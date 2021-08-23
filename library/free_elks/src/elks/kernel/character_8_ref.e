@@ -3,8 +3,8 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2020-07-03 18:42:10 +0000 (Fri, 03 Jul 2020) $"
+	revision: "$Revision: 104530 $"
 
 class CHARACTER_8_REF inherit
 
@@ -174,25 +174,35 @@ feature -- Conversion
 		end
 
 	as_upper, upper: CHARACTER_8
-			-- Uppercase value of `item'
-			-- Returns `item' if not `is_lower'
+			-- Uppercase value of `item'.
+			-- Returns `item' if not `is_lower'.
+			-- Caveat: not all upper-case values fit into `CHARACTER_8`. Use `CHARACTER_32` instead.
 		do
-			if is_lower then
-				Result := (item.code - ('a').code + ('A').code).to_character_8
-			else
-				Result := item
-			end
+			Result := upper_value [natural_32_code.as_integer_32]
 		end
 
 	as_lower, lower: CHARACTER_8
 			-- Lowercase value of `item'
 			-- Returns `item' if not `is_upper'
 		do
-			if is_upper then
-				Result := (item.code - ('A').code + ('a').code).to_character_8
-			else
-				Result := item
-			end
+			Result := lower_value [natural_32_code.as_integer_32]
+		end
+
+	to_hexa_digit: NATURAL_8
+			-- Convert a hexadecimal unicode digit character to the corresponding numeric value.
+		require
+			is_hexa_digit
+		local
+			mask: NATURAL_8
+		do
+				-- Mask out numbers.
+			Result := natural_32_code.to_natural_8 & 0x4F
+				-- Convert hexadecimal digits.
+			mask := ((Result |<< 1).to_integer_8 |>> 7).to_natural_8
+			Result := (Result & mask.bit_not) | ((Result - 55) & mask)
+		ensure
+			range: 0 <= Result and Result < 16
+			value: ("0123456789ABCDEF") [Result + 1] = as_upper
 		end
 
 feature -- Status report
@@ -412,9 +422,174 @@ feature {NONE} -- Implementation
 			Result.extend (is_punctuation_flag)                     -- 125	}
 			Result.extend (is_punctuation_flag)                     -- 126	~
 			Result.extend (is_control_flag)                         -- 127	DEL
-			Result.fill_with (0, 128, 255)							-- extended ASCII
+			Result.extend (is_control_flag)                         -- 128	
+			Result.extend (is_control_flag)                         -- 129	
+			Result.extend (is_control_flag)                         -- 130	
+			Result.extend (is_control_flag)                         -- 131	
+			Result.extend (is_control_flag)                         -- 132	
+			Result.extend (is_control_flag | is_space_flag)                         -- 133	
+			Result.extend (is_control_flag)                         -- 134	
+			Result.extend (is_control_flag)                         -- 135	
+			Result.extend (is_control_flag)                         -- 136	
+			Result.extend (is_control_flag)                         -- 137	
+			Result.extend (is_control_flag)                         -- 138	
+			Result.extend (is_control_flag)                         -- 139	
+			Result.extend (is_control_flag)                         -- 140	
+			Result.extend (is_control_flag)                         -- 141	
+			Result.extend (is_control_flag)                         -- 142	
+			Result.extend (is_control_flag)                         -- 143	
+			Result.extend (is_control_flag)                         -- 144	
+			Result.extend (is_control_flag)                         -- 145	
+			Result.extend (is_control_flag)                         -- 146	
+			Result.extend (is_control_flag)                         -- 147	
+			Result.extend (is_control_flag)                         -- 148	
+			Result.extend (is_control_flag)                         -- 149	
+			Result.extend (is_control_flag)                         -- 150	
+			Result.extend (is_control_flag)                         -- 151	
+			Result.extend (is_control_flag)                         -- 152	
+			Result.extend (is_control_flag)                         -- 153	
+			Result.extend (is_control_flag)                         -- 154	
+			Result.extend (is_control_flag)                         -- 155	
+			Result.extend (is_control_flag)                         -- 156	
+			Result.extend (is_control_flag)                         -- 157	
+			Result.extend (is_control_flag)                         -- 158	
+			Result.extend (is_control_flag)                         -- 159	
+			Result.extend (is_space_flag)                         -- 160	
+			Result.extend (is_punctuation_flag)                         -- 161	¡
+			Result.extend (0)                         -- 162	¢
+			Result.extend (0)                         -- 163	£
+			Result.extend (0)                         -- 164	¤
+			Result.extend (0)                         -- 165	¥
+			Result.extend (0)                         -- 166	¦
+			Result.extend (is_punctuation_flag)                         -- 167	§
+			Result.extend (0)                         -- 168	¨
+			Result.extend (0)                         -- 169	©
+			Result.extend (0)                         -- 170	ª
+			Result.extend (is_punctuation_flag)                         -- 171	«
+			Result.extend (0)                         -- 172	¬
+			Result.extend (0)                         -- 173	­
+			Result.extend (0)                         -- 174	®
+			Result.extend (0)                         -- 175	¯
+			Result.extend (0)                         -- 176	°
+			Result.extend (0)                         -- 177	±
+			Result.extend (0)                         -- 178	²
+			Result.extend (0)                         -- 179	³
+			Result.extend (0)                         -- 180	´
+			Result.extend (is_lower_flag)                         -- 181	µ
+			Result.extend (is_punctuation_flag)                         -- 182	¶
+			Result.extend (is_punctuation_flag)                         -- 183	·
+			Result.extend (0)                         -- 184	¸
+			Result.extend (0)                         -- 185	¹
+			Result.extend (0)                         -- 186	º
+			Result.extend (is_punctuation_flag)                         -- 187	»
+			Result.extend (0)                         -- 188	¼
+			Result.extend (0)                         -- 189	½
+			Result.extend (0)                         -- 190	¾
+			Result.extend (is_punctuation_flag)                         -- 191	¿
+			Result.extend (is_upper_flag)                         -- 192	À
+			Result.extend (is_upper_flag)                         -- 193	Á
+			Result.extend (is_upper_flag)                         -- 194	Â
+			Result.extend (is_upper_flag)                         -- 195	Ã
+			Result.extend (is_upper_flag)                         -- 196	Ä
+			Result.extend (is_upper_flag)                         -- 197	Å
+			Result.extend (is_upper_flag)                         -- 198	Æ
+			Result.extend (is_upper_flag)                         -- 199	Ç
+			Result.extend (is_upper_flag)                         -- 200	È
+			Result.extend (is_upper_flag)                         -- 201	É
+			Result.extend (is_upper_flag)                         -- 202	Ê
+			Result.extend (is_upper_flag)                         -- 203	Ë
+			Result.extend (is_upper_flag)                         -- 204	Ì
+			Result.extend (is_upper_flag)                         -- 205	Í
+			Result.extend (is_upper_flag)                         -- 206	Î
+			Result.extend (is_upper_flag)                         -- 207	Ï
+			Result.extend (is_upper_flag)                         -- 208	Ð
+			Result.extend (is_upper_flag)                         -- 209	Ñ
+			Result.extend (is_upper_flag)                         -- 210	Ò
+			Result.extend (is_upper_flag)                         -- 211	Ó
+			Result.extend (is_upper_flag)                         -- 212	Ô
+			Result.extend (is_upper_flag)                         -- 213	Õ
+			Result.extend (is_upper_flag)                         -- 214	Ö
+			Result.extend (0)                         -- 215	×
+			Result.extend (is_upper_flag)                         -- 216	Ø
+			Result.extend (is_upper_flag)                         -- 217	Ù
+			Result.extend (is_upper_flag)                         -- 218	Ú
+			Result.extend (is_upper_flag)                         -- 219	Û
+			Result.extend (is_upper_flag)                         -- 220	Ü
+			Result.extend (is_upper_flag)                         -- 221	Ý
+			Result.extend (is_upper_flag)                         -- 222	Þ
+			Result.extend (is_lower_flag)                         -- 223	ß
+			Result.extend (is_lower_flag)                         -- 224	à
+			Result.extend (is_lower_flag)                         -- 225	á
+			Result.extend (is_lower_flag)                         -- 226	â
+			Result.extend (is_lower_flag)                         -- 227	ã
+			Result.extend (is_lower_flag)                         -- 228	ä
+			Result.extend (is_lower_flag)                         -- 229	å
+			Result.extend (is_lower_flag)                         -- 230	æ
+			Result.extend (is_lower_flag)                         -- 231	ç
+			Result.extend (is_lower_flag)                         -- 232	è
+			Result.extend (is_lower_flag)                         -- 233	é
+			Result.extend (is_lower_flag)                         -- 234	ê
+			Result.extend (is_lower_flag)                         -- 235	ë
+			Result.extend (is_lower_flag)                         -- 236	ì
+			Result.extend (is_lower_flag)                         -- 237	í
+			Result.extend (is_lower_flag)                         -- 238	î
+			Result.extend (is_lower_flag)                         -- 239	ï
+			Result.extend (is_lower_flag)                         -- 240	ð
+			Result.extend (is_lower_flag)                         -- 241	ñ
+			Result.extend (is_lower_flag)                         -- 242	ò
+			Result.extend (is_lower_flag)                         -- 243	ó
+			Result.extend (is_lower_flag)                         -- 244	ô
+			Result.extend (is_lower_flag)                         -- 245	õ
+			Result.extend (is_lower_flag)                         -- 246	ö
+			Result.extend (0)                         -- 247	÷
+			Result.extend (is_lower_flag)                         -- 248	ø
+			Result.extend (is_lower_flag)                         -- 249	ù
+			Result.extend (is_lower_flag)                         -- 250	ú
+			Result.extend (is_lower_flag)                         -- 251	û
+			Result.extend (is_lower_flag)                         -- 252	ü
+			Result.extend (is_lower_flag)                         -- 253	ý
+			Result.extend (is_lower_flag)                         -- 254	þ
+			Result.extend (is_lower_flag)                         -- 255	ÿ
 		ensure
 			internal_character_types_not_void: Result /= Void
+		end
+
+	lower_value: SPECIAL [CHARACTER_8]
+			-- Lower value indexed by code point.
+		once
+			Result :=
+				("%/0c000/%/0c001/%/0c002/%/0c003/%/0c004/%/0c005/%/0c006/%/0c007/%/0c010/%/0c011/%/0c012/%/0c013/%/0c014/%/0c015/%/0c016/%/0c017/%
+				%%/0c020/%/0c021/%/0c022/%/0c023/%/0c024/%/0c025/%/0c026/%/0c027/%/0c030/%/0c031/%/0c032/%/0c033/%/0c034/%/0c035/%/0c036/%/0c037/%
+				% !%"#$%%&'()*+,-./0123456789:;<=>?%
+				%@abcdefghijklmnopqrstuvwxyz[\]^_%
+				%`abcdefghijklmnopqrstuvwxyz{|}~%/0c177/%
+				%%/0c200/%/0c201/%/0c202/%/0c203/%/0c204/%/0c205/%/0c206/%/0c207/%/0c210/%/0c211/%/0c212/%/0c213/%/0c214/%/0c215/%/0c216/%/0c217/%
+				%%/0c220/%/0c221/%/0c222/%/0c223/%/0c224/%/0c225/%/0c226/%/0c227/%/0c230/%/0c231/%/0c232/%/0c233/%/0c234/%/0c235/%/0c236/%/0c237/%
+				%%/0c240/%/0c241/%/0c242/%/0c243/%/0c244/%/0c245/%/0c246/%/0c247/%/0c250/%/0c251/%/0c252/%/0c253/%/0c254/%/0c255/%/0c256/%/0c257/%
+				%%/0c260/%/0c261/%/0c262/%/0c263/%/0c264/%/0c265/%/0c266/%/0c267/%/0c270/%/0c271/%/0c272/%/0c273/%/0c274/%/0c275/%/0c276/%/0c277/%
+				%%/0c340/%/0c341/%/0c342/%/0c343/%/0c344/%/0c345/%/0c346/%/0c347/%/0c350/%/0c351/%/0c352/%/0c353/%/0c354/%/0c355/%/0c356/%/0c357/%
+				%%/0c360/%/0c361/%/0c362/%/0c363/%/0c364/%/0c365/%/0c366/%/0c327/%/0c370/%/0c371/%/0c372/%/0c373/%/0c374/%/0c375/%/0c376/%/0c337/%
+				%%/0c340/%/0c341/%/0c342/%/0c343/%/0c344/%/0c345/%/0c346/%/0c347/%/0c350/%/0c351/%/0c352/%/0c353/%/0c354/%/0c355/%/0c356/%/0c357/%
+				%%/0c360/%/0c361/%/0c362/%/0c363/%/0c364/%/0c365/%/0c366/%/0c367/%/0c370/%/0c371/%/0c372/%/0c373/%/0c374/%/0c375/%/0c376/%/0c377/").area
+		end
+
+	upper_value: SPECIAL [CHARACTER_8]
+			-- Upper value indexed by code point.
+		once
+			Result :=
+				("%/0c000/%/0c001/%/0c002/%/0c003/%/0c004/%/0c005/%/0c006/%/0c007/%/0c010/%/0c011/%/0c012/%/0c013/%/0c014/%/0c015/%/0c016/%/0c017/%
+				%%/0c020/%/0c021/%/0c022/%/0c023/%/0c024/%/0c025/%/0c026/%/0c027/%/0c030/%/0c031/%/0c032/%/0c033/%/0c034/%/0c035/%/0c036/%/0c037/%
+				% !%"#$%%&'()*+,-./0123456789:;<=>?%
+				%@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_%
+				%`ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}~%/0c177/%
+				%%/0c200/%/0c201/%/0c202/%/0c203/%/0c204/%/0c205/%/0c206/%/0c207/%/0c210/%/0c211/%/0c212/%/0c213/%/0c214/%/0c215/%/0c216/%/0c217/%
+				%%/0c220/%/0c221/%/0c222/%/0c223/%/0c224/%/0c225/%/0c226/%/0c227/%/0c230/%/0c231/%/0c232/%/0c233/%/0c234/%/0c235/%/0c236/%/0c237/%
+				%%/0c240/%/0c241/%/0c242/%/0c243/%/0c244/%/0c245/%/0c246/%/0c247/%/0c250/%/0c251/%/0c252/%/0c253/%/0c254/%/0c255/%/0c256/%/0c257/%
+				%%/0c260/%/0c261/%/0c262/%/0c263/%/0c264/%/0c265/%/0c266/%/0c267/%/0c270/%/0c271/%/0c272/%/0c273/%/0c274/%/0c275/%/0c276/%/0c277/%
+				%%/0c300/%/0c301/%/0c302/%/0c303/%/0c304/%/0c305/%/0c306/%/0c307/%/0c310/%/0c311/%/0c312/%/0c313/%/0c314/%/0c315/%/0c316/%/0c317/%
+				%%/0c320/%/0c321/%/0c322/%/0c323/%/0c324/%/0c325/%/0c326/%/0c327/%/0c330/%/0c331/%/0c332/%/0c333/%/0c334/%/0c335/%/0c336/%/0c337/%
+				%%/0c300/%/0c301/%/0c302/%/0c303/%/0c304/%/0c305/%/0c306/%/0c307/%/0c310/%/0c311/%/0c312/%/0c313/%/0c314/%/0c315/%/0c316/%/0c317/%
+				%%/0c320/%/0c321/%/0c322/%/0c323/%/0c324/%/0c325/%/0c326/%/0c367/%/0c330/%/0c331/%/0c332/%/0c333/%/0c334/%/0c335/%/0c336/%/0c377/").area
 		end
 
 	is_upper_flag: NATURAL_8 = 0x01

@@ -5,7 +5,7 @@ note
 		"Eiffel lists of actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -521,12 +521,14 @@ feature -- Output
 			nb := count
 			if nb >= 1 then
 				from i := 1 until i > nb loop
-					if i > 1 then
-						a_string.append_string (", ")
-					end
 					if attached actual_parameter (i).label as l_label then
+						if i > 1 then
+							a_string.append_string ("; ")
+						end
 						a_string.append_string (l_label.lower_name)
 						a_string.append_string (": ")
+					elseif i > 1 then
+						a_string.append_string (", ")
 					end
 					type (i).append_to_string (a_string)
 					i := i + 1

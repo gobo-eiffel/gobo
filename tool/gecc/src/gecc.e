@@ -7,7 +7,7 @@ note
 			Take advantage of multi-CPU machines to compile several C files concurrently.
 		]"
 
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,9 @@ inherit
 
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
+
+	ET_SHARED_ISE_VARIABLES
+		export {NONE} all end
 
 create
 
@@ -40,6 +43,11 @@ feature -- Execution
 			l_thread_count: INTEGER
 		do
 			Arguments.set_program_name ("gecc")
+				-- For compatibility with ISE's tools, define the environment
+				-- variable "$ISE_LIBRARY" to $ISE_EIFFEL" if not set yet.
+			ise_variables.set_ise_library_variable
+				-- Also define the environment variable "$ISE_PLATFORM" if not set yet.
+			ise_variables.set_ise_platform_variable
 			create error_handler.make_standard
 			parse_arguments
 			l_filename := script_filename

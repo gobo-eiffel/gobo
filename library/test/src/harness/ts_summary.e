@@ -5,7 +5,7 @@ note
 		"Test result summaries"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/29 $"
 	revision: "$Revision: #10 $"
@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			-- Create a new result summary.
 		do
 			create results.make
+			create mutex.make
 			success_output := null_output_stream
 			failure_output := null_output_stream
 			abort_output := null_output_stream
@@ -61,6 +62,9 @@ feature -- Status report
 			-- debugging it might be useful to get the full exception
 			-- trace.)
 
+	sort_errors: BOOLEAN
+			-- Should erros be sorted by test names when printing them?
+
 	enabled_test_cases: detachable DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
 			-- Only test cases whose name matches one of these regexps will
 			-- be executed, or execute all test cases is Void
@@ -90,6 +94,14 @@ feature -- Status setting
 			fail_on_rescue := b
 		ensure
 			fail_on_rescue_set: fail_on_rescue = b
+		end
+
+	set_sort_errors (b: BOOLEAN)
+			-- Set `sort_errors' to `b'.
+		do
+			sort_errors := b
+		ensure
+			sort_errors_set: sort_errors = b
 		end
 
 	set_enabled_test_cases (a_test_cases: like enabled_test_cases)
@@ -189,6 +201,7 @@ feature -- Element change
 		local
 			a_result: TS_SUCCESSFUL_RESULT
 		do
+			mutex.lock
 			create a_result.make (a_test)
 			results.put_last (a_result)
 			success_count := success_count + 1
@@ -196,6 +209,7 @@ feature -- Element change
 			success_output.flush
 			completed_output.put_line (a_test.name)
 			completed_output.flush
+			mutex.unlock
 		end
 
 	put_failure (a_test: TS_TEST; a_reason: STRING)
@@ -206,6 +220,7 @@ feature -- Element change
 		local
 			a_result: TS_FAILED_RESULT
 		do
+			mutex.lock
 			create a_result.make (a_test, a_reason)
 			results.put_last (a_result)
 			failure_count := failure_count + 1
@@ -213,6 +228,7 @@ feature -- Element change
 			failure_output.flush
 			completed_output.put_line (a_test.name)
 			completed_output.flush
+			mutex.unlock
 		end
 
 	put_abort (a_test: TS_TEST; a_reason: STRING)
@@ -223,6 +239,7 @@ feature -- Element change
 		local
 			a_result: TS_ABORTED_RESULT
 		do
+			mutex.lock
 			create a_result.make (a_test, a_reason)
 			results.put_last (a_result)
 			abort_count := abort_count + 1
@@ -230,6 +247,7 @@ feature -- Element change
 			abort_output.flush
 			completed_output.put_line (a_test.name)
 			completed_output.flush
+			mutex.unlock
 		end
 
 	start_test (a_test: TS_TEST)
@@ -244,7 +262,9 @@ feature -- Element change
 			-- Inform Current that a test was completed with
 			-- `asserts' assertions run.
 		do
+			mutex.lock
 			assertion_count := assertion_count + asserts
+			mutex.unlock
 		end
 
 feature -- Output
@@ -343,6 +363,18 @@ feature -- Output
 
 	print_errors (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print failed or aborted results to `a_file'.
+			-- Print them sorted by tets names if `sort_errors' is True.
+		do
+			if sort_errors then
+				print_sorted_errors (a_file)
+			else
+				print_unsorted_errors (a_file)
+			end
+		end
+
+	print_unsorted_errors (a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print failed or aborted results to `a_file'.
+			-- Do not sort them.
 		require
 			not_successful: not is_successful
 			a_file_not_void: a_file /= Void
@@ -364,6 +396,46 @@ feature -- Output
 					a_file.put_new_line
 				end
 				a_cursor.forth
+			end
+		end
+
+	print_sorted_errors (a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print failed or aborted results to `a_file'
+			-- sorted by test names.
+		require
+			not_successful: not is_successful
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			l_sorter: DS_QUICK_SORTER [TS_RESULT]
+			l_comparator: KL_AGENT_COMPARATOR [TS_RESULT]
+			l_errors: DS_ARRAYED_LIST [TS_RESULT]
+			l_cursor: DS_LIST_CURSOR [TS_RESULT]
+			l_result: TS_RESULT
+			i, nb: INTEGER
+		do
+			a_file.put_line ("Test Results:")
+			create l_errors.make (results.count)
+			l_cursor := results.new_cursor
+			from
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
+				l_result := l_cursor.item
+				if not l_result.passed then
+					l_errors.put_last (l_result)
+				end
+				l_cursor.forth
+			end
+			create l_comparator.make (agent result_less_than)
+			create l_sorter.make (l_comparator)
+			l_errors.sort (l_sorter)
+			nb := l_errors.count
+			from i := 1 until i > nb loop
+				l_errors.item (i).print_result (a_file)
+				a_file.put_new_line
+				i := i + 1
 			end
 		end
 
@@ -390,6 +462,22 @@ feature -- Output
 			end
 		end
 
+feature -- Implementation
+
+	mutex: MUTEX
+			-- To used in multithreaded mode when several tests
+			-- will record their status to the current summary
+
+	result_less_than (a_result1, a_result2: TS_RESULT): BOOLEAN
+			-- Is `a_result1' considered less than `a_result2'?
+			-- Sort by test names.
+		require
+			a_result1_not_void: a_result1 /= Void
+			a_result2_not_void: a_result2 /= Void
+		do
+			Result := {KL_STRING_ROUTINES}.three_way_case_insensitive_comparison (a_result1.test.name, a_result2.test.name) = -1
+		end
+
 invariant
 
 	success_count_positive: success_count >= 0
@@ -410,5 +498,6 @@ invariant
 	abort_output_open_write: abort_output.is_open_write
 	completed_output_not_void: completed_output /= Void
 	completed_output_open_write: completed_output.is_open_write
+	mutex_not_void: mutex /= Void
 
 end

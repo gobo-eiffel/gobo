@@ -8,7 +8,7 @@ test:
   rules:
     - when: never
 
-test_windows:
+test_library_windows:
   stage: test
   tags:
     - shared-windows
@@ -17,17 +17,48 @@ test_windows:
   script:
     - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
+    - cd "$env:GOBO\library"
     - '& "$env:GOBO\.gitlab\do_it.bat" geant test_debug_ge'
 
-test_linux:
+test_tool_windows:
+  stage: test
+  tags:
+    - shared-windows
+    - windows
+    - windows-1809
+  script:
+    - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
+    - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
+    - cd "$env:GOBO\tool"
+    - '& "$env:GOBO\.gitlab\do_it.bat" geant test_ge'
+
+test_library_linux:
   stage: test
   tags:
     - linux
   script:
+    - cat /etc/*-release
+    - arch
+    - gcc --version
     - $CI_PROJECT_DIR/bin/install.sh -v gcc
     - export PATH=$PATH:$GOBO/bin
     - gec --version
-    - geant test_debug_ge
+    - cd $GOBO/library
+    - geant test_ge
+
+test_tool_linux:
+  stage: test
+  tags:
+    - linux
+  script:
+    - cat /etc/*-release
+    - arch
+    - gcc --version
+    - $CI_PROJECT_DIR/bin/install.sh -v gcc
+    - export PATH=$PATH:$GOBO/bin
+    - gec --version
+    - cd $GOBO/tool
+    - geant test_ge
 
 stages:
   - test

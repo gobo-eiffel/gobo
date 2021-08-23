@@ -5,9 +5,9 @@ Running Test Cases
 Test Summary for validation
 
     # Passed:     238 tests
-    # FAILED:     67 tests
+    # FAILED:     70 tests
     # Aborted:    0 test
-    # Total:      305 tests
+    # Total:      308 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo/test\_close\_repeat\_1](definition/difo/test\_close\_repeat\_1)\] test\_failed</br>
@@ -69,6 +69,9 @@ FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_1](validity/vgmc/test\_labeled\_tu
 FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_2](validity/vgmc/test\_labeled\_tuple\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_3](validity/vgmc/test\_labeled\_tuple\_3)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_4](validity/vgmc/test\_labeled\_tuple\_4)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_5](validity/vgmc/test\_labeled\_tuple\_5)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_6](validity/vgmc/test\_labeled\_tuple\_6)\] test\_failed</br>
+FAIL:  \[[validity/vgmc/test\_labeled\_tuple\_7](validity/vgmc/test\_labeled\_tuple\_7)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_1](validity/vgmc/test\_parenthesis\_call\_1)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_2](validity/vgmc/test\_parenthesis\_call\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_3](validity/vgmc/test\_parenthesis\_call\_3)\] test\_failed</br>

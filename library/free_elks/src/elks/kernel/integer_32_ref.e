@@ -3,8 +3,8 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2020-10-17 17:13:58 +0000 (Sat, 17 Oct 2020) $"
+	revision: "$Revision: 104784 $"
 
 class
 	INTEGER_32_REF
@@ -513,8 +513,8 @@ feature -- Bit operations
 			-- Shift Current from `n' position to right if `n' positive,
 			-- to left otherwise.
 		require
-			n_less_or_equal_to_32: n <= 32
-			n_greater_or_equal_to_minus_32: n >= -32
+			n_less_than_32: n < 32
+			n_greater_than_minus_32: n > -32
 		do
 			if n > 0 then
 				Result := bit_shift_right (n).item
@@ -527,7 +527,7 @@ feature -- Bit operations
 			-- Shift Current from `n' position to left.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_32: n <= 32
+			n_less_than_32: n < 32
 		do
 			create Result
 			Result.set_item (item.bit_shift_left (n))
@@ -539,7 +539,7 @@ feature -- Bit operations
 			-- Shift Current from `n' position to right.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_32: n <= 32
+			n_less_than_32: n < 32
 		do
 			create Result
 			Result.set_item (item.bit_shift_right (n))

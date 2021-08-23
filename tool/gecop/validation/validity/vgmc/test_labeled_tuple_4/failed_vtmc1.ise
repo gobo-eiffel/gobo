@@ -10,10 +10,10 @@ What to do: Make sure that the name of the feature is correct:
        - Ensure that the feature name occurs in exactly one
          constraining type.
 
-Class: BB [G -> {TUPLE [f: INTEGER_32], TUPLE [f: INTEGER_32]}]
+Class: BB [G -> {TUPLE [f: INTEGER_32], TUPLE [f: INTEGER_32; g: BOOLEAN]}]
 Feature: f
 The feature with name `f' does not occur in the following type set:
-   {TUPLE [INTEGER_32],TUPLE [INTEGER_32]}
+   {TUPLE [INTEGER_32],TUPLE [INTEGER_32, BOOLEAN]}
 Line: 9
       do
 ->      i := a.f

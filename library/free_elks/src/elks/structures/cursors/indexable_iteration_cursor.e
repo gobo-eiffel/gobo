@@ -3,8 +3,8 @@
 	library: "EiffelBase: Library of reusable components for Eiffel."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2020-10-17 16:34:00 +0000 (Sat, 17 Oct 2020) $"
+	revision: "$Revision: 104783 $"
 
 deferred class
 	INDEXABLE_ITERATION_CURSOR [G]
@@ -26,18 +26,18 @@ feature -- Access
 		end
 
 	target_index: INTEGER
-			-- Index position of target structure for current iteration.
+			-- Index position in target structure for current iteration.
 		deferred
 		end
 
 	first_index: INTEGER
-			-- First valid index of target structure for current iteration.
+			-- First valid index in target structure for current iteration.
 			-- Note that if `is_reversed', `first_index' might be greater than `last_index'.
 		deferred
 		end
 
 	last_index: INTEGER
-			-- Last valid index of target structure for current iteration.
+			-- Last valid index in target structure for current iteration.
 			-- Note that if `is_reversed', `first_index' might be greater than `last_index'.
 		deferred
 		end
@@ -134,7 +134,7 @@ invariant
 	step_positive: step > 0
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

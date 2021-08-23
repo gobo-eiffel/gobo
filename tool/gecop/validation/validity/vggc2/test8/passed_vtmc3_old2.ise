@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+
+Error code: VTMC(3)
+
+Error: A renaming cannot be applied to a formal constraint.
+
+What to do: Resolve feature conflicts directly on the constraint type
+  which provides the feature. This will be a class type, not a formal.
+    MULTI [G -> H rename f as g end, H -> B]
+  H is a formal, but you can apply the renaming to B, which is a class type:
+    MULTI [G -> H, H -> B rename f as g end]
+
+Class: BB [G -> NONE rename default_create as g end]
+Feature: inheritance or invariant clause
+It is not allowed to apply a renaming to constraint which is a formal generic or NONE.
+Type: detachable NONE
+-------------------------------------------------------------------------------

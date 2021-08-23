@@ -5,7 +5,7 @@ note
 		"Test result summaries and progress status"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,12 +53,14 @@ feature -- Element change
 		local
 			a_result: TS_FAILED_RESULT
 		do
+			mutex.lock
 			create a_result.make (a_test, a_reason)
 			results.put_last (a_result)
 			failure_count := failure_count + 1
 			a_result.print_result (output_file)
 			output_file.put_new_line
 			output_file.flush
+			mutex.unlock
 		end
 
 	put_abort (a_test: TS_TEST; a_reason: STRING)
@@ -66,20 +68,24 @@ feature -- Element change
 		local
 			a_result: TS_ABORTED_RESULT
 		do
+			mutex.lock
 			create a_result.make (a_test, a_reason)
 			results.put_last (a_result)
 			abort_count := abort_count + 1
 			a_result.print_result (output_file)
 			output_file.put_new_line
 			output_file.flush
+			mutex.unlock
 		end
 
 	start_test (a_test: TS_TEST)
 			-- Inform Current that a test will be started.
 		do
+			mutex.lock
 			output_file.put_character ('@')
 			output_file.put_line (a_test.name)
 			output_file.flush
+			mutex.unlock
 		end
 
 invariant

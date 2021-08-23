@@ -2,15 +2,51 @@
 
 ## Version ?? - ??
 
+### geant
+
+* Added option `executable` for the tasks `<gec>` and `<ise>` to be
+  able specify the filename (optionally with a pathname) of the Eiffel
+  compiler executable. The default is the executable which can be found
+  in the `PATH`.
+
 ### gec
 
 * Added runtime support for attributes with self-initializing code.
 * Added support for the ECF setting `line_generation`, with
   preprocessor statements `#line` now included in the generated C code.
+* Let the test in `$GOBO/tool/gec/test/tool` run `gecop` with the `gec`
+  executable just built (the executable under test).
+
+### gecop
+
+* Made `gecop` multi-threaded. Each thread will run its own set of
+  validation tests independently of the others.
+* Added command-line option `--tool-executable` to specify the 
+  executable filename (optionally with a pathname) of the Eiffel tool
+  to be tested. The default is either `gec`, `gelint`, `ec` which can
+  be found in the `PATH`.
+
+### gelint
+
+* Let the test in `$GOBO/tool/gelint/test/tool` run `gecop` with the
+  `gelint` executable just built (the executable under test).
+
+### Gobo Eiffel Test Library
+
+* Added support for multi-threading where running tests with the
+  class `TS_MULTITHREADED_TEST_SUITE`.
 
 ### Gobo Eiffel Tools Library
 
 * Improved processing of conversion expressions.
+* Fixed textual representation of `ET_TUPLE_TYPE` in case of labeled
+  tuples: should use `;` instead of `,` as separator for actual generic
+  parameters (e.g. `"TUPLE [a: A; b: B]"` and not `"TUPLE [a: A, b: B]"`).
+* Fixed the fact that it is valid to have `x.f` where the type of `x` is
+  a formal generic parameter and `f` is a tuple label declared in several
+  constraints `G -> {TUPLE [f: INTEGER], TUPLE [f: INTEGER]}` because the
+  two constraints have the same base type and the labels are at the same
+  position.
 
 ## Version 20.05.31.5 - 31 May 2020
 

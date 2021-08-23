@@ -9,7 +9,7 @@
 >
 	<description>
 		system: "Gobo Eiffel Cop"
-		copyright: "Copyright (c) 2018-2019, Eric Bezault and others"
+		copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 	<target name="all_classes">
@@ -35,7 +35,7 @@
 		<root class="GECOP" feature="execute"/>
 		<setting name="console_application" value="true"/>
 		<capability>
-			<concurrency use="none"/>
+			<concurrency use="thread"/>
 		</capability>
 	</target>
 </system>

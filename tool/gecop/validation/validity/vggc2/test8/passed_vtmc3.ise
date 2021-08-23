@@ -10,7 +10,7 @@ What to do: Resolve feature conflicts directly on the constraint type
   H is a formal, but you can apply the renaming to B, which is a class type:
     MULTI [G -> H, H -> B rename f as g end]
 
-Class: BB [G -> NONE rename default_create as g end]
+Class: BB [G -> detachable NONE rename default_create as g end]
 Feature: inheritance or invariant clause
 It is not allowed to apply a renaming to constraint which is a formal generic or NONE.
 Type: detachable NONE

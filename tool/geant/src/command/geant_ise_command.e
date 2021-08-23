@@ -5,7 +5,7 @@ note
 		"Compilation commands for ISE Eiffel"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,10 +15,22 @@ class GEANT_ISE_COMMAND
 inherit
 
 	GEANT_COMMAND
+		redefine
+			make
+		end
 
 create
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_project: GEANT_PROJECT)
+			-- Initialize command by setting `project' to `a_project'.
+		do
+			executable_filename := "ec"
+			precursor (a_project)
+		end
 
 feature -- Status report
 
@@ -49,6 +61,9 @@ feature -- Status report
 		end
 
 feature -- Access
+
+	executable_filename: STRING
+			-- Filename of ISE's compiler executable
 
 	ecf_filename: detachable STRING
 			-- ECF filename
@@ -91,6 +106,17 @@ feature -- Access
 
 
 feature -- Setting
+
+	set_executable_filename (a_filename: like executable_filename)
+			-- Set `executable_filename' to `a_filename'.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.is_empty
+		do
+			executable_filename := a_filename
+		ensure
+			executable_filename_set: executable_filename = a_filename
+		end
 
 	set_ecf_filename (a_filename: like ecf_filename)
 			-- Set `ecf_filename' to `a_filename'.
@@ -196,7 +222,8 @@ feature -- Execution
 		do
 			check is_compilable: attached system_name as l_system_name then
 				create cmd.make (128)
-				cmd.append_string ("ec -batch")
+				cmd.append_string (executable_filename)
+				cmd.append_string (" -batch")
 				if attached ecf_filename as l_ecf_filename and then l_ecf_filename.count > 0 then
 					cmd.append_string (" -config ")
 					a_filename := file_system.pathname_from_file_system (l_ecf_filename, unix_file_system)
@@ -352,5 +379,10 @@ feature -- Execution
 				end
 			end
 		end
+
+invariant
+
+	executable_filename_not_void: executable_filename /= Void
+	executable_filename_not_empty: not executable_filename.is_empty
 
 end

@@ -738,7 +738,7 @@ feature -- Element change
 			-- there was one, `new' otherwise).
 			--
 			-- To choose between various insert/replace procedures,
-			-- see `instructions' in the Indexing clause.
+			-- see usage instructions at end of class.
 		require else
 			True
 		local
@@ -802,7 +802,7 @@ feature -- Element change
 			-- `found_item' to the default value.
 			--
 			-- To choose between various insert/replace procedures,
-			-- see `instructions' in the Indexing clause.
+			-- see usage instructions at end of class.
 		require else
 			True
 		local
@@ -860,7 +860,7 @@ feature -- Element change
 			-- Set `inserted'.
 			--
 			-- To choose between various insert/replace procedures,
-			-- see `instructions' in the Indexing clause.
+			-- see usage instructions at end of class.
 		require
 			not_present: not has (key)
 		local
@@ -906,7 +906,7 @@ feature -- Element change
 			-- with `key' (default value if there was none).
 			--
 			-- To choose between various insert/replace procedures,
-			-- see `instructions' in the Indexing clause.
+			-- see usage instructions at end of class.
 		local
 			l_default_item: detachable G
 		do
@@ -936,7 +936,7 @@ feature -- Element change
 			-- associated with `new_key'.
 			--
 			-- To choose between various insert/replace procedures,
-			-- see `instructions' in the Indexing clause.
+			-- see usage instructions at end of class.
 		local
 			l_item: G
 		do
@@ -1763,8 +1763,8 @@ note
 				... No item was present for `your_key' ...
 			end
 		]"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2020-09-18 08:49:21 +0000 (Fri, 18 Sep 2020) $"
+	revision: "$Revision: 104681 $"
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

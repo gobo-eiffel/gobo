@@ -7,7 +7,7 @@ note
 			An Eiffel language conformance validation suite.
 		]"
 
-	copyright: "Copyright (c) 2018-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,6 +45,7 @@ feature -- Execution
 			l_output_string: STRING
 			l_aggregate, l_diff: BOOLEAN
 			l_filter: detachable RX_PCRE_REGULAR_EXPRESSION
+			l_set_up_mutex: MUTEX
 		do
 			Arguments.set_program_name ("gecop")
 			create error_handler.make_standard
@@ -76,10 +77,14 @@ feature -- Execution
 			l_directory.open_read
 			if l_directory.is_open_read then
 				create l_tester.make_default
+				if tool_executable_option.was_found and then attached tool_executable_option.parameter as l_executable_filename and then not l_executable_filename.is_empty then
+					l_tester.variables.set_value ("executable", l_executable_filename)
+				end
 				create l_test_suite.make ("validation", l_tester.variables)
 				l_tester.set_suite (l_test_suite)
 				create l_relative_path.make_default
-				process_directory (l_directory, l_relative_path, l_tested_eiffel_tool, l_filter, l_tester)
+				create l_set_up_mutex.make
+				process_directory (l_directory, l_relative_path, l_tested_eiffel_tool, l_filter, l_tester, l_set_up_mutex)
 				l_directory.close
 				create l_output_stream.make_empty
 				l_aggregate := not aggregate_option.was_found or else aggregate_option.parameter
@@ -105,7 +110,7 @@ feature -- Execution
 
 feature {NONE} -- Processing
 
-	process_directory (a_directory: KL_DIRECTORY; a_relative_path: DS_ARRAYED_LIST [STRING]; a_tested_eiffel_tool: STRING; a_filter: detachable RX_REGULAR_EXPRESSION; a_tester: TS_TESTER)
+	process_directory (a_directory: KL_DIRECTORY; a_relative_path: DS_ARRAYED_LIST [STRING]; a_tested_eiffel_tool: STRING; a_filter: detachable RX_REGULAR_EXPRESSION; a_tester: TS_TESTER; a_set_up_mutex: detachable MUTEX)
 			-- Traverse `a_directory' and recursively its subdirectories to find
 			-- test cases to be added to `a_tester' (if matching `a_filter') and
 			-- later run with `a_tested_eiffel_tool'.
@@ -177,10 +182,11 @@ feature {NONE} -- Processing
 							create l_test_case.make (l_entry_fullname, l_test_dirname)
 							l_test_case.set_test (l_test_name, agent l_test_case.compile_and_test (a_tested_eiffel_tool))
 							l_test_case.set_variables (a_tester.variables)
+							l_test_case.set_set_up_mutex (a_set_up_mutex)
 							l_test_suite.put_test (l_test_case)
 						end
 					else
-						process_directory (l_subdirectory, a_relative_path, a_tested_eiffel_tool, a_filter, a_tester)
+						process_directory (l_subdirectory, a_relative_path, a_tested_eiffel_tool, a_filter, a_tester, a_set_up_mutex)
 					end
 					a_relative_path.remove_last
 					l_subdirectory.close
@@ -203,6 +209,9 @@ feature {NONE} -- Processing
 			l_test_suite: TS_TEST_SUITE
 			l_has_test_suite: BOOLEAN
 			l_has_test_case: BOOLEAN
+			l_thread_count: INTEGER
+			l_multithreaded_test_suite: TS_MULTITHREADED_TEST_SUITE
+			l_old_test_suite: TS_TEST_SUITE
 		do
 			if a_aggregate then
 				std.output.put_new_line
@@ -210,7 +219,19 @@ feature {NONE} -- Processing
 				std.output.put_line ("Running Test Cases")
 				std.output.put_new_line
 				create l_summary.make
-				a_tester.execute_with_summary (l_summary, std.output)
+				l_summary.set_sort_errors (True)
+				l_thread_count := thread_count
+				if l_thread_count > 1 then
+					l_old_test_suite := a_tester.suite
+					create l_multithreaded_test_suite.make (l_old_test_suite.name, l_old_test_suite.variables)
+					l_multithreaded_test_suite.set_thread_count (l_thread_count)
+					l_old_test_suite.add_test_cases_to_suite (l_multithreaded_test_suite)
+					a_tester.set_suite (l_multithreaded_test_suite)
+					a_tester.execute_with_summary (l_summary, std.output)
+					a_tester.set_suite (l_old_test_suite)
+				else
+					a_tester.execute_with_summary (l_summary, std.output)
+				end
 					-- Write to `a_output_file'.
 				a_output_file.put_new_line
 				a_output_file.put_line ("Testing " + a_tester.suite.name + "...")
@@ -386,10 +407,32 @@ feature -- Error handling
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
 
+feature -- Status report
+
+	thread_count: INTEGER
+			-- Number of threads to be used
+		do
+			Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32
+			if thread_option.was_found then
+				Result := thread_option.parameter
+				if Result <= 0 then
+					Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 + Result
+				end
+			end
+			if Result < 1 or not {PLATFORM}.is_thread_capable then
+				Result := 1
+			end
+		ensure
+			thread_count_not_negative: Result >= 1
+		end
+
 feature -- Argument parsing
 
 	tool_option: AP_ENUMERATION_OPTION
 			-- Option for '--tool=<eiffel_tool>'
+
+	tool_executable_option: AP_STRING_OPTION
+			-- Option for '--tool_executable=<executable_filename>'
 
 	validation_option: AP_STRING_OPTION
 			-- Option for '--validation=<directory_name>'
@@ -405,6 +448,9 @@ feature -- Argument parsing
 
 	keep_testdir_flag: AP_FLAG
 			-- Flag for '--keep-testdir'
+
+	thread_option: AP_INTEGER_OPTION
+			-- Option for '--thread=<thread_count>'
 
 	version_flag: AP_FLAG
 			-- Flag for '--version'
@@ -431,6 +477,11 @@ feature -- Argument parsing
 			tool_option.extend ("ise_dotnet")
 			tool_option.extend ("ise_dotnet_debug")
 			l_parser.options.force_last (tool_option)
+				-- tool_executable
+			create tool_executable_option.make_with_long_form ("tool-executable")
+			tool_executable_option.set_description ("Executable filename (optionally with a pathname) of Eiffel tool to be tested. (default: gec|gelint|ec in the PATH)")
+			tool_executable_option.set_parameter_description ("filename")
+			l_parser.options.force_last (tool_executable_option)
 				-- validation
 			create validation_option.make_with_long_form ("validation")
 			validation_option.set_description ("Directory containing the Eiffel validation suite. (default: $GOBO/tool/gecop/validation)")
@@ -455,6 +506,13 @@ feature -- Argument parsing
 			create keep_testdir_flag.make_with_long_form ("keep-testdir")
 			keep_testdir_flag.set_description ("Do no delete temporary directory after running the validation suite. (default: delete testdir)")
 			l_parser.options.force_last (keep_testdir_flag)
+				-- thread
+			create thread_option.make_with_long_form ("thread")
+			thread_option.set_description ("Number of threads to be used. Negative numbers -N mean %"number of CPUs - N%". (default: number of CPUs)")
+			thread_option.set_parameter_description ("thread_count")
+			if {PLATFORM}.is_thread_capable then
+				l_parser.options.force_last (thread_option)
+			end
 				-- version
 			create version_flag.make ('V', "version")
 			version_flag.set_description ("Print the version number of gecop and exit.")
@@ -471,11 +529,13 @@ feature -- Argument parsing
 			end
 		ensure
 			tool_option_not_void: tool_option /= Void
+			tool_executable_option_not_void: tool_executable_option /= Void
 			validation_option_not_void: validation_option /= Void
 			filter_option_not_void: filter_option /= Void
 			aggregate_option_not_void: aggregate_option /= Void
 			diff_option_not_void: diff_option /= Void
 			keep_testdir_flag_not_void: keep_testdir_flag /= Void
+			thread_option_not_void: thread_option /= Void
 			version_flag_not_void: version_flag /= Void
 		end
 
@@ -515,11 +575,13 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	tool_option_not_void: tool_option /= Void
+	tool_executable_option_not_void: tool_executable_option /= Void
 	validation_option_not_void: validation_option /= Void
 	filter_option_not_void: filter_option /= Void
 	aggregate_option_not_void: aggregate_option /= Void
 	diff_option_not_void: diff_option /= Void
 	keep_testdir_flag_not_void: keep_testdir_flag /= Void
+	thread_option_not_void: thread_option /= Void
 	version_flag_not_void: version_flag /= Void
 
 end

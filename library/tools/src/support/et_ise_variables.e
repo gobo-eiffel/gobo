@@ -84,9 +84,9 @@ feature -- Setting
 				elseif {PLATFORM}.is_windows then
 					l_value := "windows"
 				elseif {PLATFORM}.is_mac and {PLATFORM}.is_64_bits then
-					l_value := "macox-x86-64"
+					l_value := "macosx-x86-64"
 				elseif {PLATFORM}.is_mac then
-					l_value := "macox-x86"
+					l_value := "macosx-x86"
 				elseif {PLATFORM}.is_64_bits then
 					l_value := "linux-x86-64"
 				else

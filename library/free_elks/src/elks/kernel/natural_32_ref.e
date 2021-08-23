@@ -3,8 +3,8 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2020-10-17 17:13:58 +0000 (Sat, 17 Oct 2020) $"
+	revision: "$Revision: 104784 $"
 
 class
 	NATURAL_32_REF
@@ -492,8 +492,8 @@ feature -- Bit operations
 			-- `Current' shifted from `n' position to right if `n' positive,
 			-- to left otherwise.
 		require
-			n_less_or_equal_to_32: n <= 32
-			n_greater_or_equal_to_minus_32: n >= -32
+			n_less_than_32: n < 32
+			n_greater_than_minus_32: n > -32
 		do
 			if n > 0 then
 				Result := bit_shift_right (n).item
@@ -506,7 +506,7 @@ feature -- Bit operations
 			-- `Current' shifted from `n' position to left.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_32: n <= 32
+			n_less_than_32: n < 32
 		do
 			create Result
 			Result.set_item (item.bit_shift_left (n))
@@ -518,7 +518,7 @@ feature -- Bit operations
 			-- `Current' shifted from `n' position to right.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_32: n <= 32
+			n_less_than_32: n < 32
 		do
 			create Result
 			Result.set_item (item.bit_shift_right (n))
@@ -532,7 +532,7 @@ feature -- Bit operations
 			n_nonnegative: n >= 0
 			n_less_than_32: n < 32
 		do
-			Result := item & ((1).to_natural_32 |<< n) /= 0
+			Result := item & ({NATURAL_32} 1 |<< n) /= 0
 		end
 
 	frozen set_bit (b: BOOLEAN; n: INTEGER): NATURAL_32
@@ -543,9 +543,9 @@ feature -- Bit operations
 			n_less_than_32: n < 32
 		do
 			if b then
-				Result := item | ((1).to_natural_32 |<< n)
+				Result := item | ({NATURAL_32} 1 |<< n)
 			else
-				Result := item & ((1).to_natural_32 |<< n).bit_not
+				Result := item & ({NATURAL_32} 1 |<< n).bit_not
 			end
 		end
 

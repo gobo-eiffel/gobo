@@ -6,7 +6,7 @@
 		"Using gecop"
 
 	tool: "Gobo Eiffel Cop"
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gecop/usage">
 <chapterinfo>
 	<copyright>
-		<year>2018</year>
+		<year>2018-2020</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>31 December 2018</date>
+	<date>16 November 2020</date>
 </chapterinfo>
 
 <title>Using gecop</title>
@@ -61,6 +61,15 @@ Here is the list of options that can be used with <projectname>gecop</projectnam
 			for a given Eiffel tool, unless the suffix <filename>debug</filename>
 			is provided (e.g. workbench mode with assertion monitoring turned on).
 			(default: ge)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--tool-executable=&lt;filename&gt;</filename>
+		</term>
+		<listitem><para>
+			Executable filename (optionally with a pathname) of the Eiffel tool to be tested.
+			(default: gec|gelint|ec in the PATH)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
@@ -106,6 +115,17 @@ Here is the list of options that can be used with <projectname>gecop</projectnam
 		<listitem><para>
 			Do no delete temporary directory after running the validation suite.
 			(default: delete testdir)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--thread=&lt;thread_count&gt;</filename>
+		</term>
+		<listitem><para>
+			Number of threads to be used to run <projectname>gecop</projectname>.
+			Each thread will run its own set of validation tests independently of the others.
+			Negative numbers -N mean &quot;number of CPUs - N&quot;.
+			(default: number of CPUs)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
