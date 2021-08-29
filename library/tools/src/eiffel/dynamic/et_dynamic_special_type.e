@@ -21,12 +21,10 @@ inherit
 			is_special,
 			has_nested_non_embedded_attributes,
 			has_nested_reference_fields,
+			has_nested_custom_standard_copy_routine,
 			new_dynamic_query,
 			new_dynamic_procedure
 		end
-
-	ET_SHARED_TOKEN_CONSTANTS
-		export {NONE} all end
 
 create
 
@@ -133,18 +131,55 @@ feature -- Features
 			end
 		end
 
+	has_nested_custom_standard_copy_routine: BOOLEAN
+			-- Does current type contains fields, or recursively does it have
+			-- embedded expanded attributes which contain fields, which require
+			-- special treatment in the implementation of routine 'standard_copy'?
+		do
+			Result := precursor or has_item_nested_custom_standard_copy_routine
+		end
+
+	has_item_nested_custom_standard_copy_routine: BOOLEAN
+			-- Does current type contains items, or recursively do they have
+			-- embedded expanded attributes which contain fields, which require
+			-- special treatment in the implementation of routine 'standard_copy'?
+		local
+			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			l_item_type := item_type_set.static_type.primary_type
+			if l_item_type.is_embedded then
+				if l_item_type.has_redefined_copy_routine then
+					Result := True
+				elseif l_item_type = Current then
+					-- We should not have cyclic recursive embedded expanded objects.
+					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
+					-- or by another proper handling if ECMA relaxed this rule
+					-- (through the introduction of attached types). But in case
+					-- such a cyclic recursion has slipped through, we have this
+					-- test to break that cycle.
+				elseif l_item_type.has_nested_custom_standard_copy_routine then
+					Result := True
+				end
+			elseif l_item_type.is_expanded then
+					-- Non-embedded expanded attribute (e.g. attribute with generic expanded type
+					-- which can be polyphormic with 'EXP [INTEGER]' conforming to 'EXP [ANY]').
+				Result := True
+			elseif item_type_set.has_expanded then
+					-- Reference attribute which may be attached to an object with copy semantics.
+				Result := True
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	new_dynamic_query (a_query: ET_QUERY; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
 			-- Run-time query associated with `a_query';
 			-- Create a new object at each call.
 		local
-			l_name: ET_FEATURE_NAME
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			Result := precursor (a_query, a_system)
-			l_name := a_query.name
-			if l_name.same_feature_name (tokens.item_feature_name) then
+			if Result.is_builtin_special_item then
 				l_result_type_set := Result.result_type_set
 				if l_result_type_set /= Void and then l_result_type_set.static_type = item_type_set.static_type then
 					Result.set_result_type_set (item_type_set)
@@ -156,14 +191,12 @@ feature {NONE} -- Implementation
 			-- Run-time procedure associated with `a_procedure';
 			-- Create a new object at each call.
 		local
-			l_name: ET_FEATURE_NAME
 			l_procedure_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			i, nb: INTEGER
 		do
 			Result := precursor (a_procedure, a_system)
-			l_name := a_procedure.name
-			if l_name.same_feature_name (tokens.put_feature_name) or l_name.same_feature_name (tokens.extend_feature_name) then
+			if Result.is_builtin_special_put or Result.is_builtin_special_extend then
 				l_procedure_type_sets := Result.dynamic_type_sets
 				nb := l_procedure_type_sets.count
 				create l_dynamic_type_sets.make_with_capacity (nb)

@@ -5,7 +5,7 @@ note
 		"Test features of class ANY"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -385,65 +385,123 @@ feature -- Test
 			assert ("not_equal9", not aa1.standard_equal (aa2, aa1))
 		end
 
-	test_twin
+	test_twin_1
 			-- Test feature 'twin'.
 		local
 			s1, s2: STRING
-			i1, i2: INTEGER
-			sp1, sp2: SPECIAL [INTEGER]
-			aa1, aa2: AA
 		do
 			s1 := "gobo"
 			s2 := s1.twin
-			assert ("not_void1", s2 /= Void)
-			assert_equal ("value1", "gobo", s2)
-			assert ("not_same_area1", s2.area /= s1.area)
-			assert ("cloned1", s2 /= s1)
+			assert ("not_void", s2 /= Void)
+			assert_equal ("value", "gobo", s2)
+			assert ("not_same_area", s2.area /= s1.area)
+			assert ("cloned", s2 /= s1)
+		end
+
+	test_twin_2
+			-- Test feature 'twin'.
+		local
+			i1, i2: INTEGER
+		do
 			i1 := 5
 			i2 := i1.twin
-			assert ("value2", i2 = 5)
+			assert ("value", i2 = 5)
+		end
+
+	test_twin_3
+			-- Test feature 'twin'.
+		local
+			sp1, sp2: SPECIAL [INTEGER]
+		do
 			create sp1.make_filled (0, 2)
 			sp1.put (2, 0)
 			sp1.put (5, 1)
 			sp2 := sp1.twin
-			assert ("not_void3", sp2 /= Void)
-			assert ("sp_count3", sp2.count = 2)
-			assert ("sp_item0_3", sp2.item (0) = 2)
-			assert ("sp_item1_3", sp2.item (1) = 5)
-			assert ("cloned3", sp2 /= sp1)
+			assert ("not_void", sp2 /= Void)
+			assert ("sp_count", sp2.count = 2)
+			assert ("sp_item0", sp2.item (0) = 2)
+			assert ("sp_item1", sp2.item (1) = 5)
+			assert ("cloned", sp2 /= sp1)
+		end
+
+	test_twin_4
+			-- Test feature 'twin'.
+		local
+			aa1, aa2: AA
+		do
 			create aa1
 			aa1.set_foo (5)
 			aa2 := aa1.twin
-			assert ("not_void4", aa2 /= Void)
-			assert ("value4", aa2.foo = 5)
-			assert ("cloned4", aa2 /= aa1)
+			assert ("not_void", aa2 /= Void)
+			assert ("value", aa2.foo = 5)
+			assert ("cloned", aa2 /= aa1)
 		end
 
-	test_copy
+	test_twin_5
+			-- Test feature 'twin'.
+			-- Shows that the new object is created with
+			-- default initialization before calling 'copy'.
+		local
+			ff1,ff2: FF
+		do
+			create ff1
+			ff1.set_foo (15)
+			ff1.set_bar (25)
+			ff1.set_copy_count (5)
+			ff2 := ff1.twin
+			assert ("not_void", ff2 /= Void)
+			assert ("cloned", ff2 /= ff1)
+			assert ("foo", ff2.foo = 15)
+			assert ("bar", ff2.bar = 0)
+			assert ("copy_count", ff2.copy_count = 1)
+		end
+
+	test_copy_1
 			-- Test feature 'copy'.
 		local
 			s1, s2: STRING
-			sp1, sp2: SPECIAL [INTEGER]
-			aa1, aa2: AA
 		do
 			s1 := "gobo"
 			create s2.make (10)
 			s2.copy (s1)
-			assert_equal ("value1", "gobo", s2)
-			assert ("not_same_area1", s2.area /= s1.area)
+			assert_equal ("value", "gobo", s2)
+			assert ("not_same_area", s2.area /= s1.area)
+		end
+
+	test_copy_2
+			-- Test feature 'copy'.
+		local
+			s1, s2: STRING
+		do
+			s1 := "gobo"
 			create s2.make (2)
 			s2.copy (s1)
-			assert_equal ("value2", "gobo", s2)
-			assert ("not_same_area2", s2.area /= s1.area)
-				-- Copy specials of the same size.
+			assert_equal ("value", "gobo", s2)
+			assert ("not_same_area", s2.area /= s1.area)
+		end
+
+	test_copy_3
+			-- Test feature 'copy'.
+			-- Copy SPECIALs of the same size.
+		local
+			sp1, sp2: SPECIAL [INTEGER]
+		do
 			create sp1.make_filled (0, 2)
 			sp1.put (2, 0)
 			sp1.put (5, 1)
 			create sp2.make_filled (0, 2)
 			sp2.copy (sp1)
-			assert_integers_equal ("sp_count4", 2, sp2.count)
-			assert_integers_equal ("sp_item0_4", 2, sp2.item (0))
-			assert_integers_equal ("sp_item1_4", 5, sp2.item (1))
+			assert_integers_equal ("sp_count", 2, sp2.count)
+			assert_integers_equal ("sp_item0", 2, sp2.item (0))
+			assert_integers_equal ("sp_item1", 5, sp2.item (1))
+		end
+
+	test_copy_4
+			-- Test feature 'copy'.
+			-- Copy object with basic expanded attribute.
+		local
+			aa1, aa2: AA
+		do
 			create aa1
 			aa1.set_foo (5)
 			create aa2
@@ -451,46 +509,113 @@ feature -- Test
 			assert_integers_equal ("value7", 5, aa2.foo)
 		end
 
-	test_copy___fail_ise
+	test_copy_5
+			-- Test feature 'copy'.
+			-- Copy object with expanded attribute whose
+			-- 'copy' routine has been redefined. This redefined
+			-- version of 'copy' is not called, 'standard_copy'
+			-- is used instead.
+			-- Does not work with ISE Eiffel.
+		local
+			xx1, xx2: XX
+		do
+			if not eiffel_compiler.is_ise then
+				create xx1
+				xx1.set_z_attr (5)
+				assert_integers_equal ("xx1_value", 5, xx1.z.attr)
+				create xx2
+				xx2.set_z_attr (10)
+				assert_integers_equal ("xx2_copy_count_0", 0, xx2.z.copy_count)
+				xx2.copy (xx1)
+				assert_integers_equal ("xx2_value", 5, xx2.z.attr)
+				assert_integers_equal ("xx2_copy_count_1", 1, xx2.z.copy_count)
+				assert_integers_equal ("xx1_copy_count_0", 0, xx1.z.copy_count)
+			end
+		end
+
+	test_copy_6
+			-- Test feature 'copy'.
+			-- Copy tuple with expanded item whose
+			-- 'copy' routine has been redefined.
+			-- Does not work with ISE Eiffel.
+		local
+			t1, t2: TUPLE [z: ZZ]
+			z: ZZ
+		do
+			if not eiffel_compiler.is_ise then
+				z.set_attr (5)
+				z.set_copy_count (25)
+				t1 := [z]
+				assert_integers_equal ("t1_value_1", 5, t1.z.attr)
+				z.set_attr (10)
+				z.set_copy_count (25)
+				t2 := [z]
+				assert_integers_equal ("t2_value_1", 10, t2.z.attr)
+				t2.copy (t1)
+				assert_integers_equal ("t2_value_2", 5, t2.z.attr)
+				assert_integers_equal ("t2_copy_count_2", 1, t2.z.copy_count)
+			end
+		end
+
+	test_copy_7
 			-- Test feature 'copy'.
 			-- Does not work with ISE Eiffel.
 		local
 			i1, i2: INTEGER
-			sp1, sp2: SPECIAL [INTEGER]
 		do
 			if not eiffel_compiler.is_ise then
 				i1 := 5
 				i2.copy (i1)
-				assert ("value3", i2 = 5)
-					-- Copy a special to a bigger one.
-				create sp1.make_filled (0, 2)
-				sp1.put (2, 0)
-				sp1.put (5, 1)
-				create sp2.make_filled (0, 5)
-				sp2.copy (sp1)
-				assert_integers_equal ("sp_count5", 2, sp2.count)
-				assert_integers_equal ("sp_item0_5", 2, sp2.item (0))
-				assert_integers_equal ("sp_item1_5", 5, sp2.item (1))
+				assert ("value", i2 = 5)
 			end
 		end
 
-	test_copy___fail_ise_ge
+	test_copy_8
 			-- Test feature 'copy'.
-			-- Does not work with ISE Eiffel and Gobo Eiffel.
 		local
 			sp1, sp2: SPECIAL [INTEGER]
+			b: BOOLEAN
 		do
-			if not eiffel_compiler.is_ise and not eiffel_compiler.is_ge then
-					-- Copy a special to a smaller one.
-				create sp1.make_filled (0, 2)
-				sp1.put (2, 0)
-				sp1.put (5, 1)
-				create sp2.make_filled (0, 1)
-				sp2.copy (sp1)
-				assert_integers_equal ("sp_count6", 2, sp2.count)
-				assert_integers_equal ("sp_item0_6", 2, sp2.item (0))
-				assert_integers_equal ("sp_item1_6", 5, sp2.item (1))
-			end
+				-- `sp2' has more items than `sp1'.
+				-- All items of `sp1' will be copied to `sp2'.
+				-- The other items in `sp2' will not be changed.
+				-- The 'count' and 'capacity' in `sp2' will not change.
+			create sp1.make_filled (0, 2)
+			sp1.put (2, 0)
+			sp1.put (5, 1)
+			create sp2.make_filled (0, 4)
+				-- The following call to 'copy' violates its
+				-- postcondition "is_equal".
+			b := {ISE_RUNTIME}.check_assert (False)
+			sp2.copy (sp1)
+			b := {ISE_RUNTIME}.check_assert (b)
+			assert_integers_equal ("sp2_count", 4, sp2.count)
+			assert_integers_equal ("sp2_item0", 2, sp2.item (0))
+			assert_integers_equal ("sp2_item1", 5, sp2.item (1))
+			assert_integers_equal ("sp2_item2", 0, sp2.item (2))
+			assert_integers_equal ("sp2_item3", 0, sp2.item (3))
+		end
+
+	test_copy_9
+			-- Test feature 'copy'.
+		local
+			sp1, sp2: SPECIAL [INTEGER]
+			b: BOOLEAN
+		do
+				-- `sp2' has less items than `sp1'.
+				-- All items of `sp2' will be replaced by the first items in `sp1'.
+				-- The 'count' and 'capacity' in `sp2' will not change.
+			create sp1.make_filled (0, 2)
+			sp1.put (2, 0)
+			sp1.put (5, 1)
+			create sp2.make_filled (0, 1)
+				-- The following call to 'copy' violates its
+				-- postcondition "is_equal".
+			b := {ISE_RUNTIME}.check_assert (False)
+			sp2.copy (sp1)
+			b := {ISE_RUNTIME}.check_assert (b)
+			assert_integers_equal ("sp2_count", 1, sp2.count)
+			assert_integers_equal ("sp2_item0", 2, sp2.item (0))
 		end
 
 	test_standard_twin
@@ -530,78 +655,167 @@ feature -- Test
 			assert ("cloned4", aa2 /= aa1)
 		end
 
-	test_standard_copy
+	test_standard_copy_1
 			-- Test feature 'standard_copy'.
 		local
 			s1, s2: STRING
-			sp1, sp2: SPECIAL [INTEGER]
-			aa1, aa2: AA
 		do
 			s1 := "gobo"
 			create s2.make (10)
 			s2.standard_copy (s1)
-			assert_equal ("value1", "gobo", s2)
-			assert ("same_area1", s2.area = s1.area)
+			assert_equal ("value", "gobo", s2)
+			assert ("same_area", s2.area = s1.area)
+		end
+
+	test_standard_copy_2
+			-- Test feature 'standard_copy'.
+		local
+			s1, s2: STRING
+		do
+			s1 := "gobo"
 			create s2.make (2)
 			s2.standard_copy (s1)
-			assert_equal ("value2", "gobo", s2)
-			assert ("same_area2", s2.area = s1.area)
-				-- Copy specials of the same size.
+			assert_equal ("value", "gobo", s2)
+			assert ("same_area", s2.area = s1.area)
+		end
+
+	test_standard_copy_3
+			-- Test feature 'standard_copy'.
+			-- Copy SPECIALs of the same size.
+		local
+			sp1, sp2: SPECIAL [INTEGER]
+		do
 			create sp1.make_filled (0, 2)
 			sp1.put (2, 0)
 			sp1.put (5, 1)
 			create sp2.make_filled (0, 2)
 			sp2.standard_copy (sp1)
-			assert_integers_equal ("sp_count4", 2, sp2.count)
-			assert_integers_equal ("sp_item0_4", 2, sp2.item (0))
-			assert_integers_equal ("sp_item1_4", 5, sp2.item (1))
+			assert_integers_equal ("sp_count", 2, sp2.count)
+			assert_integers_equal ("sp_item0", 2, sp2.item (0))
+			assert_integers_equal ("sp_item1", 5, sp2.item (1))
+		end
+
+	test_standard_copy_4
+			-- Test feature 'standard_copy'.
+			-- Copy object with basic expanded attribute.
+		local
+			aa1, aa2: AA
+		do
 			create aa1
 			aa1.set_foo (5)
 			create aa2
 			aa2.standard_copy (aa1)
-			assert_integers_equal ("value7", 5, aa2.foo)
+			assert_integers_equal ("value", 5, aa2.foo)
 		end
 
-	test_standard_copy___fail_ise
+	test_standard_copy_5
+			-- Test feature 'standard_copy'.
+			-- Copy object with expanded attribute whose
+			-- 'copy' routine has been redefined.
+			-- Does not work with ISE Eiffel.
+		local
+			xx1, xx2: XX
+		do
+			if not eiffel_compiler.is_ise then
+				create xx1
+				xx1.set_z_attr (5)
+				assert_integers_equal ("xx1_value_1", 5, xx1.z.attr)
+				assert_integers_equal ("xx1_copy_count_1", 0, xx1.z.copy_count)
+				create xx2
+				xx2.set_z_attr (10)
+				assert_integers_equal ("xx2_value_1", 10, xx2.z.attr)
+				assert_integers_equal ("xx2_copy_count_1", 0, xx2.z.copy_count)
+				xx2.standard_copy (xx1)
+				assert_integers_equal ("xx2_value_2", 5, xx2.z.attr)
+				assert_integers_equal ("xx2_copy_count_2", 1, xx2.z.copy_count)
+				assert_integers_equal ("xx1_value_2", 5, xx1.z.attr)
+				assert_integers_equal ("xx1_copy_count_2", 0, xx1.z.copy_count)
+			end
+		end
+
+	test_standard_copy_6
+			-- Test feature 'standard_copy'.
+			-- Copy tuple with expanded item whose
+			-- 'copy' routine has been redefined.
+			-- Does not work with ISE Eiffel.
+		local
+			t1, t2: TUPLE [z: ZZ]
+			z: ZZ
+		do
+			if not eiffel_compiler.is_ise then
+				z.set_attr (5)
+				z.set_copy_count (25)
+				t1 := [z]
+				assert_integers_equal ("t1_value_1", 5, t1.z.attr)
+				z.set_attr (10)
+				z.set_copy_count (25)
+				t2 := [z]
+				assert_integers_equal ("t2_value_1", 10, t2.z.attr)
+				t2.standard_copy (t1)
+				assert_integers_equal ("t2_value_2", 5, t2.z.attr)
+				assert_integers_equal ("t2_copy_count_2", 1, t2.z.copy_count)
+			end
+		end
+
+	test_standard_copy_7
 			-- Test feature 'standard_copy'.
 			-- Does not work with ISE Eiffel.
 		local
 			i1, i2: INTEGER
-			sp1, sp2: SPECIAL [INTEGER]
 		do
 			if not eiffel_compiler.is_ise then
 				i1 := 5
-				i2.copy (i1)
-				assert ("value3", i2 = 5)
-					-- Copy a special to a bigger one.
-				create sp1.make_filled (0, 2)
-				sp1.put (2, 0)
-				sp1.put (5, 1)
-				create sp2.make_filled (0, 5)
-				sp2.standard_copy (sp1)
-				assert_integers_equal ("sp_count5", 2, sp2.count)
-				assert_integers_equal ("sp_item0_5", 2, sp2.item (0))
-				assert_integers_equal ("sp_item1_5", 5, sp2.item (1))
+				i2.standard_copy (i1)
+				assert ("value", i2 = 5)
 			end
 		end
 
-	test_standard_copy___fail_ise_ge
+	test_standard_copy_8
 			-- Test feature 'standard_copy'.
-			-- Does not work with ISE Eiffel and Gobo Eiffel.
 		local
 			sp1, sp2: SPECIAL [INTEGER]
+			b: BOOLEAN
 		do
-			if not eiffel_compiler.is_ise and not eiffel_compiler.is_ge then
-					-- Copy a special to a smaller one.
-				create sp1.make_filled (0, 2)
-				sp1.put (2, 0)
-				sp1.put (5, 1)
-				create sp2.make_filled (0, 1)
-				sp2.standard_copy (sp1)
-				assert_integers_equal ("sp_count6", 2, sp2.count)
-				assert_integers_equal ("sp_item0_6", 2, sp2.item (0))
-				assert_integers_equal ("sp_item1_6", 5, sp2.item (1))
-			end
+				-- `sp2' has more items than `sp1'.
+				-- All items of `sp1' will be copied to `sp2'.
+				-- The other items in `sp2' will not be changed.
+				-- The 'count' and 'capacity' in `sp2' will not change.
+			create sp1.make_filled (0, 2)
+			sp1.put (2, 0)
+			sp1.put (5, 1)
+			create sp2.make_filled (0, 4)
+				-- The following call to 'copy' violates its
+				-- postcondition "is_equal".
+			b := {ISE_RUNTIME}.check_assert (False)
+			sp2.standard_copy (sp1)
+			b := {ISE_RUNTIME}.check_assert (b)
+			assert_integers_equal ("sp2_count", 4, sp2.count)
+			assert_integers_equal ("sp2_item0", 2, sp2.item (0))
+			assert_integers_equal ("sp2_item1", 5, sp2.item (1))
+			assert_integers_equal ("sp2_item2", 0, sp2.item (2))
+			assert_integers_equal ("sp2_item3", 0, sp2.item (3))
+		end
+
+	test_standard_copy_9
+			-- Test feature 'standard_copy'.
+		local
+			sp1, sp2: SPECIAL [INTEGER]
+			b: BOOLEAN
+		do
+				-- `sp2' has less items than `sp1'.
+				-- All items of `sp2' will be replaced by the first items in `sp1'.
+				-- The 'count' and 'capacity' in `sp2' will not change.
+			create sp1.make_filled (0, 2)
+			sp1.put (2, 0)
+			sp1.put (5, 1)
+			create sp2.make_filled (0, 1)
+				-- The following call to 'copy' violates its
+				-- postcondition "is_equal".
+			b := {ISE_RUNTIME}.check_assert (False)
+			sp2.standard_copy (sp1)
+			b := {ISE_RUNTIME}.check_assert (b)
+			assert_integers_equal ("sp2_count", 1, sp2.count)
+			assert_integers_equal ("sp2_item0", 2, sp2.item (0))
 		end
 
 	test_out

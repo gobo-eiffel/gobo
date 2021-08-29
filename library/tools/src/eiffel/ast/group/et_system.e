@@ -5,7 +5,7 @@ note
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #22 $"
@@ -116,6 +116,9 @@ feature -- Feature seeds
 	copy_seed: INTEGER
 			-- Seed of feature 'copy' in class "ANY"
 
+	twin_seed: INTEGER
+			-- Seed of feature 'twin' in class "ANY"
+
 	is_equal_seed: INTEGER
 			-- Seed of feature 'is_equal' in class "ANY"
 
@@ -140,6 +143,9 @@ feature -- Feature seeds
 	iteration_cursor_forth_seed: INTEGER
 			-- Seed of feature 'forth' in class "ITERATION_CURSOR"
 
+	special_item_seed: INTEGER
+			-- Seed of feature 'item' in class "SPECIAL"
+
 feature -- Feature seeds setting
 
 	set_default_create_seed (a_seed: INTEGER)
@@ -160,6 +166,16 @@ feature -- Feature seeds setting
 			copy_seed := a_seed
 		ensure
 			copy_seed_set: copy_seed = a_seed
+		end
+
+	set_twin_seed (a_seed: INTEGER)
+			-- Set `twin_seed' to `a_seed'.
+		require
+			a_seed_not_negative: a_seed >= 0
+		do
+			twin_seed := a_seed
+		ensure
+			twin_seed_set: twin_seed = a_seed
 		end
 
 	set_is_equal_seed (a_seed: INTEGER)
@@ -240,6 +256,16 @@ feature -- Feature seeds setting
 			iteration_cursor_forth_seed := a_seed
 		ensure
 			iteration_cursor_forth_seed_set: iteration_cursor_forth_seed = a_seed
+		end
+
+	set_special_item_seed (a_seed: INTEGER)
+			-- Set `special_item_seed' to `a_seed'.
+		require
+			a_seed_not_negative: a_seed >= 0
+		do
+			special_item_seed := a_seed
+		ensure
+			special_item_seed_set: special_item_seed = a_seed
 		end
 
 feature -- Class registration

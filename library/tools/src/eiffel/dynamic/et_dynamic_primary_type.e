@@ -40,9 +40,6 @@ feature {NONE} -- Initialization
 			queries := empty_features
 			procedures := empty_features
 			create conforming_ancestors.make (a_class.conforming_ancestors.count)
-			if is_expanded then
-				set_alive
-			end
 		ensure
 			base_type_set: base_type = a_type
 			base_class_set: base_class = a_class
@@ -57,6 +54,7 @@ feature -- Status report
 
 	is_embedded: BOOLEAN
 			-- Are objects of this type embedded within the enclosing object?
+			-- Embedded objects have no type-ids nor flags.
 			--
 			-- Note that in the future, some attributes whose types are declared of expanded type
 			-- (such as generic expanded types) may not be embedded with the enclosing object
@@ -350,6 +348,65 @@ feature -- Features
 					end
 				end
 				has_reference_attributes := False
+			end
+		end
+
+	has_redefined_copy_routine: BOOLEAN
+			-- Is the version of routine 'copy' in current type different
+			-- from the one in class 'ANY'?
+
+	has_nested_custom_standard_copy_routine: BOOLEAN
+			-- Does current type contains fields, or recursively does it have
+			-- embedded expanded attributes which contain fields, which require
+			-- special treatment in the implementation of routine 'standard_copy'?
+		local
+			i, nb: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if has_once_per_object_routines then
+				Result := True
+			elseif is_basic then
+				Result := False
+			else
+					-- We should not have cyclic recursive embedded expanded objects.
+					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
+					-- or by another proper handling if ECMA relaxed this rule
+					-- (through the introduction of attached types). But in case
+					-- such a cyclic recursion has slipped through, we temporarily
+					-- set `has_once_per_object_routines' to True to break that cycle.
+				has_once_per_object_routines := True
+				nb := attribute_count
+				from i := 1 until i > nb loop
+					if attached queries.item (i).result_type_set as l_result_type_set then
+						l_type := l_result_type_set.static_type.primary_type
+						if l_type.is_embedded then
+							if l_type.has_redefined_copy_routine then
+								Result := True
+								i := nb + 1
+							elseif l_type.has_nested_custom_standard_copy_routine then
+								Result := True
+								i := nb + 1
+							else
+								i := i + 1
+							end
+						elseif l_type.is_expanded then
+								-- Non-embedded expanded attribute (e.g. attribute with generic expanded type
+								-- which can be polyphormic with 'EXP [INTEGER]' conforming to 'EXP [ANY]').
+							Result := True
+							i := nb + 1
+						elseif l_result_type_set.has_expanded then
+								-- Reference attribute which may be attached to an object with copy semantics.
+							Result := True
+							i := nb + 1
+						else
+							i := i + 1
+						end
+					else
+							-- Should never happen: queries have a result type set.
+						i := i + 1
+					end
+				end
+				has_once_per_object_routines := False
 			end
 		end
 
@@ -688,6 +745,9 @@ feature {NONE} -- Features
 			procedures.force_last (a_procedure)
 			if not has_once_per_object_routines then
 				has_once_per_object_routines := a_procedure.is_once_per_object
+			end
+			if a_procedure.is_copy_routine then
+				has_redefined_copy_routine := not a_procedure.is_builtin_any_copy
 			end
 		end
 

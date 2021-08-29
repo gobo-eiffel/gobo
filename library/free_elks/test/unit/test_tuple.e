@@ -374,5 +374,29 @@ feature -- Test
 				assert_same ("s2", s2, t3.s2)
 			end
 		end
-		
+
+	test_standard_copy_1
+			-- Test feature 'standard_copy'.
+			-- Copy tuple with expanded item whose
+			-- 'copy' routine has been redefined.
+			-- Does not work with ISE Eiffel.
+		local
+			t1, t2: TUPLE [z: ZZ]
+			z: ZZ
+		do
+			if not eiffel_compiler.is_ise then
+				z.set_attr (5)
+				z.set_copy_count (25)
+				t1 := [z]
+				assert_integers_equal ("t1_value_1", 5, t1.z.attr)
+				z.set_attr (10)
+				z.set_copy_count (25)
+				t2 := [z]
+				assert_integers_equal ("t2_value_1", 10, t2.z.attr)
+				t2.standard_copy (t1)
+				assert_integers_equal ("t2_value_2", 5, t2.z.attr)
+				assert_integers_equal ("t2_copy_count_2", 1, t2.z.copy_count)
+			end
+		end
+
 end

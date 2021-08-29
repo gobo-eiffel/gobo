@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -779,6 +779,9 @@ feature {NONE} -- Types
 			from i := a_start until i > a_end loop
 				l_type := dynamic_types.item (i)
 				l_base_class := l_type.base_class
+				if l_type.is_expanded then
+					dynamic_type_set_builder.mark_type_alive (l_type)
+				end
 				if l_base_class.is_special_class then
 					initialize_special_type (l_type)
 				elseif l_base_class.is_array_class then
@@ -804,6 +807,8 @@ feature {NONE} -- Types
 		require
 			a_type_not_void: a_type /= Void
 			is_special_type: a_type.base_class.is_special_class
+		local
+			l_feature: ET_DYNAMIC_FEATURE
 		do
 				-- Make attributes 'count' and 'capacity' alive at the first two
 				-- positions in the attribute list of the "SPECIAL" type.
@@ -812,6 +817,9 @@ feature {NONE} -- Types
 			end
 			if attached special_capacity_feature as l_special_capacity_feature then
 				a_type.set_attribute_position (a_type.dynamic_query (l_special_capacity_feature, Current), 2)
+			end
+			if attached special_item_feature as l_special_item_feature then
+				l_feature := a_type.dynamic_query (l_special_item_feature, Current)
 			end
 		end
 
@@ -1350,6 +1358,7 @@ feature {NONE} -- Compilation
 			l_class: ET_CLASS
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_context: ET_NESTED_TYPE_CONTEXT
+			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
 		do
 			if not a_system_processor.stop_requested then
 				dynamic_types.wipe_out
@@ -1469,6 +1478,7 @@ feature {NONE} -- Compilation
 					-- Class "SPECIAL".
 				special_count_feature := Void
 				special_capacity_feature := Void
+				special_item_feature := Void
 				l_class := current_system.special_any_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
@@ -1509,6 +1519,22 @@ feature {NONE} -- Compilation
 							error_handler.report_gvkfe3a_error (l_class, l_special_capacity_feature, l_class.universe.integer_type)
 						else
 							special_capacity_feature := l_special_capacity_feature
+						end
+							-- Check feature 'item' of class SPECIAL.
+						l_formal_parameter := l_class.formal_parameter_type (1)
+						if not attached l_class.named_query (tokens.item_feature_name) as l_special_item_feature then
+							if attached l_class.named_procedure (tokens.item_feature_name) as l_procedure then
+								set_fatal_error
+								error_handler.report_gvkfe5a_error (l_class, l_procedure)
+							else
+								set_fatal_error
+								error_handler.report_gvkfe1a_error (l_class, tokens.item_feature_name)
+							end
+						elseif not l_special_item_feature.type.same_named_type (l_formal_parameter, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_special_item_feature, <<current_system.universe.integer_type.type>>, l_formal_parameter)
+						else
+							special_item_feature := l_special_item_feature
 						end
 					end
 				end
@@ -2380,6 +2406,9 @@ feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Static features
 
 	special_capacity_feature: detachable ET_QUERY
 			-- Expected attribute 'capacity' in class "SPECIAL"
+
+	special_item_feature: detachable ET_QUERY
+			-- Expected attribute 'item' in class "SPECIAL"
 
 	typed_pointer_to_pointer_feature: detachable ET_QUERY
 			-- Expected attribute 'to_pointer' in class "TYPED_POINTER"

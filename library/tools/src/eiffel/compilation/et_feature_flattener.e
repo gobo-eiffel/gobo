@@ -5,7 +5,7 @@ note
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1872,6 +1872,22 @@ feature {NONE} -- Kernel feature validity
 					error_handler.report_gvkfe1a_error (l_class, tokens.copy_feature_name)
 					current_system.set_copy_seed (0)
 				end
+					-- ANY.twin.
+				named_features.search (tokens.twin_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_query then
+						current_system.set_twin_seed (l_feature.first_seed)
+					else
+						set_fatal_error (l_class)
+						error_handler.report_gvkfe5a_error (l_class, l_feature)
+						current_system.set_twin_seed (0)
+					end
+				else
+					set_fatal_error (l_class)
+					error_handler.report_gvkfe1a_error (l_class, tokens.copy_feature_name)
+					current_system.set_twin_seed (0)
+				end
 					-- ANY.is_equal.
 				named_features.search (tokens.is_equal_feature_name)
 				if named_features.found then
@@ -1976,6 +1992,19 @@ feature {NONE} -- Kernel feature validity
 					end
 				else
 					current_system.set_iteration_cursor_forth_seed (0)
+				end
+			elseif l_class.is_special_class then
+					-- SPECIAL.item.
+				named_features.search (tokens.item_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_query then
+						current_system.set_special_item_seed (l_feature.first_seed)
+					else
+						current_system.set_special_item_seed (0)
+					end
+				else
+					current_system.set_special_item_seed (0)
 				end
 			end
 		end

@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -124,8 +124,16 @@ feature -- Generation
 		do
 			if not a_type.is_alive then
 				a_type.set_alive
-					-- Make sure that feature 'dispose' is alive for reference types.
-				if not a_type.is_expanded then
+				if a_type.is_expanded then
+						-- Make sure that feature 'twin' is alive for expanded types.
+					l_seed := current_system.twin_seed
+					if l_seed > 0 then
+						if attached a_type.seeded_dynamic_query (l_seed, current_dynamic_system) as l_feature then
+							l_feature.set_regular (True)
+						end
+					end
+				else
+						-- Make sure that feature 'dispose' is alive for reference types.
 					l_seed := current_system.dispose_seed
 					if l_seed > 0 then
 						if attached a_type.seeded_dynamic_procedure (l_seed, current_dynamic_system) as l_feature then
