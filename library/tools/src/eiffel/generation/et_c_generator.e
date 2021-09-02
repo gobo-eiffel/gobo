@@ -12695,6 +12695,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			l_printed: BOOLEAN
 			l_manifest_tuple_operand: detachable ET_MANIFEST_TUPLE
 			l_target_operand: ET_EXPRESSION
+			l_old_call_target: detachable ET_EXPRESSION
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -12705,10 +12706,26 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			l_call_type_set := dynamic_type_set (a_call)
 			l_call_type := l_call_type_set.static_type.primary_type
 			l_target_static_type := l_target_type_set.static_type.primary_type
-			if in_operand and then l_name.is_tuple_label and then l_target.is_current then
+			if l_name.is_tuple_label and then l_target.is_current then
 					-- Note that it's not syntactically possible to have "Current.tuple_label".
 					-- This is a special case to implement 'standard_copy'.
-				operand_stack.force (a_call)
+				if in_operand then
+					operand_stack.force (a_call)
+				else
+					if call_operands.is_empty then
+						call_operands.force_last (tokens.current_keyword)
+					else
+						l_old_call_target := call_operands.first
+						call_operands.replace (tokens.current_keyword, 1)
+					end
+					print_adapted_named_query_call (l_name, current_type, l_call_type, False)
+					if l_old_call_target /= Void then
+						call_operands.replace (l_old_call_target, 1)
+						l_old_call_target := Void
+					else
+						call_operands.wipe_out
+					end
+				end
 			elseif
 				l_target_static_type = current_dynamic_system.boolean_type and in_operand and then
 				(l_name.is_infix_and_then or l_name.is_infix_or_else or l_name.is_infix_implies or
@@ -12978,7 +12995,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					current_file.put_new_line
 				end
 			end
-			call_operands.wipe_out
+			if not (l_name.is_tuple_label and then l_target.is_current) then
+				call_operands.wipe_out
+			end
 			if l_manifest_tuple_operand /= Void then
 				mark_expressions_unfrozen (l_manifest_tuple_operand)
 				l_manifest_tuple_operand.wipe_out
@@ -13727,7 +13746,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 						not attached l_dynamic_feature.result_type_set as l_result_type_set or else
 						l_result_type_set.static_type.is_self_initializing)
 					then
-							-- This is an attribute for which there is not self-initialization code
+							-- This is an attribute for which there is no self-initialization code
 							-- to be executed.
 						if in_operand then
 							operand_stack.force (a_call)
@@ -13735,7 +13754,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 								-- This is a built-in attribute (such as feature 'item' in 'INTEGER_REF').
 								-- The call might be the operand (target or argument) of another call.
 								-- Therefore we need to take some care when dealing with `call_operands'.
-								-- We need to keek track of the operands of this possible other call
+								-- We need to keep track of the operands of this possible other call
 								-- while processing the current call to the built-in attribute, for
 								-- which only the target ('Current') needs to be on `call_operands'.
 							if call_operands.is_empty then
