@@ -31543,7 +31543,6 @@ feature {NONE} -- Memory allocation
 			current_file.put_character (',')
 			current_file.put_character ('0')
 			current_file.put_character (',')
-			current_file.put_character ('a')
 			current_file.put_string (c_sizeof)
 			current_file.put_character ('(')
 			print_once_per_object_data_type_name (a_type, current_file)
@@ -32753,7 +32752,7 @@ feature {NONE} -- Once feature generation
 		do
 			if a_feature.is_once_per_object then
 				print_once_per_object_mutex (a_feature)
-			elseif a_feature.is_once_per_object then
+			elseif a_feature.is_once_per_process then
 				print_once_per_process_mutex (a_feature, a_once_kind, a_once_index)
 			else
 					-- Internal error: this once key is not supported.
@@ -32776,7 +32775,7 @@ feature {NONE} -- Once feature generation
 		do
 			current_file.put_string (c_ge_mutex_try_lock)
 			current_file.put_character ('(')
-			print_once_per_process_mutex (a_feature, a_once_kind, a_once_index)
+			print_once_mutex (a_feature, a_once_kind, a_once_index)
 			current_file.put_character (')')
 		end
 
@@ -32795,7 +32794,7 @@ feature {NONE} -- Once feature generation
 			print_indentation
 			current_file.put_string (c_ge_mutex_lock)
 			current_file.put_character ('(')
-			print_once_per_process_mutex (a_feature, a_once_kind, a_once_index)
+			print_once_mutex (a_feature, a_once_kind, a_once_index)
 			current_file.put_character (')')
 			current_file.put_character (';')
 			current_file.put_new_line
@@ -32816,7 +32815,7 @@ feature {NONE} -- Once feature generation
 			print_indentation
 			current_file.put_string (c_ge_mutex_unlock)
 			current_file.put_character ('(')
-			print_once_per_process_mutex (a_feature, a_once_kind, a_once_index)
+			print_once_mutex (a_feature, a_once_kind, a_once_index)
 			current_file.put_character (')')
 			current_file.put_character (';')
 			current_file.put_new_line
