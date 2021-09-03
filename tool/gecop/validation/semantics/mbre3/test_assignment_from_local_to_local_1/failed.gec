@@ -1,0 +1,15 @@
+## copy expected
+## copy expected
+##
+d.value = 2
+c1.value = 2
+c2.value = 2
+d.value = 3
+c1.value = 2
+c2.value = 2
+d.value = 3
+c1.value = 4
+c2.value = 4
+d.value = 3
+c1.value = 5
+c2.value = 5

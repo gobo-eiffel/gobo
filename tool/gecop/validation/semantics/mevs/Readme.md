@@ -1,7 +1,7 @@
 # Semantics MEVS
 
-These [tests](.) are exercising the semantics rule below.</br>
-Click on the `[tests]` label following the case numbers to below to see tests specific to these cases.
+These [tests](.) are exercising the semantics rule below.  
+Click on the `[tests]` label following the case numbers below to see tests specific to these cases.
 
 ## MEVS: Variable Semantics
 
@@ -20,4 +20,4 @@ Same as above.
 
 ## Notes
 
-* It would be less confusing to have case 3 before case 2. If the user provides self-initializing code for an attribute, it's because he expects it to be executed in case 1 does not hold. Furthermore, it would allow to have the same behavior if the code is compiled in void-safe mode or not.
+* It would be less confusing to have case 3 before case 2. If the user provides self-initializing code for an attribute, it's because he expects it to be executed if case 1 does not hold. Furthermore, it would allow to have the same behavior if the code is compiled in void-safe mode or not.

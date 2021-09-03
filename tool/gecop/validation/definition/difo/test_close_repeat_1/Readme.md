@@ -8,4 +8,4 @@ In this test, the sequence of characters `⟲⟲` is used as *free operator*. It
 
 ### Notes
 
-* ISE Eiffel (as of 19.12.10.3842 and after) erroneously reports a syntax error.
+* ISE Eiffel (as of 19.12.10.3842 and after)  a syntax error.

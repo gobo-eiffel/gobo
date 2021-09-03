@@ -4,14 +4,12 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     238 tests
-    # FAILED:     70 tests
+    # Passed:     265 tests
+    # FAILED:     88 tests
     # Aborted:    0 test
-    # Total:      308 tests
+    # Total:      353 tests
 
 Test Results:</br>
-FAIL:  \[[definition/difo/test\_close\_repeat\_1](definition/difo/test\_close\_repeat\_1)\] test\_failed</br>
-FAIL:  \[[definition/difo/test\_open\_repeat\_1](definition/difo/test\_open\_repeat\_1)\] test\_failed</br>
 FAIL:  \[[definition/difo/test\_tilde\_1](definition/difo/test\_tilde\_1)\] test\_failed</br>
 FAIL:  \[[definition/difo1/test\_bar\_2](definition/difo1/test\_bar\_2)\] test\_failed</br>
 FAIL:  \[[definition/difo1/test\_close\_repeat\_2](definition/difo1/test\_close\_repeat\_2)\] test\_failed</br>
@@ -23,6 +21,26 @@ FAIL:  \[[definition/dlcf3/test\_export\_all\_redeclared\_1](definition/dlcf3/te
 FAIL:  \[[definition/dlcf3/test\_export\_all\_repeated\_1](definition/dlcf3/test\_export\_all\_repeated\_1)\] test\_failed</br>
 FAIL:  \[[definition/dlcf3/test\_export\_f\_redeclared\_1](definition/dlcf3/test\_export\_f\_redeclared\_1)\] test\_failed</br>
 FAIL:  \[[definition/dlcf3/test\_export\_f\_repeated\_1](definition/dlcf3/test\_export\_f\_repeated\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_attribute\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_attribute\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_call\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_call\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_once\_call\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_once\_call\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_qualified\_attribute\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_qualified\_attribute\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_special\_item\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_special\_item\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_tuple\_item\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_tuple\_item\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_1](semantics/mbre3/test\_copy\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_2](semantics/mbre3/test\_copy\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_special\_1](semantics/mbre3/test\_copy\_special\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_special\_2](semantics/mbre3/test\_copy\_special\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_tuple\_1](semantics/mbre3/test\_copy\_tuple\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_tuple\_2](semantics/mbre3/test\_copy\_tuple\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_1](semantics/mbre3/test\_twin\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_special\_1](semantics/mbre3/test\_twin\_special\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_special\_2](semantics/mbre3/test\_twin\_special\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_tuple\_1](semantics/mbre3/test\_twin\_tuple\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_tuple\_2](semantics/mbre3/test\_twin\_tuple\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_4](semantics/mugc2/test\_qualified\_attribute\_target\_4)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_special\_item\_target\_1](semantics/mugc2/test\_special\_item\_target\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_special\_item\_target\_2](semantics/mugc2/test\_special\_item\_target\_2)\] test\_failed</br>
 FAIL:  \[[semantics/muon1/test\_once\_per\_object\_3](semantics/muon1/test\_once\_per\_object\_3)\] test\_failed</br>
 FAIL:  \[[semantics/muon1/test\_once\_per\_object\_4](semantics/muon1/test\_once\_per\_object\_4)\] test\_failed</br>
 FAIL:  \[[semantics/muon1/test\_once\_per\_object\_5](semantics/muon1/test\_once\_per\_object\_5)\] test\_failed</br>

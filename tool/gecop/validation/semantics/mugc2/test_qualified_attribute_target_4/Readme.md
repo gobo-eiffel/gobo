@@ -1,0 +1,25 @@
+# Semantics MUGC-2
+
+This [test](.) is exercising the case [2](../Readme.md) of the semantics rule [MUGC](../../mugc/Readme.md).
+
+### Description
+
+This test is exercising the fact that there is no *Reattachment Semantics* rule involved for the target of a call. So even when the target is an attribute whose type is expanded (object with copy semantics), this object is not cloned and the feature is called on this object.
+
+In this test, we have a call `b.d.f` where `b` can be of type `BB` or `CC` and `d` is a function of reference type in `BB` and an attribute of expanded type in `CC`. When `b` is of type `BB`, the call to `f` sets the value of `bar` in the object returned by the function, which is a new object each time. But when `b` is of type `CC`, the call to `f` sets the value of `bar` in the object attached to this attribute, not in a clone. This test satisfies `MUGC-2`.
+
+Note that this is different from:
+
+```
+d := b.d
+d.f (i)
+```
+
+because the *Reattachment Semantics* rule applies in the assignment `d := b.d`, and therefore the target of the call to `f` is a clone of the attribute `d` in `b`, and not the object itself.
+
+### Notes
+
+* See also `MUVA` (*Value of a call expression*): The value of a *Call* `c` used as an expression is, at any run-time moment, the result of executing `c`.
+* See also `MURE-3` (*Call result*): If `df` is an attribute: the corresponding field in `O`.
+* ISE Eiffel (as of 20.11.10.5058 and after) erroneously reports a validity error `VDRD-8` because a feature of reference type is redefined to a feature of expanded type. This rule is not part of the ECMA Eiffel standard.
+* Gobo Eiffel (as of 20.05.31.5 and after) does call `f` on the attribute object. This violates `MUGC-2`.

@@ -1,0 +1,9 @@
+## copy expected
+DD copied
+##
+b1.value = 2
+b2.value = 2
+b1.value = 3
+b2.value = 2
+b1.value = 3
+b2.value = 4

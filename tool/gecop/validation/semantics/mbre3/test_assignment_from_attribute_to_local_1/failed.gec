@@ -1,0 +1,15 @@
+## copy expected
+## copy expected
+##
+d.value = 2
+attr.value = 2
+c.value = 2
+d.value = 3
+attr.value = 2
+c.value = 2
+d.value = 3
+attr.value = 4
+c.value = 4
+d.value = 3
+attr.value = 5
+c.value = 5

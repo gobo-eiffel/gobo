@@ -1,0 +1,16 @@
+## copy expected
+DD copied
+## standard copy expected
+##
+d.value = 2
+t1.v.value = 2
+t2.v.value = 2
+d.value = 3
+t1.v.value = 2
+t2.v.value = 2
+d.value = 3
+t1.v.value = 4
+t2.v.value = 4
+d.value = 3
+t1.v.value = 5
+t2.v.value = 5

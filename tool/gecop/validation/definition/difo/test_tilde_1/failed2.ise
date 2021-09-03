@@ -1,0 +1,21 @@
+-------------------------------------------------------------------------------
+
+Error code: VFAV(1)
+
+Error: alias clause lists an operator for a feature such that
+  it is not a query or
+  its argument number is not 0 for unary operator or
+  its argument number is not 1 for binary operator or
+  class has other feature with the same alias name and argument number.
+What to do: ensure that feature is a query and has no arguments for unary
+  operator or has one argument for binary operator and class has no other
+  feature with the same operator name and the same number of arguments.
+
+Class: AA
+Feature name: f
+Line: 19
+  
+->  f alias "~~" (i: INTEGER): INTEGER
+      do
+
+-------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 # Semantics MUON
 
-These [tests](.) are exercising the semantics rule below.</br>
-Click on the `[tests]` label following the case numbers to below to see tests specific to these cases.
+These [tests](.) are exercising the semantics rule below.  
+Click on the `[tests]` label following the case numbers below to see tests specific to these cases.
 
 ## MUON: Once Routine Execution Semantics
 

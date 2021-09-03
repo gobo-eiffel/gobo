@@ -1,0 +1,9 @@
+## copy expected
+DD copied
+##
+attr.value = 2
+c.value = 2
+attr.value = 3
+c.value = 2
+attr.value = 3
+c.value = 4

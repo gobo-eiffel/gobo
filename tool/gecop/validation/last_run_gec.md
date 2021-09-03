@@ -4,15 +4,53 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     302 tests
-    # FAILED:     6 tests
+    # Passed:     309 tests
+    # FAILED:     44 tests
     # Aborted:    0 test
-    # Total:      308 tests
+    # Total:      353 tests
 
 Test Results:</br>
-FAIL:  \[[semantics/muon1/test\_once\_per\_object\_5](semantics/muon1/test\_once\_per\_object\_5)\] unknown\_test\_result</br>
-FAIL:  \[[semantics/muon1/test\_once\_per\_object\_6](semantics/muon1/test\_once\_per\_object\_6)\] unknown\_test\_result</br>
-FAIL:  \[[semantics/muon3/test\_once\_per\_object\_3](semantics/muon3/test\_once\_per\_object\_3)\] unknown\_test\_result</br>
-FAIL:  \[[semantics/muon3/test\_once\_per\_object\_4](semantics/muon3/test\_once\_per\_object\_4)\] unknown\_test\_result</br>
-FAIL:  \[[semantics/muon4/test\_once\_per\_object\_3](semantics/muon4/test\_once\_per\_object\_3)\] unknown\_test\_result</br>
-FAIL:  \[[semantics/muon4/test\_once\_per\_object\_4](semantics/muon4/test\_once\_per\_object\_4)\] unknown\_test\_result
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_attribute\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_attribute\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_attribute\_to\_local\_2](semantics/mbre3/test\_assignment\_from\_attribute\_to\_local\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_attribute\_to\_local\_3](semantics/mbre3/test\_assignment\_from\_attribute\_to\_local\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_call\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_call\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_call\_to\_local\_2](semantics/mbre3/test\_assignment\_from\_call\_to\_local\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_call\_to\_local\_3](semantics/mbre3/test\_assignment\_from\_call\_to\_local\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_local\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_local\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_local\_to\_local\_2](semantics/mbre3/test\_assignment\_from\_local\_to\_local\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_local\_to\_local\_3](semantics/mbre3/test\_assignment\_from\_local\_to\_local\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_once\_call\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_once\_call\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_once\_call\_to\_local\_2](semantics/mbre3/test\_assignment\_from\_once\_call\_to\_local\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_once\_call\_to\_local\_3](semantics/mbre3/test\_assignment\_from\_once\_call\_to\_local\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_qualified\_attribute\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_qualified\_attribute\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_qualified\_attribute\_to\_local\_2](semantics/mbre3/test\_assignment\_from\_qualified\_attribute\_to\_local\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_qualified\_attribute\_to\_local\_3](semantics/mbre3/test\_assignment\_from\_qualified\_attribute\_to\_local\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_special\_item\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_special\_item\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_special\_item\_to\_local\_2](semantics/mbre3/test\_assignment\_from\_special\_item\_to\_local\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_special\_item\_to\_local\_3](semantics/mbre3/test\_assignment\_from\_special\_item\_to\_local\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_tuple\_item\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_tuple\_item\_to\_local\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_tuple\_item\_to\_local\_2](semantics/mbre3/test\_assignment\_from\_tuple\_item\_to\_local\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_assignment\_from\_tuple\_item\_to\_local\_3](semantics/mbre3/test\_assignment\_from\_tuple\_item\_to\_local\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_call\_chain\_1](semantics/mbre3/test\_call\_chain\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_1](semantics/mbre3/test\_copy\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_special\_1](semantics/mbre3/test\_copy\_special\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_special\_2](semantics/mbre3/test\_copy\_special\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_tuple\_1](semantics/mbre3/test\_copy\_tuple\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_copy\_tuple\_2](semantics/mbre3/test\_copy\_tuple\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_1](semantics/mbre3/test\_twin\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_2](semantics/mbre3/test\_twin\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_special\_1](semantics/mbre3/test\_twin\_special\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_special\_2](semantics/mbre3/test\_twin\_special\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_tuple\_1](semantics/mbre3/test\_twin\_tuple\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_twin\_tuple\_2](semantics/mbre3/test\_twin\_tuple\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_1](semantics/mugc2/test\_qualified\_attribute\_target\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_2](semantics/mugc2/test\_qualified\_attribute\_target\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_3](semantics/mugc2/test\_qualified\_attribute\_target\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_4](semantics/mugc2/test\_qualified\_attribute\_target\_4)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_special\_item\_target\_1](semantics/mugc2/test\_special\_item\_target\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_special\_item\_target\_2](semantics/mugc2/test\_special\_item\_target\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_tuple\_label\_target\_1](semantics/mugc2/test\_tuple\_label\_target\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_tuple\_label\_target\_2](semantics/mugc2/test\_tuple\_label\_target\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_tuple\_label\_target\_3](semantics/mugc2/test\_tuple\_label\_target\_3)\] test\_failed</br>
+FAIL:  \[[semantics/muon1/test\_once\_per\_object\_5](semantics/muon1/test\_once\_per\_object\_5)\] test\_failed</br>
+FAIL:  \[[semantics/muon1/test\_once\_per\_object\_6](semantics/muon1/test\_once\_per\_object\_6)\] test\_failed
