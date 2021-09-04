@@ -1,1 +1,9 @@
-aa1.c(2147): error C2440: '=': cannot convert from 'T69' to 'EIF_ANY *'
+## copy expected
+## copy expected
+##
+c1.value = 2
+c2.value = 2
+c1.value = 3
+c2.value = 3
+c1.value = 4
+c2.value = 4

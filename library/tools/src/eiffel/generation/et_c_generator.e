@@ -7424,11 +7424,10 @@ feature {NONE} -- Instruction generation
 			l_target: ET_WRITABLE
 			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_static_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_seed: INTEGER
 			l_actuals: detachable ET_ACTUAL_ARGUMENT_LIST
 			l_dynamic_procedure: detachable ET_DYNAMIC_FEATURE
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 			l_once_index: INTEGER
 			l_once_kind: INTEGER
@@ -7436,14 +7435,15 @@ feature {NONE} -- Instruction generation
 			if line_generation_mode then
 				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
 			end
-				-- Look for the dynamic type of the creation type.
+				-- Look for the static and dynamic types of the creation.
 			l_target := an_instruction.target
+			l_dynamic_type_set := dynamic_type_set (l_target)
+			l_static_type := l_dynamic_type_set.static_type.primary_type
 			if attached an_instruction.type as l_type then
 				l_dynamic_type := current_dynamic_system.dynamic_primary_type (l_type, current_type.base_type)
 			else
-					-- Look for the dynamic type of the target.
-				l_dynamic_type_set := dynamic_type_set (l_target)
-				l_dynamic_type := l_dynamic_type_set.static_type.primary_type
+					-- Look for the type of the target.
+				l_dynamic_type := l_static_type
 			end
 			if attached an_instruction.creation_call as l_creation_call then
 				l_seed := l_creation_call.name.seed
@@ -7470,27 +7470,9 @@ feature {NONE} -- Instruction generation
 				fill_call_operands (nb)
 				print_indentation
 				print_writable (l_target)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				if not l_dynamic_procedure.is_generated then
-					l_dynamic_procedure.set_generated (True)
-					called_features.force_last (l_dynamic_procedure)
-				end
-				print_creation_procedure_name (l_dynamic_procedure, l_dynamic_type, current_file)
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				from i := 1 until i > nb loop
-					current_file.put_character (',')
-					current_file.put_character (' ')
-					l_actual_type_set := dynamic_type_set (call_operands.item (i))
-					l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_procedure)
-					print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-					i := i + 1
-				end
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_assign_to
+				print_adapted_creation_procedure_call (l_dynamic_procedure, l_dynamic_type, l_static_type)
+				print_semicolon_newline
 				call_operands.wipe_out
 			end
 			if current_agent = Void and then current_feature.is_once then
@@ -7504,7 +7486,7 @@ feature {NONE} -- Instruction generation
 					-- the Result itself) is kept in the 'GE_onces' C struct. So we
 					-- need to use the content of the boxed value in place of Result
 					-- in case its fields get modified. (See `print_result'.)
-				if l_target.is_result and then not (l_dynamic_type.is_expanded and then not l_dynamic_type.is_basic) then
+				if l_target.is_result and then not (l_static_type.is_expanded and then not l_static_type.is_basic) then
 					once_features.search (current_feature.static_feature.implementation_feature)
 					if once_features.found then
 						l_once_index := once_features.found_item
@@ -8575,6 +8557,54 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 		end
 
 feature {NONE} -- Procedure call generation
+
+	print_adapted_creation_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type, a_static_type: ET_DYNAMIC_PRIMARY_TYPE)
+			-- Print to `current_file' a call to creation procedure `a_feature' (static binding).
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_static_type' is the static type of the declared type of the target,
+			-- used to adapt the result of the creation if needed (see header comment of
+			-- `print_adapted_expression' for details).
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_creation: a_feature.is_creation
+			a_target_type_not_void: a_target_type /= Void
+			a_static_type_not_void: a_static_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_adapted_expression (agent print_creation_procedure_call (a_feature, a_target_type), a_target_type, a_static_type)
+		end
+
+	print_creation_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE)
+			-- Print to `current_file' a call to creation procedure `a_feature' (static binding).
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			i, nb: INTEGER
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if not a_feature.is_generated then
+				a_feature.set_generated (True)
+				called_features.force_last (a_feature)
+			end
+			print_creation_procedure_name (a_feature, a_target_type, current_file)
+			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			nb := call_operands.count
+			from i := 1 until i > nb loop
+				print_comma
+				l_actual_type_set := dynamic_type_set (call_operands.item (i))
+				l_formal_type_set := argument_type_set_in_feature (i, a_feature)
+				print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
+				i := i + 1
+			end
+			current_file.put_character (')')
+		end
 
 	print_named_procedure_call (a_name: ET_CALL_NAME; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_name' (static binding).
@@ -9817,44 +9847,52 @@ feature {NONE} -- Expression generation
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_static_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_seed: INTEGER
 			i, nb: INTEGER
 			l_temp: detachable ET_IDENTIFIER
 			l_temp_index: INTEGER
 			l_assignment_target: like assignment_target
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
 			l_target_type_set := dynamic_type_set (an_expression)
 			l_target_type := l_target_type_set.static_type.primary_type
-			if attached an_expression.name as l_name then
-				l_seed := l_name.seed
+			if in_operand and l_assignment_target /= Void then
+				l_static_type := dynamic_type_set (l_assignment_target).static_type.primary_type
+				operand_stack.force (l_assignment_target)
+				print_indentation
+				print_writable (l_assignment_target)
+				print_assign_to
+				current_file.put_character ('(')
+				in_operand := False
+				print_attachment_expression (an_expression, l_target_type_set, l_static_type)
+				in_operand := True
+				current_file.put_character (')')
+				print_semicolon_newline
 			else
-				l_seed := current_system.default_create_seed
-			end
-			if not attached l_target_type.seeded_dynamic_procedure (l_seed, current_dynamic_system) as l_procedure then
-					-- Internal error: there should be a procedure with `l_seed'.
-					-- It has been computed in ET_FEATURE_CHECKER or else an
-					-- error should have already been reported.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				if attached an_expression.arguments as l_actuals then
-					nb := l_actuals.count
-					from i := 1 until i > nb loop
-						print_operand (l_actuals.actual_argument (i))
-						i := i + 1
-					end
+				if attached an_expression.name as l_name then
+					l_seed := l_name.seed
+				else
+					l_seed := current_system.default_create_seed
 				end
-				fill_call_operands (nb)
-				if in_operand then
-					if l_assignment_target /= Void then
-						operand_stack.force (l_assignment_target)
-						print_indentation
-						print_writable (l_assignment_target)
-					else
+				if not attached l_target_type.seeded_dynamic_procedure (l_seed, current_dynamic_system) as l_procedure then
+						-- Internal error: there should be a procedure with `l_seed'.
+						-- It has been computed in ET_FEATURE_CHECKER or else an
+						-- error should have already been reported.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					if attached an_expression.arguments as l_actuals then
+						nb := l_actuals.count
+						from i := 1 until i > nb loop
+							print_operand (l_actuals.actual_argument (i))
+							i := i + 1
+						end
+					end
+					fill_call_operands (nb)
+					if in_operand then
+						l_static_type := l_target_type
 						l_temp := new_temp_variable (l_target_type)
 							-- We will set the index of `l_temp' later because
 							-- it could still be used in `call_operands'.
@@ -9862,38 +9900,20 @@ feature {NONE} -- Expression generation
 						operand_stack.force (l_temp)
 						print_indentation
 						print_temp_name (l_temp, current_file)
+						print_assign_to
+						current_file.put_character ('(')
+						print_adapted_creation_procedure_call (l_procedure, l_target_type, l_static_type)
+						current_file.put_character (')')
+						print_semicolon_newline
+						if l_temp_index /= 0 then
+								-- We had to wait until this stage to set the index of `l_temp'
+								-- because it could have still been used in `call_operands'.
+							l_temp.set_index (l_temp_index)
+						end
+					else
+						print_creation_procedure_call (l_procedure, l_target_type)
 					end
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-				end
-				if not l_procedure.is_generated then
-					l_procedure.set_generated (True)
-					called_features.force_last (l_procedure)
-				end
-				print_creation_procedure_name (l_procedure, l_target_type, current_file)
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				from i := 1 until i > nb loop
-					current_file.put_character (',')
-					current_file.put_character (' ')
-					l_actual_type_set := dynamic_type_set (call_operands.item (i))
-					l_formal_type_set := argument_type_set_in_feature (i, l_procedure)
-					print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-					i := i + 1
-				end
-				current_file.put_character (')')
-				if in_operand then
-					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
-				end
-				call_operands.wipe_out
-				if l_temp /= Void and then l_temp_index /= 0 then
-						-- We had to wait until this stage to set the index of `l_temp'
-						-- because it could have still been used in `call_operands'.
-					l_temp.set_index (l_temp_index)
+					call_operands.wipe_out
 				end
 			end
 		end
