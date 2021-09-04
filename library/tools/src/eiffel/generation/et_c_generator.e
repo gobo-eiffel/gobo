@@ -9858,9 +9858,22 @@ feature {NONE} -- Expression generation
 			assignment_target := Void
 			l_target_type_set := dynamic_type_set (an_expression)
 			l_target_type := l_target_type_set.static_type.primary_type
+			if call_operands.is_empty then
+					-- This routine can be called recursively when calling
+					-- `print_attachment_expression' or `print_adapted_expression'.
+					-- In that case, `call_operands' should have been filled
+					-- when calling this routine the first time.
+				if attached an_expression.arguments as l_actuals then
+					nb := l_actuals.count
+					from i := 1 until i > nb loop
+						print_operand (l_actuals.actual_argument (i))
+						i := i + 1
+					end
+				end
+				fill_call_operands (nb)
+			end
 			if in_operand and l_assignment_target /= Void then
 				l_static_type := dynamic_type_set (l_assignment_target).static_type.primary_type
-				operand_stack.force (l_assignment_target)
 				print_indentation
 				print_writable (l_assignment_target)
 				print_assign_to
@@ -9870,6 +9883,7 @@ feature {NONE} -- Expression generation
 				in_operand := True
 				current_file.put_character (')')
 				print_semicolon_newline
+				operand_stack.force (l_assignment_target)
 			else
 				if attached an_expression.name as l_name then
 					l_seed := l_name.seed
@@ -9883,14 +9897,6 @@ feature {NONE} -- Expression generation
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					if attached an_expression.arguments as l_actuals then
-						nb := l_actuals.count
-						from i := 1 until i > nb loop
-							print_operand (l_actuals.actual_argument (i))
-							i := i + 1
-						end
-					end
-					fill_call_operands (nb)
 					if in_operand then
 						l_static_type := l_target_type
 						l_temp := new_temp_variable (l_target_type)
