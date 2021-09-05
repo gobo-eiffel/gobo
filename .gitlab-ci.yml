@@ -18,9 +18,9 @@ test_library_windows:
     - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
     - cd "$env:GOBO\library"
-    - '& "$env:GOBO\.gitlab\do_it.bat" geant test_debug_ge'
+    - '& "$env:GOBO\.gitlab\do_it.bat" geant test_ge'
 
-test_tool_windows:
+test_tool_no_gec_windows:
   stage: test
   tags:
     - shared-windows
@@ -29,7 +29,20 @@ test_tool_windows:
   script:
     - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
+    - Remove-Item "$env:GOBO\tool\gec\test" -Force -Recurse
     - cd "$env:GOBO\tool"
+    - '& "$env:GOBO\.gitlab\do_it.bat" geant test_ge'
+
+test_tool_gec_windows:
+  stage: test
+  tags:
+    - shared-windows
+    - windows
+    - windows-1809
+  script:
+    - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
+    - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
+    - cd "$env:GOBO\tool\gec"
     - '& "$env:GOBO\.gitlab\do_it.bat" geant test_ge'
 
 test_library_linux:
@@ -40,7 +53,7 @@ test_library_linux:
     - cat /etc/*-release
     - arch
     - gcc --version
-    - $CI_PROJECT_DIR/bin/install.sh -v gcc
+    - $GOBO/bin/install.sh -v gcc
     - export PATH=$PATH:$GOBO/bin
     - gec --version
     - cd $GOBO/library
@@ -54,7 +67,7 @@ test_tool_linux:
     - cat /etc/*-release
     - arch
     - gcc --version
-    - $CI_PROJECT_DIR/bin/install.sh -v gcc
+    - $GOBO/bin/install.sh -v gcc
     - export PATH=$PATH:$GOBO/bin
     - gec --version
     - cd $GOBO/tool
