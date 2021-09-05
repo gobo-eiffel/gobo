@@ -11076,7 +11076,7 @@ feature {NONE} -- Expression validity
 							attached {ET_CALL_WITH_ACTUAL_ARGUMENT_LIST} a_call as l_call and then
 							not attached {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST} l_call.arguments
 						then
-							l_actual_list := create {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST}.make (l_call.arguments, l_tuple_argument_position, nb)
+							create {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST} l_actual_list.make (l_call.arguments, l_tuple_argument_position, nb)
 							l_actuals := l_actual_list
 							l_call.set_arguments (l_actual_list)
 								-- Reprocess this actual argument now that it has been

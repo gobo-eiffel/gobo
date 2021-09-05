@@ -27415,7 +27415,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 								-- Print the actual call to extract the tuple item.
 							print_attachment_expression (l_tuple_item_expression, l_tuple_item_type_set, l_open_operand_type_sets.item (i).static_type)
 								-- Clean up.
-							free_tuple_item_expression (l_tuple_item_expression)
+							if l_tuple_conforming_type_set.count <= 2 then
+								free_tuple_item_expression (l_tuple_item_expression)
+							end
 							extra_dynamic_type_sets.remove_last
 								-- No need to check for the void-ness of the tuple when accessing
 								-- each of its items. The first time is enough.
