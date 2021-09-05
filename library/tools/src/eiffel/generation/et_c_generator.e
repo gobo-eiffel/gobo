@@ -8572,7 +8572,7 @@ feature {NONE} -- Procedure call generation
 			a_static_type_not_void: a_static_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_adapted_expression (agent print_creation_procedure_call (a_feature, a_target_type), a_target_type, a_static_type)
+			print_adapted_expression_with_agent (agent print_creation_procedure_call (a_feature, a_target_type), a_target_type, a_static_type)
 		end
 
 	print_creation_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE)
@@ -9202,6 +9202,186 @@ feature {NONE} -- Expression generation
 				print_attribute_access (an_attribute, a_target, a_target_type, a_check_void_target)
 			else
 				print_boxed_attribute_access (an_attribute, a_target, a_target_type, a_check_void_target)
+			end
+		end
+
+	print_adapted_expression (a_expression: ET_EXPRESSION; a_source_type_set: ET_DYNAMIC_TYPE_SET; a_target_type: ET_DYNAMIC_PRIMARY_TYPE)
+			-- Print to `current_file' an expression with
+			-- dynamic type set `a_source_type_set' when the static type expected
+			-- by the caller is `a_target_type'. This is useful for example when the
+			-- expression is a call to a query and this call is one of the alternatives
+			-- of a polymorphic call whose static type expected by the caller is
+			-- `a_target_type'. In that case the result of the query needs to be
+			-- adapted to match the kind of result type expected by the caller.
+			-- For example, if we have:
+			--
+			--    l: LIST [ANY]
+			--    li: LIST [INTEGER]
+			--    ls: LIST [STRING]
+			--    ...
+			--    a: ANY
+			--    if b then
+			--       l := li
+			--    else
+			--       l := ls
+			--    end
+			--    a := l.item
+			--
+			-- depending on the value of 'b', the call to 'item' will yield an integer
+			-- or a string. If it's an integer (this corresponds to the static type
+			-- of `a_source_type_set'), then its value will need to be boxed because
+			-- the signature of 'item' in 'LIST [ANY]' is of reference type (this
+			-- corresponds to `a_target_type').
+			--
+			-- Note that contrary to `print_attachment_expression', the result of the
+			-- query should not be copied or cloned. It will occur later on when the call
+			-- is the source of an assignment or passed as actual argument (in the example
+			-- above it will occur when the value of the call to 'l.item' is assigned
+			-- to 'a').
+			--
+			-- And also, contrary to `print_attachment_expression', the static type of
+			-- the result of the query is expected to conform to the type of the underlying
+			-- call. Unless the query has a result type of the form 'like argument'.
+			-- For example 'clone (1)' is expected to be of type INTEGER and
+			-- 'clone ("gobo")' is expected to be of type STRING. But the corresponding
+			-- generated function for 'clone' will be declared to return an ANY.
+		require
+			a_expression_not_void: a_expression /= Void
+			a_source_type_set_not_void: a_source_type_set /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_source_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			l_source_type := a_source_type_set.static_type.primary_type
+			if a_target_type.is_expanded then
+					-- Only expanded types conform to expanded types.
+					-- So no unboxing is needed, and copy or clone will
+					-- not be called at this stage.
+					--
+					-- However we may need to unbox when the query has
+					-- a result type of the form 'like argument' (see
+					-- header comment).
+				if not l_source_type.is_expanded then
+-- TODO: there might be some problems if the expanded types are generic with different actual parameters.
+						-- The source object has been boxed.
+					print_boxed_attribute_item_access (a_expression, a_target_type, True)
+				else
+					print_expression (a_expression)
+				end
+			else
+				if l_source_type.is_expanded then
+						-- We need to box the object, but without triggering a call to
+						-- 'copy' (it will be called during subsequent attachment).
+-- TODO: 'geboxed' will trigger a call to 'copy'. We should avoid that.
+					print_boxed_expression (a_expression, l_source_type)
+				else
+						-- Even if the dynamic type set of the expression contains
+						-- expanded types, there will be no copy or clone
+						-- at this stage.
+					print_expression (a_expression)
+				end
+			end
+		end
+
+	print_adapted_expression_with_agent (a_print_expression: PROCEDURE; a_source_type_set: ET_DYNAMIC_TYPE_SET; a_target_type: ET_DYNAMIC_PRIMARY_TYPE)
+			-- Print to `current_file' an expression (using `a_print_expression') with
+			-- dynamic type set `a_source_type_set' when the static type expected
+			-- by the caller is `a_target_type'. This is useful for example when the
+			-- expression is a call to a query and this call is one of the alternatives
+			-- of a polymorphic call whose static type expected by the caller is
+			-- `a_target_type'. In that case the result of the query needs to be
+			-- adapted to match the kind of result type expected by the caller.
+			-- For example, if we have:
+			--
+			--    l: LIST [ANY]
+			--    li: LIST [INTEGER]
+			--    ls: LIST [STRING]
+			--    ...
+			--    a: ANY
+			--    if b then
+			--       l := li
+			--    else
+			--       l := ls
+			--    end
+			--    a := l.item
+			--
+			-- depending on the value of 'b', the call to 'item' will yield an integer
+			-- or a string. If it's an integer (this corresponds to the static type
+			-- of `a_source_type_set'), then its value will need to be boxed because
+			-- the signature of 'item' in 'LIST [ANY]' is of reference type (this
+			-- corresponds to `a_target_type').
+			--
+			-- Note that contrary to `print_attachment_expression', the result of the
+			-- query should not be copied or cloned. It will occur later on when the call
+			-- is the source of an assignment or passed as actual argument (in the example
+			-- above it will occur when the value of the call to 'l.item' is assigned
+			-- to 'a').
+			--
+			-- And also, contrary to `print_attachment_expression', the static type of
+			-- the result of the query is expected to conform to the type of the underlying
+			-- call. Unless the query has a result type of the form 'like argument'.
+			-- For example 'clone (1)' is expected to be of type INTEGER and
+			-- 'clone ("gobo")' is expected to be of type STRING. But the corresponding
+			-- generated function for 'clone' will be declared to return an ANY.
+		require
+			a_print_expression_not_void: a_print_expression /= Void
+			a_source_type_set_not_void: a_source_type_set /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_source_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_do_check_void: BOOLEAN
+		do
+			l_source_type := a_source_type_set.static_type.primary_type
+			if a_target_type.is_expanded then
+					-- Only expanded types conform to expanded types.
+					-- So no unboxing is needed, and copy or clone will
+					-- not be called at this stage.
+					--
+					-- However we may need to unbox when the query has
+					-- a result type of the form 'like argument' (see
+					-- header comment).
+				if not l_source_type.is_expanded then
+-- TODO: there might be some problems if the expanded types are generic with different actual parameters.
+						-- The source object has been boxed.
+					current_file.put_character ('(')
+					print_boxed_type_cast (a_target_type, current_file)
+					current_file.put_character ('(')
+					if a_source_type_set.can_be_void  then
+						can_be_void_target_count := can_be_void_target_count + 1
+						current_file.put_string (c_ge_void)
+						current_file.put_character ('(')
+						l_do_check_void := True
+					else
+						never_void_target_count := never_void_target_count + 1
+					end
+					a_print_expression.call ([])
+					if l_do_check_void then
+						current_file.put_character (')')
+					end
+					current_file.put_character (')')
+					current_file.put_character (')')
+						-- The source object has been boxed.
+					current_file.put_string (c_arrow)
+					print_boxed_attribute_item_name (a_target_type, current_file)
+				else
+					a_print_expression.call ([])
+				end
+			else
+				if l_source_type.is_expanded then
+						-- We need to box the object, but without triggering a call to
+						-- 'copy' (it will be called during subsequent attachment).
+-- TODO: 'geboxed' will trigger a call to 'copy'. We should avoid that.
+					current_file.put_string (c_ge_boxed)
+					current_file.put_integer (l_source_type.id)
+					current_file.put_character ('(')
+					a_print_expression.call ([])
+					current_file.put_character (')')
+				else
+						-- Even if the dynamic type set of the expression contains
+						-- expanded types, there will be no copy or clone
+						-- at this stage.
+					a_print_expression.call ([])
+				end
 			end
 		end
 
@@ -9872,19 +10052,7 @@ feature {NONE} -- Expression generation
 				end
 				fill_call_operands (nb)
 			end
-			if in_operand and l_assignment_target /= Void then
-				l_static_type := dynamic_type_set (l_assignment_target).static_type.primary_type
-				print_indentation
-				print_writable (l_assignment_target)
-				print_assign_to
-				current_file.put_character ('(')
-				in_operand := False
-				print_attachment_expression (an_expression, l_target_type_set, l_static_type)
-				in_operand := True
-				current_file.put_character (')')
-				print_semicolon_newline
-				operand_stack.force (l_assignment_target)
-			else
+			if not in_operand then
 				if attached an_expression.name as l_name then
 					l_seed := l_name.seed
 				else
@@ -9897,30 +10065,36 @@ feature {NONE} -- Expression generation
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					if in_operand then
-						l_static_type := l_target_type
-						l_temp := new_temp_variable (l_target_type)
-							-- We will set the index of `l_temp' later because
-							-- it could still be used in `call_operands'.
-						l_temp_index := an_expression.index
-						operand_stack.force (l_temp)
-						print_indentation
-						print_temp_name (l_temp, current_file)
-						print_assign_to
-						current_file.put_character ('(')
-						print_adapted_creation_procedure_call (l_procedure, l_target_type, l_static_type)
-						current_file.put_character (')')
-						print_semicolon_newline
-						if l_temp_index /= 0 then
-								-- We had to wait until this stage to set the index of `l_temp'
-								-- because it could have still been used in `call_operands'.
-							l_temp.set_index (l_temp_index)
-						end
-					else
-						print_creation_procedure_call (l_procedure, l_target_type)
-					end
+					print_creation_procedure_call (l_procedure, l_target_type)
 					call_operands.wipe_out
 				end
+			elseif l_assignment_target /= Void then
+				l_static_type := dynamic_type_set (l_assignment_target).static_type.primary_type
+				print_indentation
+				print_writable (l_assignment_target)
+				print_assign_to
+				current_file.put_character ('(')
+				print_attachment_expression (an_expression, l_target_type_set, l_static_type)
+				current_file.put_character (')')
+				print_semicolon_newline
+				operand_stack.force (l_assignment_target)
+			else
+				l_static_type := l_target_type
+				l_temp := new_temp_variable (l_target_type)
+					-- We will set the index of `l_temp' later because
+					-- it could still be used in `call_operands'.
+				l_temp_index := an_expression.index
+				operand_stack.force (l_temp)
+				print_indentation
+				print_temp_name (l_temp, current_file)
+				print_assign_to
+				current_file.put_character ('(')
+				print_adapted_expression (an_expression, l_target_type, l_static_type)
+				current_file.put_character (')')
+				print_semicolon_newline
+					-- We had to wait until this stage to set the index of `l_temp'
+					-- because it could have still been used in `call_operands'.
+				l_temp.set_index (l_temp_index)
 			end
 		end
 
@@ -15137,7 +15311,7 @@ feature {NONE} -- Query call generation
 							current_file.put_character ('&')
 							current_file.put_character ('(')
 						end
-						print_adapted_expression (agent print_attribute_tuple_item_access (l_seed, call_operands.first, a_target_type, a_check_void_target), l_query_type_set, a_result_type)
+						print_adapted_expression_with_agent (agent print_attribute_tuple_item_access (l_seed, call_operands.first, a_target_type, a_check_void_target), l_query_type_set, a_result_type)
 						if l_in_target_and_result_type_is_expanded then
 							current_file.put_character (')')
 						end
@@ -15175,7 +15349,7 @@ feature {NONE} -- Query call generation
 		do
 			l_query_type_set := a_feature.result_type_set
 			check precondition_a_feature_is_query: l_query_type_set /= Void then end
-			print_adapted_expression (agent print_query_call (a_feature, a_target_type, a_check_void_target), l_query_type_set, a_result_type)
+			print_adapted_expression_with_agent (agent print_query_call (a_feature, a_target_type, a_check_void_target), l_query_type_set, a_result_type)
 		end
 
 	print_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -16290,108 +16464,6 @@ feature {NONE} -- Query call generation
 				print_builtin_type_runtime_name_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
-			end
-		end
-
-	print_adapted_expression (a_print_expression: PROCEDURE; a_source_type_set: ET_DYNAMIC_TYPE_SET; a_target_type: ET_DYNAMIC_PRIMARY_TYPE)
-			-- Print to `current_file' an expression (using `a_print_expression') with
-			-- dynamic type set `a_source_type_set' when the static type expected
-			-- by the caller is `a_target_type'. This is useful for example when the
-			-- expression is a call to a query and this call is one of the alternatives
-			-- of a polymorphic call whose static type expected by the caller is
-			-- `a_target_type'. In that case the result of the query needs to be
-			-- adapted to match the kind of result type expected by the caller.
-			-- For example, if we have:
-			--
-			--    l: LIST [ANY]
-			--    li: LIST [INTEGER]
-			--    ls: LIST [STRING]
-			--    ...
-			--    a: ANY
-			--    if b then
-			--       l := li
-			--    else
-			--       l := ls
-			--    end
-			--    a := l.item
-			--
-			-- depending on the value of 'b', the call to 'item' will yield an integer
-			-- or a string. If it's an integer (this corresponds to the static type
-			-- of `a_source_type_set'), then its value will need to be boxed because
-			-- the signature of 'item' in 'LIST [ANY]' is of reference type (this
-			-- corresponds to `a_target_type').
-			--
-			-- Note that contrary to `print_attachment_expression', the result of the
-			-- query should not be copied or cloned. It will occur later on when the call
-			-- is the source of an assignment or passed as actual argument (in the example
-			-- above it will occur when the value of the call to 'l.item' is assigned
-			-- to 'a').
-			--
-			-- And also, contrary to `print_attachment_expression', the static type of
-			-- the result of the query is expected to conform to the type of the underlying
-			-- call. Unless the query has a result type of the form 'like argument'.
-			-- For example 'clone (1)' is expected to be of type INTEGER and
-			-- 'clone ("gobo")' is expected to be of type STRING. But the corresponding
-			-- generated function for 'clone' will be declared to return an ANY.
-		require
-			a_print_expression_not_void: a_print_expression /= Void
-			a_source_type_set_not_void: a_source_type_set /= Void
-			a_target_type_not_void: a_target_type /= Void
-		local
-			l_source_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_do_check_void: BOOLEAN
-		do
-			l_source_type := a_source_type_set.static_type.primary_type
-			if a_target_type.is_expanded then
-					-- Only expanded types conform to expanded types.
-					-- So no unboxing is needed, and copy or clone will
-					-- not be called at this stage.
-					--
-					-- However we may need to unbox when the query has
-					-- a result type of the form 'like argument' (see
-					-- header comment).
-				if not l_source_type.is_expanded then
--- TODO: there might be some problems if the expanded types are generic with different actual parameters.
-						-- The source object has been boxed.
-					current_file.put_character ('(')
-					print_boxed_type_cast (a_target_type, current_file)
-					current_file.put_character ('(')
-					if a_source_type_set.can_be_void  then
-						can_be_void_target_count := can_be_void_target_count + 1
-						current_file.put_string (c_ge_void)
-						current_file.put_character ('(')
-						l_do_check_void := True
-					else
-						never_void_target_count := never_void_target_count + 1
-					end
-					a_print_expression.call ([])
-					if l_do_check_void then
-						current_file.put_character (')')
-					end
-					current_file.put_character (')')
-					current_file.put_character (')')
-						-- The source object has been boxed.
-					current_file.put_string (c_arrow)
-					print_boxed_attribute_item_name (a_target_type, current_file)
-				else
-					a_print_expression.call ([])
-				end
-			else
-				if l_source_type.is_expanded then
-						-- We need to box the object, but without triggering a call to
-						-- 'copy' (it will be called during subsequent attachment).
--- TODO: 'geboxed' will trigger a call to 'copy'. We should avoid that.
-					current_file.put_string (c_ge_boxed)
-					current_file.put_integer (l_source_type.id)
-					current_file.put_character ('(')
-					a_print_expression.call ([])
-					current_file.put_character (')')
-				else
-						-- Even if the dynamic type set of the expression contains
-						-- expanded types, there will be no copy or clone
-						-- at this stage.
-					a_print_expression.call ([])
-				end
 			end
 		end
 
@@ -19070,7 +19142,7 @@ feature {NONE} -- Deep features generation
 			a_target_type_not_void: a_target_type /= Void
 			a_result_type_not_void: a_result_type /= Void
 		do
-			print_adapted_expression (agent print_deep_twin_call (a_target, a_target_type), a_target_type, a_result_type)
+			print_adapted_expression_with_agent (agent print_deep_twin_call (a_target, a_target_type), a_target_type, a_result_type)
 		end
 
 	print_deep_twin_call (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE)
@@ -28700,7 +28772,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
-						print_adapted_expression (agent print_attribute_tuple_item_access (i, tokens.current_keyword, l_tuple_type, False), l_item_type_set, current_dynamic_system.any_type)
+						print_adapted_expression_with_agent (agent print_attribute_tuple_item_access (i, tokens.current_keyword, l_tuple_type, False), l_item_type_set, current_dynamic_system.any_type)
 						current_file.put_character (';')
 						current_file.put_new_line
 						print_indentation
