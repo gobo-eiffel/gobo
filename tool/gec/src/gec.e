@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Compiler"
 
-	copyright: "Copyright (c) 2005-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,12 +37,41 @@ inherit
 
 create
 
-	execute
+	execute,
+	execute_with_arguments,
+	execute_with_arguments_and_error_handler
 
 feature -- Execution
 
 	execute
-			-- Start 'gec' execution.
+			-- Start 'gec' execution, reading arguments from the command-line.
+		do
+			execute_with_arguments (Arguments.to_array)
+			Exceptions.die (exit_code)
+		rescue
+			Exceptions.die (4)
+		end
+
+	execute_with_arguments (a_args: ARRAY [STRING])
+			-- Start 'gec' execution with arguments `a_args'.
+			-- Set `exit_code'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args is l_arg all l_arg /= Void end
+		local
+			l_error_handler: ET_ERROR_HANDLER
+		do
+			create l_error_handler.make_standard
+			execute_with_arguments_and_error_handler (a_args, l_error_handler)
+		end
+
+	execute_with_arguments_and_error_handler (a_args: ARRAY [STRING]; a_error_handler: ET_ERROR_HANDLER)
+			-- Start 'gec' execution with arguments `a_args'.
+			-- Set `exit_code'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args is l_arg all l_arg /= Void end
+			a_error_handler_not_void: a_error_handler /= Void
 		local
 			a_filename: STRING
 			a_file: KL_TEXT_INPUT_FILE
@@ -53,33 +82,35 @@ feature -- Execution
 			ise_variables.set_ise_library_variable
 				-- Also define the environment variable "$ISE_PLATFORM" if not set yet.
 			ise_variables.set_ise_platform_variable
-			create error_handler.make_standard
-			parse_arguments
-			a_filename := ecf_filename
-			create a_file.make (a_filename)
-			a_file.open_read
-			if a_file.is_open_read then
-				last_system := Void
-				parse_ecf_file (a_file)
-				a_file.close
-				if attached last_system as l_last_system then
-					process_system (l_last_system)
-					debug ("stop")
-						std.output.put_line ("Press Enter...")
-						std.input.read_character
-					end
-					if error_handler.has_error then
-						Exceptions.die (2)
+			error_handler := a_error_handler
+			parse_arguments (a_args)
+			if exit_code = 0 and then not version_flag.was_found then
+				a_filename := ecf_filename
+				create a_file.make (a_filename)
+				a_file.open_read
+				if a_file.is_open_read then
+					last_system := Void
+					parse_ecf_file (a_file)
+					a_file.close
+					if attached last_system as l_last_system then
+						process_system (l_last_system)
+						debug ("stop")
+							std.output.put_line ("Press Enter...")
+							std.input.read_character
+						end
+						if exit_code = 0 and error_handler.has_error then
+							exit_code := 2
+						end
+					else
+						exit_code := 3
 					end
 				else
-					Exceptions.die (3)
+					report_cannot_read_error (a_filename)
+					exit_code := 1
 				end
-			else
-				report_cannot_read_error (a_filename)
-				Exceptions.die (1)
 			end
 		rescue
-			Exceptions.die (4)
+			exit_code := 4
 		end
 
 feature -- Access
@@ -152,9 +183,7 @@ feature {NONE} -- Processing
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 			l_root_type: ET_BASE_TYPE
 			l_generator: ET_C_GENERATOR
-			l_command: KL_SHELL_COMMAND
 			l_system_name: STRING
-			l_script_filename: STRING
 			l_thread_count: INTEGER
 			dt_total: detachable DT_DATE_TIME
 			dt2: detachable DT_DATE_TIME
@@ -196,8 +225,7 @@ feature {NONE} -- Processing
 			elseif l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) then
 				-- Do nothing.
 			elseif l_system.has_fatal_error then
-				l_system_processor.record_end_time (dt_total, "Total Time")
-				Exceptions.die (1)
+				exit_code := 1
 			else
 					-- C code generation.
 				dt2 := l_system_processor.benchmark_start_time
@@ -239,31 +267,50 @@ feature {NONE} -- Processing
 				end
 				l_system_processor.record_end_time (dt2, "Degree -3")
 				if l_generator.has_fatal_error then
-					l_system_processor.record_end_time (dt_total, "Total Time")
-					Exceptions.die (1)
+					exit_code := 1
 				elseif not no_c_compile then
 					dt2 := l_system_processor.benchmark_start_time
-					if operating_system.is_windows then
-						l_script_filename := l_system_name + ".bat"
-					else
-						l_script_filename := l_system_name + ".sh"
-					end
-					if c_compile_using_script then
-						create l_command.make (file_system.absolute_pathname (l_script_filename))
-					elseif c_compile_using_make then
-						create l_command.make ("make -f " + l_system_name + ".make")
-					else
-						create l_command.make ("gecc --thread=" + l_thread_count.out + " " + l_script_filename)
-					end
-					l_command.execute
+					compile_c_code (l_system_name)
 					l_system_processor.record_end_time (dt2, "Degree -4")
-					if l_command.exit_code /= 0 then
-						l_system_processor.record_end_time (dt_total, "Total Time")
-						Exceptions.die (1)
-					end
 				end
 			end
 			l_system_processor.record_end_time (dt_total, "Total Time")
+		end
+
+	compile_c_code (a_system_name: STRING)
+			-- Compile generated C code.
+		require
+			a_system_name_not_void: a_system_name /= Void
+		local
+			l_command: KL_SHELL_COMMAND
+			l_script_filename: STRING
+			l_gecc: GECC
+			l_exit_code: INTEGER
+		do
+			if operating_system.is_windows then
+				l_script_filename := a_system_name + ".bat"
+			else
+				l_script_filename := a_system_name + ".sh"
+			end
+			if c_compile_using_script then
+				create l_command.make (file_system.absolute_pathname (l_script_filename))
+				l_command.execute
+				l_exit_code := l_command.exit_code
+			elseif c_compile_using_make then
+				create l_command.make ("make -f " + a_system_name + ".make")
+				l_command.execute
+				l_exit_code := l_command.exit_code
+			elseif c_compile_using_gecc then
+				create l_command.make ("gecc --thread=" + thread_count.out + " " + l_script_filename)
+				l_command.execute
+				l_exit_code := l_command.exit_code
+			else
+				create l_gecc.execute_with_arguments (<<"--thread=" + thread_count.out, l_script_filename>>)
+				l_exit_code := l_gecc.exit_code
+			end
+			if l_exit_code /= 0 then
+				exit_code := 1
+			end
 		end
 
 feature -- Arguments
@@ -327,6 +374,12 @@ feature -- Arguments
 			-- Should the back-end C compiler not be invoked on the generated C code?
 		do
 			Result := c_compile_option.was_found and then attached c_compile_option.parameter as l_parameter and then STRING_.same_string (l_parameter, "no")
+		end
+
+	c_compile_using_gecc: BOOLEAN
+			-- Should the back-end C compiler be invoked on the generated C code using 'gecc'?
+		do
+			Result := c_compile_option.was_found and then attached c_compile_option.parameter as l_parameter and then STRING_.same_string (l_parameter, "gecc")
 		end
 
 	c_compile_using_script: BOOLEAN
@@ -466,8 +519,11 @@ feature -- Argument parsing
 	version_flag: AP_FLAG
 			-- Flag for '--version'
 
-	parse_arguments
-			-- Initialize options and parse the command line.
+	parse_arguments (a_args: ARRAY [STRING])
+			-- Initialize options and parse arguments `a_args'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args is l_arg all l_arg /= Void end
 		local
 			a_parser: AP_PARSER
 			a_list: AP_ALTERNATIVE_OPTIONS_LIST
@@ -519,7 +575,7 @@ feature -- Argument parsing
 			a_parser.options.force_last (catcall_option)
 				-- cc
 			create c_compile_option.make_with_long_form ("cc")
-			c_compile_option.set_description ("Should the back-end C compiler be invoked on the generated C code, and if yes with what method? (default: gecc)")
+			c_compile_option.set_description ("Should the back-end C compiler be invoked on the generated C code, and if yes with what method? (default: gecc, built-in)")
 			c_compile_option.extend ("no")
 			c_compile_option.extend ("script")
 			c_compile_option.extend ("make")
@@ -581,27 +637,29 @@ feature -- Argument parsing
 			create a_list.make (version_flag)
 			a_parser.alternative_options_lists.force_last (a_list)
 				-- Parsing.
-			a_parser.parse_arguments
+			a_parser.parse_array (a_args)
 			if silent_flag.was_found then
 				create {ET_NULL_ERROR_HANDLER} error_handler.make_null
 			end
 			if version_flag.was_found then
 				report_version_number
 				ecf_filename := ""
-				Exceptions.die (0)
+				ise_version := ise_latest
+				exit_code := 0
 			elseif a_parser.parameters.count /= 1 then
 				report_usage_message (a_parser)
 				ecf_filename := ""
-				Exceptions.die (1)
+				ise_version := ise_latest
+				exit_code := 1
 			else
 				ecf_filename := a_parser.parameters.first
+				set_ise_version (ise_option, a_parser)
+				set_override_settings (setting_option, a_parser)
+				set_override_capabilities (capability_option, a_parser)
+				set_override_variables (variable_option, a_parser)
+				set_split_size (split_size_option, a_parser)
+				set_new_instance_types (new_instance_types_option, a_parser)
 			end
-			set_ise_version (ise_option, a_parser)
-			set_override_settings (setting_option, a_parser)
-			set_override_capabilities (capability_option, a_parser)
-			set_override_variables (variable_option, a_parser)
-			set_split_size (split_size_option, a_parser)
-			set_new_instance_types (new_instance_types_option, a_parser)
 		ensure
 			ecf_filename_not_void: ecf_filename /= Void
 			target_option_not_void: target_option /= Void
@@ -637,7 +695,7 @@ feature -- Argument parsing
 			l_ise_version := ise_latest
 			if not attached a_option.parameter as l_parameter then
 				report_usage_message (a_parser)
-				Exceptions.die (1)
+				exit_code := 1
 			elseif not STRING_.same_string (l_parameter, ise_latest.out) then
 				create l_ise_regexp.make
 				l_ise_regexp.compile ("([0-9]+)(\.([0-9]+))?(\.([0-9]+))?(\.([0-9]+))?")
@@ -653,11 +711,11 @@ feature -- Argument parsing
 						create l_ise_version.make (l_ise_regexp.captured_substring (1).to_integer, l_ise_regexp.captured_substring (3).to_integer, l_ise_regexp.captured_substring (5).to_integer, l_ise_regexp.captured_substring (7).to_integer)
 					else
 						report_usage_message (a_parser)
-						Exceptions.die (1)
+						exit_code := 1
 					end
 				else
 					report_usage_message (a_parser)
-					Exceptions.die (1)
+					exit_code := 1
 				end
 			end
 			ise_version := l_ise_version
@@ -776,7 +834,7 @@ feature -- Argument parsing
 				else
 					create l_error.make_invalid_parameter_error (a_option, a_option.parameter.out)
 					error_handler.report_error (l_error)
-					Exceptions.die (1)
+					exit_code := 1
 				end
 			end
 		end
@@ -813,7 +871,7 @@ feature -- Argument parsing
 					l_file.close
 				else
 					report_cannot_read_error (l_filename)
-					Exceptions.die (1)
+					exit_code := 1
 				end
 			end
 		end
@@ -854,6 +912,9 @@ feature -- Error handling
 			create l_error.make (a_parser.full_usage_instruction)
 			error_handler.report_error (l_error)
 		end
+
+	exit_code: INTEGER
+			-- Exit code
 
 invariant
 

@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Doc"
 
-	copyright: "Copyright (c) 2017-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,12 +35,41 @@ inherit
 
 create
 
-	execute
+	execute,
+	execute_with_arguments,
+	execute_with_arguments_and_error_handler
 
 feature -- Execution
 
 	execute
-			-- Start 'gedoc' execution.
+			-- Start 'gedoc' execution, reading arguments from the command-line.
+		do
+			execute_with_arguments (Arguments.to_array)
+			Exceptions.die (exit_code)
+		rescue
+			Exceptions.die (2)
+		end
+
+	execute_with_arguments (a_args: ARRAY [STRING])
+			-- Start 'gedoc' execution with arguments `a_args'.
+			-- Set `exit_code'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args is l_arg all l_arg /= Void end
+		local
+			l_error_handler: ET_ERROR_HANDLER
+		do
+			create l_error_handler.make_standard
+			execute_with_arguments_and_error_handler (a_args, l_error_handler)
+		end
+
+	execute_with_arguments_and_error_handler (a_args: ARRAY [STRING]; a_error_handler: ET_ERROR_HANDLER)
+			-- Start 'gedoc' execution with arguments `a_args'.
+			-- Set `exit_code'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args is l_arg all l_arg /= Void end
+			a_error_handler_not_void: a_error_handler /= Void
 		do
 			Arguments.set_program_name ("gedoc")
 				-- For compatibility with ISE's tools, define the environment
@@ -48,19 +77,19 @@ feature -- Execution
 			ise_variables.set_ise_library_variable
 				-- Also define the environment variable "$ISE_PLATFORM" if not set yet.
 			ise_variables.set_ise_platform_variable
-			create error_handler.make_standard
-			parse_arguments
-			if attached format as l_format then
+			error_handler := a_error_handler
+			parse_arguments (a_args)
+			if exit_code = 0 and then attached format as l_format then
 				l_format.execute
 				if l_format.has_error then
-					Exceptions.die (1)
+					exit_code := 1
 				end
 			end
-			if has_error then
-				Exceptions.die (1)
+			if exit_code = 0 and has_error then
+				exit_code := 1
 			end
 		rescue
-			Exceptions.die (2)
+			exit_code := 2
 		end
 
 feature -- Access
@@ -127,8 +156,11 @@ feature -- Argument parsing
 	version_flag: AP_FLAG
 			-- Flag for '--version'
 
-	parse_arguments
-			-- Initialize options and parse the command line.
+	parse_arguments (a_args: ARRAY [STRING])
+			-- Initialize options and parse arguments `a_args'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args is l_arg all l_arg /= Void end
 		local
 			l_parser: AP_PARSER
 			l_list: AP_ALTERNATIVE_OPTIONS_LIST
@@ -240,10 +272,10 @@ feature -- Argument parsing
 			end
 			if version_flag.was_found then
 				report_version_number
-				Exceptions.die (0)
+				exit_code := 0
 			elseif l_parser.parameters.count /= 1 or else not attached l_parser.parameters.first as l_input_filename then
 				report_usage_message (l_parser)
-				Exceptions.die (1)
+				exit_code := 1
 			elseif not format_option.was_found or format_option.parameter ~ "pretty_print" then
 				create {GEDOC_PRETTY_PRINT_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif format_option.parameter ~ "html_ise_stylesheet" then
@@ -326,7 +358,7 @@ feature -- Argument parsing
 				l_ise_version := ise_latest
 			elseif not attached a_option.parameter as l_parameter then
 				report_usage_message (a_parser)
-				Exceptions.die (1)
+				exit_code := 1
 			elseif STRING_.same_string (l_parameter, ise_latest.out) then
 				l_ise_version := ise_latest
 			else
@@ -344,11 +376,11 @@ feature -- Argument parsing
 						create l_ise_version.make (l_ise_regexp.captured_substring (1).to_integer, l_ise_regexp.captured_substring (3).to_integer, l_ise_regexp.captured_substring (5).to_integer, l_ise_regexp.captured_substring (7).to_integer)
 					else
 						report_usage_message (a_parser)
-						Exceptions.die (1)
+						exit_code := 1
 					end
 				else
 					report_usage_message (a_parser)
-					Exceptions.die (1)
+					exit_code := 1
 				end
 			end
 			if l_ise_version /= Void then
@@ -371,7 +403,7 @@ feature -- Argument parsing
 				l_ecf_version := Void
 			elseif not attached a_option.parameter as l_parameter then
 				report_usage_message (a_parser)
-				Exceptions.die (1)
+				exit_code := 1
 			elseif STRING_.same_string (l_parameter, "latest") then
 				l_ecf_version := {UT_SHARED_ECF_VERSIONS}.ecf_last_known
 			else
@@ -383,11 +415,11 @@ feature -- Argument parsing
 						create l_ecf_version.make (l_ecf_regexp.captured_substring (1).to_integer, l_ecf_regexp.captured_substring (3).to_integer, l_ecf_regexp.captured_substring (5).to_integer, 0)
 					else
 						report_usage_message (a_parser)
-						Exceptions.die (1)
+						exit_code := 1
 					end
 				else
 					report_usage_message (a_parser)
-					Exceptions.die (1)
+					exit_code := 1
 				end
 			end
 			if l_ecf_version /= Void then
@@ -522,7 +554,7 @@ feature -- Argument parsing
 						create l_wildcard.compile_case_insensitive (l_class_filter)
 						if not l_wildcard.is_compiled then
 							report_invalid_class_option_error (l_class_filter)
-							Exceptions.die (1)
+							exit_code := 1
 						else
 							l_class_filters.put_last (l_wildcard)
 						end
@@ -546,7 +578,7 @@ feature -- Argument parsing
 				a_format.set_output_directory (Execution_environment.interpreted_string (l_output_directory))
 			elseif a_format.is_output_directory_required then
 				report_missing_output_option_error
-				Exceptions.die (1)
+				exit_code := 1
 			end
 		end
 
@@ -631,6 +663,9 @@ feature -- Error handling
 			create l_error.make (a_parser.full_usage_instruction)
 			report_error (l_error)
 		end
+
+	exit_code: INTEGER
+			-- Exit code
 
 invariant
 

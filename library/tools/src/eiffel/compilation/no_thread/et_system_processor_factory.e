@@ -2,7 +2,7 @@ note
 
 	description:
 
-		"Factories Eiffel system processors"
+		"Factories for Eiffel system processors"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2019, Eric Bezault and others"

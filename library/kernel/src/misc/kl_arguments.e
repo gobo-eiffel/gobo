@@ -11,7 +11,7 @@ note
 	]"
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,6 +38,24 @@ feature -- Access
 
 	program_name: STRING
 			-- Program name
+
+	to_array: ARRAY [STRING]
+			-- Array representation of command-line arguments
+		local
+			j, nb: INTEGER
+		do
+			nb := argument_count
+			create Result.make_filled ("", 1, nb)
+			from j := 1 until j > nb loop
+				Result.put (argument (j), j)
+				j := j + 1
+			end
+		ensure
+			to_array_not_void: Result /= Void
+			lower: Result.lower = 1
+			upper: Result.upper = argument_count
+			definition: across (1 |..| argument_count) is i all Result [i] = argument (i) end
+		end
 
 feature -- Setting
 

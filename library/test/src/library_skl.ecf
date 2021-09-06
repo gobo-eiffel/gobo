@@ -10,7 +10,7 @@
 	<description>
 		description: "ECF file for the Gobo Eiffel test harness"
 		library: "Gobo Eiffel Test Library"
-		copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
+		copyright: "Copyright (c) 2002-2021, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 	<target name="test_skl">
@@ -38,6 +38,12 @@
 				<exclude>/thread$</exclude>
 				<condition>
 					<concurrency value="scoop"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/no_thread$</exclude>
+				<condition>
+					<concurrency excluded_value="scoop"/>
 				</condition>
 			</file_rule>
 		</cluster>

@@ -9,7 +9,7 @@
 >
 	<description>
 		system: "Gobo Eiffel Compiler"
-		copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
+		copyright: "Copyright (c) 2005-2021, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 	<target name="all_classes">
@@ -29,6 +29,7 @@
 		<library name="time" location="${GOBO_LIBRARY}/library/time/library.ecf" readonly="true"/>
 		<library name="tools" location="${GOBO_LIBRARY}/library/tools/library.ecf" readonly="true"/>
 		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
+		<library name="gecc" location="${GOBO_LIBRARY}/tool/gecc/src/system.ecf" readonly="true"/>
 		<cluster name="gec" location="./"/>
 	</target>
 	<target name="gec" extends="all_classes">

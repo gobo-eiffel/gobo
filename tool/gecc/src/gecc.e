@@ -7,7 +7,7 @@ note
 			Take advantage of multi-CPU machines to compile several C files concurrently.
 		]"
 
-	copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,11 @@ inherit
 
 	GECC_VERSION
 
+	GECC_PROCESSOR
+		export {NONE} all end
+
 	KL_SHARED_EXCEPTIONS
+
 	KL_SHARED_ARGUMENTS
 
 	ET_SHARED_ISE_VARIABLES
@@ -26,20 +30,48 @@ inherit
 
 create
 
-	execute
+	execute,
+	execute_with_arguments,
+	execute_with_arguments_and_error_handler
 
 feature -- Execution
 
 	execute
-			-- Start 'gecc' execution.
+			-- Start 'gecc' execution, reading arguments from the command-line.
+		do
+			execute_with_arguments (Arguments.to_array)
+			Exceptions.die (exit_code)
+		rescue
+			Exceptions.die (4)
+		end
+
+	execute_with_arguments (a_args: ARRAY [STRING])
+			-- Start 'gecc' execution with arguments `a_args'.
+			-- Set `exit_code'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args is l_arg all l_arg /= Void end
+		local
+			l_error_handler: UT_ERROR_HANDLER
+		do
+			create l_error_handler.make_standard
+			execute_with_arguments_and_error_handler (a_args, l_error_handler)
+		end
+
+	execute_with_arguments_and_error_handler (a_args: ARRAY [STRING]; a_error_handler: UT_ERROR_HANDLER)
+			-- Start 'gecc' execution with arguments `a_args'.
+			-- Set `exit_code'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args is l_arg all l_arg /= Void end
+			a_error_handler_not_void: a_error_handler /= Void
 		local
 			l_filename: STRING
 			l_file: KL_TEXT_INPUT_FILE
 			l_lines: DS_ARRAYED_LIST [STRING]
 			l_line: STRING
 			l_mutex: MUTEX
-			i, nb: INTEGER
-			l_thread: WORKER_THREAD
+			nb: INTEGER
 			l_thread_count: INTEGER
 		do
 			Arguments.set_program_name ("gecc")
@@ -48,54 +80,43 @@ feature -- Execution
 			ise_variables.set_ise_library_variable
 				-- Also define the environment variable "$ISE_PLATFORM" if not set yet.
 			ise_variables.set_ise_platform_variable
-			create error_handler.make_standard
-			parse_arguments
-			l_filename := script_filename
-			create l_file.make (l_filename)
-			l_file.open_read
-			if l_file.is_open_read then
-				create l_lines.make (50)
-				from
-					l_file.read_line
-				until
-					l_file.end_of_file
-				loop
-					l_line := l_file.last_string.twin
-					l_line.adjust
-					if not l_line.is_empty and not (l_line.starts_with ("#") and l_filename.ends_with (".sh")) then
-						l_lines.force_last (l_line)
-					end
-					l_file.read_line
-				end
-				l_file.close
-				if not l_lines.is_empty then
-					create l_mutex.make
-					l_thread_count := thread_count
-					nb := l_thread_count.min (l_lines.count - 1) - 1
-					if nb >= 1 then
-						from
-							i := 1
-						until
-							i > nb
-						loop
-							create l_thread.make (agent process_lines (l_lines, 1, l_mutex))
-							l_thread.launch
-								-- Sleep a little bit so that the first
-								-- lines are executed in order.
-							{EXECUTION_ENVIRONMENT}.sleep (1000)
-							i := i + 1
+			error_handler := a_error_handler
+			parse_arguments (a_args)
+			if exit_code = 0 and then not version_flag.was_found then
+				l_filename := script_filename
+				create l_file.make (l_filename)
+				l_file.open_read
+				if l_file.is_open_read then
+					create l_lines.make (50)
+					from
+						l_file.read_line
+					until
+						l_file.end_of_file
+					loop
+						l_line := l_file.last_string.twin
+						l_line.adjust
+						if not l_line.is_empty and not (l_line.starts_with ("#") and l_filename.ends_with (".sh")) then
+							l_lines.force_last (l_line)
 						end
-						process_lines (l_lines, 1, l_mutex)
-						{THREAD_CONTROL}.join_all
+						l_file.read_line
 					end
-					process_lines (l_lines, 0, l_mutex)
+					l_file.close
+					if not l_lines.is_empty then
+						create l_mutex.make
+						l_thread_count := thread_count
+						nb := l_thread_count.min (l_lines.count - 1)
+						if nb >= 2 then
+							process (agent process_lines (l_lines, 1, l_mutex), nb)
+						end
+						process_lines (l_lines, 0, l_mutex)
+					end
+				else
+					report_cannot_read_error (l_filename)
+					exit_code := 1
 				end
-			else
-				report_cannot_read_error (l_filename)
-				Exceptions.die (1)
 			end
 		rescue
-			Exceptions.die (4)
+			exit_code := 4
 		end
 
 feature {NONE} -- Processing
@@ -120,7 +141,11 @@ feature {NONE} -- Processing
 				l_done
 			loop
 				a_mutex.lock
-				if a_lines.count <= a_keep_count then
+				if exit_code /= 0 then
+						-- `exit_code' has been set in another thread.
+					l_done := True
+					l_line := Void
+				elseif a_lines.count <= a_keep_count then
 					l_done := True
 					l_line := Void
 				else
@@ -132,18 +157,19 @@ feature {NONE} -- Processing
 					create l_command.make (l_line)
 					l_command.execute
 					if l_command.exit_code /= 0 then
-						Exceptions.die (1)
+						a_mutex.lock
+						exit_code := 1
+						a_mutex.unlock
+						l_done := True
 					end
 				end
 			end
 		end
 
-feature -- Access
+feature -- Error handling
 
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
-
-feature -- Error handling
 
 	report_cannot_read_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
@@ -165,6 +191,9 @@ feature -- Error handling
 			create a_message.make (Version_number)
 			error_handler.report_info (a_message)
 		end
+
+	exit_code: INTEGER
+			-- Exit code
 
 feature -- Status report
 
@@ -196,8 +225,11 @@ feature -- Argument parsing
 	version_flag: AP_FLAG
 			-- Flag for '--version'
 
-	parse_arguments
-			-- Initialize options and parse the command line.
+	parse_arguments (a_args: ARRAY [STRING])
+			-- Initialize options and parse arguments `a_args'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args is l_arg all l_arg /= Void end
 		local
 			l_parser: AP_PARSER
 			l_list: AP_ALTERNATIVE_OPTIONS_LIST
@@ -218,15 +250,15 @@ feature -- Argument parsing
 			create l_list.make (version_flag)
 			l_parser.alternative_options_lists.force_last (l_list)
 				-- Parsing.
-			l_parser.parse_arguments
+			l_parser.parse_array (a_args)
 			if version_flag.was_found then
 				report_version_number
 				script_filename := ""
-				Exceptions.die (0)
+				exit_code := 0
 			elseif l_parser.parameters.count /= 1 then
 				error_handler.report_info_message (l_parser.help_option.full_usage_instruction (l_parser))
 				script_filename := ""
-				Exceptions.die (1)
+				exit_code := 1
 			else
 				script_filename := l_parser.parameters.first
 			end

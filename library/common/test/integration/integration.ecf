@@ -9,7 +9,7 @@
 >
 	<description>
 		system: "Gobo Eiffel all classes integration"
-		copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+		copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 	<target name="integration">
@@ -120,17 +120,9 @@
 		<library name="geant_test_unit" location="${GOBO_LIBRARY}/tool/geant/test/unit/system.ecf" readonly="false"/>
 		<library name="gec" location="${GOBO_LIBRARY}/tool/gec/src/system.ecf" readonly="false"/>
 		<library name="gec_test_tool" location="${GOBO_LIBRARY}/tool/gec/test/tool/system.ecf" readonly="false"/>
-		<library name="gecc" location="${GOBO_LIBRARY}/tool/gecc/src/system.ecf" readonly="false">
-			<condition>
-				<concurrency excluded_value="scoop"/>
-			</condition>
-		</library>
+		<library name="gecc" location="${GOBO_LIBRARY}/tool/gecc/src/system.ecf" readonly="false"/>
 		<library name="gecc_test_tool" location="${GOBO_LIBRARY}/tool/gecc/test/tool/system.ecf" readonly="false"/>
-		<library name="gecop" location="${GOBO_LIBRARY}/tool/gecop/src/system.ecf" readonly="false">
-			<condition>
-				<concurrency excluded_value="scoop"/>
-			</condition>
-		</library>
+		<library name="gecop" location="${GOBO_LIBRARY}/tool/gecop/src/system.ecf" readonly="false"/>
 		<library name="gecop_test_tool" location="${GOBO_LIBRARY}/tool/gecop/test/tool/system.ecf" readonly="false"/>
 		<library name="gedoc" location="${GOBO_LIBRARY}/tool/gedoc/src/system.ecf" readonly="false"/>
 		<library name="gedoc_test_tool" location="${GOBO_LIBRARY}/tool/gedoc/test/tool/system.ecf" readonly="false"/>

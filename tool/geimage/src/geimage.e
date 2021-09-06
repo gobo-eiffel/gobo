@@ -7,7 +7,7 @@ note
 			Generate Eiffel class embedding an image.
 		]"
 
-	copyright: "Copyright (c) 2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2020-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,12 +24,41 @@ inherit
 
 create
 
-	execute
+	execute,
+	execute_with_arguments,
+	execute_with_arguments_and_error_handler
 
 feature -- Execution
 
 	execute
-			-- Start 'geimage' execution.
+			-- Start 'geimage' execution, reading arguments from the command-line.
+		do
+			execute_with_arguments (Arguments.to_array)
+			Exceptions.die (exit_code)
+		rescue
+			Exceptions.die (4)
+		end
+
+	execute_with_arguments (a_args: ARRAY [STRING])
+			-- Start 'geimage' execution with arguments `a_args'.
+			-- Set `exit_code'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args is l_arg all l_arg /= Void end
+		local
+			l_error_handler: UT_ERROR_HANDLER
+		do
+			create l_error_handler.make_standard
+			execute_with_arguments_and_error_handler (a_args, l_error_handler)
+		end
+
+	execute_with_arguments_and_error_handler (a_args: ARRAY [STRING]; a_error_handler: UT_ERROR_HANDLER)
+			-- Start 'geimage' execution with arguments `a_args'.
+			-- Set `exit_code'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args is l_arg all l_arg /= Void end
+			a_error_handler_not_void: a_error_handler /= Void
 		local
 			l_filename: STRING
 			l_input_file: KL_BINARY_INPUT_FILE
@@ -41,63 +70,63 @@ feature -- Execution
 			i, nb: INTEGER
 		do
 			Arguments.set_program_name ("geimage")
-			create error_handler.make_standard
-			parse_arguments
-			create l_input_file.make (image_filename)
-			l_input_file.open_read
-			if l_input_file.is_open_read then
-				if attached class_option.parameter as l_parameter then
-					l_class_name := l_parameter
-				else
-					l_class_name := file_system.basename (image_filename)
-					nb := l_class_name.count
-					from i := 1 until i > nb loop
-						inspect l_class_name.item (i)
-						when 'a' .. 'z', 'A' .. 'Z', '0' .. '9', '_' then
-							i := i + 1
-						else
-							nb := i - 1
-							l_class_name.keep_head (nb)
+			error_handler := a_error_handler
+			parse_arguments (a_args)
+			if exit_code = 0 and then not version_flag.was_found then
+				create l_input_file.make (image_filename)
+				l_input_file.open_read
+				if l_input_file.is_open_read then
+					if attached class_option.parameter as l_parameter then
+						l_class_name := l_parameter
+					else
+						l_class_name := file_system.basename (image_filename)
+						nb := l_class_name.count
+						from i := 1 until i > nb loop
+							inspect l_class_name.item (i)
+							when 'a' .. 'z', 'A' .. 'Z', '0' .. '9', '_' then
+								i := i + 1
+							else
+								nb := i - 1
+								l_class_name.keep_head (nb)
+							end
 						end
 					end
-				end
-				l_filename := l_class_name.as_lower + ".e"
-				create l_output_file.make (l_filename)
-				l_output_file.open_write
-				if l_output_file.is_open_write then
-					print_class_header (l_class_name, l_output_file)
-					create l_bytes.make_filled ('%U', chunk_size)
-					from
-						nb := l_input_file.read_to_string (l_bytes, 1, chunk_size)
-					until
-						nb = 0
-					loop
-						l_chunk_count := l_chunk_count + 1
-						print_build_image_data_routine (l_bytes, nb, l_chunk_count, l_output_file)
-						l_bytes_total := l_bytes_total + nb
-						nb := l_input_file.read_to_string (l_bytes, 1, chunk_size)
+					l_filename := l_class_name.as_lower + ".e"
+					create l_output_file.make (l_filename)
+					l_output_file.open_write
+					if l_output_file.is_open_write then
+						print_class_header (l_class_name, l_output_file)
+						create l_bytes.make_filled ('%U', chunk_size)
+						from
+							nb := l_input_file.read_to_string (l_bytes, 1, chunk_size)
+						until
+							nb = 0
+						loop
+							l_chunk_count := l_chunk_count + 1
+							print_build_image_data_routine (l_bytes, nb, l_chunk_count, l_output_file)
+							l_bytes_total := l_bytes_total + nb
+							nb := l_input_file.read_to_string (l_bytes, 1, chunk_size)
+						end
+						print_class_footer (l_bytes_total, l_chunk_count, l_output_file)
+						l_output_file.close
+					else
+						report_cannot_write_error (l_filename)
+						exit_code := 1
 					end
-					print_class_footer (l_bytes_total, l_chunk_count, l_output_file)
-					l_output_file.close
+					l_input_file.close
 				else
-					report_cannot_write_error (l_filename)
-					Exceptions.die (1)
+					report_cannot_read_error (image_filename)
+					exit_code := 1
 				end
-				l_input_file.close
-			else
-				report_cannot_read_error (image_filename)
-				Exceptions.die (1)
 			end
 		rescue
-			Exceptions.die (4)
+			exit_code := 4
 		end
 
-feature -- Access
+feature -- Error handling
 
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
-
-feature -- Error handling
 
 	report_cannot_read_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
@@ -132,6 +161,9 @@ feature -- Error handling
 			error_handler.report_info (a_message)
 		end
 
+	exit_code: INTEGER
+			-- Exit code
+
 feature -- Argument parsing
 
 	image_filename: STRING
@@ -143,8 +175,11 @@ feature -- Argument parsing
 	version_flag: AP_FLAG
 			-- Flag for '--version'
 
-	parse_arguments
-			-- Initialize options and parse the command line.
+	parse_arguments (a_args: ARRAY [STRING])
+			-- Initialize options and parse arguments `a_args'.
+		require
+			a_args_not_void: a_args /= Void
+			no_void_arg: across a_args is l_arg all l_arg /= Void end
 		local
 			l_parser: AP_PARSER
 			l_list: AP_ALTERNATIVE_OPTIONS_LIST
@@ -167,11 +202,11 @@ feature -- Argument parsing
 			if version_flag.was_found then
 				report_version_number
 				image_filename := ""
-				Exceptions.die (0)
+				exit_code := 0
 			elseif l_parser.parameters.count /= 1 then
 				error_handler.report_info_message (l_parser.help_option.full_usage_instruction (l_parser))
 				image_filename := ""
-				Exceptions.die (1)
+				exit_code := 1
 			else
 				image_filename := l_parser.parameters.first
 			end
