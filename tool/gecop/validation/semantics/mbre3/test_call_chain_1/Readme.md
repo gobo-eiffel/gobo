@@ -12,7 +12,3 @@ d.set_value (3)
 ```
 
 where an attachment would have been involved. Since there is no attachment, the semantics rule `MBRE`, and in particular `MBRE-3`, does not apply. So there is no cloning of the object attached to `b.d` despite its copy semantics.
-
-### Notes
-
-* Gobo Eiffel (as of 20.05.31.5 and after) does not fully implement copy semantics. This violates `MBRE-3`.

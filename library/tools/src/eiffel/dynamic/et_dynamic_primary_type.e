@@ -792,6 +792,7 @@ feature -- Calls
 		do
 			a_call.set_next (query_calls)
 			query_calls := a_call
+			a_call.current_feature.put_query_call (a_call)
 		end
 
 	put_procedure_call (a_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL)
@@ -801,6 +802,7 @@ feature -- Calls
 		do
 			a_call.set_next (procedure_calls)
 			procedure_calls := a_call
+			a_call.current_feature.put_procedure_call (a_call)
 		end
 
 feature -- Equality expressions

@@ -5,7 +5,7 @@ note
 		"Eiffel qualified calls at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,6 +27,17 @@ feature -- Access
 	static_feature: detachable ET_FEATURE
 			-- Static feature of the call;
 			-- Void if no such feature found
+		deferred
+		end
+
+	dynamic_feature (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
+			-- Run-time feature in `a_type' corresponding to current call;
+			-- Void if no such feature
+		require
+			not_tuple_label: not is_tuple_label
+			a_type_not_void: a_type /= Void
+			a_type_valid: target_type_set.has_type (a_type)
+			a_system_not_void: a_system /= Void
 		deferred
 		end
 
@@ -61,6 +72,30 @@ feature -- Status report
 			Result := static_call.is_call_agent
 		end
 
+	is_generated: BOOLEAN
+			-- Has code for current call been registered to be generated?
+
+	force_result_boxing: BOOLEAN
+			-- Should result be boxed even though the result static type is embedded?
+			-- This is needed when the call is an attribute, tuple label or "SPECIAL"
+			-- item, the call result type is embedded, and it is the target of another call.
+			-- In that case we force the result type to be of reference type in order
+			-- to force the boxing of the result so that the other call is applied on
+			-- the result object itself and not on a copy of this object.
+		do
+			-- Result := False
+		end
+
+feature -- Status setting
+
+	set_generated (b: BOOLEAN)
+			-- Set `is_generated' to `b'.
+		do
+			is_generated := b
+		ensure
+			generated_set: is_generated = b
+		end
+
 feature -- Measurement
 
 	count: INTEGER
@@ -72,11 +107,11 @@ feature -- Element change
 	put_type_from_type_set (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `a_type_set' to current target.
 		local
-			l_dynamic_feature: like seeded_dynamic_feature
+			l_dynamic_feature: like dynamic_feature
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 		do
 			if not is_tuple_label then
-				l_dynamic_feature := seeded_dynamic_feature (a_type, a_system)
+				l_dynamic_feature := dynamic_feature (a_type, a_system)
 				if l_dynamic_feature = Void then
 					if a_type.conforms_to_primary_type (target_type_set.static_type.primary_type) then
 							-- Internal error: there should be a feature with that seed
@@ -133,12 +168,12 @@ feature -- Element change
 			a_type_not_void: a_type /= Void
 			a_builder_not_void: a_builder /= Void
 		local
-			l_dynamic_feature: like seeded_dynamic_feature
+			l_dynamic_feature: like dynamic_feature
 			l_system: ET_DYNAMIC_SYSTEM
 		do
 			if not is_tuple_label then
 				l_system := a_builder.current_dynamic_system
-				l_dynamic_feature := seeded_dynamic_feature (a_type, l_system)
+				l_dynamic_feature := dynamic_feature (a_type, l_system)
 				if l_dynamic_feature = Void then
 					if a_type.conforms_to_primary_type (target_type_set.static_type.primary_type) then
 							-- Internal error: there should be a feature with that seed
@@ -154,18 +189,6 @@ feature -- Element change
 			else
 				put_type_with_tuple_label (a_type, a_builder)
 			end
-		end
-
-feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
-
-	seeded_dynamic_feature (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
-			-- Run-time feature in `a_type' corresponding to current call;
-			-- Void if no such feature
-		require
-			not_tuple_label: not is_tuple_label
-			a_type_not_void: a_type /= Void
-			a_system_not_void: a_system /= Void
-		deferred
 		end
 
 feature {NONE} -- Implementation

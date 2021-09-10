@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -377,7 +377,7 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 			l_dynamic_feature: detachable ET_DYNAMIC_FEATURE
 		do
 			if not a_call.is_tuple_label then
-				l_dynamic_feature := a_call.seeded_dynamic_feature (a_type, current_dynamic_system)
+				l_dynamic_feature := a_call.dynamic_feature (a_type, current_dynamic_system)
 				if l_dynamic_feature = Void then
 					l_target_type_set := a_call.target_type_set
 					if a_type.conforms_to_primary_type (l_target_type_set.static_type.primary_type) then
@@ -762,7 +762,7 @@ feature {NONE} -- CAT-calls
 					end
 				end
 			else
-				l_dynamic_feature := a_call.seeded_dynamic_feature (a_type, current_dynamic_system)
+				l_dynamic_feature := a_call.dynamic_feature (a_type, current_dynamic_system)
 				if l_dynamic_feature = Void then
 						-- Internal error: there should be a feature in all
 						-- descendants of `a_call.target_type_set.static_type'.

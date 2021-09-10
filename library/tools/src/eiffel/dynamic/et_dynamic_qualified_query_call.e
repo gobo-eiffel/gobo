@@ -5,7 +5,7 @@ note
 		"Eiffel qualified query calls at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	ET_DYNAMIC_QUALIFIED_CALL
 		redefine
+			force_result_boxing,
 			put_type_with_feature,
 			propagate_type_with_feature
 		end
@@ -62,16 +63,65 @@ feature -- Access
 			Result := l_class.seeded_query (static_call.name.seed)
 		end
 
-	result_type_set: ET_DYNAMIC_TYPE_SET
-			-- Type of Result
-
-feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
-
-	seeded_dynamic_feature (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
+	dynamic_feature (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
 			-- Run-time query in `a_type' corresponding to current call;
 			-- Void if no such query
 		do
 			Result := a_type.seeded_dynamic_query (static_call.name.seed, a_system)
+		end
+
+	result_type_set: ET_DYNAMIC_TYPE_SET
+			-- Type of Result
+
+feature -- Status report
+
+	has_field_access (a_system: ET_DYNAMIC_SYSTEM): BOOLEAN
+			-- Is one of the possible dynamic features of current call either
+			-- an attribute, a tuple label or a "SPECIAL" item?
+		local
+			l_target_type_set: like target_type_set
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
+			i, nb: INTEGER
+		do
+			if is_tuple_label then
+				Result := True
+			else
+				l_target_type_set := target_type_set
+				nb := l_target_type_set.count
+				from i := 1 until i > nb loop
+					l_dynamic_type := l_target_type_set.dynamic_type (i)
+					if not attached dynamic_feature (l_dynamic_type, a_system) as l_dynamic_feature then
+						-- No feature found.
+					elseif l_dynamic_feature.is_builtin_special_item then
+						Result := True
+							-- Jump out of the loop.
+						i := nb + 1
+					elseif attached {ET_ATTRIBUTE} l_dynamic_feature.static_feature then
+						Result := True
+							-- Jump out of the loop.
+						i := nb + 1
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	force_result_boxing: BOOLEAN
+			-- Should result be boxed even though the result static type is embedded?
+			-- This is needed when the call is an attribute, tuple label or "SPECIAL"
+			-- item, the call result type is embedded, and it is the target of another call.
+			-- In that case we force the result type to be of reference type in order
+			-- to force the boxing of the result so that the other call is applied on
+			-- the result object itself and not on a copy of this object.
+
+feature -- Status setting
+
+	set_force_result_boxing (b: BOOLEAN)
+			-- Set `force_result_boxing' to `b'.
+		do
+			force_result_boxing := b
+		ensure
+			force_result_boxing_set: force_result_boxing = b
 		end
 
 feature {NONE} -- Implementation

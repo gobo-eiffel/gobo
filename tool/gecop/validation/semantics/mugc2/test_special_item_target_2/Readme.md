@@ -24,4 +24,3 @@ because the *Reattachment Semantics* rule applies in the assignment `b := s.item
 Informative test: A labeled tuple access, `t.b` where the type of `t` is a *Tuple_type*, falls under case 3 as a result of the notion of unfolded form of tuple types.
 * Feature `item` in class `SPECIAL` is declared as `external "built_it"`. It is assumed to return the item object, not a clone of the item, since there is no explicit assignment and hence no *Reattachment Semantics* rule involved.
 * ISE Eiffel (as of 20.11.10.5058 and after) applies the *Reattachment Semantics* rule within the implementation of `item` in class `SPECIAL`, and hence returns a clone of the item and not the item object itself.
-* Gobo Eiffel (as of 20.05.31.5 and after) does call `f` on the item object. This violates `MUGC-2`.

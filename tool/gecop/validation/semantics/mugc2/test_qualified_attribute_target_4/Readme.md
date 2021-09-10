@@ -22,4 +22,3 @@ because the *Reattachment Semantics* rule applies in the assignment `d := b.d`, 
 * See also `MUVA` (*Value of a call expression*): The value of a *Call* `c` used as an expression is, at any run-time moment, the result of executing `c`.
 * See also `MURE-3` (*Call result*): If `df` is an attribute: the corresponding field in `O`.
 * ISE Eiffel (as of 20.11.10.5058 and after) erroneously reports a validity error `VDRD-8` because a feature of reference type is redefined to a feature of expanded type. This rule is not part of the ECMA Eiffel standard.
-* Gobo Eiffel (as of 20.05.31.5 and after) does call `f` on the attribute object. This violates `MUGC-2`.

@@ -2,7 +2,8 @@
 DD copied
 ## copy expected
 DD copied
-## standard copy expected
+## copy expected
+DD copied
 ##
 d.value = 2
 s1.item (0).value = 2

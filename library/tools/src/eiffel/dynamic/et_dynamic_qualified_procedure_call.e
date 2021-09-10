@@ -5,7 +5,7 @@ note
 		"Eiffel qualified procedure calls at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,9 +55,7 @@ feature -- Access
 			Result := l_class.seeded_procedure (static_call.name.seed)
 		end
 
-feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
-
-	seeded_dynamic_feature (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
+	dynamic_feature (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
 			-- Run-time procedure in `a_type' corresponding to current call;
 			-- Void if no such procedure
 		do

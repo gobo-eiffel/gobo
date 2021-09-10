@@ -46,6 +46,8 @@ feature {NONE} -- Initialization
 			static_feature := a_feature
 			target_type := a_target_type
 			dynamic_type_sets := empty_dynamic_type_sets
+			create query_calls.make_map (10)
+			create procedure_calls.make_map (10)
 			if attached {ET_EXTERNAL_ROUTINE} a_feature as l_external_routine then
 				builtin_class_code := l_external_routine.builtin_class_code
 				builtin_feature_code := l_external_routine.builtin_feature_code
@@ -298,10 +300,10 @@ feature -- Status report
 			-- Have dynamic type sets of current feature been built?
 
 	is_generated: BOOLEAN
-			-- Has code for current feature been generated?
+			-- Has code for current feature been registered to be generated?
 
 	is_static_generated: BOOLEAN
-			-- Has code for the statically called version of current feature been generated?
+			-- Has code for the statically called version of current feature been registered to be generated?
 
 	is_creation: BOOLEAN
 			-- Is current feature used as a creation procedure?
@@ -837,6 +839,72 @@ feature -- Status setting
 			regular_set: b implies is_regular
 		end
 
+feature -- Calls
+
+	query_call (a_static_call: ET_CALL_COMPONENT): detachable ET_DYNAMIC_QUALIFIED_QUERY_CALL
+			-- Qualified query call in current feature whose static call is `a_static_call', if any
+		require
+			a_static_call_not_void: a_static_call /= Void
+		do
+			Result := query_calls.value (a_static_call.name)
+		ensure
+			definition: Result = query_calls.value (a_static_call.name)
+		end
+
+	query_calls: DS_HASH_TABLE [ET_DYNAMIC_QUALIFIED_QUERY_CALL, ET_CALL_NAME]
+			-- Qualified query calls called from current feature
+			--
+			-- Use the name of the call as key because for call agents (e.g. 'agent a.f')
+			-- we use a temporary qualified call expression or instruction instead of the
+			-- actual call agent as static call to generate the C code in ET_C_GENERATOR.
+			-- (See ET_C_GENERATOR.print_call_agent_body_declaration.) This is so that
+			-- `query_call' can get the right dynamic call despite the static call object
+			-- being different.
+
+	procedure_call (a_static_call: ET_CALL_COMPONENT): detachable ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
+			-- Qualified procedure call in current feature whose static call is `a_static_call', if any
+		require
+			a_static_call_not_void: a_static_call /= Void
+		do
+			Result := procedure_calls.value (a_static_call.name)
+		ensure
+			definition: Result = procedure_calls.value (a_static_call.name)
+		end
+
+	procedure_calls: DS_HASH_TABLE [ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL, ET_CALL_NAME]
+			-- Qualified procedure calls called from current feature
+			--
+			-- Use the name of the call as key because for call agents (e.g. 'agent a.f')
+			-- we use a temporary qualified call expression or instruction instead of the
+			-- actual call agent as static call to generate the C code in ET_C_GENERATOR.
+			-- (See ET_C_GENERATOR.print_call_agent_body_declaration.) This is so that
+			-- `procedure_call' can get the right dynamic call despite the static call object
+			-- being different.
+
+feature {ET_DYNAMIC_PRIMARY_TYPE} -- Calls
+
+	put_query_call (a_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL)
+			-- Add `a_call' to the list of qualified query calls called from current feature.
+		require
+			a_call_not_void: a_call /= Void
+			a_call_caller: a_call.current_feature = Current
+		do
+			query_calls.force (a_call, a_call.static_call.name)
+		ensure
+			added: query_calls.value (a_call.static_call.name) = a_call
+		end
+
+	put_procedure_call (a_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL)
+			-- Add `a_call' to the list of qualified procedure calls called from current feature.
+		require
+			a_call_not_void: a_call /= Void
+			a_call_caller: a_call.current_feature = Current
+		do
+			procedure_calls.force (a_call, a_call.static_call.name)
+		ensure
+			added: procedure_calls.value (a_call.static_call.name) = a_call
+		end
+
 feature -- Output
 
 	debug_output: STRING
@@ -861,5 +929,9 @@ invariant
 	static_feature_not_void: static_feature /= Void
 	target_type_not_void: target_type /= Void
 	dynamic_type_sets_not_void: dynamic_type_sets /= Void
+	query_calls_not_void: query_calls /= Void
+	no_void_query_call: not query_calls.has_void
+	procedure_calls_not_void: procedure_calls /= Void
+	no_void_procedure_call: not procedure_calls.has_void
 
 end

@@ -22,4 +22,3 @@ because the *Reattachment Semantics* rule applies in the assignment `b := t.b`, 
 * See also `MUVA` (*Value of a call expression*): The value of a *Call* `c` used as an expression is, at any run-time moment, the result of executing `c`.
 * See also `MURE-3` (*Call result*): If `df` is an attribute: the corresponding field in `O`.  
 Informative test: A labeled tuple access, `t.b` where the type of `t` is a *Tuple_type*, falls under case 3 as a result of the notion of unfolded form of tuple types.
-* Gobo Eiffel (as of 20.05.31.5 and after) does call `f` on the item object. This violates `MUGC-2`.

@@ -19,7 +19,7 @@ feature
 			d2.set_value (10)
 			print ("## copy expected%N")
 			s2.extend (d2)
-			print ("## standard copy expected%N")
+			print ("## copy expected%N")
 			s2.copy (s1)
 			print ("##%N")
 			print ("d.value = " + d.value.out + "%N")
