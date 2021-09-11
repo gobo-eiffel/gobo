@@ -1,6 +1,10 @@
 variables:
   GOBO: '$CI_PROJECT_DIR'
 
+#
+# Running tests with Gobo Eiffel.
+#
+
 test:
   stage: test
   script:
@@ -20,6 +24,11 @@ test_library_windows:
     - cd "$env:GOBO\library"
     # The tests in `$GOBO\library\lexical` are failing in GitLab when using `geant test_ge`.
     - '& "$env:GOBO\.gitlab\do_it.bat" geant test_debug_ge'
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
 
 # We have `test_tool_no_gec_windows` and `test_tool_gec_windows`, instead
 # of just `test_tool_windows`, because it takes more than 1 hour to run
@@ -38,6 +47,11 @@ test_tool_no_gec_windows:
     - Remove-Item "$env:GOBO\tool\gec\test" -Force -Recurse
     - cd "$env:GOBO\tool"
     - '& "$env:GOBO\.gitlab\do_it.bat" geant test_ge'
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
 
 test_tool_gec_windows:
   stage: test
@@ -50,6 +64,11 @@ test_tool_gec_windows:
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
     - cd "$env:GOBO\tool\gec"
     - '& "$env:GOBO\.gitlab\do_it.bat" geant test_ge'
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
 
 test_library_linux:
   stage: test
@@ -64,6 +83,11 @@ test_library_linux:
     - gec --version
     - cd $GOBO/library
     - geant test_ge
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
 
 test_tool_linux:
   stage: test
@@ -78,6 +102,48 @@ test_tool_linux:
     - gec --version
     - cd $GOBO/tool
     - geant test_ge
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+
+#
+# Running tests with ISE Eiffel.
+#
+
+test_ise:
+  stage: test_ise
+  script:
+    - Write-Host "Just to define the 'test_ise' stage name"
+  rules:
+    - when: never
+
+test_ise:
+  stage: test_ise
+  script:
+    - cat /etc/*-release
+    - arch
+    - gcc --version
+    - $GOBO/bin/install.sh -v gcc
+    - export PATH=$PATH:$GOBO/bin
+    - gec --version
+    - source $GOBO/.gitlab/install_ise.sh
+    - cd $GOBO/library/argument
+    - geant test_debug_ise
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $GOBO_CUSTOM_PIPELINE == "test_ise"
+      when: on_success
+
+
+#
+# Stages.
+#
 
 stages:
   - test
+  - test_ise
