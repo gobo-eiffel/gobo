@@ -9898,6 +9898,34 @@ feature {NONE} -- Expression generation
 			end
 		end
 
+	print_check_void_expression (a_expression: ET_EXPRESSION; a_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void: BOOLEAN)
+			-- Print `a_expression'.
+			-- `a_dynamic_type' is one of the possible dynamic types of `a_expression'.
+			-- `a_check_void' means that we need to check whether the expression is Void or not.
+		require
+			a_expression_not_void: a_expression /= Void
+			a_dynamic_type_not_void: a_dynamic_type /= Void
+		local
+			l_do_check_void: BOOLEAN
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if a_check_void then
+				l_dynamic_type_set := dynamic_type_set (a_expression)
+				if not a_dynamic_type.is_expanded and then l_dynamic_type_set.can_be_void and not a_expression.is_never_void then
+					can_be_void_target_count := can_be_void_target_count + 1
+					current_file.put_string (c_ge_void)
+					current_file.put_character ('(')
+					l_do_check_void := True
+				else
+					never_void_target_count := never_void_target_count + 1
+				end
+			end
+			a_expression.process (Current)
+			if l_do_check_void then
+				current_file.put_character (')')
+			end
+		end
+
 	print_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION)
 			-- Print `an_expression'.
 		require
@@ -12836,20 +12864,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			old_target_type: like call_target_type
 			old_target_check_void: BOOLEAN
 			l_old_in_procedure_call_target: BOOLEAN
-			l_do_check_void_target: BOOLEAN
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
-			if a_check_void_target then
-				l_dynamic_type_set := dynamic_type_set (an_expression)
-				if not a_target_type.is_expanded and then l_dynamic_type_set.can_be_void and not an_expression.is_never_void then
-					can_be_void_target_count := can_be_void_target_count + 1
-					current_file.put_string (c_ge_void)
-					current_file.put_character ('(')
-					l_do_check_void_target := True
-				else
-					never_void_target_count := never_void_target_count + 1
-				end
-			end
 			old_in_operand := in_operand
 			old_target_type := call_target_type
 			old_target_check_void := call_target_check_void
@@ -12858,14 +12873,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			call_target_type := a_target_type
 			in_procedure_call_target := True
 			call_target_check_void := a_check_void_target
-			an_expression.process (Current)
+			print_check_void_expression (an_expression, a_target_type, a_check_void_target)
 			call_target_check_void := old_target_check_void
 			in_procedure_call_target := l_old_in_procedure_call_target
 			call_target_type := old_target_type
 			in_operand := old_in_operand
-			if l_do_check_void_target then
-				current_file.put_character (')')
-			end
 		end
 
 	print_procedure_target_operand (an_operand: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE)
@@ -13743,20 +13755,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			old_target_type: like call_target_type
 			old_target_check_void: BOOLEAN
 			l_old_in_procedure_call_target: BOOLEAN
-			l_do_check_void_target: BOOLEAN
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
-			if a_check_void_target then
-				l_dynamic_type_set := dynamic_type_set (an_expression)
-				if not a_target_type.is_expanded and then l_dynamic_type_set.can_be_void and not an_expression.is_never_void then
-					can_be_void_target_count := can_be_void_target_count + 1
-					current_file.put_string (c_ge_void)
-					current_file.put_character ('(')
-					l_do_check_void_target := True
-				else
-					never_void_target_count := never_void_target_count + 1
-				end
-			end
 			old_in_operand := in_operand
 			old_target_type := call_target_type
 			old_target_check_void := call_target_check_void
@@ -13765,14 +13764,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			call_target_type := a_target_type
 			in_procedure_call_target := False
 			call_target_check_void := a_check_void_target
-			an_expression.process (Current)
+			print_check_void_expression (an_expression, a_target_type, a_check_void_target)
 			call_target_check_void := old_target_check_void
 			in_procedure_call_target := l_old_in_procedure_call_target
 			call_target_type := old_target_type
 			in_operand := old_in_operand
-			if l_do_check_void_target then
-				current_file.put_character (')')
-			end
 		end
 
 	print_target_operand (an_operand: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE)
