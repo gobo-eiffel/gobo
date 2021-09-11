@@ -21,7 +21,12 @@ test_library_windows:
     # The tests in `$GOBO\library\lexical` are failing in GitLab when using `geant test_ge`.
     - '& "$env:GOBO\.gitlab\do_it.bat" geant test_debug_ge'
 
-test_tool_windows:
+# We have `test_tool_no_gec_windows` and `test_tool_gec_windows`, instead
+# of just `test_tool_windows`, because it takes more than 1 hour to run
+# this job and the job timeout on GitLab runners for Windows is set to 1 hour
+# (even though it is set to 2 hours for the project).
+
+test_tool_no_gec_windows:
   stage: test
   tags:
     - shared-windows
@@ -30,7 +35,20 @@ test_tool_windows:
   script:
     - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
+    - Remove-Item "$env:GOBO\tool\gec\test" -Force -Recurse
     - cd "$env:GOBO\tool"
+    - '& "$env:GOBO\.gitlab\do_it.bat" geant test_ge'
+
+test_tool_gec_windows:
+  stage: test
+  tags:
+    - shared-windows
+    - windows
+    - windows-1809
+  script:
+    - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
+    - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
+    - cd "$env:GOBO\tool\gec"
     - '& "$env:GOBO\.gitlab\do_it.bat" geant test_ge'
 
 test_library_linux:
