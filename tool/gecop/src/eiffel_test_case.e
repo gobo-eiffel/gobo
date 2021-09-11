@@ -4,7 +4,7 @@ note
 
 		"Eiffel standard test cases"
 
-	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -860,6 +860,7 @@ feature {NONE} -- Output logs
 			a_pattern1, a_pattern2: STRING
 			a_regexp1, a_regexp2: RX_PCRE_REGULAR_EXPRESSION
 			l_input_filename: STRING
+			l_output2_log_filename: STRING
 			l_first_line: BOOLEAN
 		do
 				-- Compile regexps.
@@ -878,7 +879,8 @@ feature {NONE} -- Output logs
 			out_file.open_append
 			if out_file.is_open_write then
 				from
-					l_input_filename := output2_log_filename
+					l_output2_log_filename := output2_log_filename
+					l_input_filename := l_output2_log_filename
 				until
 					l_input_filename = Void
 				loop
@@ -915,7 +917,7 @@ feature {NONE} -- Output logs
 					else
 						assert ("cannot open file '" + l_input_filename + "'", False)
 					end
-					if l_input_filename = output2_log_filename then
+					if l_input_filename = l_output2_log_filename then
 						l_input_filename := error2_log_filename
 					else
 						l_input_filename := Void
@@ -934,6 +936,7 @@ feature {NONE} -- Output logs
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
 			l_input_filename: STRING
+			l_output3_log_filename: STRING
 			l_first_line: BOOLEAN
 		do
 				-- Copy files.
@@ -941,7 +944,8 @@ feature {NONE} -- Output logs
 			out_file.open_append
 			if out_file.is_open_write then
 				from
-					l_input_filename := output3_log_filename
+					l_output3_log_filename := output3_log_filename
+					l_input_filename := l_output3_log_filename
 				until
 					l_input_filename = Void
 				loop
@@ -966,7 +970,7 @@ feature {NONE} -- Output logs
 					else
 						assert ("cannot open file '" + l_input_filename + "'", False)
 					end
-					if l_input_filename = output3_log_filename then
+					if l_input_filename = l_output3_log_filename then
 						l_input_filename := error3_log_filename
 					else
 						l_input_filename := Void
