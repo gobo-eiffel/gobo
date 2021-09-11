@@ -5,7 +5,7 @@ note
 		"Eiffel class codes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date:  $"
 	revision: "$Revision: $"
@@ -72,7 +72,7 @@ feature -- Access
 feature -- Codes
 
 	no_class_code: NATURAL_8 = 0
-			-- Not a special class
+			-- Not one of the classes with a specific code (see list below)
 
 	boolean_class_code: NATURAL_8 = 1
 			-- Code for class "BOOLEAN"
