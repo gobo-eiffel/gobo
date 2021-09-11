@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     319 tests
+    # Passed:     325 tests
     # FAILED:     34 tests
     # Aborted:    0 test
-    # Total:      353 tests
+    # Total:      359 tests
 
 Test Results:</br>
 FAIL:  \[[semantics/mbre3/test\_assignment\_from\_attribute\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_attribute\_to\_local\_1)\] test\_failed</br>

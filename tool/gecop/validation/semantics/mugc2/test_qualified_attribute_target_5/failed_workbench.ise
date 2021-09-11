@@ -1,0 +1,19 @@
+
+aa: system execution failed.
+Following is the set of recorded exceptions:
+
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+INTEGER_32          copy                   Segmentation violation:      
+<XXXXXXXXXXXXXXXX>  (From ANY)             Operating system signal.      Fail
+-------------------------------------------------------------------------------
+INTEGER_32          copy                                                
+<XXXXXXXXXXXXXXXX>  (From ANY)             Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  make @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  root's creation                                     
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Exit
+-------------------------------------------------------------------------------

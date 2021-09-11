@@ -8142,7 +8142,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			if not a_call.is_tuple_label and then l_seed = current_system.routine_call_seed and then not a_call.is_call_agent then
 				if l_actuals /= Void and then l_actuals.count = 1 then
 					if attached {ET_MANIFEST_TUPLE} l_actuals.actual_argument (1) as l_manifest_tuple then
-						print_target_operand (l_target, l_target_static_type)
+						print_procedure_target_operand (l_target, l_target_static_type)
 						nb := l_manifest_tuple.count
 						from i := 1 until i > nb loop
 							print_operand (l_manifest_tuple.expression (i))
@@ -8167,7 +8167,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 				end
 			end
 			if l_manifest_tuple_operand = Void then
-				print_target_operand (l_target, l_target_static_type)
+				print_procedure_target_operand (l_target, l_target_static_type)
 				if l_actuals /= Void then
 					nb := l_actuals.count
 					from i := 1 until i > nb loop
@@ -8183,7 +8183,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 					-- Call on Void target.
 				print_indentation
 				current_file.put_character ('(')
-				print_target_expression (call_operands.first, l_target_static_type, True)
+				print_procedure_target_expression (call_operands.first, l_target_static_type, True)
 				from i := 2 until i > nb loop
 					current_file.put_character (',')
 					current_file.put_character (' ')
@@ -8224,7 +8224,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 						current_file.put_string (c_ac)
 						current_file.put_character (',')
 						current_file.put_character (' ')
-						print_target_expression (call_operands.first, l_target_static_type, True)
+						print_procedure_target_expression (call_operands.first, l_target_static_type, True)
 						if l_manifest_tuple_operand /= Void then
 							nb := l_manifest_tuple_operand.count
 							from i := 1 until i > nb loop
@@ -8712,7 +8712,7 @@ feature {NONE} -- Procedure call generation
 			current_file.put_character (',')
 			current_file.put_character (' ')
 			nb := call_operands.count
-			print_target_expression (call_operands.first, a_target_type, a_check_void_target)
+			print_procedure_target_expression (call_operands.first, a_target_type, a_check_void_target)
 			from i := 2 until i > nb loop
 				current_file.put_character (',')
 				current_file.put_character (' ')
@@ -10546,13 +10546,17 @@ feature {NONE} -- Expression generation
 		local
 			old_in_operand: BOOLEAN
 			old_target_type: like call_target_type
+			l_old_in_procedure_call_target: BOOLEAN
 		do
 			old_in_operand := in_operand
 			old_target_type := call_target_type
+			l_old_in_procedure_call_target := in_procedure_call_target
 			in_operand := False
+			in_procedure_call_target := False
 			call_target_type := Void
 			an_expression.process (Current)
 			call_target_type := old_target_type
+			in_procedure_call_target := l_old_in_procedure_call_target
 			in_operand := old_in_operand
 		end
 
@@ -12649,13 +12653,17 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 		local
 			old_in_operand: BOOLEAN
 			old_target_type: like call_target_type
+			l_old_in_procedure_call_target: BOOLEAN
 		do
 			old_in_operand := in_operand
 			old_target_type := call_target_type
+			l_old_in_procedure_call_target := in_procedure_call_target
 			in_operand := True
+			in_procedure_call_target := False
 			call_target_type := Void
 			an_operand.process (Current)
 			call_target_type := old_target_type
+			in_procedure_call_target := l_old_in_procedure_call_target
 			in_operand := old_in_operand
 		end
 
@@ -12816,6 +12824,73 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			print_qualified_call_expression (an_expression)
 		end
 
+	print_procedure_target_expression (an_expression: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print `an_expression' when appearing as the target of a procedure call.
+			-- `a_target_type' is one of the possible dynamic types of `an_expression'.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			old_in_operand: BOOLEAN
+			old_target_type: like call_target_type
+			old_target_check_void: BOOLEAN
+			l_old_in_procedure_call_target: BOOLEAN
+			l_do_check_void_target: BOOLEAN
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if a_check_void_target then
+				l_dynamic_type_set := dynamic_type_set (an_expression)
+				if not a_target_type.is_expanded and then l_dynamic_type_set.can_be_void and not an_expression.is_never_void then
+					can_be_void_target_count := can_be_void_target_count + 1
+					current_file.put_string (c_ge_void)
+					current_file.put_character ('(')
+					l_do_check_void_target := True
+				else
+					never_void_target_count := never_void_target_count + 1
+				end
+			end
+			old_in_operand := in_operand
+			old_target_type := call_target_type
+			old_target_check_void := call_target_check_void
+			l_old_in_procedure_call_target := in_procedure_call_target
+			in_operand := False
+			call_target_type := a_target_type
+			in_procedure_call_target := True
+			call_target_check_void := a_check_void_target
+			an_expression.process (Current)
+			call_target_check_void := old_target_check_void
+			in_procedure_call_target := l_old_in_procedure_call_target
+			call_target_type := old_target_type
+			in_operand := old_in_operand
+			if l_do_check_void_target then
+				current_file.put_character (')')
+			end
+		end
+
+	print_procedure_target_operand (an_operand: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE)
+			-- Print `an_operand' when appearing as the target of a procedure call.
+			-- `a_target_type' is one of the possible dynamic types of `an_operand'.
+		require
+			an_operand_not_void: an_operand /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			old_in_operand: BOOLEAN
+			old_target_type: like call_target_type
+			l_old_in_procedure_call_target: BOOLEAN
+		do
+			old_in_operand := in_operand
+			old_target_type := call_target_type
+			l_old_in_procedure_call_target := in_procedure_call_target
+			in_operand := True
+			call_target_type := a_target_type
+			in_procedure_call_target := True
+			an_operand.process (Current)
+			in_procedure_call_target := l_old_in_procedure_call_target
+			call_target_type := old_target_type
+			in_operand := old_in_operand
+		end
+
 	print_qualified_call_expression (a_call: ET_QUALIFIED_FEATURE_CALL_EXPRESSION)
 			-- Print qualified call expression.
 		require
@@ -12861,7 +12936,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			l_call_type := l_call_type_set.static_type.primary_type
 			if
 				in_target and then
-				l_call_type.is_embedded and then not l_call_type.is_basic and then
+				l_call_type.is_embedded and then
+				(not l_call_type.is_basic or else in_procedure_call_target) and then
 				(l_dynamic_call = Void or else l_dynamic_call.has_field_access (current_dynamic_system))
 			then
 					-- We want the result be boxed even though the result static type is embedded.
@@ -12870,6 +12946,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					-- In that case we force the result type to be of reference type in order
 					-- to force the boxing of the result so that the other call is applied on
 					-- the result object itself and not on a copy of this object.
+					-- Note that for optimization we don't force boxing when the type is a basic
+					-- type unless the result object is the target of a procedure call (e.g.
+					-- 'copy', 'standard_copy' or 'set_item' which will overwrite the value of
+					-- the target).
 				l_call_type := current_dynamic_system.any_type
 				l_force_result_boxing := True
 			end
@@ -13662,6 +13742,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			old_in_operand: BOOLEAN
 			old_target_type: like call_target_type
 			old_target_check_void: BOOLEAN
+			l_old_in_procedure_call_target: BOOLEAN
 			l_do_check_void_target: BOOLEAN
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -13679,12 +13760,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			old_in_operand := in_operand
 			old_target_type := call_target_type
 			old_target_check_void := call_target_check_void
+			l_old_in_procedure_call_target := in_procedure_call_target
 			in_operand := False
 			call_target_type := a_target_type
+			in_procedure_call_target := False
 			call_target_check_void := a_check_void_target
 			an_expression.process (Current)
-			call_target_type := old_target_type
 			call_target_check_void := old_target_check_void
+			in_procedure_call_target := l_old_in_procedure_call_target
+			call_target_type := old_target_type
 			in_operand := old_in_operand
 			if l_do_check_void_target then
 				current_file.put_character (')')
@@ -13700,12 +13784,16 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 		local
 			old_in_operand: BOOLEAN
 			old_target_type: like call_target_type
+			l_old_in_procedure_call_target: BOOLEAN
 		do
 			old_in_operand := in_operand
 			old_target_type := call_target_type
+			l_old_in_procedure_call_target := in_procedure_call_target
 			in_operand := True
 			call_target_type := a_target_type
+			in_procedure_call_target := False
 			an_operand.process (Current)
+			in_procedure_call_target := l_old_in_procedure_call_target
 			call_target_type := old_target_type
 			in_operand := old_in_operand
 		end
@@ -13795,7 +13883,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 					print_expression (an_expression)
 				else
 						-- We need to unbox the object.
-					print_boxed_attribute_item_access (an_expression, a_type, a_check_void)
+					current_file.put_character ('*')
+					print_boxed_attribute_pointer_access (an_expression, a_type, a_check_void)
 				end
 			else
 				print_expression (an_expression)
@@ -14147,11 +14236,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			l_seed: INTEGER
 			old_in_operand: BOOLEAN
 			old_target_type: like call_target_type
+			l_old_in_procedure_call_target: BOOLEAN
 			l_was_read: BOOLEAN
 		do
 			old_in_operand := in_operand
 			old_target_type := call_target_type
+			l_old_in_procedure_call_target := in_procedure_call_target
 			in_operand := False
+			in_procedure_call_target := False
 			call_target_type := Void
 			if attached {ET_IDENTIFIER} a_writable as l_identifier then
 				if l_identifier.is_argument then
@@ -14217,6 +14309,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 				end
 			end
 			call_target_type := old_target_type
+			in_procedure_call_target := l_old_in_procedure_call_target
 			in_operand := old_in_operand
 		end
 
@@ -19879,7 +19972,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_indentation
 				current_file.put_string (c_memcpy)
 				current_file.put_character ('(')
-				print_target_expression (tokens.current_keyword, a_special_type, False)
+				print_procedure_target_expression (tokens.current_keyword, a_special_type, False)
 				print_comma
 				print_expression (a_argument)
 				print_comma
@@ -19943,7 +20036,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						print_default_name (l_attribute_type, current_file)
 						print_semicolon_newline
 							-- Call 'copy'.
-						print_target_operand (a_target_attribute, l_attribute_type)
+						print_procedure_target_operand (a_target_attribute, l_attribute_type)
 						print_operand (a_source_attribute)
 						fill_call_operands (2)
 						print_procedure_call (l_copy_feature, l_attribute_type, False)
@@ -20179,7 +20272,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character ('(')
 					current_file.put_string (c_ac)
 					print_comma
-					print_target_expression (l_target, a_target_type, a_check_void_target)
+					print_procedure_target_expression (l_target, a_target_type, a_check_void_target)
 					print_comma
 					print_attachment_expression (l_argument, l_argument_type_set, l_formal_type)
 					current_file.put_character (')')
@@ -20203,7 +20296,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character ('*')
 					current_file.put_character (')')
 					current_file.put_character ('(')
-					print_target_expression (l_target, a_target_type, a_check_void_target)
+					print_procedure_target_expression (l_target, a_target_type, a_check_void_target)
 					current_file.put_character (')')
 					current_file.put_character (')')
 					print_plus
@@ -39116,6 +39209,9 @@ feature {NONE} -- Implementation
 		ensure
 			definition: Result = (call_target_type /= Void)
 		end
+
+	in_procedure_call_target: BOOLEAN
+			-- Is the target of a procedure call being processed?
 
 	call_target_type: detachable ET_DYNAMIC_PRIMARY_TYPE
 			-- Dynamic type of the target of the call being processed, if any

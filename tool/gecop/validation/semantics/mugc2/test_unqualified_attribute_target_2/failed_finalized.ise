@@ -1,0 +1,13 @@
+
+aa: system execution failed.
+Following is the set of recorded exceptions:
+
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+AA                  root's creation        Segmentation violation:      
+<XXXXXXXXXXXXXXXX>                         Operating system signal.      Exit
+-------------------------------------------------------------------------------
+AA                  root's creation                                     
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Exit
+-------------------------------------------------------------------------------

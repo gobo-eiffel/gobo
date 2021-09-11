@@ -5,9 +5,9 @@ Running Test Cases
 Test Summary for validation
 
     # Passed:     265 tests
-    # FAILED:     88 tests
+    # FAILED:     94 tests
     # Aborted:    0 test
-    # Total:      353 tests
+    # Total:      359 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo/test\_tilde\_1](definition/difo/test\_tilde\_1)\] test\_failed</br>
@@ -39,8 +39,14 @@ FAIL:  \[[semantics/mbre3/test\_twin\_special\_2](semantics/mbre3/test\_twin\_sp
 FAIL:  \[[semantics/mbre3/test\_twin\_tuple\_1](semantics/mbre3/test\_twin\_tuple\_1)\] test\_failed</br>
 FAIL:  \[[semantics/mbre3/test\_twin\_tuple\_2](semantics/mbre3/test\_twin\_tuple\_2)\] test\_failed</br>
 FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_4](semantics/mugc2/test\_qualified\_attribute\_target\_4)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_5](semantics/mugc2/test\_qualified\_attribute\_target\_5)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_6](semantics/mugc2/test\_qualified\_attribute\_target\_6)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_7](semantics/mugc2/test\_qualified\_attribute\_target\_7)\] test\_failed</br>
 FAIL:  \[[semantics/mugc2/test\_special\_item\_target\_1](semantics/mugc2/test\_special\_item\_target\_1)\] test\_failed</br>
 FAIL:  \[[semantics/mugc2/test\_special\_item\_target\_2](semantics/mugc2/test\_special\_item\_target\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_unqualified\_attribute\_target\_2](semantics/mugc2/test\_unqualified\_attribute\_target\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_unqualified\_attribute\_target\_3](semantics/mugc2/test\_unqualified\_attribute\_target\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_unqualified\_attribute\_target\_4](semantics/mugc2/test\_unqualified\_attribute\_target\_4)\] test\_failed</br>
 FAIL:  \[[semantics/muon1/test\_once\_per\_object\_3](semantics/muon1/test\_once\_per\_object\_3)\] test\_failed</br>
 FAIL:  \[[semantics/muon1/test\_once\_per\_object\_4](semantics/muon1/test\_once\_per\_object\_4)\] test\_failed</br>
 FAIL:  \[[semantics/muon1/test\_once\_per\_object\_5](semantics/muon1/test\_once\_per\_object\_5)\] test\_failed</br>
