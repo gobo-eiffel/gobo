@@ -29,6 +29,8 @@ test_library_windows:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
+    - if: $GOBO_CUSTOM_PIPELINE == null
+      when: on_success
 
 # We have `test_tool_no_gec_windows` and `test_tool_gec_windows`, instead
 # of just `test_tool_windows`, because it takes more than 1 hour to run
@@ -52,6 +54,8 @@ test_tool_no_gec_windows:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
+    - if: $GOBO_CUSTOM_PIPELINE == null
+      when: on_success
 
 test_tool_gec_windows:
   stage: test
@@ -69,6 +73,8 @@ test_tool_gec_windows:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
+    - if: $GOBO_CUSTOM_PIPELINE == null
+      when: on_success
 
 test_library_linux:
   stage: test
@@ -88,6 +94,8 @@ test_library_linux:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
+    - if: $GOBO_CUSTOM_PIPELINE == null
+      when: on_success
 
 test_tool_linux:
   stage: test
@@ -107,6 +115,8 @@ test_tool_linux:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
+    - if: $GOBO_CUSTOM_PIPELINE == null
+      when: on_success
 
 #
 # Running tests with ISE Eiffel.
