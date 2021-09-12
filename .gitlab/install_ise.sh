@@ -3,7 +3,7 @@
 # Install ISE Eiffel (see https://www.eiffel.org/setup/)
 
 cd $GOBO
-apt-get update
+apt-get -y update
 apt-get install libgtk2.0-0
 export GITLAB_ISE_PLATFORM=linux-x86-64
 export GITLAB_ISE_VERSION=20.05_rev_104521
