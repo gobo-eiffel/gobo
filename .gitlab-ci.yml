@@ -141,7 +141,7 @@ test_ise_library_argument_linux:
     - export PATH=$PATH:$GOBO/bin
     - gec --version
     - source $GOBO/.gitlab/install_ise.sh
-    - cd $GOBO/library/argument
+    - cd $GOBO/library
     - geant test_debug_ise
   rules:
     - if: $CI_COMMIT_TAG
