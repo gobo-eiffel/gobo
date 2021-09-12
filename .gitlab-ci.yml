@@ -230,5 +230,6 @@ tool_linux_test_ise:
 #
 
 stages:
+  - build_ge
   - test_ge
   - test_ise
