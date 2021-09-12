@@ -2,6 +2,28 @@ variables:
   GOBO: '$CI_PROJECT_DIR'
 
 #
+# Templates
+#
+
+.windows_before_script: &windows_before_script
+  - Write-Host ""
+
+.linux_before_script: &linux_before_script
+  - cat /etc/*-release
+  - arch
+  - gcc --version
+
+.windows_install_ge: &windows_install_ge
+  - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
+
+.linux_install_ge: &linux_install_ge
+  - export PATH=$PATH:$GOBO/bin
+  - gec --version
+
+.linux_install_ise: &linux_install_ise
+  - source $GOBO/.gitlab/install_ise.sh
+
+#
 # Build Gobo tools.
 #
 
@@ -20,6 +42,8 @@ windows_build_ge:
     - windows
     - windows-1809
   dependencies: []
+  before_script:
+    - *windows_before_script
   script:
     - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
@@ -42,10 +66,9 @@ linux_build_ge:
   tags:
     - linux
   dependencies: []
+  before_script:
+    - *linux_before_script
   script:
-    - cat /etc/*-release
-    - arch
-    - gcc --version
     - $GOBO/bin/install.sh -v gcc
     - export PATH=$PATH:$GOBO/bin
     - gec --version
@@ -83,8 +106,10 @@ library_windows_test_ge:
     - windows-1809
   dependencies:
     - windows_build_ge
+  before_script:
+    - *windows_before_script
+    - *windows_install_ge
   script:
-    - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
     - cd "$env:GOBO\library"
     # The tests in `$GOBO\library\lexical` are failing in GitLab when using `geant test_ge`.
     - '& "$env:GOBO\.gitlab\do_it.bat" geant test_debug_ge'
@@ -109,8 +134,10 @@ tool_no_gec_windows_test_ge:
     - windows-1809
   dependencies:
     - windows_build_ge
+  before_script:
+    - *windows_before_script
+    - *windows_install_ge
   script:
-    - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
     - Remove-Item "$env:GOBO\tool\gec\test" -Force -Recurse
     - cd "$env:GOBO\tool"
     - '& "$env:GOBO\.gitlab\do_it.bat" geant test_ge'
@@ -130,8 +157,10 @@ tool_gec_windows_test_ge:
     - windows-1809
   dependencies:
     - windows_build_ge
+  before_script:
+    - *windows_before_script
+    - *windows_install_ge
   script:
-    - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
     - cd "$env:GOBO\tool\gec"
     - '& "$env:GOBO\.gitlab\do_it.bat" geant test_ge'
   rules:
@@ -148,12 +177,10 @@ library_linux_test_ge:
     - linux
   dependencies:
     - linux_build_ge
+  before_script:
+    - *linux_before_script
+    - *linux_install_ge
   script:
-    - cat /etc/*-release
-    - arch
-    - gcc --version
-    - export PATH=$PATH:$GOBO/bin
-    - gec --version
     - cd $GOBO/library
     - geant test_ge
   rules:
@@ -170,12 +197,10 @@ tool_linux_test_ge:
     - linux
   dependencies:
     - linux_build_ge
+  before_script:
+    - *linux_before_script
+    - *linux_install_ge
   script:
-    - cat /etc/*-release
-    - arch
-    - gcc --version
-    - export PATH=$PATH:$GOBO/bin
-    - gec --version
     - cd $GOBO/tool
     - geant test_ge
   rules:
@@ -204,13 +229,11 @@ library_linux_test_ise:
     - linux
   dependencies:
     - linux_build_ge
+  before_script:
+    - *linux_before_script
+    - *linux_install_ge
+    - *linux_install_ise
   script:
-    - cat /etc/*-release
-    - arch
-    - gcc --version
-    - export PATH=$PATH:$GOBO/bin
-    - gec --version
-    - source $GOBO/.gitlab/install_ise.sh
     - cd $GOBO/library
     - geant test_debug_ise
   rules:
@@ -220,6 +243,7 @@ library_linux_test_ise:
       when: never
     - if: $GOBO_CUSTOM_PIPELINE == "test_ise"
       when: on_success
+  timeout: 3 hours
 
 tool_linux_test_ise:
   stage: test_ise
@@ -227,13 +251,11 @@ tool_linux_test_ise:
     - linux
   dependencies:
     - linux_build_ge
+  before_script:
+    - *linux_before_script
+    - *linux_install_ge
+    - *linux_install_ise
   script:
-    - cat /etc/*-release
-    - arch
-    - gcc --version
-    - export PATH=$PATH:$GOBO/bin
-    - gec --version
-    - source $GOBO/.gitlab/install_ise.sh
     - cd $GOBO/tool
     - geant test_debug_ise
   rules:
@@ -243,6 +265,7 @@ tool_linux_test_ise:
       when: never
     - if: $GOBO_CUSTOM_PIPELINE == "test_ise"
       when: on_success
+  timeout: 3 hours
 
 #
 # Stages.
