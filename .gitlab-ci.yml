@@ -2,24 +2,80 @@ variables:
   GOBO: '$CI_PROJECT_DIR'
 
 #
-# Running tests with Gobo Eiffel.
+# Build Gobo tools.
 #
 
-test:
-  stage: test_ge
+build_ge:
+  stage: build_ge
   script:
-    - Write-Host "Just to define the 'test_ge' stage name"
+    - Write-Host "Just to define the 'build_ge' stage name"
   rules:
     - when: never
 
-test_library_windows:
-  stage: test_ge
+build_windows_ge:
+  stage: build_ge
   tags:
     - shared-windows
     - windows
     - windows-1809
   script:
     - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
+    - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $GOBO_CUSTOM_PIPELINE == null
+      when: on_success
+  artifacts:
+    when: always
+    expire_in: 3 hours
+    paths:
+      - $GOBO\bin\
+
+build_linux_ge:
+  stage: build_ge
+  tags:
+    - linux
+  script:
+    - cat /etc/*-release
+    - arch
+    - gcc --version
+    - $GOBO/bin/install.sh -v gcc
+    - export PATH=$PATH:$GOBO/bin
+    - gec --version
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $GOBO_CUSTOM_PIPELINE == null
+      when: on_success
+  artifacts:
+    when: always
+    expire_in: 3 hours
+    paths:
+      - $GOBO/bin/
+
+#
+# Running tests with Gobo Eiffel.
+#
+
+test_ge:
+  stage: test_ge
+  script:
+    - Write-Host "Just to define the 'test_ge' stage name"
+  rules:
+    - when: never
+
+library_windows_test_ge:
+  stage: test_ge
+  tags:
+    - shared-windows
+    - windows
+    - windows-1809
+  script:
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
     - cd "$env:GOBO\library"
     # The tests in `$GOBO\library\lexical` are failing in GitLab when using `geant test_ge`.
@@ -32,19 +88,18 @@ test_library_windows:
     - if: $GOBO_CUSTOM_PIPELINE == null
       when: on_success
 
-# We have `test_tool_no_gec_windows` and `test_tool_gec_windows`, instead
-# of just `test_tool_windows`, because it takes more than 1 hour to run
-# this job and the job timeout on GitLab runners for Windows is set to 1 hour
-# (even though it is set to 2 hours for the project).
+# We have `tool_no_gec_windows_test_ge` and `tool_gec_windows_test_ge`,
+# instead of just `tool_windows_test_ge`, because it takes more than
+# 1 hour to run this job and the job timeout on GitLab runners for Windows 
+# is set to 1 hour (even though it is set to 2 hours for the project).
 
-test_tool_no_gec_windows:
+tool_no_gec_windows_test_ge:
   stage: test_ge
   tags:
     - shared-windows
     - windows
     - windows-1809
   script:
-    - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
     - Remove-Item "$env:GOBO\tool\gec\test" -Force -Recurse
     - cd "$env:GOBO\tool"
@@ -57,14 +112,13 @@ test_tool_no_gec_windows:
     - if: $GOBO_CUSTOM_PIPELINE == null
       when: on_success
 
-test_tool_gec_windows:
+tool_gec_windows_test_ge:
   stage: test_ge
   tags:
     - shared-windows
     - windows
     - windows-1809
   script:
-    - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
     - cd "$env:GOBO\tool\gec"
     - '& "$env:GOBO\.gitlab\do_it.bat" geant test_ge'
@@ -76,7 +130,7 @@ test_tool_gec_windows:
     - if: $GOBO_CUSTOM_PIPELINE == null
       when: on_success
 
-test_library_linux:
+library_linux_test_ge:
   stage: test_ge
   tags:
     - linux
@@ -84,7 +138,6 @@ test_library_linux:
     - cat /etc/*-release
     - arch
     - gcc --version
-    - $GOBO/bin/install.sh -v gcc
     - export PATH=$PATH:$GOBO/bin
     - gec --version
     - cd $GOBO/library
@@ -97,7 +150,7 @@ test_library_linux:
     - if: $GOBO_CUSTOM_PIPELINE == null
       when: on_success
 
-test_tool_linux:
+tool_linux_test_ge:
   stage: test_ge
   tags:
     - linux
@@ -105,7 +158,6 @@ test_tool_linux:
     - cat /etc/*-release
     - arch
     - gcc --version
-    - $GOBO/bin/install.sh -v gcc
     - export PATH=$PATH:$GOBO/bin
     - gec --version
     - cd $GOBO/tool
@@ -129,7 +181,7 @@ test_ise:
   rules:
     - when: never
 
-test_ise_library_argument_linux:
+library_linux_test_ise:
   stage: test_ise
   tags:
     - linux
@@ -151,6 +203,27 @@ test_ise_library_argument_linux:
     - if: $GOBO_CUSTOM_PIPELINE == "test_ise"
       when: on_success
 
+tool_linux_test_ise:
+  stage: test_ise
+  tags:
+    - linux
+  script:
+    - cat /etc/*-release
+    - arch
+    - gcc --version
+    - $GOBO/bin/install.sh -v gcc
+    - export PATH=$PATH:$GOBO/bin
+    - gec --version
+    - source $GOBO/.gitlab/install_ise.sh
+    - cd $GOBO/tool
+    - geant test_debug_ise
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $GOBO_CUSTOM_PIPELINE == "test_ise"
+      when: on_success
 
 #
 # Stages.
