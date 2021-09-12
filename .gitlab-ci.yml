@@ -7,17 +7,19 @@ variables:
 
 build_ge:
   stage: build_ge
+  dependencies: []
   script:
     - Write-Host "Just to define the 'build_ge' stage name"
   rules:
     - when: never
 
-build_windows_ge:
+windows_build_ge:
   stage: build_ge
   tags:
     - shared-windows
     - windows
     - windows-1809
+  dependencies: []
   script:
     - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
@@ -33,11 +35,13 @@ build_windows_ge:
     expire_in: 3 hours
     paths:
       - $GOBO\bin\
+      - $GOBO\tool\gec\config\c\default.cfg
 
-build_linux_ge:
+linux_build_ge:
   stage: build_ge
   tags:
     - linux
+  dependencies: []
   script:
     - cat /etc/*-release
     - arch
@@ -50,13 +54,14 @@ build_linux_ge:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == null
+    - if: $GOBO_CUSTOM_PIPELINE == null || $GOBO_CUSTOM_PIPELINE == "test_ise"
       when: on_success
   artifacts:
     when: always
     expire_in: 3 hours
     paths:
       - $GOBO/bin/
+      - $GOBO/tool/gec/config/c/default.cfg
 
 #
 # Running tests with Gobo Eiffel.
@@ -64,6 +69,7 @@ build_linux_ge:
 
 test_ge:
   stage: test_ge
+  dependencies: []
   script:
     - Write-Host "Just to define the 'test_ge' stage name"
   rules:
@@ -75,6 +81,8 @@ library_windows_test_ge:
     - shared-windows
     - windows
     - windows-1809
+  dependencies:
+    - windows_build_ge
   script:
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
     - cd "$env:GOBO\library"
@@ -99,6 +107,8 @@ tool_no_gec_windows_test_ge:
     - shared-windows
     - windows
     - windows-1809
+  dependencies:
+    - windows_build_ge
   script:
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
     - Remove-Item "$env:GOBO\tool\gec\test" -Force -Recurse
@@ -118,6 +128,8 @@ tool_gec_windows_test_ge:
     - shared-windows
     - windows
     - windows-1809
+  dependencies:
+    - windows_build_ge
   script:
     - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
     - cd "$env:GOBO\tool\gec"
@@ -134,6 +146,8 @@ library_linux_test_ge:
   stage: test_ge
   tags:
     - linux
+  dependencies:
+    - linux_build_ge
   script:
     - cat /etc/*-release
     - arch
@@ -154,6 +168,8 @@ tool_linux_test_ge:
   stage: test_ge
   tags:
     - linux
+  dependencies:
+    - linux_build_ge
   script:
     - cat /etc/*-release
     - arch
@@ -176,6 +192,7 @@ tool_linux_test_ge:
 
 test_ise:
   stage: test_ise
+  dependencies: []
   script:
     - Write-Host "Just to define the 'test_ise' stage name"
   rules:
@@ -185,11 +202,12 @@ library_linux_test_ise:
   stage: test_ise
   tags:
     - linux
+  dependencies:
+    - linux_build_ge
   script:
     - cat /etc/*-release
     - arch
     - gcc --version
-    - $GOBO/bin/install.sh -v gcc
     - export PATH=$PATH:$GOBO/bin
     - gec --version
     - source $GOBO/.gitlab/install_ise.sh
@@ -207,11 +225,12 @@ tool_linux_test_ise:
   stage: test_ise
   tags:
     - linux
+  dependencies:
+    - linux_build_ge
   script:
     - cat /etc/*-release
     - arch
     - gcc --version
-    - $GOBO/bin/install.sh -v gcc
     - export PATH=$PATH:$GOBO/bin
     - gec --version
     - source $GOBO/.gitlab/install_ise.sh
