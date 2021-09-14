@@ -175,6 +175,7 @@ feature {NONE} -- Initialization
 			current_type := a_system.unknown_type
 			current_feature := dummy_feature
 			create extra_dynamic_type_sets.make_with_capacity (50)
+			extra_dynamic_type_sets.put_last (a_system.any_type)
 			current_dynamic_type_sets := extra_dynamic_type_sets
 			create l_buffer.make (1024)
 			create current_function_header_buffer.make (l_buffer)
@@ -188,6 +189,7 @@ feature {NONE} -- Initialization
 			create unused_qualified_call_expressions.make (10)
 			create unused_tuple_item_expressions.make (10)
 			create unused_actual_argument_lists.make (10)
+			create unused_result_expressions.make (10)
 			create conforming_types.make_with_capacity (100)
 			create conforming_type_set.make_empty (current_dynamic_system.unknown_type)
 			create non_conforming_types.make_with_capacity (100)
@@ -6763,6 +6765,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			l_wrapper_expression: ET_UNQUALIFIED_CALL_EXPRESSION
 			l_name: ET_FEATURE_NAME
 			l_result: ET_RESULT
+			l_index: INTEGER
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
@@ -6894,11 +6897,12 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				end
 					-- Prepare dynamic type sets of wrapper feature.
 				extra_dynamic_type_sets.force_last (l_result_type_set)
+				l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
 					-- Prepare call expression to attribute feature.
 				l_name := a_feature.name
 				l_name.set_seed (a_feature.first_seed)
 				l_wrapper_expression := new_unqualified_call_expression (l_name, Void)
-				l_wrapper_expression.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
+				l_wrapper_expression.set_index (l_index)
 					-- Print assignment of call expression to result entity.
 				l_result := tokens.result_keyword
 				assignment_target := l_result
@@ -12072,24 +12076,20 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 		require
 			an_expression_not_void: an_expression /= Void
 		local
-			l_do_check_void: BOOLEAN
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			old_in_operand: BOOLEAN
+			old_target_type: like call_target_type
+			l_old_in_procedure_call_target: BOOLEAN
 		do
-			if a_check_void then
-				l_dynamic_type_set := dynamic_type_set (an_expression)
-				if l_dynamic_type_set.can_be_void and not an_expression.is_never_void then
-					can_be_void_target_count := can_be_void_target_count + 1
-					current_file.put_string (c_ge_void)
-					current_file.put_character ('(')
-					l_do_check_void := True
-				else
-					never_void_target_count := never_void_target_count + 1
-				end
-			end
-			print_expression (an_expression)
-			if l_do_check_void then
-				current_file.put_character (')')
-			end
+			old_in_operand := in_operand
+			old_target_type := call_target_type
+			l_old_in_procedure_call_target := in_procedure_call_target
+			in_operand := False
+			in_procedure_call_target := False
+			call_target_type := Void
+			print_check_void_expression (an_expression, current_dynamic_system.none_type, a_check_void)
+			call_target_type := old_target_type
+			in_procedure_call_target := l_old_in_procedure_call_target
+			in_operand := old_in_operand
 		end
 
 	print_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
@@ -13125,10 +13125,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 							-- it could still be used in `call_operands'.
 						l_temp_index := a_call.index
 						if l_force_result_boxing then
-							if extra_dynamic_type_sets.is_empty or else extra_dynamic_type_sets.last /= l_call_type then
-								extra_dynamic_type_sets.force_last (l_call_type)
-							end
-							l_temp_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+								-- `current_dynamic_system.any_type' is the first type set
+								-- in `extra_dynamic_type_sets'.
+							l_temp_index := current_dynamic_type_sets.count + 1
 						end
 						operand_stack.force (l_temp)
 						print_indentation
@@ -13963,6 +13962,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			l_seed: INTEGER
 			old_index: INTEGER
 			l_constant: ET_CONSTANT
+			l_force_result_boxing: BOOLEAN
 		do
 			if in_static_feature then
 				print_expression_static_call (a_call, current_type, a_call.name, a_call.arguments)
@@ -14078,37 +14078,26 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 								l_constant.set_index (old_index)
 							end
 						end
-					elseif
-						l_dynamic_feature.is_builtin_special_item and then
-						attached a_call.arguments as l_args and then
-						l_args.count = 1 and then
-						((attached {ET_IDENTIFIER} l_args.actual_argument (1) as l_identifier and then
-						l_identifier.is_temporary) or else
-						(attached {ET_INTEGER_CONSTANT} l_args.actual_argument (1)))
-					then
-						if in_operand then
-							operand_stack.force (a_call)
-						elseif attached call_target_type as l_call_target_type then
-							check in_target: in_target end
-							if l_call_type.is_expanded then
-									-- Pass the address of the expanded object.
-								current_file.put_character ('&')
-								current_file.put_character ('(')
-								print_builtin_special_item_call_with_operands (l_dynamic_feature, tokens.current_keyword, l_args.actual_argument (1), current_type, False)
-								current_file.put_character (')')
-							elseif l_call_target_type.is_expanded then
-									-- We need to unbox the object and then pass its address.
-								current_file.put_character ('&')
-								current_file.put_character ('(')
-								print_boxed_attribute_item_access (a_call, l_call_target_type, call_target_check_void)
-								current_file.put_character (')')
-							else
-								print_builtin_special_item_call_with_operands (l_dynamic_feature, tokens.current_keyword, l_args.actual_argument (1), current_type, False)
-							end
-						else
-							print_builtin_special_item_call_with_operands (l_dynamic_feature, tokens.current_keyword, l_args.actual_argument (1), current_type, False)
-						end
 					else
+						if
+							in_target and then
+							l_dynamic_feature.is_builtin_special_item and then
+							l_call_type.is_embedded and then
+							(not l_call_type.is_basic or else in_procedure_call_target)
+						then
+								-- We want the result be boxed even though the result static type is embedded.
+								-- This is needed when the call is a "SPECIAL" item, the call result type is
+								-- embedded, and it is the target of another call. In that case we force the
+								-- result type to be of reference type in order to force the boxing of the
+								-- result so that the other call is applied on the result object itself and not
+								-- on a copy of this object.
+								-- Note that for optimization we don't force boxing when the type is a basic
+								-- type unless the result object is the target of a procedure call (e.g.
+								-- 'copy', 'standard_copy' or 'set_item' which will overwrite the value of
+								-- the target).
+							l_call_type := current_dynamic_system.any_type
+							l_force_result_boxing := True
+						end
 						l_actuals := a_call.arguments
 						l_seed := a_call.name.seed
 							-- Check whether this a call to FUNCTION.item with a manifest
@@ -14163,6 +14152,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 									-- We will set the index of `l_temp' later because
 									-- it could still be used in `call_operands'.
 								l_temp_index := a_call.index
+								if l_force_result_boxing then
+										-- `current_dynamic_system.any_type' is the first type set
+										-- in `extra_dynamic_type_sets'.
+									l_temp_index := current_dynamic_type_sets.count + 1
+								end
 								operand_stack.force (l_temp)
 								print_indentation
 								print_temp_name (l_temp, current_file)
@@ -15648,6 +15642,8 @@ feature {NONE} -- Query call generation
 				print_builtin_any_same_type_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_any_standard_is_equal then
 				print_builtin_any_standard_is_equal_call (a_feature, a_target_type, a_check_void_target)
+			when {ET_TOKEN_CODES}.builtin_any_standard_twin then
+				print_builtin_any_standard_twin_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -19858,18 +19854,34 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				-- Cannot have two instances of class "TYPE" representing the same Eiffel type.
 			elseif attached {ET_DYNAMIC_SPECIAL_TYPE} current_type as l_special_type then
 				l_argument := l_arguments.formal_argument (1).name
-				print_builtin_any_standard_copy_body_with_special (a_feature, l_special_type, l_argument)
+				print_builtin_any_standard_copy_body_with_special (l_argument, tokens.current_keyword, l_special_type)
 			else
 				l_argument := l_arguments.formal_argument (1).name
-				print_assign_flags_attribute_to_temp_variable (tokens.current_keyword, current_type, False)
-				print_assign_onces_attribute_to_temp_variable (tokens.current_keyword, current_type, False)
+				print_builtin_any_standard_copy_body_with_no_special (l_argument, tokens.current_keyword)
+			end
+		end
+
+	print_builtin_any_standard_copy_body_with_no_special (a_source, a_target: ET_EXPRESSION)
+			-- Print to `current_file' the body of the built-in feature 'ANY.standard_copy'
+			-- where attributes and items of `a_source' are copied to object `a_target'.
+			-- `a_source' and `a_target' are expected to have the same static type `current_type'.
+		require
+			a_source_not_void: a_source /= Void
+			a_target_not_void: a_target /= Void
+			not_special_type: not current_type.is_special
+		do
+			if current_type.attribute_count = 0 and then (not attached {ET_DYNAMIC_TUPLE_TYPE} current_type as l_tuple_type or else l_tuple_type.item_type_sets.is_empty) then
+				-- Nothing to be copied.
+			else
+				print_assign_flags_attribute_to_temp_variable (a_target, current_type, False)
+				print_assign_onces_attribute_to_temp_variable (a_target, current_type, False)
 				print_indentation
 				if not current_type.is_embedded then
 					current_file.put_character ('*')
 				end
 				print_type_cast (current_type, current_file)
 				current_file.put_character ('(')
-				print_expression (tokens.current_keyword)
+				print_expression (a_target)
 				current_file.put_character (')')
 				print_assign_to
 				if not current_type.is_embedded then
@@ -19877,22 +19889,22 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				end
 				print_type_cast (current_type, current_file)
 				current_file.put_character ('(')
-				print_expression (l_argument)
+				print_expression (a_source)
 				current_file.put_character (')')
 				print_semicolon_newline
-				print_assign_temp_variable_to_flags_attribute (tokens.current_keyword, current_type, False)
-				print_assign_temp_variable_to_onces_attribute (tokens.current_keyword, current_type, False)
-				print_custom_standard_copy_attributes (l_argument)
+				print_assign_temp_variable_to_flags_attribute (a_target, current_type, False)
+				print_assign_temp_variable_to_onces_attribute (a_target, current_type, False)
+				print_builtin_any_standard_copy_custom_attributes (a_source, a_target)
 				if attached {ET_DYNAMIC_TUPLE_TYPE} current_type as l_tuple_type then
-					print_custom_standard_copy_tuple_items (l_argument, l_tuple_type)
+					print_builtin_any_standard_copy_custom_tuple_items (a_source, a_target, l_tuple_type)
 				end
 			end
 		end
 
-	print_builtin_any_standard_copy_body_with_special (a_feature: ET_EXTERNAL_ROUTINE; a_special_type: ET_DYNAMIC_SPECIAL_TYPE; a_argument: ET_IDENTIFIER)
-			-- Print to `current_file' the body of `a_feature' corresponding
-			-- to built-in feature 'ANY.standard_copy' whose target type is
-			-- `a_special_type' and its argument is `a_argument'.
+	print_builtin_any_standard_copy_body_with_special (a_source, a_target: ET_EXPRESSION; a_special_type: ET_DYNAMIC_SPECIAL_TYPE)
+			-- Print to `current_file' the body of the built-in feature 'ANY.standard_copy'
+			-- where attributes and items of `a_source' are copied to object `a_target'.
+			-- `a_source' and `a_target' are expected to have the same static type `a_special_type'.
 			--
 			-- Implementation of ISE's behavior:
 			-- * When target has more items than source:
@@ -19905,10 +19917,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			--   * The 'count' and 'capacity' in target will not change.
 			--   * It violates 'copy's postcondition "is_equal".
 		require
-			a_feature_not_void: a_feature /= Void
-			valid_feature: current_feature.static_feature = a_feature
+			a_source_not_void: a_source /= Void
+			a_target_not_void: a_target /= Void
 			a_special_type: a_special_type = current_type
-			a_argument_not_void: a_argument /= Void
 		local
 			l_count_temp: ET_IDENTIFIER
 			l_capacity_temp: ET_IDENTIFIER
@@ -19938,8 +19949,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_capacity_type := l_dynamic_type_set.static_type.primary_type
 				l_capacity_temp := new_temp_variable (l_capacity_type)
 				mark_temp_variable_frozen (l_capacity_temp)
-				print_assign_special_count_attribute_to_temp_variable (l_other_count_temp, a_argument, a_special_type, True)
-				print_assign_special_count_attribute_to_temp_variable (l_count_temp, tokens.current_keyword, a_special_type, False)
+				print_assign_special_count_attribute_to_temp_variable (l_other_count_temp, a_source, a_special_type, True)
+				print_assign_special_count_attribute_to_temp_variable (l_count_temp, a_target, a_special_type, False)
 				print_indentation_if
 				print_temp_name (l_other_count_temp, current_file)
 				print_greater_than
@@ -19959,20 +19970,20 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character ('0')
 				print_then_newline
 				indent
-				print_assign_flags_attribute_to_temp_variable (tokens.current_keyword, a_special_type, False)
-				print_assign_onces_attribute_to_temp_variable (tokens.current_keyword, a_special_type, False)
-				print_assign_special_capacity_attribute_to_temp_variable (l_capacity_temp, tokens.current_keyword, a_special_type, False)
+				print_assign_flags_attribute_to_temp_variable (a_target, a_special_type, False)
+				print_assign_onces_attribute_to_temp_variable (a_target, a_special_type, False)
+				print_assign_special_capacity_attribute_to_temp_variable (l_capacity_temp, a_target, a_special_type, False)
 					-- Do not use "*(T123*)(C) = *(T123*)(a1);" because we might overwrite
 					-- some items due to struct padding (unused bytes added at the end of
 					-- the struct for memory alignment).
 				print_indentation
 				current_file.put_string (c_memcpy)
 				current_file.put_character ('(')
-				print_procedure_target_expression (tokens.current_keyword, a_special_type, False)
+				print_procedure_target_expression (a_target, a_special_type, False)
 				print_comma
-				print_expression (a_argument)
+				print_expression (a_source)
 				print_comma
-				print_attribute_special_offset_access (tokens.current_keyword, a_special_type, False)
+				print_attribute_special_offset_access (a_target, a_special_type, False)
 				print_plus
 				print_temp_name (l_other_count_temp, current_file)
 				print_times
@@ -19982,86 +19993,91 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character (')')
 				current_file.put_character (')')
 				print_semicolon_newline
-				print_assign_temp_variable_to_flags_attribute (tokens.current_keyword, a_special_type, False)
-				print_assign_temp_variable_to_onces_attribute (tokens.current_keyword, a_special_type, False)
-				print_assign_temp_variable_to_special_count_attribute (l_count_temp, tokens.current_keyword, a_special_type, False)
-				print_assign_temp_variable_to_special_capacity_attribute (l_capacity_temp, tokens.current_keyword, a_special_type, False)
-				print_custom_standard_copy_attributes (a_argument)
-				print_custom_standard_copy_special_items (a_argument, a_special_type, l_other_count_temp)
+				print_assign_temp_variable_to_flags_attribute (a_target, a_special_type, False)
+				print_assign_temp_variable_to_onces_attribute (a_target, a_special_type, False)
+				print_assign_temp_variable_to_special_count_attribute (l_count_temp, a_target, a_special_type, False)
+				print_assign_temp_variable_to_special_capacity_attribute (l_capacity_temp, a_target, a_special_type, False)
+				print_builtin_any_standard_copy_custom_attributes (a_source, a_target)
+				print_builtin_any_standard_copy_custom_special_items (a_source, a_target, a_special_type, l_other_count_temp)
 				mark_temp_variable_unfrozen (l_count_temp)
+				mark_temp_variable_free (l_count_temp)
 				mark_temp_variable_unfrozen (l_other_count_temp)
+				mark_temp_variable_free (l_other_count_temp)
 				mark_temp_variable_unfrozen (l_capacity_temp)
+				mark_temp_variable_free (l_capacity_temp)
 				dedent
 				print_indentation_end_newline
 			end
 		end
 
-	print_custom_standard_copy_attribute (a_target_attribute, a_source_attribute: ET_EXPRESSION; a_source_attribute_type_set: ET_DYNAMIC_TYPE_SET)
-			-- Special treatment, if any, when copying attribute `a_source_attribute' to `a_target_attribute'
+	print_builtin_any_standard_copy_custom_field (a_target_field, a_source_field: ET_EXPRESSION; a_source_field_type_set: ET_DYNAMIC_TYPE_SET)
+			-- Special treatment, if any, when copying field `a_source_field' to `a_target_field'
 			-- when calling 'standard_copy' on their enclosing objects.
-			-- `a_source_attribute' and `a_target_attribute' are expected to have the same static type
-			-- (which is the static type of `a_source_attribute_type_set').
-			-- Note that `a_source_attribute' and `a_target_attribute' are expected to have
-			-- the same content in memory when calling this routine. So only attributes
+			-- A field is either an attribute, a tuple label or a "SPECIAL" item.
+			-- `a_source_field' and `a_target_field' are expected to have the same static type
+			-- (which is the static type of `a_source_field_type_set').
+			-- Note that `a_source_field' and `a_target_field' are expected to have
+			-- the same content in memory when calling this routine. So only fields
 			-- which require a different semantics need to be processed.
 		require
-			a_target_attribute_not_void: a_target_attribute /= Void
-			a_source_attribute_not_void: a_source_attribute /= Void
-			a_source_attribute_type_set_not_void: a_source_attribute_type_set /= Void
+			a_target_field_not_void: a_target_field /= Void
+			a_source_field_not_void: a_source_field /= Void
+			a_source_field_type_set_not_void: a_source_field_type_set /= Void
 		local
-			l_attribute_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_field_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_copy_feature: ET_DYNAMIC_FEATURE
 		do
-			l_attribute_type := a_source_attribute_type_set.static_type.primary_type
-			if l_attribute_type.is_basic then
+			l_field_type := a_source_field_type_set.static_type.primary_type
+			if l_field_type.is_basic then
 				-- Attribute already copied.
-			elseif l_attribute_type.is_embedded then
-				if l_attribute_type.has_redefined_copy_routine or l_attribute_type.has_nested_custom_standard_copy_routine then
+			elseif l_field_type.is_embedded then
+				if l_field_type.has_redefined_copy_routine or l_field_type.has_nested_custom_standard_copy_routine then
 						-- Copy semantics.
-					l_copy_feature := l_attribute_type.seeded_dynamic_procedure (current_system.copy_seed, current_dynamic_system)
+					l_copy_feature := l_field_type.seeded_dynamic_procedure (current_system.copy_seed, current_dynamic_system)
 					if l_copy_feature = Void then
 							-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
-						register_called_feature (l_copy_feature)
+						print_procedure_target_operand (a_target_field, l_field_type)
+						print_operand (a_source_field)
+						fill_call_operands (2)
 							-- Reinitialize the attribute (as if it was a call to 'twin').
 						print_indentation
-						print_expression (a_target_attribute)
+						print_unboxed_expression (call_operands.first, l_field_type, False)
 						print_assign_to
-						print_default_name (l_attribute_type, current_file)
+						print_default_name (l_field_type, current_file)
 						print_semicolon_newline
 							-- Call 'copy'.
-						print_procedure_target_operand (a_target_attribute, l_attribute_type)
-						print_operand (a_source_attribute)
-						fill_call_operands (2)
-						print_procedure_call (l_copy_feature, l_attribute_type, False)
+						register_called_feature (l_copy_feature)
+						print_procedure_call (l_copy_feature, l_field_type, False)
 						call_operands.wipe_out
 					end
 				else
 					-- Attribute already copied.
 				end
-			elseif l_attribute_type.is_expanded then
-					-- Non-embedded expanded attribute (e.g. attribute with generic expanded type
+			elseif l_field_type.is_expanded then
+					-- Non-embedded expanded field (e.g. field with generic expanded type
 					-- which can be polyphormic with 'EXP [INTEGER]' conforming to 'EXP [ANY]').
 -- TODO
-			elseif a_source_attribute_type_set.has_expanded then
-					-- Reference attribute which may be attached to an object with copy semantics.
+			elseif a_source_field_type_set.has_expanded then
+					-- Reference field which may be attached to an object with copy semantics.
 -- TODO
 			else
 				-- Attribute already copied.
 			end
 		end
 
-	print_custom_standard_copy_attributes (a_source: ET_EXPRESSION)
-			-- Special treatment, if any, when copying attributes `a_source' to current object
-			-- when calling 'standard_copy'.
-			-- `a_source' and current object are expected to have the same static type.
-			-- Note that the attributes of `a_source' and current object are expected to have
+	print_builtin_any_standard_copy_custom_attributes (a_source, a_target: ET_EXPRESSION)
+			-- Special treatment, if any, when copying attributes `a_source' to
+			-- object `a_target' when calling 'standard_copy'.
+			-- `a_source' and `a_target' are expected to have the same static type `current_type'.
+			-- Note that the attributes of `a_source' and `a_target' are expected to have
 			-- the same content in memory when calling this routine. So only attributes
 			-- which require a different semantics need to be processed.
 		require
 			a_source_not_void: a_source /= Void
+			a_target_not_void: a_target /= Void
 		local
 			i, nb: INTEGER
 			l_queries: ET_DYNAMIC_FEATURE_LIST
@@ -20069,7 +20085,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_attribute_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_name: ET_FEATURE_NAME
 			l_index: INTEGER
-			l_target_attribute: ET_UNQUALIFIED_CALL_EXPRESSION
+			l_target_attribute: ET_QUALIFIED_CALL_EXPRESSION
 			l_source_attribute: ET_QUALIFIED_CALL_EXPRESSION
 		do
 			nb := current_type.attribute_count
@@ -20088,12 +20104,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						-- Prepare call expressions to attribute feature.
 					l_name := l_attribute.static_feature.name
 					l_name.set_seed (l_attribute.static_feature.first_seed)
-					l_target_attribute := new_unqualified_call_expression (l_name, Void)
+					l_target_attribute := new_qualified_call_expression (a_target, l_name, Void)
 					l_target_attribute.set_index (l_index)
 					l_source_attribute := new_qualified_call_expression (a_source, l_name, Void)
 					l_source_attribute.set_index (l_index)
-					print_custom_standard_copy_attribute (l_target_attribute, l_source_attribute, l_attribute_type_set)
-					free_unqualified_call_expression (l_target_attribute)
+					print_builtin_any_standard_copy_custom_field (l_target_attribute, l_source_attribute, l_attribute_type_set)
+					free_qualified_call_expression (l_target_attribute)
 					free_qualified_call_expression (l_source_attribute)
 					extra_dynamic_type_sets.remove_last
 				end
@@ -20101,17 +20117,18 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			end
 		end
 
-	print_custom_standard_copy_special_items (a_source: ET_EXPRESSION; a_special_type: ET_DYNAMIC_SPECIAL_TYPE; a_item_count: ET_IDENTIFIER)
-			-- Special treatment, if any, when copying items of `a_source' to current object
-			-- when calling 'standard_copy'.
-			-- `a_source' and current object are expected to have the same static "SPECIAL" type.
+	print_builtin_any_standard_copy_custom_special_items (a_source, a_target: ET_EXPRESSION; a_special_type: ET_DYNAMIC_SPECIAL_TYPE; a_item_count: ET_IDENTIFIER)
+			-- Special treatment, if any, when copying items of `a_source' to
+			-- object `a_target' when calling 'standard_copy'.
+			-- `a_source' and `a_target' are expected to have the same static type `a_special_type'.
 			-- `a_item_count' is a temporary variable containing the number of items to be processed.
-			-- Note that the items of `a_source' and current object are expected to have
+			-- Note that the items of `a_source' and `a_target' are expected to have
 			-- the same content in memory when calling this routine. So only items
 			-- which require a different semantics need to be processed.
 		require
 			a_source_not_void: a_source /= Void
-			a_special_type_not_void: a_special_type /= Void
+			a_target_not_void: a_target /= Void
+			a_special_type: a_special_type = current_type
 			a_item_count_not_void: a_item_count /= Void
 			a_item_count_is_temporary: a_item_count.is_temporary
 			a_item_count_is_known: is_temp_variable_known (a_item_count)
@@ -20120,7 +20137,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_name: ET_FEATURE_NAME
 			l_index: INTEGER
-			l_target_item: ET_UNQUALIFIED_CALL_EXPRESSION
+			l_target_item: ET_QUALIFIED_CALL_EXPRESSION
 			l_source_item: ET_QUALIFIED_CALL_EXPRESSION
 			l_actual_argument_list: ET_ACTUAL_ARGUMENT_LIST
 		do
@@ -20179,31 +20196,34 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_name.set_seed (l_item_routine.static_feature.first_seed)
 				l_actual_argument_list := new_actual_argument_list
 				l_actual_argument_list.force_first (l_i_temp)
-				l_target_item := new_unqualified_call_expression (l_name, l_actual_argument_list)
+				l_target_item := new_qualified_call_expression (a_target, l_name, l_actual_argument_list)
 				l_target_item.set_index (l_index)
 				l_source_item := new_qualified_call_expression (a_source, l_name, l_actual_argument_list)
 				l_source_item.set_index (l_index)
-				print_custom_standard_copy_attribute (l_target_item, l_source_item, l_item_type_set)
-				free_unqualified_call_expression (l_target_item)
+				print_builtin_any_standard_copy_custom_field (l_target_item, l_source_item, l_item_type_set)
+				free_qualified_call_expression (l_target_item)
 				free_qualified_call_expression (l_source_item)
 				free_actual_argument_list (l_actual_argument_list)
 				extra_dynamic_type_sets.remove_last
+				extra_dynamic_type_sets.remove_last
 				mark_temp_variable_unfrozen (l_i_temp)
+				mark_temp_variable_free (l_i_temp)
 				dedent
 				print_indentation_end_newline
 			end
 		end
 
-	print_custom_standard_copy_tuple_items (a_source: ET_EXPRESSION; a_tuple_type: ET_DYNAMIC_TUPLE_TYPE)
-			-- Special treatment, if any, when copying items of `a_source' to current object
-			-- when calling 'standard_copy'.
-			-- `a_source' and current object are expected to have the same static "TUPLE" type.
-			-- Note that the items of `a_source' and current object are expected to have
+	print_builtin_any_standard_copy_custom_tuple_items (a_source, a_target: ET_EXPRESSION; a_tuple_type: ET_DYNAMIC_TUPLE_TYPE)
+			-- Special treatment, if any, when copying items of `a_source' to
+			-- object `a_target' when calling 'standard_copy'.
+			-- `a_source' and `a_target' are expected to have the same static type `a_tuple_type'.
+			-- Note that the items of `a_source' and `a_target' are expected to have
 			-- the same content in memory when calling this routine. So only items
 			-- which require a different semantics need to be processed.
 		require
 			a_source_not_void: a_source /= Void
-			a_tuple_type_not_void: a_tuple_type /= Void
+			a_target_not_void: a_target /= Void
+			a_tuple_typed: a_tuple_type = current_type
 		local
 			i, nb: INTEGER
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -20222,11 +20242,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				extra_dynamic_type_sets.force_last (l_item_type)
 				l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
 					-- Prepare call expressions to attribute feature.
-				l_target_item := new_tuple_item_expression (i, tokens.current_keyword)
+				l_target_item := new_tuple_item_expression (i, a_target)
 				l_target_item.set_index (l_index)
 				l_source_item := new_tuple_item_expression (i, a_source)
 				l_source_item.set_index (l_index)
-				print_custom_standard_copy_attribute (l_target_item, l_source_item, l_item_type_set)
+				print_builtin_any_standard_copy_custom_field (l_target_item, l_source_item, l_item_type_set)
 				free_tuple_item_expression (l_target_item)
 				free_tuple_item_expression (l_source_item)
 				extra_dynamic_type_sets.remove_last
@@ -20273,6 +20293,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_attachment_expression (l_argument, l_argument_type_set, l_formal_type)
 					current_file.put_character (')')
 					print_semicolon_newline
+				elseif a_target_type.attribute_count = 0 and then (not attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type or else l_tuple_type.item_type_sets.is_empty) then
+					-- Nothing to be copied.
 				elseif a_target_type.is_embedded then
 					print_indentation
 					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
@@ -20338,109 +20360,129 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
 		do
-			if attached {ET_DYNAMIC_SPECIAL_TYPE} current_type as l_special_type then
-				print_indentation
-				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_ge_new)
-				current_file.put_integer (l_special_type.id)
-				current_file.put_character ('(')
-				print_attribute_special_capacity_access (tokens.current_keyword, l_special_type, False)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_string (c_eif_false)
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				if not l_special_type.is_expanded then
-					current_file.put_character ('*')
-				end
-				print_type_cast (l_special_type, current_file)
-				current_file.put_character ('(')
-				print_result_name (current_file)
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				if not l_special_type.is_expanded then
-					current_file.put_character ('*')
-				end
-				print_type_cast (l_special_type, current_file)
-				current_file.put_character ('(')
-				print_current_name (current_file)
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-					-- Copy items.
-				print_indentation
-				current_file.put_string (c_memcpy)
-				current_file.put_character ('(')
-				print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
-				current_file.put_character (',')
-				print_attribute_special_item_access (tokens.current_keyword, l_special_type, False)
-				current_file.put_character (',')
-				print_attribute_special_capacity_access (tokens.current_keyword, l_special_type, False)
-				current_file.put_character ('*')
-				current_file.put_string (c_sizeof)
-				current_file.put_character ('(')
-				print_type_declaration (l_special_type.item_type_set.static_type.primary_type, current_file)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-			elseif current_type.base_class.is_type_class then
--- TODO: this built-in routine could be inlined.
+			if current_type.base_class.is_type_class then
 					-- Cannot have two instances of class TYPE representing the same Eiffel type.
-				print_indentation
-				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_indentation_assign_to_result
 				print_current_name (current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
-			elseif current_type.is_expanded then
-				print_indentation
-				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('*')
-				print_current_name (current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
+			elseif attached {ET_DYNAMIC_SPECIAL_TYPE} current_type as l_special_type then
+				print_builtin_any_standard_twin_body_with_special (l_special_type)
 			else
-				print_indentation
-				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_builtin_any_standard_twin_body_with_no_special
+			end
+		end
+
+	print_builtin_any_standard_twin_body_with_no_special
+			-- Print to `current_file' the body of the built-in feature
+			-- 'ANY.standard_twin' for objects of static type `current_type'.
+		require
+			not_special_type: not current_type.is_special
+		local
+			l_result: ET_RESULT
+		do
+			l_result := new_result_expression
+			extra_dynamic_type_sets.force_last (current_type)
+			l_result.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
+			if not current_type.is_embedded then
+				print_indentation_assign_to_result
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (current_type.id)
 				current_file.put_character ('(')
-				current_file.put_string (c_eif_false)
+				current_file.put_string (c_eif_true)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
+			end
+			print_builtin_any_standard_copy_body_with_no_special (tokens.current_keyword, l_result)
+			free_result_expression (l_result)
+			extra_dynamic_type_sets.remove_last
+		end
+
+	print_builtin_any_standard_twin_body_with_special (a_special_type: ET_DYNAMIC_SPECIAL_TYPE)
+			-- Print to `current_file' the body of the built-in feature
+			-- 'ANY.standard_twin' for objects of static type `a_special_type'.
+			--
+			-- Implementation of ISE's behavior:
+			-- * 'standard_twin' sets the capacity of the new object to
+			--   the same value as 'count', which may be different from
+			--   the capacity of the original object.
+		require
+			a_special_type: a_special_type = current_type
+		local
+			l_count_temp: ET_IDENTIFIER
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_count_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_result: ET_RESULT
+		do
+			if a_special_type.attribute_count < 2 then
+					-- Internal error: class "SPECIAL" should have at least the
+					-- features 'count' and 'capacity' as first features.
+					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_result := new_result_expression
+				extra_dynamic_type_sets.force_last (a_special_type)
+				l_result.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
+				l_dynamic_type_set := result_type_set_in_feature (a_special_type.queries.first)
+				l_count_type := l_dynamic_type_set.static_type.primary_type
+				l_count_temp := new_temp_variable (l_count_type)
+				mark_temp_variable_frozen (l_count_temp)
+				print_assign_special_count_attribute_to_temp_variable (l_count_temp, tokens.current_keyword, a_special_type, False)
+				print_indentation_assign_to_result
+				current_file.put_string (c_ge_new)
+				current_file.put_integer (a_special_type.id)
+				current_file.put_character ('(')
+				print_temp_name (l_count_temp, current_file)
+				print_comma
+				current_file.put_string (c_eif_true)
+				current_file.put_character (')')
+				print_semicolon_newline
 				print_indentation
-				current_file.put_character ('*')
-				print_type_cast (current_type, current_file)
-				current_file.put_character ('(')
-				print_result_name (current_file)
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('*')
-				print_type_cast (current_type, current_file)
-				current_file.put_character ('(')
-				print_current_name (current_file)
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_attribute_special_count_access (l_result, a_special_type, False)
+				print_assign_to
+				print_temp_name (l_count_temp, current_file)
+				print_semicolon_newline
+				mark_temp_variable_unfrozen (l_count_temp)
+				mark_temp_variable_free (l_count_temp)
+				print_builtin_any_standard_copy_body_with_special (tokens.current_keyword, l_result, a_special_type)
+				free_result_expression (l_result)
+				extra_dynamic_type_sets.remove_last
+			end
+		end
+
+	print_builtin_any_standard_twin_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ANY.standard_twin'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_target: ET_EXPRESSION
+		do
+			if call_operands.count /= 1 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_target := call_operands.first
+				if a_target_type.base_class.is_type_class then
+						-- Cannot have two instances of class "TYPE" representing the same Eiffel type.
+					print_expression (l_target)
+				elseif a_target_type.is_embedded and then not a_target_type.has_nested_custom_standard_copy_routine then
+					print_expression (l_target)
+				else
+					register_called_feature (a_feature)
+					print_routine_name (a_feature, a_target_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
+					print_target_expression (l_target, a_target_type, a_check_void_target)
+					current_file.put_character (')')
+				end
 			end
 		end
 
@@ -20488,7 +20530,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		local
 			l_copy_feature: detachable ET_DYNAMIC_FEATURE
 		do
-			if attached {ET_DYNAMIC_SPECIAL_TYPE} current_type as l_special_type then
+			if not current_type.has_redefined_copy_routine then
+				print_builtin_any_standard_twin_body (a_feature)
+			elseif attached {ET_DYNAMIC_SPECIAL_TYPE} current_type as l_special_type then
 				print_indentation
 				print_result_name (current_file)
 				current_file.put_character (' ')
@@ -27245,6 +27289,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_query_target_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
 			l_operand: ET_EXPRESSION
 			l_operand_type_set: ET_DYNAMIC_TYPE_SET
+			l_tuple_item_expression_can_be_freed: BOOLEAN
 		do
 			if not attached {ET_DYNAMIC_ROUTINE_TYPE} a_target_type as l_routine_type then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
@@ -27499,6 +27544,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 							end
 							extra_dynamic_type_sets.force_last (l_tuple_item_type_set)
 							l_tuple_item_expression := new_tuple_item_expression (i, l_tuple)
+							l_tuple_item_expression_can_be_freed := True
 							l_tuple_item_expression.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
 								-- Register the call to extract the tuple item so that
 								-- it is handled correctly in case of polymorphism.
@@ -27512,11 +27558,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 								l_query_target_type_set.put_types (l_tuple_conforming_type_set)
 								create l_query_call.make (l_tuple_item_expression, l_query_target_type_set, l_tuple_item_type_set, current_feature, current_type)
 								l_tuple_conforming_type_set.static_type.primary_type.put_query_call (l_query_call)
+								l_tuple_item_expression_can_be_freed := False
 							end
 								-- Print the actual call to extract the tuple item.
 							print_attachment_expression (l_tuple_item_expression, l_tuple_item_type_set, l_open_operand_type_sets.item (i).static_type)
 								-- Clean up.
-							if l_tuple_conforming_type_set.count <= 2 then
+							if l_tuple_item_expression_can_be_freed then
 								free_tuple_item_expression (l_tuple_item_expression)
 							end
 							extra_dynamic_type_sets.remove_last
@@ -38815,6 +38862,8 @@ feature {NONE} -- Unqualified call expressions
 			a_call.set_arguments (Void)
 		end
 
+feature {NONE} -- Unqualified call expressions (Implementation)
+
 	unused_unqualified_call_expressions: DS_ARRAYED_LIST [ET_UNQUALIFIED_CALL_EXPRESSION]
 			-- Unqualified call expressions that are not currently used
 
@@ -38851,6 +38900,8 @@ feature {NONE} -- Qualified call expressions
 			a_call.set_target (tokens.current_keyword)
 			a_call.set_arguments (Void)
 		end
+
+feature {NONE} -- Qualified call expressions (Implementation)
 
 	unused_qualified_call_expressions: DS_ARRAYED_LIST [ET_QUALIFIED_CALL_EXPRESSION]
 			-- Qualified call expressions that are not currently used
@@ -38925,8 +38976,38 @@ feature {NONE} -- Actual argument lists
 			a_arguments.wipe_out
 		end
 
+feature {NONE} -- Actual argument lists (Implementation)
+
 	unused_actual_argument_lists: DS_ARRAYED_LIST [ET_ACTUAL_ARGUMENT_LIST]
 			-- Actual argument lists that are not currently used
+
+feature {NONE} -- Result expressions
+
+	new_result_expression: ET_RESULT
+			-- New 'Result' expression
+		do
+			if unused_result_expressions.is_empty then
+				create Result.make
+			else
+				Result := unused_result_expressions.last
+				unused_result_expressions.remove_last
+			end
+		ensure
+			new_result_expression_not_void: Result /= Void
+		end
+
+	free_result_expression (a_result: ET_RESULT)
+			-- Free `a_result' so that it can be reused.
+		require
+			a_result_not_void: a_result /= Void
+		do
+			unused_result_expressions.force_last (a_result)
+		end
+
+feature {NONE} -- Result expressions (Implementation)
+
+	unused_result_expressions: DS_ARRAYED_LIST [ET_RESULT]
+			-- Result expressions that are not currently used
 
 feature {NONE} -- Formal arguments
 
@@ -39973,6 +40054,9 @@ invariant
 		-- Actual argument lists.
 	unused_actual_argument_lists_not_void: unused_actual_argument_lists /= Void
 	no_void_unused_actual_argument_list: not unused_actual_argument_lists.has_void
+		-- Result expressions.
+	unused_result_expressions_not_void: unused_result_expressions /= Void
+	no_void_unused_result_expression: not unused_result_expressions.has_void
 		-- C/C++ files.
 	included_header_filenames_not_void: included_header_filenames /= Void
 	no_void_included_header_filename: not included_header_filenames.has_void
