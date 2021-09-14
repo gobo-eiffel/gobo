@@ -19870,19 +19870,25 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_not_void: a_target /= Void
 			not_special_type: not current_type.is_special
 		do
-			if current_type.attribute_count = 0 and then (not attached {ET_DYNAMIC_TUPLE_TYPE} current_type as l_tuple_type or else l_tuple_type.item_type_sets.is_empty) then
+			if
+				not current_type.is_basic and then
+				current_type.attribute_count = 0 and then
+				(not attached {ET_DYNAMIC_TUPLE_TYPE} current_type as l_tuple_type or else l_tuple_type.item_type_sets.is_empty)
+			then
 				-- Nothing to be copied.
 			else
 				print_assign_flags_attribute_to_temp_variable (a_target, current_type, False)
 				print_assign_onces_attribute_to_temp_variable (a_target, current_type, False)
 				print_indentation
-				if not current_type.is_embedded then
+				if current_type.is_embedded then
+					print_expression (a_target)
+				else
 					current_file.put_character ('*')
+					print_type_cast (current_type, current_file)
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (')')
 				end
-				print_type_cast (current_type, current_file)
-				current_file.put_character ('(')
-				print_expression (a_target)
-				current_file.put_character (')')
 				print_assign_to
 				if not current_type.is_embedded then
 					current_file.put_character ('*')
@@ -20293,7 +20299,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_attachment_expression (l_argument, l_argument_type_set, l_formal_type)
 					current_file.put_character (')')
 					print_semicolon_newline
-				elseif a_target_type.attribute_count = 0 and then (not attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type or else l_tuple_type.item_type_sets.is_empty) then
+				elseif
+					not a_target_type.is_basic and then
+					a_target_type.attribute_count = 0 and then
+					(not attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type or else l_tuple_type.item_type_sets.is_empty)
+				then
 					-- Nothing to be copied.
 				elseif a_target_type.is_embedded then
 					print_indentation
