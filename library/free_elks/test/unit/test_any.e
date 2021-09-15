@@ -618,41 +618,56 @@ feature -- Test
 			assert_integers_equal ("sp2_item0", 2, sp2.item (0))
 		end
 
-	test_standard_twin
+	test_standard_twin_1
 			-- Test feature 'standard_twin'.
 		local
 			s1, s2: STRING
-			i1, i2: INTEGER
-			sp1, sp2: SPECIAL [INTEGER]
-			aa1, aa2: AA
 		do
 			s1 := "gobo"
 			s2 := s1.standard_twin
-			assert ("not_void1", s2 /= Void)
-			assert_equal ("value1", "gobo", s2)
-			assert ("same_area1", s2.area = s1.area)
-			assert ("cloned1", s2 /= s1)
-			--
+			assert ("not_void", s2 /= Void)
+			assert_equal ("value", "gobo", s2)
+			assert ("same_area", s2.area = s1.area)
+			assert ("cloned", s2 /= s1)
+		end
+
+	test_standard_twin_2
+			-- Test feature 'standard_twin'.
+		local
+			i1, i2: INTEGER
+		do
 			i1 := 5
 			i2 := i1.standard_twin
-			assert_integers_equal ("value2", 5, i2)
-			--
+			assert_integers_equal ("value", 5, i2)
+		end
+
+	test_standard_twin_3
+			-- Test feature 'standard_twin'.
+		local
+			sp1, sp2: SPECIAL [INTEGER]
+		do
 			create sp1.make_filled (0, 2)
 			sp1.put (2, 0)
 			sp1.put (5, 1)
 			sp2 := sp1.standard_twin
-			assert ("not_void3", sp2 /= Void)
-			assert ("sp_count3", sp2.count = 2)
-			assert ("sp_item0_3", sp2.item (0) = 2)
-			assert ("sp_item1_3", sp2.item (1) = 5)
-			assert ("cloned3", sp2 /= sp1)
-			--
+			assert ("not_void", sp2 /= Void)
+			assert ("sp_count", sp2.count = 2)
+			assert ("sp_item0_", sp2.item (0) = 2)
+			assert ("sp_item1_", sp2.item (1) = 5)
+			assert ("cloned", sp2 /= sp1)
+		end
+
+	test_standard_twin_4
+			-- Test feature 'standard_twin'.
+		local
+			aa1, aa2: AA
+		do
 			create aa1
 			aa1.set_foo (5)
 			aa2 := aa1.standard_twin
-			assert ("not_void4", aa2 /= Void)
-			assert ("value4", aa2.foo = 5)
-			assert ("cloned4", aa2 /= aa1)
+			assert ("not_void", aa2 /= Void)
+			assert ("value", aa2.foo = 5)
+			assert ("cloned", aa2 /= aa1)
 		end
 
 	test_standard_copy_1
