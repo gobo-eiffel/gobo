@@ -9,5 +9,4 @@ In this test, the call to the once-per-object procedure `f` is fresh in object `
 ### Notes
 
 * ISE Eiffel (as of 20.05.10.4440 and after) erroneously considers that objects `b1` and `b2` are not equal after the call to `f`, even though they were equal after the call to the non-once procedure `g`. This violates `MUON-1`.
-* Gobo Eiffel (as of 20.05.31.5 and after) erroneously considers that objects `b1` and `b2` are not equal after the call to `f`, even though they were equal after the call to the non-once procedure `g`. This violates `MUON-1`.
  

@@ -126,7 +126,16 @@ feature -- Generation
 				a_type.set_alive
 				if a_type.is_expanded then
 						-- Make sure that feature 'twin' is alive for expanded types.
+						-- Note that this will make fetaure 'copy' alive as well
+						-- because 'twin' calls 'copy' internally.
 					l_seed := current_system.twin_seed
+					if l_seed > 0 then
+						if attached a_type.seeded_dynamic_query (l_seed, current_dynamic_system) as l_feature then
+							l_feature.set_regular (True)
+						end
+					end
+						-- Make sure that feature 'is_equal' is alive for expanded types.
+					l_seed := current_system.is_equal_seed
 					if l_seed > 0 then
 						if attached a_type.seeded_dynamic_query (l_seed, current_dynamic_system) as l_feature then
 							l_feature.set_regular (True)

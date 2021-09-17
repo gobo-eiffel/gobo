@@ -22,6 +22,7 @@ inherit
 			has_nested_non_embedded_attributes,
 			has_nested_reference_fields,
 			has_nested_custom_standard_copy_routine,
+			has_nested_custom_standard_is_equal_routine,
 			new_dynamic_query, new_dynamic_procedure
 		end
 
@@ -194,6 +195,56 @@ feature -- Features
 							Result := True
 							i := nb + 1
 						elseif l_item_type.has_nested_custom_standard_copy_routine then
+							Result := True
+							i := nb + 1
+						else
+							i := i + 1
+						end
+					elseif l_item_type.is_expanded then
+							-- Non-embedded expanded attribute (e.g. attribute with generic expanded type
+							-- which can be polyphormic with 'EXP [INTEGER]' conforming to 'EXP [ANY]').
+						Result := True
+						i := nb + 1
+					elseif l_item_type_set.has_expanded then
+							-- Reference attribute which may be attached to an object with copy semantics.
+						Result := True
+						i := nb + 1
+					else
+						i := i + 1
+					end
+				end
+				has_once_per_object_routines := False
+			end
+		end
+
+	has_nested_custom_standard_is_equal_routine: BOOLEAN
+			-- Does current type contains fields, or recursively does it have
+			-- embedded expanded attributes which contain fields, which require
+			-- special treatment in the implementation of routine 'standard_is_equa'?
+		local
+			i, nb: INTEGER
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
+			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if precursor then
+				Result := True
+			else
+					-- We should not have cyclic recursive embedded expanded objects.
+					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
+					-- or by another proper handling if ECMA relaxed this rule
+					-- (through the introduction of attached types). But in case
+					-- such a cyclic recursion has slipped through, we temporarily
+					-- set `has_once_per_object_routines' to True to break that cycle.
+				has_once_per_object_routines := True
+				nb := item_type_sets.count
+				from i := 1 until i > nb loop
+					l_item_type_set := item_type_sets.item (i)
+					l_item_type := l_item_type_set.static_type.primary_type
+					if l_item_type.is_embedded then
+						if l_item_type.has_redefined_is_equal_routine then
+							Result := True
+							i := nb + 1
+						elseif l_item_type.has_nested_custom_standard_is_equal_routine then
 							Result := True
 							i := nb + 1
 						else

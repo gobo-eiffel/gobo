@@ -4,8 +4,8 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     325 tests
-    # FAILED:     34 tests
+    # Passed:     327 tests
+    # FAILED:     32 tests
     # Aborted:    0 test
     # Total:      359 tests
 
@@ -41,6 +41,4 @@ FAIL:  \[[semantics/mbre3/test\_twin\_2](semantics/mbre3/test\_twin\_2)\] test\_
 FAIL:  \[[semantics/mbre3/test\_twin\_special\_1](semantics/mbre3/test\_twin\_special\_1)\] test\_failed</br>
 FAIL:  \[[semantics/mbre3/test\_twin\_special\_2](semantics/mbre3/test\_twin\_special\_2)\] test\_failed</br>
 FAIL:  \[[semantics/mbre3/test\_twin\_tuple\_1](semantics/mbre3/test\_twin\_tuple\_1)\] test\_failed</br>
-FAIL:  \[[semantics/mbre3/test\_twin\_tuple\_2](semantics/mbre3/test\_twin\_tuple\_2)\] test\_failed</br>
-FAIL:  \[[semantics/muon1/test\_once\_per\_object\_5](semantics/muon1/test\_once\_per\_object\_5)\] test\_failed</br>
-FAIL:  \[[semantics/muon1/test\_once\_per\_object\_6](semantics/muon1/test\_once\_per\_object\_6)\] test\_failed
+FAIL:  \[[semantics/mbre3/test\_twin\_tuple\_2](semantics/mbre3/test\_twin\_tuple\_2)\] test\_failed

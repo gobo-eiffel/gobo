@@ -160,6 +160,8 @@ feature {NONE} -- Initialization
 			end
 			if a_feature.has_seed (a_system.current_system.copy_seed) then
 				is_copy_routine := True
+			elseif a_feature.has_seed (a_system.current_system.is_equal_seed) then
+				is_is_equal_routine := True
 			end
 		ensure
 			static_feature_set: static_feature = a_feature
@@ -416,6 +418,9 @@ feature -- Status report
 
 	is_copy_routine: BOOLEAN
 			-- Is current feature the version of 'ANY.copy' in `target_type'?
+
+	is_is_equal_routine: BOOLEAN
+			-- Is current feature the version of 'ANY.is_equal' in `target_type'?
 
 	is_semistrict (a_system: ET_DYNAMIC_SYSTEM): BOOLEAN
 			-- Is current feature semistrict?
@@ -722,6 +727,15 @@ feature -- Status report
 		ensure
 			builtin: Result implies is_builtin
 			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_any_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_any_copy)
+		end
+
+	is_builtin_any_is_equal: BOOLEAN
+			-- Is current feature the built-in feature 'ANY.is_equal'?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_any_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_any_is_equal
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_any_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_any_is_equal)
 		end
 
 	is_builtin_special_item: BOOLEAN

@@ -22,6 +22,7 @@ inherit
 			has_nested_non_embedded_attributes,
 			has_nested_reference_fields,
 			has_nested_custom_standard_copy_routine,
+			has_nested_custom_standard_is_equal_routine,
 			new_dynamic_query,
 			new_dynamic_procedure
 		end
@@ -158,6 +159,45 @@ feature -- Features
 					-- such a cyclic recursion has slipped through, we have this
 					-- test to break that cycle.
 				elseif l_item_type.has_nested_custom_standard_copy_routine then
+					Result := True
+				end
+			elseif l_item_type.is_expanded then
+					-- Non-embedded expanded attribute (e.g. attribute with generic expanded type
+					-- which can be polyphormic with 'EXP [INTEGER]' conforming to 'EXP [ANY]').
+				Result := True
+			elseif item_type_set.has_expanded then
+					-- Reference attribute which may be attached to an object with copy semantics.
+				Result := True
+			end
+		end
+
+	has_nested_custom_standard_is_equal_routine: BOOLEAN
+			-- Does current type contains fields, or recursively does it have
+			-- embedded expanded attributes which contain fields, which require
+			-- special treatment in the implementation of routine 'standard_is_equal'?
+		do
+			Result := precursor or has_item_nested_custom_standard_is_equal_routine
+		end
+
+	has_item_nested_custom_standard_is_equal_routine: BOOLEAN
+			-- Does current type contains items, or recursively do they have
+			-- embedded expanded attributes which contain fields, which require
+			-- special treatment in the implementation of routine 'standard_is_equal'?
+		local
+			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			l_item_type := item_type_set.static_type.primary_type
+			if l_item_type.is_embedded then
+				if l_item_type.has_redefined_is_equal_routine then
+					Result := True
+				elseif l_item_type = Current then
+					-- We should not have cyclic recursive embedded expanded objects.
+					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
+					-- or by another proper handling if ECMA relaxed this rule
+					-- (through the introduction of attached types). But in case
+					-- such a cyclic recursion has slipped through, we have this
+					-- test to break that cycle.
+				elseif l_item_type.has_nested_custom_standard_is_equal_routine then
 					Result := True
 				end
 			elseif l_item_type.is_expanded then
