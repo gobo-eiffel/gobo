@@ -1,6 +1,6 @@
 ## copy expected
 DD copied
-## standard copy expected
+## copy expected
 ##
 d.value = 2
 t1.v.value = 2

@@ -187,16 +187,17 @@ feature {NONE} -- Initialization
 			create frozen_temp_variables.make (40)
 			create unused_unqualified_call_expressions.make (10)
 			create unused_qualified_call_expressions.make (10)
-			create unused_tuple_item_expressions.make (10)
 			create unused_actual_argument_lists.make (10)
 			create unused_result_expressions.make (10)
+			create unused_identifiers.make (10)
 			create conforming_types.make_with_capacity (100)
-			create conforming_type_set.make_empty (current_dynamic_system.unknown_type)
 			create non_conforming_types.make_with_capacity (100)
 			create equality_type_set.make_empty (current_dynamic_system.unknown_type)
 			create equality_common_types.make_with_capacity (100)
+			create unused_standalone_type_sets.make (50)
 			create operand_stack.make (5000)
 			create call_operands.make (5000)
+			create attachment_call_operands.make (50)
 			create attachment_dynamic_type_ids.make (100)
 			create target_dynamic_type_ids.make (100)
 			create target_dynamic_types.make_map (100)
@@ -6875,7 +6876,11 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				l_wrapper_expression.set_index (l_index)
 					-- Print assignment of call expression to result entity.
 				l_result := tokens.result_keyword
-				assignment_target := l_result
+				if not is_twin_needed_in_attachment (l_result_type_set) then
+					assignment_target := l_result
+				else
+					assignment_target := Void
+				end
 				print_operand (l_wrapper_expression)
 				assignment_target := Void
 				fill_call_operands (1)
@@ -6970,16 +6975,10 @@ feature {NONE} -- Instruction generation
 			l_target_type_set := dynamic_type_set (l_target)
 			l_source_type := l_source_type_set.static_type
 			l_target_type := l_target_type_set.static_type
-			assignment_target := Void
-			if l_target_type.is_expanded then
-				if l_source_type.is_expanded then
--- TODO: check to see if `l_source_type' has a non-standard 'copy' feature.
-					assignment_target := l_target
-				end
+			if (l_source_type.is_embedded = l_target_type.is_embedded) and then not is_twin_needed_in_attachment (l_source_type_set) then
+				assignment_target := l_target
 			else
-				if not l_source_type_set.has_expanded then
-					assignment_target := l_target
-				end
+				assignment_target := Void
 			end
 			print_operand (l_source)
 			assignment_target := Void
@@ -7033,6 +7032,8 @@ feature {NONE} -- Instruction generation
 			l_target_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_conforming_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
 			l_non_conforming_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
+			l_conforming_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
+			l_old_conforming_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
 			l_can_be_void: BOOLEAN
 			l_once_index: INTEGER
 			l_once_kind: INTEGER
@@ -7151,6 +7152,12 @@ feature {NONE} -- Instruction generation
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				current_file.put_new_line
+				l_conforming_type_set := new_standalone_type_set (l_source_type)
+				l_old_conforming_types := l_conforming_type_set.dynamic_types
+				l_conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
+				if l_source_type_set.is_never_void then
+					l_conforming_type_set.set_never_void
+				end
 				if l_non_conforming_types.count < l_conforming_types.count then
 					nb := l_non_conforming_types.count
 					from i := 1 until i > nb loop
@@ -7195,12 +7202,7 @@ feature {NONE} -- Instruction generation
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
-					if l_source_type_set.is_never_void then
-						conforming_type_set.set_never_void
-					end
-					print_attachment_expression (call_operands.first, conforming_type_set, l_target_type)
-					conforming_type_set.reset_with_types (current_dynamic_system.unknown_type, Void)
+					print_attachment_expression (call_operands.first, l_conforming_type_set, l_target_type)
 					current_file.put_character (';')
 					current_file.put_new_line
 					dedent
@@ -7222,12 +7224,7 @@ feature {NONE} -- Instruction generation
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
-					if l_source_type_set.is_never_void then
-						conforming_type_set.set_never_void
-					end
-					print_attachment_expression (call_operands.first, conforming_type_set, l_target_type)
-					conforming_type_set.reset_with_types (current_dynamic_system.unknown_type, Void)
+					print_attachment_expression (call_operands.first, l_conforming_type_set, l_target_type)
 					current_file.put_character (';')
 					current_file.put_new_line
 					print_indentation
@@ -7256,6 +7253,8 @@ feature {NONE} -- Instruction generation
 					end
 					dedent
 				end
+				l_conforming_type_set.reset_with_types (current_dynamic_system.unknown_type, l_old_conforming_types)
+				free_standalone_type_set (l_conforming_type_set)
 				print_indentation
 				current_file.put_character ('}')
 				current_file.put_new_line
@@ -7827,6 +7826,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			l_cursor_name: ET_IDENTIFIER
 			l_cursor_type: ET_DYNAMIC_TYPE
 			l_cursor_type_set: ET_DYNAMIC_TYPE_SET
+			l_other_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if line_generation_mode then
 				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
@@ -7842,9 +7842,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			current_function_header_buffer.put_character (';')
 			current_function_header_buffer.put_new_line
 				-- Call to `new_cursor'.
-			assignment_target := Void
--- TODO: check to see if `l_cursor_type' has a non-standard 'copy' feature.
-			assignment_target := l_cursor_name
+			l_other_dynamic_type_set := dynamic_type_set (an_instruction.new_cursor_expression)
+			if (l_cursor_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+				assignment_target := l_cursor_name
+			else
+				assignment_target := Void
+			end
 			print_operand (an_instruction.new_cursor_expression)
 			assignment_target := Void
 			fill_call_operands (1)
@@ -9311,6 +9314,7 @@ feature {NONE} -- Expression generation
 			a_source_type_set_not_void: a_source_type_set /= Void
 			a_target_type_not_void: a_target_type /= Void
 		local
+			l_source_type: ET_DYNAMIC_TYPE
 			l_target_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_source_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
@@ -9319,9 +9323,19 @@ feature {NONE} -- Expression generation
 			l_dts_ids: STRING
 			l_dts_name: detachable STRING
 			i, nb: INTEGER
+			l_twin_feature_name: ET_IDENTIFIER
+			l_twin_expression: ET_QUALIFIED_CALL_EXPRESSION
+			l_need_unboxing: BOOLEAN
+			l_old_call_operands: like call_operands
+			l_twin_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
+			l_query_call: detachable ET_DYNAMIC_QUALIFIED_QUERY_CALL
+			l_index: INTEGER
+			l_old_index: INTEGER
+			l_checked_void: BOOLEAN
+			l_target_type_is_attached: BOOLEAN
 		do
--- TODO: deal with void-safety, when `a_target_type' is attached and we pass Void.
-			l_source_primary_type := a_source_type_set.static_type.primary_type
+			l_source_type := a_source_type_set.static_type
+			l_source_primary_type := l_source_type.primary_type
 			l_target_primary_type := a_target_type.primary_type
 			if not l_source_primary_type.conforms_to_primary_type (l_target_primary_type) then
 					-- Make sure that CAT-call errors will be reported at run-time.
@@ -9359,78 +9373,164 @@ feature {NONE} -- Expression generation
 				end
 				l_non_conforming_types.wipe_out
 			end
-			if l_target_primary_type.is_expanded then
--- TODO: check whether 'copy' has been redefined in `l_source_type'.
-				if l_source_primary_type.is_expanded then
--- TODO: there might be some problems if the expanded types are generic with different actual parameters.
-					if l_has_non_conforming_types and l_dts_name /= Void then
-						current_file.put_character ('(')
-						print_boxed_type_cast (l_source_primary_type, current_file)
-						current_file.put_character ('(')
-						current_file.put_string (c_ge_catcall)
-						current_file.put_character ('(')
+			l_twin_feature_name := new_twin_feature_name
+			l_twin_expression := new_qualified_call_expression (an_expression, l_twin_feature_name, Void)
+			l_twin_expression.set_index (an_expression.index)
+			l_need_unboxing := l_target_primary_type.is_embedded and then l_has_non_conforming_types
+			if l_need_unboxing then
+				current_file.put_character ('(')
+				print_boxed_type_cast (l_target_primary_type, current_file)
+				current_file.put_character ('(')
+			end
+			if l_has_non_conforming_types then
+				current_file.put_string (c_ge_catcall)
+				current_file.put_character ('(')
+			end
+			if l_source_primary_type.is_embedded and then l_source_primary_type.is_basic and then not l_source_primary_type.has_redefined_copy_routine then
+					-- Optimization: no need to explicitly call 'twin' in that case.
+				if l_target_primary_type.is_embedded then
+					if l_has_non_conforming_types then
 							-- We need to box the source object in order
 							-- to pass it to 'GE_catcall'.
 						print_boxed_expression (an_expression, l_source_primary_type)
-						current_file.put_character (',')
-						current_file.put_string (l_dts_name)
-						current_file.put_character (',')
-						current_file.put_integer (nb)
-						current_file.put_character (')')
-						current_file.put_character (')')
-						current_file.put_character (')')
-						current_file.put_string (c_arrow)
-						print_boxed_attribute_item_name (l_source_primary_type, current_file)
 					else
 						print_expression (an_expression)
 					end
 				else
--- TODO: there might be some problems if the expanded types are generic with different actual parameters.
-						-- The source object has been boxed.
-					if l_has_non_conforming_types and l_dts_name /= Void then
-						current_file.put_character ('(')
-						print_boxed_type_cast (l_target_primary_type, current_file)
-						current_file.put_character ('(')
-						current_file.put_string (c_ge_catcall)
-						current_file.put_character ('(')
-						print_non_void_expression (an_expression, True)
-						current_file.put_character (',')
-						current_file.put_string (l_dts_name)
-						current_file.put_character (',')
-						current_file.put_integer (nb)
-						current_file.put_character (')')
-						current_file.put_character (')')
-						current_file.put_character (')')
-						current_file.put_string (c_arrow)
-						print_boxed_attribute_item_name (l_source_primary_type, current_file)
-					else
-						print_boxed_attribute_item_access (an_expression, l_target_primary_type, True)
-					end
-				end
-			else
-				if l_has_non_conforming_types then
-					current_file.put_string (c_ge_catcall)
-					current_file.put_character ('(')
-				end
-				if l_source_primary_type.is_expanded then
 						-- We need to box the source object.
 					print_boxed_expression (an_expression, l_source_primary_type)
+				end
+			elseif l_target_primary_type.is_embedded then
+				l_old_call_operands := call_operands
+				call_operands := attachment_call_operands
+				if l_source_primary_type.is_embedded then
+					if l_has_non_conforming_types then
+							-- We need to box the source object in order
+							-- to pass it to 'GE_catcall'.
+						print_boxed_expression (l_twin_expression, l_source_primary_type)
+					else
+						print_expression (l_twin_expression)
+					end
 				else
-					if a_source_type_set.has_expanded then
--- TODO: check to see whether some of the types in the source type set are expanded.
--- If so, 'twin' needs to be called on them.
+						-- The source object has been boxed.
+						-- Only keep `l_target_primary_type' in the type set of
+						-- `an_expression' before calling 'twin' because all other
+						-- types will have triggered a CAT-call exception.
+					l_twin_type_set := new_standalone_type_set (a_target_type)
+					l_twin_type_set.put_conforming_expanded_types (a_source_type_set)
+					l_twin_type_set.set_never_void
+					l_twin_type_set.set_static_type (l_source_type)
+					extra_dynamic_type_sets.force_last (l_twin_type_set)
+					l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+					l_old_index := an_expression.index
+					an_expression.set_index (l_index)
+					l_twin_expression.set_index (l_index)
+					if l_has_non_conforming_types then
+						print_expression (l_twin_expression)
+					else
+							-- By setting the expected type for the call to 'twin' to
+							-- `a_target_type' (which is embedded), we will directly get
+							-- an unboxed object. This will avoid boxing the result of
+							-- the call to 'twin' and then unboxing it so that it's ready
+							-- to be attached to an entity of type `a_target_type'.
+						extra_dynamic_type_sets.force_last (a_target_type)
+						l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+						l_twin_expression.set_index (l_index)
+						print_expression (l_twin_expression)
+						extra_dynamic_type_sets.remove_last
+					end
+					an_expression.set_index (l_old_index)
+					extra_dynamic_type_sets.remove_last
+				end
+				call_operands := l_old_call_operands
+			else
+				if l_source_primary_type.is_embedded then
+						-- We need to box the source object.
+					l_old_call_operands := call_operands
+					call_operands := attachment_call_operands
+					print_boxed_expression (l_twin_expression, l_source_primary_type)
+					call_operands := l_old_call_operands
+				else
+						-- Deal with void-safety: when `a_target_type' is attached,
+						-- then we need to check that we don't pass Void.
+					l_target_type_is_attached := a_target_type.is_attached
+						-- Check to see whether some of the types in the source type set are expanded.
+						-- If so, 'twin' needs to be called on them.
+					l_twin_type_set := new_standalone_type_set (a_target_type)
+					l_twin_type_set.put_conforming_expanded_types (a_source_type_set)
+					l_twin_type_set.set_never_void
+					if l_twin_type_set.is_empty then
+-- TODO: Improve dynamic type set 'is_never_void' in void-safe mode before
+-- using this code. Otherwise we end up with too many unnecessary checks for void.
+--						print_non_void_expression (an_expression, l_target_type_is_attached)
 						print_expression (an_expression)
 					else
+						current_file.put_character ('(')
+						if not l_target_type_is_attached and then a_source_type_set.can_be_void and then not an_expression.is_never_void then
+							l_checked_void := True
+							current_file.put_character ('(')
+							print_expression (an_expression)
+							print_and_then
+						end
+						current_file.put_character ('(')
+						current_file.put_string (c_ge_type_infos)
+						current_file.put_character ('[')
+						print_boxed_attribute_type_id_access (an_expression, l_source_primary_type, l_target_type_is_attached)
+						current_file.put_character (']')
+						current_file.put_character ('.')
+						current_file.put_string (c_flags)
+						current_file.put_character ('&')
+						current_file.put_string (c_ge_type_flag_expanded)
+						current_file.put_character (')')
+						if l_checked_void then
+							current_file.put_character (')')
+						end
+						current_file.put_character ('?')
+						l_old_call_operands := call_operands
+						call_operands := attachment_call_operands
+						extra_dynamic_type_sets.force_last (l_twin_type_set)
+						l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+						l_old_index := an_expression.index
+						an_expression.set_index (l_index)
+						l_twin_expression.set_index (l_index)
+							-- Register the call to 'twin' so that it is handled correctly
+							-- in case of polymorphism.
+							-- The special treatment for polymorphism only occurs
+							-- when the target has more than 2 possible dynamic types.
+						if l_twin_type_set.count > 2 then
+							create l_query_call.make (l_twin_expression, l_twin_type_set, l_twin_type_set, current_feature, current_type)
+							l_target_primary_type.put_query_call (l_query_call)
+						end
+						print_expression (l_twin_expression)
+						an_expression.set_index (l_old_index)
+						extra_dynamic_type_sets.remove_last
+						call_operands := l_old_call_operands
+						current_file.put_character (':')
 						print_expression (an_expression)
+						current_file.put_character (')')
+					end
+						-- Clean up.
+					if l_query_call = Void then
+						free_standalone_type_set (l_twin_type_set)
 					end
 				end
-				if l_has_non_conforming_types and l_dts_name /= Void then
-					current_file.put_character (',')
-					current_file.put_string (l_dts_name)
-					current_file.put_character (',')
-					current_file.put_integer (nb)
-					current_file.put_character (')')
-				end
+			end
+			if l_has_non_conforming_types and l_dts_name /= Void then
+				current_file.put_character (',')
+				current_file.put_string (l_dts_name)
+				current_file.put_character (',')
+				current_file.put_integer (nb)
+				current_file.put_character (')')
+			end
+			if l_need_unboxing then
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_string (c_arrow)
+				print_boxed_attribute_item_name (l_source_primary_type, current_file)
+			end
+			if l_query_call = Void then
+				free_qualified_call_expression (l_twin_expression)
+				free_twin_feature_name (l_twin_feature_name)
 			end
 		end
 
@@ -10081,10 +10181,7 @@ feature {NONE} -- Expression generation
 					print_current_name (current_file)
 				elseif l_call_target_type.is_expanded then
 						-- We need to unbox the object and then pass its address.
-					current_file.put_character ('&')
-					current_file.put_character ('(')
-					print_boxed_attribute_item_access (an_expression, l_call_target_type, False)
-					current_file.put_character (')')
+					print_boxed_attribute_pointer_access (an_expression, l_call_target_type, False)
 				else
 					print_current_name (current_file)
 				end
@@ -10434,9 +10531,8 @@ feature {NONE} -- Expression generation
 							end
 							l_actual_type_set := equality_type_set
 						end
-						if total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_32_type then
+						if total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_32_type and then not l_dynamic_type.has_redefined_is_equal_routine then
 								-- Optimization: avoid a function call for basic types.
--- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
 							include_runtime_header_file ("ge_real.h", False, header_file)
 							current_file.put_string (l_not_not)
 							current_file.put_string (c_ge_real_32_is_equal)
@@ -10446,9 +10542,8 @@ feature {NONE} -- Expression generation
 							current_file.put_character (' ')
 							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
 							current_file.put_character (')')
-						elseif total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_64_type then
+						elseif total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_64_type and then not l_dynamic_type.has_redefined_is_equal_routine then
 								-- Optimization: avoid a function call for basic types.
--- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
 							include_runtime_header_file ("ge_real.h", False, header_file)
 							current_file.put_string (l_not_not)
 							current_file.put_string (c_ge_real_64_is_equal)
@@ -10458,9 +10553,8 @@ feature {NONE} -- Expression generation
 							current_file.put_character (' ')
 							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
 							current_file.put_character (')')
-						elseif l_dynamic_type.is_basic then
+						elseif l_dynamic_type.is_basic and then not l_dynamic_type.has_redefined_is_equal_routine then
 								-- Optimization: avoid a function call for basic types.
--- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
 							current_file.put_character ('(')
 							current_file.put_character ('(')
 							print_unboxed_expression (l_left_operand, l_dynamic_type, False)
@@ -10850,10 +10944,7 @@ feature {NONE} -- Expression generation
 					print_argument_name (a_name, current_file)
 				elseif l_call_target_type.is_expanded then
 						-- We need to unbox the object and then pass its address.
-					current_file.put_character ('&')
-					current_file.put_character ('(')
-					print_boxed_attribute_item_access (a_name, l_call_target_type, call_target_check_void)
-					current_file.put_character (')')
+					print_boxed_attribute_pointer_access (a_name, l_call_target_type, call_target_check_void)
 				else
 					print_argument_name (a_name, current_file)
 				end
@@ -10878,6 +10969,7 @@ feature {NONE} -- Expression generation
 			l_temp: ET_IDENTIFIER
 			l_temp_index: INTEGER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_other_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_expression: ET_EXPRESSION
 			l_elseif: ET_ELSEIF_EXPRESSION
@@ -10906,8 +10998,13 @@ feature {NONE} -- Expression generation
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
-			assignment_target := l_temp
 			l_expression := a_expression.then_expression
+			l_other_dynamic_type_set := dynamic_type_set (l_expression)
+			if (l_dynamic_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+				assignment_target := l_temp
+			else
+				assignment_target := Void
+			end
 			print_operand (l_expression)
 			assignment_target := Void
 			fill_call_operands (1)
@@ -10948,8 +11045,13 @@ feature {NONE} -- Expression generation
 					current_file.put_character ('{')
 					current_file.put_new_line
 					indent
-					assignment_target := l_temp
 					l_expression := l_elseif.then_expression
+					l_other_dynamic_type_set := dynamic_type_set (l_expression)
+					if (l_dynamic_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+						assignment_target := l_temp
+					else
+						assignment_target := Void
+					end
 					print_operand (l_expression)
 					assignment_target := Void
 					fill_call_operands (1)
@@ -10976,8 +11078,13 @@ feature {NONE} -- Expression generation
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
-			assignment_target := l_temp
 			l_expression := a_expression.else_expression
+			l_other_dynamic_type_set := dynamic_type_set (l_expression)
+			if (l_dynamic_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+				assignment_target := l_temp
+			else
+				assignment_target := Void
+			end
 			print_operand (l_expression)
 			assignment_target := Void
 			fill_call_operands (1)
@@ -11161,6 +11268,7 @@ feature {NONE} -- Expression generation
 			l_temp: ET_IDENTIFIER
 			l_temp_index: INTEGER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_other_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_expression: ET_EXPRESSION
 			l_when_part: ET_WHEN_EXPRESSION
@@ -11328,8 +11436,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 						end
 						if l_has_case then
 							indent
-							assignment_target := l_temp
 							l_expression := l_when_part.then_expression
+							l_other_dynamic_type_set := dynamic_type_set (l_expression)
+							if (l_dynamic_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+								assignment_target := l_temp
+							else
+								assignment_target := Void
+							end
 							print_operand (l_expression)
 							assignment_target := Void
 							fill_call_operands (1)
@@ -11360,8 +11473,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			current_file.put_new_line
 			if attached a_expression.else_part as l_else_part then
 				indent
-				assignment_target := l_temp
 				l_expression := l_else_part.expression
+				l_other_dynamic_type_set := dynamic_type_set (l_expression)
+				if (l_dynamic_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+					assignment_target := l_temp
+				else
+					assignment_target := Void
+				end
 				print_operand (l_expression)
 				assignment_target := Void
 				fill_call_operands (1)
@@ -11451,10 +11569,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					print_iteration_cursor_name (a_name, current_file)
 				elseif l_call_target_type.is_expanded then
 						-- We need to unbox the object and then pass its address.
-					current_file.put_character ('&')
-					current_file.put_character ('(')
-					print_boxed_attribute_item_access (a_name, l_call_target_type, call_target_check_void)
-					current_file.put_character (')')
+					print_boxed_attribute_pointer_access (a_name, l_call_target_type, call_target_check_void)
 				else
 					print_iteration_cursor_name (a_name, current_file)
 				end
@@ -11475,6 +11590,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			l_cursor_type: ET_DYNAMIC_TYPE
 			l_cursor_type_set: ET_DYNAMIC_TYPE_SET
 			l_boolean_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_other_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			assignment_target := Void
 				-- Declaration of the iteration cursor.
@@ -11488,8 +11604,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			current_function_header_buffer.put_character (';')
 			current_function_header_buffer.put_new_line
 				-- Call to `new_cursor'.
--- TODO: check to see if `l_cursor_type' has a non-standard 'copy' feature.
-			assignment_target := l_cursor_name
+			l_other_dynamic_type_set := dynamic_type_set (an_expression.new_cursor_expression)
+			if (l_cursor_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+				assignment_target := l_cursor_name
+			else
+				assignment_target := Void
+			end
 			print_operand (an_expression.new_cursor_expression)
 			assignment_target := Void
 			fill_call_operands (1)
@@ -11578,8 +11698,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			current_file.put_character ('}')
 			current_file.put_new_line
 				-- Iteration expression.
-			assignment_target := l_temp
 			l_expression := an_expression.iteration_expression
+			l_other_dynamic_type_set := dynamic_type_set (l_expression)
+			if (l_boolean_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+				assignment_target := l_temp
+			else
+				assignment_target := Void
+			end
 			print_operand (l_expression)
 			assignment_target := Void
 			fill_call_operands (1)
@@ -11647,10 +11772,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 						current_file.put_character (')')
 					elseif l_call_target_type.is_expanded then
 							-- We need to unbox the object and then pass its address.
-						current_file.put_character ('&')
-						current_file.put_character ('(')
-						print_boxed_attribute_item_access (a_name, l_call_target_type, call_target_check_void)
-						current_file.put_character (')')
+						print_boxed_attribute_pointer_access (a_name, l_call_target_type, call_target_check_void)
 					else
 						print_local_name (a_name, current_file)
 					end
@@ -12347,9 +12469,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 							end
 							l_actual_type_set := equality_type_set
 						end
-						if total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_32_type then
+						if total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_32_type and then not l_dynamic_type.has_redefined_is_equal_routine then
 								-- Optimization: avoid a function call for basic types.
--- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
 							include_runtime_header_file ("ge_real.h", False, header_file)
 							current_file.put_string (l_not_not)
 							current_file.put_string (c_ge_real_32_is_equal)
@@ -12359,9 +12480,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 							current_file.put_character (' ')
 							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
 							current_file.put_character (')')
-						elseif total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_64_type then
+						elseif total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_64_type and then not l_dynamic_type.has_redefined_is_equal_routine then
 								-- Optimization: avoid a function call for basic types.
--- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
 							include_runtime_header_file ("ge_real.h", False, header_file)
 							current_file.put_string (l_not_not)
 							current_file.put_string (c_ge_real_64_is_equal)
@@ -12371,9 +12491,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 							current_file.put_character (' ')
 							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
 							current_file.put_character (')')
-						elseif l_dynamic_type.is_basic then
+						elseif l_dynamic_type.is_basic and then not l_dynamic_type.has_redefined_is_equal_routine then
 								-- Optimization: avoid a function call for basic types.
--- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
 							current_file.put_character ('(')
 							current_file.put_character ('(')
 							print_unboxed_expression (l_left_operand, l_dynamic_type, False)
@@ -12598,10 +12717,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					print_object_test_local_name (a_name, current_file)
 				elseif l_call_target_type.is_expanded then
 						-- We need to unbox the object and then pass its address.
-					current_file.put_character ('&')
-					current_file.put_character ('(')
-					print_boxed_attribute_item_access (a_name, l_call_target_type, call_target_check_void)
-					current_file.put_character (')')
+					print_boxed_attribute_pointer_access (a_name, l_call_target_type, call_target_check_void)
 				else
 					print_object_test_local_name (a_name, current_file)
 				end
@@ -12902,6 +13018,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			l_target_operand: ET_EXPRESSION
 			l_force_result_boxing: BOOLEAN
 			l_dynamic_call: detachable ET_DYNAMIC_QUALIFIED_QUERY_CALL
+			l_other_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -12988,7 +13105,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 						l_semistrict_target := l_temp
 					end
 					call_operands.wipe_out
-					assignment_target := l_semistrict_target
+					l_other_dynamic_type_set := dynamic_type_set (l_actuals.actual_argument (1))
+					if (l_target_static_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+						assignment_target := l_semistrict_target
+					else
+						assignment_target := Void
+					end
 					print_operand (l_actuals.actual_argument (1))
 					assignment_target := Void
 					fill_call_operands (1)
@@ -13100,7 +13222,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 							l_temp_index := current_dynamic_type_sets.count + 1
 						end
 						operand_stack.force (l_temp)
-						print_indentation
+						if not use_comma_terminator_in_operand then
+							print_indentation
+						end
 						print_temp_name (l_temp, current_file)
 					end
 					current_file.put_character (' ')
@@ -13211,8 +13335,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 				end
 				if in_operand then
 					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
+					if use_comma_terminator_in_operand then
+						print_comma
+					else
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
 				end
 			end
 			call_operands.wipe_out
@@ -13326,7 +13454,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 							current_file.put_character ('*')
 							current_file.put_character (')')
 						end
-						current_file.put_character ('&')
 						if current_agent = Void and then current_feature.is_once then
 								-- Make sure that if a once-function is called
 								-- recursively, the semantics specified by ECMA will be satisfied.
@@ -13354,21 +13481,20 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 								current_file.put_character (')')
 								current_file.put_character (')')
 								current_file.put_string (c_arrow)
-								print_boxed_attribute_item_name (l_static_type, current_file)
+								print_boxed_attribute_pointer_name (l_static_type, current_file)
 								current_file.put_character (')')
 							else
+								current_file.put_character ('&')
 								print_result_name (current_file)
 							end
 						else
+							current_file.put_character ('&')
 							print_result_name (current_file)
 						end
 						current_file.put_character (')')
 					elseif l_call_target_type.is_expanded then
 							-- We need to unbox the object and then pass its address.
-						current_file.put_character ('&')
-						current_file.put_character ('(')
-						print_boxed_attribute_item_access (an_expression, l_call_target_type, call_target_check_void)
-						current_file.put_character (')')
+						print_boxed_attribute_pointer_access (an_expression, l_call_target_type, call_target_check_void)
 					else
 						print_result_name (current_file)
 					end
@@ -14984,6 +15110,8 @@ feature {NONE} -- Object-test generation
 			l_target_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_conforming_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
 			l_non_conforming_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
+			l_conforming_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
+			l_old_conforming_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
 			l_target_argument: detachable ET_IDENTIFIER
 			l_source_argument: ET_IDENTIFIER
 			l_can_be_void: BOOLEAN
@@ -15143,6 +15271,12 @@ feature {NONE} -- Object-test generation
 					current_file.put_character (' ')
 					current_file.put_character ('{')
 					current_file.put_new_line
+					l_conforming_type_set := new_standalone_type_set (l_source_type)
+					l_old_conforming_types := l_conforming_type_set.dynamic_types
+					l_conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
+					if l_source_type_set.is_never_void then
+						l_conforming_type_set.set_never_void
+					end
 					if l_non_conforming_types.count < l_conforming_types.count then
 						nb := l_non_conforming_types.count
 						from j := 1 until j > nb loop
@@ -15176,12 +15310,7 @@ feature {NONE} -- Object-test generation
 							current_file.put_character (' ')
 							current_file.put_character ('=')
 							current_file.put_character (' ')
-							conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
-							if l_source_type_set.is_never_void then
-								conforming_type_set.set_never_void
-							end
-							print_attachment_expression (l_source_argument, conforming_type_set, l_target_type)
-							conforming_type_set.reset_with_types (current_dynamic_system.unknown_type, Void)
+							print_attachment_expression (l_source_argument, l_conforming_type_set, l_target_type)
 							current_file.put_character (';')
 							current_file.put_new_line
 						end
@@ -15213,12 +15342,7 @@ feature {NONE} -- Object-test generation
 							current_file.put_character (' ')
 							current_file.put_character ('=')
 							current_file.put_character (' ')
-							conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
-							if l_source_type_set.is_never_void then
-								conforming_type_set.set_never_void
-							end
-							print_attachment_expression (l_source_argument, conforming_type_set, l_target_type)
-							conforming_type_set.reset_with_types (current_dynamic_system.unknown_type, Void)
+							print_attachment_expression (l_source_argument, l_conforming_type_set, l_target_type)
 							current_file.put_character (';')
 							current_file.put_new_line
 						end
@@ -15242,6 +15366,8 @@ feature {NONE} -- Object-test generation
 						current_file.put_new_line
 						dedent
 					end
+					l_conforming_type_set.reset_with_types (current_dynamic_system.unknown_type, l_old_conforming_types)
+					free_standalone_type_set (l_conforming_type_set)
 					print_indentation
 					current_file.put_character ('}')
 					current_file.put_new_line
@@ -17241,7 +17367,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 					agent_expression.set_arguments (Void)
 				end
 				agent_expression.set_index (l_result.index)
-				assignment_target := l_result
+				if not is_twin_needed_in_attachment (l_result_type_set) then
+					assignment_target := l_result
+				else
+					assignment_target := Void
+				end
 				print_operand (agent_expression)
 				assignment_target := Void
 				fill_call_operands (1)
@@ -18165,7 +18295,7 @@ feature {NONE} -- Polymorphic call functions generation
 							error_handler.report_giaaa_error
 							l_call := a_last_call
 						elseif l_manifest_tuple /= Void then
-							if not attached {ET_MANIFEST_TUPLE} l_actual_arguments.actual_argument (1) as l_attached_manifest_tuple or else l_attached_manifest_tuple.count /= (nb) then
+							if not attached {ET_MANIFEST_TUPLE} l_actual_arguments.actual_argument (1) as l_attached_manifest_tuple or else l_attached_manifest_tuple.count /= nb then
 									-- Internal error: all calls should have the same signature.
 									-- This is checked by the call to `same_declared_signature'.
 								set_fatal_error
@@ -20076,6 +20206,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_index: INTEGER
+			l_tuple_label: ET_IDENTIFIER
 			l_target_item: ET_QUALIFIED_CALL_EXPRESSION
 			l_source_item: ET_QUALIFIED_CALL_EXPRESSION
 		do
@@ -20088,13 +20219,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				extra_dynamic_type_sets.force_last (l_item_type)
 				l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
 					-- Prepare call expressions to attribute feature.
-				l_target_item := new_tuple_item_expression (i, a_target)
+				l_tuple_label := new_tuple_label (i)
+				l_target_item := new_qualified_call_expression (a_target, l_tuple_label, Void)
 				l_target_item.set_index (l_index)
-				l_source_item := new_tuple_item_expression (i, a_source)
+				l_source_item := new_qualified_call_expression (a_target, l_tuple_label, Void)
 				l_source_item.set_index (l_index)
 				print_builtin_any_standard_is_equal_field (l_target_item, l_source_item, l_item_type_set)
-				free_tuple_item_expression (l_target_item)
-				free_tuple_item_expression (l_source_item)
+				free_qualified_call_expression (l_target_item)
+				free_qualified_call_expression (l_source_item)
+				free_tuple_label (l_tuple_label)
 				extra_dynamic_type_sets.remove_last
 				i := i + 1
 			end
@@ -20525,7 +20658,20 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						print_semicolon_newline
 							-- Call 'copy'.
 						register_called_feature (l_copy_feature)
-						print_procedure_call (l_copy_feature, l_field_type, False)
+						print_indentation
+						print_routine_name (l_copy_feature, l_field_type, current_file)
+						current_file.put_character ('(')
+						current_file.put_string (c_ac)
+						print_comma
+						print_procedure_target_expression (call_operands.first, l_field_type, False)
+						print_comma
+							-- We don't call `print_attachment_expression' here to avoid calling
+							-- 'twin' (and hence 'copy') on the argument of 'copy'. Otherwise we
+							-- will call 'copy' recursively (possibly infinite recursion) with the
+							-- same argument.
+						print_expression (call_operands.item (2))
+						current_file.put_character (')')
+						print_semicolon_newline
 						call_operands.wipe_out
 					end
 				else
@@ -20705,6 +20851,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_index: INTEGER
+			l_tuple_label: ET_IDENTIFIER
 			l_target_item: ET_QUALIFIED_CALL_EXPRESSION
 			l_source_item: ET_QUALIFIED_CALL_EXPRESSION
 		do
@@ -20717,13 +20864,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				extra_dynamic_type_sets.force_last (l_item_type)
 				l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
 					-- Prepare call expressions to attribute feature.
-				l_target_item := new_tuple_item_expression (i, a_target)
+				l_tuple_label := new_tuple_label (i)
+				l_target_item := new_qualified_call_expression (a_target, l_tuple_label, Void)
 				l_target_item.set_index (l_index)
-				l_source_item := new_tuple_item_expression (i, a_source)
+				l_source_item := new_qualified_call_expression (a_source, l_tuple_label, Void)
 				l_source_item.set_index (l_index)
 				print_builtin_any_standard_copy_custom_field (l_target_item, l_source_item, l_item_type_set)
-				free_tuple_item_expression (l_target_item)
-				free_tuple_item_expression (l_source_item)
+				free_qualified_call_expression (l_target_item)
+				free_qualified_call_expression (l_source_item)
+				free_tuple_label (l_tuple_label)
 				extra_dynamic_type_sets.remove_last
 				i := i + 1
 			end
@@ -20952,7 +21101,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						-- Cannot have two instances of class "TYPE" representing the same Eiffel type.
 					print_expression (l_target)
 				elseif a_target_type.is_embedded and then not a_target_type.has_nested_custom_standard_copy_routine then
-					print_expression (l_target)
+					current_file.put_character ('*')
+					print_target_expression (l_target, a_target_type, a_check_void_target)
 				else
 					register_called_feature (a_feature)
 					print_routine_name (a_feature, a_target_type, current_file)
@@ -27801,13 +27951,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_tuple_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_tuple_source_type: ET_DYNAMIC_TYPE
 			l_tuple_source_type_set: ET_DYNAMIC_TYPE_SET
-			l_tuple_conforming_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_conforming_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
+			l_tuple_conforming_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
 			l_has_non_conforming_types: BOOLEAN
 			i, nb: INTEGER
+			nb_open_operands: INTEGER
 			j, nb2: INTEGER
 			old_tuple_index: INTEGER
+			l_tuple_label: ET_IDENTIFIER
 			l_tuple_item_expression: ET_QUALIFIED_CALL_EXPRESSION
 			l_tuple_item_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
 			l_query_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
@@ -27815,6 +27965,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_operand: ET_EXPRESSION
 			l_operand_type_set: ET_DYNAMIC_TYPE_SET
 			l_tuple_item_expression_can_be_freed: BOOLEAN
+			l_old_extra_dynamic_type_sets_count: INTEGER
 		do
 			if not attached {ET_DYNAMIC_ROUTINE_TYPE} a_target_type as l_routine_type then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
@@ -27827,20 +27978,24 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- 'rout_disp' and 'closed_operands' as first queries.
 				set_fatal_error
 				error_handler.report_giaaa_error
+			elseif not attached l_routine_type.queries.item (2).result_type_set as l_closed_operands_type_set then
+					-- Internal error: 'closed_operands' should be an attribute,
+					-- hence with a result type set.
+				set_fatal_error
+				error_handler.report_giaaa_error
 			elseif call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				if a_feature.is_procedure then
-					print_indentation
-				end
 				l_routine_object := call_operands.first
 				l_tuple := call_operands.item (2)
 				l_tuple_source_type_set := dynamic_type_set (l_tuple)
 				l_tuple_source_type := l_tuple_source_type_set.static_type
 				l_tuple_target_type_set := argument_type_set_in_feature (1, a_feature)
 				l_tuple_target_type := l_tuple_target_type_set.static_type
+				l_open_operand_type_sets := l_routine_type.open_operand_type_sets
+				nb_open_operands := l_open_operand_type_sets.count
 				if system_processor.is_ise then
 						-- ISE Eiffel does not type-check the tuple operand of Agent calls even at
 						-- execution time. It only checks whether the tuple has enough items and
@@ -27848,8 +28003,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						-- itself. For example it is OK to pass a "TUPLE [ANY]" to an Agent which expects
 						-- a "TUPLE [STRING]" provided that the dynamic type of the item of this tuple
 						-- conforms to type STRING.
-					nb := l_routine_type.open_operand_type_sets.count
-					if not attached {ET_DYNAMIC_TUPLE_TYPE} l_tuple_source_type.primary_type as l_tuple_source_primary_type or else l_tuple_source_primary_type.item_type_sets.count < nb then
+					if not attached {ET_DYNAMIC_TUPLE_TYPE} l_tuple_source_type.primary_type as l_tuple_source_primary_type or else l_tuple_source_primary_type.item_type_sets.count < nb_open_operands then
 							-- There is not enough items in the tuple. Keep the real tuple target
 							-- type so that a proper CAT-call error is emitted.
 						if attached {ET_DYNAMIC_TUPLE_TYPE} l_tuple_target_type.primary_type as l_tuple_type then
@@ -27867,75 +28021,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						-- routine should be a Tuple type.
 					set_fatal_error
 					error_handler.report_giaaa_error
-				elseif attached {ET_MANIFEST_TUPLE} l_tuple as l_manifest_tuple then
-					l_open_operand_type_sets := l_routine_type.open_operand_type_sets
-					nb := l_open_operand_type_sets.count
-					if l_manifest_tuple.count < nb then
-							-- CAT-call: we don't have enough operands to pass to the routine.
-						current_file.put_character ('(')
-						print_attachment_expression (l_manifest_tuple, l_tuple_source_type_set, l_tuple_target_type)
-						if attached a_feature.result_type_set as l_result_type_set then
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_typed_default_entity_value (l_result_type_set.static_type.primary_type, current_file)
-						end
-						current_file.put_character (')')
-					else
-							-- We have enough operands to pass to the routine.
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						if attached l_routine_type.result_type_set as l_result_type_set then
-							print_type_declaration (l_result_type_set.static_type.primary_type, current_file)
-						else
-							current_file.put_string (c_void)
-						end
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						current_file.put_character ('*')
-						current_file.put_character (')')
-						current_file.put_character ('(')
-						current_file.put_string (c_ge_context)
-						current_file.put_character ('*')
-						current_file.put_character (',')
-						current_file.put_character (' ')
-						if not attached l_routine_type.queries.item (2).result_type_set as l_closed_operands_type_set then
-								-- Internal error: 'closed_operands' should be an attribute,
-								-- hence with a result type set.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							print_type_declaration (l_closed_operands_type_set.static_type.primary_type, current_file)
-						end
-						from i := 1 until i > nb loop
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_type_declaration (l_open_operand_type_sets.item (i).static_type.primary_type, current_file)
-							i := i + 1
-						end
-						current_file.put_character (')')
-						current_file.put_character (')')
-						current_file.put_character ('(')
-							-- Print attribute 'rout_disp'.
-						print_adapted_attribute_access (l_routine_type.queries.first, l_routine_object, l_routine_type, False)
-						current_file.put_character (')')
-						current_file.put_character (')')
-						current_file.put_character ('(')
-						current_file.put_string (c_ac)
-						current_file.put_character (',')
-						current_file.put_character (' ')
-							-- Print attribute 'closed_operands'.
-						print_adapted_attribute_access (l_routine_type.queries.item (2), l_routine_object, l_routine_type, False)
-						from i := 1 until i > nb loop
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							l_operand := l_manifest_tuple.expression (i)
-							l_operand_type_set := dynamic_type_set (l_operand)
-							print_attachment_expression (l_operand, l_operand_type_set, l_open_operand_type_sets.item (i).static_type)
-							i := i + 1
-						end
-						current_file.put_character (')')
-					end
 				else
+					if a_feature.is_procedure then
+						print_indentation
+					end
+					current_file.put_character ('(')
 						-- Try to find out whether there are some potential CAT-calls,
 						-- e.g. there are some Tuple types that don't conform to the
 						-- expected type. Here is an example where this can occur:
@@ -27949,89 +28039,31 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						-- So the expected argument type is 'TUPLE [ANY, INTEGER]'. But what
 						-- is passed is of type 'TUPLE [STRING]'. We are missing the integer
 						-- field to pass to feature 'f'.
-					l_conforming_types := conforming_types
-					if l_tuple_source_type.conforms_to_type (l_tuple_target_type) then
-							-- All Tuple types conform to the expected one.
-							-- Therefore we know for sure that there will be
-							-- no CAT-call.
-						if not l_tuple_source_type_set.is_never_void or else not l_tuple_source_type_set.is_empty then
-							l_tuple_conforming_type_set := l_tuple_source_type_set
-						else
-								-- Make sure that `is_never_void' is not set when the type set is empty.
-							l_conforming_types.append_last (l_tuple_source_type_set)
-							conforming_type_set.reset_with_types (l_tuple_target_type, l_conforming_types)
-							l_tuple_conforming_type_set := conforming_type_set
-						end
-					else
-							-- Make sure that CAT-call errors will be reported at run-time.
-						nb := l_tuple_source_type_set.count
-						l_conforming_types.resize (nb)
+					l_tuple_conforming_type_set := conforming_type_set (l_tuple_source_type_set, l_tuple_target_type)
+					l_has_non_conforming_types := l_tuple_conforming_type_set.count /= l_tuple_source_type_set.count
+					if l_has_non_conforming_types then
+						print_attachment_expression (l_tuple, l_tuple_source_type_set, l_tuple_target_type)
+						print_comma
+					end
+						-- Mark the temporary variable representing the tuple and the
+						-- routine object as frozen so that they are not reused in any
+						-- way when printing the tuple item extract expressions.
+					mark_call_operands_frozen
+						-- When printing the tuple item extract expressions, `call_operands'
+						-- will be used and then wiped out. Put `call_operands' in a clean state
+						-- beforehand to avoid any problem.
+					call_operands.wipe_out
+						-- Extract the items of the tuple to pass them as argument
+						-- of the function to fill in the open operands of the agent.
+					l_old_extra_dynamic_type_sets_count := extra_dynamic_type_sets.count
+					if attached {ET_MANIFEST_TUPLE} l_tuple as l_manifest_tuple then
+						nb := l_manifest_tuple.count.min (nb_open_operands)
 						from i := 1 until i > nb loop
-							l_dynamic_type := l_tuple_source_type_set.dynamic_type (i)
-							if l_dynamic_type.conforms_to_primary_type (l_tuple_target_primary_type) then
-								l_conforming_types.put_last (l_dynamic_type)
-							else
-								l_has_non_conforming_types := True
-							end
+							print_operand (l_manifest_tuple.expression (i))
 							i := i + 1
 						end
-						conforming_type_set.reset_with_types (l_tuple_target_type, l_conforming_types)
-						l_tuple_conforming_type_set := conforming_type_set
-						if l_tuple_source_type_set.is_never_void and not l_tuple_source_type_set.is_empty then
-							l_tuple_conforming_type_set.set_never_void
-						end
-					end
-					if l_has_non_conforming_types then
-						current_file.put_character ('(')
-						print_attachment_expression (l_tuple, l_tuple_source_type_set, l_tuple_target_type)
-						current_file.put_character (',')
-					end
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					if attached l_routine_type.result_type_set as l_result_type_set then
-						print_type_declaration (l_result_type_set.static_type.primary_type, current_file)
-					else
-						current_file.put_string (c_void)
-					end
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					current_file.put_character ('*')
-					current_file.put_character (')')
-					current_file.put_character ('(')
-					current_file.put_string (c_ge_context)
-					current_file.put_character ('*')
-					current_file.put_character (',')
-					current_file.put_character (' ')
-					if not attached l_routine_type.queries.item (2).result_type_set as l_closed_operands_type_set then
-							-- Internal error: 'closed_operands' should be an attribute,
-							-- hence with a result type set.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						print_type_declaration (l_closed_operands_type_set.static_type.primary_type, current_file)
-					end
-					l_open_operand_type_sets := l_routine_type.open_operand_type_sets
-					nb := l_open_operand_type_sets.count
-					from i := 1 until i > nb loop
-						current_file.put_character (',')
-						current_file.put_character (' ')
-						print_type_declaration (l_open_operand_type_sets.item (i).static_type.primary_type, current_file)
-						i := i + 1
-					end
-					current_file.put_character (')')
-					current_file.put_character (')')
-					current_file.put_character ('(')
-						-- Print attribute 'rout_disp'.
-					print_adapted_attribute_access (l_routine_type.queries.first, l_routine_object, l_routine_type, False)
-					current_file.put_character (')')
-					current_file.put_character (')')
-					current_file.put_character ('(')
-					current_file.put_string (c_ac)
-					current_file.put_character (',')
-					current_file.put_character (' ')
-						-- Print attribute 'closed_operands'.
-					print_adapted_attribute_access (l_routine_type.queries.item (2), l_routine_object, l_routine_type, False)
-					if nb > 0 then
+						fill_call_operands (nb)
+					elseif nb_open_operands > 0 then
 							-- Prepare dynamic type sets.
 							-- Temporarily change the dynamic type set of the
 							-- tuple so that it is only made up of conforming
@@ -28039,21 +28071,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						extra_dynamic_type_sets.force_last (l_tuple_conforming_type_set)
 						old_tuple_index := l_tuple.index
 						l_tuple.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
-							-- Mark the temporary variable representing the tuple and the
-							-- routine object as frozen so that they are not reused in any
-							-- way when printing the tuple item extract expressions.
-						mark_call_operands_frozen
-							-- When printing the tuple item extract expressions, it is likely that
-							-- `call_operands' will be used and then wiped out (see
-							-- `print_qualified_call_expression' which will be called indirectly from
-							-- `print_attachment_expression'). Put `call_operands' in a clean state
-							-- beforehand to avoid any problem.
-						call_operands.wipe_out
-							-- Extract the items of the tuple and pass them as argument
+							-- Extract the items of the tuple to pass them as argument
 							-- of the function to fill in the open operands of the agent.
-						from i := 1 until i > nb loop
-							current_file.put_character (',')
-							current_file.put_character (' ')
+						from i := 1 until i > nb_open_operands loop
 								-- Prepare the expression to extract the tuple item.
 							create l_tuple_item_type_set.make_empty (l_tuple_target_primary_type.item_type_sets.item (i).static_type)
 							nb2 := l_tuple_conforming_type_set.count
@@ -28068,7 +28088,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 								j := j + 1
 							end
 							extra_dynamic_type_sets.force_last (l_tuple_item_type_set)
-							l_tuple_item_expression := new_tuple_item_expression (i, l_tuple)
+							l_tuple_label := new_tuple_label (i)
+							l_tuple_item_expression := new_qualified_call_expression (l_tuple, l_tuple_label, Void)
 							l_tuple_item_expression_can_be_freed := True
 							l_tuple_item_expression.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
 								-- Register the call to extract the tuple item so that
@@ -28086,38 +28107,79 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 								l_tuple_item_expression_can_be_freed := False
 							end
 								-- Print the actual call to extract the tuple item.
-							print_attachment_expression (l_tuple_item_expression, l_tuple_item_type_set, l_open_operand_type_sets.item (i).static_type)
+							use_comma_terminator_in_operand := True
+							print_operand (l_tuple_item_expression)
+							use_comma_terminator_in_operand := False
 								-- Clean up.
 							if l_tuple_item_expression_can_be_freed then
-								free_tuple_item_expression (l_tuple_item_expression)
+								free_qualified_call_expression (l_tuple_item_expression)
+								free_tuple_label (l_tuple_label)
 							end
-							extra_dynamic_type_sets.remove_last
 								-- No need to check for the void-ness of the tuple when accessing
 								-- each of its items. The first time is enough.
 							l_tuple_conforming_type_set.set_never_void
 							i := i + 1
 						end
+						fill_call_operands (nb_open_operands)
 							-- Clean up.
 						l_tuple.set_index (old_tuple_index)
-						extra_dynamic_type_sets.remove_last
-							-- Put back the operands of current call onto `call_operands'.
-						call_operands.put_last (l_routine_object)
-						call_operands.put_last (l_tuple)
-							-- Unfreeze the temporary variables corresponding to the tuple
-							-- and routine objects.
-						mark_call_operands_unfrozen
+					end
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					if attached l_routine_type.result_type_set as l_result_type_set then
+						print_type_declaration (l_result_type_set.static_type.primary_type, current_file)
+					else
+						current_file.put_string (c_void)
+					end
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_character ('*')
+					current_file.put_character (')')
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_context)
+					current_file.put_character ('*')
+					print_comma
+					print_type_declaration (l_closed_operands_type_set.static_type.primary_type, current_file)
+					from i := 1 until i > nb_open_operands loop
+						print_comma
+						print_type_declaration (l_open_operand_type_sets.item (i).static_type.primary_type, current_file)
+						i := i + 1
 					end
 					current_file.put_character (')')
-					if l_has_non_conforming_types then
-						current_file.put_character (')')
+					current_file.put_character (')')
+					current_file.put_character ('(')
+						-- Print attribute 'rout_disp'.
+					print_adapted_attribute_access (l_routine_type.queries.first, l_routine_object, l_routine_type, False)
+					current_file.put_character (')')
+					current_file.put_character (')')
+					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
+						-- Print attribute 'closed_operands'.
+					print_adapted_attribute_access (l_routine_type.queries.item (2), l_routine_object, l_routine_type, False)
+					nb := call_operands.count
+					from i := 1 until i > nb loop
+						print_comma
+						l_operand := call_operands.item (i)
+						l_operand_type_set := dynamic_type_set (l_operand)
+						print_attachment_expression (l_operand, l_operand_type_set, l_open_operand_type_sets.item (i).static_type)
+						i := i + 1
 					end
+					current_file.put_character (')')
+					current_file.put_character (')')
 						-- Clean up.
-					conforming_type_set.reset_with_types (current_dynamic_system.unknown_type, Void)
-					l_conforming_types.wipe_out
-				end
-				if a_feature.is_procedure then
-					current_file.put_character (';')
-					current_file.put_new_line
+					extra_dynamic_type_sets.keep_first (l_old_extra_dynamic_type_sets_count)
+						-- Put back the operands of current call onto `call_operands'.
+					call_operands.wipe_out
+					call_operands.put_last (l_routine_object)
+					call_operands.put_last (l_tuple)
+						-- Unfreeze the temporary variables corresponding to the tuple
+						-- and routine objects.
+					mark_call_operands_unfrozen
+					free_standalone_type_set (l_tuple_conforming_type_set)
+					if a_feature.is_procedure then
+						print_semicolon_newline
+					end
 				end
 			end
 		end
@@ -39041,20 +39103,57 @@ feature {NONE} -- Dynamic type sets
 	extra_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Extra dynamic type sets used internally when needed
 
-	conforming_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
-			-- Set of types conforming to the target of the current assignment attempt or
-			-- types to which the target of the current call to 'ANY.conforms_to' conform;
-			-- Also used for object-tests and agent tuple type conformance.
+	conforming_type_set (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_target_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_STANDALONE_TYPE_SET
+			-- New dynamic type set containing the dynamic types of
+			-- `a_source_type_set' which conform to `a_target_type'.
+			--
+			-- When not needed anymore, the result object can be reused
+			-- after calling `free_standalone_type_set'.
+		require
+			a_source_type_set_not_void: a_source_type_set /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_source_type: ET_DYNAMIC_TYPE
+			l_target_primary_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
+			i, nb: INTEGER
+		do
+			l_source_type := a_source_type_set.static_type
+			if l_source_type.conforms_to_type (a_target_type) then
+					-- All dynamic types conform to the expected one.
+				Result := new_standalone_type_set (l_source_type)
+				Result.put_types (a_source_type_set)
+			else
+				Result := new_standalone_type_set (a_target_type)
+				l_target_primary_type := a_target_type.primary_type
+				nb := a_source_type_set.count
+				from i := 1 until i > nb loop
+					l_dynamic_type := a_source_type_set.dynamic_type (i)
+					if l_dynamic_type.conforms_to_primary_type (l_target_primary_type) then
+						Result.put_type (l_dynamic_type)
+					end
+					i := i + 1
+				end
+			end
+				-- Make sure that `is_never_void' is not set when the type set is empty.
+			if a_source_type_set.is_never_void and not Result.is_empty then
+				Result.set_never_void
+			end
+		ensure
+			conforming_type_subset_not_void: Result /= Void
+			count: Result.count <= a_source_type_set.count
+			never_void: Result.is_never_void = (a_source_type_set.is_never_void and not Result.is_empty)
+		end
 
 	conforming_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
 			-- Types conforming to the target of the current assignment attempt or
-			-- types to which the target of the current call to 'ANY.conforms_to' conform;
-			-- Also used for the arguments of PROCEDURE.call and FUNCTION.item to
-			-- detect CAT-calls
+			-- types to which the target of the current call to 'ANY.conforms_to' conforms.
+			-- Also used for object-tests.
 
 	non_conforming_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
 			-- Types non-conforming to the target of the current assignment attempt or
-			-- types to which the target of the current call to 'ANY.conforms_to' do not conform
+			-- types to which the target of the current call to 'ANY.conforms_to' do not conform.
+			-- Also used for object-tests.
 
 	attachment_dynamic_type_ids: DS_ARRAYED_LIST [INTEGER]
 			-- List of dynamic type ids of the source of an attachment
@@ -39088,6 +39187,43 @@ feature {NONE} -- Dynamic type sets
 	standalone_type_sets: ET_DYNAMIC_STANDALONE_TYPE_SET_LIST
 			-- Standalone type sets to be used as argument type sets when processing
 			-- polymorphic calls, or as target type sets when attributes are deep twined
+
+	new_standalone_type_set (a_static_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_STANDALONE_TYPE_SET
+			-- New standalone type set
+		require
+			a_static_type_not_void: a_static_type /= Void
+		local
+			l_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
+		do
+			if unused_standalone_type_sets.is_empty then
+				create Result.make (a_static_type)
+				create l_types.make_with_capacity (100)
+				Result.reset_with_types (a_static_type, l_types)
+			else
+				Result := unused_standalone_type_sets.last
+				unused_standalone_type_sets.remove_last
+				Result.reset (a_static_type)
+			end
+		ensure
+			new_standalone_type_set_not_void: Result /= Void
+			static_type_set: Result.static_type = a_static_type
+			count_set: Result.count = 0
+			not_never_void: not Result.is_never_void
+		end
+
+	free_standalone_type_set (a_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET)
+			-- Free `a_type_set' so that it can be reused.
+		require
+			a_type_set_not_void: a_type_set /= Void
+		do
+			unused_standalone_type_sets.force_last (a_type_set)
+			a_type_set.reset (current_dynamic_system.unknown_type)
+		end
+
+feature {NONE} -- Dynamic type sets (Implementation)
+
+	unused_standalone_type_sets: DS_ARRAYED_LIST [ET_DYNAMIC_STANDALONE_TYPE_SET]
+			-- Standalone type sets that are not currently used
 
 feature {NONE} -- Temporary variables
 
@@ -39455,51 +39591,35 @@ feature {NONE} -- Qualified call expressions (Implementation)
 	unused_qualified_call_expressions: DS_ARRAYED_LIST [ET_QUALIFIED_CALL_EXPRESSION]
 			-- Qualified call expressions that are not currently used
 
-feature {NONE} -- Tuple item expressions
+feature {NONE} -- Tuple labels
 
-	new_tuple_item_expression (i: INTEGER; a_tuple: ET_EXPRESSION): ET_QUALIFIED_CALL_EXPRESSION
-			-- Expression to extract the `i'-th item of a tuple `a_tuple'
+	new_tuple_label (i: INTEGER): ET_IDENTIFIER
+			-- New tuple label to extract the `i'-th item of a tuple
 		require
 			i_large_enough: i >= 1
-			a_tuple_not_void: a_tuple /= Void
-		local
-			l_label: ET_IDENTIFIER
 		do
-			if unused_tuple_item_expressions.is_empty then
-				create l_label.make ("l")
-				l_label.set_tuple_label (True)
-				l_label.set_seed (i)
-				create Result.make (a_tuple, l_label, Void)
-			else
-				Result := unused_tuple_item_expressions.last
-				unused_tuple_item_expressions.remove_last
-				Result.set_target (a_tuple)
-				Result.name.set_seed (i)
-				Result.set_arguments (Void)
-			end
+			Result := new_identifier (tuple_label_name)
+			Result.set_tuple_label (True)
+			Result.set_seed (i)
 		ensure
-			new_tuple_item_expression_not_void: Result /= Void
-			target_set: Result.target = a_tuple
-			tuple_label: Result.name.is_tuple_label
-			name_set: Result.name.seed = i
-			no_arguments: Result.arguments = Void
+			new_tuple_label_not_void: Result /= Void
+			is_tuple_label: Result.is_tuple_label
+			ith_item: Result.seed = i
 		end
 
-	free_tuple_item_expression (a_tuple_item_expression: ET_QUALIFIED_CALL_EXPRESSION)
-			-- Free `a_tuple_item_expression' so that it can be reused.
+	free_tuple_label (a_tuple_label: ET_IDENTIFIER)
+			-- Free `a_tuple_label' so that it can be reused.
 		require
-			a_tuple_item_expression_not_void: a_tuple_item_expression /= Void
-			tuple_label: a_tuple_item_expression.name.is_tuple_label
+			a_tuple_label_not_void: a_tuple_label /= Void
+			is_tuple_label: a_tuple_label.is_tuple_label
 		do
-			unused_tuple_item_expressions.force_last (a_tuple_item_expression)
-			a_tuple_item_expression.set_target (tokens.current_keyword)
-			a_tuple_item_expression.set_arguments (Void)
+			free_identifier (a_tuple_label)
 		end
 
-feature {NONE} -- Tuple item expressions (Implementation)
+feature {NONE} -- Tuple labels (Implementation)
 
-	unused_tuple_item_expressions: DS_ARRAYED_LIST [ET_QUALIFIED_CALL_EXPRESSION]
-			-- Tuple item expressions that are not currently used
+	tuple_label_name: STRING = "l"
+			-- Tuple label name
 
 feature {NONE} -- Actual argument lists
 
@@ -39557,6 +39677,63 @@ feature {NONE} -- Result expressions (Implementation)
 
 	unused_result_expressions: DS_ARRAYED_LIST [ET_RESULT]
 			-- Result expressions that are not currently used
+
+feature {NONE} -- Identifiers
+
+	new_identifier (a_name: STRING): ET_IDENTIFIER
+			-- New identifier
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+			a_name_is_string_8: a_name.same_type ({STRING_8} "")
+			valid_utf8_name: {UC_UTF8_ROUTINES}.valid_utf8 (a_name)
+		do
+			if unused_identifiers.is_empty then
+				create Result.make (a_name)
+			else
+				Result := unused_identifiers.last
+				unused_identifiers.remove_last
+				Result.set_name (a_name)
+			end
+		ensure
+			new_identifier_not_void: Result /= Void
+			name_set: Result.name = a_name
+		end
+
+	free_identifier (a_identifier: ET_IDENTIFIER)
+			-- Free `a_identifier' so that it can be reused.
+		require
+			a_identifier_not_void: a_identifier /= Void
+		do
+			unused_identifiers.force_last (a_identifier)
+		end
+
+feature {NONE} -- Identifiers (Implementation)
+
+	unused_identifiers: DS_ARRAYED_LIST [ET_IDENTIFIER]
+			-- Identifiers that are not currently used
+
+feature {NONE} -- 'twin' feature name
+
+	new_twin_feature_name: ET_IDENTIFIER
+			-- New 'twin' feature name
+		do
+			Result := new_identifier (tokens.twin_name)
+			Result.set_feature_name (True)
+			Result.set_seed (current_system.twin_seed)
+		ensure
+			new_twin_feature_name_not_void: Result /= Void
+			is_feature_name: Result.is_feature_name
+			seed_set: Result.seed = current_system.twin_seed
+		end
+
+	free_twin_feature_name (a_twin_feature_name: ET_IDENTIFIER)
+			-- Free `a_twin_feature_name' so that it can be reused.
+		require
+			a_twin_feature_name_not_void: a_twin_feature_name /= Void
+		do
+			free_identifier (a_twin_feature_name)
+		end
 
 feature {NONE} -- Formal arguments
 
@@ -39668,6 +39845,11 @@ feature {NONE} -- Operand stack
 	call_operands: DS_ARRAYED_LIST [ET_EXPRESSION]
 			-- Operands of call being processed
 
+	attachment_call_operands: DS_ARRAYED_LIST [ET_EXPRESSION]
+			-- Operands of call being processed when calling 'twin' when
+			-- attaching (e.g. assignment or actual argument of a routine)
+			-- an object with copy semantics (i.e. with an expanded type)
+
 	fill_call_operands (nb: INTEGER)
 			-- Fill `call_operands' with nb operands found in `operand_stack'.
 		require
@@ -39693,7 +39875,12 @@ feature {NONE} -- Operand stack
 				j := operand_stack.count - nb + 1
 				from i := 1 until i > nb loop
 					l_operand := operand_stack.i_th (j)
-					if attached {ET_IDENTIFIER} l_operand as l_temp and then l_temp.is_temporary then
+					if in_attachment then
+						-- We don't free the temporary variables when calling 'twin' when
+						-- attaching an object with copy semantics (i.e. with expanded type)
+						-- when it's an actual argument of a routine. This was done calling
+						-- this routine.
+					elseif attached {ET_IDENTIFIER} l_operand as l_temp and then l_temp.is_temporary then
 						if not is_temp_variable_frozen (l_temp) then
 							mark_temp_variable_free (l_temp)
 						end
@@ -39828,6 +40015,9 @@ feature {NONE} -- Implementation
 	in_operand: BOOLEAN
 			-- Is an operand being processed?
 
+	use_comma_terminator_in_operand: BOOLEAN
+			-- Use comma instead of semicolon when printing operands
+
 	in_target: BOOLEAN
 			-- Is the target of a call being processed?
 		do
@@ -39848,8 +40038,36 @@ feature {NONE} -- Implementation
 			-- Do we need to check whether the target is Void or not
 			-- when both `in_target' and not `in_operand' mode?
 
+	in_attachment: BOOLEAN
+			-- Is a call to 'twin' being processed when attaching (e.g.
+			-- assignment or actual argument of a routine) an object with
+			-- copy semantics (i.e. with an expanded type)?
+		do
+			Result := (call_operands = attachment_call_operands)
+		ensure
+			definition: Result = (call_operands = attachment_call_operands)
+		end
+
+	is_twin_needed_in_attachment (a_source_type_set: ET_DYNAMIC_TYPE_SET): BOOLEAN
+			-- Is a call to 'twin' needed when the dynamic type set of
+			-- the source of an attachment is `a_source_type_set'?
+		require
+			a_source_type_set_not_void: a_source_type_set /= Void
+		local
+			l_source_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			l_source_type := a_source_type_set.static_type.primary_type
+			if l_source_type.is_embedded and then l_source_type.is_basic then
+					-- Optimization: do not call 'twin' for basic types
+					-- when 'copy' has not been redefined.
+				Result := l_source_type.has_redefined_copy_routine
+			else
+				Result := a_source_type_set.has_expanded
+			end
+		end
+
 	assignment_target: detachable ET_WRITABLE
-			-- Target of expression currently being processed, if any
+			-- Target of assignment currently being processed, if any
 
 	same_declaration_types (a_type1, a_type2: ET_DYNAMIC_PRIMARY_TYPE): BOOLEAN
 			-- Do `a_type1' and `a_type2' have the same declaration type?
@@ -40522,7 +40740,8 @@ invariant
 	no_void_operand: not operand_stack.has_void
 	call_operands_not_void: call_operands /= Void
 	no_void_call_operand: not call_operands.has_void
-	conforming_type_set_not_void: conforming_type_set /= Void
+	attachment_call_operands_not_void: attachment_call_operands /= Void
+	no_void_attachment_call_operand: not attachment_call_operands.has_void
 	conforming_types_not_void: conforming_types /= Void
 	non_conforming_types_not_void: non_conforming_types /= Void
 	attachment_dynamic_type_ids_not_void: attachment_dynamic_type_ids /= Void
@@ -40532,6 +40751,8 @@ invariant
 	equality_type_set_not_void: equality_type_set /= Void
 	equality_common_types_not_void: equality_common_types /= Void
 	standalone_type_sets_not_void: standalone_type_sets /= Void
+	unused_standalone_type_sets_not_void: unused_standalone_type_sets /= Void
+	no_void_unused_standalone_type_set: not unused_standalone_type_sets.has_void
 	deep_twin_types_not_void: deep_twin_types /= Void
 	no_void_deep_twin_type: not deep_twin_types.has_void
 	deep_equal_types_not_void: deep_equal_types /= Void
@@ -40597,15 +40818,15 @@ invariant
 		-- Qualified call expressions.
 	unused_qualified_call_expressions_not_void: unused_qualified_call_expressions /= Void
 	no_void_unused_qualified_call_expression: not unused_qualified_call_expressions.has_void
-		-- Tuple item expressions.
-	unused_tuple_item_expressions_not_void: unused_tuple_item_expressions /= Void
-	no_void_unused_tuple_item_expression: not unused_tuple_item_expressions.has_void
 		-- Actual argument lists.
 	unused_actual_argument_lists_not_void: unused_actual_argument_lists /= Void
 	no_void_unused_actual_argument_list: not unused_actual_argument_lists.has_void
 		-- Result expressions.
 	unused_result_expressions_not_void: unused_result_expressions /= Void
 	no_void_unused_result_expression: not unused_result_expressions.has_void
+		-- Identifiers.
+	unused_identifiers_not_void: unused_identifiers /= Void
+	no_void_unused_identifier: not unused_identifiers.has_void
 		-- C/C++ files.
 	included_header_filenames_not_void: included_header_filenames /= Void
 	no_void_included_header_filename: not included_header_filenames.has_void

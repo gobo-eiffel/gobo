@@ -91,6 +91,12 @@ feature -- Initialization
 			not_never_void: not is_never_void
 		end
 
+feature -- Access
+
+	dynamic_types: detachable ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
+			-- Dynamic types in current set;
+			-- Void if no type in the set
+
 feature -- Setting
 
 	set_static_type (a_static_type: ET_DYNAMIC_TYPE)
@@ -131,12 +137,6 @@ feature -- Element change
 				put_type (a_type)
 			end
 		end
-
-feature {ET_DYNAMIC_TYPE_SET} -- Implementation
-
-	dynamic_types: detachable ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
-			-- Dynamic types in current set;
-			-- Void if no type in the set
 
 invariant
 

@@ -1,6 +1,6 @@
 ## copy expected
 DD copied
-## standard copy expected
+## copy expected
 ##
 d.value = 2
 s1.item (0).value = 2

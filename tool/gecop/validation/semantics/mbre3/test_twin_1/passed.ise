@@ -1,6 +1,6 @@
 ## copy expected
 DD copied
-## standard copy expected
+## copy expected
 ##
 b1.value = 2
 b2.value = 2

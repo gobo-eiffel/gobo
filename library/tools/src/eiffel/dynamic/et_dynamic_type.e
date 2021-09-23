@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,6 +37,18 @@ feature -- Status report
 			Result := base_type.is_expanded
 		ensure then
 			definition: Result = base_type.is_expanded
+		end
+
+	is_embedded: BOOLEAN
+			-- Are objects of this type embedded within the enclosing object?
+			-- Embedded objects have no type-ids nor flags.
+			--
+			-- Note that in the future, some attributes whose types are declared of expanded type
+			-- (such as generic expanded types) may not be embedded with the enclosing object
+			-- but have a reference to them (while still having the copy semantics). Hence the
+			-- distinction between `is_embedded' and `is_expanded'.
+		do
+			Result := is_expanded
 		end
 
 	is_never_void: BOOLEAN
@@ -75,6 +87,11 @@ feature -- Status report
 			-- The ECMA standard says that attached type with 'default_create'
 			-- as creation procedure are also self-initializing (see DEST,
 			-- section 8.19.13, page 106 of ECMA-367 3-36).
+		deferred
+		end
+
+	is_attached: BOOLEAN
+			-- Is current type attached?
 		deferred
 		end
 

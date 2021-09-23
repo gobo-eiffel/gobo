@@ -43,7 +43,6 @@ feature {NONE} -- Initialization
 		ensure
 			base_type_set: base_type = a_type
 			base_class_set: base_class = a_class
-			expanded_type_alive: is_expanded implies is_alive
 		end
 
 feature -- Status report
@@ -52,17 +51,6 @@ feature -- Status report
 			-- Is current type considered alive?
 			-- (e.g. instances of this type may be created)
 
-	is_embedded: BOOLEAN
-			-- Are objects of this type embedded within the enclosing object?
-			-- Embedded objects have no type-ids nor flags.
-			--
-			-- Note that in the future, some attributes whose types are declared of expanded type
-			-- (such as generic expanded types) may not be embedded with the enclosing object
-			-- but have a reference to them (while still having the copy semantics). Hence the
-			-- distinction between `is_embedded' and `is_expanded'.
-		do
-			Result := is_expanded
-		end
 
 	is_agent_type: BOOLEAN
 			-- Is current type an agent type?
@@ -96,6 +84,12 @@ feature -- Status report
 			-- The ECMA standard says that attached type with 'default_create'
 			-- as creation procedure are also self-initializing (see DEST,
 			-- section 8.19.13, page 106 of ECMA-367 3-36).
+
+	is_attached: BOOLEAN
+			-- Is current type attached?
+		do
+			Result := is_expanded
+		end
 
 	has_static: BOOLEAN
 			-- Does current type contain features that are used as static features?

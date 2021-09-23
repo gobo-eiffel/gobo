@@ -9,4 +9,3 @@ In this test, the source of the assignment is a call to a once function declared
 ### Notes
 
 * ISE Eiffel (as of 20.05.10.4440 and after) does not clone the object with copy semantics. This violates `MBRE-3`.
-* Gobo Eiffel (as of 20.05.31.5 and after) does not fully implement copy semantics. This violates `MBRE-3`.

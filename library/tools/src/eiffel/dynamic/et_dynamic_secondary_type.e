@@ -62,6 +62,12 @@ feature -- Status report
 				not l_type_mark.is_attached_mark or else is_expanded
 		end
 
+	is_attached: BOOLEAN
+			-- Is current type attached?
+		do
+			Result := is_expanded or else (attached type_mark as l_type_mark and then l_type_mark.is_attached_mark)
+		end
+
 feature -- Access
 
 	base_type: ET_BASE_TYPE

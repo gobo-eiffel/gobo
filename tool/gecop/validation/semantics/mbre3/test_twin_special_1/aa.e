@@ -17,7 +17,7 @@ feature
 			d.set_value (2)
 			print ("## copy expected%N")
 			s1.put (d, 0)
-			print ("## standard copy expected%N")
+			print ("## copy expected%N")
 			s2 := s1.twin
 			print ("##%N")
 			print ("d.value = " + d.value.out + "%N")

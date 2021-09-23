@@ -159,6 +159,46 @@ feature -- Element change
 			end
 		end
 
+	put_expanded_types (other: ET_DYNAMIC_PRIMARY_TYPES)
+			-- Add expanded types of `other' to current set.
+			-- Do not check for type conformance with `static_type' and do not propagate to targets.
+		require
+			other_not_void: other /= Void
+		local
+			i, nb: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			nb := other.count
+			from i := 1 until i > nb loop
+				l_type := other.dynamic_type (i)
+				if l_type.is_expanded then
+					put_type (l_type)
+				end
+				i := i + 1
+			end
+		end
+
+	put_conforming_expanded_types (other: ET_DYNAMIC_PRIMARY_TYPES)
+			-- Add expanded types of `other' conforming to `static_type' to current set.
+			-- Do not propagate to targets.
+		require
+			other_not_void: other /= Void
+		local
+			i, nb: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_static_primary_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			l_static_primary_type := static_type.primary_type
+			nb := other.count
+			from i := 1 until i > nb loop
+				l_type := other.dynamic_type (i)
+				if l_type.is_expanded and then l_type.conforms_to_primary_type (l_static_primary_type) then
+					put_type (l_type)
+				end
+				i := i + 1
+			end
+		end
+
 	put_type_from_type_set (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `a_type_set' to current target.
 		local

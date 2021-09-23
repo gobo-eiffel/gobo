@@ -9,4 +9,3 @@ In this test, a tuple object `t1` containing an item declared with an expanded t
 ### Notes
 
 * ISE Eiffel (as of 20.05.10.4440 and after) does not clone the object with copy semantics. We end up having two items, in `t1` and `t2`, sharing the same object. This violates `MBRE-3`.
-* Gobo Eiffel (as of 20.05.31.5 and after) does not fully implement copy semantics. This violates `MBRE-3`.

@@ -12,7 +12,7 @@ feature
 			b2: BB
 		do
 			create b1.make
-			print ("## standard copy expected%N")
+			print ("## copy expected%N")
 			b2 := b1.twin
 			print ("##%N")
 			print ("b1.value = " + b1.value.out + "%N")

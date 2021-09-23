@@ -9,4 +9,3 @@ In this test, the source of the assignment is an attribute declared with a refer
 ### Notes
 
 * ISE Eiffel (as of 20.05.10.4440 and after) does not clone the object with copy semantics. We end up having the local variable `c` and the attribute `attr` sharing the same object. This violates `MBRE-3`.
-* Gobo Eiffel (as of 20.05.31.5 and after) does not fully implement copy semantics. This violates `MBRE-3`.

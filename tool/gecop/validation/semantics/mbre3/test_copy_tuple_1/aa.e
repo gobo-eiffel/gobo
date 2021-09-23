@@ -16,7 +16,7 @@ feature
 			d.set_value (2)
 			print ("## copy expected%N")
 			t1.v := d
-			print ("## standard copy expected%N")
+			print ("## copy expected%N")
 			t2.copy (t1)
 			print ("##%N")
 			print ("d.value = " + d.value.out + "%N")
