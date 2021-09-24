@@ -5,7 +5,7 @@ note
 		"Objects that represent compiled xsl:result-documents"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2021, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,13 @@ inherit
 	KL_SHARED_PLATFORM
 		export {NONE} all end
 
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+
 	UT_URL_ENCODING
+		export {NONE} all end
+
+	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
 create
@@ -405,6 +411,7 @@ feature -- Evaluation
 			l_error: XM_XPATH_ERROR_VALUE
 			l_new_context: XM_XSLT_EVALUATION_CONTEXT
 			l_response: KI_CHARACTER_INPUT_STREAM
+			l_cwd: KI_PATHNAME
 		do
 			check attached a_context.transformer as l_context_transformer then
 				l_transformer := l_context_transformer
@@ -446,8 +453,15 @@ feature -- Evaluation
 									attached l_transformer.principal_result_uri as l_principal_result_uri
 									attached l_transformer.principal_result as l_principal_result
 								then
-									create l_uri.make (l_principal_result_uri)
 									l_iri_reference := escaped_uri (l_href_last_evaluated_string.string_value)
+									if STRING_.same_string (l_principal_result_uri, "stdout:") then
+											-- Use the current working directory as base uri
+											-- when the principal output is stdout.
+										l_cwd := file_system.string_to_pathname (file_system.current_working_directory)
+										l_uri := file_uri.pathname_to_uri (l_cwd)
+									else
+										create l_uri.make (l_principal_result_uri)
+									end
 									create l_uri.make_resolve (l_uri, l_iri_reference)
 									l_uri_to_use := l_uri.full_reference
 									check attached a_context.available_documents as l_context_available_documents then

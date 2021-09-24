@@ -874,7 +874,7 @@ feature {NONE} -- Implementation
 			a_stream: detachable KL_TEXT_OUTPUT_FILE
 			a_uri: UT_URI
 		do
-			check preconditiopn: attached transformer_factory.created_transformer as a_transformer then
+			check precondition: attached transformer_factory.created_transformer as a_transformer then
 				process_parameters (a_transformer)
 				if uris.count = 2 then
 					create a_source.make (uris.item (2))
