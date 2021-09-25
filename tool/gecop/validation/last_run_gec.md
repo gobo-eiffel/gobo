@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     353 tests
+    # Passed:     357 tests
     # FAILED:     6 tests
     # Aborted:    0 test
-    # Total:      359 tests
+    # Total:      363 tests
 
 Test Results:</br>
 FAIL:  \[[semantics/mbre3/test\_copy\_1](semantics/mbre3/test\_copy\_1)\] test\_failed</br>

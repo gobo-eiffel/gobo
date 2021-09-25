@@ -5,9 +5,9 @@ Running Test Cases
 Test Summary for validation
 
     # Passed:     264 tests
-    # FAILED:     95 tests
+    # FAILED:     99 tests
     # Aborted:    0 test
-    # Total:      359 tests
+    # Total:      363 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo/test\_tilde\_1](definition/difo/test\_tilde\_1)\] test\_failed</br>
@@ -55,6 +55,8 @@ FAIL:  \[[semantics/muon1/test\_once\_per\_object\_6](semantics/muon1/test\_once
 FAIL:  \[[semantics/muon3/test\_once\_per\_object\_4](semantics/muon3/test\_once\_per\_object\_4)\] test\_failed</br>
 FAIL:  \[[semantics/muon4/test\_once\_per\_object\_2](semantics/muon4/test\_once\_per\_object\_2)\] test\_failed</br>
 FAIL:  \[[semantics/muon4/test\_once\_per\_object\_4](semantics/muon4/test\_once\_per\_object\_4)\] test\_failed</br>
+FAIL:  \[[validity/gvncc4/test1](validity/gvncc4/test1)\] test\_failed</br>
+FAIL:  \[[validity/gvncc4/test2](validity/gvncc4/test2)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test10](validity/vape1/test10)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test11](validity/vape1/test11)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test13](validity/vape1/test13)\] test\_failed</br>
@@ -104,4 +106,6 @@ FAIL:  \[[validity/vgmc/test\_parenthesis\_call\_4](validity/vgmc/test\_parenthe
 FAIL:  \[[validity/vgmc/test\_qualified\_anchored\_type\_2](validity/vgmc/test\_qualified\_anchored\_type\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_typed\_agent\_1](validity/vgmc/test\_typed\_agent\_1)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_typed\_agent\_2](validity/vgmc/test\_typed\_agent\_2)\] test\_failed</br>
-FAIL:  \[[validity/vgmc/test\_unary\_call\_1](validity/vgmc/test\_unary\_call\_1)\] test\_failed
+FAIL:  \[[validity/vgmc/test\_unary\_call\_1](validity/vgmc/test\_unary\_call\_1)\] test\_failed</br>
+FAIL:  \[[validity/vncc4/test1](validity/vncc4/test1)\] test\_failed</br>
+FAIL:  \[[validity/vncc4/test2](validity/vncc4/test2)\] test\_failed

@@ -1,0 +1,2 @@
+[VJAR] class AA (18,10): the source of the assignment (of type '[attached] BB [[attached] CHARACTER]') does not conform nor convert to its target entity (of type '[attached] BB [[attached] ANY]').
+----
