@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders where types are pulled from subsets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,13 +56,9 @@ feature -- Factory
 			-- New dynamic type set
 		do
 			if a_type.is_expanded then
-				if a_type.is_generic then
-					create {ET_DYNAMIC_PULL_TYPE_SET} Result.make (a_type)
-					dynamic_type_set_count := dynamic_type_set_count + 1
-					Result.set_never_void
-				else
-					Result := a_type
-				end
+					-- Note that for expanded types, there is no type other
+					-- than itself that conforms to it.
+				Result := a_type
 			else
 				create {ET_DYNAMIC_PULL_TYPE_SET} Result.make (a_type)
 				dynamic_type_set_count := dynamic_type_set_count + 1

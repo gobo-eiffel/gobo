@@ -6975,7 +6975,7 @@ feature {NONE} -- Instruction generation
 			l_target_type_set := dynamic_type_set (l_target)
 			l_source_type := l_source_type_set.static_type
 			l_target_type := l_target_type_set.static_type
-			if (l_source_type.is_embedded = l_target_type.is_embedded) and then not is_twin_needed_in_attachment (l_source_type_set) then
+			if (l_source_type.is_expanded = l_target_type.is_expanded) and then not is_twin_needed_in_attachment (l_source_type_set) then
 				assignment_target := l_target
 			else
 				assignment_target := Void
@@ -7137,11 +7137,12 @@ feature {NONE} -- Instruction generation
 				end
 				check
 						-- None of `l_non_conforming_types' and `l_conforming_types' are empty.
-						-- Therefore the source is polymorphic. As a consequence if
-						-- `l_source_type' is expanded then it should be generic
-						-- (because non-generic expanded types cannot be polymorphic).
+						-- Therefore the source is polymorphic (at least two dynamic types, one
+						-- conforming and one not conforming). As a consequence `l_source_type'
+						-- is not expanded because for expanded types there is no type other
+						-- than itself that conforms to it.
 						-- So we know that a type-id is always available.
-					generic_if_expanded: l_source_type.is_expanded implies l_source_type.is_generic
+					not_expanded: not l_source_type.is_expanded
 				end
 				print_indentation
 				current_file.put_string (c_switch)
@@ -7843,7 +7844,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			current_function_header_buffer.put_new_line
 				-- Call to `new_cursor'.
 			l_other_dynamic_type_set := dynamic_type_set (an_instruction.new_cursor_expression)
-			if (l_cursor_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+			if (l_cursor_type.is_expanded = l_other_dynamic_type_set.static_type.is_expanded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
 				assignment_target := l_cursor_name
 			else
 				assignment_target := Void
@@ -9195,7 +9196,7 @@ feature {NONE} -- Expression generation
 			--
 			-- `a_use_boxed_pointer' indicates whether we should keep the address of the
 			-- expression, and not just its value, if boxing is needed.
-			-- Useful when the expression is an embedded attribute, tuple label or
+			-- Useful when the expression is an expanded attribute, tuple label or
 			-- "SPECIAL" item to be used as the target of another call.
 			--
 			-- Note that contrary to `print_attachment_expression', the result of the
@@ -9228,7 +9229,6 @@ feature {NONE} -- Expression generation
 					-- a result type of the form 'like argument' (see
 					-- header comment).
 				if not l_source_type.is_expanded then
--- TODO: there might be some problems if the expanded types are generic with different actual parameters.
 						-- The source object has been boxed.
 					current_file.put_character ('(')
 					print_boxed_type_cast (a_target_type, current_file)
@@ -9376,7 +9376,7 @@ feature {NONE} -- Expression generation
 			l_twin_feature_name := new_twin_feature_name
 			l_twin_expression := new_qualified_call_expression (an_expression, l_twin_feature_name, Void)
 			l_twin_expression.set_index (an_expression.index)
-			l_need_unboxing := l_target_primary_type.is_embedded and then l_has_non_conforming_types
+			l_need_unboxing := l_target_primary_type.is_expanded and then l_has_non_conforming_types
 			if l_need_unboxing then
 				current_file.put_character ('(')
 				print_boxed_type_cast (l_target_primary_type, current_file)
@@ -9386,9 +9386,9 @@ feature {NONE} -- Expression generation
 				current_file.put_string (c_ge_catcall)
 				current_file.put_character ('(')
 			end
-			if l_source_primary_type.is_embedded and then l_source_primary_type.is_basic and then not l_source_primary_type.has_redefined_copy_routine then
+			if l_source_primary_type.is_expanded and then l_source_primary_type.is_basic and then not l_source_primary_type.has_redefined_copy_routine then
 					-- Optimization: no need to explicitly call 'twin' in that case.
-				if l_target_primary_type.is_embedded then
+				if l_target_primary_type.is_expanded then
 					if l_has_non_conforming_types then
 							-- We need to box the source object in order
 							-- to pass it to 'GE_catcall'.
@@ -9400,10 +9400,10 @@ feature {NONE} -- Expression generation
 						-- We need to box the source object.
 					print_boxed_expression (an_expression, l_source_primary_type)
 				end
-			elseif l_target_primary_type.is_embedded then
+			elseif l_target_primary_type.is_expanded then
 				l_old_call_operands := call_operands
 				call_operands := attachment_call_operands
-				if l_source_primary_type.is_embedded then
+				if l_source_primary_type.is_expanded then
 					if l_has_non_conforming_types then
 							-- We need to box the source object in order
 							-- to pass it to 'GE_catcall'.
@@ -9429,7 +9429,7 @@ feature {NONE} -- Expression generation
 						print_expression (l_twin_expression)
 					else
 							-- By setting the expected type for the call to 'twin' to
-							-- `a_target_type' (which is embedded), we will directly get
+							-- `a_target_type' (which is expanded), we will directly get
 							-- an unboxed object. This will avoid boxing the result of
 							-- the call to 'twin' and then unboxing it so that it's ready
 							-- to be attached to an entity of type `a_target_type'.
@@ -9444,7 +9444,7 @@ feature {NONE} -- Expression generation
 				end
 				call_operands := l_old_call_operands
 			else
-				if l_source_primary_type.is_embedded then
+				if l_source_primary_type.is_expanded then
 						-- We need to box the source object.
 					l_old_call_operands := call_operands
 					call_operands := attachment_call_operands
@@ -11000,7 +11000,7 @@ feature {NONE} -- Expression generation
 			indent
 			l_expression := a_expression.then_expression
 			l_other_dynamic_type_set := dynamic_type_set (l_expression)
-			if (l_dynamic_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+			if (l_dynamic_type.is_expanded = l_other_dynamic_type_set.static_type.is_expanded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
 				assignment_target := l_temp
 			else
 				assignment_target := Void
@@ -11047,7 +11047,7 @@ feature {NONE} -- Expression generation
 					indent
 					l_expression := l_elseif.then_expression
 					l_other_dynamic_type_set := dynamic_type_set (l_expression)
-					if (l_dynamic_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+					if (l_dynamic_type.is_expanded = l_other_dynamic_type_set.static_type.is_expanded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
 						assignment_target := l_temp
 					else
 						assignment_target := Void
@@ -11080,7 +11080,7 @@ feature {NONE} -- Expression generation
 			indent
 			l_expression := a_expression.else_expression
 			l_other_dynamic_type_set := dynamic_type_set (l_expression)
-			if (l_dynamic_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+			if (l_dynamic_type.is_expanded = l_other_dynamic_type_set.static_type.is_expanded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
 				assignment_target := l_temp
 			else
 				assignment_target := Void
@@ -11438,7 +11438,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 							indent
 							l_expression := l_when_part.then_expression
 							l_other_dynamic_type_set := dynamic_type_set (l_expression)
-							if (l_dynamic_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+							if (l_dynamic_type.is_expanded = l_other_dynamic_type_set.static_type.is_expanded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
 								assignment_target := l_temp
 							else
 								assignment_target := Void
@@ -11475,7 +11475,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				indent
 				l_expression := l_else_part.expression
 				l_other_dynamic_type_set := dynamic_type_set (l_expression)
-				if (l_dynamic_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+				if (l_dynamic_type.is_expanded = l_other_dynamic_type_set.static_type.is_expanded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
 					assignment_target := l_temp
 				else
 					assignment_target := Void
@@ -11605,7 +11605,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			current_function_header_buffer.put_new_line
 				-- Call to `new_cursor'.
 			l_other_dynamic_type_set := dynamic_type_set (an_expression.new_cursor_expression)
-			if (l_cursor_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+			if (l_cursor_type.is_expanded = l_other_dynamic_type_set.static_type.is_expanded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
 				assignment_target := l_cursor_name
 			else
 				assignment_target := Void
@@ -11700,7 +11700,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				-- Iteration expression.
 			l_expression := an_expression.iteration_expression
 			l_other_dynamic_type_set := dynamic_type_set (l_expression)
-			if (l_boolean_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+			if (l_boolean_type.is_expanded = l_other_dynamic_type_set.static_type.is_expanded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
 				assignment_target := l_temp
 			else
 				assignment_target := Void
@@ -13035,13 +13035,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			l_call_type := l_call_type_set.static_type.primary_type
 			if
 				in_target and then
-				l_call_type.is_embedded and then
+				l_call_type.is_expanded and then
 				(not l_call_type.is_basic or else in_procedure_call_target) and then
 				(l_dynamic_call = Void or else l_dynamic_call.has_field_access (current_dynamic_system))
 			then
-					-- We want the result be boxed even though the result static type is embedded.
+					-- We want the result be boxed even though the result static type is expanded.
 					-- This is needed when the call is an attribute, tuple label or "SPECIAL"
-					-- item, the call result type is embedded, and it is the target of another call.
+					-- item, the call result type is expanded, and it is the target of another call.
 					-- In that case we force the result type to be of reference type in order
 					-- to force the boxing of the result so that the other call is applied on
 					-- the result object itself and not on a copy of this object.
@@ -13106,7 +13106,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					end
 					call_operands.wipe_out
 					l_other_dynamic_type_set := dynamic_type_set (l_actuals.actual_argument (1))
-					if (l_target_static_type.is_embedded = l_other_dynamic_type_set.static_type.is_embedded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
+					if (l_target_static_type.is_expanded = l_other_dynamic_type_set.static_type.is_expanded) and then not is_twin_needed_in_attachment (l_other_dynamic_type_set) then
 						assignment_target := l_semistrict_target
 					else
 						assignment_target := Void
@@ -14176,12 +14176,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 						if
 							in_target and then
 							l_dynamic_feature.is_builtin_special_item and then
-							l_call_type.is_embedded and then
+							l_call_type.is_expanded and then
 							(not l_call_type.is_basic or else in_procedure_call_target)
 						then
-								-- We want the result be boxed even though the result static type is embedded.
+								-- We want the result be boxed even though the result static type is expanded.
 								-- This is needed when the call is a "SPECIAL" item, the call result type is
-								-- embedded, and it is the target of another call. In that case we force the
+								-- expanded, and it is the target of another call. In that case we force the
 								-- result type to be of reference type in order to force the boxing of the
 								-- result so that the other call is applied on the result object itself and not
 								-- on a copy of this object.
@@ -15256,11 +15256,12 @@ feature {NONE} -- Object-test generation
 				else
 					check
 							-- None of `l_non_conforming_types' and `l_conforming_types' are empty.
-							-- Therefore the source is polymorphic. As a consequence if
-							-- `l_source_type' is expanded then it should be generic
-							-- (because non-generic expanded types cannot be polymorphic).
+							-- Therefore the source is polymorphic (at least two dynamic types, one
+							-- conforming and one not conforming). As a consequence `l_source_type'
+							-- is not expanded because for expanded types there is no type other
+							-- than itself that conforms to it.
 							-- So we know that a type-id is always available.
-						generic_if_expanded: l_source_type.is_expanded implies l_source_type.is_generic
+						not_expanded: not l_source_type.is_expanded
 					end
 					print_indentation
 					current_file.put_string (c_switch)
@@ -17846,9 +17847,9 @@ feature {NONE} -- Polymorphic call functions generation
 			header_file.put_character (' ')
 			if l_result_type /= Void then
 				if a_first_call.force_result_boxing then
-						-- We want the result be boxed even though the result static type is embedded.
+						-- We want the result be boxed even though the result static type is expanded.
 						-- This is needed when the call is an attribute, tuple label or "SPECIAL"
-						-- item, the call result type is embedded, and it is the target of another call.
+						-- item, the call result type is expanded, and it is the target of another call.
 						-- In that case we force the result type to be of reference type in order
 						-- to force the boxing of the result so that the other call is applied on
 						-- the result object itself and not on a copy of this object.
@@ -18380,7 +18381,7 @@ feature {NONE} -- Deep features generation
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_has_nested_non_embedded_attributes: BOOLEAN
+			l_has_nested_reference_attributes: BOOLEAN
 			i, nb: INTEGER
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_attribute: ET_DYNAMIC_FEATURE
@@ -18462,8 +18463,8 @@ feature {NONE} -- Deep features generation
 				current_file.put_character (';')
 				current_file.put_new_line
 			else
-				l_has_nested_non_embedded_attributes := a_type.has_nested_non_embedded_attributes
-				if l_has_nested_non_embedded_attributes then
+				l_has_nested_reference_attributes := a_type.has_nested_reference_attributes
+				if l_has_nested_reference_attributes then
 					print_indentation
 					current_file.put_string (c_ge_deep)
 					current_file.put_character ('*')
@@ -18516,9 +18517,9 @@ feature {NONE} -- Deep features generation
 					current_file.put_character (')')
 					current_file.put_character (';')
 					current_file.put_new_line
-					if not l_has_nested_non_embedded_attributes then
-							-- Copy items if they are non-embedded objects or embedded expanded
-							-- objects containing (recursively) non-embedded attributes.
+					if not l_has_nested_reference_attributes then
+							-- Copy items if they are reference objects or expanded
+							-- objects containing (recursively) reference attributes.
 						print_indentation
 						current_file.put_string (c_memcpy)
 						current_file.put_character ('(')
@@ -18607,9 +18608,9 @@ feature {NONE} -- Deep features generation
 					current_file.put_character (';')
 					current_file.put_new_line
 				end
-				if l_has_nested_non_embedded_attributes then
+				if l_has_nested_reference_attributes then
 						-- Allocate a 'GE_deep' struct to keep track of already twined
-						-- non-embedded objects, or use 'd' if not a null pointer (which
+						-- reference objects, or use 'd' if not a null pointer (which
 						-- means that the current object is not the root of the deep twin).
 					print_indentation
 					current_file.put_string (c_if)
@@ -18669,9 +18670,9 @@ feature {NONE} -- Deep features generation
 							elseif l_attribute_type.is_expanded then
 									-- If the items are expanded.
 									-- We need to deep twin them only if they themselves contain
-									-- (recursively) non-embedded attributes. Otherwise we can copy
+									-- (recursively) reference attributes. Otherwise we can copy
 									-- their contents without further ado.
-								if l_attribute_type.has_nested_non_embedded_attributes then
+								if l_attribute_type.has_nested_reference_attributes then
 									l_temp := new_temp_variable (l_capacity_type)
 									print_indentation
 									current_file.put_string (c_for)
@@ -18769,11 +18770,11 @@ feature {NONE} -- Deep features generation
 									-- it in that case.
 							else
 								l_attribute_type := l_attribute_type_set.static_type.primary_type
-								if l_attribute_type.is_embedded then
-										-- If the attribute is embedded, then its contents has
+								if l_attribute_type.is_expanded then
+										-- If the attribute is expanded, then its contents has
 										-- already been copied. We need to deep twin it only if
-										-- it itself contains (recursively) non-embedded attributes.
-									if l_attribute_type.has_nested_non_embedded_attributes then
+										-- it itself contains (recursively) reference attributes.
+									if l_attribute_type.has_nested_reference_attributes then
 										print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False), agent print_attribute_access (l_attribute, tokens.result_keyword, a_type, False))
 									end
 								else
@@ -18792,11 +18793,11 @@ feature {NONE} -- Deep features generation
 										-- If the dynamic type set of the item is empty,
 										-- then this item is always Void. No need to twin
 										-- it in that case.
-								elseif l_attribute_type.is_embedded then
-										-- If the item is embedded, then its contents has
+								elseif l_attribute_type.is_expanded then
+										-- If the item is expanded, then its contents has
 										-- already been copied. We need to deep twin it only if
-										-- it itself contains (recursively) non-embedded attributes.
-									if l_attribute_type.has_nested_non_embedded_attributes then
+										-- it itself contains (recursively) reference attributes.
+									if l_attribute_type.has_nested_reference_attributes then
 										print_set_deep_twined_attribute (l_attribute_type_set, agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False), agent print_attribute_tuple_item_access (i, tokens.result_keyword, a_type, False))
 									end
 								else
@@ -19825,10 +19826,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character ('(')
 						-- We know that the argument is equipped with a type-id
 						-- attribute, otherwise `l_argument_static_type' would have
-						-- to be a non-generic expanded type, and this is covered
-						-- by the elseif-branch just above. Indeed non-generic
-						-- expanded types cannot be polymorphic, so the number
-						-- of types in `l_argument_type_set' can only be one.
+						-- to be an expanded type, and this is covered by the
+						-- elseif-branch just above. Indeed expanded types cannot
+						-- be polymorphic, so the number of types in `l_argument_type_set'
+						-- can only be one.
 					print_attribute_type_id_access (l_argument, l_argument_static_type, True)
 					print_equal_to
 					current_file.put_integer (a_target_type.id)
@@ -19889,16 +19890,16 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_indentation_assign_to_result
 					current_file.put_string (c_eif_false)
 					print_semicolon_newline
-				elseif not l_has_nested_custom_standard_is_equal_routine and current_type.is_embedded then
+				elseif not l_has_nested_custom_standard_is_equal_routine and current_type.is_expanded then
 					print_indentation_assign_to_result
-					print_builtin_any_standard_is_equal_call_with_embedded (l_target, current_type, l_argument, l_argument_static_type, l_argument_type_set, l_result_type, False)
+					print_builtin_any_standard_is_equal_call_with_expanded (l_target, current_type, l_argument, l_argument_static_type, l_argument_type_set, l_result_type, False)
 					print_semicolon_newline
 				elseif not l_has_nested_custom_standard_is_equal_routine and l_argument_type_set.count = 1 then
 						-- `current_type' is one of the types held in `l_argument_type_set'
 						-- (see the if-branch above). So when `l_argument_type_set' has
 						-- exactly one type then we know that `current_type' is this type.
 					print_indentation_assign_to_result
-					print_builtin_any_standard_is_equal_call_with_no_embedded (l_target, current_type, l_argument, l_argument_static_type, l_argument_type_set, l_result_type, False)
+					print_builtin_any_standard_is_equal_call_with_reference (l_target, current_type, l_argument, l_argument_static_type, l_argument_type_set, l_result_type, False)
 					print_semicolon_newline
 				else
 					print_indentation_assign_to_result
@@ -19938,7 +19939,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						print_indentation_assign_to_result
 						print_result_name (current_file)
 						print_and_then
-						print_builtin_any_standard_is_equal_call_with_no_embedded (l_target, current_type, l_argument, l_argument_static_type, l_argument_type_set, l_result_type, False)
+						print_builtin_any_standard_is_equal_call_with_reference (l_target, current_type, l_argument, l_argument_static_type, l_argument_type_set, l_result_type, False)
 						print_semicolon_newline
 					end
 				end
@@ -20287,18 +20288,18 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_comma
 					print_attachment_expression (l_argument, l_argument_type_set, l_formal_type)
 					current_file.put_character (')')
-				elseif a_target_type.is_embedded then
-					print_builtin_any_standard_is_equal_call_with_embedded (l_target, a_target_type, l_argument, l_formal_type, l_argument_type_set, l_result_type, a_check_void_target)
+				elseif a_target_type.is_expanded then
+					print_builtin_any_standard_is_equal_call_with_expanded (l_target, a_target_type, l_argument, l_formal_type, l_argument_type_set, l_result_type, a_check_void_target)
 				else
 						-- `a_target_type' is one of the types held in `l_argument_type_set'
 						-- (see the if-branch above). So when `l_argument_type_set' has
 						-- exactly one type then we know that `a_target_type' is this type.
-					print_builtin_any_standard_is_equal_call_with_no_embedded (l_target, a_target_type, l_argument, l_formal_type, l_argument_type_set, l_result_type, a_check_void_target)
+					print_builtin_any_standard_is_equal_call_with_reference (l_target, a_target_type, l_argument, l_formal_type, l_argument_type_set, l_result_type, a_check_void_target)
 				end
 			end
 		end
 
-	print_builtin_any_standard_is_equal_call_with_embedded (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE;
+	print_builtin_any_standard_is_equal_call_with_expanded (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE;
 		a_argument: ET_EXPRESSION; a_argument_formal_type: ET_DYNAMIC_TYPE; a_argument_type_set: ET_DYNAMIC_TYPE_SET;
 		a_result_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to the built-in feature
@@ -20310,14 +20311,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		require
 			a_target_not_void: a_target /= Void
 			a_target_type_not_void: a_target_type /= Void
-			a_target_type_embedded: a_target_type.is_embedded
+			a_target_type_is_expanded: a_target_type.is_expanded
 			a_argument_not_void: a_argument /= Void
 			a_argument_formal_type_not_void: a_argument_formal_type /= Void
 			a_argument_type_set_not_void: a_argument_type_set /= Void
 			a_argument_type_set_has_target_type: a_argument_type_set.has_type (a_target_type)
 			a_result_type_not_void: a_result_type /= Void
 		do
-				-- We know that the only type which conforms to an embedded
+				-- We know that the only type which conforms to an expanded
 				-- type is the type itself. So no need to check that the
 				-- objects are of the same type here. This will be done through
 				-- a check for CAT-call in the call to `print_attachment_expression'
@@ -20343,7 +20344,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			end
 		end
 
-	print_builtin_any_standard_is_equal_call_with_no_embedded (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE;
+	print_builtin_any_standard_is_equal_call_with_reference (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE;
 		a_argument: ET_EXPRESSION; a_argument_formal_type: ET_DYNAMIC_TYPE; a_argument_type_set: ET_DYNAMIC_TYPE_SET;
 		a_result_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to the built-in feature
@@ -20356,7 +20357,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		require
 			a_target_not_void: a_target /= Void
 			a_target_type_not_void: a_target_type /= Void
-			a_target_type_not_embedded: not a_target_type.is_embedded
+			a_target_type_is_reference: not a_target_type.is_expanded
 			a_argument_not_void: a_argument /= Void
 			a_argument_formal_type_not_void: a_argument_formal_type /= Void
 			a_argument_type_set_not_void: a_argument_type_set /= Void
@@ -20482,7 +20483,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_assign_flags_attribute_to_temp_variable (a_target, current_type, False)
 				print_assign_onces_attribute_to_temp_variable (a_target, current_type, False)
 				print_indentation
-				if current_type.is_embedded then
+				if current_type.is_expanded then
 					print_expression (a_target)
 				else
 					current_file.put_character ('*')
@@ -20492,7 +20493,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character (')')
 				end
 				print_assign_to
-				if not current_type.is_embedded then
+				if not current_type.is_expanded then
 					current_file.put_character ('*')
 				end
 				print_type_cast (current_type, current_file)
@@ -20638,7 +20639,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_field_type := a_source_field_type_set.static_type.primary_type
 			if l_field_type.is_basic then
 				-- Attribute already copied.
-			elseif l_field_type.is_embedded then
+			elseif l_field_type.is_expanded then
 				if l_field_type.has_redefined_copy_routine or l_field_type.has_nested_custom_standard_copy_routine then
 						-- Copy semantics.
 					l_copy_feature := l_field_type.seeded_dynamic_procedure (current_system.copy_seed, current_dynamic_system)
@@ -20677,10 +20678,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 					-- Attribute already copied.
 				end
-			elseif l_field_type.is_expanded then
-					-- Non-embedded expanded field (e.g. field with generic expanded type
-					-- which can be polyphormic with 'EXP [INTEGER]' conforming to 'EXP [ANY]').
--- TODO
 			elseif a_source_field_type_set.has_expanded then
 					-- Reference field which may be attached to an object with copy semantics.
 -- TODO
@@ -20923,7 +20920,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					(not attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type or else l_tuple_type.item_type_sets.is_empty)
 				then
 					-- Nothing to be copied.
-				elseif a_target_type.is_embedded then
+				elseif a_target_type.is_expanded then
 					print_indentation
 					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 					print_assign_to
@@ -21011,7 +21008,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_result := new_result_expression
 			extra_dynamic_type_sets.force_last (current_type)
 			l_result.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
-			if not current_type.is_embedded then
+			if not current_type.is_expanded then
 				print_indentation_assign_to_result
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (current_type.id)
@@ -21100,7 +21097,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				if a_target_type.base_class.is_type_class then
 						-- Cannot have two instances of class "TYPE" representing the same Eiffel type.
 					print_expression (l_target)
-				elseif a_target_type.is_embedded and then not a_target_type.has_nested_custom_standard_copy_routine then
+				elseif a_target_type.is_expanded and then not a_target_type.has_nested_custom_standard_copy_routine then
 					current_file.put_character ('*')
 					print_target_expression (l_target, a_target_type, a_check_void_target)
 				else
@@ -21174,20 +21171,20 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				error_handler.report_giaaa_error
 			elseif attached {ET_DYNAMIC_SPECIAL_TYPE} current_type as l_special_type then
 				print_builtin_any_twin_body_with_special (l_special_type, l_copy_feature)
-			elseif current_type.is_embedded then
-				print_builtin_any_twin_body_with_embedded (l_copy_feature)
+			elseif current_type.is_expanded then
+				print_builtin_any_twin_body_with_expanded (l_copy_feature)
 			else
-				print_builtin_any_twin_body_with_no_embedded (l_copy_feature)
+				print_builtin_any_twin_body_with_reference (l_copy_feature)
 			end
 		end
 
-	print_builtin_any_twin_body_with_embedded (a_copy_feature: ET_DYNAMIC_FEATURE)
+	print_builtin_any_twin_body_with_expanded (a_copy_feature: ET_DYNAMIC_FEATURE)
 			-- Print to `current_file' the body of the built-in feature
-			-- 'ANY.twin' for objects of embedded static type `current_type'.
+			-- 'ANY.twin' for objects of expanded static type `current_type'.
 			-- `a_copy_feature' is the version of feature 'copy' in `current_type'
 		require
 			not_special_type: not current_type.is_special
-			embedded_type: current_type.is_embedded
+			expanded_type: current_type.is_expanded
 			a_copy_feature_not_void: a_copy_feature /= Void
 		do
 				-- Call 'copy'.
@@ -21206,13 +21203,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			print_semicolon_newline
 		end
 
-	print_builtin_any_twin_body_with_no_embedded (a_copy_feature: ET_DYNAMIC_FEATURE)
+	print_builtin_any_twin_body_with_reference (a_copy_feature: ET_DYNAMIC_FEATURE)
 			-- Print to `current_file' the body of the built-in feature
-			-- 'ANY.twin' for objects of non-embedded static type `current_type'.
+			-- 'ANY.twin' for objects of reference static type `current_type'.
 			-- `a_copy_feature' is the version of feature 'copy' in `current_type'
 		require
 			not_special_type: not current_type.is_special
-			not_embedded_type: not current_type.is_embedded
+			reference_type: not current_type.is_expanded
 			a_copy_feature_not_void: a_copy_feature /= Void
 		do
 				-- Create new object.
@@ -33784,20 +33781,13 @@ feature {NONE} -- Type generation
 						if not l_expanded_sorter.has (l_type) then
 							l_expanded_sorter.force (l_type)
 						end
-							-- For expanded types with no generics, there is no type
-							-- other than themselves that conform to them. Therefore
-							-- we do not keep the type-id in each object for those types
-							-- because if it is used as static type of an entity there
-							-- will be no polymorphic call. A boxed version (containing
-							-- the type-id) is nevertheless generated when those objects
-							-- are attached to entities of reference types (which might
-							-- be polymorphic).
-							-- Note that a boxed version is also generated for expanded
-							-- generic types, because we cannot get the address of an
-							-- expression (in order to attach it to an entity of reference
-							-- type) in the C language. So the boxed version is a way to
-							-- get around that (even though we already had a type-id) by
-							-- returning the pointer to a newly allocating piece of memory.
+							-- For expanded types, there is no type other than themselves
+							-- that conform to them. Therefore  we do not keep the type-id
+							-- in each object for those types because if it is used as
+							-- static type of an entity there will be no polymorphic call.
+							-- A boxed version (containing the type-id) is nevertheless
+							-- generated when those objects are attached to entities of
+							-- reference types (which might be polymorphic).
 						if l_type = current_dynamic_system.boolean_type then
 							print_boolean_type_definition (l_type, a_file)
 						elseif l_type = current_dynamic_system.character_8_type then
@@ -34534,7 +34524,7 @@ feature {NONE} -- Type generation
 				a_file.put_character (' ')
 				a_file.put_character ('{')
 				a_file.put_new_line
-				if not a_type.is_expanded or else a_type.is_generic then
+				if not a_type.is_expanded then
 					a_file.put_character ('%T')
 					a_file.put_string (c_eif_type_index)
 					a_file.put_character (' ')
@@ -35854,7 +35844,7 @@ feature {NONE} -- Default initialization values generation
 			if not a_type.is_expanded or else not a_type.is_basic then
 				l_empty_struct := True
 				a_file.put_character ('{')
-				if not a_type.is_expanded or else a_type.is_generic then
+				if not a_type.is_expanded then
 						-- Type id.
 					a_file.put_integer (a_type.id)
 						-- Flags.
@@ -36428,8 +36418,8 @@ feature {NONE} -- Feature name generation
 
 	print_call_name (a_call: ET_CALL_COMPONENT; a_caller: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_force_result_boxing: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of `a_call' appearing in `a_caller' with `a_target_type' as target static type to `a_file'.
-			-- `a_force_result_boxing' indicates that `a_call' is an attribute, tuple label or  "SPECIAL"
-			-- item, the call result type is embedded, and it is the target of another call.
+			-- `a_force_result_boxing' indicates that `a_call' is an attribute, tuple label or "SPECIAL"
+			-- item, the call result type is expanded, and it is the target of another call.
 			-- In that case we force the result type to be of reference type in order
 			-- to force the boxing of the result so that the other call is applied on
 			-- the result object itself and not on a copy of this object.
@@ -37305,7 +37295,7 @@ feature {NONE} -- Misc C code
 			a_target_not_void: a_target /= Void
 			a_target_type_not_void: a_target_type /= Void
 		do
-			if not a_target_type.is_embedded then
+			if not a_target_type.is_expanded then
 				print_indentation
 				current_file.put_string (c_uint16_t)
 				current_file.put_character (' ')
@@ -37325,7 +37315,7 @@ feature {NONE} -- Misc C code
 			a_target_not_void: a_target /= Void
 			a_target_type_not_void: a_target_type /= Void
 		do
-			if not a_target_type.is_embedded then
+			if not a_target_type.is_expanded then
 				print_indentation
 				print_attribute_flags_access (a_target, a_target_type, a_check_void_target)
 				print_assign_to
@@ -40057,7 +40047,7 @@ feature {NONE} -- Implementation
 			l_source_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			l_source_type := a_source_type_set.static_type.primary_type
-			if l_source_type.is_embedded and then l_source_type.is_basic then
+			if l_source_type.is_expanded and then l_source_type.is_basic then
 					-- Optimization: do not call 'twin' for basic types
 					-- when 'copy' has not been redefined.
 				Result := l_source_type.has_redefined_copy_routine

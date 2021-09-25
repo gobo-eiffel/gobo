@@ -19,7 +19,7 @@ inherit
 			make as make_type
 		redefine
 			is_special,
-			has_nested_non_embedded_attributes,
+			has_nested_reference_attributes,
 			has_nested_reference_fields,
 			has_nested_custom_standard_copy_routine,
 			has_nested_custom_standard_is_equal_routine,
@@ -48,8 +48,6 @@ feature {NONE} -- Initialization
 			l_item_type := an_item_type_set.static_type
 			if not l_item_type.is_expanded then
 				has_reference_attributes := True
-			elseif l_item_type.is_generic then
-				has_generic_expanded_attributes := True
 			end
 		ensure
 			base_type_set: base_type = a_type
@@ -69,33 +67,25 @@ feature -- Status report
 
 feature -- Features
 
-	has_nested_non_embedded_attributes: BOOLEAN
-			-- Does current type contain non-embedded attributes or recursively does it contain
-			-- embedded expanded attributes whose type contains non-embedded attributes?
+	has_nested_reference_attributes: BOOLEAN
+			-- Does current type contain reference attributes or recursively does it contain
+			-- expanded attributes whose type contains reference attributes?
 		do
-			if has_non_embedded_attributes then
+			if has_reference_attributes then
 				Result := True
 			else
-					-- Look for non-embedded attributes in the types of embedded
-					-- expanded attributes, if any.
+					-- Look for reference attributes in the types of expanded attributes, if any.
 					--
-					-- We should not have cyclic recursive embedded expanded objects.
+					-- We should not have cyclic recursive expanded objects.
 					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
 					-- or by another proper handling if ECMA relaxed this rule
 					-- (through the introduction of attached types). But in case
 					-- such a cyclic recursion has slipped through, we temporarily
 					-- set `has_reference_attributes' to True to break that cycle.
 				has_reference_attributes := True
-				if item_type_set.static_type.primary_type.has_nested_non_embedded_attributes then
-						-- Note that for non-generic expanded types, there is no type other
-						-- than itself that conforms to it. However for generic expanded types,
-						-- other generic derivations of the same generic class may conform to
-						-- it. But it is OK to take only the static type of the expanded attribute
-						-- into account even in that case, and we won't miss any sub-attribute
-						-- of reference types in conforming expanded generic derivations.
-						-- Indeed, if that static type has expanded attributes, then conforming
-						-- generic derivations cannot have these attributes of reference
-						-- type (because no reference type conforms to an expanded type).
+				if item_type_set.static_type.primary_type.has_nested_reference_attributes then
+						-- Note that for expanded types, there is no type other
+						-- than itself that conforms to it.
 					Result := True
 				end
 				has_reference_attributes := False
@@ -103,16 +93,15 @@ feature -- Features
 		end
 
 	has_nested_reference_fields: BOOLEAN
-			-- Does current type contain references, or recursively does it have
-			-- embedded expanded attributes whose types contain references?
+			-- Does current type contain reference fields, or recursively does it have
+			-- expanded attributes whose types contain reference fields?
 		do
 			if has_reference_fields then
 				Result := True
 			else
-					-- Look for references in the types of embedded
-					-- expanded attributes, if any.
+					-- Look for reference fields in the types of expanded attributes, if any.
 					--
-					-- We should not have cyclic recursive embedded expanded objects.
+					-- We should not have cyclic recursive expanded objects.
 					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
 					-- or by another proper handling if ECMA relaxed this rule
 					-- (through the introduction of attached types). But in case
@@ -120,12 +109,8 @@ feature -- Features
 					-- set `has_reference_attributes' to True to break that cycle.
 				has_reference_attributes := True
 				if item_type_set.static_type.primary_type.has_nested_reference_fields then
-						-- Note that for non-generic expanded types, there is no type other
-						-- than itself that conforms to it. For generic expanded types, we
-						-- should either disallow conformance of other generic derivations of
-						-- the same generic class, or have the corresponding attribute
-						-- non-embedded in the enclosing object (while preserving the copy
-						-- semantics).
+						-- Note that for expanded types, there is no type other
+						-- than itself that conforms to it.
 					Result := True
 				end
 				has_reference_attributes := False
@@ -134,25 +119,25 @@ feature -- Features
 
 	has_nested_custom_standard_copy_routine: BOOLEAN
 			-- Does current type contains fields, or recursively does it have
-			-- embedded expanded attributes which contain fields, which require
-			-- special treatment in the implementation of routine 'standard_copy'?
+			-- expanded attributes which contain fields, which require special
+			-- treatment in the implementation of routine 'standard_copy'?
 		do
 			Result := precursor or has_item_nested_custom_standard_copy_routine
 		end
 
 	has_item_nested_custom_standard_copy_routine: BOOLEAN
 			-- Does current type contains items, or recursively do they have
-			-- embedded expanded attributes which contain fields, which require
+			-- expanded attributes which contain fields, which require
 			-- special treatment in the implementation of routine 'standard_copy'?
 		local
 			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			l_item_type := item_type_set.static_type.primary_type
-			if l_item_type.is_embedded then
+			if l_item_type.is_expanded then
 				if l_item_type.has_redefined_copy_routine then
 					Result := True
 				elseif l_item_type = Current then
-					-- We should not have cyclic recursive embedded expanded objects.
+					-- We should not have cyclic recursive expanded objects.
 					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
 					-- or by another proper handling if ECMA relaxed this rule
 					-- (through the introduction of attached types). But in case
@@ -161,10 +146,6 @@ feature -- Features
 				elseif l_item_type.has_nested_custom_standard_copy_routine then
 					Result := True
 				end
-			elseif l_item_type.is_expanded then
-					-- Non-embedded expanded attribute (e.g. attribute with generic expanded type
-					-- which can be polyphormic with 'EXP [INTEGER]' conforming to 'EXP [ANY]').
-				Result := True
 			elseif item_type_set.has_expanded then
 					-- Reference attribute which may be attached to an object with copy semantics.
 				Result := True
@@ -173,25 +154,25 @@ feature -- Features
 
 	has_nested_custom_standard_is_equal_routine: BOOLEAN
 			-- Does current type contains fields, or recursively does it have
-			-- embedded expanded attributes which contain fields, which require
-			-- special treatment in the implementation of routine 'standard_is_equal'?
+			-- expanded attributes which contain fields, which require special
+			-- treatment in the implementation of routine 'standard_is_equal'?
 		do
 			Result := precursor or has_item_nested_custom_standard_is_equal_routine
 		end
 
 	has_item_nested_custom_standard_is_equal_routine: BOOLEAN
 			-- Does current type contains items, or recursively do they have
-			-- embedded expanded attributes which contain fields, which require
-			-- special treatment in the implementation of routine 'standard_is_equal'?
+			-- expanded attributes which contain fields, which require special
+			-- treatment in the implementation of routine 'standard_is_equal'?
 		local
 			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			l_item_type := item_type_set.static_type.primary_type
-			if l_item_type.is_embedded then
+			if l_item_type.is_expanded then
 				if l_item_type.has_redefined_is_equal_routine then
 					Result := True
 				elseif l_item_type = Current then
-					-- We should not have cyclic recursive embedded expanded objects.
+					-- We should not have cyclic recursive expanded objects.
 					-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
 					-- or by another proper handling if ECMA relaxed this rule
 					-- (through the introduction of attached types). But in case
@@ -200,10 +181,6 @@ feature -- Features
 				elseif l_item_type.has_nested_custom_standard_is_equal_routine then
 					Result := True
 				end
-			elseif l_item_type.is_expanded then
-					-- Non-embedded expanded attribute (e.g. attribute with generic expanded type
-					-- which can be polyphormic with 'EXP [INTEGER]' conforming to 'EXP [ANY]').
-				Result := True
 			elseif item_type_set.has_expanded then
 					-- Reference attribute which may be attached to an object with copy semantics.
 				Result := True

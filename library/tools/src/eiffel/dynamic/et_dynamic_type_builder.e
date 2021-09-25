@@ -154,12 +154,9 @@ feature -- Factory
 			else
 				in_new_dynamic_type_set := True
 				if a_type.is_expanded then
-					if a_type.is_generic then
-						Result := alive_conforming_descendants (a_type)
-						Result.set_never_void
-					else
-						Result := a_type
-					end
+						-- Note that for expanded types, there is no type other
+						-- than itself that conforms to it.
+					Result := a_type
 				else
 					Result := alive_conforming_descendants (a_type)
 				end

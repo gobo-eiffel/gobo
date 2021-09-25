@@ -39,18 +39,6 @@ feature -- Status report
 			definition: Result = base_type.is_expanded
 		end
 
-	is_embedded: BOOLEAN
-			-- Are objects of this type embedded within the enclosing object?
-			-- Embedded objects have no type-ids nor flags.
-			--
-			-- Note that in the future, some attributes whose types are declared of expanded type
-			-- (such as generic expanded types) may not be embedded with the enclosing object
-			-- but have a reference to them (while still having the copy semantics). Hence the
-			-- distinction between `is_embedded' and `is_expanded'.
-		do
-			Result := is_expanded
-		end
-
 	is_never_void: BOOLEAN
 			-- Can the expression of current dynamic type set never be void?
 			-- (Note that in order to be truly true, the current dynamic type
