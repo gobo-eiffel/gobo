@@ -20634,55 +20634,28 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_source_field_type_set_not_void: a_source_field_type_set /= Void
 		local
 			l_field_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_copy_feature: ET_DYNAMIC_FEATURE
+			l_attribute_already_copied: BOOLEAN
 		do
 			l_field_type := a_source_field_type_set.static_type.primary_type
 			if l_field_type.is_basic then
-				-- Attribute already copied.
+				l_attribute_already_copied := True
 			elseif l_field_type.is_expanded then
-				if l_field_type.has_redefined_copy_routine or l_field_type.has_nested_custom_standard_copy_routine then
-						-- Copy semantics.
-					l_copy_feature := l_field_type.seeded_dynamic_procedure (current_system.copy_seed, current_dynamic_system)
-					if l_copy_feature = Void then
-							-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						print_procedure_target_operand (a_target_field, l_field_type)
-						print_operand (a_source_field)
-						fill_call_operands (2)
-							-- Reinitialize the attribute (as if it was a call to 'twin').
-						print_indentation
-						print_unboxed_expression (call_operands.first, l_field_type, False)
-						print_assign_to
-						print_default_name (l_field_type, current_file)
-						print_semicolon_newline
-							-- Call 'copy'.
-						register_called_feature (l_copy_feature)
-						print_indentation
-						print_routine_name (l_copy_feature, l_field_type, current_file)
-						current_file.put_character ('(')
-						current_file.put_string (c_ac)
-						print_comma
-						print_procedure_target_expression (call_operands.first, l_field_type, False)
-						print_comma
-							-- We don't call `print_attachment_expression' here to avoid calling
-							-- 'twin' (and hence 'copy') on the argument of 'copy'. Otherwise we
-							-- will call 'copy' recursively (possibly infinite recursion) with the
-							-- same argument.
-						print_expression (call_operands.item (2))
-						current_file.put_character (')')
-						print_semicolon_newline
-						call_operands.wipe_out
-					end
-				else
-					-- Attribute already copied.
-				end
+				l_attribute_already_copied := not l_field_type.has_redefined_copy_routine and not l_field_type.has_nested_custom_standard_copy_routine
 			elseif a_source_field_type_set.has_expanded then
-					-- Reference field which may be attached to an object with copy semantics.
--- TODO
+				-- Reference field which may be attached to an object with copy semantics.
 			else
-				-- Attribute already copied.
+				l_attribute_already_copied := True
+			end
+			if not l_attribute_already_copied then
+				print_procedure_target_operand (a_target_field, l_field_type)
+				print_operand (a_source_field)
+				fill_call_operands (2)
+				print_indentation
+				print_expression (call_operands.first)
+				print_assign_to
+				print_attachment_expression (call_operands.item (2), a_source_field_type_set, l_field_type)
+				print_semicolon_newline
+				call_operands.wipe_out
 			end
 		end
 
@@ -21197,6 +21170,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			current_file.put_character ('&')
 			print_result_name (current_file)
 			print_comma
+				-- We don't call `print_attachment_expression' here to avoid calling
+				-- 'twin' (and hence 'copy') on the argument of 'copy'. Otherwise we
+				-- will call 'copy' recursively (possibly infinite recursion) with the
+				-- same argument.
 			current_file.put_character ('*')
 			print_current_name (current_file)
 			current_file.put_character (')')
@@ -21227,6 +21204,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			current_file.put_character ('(')
 			current_file.put_string (c_ac)
 			print_comma
+				-- We don't call `print_attachment_expression' here to avoid calling
+				-- 'twin' (and hence 'copy') on the argument of 'copy'. Otherwise we
+				-- will call 'copy' recursively (possibly infinite recursion) with the
+				-- same argument.
 			print_result_name (current_file)
 			print_comma
 			print_current_name (current_file)
@@ -21295,6 +21276,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_comma
 				print_result_name (current_file)
 				print_comma
+					-- We don't call `print_attachment_expression' here to avoid calling
+					-- 'twin' (and hence 'copy') on the argument of 'copy'. Otherwise we
+					-- will call 'copy' recursively (possibly infinite recursion) with the
+					-- same argument.
 				print_current_name (current_file)
 				current_file.put_character (')')
 				print_semicolon_newline
