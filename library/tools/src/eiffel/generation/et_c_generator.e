@@ -9938,7 +9938,7 @@ feature {NONE} -- Expression generation
 			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if in_operand then
-				if in_target then
+				if in_call_target then
 					in_operand := False
 					l_dynamic_type := dynamic_type_set (a_constant).static_type.primary_type
 					l_temp := new_temp_variable (l_dynamic_type)
@@ -10176,7 +10176,7 @@ feature {NONE} -- Expression generation
 			elseif in_operand then
 				operand_stack.force (an_expression)
 			elseif attached call_target_type as l_call_target_type then
-				check in_target: in_target end
+				check in_call_target: in_call_target end
 				if current_type.is_expanded then
 					print_current_name (current_file)
 				elseif l_call_target_type.is_expanded then
@@ -10692,7 +10692,7 @@ feature {NONE} -- Expression generation
 			l_temp: ET_IDENTIFIER
 		do
 			if in_operand then
-				if in_target then
+				if in_call_target then
 					l_temp := new_temp_variable (dynamic_type_set (a_constant).static_type.primary_type)
 					print_indentation
 					print_temp_name (l_temp, current_file)
@@ -10935,7 +10935,7 @@ feature {NONE} -- Expression generation
 			elseif in_operand then
 				operand_stack.force (a_name)
 			elseif attached call_target_type as l_call_target_type then
-				check in_target: in_target end
+				check in_call_target: in_call_target end
 				l_dynamic_type_set := dynamic_type_set (a_name)
 				l_static_type := l_dynamic_type_set.static_type
 				if l_static_type.is_expanded then
@@ -11143,7 +11143,7 @@ feature {NONE} -- Expression generation
 			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if in_operand then
-				if in_target then
+				if in_call_target then
 					in_operand := False
 					l_dynamic_type := dynamic_type_set (a_constant).static_type.primary_type
 					l_temp := new_temp_variable (l_dynamic_type)
@@ -11560,7 +11560,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			elseif in_operand then
 				operand_stack.force (a_name)
 			elseif attached call_target_type as l_call_target_type then
-				check in_target: in_target end
+				check in_call_target: in_call_target end
 				l_dynamic_type_set := dynamic_type_set (a_name)
 				l_static_type := l_dynamic_type_set.static_type
 				if l_static_type.is_expanded then
@@ -11751,7 +11751,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					locals_read.force_last (a_name)
 				end
 				if attached call_target_type as l_call_target_type then
-					check in_target: in_target end
+					check in_call_target: in_call_target end
 					l_dynamic_type_set := dynamic_type_set (a_name)
 					l_static_type := l_dynamic_type_set.static_type.primary_type
 					if l_static_type.is_expanded then
@@ -12708,7 +12708,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			if in_operand then
 				operand_stack.force (a_name)
 			elseif attached call_target_type as l_call_target_type then
-				check in_target: in_target end
+				check in_call_target: in_call_target end
 				l_dynamic_type_set := dynamic_type_set (a_name)
 				l_static_type := l_dynamic_type_set.static_type
 				if l_static_type.is_expanded then
@@ -13034,7 +13034,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			l_call_type_set := dynamic_type_set (a_call)
 			l_call_type := l_call_type_set.static_type.primary_type
 			if
-				in_target and then
+				in_call_target and then
 				l_call_type.is_expanded and then
 				(not l_call_type.is_basic or else in_procedure_call_target) and then
 				(l_dynamic_call = Void or else l_dynamic_call.has_field_access (current_dynamic_system))
@@ -13388,7 +13388,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if in_operand then
-				if in_target then
+				if in_call_target then
 					in_operand := False
 					l_dynamic_type := dynamic_type_set (a_constant).static_type.primary_type
 					l_temp := new_temp_variable (l_dynamic_type)
@@ -13432,7 +13432,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 				operand_stack.force (an_expression)
 			else
 				if attached call_target_type as l_call_target_type then
-					check in_target: in_target end
+					check in_call_target: in_call_target end
 					if has_rescue then
 							-- Keep track of the fact that the value of the 'Result' entity has
 							-- been read. Useful to determine the 'volatile' status of the 'Result'
@@ -13897,7 +13897,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 				operand_stack.force (a_name)
 			else
 				if attached call_target_type as l_call_target_type then
-					check in_target: in_target end
+					check in_call_target: in_call_target end
 					if not is_temp_variable_known (a_name) then
 							-- Internal error: the temporary
 							-- variable should be known at this stage.
@@ -13932,7 +13932,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			l_temp: ET_IDENTIFIER
 		do
 			if in_operand then
-				if in_target then
+				if in_call_target then
 					l_temp := new_temp_variable (dynamic_type_set (a_constant).static_type.primary_type)
 					print_indentation
 					print_temp_name (l_temp, current_file)
@@ -13999,7 +13999,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if in_operand then
-				if in_target then
+				if in_call_target then
 					in_operand := False
 					l_dynamic_type := dynamic_type_set (a_constant).static_type.primary_type
 					l_temp := new_temp_variable (l_dynamic_type)
@@ -14095,7 +14095,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 								l_old_call_target := call_operands.first
 								call_operands.replace (tokens.current_keyword, 1)
 							end
-							if in_target and l_call_type.is_expanded then
+							if in_call_target and l_call_type.is_expanded then
 									-- Pass the address of the built-in attribute expanded object.
 								current_file.put_character ('&')
 								current_file.put_character ('(')
@@ -14117,7 +14117,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 								call_operands.wipe_out
 							end
 						elseif attached call_target_type as l_call_target_type then
-							check in_target: in_target end
+							check in_call_target: in_call_target end
 							if l_call_type.is_expanded then
 									-- Pass the address of the expanded object.
 								current_file.put_character ('&')
@@ -14138,7 +14138,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 						end
 					elseif l_dynamic_feature.is_constant_attribute then
 						if in_operand then
-							if in_target then
+							if in_call_target then
 								if l_call_type.is_expanded then
 									in_operand := False
 									l_temp := new_temp_variable (l_call_type)
@@ -14174,7 +14174,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 						end
 					else
 						if
-							in_target and then
+							in_call_target and then
 							l_dynamic_feature.is_builtin_special_item and then
 							l_call_type.is_expanded and then
 							(not l_call_type.is_basic or else in_procedure_call_target)
@@ -15427,7 +15427,7 @@ feature {NONE} -- Query call generation
 						error_handler.report_giaaa_error
 					else
 						l_query_type_set := l_tuple_item_type_sets.item (l_seed)
-						print_adapted_expression_with_agent (agent print_attribute_tuple_item_access (l_seed, call_operands.first, a_target_type, a_check_void_target), l_query_type_set, a_result_type, in_target)
+						print_adapted_expression_with_agent (agent print_attribute_tuple_item_access (l_seed, call_operands.first, a_target_type, a_check_void_target), l_query_type_set, a_result_type, in_call_target)
 					end
 				end
 			elseif attached a_target_type.seeded_dynamic_query (l_seed, current_dynamic_system) as l_dynamic_feature then
@@ -15480,13 +15480,13 @@ feature {NONE} -- Query call generation
 				print_query_call (a_feature, a_target_type, a_check_void_target)
 				print_comma
 					-- Then return the attribute (or its address if it is the target of another call).
-				print_adapted_expression_with_agent (agent print_adapted_attribute_access (a_feature, l_target, a_target_type, a_check_void_target), l_query_type_set, a_result_type, in_target)
+				print_adapted_expression_with_agent (agent print_adapted_attribute_access (a_feature, l_target, a_target_type, a_check_void_target), l_query_type_set, a_result_type, in_call_target)
 				current_file.put_character (')')
 			elseif
 				attached {ET_ATTRIBUTE} l_static_query or
 				a_feature.is_builtin_special_item
 			then
-				print_adapted_expression_with_agent (agent print_query_call (a_feature, a_target_type, a_check_void_target), l_query_type_set, a_result_type, in_target)
+				print_adapted_expression_with_agent (agent print_query_call (a_feature, a_target_type, a_check_void_target), l_query_type_set, a_result_type, in_call_target)
 			else
 				print_adapted_expression_with_agent (agent print_query_call (a_feature, a_target_type, a_check_void_target), l_query_type_set, a_result_type, False)
 			end
@@ -16766,7 +16766,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			if in_operand then
 				operand_stack.force (a_name)
 			elseif attached call_target_type as l_call_target_type then
-				check in_target: in_target end
+				check in_call_target: in_call_target end
 				l_dynamic_type_set := dynamic_type_set (a_name)
 				l_static_type := l_dynamic_type_set.static_type
 				if l_static_type.is_expanded then
@@ -16807,7 +16807,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			if in_operand then
 				operand_stack.force (a_name)
 			elseif attached call_target_type as l_call_target_type then
-				check in_target: in_target end
+				check in_call_target: in_call_target end
 				l_dynamic_type_set := dynamic_type_set (a_name)
 				l_static_type := l_dynamic_type_set.static_type
 				if l_static_type.is_expanded then
@@ -21181,7 +21181,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 	print_builtin_any_twin_body_with_expanded (a_copy_feature: ET_DYNAMIC_FEATURE)
 			-- Print to `current_file' the body of the built-in feature
 			-- 'ANY.twin' for objects of expanded static type `current_type'.
-			-- `a_copy_feature' is the version of feature 'copy' in `current_type'
+			-- `a_copy_feature' is the version of feature 'copy' in `current_type'.
 		require
 			not_special_type: not current_type.is_special
 			expanded_type: current_type.is_expanded
@@ -21206,7 +21206,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 	print_builtin_any_twin_body_with_reference (a_copy_feature: ET_DYNAMIC_FEATURE)
 			-- Print to `current_file' the body of the built-in feature
 			-- 'ANY.twin' for objects of reference static type `current_type'.
-			-- `a_copy_feature' is the version of feature 'copy' in `current_type'
+			-- `a_copy_feature' is the version of feature 'copy' in `current_type'.
 		require
 			not_special_type: not current_type.is_special
 			reference_type: not current_type.is_expanded
@@ -40008,7 +40008,7 @@ feature {NONE} -- Implementation
 	use_comma_terminator_in_operand: BOOLEAN
 			-- Use comma instead of semicolon when printing operands
 
-	in_target: BOOLEAN
+	in_call_target: BOOLEAN
 			-- Is the target of a call being processed?
 		do
 			Result := (call_target_type /= Void)
@@ -40026,7 +40026,7 @@ feature {NONE} -- Implementation
 
 	call_target_check_void: BOOLEAN
 			-- Do we need to check whether the target is Void or not
-			-- when both `in_target' and not `in_operand' mode?
+			-- when both `in_call_target' and not `in_operand' mode?
 
 	in_attachment: BOOLEAN
 			-- Is a call to 'twin' being processed when attaching (e.g.
