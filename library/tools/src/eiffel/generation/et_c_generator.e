@@ -10214,14 +10214,6 @@ feature {NONE} -- Expression generation
 				l_temp := new_temp_variable (l_dynamic_type)
 				l_temp.set_index (an_expression.index)
 				operand_stack.force (l_temp)
-				print_indentation
-				print_attribute_type_id_access (l_temp, l_dynamic_type, False)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_integer (l_dynamic_type.id)
-				current_file.put_character (';')
-				current_file.put_new_line
 				l_queries := l_dynamic_type.queries
 				if l_queries.is_empty then
 						-- Internal error: TYPED_POINTER should have an attribute
@@ -10739,14 +10731,6 @@ feature {NONE} -- Expression generation
 				l_temp := new_temp_variable (l_dynamic_type)
 				l_temp.set_index (an_expression.index)
 				operand_stack.force (l_temp)
-				print_indentation
-				print_attribute_type_id_access (l_temp, l_dynamic_type, False)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_integer (l_dynamic_type.id)
-				current_file.put_character (';')
-				current_file.put_new_line
 				l_queries := l_dynamic_type.queries
 				if l_queries.is_empty then
 						-- Internal error: TYPED_POINTER should have an attribute
@@ -13568,14 +13552,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 				l_temp := new_temp_variable (l_dynamic_type)
 				l_temp.set_index (an_expression.index)
 				operand_stack.force (l_temp)
-				print_indentation
-				print_attribute_type_id_access (l_temp, l_dynamic_type, False)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_integer (l_dynamic_type.id)
-				current_file.put_character (';')
-				current_file.put_new_line
 				l_queries := l_dynamic_type.queries
 				if l_queries.is_empty then
 						-- Internal error: TYPED_POINTER should have an attribute
