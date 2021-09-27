@@ -92,7 +92,7 @@ feature -- Access
 			a_uri_not_void: a_uri /= Void
 		local
 			a_file: XM_FILE_URI_RESOLVER
-				a_data: XM_DATA_URI_RESOLVER
+			a_data: XM_DATA_URI_RESOLVER
 			a_simple_uri_resolver: XM_SIMPLE_URI_EXTERNAL_RESOLVER
 		do
 			create a_simple_uri_resolver.make_with_base (a_uri)
