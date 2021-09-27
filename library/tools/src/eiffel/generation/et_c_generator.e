@@ -8025,8 +8025,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 						if not l_current_class.ancestors_built or else l_current_class.has_ancestors_error then
 								-- 'ancestor_builder' should already have been executed
 								-- on `l_current_class' at this stage, and any error
-								-- should already heve been reported.
+								-- should have already been reported.
 							set_fatal_error
+							error_handler.report_giaaa_error
 						else
 							l_ancestor := l_current_class.ancestor (l_parent_type)
 							if l_ancestor = Void then
@@ -12825,8 +12826,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 						if not l_current_class.ancestors_built or else l_current_class.has_ancestors_error then
 								-- 'ancestor_builder' should already have been executed
 								-- on `l_current_class' at this stage, and any error
-								-- should already heve been reported.
+								-- should have already been reported.
 							set_fatal_error
+							error_handler.report_giaaa_error
 						else
 							l_ancestor := l_current_class.ancestor (l_parent_type)
 							if l_ancestor = Void then
@@ -37565,8 +37567,8 @@ feature {NONE} -- Include files
 				a_file.append (l_other_file)
 				l_other_file.close
 			else
--- TODO: report error.
 				set_fatal_error
+				report_cannot_read_error (a_filename)
 			end
 		end
 
