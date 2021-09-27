@@ -23,11 +23,13 @@ feature -- Basic operations
 		local
 			i: INTEGER
 			l_thread: WORKER_THREAD
+			nb: INTEGER
 		do
 			from
 				i := 1
+				nb := a_thread_count - 1
 			until
-				i > a_thread_count
+				i > nb
 			loop
 				create l_thread.make (a_process)
 				l_thread.launch
