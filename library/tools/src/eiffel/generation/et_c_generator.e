@@ -20595,46 +20595,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			end
 		end
 
-	print_builtin_any_standard_copy_custom_field (a_target_field, a_source_field: ET_EXPRESSION; a_source_field_type_set: ET_DYNAMIC_TYPE_SET)
-			-- Special treatment, if any, when copying field `a_source_field' to `a_target_field'
-			-- when calling 'standard_copy' on their enclosing objects.
-			-- A field is either an attribute, a tuple label or a "SPECIAL" item.
-			-- `a_source_field' and `a_target_field' are expected to have the same static type
-			-- (which is the static type of `a_source_field_type_set').
-			-- Note that `a_source_field' and `a_target_field' are expected to have
-			-- the same content in memory when calling this routine. So only fields
-			-- which require a different semantics need to be processed.
-		require
-			a_target_field_not_void: a_target_field /= Void
-			a_source_field_not_void: a_source_field /= Void
-			a_source_field_type_set_not_void: a_source_field_type_set /= Void
-		local
-			l_field_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_attribute_already_copied: BOOLEAN
-		do
-			l_field_type := a_source_field_type_set.static_type.primary_type
-			if l_field_type.is_basic then
-				l_attribute_already_copied := True
-			elseif l_field_type.is_expanded then
-				l_attribute_already_copied := not l_field_type.has_redefined_copy_routine and not l_field_type.has_nested_custom_standard_copy_routine
-			elseif a_source_field_type_set.has_expanded then
-				-- Reference field which may be attached to an object with copy semantics.
-			else
-				l_attribute_already_copied := True
-			end
-			if not l_attribute_already_copied then
-				print_procedure_target_operand (a_target_field, l_field_type)
-				print_operand (a_source_field)
-				fill_call_operands (2)
-				print_indentation
-				print_expression (call_operands.first)
-				print_assign_to
-				print_attachment_expression (call_operands.item (2), a_source_field_type_set, l_field_type)
-				print_semicolon_newline
-				call_operands.wipe_out
-			end
-		end
-
 	print_builtin_any_standard_copy_custom_attributes (a_source, a_target: ET_EXPRESSION)
 			-- Special treatment, if any, when copying the attributes of object
 			-- `a_source' to object `a_target' when calling 'standard_copy'.
@@ -20652,8 +20612,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_attribute_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_name: ET_FEATURE_NAME
 			l_index: INTEGER
-			l_target_attribute: ET_QUALIFIED_CALL_EXPRESSION
 			l_source_attribute: ET_QUALIFIED_CALL_EXPRESSION
+			l_attribute_already_copied: BOOLEAN
 		do
 			nb := current_type.attribute_count
 			l_queries := current_type.queries
@@ -20665,20 +20625,38 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					error_handler.report_giaaa_error
 				else
 					l_attribute_type := l_attribute_type_set.static_type.primary_type
-						-- Prepare dynamic type sets of attribute expressions.
-					extra_dynamic_type_sets.force_last (l_attribute_type)
-					l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
-						-- Prepare call expressions to attribute feature.
-					l_name := l_attribute.static_feature.name
-					l_name.set_seed (l_attribute.static_feature.first_seed)
-					l_target_attribute := new_qualified_call_expression (a_target, l_name, Void)
-					l_target_attribute.set_index (l_index)
-					l_source_attribute := new_qualified_call_expression (a_source, l_name, Void)
-					l_source_attribute.set_index (l_index)
-					print_builtin_any_standard_copy_custom_field (l_target_attribute, l_source_attribute, l_attribute_type_set)
-					free_qualified_call_expression (l_target_attribute)
-					free_qualified_call_expression (l_source_attribute)
-					extra_dynamic_type_sets.remove_last
+					if l_attribute_type.is_basic then
+						l_attribute_already_copied := True
+					elseif l_attribute_type.is_expanded then
+						l_attribute_already_copied := not l_attribute_type.has_redefined_copy_routine and not l_attribute_type.has_nested_custom_standard_copy_routine
+					elseif l_attribute_type_set.has_expanded then
+						-- Reference field which may be attached to an object with copy semantics.
+					else
+						l_attribute_already_copied := True
+					end
+					if not l_attribute_already_copied then
+							-- Prepare dynamic type sets of attribute expression.
+						extra_dynamic_type_sets.force_last (l_attribute_type_set)
+						l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+							-- Prepare call expression to attribute feature.
+						l_name := l_attribute.static_feature.name
+						l_name.set_seed (l_attribute.static_feature.first_seed)
+						l_source_attribute := new_qualified_call_expression (a_source, l_name, Void)
+						l_source_attribute.set_index (l_index)
+						print_operand (l_source_attribute)
+						fill_call_operands (1)
+						print_indentation
+						print_attribute_access (l_attribute, a_target, current_type, False)
+						print_assign_to
+							-- The clone of the item with copy semantics occurs here
+							-- in the call to `print_attachment_expression'.
+						print_attachment_expression (call_operands.first, l_attribute_type_set, l_attribute_type)
+						print_semicolon_newline
+							-- Clean up.
+						call_operands.wipe_out
+						free_qualified_call_expression (l_source_attribute)
+						extra_dynamic_type_sets.remove_last
+					end
 				end
 				i := i + 1
 			end
@@ -20704,9 +20682,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_name: ET_FEATURE_NAME
 			l_index: INTEGER
-			l_target_item: ET_QUALIFIED_CALL_EXPRESSION
 			l_source_item: ET_QUALIFIED_CALL_EXPRESSION
 			l_actual_argument_list: ET_ACTUAL_ARGUMENT_LIST
+			l_item_already_copied: BOOLEAN
 		do
 			if not a_special_type.has_item_nested_custom_standard_copy_routine then
 				-- Items already copied.
@@ -20726,57 +20704,78 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				error_handler.report_giaaa_error
 			else
 				l_item_type := l_item_type_set.static_type.primary_type
-				l_i_temp := new_temp_variable (l_item_count_type)
-				mark_temp_variable_frozen (l_i_temp)
-				print_indentation
-				current_file.put_string (c_for)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_temp_name (l_i_temp, current_file)
-				print_assign_to
-				print_temp_name (a_item_count, current_file)
-				print_minus
-				current_file.put_character ('1')
-				current_file.put_character (';')
-				current_file.put_character (' ')
-				print_temp_name (l_i_temp, current_file)
-				print_greater_than_or_equal
-				current_file.put_character ('0')
-				current_file.put_character (';')
-				current_file.put_character (' ')
-				print_temp_name (l_i_temp, current_file)
-				current_file.put_character ('-')
-				current_file.put_character ('-')
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				indent
-					-- Prepare dynamic type sets of item expressions.
-				extra_dynamic_type_sets.force_last (l_item_count_type)
-				l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
-				l_i_temp.set_index (l_index)
-				extra_dynamic_type_sets.force_last (l_item_type)
-				l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
-					-- Prepare call expressions to 'item' feature.
-				l_name := l_item_routine.static_feature.name
-				l_name.set_seed (l_item_routine.static_feature.first_seed)
-				l_actual_argument_list := new_actual_argument_list
-				l_actual_argument_list.force_first (l_i_temp)
-				l_target_item := new_qualified_call_expression (a_target, l_name, l_actual_argument_list)
-				l_target_item.set_index (l_index)
-				l_source_item := new_qualified_call_expression (a_source, l_name, l_actual_argument_list)
-				l_source_item.set_index (l_index)
-				print_builtin_any_standard_copy_custom_field (l_target_item, l_source_item, l_item_type_set)
-				free_qualified_call_expression (l_target_item)
-				free_qualified_call_expression (l_source_item)
-				free_actual_argument_list (l_actual_argument_list)
-				extra_dynamic_type_sets.remove_last
-				extra_dynamic_type_sets.remove_last
-				mark_temp_variable_unfrozen (l_i_temp)
-				mark_temp_variable_free (l_i_temp)
-				dedent
-				print_indentation_end_newline
+				if l_item_type.is_basic then
+					l_item_already_copied := True
+				elseif l_item_type.is_expanded then
+					l_item_already_copied := not l_item_type.has_redefined_copy_routine and not l_item_type.has_nested_custom_standard_copy_routine
+				elseif l_item_type_set.has_expanded then
+					-- Reference item which may be attached to an object with copy semantics.
+				else
+					l_item_already_copied := True
+				end
+				if not l_item_already_copied then
+					l_i_temp := new_temp_variable (l_item_count_type)
+					mark_temp_variable_frozen (l_i_temp)
+					print_indentation
+					current_file.put_string (c_for)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_temp_name (l_i_temp, current_file)
+					print_assign_to
+					print_temp_name (a_item_count, current_file)
+					print_minus
+					current_file.put_character ('1')
+					current_file.put_character (';')
+					current_file.put_character (' ')
+					print_temp_name (l_i_temp, current_file)
+					print_greater_than_or_equal
+					current_file.put_character ('0')
+					current_file.put_character (';')
+					current_file.put_character (' ')
+					print_temp_name (l_i_temp, current_file)
+					current_file.put_character ('-')
+					current_file.put_character ('-')
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+						-- Prepare dynamic type sets of item expression.
+					extra_dynamic_type_sets.force_last (l_item_count_type)
+					l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+					l_i_temp.set_index (l_index)
+					extra_dynamic_type_sets.force_last (l_item_type_set)
+					l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+						-- Prepare call expressions to 'item' feature.
+					l_name := l_item_routine.static_feature.name
+					l_name.set_seed (l_item_routine.static_feature.first_seed)
+					l_actual_argument_list := new_actual_argument_list
+					l_actual_argument_list.force_first (l_i_temp)
+					l_source_item := new_qualified_call_expression (a_source, l_name, l_actual_argument_list)
+					l_source_item.set_index (l_index)
+					print_operand (l_source_item)
+					fill_call_operands (1)
+					print_indentation
+					print_attribute_special_item_access (a_target, a_special_type, False)
+					current_file.put_character ('[')
+					print_temp_name (l_i_temp, current_file)
+					current_file.put_character (']')
+					print_assign_to
+						-- The clone of the item with copy semantics occurs here
+						-- in the call to `print_attachment_expression'.
+					print_attachment_expression (call_operands.first, l_item_type_set, l_item_type)
+					print_semicolon_newline
+					dedent
+					print_indentation_end_newline
+						-- Clean up.
+					call_operands.wipe_out
+					free_qualified_call_expression (l_source_item)
+					free_actual_argument_list (l_actual_argument_list)
+					extra_dynamic_type_sets.remove_last
+					extra_dynamic_type_sets.remove_last
+					mark_temp_variable_unfrozen (l_i_temp)
+					mark_temp_variable_free (l_i_temp)
+				end
 			end
 		end
 
@@ -20798,28 +20797,46 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_index: INTEGER
 			l_tuple_label: ET_IDENTIFIER
-			l_target_item: ET_QUALIFIED_CALL_EXPRESSION
 			l_source_item: ET_QUALIFIED_CALL_EXPRESSION
+			l_item_already_copied: BOOLEAN
 		do
 			l_item_type_sets := a_tuple_type.item_type_sets
 			nb := l_item_type_sets.count
 			from i := 1 until i > nb loop
 				l_item_type_set := l_item_type_sets.item (i)
 				l_item_type := l_item_type_set.static_type.primary_type
-					-- Prepare dynamic type sets of item expressions.
-				extra_dynamic_type_sets.force_last (l_item_type)
-				l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
-					-- Prepare call expressions to attribute feature.
-				l_tuple_label := new_tuple_label (i)
-				l_target_item := new_qualified_call_expression (a_target, l_tuple_label, Void)
-				l_target_item.set_index (l_index)
-				l_source_item := new_qualified_call_expression (a_source, l_tuple_label, Void)
-				l_source_item.set_index (l_index)
-				print_builtin_any_standard_copy_custom_field (l_target_item, l_source_item, l_item_type_set)
-				free_qualified_call_expression (l_target_item)
-				free_qualified_call_expression (l_source_item)
-				free_tuple_label (l_tuple_label)
-				extra_dynamic_type_sets.remove_last
+				if l_item_type.is_basic then
+					l_item_already_copied := True
+				elseif l_item_type.is_expanded then
+					l_item_already_copied := not l_item_type.has_redefined_copy_routine and not l_item_type.has_nested_custom_standard_copy_routine
+				elseif l_item_type_set.has_expanded then
+					-- Reference item which may be attached to an object with copy semantics.
+				else
+					l_item_already_copied := True
+				end
+				if not l_item_already_copied then
+						-- Prepare dynamic type sets of item expressions.
+					extra_dynamic_type_sets.force_last (l_item_type_set)
+					l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+						-- Prepare call expression to tuple item.
+					l_tuple_label := new_tuple_label (i)
+					l_source_item := new_qualified_call_expression (a_source, l_tuple_label, Void)
+					l_source_item.set_index (l_index)
+					print_operand (l_source_item)
+					fill_call_operands (1)
+					print_indentation
+					print_attribute_tuple_item_access (i, a_target, a_tuple_type, False)
+					print_assign_to
+						-- The clone of the item with copy semantics occurs here
+						-- in the call to `print_attachment_expression'.
+					print_attachment_expression (call_operands.first, l_item_type_set, l_item_type)
+					print_semicolon_newline
+						-- Clean up.
+					call_operands.wipe_out
+					free_qualified_call_expression (l_source_item)
+					free_tuple_label (l_tuple_label)
+					extra_dynamic_type_sets.remove_last
+				end
 				i := i + 1
 			end
 		end
