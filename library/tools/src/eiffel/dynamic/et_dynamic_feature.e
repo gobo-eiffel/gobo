@@ -738,6 +738,15 @@ feature -- Status report
 			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_any_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_any_is_equal)
 		end
 
+	is_builtin_ise_runtime_new_tuple_instance_of: BOOLEAN
+			-- Is current feature the built-in feature 'ISE_RUNTIME.new_tuple_instance_of'?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_ise_runtime_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_ise_runtime_new_tuple_instance_of
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_ise_runtime_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_ise_runtime_new_tuple_instance_of)
+		end
+
 	is_builtin_special_item: BOOLEAN
 			-- Is current feature the built-in feature 'SPECIAL.item'?
 		do

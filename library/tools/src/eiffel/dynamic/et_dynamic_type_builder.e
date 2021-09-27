@@ -2576,7 +2576,20 @@ feature {NONE} -- Event handling
 						i := i + 1
 					end
 				end
-				l_dynamic_type_set := l_dynamic_query.result_type_set
+				if
+					l_dynamic_query.is_builtin_ise_runtime_new_tuple_instance_of and then
+					attached an_expression.arguments as l_actuals and then
+					l_actuals.count = 1 and then
+					attached {ET_QUALIFIED_CALL_EXPRESSION} l_actuals.first as l_qualified_call and then
+					attached {ET_PARENTHESIZED_EXPRESSION} l_qualified_call.target as l_call_target and then
+					attached {ET_MANIFEST_TYPE} l_call_target.expression as l_manifest_type and then
+					l_qualified_call.name.same_feature_name (tokens.type_id_feature_name)
+				then
+						-- Optimization in case: '{ISE_RUNTIME}.new_tuple_instance_of ((TYPE}).type_id)'.
+					l_dynamic_type_set := current_dynamic_system.dynamic_primary_type (l_manifest_type.type, current_type)
+				else
+					l_dynamic_type_set := l_dynamic_query.result_type_set
+				end
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a query cannot be void.
 					set_fatal_error
