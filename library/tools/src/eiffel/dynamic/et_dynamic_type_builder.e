@@ -2563,6 +2563,7 @@ feature {NONE} -- Event handling
 			l_dynamic_query: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_actual: ET_EXPRESSION
+			l_tuple_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type := current_dynamic_system.dynamic_primary_type (a_type, current_type)
@@ -2585,8 +2586,10 @@ feature {NONE} -- Event handling
 					attached {ET_MANIFEST_TYPE} l_call_target.expression as l_manifest_type and then
 					l_qualified_call.name.same_feature_name (tokens.type_id_feature_name)
 				then
-						-- Optimization in case: '{ISE_RUNTIME}.new_tuple_instance_of ((TYPE}).type_id)'.
-					l_dynamic_type_set := current_dynamic_system.dynamic_primary_type (l_manifest_type.type, current_type)
+						-- Optimization for '{ISE_RUNTIME}.new_tuple_instance_of ((TYPE}).type_id)'.
+					l_tuple_type := current_dynamic_system.dynamic_primary_type (l_manifest_type.type, current_type)
+					l_dynamic_type_set := l_tuple_type
+					mark_type_alive (l_tuple_type)
 				else
 					l_dynamic_type_set := l_dynamic_query.result_type_set
 				end
