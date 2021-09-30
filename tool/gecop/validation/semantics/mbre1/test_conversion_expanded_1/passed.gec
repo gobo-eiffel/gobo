@@ -1,0 +1,9 @@
+## copy expected
+CC copied
+##
+d.to_c.value = 2
+c.value = 2
+d.to_c.value = 3
+c.value = 2
+d.to_c.value = 3
+c.value = 4

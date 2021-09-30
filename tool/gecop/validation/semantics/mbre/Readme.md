@@ -1,7 +1,7 @@
 # Semantics MBRE
 
-These [tests](.) are exercising the semantics rule below.</br>
-Click on the `[tests]` label following the case numbers to below to see tests specific to these cases.
+These [tests](.) are exercising the semantics rule below.  
+Click on the `[tests]` label following the case numbers below to see tests specific to these cases.
 
 ## MBRE: Reattachment Semantics
 
@@ -20,4 +20,15 @@ Same as above.
 
 ### Notes
 
-* Case 3 mentions "if possible". This refers to the fact that the cloning might be impossible for lack of memory, in which case the semantics of the cloning operation specifies triggering an exception, of type `NO_MORE_MEMORY`.
+* The *informative text* of [`MBAS`](../mbas/Readme.md) (*Assignment semantics*) mentions:
+
+  > The other cases where *Reattachment Semantics* applies is actual-formal association, per step `5` of the *General Call* rule.  
+  On the other hand, the semantics of *Object_test*, a construct which also allows a *Read_only* entity to denote the same value as an expression, is simple enough that it does not need to refer to reattachment.
+
+  This is not quite true. Even though there is no need for conversion in that case, there is still a need to create a clone of the value of the expression when the corresponding object has a copy semantics. Otherwise we may end up with two entities attached to the same object with copy semantics, which defeats one of the goals of copy semantics. See [`MVOL`](../mvol) for some examples.
+
+  So condition `1` should be removed from `MBRE`. It is common to assignment and argument passing, whereas the other conditions about attachment proper (in particular when copy semantics is involved) are applicable to more cases like *Object_test* (see [`MVOL`](../mvol/Readme.md)). Conversion is already explictly mentioned in [`MUGC`](../mugc/Readme.md) (*General Call Semantics*) for argument passing. It should be explicitly mentioned in `MBAS` as well.
+
+* Condition `1` about conversion and the other conditions about attachment proper (in particular when copy semantics is involved) should not be exclusive. There are cases where we need first to convert the source and then clone the resulting object when it has copy semantics. See the tests for [`MBRE-1`](../mbre1) for examples.
+
+* Condition `3` mentions "if possible". This refers to the fact that the cloning might be impossible for lack of memory, in which case the semantics of the cloning operation specifies triggering an exception, of type `NO_MORE_MEMORY`.

@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     264 tests
-    # FAILED:     99 tests
+    # Passed:     280 tests
+    # FAILED:     102 tests
     # Aborted:    0 test
-    # Total:      363 tests
+    # Total:      382 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo/test\_tilde\_1](definition/difo/test\_tilde\_1)\] test\_failed</br>
@@ -21,6 +21,9 @@ FAIL:  \[[definition/dlcf3/test\_export\_all\_redeclared\_1](definition/dlcf3/te
 FAIL:  \[[definition/dlcf3/test\_export\_all\_repeated\_1](definition/dlcf3/test\_export\_all\_repeated\_1)\] test\_failed</br>
 FAIL:  \[[definition/dlcf3/test\_export\_f\_redeclared\_1](definition/dlcf3/test\_export\_f\_redeclared\_1)\] test\_failed</br>
 FAIL:  \[[definition/dlcf3/test\_export\_f\_repeated\_1](definition/dlcf3/test\_export\_f\_repeated\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbas/test\_expanded\_convert\_to\_2](semantics/mbas/test\_expanded\_convert\_to\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre1/test\_conversion\_expanded\_2](semantics/mbre1/test\_conversion\_expanded\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre1/test\_conversion\_expanded\_3](semantics/mbre1/test\_conversion\_expanded\_3)\] test\_failed</br>
 FAIL:  \[[semantics/mbre3/test\_assignment\_from\_attribute\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_attribute\_to\_local\_1)\] test\_failed</br>
 FAIL:  \[[semantics/mbre3/test\_assignment\_from\_call\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_call\_to\_local\_1)\] test\_failed</br>
 FAIL:  \[[semantics/mbre3/test\_assignment\_from\_once\_call\_to\_local\_1](semantics/mbre3/test\_assignment\_from\_once\_call\_to\_local\_1)\] test\_failed</br>

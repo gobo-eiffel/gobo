@@ -1,6 +1,6 @@
 # Semantics MBRE-3
 
-This [test](.) is exercising the case [3](../Readme.md) of the semantics rule [MBRE](../../mbre/Readme.md).
+This [test](.) is exercising the condition [`3`](../Readme.md) of the semantics rule [`MBRE`](../../mbre/Readme.md).
 
 ### Description
 
