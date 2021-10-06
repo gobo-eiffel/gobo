@@ -69,6 +69,7 @@ feature {NONE} -- Implementation
 				if l_result_type_set /= Void and then l_result_type_set.static_type = result_type_set.static_type then
 					Result.set_result_type_set (result_type_set)
 				end
+				open_operand_tuple_type_set := Result.argument_type_set (1)
 			end
 		end
 

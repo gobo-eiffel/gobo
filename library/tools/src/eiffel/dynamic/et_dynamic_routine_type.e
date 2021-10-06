@@ -26,6 +26,10 @@ feature -- Status report
 
 feature -- Access
 
+	open_operand_tuple_type_set: detachable ET_DYNAMIC_TYPE_SET
+			-- Dynamic type set of the tuple passed as argument of the built-in
+			-- features 'PROCEDURE.call' or 'FUNCTION.item' if known
+
 	open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Type sets of open operands
 

@@ -1,6 +1,6 @@
 # Semantics MUGC-2
 
-This [test](.) is exercising the case [2](../Readme.md) of the semantics rule [MUGC](../../mugc/Readme.md).
+This [test](.) is exercising the step [`2`](../Readme.md) of the semantics rule [`MUGC`](../../mugc/Readme.md).
 
 ### Description
 
@@ -20,5 +20,7 @@ because the *Reattachment Semantics* rule applies in the assignment `c := b.c`, 
 ### Notes
 
 * See also `MUVA` (*Value of a call expression*): The value of a *Call* `c` used as an expression is, at any run-time moment, the result of executing `c`.
+
 * See also `MURE-3` (*Call result*): If `df` is an attribute: the corresponding field in `O`.
+
 * ISE Eiffel (as of 20.11.10.5058 and after) crashes with an exception trace when executing this code.

@@ -1,0 +1,9 @@
+## copy expected
+CC copied
+## copy expected
+##
+b.value = 2
+value = 3
+b.value = 3
+value = 4
+b.value = 4

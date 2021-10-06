@@ -1,7 +1,7 @@
 # Semantics MBRE
 
 These [tests](.) are exercising the semantics rule below.  
-Click on the `[tests]` label following the case numbers below to see tests specific to these cases.
+Click on the `[tests]` label following the condition numbers below to see tests specific to these conditions.
 
 ## MBRE: Reattachment Semantics
 

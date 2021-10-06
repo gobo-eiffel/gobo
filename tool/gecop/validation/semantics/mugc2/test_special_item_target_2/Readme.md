@@ -1,6 +1,6 @@
 # Semantics MUGC-2
 
-This [test](.) is exercising the case [2](../Readme.md) of the semantics rule [MUGC](../../mugc/Readme.md).
+This [test](.) is exercising the step [`2`](../Readme.md) of the semantics rule [`MUGC`](../../mugc/Readme.md).
 
 ### Description
 
@@ -20,7 +20,10 @@ because the *Reattachment Semantics* rule applies in the assignment `b := s.item
 ### Notes
 
 * See also `MUVA` (*Value of a call expression*): The value of a *Call* `c` used as an expression is, at any run-time moment, the result of executing `c`.
+
 * See also `MURE-3` (*Call result*): If `df` is an attribute: the corresponding field in `O`.  
-Informative test: A labeled tuple access, `t.b` where the type of `t` is a *Tuple_type*, falls under case 3 as a result of the notion of unfolded form of tuple types.
+Informative text: A labeled tuple access, `t.b` where the type of `t` is a *Tuple_type*, falls under case 3 as a result of the notion of unfolded form of tuple types.
+
 * Feature `item` in class `SPECIAL` is declared as `external "built_it"`. It is assumed to return the item object, not a clone of the item, since there is no explicit assignment and hence no *Reattachment Semantics* rule involved.
+
 * ISE Eiffel (as of 20.11.10.5058 and after) applies the *Reattachment Semantics* rule within the implementation of `item` in class `SPECIAL`, and hence returns a clone of the item and not the item object itself.

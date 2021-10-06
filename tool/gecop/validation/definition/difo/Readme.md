@@ -1,7 +1,7 @@
 # Definition DIFO
 
-These [tests](.) are exercising the definition below.</br>
-Click on the `[tests]` label following the case numbers to below to see tests specific to these cases.
+These [tests](.) are exercising the definition below.  
+Click on the `[tests]` label following the property numbers below to see tests specific to these properties.
 
 ## DIFO: Free operator
 
@@ -22,4 +22,4 @@ A *Free\_binary* is a free operator that is distinct from all *standard binary o
 * If we want to allow `∀∀` as free operator (but not `∀`), I think that we need add `∀`, `∃`, `⟳`, `⟲` and `¦` (symbols used in symbolic forms of *across loops*) to:
   * DISP: Special symbol
   * DIPO: Predefined operator
-  * DIOS: Operator symbol, clause 3
+  * DIOS: Operator symbol, clause `3`

@@ -1,0 +1,16 @@
+b.value = 2
+## copy expected
+CC copied
+CC copied
+CC copied
+CC copied
+value = 3
+t.b.value = 3
+b.value = 2
+## copy expected
+CC copied
+CC copied
+CC copied
+CC copied
+value = 3
+b.value = 2

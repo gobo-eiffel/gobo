@@ -1,7 +1,7 @@
 # Semantics MUGC
 
 These [tests](.) are exercising the semantics rule below.  
-Click on the `[tests]` label following the case numbers below to see tests specific to these cases.
+Click on the `[tests]` label following the step numbers below to see tests specific to these steps.
 
 ## MUGC: General Call Semantics
 
@@ -48,5 +48,8 @@ An exception occurring during any of these steps causes the execution to skip th
 
 ## Notes
 
-* We should use the same wording in 7. and 13. (about class invariant).
-* The part about conversion of actual arguments in 5. is redundant with 1. of the *Reattachment Semantics* rule (MBRE-1).
+* For each actual argument in the order listed, first it is evaluated, then converted if needed, and finally if the resulting object has copy semantics it is cloned. This is different from what is specified above where the actual arguments are first evaluated and converted (first traversal in step `4`) and then cloned (second traversal in step `5`). So the two traversals in steps `4` and `5` need to be merged into a single traversal. See this [test](../mugc5/test_expanded_convert_1) as an example.
+
+* We should use the same wording in `7` and `13` (about class invariant).
+
+* The part about conversion of actual arguments in `5` is redundant with `1` of the *Reattachment Semantics* rule ([`MBRE-1`](../mbre/Readme.md)). It should be removed from `MBRE`.

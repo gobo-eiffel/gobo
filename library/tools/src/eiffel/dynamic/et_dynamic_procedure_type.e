@@ -63,6 +63,7 @@ feature {NONE} -- Implementation
 			Result := precursor (a_procedure, a_system)
 			if Result.builtin_class_code = tokens.builtin_procedure_class and then Result.builtin_feature_code = tokens.builtin_procedure_call then
 				a_system.dynamic_type_set_builder.build_agent_call (Current, Result)
+				open_operand_tuple_type_set := Result.argument_type_set (1)
 			end
 		end
 

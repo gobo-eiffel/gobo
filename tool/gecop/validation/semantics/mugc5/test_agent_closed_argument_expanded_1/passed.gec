@@ -1,0 +1,20 @@
+## copy expected
+BB copied
+## copy expected
+BB copied
+##
+b.value = 2
+a.value = 2
+b.value = 3
+a.value = 2
+b.value = 3
+a.value = 4
+## copy expected
+BB copied
+##
+b.value = 3
+a.value = 2
+b.value = 3
+a.value = 2
+b.value = 3
+a.value = 4

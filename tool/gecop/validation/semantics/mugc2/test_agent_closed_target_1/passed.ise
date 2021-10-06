@@ -1,0 +1,8 @@
+## copy expected
+BB copied
+##
+b.value = 2
+value = 3
+b.value = 2
+value = 4
+b.value = 2

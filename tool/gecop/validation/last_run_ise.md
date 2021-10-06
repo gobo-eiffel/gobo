@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     280 tests
-    # FAILED:     102 tests
+    # Passed:     286 tests
+    # FAILED:     113 tests
     # Aborted:    0 test
-    # Total:      382 tests
+    # Total:      399 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo/test\_tilde\_1](definition/difo/test\_tilde\_1)\] test\_failed</br>
@@ -42,6 +42,11 @@ FAIL:  \[[semantics/mbre3/test\_twin\_special\_1](semantics/mbre3/test\_twin\_sp
 FAIL:  \[[semantics/mbre3/test\_twin\_special\_2](semantics/mbre3/test\_twin\_special\_2)\] test\_failed</br>
 FAIL:  \[[semantics/mbre3/test\_twin\_tuple\_1](semantics/mbre3/test\_twin\_tuple\_1)\] test\_failed</br>
 FAIL:  \[[semantics/mbre3/test\_twin\_tuple\_2](semantics/mbre3/test\_twin\_tuple\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_agent\_closed\_target\_1](semantics/mugc2/test\_agent\_closed\_target\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_agent\_closed\_target\_2](semantics/mugc2/test\_agent\_closed\_target\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_agent\_open\_target\_1](semantics/mugc2/test\_agent\_open\_target\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_agent\_open\_target\_2](semantics/mugc2/test\_agent\_open\_target\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_agent\_open\_target\_3](semantics/mugc2/test\_agent\_open\_target\_3)\] test\_failed</br>
 FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_4](semantics/mugc2/test\_qualified\_attribute\_target\_4)\] test\_failed</br>
 FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_5](semantics/mugc2/test\_qualified\_attribute\_target\_5)\] test\_failed</br>
 FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_6](semantics/mugc2/test\_qualified\_attribute\_target\_6)\] test\_failed</br>
@@ -51,6 +56,12 @@ FAIL:  \[[semantics/mugc2/test\_special\_item\_target\_2](semantics/mugc2/test\_
 FAIL:  \[[semantics/mugc2/test\_unqualified\_attribute\_target\_2](semantics/mugc2/test\_unqualified\_attribute\_target\_2)\] test\_failed</br>
 FAIL:  \[[semantics/mugc2/test\_unqualified\_attribute\_target\_3](semantics/mugc2/test\_unqualified\_attribute\_target\_3)\] test\_failed</br>
 FAIL:  \[[semantics/mugc2/test\_unqualified\_attribute\_target\_4](semantics/mugc2/test\_unqualified\_attribute\_target\_4)\] test\_failed</br>
+FAIL:  \[[semantics/mugc5/test\_agent\_closed\_argument\_expanded\_1](semantics/mugc5/test\_agent\_closed\_argument\_expanded\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mugc5/test\_agent\_closed\_argument\_expanded\_2](semantics/mugc5/test\_agent\_closed\_argument\_expanded\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc5/test\_agent\_closed\_argument\_expanded\_3](semantics/mugc5/test\_agent\_closed\_argument\_expanded\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mugc5/test\_agent\_open\_argument\_expanded\_1](semantics/mugc5/test\_agent\_open\_argument\_expanded\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mugc5/test\_agent\_open\_argument\_expanded\_2](semantics/mugc5/test\_agent\_open\_argument\_expanded\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc5/test\_agent\_open\_argument\_expanded\_3](semantics/mugc5/test\_agent\_open\_argument\_expanded\_3)\] test\_failed</br>
 FAIL:  \[[semantics/muon1/test\_once\_per\_object\_3](semantics/muon1/test\_once\_per\_object\_3)\] test\_failed</br>
 FAIL:  \[[semantics/muon1/test\_once\_per\_object\_4](semantics/muon1/test\_once\_per\_object\_4)\] test\_failed</br>
 FAIL:  \[[semantics/muon1/test\_once\_per\_object\_5](semantics/muon1/test\_once\_per\_object\_5)\] test\_failed</br>
