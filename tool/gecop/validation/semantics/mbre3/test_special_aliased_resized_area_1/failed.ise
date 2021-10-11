@@ -1,0 +1,17 @@
+## copy expected
+DD copied
+## copy expected
+##
+s1 /= s2: True
+d.value = 2
+s1.item (0).value = 2
+s2.item (0).value = 2
+d.value = 3
+s1.item (0).value = 2
+s2.item (0).value = 2
+d.value = 3
+s1.item (0).value = 4
+s2.item (0).value = 4
+d.value = 3
+s1.item (0).value = 5
+s2.item (0).value = 5

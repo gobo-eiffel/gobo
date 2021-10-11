@@ -38,5 +38,4 @@ feature
 			print ("s2.item (0).value = " + s2.item (0).value.out + "%N")
 		end
 
-
 end

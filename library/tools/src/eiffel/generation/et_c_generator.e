@@ -28318,6 +28318,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_temp: ET_IDENTIFIER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_capacity_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_result: ET_RESULT
 		do
 			l_arguments := a_feature.arguments
 			if not attached {ET_DYNAMIC_SPECIAL_TYPE} current_type as l_special_type then
@@ -28342,161 +28343,65 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_item_type := l_special_type.item_type_set.static_type.primary_type
 				print_indentation
 				print_temp_name (l_temp, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				print_attribute_special_capacity_access (tokens.current_keyword, l_special_type, False)
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_string (c_if)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
+				print_semicolon_newline
+				print_indentation_if
 				l_argument_name := l_arguments.formal_argument (1).name
 				print_argument_name (l_argument_name, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('>')
-				current_file.put_character (' ')
+				print_greater_than
 				print_temp_name (l_temp, current_file)
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
+				print_then_newline
 				indent
 					-- Need to allocate a new object.
-				print_indentation
-				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				l_result := new_result_expression
+				extra_dynamic_type_sets.force_last (l_special_type)
+				l_result.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
+				print_indentation_assign_to_result
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (l_special_type.id)
 				current_file.put_character ('(')
 				print_argument_name (l_argument_name, current_file)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_string (c_eif_false)
+				print_comma
+				current_file.put_string (c_eif_true)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
+				mark_temp_variable_free (l_temp)
+					-- Set count.
 				print_indentation
-				if not l_special_type.is_expanded then
-					current_file.put_character ('*')
-				end
-				print_type_cast (l_special_type, current_file)
-				current_file.put_character ('(')
-				print_result_name (current_file)
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				if not l_special_type.is_expanded then
-					current_file.put_character ('*')
-				end
-				print_type_cast (l_special_type, current_file)
-				current_file.put_character ('(')
-				print_current_name (current_file)
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-					-- Copy old items.
--- TODO: look for 'copy' redefinition, copy semantics, once-per-object data, etc.
-				print_indentation
-				current_file.put_string (c_memcpy)
-				current_file.put_character ('(')
-				print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
-				current_file.put_character (',')
-				print_attribute_special_item_access (tokens.current_keyword, l_special_type, False)
-				current_file.put_character (',')
-				print_temp_name (l_temp, current_file)
-				current_file.put_character ('*')
-				current_file.put_string (c_sizeof)
-				current_file.put_character ('(')
-				print_type_declaration (l_item_type, current_file)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-					-- Clear new item slots if needed.
-				current_file.put_string (c_ifndef)
-				current_file.put_character (' ')
-				if l_special_type.has_nested_reference_fields then
-					current_file.put_line (c_ge_malloc_cleared)
-				else
-					current_file.put_line (c_ge_malloc_atomic_cleared)
-				end
-				print_indentation
-				current_file.put_string (c_memset)
-				current_file.put_character ('(')
-				print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
-				current_file.put_character ('+')
-				print_temp_name (l_temp, current_file)
-				current_file.put_character (',')
-				current_file.put_character ('0')
-				current_file.put_character (',')
-				current_file.put_character ('(')
-				print_argument_name (l_argument_name, current_file)
-				current_file.put_character ('-')
-				print_temp_name (l_temp, current_file)
-				current_file.put_character (')')
-				current_file.put_character ('*')
-				current_file.put_string (c_sizeof)
-				current_file.put_character ('(')
-				print_type_declaration (l_item_type, current_file)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-				current_file.put_line (c_endif)
+				print_attribute_special_count_access (tokens.result_keyword, l_special_type, False)
+				print_assign_to
+				print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+				print_semicolon_newline
+					-- Copy items.
+				print_builtin_any_standard_copy_body_with_special (tokens.current_keyword, l_result, l_special_type)
+					-- Clean up.
+				free_result_expression (l_result)
+				extra_dynamic_type_sets.remove_last
 				dedent
-				print_indentation
-				current_file.put_character ('}')
-				current_file.put_character (' ')
-				current_file.put_string (c_else)
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
+				print_indentation_else_newline
 				indent
 					-- Keep the same object.
-				print_indentation
-				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_indentation_assign_to_result
 				print_current_name (current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 					-- Set new count if needed.
 				print_indentation
 				print_temp_name (l_temp, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				print_attribute_special_count_access (tokens.result_keyword, l_special_type, False)
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_string (c_if)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
+				print_semicolon_newline
+				print_indentation_if
 				print_temp_name (l_temp, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('>')
-				current_file.put_character (' ')
+				print_greater_than
 				print_argument_name (l_argument_name, current_file)
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
+				print_then_newline
 				indent
 				print_indentation
 				print_attribute_special_count_access (tokens.result_keyword, l_special_type, False)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				print_argument_name (l_argument_name, current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 					-- Clear discarded item slots if needed.
 				current_file.put_string (c_ifndef)
 				current_file.put_character (' ')
@@ -28509,42 +28414,34 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_string (c_memset)
 				current_file.put_character ('(')
 				print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
-				current_file.put_character ('+')
+				print_plus
 				print_argument_name (l_argument_name, current_file)
-				current_file.put_character (',')
+				print_comma
 				current_file.put_character ('0')
-				current_file.put_character (',')
+				print_comma
 				current_file.put_character ('(')
 				print_temp_name (l_temp, current_file)
-				current_file.put_character ('-')
+				print_minus
 				print_argument_name (l_argument_name, current_file)
 				current_file.put_character (')')
-				current_file.put_character ('*')
+				print_times
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
 				print_type_declaration (l_item_type, current_file)
 				current_file.put_character (')')
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				current_file.put_line (c_endif)
 				dedent
-				print_indentation
-				current_file.put_character ('}')
-				current_file.put_new_line
+				print_indentation_end_newline
 				dedent
-				print_indentation
-				current_file.put_character ('}')
-				current_file.put_new_line
+				print_indentation_end_newline
 					-- Set new capacity.
 				print_indentation
 				print_attribute_special_capacity_access (tokens.result_keyword, l_special_type, False)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				print_argument_name (l_argument_name, current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 		end
 

@@ -36,5 +36,4 @@ feature
 			print ("t2.v.value = " + t2.v.value.out + "%N")
 		end
 
-
 end

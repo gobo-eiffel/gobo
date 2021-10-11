@@ -8,18 +8,17 @@ feature
 
 	make
 		local
-			s1, s2: SPECIAL [CC]
-			c: CC
+			s1, s2: SPECIAL [DD]
 			d: DD
 		do
-			create c
-			create s1.make_filled (c, 1)
+			create s1.make_empty (1)
 			d.set_value (2)
 			print ("## copy expected%N")
-			s1.put (d, 0)
+			s1.extend (d)
 			print ("## copy expected%N")
-			s2 := s1.twin
+			s2 := s1.aliased_resized_area (100)
 			print ("##%N")
+			print ("s1 /= s2: " + (s1 /= s2).out + "%N")
 			print ("d.value = " + d.value.out + "%N")
 			print ("s1.item (0).value = " + s1.item (0).value.out + "%N")
 			print ("s2.item (0).value = " + s2.item (0).value.out + "%N")

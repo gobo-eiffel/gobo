@@ -18,8 +18,9 @@ feature
 			print ("## copy expected%N")
 			s1.put (d, 0)
 			print ("## copy expected%N")
-			s2 := s1.twin
+			s2 := s1.aliased_resized_area (100)
 			print ("##%N")
+			print ("s1 /= s2: " + (s1 /= s2).out + "%N")
 			print ("d.value = " + d.value.out + "%N")
 			print ("s1.item (0).value = " + s1.item (0).value.out + "%N")
 			print ("s2.item (0).value = " + s2.item (0).value.out + "%N")

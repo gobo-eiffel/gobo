@@ -5,9 +5,9 @@ Running Test Cases
 Test Summary for validation
 
     # Passed:     286 tests
-    # FAILED:     113 tests
+    # FAILED:     115 tests
     # Aborted:    0 test
-    # Total:      399 tests
+    # Total:      401 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo/test\_tilde\_1](definition/difo/test\_tilde\_1)\] test\_failed</br>
@@ -36,6 +36,8 @@ FAIL:  \[[semantics/mbre3/test\_copy\_special\_1](semantics/mbre3/test\_copy\_sp
 FAIL:  \[[semantics/mbre3/test\_copy\_special\_2](semantics/mbre3/test\_copy\_special\_2)\] test\_failed</br>
 FAIL:  \[[semantics/mbre3/test\_copy\_tuple\_1](semantics/mbre3/test\_copy\_tuple\_1)\] test\_failed</br>
 FAIL:  \[[semantics/mbre3/test\_copy\_tuple\_2](semantics/mbre3/test\_copy\_tuple\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_special\_aliased\_resized\_area\_1](semantics/mbre3/test\_special\_aliased\_resized\_area\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mbre3/test\_special\_aliased\_resized\_area\_2](semantics/mbre3/test\_special\_aliased\_resized\_area\_2)\] test\_failed</br>
 FAIL:  \[[semantics/mbre3/test\_twin\_1](semantics/mbre3/test\_twin\_1)\] test\_failed</br>
 FAIL:  \[[semantics/mbre3/test\_twin\_2](semantics/mbre3/test\_twin\_2)\] test\_failed</br>
 FAIL:  \[[semantics/mbre3/test\_twin\_special\_1](semantics/mbre3/test\_twin\_special\_1)\] test\_failed</br>

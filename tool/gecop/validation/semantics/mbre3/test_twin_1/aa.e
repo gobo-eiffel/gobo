@@ -25,5 +25,4 @@ feature
 			print ("b2.value = " + b2.value.out + "%N")
 		end
 
-
 end
