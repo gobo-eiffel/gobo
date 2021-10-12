@@ -1,0 +1,11 @@
+## copy expected
+DD copied
+## copy expected
+DD copied
+##
+c.value = 2
+t.v.value = 2
+c.value = 3
+t.v.value = 2
+c.value = 3
+t.v.value = 4

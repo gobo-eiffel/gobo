@@ -1,0 +1,7 @@
+## copy expected
+DD copied
+##
+d.value = 2
+a.area.item (0).value = 2
+d.value = 3
+a.area.item (0).value = 2
