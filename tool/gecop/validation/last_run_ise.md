@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     288 tests
-    # FAILED:     117 tests
+    # Passed:     295 tests
+    # FAILED:     122 tests
     # Aborted:    0 test
-    # Total:      405 tests
+    # Total:      417 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo/test\_tilde\_1](definition/difo/test\_tilde\_1)\] test\_failed</br>
@@ -51,6 +51,11 @@ FAIL:  \[[semantics/mugc2/test\_agent\_closed\_target\_2](semantics/mugc2/test\_
 FAIL:  \[[semantics/mugc2/test\_agent\_open\_target\_1](semantics/mugc2/test\_agent\_open\_target\_1)\] test\_failed</br>
 FAIL:  \[[semantics/mugc2/test\_agent\_open\_target\_2](semantics/mugc2/test\_agent\_open\_target\_2)\] test\_failed</br>
 FAIL:  \[[semantics/mugc2/test\_agent\_open\_target\_3](semantics/mugc2/test\_agent\_open\_target\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_once\_per\_object\_target\_1](semantics/mugc2/test\_once\_per\_object\_target\_1)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_once\_per\_object\_target\_2](semantics/mugc2/test\_once\_per\_object\_target\_2)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_once\_per\_object\_target\_3](semantics/mugc2/test\_once\_per\_object\_target\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_once\_per\_process\_target\_3](semantics/mugc2/test\_once\_per\_process\_target\_3)\] test\_failed</br>
+FAIL:  \[[semantics/mugc2/test\_once\_per\_thread\_target\_3](semantics/mugc2/test\_once\_per\_thread\_target\_3)\] test\_failed</br>
 FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_4](semantics/mugc2/test\_qualified\_attribute\_target\_4)\] test\_failed</br>
 FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_5](semantics/mugc2/test\_qualified\_attribute\_target\_5)\] test\_failed</br>
 FAIL:  \[[semantics/mugc2/test\_qualified\_attribute\_target\_6](semantics/mugc2/test\_qualified\_attribute\_target\_6)\] test\_failed</br>
