@@ -8,11 +8,5 @@ feature
 		do
 			value := i
 		end
-
-	f
-		do
-			value := value + 1
-			print ("value = " + value.out + "%N")
-		end
-
+		
 end

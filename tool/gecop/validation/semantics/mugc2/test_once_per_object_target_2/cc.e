@@ -4,7 +4,7 @@ inherit
 
 	BB
 		redefine
-			copy
+				copy
 		end
 
 feature

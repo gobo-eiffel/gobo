@@ -77,7 +77,7 @@ feature -- Status report
 
 	has_field_access (a_system: ET_DYNAMIC_SYSTEM): BOOLEAN
 			-- Is one of the possible dynamic features of current call either
-			-- an attribute, a tuple label or a "SPECIAL" item?
+			-- an attribute, a tuple label, a "SPECIAL" item or a once function?
 		local
 			l_target_type_set: like target_type_set
 			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
@@ -93,6 +93,10 @@ feature -- Status report
 					if not attached dynamic_feature (l_dynamic_type, a_system) as l_dynamic_feature then
 						-- No feature found.
 					elseif l_dynamic_feature.is_builtin_special_item then
+						Result := True
+							-- Jump out of the loop.
+						i := nb + 1
+					elseif l_dynamic_feature.is_once then
 						Result := True
 							-- Jump out of the loop.
 						i := nb + 1

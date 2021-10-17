@@ -5873,7 +5873,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_argument_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
-			l_once_feature: ET_FEATURE
 			i, nb_args: INTEGER
 			old_file: KI_TEXT_OUTPUT_STREAM
 			l_name: ET_IDENTIFIER
@@ -6037,21 +6036,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				l_is_once_per_thread := a_feature.is_once_per_thread
 				l_is_once_per_object := a_feature.is_once_per_object
 				if l_is_once_per_process or l_is_once_per_thread then
-					l_once_feature := a_feature.implementation_feature
+					register_once_feature (current_feature)
+					l_once_index := once_features.value (a_feature.implementation_feature)
 					l_once_kind := once_kind (current_feature)
-					once_features.search (l_once_feature)
-					if once_features.found then
-						l_once_index := once_features.found_item
-					else
-						if not multithreaded_mode or else l_is_once_per_process then
-							l_once_index := once_per_process_counts.item (l_once_kind)
-							once_per_process_counts.put (l_once_index + 1, l_once_kind)
-						else
-							l_once_index := once_per_thread_counts.item (l_once_kind)
-							once_per_thread_counts.put (l_once_index + 1, l_once_kind)
-						end
-						once_features.force_last (l_once_index, l_once_feature)
-					end
 				end
 				if l_is_once_per_object then
 						-- Create once-per-object data for 'Current' object if not created yet.
@@ -6310,11 +6297,12 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
 						-- to the once-function should return the value of 'Result' as it
 						-- was when the recursive calls occurred.
-						-- There is a special treatment for once functions of non-basic
-						-- expanded types because a boxed version of the Result (and not
-						-- the Result itself) is kept in the 'GE_onces' C struct. So we
-						-- used the content of the boxed value in place of Result
-						-- in case its fields get modified. (See `print_result'.)
+						-- There is a special treatment for once-per-process and once-per-thread
+						-- functions of non-basic expanded types because a boxed version of the
+						-- Result (and not the Result itself) is kept in the 'GE_onces' C struct.
+						-- So we usede the content of the boxed value in place of Result
+						-- in case its fields get modified. Likewise for once-per-object functions
+						-- even though the Result is not boxed in that case. (See `print_result'.)
 						-- Set it back to Result here.
 					print_assign_once_value_to_result (current_feature, l_once_kind, l_once_index)
 				end
@@ -6987,11 +6975,12 @@ feature {NONE} -- Instruction generation
 					-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
 					-- to the once-function should return the value of 'Result' as it
 					-- was when the recursive calls occurred.
-					-- There is a special treatment for once functions of non-basic
-					-- expanded types because a boxed version of the Result (and not
-					-- the Result itself) is kept in the 'GE_onces' C struct. So we
-					-- need to use the content of the boxed value in place of Result
-					-- in case its fields get modified. (See `print_result'.)
+					-- There is a special treatment for once-per-process and once-per-thread
+					-- functions of non-basic expanded types because a boxed version of the
+					-- Result (and not the Result itself) is kept in the 'GE_onces' C struct.
+					-- So we need to use the content of the boxed value in place of Result
+					-- in case its fields get modified. Likewise for once-per-object functions
+					-- even though the Result is not boxed in that case. (See `print_result'.)
 				if l_target.is_result and then not (l_target_type.is_expanded and then not l_target_type.is_basic) then
 					once_features.search (current_feature.static_feature.implementation_feature)
 					if once_features.found then
@@ -7262,11 +7251,12 @@ feature {NONE} -- Instruction generation
 					-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
 					-- to the once-function should return the value of 'Result' as it
 					-- was when the recursive calls occurred.
-					-- There is a special treatment for once functions of non-basic
-					-- expanded types because a boxed version of the Result (and not
-					-- the Result itself) is kept in the 'GE_onces' C struct. So we
-					-- need to use the content of the boxed value in place of Result
-					-- in case its fields get modified. (See `print_result'.)
+					-- There is a special treatment for once-per-process and once-per-thread
+					-- functions of non-basic expanded types because a boxed version of the
+					-- Result (and not the Result itself) is kept in the 'GE_onces' C struct.
+					-- So we need to use the content of the boxed value in place of Result
+					-- in case its fields get modified. Likewise for once-per-object functions.
+					-- even though the Result is not boxed in that case. (See `print_result'.)
 				if l_target.is_result and then not (l_target_type.is_expanded and then not l_target_type.is_basic) then
 					once_features.search (current_feature.static_feature.implementation_feature)
 					if once_features.found then
@@ -7433,11 +7423,12 @@ feature {NONE} -- Instruction generation
 					-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
 					-- to the once-function should return the value of 'Result' as it
 					-- was when the recursive calls occurred.
-					-- There is a special treatment for once functions of non-basic
-					-- expanded types because a boxed version of the Result (and not
-					-- the Result itself) is kept in the 'GE_onces' C struct. So we
-					-- need to use the content of the boxed value in place of Result
-					-- in case its fields get modified. (See `print_result'.)
+					-- There is a special treatment for once-per-process and once-per-thread
+					-- functions of non-basic expanded types because a boxed version of the
+					-- Result (and not the Result itself) is kept in the 'GE_onces' C struct.
+					-- So we need to use the content of the boxed value in place of Result
+					-- in case its fields get modified. Likewise for once-per-object functions.
+					-- even though the Result is not boxed in that case. (See `print_result'.)
 				if l_target.is_result and then not (l_static_type.is_expanded and then not l_static_type.is_basic) then
 					once_features.search (current_feature.static_feature.implementation_feature)
 					if once_features.found then
@@ -9257,7 +9248,6 @@ feature {NONE} -- Expression generation
 				if l_source_type.is_expanded then
 						-- We need to box the object, but without triggering a call to
 						-- 'copy' (it will be called during subsequent attachment).
--- TODO: 'geboxed' will trigger a call to 'copy'. We should avoid that.
 					if a_use_boxed_pointer then
 						current_file.put_string (c_ge_boxed_pointer)
 						current_file.put_integer (l_source_type.id)
@@ -13016,10 +13006,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 				(l_dynamic_call = Void or else l_dynamic_call.has_field_access (current_dynamic_system))
 			then
 					-- We want the result to be boxed even though the result static type is expanded.
-					-- This is needed when the call is an attribute, tuple label or "SPECIAL"
-					-- item, the call result type is expanded, and it is the target of another call.
-					-- In that case we force the result type to be of reference type in order
-					-- to force the boxing of the result so that the other call is applied on
+					-- This is needed when the call is an attribute, tuple label, "SPECIAL" item or
+					-- a once function, the call result type is expanded, and it is the target of
+					-- another call. In that case we force the result type to be of reference type in
+					-- order to force the boxing of the result so that the other call is applied on
 					-- the result object itself and not on a clone of this object.
 					-- Note that for optimization we don't force boxing when the type is a basic
 					-- type unless the result object is the target of a procedure call (e.g.
@@ -13427,29 +13417,35 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 								-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
 								-- to the once-function should return the value of 'Result' as it
 								-- was when the recursive calls occurred.
-								-- There is a special treatment for once functions of non-basic
-								-- expanded types because a boxed version of the Result (and not
-								-- the Result itself) is kept in the 'GE_onces' C struct. So we
-								-- need to use the content of the boxed value in place of Result
-								-- in case its fields get modified.
+								-- There is a special treatment for once-per-process and once-per-thread
+								-- functions of non-basic expanded types because a boxed version of the
+								-- Result (and not the Result itself) is kept in the 'GE_onces' C struct.
+								-- So we need to use the content of the boxed value in place of Result
+								-- in case its fields get modified. Likewise for once-per-object functions
+								-- even though the Result is not boxed in that case.
 							if not l_static_type.is_basic then
-								once_features.search (current_feature.static_feature.implementation_feature)
-								if once_features.found then
-									l_once_index := once_features.found_item
-									l_once_kind := once_kind (current_feature)
+								if current_feature.is_once_per_object then
+									current_file.put_character ('&')
+									print_once_value (current_feature, 0, 0)
+								else
+									once_features.search (current_feature.static_feature.implementation_feature)
+									if once_features.found then
+										l_once_index := once_features.found_item
+										l_once_kind := once_kind (current_feature)
+									end
+										-- The once value has been boxed.
+										-- It needs to be unboxed.
+									current_file.put_character ('(')
+									current_file.put_character ('(')
+									print_boxed_type_cast (l_static_type, current_file)
+									current_file.put_character ('(')
+									print_once_value (current_feature, l_once_kind, l_once_index)
+									current_file.put_character (')')
+									current_file.put_character (')')
+									current_file.put_string (c_arrow)
+									print_boxed_attribute_pointer_name (l_static_type, current_file)
+									current_file.put_character (')')
 								end
-									-- The once value has been boxed.
-									-- It needs to be unboxed.
-								current_file.put_character ('(')
-								current_file.put_character ('(')
-								print_boxed_type_cast (l_static_type, current_file)
-								current_file.put_character ('(')
-								print_once_value (current_feature, l_once_kind, l_once_index)
-								current_file.put_character (')')
-								current_file.put_character (')')
-								current_file.put_string (c_arrow)
-								print_boxed_attribute_pointer_name (l_static_type, current_file)
-								current_file.put_character (')')
 							else
 								current_file.put_character ('&')
 								print_result_name (current_file)
@@ -13471,29 +13467,34 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 						-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
 						-- to the once-function should return the value of 'Result' as it
 						-- was when the recursive calls occurred.
-						-- There is a special treatment for once functions of non-basic
-						-- expanded types because a boxed version of the Result (and not
-						-- the Result itself) is kept in the 'GE_onces' C struct. So we
-						-- need to use the content of the boxed value in place of Result
-						-- in case its fields get modified.
+						-- There is a special treatment for once-per-process and once-per-thread
+						-- functions of non-basic expanded types because a boxed version of the
+						-- Result (and not the Result itself) is kept in the 'GE_onces' C struct.
+						-- So we need to use the content of the boxed value in place of Result
+						-- in case its fields get modified. Likewise for once-per-object functions
+						-- even though the Result is not boxed in that case.
 					l_dynamic_type_set := dynamic_type_set (an_expression)
 					l_static_type := l_dynamic_type_set.static_type.primary_type
 					if l_static_type.is_expanded and then not l_static_type.is_basic then
-						once_features.search (current_feature.static_feature.implementation_feature)
-						if once_features.found then
-							l_once_index := once_features.found_item
-							l_once_kind := once_kind (current_feature)
+						if current_feature.is_once_per_object then
+							print_once_value (current_feature, 0, 0)
+						else
+							once_features.search (current_feature.static_feature.implementation_feature)
+							if once_features.found then
+								l_once_index := once_features.found_item
+								l_once_kind := once_kind (current_feature)
+							end
+								-- The once value has been boxed.
+								-- It needs to be unboxed.
+							current_file.put_character ('(')
+							print_boxed_type_cast (l_static_type, current_file)
+							current_file.put_character ('(')
+							print_once_value (current_feature, l_once_kind, l_once_index)
+							current_file.put_character (')')
+							current_file.put_character (')')
+							current_file.put_string (c_arrow)
+							print_boxed_attribute_item_name (l_static_type, current_file)
 						end
-							-- The once value has been boxed.
-							-- It needs to be unboxed.
-						current_file.put_character ('(')
-						print_boxed_type_cast (l_static_type, current_file)
-						current_file.put_character ('(')
-						print_once_value (current_feature, l_once_kind, l_once_index)
-						current_file.put_character (')')
-						current_file.put_character (')')
-						current_file.put_string (c_arrow)
-						print_boxed_attribute_item_name (l_static_type, current_file)
 					else
 						print_result_name (current_file)
 					end
@@ -13562,41 +13563,45 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					error_handler.report_giaaa_error
 				elseif l_result_type_set.is_expanded then
 					print_type_cast (l_pointer_type, current_file)
-					current_file.put_character ('&')
 					if current_agent = Void and then current_feature.is_once then
 							-- Make sure that if a once-function is called
 							-- recursively, the semantics specified by ECMA will be satisfied.
 							-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
 							-- to the once-function should return the value of 'Result' as it
 							-- was when the recursive calls occurred.
-							-- There is a special treatment for once functions of non-basic
-							-- expanded types because a boxed version of the Result (and not
-							-- the Result itself) is kept in the 'GE_onces' C struct. So we
-							-- need to use the content of the boxed value in place of Result
-							-- in case its fields get modified.
+							-- There is a special treatment for once-per-process and once-per-thread
+							-- functions of non-basic expanded types because a boxed version of the
+							-- Result (and not the Result itself) is kept in the 'GE_onces' C struct.
+							-- So we need to use the content of the boxed value in place of Result
+							-- in case its fields get modified. Likewise for once-per-object functions
+							-- even though the Result is not boxed in that case.
 						l_static_type := l_result_type_set.static_type.primary_type
 						if not l_static_type.is_basic then
-							once_features.search (current_feature.static_feature.implementation_feature)
-							if once_features.found then
-								l_once_index := once_features.found_item
-								l_once_kind := once_kind (current_feature)
+							if current_feature.is_once_per_object then
+								current_file.put_character ('&')
+								print_once_value (current_feature, 0, 0)
+							else
+								once_features.search (current_feature.static_feature.implementation_feature)
+								if once_features.found then
+									l_once_index := once_features.found_item
+									l_once_kind := once_kind (current_feature)
+								end									-- The once value has been boxed.
+									-- It needs to be unboxed.
+								current_file.put_character ('(')
+								print_boxed_type_cast (l_static_type, current_file)
+								current_file.put_character ('(')
+								print_once_value (current_feature, l_once_kind, l_once_index)
+								current_file.put_character (')')
+								current_file.put_character (')')
+								current_file.put_string (c_arrow)
+								print_boxed_attribute_pointer_name (l_static_type, current_file)
 							end
-								-- The once value has been boxed.
-								-- It needs to be unboxed.
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							print_boxed_type_cast (l_static_type, current_file)
-							current_file.put_character ('(')
-							print_once_value (current_feature, l_once_kind, l_once_index)
-							current_file.put_character (')')
-							current_file.put_character (')')
-							current_file.put_string (c_arrow)
-							print_boxed_attribute_item_name (l_static_type, current_file)
-							current_file.put_character (')')
 						else
+							current_file.put_character ('&')
 							print_result_name (current_file)
 						end
 					else
+						current_file.put_character ('&')
 						print_result_name (current_file)
 					end
 				elseif attached l_result_type_set.special_type as l_special_type then
@@ -14139,16 +14144,16 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 					else
 						if
 							in_call_target and then
-							l_dynamic_feature.is_builtin_special_item and then
+							(l_dynamic_feature.is_builtin_special_item or l_dynamic_feature.is_once) and then
 							l_call_type.is_expanded and then
 							(not l_call_type.is_basic or else in_procedure_call_target)
 						then
 								-- We want the result be boxed even though the result static type is expanded.
-								-- This is needed when the call is a "SPECIAL" item, the call result type is
-								-- expanded, and it is the target of another call. In that case we force the
-								-- result type to be of reference type in order to force the boxing of the
-								-- result so that the other call is applied on the result object itself and not
-								-- on a copy of this object.
+								-- This is needed when the call is a "SPECIAL" item or a once function, the call
+								-- result type is expanded, and it is the target of another call. In that case we
+								-- force the result type to be of reference type in order to force the boxing of
+								-- the result so that the other call is applied on the result object itself and
+								-- not on a copy of this object.
 								-- Note that for optimization we don't force boxing when the type is a basic
 								-- type unless the result object is the target of a procedure call (e.g.
 								-- 'copy', 'standard_copy' or 'set_item' which will overwrite the value of
@@ -14238,6 +14243,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 							-- But the corresponding generated function for 'clone' will
 							-- be declared to return an ANY. Hence the need for a call
 							-- to `print_adapted_query_call' in this case.
+							-- There is also the case when `l_force_result_boxing' is True.
 						print_adapted_query_call (l_dynamic_feature, current_type, l_call_type, False)
 						if in_operand then
 							current_file.put_character (')')
@@ -15424,16 +15430,47 @@ feature {NONE} -- Query call generation
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_static_query: ET_FEATURE
-			l_target: ET_EXPRESSION
+			l_use_boxed_pointer: BOOLEAN
 		do
 			l_static_query := a_feature.static_feature
+			if attached {ET_EXTENDED_ATTRIBUTE} l_static_query as l_extended_attribute then
+				print_adapted_extended_attribute_call (a_feature, l_extended_attribute, a_target_type, a_result_type, a_check_void_target)
+			elseif a_feature.is_once then
+				print_adapted_once_function_call (a_feature, a_target_type, a_result_type, a_check_void_target)
+			elseif not attached a_feature.result_type_set as l_query_type_set then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_use_boxed_pointer := in_call_target and then (attached {ET_ATTRIBUTE} l_static_query or a_feature.is_builtin_special_item)
+				print_adapted_expression_with_agent (agent print_query_call (a_feature, a_target_type, a_check_void_target), l_query_type_set, a_result_type, l_use_boxed_pointer)
+			end
+		end
+
+	print_adapted_extended_attribute_call (a_feature: ET_DYNAMIC_FEATURE; a_static_feature: ET_EXTENDED_ATTRIBUTE; a_target_type, a_result_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to extended attribute `a_feature' (static binding).
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- `a_result_type' is the static type of the result expected by the caller,
+			-- used to adapt the result of the query if needed (see header comment of
+			-- `print_adapted_expression_with_agent' for details).
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_query: a_feature.is_query
+			a_static_feature: a_static_feature = a_feature.static_feature
+			a_target_type_not_void: a_target_type /= Void
+			a_result_type_not_void: a_result_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_target: ET_EXPRESSION
+		do
 			if not attached a_feature.result_type_set as l_query_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			elseif
-				attached {ET_EXTENDED_ATTRIBUTE} l_static_query as l_extended_attribute and then
-				l_extended_attribute.has_self_initializing_code and then
+				a_static_feature.has_self_initializing_code and then
 				not l_query_type_set.static_type.is_self_initializing
 			then
 					-- Note: If there is no attribute initialization code, then
@@ -15450,11 +15487,54 @@ feature {NONE} -- Query call generation
 					-- Then return the attribute (or its address if it is the target of another call).
 				print_adapted_expression_with_agent (agent print_adapted_attribute_access (a_feature, l_target, a_target_type, a_check_void_target), l_query_type_set, a_result_type, in_call_target)
 				current_file.put_character (')')
-			elseif
-				attached {ET_ATTRIBUTE} l_static_query or
-				a_feature.is_builtin_special_item
-			then
+			else
 				print_adapted_expression_with_agent (agent print_query_call (a_feature, a_target_type, a_check_void_target), l_query_type_set, a_result_type, in_call_target)
+			end
+		end
+
+	print_adapted_once_function_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type, a_result_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to once function `a_feature' (static binding).
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- `a_result_type' is the static type of the result expected by the caller,
+			-- used to adapt the result of the once function if needed (see header comment of
+			-- `print_adapted_expression_with_agent' for details).
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_query: a_feature.is_query
+			a_feature_is_once: a_feature.is_once
+			a_target_type_not_void: a_target_type /= Void
+			a_result_type_not_void: a_result_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_once_index: INTEGER
+			l_once_kind: INTEGER
+		do
+			if not attached a_feature.result_type_set as l_query_type_set then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_query_type_set.is_expanded and then not a_result_type.is_expanded then
+				current_file.put_character ('(')
+					-- Call the once function in order to be sure that it have been executed at least once.
+				print_query_call (a_feature, a_target_type, a_check_void_target)
+				print_comma
+					-- Then return the boxed value.
+				register_once_feature (a_feature)
+				once_features.search (a_feature.static_feature.implementation_feature)
+				if once_features.found then
+					l_once_index := once_features.found_item
+					l_once_kind := once_kind (a_feature)
+				end
+				if a_feature.is_once_per_object or l_query_type_set.static_type.is_basic then
+					print_adapted_expression_with_agent (agent print_once_value (a_feature, l_once_kind, l_once_index), l_query_type_set, a_result_type, in_call_target)
+				else
+						-- Note that for once-per-process and once-per-thread functions with
+						-- non-basic expanded types, the value is already boxed.
+					print_once_value (a_feature, l_once_kind, l_once_index)
+				end
+				current_file.put_character (')')
 			else
 				print_adapted_expression_with_agent (agent print_query_call (a_feature, a_target_type, a_check_void_target), l_query_type_set, a_result_type, False)
 			end
@@ -33280,7 +33360,7 @@ feature {NONE} -- Once feature generation
 				current_file.put_character ('=')
 				current_file.put_character (' ')
 				l_result_type := l_result_type_set.static_type.primary_type
-				if l_result_type.is_expanded and then not l_result_type.is_basic then
+				if not a_feature.is_once_per_object and then l_result_type.is_expanded and then not l_result_type.is_basic then
 						-- The value needs to be boxed.
 					current_file.put_string (c_ge_boxed)
 					current_file.put_integer (l_result_type.id)
@@ -33351,7 +33431,7 @@ feature {NONE} -- Once feature generation
 				current_file.put_character ('=')
 				current_file.put_character (' ')
 				l_result_type := l_result_type_set.static_type.primary_type
-				if l_result_type.is_expanded and then not l_result_type.is_basic then
+				if not a_feature.is_once_per_object and then l_result_type.is_expanded and then not l_result_type.is_basic then
 						-- The value has been boxed.
 						-- It needs to be unboxed.
 					current_file.put_character ('(')
@@ -33389,7 +33469,7 @@ feature {NONE} -- Once feature generation
 			if attached a_feature.result_type_set as l_result_type_set then
 				current_file.put_character (' ')
 				l_result_type := l_result_type_set.static_type.primary_type
-				if l_result_type.is_expanded and then not l_result_type.is_basic then
+				if not a_feature.is_once_per_object and then l_result_type.is_expanded and then not l_result_type.is_basic then
 						-- The value has been boxed.
 						-- It needs to be unboxed.
 					current_file.put_character ('(')
@@ -33711,6 +33791,7 @@ feature {NONE} -- Once feature generation
 			current_file.put_character (';')
 			current_file.put_new_line
 		end
+
 feature {NONE} -- Type generation
 
 	sort_types
@@ -38901,7 +38982,42 @@ feature {NONE} -- Once features
 
 	once_features: DS_HASH_TABLE [INTEGER, ET_FEATURE]
 			-- Once-per-process or once-per-thread features already generated,
-			-- with their indexes in 'GE_onces' C struct's arrays
+			-- with their indexes in 'GE_onces' C struct's arrays.
+			-- The key is the implementation feature of the once feature.
+
+	register_once_feature (a_feature: ET_DYNAMIC_FEATURE)
+			-- Register `a_feature' in `once_features' if it's a once-per-process
+			-- on once-per-thread feature.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_once: a_feature.is_once
+		local
+			l_once_feature: ET_FEATURE
+			l_is_once_per_process: BOOLEAN
+			l_is_once_per_thread: BOOLEAN
+			l_once_kind: INTEGER
+			l_once_index: INTEGER
+		do
+			l_is_once_per_process := a_feature.is_once_per_process
+			l_is_once_per_thread := a_feature.is_once_per_thread
+			if l_is_once_per_process or l_is_once_per_thread then
+				l_once_feature := a_feature.static_feature.implementation_feature
+				once_features.search (l_once_feature)
+				if not once_features.found then
+					l_once_kind := once_kind (a_feature)
+					if not multithreaded_mode or else l_is_once_per_process then
+						l_once_index := once_per_process_counts.item (l_once_kind)
+						once_per_process_counts.put (l_once_index + 1, l_once_kind)
+					else
+						l_once_index := once_per_thread_counts.item (l_once_kind)
+						once_per_thread_counts.put (l_once_index + 1, l_once_kind)
+					end
+					once_features.force_last (l_once_index, l_once_feature)
+				end
+			end
+		ensure
+			registered: (a_feature.is_once_per_process or a_feature.is_once_per_thread) implies once_features.has (a_feature.static_feature.implementation_feature)
+		end
 
 	once_kind (a_feature: ET_DYNAMIC_FEATURE): INTEGER
 			-- Once kind of `a_feature' in 'GE_onces' C struct,
