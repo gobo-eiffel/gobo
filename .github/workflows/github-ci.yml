@@ -10,9 +10,10 @@ jobs:
 
   linux_build_ge:
     runs-on: ubuntu-latest
-    env:
-      GOBO: $GITHUB_WORKSPACE
     steps:
+      - name: before_script1
+        run: |
+          export GOBO=$GITHUB_WORKSPACE
       - name: before_script
         run: |
           echo $GITHUB_WORKSPACE
@@ -44,11 +45,10 @@ jobs:
   library_linux_test_ge:
     runs-on: ubuntu-latest
     needs: linux_build_ge
-    env:
-      GOBO: $GITHUB_WORKSPACE
     steps:
       - name: before_script
         run: |
+          export GOBO=$GITHUB_WORKSPACE
           cat /etc/*-release
           arch
           gcc --version
