@@ -1,0 +1,89 @@
+name: Continuous Integration
+
+on: [push, pull_request]
+
+env:
+  GOBO: $GITHUB_WORKSPACE
+
+jobs:
+
+#
+# Build Gobo tools.
+#
+
+  linux_build_ge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: before_script
+        run: |
+          cat /etc/*-release
+	  arch
+          gcc --version
+      - uses: actions/checkout@v2
+      - name: build
+        run: |
+          $GOBO/bin/install.sh -v gcc
+	  export PATH=$PATH:$GOBO/bin
+          gec --version
+      - uses: actions/upload-artifact@v2
+        with:
+          name: gobo_bin
+          path: $GOBO/bin/
+          retention-days: 1
+      - uses: actions/upload-artifact@v2
+        with:
+          name: gobo_c_config
+          path: $GOBO/tool/gec/config/c/default.cfg
+          retention-days: 1
+
+#
+# Running tests with Gobo Eiffel.
+#
+
+  library_linux_test_ge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: before_script
+        run: |
+          cat /etc/*-release
+	  arch
+          gcc --version
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: gobo_bin
+      - uses: actions/download-artifact@v2
+        with:
+          name: gobo_c_config
+      - name: install_ge
+        run: |
+          export PATH=$PATH:$GOBO/bin
+          gec --version
+      - name: test
+        run: |
+          cd $GOBO/library
+          geant test_ge
+
+  tool_linux_test_ge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: before_script
+        run: |
+          cat /etc/*-release
+	  arch
+          gcc --version
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: gobo_bin
+      - uses: actions/download-artifact@v2
+        with:
+          name: gobo_c_config
+      - name: install_ge
+        run: |
+          export PATH=$PATH:$GOBO/bin
+          gec --version
+      - name: test
+        run: |
+          cd $GOBO/tool
+          geant test_ge
