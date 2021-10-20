@@ -51,15 +51,15 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: gobo_bin
+          path: bin
       - uses: actions/download-artifact@v2
         with:
           name: gobo_c_config
+          path: tool/gec/config/c
       - name: test
         run: |
           export GOBO=$GITHUB_WORKSPACE
           export PATH=$PATH:$GOBO/bin
-          ls $GOBO
-          ls $GOBO/bin
           gec --version
           cd $GOBO/library
           geant test_ge
@@ -77,9 +77,11 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: gobo_bin
+          path: bin
       - uses: actions/download-artifact@v2
         with:
           name: gobo_c_config
+          path: tool/gec/config/c
       - name: test
         run: |
           export GOBO=$GITHUB_WORKSPACE
