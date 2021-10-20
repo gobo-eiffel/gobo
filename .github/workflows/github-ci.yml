@@ -58,6 +58,8 @@ jobs:
         run: |
           export GOBO=$GITHUB_WORKSPACE
           export PATH=$PATH:$GOBO/bin
+          ls $GOBO
+          ls $GOBO/bin
           gec --version
           cd $GOBO/library
           geant test_ge
