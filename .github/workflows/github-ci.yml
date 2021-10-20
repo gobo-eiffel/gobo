@@ -2,9 +2,6 @@ name: Continuous Integration
 
 on: [push, pull_request]
 
-env:
-  GOBO: ${{env.GITHUB_WORKSPACE}}
-
 jobs:
 
 #
@@ -13,6 +10,8 @@ jobs:
 
   linux_build_ge:
     runs-on: ubuntu-latest
+    env:
+      GOBO: ${{env.GITHUB_WORKSPACE}}
     steps:
       - name: before_script
         run: |
@@ -45,6 +44,8 @@ jobs:
   library_linux_test_ge:
     runs-on: ubuntu-latest
     needs: linux_build_ge
+    env:
+      GOBO: ${{env.GITHUB_WORKSPACE}}
     steps:
       - name: before_script
         run: |
@@ -70,6 +71,8 @@ jobs:
   tool_linux_test_ge:
     runs-on: ubuntu-latest
     needs: linux_build_ge
+    env:
+      GOBO: ${{env.GITHUB_WORKSPACE}}
     steps:
       - name: before_script
         run: |
