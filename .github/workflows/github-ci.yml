@@ -3,7 +3,7 @@ name: Continuous Integration
 on: [push, pull_request]
 
 env:
-  GOBO: $GITHUB_WORKSPACE
+  GOBO: ${{env.GITHUB_WORKSPACE}}
 
 jobs:
 
