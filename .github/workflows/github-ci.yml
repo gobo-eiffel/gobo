@@ -23,7 +23,7 @@ jobs:
       - name: build
         run: |
           $GOBO/bin/install.sh -v gcc
-	  export PATH=$PATH:$GOBO/bin
+          export PATH=$PATH:$GOBO/bin
           gec --version
       - uses: actions/upload-artifact@v2
         with:
