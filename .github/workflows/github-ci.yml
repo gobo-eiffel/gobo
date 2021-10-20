@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: linux_build_ge
     env:
-      GOBO: ${{env.GITHUB_WORKSPACE}}
+      GOBO: $GITHUB_WORKSPACE
     steps:
       - name: before_script
         run: |
@@ -72,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: linux_build_ge
     env:
-      GOBO: ${{env.GITHUB_WORKSPACE}}
+      GOBO: $GITHUB_WORKSPACE
     steps:
       - name: before_script
         run: |
