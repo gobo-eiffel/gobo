@@ -11,31 +11,27 @@ jobs:
   linux_build_ge:
     runs-on: ubuntu-latest
     steps:
-      - name: before_script1
-        run: |
-          export GOBO=$GITHUB_WORKSPACE
       - name: before_script
         run: |
-          echo $GITHUB_WORKSPACE
-          echo $GOBO
           cat /etc/*-release
           arch
           gcc --version
       - uses: actions/checkout@v2
       - name: build
         run: |
+          export GOBO=$GITHUB_WORKSPACE
           $GOBO/bin/install.sh -v gcc
           export PATH=$PATH:$GOBO/bin
           gec --version
       - uses: actions/upload-artifact@v2
         with:
           name: gobo_bin
-          path: $GOBO/bin/
+          path: $GITHUB_WORKSPACE/bin/
           retention-days: 1
       - uses: actions/upload-artifact@v2
         with:
           name: gobo_c_config
-          path: $GOBO/tool/gec/config/c/default.cfg
+          path: $GITHUB_WORKSPACE/tool/gec/config/c/default.cfg
           retention-days: 1
 
 #
@@ -48,7 +44,6 @@ jobs:
     steps:
       - name: before_script
         run: |
-          export GOBO=$GITHUB_WORKSPACE
           cat /etc/*-release
           arch
           gcc --version
@@ -59,20 +54,17 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: gobo_c_config
-      - name: install_ge
-        run: |
-          export PATH=$PATH:$GOBO/bin
-          gec --version
       - name: test
         run: |
+          export GOBO=$GITHUB_WORKSPACE
+          export PATH=$PATH:$GOBO/bin
+          gec --version
           cd $GOBO/library
           geant test_ge
 
   tool_linux_test_ge:
     runs-on: ubuntu-latest
     needs: linux_build_ge
-    env:
-      GOBO: $GITHUB_WORKSPACE
     steps:
       - name: before_script
         run: |
@@ -86,11 +78,10 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: gobo_c_config
-      - name: install_ge
-        run: |
-          export PATH=$PATH:$GOBO/bin
-          gec --version
       - name: test
         run: |
+          export GOBO=$GITHUB_WORKSPACE
+          export PATH=$PATH:$GOBO/bin
+          gec --version
           cd $GOBO/tool
           geant test_ge
