@@ -17,7 +17,7 @@ jobs:
       - name: before_script
         run: |
           cat /etc/*-release
-	  arch
+          arch
           gcc --version
       - uses: actions/checkout@v2
       - name: build
@@ -46,7 +46,7 @@ jobs:
       - name: before_script
         run: |
           cat /etc/*-release
-	  arch
+          arch
           gcc --version
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
@@ -70,7 +70,7 @@ jobs:
       - name: before_script
         run: |
           cat /etc/*-release
-	  arch
+          arch
           gcc --version
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
