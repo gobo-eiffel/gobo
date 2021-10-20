@@ -26,12 +26,12 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: gobo_bin
-          path: $GITHUB_WORKSPACE/bin/
+          path: bin
           retention-days: 1
       - uses: actions/upload-artifact@v2
         with:
           name: gobo_c_config
-          path: $GITHUB_WORKSPACE/tool/gec/config/c/default.cfg
+          path: tool/gec/config/c/default.cfg
           retention-days: 1
 
 #
