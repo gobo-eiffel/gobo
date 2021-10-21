@@ -8,11 +8,9 @@ jobs:
 # Build Gobo tools.
 #
 
-  linux_ge_build:
-    runs-on: ${{ matrix.os }}
+  linux_build:
+    runs-on: ubuntu-latest
     strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v2
       - name: before_script
@@ -21,105 +19,91 @@ jobs:
         run: source .github/build_ge.sh
       - uses: actions/upload-artifact@v2
         with:
-          name: gobo_bin_$RUNNER_OS
+          name: gobo_bin_linux
           path: bin
           retention-days: 1
       - uses: actions/upload-artifact@v2
         with:
-          name: gobo_c_config_$RUNNER_OS
+          name: gobo_c_config_linux
+          path: tool/gec/config/c/default.cfg
+          retention-days: 1
+
+  macos_build:
+    runs-on: macos-latest
+    strategy:
+    steps:
+      - uses: actions/checkout@v2
+      - name: before_script
+        run: source .github/before_script.sh
+      - name: build
+        run: source .github/build_ge.sh
+      - uses: actions/upload-artifact@v2
+        with:
+          name: gobo_bin_macos
+          path: bin
+          retention-days: 1
+      - uses: actions/upload-artifact@v2
+        with:
+          name: gobo_c_config_macos
           path: tool/gec/config/c/default.cfg
           retention-days: 1
 
 #
-# Running tests with Gobo Eiffel.
+# Running tests.
 #
 
-  linux_ge_test_library:
+  linux_test:
     runs-on: ubuntu-latest
-    needs: linux_ge_build
+    needs: linux_build
+    strategy:
+      matrix:
+        eiffel_compiler: [ge, debug_ise]
+        system_under_test: [library, tool]
     steps:
       - uses: actions/checkout@v2
       - name: before_script
         run: source .github/before_script.sh
       - uses: actions/download-artifact@v2
         with:
-          name: gobo_bin_$RUNNER_OS
+          name: gobo_bin_linux
           path: bin
       - uses: actions/download-artifact@v2
         with:
-          name: gobo_c_config_$RUNNER_OS
+          name: gobo_c_config_linux
           path: tool/gec/config/c
       - name: test
         run: |
           source .github/install_ge.sh
-          cd $GOBO/library
-          geant test_ge
+          if [ ${{ matrix.eiffel_compiler }} = "debug_ise" ]; then
+            source $GOBO/.github/install_ise.sh
+          fi
+          cd $GOBO/${{ matrix.system_under_test }}
+          geant test_${{ matrix.eiffel_compiler }}
 
-  linux_ge_test_tool:
-    runs-on: ubuntu-latest
-    needs: linux_ge_build
+  macos_test:
+    runs-on: macos-latest
+    needs: macos_build
+    strategy:
+      matrix:
+        eiffel_compiler: [ge, debug_ise]
+        system_under_test: [library, tool]
     steps:
       - uses: actions/checkout@v2
       - name: before_script
         run: source .github/before_script.sh
       - uses: actions/download-artifact@v2
         with:
-          name: gobo_bin_$RUNNER_OS
+          name: gobo_bin_macos
           path: bin
       - uses: actions/download-artifact@v2
         with:
-          name: gobo_c_config_$RUNNER_OS
+          name: gobo_c_config_macos
           path: tool/gec/config/c
       - name: test
         run: |
           source .github/install_ge.sh
-          cd $GOBO/tool
-          geant test_ge
-
-#
-# Running tests with ISE Eiffel.
-#
-
-  linux_ise_test_library:
-    runs-on: ubuntu-latest
-    needs: linux_ge_build
-    steps:
-      - uses: actions/checkout@v2
-      - name: before_script
-        run: source .github/before_script.sh
-      - uses: actions/download-artifact@v2
-        with:
-          name: gobo_bin_$RUNNER_OS
-          path: bin
-      - uses: actions/download-artifact@v2
-        with:
-          name: gobo_c_config_$RUNNER_OS
-          path: tool/gec/config/c
-      - name: test
-        run: |
-          source .github/install_ge.sh
-          source $GOBO/.github/install_ise.sh
-          cd $GOBO/library
-          geant test_debug_ise
-
-  linux_ise_test_tool:
-    runs-on: ubuntu-latest
-    needs: linux_ge_build
-    steps:
-      - uses: actions/checkout@v2
-      - name: before_script
-        run: source .github/before_script.sh
-      - uses: actions/download-artifact@v2
-        with:
-          name: gobo_bin_$RUNNER_OS
-          path: bin
-      - uses: actions/download-artifact@v2
-        with:
-          name: gobo_c_config_$RUNNER_OS
-          path: tool/gec/config/c
-      - name: test
-        run: |
-          source .github/install_ge.sh
-          source $GOBO/.github/install_ise.sh
-          cd $GOBO/tool
-          geant test_debug_ise
+          if [ ${{ matrix.eiffel_compiler }} = "debug_ise" ]; then
+            source $GOBO/.github/install_ise.sh
+          fi
+          cd $GOBO/${{ matrix.system_under_test }}
+          geant test_${{ matrix.eiffel_compiler }}
