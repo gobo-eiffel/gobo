@@ -15,10 +15,10 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     steps:
       - name: before_script
-        run: source $GOBO/.github/before_script.sh
+        run: source .github/before_script.sh
       - uses: actions/checkout@v2
       - name: build
-        run: source $GOBO/.github/build_ge.sh
+        run: source .github/build_ge.sh
       - uses: actions/upload-artifact@v2
         with:
           name: gobo_bin_$RUNNER_OS
@@ -39,7 +39,7 @@ jobs:
     needs: linux_ge_build
     steps:
       - name: before_script
-        run: source $GOBO/.github/before_script.sh
+        run: source .github/before_script.sh
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
@@ -51,7 +51,7 @@ jobs:
           path: tool/gec/config/c
       - name: test
         run: |
-          source $GOBO/.github/install_ge.sh
+          source .github/install_ge.sh
           cd $GOBO/library
           geant test_ge
 
@@ -60,7 +60,7 @@ jobs:
     needs: linux_ge_build
     steps:
       - name: before_script
-        run: source $GOBO/.github/before_script.sh
+        run: source .github/before_script.sh
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
@@ -72,7 +72,7 @@ jobs:
           path: tool/gec/config/c
       - name: test
         run: |
-          source $GOBO/.github/install_ge.sh
+          source .github/install_ge.sh
           cd $GOBO/tool
           geant test_ge
 
@@ -85,7 +85,7 @@ jobs:
     needs: linux_ge_build
     steps:
       - name: before_script
-        run: source $GOBO/.github/before_script.sh
+        run: source .github/before_script.sh
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
@@ -97,7 +97,7 @@ jobs:
           path: tool/gec/config/c
       - name: test
         run: |
-          source $GOBO/.github/install_ge.sh
+          source .github/install_ge.sh
           source $GOBO/.github/install_ise.sh
           cd $GOBO/library
           geant test_debug_ise
@@ -107,7 +107,7 @@ jobs:
     needs: linux_ge_build
     steps:
       - name: before_script
-        run: source $GOBO/.github/before_script.sh
+        run: source .github/before_script.sh
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
@@ -119,7 +119,7 @@ jobs:
           path: tool/gec/config/c
       - name: test
         run: |
-          source $GOBO/.github/install_ge.sh
+          source .github/install_ge.sh
           source $GOBO/.github/install_ise.sh
           cd $GOBO/tool
           geant test_debug_ise
