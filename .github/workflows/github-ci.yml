@@ -91,3 +91,63 @@ jobs:
           gec --version
           cd $GOBO/tool
           geant test_ge
+
+#
+# Running tests with ISE Eiffel.
+#
+
+  library_linux_test_ise:
+    runs-on: ubuntu-latest
+    needs: linux_build_ge
+    steps:
+      - name: before_script
+        run: |
+          cat /etc/*-release
+          arch
+          gcc --version
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: gobo_bin
+          path: bin
+      - uses: actions/download-artifact@v2
+        with:
+          name: gobo_c_config
+          path: tool/gec/config/c
+      - name: test
+        run: |
+          export GOBO=$GITHUB_WORKSPACE
+          export PATH=$PATH:$GOBO/bin
+          chmod a+x $GOBO/bin/ge*
+          gec --version
+          source $GOBO/.github/install_ise.sh
+          cd $GOBO/library
+          geant test_debug_ise
+
+  tool_linux_test_ise:
+    runs-on: ubuntu-latest
+    needs: linux_build_ge
+    steps:
+      - name: before_script
+        run: |
+          cat /etc/*-release
+          arch
+          gcc --version
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: gobo_bin
+          path: bin
+      - uses: actions/download-artifact@v2
+        with:
+          name: gobo_c_config
+          path: tool/gec/config/c
+      - name: test
+        run: |
+          export GOBO=$GITHUB_WORKSPACE
+          export PATH=$PATH:$GOBO/bin
+          chmod a+x $GOBO/bin/ge*
+          gec --version
+          source $GOBO/.github/install_ise.sh
+          cd $GOBO/tool
+          geant test_debug_ise
