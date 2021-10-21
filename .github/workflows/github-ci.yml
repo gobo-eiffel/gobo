@@ -8,29 +8,25 @@ jobs:
 # Build Gobo tools.
 #
 
-  linux_build_ge:
-    runs-on: ubuntu-latest
+  linux_ge_build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
       - name: before_script
-        run: |
-          cat /etc/*-release
-          arch
-          gcc --version
+        run: source $GOBO/.github/before_script.sh
       - uses: actions/checkout@v2
       - name: build
-        run: |
-          export GOBO=$GITHUB_WORKSPACE
-          $GOBO/bin/install.sh -v gcc
-          export PATH=$PATH:$GOBO/bin
-          gec --version
+        run: source $GOBO/.github/build_ge.sh
       - uses: actions/upload-artifact@v2
         with:
-          name: gobo_bin
+          name: gobo_bin_$RUNNER_OS
           path: bin
           retention-days: 1
       - uses: actions/upload-artifact@v2
         with:
-          name: gobo_c_config
+          name: gobo_c_config_$RUNNER_OS
           path: tool/gec/config/c/default.cfg
           retention-days: 1
 
@@ -38,57 +34,45 @@ jobs:
 # Running tests with Gobo Eiffel.
 #
 
-  library_linux_test_ge:
+  linux_ge_test_library:
     runs-on: ubuntu-latest
-    needs: linux_build_ge
+    needs: linux_ge_build
     steps:
       - name: before_script
-        run: |
-          cat /etc/*-release
-          arch
-          gcc --version
+        run: source $GOBO/.github/before_script.sh
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
-          name: gobo_bin
+          name: gobo_bin_$RUNNER_OS
           path: bin
       - uses: actions/download-artifact@v2
         with:
-          name: gobo_c_config
+          name: gobo_c_config_$RUNNER_OS
           path: tool/gec/config/c
       - name: test
         run: |
-          export GOBO=$GITHUB_WORKSPACE
-          export PATH=$PATH:$GOBO/bin
-          chmod a+x $GOBO/bin/ge*
-          gec --version
+          source $GOBO/.github/install_ge.sh
           cd $GOBO/library
           geant test_ge
 
-  tool_linux_test_ge:
+  linux_ge_test_tool:
     runs-on: ubuntu-latest
-    needs: linux_build_ge
+    needs: linux_ge_build
     steps:
       - name: before_script
-        run: |
-          cat /etc/*-release
-          arch
-          gcc --version
+        run: source $GOBO/.github/before_script.sh
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
-          name: gobo_bin
+          name: gobo_bin_$RUNNER_OS
           path: bin
       - uses: actions/download-artifact@v2
         with:
-          name: gobo_c_config
+          name: gobo_c_config_$RUNNER_OS
           path: tool/gec/config/c
       - name: test
         run: |
-          export GOBO=$GITHUB_WORKSPACE
-          export PATH=$PATH:$GOBO/bin
-          chmod a+x $GOBO/bin/ge*
-          gec --version
+          source $GOBO/.github/install_ge.sh
           cd $GOBO/tool
           geant test_ge
 
@@ -96,58 +80,46 @@ jobs:
 # Running tests with ISE Eiffel.
 #
 
-  library_linux_test_ise:
+  linux_ise_test_library:
     runs-on: ubuntu-latest
-    needs: linux_build_ge
+    needs: linux_ge_build
     steps:
       - name: before_script
-        run: |
-          cat /etc/*-release
-          arch
-          gcc --version
+        run: source $GOBO/.github/before_script.sh
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
-          name: gobo_bin
+          name: gobo_bin_$RUNNER_OS
           path: bin
       - uses: actions/download-artifact@v2
         with:
-          name: gobo_c_config
+          name: gobo_c_config_$RUNNER_OS
           path: tool/gec/config/c
       - name: test
         run: |
-          export GOBO=$GITHUB_WORKSPACE
-          export PATH=$PATH:$GOBO/bin
-          chmod a+x $GOBO/bin/ge*
-          gec --version
+          source $GOBO/.github/install_ge.sh
           source $GOBO/.github/install_ise.sh
           cd $GOBO/library
           geant test_debug_ise
 
-  tool_linux_test_ise:
+  linux_ise_test_tool:
     runs-on: ubuntu-latest
-    needs: linux_build_ge
+    needs: linux_ge_build
     steps:
       - name: before_script
-        run: |
-          cat /etc/*-release
-          arch
-          gcc --version
+        run: source $GOBO/.github/before_script.sh
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
-          name: gobo_bin
+          name: gobo_bin_$RUNNER_OS
           path: bin
       - uses: actions/download-artifact@v2
         with:
-          name: gobo_c_config
+          name: gobo_c_config_$RUNNER_OS
           path: tool/gec/config/c
       - name: test
         run: |
-          export GOBO=$GITHUB_WORKSPACE
-          export PATH=$PATH:$GOBO/bin
-          chmod a+x $GOBO/bin/ge*
-          gec --version
+          source $GOBO/.github/install_ge.sh
           source $GOBO/.github/install_ise.sh
           cd $GOBO/tool
           geant test_debug_ise

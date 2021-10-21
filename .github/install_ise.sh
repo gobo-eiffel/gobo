@@ -3,7 +3,8 @@
 # Install ISE Eiffel (see https://www.eiffel.org/setup/)
 
 export GITHUB_ISE_VERSION=20.05_rev_104521
-export GITHUB_ISE_PLATFORM=linux-x86-64
+if [ "$RUNNER_OS" = "Linux" ]; then export GITHUB_ISE_PLATFORM=linux-x86-64; fi
+if [ "$RUNNER_OS" = "macOS" ]; then export GITHUB_ISE_PLATFORM=macosx-x86-64; fi
 
 cd $GOBO
 sudo apt-get update
