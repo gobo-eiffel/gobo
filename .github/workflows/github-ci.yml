@@ -10,7 +10,6 @@ jobs:
 
   linux_build:
     runs-on: ubuntu-latest
-    strategy:
     steps:
       - uses: actions/checkout@v2
       - name: before_script
@@ -30,7 +29,6 @@ jobs:
 
   macos_build:
     runs-on: macos-latest
-    strategy:
     steps:
       - uses: actions/checkout@v2
       - name: before_script
