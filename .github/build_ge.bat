@@ -15,6 +15,7 @@ goto do_it
 
 :github
 	set GOBO=%GITHUB_WORKSPACE%
+	call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"
 	goto do_it
 
 :gitlab
