@@ -71,6 +71,34 @@ jobs:
 # Running tests.
 #
 
+  windows_test:
+    runs-on: windows-latest
+    needs: windows_build
+    strategy:
+      matrix:
+        eiffel_compiler: [ge]
+        system_under_test: [library, tool]
+    steps:
+      - uses: actions/checkout@v2
+      - name: before_script
+        run: call .github\before_script.bat github
+        shell: cmd
+      - uses: actions/download-artifact@v2
+        with:
+          name: gobo_bin_windows
+          path: bin
+      - uses: actions/download-artifact@v2
+        with:
+          name: gobo_c_config_windows
+          path: tool\gec\config\c
+      - name: test
+        run: |
+          call .github\install_ge.bat github
+          if ${{ matrix.eiffel_compiler }} == "debug_ise" call %GOBO%\.github\install_ise.bat github
+          cd $GOBO\${{ matrix.system_under_test }}
+          geant test_${{ matrix.eiffel_compiler }}
+        shell: cmd
+  
   linux_test:
     runs-on: ubuntu-latest
     needs: linux_build
