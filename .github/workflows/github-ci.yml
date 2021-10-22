@@ -8,6 +8,25 @@ jobs:
 # Build Gobo tools.
 #
 
+  windows_build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: before_script
+        run: call .github\before_script.bat github
+      - name: build
+        run: call .github\build_ge.bat github
+      - uses: actions/upload-artifact@v2
+        with:
+          name: gobo_bin_windows
+          path: bin
+          retention-days: 1
+      - uses: actions/upload-artifact@v2
+        with:
+          name: gobo_c_config_windows
+          path: tool\gec\config\c\default.cfg
+          retention-days: 1
+
   linux_build:
     runs-on: ubuntu-latest
     steps:
