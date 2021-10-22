@@ -14,8 +14,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: before_script
         run: call .github\before_script.bat github
+        shell: cmd
       - name: build
         run: call .github\build_ge.bat github
+        shell: cmd
       - uses: actions/upload-artifact@v2
         with:
           name: gobo_bin_windows
