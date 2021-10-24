@@ -42,10 +42,10 @@ function Invoke-Environment {
 
 if ($CiTool -eq 'github') {
 	$env:GOBO = $env:GITHUB_WORKSPACE
-	Invoke-Environment("C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat")
+	Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
 } elseif ($CiTool -eq 'gitlab') {
 	$env:GOBO = $env:CI_PROJECT_DIR
-	Invoke-Environment("C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsx86_amd64.bat")
+	Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
 }
 
 Write-Host [IO.Path]::PathSeparator
