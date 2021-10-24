@@ -31,10 +31,8 @@ function Invoke-Environment {
 		[Parameter(Mandatory=$true)] [string]
 		$Command
 	)
-	Write-Host $Command
 	cmd /c "$Command > nul 2>&1 && set" | .{process{
 		if ($_ -match '^([^=]+)=(.*)') {
-			Write-Host "$matches[1]" + " = " + "$matches[2]"
 			[System.Environment]::SetEnvironmentVariable($matches[1], $matches[2])
 		}
 	}}
@@ -48,8 +46,6 @@ if ($CiTool -eq 'github') {
 	Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
 }
 
-Write-Host [IO.Path]::PathSeparator
-
-$env:PATH = "$env:GOBO/bin" + [IO.Path]::PathSeparator + $env:PATH
-. $env:GOBO/bin/install.bat -v msc
+$env:PATH = "$env:GOBO/bin$([IO.Path]::PathSeparator)$env:PATH"
+. "$env:GOBO/bin/install.bat" -v msc
 gec --version
