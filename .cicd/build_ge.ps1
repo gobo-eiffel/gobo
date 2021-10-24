@@ -40,13 +40,13 @@ function Invoke-Environment {
 }
 
 if ($CiTool == 'github') {
-	$env:GOBO = $env:GITHUB_WORKSPACE
-	Invoke-Environment("C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat")
+#	$env:GOBO = $env:GITHUB_WORKSPACE
+#	Invoke-Environment("C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat")
 } elseif ($CiTool == 'gitlab') {
-	$env:GOBO =  $env:CI_PROJECT_DIR
+	$env:GOBO = $env:CI_PROJECT_DIR
 	Invoke-Environment("C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsx86_amd64.bat")
 }
 
-$env:PATH = "$env:GOBO/bin" + [IO.Path]::PathSeparator + $env:PATH
-. "$env:GOBO/bin/install.bat" -v msc
+#$env:PATH = "$env:GOBO/bin" + [IO.Path]::PathSeparator + $env:PATH
+#. $env:GOBO/bin/install.bat -v msc
 gec --version
