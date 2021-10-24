@@ -16,7 +16,7 @@ jobs:
         run: call %GITHUB_WORKSPACE%\.cicd\before_script.bat github
         shell: cmd
       - name: build
-        run: "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github
       - uses: actions/upload-artifact@v2
         with:
           name: gobo_bin_windows
