@@ -34,6 +34,7 @@ function Invoke-Environment {
 	Write-Host $Command
 	cmd /c "$Command > nul 2>&1 && set" | .{process{
 		if ($_ -match '^([^=]+)=(.*)') {
+			Write-Host "$matches[1]" + " = " + "$matches[2]"
 			[System.Environment]::SetEnvironmentVariable($matches[1], $matches[2])
 		}
 	}}
