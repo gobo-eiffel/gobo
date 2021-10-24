@@ -17,13 +17,13 @@
 	License: "MIT License"
 #>
 
-#param
-#(
-#	[Parameter(Mandatory=$true)]
-#	[ValidateSet('github', 'gitlab', 'travis')] 
-#	[string]
-#	$CiTool
-#)
+param
+(
+	[Parameter(Mandatory=$true)]
+	[ValidateSet('github', 'gitlab', 'travis')] 
+	[string]
+	$CiTool
+)
 
 #function Invoke-Environment {
 #	param
