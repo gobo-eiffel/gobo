@@ -13,11 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: before_script
-        run: call .github\before_script.bat github
+        run: call %GITHUB_WORKSPACE%\.cicd\before_script.bat github
         shell: cmd
       - name: build
-        run: call .github\build_ge.bat github
-        shell: cmd
+        run: "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github
       - uses: actions/upload-artifact@v2
         with:
           name: gobo_bin_windows
@@ -81,7 +80,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: before_script
-        run: call .github\before_script.bat github
+        run: call %GITHUB_WORKSPACE%\.cicd\before_script.bat github
         shell: cmd
       - uses: actions/download-artifact@v2
         with:
@@ -93,9 +92,10 @@ jobs:
           path: tool\gec\config\c
       - name: test
         run: |
-          call .github\install_ge.bat github
+          call %GITHUB_WORKSPACE%\.cicd\install_ge.bat github
+          if ${{ matrix.eiffel_compiler }} == "ise" call %GOBO%\.github\install_ise.bat github
           if ${{ matrix.eiffel_compiler }} == "debug_ise" call %GOBO%\.github\install_ise.bat github
-          cd $GOBO\${{ matrix.system_under_test }}
+          cd %GOBO%\${{ matrix.system_under_test }}
           geant test_${{ matrix.eiffel_compiler }}
         shell: cmd
   
