@@ -25,30 +25,30 @@ param
 	$CiTool
 )
 
-#function Invoke-Environment {
-#	param
-#	(
-#		[Parameter(Mandatory=$true)] [string]
-#		$Command
-#	)
-#
-#	cmd /c "$Command > nul 2>&1 && set" | .{process{
-#		if ($_ -match '^([^=]+)=(.*)') {
-#			[System.Environment]::SetEnvironmentVariable($matches[1], $matches[2])
-#		}
-#	}}
-#}
+function Invoke-Environment {
+	param
+	(
+		[Parameter(Mandatory=$true)] [string]
+		$Command
+	)
 
-if ($CiTool == 'github') {
-#	$env:GOBO = $env:GITHUB_WORKSPACE
-#	Invoke-Environment("C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat")
-#} elseif ($CiTool == 'gitlab') {
-#	$env:GOBO = $env:CI_PROJECT_DIR
-#	Invoke-Environment("C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsx86_amd64.bat")
+	cmd /c "$Command > nul 2>&1 && set" | .{process{
+		if ($_ -match '^([^=]+)=(.*)') {
+			[System.Environment]::SetEnvironmentVariable($matches[1], $matches[2])
+		}
+	}}
+}
+
+if ($CiTool -eq 'github') {
+	$env:GOBO = $env:GITHUB_WORKSPACE
+	Invoke-Environment("C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat")
+} elseif ($CiTool -eq 'gitlab') {
+	$env:GOBO = $env:CI_PROJECT_DIR
+	Invoke-Environment("C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsx86_amd64.bat")
 }
 
 Write-Host [IO.Path]::PathSeparator
 
-#$env:PATH = "$env:GOBO/bin" + [IO.Path]::PathSeparator + $env:PATH
-#. $env:GOBO/bin/install.bat -v msc
-#gec --version
+$env:PATH = "$env:GOBO/bin" + [IO.Path]::PathSeparator + $env:PATH
+. $env:GOBO/bin/install.bat -v msc
+gec --version
