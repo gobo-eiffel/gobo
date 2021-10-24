@@ -48,5 +48,5 @@ if ($CiTool == 'github') {
 }
 
 $env:PATH = "$env:GOBO/bin" + [IO.Path]::PathSeparator + $env:PATH
-"$env:GOBO/bin/install.bat" -v msc
+. "$env:GOBO/bin/install.bat" -v msc
 gec --version
