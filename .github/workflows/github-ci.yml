@@ -12,9 +12,6 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - name: before_script
-        run: call %GITHUB_WORKSPACE%\.cicd\before_script.bat github
-        shell: cmd
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github
       - uses: actions/upload-artifact@v2
@@ -32,10 +29,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: before_script
-        run: source .github/before_script.sh
       - name: build
-        run: source .github/build_ge.sh
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github
+        shell: pwsh
       - uses: actions/upload-artifact@v2
         with:
           name: gobo_bin_linux
@@ -51,10 +47,9 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - name: before_script
-        run: source .github/before_script.sh
       - name: build
-        run: source .github/build_ge.sh
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github
+        shell: pwsh
       - uses: actions/upload-artifact@v2
         with:
           name: gobo_bin_macos
