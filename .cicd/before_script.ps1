@@ -104,19 +104,19 @@ switch ($CiTool) {
 switch ($GOBO_CI_OS) {
 	"linux" {
 		$GOBO_CI_C_COMPILER = gcc
-		$GOBO_CI_SCRIPT_EXTENSION = ".sh"
+		$GOBO_CI_BUILD_SCRIPT = "install.sh"
 		Get-Content "/etc/*-release"
 		arch
 		gcc --version
 	}
 	"macos" {
 		$GOBO_CI_C_COMPILER = clang
-		$GOBO_CI_SCRIPT_EXTENSION = ".sh"
+		$GOBO_CI_BUILD_SCRIPT = "install.sh"
 		clang --version
 	}
 	"windows" {
 		$GOBO_CI_C_COMPILER = cl
-		$GOBO_CI_SCRIPT_EXTENSION = ".bat"
+		$GOBO_CI_BUILD_SCRIPT = "install.bat"
 	}
 }
 
