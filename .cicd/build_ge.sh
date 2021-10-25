@@ -12,7 +12,7 @@ gobo_usage() {
 }
 
 if [ $# -ne 1 ]; then
-	gobo_usage()
+	gobo_usage
 	exit 1
 fi
 
