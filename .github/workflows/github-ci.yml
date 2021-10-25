@@ -8,23 +8,6 @@ jobs:
 # Build Gobo tools.
 #
 
-  windows_build:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: build
-        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github
-      - uses: actions/upload-artifact@v2
-        with:
-          name: gobo_bin_windows
-          path: bin
-          retention-days: 1
-      - uses: actions/upload-artifact@v2
-        with:
-          name: gobo_c_config_windows
-          path: tool\gec\config\c\default.cfg
-          retention-days: 1
-
   linux_build:
     runs-on: ubuntu-latest
     steps:
@@ -61,45 +44,33 @@ jobs:
           path: tool/gec/config/c/default.cfg
           retention-days: 1
 
-#
-# Running tests.
-#
-
-  windows_test:
+  windows_build:
     runs-on: windows-latest
-    needs: windows_build
-    strategy:
-      matrix:
-        eiffel_compiler: [ge]
-        system_under_test: [library, tool]
     steps:
       - uses: actions/checkout@v2
-      - name: before_script
-        run: call %GITHUB_WORKSPACE%\.cicd\before_script.bat github
-        shell: cmd
-      - uses: actions/download-artifact@v2
+      - name: build
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github
+      - uses: actions/upload-artifact@v2
         with:
           name: gobo_bin_windows
           path: bin
-      - uses: actions/download-artifact@v2
+          retention-days: 1
+      - uses: actions/upload-artifact@v2
         with:
           name: gobo_c_config_windows
-          path: tool\gec\config\c
-      - name: test
-        run: |
-          call %GITHUB_WORKSPACE%\.cicd\install_ge.bat github
-          if ${{ matrix.eiffel_compiler }} == "ise" call %GOBO%\.github\install_ise.bat github
-          if ${{ matrix.eiffel_compiler }} == "debug_ise" call %GOBO%\.github\install_ise.bat github
-          cd %GOBO%\${{ matrix.system_under_test }}
-          geant test_${{ matrix.eiffel_compiler }}
-        shell: cmd
+          path: tool/gec/config/c/default.cfg
+          retention-days: 1
+
+#
+# Running tests.
+#
   
   linux_test:
     runs-on: ubuntu-latest
     needs: linux_build
     strategy:
       matrix:
-        eiffel_compiler: [ge, debug_ise]
+        eiffel_compiler: [ge]
         system_under_test: [library, tool]
     steps:
       - uses: actions/checkout@v2
@@ -115,12 +86,13 @@ jobs:
           path: tool/gec/config/c
       - name: test
         run: |
-          source .github/install_ge.sh
-          if [ ${{ matrix.eiffel_compiler }} = "debug_ise" ]; then
-            source $GOBO/.github/install_ise.sh
-          fi
-          cd $GOBO/${{ matrix.system_under_test }}
+          . "$env:GITHUB_WORKSPACE/.cicd/install_ge.ps1" github
+          if ((${{ matrix.eiffel_compiler }}).EndsWith("ise")) {
+            . "$env:GOBO/.cicd/install_ise.ps1" github
+          }
+          cd $env:GOBO/${{ matrix.system_under_test }}
           geant test_${{ matrix.eiffel_compiler }}
+        shell: pwsh
 
   macos_test:
     runs-on: macos-latest
@@ -131,8 +103,6 @@ jobs:
         system_under_test: [library, tool]
     steps:
       - uses: actions/checkout@v2
-      - name: before_script
-        run: source .github/before_script.sh
       - uses: actions/download-artifact@v2
         with:
           name: gobo_bin_macos
@@ -143,9 +113,36 @@ jobs:
           path: tool/gec/config/c
       - name: test
         run: |
-          source .github/install_ge.sh
-          if [ ${{ matrix.eiffel_compiler }} = "debug_ise" ]; then
-            source $GOBO/.github/install_ise.sh
-          fi
-          cd $GOBO/${{ matrix.system_under_test }}
+          . "$env:GITHUB_WORKSPACE/.cicd/install_ge.ps1" github
+          if ((${{ matrix.eiffel_compiler }}).EndsWith("ise")) {
+            . "$env:GOBO/.cicd/install_ise.ps1" github
+          }
+          cd $env:GOBO/${{ matrix.system_under_test }}
+          geant test_${{ matrix.eiffel_compiler }}
+        shell: pwsh
+
+  windows_test:
+    runs-on: windows-latest
+    needs: windows_build
+    strategy:
+      matrix:
+        eiffel_compiler: [ge]
+        system_under_test: [library, tool]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: gobo_bin_windows
+          path: bin
+      - uses: actions/download-artifact@v2
+        with:
+          name: gobo_c_config_windows
+          path: tool/gec/config/c
+      - name: test
+        run: |
+          . "$env:GITHUB_WORKSPACE/.cicd/install_ge.ps1" github
+          if ((${{ matrix.eiffel_compiler }}).EndsWith("ise")) {
+            . "$env:GOBO/.cicd/install_ise.ps1" github
+          }
+          cd $env:GOBO/${{ matrix.system_under_test }}
           geant test_${{ matrix.eiffel_compiler }}

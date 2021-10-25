@@ -1,8 +1,23 @@
 #!/bin/sh
 
-# Install Gobo Eiffel.
+# description: "Install Gobo Eiffel executables"
+# copyright: "Copyright (c) 2021, Eric Bezault and others"
+# license: "MIT License"
 
-export GOBO=$GITHUB_WORKSPACE
-export PATH=$PATH:$GOBO/bin
+# usage: install_ge.sh <ci_tool>
+
+usage() {
+	echo "usage: install_ge.sh <ci_tool>"
+	echo "   ci_tool:  github | gitlab | travis"
+}
+
+if [ $# -ne 1 ]; then
+	usage()
+	exit 1
+fi
+
+CI_TOOL=$1
+
+source .cicd/before_script.sh $CI_TOOL
 chmod a+x $GOBO/bin/ge*
 gec --version

@@ -1,11 +1,27 @@
 #!/bin/sh
 
-# Build Gobo Eiffel executables.
+# description: "Build Gobo Eiffel executables"
+# copyright: "Copyright (c) 2021, Eric Bezault and others"
+# license: "MIT License"
 
-if [ "$RUNNER_OS" = "Linux" ]; then export GITHUB_GE_C_COMPILER=gcc; fi
-if [ "$RUNNER_OS" = "macOS" ]; then export GITHUB_GE_C_COMPILER=clang; fi
+# usage: build_ge.sh <ci_tool>
 
-export GOBO=$GITHUB_WORKSPACE
-$GOBO/bin/install.sh -v $GITHUB_GE_C_COMPILER
-export PATH=$PATH:$GOBO/bin
+usage() {
+	echo "usage: build_ge.sh <ci_tool>"
+	echo "   ci_tool:  github | gitlab | travis"
+}
+
+if [ $# -ne 1 ]; then
+	usage()
+	exit 1
+fi
+
+CI_TOOL=$1
+
+source .cicd/before_script.sh $CI_TOOL
+if [ "$CI_TOOL" = "travis" ]; then
+	travis_wait 60 "$GOBO/bin/$GOBO_CI_BUILD_SCRIPT" -v -t $GOBO_CI_C_COMPILER
+else
+	"$GOBO/bin/$GOBO_CI_BUILD_SCRIPT" -v $GOBO_CI_C_COMPILER
+fi
 gec --version
