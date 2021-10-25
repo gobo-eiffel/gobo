@@ -66,6 +66,9 @@ switch ($CiTool) {
 				"linux" {
 					$GOBO_CI_OS = "linux"
 				}
+				"macos" {
+					$GOBO_CI_OS = "macos"
+				}
 				"windows" {
 					$GOBO_CI_OS = "windows"
 					Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')

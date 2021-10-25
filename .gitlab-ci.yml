@@ -35,6 +35,27 @@ build_ge:
   rules:
     - when: never
 
+linux_build_ge:
+  stage: build_ge
+  tags:
+    - linux
+  dependencies: []
+  script:
+    - pwsh -f "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" gitlab
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $GOBO_CUSTOM_PIPELINE == null || $GOBO_CUSTOM_PIPELINE == "test_ise"
+      when: on_success
+  artifacts:
+    when: always
+    expire_in: 3 hours
+    paths:
+      - $GOBO/bin/
+      - $GOBO/tool/gec/config/c/default.cfg
+
 windows_build_ge:
   stage: build_ge
   tags:
@@ -42,42 +63,14 @@ windows_build_ge:
     - windows
     - windows-1809
   dependencies: []
-  before_script:
-    - *windows_before_script
   script:
-    - '& "$env:GOBO\.gitlab\do_it.bat" "$env:GOBO\bin\install.bat" -v msc'
-    - '& "$env:GOBO\.gitlab\do_it.bat" gec --version'
+    - . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" gitlab
   rules:
     - if: $CI_COMMIT_TAG
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
     - if: $GOBO_CUSTOM_PIPELINE == null
-      when: on_success
-  artifacts:
-    when: always
-    expire_in: 3 hours
-    paths:
-      - $GOBO\bin\
-      - $GOBO\tool\gec\config\c\default.cfg
-
-linux_build_ge:
-  stage: build_ge
-  tags:
-    - linux
-  dependencies: []
-  before_script:
-    - *linux_before_script
-  script:
-    - $GOBO/bin/install.sh -v gcc
-    - export PATH=$PATH:$GOBO/bin
-    - gec --version
-  rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: $CI_MERGE_REQUEST_ID
-      when: never
-    - if: $GOBO_CUSTOM_PIPELINE == null || $GOBO_CUSTOM_PIPELINE == "test_ise"
       when: on_success
   artifacts:
     when: always
