@@ -30,12 +30,13 @@ if [ "$CI_TOOL" = "github" ]; then
 	fi
 elif [ "$CI_TOOL" = "gitlab" ]; then
 	export GOBO=$CI_PROJECT_DIR
-	if [ "$RUNNER_OS" = "linux" ]; then
+	export GOBO_CI_OS=`dirname $CI_RUNNER_EXECUTABLE_ARCH`
+	if [ "$GOBO_CI_OS" = "linux" ]; then
 		export GOBO_CI_OS="linux"
-	elif [ "$RUNNER_OS" = "macos" ]; then
+	elif [ "$GOBO_CI_OS" = "macos" ]; then
 		export GOBO_CI_OS="macos"
 	else
-		echo "Platform not supported: $RUNNER_OS"
+		echo "Platform not supported: $GOBO_CI_OS"
 		exit 1
 	fi
 elif [ "$CI_TOOL" = "travis" ]; then
