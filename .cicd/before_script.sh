@@ -57,7 +57,7 @@ fi
 if [ "$GOBO_CI_OS" = "linux" ]; then
 	export GOBO_CI_C_COMPILER="gcc"
 	export GOBO_CI_BUILD_SCRIPT="install.sh"
-	cat "/etc/*-release"
+	cat /etc/*-release
 	arch
 	gcc --version
 elif [ "$GOBO_CI_OS" = "macos" ]; then
