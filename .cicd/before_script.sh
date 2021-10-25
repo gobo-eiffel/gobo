@@ -6,13 +6,13 @@
 
 # usage: before_script.sh <ci_tool>
 
-usage() {
+gobo_usage() {
 	echo "usage: before_script.sh <ci_tool>"
 	echo "   ci_tool:  github | gitlab | travis"
 }
 
 if [ $# -ne 1 ]; then
-	usage()
+	gobo_usage()
 	exit 1
 fi
 

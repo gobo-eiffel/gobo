@@ -27,6 +27,33 @@ param
 )
 
 function Invoke-Environment {
+	# See https://stackoverflow.com/questions/4384814/how-to-call-batch-script-from-powershell
+	# See https://newbedev.com/how-to-call-batch-script-from-powershell
+	<#
+	.SYNOPSIS
+		Invokes a command and imports its environment variables.
+
+	.DESCRIPTION
+		It invokes any cmd shell command (normally a configuration batch file) and
+		imports its environment variables to the calling process. Command output is
+		discarded completely. It fails if the command exit code is not 0. To ignore
+		the exit code use the 'call' command.
+
+	.PARAMETER Command
+		Any cmd shell command, normally a configuration batch file.
+
+	.EXAMPLE
+		# Invokes Config.bat in the current directory or the system path
+		Invoke-Environment Config.bat
+
+	.EXAMPLE
+		# Visual Studio environment: works even if exit code is not 0
+		Invoke-Environment 'call "%VS100COMNTOOLS%\vsvars32.bat"'
+
+	.EXAMPLE
+		# This command fails if vsvars32.bat exit code is not 0
+		Invoke-Environment '"%VS100COMNTOOLS%\vsvars32.bat"'
+	#>
 	param
 	(
 		[Parameter(Mandatory=$true)]

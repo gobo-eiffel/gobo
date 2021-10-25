@@ -74,8 +74,6 @@ jobs:
         system_under_test: [library, tool]
     steps:
       - uses: actions/checkout@v2
-      - name: before_script
-        run: source .github/before_script.sh
       - uses: actions/download-artifact@v2
         with:
           name: gobo_bin_linux
@@ -87,7 +85,7 @@ jobs:
       - name: test
         run: |
           . "$env:GITHUB_WORKSPACE/.cicd/install_ge.ps1" github
-          if ((${{ matrix.eiffel_compiler }}).EndsWith("ise")) {
+          if (("${{ matrix.eiffel_compiler }}").EndsWith("ise")) {
             . "$env:GOBO/.cicd/install_ise.ps1" github
           }
           cd $env:GOBO/${{ matrix.system_under_test }}
@@ -114,7 +112,7 @@ jobs:
       - name: test
         run: |
           . "$env:GITHUB_WORKSPACE/.cicd/install_ge.ps1" github
-          if ((${{ matrix.eiffel_compiler }}).EndsWith("ise")) {
+          if (("${{ matrix.eiffel_compiler }}").EndsWith("ise")) {
             . "$env:GOBO/.cicd/install_ise.ps1" github
           }
           cd $env:GOBO/${{ matrix.system_under_test }}
@@ -141,7 +139,7 @@ jobs:
       - name: test
         run: |
           . "$env:GITHUB_WORKSPACE/.cicd/install_ge.ps1" github
-          if ((${{ matrix.eiffel_compiler }}).EndsWith("ise")) {
+          if (("${{ matrix.eiffel_compiler }}").EndsWith("ise")) {
             . "$env:GOBO/.cicd/install_ise.ps1" github
           }
           cd $env:GOBO/${{ matrix.system_under_test }}
