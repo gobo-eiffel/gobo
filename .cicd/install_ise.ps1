@@ -9,7 +9,7 @@
 	CI tool (github, gitlab, travis).
 
 .EXAMPLE
-	# Install Gobo Eiffel tools from the GitHub Actions pipeline:
+	# Install ISE Eiffel tools from the GitHub Actions pipeline:
 	install_ge.ps1 github
 
 .NOTES
@@ -24,4 +24,45 @@ param
 	[string] $CiTool
 )
 
+Set-ExecutionPolicy Unrestricted -Force
+Install-Module -Name 7Zip4PowerShell -Force
+
 . "$PSScriptRoot/before_script.ps1" $CiTool
+
+switch ($GOBO_CI_OS) {
+	"linux" {
+		$env:ISE_PLATFORM = "linux-x86-64"
+		$env:ISE_C_COMPILER = "gcc"
+		$GOBO_CI_ISE_ARCHIVE_EXTENSION = ".tar.bz2"
+	}
+	"macos" {
+		$env:ISE_PLATFORM = "macosx-x86-64"
+		$env:ISE_C_COMPILER = "clang"
+		$GOBO_CI_ISE_ARCHIVE_EXTENSION = ".tar.bz2"
+	}
+	"windows" {
+		$env:ISE_PLATFORM = "win64"
+		$env:ISE_C_COMPILER = "msc_vc140"
+		$GOBO_CI_ISE_ARCHIVE_EXTENSION = ".7z"
+	}
+}
+
+Set-Location "$env:GOBO"
+$GOBO_CI_ISE_VERSION = "20.05"
+$GOBO_CI_ISE_REVISION = "rev_104521"
+$GOBO_CI_ISE_ARCHIVE_FILENAME = "Eiffel_${GOBO_CI_ISE_VERSION}_${GOBO_CI_ISE_REVISION}-$env:ISE_PLATFORM$GOBO_CI_ISE_ARCHIVE_EXTENSION"
+
+Invoke-RestMethod -Method Get -Uri "https://ftp.eiffel.com/pub/beta/nightly/$GOBO_CI_ISE_ARCHIVE_FILENAME" -OutFile "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME" 
+Expand-7Zip -ArchiveFileName "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME" -TargetPath "$env:GOBO"
+Remove-Item "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME"
+if (($GOBO_CI_ISE_ARCHIVE_EXTENSION).StartsWith(".tar.")) {
+	$GOBO_CI_ISE_ARCHIVE_FILENAME = "Eiffel_${GOBO_CI_ISE_VERSION}_${GOBO_CI_ISE_REVISION}-$env:ISE_PLATFORM.tar"
+	Expand-7Zip -ArchiveFileName "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME" -TargetPath "$env:GOBO"
+}
+
+$env:ISE_EIFFEL = "$env:GOBO/Eiffel_$GOBO_CI_ISE_VERSION"
+$env:PATH = "$env:PATH$([IO.Path]::PathSeparator)$env:ISE_EIFFEL/studio/spec/$env:ISE_PLATFORM/bin"
+
+# Make sure that we are using our version of the Gobo tools.
+Remove-Item  "$env:ISE_EIFFEL/library/gobo/spec" -Recurse -Force
+ecb -version

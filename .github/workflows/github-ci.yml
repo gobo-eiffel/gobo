@@ -70,7 +70,7 @@ jobs:
     needs: linux_build
     strategy:
       matrix:
-        eiffel_compiler: [ge]
+        eiffel_compiler: [ge, debug_ise]
         system_under_test: [library, tool]
     steps:
       - uses: actions/checkout@v2
@@ -97,7 +97,7 @@ jobs:
     needs: macos_build
     strategy:
       matrix:
-        eiffel_compiler: [ge]
+        eiffel_compiler: [ge, debug_ise]
         system_under_test: [library, tool]
     steps:
       - uses: actions/checkout@v2
@@ -124,7 +124,7 @@ jobs:
     needs: windows_build
     strategy:
       matrix:
-        eiffel_compiler: [ge]
+        eiffel_compiler: [ge, debug_ise]
         system_under_test: [library, tool]
     steps:
       - uses: actions/checkout@v2
