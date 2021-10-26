@@ -55,7 +55,7 @@ if ($GOBO_CI_OS -eq "windows") {
 	Install-Module -Name 7Zip4PowerShell -Force
 	Expand-7Zip -ArchiveFileName "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME" -TargetPath "$env:GOBO"
 } else {
-	tar -x -p --bzip2 "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME"
+	tar -x -p --bzip2 -f "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME"
 }
 Remove-Item "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME"
 
