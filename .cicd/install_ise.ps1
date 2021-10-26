@@ -24,7 +24,6 @@ param
 	[string] $CiTool
 )
 
-Set-ExecutionPolicy Unrestricted -Force
 Install-Module -Name 7Zip4PowerShell -Force
 
 . "$PSScriptRoot/before_script.ps1" $CiTool
@@ -34,6 +33,8 @@ switch ($GOBO_CI_OS) {
 		$env:ISE_PLATFORM = "linux-x86-64"
 		$env:ISE_C_COMPILER = "gcc"
 		$GOBO_CI_ISE_ARCHIVE_EXTENSION = ".tar.bz2"
+		sudo apt-get update
+		sudo apt-get -y install libgtk2.0-0
 	}
 	"macos" {
 		$env:ISE_PLATFORM = "macosx-x86-64"
