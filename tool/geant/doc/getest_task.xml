@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="getest_task">
 <chapterinfo>
 	<copyright>
-		<year>2002-2005</year>
+		<year>2002-2021</year>
 		<holder>Sven Ehrke</holder>
 	</copyright>
 	<author>
 		<firstname>Sven</firstname><surname>Ehrke</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>16 November 2005</date>
+	<date>27 October 2021</date>
 </chapterinfo>
 
 	<title>getest</title>
@@ -179,6 +179,19 @@
 				</listitem>
 			</varlistentry>
 
+			<varlistentry>
+				<term>exit_code_variable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of variable holding the execution's return code
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Integer (usually 0 for OK, and any other number for not OK)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>`Void' (no variable is set if attribute is not specified)</para>
+				</listitem>
+			</varlistentry>
 		</variablelist>
 	</section>
 
@@ -220,6 +233,9 @@
       <zeroOrMore>
         <ref name="define"/>
       </zeroOrMore>
+      <optional>
+        <attribute name="exit_code_variable"/>
+      </optional>
     </element>
   </define>
 ]]>

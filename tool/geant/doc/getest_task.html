@@ -128,6 +128,15 @@
      </p>
     </dd>
     
+    			
+    <dt>exit_code_variable</dt>
+    <dd><i>Description: </i>Name of variable holding the execution's return code
+     					
+     <p><i>Domain: </i>Integer (usually 0 for OK, and any other number for not OK)
+     </p>
+     <p><i>Default: </i>`Void' (no variable is set if attribute is not specified)
+     </p>
+    </dd>
     		
    </dl>
    	
@@ -171,6 +180,9 @@
       &lt;zeroOrMore&gt;
         &lt;ref name="define"/&gt;
       &lt;/zeroOrMore&gt;
+      &lt;optional&gt;
+        &lt;attribute name="exit_code_variable"/&gt;
+      &lt;/optional&gt;
     &lt;/element&gt;
   &lt;/define&gt;
 
@@ -195,7 +207,7 @@
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>16 November 2005</font></address>
+     <address><font size="2"><b>Copyright © 2002-2021, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>27 October 2021</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="gepp_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="input_task.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

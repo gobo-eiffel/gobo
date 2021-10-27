@@ -8,6 +8,7 @@
   able specify the filename (optionally with a pathname) of the Eiffel
   compiler executable. The default is the executable which can be found
   in the `PATH`.
+* Added option `exit_code_variable` to the task `<getest>`.
 
 ### gec
 

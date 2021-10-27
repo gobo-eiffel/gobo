@@ -5,7 +5,7 @@ note
 		"Getest commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2021, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,8 +46,10 @@ feature -- Status report
 			-- Can command be executed?
 		do
 			Result := attached config_filename as l_config_filename and then l_config_filename.count > 0
+			Result := Result and then (not attached exit_code_variable_name as l_exit_code_variable_name or else l_exit_code_variable_name.count > 0)
 		ensure then
 			config_filename_not_void_and_not_empty: Result implies attached config_filename as l_config_filename and then l_config_filename.count > 0
+			exit_code_variable_name_void_or_not_empty: Result implies (not attached exit_code_variable_name as l_exit_code_variable_name or else l_exit_code_variable_name.count > 0)
 		end
 
 feature -- Access
@@ -84,6 +86,9 @@ feature -- Access
 
 	defines: DS_HASH_TABLE [STRING, STRING]
 			-- Defined values from the command-line (--define option)
+
+	exit_code_variable_name: detachable STRING
+			-- Name of variable holding exit code of gec compilation process
 
 feature -- Setting
 
@@ -176,6 +181,17 @@ feature -- Setting
 			abort_set: abort = b
 		end
 
+	set_exit_code_variable_name (a_exit_code_variable_name: like exit_code_variable_name)
+			-- Set `exit_code_variable_name' to `a_exit_code_variable_name'.
+		require
+			a_exit_code_variable_name_not_void: a_exit_code_variable_name /= Void
+			a_exit_code_variable_name_not_empty: a_exit_code_variable_name.count > 0
+		do
+			exit_code_variable_name := a_exit_code_variable_name
+		ensure
+			exit_code_variable_name_set: exit_code_variable_name = a_exit_code_variable_name
+		end
+
 feature -- Execution
 
 	execute
@@ -249,6 +265,13 @@ feature -- Execution
 					cmd := STRING_.appended_string (cmd, a_filename)
 					project.trace (<<"  [getest] ", cmd>>)
 					execute_shell (cmd)
+					if attached exit_code_variable_name as l_exit_code_variable_name then
+							-- Store return_code of compilation process:
+						project.set_variable_value (l_exit_code_variable_name, exit_code.out)
+							-- Reset `exit_code' since return_code of process is available through
+							-- variable 'exit_code_variable_name':
+						exit_code := 0
+					end
 				end
 			end
 		end
