@@ -94,8 +94,8 @@ switch ($CiTool) {
 				"linux" {
 					$GOBO_CI_OS = "linux"
 					# Installing `gcc`.
-					sudo apt update
-					sudo apt install build-essential
+					apt update
+					apt install build-essential
 				}
 				"macos" {
 					$GOBO_CI_OS = "macos"
