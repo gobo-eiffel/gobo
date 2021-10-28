@@ -17,9 +17,12 @@ linux_build_ge:
   stage: build_ge
   tags:
     - linux
+  image:
+    # See: https://stackoverflow.com/questions/44319313/how-do-i-use-powershell-with-gitlab-ci-in-gitlab-pages
+    name: "mcr.microsoft.com/powershell:latest"
   dependencies: []
   script:
-    - source "$GOBO/.cicd/build_ge.sh" gitlab
+    - pwsh -f "$GOBO/.cicd/build_ge.ps1" gitlab
   rules:
     - if: $CI_COMMIT_TAG
       when: never
