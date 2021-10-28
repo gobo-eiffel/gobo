@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Cat Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2021, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="cat_task">
+<chapterinfo>
+	<copyright>
+		<year>2021</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>27 October 2021</date>
+</chapterinfo>
+
+	<title>cat</title>
+
+	<section id="cat_description">
+		<title>Description</title>
+		<para>
+			Write the content of a file to stdout.
+		</para>
+	</section>
+
+	<section id="cat_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>file</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>file to be written</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>to_file</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>if specified this attribute defines the name of the file the input file will be written to</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>append</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>This attribute applies only if attribute 'to'file' was specified.
+						If set to 'true' the content of 'file' will be appended to the file. Otherwise the file will be overwritten with the content of 'file'.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</section>
+
+	<section id="cat_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+<define name="cat">
+  <element name="cat">
+    <ref name="dir_if_unless"/>
+    <choice>
+      <text/>
+      <attribute name="file"/>
+    </choice>
+    <optional>
+      <attribute name="to_file"/>
+      <optional>
+        <attribute name="append"/>
+      </optional>
+    </optional>
+  </element>
+</define>
+]]>
+		</programlisting>
+	</section>
+
+	<section id="cat_examples">
+		<title>Examples</title>
+
+		<programlisting><![CDATA[
+  <cat file="my_file.txt"/>
+  <cat file="my_file.txt" to_file="output.txt"/>
+  <cat file="my_other_file.txt" to_file="output.txt" append="true"/>
+]]>
+		</programlisting>
+	</section>
+
+</chapter>

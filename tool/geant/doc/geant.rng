@@ -91,6 +91,7 @@
 				<ref name="available"/>
 				<ref name="copy"/>
 				<ref name="echo"/>
+				<ref name="cat"/>
 				<ref name="delete"/>
 				<ref name="exec"/>
 				<ref name="exit"/>
@@ -129,7 +130,21 @@
 			</optional>
 		</element>
 	</define>
-
+	<define name="cat">
+		<element name="cat">
+			<ref name="dir_if_unless"/>
+			<choice>
+				<text/>
+				<attribute name="file"/>
+			</choice>
+			<optional>
+				<attribute name="to_file"/>
+				<optional>
+					<attribute name="append"/>
+				</optional>
+			</optional>
+		</element>
+	</define>
 	<define name="copy">
 		<element name="copy">
 			<ref name="dir_if_unless"/>

@@ -9,6 +9,8 @@
   compiler executable. The default is the executable which can be found
   in the `PATH`.
 * Added option `exit_code_variable` to the task `<getest>`.
+* Added task `<cat>`, which is similar to `<echo>` except that it writes
+  the content of a file instead of a message.
 
 ### gec
 

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>cat</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>cat</strong></font></td>
+    <td align="right"><a href="available_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="copy_task.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="cat_description"></a>
+   		
+   <h2>Description</h2>
+   		
+   <p>
+    			Write the content of a file to stdout.
+    		
+   </p>
+   	
+  </div>
+  <div><a name="cat_parameters"></a>
+   		
+   <h2>Parameters</h2>
+   
+   		
+   <dl>
+    			
+    <dt>file</dt>
+    <dd><i>Description: </i>file to be written
+     <p><i>Domain: </i>valid filename
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    			
+    <dt>to_file</dt>
+    <dd><i>Description: </i>if specified this attribute defines the name of the file the input file will be written to
+     <p><i>Domain: </i>valid filename
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    			
+    <dt>append</dt>
+    <dd><i>Description: </i>This attribute applies only if attribute 'to'file' was specified.
+     						If set to 'true' the content of 'file' will be appended to the file. Otherwise the file will be overwritten with the
+     content of 'file'.
+     					
+     <p><i>Domain: </i>Boolean (true|false)
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="cat_specification"></a>
+   		
+   <h2>RNG Specification</h2>
+   
+   		<pre>
+&lt;define name="cat"&gt;
+  &lt;element name="cat"&gt;
+    &lt;ref name="dir_if_unless"/&gt;
+    &lt;choice&gt;
+      &lt;text/&gt;
+      &lt;attribute name="file"/&gt;
+    &lt;/choice&gt;
+    &lt;optional&gt;
+      &lt;attribute name="to_file"/&gt;
+      &lt;optional&gt;
+        &lt;attribute name="append"/&gt;
+      &lt;/optional&gt;
+    &lt;/optional&gt;
+  &lt;/element&gt;
+&lt;/define&gt;
+
+		</pre>
+   	</div>
+  <div><a name="cat_examples"></a>
+   		
+   <h2>Examples</h2>
+   
+   		<pre>
+  &lt;cat file="my_file.txt"/&gt;
+  &lt;cat file="my_file.txt" to_file="output.txt"/&gt;
+  &lt;cat file="my_other_file.txt" to_file="output.txt" append="true"/&gt;
+
+		</pre>
+   	</div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2021, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>27 October 2021</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="available_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="copy_task.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -5,7 +5,7 @@ note
 		"Geant tasks factory"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2019, Sven Ehrke, Jocelyn Fiat, and others"
+	copyright: "Copyright (c) 2001-2021, Sven Ehrke, Jocelyn Fiat, and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -177,6 +177,16 @@ feature -- Factory
 			new_echo_task_not_void: Result /= Void
 		end
 
+	new_cat_task (a_xml_element: XM_ELEMENT): GEANT_CAT_TASK
+			-- cat
+		require
+			a_xml_element_not_void: a_xml_element /= Void
+		do
+			create Result.make_from_interpreting_element (create {GEANT_INTERPRETING_ELEMENT}.make (project, a_xml_element))
+		ensure
+			new_cat_task_not_void: Result /= Void
+		end
+
 	new_mkdir_task (a_xml_element: XM_ELEMENT): GEANT_MKDIR_TASK
 			-- mkdir
 		require
@@ -332,6 +342,8 @@ feature {NONE} -- Implementation
 			builders.force_new (agent new_geant_task, Geant_task_name)
 				-- echo
 			builders.force_new (agent new_echo_task, Echo_task_name)
+				-- cat
+			builders.force_new (agent new_cat_task, Cat_task_name)
 				-- mkdir
 			builders.force_new (agent new_mkdir_task, Mkdir_task_name)
 				-- delete

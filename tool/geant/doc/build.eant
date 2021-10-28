@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Gobo Eiffel Ant Documentation"
-		copyright: "Copyright (c) 2002-2019, Sven Ehrke and others"
+		copyright: "Copyright (c) 2002-2021, Sven Ehrke and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -34,6 +34,7 @@
 		<geant target="${target}" arguments="fileset_element"/>
 		<geant target="${target}" arguments="map_element"/>
 		<geant target="${target}" arguments="available_task"/>
+		<geant target="${target}" arguments="cat_task"/>
 		<geant target="${target}" arguments="copy_task"/>
 		<geant target="${target}" arguments="delete_task"/>
 		<geant target="${target}" arguments="echo_task"/>

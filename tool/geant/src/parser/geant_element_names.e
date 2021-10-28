@@ -5,7 +5,7 @@ note
 		"Element name constants for GEANT"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2019, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2021, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -137,6 +137,15 @@ feature -- Task names
 			-- "echo" task name
 		once
 			Result := "echo"
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: Result.count > 0
+		end
+
+	Cat_task_name: STRING
+			-- "cat" task name
+		once
+			Result := "cat"
 		ensure
 			task_name_not_void: Result /= Void
 			task_name_not_empty: Result.count > 0

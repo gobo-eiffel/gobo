@@ -5,7 +5,7 @@ note
 		"Echo commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2021, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,7 +75,7 @@ feature -- Access
 			-- NOTE: using a DS_CELL here and for the other agents makes it possible to set the underlying agent from outside
 			-- without having to provide individual setters for each agent.
 
-	message_with_file_agent_cell: DS_CELL [PROCEDURE [TUPLE [STRING, KL_TEXT_OUTPUT_FILE, BOOLEAN]]]
+	message_with_file_agent_cell: DS_CELL [PROCEDURE [TUPLE [STRING, KL_TEXT_OUTPUT_FILE]]]
 			-- Agent cell for Message with file
 
 feature -- Execution
@@ -100,7 +100,7 @@ feature -- Execution
 					project.trace (<<"  [echo] Writing '", a_message, "' to file '", a_to_file, "'">>)
 					a_file.open_write
 				end
-				message_with_file_agent_cell.item.call ([a_message, a_file, a_append])
+				message_with_file_agent_cell.item.call ([a_message, a_file])
 				if a_file.is_open_write then
 					a_file.close
 				end
@@ -121,12 +121,8 @@ feature {NONE} -- Implementation
 			exit_code := 0
 		end
 
-	write_message_to_file (a_message: STRING; a_file: KL_TEXT_OUTPUT_FILE; a_append: BOOLEAN)
+	write_message_to_file (a_message: STRING; a_file: KL_TEXT_OUTPUT_FILE)
 			-- Write `a_message' to `a_file'.
-			-- Note: `a_append' = True implies that `a_file' has been opened in append mode, otherwise
-			-- in normal write mode. `a_append' is passed in only as information in case
-			-- append/write-mode dependent actions need to be performed.
-			-- TODO: shouldn't `KL_OUTPUT_FILE.is_open_append' be exported so that this information is directly available?
 		require
 			a_message_not_void: a_message /= Void
 			a_file_not_void: a_file /= Void
