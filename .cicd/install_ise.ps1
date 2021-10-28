@@ -26,6 +26,9 @@ param
 
 . "$PSScriptRoot/before_script.ps1" $CiTool
 
+$GOBO_CI_ISE_VERSION = "20.11"
+$GOBO_CI_ISE_REVISION = "rev_105048"
+
 switch ($GOBO_CI_OS) {
 	"linux" {
 		$env:ISE_PLATFORM = "linux-x86-64"
@@ -44,8 +47,6 @@ switch ($GOBO_CI_OS) {
 	}
 }
 
-$GOBO_CI_ISE_VERSION = "20.05"
-$GOBO_CI_ISE_REVISION = "rev_104521"
 $GOBO_CI_ISE_ARCHIVE_FILENAME = "Eiffel_${GOBO_CI_ISE_VERSION}_${GOBO_CI_ISE_REVISION}-$env:ISE_PLATFORM$GOBO_CI_ISE_ARCHIVE_EXTENSION"
 
 Invoke-RestMethod -Method Get -Uri "https://ftp.eiffel.com/pub/beta/nightly/$GOBO_CI_ISE_ARCHIVE_FILENAME" -OutFile "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME"
