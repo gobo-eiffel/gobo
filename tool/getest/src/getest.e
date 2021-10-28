@@ -429,10 +429,10 @@ feature {NONE} -- Error handling
 
 	report_eiffel_compilation_error
 			-- Report that an Eiffel compilation error occurred
-			-- and then terminate with exit status 1.
+			-- and then terminate with exit status 3.
 		do
 			error_handler.report_eiffel_compilation_error
-			Exceptions.die (1)
+			Exceptions.die (3)
 		end
 
 	report_usage_message

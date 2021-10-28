@@ -34,6 +34,11 @@
 * Let the test in `$GOBO/tool/gelint/test/tool` run `gecop` with the
   `gelint` executable just built (the executable under test).
 
+### getest
+
+* Changed exit code to `3` in case of an Eiffel compilation error when
+  compiling the test harness.
+
 ### Gobo Eiffel Test Library
 
 * Added support for multi-threading where running tests with the
