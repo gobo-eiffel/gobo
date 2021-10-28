@@ -11,6 +11,8 @@
 * Added option `exit_code_variable` to the task `<getest>`.
 * Added task `<cat>`, which is similar to `<echo>` except that it writes
   the content of a file instead of a message.
+* Display Eiffel compilation error message when an error occurred during
+  the compilation of the test harness in task `<getest>`.
 
 ### gec
 

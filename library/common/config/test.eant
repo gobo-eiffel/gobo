@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel test"
-		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2021, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -57,7 +57,7 @@
 		<set name="verbose_option" value="true" if="${verbose}"/>
 		<set name="compile_verbose_option" value=""/>
 		<set name="compile_verbose_option" value="-v" if="${verbose}"/>
-		<getest verbose="${verbose_option}" abort="${abort_option}" config="&quot;${system_dir}/getest.cfg&quot;" compile="geant ${compile_verbose_option} ${gobo_os} \&quot;-DGOBO_TESTGEN=${cwd}/TESTGEN\&quot; -b \&quot;${system_dir}/build.eant\&quot; compile${debug_suffix}_${eiffel} ${compilation_log}">
+		<getest verbose="${verbose_option}" abort="${abort_option}" config="&quot;${system_dir}/getest.cfg&quot;" compile="geant ${compile_verbose_option} ${gobo_os} \&quot;-DGOBO_TESTGEN=${cwd}/TESTGEN\&quot; -b \&quot;${system_dir}/build.eant\&quot; compile${debug_suffix}_${eiffel} ${compilation_log}" exit_code_variable="return_code">
 			<attribute name="class" value="${class}" if="${class}"/>
 			<attribute name="feature" value="${feature}" if="${feature}"/>
 			<attribute name="default_test" value="true" if="${default_test}=true"/>
@@ -66,6 +66,8 @@
 			<define name="ecf_filename" value="${ecf_filename}" if="${ecf_filename}"/>
 			<define name="test" value="${test}" if="${test}"/>
 		</getest>
+		<cat file="xcompile.log" if="${return_code} = 3"/> <!-- Eiffel compilation error -->
+		<exit code="${return_code}" unless="${return_code} = 0"/>
 	</target>
 
 	<target name="test_ge" depend="init">
