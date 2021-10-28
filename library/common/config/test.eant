@@ -66,8 +66,8 @@
 			<define name="ecf_filename" value="${ecf_filename}" if="${ecf_filename}"/>
 			<define name="test" value="${test}" if="${test}"/>
 		</getest>
-		<cat file="xcompile.log" if="${return_code} = 3"/> <!-- Eiffel compilation error -->
-		<exit code="${return_code}" unless="${return_code} = 0"/>
+		<cat file="xcompile.log" if="${return_code}=3"/> <!-- Eiffel compilation error -->
+		<exit code="${return_code}" unless="${return_code}=0"/>
 	</target>
 
 	<target name="test_ge" depend="init">
