@@ -76,12 +76,13 @@ library_linux_test_ge:
   stage: test_ge
   tags:
     - linux
+  image:
+    # See: https://stackoverflow.com/questions/44319313/how-do-i-use-powershell-with-gitlab-ci-in-gitlab-pages
+    name: "mcr.microsoft.com/powershell:latest"
   dependencies:
     - linux_build_ge
   script:
-    - source "$GOBO/.cicd/install_ge.sh" gitlab
-    - cd $GOBO/library
-    - geant test_ge
+    - pwsh -c { . "$GOBO/.cicd/install_ge.ps1" gitlab ; cd $env:GOBO/library ; geant test_ge }
   rules:
     - if: $CI_COMMIT_TAG
       when: never

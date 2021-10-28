@@ -142,8 +142,6 @@ switch ($GOBO_CI_OS) {
 		$GOBO_CI_BUILD_SCRIPT = "install.sh"
 		Get-Content "/etc/*-release"
 		arch
-		echo "$env:PATH"
-		ls /usr/bin
 		gcc --version
 	}
 	"macos" {
