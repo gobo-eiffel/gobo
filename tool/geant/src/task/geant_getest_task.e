@@ -76,6 +76,12 @@ feature {NONE} -- Initialization
 			if has_attribute (Abort_attribute_name) then
 				command.set_abort (boolean_value (Abort_attribute_name))
 			end
+			if has_attribute (Exit_code_variable_attribute_name) then
+				a_value := attribute_value (Exit_code_variable_attribute_name)
+				if a_value.count > 0 then
+					command.set_exit_code_variable_name (a_value)
+				end
+			end
 				-- attributes (TODO: generalize this):
 			attribute_elements := elements_by_name (Attribute_element_name)
 			cs := attribute_elements.new_cursor
