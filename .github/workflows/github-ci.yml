@@ -124,7 +124,24 @@ jobs:
     needs: windows_build
     strategy:
       matrix:
-        eiffel_compiler: [ge, debug_ge, ise, debug_ise]
+# The test for `library/xslt` crashes with a run-time panic when using 
+# ISE Eiffel in workbench mode in GitHub Actions pipeline:
+#
+# xslt: PANIC: Unexpected harmful signal (Segmentation violation) ...
+#
+# xslt: system execution failed.
+# Following is the set of recorded exceptions.
+# NB: The raised panic may have induced completely inconsistent information:
+#
+# -------------------------------------------------------------------------------
+# Class / Object      Routine                Nature of exception           Effect
+# -------------------------------------------------------------------------------
+# RUN-TIME            root's set-up          Unexpected harmful signal (Segmentation violation):
+# <0000000000000000>                         Eiffel run-time panic.        Bye
+# -------------------------------------------------------------------------------
+#
+# So `debug_ise` is excluded below.
+        eiffel_compiler: [ge, debug_ge, ise]
         system_under_test: [library, tool]
     steps:
       - uses: actions/checkout@v2
