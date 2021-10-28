@@ -78,6 +78,7 @@ switch ($CiTool) {
 			}
 			"Windows" {
 				$GOBO_CI_OS = "windows"
+				# Setting the environment variables for `cl`.
 				Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
 			}
 			default {
@@ -92,12 +93,16 @@ switch ($CiTool) {
 			switch ($matches[1]) {
 				"linux" {
 					$GOBO_CI_OS = "linux"
+					# Installing `gcc`.
+					sudo apt update
+					sudo apt install build-essential
 				}
 				"macos" {
 					$GOBO_CI_OS = "macos"
 				}
 				"windows" {
 					$GOBO_CI_OS = "windows"
+					# Setting the environment variables for `cl`.
 					Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
 				}
 				default {
