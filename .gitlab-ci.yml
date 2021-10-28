@@ -82,7 +82,7 @@ library_linux_test_ge:
   dependencies:
     - linux_build_ge
   script:
-    - pwsh -c { . "$GOBO/.cicd/install_ge.ps1" gitlab ; cd $env:GOBO/library ; geant test_ge }
+    - pwsh -f "$GOBO/.cicd/test_ge.ps1" gitlab ge library
   rules:
     - if: $CI_COMMIT_TAG
       when: never
