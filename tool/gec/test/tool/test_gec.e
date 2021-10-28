@@ -4,7 +4,7 @@ note
 
 		"Test 'gec'"
 
-	copyright: "Copyright (c) 2006-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +30,7 @@ feature -- Test
 			-- Test 'gec'.
 		do
 			compile_program
-			if not eiffel_compiler.is_ise then
+			if eiffel_compiler.is_ge then
 				run_validation
 			end
 		end
