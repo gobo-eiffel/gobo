@@ -31,8 +31,6 @@ switch ($GOBO_CI_OS) {
 		$env:ISE_PLATFORM = "linux-x86-64"
 		$env:ISE_C_COMPILER = "gcc"
 		$GOBO_CI_ISE_ARCHIVE_EXTENSION = ".tar.bz2"
-		sudo apt-get update
-		sudo apt-get -y install libgtk2.0-0
 	}
 	"macos" {
 		$env:ISE_PLATFORM = "macosx-x86-64"
@@ -62,6 +60,13 @@ Remove-Item "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME"
 $env:ISE_EIFFEL = "$env:GOBO/Eiffel_$GOBO_CI_ISE_VERSION"
 $env:PATH = "$env:PATH$([IO.Path]::PathSeparator)$env:ISE_EIFFEL/studio/spec/$env:ISE_PLATFORM/bin"
 
+# Use 'ecb' by default to run ISE Eiffel compiler.
+# It runs faster and does not require GTK to be installed on Linux and MacOS.
+# The generated EIFGEN is not compatible with 'ec', but this is not a problem
+# here since we discard the EIFGEN at the end of the compilation.
+$env:EC_EXECUTABLE="ecb"
+
 # Make sure that we are using our version of the Gobo tools.
 Remove-Item  "$env:ISE_EIFFEL/library/gobo/spec" -Recurse -Force
+
 ecb -version
