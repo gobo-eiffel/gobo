@@ -6,7 +6,7 @@
 	Install ISE Eiffel tools.
 
 .PARAMETER CiTool
-	CI tool (github, gitlab, travis).
+	CI tool (github, gitlab).
 
 .EXAMPLE
 	# Install ISE Eiffel tools from the GitHub Actions pipeline:
@@ -20,7 +20,7 @@
 param
 (
 	[Parameter(Mandatory=$true)]
-	[ValidateSet('github', 'gitlab', 'travis')] 
+	[ValidateSet("github", "gitlab")] 
 	[string] $CiTool
 )
 

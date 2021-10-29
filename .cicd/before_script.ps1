@@ -8,7 +8,7 @@
 	Set environment variables.
 
 .PARAMETER CiTool
-	CI tool (github, gitlab, travis).
+	CI tool (github, gitlab).
 
 .EXAMPLE
 	# To be executed before CI/CD scripts on GitHub Actions pipeline:
@@ -22,7 +22,7 @@
 param
 (
 	[Parameter(Mandatory=$true)]
-	[ValidateSet("github", "gitlab", "travis")] 
+	[ValidateSet("github", "gitlab")] 
 	[string] $CiTool
 )
 
@@ -112,24 +112,6 @@ switch ($CiTool) {
 			}
 		}
 	}
-	"travis" {
-		$env:GOBO = $env:TRAVIS_BUILD_DIR
-		switch ($env:TRAVIS_OS_NAME) {
-			"linux" {
-				$GOBO_CI_OS = "linux"
-			}
-			"osx" {
-				$GOBO_CI_OS = "macos"
-			}
-			"windows" {
-				$GOBO_CI_OS = "windows"
-			}
-			default {
-				Write-Error "Platform not supported: $env:TRAVIS_OS_NAME"
-				exit 1
-			}
-		}
-	}
 	default {
 		Write-Error "CI tool not supported: $CiTool"
 		exit 1
@@ -154,5 +136,7 @@ switch ($GOBO_CI_OS) {
 		$GOBO_CI_BUILD_SCRIPT = "install.bat"
 	}
 }
+Write-Host "`$GOBO_CI_C_COMPILER = $GOBO_CI_C_COMPILER"
+Write-Host "`$GOBO_CI_BUILD_SCRIPT = $GOBO_CI_BUILD_SCRIPT"
 
 $env:PATH = "$env:GOBO/bin$([IO.Path]::PathSeparator)$env:PATH"

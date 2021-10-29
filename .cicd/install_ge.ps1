@@ -6,7 +6,7 @@
 	Install Gobo Eiffel tools.
 
 .PARAMETER CiTool
-	CI tool (github, gitlab, travis).
+	CI tool (github, gitlab).
 
 .EXAMPLE
 	# Install Gobo Eiffel tools from the GitHub Actions pipeline:
@@ -20,7 +20,7 @@
 param
 (
 	[Parameter(Mandatory=$true)]
-	[ValidateSet('github', 'gitlab', 'travis')] 
+	[ValidateSet("github", "gitlab")] 
 	[string] $CiTool
 )
 
@@ -29,11 +29,11 @@ param
 switch ($GOBO_CI_OS) {
 	"linux" {
 		# See limitations (Permission Loss) in https://github.com/actions/download-artifact
-		bash -c 'chmod a+x "$GOBO/bin/ge*"'
+		chmod a+x "$env:GOBO/bin/ge*"
 	}
 	"macos" {
 		# See limitations (Permission Loss) in https://github.com/actions/download-artifact
-		bash -c 'chmod a+x "$GOBO/bin/ge*"'
+		chmod a+x "$env:GOBO/bin/ge*"
 	}
 }
 
