@@ -32,7 +32,7 @@ param
 	[ValidateSet("ge", "debug_ge", "ise", "debug_ise")] 
 	[string] $EiffelCompiler,
 	[Parameter(Mandatory=$true)]
-	[ValidateSet("library", "tool", "tool/gec")] 
+	[ValidateSet("library", "tool", "library/xslt", "tool/gec")] 
 	[string] $SystemUnderTest
 )
 

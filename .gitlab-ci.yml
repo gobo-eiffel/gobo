@@ -216,7 +216,35 @@ tool_linux_test_ise:
       when: on_success
   timeout: 3 hours
 
-library_windows_test_ise:
+# We have `library_no_xslt_windows_test_ise` and `library_xslt_windows_test_ise`,
+# instead of just `library_windows_test_ise`, because it takes more than
+# 1 hour to run this job and the job timeout on GitLab runners for Windows 
+# is set to 1 hour (even though it is set to 2 hours for the project).
+
+library_no_xslt_windows_test_ise:
+  stage: test_ge
+  tags:
+    - shared-windows
+    - windows
+    - windows-1809
+  dependencies:
+    - windows_build_ge
+  script:
+    - Remove-Item "$GOBO/library/xslt/test" -Force -Recurse
+# Use ISE Eiffel in finalized mode because it takes more than
+# 1 hour to run this job in workbench mode and the job timeout
+# on GitLab runners for Windows is set to 1 hour (even though
+# it is set to 2 hours for the project).
+    - . "$GOBO/.cicd/test_ge.ps1" gitlab ise library
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $GOBO_CUSTOM_PIPELINE == "windows_test_ise"
+      when: on_success
+
+library_xslt_windows_test_ise:
   stage: test_ge
   tags:
     - shared-windows
@@ -229,7 +257,7 @@ library_windows_test_ise:
 # 1 hour to run this job in workbench mode and the job timeout
 # on GitLab runners for Windows is set to 1 hour (even though
 # it is set to 2 hours for the project).
-    - . "$GOBO/.cicd/test_ge.ps1" gitlab ise library
+    - . "$GOBO/.cicd/test_ge.ps1" gitlab ise library/xslt
   rules:
     - if: $CI_COMMIT_TAG
       when: never
