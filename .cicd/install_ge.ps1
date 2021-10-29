@@ -29,11 +29,11 @@ param
 switch ($GOBO_CI_OS) {
 	"linux" {
 		# See limitations (Permission Loss) in https://github.com/actions/download-artifact
-		chmod a+x "$env:GOBO/bin/ge*"
+		bash -c 'chmod a+x "$GOBO/bin/ge*"'
 	}
 	"macos" {
 		# See limitations (Permission Loss) in https://github.com/actions/download-artifact
-		chmod a+x "$env:GOBO/bin/ge*"
+		bash -c 'chmod a+x "$GOBO/bin/ge*"'
 	}
 }
 
