@@ -246,7 +246,7 @@ library_windows_test_ise:
 # 1 hour to run this job and the job timeout on GitLab runners for Windows 
 # is set to 1 hour (even though it is set to 2 hours for the project).
 
-tool_no_gec_windows_test_ge:
+tool_no_gec_windows_test_ise:
   stage: test_ge
   tags:
     - shared-windows
@@ -265,7 +265,7 @@ tool_no_gec_windows_test_ge:
     - if: $GOBO_CUSTOM_PIPELINE == "windows_test_ise"
       when: on_success
 
-tool_gec_windows_test_ge:
+tool_gec_windows_test_ise:
   stage: test_ge
   tags:
     - shared-windows
