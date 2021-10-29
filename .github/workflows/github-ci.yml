@@ -128,7 +128,7 @@ jobs:
 # <0000000000000000>                         Eiffel run-time panic.        Bye
 # -------------------------------------------------------------------------------
 #
-# So `debug_ise` is excluded below.
+# So `debug_ise` is not included below.
         eiffel_compiler: [ge, debug_ge, ise]
         system_under_test: [library, tool]
     steps:
