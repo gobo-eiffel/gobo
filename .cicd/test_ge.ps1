@@ -36,9 +36,10 @@ param
 	[string] $SystemUnderTest
 )
 
-. "$PSScriptRoot/.cicd/install_ge.ps1" $CiTool
+. "$PSScriptRoot/install_ge.ps1" $CiTool
 if ($EiffelCompiler.EndsWith("ise")) {
-  . "$PSScriptRoot/.cicd/install_ise.ps1" $CiTool
+  . "$PSScriptRoot/install_ise.ps1" $CiTool
 }
 Set-Location "$env:GOBO/$SystemUnderTest"
 geant test_$EiffelCompiler
+if ($LastExitCode -ne 0) { exit $LastExitCode }
