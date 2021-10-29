@@ -28,7 +28,7 @@ linux_build_ge:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == null || $GOBO_CUSTOM_PIPELINE == "test_ise"
+    - if: $GOBO_CUSTOM_PIPELINE == null || $GOBO_CUSTOM_PIPELINE == "linux_test_ise"
       when: on_success
   artifacts:
     when: always
@@ -51,7 +51,7 @@ windows_build_ge:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == null
+    - if: $GOBO_CUSTOM_PIPELINE == null || $GOBO_CUSTOM_PIPELINE == "windows_test_ise"
       when: on_success
   artifacts:
     when: always
@@ -95,12 +95,13 @@ tool_linux_test_ge:
   stage: test_ge
   tags:
     - linux
+  image:
+    # See: https://stackoverflow.com/questions/44319313/how-do-i-use-powershell-with-gitlab-ci-in-gitlab-pages
+    name: "mcr.microsoft.com/powershell:latest"
   dependencies:
     - linux_build_ge
   script:
-    - source "$GOBO/.cicd/install_ge.sh" gitlab
-    - cd $GOBO/tool
-    - geant test_ge
+    - pwsh -f "$GOBO/.cicd/test_ge.ps1" gitlab ge tool
   rules:
     - if: $CI_COMMIT_TAG
       when: never
@@ -118,10 +119,8 @@ library_windows_test_ge:
   dependencies:
     - windows_build_ge
   script:
-    - . "$GOBO/.cicd/install_ge.ps1" gitlab
-    - cd "$env:GOBO/library"
     # The tests in `$GOBO\library\lexical` are failing in GitLab when using `geant test_ge`.
-    - geant test_debug_ge
+    - . "$GOBO/.cicd/test_ge.ps1" gitlab debug_ge library
   rules:
     - if: $CI_COMMIT_TAG
       when: never
@@ -144,10 +143,8 @@ tool_no_gec_windows_test_ge:
   dependencies:
     - windows_build_ge
   script:
-    - . "$GOBO/.cicd/install_ge.ps1" gitlab
-    - Remove-Item "$env:GOBO/tool/gec/test" -Force -Recurse
-    - cd "$env:GOBO/tool"
-    - geant test_ge
+    - Remove-Item "$GOBO/tool/gec/test" -Force -Recurse
+    - . "$GOBO/.cicd/test_ge.ps1" gitlab ge tool
   rules:
     - if: $CI_COMMIT_TAG
       when: never
@@ -165,9 +162,7 @@ tool_gec_windows_test_ge:
   dependencies:
     - windows_build_ge
   script:
-    - . "$GOBO/.cicd/install_ge.ps1" gitlab
-    - cd "$env:GOBO/tool/gec"
-    - geant test_ge
+    - . "$GOBO/.cicd/test_ge.ps1" gitlab ge tool/gec
   rules:
     - if: $CI_COMMIT_TAG
       when: never
@@ -192,19 +187,19 @@ library_linux_test_ise:
   stage: test_ise
   tags:
     - linux
+  image:
+    # See: https://stackoverflow.com/questions/44319313/how-do-i-use-powershell-with-gitlab-ci-in-gitlab-pages
+    name: "mcr.microsoft.com/powershell:latest"
   dependencies:
     - linux_build_ge
   script:
-    - source "$GOBO/.cicd/install_ge.sh" gitlab
-    - source "$GOBO/.cicd/install_ise.sh" gitlab
-    - cd $GOBO/library
-    - geant test_debug_ise
+    - pwsh -f "$GOBO/.cicd/test_ge.ps1" gitlab debug_ise library
   rules:
     - if: $CI_COMMIT_TAG
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == "test_ise"
+    - if: $GOBO_CUSTOM_PIPELINE == "linux_test_ise"
       when: on_success
   timeout: 3 hours
 
@@ -212,21 +207,81 @@ tool_linux_test_ise:
   stage: test_ise
   tags:
     - linux
+  image:
+    # See: https://stackoverflow.com/questions/44319313/how-do-i-use-powershell-with-gitlab-ci-in-gitlab-pages
+    name: "mcr.microsoft.com/powershell:latest"
   dependencies:
     - linux_build_ge
   script:
-    - source "$GOBO/.cicd/install_ge.sh" gitlab
-    - source "$GOBO/.cicd/install_ise.sh" gitlab
-    - cd $GOBO/tool
-    - geant test_debug_ise
+    - pwsh -f "$GOBO/.cicd/test_ge.ps1" gitlab debug_ise tool
   rules:
     - if: $CI_COMMIT_TAG
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == "test_ise"
+    - if: $GOBO_CUSTOM_PIPELINE == "linux_test_ise"
       when: on_success
   timeout: 3 hours
+
+library_windows_test_ise:
+  stage: test_ise
+  tags:
+    - shared-windows
+    - windows
+    - windows-1809
+  dependencies:
+    - windows_build_ge
+  script:
+    - . "$GOBO/.cicd/test_ge.ps1" gitlab debug_ise library
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $GOBO_CUSTOM_PIPELINE == "windows_test_ise"
+      when: on_success
+
+# We have `tool_no_gec_windows_test_ise` and `tool_gec_windows_test_ise`,
+# instead of just `tool_windows_test_ise`, because it takes more than
+# 1 hour to run this job and the job timeout on GitLab runners for Windows 
+# is set to 1 hour (even though it is set to 2 hours for the project).
+
+tool_no_gec_windows_test_ge:
+  stage: test_ge
+  tags:
+    - shared-windows
+    - windows
+    - windows-1809
+  dependencies:
+    - windows_build_ge
+  script:
+    - Remove-Item "$GOBO/tool/gec/test" -Force -Recurse
+    - . "$GOBO/.cicd/test_ge.ps1" gitlab debug_ise tool
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $GOBO_CUSTOM_PIPELINE == "windows_test_ise"
+      when: on_success
+
+tool_gec_windows_test_ge:
+  stage: test_ge
+  tags:
+    - shared-windows
+    - windows
+    - windows-1809
+  dependencies:
+    - windows_build_ge
+  script:
+    - . "$GOBO/.cicd/test_ge.ps1" gitlab debug_ise tool/gec
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $GOBO_CUSTOM_PIPELINE == "windows_test_ise"
+      when: on_success
 
 #
 # Stages.
