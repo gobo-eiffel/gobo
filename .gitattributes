@@ -1,2 +1,3 @@
 tool/gec/bootstrap/* linguist-vendored
+*.e linguist-language=Eiffel
 *.E linguist-language=Eiffel
