@@ -69,6 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: linux_build
     strategy:
+      fail-fast: false
       matrix:
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
@@ -90,6 +91,7 @@ jobs:
     runs-on: macos-latest
     needs: macos_build
     strategy:
+      fail-fast: false
       matrix:
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
@@ -111,9 +113,25 @@ jobs:
     runs-on: windows-latest
     needs: windows_build
     strategy:
+      fail-fast: false
       matrix:
+        eiffel_compiler: [ge, debug_ge, ise, debug_ise]
+        system_under_test: [library, tool]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: gobo_bin_windows
+          path: bin
+      - uses: actions/download-artifact@v2
+        with:
+          name: gobo_c_config_windows
+          path: tool/gec/config/c
+      - name: test
+        run: |
+          if ("${{ matrix.eiffel_compiler }}" -eq "debug_ise") {
 # The test for `library/xslt` crashes with a run-time panic when using 
-# ISE Eiffel in workbench mode in GitHub Actions pipeline:
+# ISE Eiffel (as of 20.11.10.5048) in workbench mode in GitHub Actions pipeline:
 #
 # xslt: PANIC: Unexpected harmful signal (Segmentation violation) ...
 #
@@ -128,18 +146,7 @@ jobs:
 # <0000000000000000>                         Eiffel run-time panic.        Bye
 # -------------------------------------------------------------------------------
 #
-# So `debug_ise` is not included below.
-        eiffel_compiler: [ge, debug_ge, ise]
-        system_under_test: [library, tool]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
-        with:
-          name: gobo_bin_windows
-          path: bin
-      - uses: actions/download-artifact@v2
-        with:
-          name: gobo_c_config_windows
-          path: tool/gec/config/c
-      - name: test
-        run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
+# So do not include it.
+            Remove-Item "$env:GITHUB_WORKSPACE/library/xslt/test" -Force -Recurse
+          }
+          . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}

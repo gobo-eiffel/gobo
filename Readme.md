@@ -1,3 +1,5 @@
+![Continuous Integration](https://github.com/gobo-eiffel/gobo/actions/workflows/github-ci.yml/badge.svg)
+
 # Gobo Eiffel Project
 
 One of the main concerns of the *Gobo Eiffel Project* is to provide
