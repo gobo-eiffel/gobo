@@ -1,0 +1,37 @@
+name: Continuous Integration
+
+jobs:
+
+#
+# Build Gobo tools.
+#
+
+  - job: linux_build
+    pool: ubuntu-latest
+    steps:
+      - pwsh: . "$(Build.SourcesDirectory)/.cicd/build_ge.ps1" github
+        name: build
+      - publish: $(Build.SourcesDirectory)/bin
+        artifact: gobo_bin_linux
+      - publish: $(Build.SourcesDirectory)/tool/gec/config/c/default.cfg
+        artifact: : gobo_c_config_linux
+
+  - job: macos_build
+    pool: macos-latest
+    steps:
+      - pwsh: . "$(Build.SourcesDirectory)/.cicd/build_ge.ps1" github
+        name: build
+      - publish: $(Build.SourcesDirectory)/bin
+        artifact: gobo_bin_macos
+      - publish: $(Build.SourcesDirectory)/tool/gec/config/c/default.cfg
+        artifact: : gobo_c_config_macos
+
+  - job: windows_build
+    pool: windows-latest
+    steps:
+      - pwsh: . "$(Build.SourcesDirectory)/.cicd/build_ge.ps1" github
+        name: build
+      - publish: $(Build.SourcesDirectory)/bin
+        artifact: gobo_bin_windows
+      - publish: $(Build.SourcesDirectory)/tool/gec/config/c/default.cfg
+        artifact: : gobo_c_config_windows
