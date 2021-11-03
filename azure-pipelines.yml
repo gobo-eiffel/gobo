@@ -7,7 +7,8 @@ jobs:
 #
 
   - job: linux_build
-    pool: ubuntu-latest
+    pool:
+      vmImage: ubuntu-latest
     steps:
       - pwsh: . "$(Build.SourcesDirectory)/.cicd/build_ge.ps1" github
         name: build
@@ -17,7 +18,8 @@ jobs:
         artifact: : gobo_c_config_linux
 
   - job: macos_build
-    pool: macos-latest
+    pool:
+      vmImage: macos-latest
     steps:
       - pwsh: . "$(Build.SourcesDirectory)/.cicd/build_ge.ps1" github
         name: build
@@ -27,7 +29,8 @@ jobs:
         artifact: : gobo_c_config_macos
 
   - job: windows_build
-    pool: windows-latest
+    pool:
+      vmImage: windows-latest
     steps:
       - pwsh: . "$(Build.SourcesDirectory)/.cicd/build_ge.ps1" github
         name: build
