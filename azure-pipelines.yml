@@ -15,7 +15,7 @@ jobs:
       - publish: $(Build.SourcesDirectory)/bin
         artifact: gobo_bin_linux
       - publish: $(Build.SourcesDirectory)/tool/gec/config/c/default.cfg
-        artifact: : gobo_c_config_linux
+        artifact: gobo_c_config_linux
 
   - job: macos_build
     pool:
@@ -26,7 +26,7 @@ jobs:
       - publish: $(Build.SourcesDirectory)/bin
         artifact: gobo_bin_macos
       - publish: $(Build.SourcesDirectory)/tool/gec/config/c/default.cfg
-        artifact: : gobo_c_config_macos
+        artifact: gobo_c_config_macos
 
   - job: windows_build
     pool:
@@ -37,4 +37,4 @@ jobs:
       - publish: $(Build.SourcesDirectory)/bin
         artifact: gobo_bin_windows
       - publish: $(Build.SourcesDirectory)/tool/gec/config/c/default.cfg
-        artifact: : gobo_c_config_windows
+        artifact: gobo_c_config_windows
