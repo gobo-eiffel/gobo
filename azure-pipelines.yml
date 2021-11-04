@@ -43,7 +43,7 @@ jobs:
 # Running tests.
 #
   
-  - job: linux_test:
+  - job: linux_test
     pool:
       vmImage: ubuntu-latest
     dependsOn: linux_build
