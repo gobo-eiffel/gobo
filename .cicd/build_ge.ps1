@@ -25,6 +25,7 @@ param
 )
 
 . "$PSScriptRoot/before_script.ps1" $CiTool
+Get-ChildItem "$env:GOBO"
 & "$env:GOBO/bin/$GOBO_CI_BUILD_SCRIPT" -v $GOBO_CI_C_COMPILER
 if ($LastExitCode -ne 0) { exit $LastExitCode }
 gec --version
