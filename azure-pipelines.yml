@@ -25,23 +25,17 @@ stages:
 # Running tests.
 #
 
-  - stage: linux_test
-    dependsOn: linux_build
-    jobs:
-    - job: linux_test
-      pool:
-        vmImage: ubuntu-latest
-      strategy:
-        matrix:
-          ge_library:
-            GOBO_CI_EIFFEL_COMPILER: ge
-            GOBO_CI_SYSTEM_UNDER_TEST: library
-      steps:
-        - download: current
-          artifact: gobo_bin_linux
-        - pwsh: Move-Item -Path "$(Pipeline.Workspace)/gobo_bin_linux/*" -Destination "$(Build.Repository.LocalPath)/bin" -Force
-        - download: current
-          artifact: gobo_c_config_linux
-        - pwsh: Move-Item -Path "$(Pipeline.Workspace)/gobo_c_config_linux/*" -Destination "$(Build.Repository.LocalPath)/tool/gec/config/c" -Force
-        - pwsh: . "$(Build.Repository.LocalPath)/.cicd/test_ge.ps1" azure $env:GOBO_CI_EIFFEL_COMPILER $env:GOBO_CI_SYSTEM_UNDER_TEST
-          name: test
+  - template: .azure/test.yml
+    parameters:
+      os: linux
+      vm_image: ubuntu-latest
+
+  - template: .azure/test.yml
+    parameters:
+      os: macos
+      vm_image: macos-latest
+
+  - template: .azure/test.yml
+    parameters:
+      os: windows
+      vm_image: windows-latest
