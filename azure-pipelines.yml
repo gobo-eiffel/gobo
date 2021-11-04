@@ -12,9 +12,9 @@ jobs:
     steps:
       - pwsh: . "$(Build.Repository.LocalPath)/.cicd/build_ge.ps1" azure
         name: build
-      - publish: $(Build.Repository.LocalPath)/bin
+      - publish: "$(Build.Repository.LocalPath)/bin"
         artifact: gobo_bin_linux
-      - publish: $(Build.Repository.LocalPath)/tool/gec/config/c/default.cfg
+      - publish: "$(Build.Repository.LocalPath)/tool/gec/config/c/default.cfg"
         artifact: gobo_c_config_linux
 
   - job: macos_build
@@ -23,9 +23,9 @@ jobs:
     steps:
       - pwsh: . "$(Build.Repository.LocalPath)/.cicd/build_ge.ps1" azure
         name: build
-      - publish: $(Build.Repository.LocalPath)/bin
+      - publish: "$(Build.Repository.LocalPath)/bin"
         artifact: gobo_bin_macos
-      - publish: $(Build.Repository.LocalPath)/tool/gec/config/c/default.cfg
+      - publish: "$(Build.Repository.LocalPath)/tool/gec/config/c/default.cfg"
         artifact: gobo_c_config_macos
 
   - job: windows_build
@@ -34,7 +34,30 @@ jobs:
     steps:
       - pwsh: . "$(Build.Repository.LocalPath)/.cicd/build_ge.ps1" azure
         name: build
-      - publish: $(Build.Repository.LocalPath)/bin
+      - publish: "$(Build.Repository.LocalPath)/bin"
         artifact: gobo_bin_windows
-      - publish: $(Build.Repository.LocalPath)/tool/gec/config/c/default.cfg
+      - publish: "$(Build.Repository.LocalPath)/tool/gec/config/c/default.cfg"
         artifact: gobo_c_config_windows
+
+#
+# Running tests.
+#
+  
+  - job: linux_test:
+    pool:
+      vmImage: ubuntu-latest
+    dependsOn: linux_build
+    strategy:
+      matrix:
+        ge_library:
+          - GOBO_CI_EIFFEL_COMPILER: ge
+          - GOBO_CI_SYSTEM_UNDER_TEST: library
+    steps:
+      - download: current
+        artifact: gobo_bin_linux
+      - pwsh: Move-Item -Path "$(Pipeline.Workspace)/gobo_bin_linux/*" -Destination "$(Build.Repository.LocalPath)/bin"
+      - download: current
+        artifact: gobo_c_config_linux
+      - pwsh: Move-Item -Path "$(Pipeline.Workspace)/gobo_c_config_linux/*" -Destination "$(Build.Repository.LocalPath)/tool/gec/config/c"
+      - pwsh: . "$(Build.Repository.LocalPath)/.cicd/test_ge.ps1" azure $GOBO_CI_EIFFEL_COMPILER $GOBO_CI_SYSTEM_UNDER_TEST
+        name: test
