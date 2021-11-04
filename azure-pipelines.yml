@@ -47,6 +47,7 @@ stages:
 
   - stage: test
     jobs:
+    - job: dummy
     - job: linux_test
       pool:
         vmImage: ubuntu-latest
