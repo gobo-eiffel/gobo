@@ -46,11 +46,11 @@ stages:
 #
 
   - stage: test
+    dependsOn: build
     jobs:
     - job: linux_test
       pool:
         vmImage: ubuntu-latest
-      dependsOn: build.linux_build
       strategy:
         matrix:
           ge_library:
