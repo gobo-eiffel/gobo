@@ -54,8 +54,8 @@ stages:
       strategy:
         matrix:
           ge_library:
-            GOBO_CI_EIFFEL_COMPILER: "ge"
-            GOBO_CI_SYSTEM_UNDER_TEST: "library"
+            GOBO_CI_EIFFEL_COMPILER: ge
+            GOBO_CI_SYSTEM_UNDER_TEST: library
       steps:
         - download: current
           artifact: gobo_bin_linux
@@ -63,5 +63,5 @@ stages:
         - download: current
           artifact: gobo_c_config_linux
         - pwsh: Move-Item -Path "$(Pipeline.Workspace)/gobo_c_config_linux/*" -Destination "$(Build.Repository.LocalPath)/tool/gec/config/c" -Force
-        - pwsh: . "$(Build.Repository.LocalPath)/.cicd/test_ge.ps1" azure $GOBO_CI_EIFFEL_COMPILER $GOBO_CI_SYSTEM_UNDER_TEST
+        - pwsh: . "$(Build.Repository.LocalPath)/.cicd/test_ge.ps1" azure $env:GOBO_CI_EIFFEL_COMPILER $env:GOBO_CI_SYSTEM_UNDER_TEST
           name: test
