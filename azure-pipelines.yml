@@ -46,16 +46,16 @@ stages:
 #
 
   - stage: test
-    dependsOn: build
     jobs:
     - job: linux_test
       pool:
         vmImage: ubuntu-latest
+      dependsOn: build.linux_build
       strategy:
         matrix:
           ge_library:
-            GOBO_CI_EIFFEL_COMPILER: ge
-            GOBO_CI_SYSTEM_UNDER_TEST: library
+            GOBO_CI_EIFFEL_COMPILER: "ge"
+            GOBO_CI_SYSTEM_UNDER_TEST: "library"
       steps:
         - download: current
           artifact: gobo_bin_linux
