@@ -10,31 +10,31 @@ jobs:
     pool:
       vmImage: ubuntu-latest
     steps:
-      - pwsh: . "$(Build.SourcesDirectory)/.cicd/build_ge.ps1" azure
+      - pwsh: . "$(Build.Repository.LocalPath)/.cicd/build_ge.ps1" azure
         name: build
-      - publish: $(Build.SourcesDirectory)/bin
+      - publish: $(Build.Repository.LocalPath)/bin
         artifact: gobo_bin_linux
-      - publish: $(Build.SourcesDirectory)/tool/gec/config/c/default.cfg
+      - publish: $(Build.Repository.LocalPath)/tool/gec/config/c/default.cfg
         artifact: gobo_c_config_linux
 
   - job: macos_build
     pool:
       vmImage: macos-latest
     steps:
-      - pwsh: . "$(Build.SourcesDirectory)/.cicd/build_ge.ps1" azure
+      - pwsh: . "$(Build.Repository.LocalPath)/.cicd/build_ge.ps1" azure
         name: build
-      - publish: $(Build.SourcesDirectory)/bin
+      - publish: $(Build.Repository.LocalPath)/bin
         artifact: gobo_bin_macos
-      - publish: $(Build.SourcesDirectory)/tool/gec/config/c/default.cfg
+      - publish: $(Build.Repository.LocalPath)/tool/gec/config/c/default.cfg
         artifact: gobo_c_config_macos
 
   - job: windows_build
     pool:
       vmImage: windows-latest
     steps:
-      - pwsh: . "$(Build.SourcesDirectory)/.cicd/build_ge.ps1" azure
+      - pwsh: . "$(Build.Repository.LocalPath)/.cicd/build_ge.ps1" azure
         name: build
-      - publish: $(Build.SourcesDirectory)/bin
+      - publish: $(Build.Repository.LocalPath)/bin
         artifact: gobo_bin_windows
-      - publish: $(Build.SourcesDirectory)/tool/gec/config/c/default.cfg
+      - publish: $(Build.Repository.LocalPath)/tool/gec/config/c/default.cfg
         artifact: gobo_c_config_windows

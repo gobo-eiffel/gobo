@@ -68,7 +68,7 @@ function Invoke-Environment {
 
 switch ($CiTool) {
 	"azure" {
-		$env:GOBO = "$env:BUILD_REPOSITORY_LOCALPATH/$env:BUILD_REPOSITORY_NAME"
+		$env:GOBO = $env:BUILD_REPOSITORY_LOCALPATH
 		switch ($env:AGENT_OS) {
 			"Linux" {
 				$GOBO_CI_OS = "linux"
