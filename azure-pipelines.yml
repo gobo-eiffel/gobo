@@ -8,16 +8,11 @@ stages:
 
   - stage: build
     jobs:
-      - job: linux_build
-        pool:
-          vmImage: ubuntu-latest
-        steps:
-          - pwsh: . "$(Build.Repository.LocalPath)/.cicd/build_ge.ps1" azure
-            name: build
-          - publish: "$(Build.Repository.LocalPath)/bin"
-            artifact: gobo_bin_linux
-          - publish: "$(Build.Repository.LocalPath)/tool/gec/config/c/default.cfg"
-            artifact: gobo_c_config_linux
+      - template: .azure/build.yml
+        parameters:
+          os: linux
+          pool:
+            vmImage: ubuntu-latest
 
       - job: macos_build
         pool:
