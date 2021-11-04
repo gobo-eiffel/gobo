@@ -6,42 +6,27 @@ stages:
 # Build Gobo tools.
 #
 
-  - stage: build
-    jobs:
-      - template: .azure/build.yml
-        parameters:
-          os: linux
-          pool:
-            vmImage: ubuntu-latest
+  - template: .azure/build.yml
+    parameters:
+      os: linux
+      vm_image: ubuntu-latest
 
-      - job: macos_build
-        pool:
-          vmImage: macos-latest
-        steps:
-          - pwsh: . "$(Build.Repository.LocalPath)/.cicd/build_ge.ps1" azure
-            name: build
-          - publish: "$(Build.Repository.LocalPath)/bin"
-            artifact: gobo_bin_macos
-          - publish: "$(Build.Repository.LocalPath)/tool/gec/config/c/default.cfg"
-            artifact: gobo_c_config_macos
+  - template: .azure/build.yml
+    parameters:
+      os: macos
+      vm_image: macos-latest
 
-      - job: windows_build
-        pool:
-          vmImage: windows-latest
-        steps:
-          - pwsh: . "$(Build.Repository.LocalPath)/.cicd/build_ge.ps1" azure
-            name: build
-          - publish: "$(Build.Repository.LocalPath)/bin"
-            artifact: gobo_bin_windows
-          - publish: "$(Build.Repository.LocalPath)/tool/gec/config/c/default.cfg"
-            artifact: gobo_c_config_windows
+  - template: .azure/build.yml
+    parameters:
+      os: windows
+      vm_image: windows-latest
 
 #
 # Running tests.
 #
 
-  - stage: test
-    dependsOn: build
+  - stage: linux_test
+    dependsOn: linux_build
     jobs:
     - job: linux_test
       pool:
