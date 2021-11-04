@@ -6,7 +6,7 @@
 	Test Gobo Eiffel tools and libraries.
 
 .PARAMETER CiTool
-	CI tool (github, gitlab).
+	CI tool (azure, github, gitlab).
 
 .PARAMETER EiffelCompiler
 	Eiffel compiler (ge, debug_ge, ise, debug_ise).
@@ -26,7 +26,7 @@
 param
 (
 	[Parameter(Mandatory=$true)]
-	[ValidateSet("github", "gitlab")] 
+	[ValidateSet("azure", "github", "gitlab")] 
 	[string] $CiTool,
 	[Parameter(Mandatory=$true)]
 	[ValidateSet("ge", "debug_ge", "ise", "debug_ise")] 
