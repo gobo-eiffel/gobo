@@ -50,8 +50,8 @@ jobs:
     strategy:
       matrix:
         ge_library:
-          - GOBO_CI_EIFFEL_COMPILER: ge
-          - GOBO_CI_SYSTEM_UNDER_TEST: library
+          GOBO_CI_EIFFEL_COMPILER: ge
+          GOBO_CI_SYSTEM_UNDER_TEST: library
     steps:
       - download: current
         artifact: gobo_bin_linux
