@@ -8,7 +8,7 @@
 	Set environment variables.
 
 .PARAMETER CiTool
-	CI tool (github, gitlab).
+	CI tool (azure, github, gitlab).
 
 .EXAMPLE
 	# To be executed before CI/CD scripts on GitHub Actions pipeline:
@@ -22,7 +22,7 @@
 param
 (
 	[Parameter(Mandatory=$true)]
-	[ValidateSet("github", "gitlab")] 
+	[ValidateSet("azure", "github", "gitlab")] 
 	[string] $CiTool
 )
 
@@ -67,6 +67,26 @@ function Invoke-Environment {
 }
 
 switch ($CiTool) {
+	"azure" {
+		$env:GOBO = "$env:BUILD_REPOSITORY_LOCALPATH/$env:BUILD_REPOSITORY_NAME"
+		switch ($env:AGENT_OS) {
+			"Linux" {
+				$GOBO_CI_OS = "linux"
+			}
+			"Darwin" {
+				$GOBO_CI_OS = "macos"
+			}
+			"Windows_NT" {
+				$GOBO_CI_OS = "windows"
+				# Setting the environment variables for `cl`.
+				Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
+			}
+			default {
+				Write-Error "Platform not supported: $env:AGENT_OS"
+				exit 1
+			}
+		}
+	}
 	"github" {
 		$env:GOBO = $env:GITHUB_WORKSPACE
 		switch ($env:RUNNER_OS) {
