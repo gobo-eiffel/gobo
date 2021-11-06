@@ -1,4 +1,4 @@
-![Continuous Integration](https://github.com/gobo-eiffel/gobo/actions/workflows/github-ci.yml/badge.svg)
+![build & test](https://github.com/gobo-eiffel/gobo/actions/workflows/github-ci.yml/badge.svg)
 
 # Gobo Eiffel Project
 
