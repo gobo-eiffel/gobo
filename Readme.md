@@ -1,4 +1,6 @@
-![build & test](https://github.com/gobo-eiffel/gobo/actions/workflows/github-ci.yml/badge.svg)
+[![GitHub Actions](https://github.com/gobo-eiffel/gobo/actions/workflows/github-ci.yml/badge.svg)](https://github.com/gobo-eiffel/gobo/actions/workflows/github-ci.yml)
+[![GitLab CI/CD](https://gitlab.com/ebezault/gobo/badges/master/pipeline.svg?key_text=GitLab+CI/CD&key_width=85)](https://gitlab.com/ebezault/gobo/-/pipelines)
+[![Azure Pipelines](https://dev.azure.com/ericb0733/gobo/_apis/build/status/gobo?branchName=master)](https://dev.azure.com/ericb0733/gobo/_build?definitionId=1&branchName=master)
 
 # Gobo Eiffel Project
 
