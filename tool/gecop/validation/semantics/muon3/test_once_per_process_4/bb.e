@@ -6,7 +6,6 @@ feature
 		do
 			print ("First call to f%N")
 			f (False)
-			print ("End of first call to f%N")
 			if attached other_thread as l_other_thread then
 				l_other_thread.join
 			end
@@ -38,6 +37,7 @@ feature
 					i := i - 1
 				end
 			end
+			print ("End of first call to f%N")
 		end
 
 	other_thread: detachable CC
