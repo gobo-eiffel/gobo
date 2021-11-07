@@ -131,7 +131,7 @@ feature -- Test Gobo Eiffel Compiler
 			elseif l_directory.there_exists (agent output_recognized (?, l_directory, failed_filename_regexp ("gec?"), output_log_filename)) then
 				assert ("test_failed", False)
 			else
-				assert ("unknown_test_result", False)
+				assert_known_test_result ("unknown_test_result", False, output_log_filename)
 			end
 		end
 
@@ -260,7 +260,7 @@ feature -- Test gelint
 			elseif l_directory.there_exists (agent output_recognized (?, l_directory, failed_filename_regexp ("(gelint|gec?)"), output_log_filename)) then
 				assert ("test_failed", False)
 			else
-				assert ("unknown_test_result", False)
+				assert_known_test_result ("unknown_test_result", False, output_log_filename)
 			end
 		end
 
@@ -401,7 +401,7 @@ feature -- Test ISE Eiffel
 			elseif l_directory.there_exists (agent output_recognized (?, l_directory, failed_filename_regexp ("ise"), output_log_filename)) then
 				assert ("test_failed", False)
 			else
-				assert ("unknown_test_result", False)
+				assert_known_test_result ("unknown_test_result", False, output_log_filename)
 			end
 		end
 
@@ -730,6 +730,48 @@ feature {NONE} -- Directory and file names
 
 	testrun_dirname: STRING
 			-- Name of temporary directory where to run the test
+
+feature {NONE} -- Assertions
+
+	assert_known_test_result (a_tag: STRING; a_is_known: BOOLEAN; a_output_filename: STRING)
+			-- Assert that the test result is known.
+			-- `a_is_known' is True when the test result is known.
+			-- `a_output_filename' is the name of the file containing the output of the test.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_output_filename_not_void: a_output_filename /= Void
+		local
+			l_file: KL_TEXT_INPUT_FILE
+			l_output: STRING
+		do
+			assertions.add_assertion
+			if not a_is_known then
+				create l_output.make (512)
+				l_output.append_string ("unknown_test_result:%N")
+				create l_file.make (a_output_filename)
+				l_file.open_read
+				if l_file.is_open_read then
+					from
+						l_file.read_line
+					until
+						l_file.end_of_file
+					loop
+						l_output.append_string (l_file.last_string)
+						l_output.append_character ('%N')
+						l_file.read_line
+					end
+					l_file.close
+				else
+					l_output.append_string ("Cannot read test output file '")
+					l_output.append_string (a_output_filename)
+					l_output.append_character ('%'')
+				end
+				logger.report_failure (a_tag, l_output)
+				assertions.report_error (l_output)
+			else
+				logger.report_success (a_tag)
+			end
+		end
 
 feature {NONE} -- Output logs
 
