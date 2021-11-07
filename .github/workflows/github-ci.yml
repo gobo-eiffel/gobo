@@ -128,25 +128,4 @@ jobs:
           name: gobo_c_config_windows
           path: tool/gec/config/c
       - name: test
-# The test for `library/xslt` crashes with a run-time panic when using 
-# ISE Eiffel (as of 20.11.10.5048) in workbench mode in GitHub Actions pipeline:
-#
-# xslt: PANIC: Unexpected harmful signal (Segmentation violation) ...
-#
-# xslt: system execution failed.
-# Following is the set of recorded exceptions.
-# NB: The raised panic may have induced completely inconsistent information:
-#
-# -------------------------------------------------------------------------------
-# Class / Object      Routine                Nature of exception           Effect
-# -------------------------------------------------------------------------------
-# RUN-TIME            root's set-up          Unexpected harmful signal (Segmentation violation):
-# <0000000000000000>                         Eiffel run-time panic.        Bye
-# -------------------------------------------------------------------------------
-#
-# So do not include it.
-        run: |
-          if ("${{ matrix.eiffel_compiler }}" -eq "debug_ise") {
-            Remove-Item "$env:GITHUB_WORKSPACE/library/xslt/test" -Force -Recurse
-          }
-          . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
+        run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
