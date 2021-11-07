@@ -73,6 +73,7 @@ feature {NONE} -- Initialization
 				--
 				-- I suspect that this is happening when the Eiffel runtime is cleaning
 				-- up memory before exit. Force a manual exit to avoid this crash.
+			print ("Will exist 3%N")
 			Exceptions.die (0)
 		end
 
@@ -417,6 +418,7 @@ feature -- Execution
 				l_completed_file.close
 			end
 			a_summary.print_summary (l_suite, a_file)
+			print ("Will exist 1%N")
 			if not a_summary.is_successful then
 				if not progress_status then
 					a_file.put_new_line
@@ -430,6 +432,7 @@ feature -- Execution
 					Exceptions.die (3)
 				end
 			end
+			print ("Will exist 2%N")
 		end
 
 feature {NONE} -- Command line
