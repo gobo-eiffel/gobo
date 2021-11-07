@@ -21,6 +21,8 @@ inherit
 
 	KL_SHARED_EXCEPTIONS
 
+	KL_SHARED_MEMORY
+
 	KL_SHARED_STANDARD_FILES
 
 	KL_SHARED_FILE_SYSTEM
@@ -74,6 +76,8 @@ feature {NONE} -- Initialization
 				-- I suspect that this is happening when the Eiffel runtime is cleaning
 				-- up memory before exit. Force a manual exit to avoid this crash.
 			print ("Will exist 3%N")
+			memory.collection_off
+			print ("Will exist 4%N")
 			Exceptions.die (0)
 		end
 
