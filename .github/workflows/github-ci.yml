@@ -116,7 +116,7 @@ jobs:
       fail-fast: false
       matrix:
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
-        system_under_test: [library, tool]
+        system_under_test: [library/xslt, tool]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
