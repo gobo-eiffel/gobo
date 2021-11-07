@@ -2,6 +2,8 @@ class CC
 
 inherit
 
+	BB
+
 	THREAD
 		rename
 			make as make_thread
@@ -25,7 +27,7 @@ feature
 		do
 			print ("Second call to f%N")
 			b.set_other_thread_launched (True)
-			b.f (True)
+			f (True)
 			print ("End of second call to f%N")
 		end	
 		

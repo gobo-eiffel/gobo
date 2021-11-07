@@ -10,7 +10,7 @@ feature
 		local
 			b: BB
 		do
-			create b.make
+			create b
 			b.g
 		end
 		
