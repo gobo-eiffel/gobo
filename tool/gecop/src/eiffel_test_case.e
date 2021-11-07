@@ -747,7 +747,8 @@ feature {NONE} -- Assertions
 			assertions.add_assertion
 			if not a_is_known then
 				create l_output.make (512)
-				l_output.append_string ("unknown_test_result:%N")
+				l_output.append_string (a_tag)
+				l_output.append_string ("%Ntest output:%N----%N")
 				create l_file.make (a_output_filename)
 				l_file.open_read
 				if l_file.is_open_read then
@@ -764,8 +765,9 @@ feature {NONE} -- Assertions
 				else
 					l_output.append_string ("Cannot read test output file '")
 					l_output.append_string (a_output_filename)
-					l_output.append_character ('%'')
+					l_output.append_string ("%'%N")
 				end
+				l_output.append_string ("----")
 				logger.report_failure (a_tag, l_output)
 				assertions.report_error (l_output)
 			else
