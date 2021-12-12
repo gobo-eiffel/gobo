@@ -138,20 +138,19 @@ void GE_get_argcargv(EIF_NATIVE_CHAR* cmd, int* argc, EIF_NATIVE_CHAR*** argvp)
 	(*argvp)[i] = (EIF_NATIVE_CHAR*)0;
 }
 
-int main(void)
+int main(int dummy_arg1, char** dummy_argv)
 {
 	int code;
 	int argc;
 	EIF_NATIVE_CHAR** argv;
 	EIF_NATIVE_CHAR* cmd;
-#ifdef EIF_WINDOWS
+
 	GE_set_windows_exception_filter();
 		/* Variables used in WEL. */
 	eif_hInstance = GetModuleHandle(NULL);
 	eif_hPrevInstance = NULL;
 	eif_lpCmdLine = GetCommandLineW();
 	eif_nCmdShow = SW_SHOW;
-#endif
 	cmd = GE_nstrdup(GetCommandLineW());
 	GE_get_argcargv(cmd, &argc, &argv);
 	code = GE_main(argc, argv);
@@ -171,7 +170,7 @@ int main(void)
  */
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	return main();
+	return main(0, NULL);
 }
 
 #else
