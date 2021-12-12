@@ -26,8 +26,8 @@ param
 
 . "$PSScriptRoot/before_script.ps1" $CiTool
 
-$GOBO_CI_ISE_VERSION = "20.11"
-$GOBO_CI_ISE_REVISION = "rev_105048"
+$GOBO_CI_ISE_VERSION = "21.11"
+$GOBO_CI_ISE_REVISION = "rev_106046"
 
 switch ($GOBO_CI_OS) {
 	"linux" {
