@@ -2104,19 +2104,22 @@ feature {NONE} -- Feature generation
 				end
 				print_external_c_struct_body (l_arguments, l_result_type_set, l_struct_type, l_struct_field_name, l_struct_field_type)
 			elseif old_external_c_regexp.recognizes (l_language_string) then
-					-- Regexp: C ["(" {<type> "," ...}* ")" [":" <type>]] ["|" {<include> "," ...}+]
+					-- Regexp: C [["(" {<type> "," ...}* ")"] [":" <type>]] ["|" {<include> "," ...}+]
 					-- \1: has signature
-					-- \2: signature arguments
-					-- \4: signature result
-					-- \6: include files
-				if old_external_c_regexp.match_count > 6 and then old_external_c_regexp.captured_substring_count (6) > 0 then
+					-- \2: has signature arguments
+					-- \3: signature arguments
+					-- \5: signature result
+					-- \7: include files
+				if old_external_c_regexp.match_count > 7 and then old_external_c_regexp.captured_substring_count (7) > 0 then
 					l_has_include_files := True
-					print_external_c_includes (old_external_c_regexp.captured_substring (6))
+					print_external_c_includes (old_external_c_regexp.captured_substring (7))
 				end
 				if old_external_c_regexp.match_count > 1 and then old_external_c_regexp.captured_substring_count (1) > 0 then
-					l_signature_arguments := old_external_c_regexp.captured_substring (2)
-					if old_external_c_regexp.match_count > 4 and then old_external_c_regexp.captured_substring_count (4) > 0 then
-						l_signature_result := old_external_c_regexp.captured_substring (4)
+					if old_external_c_regexp.match_count > 2 and then old_external_c_regexp.captured_substring_count (2) > 0 then
+						l_signature_arguments := old_external_c_regexp.captured_substring (3)
+					end
+					if old_external_c_regexp.match_count > 5 and then old_external_c_regexp.captured_substring_count (5) > 0 then
+						l_signature_result := old_external_c_regexp.captured_substring (5)
 					end
 				end
 				if not l_has_include_files then
@@ -40255,11 +40258,12 @@ feature {NONE} -- External regexp
 			-- \3: include files
 
 	old_external_c_regexp: RX_PCRE_REGULAR_EXPRESSION
-			-- Regexp: C ["(" {<type> "," ...}* ")" [":" <type>]] ["|" {<include> "," ...}+]
+			-- Regexp: C [["(" {<type> "," ...}* ")"] [":" <type>]] ["|" {<include> "," ...}+]
 			-- \1: has signature
-			-- \2: signature arguments
-			-- \4: signature result
-			-- \6: include files
+			-- \2: has signature arguments
+			-- \3: signature arguments
+			-- \5: signature result
+			-- \7: include files
 
 	old_external_c_macro_regexp: RX_PCRE_REGULAR_EXPRESSION
 			-- Regexp: C "[" macro <include> "]" ["(" {<type> "," ...}* ")"] [":" <type>]
@@ -40330,9 +40334,9 @@ feature {NONE} -- External regexp
 				-- Regexp: C [blocking] inline [use {<include> "," ...}+]
 			create external_c_inline_regexp.make
 			external_c_inline_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]+(blocking[ \t\r\n]+)?inline([ \t\r\n]+use[ \t\r\n]*((.|\n)+))?")
-				-- Regexp: C ["(" {<type> "," ...}* ")" [":" <type>]] ["|" {<include> "," ...}+]
+				-- Regexp: C [["(" {<type> "," ...}* ")"] [":" <type>]] ["|" {<include> "," ...}+]
 			create old_external_c_regexp.make
-			old_external_c_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]*(\(([^)]*)\)[ \t\r\n]*(:[ \t\r\n]*([^|]+))?)?[ \t\r\n]*(\|[ \t\r\n]*((.|\n)+))?")
+			old_external_c_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]*((\(([^)]*)\))?[ \t\r\n]*(:[ \t\r\n]*([^|]+))?)?[ \t\r\n]*(\|[ \t\r\n]*((.|\n)+))?")
 				-- Regexp: C "[" macro <include> "]" ["(" {<type> "," ...}* ")"] [":" <type>]
 			create old_external_c_macro_regexp.make
 			old_external_c_macro_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]*\[[ \t\r\n]*macro[ \t\r\n]*([^]]+)\][ \t\r\n]*(\(([^)]*)\))?[ \t\r\n]*(:[ \t\r\n]*((.|\n)+))?")
