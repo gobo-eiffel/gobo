@@ -5,7 +5,7 @@ note
 		"Test features of class ET_AST_PRINTER"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -83,10 +83,9 @@ feature -- Test
 			l_system_processor: ET_SYSTEM_PROCESSOR
 		do
 				-- For compatibility with ISE's tools, define the environment
-				-- variable "$ISE_LIBRARY" to $ISE_EIFFEL" if not set yet.
-			ise_variables.set_ise_library_variable
-				-- Also define the environment variable "$ISE_PLATFORM" if not set yet.
-			ise_variables.set_ise_platform_variable
+				-- variables "$ISE_LIBRARY", "$EIFFEL_LIBRARY", "$ISE_PLATFORM"
+				-- and "$ISE_C_COMPILER" if not set yet.
+			ise_variables.set_ise_variables
 			if eiffel_compiler.is_ise then
 				ise_version := ise_latest
 			elseif eiffel_compiler.is_ge then

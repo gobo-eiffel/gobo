@@ -78,10 +78,9 @@ feature -- Execution
 		do
 			Arguments.set_program_name ("gec")
 				-- For compatibility with ISE's tools, define the environment
-				-- variable "$ISE_LIBRARY" to $ISE_EIFFEL" if not set yet.
-			ise_variables.set_ise_library_variable
-				-- Also define the environment variable "$ISE_PLATFORM" if not set yet.
-			ise_variables.set_ise_platform_variable
+				-- variables "$ISE_LIBRARY", "$EIFFEL_LIBRARY", "$ISE_PLATFORM"
+				-- and "$ISE_C_COMPILER" if not set yet.
+			ise_variables.set_ise_variables
 			error_handler := a_error_handler
 			parse_arguments (a_args)
 			if exit_code = 0 and then not version_flag.was_found then
