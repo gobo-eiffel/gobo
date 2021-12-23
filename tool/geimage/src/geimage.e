@@ -44,7 +44,7 @@ feature -- Execution
 			-- Set `exit_code'.
 		require
 			a_args_not_void: a_args /= Void
-			no_void_arg: across a_args is l_arg all l_arg /= Void end
+			no_void_arg: across a_args as l_arg all l_arg.item /= Void end
 		local
 			l_error_handler: UT_ERROR_HANDLER
 		do
@@ -57,7 +57,7 @@ feature -- Execution
 			-- Set `exit_code'.
 		require
 			a_args_not_void: a_args /= Void
-			no_void_arg: across a_args is l_arg all l_arg /= Void end
+			no_void_arg: across a_args as l_arg all l_arg.item /= Void end
 			a_error_handler_not_void: a_error_handler /= Void
 		local
 			l_filename: STRING
@@ -179,7 +179,7 @@ feature -- Argument parsing
 			-- Initialize options and parse arguments `a_args'.
 		require
 			a_args_not_void: a_args /= Void
-			no_void_arg: across a_args is l_arg all l_arg /= Void end
+			no_void_arg: across a_args as l_arg all l_arg.item /= Void end
 		local
 			l_parser: AP_PARSER
 			l_list: AP_ALTERNATIVE_OPTIONS_LIST

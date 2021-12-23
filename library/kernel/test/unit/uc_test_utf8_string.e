@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -470,46 +470,46 @@ feature -- Test
 			end
 		end
 
-	test_infix_at1
-			-- Test feature `at' with 'alias "@"'.
+	test_at1
+			-- Test feature `at'.
 		local
 			a_string: UC_UTF8_STRING
 		do
 			create a_string.make_from_string ("bar")
-			assert_characters_equal ("item1", 'b', a_string @ 1)
-			assert_characters_equal ("item2", 'a', a_string @ 2)
-			assert_characters_equal ("item3", 'r', a_string @ 3)
+			assert_characters_equal ("item1", 'b', a_string.at (1))
+			assert_characters_equal ("item2", 'a', a_string.at (2))
+			assert_characters_equal ("item3", 'r', a_string.at (3))
 			a_string.put_item_code (too_big_character, 2)
-			assert_characters_equal ("item4", '%U', a_string @ 2)
+			assert_characters_equal ("item4", '%U', a_string.at (2))
 		end
 
-	test_infix_at2
-			-- Test feature `at' with 'alias "@"'.
+	test_at2
+			-- Test feature `at'.
 		local
 			a_string: UC_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
-			assert_characters_equal ("item1", 'b', a_string @ 1)
-			assert_characters_equal ("item2", 'a', a_string @ 2)
-			assert_characters_equal ("item3", 'r', a_string @ 3)
+			assert_characters_equal ("item1", 'b', a_string.at (1))
+			assert_characters_equal ("item2", 'a', a_string.at (2))
+			assert_characters_equal ("item3", 'r', a_string.at (3))
 			a_string.put_item_code (too_big_character, 2)
-			assert_characters_equal ("item4", '%U', a_string @ 2)
+			assert_characters_equal ("item4", '%U', a_string.at (2))
 		end
 
-	test_infix_at3
-			-- Test feature `at' with 'alias "@"'.
+	test_at3
+			-- Test feature `at'.
 		local
 			a_string: STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
-			assert_characters_equal ("item1", 'b', a_string @ 1)
-			assert_characters_equal ("item2", 'a', a_string @ 2)
-			assert_characters_equal ("item3", 'r', a_string @ 3)
+			assert_characters_equal ("item1", 'b', a_string.at (1))
+			assert_characters_equal ("item2", 'a', a_string.at (2))
+			assert_characters_equal ("item3", 'r', a_string.at (3))
 			if not attached {UC_UTF8_STRING} a_string as utf8 then
 				assert ("utf8", False)
 			else
 				utf8.put_item_code (too_big_character, 2)
-				assert_characters_equal ("item4", '%U', a_string @ 2)
+				assert_characters_equal ("item4", '%U', a_string.at (2))
 			end
 		end
 

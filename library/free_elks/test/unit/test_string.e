@@ -5,7 +5,7 @@ note
 		"Test features of class STRING"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -192,15 +192,15 @@ feature -- Test
 			assert_integers_equal ("item_code3", ('r').code, a_string.item_code (3))
 		end
 
-	test_infix_at
-			-- Test feature `at' with 'alias "@"'.
+	test_at
+			-- Test feature `at'.
 		local
 			a_string: STRING
 		do
 			a_string := "bar"
-			assert_characters_equal ("item1", 'b', a_string @ 1)
-			assert_characters_equal ("item2", 'a', a_string @ 2)
-			assert_characters_equal ("item3", 'r', a_string @ 3)
+			assert_characters_equal ("item1", 'b', a_string.at (1))
+			assert_characters_equal ("item2", 'a', a_string.at (2))
+			assert_characters_equal ("item3", 'r', a_string.at (3))
 		end
 
 	test_put

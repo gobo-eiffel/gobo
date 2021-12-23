@@ -5,7 +5,7 @@
 		"Eiffel decorated Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -380,9 +380,9 @@ feature -- Status setting
 			-- Set `explicit_convert_class_names' to `a_explicit_convert_class_names'.
 		require
 			regexps_compiled: a_explicit_convert_class_names /= Void implies
-				across a_explicit_convert_class_names is l_conversion all
-					(attached l_conversion.from_class as l_from_class implies l_from_class.is_compiled) and
-					(attached l_conversion.from_class as l_to_class implies l_to_class.is_compiled) end
+				across a_explicit_convert_class_names as l_conversion all
+					(attached l_conversion.item.from_class as l_from_class implies l_from_class.is_compiled) and
+					(attached l_conversion.item.from_class as l_to_class implies l_to_class.is_compiled) end
 		do
 			explicit_convert_class_names := a_explicit_convert_class_names
 		ensure
@@ -4130,8 +4130,8 @@ feature {NONE} -- Implementation
 invariant
 
 	explicit_convert_class_names_regexps_compiled: attached explicit_convert_class_names as l_explicit_convert_class_names implies
-		across l_explicit_convert_class_names is l_conversion all
-			(attached l_conversion.from_class as l_from_class implies l_from_class.is_compiled) and
-			(attached l_conversion.from_class as l_to_class implies l_to_class.is_compiled) end
+		across l_explicit_convert_class_names as l_conversion all
+			(attached l_conversion.item.from_class as l_from_class implies l_from_class.is_compiled) and
+			(attached l_conversion.item.from_class as l_to_class implies l_to_class.is_compiled) end
 
 end
