@@ -12,7 +12,7 @@ What to do: Make sure that the name of the feature is unambiguous:
 
 Class: BB [G -> {CC, DD}]
 Feature: f
-The feature `prefix "+"' occurs in the following set of constraint classes:
+The feature `+' occurs in the following set of constraint classes:
 
 	{CC}.f  from formal G at constraint position #1.
 	{DD}.g  from formal G at constraint position #2.

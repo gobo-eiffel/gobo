@@ -1,0 +1,23 @@
+-------------------------------------------------------------------------------
+
+Obsolete syntax used at line 15 in class AA
+Deprecated use of keyword `is`.
+
+            create b.make (2)
+            across b is c loop
+---------------------^
+                print (c.value)
+
+-------------------------------------------------------------------------------
+1
+True
+True
+2
+True
+True
+1
+True
+True
+2
+True
+True

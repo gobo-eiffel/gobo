@@ -9,4 +9,4 @@ In this test, the sequence of characters `~~` is used as *free operator*. It sat
 ### Notes
 
 * ISE Eiffel (as of 19.12.10.3842 and after) erroneously reports a syntax error.
-* ISE Eiffel (as of 20.11.10.5048 and after) erroneously reports a validity error  `VFAV-1`.
+* ISE Eiffel (as of 20.11.10.5048 and after) erroneously reports a validity error `VFAV-1`.

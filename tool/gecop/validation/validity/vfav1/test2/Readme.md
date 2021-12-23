@@ -9,3 +9,5 @@ In this test, the constraint of the formal generic parameter of class `BB` has a
 ### Notes
 
 * ISE Eiffel (as of 18.11.10.2592 and after) reports this validity rule violation using the code `VTGC-2`. Also, it mentions `infix "+"` whereas only `alias "+"` are involved. And the error message is truncated.
+
+* ISE Eiffel (as of 21.11.10.6046) crashes with an exception trace.

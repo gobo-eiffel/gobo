@@ -17,4 +17,9 @@ The feature `[]' occurs in the following set of constraint classes:
 	{CC}.f  from formal G at constraint position #1.
 	{DD}.g  from formal G at constraint position #2.
 
+Line: 9
+      do
+->      i := a [5]
+      end
+
 -------------------------------------------------------------------------------

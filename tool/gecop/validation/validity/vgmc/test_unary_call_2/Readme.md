@@ -9,3 +9,5 @@ In this test, the formal generic parameter `G` of class `BB` has two constraints
 ### Notes
 
 * ISE Eiffel (as of 18.11.10.2592 and after) reports this validity rule violation using the old code `VTMC-2`. Also, the error message mentions `prefix "+"`, but there is not such feature name in the code. The code uses `alias "+"`.
+
+* ISE Eiffel (as of 21.11.10.6046) still reports this validity rule violation using the old code `VTMC-2`. But it does not mention `prefix "+"` anymore, but just `feature +`.
