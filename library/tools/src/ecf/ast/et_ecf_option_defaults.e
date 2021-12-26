@@ -645,7 +645,7 @@ feature -- Setting
 			a_options_not_void: a_options /= Void
 		do
 			set_default_options_1_21_0 (a_options)
-			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
+			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.none_option_value)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_obsolete_feature_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
 		ensure
 			instance_free: class
