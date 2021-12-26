@@ -5,7 +5,7 @@ note
 		"ECF option default values"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,9 @@ feature -- Access
 		require
 			a_ecf_version_not_void: a_ecf_version /= Void
 		do
-			if a_ecf_version >= ecf_1_21_0 then
+			if a_ecf_version >= ecf_1_22_0 then
+				Result := default_options_1_22_0
+			elseif a_ecf_version >= ecf_1_21_0 then
 				Result := default_options_1_21_0
 			elseif a_ecf_version >= ecf_1_18_0 then
 				Result := default_options_1_18_0
@@ -50,6 +52,16 @@ feature -- Access
 		ensure
 			instance_free: class
 			default_options_not_void: Result /= Void
+		end
+
+	default_options_1_22_0: ET_ECF_OPTIONS
+			-- Default option values for ECF 1.22.0 and above
+		once
+			create Result.make
+			set_default_options_1_22_0 (Result)
+		ensure
+			instance_free: class
+			default_options_1_22_0_not_void: Result /= Void
 		end
 
 	default_options_1_21_0: ET_ECF_OPTIONS
@@ -195,7 +207,9 @@ feature -- Access
 		require
 			a_ecf_version_not_void: a_ecf_version /= Void
 		do
-			if a_ecf_version >= ecf_1_21_0 then
+			if a_ecf_version >= ecf_1_22_0 then
+				Result := valid_options_1_22_0
+			elseif a_ecf_version >= ecf_1_21_0 then
 				Result := valid_options_1_21_0
 			elseif a_ecf_version >= ecf_1_18_0 then
 				Result := valid_options_1_18_0
@@ -242,6 +256,7 @@ feature -- Access
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.debug_option_name)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.full_class_checking_option_name)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.is_attached_by_default_option_name)
+			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.is_obsolete_iteration_option_name)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.is_obsolete_routine_type_option_name)
 			Result.force_last (manifest_array_type_option_value_regexp, {ET_ECF_OPTION_NAMES}.manifest_array_type_option_name)
 			Result.force_last (boolean_option_value_regexp, {ET_ECF_OPTION_NAMES}.msil_application_optimize_option_name)
@@ -257,12 +272,25 @@ feature -- Access
 			no_void_option_name: not Result.has_void
 		end
 
+	valid_options_1_22_0: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
+			-- Valid option values for ECF 1.22.0 and above
+			--
+			-- A void regexp means that there is no constraint on the option value.
+		once
+			Result := valid_options_latest
+		ensure
+			instance_free: class
+			valid_options_1_22_0_not_void: Result /= Void
+			no_void_option_name: not Result.has_void
+		end
+
 	valid_options_1_21_0: DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING]
 			-- Valid option values for ECF 1.21.0 and above
 			--
 			-- A void regexp means that there is no constraint on the option value.
 		once
-			Result := valid_options_latest
+			Result := valid_options_1_22_0.twin
+			Result.remove ({ET_ECF_OPTION_NAMES}.is_obsolete_iteration_option_name)
 		ensure
 			instance_free: class
 			valid_options_1_21_0_not_void: Result /= Void
@@ -557,6 +585,7 @@ feature -- Setting
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.debug_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.is_attached_by_default_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
+			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.is_obsolete_iteration_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.is_obsolete_routine_type_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.manifest_array_type_option_name, {ET_ECF_OPTION_NAMES}.standard_option_value)
 			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.msil_application_optimize_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
@@ -589,12 +618,23 @@ feature -- Setting
 			instance_free: class
 		end
 
+	set_default_options_1_22_0 (a_options: ET_ECF_OPTIONS)
+			-- Set in `a_options' the default values for ECF 1.22.0 and above.
+		require
+			a_options_not_void: a_options /= Void
+		do
+			set_default_options_latest (a_options)
+		ensure
+			instance_free: class
+		end
+
 	set_default_options_1_21_0 (a_options: ET_ECF_OPTIONS)
 			-- Set in `a_options' the default values for ECF 1.21.0 and above.
 		require
 			a_options_not_void: a_options /= Void
 		do
-			set_default_options_latest (a_options)
+			set_default_options_1_22_0 (a_options)
+			a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.is_obsolete_iteration_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
 		ensure
 			instance_free: class
 		end

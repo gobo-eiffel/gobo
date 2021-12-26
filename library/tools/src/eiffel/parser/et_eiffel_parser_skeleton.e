@@ -5,7 +5,7 @@
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/01 $"
 	revision: "$Revision: #41 $"
@@ -1266,6 +1266,7 @@ feature {NONE} -- AST factory
 		do
 			Result := ast_factory.new_across_all_expression (a_across, a_iterable_expression, a_as, a_cursor_name, Void, Void, tokens.true_keyword, Void, Void)
 			if Result /= Void then
+				Result.set_has_item_cursor (not current_universe.obsolete_iteration_mode or else Result.as_keyword.is_is)
 				l_last_iteration_components := last_iteration_components
 				if l_last_iteration_components = Void then
 					l_last_iteration_components := new_iteration_component_list
@@ -1315,6 +1316,7 @@ feature {NONE} -- AST factory
 		do
 			Result := ast_factory.new_across_instruction (a_across, a_iterable_expression, a_as, a_cursor_name, Void, Void, Void, Void, Void, Void)
 			if Result /= Void then
+				Result.set_has_item_cursor (not current_universe.obsolete_iteration_mode or else Result.as_keyword.is_is)
 				l_last_iteration_components := last_iteration_components
 				if l_last_iteration_components = Void then
 					l_last_iteration_components := new_iteration_component_list

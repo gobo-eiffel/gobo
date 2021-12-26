@@ -5,7 +5,7 @@ note
 		"Eiffel across expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2012-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2012-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,12 +46,14 @@ feature {NONE} -- Initialization
 			iteration_conditional := a_iteration_conditional
 			end_keyword := tokens.end_keyword
 			is_all := False
+			has_item_cursor := True
 			create_unfolded_form
 		ensure
 			iterable_expression_set: iterable_expression = a_iterable_expression
 			cursor_name_set: cursor_name = a_cursor_name
 			until_conditional_set: until_conditional = an_until_conditional
 			iteration_conditional_set: iteration_conditional = a_iteration_conditional
+			has_item_cursor: has_item_cursor
 			is_some: is_some
 		end
 
@@ -73,12 +75,14 @@ feature {NONE} -- Initialization
 			iteration_conditional := a_iteration_conditional
 			end_keyword := tokens.end_keyword
 			is_all := True
+			has_item_cursor := True
 			create_unfolded_form
 		ensure
 			iterable_expression_set: iterable_expression = a_iterable_expression
 			cursor_name_set: cursor_name = a_cursor_name
 			until_conditional_set: until_conditional = an_until_conditional
 			iteration_conditional_set: iteration_conditional = a_iteration_conditional
+			has_item_cursor: has_item_cursor
 			is_all: is_all
 		end
 

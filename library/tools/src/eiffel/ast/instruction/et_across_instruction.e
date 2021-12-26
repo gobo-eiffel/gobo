@@ -5,7 +5,7 @@ note
 		"Eiffel across instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2012-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2012-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			until_conditional := an_until_conditional
 			loop_compound := a_loop_compound
 			end_keyword := tokens.end_keyword
+			has_item_cursor := True
 			create_unfolded_form
 		ensure
 			iterable_expression_set: iterable_expression = a_iterable_expression
@@ -52,6 +53,7 @@ feature {NONE} -- Initialization
 			from_compound_set: from_compound = a_from_compound
 			until_conditional_set: until_conditional = an_until_conditional
 			loop_compound_set: loop_compound = a_loop_compound
+			has_item_cursor: has_item_cursor
 		end
 
 feature -- Access

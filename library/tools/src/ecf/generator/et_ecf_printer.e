@@ -5,7 +5,7 @@ note
 		"ECF file printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2261,7 +2261,7 @@ feature {NONE} -- Adaptation
 			l_default_options := default_options (ecf_version)
 			l_original_options := a_target.options
 			if a_target.parent /= Void or l_original_options.secondary_options = l_default_options then
-				if ecf_version >= ecf_1_21_0 then
+				if ecf_version >= ecf_1_22_0 then
 					Result := l_original_options
 				else
 					create Result.make
@@ -2281,7 +2281,7 @@ feature {NONE} -- Adaptation
 			else
 				Result := explicit_options (l_original_options, l_default_options)
 			end
-			if ecf_version < ecf_1_21_0 then
+			if ecf_version < ecf_1_22_0 then
 				if ecf_version < ecf_1_16_0 then
 						-- Option "cat_call_detection" has been superseded by capability "catcall_detection" in ECF 1.16.0.
 					Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
@@ -2388,7 +2388,7 @@ feature {NONE} -- Adaptation
 			l_default_options: ET_ECF_OPTIONS
 		do
 			l_default_options := default_options (ecf_version)
-			if ecf_version >= ecf_1_21_0 then
+			if ecf_version >= ecf_1_22_0 then
 				Result := a_options
 			else
 				create Result.make
@@ -2405,7 +2405,7 @@ feature {NONE} -- Adaptation
 					Result.set_primary_warning_value (l_primary_warnings.key, l_primary_warnings.item)
 				end
 			end
-			if ecf_version < ecf_1_21_0 then
+			if ecf_version < ecf_1_22_0 then
 				if ecf_version < ecf_1_16_0 then
 						-- Option "cat_call_detection" has been superseded by capability "catcall_detection" in ECF 1.16.0.
 					Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)

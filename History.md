@@ -57,6 +57,7 @@
   constraints `G -> {TUPLE [f: INTEGER], TUPLE [f: INTEGER]}` because the
   two constraints have the same base type and the labels are at the same
   position.
+* Added support for ECF 1.22.0 and its new option `is_obsolete_iteration`.
 
 ## Version 20.05.31.5 - 31 May 2020
 

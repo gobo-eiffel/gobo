@@ -5,7 +5,7 @@ note
 		"ECF option names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,6 +73,13 @@ feature -- Names
 			-- Values: true|false
 			--
 			-- Note: introduced in ECF 1.3.0.
+
+	is_obsolete_iteration_option_name: STRING = "is_obsolete_iteration"
+			-- Name of option "is_obsolete_iteration"
+			--
+			-- Values: true|false
+			--
+			-- Note: introduced in ECF 1.22.0.
 
 	is_obsolete_routine_type_option_name: STRING = "is_obsolete_routine_type"
 			-- Name of option "is_obsolete_routine_type"

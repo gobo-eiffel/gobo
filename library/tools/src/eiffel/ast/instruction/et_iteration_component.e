@@ -6,7 +6,7 @@ note
 		quantifier expressions or repeat instructions).
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,9 +42,10 @@ feature -- Status report
 	has_item_cursor: BOOLEAN
 			-- Should `cursor_name' represent the items being traversed?
 			-- Otherwise it represents the cursor used for the traversal.
-			-- True in case of 'across ... is ...' (as opposed to
-			-- 'across ... as ...'), or for quantifier expressions or
-			-- repeat instructions.
+			-- True in case of 'across ... as ...' when 'obsolete_iteration_mode'
+			-- is set to False in the surrounding universe (and in case
+			-- of the obsolete syntax 'across ... is ...'), or for quantifier
+			-- expressions or repeat instructions.
 		deferred
 		end
 

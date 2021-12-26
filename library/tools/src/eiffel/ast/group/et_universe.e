@@ -16,7 +16,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #18 $"
@@ -1982,6 +1982,22 @@ feature -- Compilation options
 			-- Implicit attachment type mark when a type in a class of the
 			-- current universe is declared with no explicit attachment type mark
 
+	obsolete_iteration_mode: BOOLEAN
+			-- Should the obsolete iteration syntax used?
+			--
+			-- Obsolete iteration syntax uses "is" with direct access to the iteration
+			-- item, or uses "as" with direct access to the iteration cursor.
+			--
+			-- When "true", the following obsolete syntax is used:
+			--     across foo as x loop ... x.item ... x.key ... end
+			--     across foo is x loop ... x ... @x.key ... end
+			--
+			-- When "false" (the default), the following contemporary syntax is used:
+			--     across foo as x loop ... x ... @x.key ... end
+			--			
+			-- Note: the use of "as" instead of "is" for direct access to the iteration
+			-- item has been introduced in ISE 21.11.
+
 	obsolete_routine_type_mode: BOOLEAN
 			-- Should the first generic parameter of routine types (ROUTINE, PROCEDURE, FUNCTION, PREDICATE)
 			-- be ignored?
@@ -1997,6 +2013,14 @@ feature -- Compilation options setting
 			implicit_attachment_type_mark := a_type_mark
 		ensure
 			implicit_attachment_type_mark_set: implicit_attachment_type_mark = a_type_mark
+		end
+
+	set_obsolete_iteration_mode (b: BOOLEAN)
+			-- Set `obsolete_iteration_mode' to `b'.
+		do
+			obsolete_iteration_mode := b
+		ensure
+			obsolete_iteration_mode_set: obsolete_iteration_mode = b
 		end
 
 	set_obsolete_routine_type_mode (b: BOOLEAN)

@@ -5,7 +5,7 @@ note
 		"ECF targets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -582,6 +582,11 @@ feature -- Basic operations
 				a_universe.set_implicit_attachment_type_mark (tokens.implicit_attached_type_mark)
 			else
 				a_universe.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark)
+			end
+				-- is_obsolete_iteration.
+			l_value := options.value ({ET_ECF_OPTION_NAMES}.is_obsolete_iteration_option_name)
+			if l_value /= Void and then l_value.is_boolean then
+				a_universe.set_obsolete_iteration_mode (l_value.to_boolean)
 			end
 				-- is_obsolete_routine_type.
 			l_value := options.value ({ET_ECF_OPTION_NAMES}.is_obsolete_routine_type_option_name)
