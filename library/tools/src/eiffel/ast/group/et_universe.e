@@ -2003,6 +2003,14 @@ feature -- Compilation options
 			-- be ignored?
 			-- Note: the first generic parameter of routine types has been dropped in ISE 15.12.
 
+	use_obsolete_syntax_mode: BOOLEAN
+			-- Should obsolete syntax be used in case of ambiguity?
+			--
+			-- For example, should `@ i` be considered as a call to the unary
+			-- operator `@` with `i` as target (obsolete syntax) or as the
+			-- iteration cursor associated with item `i` in an iteration construct
+			-- such as `across foo as i all @i.key.is_valid end` (standard syntax)?
+
 feature -- Compilation options setting
 
 	set_implicit_attachment_type_mark (a_type_mark: like implicit_attachment_type_mark)

@@ -5,7 +5,7 @@
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -3928,6 +3928,15 @@ feature -- Symbols
 			symbol_not_void: Result /= Void
 		end
 
+	at_symbol: ET_SYMBOL
+			-- '@' symbol
+		once
+			create Result.make_at
+		ensure
+			instance_free: class
+			symbol_not_void: Result /= Void
+		end
+
 	bang_symbol: ET_SYMBOL
 			-- '!' symbol
 		once
@@ -5851,6 +5860,7 @@ feature -- Keyword and symbol names
 	arrow_symbol_name: STRING = "->"
 	assign_symbol_name: STRING = ":="
 	assign_attempt_symbol_name: STRING = "?="
+	at_symbol_name: STRING = "@"
 	bang_symbol_name: STRING = "!"
 	bar_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "¦") end
 	brackets_symbol_name: STRING = "[]"

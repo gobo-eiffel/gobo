@@ -5,7 +5,7 @@
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2013/09/19 $"
 	revision: "$Revision: #1 $"
@@ -3403,7 +3403,7 @@ feature {NONE} -- Processing
 			-- one character `c'.
 		require
 			one_char: text_count >= 1
-			valid_string: {RX_PCRE_ROUTINES}.regexp ({STRING_32} "[-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲∧⇒¬∨⊻]").recognizes (unicode_text_substring (1, 1))
+			valid_string: {RX_PCRE_ROUTINES}.regexp ({STRING_32} "[-+*/^=><.;,:!?(){}[\]$~@∀∃¦⟳⟲∧⇒¬∨⊻]").recognizes (unicode_text_substring (1, 1))
 			valid_c: unicode_text_item (1) = c
 		do
 			last_literal_start := 1
@@ -3475,6 +3475,9 @@ feature {NONE} -- Processing
 			when '~' then
 				last_token := Tilde_code
 				last_detachable_et_symbol_value := ast_factory.new_tilde_symbol (Current)
+			when '@' then
+				last_token := At_code
+				last_detachable_et_symbol_value := ast_factory.new_at_symbol (Current)
 			when '∀' then
 				last_token := E_FOR_ALL
 				last_detachable_et_symbol_value := ast_factory.new_for_all_symbol (Current)

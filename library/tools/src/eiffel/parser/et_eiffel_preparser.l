@@ -6,7 +6,7 @@ note
 		"Eiffel preparsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 ----------/** Separators, Comments, Symbols **/----------------------------------------------------
 
 ({BREAK}|"--".*)+	|
-[-+*/^=><.;,:!?(){}[\]$~∀∃¦⟳⟲∧⇒¬∨⊻]	|
+[-+*/^=><.;,:!?(){}[\]$~@∀∃¦⟳⟲∧⇒¬∨⊻]	|
 ("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?="|"∧…"|"∨…")	{
 			}
 

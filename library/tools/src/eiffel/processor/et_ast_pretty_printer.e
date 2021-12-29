@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -319,7 +319,7 @@ feature {ET_AST_NODE} -- Processing
 			print_space
 			an_expression.as_keyword.process (Current)
 			print_space
-			an_expression.cursor_name.process (Current)
+			an_expression.item_name.process (Current)
 			print_space
 			if attached an_expression.invariant_part as l_invariant_part then
 				l_invariant_part.process (Current)
@@ -371,7 +371,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			indent
 			process_comments
-			an_instruction.cursor_name.process (Current)
+			an_instruction.item_name.process (Current)
 			print_new_line
 			process_comments
 			dedent
@@ -4985,7 +4985,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			a_expression.quantifier_symbol.process (Current)
 			print_space
-			a_expression.cursor_name.process (Current)
+			a_expression.item_name.process (Current)
 			a_expression.colon_symbol.process (Current)
 			print_space
 			a_expression.iterable_expression.process (Current)
@@ -5094,7 +5094,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			a_instruction.open_repeat_symbol.process (Current)
 			print_space
-			a_instruction.cursor_name.process (Current)
+			a_instruction.item_name.process (Current)
 			a_instruction.colon_symbol.process (Current)
 			print_space
 			a_instruction.iterable_expression.process (Current)

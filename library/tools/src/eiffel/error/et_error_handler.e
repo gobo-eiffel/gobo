@@ -5,7 +5,7 @@ note
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2275,14 +2275,14 @@ feature -- Validity errors
 	report_veen9a_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report VEEN-9 error: `an_identifier', appearing in `a_feature'
 			-- of `a_class' or one of its (possibly nested) inline agents, is an
-			-- iteration cursor that is used outside of its scope.
+			-- iteration item that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			an_identifier_not_void: an_identifier /= Void
-			an_identifier_iteration_cursor: an_identifier.is_iteration_cursor
+			an_identifier_iteration_item: an_identifier.is_iteration_item
 			a_feature_not_void: a_feature /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
@@ -2296,14 +2296,14 @@ feature -- Validity errors
 	report_veen9b_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER)
 			-- Report VEEN-9 error: `an_identifier', appearing in the invariant
 			-- of `a_class' or one of its (possibly nested) inline agents, is an
-			-- iteration cursor that is used outside of its scope.
+			-- iteration item that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			an_identifier_not_void: an_identifier /= Void
-			an_identifier_iteration_cursor: an_identifier.is_iteration_cursor
+			an_identifier_iteration_item: an_identifier.is_iteration_item
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -5030,7 +5030,7 @@ feature -- Validity errors
 		end
 
 	report_voit2a_error (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_feature: ET_FEATURE)
-			-- Report VOIT-2 error: The cursor of `a_iteration_component' has the same
+			-- Report VOIT-2 error: The iteration item of `a_iteration_component' has the same
 			-- name as `a_feature' in `a_class'.
 			--
 			-- Not in ECMA.
@@ -5049,7 +5049,7 @@ feature -- Validity errors
 		end
 
 	report_voit2b_error (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; arg: ET_FORMAL_ARGUMENT)
-			-- Report VOIT-2 error: The cursor of `a_iteration_component' has
+			-- Report VOIT-2 error: The iteration item of `a_iteration_component' has
 			-- the same name as argument `arg' of an enclosing feature or
 			-- inline agent.
 			--
@@ -5069,7 +5069,7 @@ feature -- Validity errors
 		end
 
 	report_voit2c_error (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_local: ET_LOCAL_VARIABLE)
-			-- Report VOIT-2 error: The cursor of `a_iteration_component' has
+			-- Report VOIT-2 error: The iteration item of `a_iteration_component' has
 			-- the same name as local variable `a_local' of an enclosing
 			-- feature or inline agent.
 			--
@@ -5109,7 +5109,8 @@ feature -- Validity errors
 
 	report_voit2e_error (a_class: ET_CLASS; a_iteration_component1, a_iteration_component2: ET_ITERATION_COMPONENT)
 			-- Report VOIT-2 error: `a_iteration_component1' appears in the scope
-			-- of the cursor of `a_iteration_component2' with the same cursor name.
+			-- of the iteration item of `a_iteration_component2' with the same 
+			-- iteration item name.
 			--
 			-- Not in ECMA.
 		require
@@ -5123,6 +5124,24 @@ feature -- Validity errors
 			if reportable_voit2_error (a_class) then
 				create an_error.make_voit2e (a_class, a_iteration_component1, a_iteration_component2)
 				report_validity_error (an_error)
+			end
+		end
+
+	report_voit3a_error (a_class: ET_CLASS; a_iteration_cursor: ET_ITERATION_CURSOR)
+			-- Create a new VUOT-3 error: the name appearing in `a_iteration_cursor`
+			-- is not the name of an iteration item.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_iteration_cursor_not_void: a_iteration_cursor /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_voit3_error (a_class) then
+				create l_error.make_voit3a (a_class, a_iteration_cursor)
+				report_validity_error (l_error)
 			end
 		end
 
@@ -9048,6 +9067,16 @@ feature -- Validity error status
 
 	reportable_voit2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VOIT-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_voit3_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VOIT-3 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

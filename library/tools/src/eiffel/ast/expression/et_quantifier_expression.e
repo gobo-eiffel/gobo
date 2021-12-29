@@ -23,17 +23,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make_there_exists (a_cursor_name: like cursor_name;
+	make_there_exists (a_item_name: like item_name;
 		a_iterable_expression: like iterable_expression;
 		a_iteration_expression: like iteration_expression)
 			-- Create a new quantifier expression of the form '∃'.
 		require
-			a_cursor_name_not_void: a_cursor_name /= Void
+			a_item_name_not_void: a_item_name /= Void
 			a_iterable_expression_not_void: a_iterable_expression /= Void
 			a_iteration_expression_not_void: a_iteration_expression /= Void
 		do
 			quantifier_symbol := tokens.there_exists_symbol
-			cursor_name := a_cursor_name
+			item_name := a_item_name
 			colon_symbol := tokens.colon_symbol
 			iterable_expression := a_iterable_expression
 			bar_symbol := tokens.bar_symbol
@@ -41,23 +41,23 @@ feature {NONE} -- Initialization
 			is_all := False
 			create_unfolded_form
 		ensure
-			cursor_name_set: cursor_name = a_cursor_name
+			item_name_set: item_name = a_item_name
 			iterable_expression_set: iterable_expression = a_iterable_expression
 			iteration_expression_set: iteration_expression = a_iteration_expression
 			is_some: is_some
 		end
 
-	make_for_all (a_cursor_name: like cursor_name;
+	make_for_all (a_item_name: like item_name;
 		a_iterable_expression: like iterable_expression;
 		a_iteration_expression: like iteration_expression)
 			-- Create a new quantifier expression of the form '∀'.
 		require
-			a_cursor_name_not_void: a_cursor_name /= Void
+			a_item_name_not_void: a_item_name /= Void
 			a_iterable_expression_not_void: a_iterable_expression /= Void
-			a_iteration_conditional_not_void: a_iteration_expression /= Void
+			a_iteration_expression_not_void: a_iteration_expression /= Void
 		do
 			quantifier_symbol := tokens.there_exists_symbol
-			cursor_name := a_cursor_name
+			item_name := a_item_name
 			colon_symbol := tokens.colon_symbol
 			iterable_expression := a_iterable_expression
 			bar_symbol := tokens.bar_symbol
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			is_all := True
 			create_unfolded_form
 		ensure
-			cursor_name_set: cursor_name = a_cursor_name
+			item_name_set: item_name = a_item_name
 			iterable_expression_set: iterable_expression = a_iterable_expression
 			iteration_expression_set: iteration_expression = a_iteration_expression
 			is_all: is_all
@@ -76,13 +76,11 @@ feature -- Status report
 	is_all: BOOLEAN
 			-- Is the iteration of form '∀'?
 
-	has_item_cursor: BOOLEAN = True
-			-- Should `cursor_name' represent the items being traversed?
-			-- Otherwise it represents the cursor used for the traversal.
+	has_cursor_name: BOOLEAN = False
+			-- Should `item_name' represent the cursor used for the traversal?
+			-- Otherwise it represents the items being traversed.
 			-- True in case of 'across ... as ...' when 'obsolete_iteration_mode'
-			-- is set to False in the surrounding universe (and in case
-			-- of the obsolete syntax 'across ... is ...'), or for quantifier
-			-- expressions or repeat instructions.
+			-- is set to True in the surrounding universe, False otherwise.
 
 feature -- Access
 
@@ -123,7 +121,7 @@ feature -- Access
 			if not quantifier_symbol.position.is_null then
 				Result := quantifier_symbol.position
 			else
-				Result := cursor_name.position
+				Result := item_name.position
 			end
 		end
 

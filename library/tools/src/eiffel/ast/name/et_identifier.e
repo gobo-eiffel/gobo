@@ -5,7 +5,7 @@ note
 		"Eiffel identifiers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,8 +31,8 @@ inherit
 			argument_name,
 			object_test_local_name,
 			is_object_test_local,
-			iteration_cursor_name,
-			is_iteration_cursor
+			iteration_item_name,
+			is_iteration_item
 		end
 
 	ET_CLASS_NAME
@@ -316,10 +316,11 @@ feature -- Status report
 			Result := (status_code = object_test_local_code)
 		end
 
-	is_iteration_cursor: BOOLEAN
-			-- Is current identifier actually an iteration cursor name?
+	is_iteration_item: BOOLEAN
+			-- Is current identifier actually an iteration item name
+			-- (or an iteration cursor name when using some obsolete syntax)?
 		do
-			Result := (status_code = iteration_cursor_code)
+			Result := (status_code = iteration_item_code)
 		end
 
 	is_temporary: BOOLEAN
@@ -426,16 +427,16 @@ feature -- Status setting
 			object_test_local_set: is_object_test_local = b
 		end
 
-	set_iteration_cursor (b: BOOLEAN)
-			-- Set `is_iteration_cursor' to `b'.
+	set_iteration_item (b: BOOLEAN)
+			-- Set `is_iteration_item' to `b'.
 		do
 			if b then
-				status_code := iteration_cursor_code
+				status_code := iteration_item_code
 			else
 				status_code := no_code
 			end
 		ensure
-			iteration_cursor_set: is_iteration_cursor = b
+			iteration_item_set: is_iteration_item = b
 		end
 
 	set_temporary (b: BOOLEAN)
@@ -617,8 +618,8 @@ feature -- Conversion
 			Result := Current
 		end
 
-	iteration_cursor_name: ET_IDENTIFIER
-			-- Current name viewed as an iteration cursor name
+	iteration_item_name: ET_IDENTIFIER
+			-- Current name viewed as an iteration item name
 		do
 			Result := Current
 		end
@@ -663,7 +664,7 @@ feature {NONE} -- Implementation
 	feature_name_code: CHARACTER = 'f'
 	local_code: CHARACTER = 'l'
 	object_test_local_code: CHARACTER = 'm'
-	iteration_cursor_code: CHARACTER = 'i'
+	iteration_item_code: CHARACTER = 'i'
 	argument_code: CHARACTER = 'a'
 	temporary_code: CHARACTER = 'v'
 	tuple_label_code: CHARACTER = 't'

@@ -6,7 +6,7 @@ note
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -85,6 +85,7 @@ create
 %token <detachable ET_SYMBOL> '{' '}'
 %token <detachable ET_SYMBOL> '(' ')' ':' ',' ']' '$' '.' '!'
 %token <detachable ET_SYMBOL> E_FOR_ALL E_THERE_EXISTS E_BAR E_OPEN_REPEAT E_CLOSE_REPEAT
+%token <detachable ET_SYMBOL> '@'
 %token <detachable ET_SYMBOL_OPERATOR> '-'
 %token <detachable ET_SYMBOL_OPERATOR> '+'
 %token <detachable ET_SYMBOL_OPERATOR> E_IMPLIES_SYMBOL E_OR_SYMBOL E_OR_ELSE_SYMBOL E_XOR_SYMBOL
@@ -102,8 +103,9 @@ create
 %left '+' '-'
 %left '*' '/' E_DIV E_MOD
 %right '^'
-%left E_FREEOP
+%left E_FREEOP '@'
 %right E_NOT E_NOT_SYMBOL E_OLD
+%right E_ITERATION_CURSOR_SYMBOL
 
 %type <detachable ET_ACROSS_EXPRESSION> Across_all_expression Across_some_expression Across_expression_header
 %type <detachable ET_ACROSS_INSTRUCTION> Across_instruction_header
@@ -169,6 +171,7 @@ create
 %type <detachable ET_EXPRESSION> Typed_call_expression Untyped_call_expression
 %type <detachable ET_EXPRESSION> Typed_bracket_target Untyped_bracket_target
 %type <detachable ET_EXPRESSION> Binary_expression Non_binary_expression Non_binary_and_typed_expression
+%type <detachable ET_EXPRESSION> Iteration_cursor
 %type <detachable ET_EXPRESSION_ITEM> Expression_comma
 %type <detachable ET_EXTENDED_FEATURE_NAME> Extended_feature_name
 %type <detachable ET_EXTERNAL_ALIAS> External_name_opt
@@ -243,7 +246,7 @@ create
 %type <detachable ET_WHEN_PART_LIST> When_list When_list_opt
 %type <detachable ET_WRITABLE> Writable
 
-%expect 117
+%expect 124
 %start Class_declarations
 
 %%
@@ -3572,6 +3575,8 @@ Untyped_call_chain: Identifier Actuals_opt
 		{ $$ := $1 }
 	| Precursor_expression
 		{ $$ := $1 }
+	| Iteration_cursor
+		{ $$ := $1 }
 	| Untyped_bracket_expression
 		{
 			if system_processor.older_ise_version (ise_5_7_59914) then
@@ -3683,6 +3688,8 @@ Expression: Binary_expression
 
 Binary_expression: Expression E_FREEOP Expression
 		{ $$ := ast_factory.new_infix_expression ($1, ast_factory.new_infix_free_operator ($2), $3) }
+	| Expression '@' Expression
+		{ $$ := ast_factory.new_infix_expression ($1, ast_factory.new_infix_free_operator_from_symbol ($2), $3) }
 	| Expression '+' Expression
 		{ $$ := ast_factory.new_infix_expression ($1, ast_factory.new_infix_plus_operator ($2), $3) }
 	| Expression '-' Expression
@@ -3824,6 +3831,8 @@ Untyped_bracket_target: Untyped_call_expression
 	| Inline_agent
 		{ $$ := $1 }
 	| E_VOID
+		{ $$ := $1 }
+	| Iteration_cursor
 		{ $$ := $1 }
 	| Untyped_character_constant
 		{ $$ := $1 }
@@ -4150,6 +4159,16 @@ Quantifier_expression_header: E_FOR_ALL Identifier ':' Expression E_BAR
 		{ $$ := new_for_all_quantifier_expression_header ($1, $2, $3, $4, $5) }
 	| E_THERE_EXISTS Identifier ':' Expression E_BAR
 		{ $$ := new_there_exists_quantifier_expression_header ($1, $2, $3, $4, $5) }
+	;
+
+Iteration_cursor: '@' Identifier %prec E_ITERATION_CURSOR_SYMBOL
+		{
+			if current_universe.use_obsolete_syntax_mode then
+				$$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_free_operator_from_symbol ($1), $2)
+			else
+				$$ := new_iteration_cursor ($1, $2)
+			end
+		}
 	;
 
 ------------------------------------------------------------------------------------

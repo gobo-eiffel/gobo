@@ -63,6 +63,8 @@ inherit
 			report_integer_64_constant,
 			report_iteration_cursor,
 			report_iteration_cursor_declaration,
+			report_iteration_item_declaration,
+			report_iteration_item,
 			report_iteration_expression,
 			report_local_assignment_target,
 			report_local_variable,
@@ -1768,13 +1770,11 @@ feature {NONE} -- Event handling
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_iteration_cursor (a_name: ET_IDENTIFIER; a_iteration_component: ET_ITERATION_COMPONENT)
-			-- Report that a call to iteration cursor `a_name' has been processed.
+	report_iteration_cursor (a_iteration_cursor: ET_ITERATION_CURSOR; a_iteration_component: ET_ITERATION_COMPONENT)
+			-- Report that a call to iteration cursor `a_iteration_cursor' has been processed.
 		do
 			if current_type = current_dynamic_type.base_type then
-				if a_name /= a_iteration_component.unfolded_cursor_name then
-					a_name.set_index (a_iteration_component.cursor_name.index)
-				end
+				a_iteration_cursor.set_index (a_iteration_component.unfolded_cursor_name.index)
 			end
 		end
 
@@ -1782,12 +1782,7 @@ feature {NONE} -- Event handling
 			-- Report that the declaration of the iteration cursor `a_name' has been processed.
 		do
 			if current_type = current_dynamic_type.base_type then
-					-- Take care of the type of the across cursor.
-				if a_name = a_iteration_component.unfolded_cursor_name or not a_iteration_component.has_item_cursor then
-					a_name.set_index (a_iteration_component.new_cursor_expression.index)
-				else
-					a_name.set_index (a_iteration_component.cursor_item_expression.index)
-				end
+				a_name.set_index (a_iteration_component.new_cursor_expression.index)
 			end
 		end
 
@@ -1795,6 +1790,28 @@ feature {NONE} -- Event handling
 			-- Report that the iteration expression `a_iteration_expression' has been processed.
 		do
 			report_constant_expression (a_iteration_expression, current_universe_impl.boolean_type)
+		end
+
+	report_iteration_item (a_name: ET_IDENTIFIER; a_iteration_component: ET_ITERATION_COMPONENT)
+			-- Report that a call to iteration item `a_name' has been processed.
+		do
+			if current_type = current_dynamic_type.base_type then
+				if a_name /= a_iteration_component.unfolded_cursor_name then
+					a_name.set_index (a_iteration_component.item_name.index)
+				end
+			end
+		end
+
+	report_iteration_item_declaration (a_name: ET_IDENTIFIER; a_iteration_component: ET_ITERATION_COMPONENT)
+			-- Report that the declaration of the iteration item `a_name' has been processed.
+		do
+			if current_type = current_dynamic_type.base_type then
+				if a_iteration_component.has_cursor_name then
+					a_name.set_index (a_iteration_component.new_cursor_expression.index)
+				else
+					a_name.set_index (a_iteration_component.cursor_item_expression.index)
+				end
+			end
 		end
 
 	report_local_assignment_target (a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)

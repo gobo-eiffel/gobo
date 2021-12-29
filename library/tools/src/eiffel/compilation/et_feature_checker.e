@@ -5,7 +5,7 @@ note
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,6 +75,7 @@ inherit
 			process_infix_expression,
 			process_inspect_expression,
 			process_inspect_instruction,
+			process_iteration_cursor,
 			process_loop_instruction,
 			process_manifest_array,
 			process_manifest_tuple,
@@ -173,7 +174,8 @@ feature {NONE} -- Initialization
 			create object_test_scope_builder.make (a_system_processor)
 				-- Iteration components.
 			create current_iteration_cursor_types.make_map (50)
-			create current_iteration_cursor_scope.make
+			create current_iteration_item_types.make_map (50)
+			create current_iteration_item_scope.make
 				-- Attachments.
 			create current_initialization_scope.make
 			create current_attachment_scope.make
@@ -343,7 +345,14 @@ feature -- Validity checking
 					current_iteration_cursor_types.forth
 				end
 				current_iteration_cursor_types.wipe_out
-				current_iteration_cursor_scope.wipe_out
+				from current_iteration_item_types.start until current_iteration_item_types.after loop
+					if not current_iteration_item_types.key_for_iteration.has_cursor_name then
+						free_context (current_iteration_item_types.item_for_iteration)
+					end
+					current_iteration_item_types.forth
+				end
+				current_iteration_item_types.wipe_out
+				current_iteration_item_scope.wipe_out
 				current_attachment_scope.wipe_out
 				current_initialization_scope.wipe_out
 				current_class := old_class
@@ -492,7 +501,14 @@ feature -- Validity checking
 					current_iteration_cursor_types.forth
 				end
 				current_iteration_cursor_types.wipe_out
-				current_iteration_cursor_scope.wipe_out
+				from current_iteration_item_types.start until current_iteration_item_types.after loop
+					if not current_iteration_item_types.key_for_iteration.has_cursor_name then
+						free_context (current_iteration_item_types.item_for_iteration)
+					end
+					current_iteration_item_types.forth
+				end
+				current_iteration_item_types.wipe_out
+				current_iteration_item_scope.wipe_out
 				current_attachment_scope.wipe_out
 				current_initialization_scope.wipe_out
 				current_class := old_class
@@ -637,7 +653,14 @@ feature -- Validity checking
 					current_iteration_cursor_types.forth
 				end
 				current_iteration_cursor_types.wipe_out
-				current_iteration_cursor_scope.wipe_out
+				from current_iteration_item_types.start until current_iteration_item_types.after loop
+					if not current_iteration_item_types.key_for_iteration.has_cursor_name then
+						free_context (current_iteration_item_types.item_for_iteration)
+					end
+					current_iteration_item_types.forth
+				end
+				current_iteration_item_types.wipe_out
+				current_iteration_item_scope.wipe_out
 				current_attachment_scope.wipe_out
 				current_initialization_scope.wipe_out
 				current_class := old_class
@@ -759,7 +782,14 @@ feature -- Validity checking
 					current_iteration_cursor_types.forth
 				end
 				current_iteration_cursor_types.wipe_out
-				current_iteration_cursor_scope.wipe_out
+				from current_iteration_item_types.start until current_iteration_item_types.after loop
+					if not current_iteration_item_types.key_for_iteration.has_cursor_name then
+						free_context (current_iteration_item_types.item_for_iteration)
+					end
+					current_iteration_item_types.forth
+				end
+				current_iteration_item_types.wipe_out
+				current_iteration_item_scope.wipe_out
 				current_attachment_scope.wipe_out
 				current_initialization_scope.wipe_out
 				current_class := old_class
@@ -1913,8 +1943,8 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 						set_fatal_error
 						error_handler.report_vpir1e_error (current_class, l_formal, an_agent, l_object_test)
 					end
-					if attached current_iteration_cursor_scope.hidden_iteration_component (l_name) as l_iteration_component then
-							-- This formal argument has the same name as an iteration cursor
+					if attached current_iteration_item_scope.hidden_iteration_component (l_name) as l_iteration_component then
+							-- This formal argument has the same name as an iteration item
 							-- of an enclosing feature or inline agent whose scope contains
 							-- the inline agent `an_agent'.
 						set_fatal_error
@@ -2116,8 +2146,8 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 						set_fatal_error
 						error_handler.report_vpir1f_error (current_class, l_local, an_agent, l_object_test)
 					end
-					if attached current_iteration_cursor_scope.hidden_iteration_component (l_name) as l_iteration_component then
-							-- This local variable has the same name as an iteration cursor
+					if attached current_iteration_item_scope.hidden_iteration_component (l_name) as l_iteration_component then
+							-- This local variable has the same name as an iteration item
 							-- of an enclosing feature or inline agent whose scope contains
 							-- the inline agent `an_agent'.
 						set_fatal_error
@@ -2260,11 +2290,11 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 				nb := a_iteration_components.count
 				from i := 1 until i > nb loop
 					l_iteration_component := a_iteration_components.iteration_component (i)
-					l_name := l_iteration_component.cursor_name
-					l_name.set_iteration_cursor (True)
+					l_name := l_iteration_component.item_name
+					l_name.set_iteration_item (True)
 					l_name.set_seed (i)
 					l_name := l_iteration_component.unfolded_cursor_name
-					l_name.set_iteration_cursor (True)
+					l_name.set_iteration_item (True)
 					l_name.set_seed (i)
 					i := i + 1
 				end
@@ -2292,11 +2322,11 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 				nb := a_iteration_components.count
 				from i := 1 until i > nb loop
 					l_iteration_component := a_iteration_components.iteration_component (i)
-					l_name := l_iteration_component.cursor_name
-					l_name.set_iteration_cursor (True)
+					l_name := l_iteration_component.item_name
+					l_name.set_iteration_item (True)
 					l_name.set_seed (i)
 					l_name := l_iteration_component.unfolded_cursor_name
-					l_name.set_iteration_cursor (True)
+					l_name.set_iteration_item (True)
 					l_name.set_seed (i)
 					i := i + 1
 				end
@@ -4034,7 +4064,7 @@ feature {NONE} -- Instruction validity
 							-- This is not a constant.
 					elseif l_identifier.is_object_test_local then
 							-- This is not a constant.
-					elseif l_identifier.is_iteration_cursor then
+					elseif l_identifier.is_iteration_item then
 							-- This is not a constant.
 					else
 						l_seed := l_identifier.seed
@@ -4080,7 +4110,7 @@ feature {NONE} -- Instruction validity
 			if has_fatal_error then
 				had_error := True
 			end
-			current_iteration_cursor_scope.add_iteration_component (an_instruction)
+			current_iteration_item_scope.add_iteration_component (an_instruction)
 			if attached an_instruction.from_compound as l_from_compound then
 				check_instructions_validity (l_from_compound)
 				if has_fatal_error then
@@ -4088,10 +4118,17 @@ feature {NONE} -- Instruction validity
 				end
 			end
 			check_loop_component_no_from_validity (an_instruction)
-			current_iteration_cursor_scope.remove_iteration_components (1)
+			current_iteration_item_scope.remove_iteration_components (1)
+			current_iteration_item_types.search (an_instruction)
+			if current_iteration_item_types.found then
+				free_context (current_iteration_item_types.found_item)
+				current_iteration_item_types.remove_found_item
+			end
 			current_iteration_cursor_types.search (an_instruction)
 			if current_iteration_cursor_types.found then
-				free_context (current_iteration_cursor_types.found_item)
+				if not an_instruction.has_cursor_name then
+					free_context (current_iteration_cursor_types.found_item)
+				end
 				current_iteration_cursor_types.remove_found_item
 			end
 			if had_error then
@@ -4995,8 +5032,8 @@ feature {NONE} -- Instruction validity
 				elseif l_identifier.is_local then
 					check_unqualified_local_variable_call_instruction_validity (a_call, l_identifier)
 					l_checked := True
-				elseif l_identifier.is_iteration_cursor then
-					check_unqualified_iteration_cursor_call_instruction_validity (a_call, l_identifier)
+				elseif l_identifier.is_iteration_item then
+					check_unqualified_iteration_item_call_instruction_validity (a_call, l_identifier)
 					l_checked := True
 				elseif l_identifier.is_object_test_local then
 					check_unqualified_object_test_local_call_instruction_validity (a_call, l_identifier)
@@ -5118,14 +5155,14 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	check_unqualified_iteration_cursor_call_instruction_validity (a_call: ET_UNQUALIFIED_FEATURE_CALL_INSTRUCTION; a_name: ET_IDENTIFIER)
+	check_unqualified_iteration_item_call_instruction_validity (a_call: ET_UNQUALIFIED_FEATURE_CALL_INSTRUCTION; a_name: ET_IDENTIFIER)
 			-- Check validity of unqualified call `a_call' whose
-			-- name `a_name' appears to be an iteration cursor.
+			-- name `a_name' appears to be an iteration item.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
 			a_name_not_void: a_name /= Void
-			is_iteration_cursor: a_name.is_iteration_cursor
+			is_iteration_item: a_name.is_iteration_item
 		local
 			l_context: ET_NESTED_TYPE_CONTEXT
 		do
@@ -5140,7 +5177,7 @@ feature {NONE} -- Instruction validity
 				check_orphan_actual_arguments_validity (a_call)
 			else
 				l_context := new_context (current_type)
-				check_iteration_cursor_parenthesis_call_validity (a_call, a_name, l_context)
+				check_iteration_item_parenthesis_call_validity (a_call, a_name, l_context)
 				free_context (l_context)
 				if has_fatal_error then
 					-- Do nothing.
@@ -6282,7 +6319,7 @@ feature {NONE} -- Expression validity
 								already_checked := True
 							end
 						end
-					elseif l_name.is_iteration_cursor then
+					elseif l_name.is_iteration_item then
 							-- We need to resolve `a_name' in the implementation
 							-- class of `current_feature_impl' first.
 						if current_class_impl /= current_class then
@@ -6293,10 +6330,10 @@ feature {NONE} -- Expression validity
 								error_handler.report_giaaa_error
 							end
 						else
-							l_identifier := l_name.iteration_cursor_name
-							l_iteration_component := current_iteration_cursor_scope.iteration_component (l_identifier)
+							l_identifier := l_name.iteration_item_name
+							l_iteration_component := current_iteration_item_scope.iteration_component (l_identifier)
 							if l_iteration_component = Void then
-									-- Error: `l_identifier' is an iteration cursor that is used outside of its scope.
+									-- Error: `l_identifier' is an iteration item that is used outside of its scope.
 								set_fatal_error
 								if current_feature_impl.is_feature then
 									error_handler.report_veen9a_error (current_class, l_identifier, current_feature_impl.as_feature)
@@ -6304,26 +6341,26 @@ feature {NONE} -- Expression validity
 									error_handler.report_veen9b_error (current_class, l_identifier)
 								end
 							else
-								report_iteration_cursor (l_identifier, l_iteration_component)
-								l_seed := l_iteration_component.cursor_name.seed
+								report_iteration_item (l_identifier, l_iteration_component)
+								l_seed := l_iteration_component.item_name.seed
 								l_identifier.set_seed (l_seed)
 								l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 								l_typed_pointer_class := l_typed_pointer_type.named_base_class
 								if l_typed_pointer_class.actual_class.is_preparsed then
 										-- Class TYPED_POINTER has been found in the universe.
-										-- Use ISE's implementation: the type of '$iteration_cursor' is
-										-- 'TYPED_POINTER [<type-of-iteration-cursor>]'.
-									current_iteration_cursor_types.search (l_iteration_component)
-									if not current_iteration_cursor_types.found then
-											-- The type of the iteration cursor should have been determined
+										-- Use ISE's implementation: the type of '$iteration_item' is
+										-- 'TYPED_POINTER [<type-of-iteration-item>]'.
+									current_iteration_item_types.search (l_iteration_component)
+									if not current_iteration_item_types.found then
+											-- The type of the iteration item should have been determined
 											-- when processing the header of the iteration component itself.
 											-- And this should have already been done since we are in the
-											-- scope of that cursor. Here we don't have this type, which
-											-- means that an error had occurred (and had been reported)
+											-- scope of that iteration item. Here we don't have this type,
+											-- which means that an error had occurred (and had been reported)
 											-- when processing the iterable expression of the iteration component.
 										set_fatal_error
 									else
-										a_context.copy_type_context (current_iteration_cursor_types.found_item)
+										a_context.copy_type_context (current_iteration_item_types.found_item)
 										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 										a_context.force_last (l_typed_pointer_type)
 									end
@@ -6566,7 +6603,7 @@ feature {NONE} -- Expression validity
 							report_pointer_expression (an_expression, l_pointer_type)
 						end
 					end
-				elseif l_name.is_iteration_cursor then
+				elseif l_name.is_iteration_item then
 					l_iteration_components := current_closure_impl.iteration_components
 					if l_iteration_components = Void then
 							-- Internal error.
@@ -6578,29 +6615,30 @@ feature {NONE} -- Expression validity
 						error_handler.report_giaaa_error
 					else
 						l_iteration_component := l_iteration_components.iteration_component (l_seed)
-						l_identifier := l_name.iteration_cursor_name
-						report_iteration_cursor (l_identifier, l_iteration_component)
+						l_identifier := l_name.iteration_item_name
+						report_iteration_item (l_identifier, l_iteration_component)
 						l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 						l_typed_pointer_class := l_typed_pointer_type.named_base_class
 						if l_typed_pointer_class.actual_class.is_preparsed then
 								-- Class TYPED_POINTER has been found in the universe.
-								-- Use ISE's implementation: the type of '$iteration_cursor' is
-								-- 'TYPED_POINTER [<type-of-iteration-cursor>]'.
-							current_iteration_cursor_types.search (l_iteration_component)
-							if not current_iteration_cursor_types.found then
-									-- Internal error: the type of the iteration cursor should
+								-- Use ISE's implementation: the type of '$iteration_item' is
+								-- 'TYPED_POINTER [<type-of-iteration-item>]'.
+							current_iteration_item_types.search (l_iteration_component)
+							if not current_iteration_item_types.found then
+									-- Internal error: the type of the iteration item should
 									-- have been determined when processing the header of the
 									-- across component itself. And this should have already
-									-- been done since we are in the scope of that cursor.
+									-- been done since we are in the scope of that iteration
+									-- item.
 								set_fatal_error
 								error_handler.report_giaaa_error
 							else
-								a_context.copy_type_context (current_iteration_cursor_types.found_item)
+								a_context.copy_type_context (current_iteration_item_types.found_item)
 								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 								a_context.force_last (l_typed_pointer_type)
 							end
 						else
-								-- Use the ETL2 implementation: the type of '$iteration_cursor' is POINTER.
+								-- Use the ETL2 implementation: the type of '$iteration_item' is POINTER.
 							l_pointer_type := current_universe_impl.pointer_type
 							a_context.force_last (l_pointer_type)
 							report_pointer_expression (an_expression, l_pointer_type)
@@ -7403,7 +7441,7 @@ feature {NONE} -- Expression validity
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_conditional_context: ET_NESTED_TYPE_CONTEXT
 			l_item_context: ET_NESTED_TYPE_CONTEXT
-			l_cursor_name: ET_IDENTIFIER
+			l_item_name: ET_IDENTIFIER
 			i, j, nb: INTEGER
 			l_enclosing_agent: ET_INLINE_AGENT
 			l_iterable_type: ET_CLASS_TYPE
@@ -7427,11 +7465,11 @@ feature {NONE} -- Expression validity
 				error_handler.report_voit1a_error (current_class, current_class_impl, l_iterable_expression, l_named_type)
 			end
 			free_context (l_expression_context)
-				-- Check iteration cursor name clashes (see VOIT-2).
-			l_cursor_name := a_iteration_component.cursor_name
+				-- Check iteration item name clashes (see VOIT-2).
+			l_item_name := a_iteration_component.item_name
 			if current_class = current_class_impl then
-				if attached current_class.named_feature (l_cursor_name) as l_feature then
-						-- This iteration cursor has the same name as the
+				if attached current_class.named_feature (l_item_name) as l_feature then
+						-- This iteration item has the same name as the
 						-- final name of a feature in `current_class'.
 					l_had_error := True
 					set_fatal_error
@@ -7443,9 +7481,9 @@ feature {NONE} -- Expression validity
 					from i := 1 until i > nb loop
 						l_enclosing_agent := enclosing_inline_agents.item (i)
 						if attached l_enclosing_agent.formal_arguments as args then
-							j := args.index_of (l_cursor_name)
+							j := args.index_of (l_item_name)
 							if j /= 0 then
-									-- This iteration cursor has the same name as a formal
+									-- This iteration item has the same name as a formal
 									-- argument of an enclosing inline agent.
 								l_had_error := True
 								set_fatal_error
@@ -7453,9 +7491,9 @@ feature {NONE} -- Expression validity
 							end
 						end
 						if attached l_enclosing_agent.locals as l_locals then
-							j := l_locals.index_of (l_cursor_name)
+							j := l_locals.index_of (l_item_name)
 							if j /= 0 then
-									-- This iteration cursor has the same name as a
+									-- This iteration item has the same name as a
 									-- local variable of an enclosing inline agent.
 								l_had_error := True
 								set_fatal_error
@@ -7467,9 +7505,9 @@ feature {NONE} -- Expression validity
 					enclosing_inline_agents.remove_last
 				end
 				if attached current_feature.arguments as args then
-					j := args.index_of (l_cursor_name)
+					j := args.index_of (l_item_name)
 					if j /= 0 then
-							-- This iteration cursor has the same name as a formal
+							-- This iteration item has the same name as a formal
 							-- argument of the enclosing feature.
 						l_had_error := True
 						set_fatal_error
@@ -7477,35 +7515,35 @@ feature {NONE} -- Expression validity
 					end
 				end
 				if attached current_feature.locals as l_locals then
-					j := l_locals.index_of (l_cursor_name)
+					j := l_locals.index_of (l_item_name)
 					if j /= 0 then
-							-- This iteration cursor has the same name as a
+							-- This iteration item has the same name as a
 							-- local variable of the enclosing feature.
 						l_had_error := True
 						set_fatal_error
 						error_handler.report_voit2c_error (current_class, a_iteration_component, l_locals.local_variable (j))
 					end
 				end
-				if attached current_object_test_scope.object_test (l_cursor_name) as l_object_test then
-						-- This iteration cursor appears in the scope of a
+				if attached current_object_test_scope.object_test (l_item_name) as l_object_test then
+						-- This iteration item appears in the scope of a
 						-- object-test local with the same name.
 					l_had_error := True
 					set_fatal_error
 					error_handler.report_voit2d_error (current_class, a_iteration_component, l_object_test)
-				elseif attached current_object_test_scope.hidden_object_test (l_cursor_name) as l_object_test then
+				elseif attached current_object_test_scope.hidden_object_test (l_item_name) as l_object_test then
 						-- Take into account object-tests in enclosing feature or inline agent as
 						-- well when in an inline agent.
 					l_had_error := True
 					set_fatal_error
 					error_handler.report_voit2d_error (current_class, a_iteration_component, l_object_test)
 				end
-				if attached current_iteration_cursor_scope.iteration_component (l_cursor_name) as l_other_iteration_component then
-						-- This iteration cursor appears in the scope of an other iteration
-						-- cursor with the same name.
+				if attached current_iteration_item_scope.iteration_component (l_item_name) as l_other_iteration_component then
+						-- This iteration item appears in the scope of an other iteration
+						-- item with the same name.
 					l_had_error := True
 					set_fatal_error
 					error_handler.report_voit2e_error (current_class, a_iteration_component, l_other_iteration_component)
-				elseif attached current_iteration_cursor_scope.hidden_iteration_component (l_cursor_name) as l_other_iteration_component then
+				elseif attached current_iteration_item_scope.hidden_iteration_component (l_item_name) as l_other_iteration_component then
 						-- Take into account iteration components in enclosing feature or inline agent as
 						-- well when in an inline agent.
 					l_had_error := True
@@ -7513,7 +7551,7 @@ feature {NONE} -- Expression validity
 					error_handler.report_voit2e_error (current_class, a_iteration_component, l_other_iteration_component)
 				end
 			end
-				-- Type of iteration cursor.
+				-- Type of iteration item.
 			if not l_had_iterable_error then
 				l_expression_context := new_context (current_type)
 				a_iteration_component.new_cursor_expression.name.set_seed (current_system.iterable_new_cursor_seed)
@@ -7524,7 +7562,14 @@ feature {NONE} -- Expression validity
 				else
 					report_iteration_cursor_declaration (a_iteration_component.unfolded_cursor_name, a_iteration_component)
 					current_iteration_cursor_types.force_last (l_expression_context, a_iteration_component)
-					current_iteration_cursor_scope.add_iteration_component (a_iteration_component)
+						-- Record the type of the iteration cursor in `current_iteration_item_types' even
+						-- when `a_iteration_component.has_cursor_name` is False so that we can process
+						-- 'unfolded_cursor_name.after', 'unfolded_cursor_name.forth' and
+						-- 'unfolded_cursor_name.item' below. The type of the iteration item will
+						-- be recorded in `current_iteration_item_types` just after if `has_cursor_name`
+						-- is False.
+					current_iteration_item_types.force_last (l_expression_context, a_iteration_component)
+					current_iteration_item_scope.add_iteration_component (a_iteration_component)
 						-- Make sure that it is valid to call feature
 						-- 'after' on the iteration cursor.
 					a_iteration_component.cursor_after_expression.name.set_seed (current_system.iteration_cursor_after_seed)
@@ -7549,19 +7594,19 @@ feature {NONE} -- Expression validity
 					end
 						-- Make sure that it is valid to call feature
 						-- 'item' on the iteration cursor.
-					if a_iteration_component.has_item_cursor then
+					if not a_iteration_component.has_cursor_name then
 						a_iteration_component.cursor_item_expression.name.set_seed (current_system.iteration_cursor_item_seed)
 						l_item_context := new_context (current_type)
 						check_expression_validity (a_iteration_component.cursor_item_expression, l_item_context, current_system.detachable_any_type)
 						if has_fatal_error then
 							l_had_error := True
 						end
-							-- From now on, the type of the item is the type of the iteration local name.
-						current_iteration_cursor_types.force_last (l_item_context, a_iteration_component)
-						free_context (l_expression_context)
+							-- From now one, use the correct type of the iteration item (and not the
+							-- type of the iteration cursor as explained above).
+						current_iteration_item_types.force_last (l_item_context, a_iteration_component)
 					end
-					report_iteration_cursor_declaration (l_cursor_name, a_iteration_component)
-					current_iteration_cursor_scope.remove_iteration_components (1)
+					report_iteration_item_declaration (l_item_name, a_iteration_component)
+					current_iteration_item_scope.remove_iteration_components (1)
 				end
 			end
 			if l_had_error then
@@ -7569,22 +7614,27 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_iteration_cursor_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
-			-- Check validity of iteration cursor `a_name'.
-			-- `a_context' represents the type in which `a_name' appears.
-			-- It will be altered on exit to represent the type of `a_name'.
+	check_iteration_cursor_validity (a_iteration_cursor: ET_ITERATION_CURSOR; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- Check validity of `a_iteration_cursor'.
+			-- `a_context' represents the type in which `a_iteration_cursor' appears.
+			-- It will be altered on exit to represent the type of `a_iteration_cursor'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
-			a_name_not_void: a_name /= Void
-			a_name_iteration_cursor: a_name.is_iteration_cursor
+			a_iteration_cursor_not_void: a_iteration_cursor /= Void
 			a_context_not_void: a_context /= Void
 		local
+			l_name: ET_IDENTIFIER
 			l_seed: INTEGER
 			l_iteration_component: detachable ET_ITERATION_COMPONENT
 		do
 			has_fatal_error := False
-			l_seed := a_name.seed
-			if l_seed = 0 then
+			l_name := a_iteration_cursor.item_name
+			l_seed := l_name.seed
+			if not l_name.is_iteration_item then
+					-- Error: `l_name` is not the name of an iteration item.
+				set_fatal_error
+				error_handler.report_voit3a_error (current_class, a_iteration_cursor)
+			elseif l_seed = 0 then
 					-- We need to resolve `a_name' in the implementation
 					-- class of `current_feature_impl' first.
 				if current_class_impl /= current_class then
@@ -7595,30 +7645,34 @@ feature {NONE} -- Expression validity
 						error_handler.report_giaaa_error
 					end
 				else
-					l_iteration_component := current_iteration_cursor_scope.iteration_component (a_name)
+					l_iteration_component := current_iteration_item_scope.iteration_component (l_name)
 					if l_iteration_component = Void then
-							-- Error: `a_name' is an iteration cursor that is used outside of its scope.
+							-- Error: `l_name' is an iteration item that is used outside of its scope.
 						set_fatal_error
 						if current_feature_impl.is_feature then
-							error_handler.report_veen9a_error (current_class, a_name, current_feature_impl.as_feature)
+							error_handler.report_veen9a_error (current_class, l_name, current_feature_impl.as_feature)
 						else
-							error_handler.report_veen9b_error (current_class, a_name)
+							error_handler.report_veen9b_error (current_class, l_name)
 						end
+					elseif l_iteration_component.has_cursor_name then
+							-- Error: `l_name` is not the name of an iteration item.
+						set_fatal_error
+						error_handler.report_voit3a_error (current_class, a_iteration_cursor)
 					else
-						l_seed := l_iteration_component.cursor_name.seed
-						a_name.set_seed (l_seed)
+						l_seed := l_iteration_component.item_name.seed
+						l_name.set_seed (l_seed)
 						current_iteration_cursor_types.search (l_iteration_component)
 						if not current_iteration_cursor_types.found then
 								-- The type of the iteration cursor should have been determined
 								-- when processing the header of the iteration component itself.
 								-- And this should have already been done since we are in the
-								-- scope of that cursor. Here we don't have this type, which
-								-- means that an error had occurred (and had been reported)
+								-- scope of the iteration item. Here we don't have this type,
+								-- which means that an error had occurred (and had been reported)
 								-- when processing the iterable expression of the iteration component.
 							set_fatal_error
 						else
 							a_context.copy_type_context (current_iteration_cursor_types.found_item)
-							report_iteration_cursor (a_name, l_iteration_component)
+							report_iteration_cursor (a_iteration_cursor, l_iteration_component)
 						end
 					end
 				end
@@ -7638,12 +7692,92 @@ feature {NONE} -- Expression validity
 							-- Internal error: the type of the iteration cursor should
 							-- have been determined when processing the header of the
 							-- iteration component itself. And this should have already
-							-- been done since we are in the scope of that cursor.
+							-- been done since we are in the scope of the iteration item.
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
 						a_context.copy_type_context (current_iteration_cursor_types.found_item)
-						report_iteration_cursor (a_name, l_iteration_component)
+						report_iteration_cursor (a_iteration_cursor, l_iteration_component)
+					end
+				end
+			end
+		end
+
+	check_iteration_item_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- Check validity of iteration item `a_name'.
+			-- `a_context' represents the type in which `a_name' appears.
+			-- It will be altered on exit to represent the type of `a_name'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_iteration_item: a_name.is_iteration_item
+			a_context_not_void: a_context /= Void
+		local
+			l_seed: INTEGER
+			l_iteration_component: detachable ET_ITERATION_COMPONENT
+		do
+			has_fatal_error := False
+			l_seed := a_name.seed
+			if l_seed = 0 then
+					-- We need to resolve `a_name' in the implementation
+					-- class of `current_feature_impl' first.
+				if current_class_impl /= current_class then
+					set_fatal_error
+					if not has_implementation_error (current_feature_impl) then
+							-- Internal error: `a_name' should have been resolved in
+							-- the implementation feature.
+						error_handler.report_giaaa_error
+					end
+				else
+					l_iteration_component := current_iteration_item_scope.iteration_component (a_name)
+					if l_iteration_component = Void then
+							-- Error: `a_name' is an iteration item that is used outside of its scope.
+						set_fatal_error
+						if current_feature_impl.is_feature then
+							error_handler.report_veen9a_error (current_class, a_name, current_feature_impl.as_feature)
+						else
+							error_handler.report_veen9b_error (current_class, a_name)
+						end
+					else
+						l_seed := l_iteration_component.item_name.seed
+						a_name.set_seed (l_seed)
+						current_iteration_item_types.search (l_iteration_component)
+						if not current_iteration_item_types.found then
+								-- The type of the iteration item should have been determined
+								-- when processing the header of the iteration component itself.
+								-- And this should have already been done since we are in the
+								-- scope of that iteration item. Here we don't have this type, which
+								-- means that an error had occurred (and had been reported)
+								-- when processing the iterable expression of the iteration component.
+							set_fatal_error
+						else
+							a_context.copy_type_context (current_iteration_item_types.found_item)
+							report_iteration_item (a_name, l_iteration_component)
+						end
+					end
+				end
+			else
+				if not attached current_closure_impl.iteration_components as l_iteration_components then
+						-- Internal error.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif l_seed < 1 or l_seed > l_iteration_components.count then
+						-- Internal error.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_iteration_component := l_iteration_components.iteration_component (l_seed)
+					current_iteration_item_types.search (l_iteration_component)
+					if not current_iteration_item_types.found then
+							-- Internal error: the type of the iteration item should
+							-- have been determined when processing the header of the
+							-- iteration component itself. And this should have already
+							-- been done since we are in the scope of that iteration item.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						a_context.copy_type_context (current_iteration_item_types.found_item)
+						report_iteration_item (a_name, l_iteration_component)
 					end
 				end
 			end
@@ -7673,7 +7807,7 @@ feature {NONE} -- Expression validity
 			if has_fatal_error then
 				had_error := True
 			end
-			current_iteration_cursor_scope.add_iteration_component (an_expression)
+			current_iteration_item_scope.add_iteration_component (an_expression)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
@@ -7738,10 +7872,17 @@ feature {NONE} -- Expression validity
 			end
 			free_context (l_expression_context)
 			current_object_test_scope.keep_object_tests (l_old_object_test_scope)
-			current_iteration_cursor_scope.remove_iteration_components (1)
+			current_iteration_item_scope.remove_iteration_components (1)
+			current_iteration_item_types.search (an_expression)
+			if current_iteration_item_types.found then
+				free_context (current_iteration_item_types.found_item)
+				current_iteration_item_types.remove_found_item
+			end
 			current_iteration_cursor_types.search (an_expression)
 			if current_iteration_cursor_types.found then
-				free_context (current_iteration_cursor_types.found_item)
+				if not an_expression.has_cursor_name then
+					free_context (current_iteration_cursor_types.found_item)
+				end
 				current_iteration_cursor_types.remove_found_item
 			end
 			if current_system.attachment_type_conformance_mode then
@@ -8506,7 +8647,7 @@ feature {NONE} -- Expression validity
 					set_fatal_error
 					error_handler.report_vuot1d_error (current_class, an_expression, l_other_object_test)
 				end
-				if attached current_iteration_cursor_scope.iteration_component (l_name) as l_iteration_component then
+				if attached current_iteration_item_scope.iteration_component (l_name) as l_iteration_component then
 						-- This object-test appears in the scope of an iteration
 						-- cursor with the same name.
 					set_fatal_error
@@ -10305,8 +10446,8 @@ feature {NONE} -- Expression validity
 				elseif l_identifier.is_local then
 					check_unqualified_local_variable_call_expression_validity (a_call, l_identifier, a_context)
 					l_checked := True
-				elseif l_identifier.is_iteration_cursor then
-					check_unqualified_iteration_cursor_call_expression_validity (a_call, l_identifier, a_context)
+				elseif l_identifier.is_iteration_item then
+					check_unqualified_iteration_item_call_expression_validity (a_call, l_identifier, a_context)
 					l_checked := True
 				elseif l_identifier.is_object_test_local then
 					check_unqualified_object_test_local_call_expression_validity (a_call, l_identifier, a_context)
@@ -10412,21 +10553,21 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_unqualified_iteration_cursor_call_expression_validity (a_call: ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION; a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_unqualified_iteration_item_call_expression_validity (a_call: ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION; a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of unqualified call `a_call' whose
-			-- name `a_name' appears to be an iteration cursor.
+			-- name `a_name' appears to be an iteration item.
 			-- `a_context' represents the type in which `a_call' appears.
 			-- It will be altered on exit to represent the type of `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
 			a_name_not_void: a_name /= Void
-			is_iteration_cursor: a_name.is_iteration_cursor
+			is_iteration_item: a_name.is_iteration_item
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
 			if a_call.arguments = Void then
-				check_iteration_cursor_validity (a_name, a_context)
+				check_iteration_item_validity (a_name, a_context)
 			elseif current_class_impl /= current_class then
 				set_fatal_error
 				if not has_implementation_error (current_feature_impl) then
@@ -10436,7 +10577,7 @@ feature {NONE} -- Expression validity
 				end
 				check_orphan_actual_arguments_validity (a_call)
 			else
-				check_iteration_cursor_parenthesis_call_validity (a_call, a_name, a_context)
+				check_iteration_item_parenthesis_call_validity (a_call, a_name, a_context)
 				if has_fatal_error then
 					-- Do nothing.
 				elseif attached a_call.parenthesis_call as l_parenthesis_call then
@@ -11451,8 +11592,8 @@ feature {NONE} -- Parenthesis call validity
 			end
 		end
 
-	check_iteration_cursor_parenthesis_call_validity (a_call: ET_FEATURE_CALL; a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
-			-- Check whether `a_call', whose name `a_name' appears to be an iteration cursor,
+	check_iteration_item_parenthesis_call_validity (a_call: ET_FEATURE_CALL; a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- Check whether `a_call', whose name `a_name' appears to be an iteration item,
 			-- is in fact a parenthesis call.
 			-- For example, if `a_name' is 'foo' and `a_call' is 'foo (args)', a parenthesis
 			-- call will be 'foo.g (args)' where 'g' is declared as 'g alias "()"'.
@@ -11462,14 +11603,14 @@ feature {NONE} -- Parenthesis call validity
 			-- `a_context' represents the type in which `a_call' appears.
 			-- If `a_call' is a parenthesis call, it will be altered on exit
 			-- to represent the type of `a_call'. Otherwise, it will be
-			-- altered on exit to represent the type of the iteration cursor.
+			-- altered on exit to represent the type of the iteration item.
 			--
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
 			unqualified_call: not a_call.is_qualified_call
 			a_name_not_void: a_name /= Void
-			is_iteration_cursor: a_name.is_iteration_cursor
+			is_iteration_item: a_name.is_iteration_item
 			a_context_not_void: a_context /= Void
 			in_implementation_class: current_class_impl = current_class
 		do
@@ -11479,7 +11620,7 @@ feature {NONE} -- Parenthesis call validity
 			elseif not attached l_regular_call.arguments as l_actuals or else l_actuals.is_empty then
 				-- Do nothing.
 			else
-				check_iteration_cursor_validity (a_name, a_context)
+				check_iteration_item_validity (a_name, a_context)
 				if has_fatal_error then
 					check_orphan_actual_arguments_validity (a_call)
 				else
@@ -12880,7 +13021,7 @@ feature {NONE} -- Agent validity
 			l_type: ET_TYPE
 			l_compound: detachable ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
-			l_old_hidden_iteration_cursor_scope: INTEGER
+			l_old_hidden_iteration_item_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_error: BOOLEAN
@@ -12900,10 +13041,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
-				-- Make sure that we do not use iteration cursors declared
+				-- Make sure that we do not use iteration items declared
 				-- in an enclosing feature or inline agent.
-			l_old_hidden_iteration_cursor_scope := current_iteration_cursor_scope.hidden_count
-			current_iteration_cursor_scope.hide_iteration_components (current_iteration_cursor_scope.count)
+			l_old_hidden_iteration_item_scope := current_iteration_item_scope.hidden_count
+			current_iteration_item_scope.hide_iteration_components (current_iteration_item_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
@@ -12999,9 +13140,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
-				-- Restore the scope iteration cursors declared
+				-- Restore the scope iteration items declared
 				-- in the enclosing feature or inline agent.
-			current_iteration_cursor_scope.hide_iteration_components (l_old_hidden_iteration_cursor_scope)
+			current_iteration_item_scope.hide_iteration_components (l_old_hidden_iteration_item_scope)
 			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -13029,7 +13170,7 @@ feature {NONE} -- Agent validity
 		local
 			l_compound: detachable ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
-			l_old_hidden_iteration_cursor_scope: INTEGER
+			l_old_hidden_iteration_item_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_error: BOOLEAN
@@ -13049,10 +13190,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
-				-- Make sure that we do not use iteration cursors declared
+				-- Make sure that we do not use iteration items declared
 				-- in an enclosing feature or inline agent.
-			l_old_hidden_iteration_cursor_scope := current_iteration_cursor_scope.hidden_count
-			current_iteration_cursor_scope.hide_iteration_components (current_iteration_cursor_scope.count)
+			l_old_hidden_iteration_item_scope := current_iteration_item_scope.hidden_count
+			current_iteration_item_scope.hide_iteration_components (current_iteration_item_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
@@ -13123,9 +13264,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
-				-- Restore the scope iteration cursors declared
+				-- Restore the scope iteration items declared
 				-- in the enclosing feature or inline agent.
-			current_iteration_cursor_scope.hide_iteration_components (l_old_hidden_iteration_cursor_scope)
+			current_iteration_item_scope.hide_iteration_components (l_old_hidden_iteration_item_scope)
 			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -13153,7 +13294,7 @@ feature {NONE} -- Agent validity
 		local
 			l_type: ET_TYPE
 			l_old_hidden_object_test_scope: INTEGER
-			l_old_hidden_iteration_cursor_scope: INTEGER
+			l_old_hidden_iteration_item_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_error: BOOLEAN
@@ -13168,10 +13309,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
-				-- Make sure that we do not use iteration cursors declared
+				-- Make sure that we do not use iteration items declared
 				-- in an enclosing feature or inline agent.
-			l_old_hidden_iteration_cursor_scope := current_iteration_cursor_scope.hidden_count
-			current_iteration_cursor_scope.hide_iteration_components (current_iteration_cursor_scope.count)
+			l_old_hidden_iteration_item_scope := current_iteration_item_scope.hidden_count
+			current_iteration_item_scope.hide_iteration_components (current_iteration_item_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
@@ -13207,9 +13348,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
-				-- Restore the scope iteration cursors declared
+				-- Restore the scope iteration items declared
 				-- in the enclosing feature or inline agent.
-			current_iteration_cursor_scope.hide_iteration_components (l_old_hidden_iteration_cursor_scope)
+			current_iteration_item_scope.hide_iteration_components (l_old_hidden_iteration_item_scope)
 			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -13241,7 +13382,7 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			l_old_hidden_object_test_scope: INTEGER
-			l_old_hidden_iteration_cursor_scope: INTEGER
+			l_old_hidden_iteration_item_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_error: BOOLEAN
@@ -13256,10 +13397,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
-				-- Make sure that we do not use iteration cursors declared
+				-- Make sure that we do not use iteration items declared
 				-- in an enclosing feature or inline agent.
-			l_old_hidden_iteration_cursor_scope := current_iteration_cursor_scope.hidden_count
-			current_iteration_cursor_scope.hide_iteration_components (current_iteration_cursor_scope.count)
+			l_old_hidden_iteration_item_scope := current_iteration_item_scope.hidden_count
+			current_iteration_item_scope.hide_iteration_components (current_iteration_item_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
@@ -13288,9 +13429,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
-				-- Restore the scope iteration cursors declared
+				-- Restore the scope iteration items declared
 				-- in the enclosing feature or inline agent.
-			current_iteration_cursor_scope.hide_iteration_components (l_old_hidden_iteration_cursor_scope)
+			current_iteration_item_scope.hide_iteration_components (l_old_hidden_iteration_item_scope)
 			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -13324,7 +13465,7 @@ feature {NONE} -- Agent validity
 			l_type: ET_TYPE
 			l_compound: detachable ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
-			l_old_hidden_iteration_cursor_scope: INTEGER
+			l_old_hidden_iteration_item_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_key_error: BOOLEAN
@@ -13345,10 +13486,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
-				-- Make sure that we do not use iteration cursors declared
+				-- Make sure that we do not use iteration items declared
 				-- in an enclosing feature or inline agent.
-			l_old_hidden_iteration_cursor_scope := current_iteration_cursor_scope.hidden_count
-			current_iteration_cursor_scope.hide_iteration_components (current_iteration_cursor_scope.count)
+			l_old_hidden_iteration_item_scope := current_iteration_item_scope.hidden_count
+			current_iteration_item_scope.hide_iteration_components (current_iteration_item_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
@@ -13446,9 +13587,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
-				-- Restore the scope iteration cursors declared
+				-- Restore the scope iteration items declared
 				-- in the enclosing feature or inline agent.
-			current_iteration_cursor_scope.hide_iteration_components (l_old_hidden_iteration_cursor_scope)
+			current_iteration_item_scope.hide_iteration_components (l_old_hidden_iteration_item_scope)
 			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -13481,7 +13622,7 @@ feature {NONE} -- Agent validity
 		local
 			l_compound: detachable ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
-			l_old_hidden_iteration_cursor_scope: INTEGER
+			l_old_hidden_iteration_item_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_key_error: BOOLEAN
@@ -13502,10 +13643,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
-				-- Make sure that we do not use iteration cursors declared
+				-- Make sure that we do not use iteration items declared
 				-- in an enclosing feature or inline agent.
-			l_old_hidden_iteration_cursor_scope := current_iteration_cursor_scope.hidden_count
-			current_iteration_cursor_scope.hide_iteration_components (current_iteration_cursor_scope.count)
+			l_old_hidden_iteration_item_scope := current_iteration_item_scope.hidden_count
+			current_iteration_item_scope.hide_iteration_components (current_iteration_item_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
@@ -13578,9 +13719,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
-				-- Restore the scope iteration cursors declared
+				-- Restore the scope iteration items declared
 				-- in the enclosing feature or inline agent.
-			current_iteration_cursor_scope.hide_iteration_components (l_old_hidden_iteration_cursor_scope)
+			current_iteration_item_scope.hide_iteration_components (l_old_hidden_iteration_item_scope)
 			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -14414,11 +14555,11 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_iteration_cursor (a_name: ET_IDENTIFIER; a_iteration_component: ET_ITERATION_COMPONENT)
-			-- Report that a call to iteration cursor `a_name' has been processed.
+	report_iteration_cursor (a_iteration_cursor: ET_ITERATION_CURSOR; a_iteration_component: ET_ITERATION_COMPONENT)
+			-- Report that a call to iteration cursor `a_iteration_cursor' has been processed.
 		require
 			no_error: not has_fatal_error
-			a_name_not_void: a_name /= Void
+			a_iteration_cursor_not_void: a_iteration_cursor /= Void
 			a_iteration_component_not_void: a_iteration_component /= Void
 		do
 		end
@@ -14437,6 +14578,24 @@ feature {NONE} -- Event handling
 		require
 			no_error: not has_fatal_error
 			a_iteration_expression_not_void: a_iteration_expression /= Void
+		do
+		end
+
+	report_iteration_item (a_name: ET_IDENTIFIER; a_iteration_component: ET_ITERATION_COMPONENT)
+			-- Report that a call to iteration item `a_name' has been processed.
+		require
+			no_error: not has_fatal_error
+			a_name_not_void: a_name /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
+		do
+		end
+
+	report_iteration_item_declaration (a_name: ET_IDENTIFIER; a_iteration_component: ET_ITERATION_COMPONENT)
+			-- Report that the declaration of the iteration item `a_name' has been processed.
+		require
+			no_error: not has_fatal_error
+			a_name_not_void: a_name /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 		do
 		end
 
@@ -15381,8 +15540,8 @@ feature {ET_AST_NODE} -- Processing
 				check_local_variable_validity (an_identifier, current_context)
 			elseif an_identifier.is_object_test_local then
 				check_object_test_local_validity (an_identifier, current_context)
-			elseif an_identifier.is_iteration_cursor then
-				check_iteration_cursor_validity (an_identifier, current_context)
+			elseif an_identifier.is_iteration_item then
+				check_iteration_item_validity (an_identifier, current_context)
 			else
 					-- Internal error: invalid kind of identifier.
 				set_fatal_error
@@ -15424,6 +15583,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 		do
 			check_inspect_instruction_validity (an_instruction)
+		end
+
+	process_iteration_cursor (a_iteration_cursor: ET_ITERATION_CURSOR)
+			-- Process `a_iteration_cursor'.
+		do
+			check_iteration_cursor_validity (a_iteration_cursor, current_context)
 		end
 
 	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION)
@@ -15833,9 +15998,12 @@ feature {NONE} -- Iteration components
 	current_iteration_cursor_types: DS_HASH_TABLE [ET_NESTED_TYPE_CONTEXT, ET_ITERATION_COMPONENT]
 			-- Types of iteration cursors
 
-	current_iteration_cursor_scope: ET_ITERATION_CURSOR_SCOPE
+	current_iteration_item_types: DS_HASH_TABLE [ET_NESTED_TYPE_CONTEXT, ET_ITERATION_COMPONENT]
+			-- Types of iteration items (or of iteration cursors when using obsolete syntax)
+
+	current_iteration_item_scope: ET_ITERATION_ITEM_SCOPE
 			-- Iteration components for which we are currently in the
-			-- scope of their cursors
+			-- scope of their iteration items
 
 feature {NONE} -- Attachments
 
@@ -16736,7 +16904,11 @@ invariant
 		-- Iteration components.
 	current_iteration_cursor_types_not_void: current_iteration_cursor_types /= Void
 	no_void_iteration_cursor_type: not current_iteration_cursor_types.has_void_item
-	current_iteration_cursor_scope_not_void: current_iteration_cursor_scope /= Void
+	no_void_cursor_type_iteration_component: not current_iteration_cursor_types.has_void
+	current_iteration_item_types_not_void: current_iteration_item_types /= Void
+	no_void_iteration_item_type: not current_iteration_item_types.has_void_item
+	no_void_item_type_iteration_component: not current_iteration_item_types.has_void
+	current_iteration_item_scope_not_void: current_iteration_item_scope /= Void
 		-- Attachments.
 	current_initialization_scope_not_void: current_initialization_scope /= Void
 	current_attachment_scope_not_void: current_attachment_scope /= Void

@@ -6,7 +6,7 @@ note
 		"Scanners for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,6 +50,53 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 				last_break_end := 0
 				last_comment_end := text_count
 				process_one_char_symbol (unicode_text_item (1))
+			}
+@	{
+				if current_universe.use_obsolete_syntax_mode then
+					last_token := E_FREEOP
+					last_text_count := 1
+					last_literal_start := 1
+					last_literal_end := 1
+					last_break_end := 0
+					last_comment_end := 0
+					last_detachable_et_free_operator_value := ast_factory.new_free_operator (Current)
+				else
+					last_break_end := 0
+					last_comment_end := 0
+					process_one_char_symbol (unicode_text_item (1))
+				end
+			}
+@{BREAK}+	{
+				if current_universe.use_obsolete_syntax_mode then
+					last_token := E_FREEOP
+					last_text_count := 1
+					last_literal_start := 1
+					last_literal_end := 1
+					last_break_end := text_count
+					last_comment_end := 0
+					last_detachable_et_free_operator_value := ast_factory.new_free_operator (Current)
+				else
+					last_text_count := 1
+					last_break_end := text_count
+					last_comment_end := 0
+					process_one_char_symbol (unicode_text_item (1))
+				end
+			}
+@({BREAK}|"--".*)+	{
+				if current_universe.use_obsolete_syntax_mode then
+					last_token := E_FREEOP
+					last_text_count := 1
+					last_literal_start := 1
+					last_literal_end := 1
+					last_break_end := 0
+					last_comment_end := text_count
+					last_detachable_et_free_operator_value := ast_factory.new_free_operator (Current)
+				else
+					last_text_count := 1
+					last_break_end := 0
+					last_comment_end := text_count
+					process_one_char_symbol (unicode_text_item (1))
+				end
 			}
 "-"{BREAK}({BREAK}|"--".*)+	{
 				last_text_count := 1
@@ -158,7 +205,8 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 
 -- Legacy: free operators which must start with [@#|&] is not in the standard anymore.
 -- Make sure that we don't have a subsequence of the form "--" (beginning of a comment).
-[@#|&]([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*\-? {
+[#|&]([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*\-? |
+@([@#0-9_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*\-? {
 				last_token := E_FREEOP
 				last_literal_start := 1
 				last_literal_end := text_count
@@ -166,8 +214,10 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 				last_comment_end := 0
 				last_detachable_et_free_operator_value := ast_factory.new_free_operator (Current)
 			}
-[@#|&]([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*\-/{BREAK} |
-[@#|&]([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*/({BREAK}|"--") {
+[#|&]([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*\-/{BREAK} |
+[#|&]([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*/({BREAK}|"--") |
+@([@#0-9_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*\-/{BREAK} |
+@([@#0-9_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*/({BREAK}|"--") {
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
@@ -313,7 +363,7 @@ CHAR_CODE			[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7
 				break_kind := string_break
 				more
 				set_start_condition (BREAK)
-			}
+			}			
 \"[@#|&]([@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~]|\-[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\./:;<>=\?\[\\\]\^\`\{\}\|\~])*\-?\" |
 \"({FREEOP_CHAR}{-}[\-<>%]|\-{FREEOP_CHAR}{-}[\->%]|>{FREEOP_CHAR}{-}[>%]|<{FREEOP_CHAR}{-}[<%])+({FREEOP_CHAR}{-}[\-%]\-|{FREEOP_CHAR}{-}[\->%]>|{FREEOP_CHAR}{-}[<%]<)?\" {
 				last_token := E_STRFREEOP

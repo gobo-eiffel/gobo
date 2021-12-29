@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Bootstrap Gobo Eiffel Compiler in $GOBO/bin"
-# copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
+# copyright: "Copyright (c) 2016-2021, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -56,6 +56,7 @@ c_compilation() {
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gec (bootstrap 0)..."
 	fi
+	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec9.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec8.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec7.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec6.c

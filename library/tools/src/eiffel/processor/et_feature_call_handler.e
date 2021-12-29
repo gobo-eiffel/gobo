@@ -5,7 +5,7 @@ note
 		"Eiffel feature call handlers: traverse features and report when feature calls are found."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/04/06 $"
 	revision: "$Revision: #12 $"
@@ -1559,7 +1559,7 @@ feature {ET_AST_NODE} -- Processing
 				-- Do nothing
 			elseif l_name.is_object_test_local then
 				-- Do nothing
-			elseif l_name.is_iteration_cursor then
+			elseif l_name.is_iteration_item then
 				-- Do nothing
 			elseif attached current_class.seeded_procedure (l_seed) as l_procedure then
 					-- This is of the form '$procedure_name'.
@@ -1625,7 +1625,7 @@ feature {ET_AST_NODE} -- Processing
 			l_seed: INTEGER
 			l_iteration_component: ET_ITERATION_COMPONENT
 		do
-			if a_identifier.is_iteration_cursor then
+			if a_identifier.is_iteration_item then
 				l_seed := a_identifier.seed
 				if not attached current_closure_impl.iteration_components as l_iteration_components then
 						-- Internal error.
@@ -1645,8 +1645,9 @@ feature {ET_AST_NODE} -- Processing
 					end
 				else
 					l_iteration_component := l_iteration_components.iteration_component (l_seed)
-					if a_identifier /= l_iteration_component.unfolded_cursor_name and then l_iteration_component.has_item_cursor then
-							-- We are in the case 'across ... is ...' or with quantifiers.
+					if a_identifier /= l_iteration_component.unfolded_cursor_name and then not l_iteration_component.has_cursor_name then
+							-- We are not in the case of 'across ... as ...' with
+							-- 'obsolete_iteration_mode' set to True.
 						process_expression (l_iteration_component.cursor_item_expression)
 					end
 				end

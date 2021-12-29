@@ -5,7 +5,7 @@
 		"Eiffel feature call names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -92,8 +92,8 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_iteration_cursor: BOOLEAN
-			-- Is current call name actually an iteration cursor name?
+	is_iteration_item: BOOLEAN
+			-- Is current call name actually an iteration item name?
 		do
 			-- Result := False
 		end
@@ -384,12 +384,12 @@ feature -- Conversion
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	iteration_cursor_name: ET_IDENTIFIER
-			-- Current name viewed as an iteration cursor name
+	iteration_item_name: ET_IDENTIFIER
+			-- Current name viewed as an iteration item name
 		require
-			is_iteration_cursor: is_iteration_cursor
+			is_iteration_item: is_iteration_item
 		do
-			check is_iteration_cursor: False then end
+			check is_iteration_item: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end

@@ -18,13 +18,11 @@ inherit
 
 feature -- Status report
 
-	has_item_cursor: BOOLEAN
-			-- Should `cursor_name' represent the items being traversed?
-			-- Otherwise it represents the cursor used for the traversal.
+	has_cursor_name: BOOLEAN
+			-- Should `item_name' represent the cursor used for the traversal?
+			-- Otherwise it represents the items being traversed.
 			-- True in case of 'across ... as ...' when 'obsolete_iteration_mode'
-			-- is set to False in the surrounding universe (and in case
-			-- of the obsolete syntax 'across ... is ...'), or for quantifier
-			-- expressions or repeat instructions.
+			-- is set to True in the surrounding universe, False otherwise.
 
 feature -- Access
 
@@ -71,12 +69,12 @@ feature -- Access
 
 feature -- Status setting
 
-	set_has_item_cursor (b: BOOLEAN)
-			-- Set `has_item_cursor' to `b'.
+	set_has_cursor_name (b: BOOLEAN)
+			-- Set `has_cursor_name' to `b'.
 		do
-			has_item_cursor := b
+			has_cursor_name := b
 		ensure
-			has_item_cursor_set: has_item_cursor = b
+			has_cursor_name_set: has_cursor_name = b
 		end
 
 feature -- Setting

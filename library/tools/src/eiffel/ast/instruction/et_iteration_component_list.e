@@ -5,7 +5,7 @@ note
 		"Eiffel lists of iteration components"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2012-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2012-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,19 +34,19 @@ feature -- Access
 		end
 
 	index_of_name (a_name: ET_IDENTIFIER): INTEGER
-			-- Index of first iteration component with cursor named `a_name' which is in scope
-			-- (by convention, we are in the scope of an iteration component if its `cursor_name'
-			-- is not marked as 'is_iteration_cursor');
+			-- Index of first iteration component with iteration item named `a_name' 
+			-- which is in scope (by convention, we are in the scope of an iteration 
+			-- component if its `item_name' is not marked as 'is_iteration_item');
 			-- 0 if it does not exist
 		require
 			a_name_not_void: a_name /= Void
 		local
 			i: INTEGER
-			l_cursor_name: ET_IDENTIFIER
+			l_item_name: ET_IDENTIFIER
 		do
 			from i := count until i < 1 loop
-				l_cursor_name := storage.item (i).cursor_name
-				if l_cursor_name.same_identifier (a_name) and then not l_cursor_name.is_iteration_cursor then
+				l_item_name := storage.item (i).item_name
+				if l_item_name.same_identifier (a_name) and then not l_item_name.is_iteration_item then
 					Result := i
 						-- Jump out of the loop.
 					i := 0
@@ -57,7 +57,7 @@ feature -- Access
 		ensure
 			index_large_enough: Result >= 0
 			index_small_enough: Result <= count
-			in_scope: Result > 0 implies not iteration_component (Result).cursor_name.is_iteration_cursor
+			in_scope: Result > 0 implies not iteration_component (Result).item_name.is_iteration_item
 		end
 
 feature -- Duplication

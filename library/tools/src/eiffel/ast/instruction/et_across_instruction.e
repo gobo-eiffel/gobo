@@ -28,32 +28,32 @@ create
 feature {NONE} -- Initialization
 
 	make (a_iterable_expression: like iterable_expression;
-		a_cursor_name: like cursor_name;
+		a_item_name: like item_name;
 		a_from_compound: like from_compound;
 		an_until_conditional: like until_conditional;
 		a_loop_compound: like loop_compound)
 			-- Create a new across instruction.
 		require
 			a_iterable_expression_not_void: a_iterable_expression /= Void
-			a_cursor_name_not_void: a_cursor_name /= Void
+			a_item_name_not_void: a_item_name /= Void
 		do
 			across_keyword := tokens.across_keyword
 			iterable_expression := a_iterable_expression
 			as_keyword := tokens.as_keyword
-			cursor_name := a_cursor_name
+			item_name := a_item_name
 			from_compound := a_from_compound
 			until_conditional := an_until_conditional
 			loop_compound := a_loop_compound
 			end_keyword := tokens.end_keyword
-			has_item_cursor := True
+			has_cursor_name := False
 			create_unfolded_form
 		ensure
 			iterable_expression_set: iterable_expression = a_iterable_expression
-			cursor_name_set: cursor_name = a_cursor_name
+			item_name_set: item_name = a_item_name
 			from_compound_set: from_compound = a_from_compound
 			until_conditional_set: until_conditional = an_until_conditional
 			loop_compound_set: loop_compound = a_loop_compound
-			has_item_cursor: has_item_cursor
+			not_has_cursor_name: not has_cursor_name
 		end
 
 feature -- Access

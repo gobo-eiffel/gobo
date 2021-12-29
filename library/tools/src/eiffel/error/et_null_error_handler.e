@@ -5,7 +5,7 @@ note
 		"Null error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -108,6 +108,7 @@ inherit
 			reportable_vmss3_error,
 			reportable_voit1_error,
 			reportable_voit2_error,
+			reportable_voit3_error,
 			reportable_vomb1_error,
 			reportable_vomb2_error,
 			reportable_vpca1_error,
@@ -849,6 +850,13 @@ feature -- Validity error status
 
 	reportable_voit2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VOIT-2 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_voit3_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VOIT-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

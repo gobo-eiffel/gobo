@@ -22,16 +22,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_cursor_name: like cursor_name;
+	make (a_item_name: like item_name;
 		a_iterable_expression: like iterable_expression;
 		a_loop_compound: like loop_compound)
 			-- Create a new loop instruction of the form '⟳ ... ⟲'.
 		require
-			a_cursor_name_not_void: a_cursor_name /= Void
+			a_item_name_not_void: a_item_name /= Void
 			a_iterable_expression_not_void: a_iterable_expression /= Void
 		do
 			open_repeat_symbol := tokens.open_repeat_symbol
-			cursor_name := a_cursor_name
+			item_name := a_item_name
 			colon_symbol := tokens.colon_symbol
 			iterable_expression := a_iterable_expression
 			bar_symbol := tokens.bar_symbol
@@ -39,20 +39,18 @@ feature {NONE} -- Initialization
 			close_repeat_symbol := tokens.close_repeat_symbol
 			create_unfolded_form
 		ensure
-			cursor_name_set: cursor_name = a_cursor_name
+			item_name_set: item_name = a_item_name
 			iterable_expression_set: iterable_expression = a_iterable_expression
 			loop_compound_set: loop_compound = a_loop_compound
 		end
 
 feature -- Status report
 
-	has_item_cursor: BOOLEAN = True
-			-- Should `cursor_name' represent the items being traversed?
-			-- Otherwise it represents the cursor used for the traversal.
+	has_cursor_name: BOOLEAN = False
+			-- Should `item_name' represent the cursor used for the traversal?
+			-- Otherwise it represents the items being traversed.
 			-- True in case of 'across ... as ...' when 'obsolete_iteration_mode'
-			-- is set to False in the surrounding universe (and in case
-			-- of the obsolete syntax 'across ... is ...'), or for quantifier
-			-- expressions or repeat instructions.
+			-- is set to True in the surrounding universe, False otherwise.
 
 feature -- Access
 
@@ -102,7 +100,7 @@ feature -- Access
 			if not open_repeat_symbol.position.is_null then
 				Result := open_repeat_symbol.position
 			else
-				Result := cursor_name.position
+				Result := item_name.position
 			end
 		end
 

@@ -5,7 +5,7 @@ note
 		"Eiffel token and symbol codes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -127,31 +127,32 @@ feature -- Keyword and symbol codes
 	arrow_symbol_code: CHARACTER = '%/201/'
 	assign_symbol_code: CHARACTER = '%/202/'
 	assign_attempt_symbol_code: CHARACTER = '%/203/'
-	bang_symbol_code: CHARACTER = '%/204/'
-	bar_symbol_code: CHARACTER = '%/205/'
-	close_repeat_symbol_code: CHARACTER = '%/206/'
-	colon_symbol_code: CHARACTER = '%/207/'
-	comma_symbol_code: CHARACTER = '%/208/'
-	dollar_symbol_code: CHARACTER = '%/209/'
-	dot_symbol_code: CHARACTER = '%/210/'
-	dotdot_symbol_code: CHARACTER = '%/211/'
-	equal_symbol_code: CHARACTER = '%/212/'
-	for_all_symbol_code: CHARACTER = '%/213/'
-	left_array_symbol_code: CHARACTER = '%/214/'
-	left_brace_symbol_code: CHARACTER = '%/215/'
-	left_bracket_symbol_code: CHARACTER = '%/216/'
-	left_parenthesis_symbol_code: CHARACTER = '%/217/'
-	not_equal_symbol_code: CHARACTER = '%/218/'
-	not_tilde_symbol_code: CHARACTER = '%/219/'
-	open_repeat_symbol_code: CHARACTER = '%/220/'
-	question_mark_symbol_code: CHARACTER = '%/221/'
-	right_array_symbol_code: CHARACTER = '%/222/'
-	right_brace_symbol_code: CHARACTER = '%/223/'
-	right_bracket_symbol_code: CHARACTER = '%/224/'
-	right_parenthesis_symbol_code: CHARACTER = '%/225/'
-	semicolon_symbol_code: CHARACTER = '%/226/'
-	there_exists_symbol_code: CHARACTER = '%/227/'
-	tilde_symbol_code: CHARACTER = '%/228/'
+	at_symbol_code: CHARACTER = '%/204/'
+	bang_symbol_code: CHARACTER = '%/205/'
+	bar_symbol_code: CHARACTER = '%/206/'
+	close_repeat_symbol_code: CHARACTER = '%/207/'
+	colon_symbol_code: CHARACTER = '%/208/'
+	comma_symbol_code: CHARACTER = '%/209/'
+	dollar_symbol_code: CHARACTER = '%/210/'
+	dot_symbol_code: CHARACTER = '%/211/'
+	dotdot_symbol_code: CHARACTER = '%/212/'
+	equal_symbol_code: CHARACTER = '%/213/'
+	for_all_symbol_code: CHARACTER = '%/214/'
+	left_array_symbol_code: CHARACTER = '%/215/'
+	left_brace_symbol_code: CHARACTER = '%/216/'
+	left_bracket_symbol_code: CHARACTER = '%/217/'
+	left_parenthesis_symbol_code: CHARACTER = '%/218/'
+	not_equal_symbol_code: CHARACTER = '%/219/'
+	not_tilde_symbol_code: CHARACTER = '%/220/'
+	open_repeat_symbol_code: CHARACTER = '%/221/'
+	question_mark_symbol_code: CHARACTER = '%/222/'
+	right_array_symbol_code: CHARACTER = '%/223/'
+	right_brace_symbol_code: CHARACTER = '%/224/'
+	right_bracket_symbol_code: CHARACTER = '%/225/'
+	right_parenthesis_symbol_code: CHARACTER = '%/226/'
+	semicolon_symbol_code: CHARACTER = '%/227/'
+	there_exists_symbol_code: CHARACTER = '%/228/'
+	tilde_symbol_code: CHARACTER = '%/229/'
 			-- Eiffel symbol codes
 
 feature -- Built-in codes

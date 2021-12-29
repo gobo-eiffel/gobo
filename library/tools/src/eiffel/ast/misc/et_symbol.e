@@ -5,7 +5,7 @@
 		"Eiffel lexical symbols"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,6 +31,7 @@ create
 	make_arrow,
 	make_assign,
 	make_assign_attempt,
+	make_at,
 	make_bang,
 	make_bar,
 	make_close_repeat,
@@ -107,6 +108,17 @@ feature {NONE} -- Initialization
 			make_leaf
 		ensure
 			is_assign_attempt: is_assign_attempt
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
+	make_at
+			-- Create a new '@' symbol.
+		do
+			code := tokens.at_symbol_code
+			make_leaf
+		ensure
+			is_at: is_at
 			line_set: line = no_line
 			column_set: column = no_column
 		end
@@ -579,6 +591,8 @@ feature -- Access
 				Result := tokens.assign_symbol_name
 			when assign_attempt_symbol_code then
 				Result := tokens.assign_attempt_symbol_name
+			when at_symbol_code then
+				Result := tokens.at_symbol_name
 			when bang_symbol_code then
 				Result := tokens.bang_symbol_name
 			when bar_symbol_code then
@@ -707,6 +721,12 @@ feature -- Status report
 			-- Is current symbol '?='?
 		do
 			Result := (code = tokens.assign_attempt_symbol_code)
+		end
+
+	is_at: BOOLEAN
+			-- Is current symbol '@'?
+		do
+			Result := (code = tokens.at_symbol_code)
 		end
 
 	is_bang: BOOLEAN

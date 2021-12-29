@@ -29,60 +29,60 @@ create
 feature {NONE} -- Initialization
 
 	make_some (a_iterable_expression: like iterable_expression;
-		a_cursor_name: like cursor_name;
+		a_item_name: like item_name;
 		an_until_conditional: like until_conditional;
 		a_iteration_conditional: like iteration_conditional)
 			-- Create a new across some expression.
 		require
 			a_iterable_expression_not_void: a_iterable_expression /= Void
-			a_cursor_name_not_void: a_cursor_name /= Void
+			a_item_name_not_void: a_item_name /= Void
 			a_iteration_conditional_not_void: a_iteration_conditional /= Void
 		do
 			across_keyword := tokens.across_keyword
 			iterable_expression := a_iterable_expression
 			as_keyword := tokens.as_keyword
-			cursor_name := a_cursor_name
+			item_name := a_item_name
 			until_conditional := an_until_conditional
 			iteration_conditional := a_iteration_conditional
 			end_keyword := tokens.end_keyword
 			is_all := False
-			has_item_cursor := True
+			has_cursor_name := False
 			create_unfolded_form
 		ensure
 			iterable_expression_set: iterable_expression = a_iterable_expression
-			cursor_name_set: cursor_name = a_cursor_name
+			item_name_set: item_name = a_item_name
 			until_conditional_set: until_conditional = an_until_conditional
 			iteration_conditional_set: iteration_conditional = a_iteration_conditional
-			has_item_cursor: has_item_cursor
+			not_has_cursor_name: not has_cursor_name
 			is_some: is_some
 		end
 
 	make_all (a_iterable_expression: like iterable_expression;
-		a_cursor_name: like cursor_name;
+		a_item_name: like item_name;
 		an_until_conditional: like until_conditional;
 		a_iteration_conditional: like iteration_conditional)
 			-- Create a new across all expression.
 		require
 			a_iterable_expression_not_void: a_iterable_expression /= Void
-			a_cursor_name_not_void: a_cursor_name /= Void
+			a_item_name_not_void: a_item_name /= Void
 			a_iteration_conditional_not_void: a_iteration_conditional /= Void
 		do
 			across_keyword := tokens.across_keyword
 			iterable_expression := a_iterable_expression
 			as_keyword := tokens.as_keyword
-			cursor_name := a_cursor_name
+			item_name := a_item_name
 			until_conditional := an_until_conditional
 			iteration_conditional := a_iteration_conditional
 			end_keyword := tokens.end_keyword
 			is_all := True
-			has_item_cursor := True
+			has_cursor_name := False
 			create_unfolded_form
 		ensure
 			iterable_expression_set: iterable_expression = a_iterable_expression
-			cursor_name_set: cursor_name = a_cursor_name
+			item_name_set: item_name = a_item_name
 			until_conditional_set: until_conditional = an_until_conditional
 			iteration_conditional_set: iteration_conditional = a_iteration_conditional
-			has_item_cursor: has_item_cursor
+			not_has_cursor_name: not has_cursor_name
 			is_all: is_all
 		end
 

@@ -5,7 +5,7 @@ note
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -218,6 +218,7 @@ create
 	make_voit2c,
 	make_voit2d,
 	make_voit2e,
+	make_voit3a,
 	make_vomb1a,
 	make_vomb2a,
 	make_vomb2b,
@@ -3400,14 +3401,14 @@ feature {NONE} -- Initialization
 	make_veen9a (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Create a new VEEN-9 error: `an_identifier', appearing in `a_feature'
 			-- of `a_class' or one of its (possibly nested) inline agents, is an
-			-- iteration cursor that is used outside of its scope.
+			-- iteration item that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			an_identifier_not_void: an_identifier /= Void
-			an_identifier_iteration_cursor: an_identifier.is_iteration_cursor
+			an_identifier_iteration_item: an_identifier.is_iteration_item
 			a_feature_not_void: a_feature /= Void
 		do
 			current_class := a_class
@@ -3438,21 +3439,21 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = iteration cursor
+			-- dollar7: $7 = iteration item
 			-- dollar8: $8 = feature name
 		end
 
 	make_veen9b (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER)
 			-- Create a new VEEN-9 error: `an_identifier', appearing in the invariant
 			-- of `a_class' or one of its (possibly nested) inline agents, is an
-			-- iteration cursor that is used outside of its scope.
+			-- iteration item that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			an_identifier_not_void: an_identifier /= Void
-			an_identifier_iteration_cursor: an_identifier.is_iteration_cursor
+			an_identifier_iteration_item: an_identifier.is_iteration_item
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -3481,7 +3482,7 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = iteration cursor
+			-- dollar7: $7 = iteration item
 		end
 
 	make_vevi0a (a_class, a_class_impl: ET_CLASS; a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
@@ -9296,7 +9297,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_voit2a (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_feature: ET_FEATURE)
-			-- Create a new VOIT-2 error: The cursor of `a_iteration_component' has the same
+			-- Create a new VOIT-2 error: The iteration item of `a_iteration_component' has the same
 			-- name as `a_feature' in `a_class'.
 			--
 			-- Not in ECMA.
@@ -9308,7 +9309,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_iteration_component.cursor_name.position
+			position := a_iteration_component.item_name.position
 			code := template_code (voit2a_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2a_default_template)
@@ -9318,7 +9319,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.item_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9331,11 +9332,11 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = iteration cursor name
+			-- dollar6: $6 = iteration item name
 		end
 
 	make_voit2b (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; arg: ET_FORMAL_ARGUMENT)
-			-- Create a new VOIT-2 error: The cursor of `a_iteration_component' has
+			-- Create a new VOIT-2 error: The iteration item of `a_iteration_component' has
 			-- the same name as argument `arg' of an enclosing feature or
 			-- inline agent.
 			--
@@ -9348,7 +9349,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_iteration_component.cursor_name.position
+			position := a_iteration_component.item_name.position
 			code := template_code (voit2b_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2b_default_template)
@@ -9358,7 +9359,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.item_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9371,11 +9372,11 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = iteration cursor name
+			-- dollar6: $6 = iteration item name
 		end
 
 	make_voit2c (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_local: ET_LOCAL_VARIABLE)
-			-- Create a new VOIT-2 error: The cursor of `a_iteration_component' has
+			-- Create a new VOIT-2 error: The iteration item of `a_iteration_component' has
 			-- the same name as local variable `a_local' of an enclosing
 			-- feature or inline agent.
 			--
@@ -9388,7 +9389,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_iteration_component.cursor_name.position
+			position := a_iteration_component.item_name.position
 			code := template_code (voit2c_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2c_default_template)
@@ -9398,7 +9399,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.item_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9411,7 +9412,7 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = iteration cursor name
+			-- dollar6: $6 = iteration item name
 		end
 
 	make_voit2d (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_object_test: ET_NAMED_OBJECT_TEST)
@@ -9427,7 +9428,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_iteration_component.cursor_name.position
+			position := a_iteration_component.item_name.position
 			code := template_code (voit2d_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2d_default_template)
@@ -9437,7 +9438,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.item_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9450,12 +9451,13 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = iteration cursor name
+			-- dollar6: $6 = iteration item name
 		end
 
 	make_voit2e (a_class: ET_CLASS; a_iteration_component1, a_iteration_component2: ET_ITERATION_COMPONENT)
-			-- Create a new VUOT-1 error: `a_iteration_component1' appears in the scope
-			-- of the cursor of `a_iteration_component2' with the same cursor name.
+			-- Create a new VUOT-2 error: `a_iteration_component1' appears in the scope
+			-- of the iteration item of `a_iteration_component2' with the same iteration 
+			-- item name.
 			--
 			-- Not in ECMA.
 		require
@@ -9466,7 +9468,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_iteration_component1.cursor_name.position
+			position := a_iteration_component1.item_name.position
 			code := template_code (voit2e_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2e_default_template)
@@ -9476,7 +9478,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_iteration_component1.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component1.item_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9489,7 +9491,45 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = iteration cursor name
+			-- dollar6: $6 = iteration item name
+		end
+
+	make_voit3a (a_class: ET_CLASS; a_iteration_cursor: ET_ITERATION_CURSOR)
+			-- Create a new VUOT-3 error: the name appearing in `a_iteration_cursor`
+			-- is not the name of an iteration item.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_iteration_cursor_not_void: a_iteration_cursor /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_iteration_cursor.item_name.position
+			code := template_code (voit3a_template_code)
+			etl_code := voit3_etl_code
+			default_template := default_message_template (voit3a_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_iteration_cursor.item_name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = iteration item name
 		end
 
 	make_vomb1a (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
@@ -16459,8 +16499,8 @@ feature {NONE} -- Implementation
 	veen2g_default_template: STRING = "entity 'Result' appears in the body, postcondition or rescue clause of an inline agent whose associated feature is a procedure."
 	veen8a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
 	veen8b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
-	veen9a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an iteration cursor that is used outside of its scope."
-	veen9b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an iteration cursor that is used outside of its scope."
+	veen9a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an iteration item that is used outside of its scope."
+	veen9b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an iteration item that is used outside of its scope."
 	vevi0a_default_template: STRING = "local entity `$7' declared as attached is used before being initialized."
 	vevi0b_default_template: STRING = "entity 'Result' declared as attached is used before being initialized."
 	vevi0c_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of the body of function `$7'."
@@ -16580,12 +16620,13 @@ feature {NONE} -- Implementation
 	vmss1a_default_template: STRING = "`$7' is not the final name of a feature inherited from $8."
 	vmss2a_default_template: STRING = "feature name `$7' appears twice in the Select subclause of parent $8."
 	vmss3a_default_template: STRING = "feature name `$7' appears in the Select subclause of parent $8 but is not replicated."
-	voit1a_default_template: STRING = "the type '$7' of the across iterable expression does not conform to any generic derivation of ITERABLE."
-	voit2a_default_template: STRING = "iteration cursor name '$6' is also the final name of a feature."
-	voit2b_default_template: STRING = "iteration cursor name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
-	voit2c_default_template: STRING = "iteration cursor name '$6' is also the name of a local variable of an enclosing feature or inline agent."
-	voit2d_default_template: STRING = "iteration with cursor name '$6' appears in the scope of an object-test local with the same name."
-	voit2e_default_template: STRING = "iteration with cursor name '$6' appears in the scope of another across cursor with the same name."
+	voit1a_default_template: STRING = "the type '$7' of the iterable expression does not conform to any generic derivation of ITERABLE."
+	voit2a_default_template: STRING = "iteration item name '$6' is also the final name of a feature."
+	voit2b_default_template: STRING = "iteration item name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
+	voit2c_default_template: STRING = "iteration item name '$6' is also the name of a local variable of an enclosing feature or inline agent."
+	voit2d_default_template: STRING = "iteration with item name '$6' appears in the scope of an object-test local with the same name."
+	voit2e_default_template: STRING = "iteration with item name '$6' appears in the scope of another iteration item with the same name."
+	voit3a_default_template: STRING = "'$6' appearing in '@$6' is not the name of an iteration item."
 	vomb1a_default_template: STRING = "inspect expression of type '$7' different from INTEGER or CHARACTER."
 	vomb2a_default_template: STRING = "inspect constant of type '$7' different from type '$8' of inspect expression."
 	vomb2b_default_template: STRING = "inspect choice `$7' is not a constant attribute."
@@ -16604,8 +16645,8 @@ feature {NONE} -- Implementation
 	vpir1d_default_template: STRING = "local variable name '$7' in inline agent is also the name of a local variable of an enclosing feature or inline agent."
 	vpir1e_default_template: STRING = "argument name '$7' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent."
 	vpir1f_default_template: STRING = "local variable name '$7' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent."
-	vpir1g_default_template: STRING = "argument name '$7' in inline agent is also the name of an iteration cursor of an enclosing feature or inline agent whose scope contains the inline agent."
-	vpir1h_default_template: STRING = "local variable name '$7' in inline agent is also the name of an iteration cursor of an enclosing feature or inline agent whose scope contains the inline agent."
+	vpir1g_default_template: STRING = "argument name '$7' in inline agent is also the name of an iteration item of an enclosing feature or inline agent whose scope contains the inline agent."
+	vpir1h_default_template: STRING = "local variable name '$7' in inline agent is also the name of an iteration item of an enclosing feature or inline agent whose scope contains the inline agent."
 	vpir3a_default_template: STRING = "inline agents cannot be of the once form."
 	vpir3b_default_template: STRING = "inline agents cannot be of the external form."
 	vqmc1a_default_template: STRING = "boolean constant attribute `$7' is not declared of type BOOLEAN."
@@ -16669,7 +16710,7 @@ feature {NONE} -- Implementation
 	vuot1b_default_template: STRING = "object-test local name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
 	vuot1c_default_template: STRING = "object-test local name '$6' is also the name of a local variable of an enclosing feature or inline agent."
 	vuot1d_default_template: STRING = "object-test with local name '$6' appears in the scope of another object-test local with the same name."
-	vuot1e_default_template: STRING = "object-test with local name '$6' appears in the scope of an iteration cursor with the same name."
+	vuot1e_default_template: STRING = "object-test with local name '$6' appears in the scope of an iteration item with the same name."
 	vuot1f_default_template: STRING = "the scope of object-test with local name '$6' overlaps with the scope of another object-test with the same local name."
 	vuot3a_default_template: STRING = "object-test with local name '$6' has the same name as another object-test local appearing in the same feature `$7' or in the same inline agent."
 	vuot3b_default_template: STRING = "object-test with local name '$6' has the same name as another object-test local appearing in the invariant or in the same inline agent."
@@ -16820,6 +16861,7 @@ feature {NONE} -- Implementation
 	vmss3_etl_code: STRING = "VMSS-3"
 	voit1_etl_code: STRING = "VOIT-1"
 	voit2_etl_code: STRING = "VOIT-2"
+	voit3_etl_code: STRING = "VOIT-3"
 	vomb1_etl_code: STRING = "VOMB-1"
 	vomb2_etl_code: STRING = "VOMB-2"
 	vpca1_etl_code: STRING = "VPCA-1"
@@ -17114,6 +17156,7 @@ feature {NONE} -- Implementation
 	voit2c_template_code: STRING = "voit2c"
 	voit2d_template_code: STRING = "voit2d"
 	voit2e_template_code: STRING = "voit2e"
+	voit3a_template_code: STRING = "voit3a"
 	vomb1a_template_code: STRING = "vomb1a"
 	vomb2a_template_code: STRING = "vomb2a"
 	vomb2b_template_code: STRING = "vomb2b"

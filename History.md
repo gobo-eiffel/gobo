@@ -58,6 +58,9 @@
   two constraints have the same base type and the labels are at the same
   position.
 * Added support for ECF 1.22.0 and its new option `is_obsolete_iteration`.
+* Added support for the notation `@i` to access the iteration cursor of
+  an iteration whose iteration item is `i`, e.g. `∀ i: list ¦ i
+  = @i.index` (1 is at the first position, 2 at the second position, etc.).
 
 ## Version 20.05.31.5 - 31 May 2020
 

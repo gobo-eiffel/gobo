@@ -66,6 +66,7 @@ inherit
 			process_infix_expression,
 			process_inspect_expression,
 			process_inspect_instruction,
+			process_iteration_cursor,
 			process_loop_instruction,
 			process_manifest_array,
 			process_manifest_tuple,
@@ -7774,7 +7775,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 							-- This is not a constant.
 					elseif l_identifier.is_object_test_local then
 							-- This is not a constant.
-					elseif l_identifier.is_iteration_cursor then
+					elseif l_identifier.is_iteration_item then
 							-- This is not a constant.
 					else
 						l_seed := l_identifier.seed
@@ -10781,8 +10782,8 @@ feature {NONE} -- Expression generation
 					l_name_expression := l_name.local_name
 				elseif l_name.is_object_test_local then
 					l_name_expression := l_name.object_test_local_name
-				elseif l_name.is_iteration_cursor then
-					l_name_expression := l_name.iteration_cursor_name
+				elseif l_name.is_iteration_item then
+					l_name_expression := l_name.iteration_item_name
 				elseif attached {ET_IDENTIFIER} l_name as l_identifier and then l_identifier.is_temporary then
 					l_name_expression := l_identifier
 				end
@@ -11497,11 +11498,42 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			mark_temp_variable_unfrozen (l_temp)
 		end
 
-	print_iteration_cursor (a_name: ET_IDENTIFIER)
-			-- Print iteration cursor `a_name'.
+	print_iteration_cursor (a_iteration_cursor: ET_ITERATION_CURSOR)
+			-- Print `a_iteration_cursor'.
+		require
+			a_iteration_cursor_not_void: a_iteration_cursor /= Void
+		local
+			l_name: ET_IDENTIFIER
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_static_type: ET_DYNAMIC_TYPE
+		do
+			l_name := a_iteration_cursor.item_name
+			if in_operand then
+				operand_stack.force (a_iteration_cursor)
+			elseif attached call_target_type as l_call_target_type then
+				check in_call_target: in_call_target end
+				l_dynamic_type_set := dynamic_type_set (a_iteration_cursor)
+				l_static_type := l_dynamic_type_set.static_type
+				if l_static_type.is_expanded then
+						-- Pass the address of the expanded object.
+					current_file.put_character ('&')
+					print_iteration_cursor_name (l_name, current_file)
+				elseif l_call_target_type.is_expanded then
+						-- We need to unbox the object and then pass its address.
+					print_boxed_attribute_pointer_access (l_name, l_call_target_type, call_target_check_void)
+				else
+					print_iteration_cursor_name (l_name, current_file)
+				end
+			else
+				print_iteration_cursor_name (l_name, current_file)
+			end
+		end
+
+	print_iteration_item (a_name: ET_IDENTIFIER)
+			-- Print iteration item `a_name'.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_iteration_cursor: a_name.is_iteration_cursor
+			a_name_iteration_item: a_name.is_iteration_item
 		local
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_static_type: ET_DYNAMIC_TYPE
@@ -11519,9 +11551,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				l_seed := a_name.seed
 				if l_seed >= 1 and l_seed <= l_iteration_components.count then
 					l_iteration_component := l_iteration_components.iteration_component (l_seed)
-					if a_name /= l_iteration_component.unfolded_cursor_name and then l_iteration_component.has_item_cursor then
-							-- We are in the case 'across ... is ...'.
-							-- Print the unfolded form: 'unfolded_cursor_name.item'
+					if a_name /= l_iteration_component.unfolded_cursor_name and then not l_iteration_component.has_cursor_name then
+							-- We are not in the case of 'across ... as ...' with 'obsolete_iteration_mode' set to True.
+							-- Print the unfolded form of iteration item: 'unfolded_cursor_name.item'
 						print_qualified_call_expression (l_iteration_component.cursor_item_expression)
 						l_done := True
 					end
@@ -14311,8 +14343,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 					print_formal_argument (l_identifier)
 				elseif l_identifier.is_temporary then
 					print_temporary_variable (l_identifier)
-				elseif l_identifier.is_iteration_cursor then
-					print_iteration_cursor (l_identifier)
+				elseif l_identifier.is_iteration_item then
+					print_iteration_item (l_identifier)
 				elseif l_identifier.is_local then
 					if has_rescue then
 							-- Keep track of the fact that the value of this local variable
@@ -36631,7 +36663,7 @@ feature {NONE} -- Feature name generation
 			-- Print name of iteration cursor `a_name' to `a_file'.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_iteration_cursor: a_name.is_iteration_cursor
+			a_name_iteration_item: a_name.is_iteration_item
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
@@ -38530,8 +38562,8 @@ feature {ET_AST_NODE} -- Processing
 				print_local_variable (an_identifier)
 			elseif an_identifier.is_object_test_local then
 				print_object_test_local (an_identifier)
-			elseif an_identifier.is_iteration_cursor then
-				print_iteration_cursor (an_identifier)
+			elseif an_identifier.is_iteration_item then
+				print_iteration_item (an_identifier)
 			elseif an_identifier.is_agent_open_operand then
 				print_agent_open_operand (an_identifier)
 			elseif an_identifier.is_agent_closed_operand then
@@ -38573,6 +38605,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 		do
 			print_inspect_instruction (an_instruction)
+		end
+
+	process_iteration_cursor (a_iteration_cursor: ET_ITERATION_CURSOR)
+			-- Process `a_iteration_cursor'.
+		do
+			print_iteration_cursor (a_iteration_cursor)
 		end
 
 	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION)

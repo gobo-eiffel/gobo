@@ -1,10 +1,12 @@
 note
 
 	description:
+
 	"[
 		Eiffel iteration components (either across expressions/instructions,
 		quantifier expressions or repeat instructions).
 	]"
+
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2019-2021, Eric Bezault and others"
 	license: "MIT License"
@@ -39,27 +41,26 @@ feature -- Initialization
 
 feature -- Status report
 
-	has_item_cursor: BOOLEAN
-			-- Should `cursor_name' represent the items being traversed?
-			-- Otherwise it represents the cursor used for the traversal.
+	has_cursor_name: BOOLEAN
+			-- Should `item_name' represent the cursor used for the traversal?
+			-- Otherwise it represents the items being traversed.
 			-- True in case of 'across ... as ...' when 'obsolete_iteration_mode'
-			-- is set to False in the surrounding universe (and in case
-			-- of the obsolete syntax 'across ... is ...'), or for quantifier
-			-- expressions or repeat instructions.
+			-- is set to True in the surrounding universe, False otherwise.
 		deferred
 		end
 
 feature -- Access
 
 	iterable_expression: ET_EXPRESSION
-			-- Iterable expression
+			-- Expression returning the object to which the iteration applies
 
-	cursor_name: ET_IDENTIFIER
-			-- Iteration local name;
-			-- It's either the name of the iteration cursor,
-			-- or a folded form for the calls to its 'item' feature
-			-- (when `has_item_cursor' is True, then the unfolded
-			-- form `cursor_name' is `unfolded_cursor_name'.item).
+	item_name: ET_IDENTIFIER
+			-- Iteration item name
+			--
+			-- It's either then folded form for the calls to the 'item'
+			-- feature of the iteration cursor (the unfolded form is
+			-- `unfolded_cursor_name'.item), or the name of the iteration
+			-- cursor when `has_item_cursor' is False.
 
 	invariant_part: detachable ET_LOOP_INVARIANTS
 			-- Invariant part
@@ -79,14 +80,13 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash value
 		do
-			Result := cursor_name.hash_code
+			Result := item_name.hash_code
 		end
 
 feature -- Unfolded form
 
 	unfolded_cursor_name: ET_IDENTIFIER
-			-- Name of the iteration cursor (even in the case of
-			-- 'across ... is ...'), to be used in unfolded form.
+			-- Name of the iteration cursor, to be used in unfolded form
 
 	new_cursor_expression: ET_QUALIFIED_CALL_EXPRESSION
 			-- Expression corresponding to `iterable_expression'.new_cursor
@@ -106,18 +106,18 @@ feature -- Unfolded form
 			l_name: ET_IDENTIFIER
 		do
 			create l_name.make (tokens.new_cursor_name)
-			l_name.set_position (cursor_name.line, cursor_name.column)
+			l_name.set_position (item_name.line, item_name.column)
 			create new_cursor_expression.make (iterable_expression, l_name, Void)
-			create unfolded_cursor_name.make (cursor_name.name)
-			unfolded_cursor_name.set_position (cursor_name.line, cursor_name.column)
+			create unfolded_cursor_name.make (item_name.name)
+			unfolded_cursor_name.set_position (item_name.line, item_name.column)
 			create l_name.make (tokens.item_name)
-			l_name.set_position (cursor_name.line, cursor_name.column)
+			l_name.set_position (item_name.line, item_name.column)
 			create cursor_item_expression.make (unfolded_cursor_name, l_name, Void)
 			create l_name.make (tokens.after_name)
-			l_name.set_position (cursor_name.line, cursor_name.column)
+			l_name.set_position (item_name.line, item_name.column)
 			create cursor_after_expression.make (unfolded_cursor_name, l_name, Void)
 			create l_name.make (tokens.forth_name)
-			l_name.set_position (cursor_name.line, cursor_name.column)
+			l_name.set_position (item_name.line, item_name.column)
 			create cursor_forth_instruction.make (unfolded_cursor_name, l_name, Void)
 		end
 
@@ -134,7 +134,7 @@ feature -- Unfolded form
 invariant
 
 	iterable_expression_not_void: iterable_expression /= Void
-	cursor_name_not_void: cursor_name /= Void
+	item_name_not_void: item_name /= Void
 	unfolded_cursor_name_not_void: unfolded_cursor_name /= Void
 	new_cursor_expression_not_void: new_cursor_expression /= Void
 	cursor_item_expression_not_void: cursor_item_expression /= Void

@@ -311,6 +311,8 @@ feature -- Access
 				Result := "E_NE"
 			when E_NOT_TILDE then
 				Result := "E_NOT_TILDE"
+			when E_ITERATION_CURSOR_SYMBOL then
+				Result := "E_ITERATION_CURSOR_SYMBOL"
 			else
 				Result := yy_character_token_name (a_token)
 			end
@@ -451,5 +453,6 @@ feature -- Token codes
 	E_NOT_SYMBOL: INTEGER = 388
 	E_NE: INTEGER = 389
 	E_NOT_TILDE: INTEGER = 390
+	E_ITERATION_CURSOR_SYMBOL: INTEGER = 391
 
 end
