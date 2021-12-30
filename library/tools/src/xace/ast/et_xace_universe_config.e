@@ -5,7 +5,7 @@ note
 		"Xace universes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -152,18 +152,18 @@ feature -- Basic operations
 			an_externals_not_void: an_externals /= Void
 		do
 			if attached options.multivalue ({ET_XACE_OPTION_NAMES}.c_compiler_options_option_name) as l_multivalue then
-				across l_multivalue as l_c_compiler_options loop
-					an_externals.put_c_compiler_options (l_c_compiler_options.item)
+				across l_multivalue as i_c_compiler_option loop
+					an_externals.put_c_compiler_options (i_c_compiler_option)
 				end
 			end
 			if attached options.multivalue ({ET_XACE_OPTION_NAMES}.header_option_name) as l_multivalue then
-				across l_multivalue as l_includes loop
-					an_externals.put_include_directory (l_includes.item)
+				across l_multivalue as i_include loop
+					an_externals.put_include_directory (i_include)
 				end
 			end
 			if attached options.multivalue ({ET_XACE_OPTION_NAMES}.link_option_name) as l_multivalue then
-				across l_multivalue as l_links loop
-					an_externals.put_link_library (l_links.item)
+				across l_multivalue as i_link loop
+					an_externals.put_link_library (i_link)
 				end
 			end
 			clusters.merge_externals (an_externals)

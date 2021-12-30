@@ -5,7 +5,7 @@ note
 		"Eiffel adapted base class checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -253,7 +253,7 @@ feature -- Validity checking
 			current_class_impl := l_old_current_class_impl
 		ensure
 			in_implementation_class: (a_current_class_impl = a_current_class or a_name.seed = 0) implies a_adapted_base_classes.count = 1
-			not_in_implementation_class: (a_current_class_impl /= a_current_class and a_name.seed /= 0) implies across a_adapted_base_classes as l_adapted_base_classes all a_name.is_tuple_label or else (not l_adapted_base_classes.item.base_class.is_none implies l_adapted_base_classes.item.base_class.seeded_feature (a_name.seed) /= Void) end
+			not_in_implementation_class: (a_current_class_impl /= a_current_class and a_name.seed /= 0) implies across a_adapted_base_classes as i_adapted_base_class all a_name.is_tuple_label or else (not i_adapted_base_class.base_class.is_none implies i_adapted_base_class.base_class.seeded_feature (a_name.seed) /= Void) end
 		end
 
 feature -- Type contexts

@@ -6,7 +6,7 @@ note
 		%generators such as 'gelex'"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1179,7 +1179,7 @@ feature {NONE} -- Implementation
 			-- in the concatenations to be added.
 		require
 			a_symbol_classes_not_void: a_symbol_classes /= Void
-			has_symbol_class: across a_symbol_classes as l_classes some l_classes.item /= Void end
+			has_symbol_class: across a_symbol_classes as i_class some i_class /= Void end
 			a_list_not_void: a_list /= Void
 		local
 			l_done: BOOLEAN
@@ -1230,7 +1230,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			added: a_list.count > old a_list.count
-			wiped_out: across a_symbol_classes as l_classes all l_classes.item = Void end
+			wiped_out: across a_symbol_classes as i_class all i_class = Void end
 		end
 
 	append_concatenations_of_symbol_classes_from_utf8_n_byte_character_class (a_symbol_classes: ARRAY [detachable DS_HASH_SET [INTEGER]]; a_byte_count: INTEGER; a_preceding: detachable LX_SYMBOL_CLASS; a_list: DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]])
@@ -1244,7 +1244,7 @@ feature {NONE} -- Implementation
 			-- to be added.
 		require
 			a_symbol_classes_not_void: a_symbol_classes /= Void
-			has_symbol_class: across a_symbol_classes as l_classes some l_classes.item /= Void end
+			has_symbol_class: across a_symbol_classes as i_class some i_class /= Void end
 			a_byte_count_valid: a_byte_count >= 3 and a_byte_count <= 4
 			no_preceding_when_4_byes: a_byte_count = 4 implies a_preceding = Void
 			a_list_not_void: a_list /= Void
@@ -1318,7 +1318,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			added: a_list.count > old a_list.count
-			wiped_out: across a_symbol_classes as l_classes all l_classes.item = Void end
+			wiped_out: across a_symbol_classes as i_class all i_class = Void end
 		end
 
 	append_trail_context_to_regexp (a_trail, a_regexp: LX_NFA): LX_NFA

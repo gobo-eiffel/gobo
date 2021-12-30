@@ -5,7 +5,7 @@ note
 		"Xace file generators from Xace files. Useful to strip if/unless clauses."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -146,23 +146,23 @@ feature {NONE} -- Output
 		local
 			l_name: STRING
 		do
-			across an_option.primary_options as l_options loop
+			across an_option.primary_options as i_option loop
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"")
-				print_quote_escaped_string (l_options.key, a_file)
+				print_quote_escaped_string (@i_option.key, a_file)
 				a_file.put_string ("%" value=%"")
-				print_quote_escaped_string (l_options.item, a_file)
+				print_quote_escaped_string (i_option, a_file)
 				a_file.put_line ("%"/>")
 			end
-			across an_option.primary_multivalue_options as l_multivalue_options loop
-				l_name := l_multivalue_options.key
-				if attached l_multivalue_options.item as l_multivalues then
-					across l_multivalues as l_values loop
+			across an_option.primary_multivalue_options as i_multivalue_option loop
+				l_name := @i_multivalue_option.key
+				if attached i_multivalue_option as l_multivalues then
+					across l_multivalues as i_value loop
 						print_indentation (indent, a_file)
 						a_file.put_string ("<option name=%"")
 						print_quote_escaped_string (l_name, a_file)
 						a_file.put_string ("%" value=%"")
-						print_quote_escaped_string (l_values.item, a_file)
+						print_quote_escaped_string (i_value, a_file)
 						a_file.put_line ("%"/>")
 					end
 				end

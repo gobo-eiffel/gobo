@@ -5,7 +5,7 @@ note
 		"Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -204,7 +204,7 @@ feature -- Status report
 			-- Do not take into account missing implicit subclusters.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: across a_names as i_names all i_names.item /= Void end
+			no_void_name: across a_names as l_name all l_name /= Void end
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		do
 			if a_names.is_empty then
@@ -451,7 +451,7 @@ feature -- Nested
 			-- Void if not such cluster.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: across a_names as i_names all i_names.item /= Void end
+			no_void_name: across a_names as i_name all i_name /= Void end
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		local
 			l_name: STRING

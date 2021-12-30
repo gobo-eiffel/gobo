@@ -5,7 +5,7 @@ note
 		"Character sets"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2019, Harald Erdbruegger and others"
+	copyright: "Copyright (c) 2001-2021, Harald Erdbruegger and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -221,12 +221,12 @@ feature -- Element Change
 							end
 						end
 					end
-					across l_other_other_sets as l_other_other_sets_cursor loop
-						l_current_other_sets.search (l_other_other_sets_cursor.key)
+					across l_other_other_sets as i_other_other_set loop
+						l_current_other_sets.search (@i_other_other_set.key)
 						if l_current_other_sets.found then
-							l_current_other_sets.replace_found_item (l_current_other_sets.found_item | l_other_other_sets_cursor.item)
+							l_current_other_sets.replace_found_item (l_current_other_sets.found_item | i_other_other_set)
 						elseif not l_reverted then
-							l_current_other_sets.force_new (l_other_other_sets_cursor.item, l_other_other_sets_cursor.key)
+							l_current_other_sets.force_new (i_other_other_set, @i_other_other_set.key)
 						end
 					end
 					is_reverted := l_reverted or l_other_reverted
@@ -300,12 +300,12 @@ feature -- Element Change
 							end
 						end
 					end
-					across l_other_other_sets as l_other_other_sets_cursor loop
-						l_current_other_sets.search (l_other_other_sets_cursor.key)
+					across l_other_other_sets as i_other_other_set loop
+						l_current_other_sets.search (@i_other_other_set.key)
 						if l_current_other_sets.found then
-							l_current_other_sets.replace_found_item (l_current_other_sets.found_item | l_other_other_sets_cursor.item.bit_not)
+							l_current_other_sets.replace_found_item (l_current_other_sets.found_item | i_other_other_set.bit_not)
 						elseif not l_reverted then
-							l_current_other_sets.force_new (l_other_other_sets_cursor.item.bit_not, l_other_other_sets_cursor.key)
+							l_current_other_sets.force_new (i_other_other_set.bit_not, @i_other_other_set.key)
 						end
 					end
 					is_reverted := l_reverted or l_other_reverted

@@ -36,7 +36,7 @@ feature
 	foo: detachable G
 		do
 			across Current as i loop
-				Result := i.item
+				Result := i
 			end
 		end
 

@@ -5,7 +5,7 @@ note
 		"Test URI parsing."
 
 	library: "Gobo Eiffel Utility Library"
-	copyright:"Copyright (c) 2004-2018, Berend de Boer and others"
+	copyright:"Copyright (c) 2004-2021, Berend de Boer and others"
 	license: "MIT License"
 	revision: "$Revision$"
 	date: "$Date$"
@@ -207,9 +207,9 @@ feature {NONE} -- Implementation
 				if attached l_query_items.keys.to_array as l_array then
 					i := l_array.lower
 					across
-						a_names as a_name
+						a_names as i_name
 					loop
-						assert_equal ("Query name found", a_name.item, l_array.item (i))
+						assert_equal ("Query name found", i_name, l_array.item (i))
 						i := i + 1
 					variant
 						a_names.count - i + 1
@@ -218,9 +218,9 @@ feature {NONE} -- Implementation
 				if attached l_query_items.to_array as l_array then
 					i := l_array.lower
 					across
-						a_values as a_value
+						a_values as i_value
 					loop
-						assert_equal ("Query value found", a_value.item, l_array.item (i))
+						assert_equal ("Query value found", i_value, l_array.item (i))
 						i := i + 1
 					variant
 						a_values.count - i + 1

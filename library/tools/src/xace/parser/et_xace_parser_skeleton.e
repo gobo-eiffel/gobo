@@ -5,7 +5,7 @@ note
 		"Xace parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2019, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2021, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -629,8 +629,8 @@ feature {NONE} -- Element change
 			end
 				-- Set override clusters.
 			if attached l_options.multivalue ({ET_XACE_OPTION_NAMES}.override_cluster_option_name) as l_multivalue then
-				across l_multivalue as l_override_cluster_names loop
-					l_override_cluster := l_clusters.cluster_by_name (l_override_cluster_names.item)
+				across l_multivalue as i_override_cluster_name loop
+					l_override_cluster := l_clusters.cluster_by_name (i_override_cluster_name)
 					if l_override_cluster /= Void then
 						l_override_cluster.set_override (True)
 					end

@@ -174,7 +174,7 @@ feature -- Access
 			no_void_parent: not Result.has_void
 			first: not Result.is_empty implies Result.first = parent
 			last: not Result.is_empty implies Result.last.target = a_other_target
-			path: across Result as l_path all if not l_path.is_first then Result.item (l_path.index - 1) = l_path.item else True end end
+			path: across Result as i_path all if not @i_path.is_first then Result.item (@i_path.index - 1) = i_path else True end end
 		end
 
 feature -- Status setting
@@ -609,8 +609,8 @@ feature -- Basic operations
 			a_state_not_void: a_state /= Void
 		do
 			if attached class_mappings as l_attached_class_mappings then
-				across l_attached_class_mappings as l_class_mappings loop
-					a_universe.set_class_mapping (create {ET_IDENTIFIER}.make (l_class_mappings.key), create {ET_IDENTIFIER}.make (l_class_mappings.item))
+				across l_attached_class_mappings as i_class_mapping loop
+					a_universe.set_class_mapping (create {ET_IDENTIFIER}.make (@i_class_mapping.key), create {ET_IDENTIFIER}.make (i_class_mapping))
 				end
 			end
 		end
@@ -622,21 +622,21 @@ feature -- Basic operations
 		local
 			i, nb: INTEGER
 		do
-			across a_settings.primary_settings as l_primary_settings loop
-				if STRING_.same_case_insensitive (l_primary_settings.key, "all_assertions") then
+			across a_settings.primary_settings as i_primary_setting loop
+				if STRING_.same_case_insensitive (@i_primary_setting.key, "all_assertions") then
 					if attached system_config.targets as l_targets then
-						l_targets.do_all (agent {ET_ECF_TARGET}.override_all_assertions (l_primary_settings.item))
+						l_targets.do_all (agent {ET_ECF_TARGET}.override_all_assertions (i_primary_setting))
 					else
-						override_all_assertions (l_primary_settings.item)
+						override_all_assertions (i_primary_setting)
 					end
-				elseif STRING_.same_case_insensitive (l_primary_settings.key, {ET_ECF_SETTING_NAMES}.library_root_setting_name) and attached system_config.targets as l_targets then
+				elseif STRING_.same_case_insensitive (@i_primary_setting.key, {ET_ECF_SETTING_NAMES}.library_root_setting_name) and attached system_config.targets as l_targets then
 					nb := l_targets.count
 					from i := 1 until i > nb loop
-						l_targets.target (i).settings.set_primary_value (l_primary_settings.key, l_primary_settings.item)
+						l_targets.target (i).settings.set_primary_value (@i_primary_setting.key, i_primary_setting)
 						i := i + 1
 					end
 				else
-					settings.set_primary_value (l_primary_settings.key, l_primary_settings.item)
+					settings.set_primary_value (@i_primary_setting.key, i_primary_setting)
 				end
 			end
 		end
@@ -646,11 +646,11 @@ feature -- Basic operations
 		require
 			a_capabilities_not_void: a_capabilities /= Void
 		do
-			across a_capabilities.primary_support_capabilities as l_primary_support_capabilities loop
-				capabilities.set_primary_support_value (l_primary_support_capabilities.key, l_primary_support_capabilities.item)
+			across a_capabilities.primary_support_capabilities as i_primary_support_capability loop
+				capabilities.set_primary_support_value (@i_primary_support_capability.key, i_primary_support_capability)
 			end
-			across a_capabilities.primary_use_capabilities as l_primary_use_capabilities loop
-				capabilities.set_primary_use_value_id (l_primary_use_capabilities.key, l_primary_use_capabilities.item)
+			across a_capabilities.primary_use_capabilities as i_primary_use_capability loop
+				capabilities.set_primary_use_value_id (@i_primary_use_capability.key, i_primary_use_capability)
 			end
 		end
 
@@ -659,8 +659,8 @@ feature -- Basic operations
 		require
 			a_variables_not_void: a_variables /= Void
 		do
-			across a_variables.primary_variables as l_primary_variables loop
-				variables.set_primary_value (l_primary_variables.key, l_primary_variables.item)
+			across a_variables.primary_variables as i_primary_variable loop
+				variables.set_primary_value (@i_primary_variable.key, i_primary_variable)
 			end
 		end
 

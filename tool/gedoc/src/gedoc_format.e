@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Documentation Format"
 
-	copyright: "Copyright (c) 2017-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -486,9 +486,9 @@ feature {NONE} -- Processing
 				-- Nothing to be done.
 			elseif attached class_filters as l_class_filters and then not l_class_filters.is_empty then
 				create l_input_classes.make (500)
-				across l_class_filters as l_class_wildcards loop
-					l_last_wildcard := l_class_wildcards.item.pattern
-					a_system.add_classes_by_wildcarded_name_recursive (l_class_wildcards.item, l_input_classes)
+				across l_class_filters as i_class_wildcard loop
+					l_last_wildcard := i_class_wildcard.pattern
+					a_system.add_classes_by_wildcarded_name_recursive (i_class_wildcard, l_input_classes)
 				end
 				l_input_classes.remove (a_system.none_type.base_class)
 				if l_input_classes.is_empty and l_last_wildcard /= Void then

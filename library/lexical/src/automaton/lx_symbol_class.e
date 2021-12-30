@@ -6,7 +6,7 @@ note
 
 	storable_version: "20190721"
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1052,6 +1052,6 @@ invariant
 	lower_large_enough: lower >= 0
 	upper_large_enough: upper >= lower
 	chunk_count: upper >= 256 implies not attached other_sets as l_other_sets or else l_other_sets.count >= ((upper - 256) // symbols_per_chunk + 1)
-	chunk_size: attached other_sets as l_other_sets implies across l_other_sets as l_chunks all attached l_chunks.item as l_chunk and then l_chunk.count /= 0 implies l_chunk.count = chunk_size end
+	chunk_size: attached other_sets as l_other_sets implies across l_other_sets as i_chunk all attached i_chunk as l_chunk and then l_chunk.count /= 0 implies l_chunk.count = chunk_size end
 
 end

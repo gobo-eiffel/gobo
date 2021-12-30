@@ -157,8 +157,8 @@ feature -- Output
 		local
 			l_action: ET_ECF_ACTION
 		do
-			across a_actions as l_actions loop
-				l_action := l_actions.item
+			across a_actions as i_action loop
+				l_action := i_action
 				print_indentation
 				file.put_character ('<')
 				file.put_string (a_xml_name)
@@ -282,8 +282,8 @@ feature -- Output
 					print_renamings (l_renamings)
 				end
 				if attached a_assembly.class_options as l_class_options and then not l_class_options.is_empty then
-					across l_class_options as l_options_by_class loop
-						print_options (adapted_options (l_options_by_class.item), l_options_by_class.key)
+					across l_class_options as i_options_by_class loop
+						print_options (adapted_options (i_options_by_class), @i_options_by_class.key)
 					end
 				end
 				if attached a_assembly.conditions as l_conditions then
@@ -334,9 +334,9 @@ feature -- Output
 			l_inner_printed: BOOLEAN
 		do
 			l_capability_names := valid_capabilities (ecf_version)
-			across l_capability_names as i_capability_names loop
+			across l_capability_names as i_capability_name loop
 				l_inner_printed := False
-				l_capability_name := i_capability_names.key
+				l_capability_name := @i_capability_name.key
 				if attached a_capabilities.primary_support_value (l_capability_name) as l_support then
 					if not l_outer_printed then
 						print_indentation
@@ -478,8 +478,8 @@ feature -- Output
 					print_renamings (l_renamings)
 				end
 				if attached a_cluster.class_options as l_class_options and then not l_class_options.is_empty then
-					across l_class_options as l_options_by_class loop
-						print_options (adapted_options (l_options_by_class.item), l_options_by_class.key)
+					across l_class_options as i_options_by_class loop
+						print_options (adapted_options (i_options_by_class), @i_options_by_class.key)
 					end
 				end
 				if attached a_cluster.visible_classes as l_visibles then
@@ -752,8 +752,8 @@ feature -- Output
 		local
 			l_external_value: ET_ECF_EXTERNAL_VALUE
 		do
-			across a_external_values.external_values as l_external_values loop
-				l_external_value := l_external_values.item
+			across a_external_values.external_values as i_external_value loop
+				l_external_value := i_external_value
 				print_indentation
 				file.put_character ('<')
 				file.put_string (a_xml_name)
@@ -795,8 +795,8 @@ feature -- Output
 		local
 			l_file_rule: ET_ECF_FILE_RULE
 		do
-			across a_file_rules.file_rules as l_file_rules loop
-				l_file_rule := l_file_rules.item
+			across a_file_rules.file_rules as i_file_rule loop
+				l_file_rule := i_file_rule
 				print_indentation
 				file.put_character ('<')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_file_rule)
@@ -807,12 +807,12 @@ feature -- Output
 					print_description (l_description)
 				end
 				if attached l_file_rule.exclude as l_exclude then
-					across l_exclude as l_regexps loop
+					across l_exclude as i_regexp loop
 						print_indentation
 						file.put_character ('<')
 						file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_exclude)
 						file.put_character ('>')
-						print_escaped_string (l_regexps.item)
+						print_escaped_string (i_regexp)
 						file.put_character ('<')
 						file.put_character ('/')
 						file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_exclude)
@@ -821,12 +821,12 @@ feature -- Output
 					end
 				end
 				if attached l_file_rule.include as l_include then
-					across l_include as l_regexps loop
+					across l_include as i_regexp loop
 						print_indentation
 						file.put_character ('<')
 						file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_include)
 						file.put_character ('>')
-						print_escaped_string (l_regexps.item)
+						print_escaped_string (i_regexp)
 						file.put_character ('<')
 						file.put_character ('/')
 						file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_include)
@@ -911,8 +911,8 @@ feature -- Output
 					print_renamings (l_renamings)
 				end
 				if attached a_library.class_options as l_class_options and then not l_class_options.is_empty then
-					across l_class_options as l_options_by_class loop
-						print_options (adapted_options (l_options_by_class.item), l_options_by_class.key)
+					across l_class_options as i_options_by_class loop
+						print_options (adapted_options (i_options_by_class), @i_options_by_class.key)
 					end
 				end
 				if attached a_library.visible_classes as l_visibles then
@@ -941,18 +941,18 @@ feature -- Output
 			no_void_new_mapping: not a_mappings.has_void
 			no_void_old_mapping: not a_mappings.has_void_item
 		do
-			across a_mappings as l_mappings loop
+			across a_mappings as i_mapping loop
 				print_indentation
 				file.put_character ('<')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_mapping)
 				file.put_character (' ')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_old_name)
 				file.put_character ('=')
-				print_quoted_string (l_mappings.key)
+				print_quoted_string (@i_mapping.key)
 				file.put_character (' ')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_new_name)
 				file.put_character ('=')
-				print_quoted_string (l_mappings.item)
+				print_quoted_string (i_mapping)
 				file.put_character ('/')
 				file.put_character ('>')
 				file.put_new_line
@@ -998,11 +998,11 @@ feature -- Output
 				print_indentation
 				file.put_character ('<')
 				file.put_string (a_note_element.name)
-				across a_note_element.attributes as l_attributes loop
+				across a_note_element.attributes as i_attribute loop
 					file.put_character (' ')
-					file.put_string (l_attributes.key)
+					file.put_string (@i_attribute.key)
 					file.put_character ('=')
-					print_quoted_string (l_attributes.item)
+					print_quoted_string (i_attribute)
 				end
 				if
 					not a_note_element.elements.is_empty or
@@ -1062,8 +1062,8 @@ feature -- Output
 			else
 				l_xml_name := {ET_ECF_ELEMENT_NAMES}.xml_option
 			end
-			across a_options.primary_options as l_options loop
-				l_name := l_options.key
+			across a_options.primary_options as i_option loop
+				l_name := @i_option.key
 				if l_option_names.has (l_name) then
 					if not l_start_printed then
 						print_indentation
@@ -1074,7 +1074,7 @@ feature -- Output
 					file.put_character (' ')
 					file.put_string (l_name)
 					file.put_character ('=')
-					print_quoted_string (l_options.item)
+					print_quoted_string (i_option)
 				end
 			end
 			if attached a_options.description as l_description then
@@ -1094,7 +1094,7 @@ feature -- Output
 				print_description (l_description)
 				dedent
 			end
-			across a_options.primary_debugs as l_debugs loop
+			across a_options.primary_debugs as i_debug loop
 				if not l_start_printed then
 					print_indentation
 					file.put_character ('<')
@@ -1114,18 +1114,18 @@ feature -- Output
 				file.put_character (' ')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_name)
 				file.put_character ('=')
-				print_quoted_string (l_debugs.key)
+				print_quoted_string (@i_debug.key)
 				file.put_character (' ')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_enabled)
 				file.put_character ('=')
-				print_quoted_string (l_debugs.item)
+				print_quoted_string (i_debug)
 				file.put_character ('/')
 				file.put_character ('>')
 				file.put_new_line
 				dedent
 			end
-			across a_options.primary_assertions as l_assertions loop
-				l_name := l_assertions.key
+			across a_options.primary_assertions as i_assertion loop
+				l_name := @i_assertion.key
 				if l_assertion_names.has (l_name) then
 					if not l_assertions_printed then
 						if not l_start_printed then
@@ -1149,7 +1149,7 @@ feature -- Output
 					file.put_character (' ')
 					file.put_string (l_name)
 					file.put_character ('=')
-					print_quoted_string (l_assertions.item)
+					print_quoted_string (i_assertion)
 				end
 			end
 			if l_assertions_printed then
@@ -1158,8 +1158,8 @@ feature -- Output
 				file.put_new_line
 				dedent
 			end
-			across a_options.primary_warnings as l_warnings loop
-				l_name := l_warnings.key
+			across a_options.primary_warnings as i_warning loop
+				l_name := @i_warning.key
 				if l_warning_names.has (l_name) then
 					if not l_start_printed then
 						print_indentation
@@ -1184,7 +1184,7 @@ feature -- Output
 					file.put_character (' ')
 					file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_enabled)
 					file.put_character ('=')
-					print_quoted_string (l_warnings.item)
+					print_quoted_string (i_warning)
 					file.put_character ('/')
 					file.put_character ('>')
 					file.put_new_line
@@ -1309,8 +1309,8 @@ feature -- Output
 					print_renamings (l_renamings)
 				end
 				if attached a_precompiled_library.class_options as l_class_options and then not l_class_options.is_empty then
-					across l_class_options as l_options_by_class loop
-						print_options (adapted_options (l_options_by_class.item), l_options_by_class.key)
+					across l_class_options as i_options_by_class loop
+						print_options (adapted_options (i_options_by_class), @i_options_by_class.key)
 					end
 				end
 				if attached a_precompiled_library.visible_classes as l_visibles then
@@ -1338,14 +1338,14 @@ feature -- Output
 			a_provider_groups_not_void: a_provider_groups /= Void
 			no_void_provider_group: not a_provider_groups.has_void
 		do
-			across a_provider_groups as l_provider_groups loop
+			across a_provider_groups as i_provider_group loop
 				print_indentation
 				file.put_character ('<')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_uses)
 				file.put_character (' ')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_group)
 				file.put_character ('=')
-				print_quoted_string (l_provider_groups.item)
+				print_quoted_string (i_provider_group)
 				file.put_character ('/')
 				file.put_character ('>')
 				file.put_new_line
@@ -1415,18 +1415,18 @@ feature -- Output
 			no_void_new_renaming: not a_renamings.has_void
 			no_void_old_renaming: not a_renamings.has_void_item
 		do
-			across a_renamings as l_renamings loop
+			across a_renamings as i_renaming loop
 				print_indentation
 				file.put_character ('<')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_renaming)
 				file.put_character (' ')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_old_name)
 				file.put_character ('=')
-				print_quoted_string (l_renamings.key)
+				print_quoted_string (@i_renaming.key)
 				file.put_character (' ')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_new_name)
 				file.put_character ('=')
-				print_quoted_string (l_renamings.item)
+				print_quoted_string (i_renaming)
 				file.put_character ('/')
 				file.put_character ('>')
 				file.put_new_line
@@ -1484,8 +1484,8 @@ feature -- Output
 			l_name: STRING
 		do
 			l_setting_names := valid_settings (ecf_version)
-			across a_settings.primary_settings as l_settings loop
-				l_name := l_settings.key
+			across a_settings.primary_settings as i_setting loop
+				l_name := @i_setting.key
 				if l_setting_names.has (l_name) then
 					print_indentation
 					file.put_character ('<')
@@ -1497,7 +1497,7 @@ feature -- Output
 					file.put_character (' ')
 					file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_value)
 					file.put_character ('=')
-					print_quoted_string (l_settings.item)
+					print_quoted_string (i_setting)
 					file.put_character ('/')
 					file.put_character ('>')
 					file.put_new_line
@@ -1755,18 +1755,18 @@ feature -- Output
 		require
 			a_variables_not_void: a_variables /= Void
 		do
-			across a_variables.primary_variables as l_variables loop
+			across a_variables.primary_variables as i_variable loop
 				print_indentation
 				file.put_character ('<')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_variable)
 				file.put_character (' ')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_name)
 				file.put_character ('=')
-				print_quoted_string (l_variables.key)
+				print_quoted_string (@i_variable.key)
 				file.put_character (' ')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_value)
 				file.put_character ('=')
-				print_quoted_string (l_variables.item)
+				print_quoted_string (i_variable)
 				file.put_character ('/')
 				file.put_character ('>')
 				file.put_new_line
@@ -1851,8 +1851,8 @@ feature -- Output
 		local
 			l_visible: ET_ECF_VISIBLE_CLASS
 		do
-			across a_visibles as l_visibles loop
-				l_visible := l_visibles.item
+			across a_visibles as i_visible loop
+				l_visible := i_visible
 				print_indentation
 				file.put_character ('<')
 				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_visible)
@@ -2073,8 +2073,8 @@ feature {NONE} -- Adaptation
 					Result := l_original_settings
 				else
 					create Result.make
-					across l_original_settings.primary_settings as l_primary_settings loop
-						Result.set_primary_value (l_primary_settings.key, l_primary_settings.item)
+					across l_original_settings.primary_settings as i_primary_setting loop
+						Result.set_primary_value (@i_primary_setting.key, i_primary_setting)
 					end
 				end
 			else
@@ -2163,8 +2163,8 @@ feature {NONE} -- Adaptation
 			l_name: STRING
 		do
 			create Result.make
-			across valid_settings_latest as l_setting_names loop
-				l_name := l_setting_names.key
+			across valid_settings_latest as i_setting_name loop
+				l_name := @i_setting_name.key
 				if attached a_original_settings.primary_value (l_name) as l_value then
 					Result.set_primary_value (l_name, l_value)
 				elseif attached a_default_settings.value (l_name) as l_default_value then
@@ -2215,8 +2215,8 @@ feature {NONE} -- Adaptation
 			l_name: STRING
 		do
 			create Result.make
-			across valid_capabilities_latest as l_capability_names loop
-				l_name := l_capability_names.key
+			across valid_capabilities_latest as i_capability_name loop
+				l_name := @i_capability_name.key
 				if attached a_original_capabilities.primary_support_value (l_name) as l_value then
 					Result.set_primary_support_value (l_name, l_value)
 				elseif attached a_default_capabilities.support_value (l_name) as l_default_value then
@@ -2265,17 +2265,17 @@ feature {NONE} -- Adaptation
 					Result := l_original_options
 				else
 					create Result.make
-					across l_original_options.primary_options as l_primary_options loop
-						Result.set_primary_value (l_primary_options.key, l_primary_options.item)
+					across l_original_options.primary_options as i_primary_option loop
+						Result.set_primary_value (@i_primary_option.key, i_primary_option)
 					end
-					across l_original_options.primary_assertions as l_primary_assertions loop
-						Result.set_primary_assertion_value (l_primary_assertions.key, l_primary_assertions.item)
+					across l_original_options.primary_assertions as i_primary_assertion loop
+						Result.set_primary_assertion_value (@i_primary_assertion.key, i_primary_assertion)
 					end
-					across l_original_options.primary_debugs as l_primary_debugs loop
-						Result.set_primary_debug_value (l_primary_debugs.key, l_primary_debugs.item)
+					across l_original_options.primary_debugs as i_primary_debug loop
+						Result.set_primary_debug_value (@i_primary_debug.key, i_primary_debug)
 					end
-					across l_original_options.primary_warnings as l_primary_warnings loop
-						Result.set_primary_warning_value (l_primary_warnings.key, l_primary_warnings.item)
+					across l_original_options.primary_warnings as i_primary_warning loop
+						Result.set_primary_warning_value (@i_primary_warning.key, i_primary_warning)
 					end
 				end
 			else
@@ -2392,17 +2392,17 @@ feature {NONE} -- Adaptation
 				Result := a_options
 			else
 				create Result.make
-				across a_options.primary_options as l_primary_options loop
-					Result.set_primary_value (l_primary_options.key, l_primary_options.item)
+				across a_options.primary_options as i_primary_option loop
+					Result.set_primary_value (@i_primary_option.key, i_primary_option)
 				end
-				across a_options.primary_assertions as l_primary_assertions loop
-					Result.set_primary_assertion_value (l_primary_assertions.key, l_primary_assertions.item)
+				across a_options.primary_assertions as i_primary_assertion loop
+					Result.set_primary_assertion_value (@i_primary_assertion.key, i_primary_assertion)
 				end
-				across a_options.primary_debugs as l_primary_debugs loop
-					Result.set_primary_debug_value (l_primary_debugs.key, l_primary_debugs.item)
+				across a_options.primary_debugs as i_primary_debug loop
+					Result.set_primary_debug_value (@i_primary_debug.key, i_primary_debug)
 				end
-				across a_options.primary_warnings as l_primary_warnings loop
-					Result.set_primary_warning_value (l_primary_warnings.key, l_primary_warnings.item)
+				across a_options.primary_warnings as i_primary_warning loop
+					Result.set_primary_warning_value (@i_primary_warning.key, i_primary_warning)
 				end
 			end
 			if ecf_version < ecf_1_22_0 then
@@ -2434,8 +2434,8 @@ feature {NONE} -- Adaptation
 			l_name: STRING
 		do
 			create Result.make
-			across valid_options_latest as l_option_names loop
-				l_name := l_option_names.key
+			across valid_options_latest as i_option_name loop
+				l_name := @i_option_name.key
 				if attached a_original_options.primary_value (l_name) as l_value then
 					Result.set_primary_value (l_name, l_value)
 				elseif attached a_default_options.value (l_name) as l_default_value then
@@ -2446,8 +2446,8 @@ feature {NONE} -- Adaptation
 					end
 				end
 			end
-			across valid_assertions_latest as l_assertion_names loop
-				l_name := l_assertion_names.key
+			across valid_assertions_latest as i_assertion_name loop
+				l_name := @i_assertion_name.key
 				if attached a_original_options.primary_assertion_value (l_name) as l_value then
 					Result.set_primary_assertion_value (l_name, l_value)
 				elseif attached a_default_options.assertion_value (l_name) as l_default_value then
@@ -2458,8 +2458,8 @@ feature {NONE} -- Adaptation
 					end
 				end
 			end
-			across valid_warnings_latest as l_warning_names loop
-				l_name := l_warning_names.key
+			across valid_warnings_latest as i_warning_name loop
+				l_name := @i_warning_name.key
 				if attached a_original_options.primary_warning_value (l_name) as l_value then
 					Result.set_primary_warning_value (l_name, l_value)
 				elseif attached a_default_options.warning_value (l_name) as l_default_value then
@@ -2470,8 +2470,8 @@ feature {NONE} -- Adaptation
 					end
 				end
 			end
-			across a_original_options.primary_debugs as l_primary_debugs loop
-				Result.set_primary_debug_value (l_primary_debugs.key, l_primary_debugs.item)
+			across a_original_options.primary_debugs as i_primary_debug loop
+				Result.set_primary_debug_value (@i_primary_debug.key, i_primary_debug)
 			end
 		ensure
 			explicit_options_not_void: Result /= Void

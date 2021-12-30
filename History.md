@@ -62,6 +62,10 @@
   an iteration whose iteration item is `i`, e.g. `∀ i: list ¦ i
   = @i.index` (1 is at the first position, 2 at the second position, etc.).
 
+### Miscellaneous
+
+* Upgraded all ECF files to ECF 1.22.0.
+
 ## Version 20.05.31.5 - 31 May 2020
 
 ### gec

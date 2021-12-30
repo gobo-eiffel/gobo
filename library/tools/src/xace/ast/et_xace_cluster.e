@@ -5,7 +5,7 @@ note
 		"Xace Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2019, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2021, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -261,18 +261,18 @@ feature -- Basic operations
 		do
 			if attached options as l_options then
 				if attached l_options.multivalue ({ET_XACE_OPTION_NAMES}.c_compiler_options_option_name) as l_multivalue then
-					across l_multivalue as l_c_compiler_options loop
-						an_externals.put_c_compiler_options (l_c_compiler_options.item)
+					across l_multivalue as i_c_compiler_option loop
+						an_externals.put_c_compiler_options (i_c_compiler_option)
 					end
 				end
 				if attached l_options.multivalue ({ET_XACE_OPTION_NAMES}.header_option_name) as l_multivalue then
-					across l_multivalue as l_includes loop
-						an_externals.put_include_directory (l_includes.item)
+					across l_multivalue as i_include loop
+						an_externals.put_include_directory (i_include)
 					end
 				end
 				if attached l_options.multivalue ({ET_XACE_OPTION_NAMES}.link_option_name) as l_multivalue then
-					across l_multivalue as l_links loop
-						an_externals.put_link_library (l_links.item)
+					across l_multivalue as i_link loop
+						an_externals.put_link_library (i_link)
 					end
 				end
 			end

@@ -347,6 +347,8 @@ feature -- Validity checking
 				current_iteration_cursor_types.wipe_out
 				from current_iteration_item_types.start until current_iteration_item_types.after loop
 					if not current_iteration_item_types.key_for_iteration.has_cursor_name then
+							-- Do not free this context more than once if it
+							-- was already in `current_iteration_cursor_types'.
 						free_context (current_iteration_item_types.item_for_iteration)
 					end
 					current_iteration_item_types.forth
@@ -503,6 +505,8 @@ feature -- Validity checking
 				current_iteration_cursor_types.wipe_out
 				from current_iteration_item_types.start until current_iteration_item_types.after loop
 					if not current_iteration_item_types.key_for_iteration.has_cursor_name then
+							-- Do not free this context more than once if it
+							-- was already in `current_iteration_cursor_types'.
 						free_context (current_iteration_item_types.item_for_iteration)
 					end
 					current_iteration_item_types.forth
@@ -655,6 +659,8 @@ feature -- Validity checking
 				current_iteration_cursor_types.wipe_out
 				from current_iteration_item_types.start until current_iteration_item_types.after loop
 					if not current_iteration_item_types.key_for_iteration.has_cursor_name then
+							-- Do not free this context more than once if it
+							-- was already in `current_iteration_cursor_types'.
 						free_context (current_iteration_item_types.item_for_iteration)
 					end
 					current_iteration_item_types.forth
@@ -784,6 +790,8 @@ feature -- Validity checking
 				current_iteration_cursor_types.wipe_out
 				from current_iteration_item_types.start until current_iteration_item_types.after loop
 					if not current_iteration_item_types.key_for_iteration.has_cursor_name then
+							-- Do not free this context more than once if it
+							-- was already in `current_iteration_cursor_types'.
 						free_context (current_iteration_item_types.item_for_iteration)
 					end
 					current_iteration_item_types.forth
@@ -4127,6 +4135,8 @@ feature {NONE} -- Instruction validity
 			current_iteration_cursor_types.search (an_instruction)
 			if current_iteration_cursor_types.found then
 				if not an_instruction.has_cursor_name then
+						-- Do not free this context more than once if it
+						-- was already in `current_iteration_item_types'.
 					free_context (current_iteration_cursor_types.found_item)
 				end
 				current_iteration_cursor_types.remove_found_item
@@ -7601,7 +7611,7 @@ feature {NONE} -- Expression validity
 						if has_fatal_error then
 							l_had_error := True
 						end
-							-- From now one, use the correct type of the iteration item (and not the
+							-- From now on, use the correct type of the iteration item (and not the
 							-- type of the iteration cursor as explained above).
 						current_iteration_item_types.force_last (l_item_context, a_iteration_component)
 					end
@@ -7881,6 +7891,8 @@ feature {NONE} -- Expression validity
 			current_iteration_cursor_types.search (an_expression)
 			if current_iteration_cursor_types.found then
 				if not an_expression.has_cursor_name then
+						-- Do not free this context more than once if it
+						-- was already in `current_iteration_item_types'.
 					free_context (current_iteration_cursor_types.found_item)
 				end
 				current_iteration_cursor_types.remove_found_item
@@ -14070,7 +14082,7 @@ feature {NONE} -- Multiple generic constraints
 			end
 		ensure
 			in_implementation_class: (current_class_impl = current_class or a_name.seed = 0) implies a_adapted_base_classes.count = 1
-			not_in_implementation_class: (current_class_impl /= current_class and a_name.seed /= 0) implies across a_adapted_base_classes as l_adapted_base_classes all a_name.is_tuple_label or else (not l_adapted_base_classes.item.base_class.is_none implies l_adapted_base_classes.item.base_class.seeded_feature (a_name.seed) /= Void) end
+			not_in_implementation_class: (current_class_impl /= current_class and a_name.seed /= 0) implies across a_adapted_base_classes as i_adapted_base_class all a_name.is_tuple_label or else (not i_adapted_base_class.base_class.is_none implies i_adapted_base_class.base_class.seeded_feature (a_name.seed) /= Void) end
 		end
 
 	adapted_base_class_checker: ET_ADAPTED_BASE_CLASS_CHECKER

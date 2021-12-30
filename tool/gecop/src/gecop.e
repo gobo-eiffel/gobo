@@ -48,7 +48,7 @@ feature -- Execution
 			-- Set `exit_code'.
 		require
 			a_args_not_void: a_args /= Void
-			no_void_arg: across a_args as l_arg all l_arg.item /= Void end
+			no_void_arg: across a_args as i_arg all i_arg /= Void end
 		local
 			l_error_handler: UT_ERROR_HANDLER
 		do
@@ -61,7 +61,7 @@ feature -- Execution
 			-- Set `exit_code'.
 		require
 			a_args_not_void: a_args /= Void
-			no_void_arg: across a_args as l_arg all l_arg.item /= Void end
+			no_void_arg: across a_args as i_arg all i_arg /= Void end
 			a_error_handler_not_void: a_error_handler /= Void
 		local
 			l_validation_directory_name: STRING
@@ -259,8 +259,8 @@ feature {NONE} -- Processing
 					l_summary.print_errors (a_output_file)
 				end
 			else
-				across a_tester.suite as l_tests loop
-					if attached {TS_TEST_SUITE} l_tests.item as l_suite then
+				across a_tester.suite as i_tests loop
+					if attached {TS_TEST_SUITE} i_tests as l_suite then
 						create l_tester.make_default
 						l_tester.set_suite (l_suite)
 						run_tests (l_tester, False, a_output_file)
@@ -273,9 +273,9 @@ feature {NONE} -- Processing
 					run_tests (a_tester, True, a_output_file)
 				elseif l_has_test_case then
 					create l_test_suite.make (a_tester.suite.name, a_tester.suite.variables)
-					across a_tester.suite as l_tests loop
-						if not attached {TS_TEST_SUITE} l_tests.item then
-							l_test_suite.put_test (l_tests.item)
+					across a_tester.suite as i_tests loop
+						if not attached {TS_TEST_SUITE} i_tests then
+							l_test_suite.put_test (i_tests)
 						end
 					end
 					create l_tester.make_default
@@ -481,7 +481,7 @@ feature -- Argument parsing
 			-- Initialize options and parse arguments `a_args'.
 		require
 			a_args_not_void: a_args /= Void
-			no_void_arg: across a_args as l_arg all l_arg.item /= Void end
+			no_void_arg: across a_args as i_arg all i_arg /= Void end
 		local
 			l_parser: AP_PARSER
 			l_list: AP_ALTERNATIVE_OPTIONS_LIST

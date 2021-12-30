@@ -382,9 +382,9 @@ feature -- Status setting
 			-- Set `explicit_convert_class_names' to `a_explicit_convert_class_names'.
 		require
 			regexps_compiled: a_explicit_convert_class_names /= Void implies
-				across a_explicit_convert_class_names as l_conversion all
-					(attached l_conversion.item.from_class as l_from_class implies l_from_class.is_compiled) and
-					(attached l_conversion.item.from_class as l_to_class implies l_to_class.is_compiled) end
+				across a_explicit_convert_class_names as i_conversion all
+					(attached i_conversion.from_class as l_from_class implies l_from_class.is_compiled) and
+					(attached i_conversion.from_class as l_to_class implies l_to_class.is_compiled) end
 		do
 			explicit_convert_class_names := a_explicit_convert_class_names
 		ensure
@@ -4151,8 +4151,8 @@ feature {NONE} -- Implementation
 invariant
 
 	explicit_convert_class_names_regexps_compiled: attached explicit_convert_class_names as l_explicit_convert_class_names implies
-		across l_explicit_convert_class_names as l_conversion all
-			(attached l_conversion.item.from_class as l_from_class implies l_from_class.is_compiled) and
-			(attached l_conversion.item.from_class as l_to_class implies l_to_class.is_compiled) end
+		across l_explicit_convert_class_names as i_conversion all
+			(attached i_conversion.from_class as l_from_class implies l_from_class.is_compiled) and
+			(attached i_conversion.from_class as l_to_class implies l_to_class.is_compiled) end
 
 end

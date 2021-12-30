@@ -5,7 +5,7 @@ note
 		"Interface for directories"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,7 +56,7 @@ feature -- Access
 		deferred
 		ensure
 			no_void_filename: Result /= Void implies not STRING_ARRAY_.has_void (Result)
-			no_empty_filename: Result /= Void implies across Result as l_filenames all not l_filenames.item.is_empty end
+			no_empty_filename: Result /= Void implies across Result as i_filename all not i_filename.is_empty end
 		end
 
 	directory_names: detachable ARRAY [STRING]
@@ -66,7 +66,7 @@ feature -- Access
 		deferred
 		ensure
 			no_void_directory_names: Result /= Void implies not STRING_ARRAY_.has_void (Result)
-			no_empty_directory_names: Result /= Void implies across Result as l_directory_names all not l_directory_names.item.is_empty end
+			no_empty_directory_names: Result /= Void implies across Result as i_directory_name all not i_directory_name.is_empty end
 		end
 
 feature -- Status report

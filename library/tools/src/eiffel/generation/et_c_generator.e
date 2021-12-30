@@ -33845,8 +33845,8 @@ feature {NONE} -- Type generation
 			end
 			from i := 1 until i > nb loop
 				l_type := dynamic_types.item (i)
-				across l_type.conforming_ancestors as l_conforming_ancestors loop
-					l_other_type := l_conforming_ancestors.item
+				across l_type.conforming_ancestors as i_conforming_ancestor loop
+					l_other_type := i_conforming_ancestor
 					if l_other_type /= l_type then
 						l_sorter.put_relation (l_other_type, l_type)
 					end
@@ -39149,7 +39149,7 @@ feature {NONE} -- Once features
 				"procedure">>
 		ensure
 			once_prefixes_not_void: Result /= Void
-			no_void_prefix: across Result as l_prefixes all l_prefixes.item /= Void end
+			no_void_prefix: across Result as i_prefix all i_prefix /= Void end
 			lower: Result.lower = 1
 			upper: Result.upper = once_kind_count
 		end
@@ -40934,7 +40934,7 @@ invariant
 	no_void_called_static_feature: not called_static_features.has_void
 	once_features_not_void: once_features /= Void
 	no_void_once_feature: not once_features.has_void
-	once_feature_constraint: across once_features as l_features all l_features.key = l_features.key.implementation_feature end
+	once_feature_constraint: across once_features as i_feature all @i_feature.key = @i_feature.key.implementation_feature end
 	once_per_process_counts_not_void: once_per_process_counts /= Void
 	once_per_process_counts_bounds: once_per_process_counts.lower = 1 and once_per_process_counts.upper = once_kind_count
 	no_negative_once_per_process_count: across once_per_process_counts as l_once_per_process_counts all l_once_per_process_counts.item >= 0 end
@@ -40943,7 +40943,7 @@ invariant
 	no_negative_once_per_thread_count: across once_per_thread_counts as l_once_per_thread_counts all l_once_per_thread_counts.item >= 0 end
 	constant_features_not_void: constant_features /= Void
 	no_void_constant_feature: not constant_features.has_void
-	constant_feature_constraint: across constant_features as l_features all l_features.key = l_features.key.implementation_feature end
+	constant_feature_constraint: across constant_features as i_feature all @i_feature.key = @i_feature.key.implementation_feature end
 	inline_constants_not_void: inline_constants /= Void
 	no_void_inline_constant: not inline_constants.has_void
 	no_void_inline_constant_type: not inline_constants.has_void_item

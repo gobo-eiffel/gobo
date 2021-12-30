@@ -5,7 +5,7 @@ note
 		"ECF parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -318,8 +318,8 @@ feature {NONE} -- Element change
 								-- Check capabilities compatibility.
 							l_current_capabilities := l_current_target.capabilities
 							l_parent_capabilities := l_parent_target.capabilities
-							across valid_capabilities_latest as l_capability_names loop
-								l_capability_name := l_capability_names.key
+							across valid_capabilities_latest as i_capability_name loop
+								l_capability_name := @i_capability_name.key
 								if attached l_parent_capabilities.primary_use_value_id (l_capability_name) as l_use_value then
 									if not l_parent_capabilities.is_capability_supported (l_capability_name, l_use_value.name) then
 										l_has_error := True
@@ -354,8 +354,8 @@ feature {NONE} -- Element change
 			end
 			if not l_has_error then
 				l_current_capabilities := a_target.capabilities
-				across valid_capabilities_latest as l_capability_names loop
-					l_capability_name := l_capability_names.key
+				across valid_capabilities_latest as i_capability_name loop
+					l_capability_name := @i_capability_name.key
 					if attached l_current_capabilities.primary_use_value_id (l_capability_name) as l_use_value then
 						if not l_current_capabilities.is_capability_supported (l_capability_name, l_use_value.name) then
 							error_handler.report_eadq_error (l_capability_name, l_use_value, a_target.system_config)
@@ -419,8 +419,8 @@ feature {NONE} -- Element change
 							if attached a_universe.selected_target as l_current_target and l_target /= Void then
 								l_current_capabilities := l_current_target.capabilities
 								l_library_capabilities := l_target.capabilities
-								across valid_capabilities_latest as l_capability_names loop
-									l_capability_name := l_capability_names.key
+								across valid_capabilities_latest as i_capability_name loop
+									l_capability_name := @i_capability_name.key
 									if not attached l_current_capabilities.support_value (l_capability_name) as l_capability_value then
 										-- OK.
 									elseif l_library_capabilities.is_capability_supported (l_capability_name, l_capability_value) then

@@ -6,7 +6,7 @@ note
 
 	remark: "Generate ECF version 1.15"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,7 @@ class ET_XACE_ECF_GENERATOR
 obsolete
 
 	"Use ET_ECF_* classes instead. [2019-03-17]"
-	
+
 inherit
 
 	ET_XACE_GENERATOR
@@ -530,10 +530,10 @@ feature {NONE} -- Output
 					end
 					l_option_element_printed := True
 				end
-				across l_debug_tags as l_debug_tag loop
+				across l_debug_tags as i_debug_tag loop
 					print_indentation (indent + 1, a_file)
 					a_file.put_string ("<debug name=%"")
-					print_quote_escaped_string (l_debug_tag.item, a_file)
+					print_quote_escaped_string (i_debug_tag, a_file)
 					a_file.put_line ("%" enabled=%"true%"/>")
 				end
 			end
@@ -908,18 +908,18 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("<file_rule>")
 				if l_includes /= Void and then not l_includes.is_empty then
-					across l_includes as l_include loop
+					across l_includes as i_include loop
 						print_indentation (indent + 1, a_file)
 						a_file.put_string ("<include>/")
-						print_escaped_string (l_include.item, a_file)
+						print_escaped_string (i_include, a_file)
 						a_file.put_line ("$</include>")
 					end
 				end
 				if l_excludes /= Void and then not l_excludes.is_empty then
-					across l_excludes as l_exclude loop
+					across l_excludes as i_exclude loop
 						print_indentation (indent + 1, a_file)
 						a_file.put_string ("<exclude>/")
-						print_escaped_string (l_exclude.item, a_file)
+						print_escaped_string (i_exclude, a_file)
 						a_file.put_line ("$</exclude>")
 					end
 				end

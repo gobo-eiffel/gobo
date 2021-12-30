@@ -57,7 +57,7 @@ feature -- Execution
 			-- Set `exit_code'.
 		require
 			a_args_not_void: a_args /= Void
-			no_void_arg: across a_args as l_arg all l_arg.item /= Void end
+			no_void_arg: across a_args as i_arg all i_arg /= Void end
 		local
 			l_error_handler: ET_ERROR_HANDLER
 		do
@@ -70,7 +70,7 @@ feature -- Execution
 			-- Set `exit_code'.
 		require
 			a_args_not_void: a_args /= Void
-			no_void_arg: across a_args as l_arg all l_arg.item /= Void end
+			no_void_arg: across a_args as i_arg all i_arg /= Void end
 			a_error_handler_not_void: a_error_handler /= Void
 		local
 			l_filename: STRING
@@ -351,7 +351,7 @@ feature -- Argument parsing
 			-- Initialize options and parse arguments `a_args'.
 		require
 			a_args_not_void: a_args /= Void
-			no_void_arg: across a_args as l_arg all l_arg.item /= Void end
+			no_void_arg: across a_args as i_arg all i_arg /= Void end
 		local
 			l_parser: AP_PARSER
 			l_list: AP_ALTERNATIVE_OPTIONS_LIST
@@ -527,8 +527,8 @@ feature -- Argument parsing
 		do
 			if not a_option.parameters.is_empty then
 				create l_override_settings.make
-				across a_option.parameters as l_settings loop
-					if attached l_settings.item as l_setting then
+				across a_option.parameters as i_setting loop
+					if attached i_setting as l_setting then
 						l_definition := l_setting
 						if l_definition.count > 0 then
 							l_index := l_definition.index_of ('=', 1)
@@ -559,8 +559,8 @@ feature -- Argument parsing
 		do
 			if not a_option.parameters.is_empty then
 				create l_override_capabilities.make
-				across a_option.parameters as l_capabilities loop
-					if attached l_capabilities.item as l_capability then
+				across a_option.parameters as i_capability loop
+					if attached i_capability as l_capability then
 						l_definition := l_capability
 						if l_definition.count > 0 then
 							l_index := l_definition.index_of ('=', 1)
@@ -604,8 +604,8 @@ feature -- Argument parsing
 				Execution_environment.set_variable_value ("GOBO_EIFFEL", l_gobo_eiffel)
 			end
 			if not a_option.parameters.is_empty then
-				across a_option.parameters as l_variables loop
-					if attached l_variables.item as l_variable then
+				across a_option.parameters as i_variable loop
+					if attached i_variable as l_variable then
 						l_definition := l_variable
 						if l_definition.count > 0 then
 							l_index := l_definition.index_of ('=', 1)

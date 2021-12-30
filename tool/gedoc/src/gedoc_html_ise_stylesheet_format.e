@@ -9,7 +9,7 @@ note
 			ec -filter html-stylesheet -all -config project.ecf
 	]"
 
-	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -179,11 +179,11 @@ feature {NONE} -- Output
 				l_file.recursive_open_write
 				if l_file.is_open_write then
 					l_file.put_line ("classList = new Array (")
-					across a_class_chart_mapping as l_mapping loop
+					across a_class_chart_mapping as i_mapping loop
 						l_file.put_string ("%T%"")
-						l_file.put_string (l_mapping.key.upper_name)
+						l_file.put_string (@i_mapping.key.upper_name)
 						l_file.put_character ('%"')
-						if not l_mapping.is_last then
+						if not @i_mapping.is_last then
 							l_file.put_character (',')
 						end
 						l_file.put_new_line
@@ -191,11 +191,11 @@ feature {NONE} -- Output
 					l_file.put_line (");")
 					l_file.put_new_line
 					l_file.put_line ("locationList = new Array (")
-					across a_class_chart_mapping as l_mapping loop
+					across a_class_chart_mapping as i_mapping loop
 						l_file.put_string ("%T%"")
-						l_file.put_string (l_mapping.item)
+						l_file.put_string (i_mapping)
 						l_file.put_character ('%"')
-						if not l_mapping.is_last then
+						if not @i_mapping.is_last then
 							l_file.put_character (',')
 						end
 						l_file.put_new_line
@@ -293,9 +293,9 @@ feature {NONE} -- Output
 					l_printer.print_end_span
 					l_printer.print_new_line
 					l_printer.indent
-					across a_universe_mapping as l_mapping loop
-						l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, l_mapping.item)
-						l_printer.print_string (universe_lower_name (l_mapping.key))
+					across a_universe_mapping as i_mapping loop
+						l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, i_mapping)
+						l_printer.print_string (universe_lower_name (@i_mapping.key))
 						l_printer.print_end_a
 						l_printer.print_new_line
 					end
@@ -353,17 +353,17 @@ feature {NONE} -- Output
 					l_printer.print_end_span
 					l_printer.print_new_line
 					l_printer.indent
-					across a_class_mapping as l_mapping loop
-						l_class := l_mapping.key
+					across a_class_mapping as i_mapping loop
+						l_class := @i_mapping.key
 						l_printer.set_current_class (l_class)
 						l_printer.print_class_header (l_class, True)
 						l_printer.print_new_line
 						if attached class_description (l_class) as l_description then
 							l_printer.indent
 							l_printer.indent
-							across l_line_splitter.split_greedy (l_description) as l_lines loop
+							across l_line_splitter.split_greedy (l_description) as i_line loop
 								l_printer.print_indentation
-								l_printer.print_comment_text ("-- " + l_lines.item)
+								l_printer.print_comment_text ("-- " + i_line)
 								l_printer.print_new_line
 							end
 							l_printer.dedent
@@ -418,9 +418,9 @@ feature {NONE} -- Output
 					l_printer.print_end_span
 					l_printer.print_new_line
 					l_printer.indent
-					across a_universe_mapping as l_mapping loop
-						l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, l_mapping.item)
-						l_printer.print_string (universe_lower_name (l_mapping.key))
+					across a_universe_mapping as i_mapping loop
+						l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, i_mapping)
+						l_printer.print_string (universe_lower_name (@i_mapping.key))
 						l_printer.print_end_a
 						l_printer.print_new_line
 					end
@@ -472,12 +472,12 @@ feature {NONE} -- Output
 					l_printer.print_end_span
 					l_printer.print_new_line
 					l_printer.indent
-					across a_universe_mapping as l_mapping loop
-						l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, l_mapping.item)
-						l_printer.print_string (universe_lower_name (l_mapping.key))
+					across a_universe_mapping as i_mapping loop
+						l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, i_mapping)
+						l_printer.print_string (universe_lower_name (@i_mapping.key))
 						l_printer.print_end_a
 						l_printer.print_new_line
-						if attached {ET_INTERNAL_UNIVERSE} l_mapping.key as l_internal_universe then
+						if attached {ET_INTERNAL_UNIVERSE} @i_mapping.key as l_internal_universe then
 							l_printer.indent
 							l_printer.print_cluster_names_recursive (l_internal_universe.clusters)
 							l_printer.dedent
@@ -570,8 +570,8 @@ feature {NONE} -- Output
 					l_printer.print_end_span
 					l_printer.print_new_line
 					l_printer.indent
-					across a_class_mapping as l_mapping loop
-						l_class := l_mapping.key
+					across a_class_mapping as i_mapping loop
+						l_class := @i_mapping.key
 						if l_class.universe = a_universe then
 							l_printer.print_class_header (l_class, True)
 							l_printer.print_new_line
@@ -759,13 +759,13 @@ feature {NONE} -- Output
 					a_printer.print_new_line
 					a_printer.indent
 					l_line_splitter := line_splitter
-					across l_line_splitter.split_greedy (l_description) as l_lines loop
+					across l_line_splitter.split_greedy (l_description) as i_line loop
 						a_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_estring)
-						if l_lines.is_first then
+						if @i_line.is_first then
 							a_printer.print_character ('%"')
 						end
-						a_printer.print_string (l_lines.item)
-						if l_lines.is_last then
+						a_printer.print_string (i_line)
+						if @i_line.is_last then
 							a_printer.print_character ('%"')
 						end
 						a_printer.print_end_span

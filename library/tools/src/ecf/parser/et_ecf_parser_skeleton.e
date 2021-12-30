@@ -5,7 +5,7 @@ note
 		"ECF parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2260,10 +2260,10 @@ feature {NONE} -- Element change
 				-- When <assertions> is provided but no value is provided, then it's
 				-- as if the default value had explicitly been specified.
 				-- At least that's the way in works in ISE 17.05.
-			across a_default_options.primary_assertions as l_default_assertions loop
-				l_name := l_default_assertions.key
+			across a_default_options.primary_assertions as i_default_assertion loop
+				l_name := @i_default_assertion.key
 				if not attached a_options.primary_assertion_value (l_name) then
-					a_options.set_primary_assertion_value (l_name, l_default_assertions.item)
+					a_options.set_primary_assertion_value (l_name, i_default_assertion)
 				end
 			end
 		end

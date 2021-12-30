@@ -5,7 +5,7 @@ note
 		"Interface for file systems"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -655,7 +655,7 @@ feature -- Pathname handling
 			a_pathnames_not_void: a_pathnames /= Void
 			a_pathnames_not_empty: a_pathnames.count > 0
 			no_void_pathname: not STRING_ARRAY_.has_void (a_pathnames)
-			a_pathnames_relative: across a_pathnames as l_pathnames all is_relative_pathname (l_pathnames.item) end
+			a_pathnames_relative: across a_pathnames as i_pathname all is_relative_pathname (i_pathname) end
 		deferred
 		ensure
 			instance_free: class

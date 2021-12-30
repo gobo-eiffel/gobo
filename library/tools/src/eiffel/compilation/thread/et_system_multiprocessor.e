@@ -5,7 +5,7 @@ note
 		"Eiffel system multiprocessors, using threads."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2021, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -137,7 +137,7 @@ feature -- Status setting
 				i := i - 1
 			end
 		ensure then
-			other_benchmark_shown_set: across other_processors as l_other_processors all l_other_processors.item.benchmark_shown = b end
+			other_benchmark_shown_set: across other_processors as i_other_processor all i_other_processor.benchmark_shown = b end
 		end
 
 	set_nested_benchmark_shown (b: BOOLEAN)
@@ -156,7 +156,7 @@ feature -- Status setting
 				i := i - 1
 			end
 		ensure then
-			other_nested_benchmark_shown_set: across other_processors as l_other_processors all l_other_processors.item.nested_benchmark_shown = b end
+			other_nested_benchmark_shown_set: across other_processors as i_other_processor all i_other_processor.nested_benchmark_shown = b end
 		end
 
 	set_metrics_shown (b: BOOLEAN)
@@ -175,7 +175,7 @@ feature -- Status setting
 				i := i - 1
 			end
 		ensure then
-			other_metrics_shown_set: across other_processors as l_other_processors all l_other_processors.item.metrics_shown = b end
+			other_metrics_shown_set: across other_processors as i_other_processor all i_other_processor.metrics_shown = b end
 		end
 
 feature -- Parser status setting
@@ -196,7 +196,7 @@ feature -- Parser status setting
 				i := i - 1
 			end
 		ensure then
-			other_use_attached_keyword_set: across other_processors as l_other_processors all l_other_processors.item.use_attached_keyword = b end
+			other_use_attached_keyword_set: across other_processors as i_other_processor all i_other_processor.use_attached_keyword = b end
 		end
 
 	set_use_attribute_keyword (b: BOOLEAN)
@@ -215,7 +215,7 @@ feature -- Parser status setting
 				i := i - 1
 			end
 		ensure then
-			other_use_attribute_keyword_set: across other_processors as l_other_processors all l_other_processors.item.use_attribute_keyword = b end
+			other_use_attribute_keyword_set: across other_processors as i_other_processor all i_other_processor.use_attribute_keyword = b end
 		end
 
 	set_use_detachable_keyword (b: BOOLEAN)
@@ -234,7 +234,7 @@ feature -- Parser status setting
 				i := i - 1
 			end
 		ensure then
-			other_use_detachable_keyword_set: across other_processors as l_other_processors all l_other_processors.item.use_detachable_keyword = b end
+			other_use_detachable_keyword_set: across other_processors as i_other_processor all i_other_processor.use_detachable_keyword = b end
 		end
 
 	set_use_note_keyword (b: BOOLEAN)
@@ -253,7 +253,7 @@ feature -- Parser status setting
 				i := i - 1
 			end
 		ensure then
-			other_use_note_keyword_set: across other_processors as l_other_processors all l_other_processors.item.use_note_keyword = b end
+			other_use_note_keyword_set: across other_processors as i_other_processor all i_other_processor.use_note_keyword = b end
 		end
 
 	set_use_reference_keyword (b: BOOLEAN)
@@ -272,7 +272,7 @@ feature -- Parser status setting
 				i := i - 1
 			end
 		ensure then
-			other_use_reference_keyword_set: across other_processors as l_other_processors all l_other_processors.item.use_reference_keyword = b end
+			other_use_reference_keyword_set: across other_processors as i_other_processor all i_other_processor.use_reference_keyword = b end
 		end
 
 	set_default_keyword_usage
@@ -308,7 +308,7 @@ feature -- Parser status setting
 				i := i - 1
 			end
 		ensure then
-			other_providers_enabled_set: across other_processors as l_other_processors all l_other_processors.item.providers_enabled = b end
+			other_providers_enabled_set: across other_processors as i_other_processor all i_other_processor.providers_enabled = b end
 		end
 
 	set_cluster_dependence_enabled (b: BOOLEAN)
@@ -327,7 +327,7 @@ feature -- Parser status setting
 				i := i - 1
 			end
 		ensure then
-			other_cluster_dependence_enabled_set: across other_processors as l_other_processors all l_other_processors.item.cluster_dependence_enabled = b end
+			other_cluster_dependence_enabled_set: across other_processors as i_other_processor all i_other_processor.cluster_dependence_enabled = b end
 		end
 
 	set_use_cluster_dependence_pathnames (b: BOOLEAN)
@@ -346,7 +346,7 @@ feature -- Parser status setting
 				i := i - 1
 			end
 		ensure then
-			other_use_cluster_dependence_pathnames_set: across other_processors as l_other_processors all l_other_processors.item.use_cluster_dependence_pathnames = b end
+			other_use_cluster_dependence_pathnames_set: across other_processors as i_other_processor all i_other_processor.use_cluster_dependence_pathnames = b end
 		end
 
 	set_qualified_anchored_types_cycle_detection_enabled (b: BOOLEAN)
@@ -365,7 +365,7 @@ feature -- Parser status setting
 				i := i - 1
 			end
 		ensure then
-			other_qualified_anchored_types_cycle_detection_enabled_set: across other_processors as l_other_processors all l_other_processors.item.qualified_anchored_types_cycle_detection_enabled = b end
+			other_qualified_anchored_types_cycle_detection_enabled_set: across other_processors as i_other_processor all i_other_processor.qualified_anchored_types_cycle_detection_enabled = b end
 		end
 
 	set_preparse_shallow_mode
@@ -384,9 +384,9 @@ feature -- Parser status setting
 				i := i - 1
 			end
 		ensure then
-			other_preparse_shallow_mode_set: across other_processors as l_other_processors all l_other_processors.item.preparse_shallow_mode end
-			other_preparse_single_mode_unset: across other_processors as l_other_processors all not l_other_processors.item.preparse_single_mode end
-			other_preparse_multiple_mode_unset: across other_processors as l_other_processors all not l_other_processors.item.preparse_multiple_mode end
+			other_preparse_shallow_mode_set: across other_processors as i_other_processor all i_other_processor.preparse_shallow_mode end
+			other_preparse_single_mode_unset: across other_processors as i_other_processor all not i_other_processor.preparse_single_mode end
+			other_preparse_multiple_mode_unset: across other_processors as i_other_processor all not i_other_processor.preparse_multiple_mode end
 		end
 
 	set_preparse_single_mode
@@ -405,9 +405,9 @@ feature -- Parser status setting
 				i := i - 1
 			end
 		ensure then
-			other_preparse_single_mode_set: across other_processors as l_other_processors all l_other_processors.item.preparse_single_mode end
-			other_preparse_shallow_mode_unset: across other_processors as l_other_processors all not l_other_processors.item.preparse_shallow_mode end
-			other_preparse_multiple_mode_unset: across other_processors as l_other_processors all not l_other_processors.item.preparse_multiple_mode end
+			other_preparse_single_mode_set: across other_processors as i_other_processor all i_other_processor.preparse_single_mode end
+			other_preparse_shallow_mode_unset: across other_processors as i_other_processor all not i_other_processor.preparse_shallow_mode end
+			other_preparse_multiple_mode_unset: across other_processors as i_other_processor all not i_other_processor.preparse_multiple_mode end
 		end
 
 	set_preparse_multiple_mode
@@ -426,9 +426,9 @@ feature -- Parser status setting
 				i := i - 1
 			end
 		ensure then
-			other_preparse_multiple_mode_set: across other_processors as l_other_processors all l_other_processors.item.preparse_multiple_mode end
-			other_preparse_shallow_mode_unset: across other_processors as l_other_processors all not l_other_processors.item.preparse_shallow_mode end
-			other_preparse_single_mode_unset: across other_processors as l_other_processors all not l_other_processors.item.preparse_single_mode end
+			other_preparse_multiple_mode_set: across other_processors as i_other_processor all i_other_processor.preparse_multiple_mode end
+			other_preparse_shallow_mode_unset: across other_processors as i_other_processor all not i_other_processor.preparse_shallow_mode end
+			other_preparse_single_mode_unset: across other_processors as i_other_processor all not i_other_processor.preparse_single_mode end
 		end
 
 	set_preparse_readonly_mode (b: BOOLEAN)
@@ -447,7 +447,7 @@ feature -- Parser status setting
 				i := i - 1
 			end
 		ensure then
-			other_preparse_readonly_mode_set: across other_processors as l_other_processors all l_other_processors.item.preparse_readonly_mode = b end
+			other_preparse_readonly_mode_set: across other_processors as i_other_processor all i_other_processor.preparse_readonly_mode = b end
 		end
 
 	set_preparse_override_mode (b: BOOLEAN)
@@ -466,7 +466,7 @@ feature -- Parser status setting
 				i := i - 1
 			end
 		ensure then
-			other_preparse_override_mode_set: across other_processors as l_other_processors all l_other_processors.item.preparse_override_mode = b end
+			other_preparse_override_mode_set: across other_processors as i_other_processor all i_other_processor.preparse_override_mode = b end
 		end
 
 feature -- Implementation checking status setting
@@ -487,7 +487,7 @@ feature -- Implementation checking status setting
 				i := i - 1
 			end
 		ensure then
-			other_flat_mode_set: across other_processors as l_other_processors all l_other_processors.item.flat_mode = b end
+			other_flat_mode_set: across other_processors as i_other_processor all i_other_processor.flat_mode = b end
 		end
 
 	set_flat_dbc_mode (b: BOOLEAN)
@@ -506,7 +506,7 @@ feature -- Implementation checking status setting
 				i := i - 1
 			end
 		ensure then
-			other_flat_dbc_mode_set: across other_processors as l_other_processors all l_other_processors.item.flat_dbc_mode = b end
+			other_flat_dbc_mode_set: across other_processors as i_other_processor all i_other_processor.flat_dbc_mode = b end
 		end
 
 	set_suppliers_enabled (b: BOOLEAN)
@@ -525,7 +525,7 @@ feature -- Implementation checking status setting
 				i := i - 1
 			end
 		ensure then
-			other_suppliers_enabled_set: across other_processors as l_other_processors all l_other_processors.item.suppliers_enabled = b end
+			other_suppliers_enabled_set: across other_processors as i_other_processor all i_other_processor.suppliers_enabled = b end
 		end
 
 	set_unknown_builtin_reported (b: BOOLEAN)
@@ -544,7 +544,7 @@ feature -- Implementation checking status setting
 				i := i - 1
 			end
 		ensure then
-			other_unknown_builtin_reported_set: across other_processors as l_other_processors all l_other_processors.item.unknown_builtin_reported = b end
+			other_unknown_builtin_reported_set: across other_processors as i_other_processor all i_other_processor.unknown_builtin_reported = b end
 		end
 
 feature -- Eiffel version setting
@@ -565,7 +565,7 @@ feature -- Eiffel version setting
 				i := i - 1
 			end
 		ensure then
-			other_ecma_version_set: across other_processors as l_other_processors all l_other_processors.item.ecma_version = a_version end
+			other_ecma_version_set: across other_processors as i_other_processor all i_other_processor.ecma_version = a_version end
 		end
 
 	set_ise_version (a_version: like ise_version)
@@ -584,7 +584,7 @@ feature -- Eiffel version setting
 				i := i - 1
 			end
 		ensure then
-			other_ise_version_set: across other_processors as l_other_processors all l_other_processors.item.ise_version = a_version end
+			other_ise_version_set: across other_processors as i_other_processor all i_other_processor.ise_version = a_version end
 		end
 
 feature -- Access
@@ -610,7 +610,7 @@ feature -- Setting
 				i := i - 1
 			end
 		ensure then
-			other_ast_factory_set: across other_processors as l_other_processors all l_other_processors.item.ast_factory = a_factory end
+			other_ast_factory_set: across other_processors as i_other_processor all i_other_processor.ast_factory = a_factory end
 		end
 
 	set_error_handler (a_handler: like error_handler)
@@ -629,7 +629,7 @@ feature -- Setting
 				i := i - 1
 			end
 		ensure then
-			other_error_handler_set: across other_processors as l_other_processors all l_other_processors.item.error_handler = a_handler end
+			other_error_handler_set: across other_processors as i_other_processor all i_other_processor.error_handler = a_handler end
 		end
 
 feature -- Processing
@@ -758,7 +758,7 @@ feature -- Stop
 				i := i - 1
 			end
 		ensure then
-			other_stop_request_set: across other_processors as l_other_processors all l_other_processors.item.stop_request = a_stop_request end
+			other_stop_request_set: across other_processors as i_other_processor all i_other_processor.stop_request = a_stop_request end
 		end
 
 feature -- Iteration
