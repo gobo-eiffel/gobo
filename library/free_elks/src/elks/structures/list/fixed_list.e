@@ -7,8 +7,8 @@
 	representation: array
 	access: index, cursor, membership
 	contents: generic
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2021-06-18 17:01:52 +0000 (Fri, 18 Jun 2021) $"
+	revision: "$Revision: 105548 $"
 
 class FIXED_LIST [G]
 
@@ -34,6 +34,9 @@ create
 	make,
 	make_from_iterable,
 	make_filled
+
+convert
+	make_from_iterable ({ARRAY [G]})
 
 feature -- Initialization
 
@@ -63,7 +66,7 @@ feature {NONE} -- Creation
 				if not extendible then
 					capacity := capacity + 1
 				end
-				extend (o.item)
+				extend (o)
 			end
 			capacity := count
 		end
@@ -80,7 +83,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

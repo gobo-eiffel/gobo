@@ -7,8 +7,8 @@
 	representation: linked
 	access: index, cursor, membership
 	contents: generic
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2021-06-18 17:01:52 +0000 (Fri, 18 Jun 2021) $"
+	revision: "$Revision: 105548 $"
 
 class LINKED_CIRCULAR [G] inherit
 
@@ -17,34 +17,48 @@ class LINKED_CIRCULAR [G] inherit
 			readable, isfirst, writable, is_equal
 		redefine
 			start, islast
-		select
-			remove, go_i_th, after, before, off,
-			prune_all, prune, first, forth
 		end
 
+inherit {NONE}
+
 	LIST [G]
-		rename
-			after as l_after,
-			before as l_before,
-			remove as l_remove,
-			first as l_first,
-			off as l_off,
-			prune as l_prune,
-			prune_all as l_prune_all,
-			go_i_th as l_go_i_th,
-			forth as l_forth
 		export {NONE}
-			l_after, l_before, l_remove, l_first,
-			l_off, l_prune, l_prune_all, l_go_i_th, l_forth
+			after,
+			before,
+			first,
+			forth,
+			go_i_th,
+			off,
+			prune,
+			prune_all,
+			remove
 		undefine
-			last, exhausted, move, valid_cursor_index,
-			isfirst, readable, islast, start, writable
+			after,
+			before,
+			exhausted,
+			first,
+			go_i_th,
+			isfirst,
+			islast,
+			last,
+			move,
+			off,
+			prune,
+			prune_all,
+			readable,
+			remove,
+			start,
+			valid_cursor_index,
+			writable
 		end
 
 create
 
 	make,
 	make_from_iterable
+
+convert
+	make_from_iterable ({ARRAY [G]})
 
 feature {NONE} -- Initialization
 
@@ -61,11 +75,7 @@ feature {NONE} -- Initialization
 		do
 			create l.make
 			list := l
-			across
-				other as o
-			loop
-				l.extend (o.item)
-			end
+			⟳ o: other ¦ l.extend (o) ⟲
 		end
 
 feature -- Measurement
@@ -293,87 +303,87 @@ feature {LINKED_CIRCULAR} -- Implementation
 	list: LINKED_LIST [G]
 
 	standard_after: BOOLEAN
-			do
-				Result := list.after
-			end
+		do
+			Result := list.after
+		end
 
 	standard_back
-			do
-				list.back
-			end
+		do
+			list.back
+		end
 
 	standard_before: BOOLEAN
-			do
-				Result := list.before
-			end
+		do
+			Result := list.before
+		end
 
 	standard_finish
-			do
-				list.finish
-			end
+		do
+			list.finish
+		end
 
 	standard_forth
-			do
-				list.forth
-			end
+		do
+			list.forth
+		end
 
 	standard_go_i_th (i: INTEGER)
-			do
-				list.go_i_th (i)
-			end
+		do
+			list.go_i_th (i)
+		end
 
 	standard_index: INTEGER
-			do
-				Result := list.index
-			end
+		do
+			Result := list.index
+		end
 
 	standard_isfirst: BOOLEAN
-			do
-				Result := list.isfirst
-			end
+		do
+			Result := list.isfirst
+		end
 
 	standard_islast: BOOLEAN
-			do
-				Result := list.islast
-			end
+		do
+			Result := list.islast
+		end
 
 	standard_move (i: INTEGER)
-			do
-				list.move (i)
-			end
+		do
+			list.move (i)
+		end
 
 	standard_off: BOOLEAN
-			do
-				Result := list.off
-			end
+		do
+			Result := list.off
+		end
 
 	standard_remove
-			do
-				list.remove
-			end
+		do
+			list.remove
+		end
 
 	standard_remove_left
-			do
-				list.remove_left
-			end
+		do
+			list.remove_left
+		end
 
 	standard_remove_right
-			do
-				list.remove_right
-			end
+		do
+			list.remove_right
+		end
 
 	standard_search (v: G)
-			do
-				list.search (v)
-			end
+		do
+			list.search (v)
+		end
 
 	standard_start
-			do
-				list.start
-			end
+		do
+			list.start
+		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

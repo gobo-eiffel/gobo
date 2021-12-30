@@ -83,8 +83,8 @@
 
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2021-05-31 11:01:25 +0000 (Mon, 31 May 2021) $"
+	revision: "$Revision: 105458 $"
 
 class
 	PATH
@@ -626,9 +626,7 @@ feature -- Access
 						l_components.forth
 					end
 				end
-				across l_components as l_component loop
-					internal_path_append_into (l_storage, l_component.item.storage, directory_separator)
-				end
+				⟳ c: l_components ¦ internal_path_append_into (l_storage, c.storage, directory_separator) ⟲
 					-- Everything was built from normalized strings.
 				create Result.make_from_normalized_storage (l_storage)
 			else
@@ -667,6 +665,8 @@ feature -- Access
 			else
 				Result := unix_separator
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Status setting
@@ -1453,7 +1453,7 @@ invariant
 	no_forward_slash_on_windows: {PLATFORM}.is_windows implies not storage.has_substring ("/%U")
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

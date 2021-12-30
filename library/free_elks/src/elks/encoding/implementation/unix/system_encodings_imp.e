@@ -11,7 +11,11 @@ class
 inherit
 	SYSTEM_ENCODINGS_I
 
+inherit {NONE}
 	ENCODING_HELPER
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -75,7 +79,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -84,7 +88,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

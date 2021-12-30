@@ -102,13 +102,29 @@ feature -- Extended operations
 			valid_operands: valid_operands (a)
 		local
 			default_arguments: detachable OPEN_ARGS
+			i: INTEGER
 		do
 			if not attached a then
 				Result := item (default_arguments)
+			elseif attached {OPEN_ARGS} a as x then
+				Result := item (x)
 			else
+					-- Note: with the precondition `valid_operands`, no need to check for conformance of items
+					--	 the following code is similar to `new_tuple_from_tuple`.
 				check
-					from_precondition: attached {OPEN_ARGS} new_tuple_from_tuple (({OPEN_ARGS}).type_id, a) as x
+					from_precondition: attached {OPEN_ARGS} ({ISE_RUNTIME}.new_tuple_instance_of (({OPEN_ARGS}).type_id)) as x
 				then
+					if a.object_comparison then
+						x.compare_objects
+					end
+					from
+						i := x.count
+					until
+						i <= 0
+					loop
+						x [i] := a [i]
+						i := i - 1
+					end
 					Result := item (x)
 				end
 			end

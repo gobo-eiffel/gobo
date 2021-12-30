@@ -20,7 +20,6 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option is_obsolete_iteration="true" warning="warning"/>
 		<capability>
 			<concurrency support="none"/>
 		</capability>

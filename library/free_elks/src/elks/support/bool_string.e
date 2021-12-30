@@ -14,17 +14,19 @@ class BOOL_STRING
 
 inherit
 
+	ANY
+		redefine
+			copy, is_equal
+		end
+
+inherit {NONE}
+
 	TO_SPECIAL [BOOLEAN]
 		export
 			{NONE} all
 			{BOOL_STRING} area
 		redefine
 			item, at, put, valid_index, copy, is_equal
-		end
-
-	ANY
-		redefine
-			copy, is_equal
 		end
 
 create
@@ -223,7 +225,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

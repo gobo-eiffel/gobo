@@ -14,6 +14,8 @@ inherit
 			is_equal, copy
 		end
 
+inherit {NONE}
+
 	IDENTIFIED_ROUTINES
 		export
 			{NONE} all
@@ -125,7 +127,7 @@ feature {IDENTIFIED} -- Implementation
 			-- Internal representation of `object_id'
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

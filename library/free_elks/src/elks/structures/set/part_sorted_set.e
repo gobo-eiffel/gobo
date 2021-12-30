@@ -10,8 +10,8 @@
 	representation: linked
 	access: membership, min, max
 	contents: generic
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2021-06-18 16:58:32 +0000 (Fri, 18 Jun 2021) $"
+	revision: "$Revision: 105547 $"
 
 class PART_SORTED_SET [G -> PART_COMPARABLE] inherit
 
@@ -49,17 +49,16 @@ create
 create {PART_SORTED_SET}
 	make_sublist
 
+convert
+	make_from_iterable ({ARRAY [G]})
+
 feature {NONE} -- Creation
 
 	make_from_iterable (other: ITERABLE [G])
 			-- Create a set with all items obtained from `other`.
 		do
 			make
-			across
-				other as o
-			loop
-				extend (o.item)
-			end
+			⟳ o: other ¦ extend (o) ⟲
 		end
 
 feature -- Element change
@@ -149,7 +148,7 @@ feature -- Duplication
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

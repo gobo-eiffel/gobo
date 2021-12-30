@@ -25,12 +25,14 @@ class RANDOM inherit
 			has
 		end
 
+	ITERATION_CURSOR [INTEGER]
+
+inherit {NONE}
+
 	DOUBLE_MATH
 		export
 			{NONE} all
 		end
-
-	ITERATION_CURSOR [INTEGER]
 
 create
 	make, set_seed
@@ -220,7 +222,7 @@ invariant
 	modulus_constraint: modulus > 1
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

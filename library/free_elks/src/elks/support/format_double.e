@@ -3,13 +3,14 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	names: format_double;
-	date: "$Date$"
-	revision: "$Revision$"
+	names: format_double
+	date: "$Date: 2021-02-22 14:30:58 +0000 (Mon, 22 Feb 2021) $"
+	revision: "$Revision: 105200 $"
 
 class FORMAT_DOUBLE
 
-inherit
+inherit {NONE}
+
 	FORMAT_INTEGER
 		rename
 			make as set_defaults,
@@ -300,7 +301,7 @@ invariant
 	separate_all: no_separator implies not after_decimal_separate
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

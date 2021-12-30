@@ -28,8 +28,8 @@
 
 	status: "See notice at end of class."
 	keywords: event, action
-	date: "$Date: 2018-11-14 15:15:17 +0000 (Wed, 14 Nov 2018) $"
-	revision: "$Revision: 102463 $"
+	date: "$Date: 2021-04-05 23:52:49 +0000 (Mon, 05 Apr 2021) $"
+	revision: "$Revision: 105261 $"
 
 class
 	ACTION_SEQUENCE [EVENT_DATA -> detachable TUPLE create default_create end]
@@ -89,7 +89,6 @@ feature -- Basic operations
 		local
 			l_routines_snapshot: SPECIAL [like item]
 			l_count: INTEGER
-			l_action: like item
 			l_kamikazes: SPECIAL [like item]
 			l_kamikazes_internal: like kamikazes_internal
 			l_is_aborted_stack: like is_aborted_stack
@@ -110,7 +109,7 @@ feature -- Basic operations
 					until
 						i = l_count
 					loop
-						prune_all (l_kamikazes @ i)
+						prune_all (l_kamikazes [i])
 						i := i + 1
 					end
 						-- Reset kamikazes list.
@@ -130,9 +129,8 @@ feature -- Basic operations
 						i = l_count
 						or l_is_aborted_stack.item
 					loop
-						l_action := l_routines_snapshot @ i
-						if l_action /= Void then
-							l_action.call (event_data)
+						if attached l_routines_snapshot [i] as l_action then
+							l_action (event_data)
 						end
 						i := i + 1
 					variant
@@ -363,22 +361,9 @@ feature {NONE} -- Implementation
 			-- Call each action in `actions'.
 		require
 			actions_not_void: actions /= Void
-		local
-			snapshot: like actions
-			i: INTEGER
 		do
 			if not actions.is_empty then
-				snapshot := actions.twin
-				from
-					i := 1
-				until
-					i > snapshot.count
-				loop
-					if snapshot @ i /= Void then
-						snapshot.i_th (i).call (Void)
-					end
-					i := i + 1
-				end
+				⟳ snapshot: actions.twin ¦ snapshot.call ⟲
 			end
 		end
 
@@ -456,7 +441,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

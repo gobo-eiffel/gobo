@@ -322,11 +322,11 @@ feature {NONE} -- Implementation
 			Result.extend (is_control_flag)                         -- 25
 			Result.extend (is_control_flag)                         -- 26
 			Result.extend (is_control_flag)                         -- 27	Escape
-			Result.extend (is_control_flag)                         -- 28	file separator
-			Result.extend (is_control_flag)                         -- 29	group separator
-			Result.extend (is_control_flag)                         -- 30	record separator
-			Result.extend (is_control_flag)                         -- 31	unit separator
-			Result.extend (is_white_space_flag | is_space_flag)     -- 32	Space
+			Result.extend (is_control_flag | is_white_space_flag)   -- 28	file separator
+			Result.extend (is_control_flag | is_white_space_flag)   -- 29	group separator
+			Result.extend (is_control_flag | is_white_space_flag)   -- 30	record separator
+			Result.extend (is_control_flag | is_white_space_flag)   -- 31	unit separator
+			Result.extend (is_space_flag   | is_white_space_flag)   -- 32	Space
 			Result.extend (is_punctuation_flag)                     -- 33	!
 			Result.extend (is_punctuation_flag)                     -- 34	"
 			Result.extend (is_punctuation_flag)                     -- 35	#
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 			Result.extend (is_control_flag)                         -- 130	
 			Result.extend (is_control_flag)                         -- 131	
 			Result.extend (is_control_flag)                         -- 132	
-			Result.extend (is_control_flag | is_space_flag)                         -- 133	
+			Result.extend (is_control_flag | is_space_flag | is_white_space_flag) -- 133	
 			Result.extend (is_control_flag)                         -- 134	
 			Result.extend (is_control_flag)                         -- 135	
 			Result.extend (is_control_flag)                         -- 136	
@@ -454,18 +454,18 @@ feature {NONE} -- Implementation
 			Result.extend (is_control_flag)                         -- 157	
 			Result.extend (is_control_flag)                         -- 158	
 			Result.extend (is_control_flag)                         -- 159	
-			Result.extend (is_space_flag)                         -- 160	
-			Result.extend (is_punctuation_flag)                         -- 161	¡
+			Result.extend (is_space_flag | is_white_space_flag)     -- 160
+			Result.extend (is_punctuation_flag)                     -- 161	¡
 			Result.extend (0)                         -- 162	¢
 			Result.extend (0)                         -- 163	£
 			Result.extend (0)                         -- 164	¤
 			Result.extend (0)                         -- 165	¥
 			Result.extend (0)                         -- 166	¦
-			Result.extend (is_punctuation_flag)                         -- 167	§
+			Result.extend (is_punctuation_flag)       -- 167	§
 			Result.extend (0)                         -- 168	¨
 			Result.extend (0)                         -- 169	©
 			Result.extend (0)                         -- 170	ª
-			Result.extend (is_punctuation_flag)                         -- 171	«
+			Result.extend (is_punctuation_flag)       -- 171	«
 			Result.extend (0)                         -- 172	¬
 			Result.extend (0)                         -- 173	­
 			Result.extend (0)                         -- 174	®
@@ -475,81 +475,81 @@ feature {NONE} -- Implementation
 			Result.extend (0)                         -- 178	²
 			Result.extend (0)                         -- 179	³
 			Result.extend (0)                         -- 180	´
-			Result.extend (is_lower_flag)                         -- 181	µ
-			Result.extend (is_punctuation_flag)                         -- 182	¶
-			Result.extend (is_punctuation_flag)                         -- 183	·
+			Result.extend (is_lower_flag)             -- 181	µ
+			Result.extend (is_punctuation_flag)       -- 182	¶
+			Result.extend (is_punctuation_flag)       -- 183	·
 			Result.extend (0)                         -- 184	¸
 			Result.extend (0)                         -- 185	¹
 			Result.extend (0)                         -- 186	º
-			Result.extend (is_punctuation_flag)                         -- 187	»
+			Result.extend (is_punctuation_flag)       -- 187	»
 			Result.extend (0)                         -- 188	¼
 			Result.extend (0)                         -- 189	½
 			Result.extend (0)                         -- 190	¾
-			Result.extend (is_punctuation_flag)                         -- 191	¿
-			Result.extend (is_upper_flag)                         -- 192	À
-			Result.extend (is_upper_flag)                         -- 193	Á
-			Result.extend (is_upper_flag)                         -- 194	Â
-			Result.extend (is_upper_flag)                         -- 195	Ã
-			Result.extend (is_upper_flag)                         -- 196	Ä
-			Result.extend (is_upper_flag)                         -- 197	Å
-			Result.extend (is_upper_flag)                         -- 198	Æ
-			Result.extend (is_upper_flag)                         -- 199	Ç
-			Result.extend (is_upper_flag)                         -- 200	È
-			Result.extend (is_upper_flag)                         -- 201	É
-			Result.extend (is_upper_flag)                         -- 202	Ê
-			Result.extend (is_upper_flag)                         -- 203	Ë
-			Result.extend (is_upper_flag)                         -- 204	Ì
-			Result.extend (is_upper_flag)                         -- 205	Í
-			Result.extend (is_upper_flag)                         -- 206	Î
-			Result.extend (is_upper_flag)                         -- 207	Ï
-			Result.extend (is_upper_flag)                         -- 208	Ð
-			Result.extend (is_upper_flag)                         -- 209	Ñ
-			Result.extend (is_upper_flag)                         -- 210	Ò
-			Result.extend (is_upper_flag)                         -- 211	Ó
-			Result.extend (is_upper_flag)                         -- 212	Ô
-			Result.extend (is_upper_flag)                         -- 213	Õ
-			Result.extend (is_upper_flag)                         -- 214	Ö
+			Result.extend (is_punctuation_flag)       -- 191	¿
+			Result.extend (is_upper_flag)             -- 192	À
+			Result.extend (is_upper_flag)             -- 193	Á
+			Result.extend (is_upper_flag)             -- 194	Â
+			Result.extend (is_upper_flag)             -- 195	Ã
+			Result.extend (is_upper_flag)             -- 196	Ä
+			Result.extend (is_upper_flag)             -- 197	Å
+			Result.extend (is_upper_flag)             -- 198	Æ
+			Result.extend (is_upper_flag)             -- 199	Ç
+			Result.extend (is_upper_flag)             -- 200	È
+			Result.extend (is_upper_flag)             -- 201	É
+			Result.extend (is_upper_flag)             -- 202	Ê
+			Result.extend (is_upper_flag)             -- 203	Ë
+			Result.extend (is_upper_flag)             -- 204	Ì
+			Result.extend (is_upper_flag)             -- 205	Í
+			Result.extend (is_upper_flag)             -- 206	Î
+			Result.extend (is_upper_flag)             -- 207	Ï
+			Result.extend (is_upper_flag)             -- 208	Ð
+			Result.extend (is_upper_flag)             -- 209	Ñ
+			Result.extend (is_upper_flag)             -- 210	Ò
+			Result.extend (is_upper_flag)             -- 211	Ó
+			Result.extend (is_upper_flag)             -- 212	Ô
+			Result.extend (is_upper_flag)             -- 213	Õ
+			Result.extend (is_upper_flag)             -- 214	Ö
 			Result.extend (0)                         -- 215	×
-			Result.extend (is_upper_flag)                         -- 216	Ø
-			Result.extend (is_upper_flag)                         -- 217	Ù
-			Result.extend (is_upper_flag)                         -- 218	Ú
-			Result.extend (is_upper_flag)                         -- 219	Û
-			Result.extend (is_upper_flag)                         -- 220	Ü
-			Result.extend (is_upper_flag)                         -- 221	Ý
-			Result.extend (is_upper_flag)                         -- 222	Þ
-			Result.extend (is_lower_flag)                         -- 223	ß
-			Result.extend (is_lower_flag)                         -- 224	à
-			Result.extend (is_lower_flag)                         -- 225	á
-			Result.extend (is_lower_flag)                         -- 226	â
-			Result.extend (is_lower_flag)                         -- 227	ã
-			Result.extend (is_lower_flag)                         -- 228	ä
-			Result.extend (is_lower_flag)                         -- 229	å
-			Result.extend (is_lower_flag)                         -- 230	æ
-			Result.extend (is_lower_flag)                         -- 231	ç
-			Result.extend (is_lower_flag)                         -- 232	è
-			Result.extend (is_lower_flag)                         -- 233	é
-			Result.extend (is_lower_flag)                         -- 234	ê
-			Result.extend (is_lower_flag)                         -- 235	ë
-			Result.extend (is_lower_flag)                         -- 236	ì
-			Result.extend (is_lower_flag)                         -- 237	í
-			Result.extend (is_lower_flag)                         -- 238	î
-			Result.extend (is_lower_flag)                         -- 239	ï
-			Result.extend (is_lower_flag)                         -- 240	ð
-			Result.extend (is_lower_flag)                         -- 241	ñ
-			Result.extend (is_lower_flag)                         -- 242	ò
-			Result.extend (is_lower_flag)                         -- 243	ó
-			Result.extend (is_lower_flag)                         -- 244	ô
-			Result.extend (is_lower_flag)                         -- 245	õ
-			Result.extend (is_lower_flag)                         -- 246	ö
+			Result.extend (is_upper_flag)             -- 216	Ø
+			Result.extend (is_upper_flag)             -- 217	Ù
+			Result.extend (is_upper_flag)             -- 218	Ú
+			Result.extend (is_upper_flag)             -- 219	Û
+			Result.extend (is_upper_flag)             -- 220	Ü
+			Result.extend (is_upper_flag)             -- 221	Ý
+			Result.extend (is_upper_flag)             -- 222	Þ
+			Result.extend (is_lower_flag)             -- 223	ß
+			Result.extend (is_lower_flag)             -- 224	à
+			Result.extend (is_lower_flag)             -- 225	á
+			Result.extend (is_lower_flag)             -- 226	â
+			Result.extend (is_lower_flag)             -- 227	ã
+			Result.extend (is_lower_flag)             -- 228	ä
+			Result.extend (is_lower_flag)             -- 229	å
+			Result.extend (is_lower_flag)             -- 230	æ
+			Result.extend (is_lower_flag)             -- 231	ç
+			Result.extend (is_lower_flag)             -- 232	è
+			Result.extend (is_lower_flag)             -- 233	é
+			Result.extend (is_lower_flag)             -- 234	ê
+			Result.extend (is_lower_flag)             -- 235	ë
+			Result.extend (is_lower_flag)             -- 236	ì
+			Result.extend (is_lower_flag)             -- 237	í
+			Result.extend (is_lower_flag)             -- 238	î
+			Result.extend (is_lower_flag)             -- 239	ï
+			Result.extend (is_lower_flag)             -- 240	ð
+			Result.extend (is_lower_flag)             -- 241	ñ
+			Result.extend (is_lower_flag)             -- 242	ò
+			Result.extend (is_lower_flag)             -- 243	ó
+			Result.extend (is_lower_flag)             -- 244	ô
+			Result.extend (is_lower_flag)             -- 245	õ
+			Result.extend (is_lower_flag)             -- 246	ö
 			Result.extend (0)                         -- 247	÷
-			Result.extend (is_lower_flag)                         -- 248	ø
-			Result.extend (is_lower_flag)                         -- 249	ù
-			Result.extend (is_lower_flag)                         -- 250	ú
-			Result.extend (is_lower_flag)                         -- 251	û
-			Result.extend (is_lower_flag)                         -- 252	ü
-			Result.extend (is_lower_flag)                         -- 253	ý
-			Result.extend (is_lower_flag)                         -- 254	þ
-			Result.extend (is_lower_flag)                         -- 255	ÿ
+			Result.extend (is_lower_flag)             -- 248	ø
+			Result.extend (is_lower_flag)             -- 249	ù
+			Result.extend (is_lower_flag)             -- 250	ú
+			Result.extend (is_lower_flag)             -- 251	û
+			Result.extend (is_lower_flag)             -- 252	ü
+			Result.extend (is_lower_flag)             -- 253	ý
+			Result.extend (is_lower_flag)             -- 254	þ
+			Result.extend (is_lower_flag)             -- 255	ÿ
 		ensure
 			internal_character_types_not_void: Result /= Void
 		end
@@ -609,7 +609,7 @@ feature {NONE} -- Implementation
 	is_space_flag: NATURAL_8 = 0x80;
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -8,8 +8,8 @@
 	size: fixed;
 	access: membership;
 	contents: generic;
-	date: "$Date$";
-	revision: "$Revision$"
+	date: "$Date: 2021-06-18 17:01:52 +0000 (Fri, 18 Jun 2021) $";
+	revision: "$Revision: 105548 $"
 
 class ARRAYED_SET [G] inherit
 
@@ -45,17 +45,16 @@ create
 create {ARRAYED_SET}
 	make_filled
 
+convert
+	make_from_iterable ({ARRAY [G]})
+
 feature {NONE} -- Creation
 
 	make_from_iterable (other: ITERABLE [G])
 			-- Create a circular chain with all items obtained from `other`.
 		do
 			make (estimated_count_of (other))
-			across
-				other as o
-			loop
-				extend (o.item)
-			end
+			⟳ o: other ¦ extend (o) ⟲
 		end
 
 feature -- Element change
@@ -78,7 +77,7 @@ feature -- Removal
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

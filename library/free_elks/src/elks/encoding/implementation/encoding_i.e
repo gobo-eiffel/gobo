@@ -8,8 +8,7 @@
 deferred class
 	ENCODING_I
 
-inherit
-	ANY
+inherit {NONE}
 
 	ENCODING_HELPER
 		export
@@ -111,8 +110,8 @@ feature {ENCODING} -- Status report
 			-- Last conversion result was wide string?
 
 ;note
-	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	library: "Base: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

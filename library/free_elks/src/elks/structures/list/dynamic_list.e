@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Sequential, dynamically modifiable lists,
 			without commitment to a particular representation
@@ -9,37 +9,24 @@ note
 	names: dynamic_list, sequence
 	access: index, cursor, membership
 	contents: generic
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2021-02-22 14:28:59 +0000 (Mon, 22 Feb 2021) $"
+	revision: "$Revision: 105199 $"
 
 deferred class DYNAMIC_LIST [G] inherit
 
 	LIST [G]
 		undefine
 			prune,
-			sequential_index_of, sequential_has,
 			remove, prune_all
 		end
 
 	DYNAMIC_CHAIN [G]
-		rename
-			wipe_out as chain_wipe_out
-		export
-			{NONE} chain_wipe_out
 		undefine
 			is_equal
 		redefine
 			put_right,
-			remove_left, remove_right
-		end
-
-	DYNAMIC_CHAIN [G]
-		undefine
-			is_equal
-		redefine
-			put_right,
-			remove_left, remove_right, wipe_out
-		select
+			remove_left,
+			remove_right,
 			wipe_out
 		end
 
@@ -126,14 +113,14 @@ feature -- Removal
 	wipe_out
 			-- Remove all items.
 		do
-			chain_wipe_out
+			Precursor
 			back
 		ensure then
 			is_before: before
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

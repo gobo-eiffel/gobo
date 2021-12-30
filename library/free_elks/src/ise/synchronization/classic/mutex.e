@@ -13,6 +13,8 @@ class
 inherit
 	DISPOSABLE
 
+inherit {NONE}
+
 	THREAD_ENVIRONMENT
 		export
 			{NONE} all
@@ -148,7 +150,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

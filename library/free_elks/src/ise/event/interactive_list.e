@@ -6,8 +6,8 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "event, linked, list"
-	date: "$Date: 2018-11-13 12:58:34 +0000 (Tue, 13 Nov 2018) $"
-	revision: "$Revision: 102449 $"
+	date: "$Date: 2021-06-18 17:01:52 +0000 (Fri, 18 Jun 2021) $"
+	revision: "$Revision: 105548 $"
 
 deferred class
 	INTERACTIVE_LIST [G]
@@ -109,7 +109,7 @@ feature -- Element Change
 			across
 				if s = Current then s.twin else s end as c
 			loop
-				extend (c.item)
+				extend (c)
 			end
 		end
 
@@ -310,7 +310,7 @@ feature -- Removal
 			until
 				i = l_count
 			loop
-				on_item_removed_at (l @ i, 1)
+				on_item_removed_at (l [i], 1)
 				i := i + 1
 			end
 		end
@@ -358,7 +358,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

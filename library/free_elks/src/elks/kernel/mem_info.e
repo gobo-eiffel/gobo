@@ -1,7 +1,7 @@
 note
 	description: "[
-		Properties of the memory management mechanism.
-		This class may be used as ancestor by classes needing its facilities.
+			Properties of the memory management mechanism.
+			This class may be used as ancestor by classes needing its facilities.
 		]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -11,12 +11,13 @@ note
 
 class MEM_INFO
 
-inherit
+inherit {NONE}
+
 	MEMORY_STRUCTURE
 		rename
 			make as structure_make
 		export
-			{NONE} make_by_pointer, structure_make, item, shared
+			{NONE} all
 		end
 
 	MEM_CONST
@@ -186,7 +187,7 @@ invariant
 	consistent_memory: total64 = free64 + used64 + overhead64
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -7,8 +7,8 @@
 	representation: array
 	access: index, cursor, membership
 	contents: generic
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2021-06-18 17:01:52 +0000 (Fri, 18 Jun 2021) $"
+	revision: "$Revision: 105548 $"
 
 class ARRAYED_CIRCULAR [G] inherit
 
@@ -17,34 +17,48 @@ class ARRAYED_CIRCULAR [G] inherit
 			readable, isfirst, writable, is_equal
 		redefine
 			start, islast, wipe_out
-		select
-			remove, go_i_th, after, before, off,
-			prune_all, prune, first, forth
 		end
 
+inherit {NONE}
+
 	LIST [G]
-		rename
-			after as l_after,
-			before as l_before,
-			remove as l_remove,
-			first as l_first,
-			off as l_off,
-			prune as l_prune,
-			prune_all as l_prune_all,
-			go_i_th as l_go_i_th,
-			forth as l_forth
 		export {NONE}
-			l_after, l_before, l_remove, l_first,
-			l_off, l_prune, l_prune_all, l_go_i_th, l_forth
+			after,
+			before,
+			first,
+			forth,
+			go_i_th,
+			off,
+			prune,
+			prune_all,
+			remove
 		undefine
-			last, exhausted, move, valid_cursor_index,
-			isfirst, readable, islast, start, writable
+			after,
+			before,
+			exhausted,
+			first,
+			go_i_th,
+			isfirst,
+			islast,
+			move,
+			last,
+			off,
+			prune,
+			prune_all,
+			readable,
+			remove,
+			start,
+			valid_cursor_index,
+			writable
 		end
 
 create
 
 	make,
 	make_from_iterable
+
+convert
+	make_from_iterable ({ARRAY [G]})
 
 feature {NONE} -- Initialization
 
@@ -63,11 +77,7 @@ feature {NONE} -- Initialization
 		do
 			create l.make (estimated_count_of (other))
 			list := l
-			across
-				other as o
-			loop
-				l.extend (o.item)
-			end
+			⟳ o: other ¦ l.extend (o) ⟲
 		end
 
 feature -- Access
@@ -387,7 +397,7 @@ invariant
 	valid_starter: starter >= 0 and starter <= count
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

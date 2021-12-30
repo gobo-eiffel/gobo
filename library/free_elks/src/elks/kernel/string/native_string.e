@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 				-- Create the memory area including the null-terminating character.
 			create managed_data.make (a_raw_string.count + unit_size)
 			across a_raw_string as l_c loop
-				managed_data.put_character (l_c.item, i)
+				managed_data.put_character (l_c, i)
 				i := i + 1
 			end
 				-- Write null terminator

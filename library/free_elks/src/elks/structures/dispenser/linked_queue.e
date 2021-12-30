@@ -7,8 +7,8 @@
 	representation: linked
 	access: fixed, fifo, membership
 	contents: generic
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2021-06-18 17:01:52 +0000 (Fri, 18 Jun 2021) $"
+	revision: "$Revision: 105548 $"
 
 class LINKED_QUEUE [G] inherit
 
@@ -57,6 +57,9 @@ create
 create {LINKED_QUEUE}
 	ll_make
 
+convert
+	make_from_iterable ({ARRAY [G]})
+
 feature -- Initialization
 
 	make
@@ -71,11 +74,7 @@ feature {NONE} -- Creation
 			-- Create a queue with all items obtained from `other`.
 		do
 			make
-			across
-				other as o
-			loop
-				extend (o.item)
-			end
+			⟳ o: other ¦ extend (o) ⟲
 		end
 
 feature -- Access
@@ -212,7 +211,7 @@ invariant
 	is_always_after: not is_empty implies after
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -9,8 +9,8 @@
 	names: subset, set
 	access: membership
 	contents: generic
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2021-06-18 17:01:52 +0000 (Fri, 18 Jun 2021) $"
+	revision: "$Revision: 105548 $"
 
 deferred class SUBSET [G]
 
@@ -110,19 +110,23 @@ feature -- Basic operations
 			set_exists: other /= Void
 			same_rule: object_comparison = other.object_comparison
 		do
-			across
-				other as o
-			loop
-				if has (o.item) then
-					prune (o.item)
-				else
-					extend (o.item)
+			if other = Current then
+				wipe_out
+			else
+				across
+					other as o
+				loop
+					if has (o) then
+						prune (o)
+					else
+						extend (o)
+					end
 				end
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

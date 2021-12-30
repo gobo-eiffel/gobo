@@ -7,8 +7,8 @@
 	representation: linked
 	access: fixed, lifo, membership
 	contents: generic
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2021-06-18 17:01:52 +0000 (Fri, 18 Jun 2021) $"
+	revision: "$Revision: 105548 $"
 
 class LINKED_STACK [G] inherit
 
@@ -48,17 +48,16 @@ create
 	make,
 	make_from_iterable
 
+convert
+	make_from_iterable ({ARRAY [G]})
+
 feature {NONE} -- Creation
 
 	make_from_iterable (other: ITERABLE [G])
 			-- Create a stack with all items obtained from `other`.
 		do
 			make
-			across
-				other as o
-			loop
-				extend (o.item)
-			end
+			⟳ o: other ¦ extend (o) ⟲
 		end
 
 feature -- Access
@@ -161,7 +160,7 @@ feature -- Duplication
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

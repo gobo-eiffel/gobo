@@ -6,10 +6,12 @@
 	names: dynamic_chain, sequence
 	access: index, cursor, membership
 	contents: generic
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2021-06-18 17:01:52 +0000 (Fri, 18 Jun 2021) $"
+	revision: "$Revision: 105548 $"
 
-deferred class DYNAMIC_CHAIN [G] inherit
+deferred class DYNAMIC_CHAIN [G]
+
+inherit
 
 	CHAIN [G]
 		export
@@ -52,7 +54,7 @@ feature -- Element change
 			extendible: extendible
 		deferred
 		ensure
-	 		new_count: count = old count + 1
+			new_count: count = old count + 1
 			item_inserted: first = v
 		end
 
@@ -64,8 +66,8 @@ feature -- Element change
 			not_before: not before
 		deferred
 		ensure
-	 		new_count: count = old count + 1
-	 		new_index: index = old index + 1
+			new_count: count = old count + 1
+			new_index: index = old index + 1
 		end
 
 	put_right (v: like item)
@@ -76,8 +78,8 @@ feature -- Element change
 			not_after: not after
 		deferred
 		ensure
-	 		new_count: count = old count + 1
-	 		same_index: index = old index
+			new_count: count = old count + 1
+			same_index: index = old index
 		end
 
 	merge_left (other: like Current)
@@ -90,8 +92,8 @@ feature -- Element change
 			not_current: other /= Current
 		deferred
 		ensure
-	 		new_count: count = old count + old other.count
-	 		new_index: index = old index + old other.count
+			new_count: count = old count + old other.count
+			new_index: index = old index + old other.count
 			other_is_empty: other.is_empty
 		end
 
@@ -105,8 +107,8 @@ feature -- Element change
 			not_current: other /= Current
 		deferred
 		ensure
-	 		new_count: count = old count + old other.count
-	 		same_index: index = old index
+			new_count: count = old count + old other.count
+			same_index: index = old index
 			other_is_empty: other.is_empty
 		end
 
@@ -150,8 +152,8 @@ feature -- Removal
 			left_exists: index > 1
 		deferred
 		ensure
-	 		new_count: count = old count - 1
-	 		new_index: index = old index - 1
+			new_count: count = old count - 1
+			new_index: index = old index - 1
 		end
 
 	remove_right
@@ -161,8 +163,8 @@ feature -- Removal
 			right_exists: index < count
 		deferred
 		ensure
-	 		new_count: count = old count - 1
-	 		same_index: index = old index
+			new_count: count = old count - 1
+			same_index: index = old index
 		end
 
 	remove_i_th (i: INTEGER)
@@ -185,8 +187,8 @@ feature -- Removal
 			new_count: count = old count - 1
 			same_index_if_below: index <= i implies index = old index
 			new_index_if_above: index > i implies index = old index - 1
-			same_leading_items: across old twin as c all c.target_index < i implies c.item = i_th (c.target_index) end
-			same_trailing_items: across old twin as c all c.target_index > i implies c.item = i_th (c.target_index - 1) end
+			same_leading_items: ∀ c: old twin ¦ @ c.target_index < i implies c = i_th (@ c.target_index)
+			same_trailing_items: ∀ c: old twin ¦ @ c.target_index > i implies c = i_th (@ c.target_index - 1)
 		end
 
 	wipe_out
@@ -247,8 +249,8 @@ feature {DYNAMIC_CHAIN} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

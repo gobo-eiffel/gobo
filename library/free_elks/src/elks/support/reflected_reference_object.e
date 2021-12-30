@@ -3,12 +3,12 @@ note
 		Accessor to an object. Useful to manipulate fields of an object, or
 		an expanded field of an object without causing any copying.
 		If applied to an expanded type, a copy will be manipulated.
-		]"
+	]"
 	implementation_details: "[
 		The GC might be moving objects, some of the routines are actually builtin.
-		]"
-	date: "$Date$"
-	revision: "$Revision$"
+	]"
+	date: "$Date: 2021-02-22 14:30:58 +0000 (Mon, 22 Feb 2021) $"
+	revision: "$Revision: 105200 $"
 
 class
 	REFLECTED_REFERENCE_OBJECT
@@ -21,7 +21,7 @@ inherit
 create
 	make
 
-create {REFLECTED_REFERENCE_OBJECT, RT_DBG_INTERNAL}
+create {REFLECTED_REFERENCE_OBJECT, RT_DBG_INTERNAL, RT_DBG_CALL_RECORD, RT_DBG_EXECUTION_RECORDER}
 	make_for_expanded_field, make_for_expanded_field_at
 
 feature {NONE} -- Initialization
@@ -116,7 +116,7 @@ feature -- Settings
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

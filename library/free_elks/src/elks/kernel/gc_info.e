@@ -13,12 +13,13 @@ note
 
 class GC_INFO
 
-inherit
+inherit {NONE}
+
 	MEMORY_STRUCTURE
 		rename
 			make as structure_make
 		export
-			{NONE} make_by_pointer, structure_make, item, shared
+			{NONE} all
 		end
 
 	MEM_CONST
@@ -363,7 +364,7 @@ feature {NONE} -- C externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

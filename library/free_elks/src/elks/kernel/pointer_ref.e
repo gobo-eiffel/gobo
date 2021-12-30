@@ -115,8 +115,9 @@ feature -- Conversion
 --			not_too_small: item >= {INTEGER_32}.Min_value
 --			not_too_big: item <= {INTEGER_32}.Max_value
 		do
-			fixme (once "Do not forget to add proper precondition to ensure we can convert pointer %
-				%value into an INTEGER_32")
+			debug ("refactor_fixme")
+				fixme (once "Do not forget to add proper precondition to ensure we can convert pointer value into an INTEGER_32")
+			end
 			Result := item.to_integer_32
 		end
 

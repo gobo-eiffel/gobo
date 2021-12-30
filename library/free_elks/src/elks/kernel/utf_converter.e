@@ -1,16 +1,16 @@
 ﻿note
 	description: "[
 			Converter from/to UTF-8, UTF-16 and UTF-32 encodings.
-
+			
 			Handling of invalid encodings
 			=============================
-
+			
 			Whenever a UTF-8 or UTF-16 sequence is decoded, the decoding routines also check
 			that the sequence is valid. If it is not, it will replace the invalid unit (e.g. a byte
 			for UTF-8 and a 2-byte for UTF-16 by the replacement character U+FFFD as described by
 			variant #3 of the recommended practice for replacement character in Unicode (see
 			http://www.unicode.org/review/pr-121.html for more details).
-
+			
 			However it means that you cannot roundtrip incorrectly encoded sequence back and forth
 			between the encoded version and the decoded STRING_32 version. To allow roundtrip, an
 			escaped representation of a bad encoded sequence has been introduced. It is adding a
@@ -29,8 +29,8 @@
 			into 1 byte, it uses the letter `u' followed by the hexadecimal value of the 2-byte sequence,
 			otherwise it simply uses the 1-byte hexadecimal representation.
 		]"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2021-06-18 17:01:52 +0000 (Fri, 18 Jun 2021) $"
+	revision: "$Revision: 105548 $"
 
 expanded class
 	UTF_CONVERTER
@@ -66,12 +66,12 @@ feature -- Status report
 					i := i + 1
 					Result := (s.code (i) & 0xC0) = 0x80
 				elseif (c & 0xF0) = 0xE0 and i + 1 < nb then
-					-- Form 1110xxxx 10xxxxxx 10xxxxxx.
+						-- Form 1110xxxx 10xxxxxx 10xxxxxx.
 					i := i + 2
 					Result := (s.code (i - 1) & 0xC0) = 0x80 and
 						(s.code (i) & 0xC0) = 0x80
 				elseif (c & 0xF8) = 0xF0 and i + 2 < nb then
-					-- Form 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx.
+						-- Form 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx.
 					i := i + 3
 					Result := (s.code (i - 2) & 0xC0) = 0x80 and
 						(s.code (i - 1) & 0xC0) = 0x80 and
@@ -102,7 +102,7 @@ feature -- Status report
 					i := i + 2
 					c1 := s.code (i - 1) | (s.code (i) |<< 8)
 					if c1 < 0xD800 or c1 >= 0xE000 then
-						-- Codepoint from Basic Multilingual Plane: one 16-bit code unit, this is valid Unicode.
+							-- Codepoint from Basic Multilingual Plane: one 16-bit code unit, this is valid Unicode.
 					elseif c1 <= 0xDBFF then
 						i := i + 2
 						if i <= nb then
@@ -143,7 +143,7 @@ feature -- Status report
 						i := n + 1
 					else
 						if c1 < 0xD800 or c1 >= 0xE000 then
-							-- Codepoint from Basic Multilingual Plane: one 16-bit code unit, this is valid Unicode.
+								-- Codepoint from Basic Multilingual Plane: one 16-bit code unit, this is valid Unicode.
 							i := i + 1
 						elseif c1 <= 0xDBFF then
 							i := i + 2
@@ -265,7 +265,7 @@ feature -- Measurement
 						-- Codepoint from Basic Multilingual Plane: one 16-bit code unit.
 					i := i + 2
 				elseif i <= n then
-						-- Supplementary Planes: surrogate pair with lead and trail surrogates.						
+						-- Supplementary Planes: surrogate pair with lead and trail surrogates.
 					i := i + 4
 				end
 				Result := Result + 1
@@ -430,8 +430,8 @@ feature -- UTF-32 to UTF-8
 		end
 
 	escaped_utf_32_substring_into_utf_8_0_pointer (
-				s: READABLE_STRING_GENERAL; start_pos, end_pos: INTEGER; p: MANAGED_POINTER;
-				p_offset: INTEGER; a_new_upper: detachable CELL [INTEGER]
+			s: READABLE_STRING_GENERAL; start_pos, end_pos: INTEGER; p: MANAGED_POINTER;
+			p_offset: INTEGER; a_new_upper: detachable CELL [INTEGER]
 		)
 			-- Write UTF-8 sequence corresponding to `s', interpreted as a UTF-32 sequence that could
 			-- be escaped, with terminating zero to address `p + p_offset' and update the size of `p' to the
@@ -490,17 +490,17 @@ feature -- UTF-32 to UTF-8
 							c := to_natural_32 (l_encoded_value)
 							if c <= 0x7F then
 									-- Value was encoded when it should not have been
-									-- do nothing, we leave the original content as is.	
+									-- do nothing, we leave the original content as is.
 								c := escape_character.natural_32_code
 							else
 								l_decoded := True
 								i := i + 2
 							end
 						else
-							-- Not an hexadecimal value, it was not escaped.
+								-- Not an hexadecimal value, it was not escaped.
 						end
 					else
-						-- Not enough to read to make it valid, it was not escaped.
+							-- Not enough to read to make it valid, it was not escaped.
 					end
 				end
 
@@ -563,7 +563,7 @@ feature -- UTF-32 to UTF-8
 			instance_free: class
 			roundtrip: a_new_upper /= Void implies utf_8_0_subpointer_to_escaped_string_32 (p, p_offset, a_new_upper.item - 1, False).same_string_general (s.substring (start_pos, end_pos))
 			roundtrip: (a_new_upper = Void and then not s.substring (start_pos, end_pos).has ('%U')) implies
-				 utf_8_0_subpointer_to_escaped_string_32 (p, p_offset, p.count, True).same_string_general (s.substring (start_pos, end_pos))
+				utf_8_0_subpointer_to_escaped_string_32 (p, p_offset, p.count, True).same_string_general (s.substring (start_pos, end_pos))
 		end
 
 	escaped_utf_32_string_to_utf_8_string_8 (s: READABLE_STRING_GENERAL): STRING_8
@@ -619,17 +619,17 @@ feature -- UTF-32 to UTF-8
 							c := to_natural_32 (l_encoded_value)
 							if c <= 0x7F then
 									-- Value was encoded when it should not have been
-									-- do nothing, we leave the original content as is.	
+									-- do nothing, we leave the original content as is.
 								c := escape_character.natural_32_code
 							else
 								l_decoded := True
 								i := i + 2
 							end
 						else
-							-- Not an hexadecimal value, it was not escaped.
+								-- Not an hexadecimal value, it was not escaped.
 						end
 					else
-						-- Not enough to read to make it valid, it was not escaped.
+							-- Not enough to read to make it valid, it was not escaped.
 					end
 				end
 
@@ -679,7 +679,7 @@ feature -- UTF-32 to UTF-8
 			instance_free: class
 			roundtrip: a_new_upper /= Void implies utf_8_0_subpointer_to_escaped_string_32 (p, p_offset, a_new_upper.item - 1, False).same_string (s)
 			roundtrip: (a_new_upper = Void and then not s.has ('%U')) implies
-				 utf_8_0_subpointer_to_escaped_string_32 (p, p_offset, p.count, True).same_string_general (s)
+				utf_8_0_subpointer_to_escaped_string_32 (p, p_offset, p.count, True).same_string_general (s)
 		end
 
 	utf_32_string_into_utf_8_0_pointer (s: READABLE_STRING_GENERAL; p: MANAGED_POINTER; p_offset: INTEGER; a_new_upper: detachable CELL [INTEGER])
@@ -771,7 +771,7 @@ feature -- UTF-32 to UTF-8
 			instance_free: class
 			roundtrip: a_new_upper /= Void implies utf_8_0_subpointer_to_escaped_string_32 (p, p_offset, a_new_upper.item - 1, False).same_string_general (s)
 			roundtrip: (a_new_upper = Void and then not s.has ('%U')) implies
-				 utf_8_0_subpointer_to_escaped_string_32 (p, p_offset, p.count, True).same_string_general (s)
+				utf_8_0_subpointer_to_escaped_string_32 (p, p_offset, p.count, True).same_string_general (s)
 		end
 
 	utf_32_string_to_utf_8 (s: READABLE_STRING_GENERAL): SPECIAL [NATURAL_8]
@@ -783,7 +783,7 @@ feature -- UTF-32 to UTF-8
 		ensure
 			instance_free: class
 			roundtrip: attached utf_32_string_to_utf_8_string_8 (s) as l_ref and then
-				across Result as l_spec all l_spec.item = l_ref.code (l_spec.target_index + 1) end
+				∀ n: Result ¦ n = l_ref.code (@ n.target_index + 1)
 		end
 
 	utf_32_string_to_utf_8_0 (s: READABLE_STRING_GENERAL): SPECIAL [NATURAL_8]
@@ -839,7 +839,7 @@ feature -- UTF-32 to UTF-8
 			instance_free: class
 			attached_utf_8_string: attached utf_32_string_to_utf_8_string_8 (s) as l_ref
 			count: Result.count = l_ref.count + 1
-			roundtrip: across l_ref as ic all ic.item = Result [ic.target_index - 1].to_character_8	end
+			roundtrip: ∀ x: l_ref ¦ x = Result [@ x.target_index - 1].to_character_8
 			zero_terminated: Result [Result.upper] = 0
 		end
 
@@ -854,8 +854,8 @@ feature -- UTF-8 to UTF-32
 			utf_8_0_pointer_into_escaped_string_32 (p, Result)
 		ensure
 			instance_free: class
-			roundtrip: attached escaped_utf_32_string_to_utf_8_string_8 (Result) as l_str and then
-				across l_str as l_char all l_char.item = p.read_natural_8 (l_char.target_index - 1).to_character_8 end
+			roundtrip: attached escaped_utf_32_string_to_utf_8_string_8 (Result) as s and then
+				∀ c: s ¦ c = p.read_natural_8 (@ c.target_index - 1).to_character_8
 		end
 
 	utf_8_0_pointer_into_escaped_string_32 (p: MANAGED_POINTER; a_result: STRING_32)
@@ -865,8 +865,8 @@ feature -- UTF-8 to UTF-32
 			utf_8_0_subpointer_into_escaped_string_32 (p, 0, p.count - 1, True, a_result)
 		ensure
 			instance_free: class
-			roundtrip: attached escaped_utf_32_string_to_utf_8_string_8 (a_result.substring (old a_result.count + 1, a_result.count)) as l_str and then
-				across l_str as l_char all l_char.item = p.read_natural_8 (l_char.target_index - 1).to_character_8 end
+			roundtrip: attached escaped_utf_32_string_to_utf_8_string_8 (a_result.substring (old a_result.count + 1, a_result.count)) as s and then
+				∀ c: s ¦ c = p.read_natural_8 (@ c.target_index - 1).to_character_8
 		end
 
 	utf_8_0_subpointer_to_escaped_string_32 (p: MANAGED_POINTER; start_pos, end_pos: INTEGER; a_stop_at_null: BOOLEAN): STRING_32
@@ -883,8 +883,8 @@ feature -- UTF-8 to UTF-32
 			utf_8_0_subpointer_into_escaped_string_32 (p, start_pos, end_pos, a_stop_at_null, Result)
 		ensure
 			instance_free: class
-			roundtrip: attached escaped_utf_32_string_to_utf_8_string_8 (Result) as l_str and then
-				across l_str as l_char all l_char.item = p.read_natural_8 (start_pos + l_char.target_index - 1).to_character_8 end
+			roundtrip: attached escaped_utf_32_string_to_utf_8_string_8 (Result) as s and then
+				∀ c: s ¦ c = p.read_natural_8 (start_pos + @ c.target_index - 1).to_character_8
 		end
 
 	utf_8_0_subpointer_into_escaped_string_32 (p: MANAGED_POINTER; start_pos, end_pos: INTEGER; a_stop_at_null: BOOLEAN; a_result: STRING_32)
@@ -908,7 +908,7 @@ feature -- UTF-8 to UTF-32
 			loop
 				c1 := p.read_natural_8 (i)
 				if c1 = 0 and a_stop_at_null then
-						-- We hit our null terminating character, we can stop					
+						-- We hit our null terminating character, we can stop
 					i := end_pos + 1
 				elseif c1 <= 0x7F then
 						-- 0xxxxxxx
@@ -923,7 +923,7 @@ feature -- UTF-8 to UTF-32
 							a_result.extend ((
 								((c1.as_natural_32 & 0x1F) |<< 6) |
 								(c2.as_natural_32 & 0x3F)
-								).to_character_32)
+							).to_character_32)
 							i := i + 2
 						else
 								-- Invalid UTF-8 sequence, we escape the first byte
@@ -945,8 +945,8 @@ feature -- UTF-8 to UTF-32
 								-- Valid UTF-8 sequence:
 								-- 1110xxxx 10xxxxxx 10xxxxxx
 							l_last_char := (((c1.as_natural_32 & 0xF) |<< 12) |
-								((c2.as_natural_32 & 0x3F) |<< 6) |
-								(c3.as_natural_32 & 0x3F)
+									((c2.as_natural_32 & 0x3F) |<< 6) |
+									(c3.as_natural_32 & 0x3F)
 								).to_character_32
 							a_result.extend (l_last_char)
 							i := i + 3
@@ -975,7 +975,7 @@ feature -- UTF-8 to UTF-32
 								((c2.as_natural_32 & 0x3F) |<< 12) |
 								((c3.as_natural_32 & 0x3F) |<< 6) |
 								(c4.as_natural_32 & 0x3F)
-								).to_character_32)
+							).to_character_32)
 							i := i + 4
 						else
 								-- Invalid UTF-8 sequence, we escape the first byte
@@ -998,8 +998,8 @@ feature -- UTF-8 to UTF-32
 			end
 		ensure
 			instance_free: class
-			roundtrip: attached escaped_utf_32_string_to_utf_8_string_8 (a_result.substring (old a_result.count + 1, a_result.count)) as l_str and then
-				across l_str as l_char all l_char.item = p.read_natural_8 (start_pos + l_char.target_index - 1).to_character_8 end
+			roundtrip: attached escaped_utf_32_string_to_utf_8_string_8 (a_result.substring (old a_result.count + 1, a_result.count)) as s and then
+				∀ c: s ¦ c = p.read_natural_8 (start_pos + @ c.target_index - 1).to_character_8
 		end
 
 	utf_8_string_8_to_string_32 (s: READABLE_STRING_8): STRING_32
@@ -1106,7 +1106,7 @@ feature -- UTF-8 to UTF-32
 							a_result.extend ((
 								((c1.as_natural_32 & 0x1F) |<< 6) |
 								(c2.as_natural_32 & 0x3F)
-								).to_character_32)
+							).to_character_32)
 							i := i + 1
 						else
 								-- Invalid UTF-8 sequence, we escape the first byte
@@ -1126,8 +1126,8 @@ feature -- UTF-8 to UTF-32
 								-- Valid UTF-8 sequence:
 								-- 1110xxxx 10xxxxxx 10xxxxxx
 							l_last_char := (((c1.as_natural_32 & 0xF) |<< 12) |
-								((c2.as_natural_32 & 0x3F) |<< 6) |
-								(c3.as_natural_32 & 0x3F)
+									((c2.as_natural_32 & 0x3F) |<< 6) |
+									(c3.as_natural_32 & 0x3F)
 								).to_character_32
 							a_result.extend (l_last_char)
 							i := i + 2
@@ -1154,7 +1154,7 @@ feature -- UTF-8 to UTF-32
 								((c2.as_natural_32 & 0x3F) |<< 12) |
 								((c3.as_natural_32 & 0x3F) |<< 6) |
 								(c4.as_natural_32 & 0x3F)
-								).to_character_32)
+							).to_character_32)
 							i := i + 3
 						else
 								-- Invalid UTF-8 sequence, we escape the first byte
@@ -1187,7 +1187,7 @@ feature -- UTF-32 to UTF-16
 		ensure
 			instance_free: class
 			roundtrip: attached utf_32_string_to_utf_16le_string_8 (s) as l_ref and then
-				across Result as l_spec all l_spec.item = (l_ref.code (l_spec.target_index * 2 + 1) | (l_ref.code ((l_spec.target_index + 1) * 2) |<< 16)) end
+				∀ n: Result ¦ n = (l_ref.code (@ n.target_index * 2 + 1) | (l_ref.code ((@ n.target_index + 1) * 2) |<< 16))
 		end
 
 	utf_32_string_to_utf_16 (s: READABLE_STRING_GENERAL): SPECIAL [NATURAL_16]
@@ -1199,7 +1199,7 @@ feature -- UTF-32 to UTF-16
 		ensure
 			instance_free: class
 			roundtrip: attached utf_32_string_to_utf_16le_string_8 (s) as l_ref and then
-				across Result as l_spec all l_spec.item = (l_ref.code (l_spec.target_index * 2 + 1) | (l_ref.code ((l_spec.target_index + 1) * 2) |<< 8)) end
+				∀ n: Result ¦ n = (l_ref.code (@ n.target_index * 2 + 1) | (l_ref.code ((@ n.target_index + 1) * 2) |<< 8))
 		end
 
 	string_32_to_utf_16_0 (s: READABLE_STRING_32): SPECIAL [NATURAL_16]
@@ -1209,9 +1209,8 @@ feature -- UTF-32 to UTF-16
 		ensure
 			instance_free: class
 			roundtrip: attached utf_32_string_to_utf_16le_string_8 (s) as l_ref and then
-				across Result.resized_area_with_default (0, Result.count - 1) as l_spec all
-					l_spec.item = (l_ref.code (l_spec.target_index * 2 + 1) | ((l_ref.code ((l_spec.target_index + 1) * 2)) |<< 8))
-				end
+				∀ n: Result.resized_area_with_default (0, Result.count - 1) ¦
+					n = (l_ref.code (@ n.target_index * 2 + 1) | ((l_ref.code ((@ n.target_index + 1) * 2)) |<< 8))
 		end
 
 	utf_32_string_to_utf_16_0 (s: READABLE_STRING_GENERAL): SPECIAL [NATURAL_16]
@@ -1257,9 +1256,8 @@ feature -- UTF-32 to UTF-16
 		ensure
 			instance_free: class
 			roundtrip: attached utf_32_string_to_utf_16le_string_8 (s) as l_ref and then
-				across Result.resized_area_with_default (0, Result.count - 1) as l_spec all
-					l_spec.item = (l_ref.code (l_spec.target_index * 2 + 1) | ((l_ref.code ((l_spec.target_index + 1) * 2)) |<< 8))
-				end
+				∀ x: Result.resized_area_with_default (0, Result.count - 1) ¦
+					x = (l_ref.code (@ x.target_index * 2 + 1) | ((l_ref.code ((@ x.target_index + 1) * 2)) |<< 8))
 		end
 
 	string_32_into_utf_16_pointer (s: READABLE_STRING_32; p: MANAGED_POINTER; p_offset: INTEGER; a_new_upper: detachable CELL [INTEGER])
@@ -1297,9 +1295,9 @@ feature -- UTF-32 to UTF-16
 		end
 
 	utf_32_substring_into_utf_16_pointer
-			(s: READABLE_STRING_GENERAL;
-			start_pos, end_pos: like {READABLE_STRING_32}.count;
-			p: MANAGED_POINTER; p_offset: INTEGER; a_new_upper: detachable CELL [INTEGER])
+ 		(s: READABLE_STRING_GENERAL;
+		start_pos, end_pos: like {READABLE_STRING_32}.count;
+		p: MANAGED_POINTER; p_offset: INTEGER; a_new_upper: detachable CELL [INTEGER])
 			-- Write UTF-16 sequence corresponding to the substring of `s',
 			-- interpreted as a UTF-32 sequence, starting at index `start_pos'
 			-- and ending at index `end_pos' to address `p + p_offset' and update the
@@ -1333,9 +1331,9 @@ feature -- UTF-32 to UTF-16
 		end
 
 	utf_32_substring_into_utf_16_0_pointer
-			(s: READABLE_STRING_GENERAL;
-			start_pos, end_pos: like {READABLE_STRING_32}.count;
-			p: MANAGED_POINTER; p_offset: INTEGER; a_new_upper: detachable CELL [INTEGER])
+ 		(s: READABLE_STRING_GENERAL;
+		start_pos, end_pos: like {READABLE_STRING_32}.count;
+		p: MANAGED_POINTER; p_offset: INTEGER; a_new_upper: detachable CELL [INTEGER])
 			-- Write UTF-16 sequence corresponding to the substring of `s',
 			-- interpreted as a UTF-32 sequence, starting at index `start_pos'
 			-- and ending at index `end_pos' to address `p + p_offset' and update the
@@ -1360,7 +1358,7 @@ feature -- UTF-32 to UTF-16
 				i := end_pos - start_pos + 1
 				l_count := p.count
 					-- Check that there is at least `i * 2' bytes available plus the terminating null character.
-				if l_count - p_offset < (i + 1) * 2  then
+				if l_count - p_offset < (i + 1) * 2 then
 						-- Optimize resizing, once we have to resize, we actually perform the resizing
 						-- only once.
 					l_count := p_offset + utf_16_bytes_count (s, start_pos, end_pos) + 2
@@ -1466,9 +1464,9 @@ feature -- UTF-32 to UTF-16
 		end
 
 	escaped_utf_32_substring_into_utf_16_0_pointer (
-				s: READABLE_STRING_GENERAL; start_pos, end_pos: like {READABLE_STRING_32}.count;
-				p: MANAGED_POINTER; p_offset: INTEGER; a_new_upper: detachable CELL [INTEGER]
-			)
+			s: READABLE_STRING_GENERAL; start_pos, end_pos: like {READABLE_STRING_32}.count;
+			p: MANAGED_POINTER; p_offset: INTEGER; a_new_upper: detachable CELL [INTEGER]
+		)
 			-- Write UTF-16 sequence corresponding to the substring of `s',
 			-- interpreted as a UTF-32 sequence, starting at index `start_pos'
 			-- and ending at index `end_pos' to address `p + p_offset' and update the
@@ -1493,7 +1491,7 @@ feature -- UTF-32 to UTF-16
 				n := end_pos - start_pos + 1
 				l_count := p.count
 					-- Check that there is at least `i * 2' bytes available plus the terminating null character.
-				if l_count - p_offset < (n + 1) * 2  then
+				if l_count - p_offset < (n + 1) * 2 then
 						-- Optimize resizing, once we have to resize, we actually perform the resizing
 						-- only once.
 					l_count := p_offset + utf_16_bytes_count (s, start_pos, end_pos) + 2
@@ -1520,7 +1518,7 @@ feature -- UTF-32 to UTF-16
 									c := to_natural_32 (l_encoded_value)
 									if c < 0xD800 or c > 0xDFFF then
 											-- Value was encoded when it should not have been
-											-- do nothing, we leave the original content as is.	
+											-- do nothing, we leave the original content as is.
 										c := escape_character.natural_32_code
 									else
 										l_decoded := True
@@ -1530,12 +1528,12 @@ feature -- UTF-32 to UTF-16
 										-- Not an hexadecimal value, it was not escaped.
 								end
 							else
-								-- Not enough characters to make a 2-byte value, it was not escaped.
+									-- Not enough characters to make a 2-byte value, it was not escaped.
 							end
 						else
-							-- Value was most likely not encoded, because if it did, it would be the
-							-- hexadecimal representation of a byte which clearly did not need to
-							-- be escaped
+								-- Value was most likely not encoded, because if it did, it would be the
+								-- hexadecimal representation of a byte which clearly did not need to
+								-- be escaped
 						end
 					else
 							-- Nothing more to read, clearly it was not encoded.
@@ -1647,7 +1645,7 @@ feature -- UTF-32 to UTF-16
 									c := to_natural_32 (l_encoded_value)
 									if c < 0xD800 or c > 0xDFFF then
 											-- Value was encoded when it should not have been
-											-- do nothing, we leave the original content as is.	
+											-- do nothing, we leave the original content as is.
 										c := escape_character.natural_32_code
 									else
 										l_decoded := True
@@ -1660,9 +1658,9 @@ feature -- UTF-32 to UTF-16
 									-- Not enough characters to make a 2-byte value, it was not escaped.
 							end
 						else
-							-- Value was most likely not encoded, because if it did, it would be the
-							-- hexadecimal representation of a byte which clearly did not need to
-							-- be escaped
+								-- Value was most likely not encoded, because if it did, it would be the
+								-- hexadecimal representation of a byte which clearly did not need to
+								-- be escaped
 						end
 					else
 							-- Nothing more to read, clearly it was not encoded.
@@ -1680,7 +1678,7 @@ feature -- UTF-32 to UTF-16
 						a_result.extend ((l_nat16 & 0x00FF).to_character_8)
 						a_result.extend (((l_nat16 & 0xFF00) |>> 8).to_character_8)
 
-								-- Write the trail surrogate pair.
+							-- Write the trail surrogate pair.
 						l_nat16 := (0xDC00 + (c & 0x3FF)).to_natural_16
 						a_result.extend ((l_nat16 & 0x00FF).to_character_8)
 						a_result.extend (((l_nat16 & 0xFF00) |>> 8).to_character_8)
@@ -1711,7 +1709,7 @@ feature -- UTF-16 to UTF-32
 		ensure
 			instance_free: class
 			roundtrip: is_valid_utf_16_subpointer (p, 0, p.count // 2, True) implies
-				across string_32_to_utf_16 (Result) as l_spec all l_spec.item = p.read_natural_16 ((l_spec.target_index + 1) * 2) end
+				∀ n: string_32_to_utf_16 (Result) ¦ n = p.read_natural_16 ((@ n.target_index + 1) * 2)
 		end
 
 	utf_16_0_pointer_into_string_32 (p: MANAGED_POINTER; a_result: STRING_32)
@@ -1725,7 +1723,7 @@ feature -- UTF-16 to UTF-32
 		ensure
 			instance_free: class
 			roundtrip: is_valid_utf_16_subpointer (p, 0, p.count // 2, True) implies
-				across string_32_to_utf_16 (a_result.substring (old a_result.count + 1, a_result.count)) as l_spec all l_spec.item = p.read_natural_16 (l_spec.target_index * 2) end
+				∀ n: string_32_to_utf_16 (a_result.substring (old a_result.count + 1, a_result.count)) ¦ n = p.read_natural_16 (@ n.target_index * 2)
 		end
 
 	utf_16_0_subpointer_to_string_32 (p: MANAGED_POINTER; start_pos, end_pos: INTEGER; a_stop_at_null: BOOLEAN): STRING_32
@@ -1742,7 +1740,7 @@ feature -- UTF-16 to UTF-32
 		ensure
 			instance_free: class
 			roundtrip: is_valid_utf_16_subpointer (p, start_pos, end_pos, a_stop_at_null) implies
-				across string_32_to_utf_16 (Result) as l_spec all l_spec.item = p.read_natural_16 (l_spec.target_index * 2) end
+				∀ n: string_32_to_utf_16 (Result) ¦ n = p.read_natural_16 (@ n.target_index * 2)
 		end
 
 	utf_16_0_subpointer_into_string_32 (p: MANAGED_POINTER; start_pos, end_pos: INTEGER; a_stop_at_null: BOOLEAN; a_result: STRING_32)
@@ -1786,7 +1784,7 @@ feature -- UTF-16 to UTF-32
 		ensure
 			instance_free: class
 			roundtrip: is_valid_utf_16_subpointer (p, start_pos, end_pos, a_stop_at_null) implies
-				across string_32_to_utf_16 (a_result.substring (old a_result.count + 1, a_result.count)) as l_spec all l_spec.item = p.read_natural_16 (l_spec.target_index * 2) end
+				∀ x: string_32_to_utf_16 (a_result.substring (old a_result.count + 1, a_result.count)) ¦ x = p.read_natural_16 (@ x.target_index * 2)
 		end
 
 	utf_16_0_pointer_to_escaped_string_32 (p: MANAGED_POINTER): STRING_32
@@ -1802,9 +1800,8 @@ feature -- UTF-16 to UTF-32
 		ensure
 			instance_free: class
 			roundtrip: attached escaped_utf_32_string_to_utf_16le_string_8 (Result) as l_utf and then
-				across l_utf.new_cursor.incremented (1) as l_str all
-					(l_str.item.natural_32_code | (l_utf.code (l_str.target_index + 1) |<< 8)) = p.read_natural_16 (l_str.target_index - 1)
-				end
+				∀ c: l_utf.new_cursor.incremented (1) ¦
+					(c.natural_32_code | (l_utf.code (@ c.target_index + 1) |<< 8)) = p.read_natural_16 (@ c.target_index - 1)
 		end
 
 	utf_16_0_pointer_into_escaped_string_32 (p: MANAGED_POINTER; a_result: STRING_32)
@@ -1818,9 +1815,8 @@ feature -- UTF-16 to UTF-32
 		ensure
 			instance_free: class
 			roundtrip: attached escaped_utf_32_string_to_utf_16le_string_8 (a_result.substring (old a_result.count + 1, a_result.count)) as l_utf and then
-				across l_utf.new_cursor.incremented (1) as l_str all
-					(l_str.item.natural_32_code | (l_utf.code (l_str.target_index + 1) |<< 8)) = p.read_natural_16 (l_str.target_index - 1)
-				end
+				∀ c: l_utf.new_cursor.incremented (1) ¦
+					(c.natural_32_code | (l_utf.code (@ c.target_index + 1) |<< 8)) = p.read_natural_16 (@ c.target_index - 1)
 		end
 
 	utf_16_0_subpointer_to_escaped_string_32 (p: MANAGED_POINTER; start_pos, end_pos: INTEGER; a_stop_at_null: BOOLEAN): STRING_32
@@ -1838,9 +1834,8 @@ feature -- UTF-16 to UTF-32
 		ensure
 			instance_free: class
 			roundtrip: attached escaped_utf_32_string_to_utf_16le_string_8 (Result) as l_utf and then
-				across l_utf.new_cursor.incremented (1) as l_str all
-					(l_str.item.natural_32_code | (l_utf.code (l_str.target_index + 1) |<< 8)) = p.read_natural_16 (start_pos * 2 + l_str.target_index - 1)
-				end
+				∀ c: l_utf.new_cursor.incremented (1) ¦
+					(c.natural_32_code | (l_utf.code (@ c.target_index + 1) |<< 8)) = p.read_natural_16 (start_pos * 2 + @ c.target_index - 1)
 		end
 
 	utf_16_0_subpointer_into_escaped_string_32 (p: MANAGED_POINTER; start_pos, end_pos: INTEGER; a_stop_at_null: BOOLEAN; a_result: STRING_32)
@@ -1894,9 +1889,8 @@ feature -- UTF-16 to UTF-32
 		ensure
 			instance_free: class
 			roundtrip: attached escaped_utf_32_string_to_utf_16le_string_8 (a_result.substring (old a_result.count + 1, a_result.count)) as l_utf and then
-				across l_utf.new_cursor.incremented (1) as l_str all
-					(l_str.item.natural_32_code | (l_utf.code (l_str.target_index + 1) |<< 8)) = p.read_natural_16 (start_pos * 2 + l_str.target_index - 1)
-				end
+				∀ c: l_utf.new_cursor.incremented (1) ¦
+					(c.natural_32_code | (l_utf.code (@ c.target_index + 1) |<< 8)) = p.read_natural_16 (start_pos * 2 + @ c.target_index - 1)
 		end
 
 	utf_16_to_string_32 (s: SPECIAL [NATURAL_16]): STRING_32
@@ -1969,7 +1963,7 @@ feature -- UTF-16 to UTF-32
 					-- Extract the first 2-bytes
 				c1 := s.code (i - 1) | (s.code (i) |<< 8)
 				if c1 < 0xD800 or c1 >= 0xE000 then
-						-- Codepoint from Basic Multilingual Plane: one 16-bit code unit, this is valid Unicode.						
+						-- Codepoint from Basic Multilingual Plane: one 16-bit code unit, this is valid Unicode.
 					a_result.extend (c1.to_character_32)
 				else
 					i := i + 2
@@ -2200,7 +2194,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

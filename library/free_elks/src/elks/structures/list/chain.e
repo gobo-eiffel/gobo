@@ -9,8 +9,8 @@
 	names: chain, sequence;
 	access: index, cursor, membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2021-02-22 14:28:59 +0000 (Mon, 22 Feb 2021) $"
+	revision: "$Revision: 105199 $"
 
 deferred class CHAIN [G] inherit
 
@@ -41,23 +41,7 @@ deferred class CHAIN [G] inherit
 		export
 			{NONE} sequence_put
 		redefine
-			index_of, has, off, occurrences, fill, append
-		select
-			index_of, has, occurrences
-		end
-
-	SEQUENCE [G]
-		rename
-			put as sequence_put,
-			index_of as sequential_index_of,
-			has as sequential_has,
-			occurrences as sequential_occurrences
-		export
-			{NONE}
-				sequential_index_of, sequential_has,
-				sequence_put, sequential_occurrences
-		redefine
-			off, fill, append
+			append, fill, has, index_of, occurrences, off
 		end
 
 feature -- Access
@@ -97,7 +81,7 @@ feature -- Access
 			pos: CURSOR
 		do
 			pos := cursor
-			Result := sequential_has (v)
+			Result := Precursor (v)
 			go_to (pos)
 		end
 
@@ -110,7 +94,7 @@ feature -- Access
 			pos: CURSOR
 		do
 			pos := cursor
-			Result := sequential_index_of (v, i)
+			Result := Precursor (v, i)
 			go_to (pos)
 		end
 
@@ -135,7 +119,7 @@ feature -- Measurement
 			pos: CURSOR
 		do
 			pos := cursor
-			Result := sequential_occurrences (v)
+			Result := Precursor (v)
 			go_to (pos)
 		end
 
@@ -386,7 +370,7 @@ invariant
 	item_corresponds_to_index: (not off) implies (item = i_th (index))
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
