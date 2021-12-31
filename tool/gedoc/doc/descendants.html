@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Eiffel Descendant Classes</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Eiffel Descendant Classes</strong></font></td>
+    <td align="right"><a href="html_ise_stylesheet.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="implicit_conversions.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   Eiffel classes can inherit from other classes (through single or multiple inheritance).
+   Classes which inherit directly or indirectly from a given class are said to be the
+   descendant classes of this class.
+   
+  </p>
+  <p>
+   <i>gedoc</i> can be used to get the list of descendants of a class or
+   of a set of classes.
+   
+  </p>
+  <p>
+   Note that there are two kinds of inheritance: conforming inheritance (introduced by the
+   keyword <font color="#008080">inherit</font>) and non-conforming inheritance (introduced by 
+   <font color="#008080">inherit {NONE}</font>). The format described below only covers conforming
+   inheritance.
+   
+  </p>
+  <div>
+   <h2>Descendants of a single class</h2>
+   
+   <p>
+    Here is how to get the list of all descendant classes of a single class <font color="#008080"><i><tt>FOO</tt></i></font>:
+    <pre>
+	<font color="#800000"><i><tt>gedoc --format=descendants --class=FOO project.ecf</tt></i></font>
+</pre>
+    where <font color="#800000"><i><tt>project.ecf</tt></i></font> is an ECF file describing an Eiffel project containing
+    class <font color="#008080"><i><tt>FOO</tt></i></font>.
+    
+   </p>
+   
+   <p>
+    The command-line option <font color="#800000"><i><tt>--no-benchmark</tt></i></font> can be used to avoid displaying
+    information about the Eiffel code analysis before the actual list of descendant classes:
+    <pre>
+	<font color="#800000"><i><tt>gedoc --format=descendants --class=FOO --no-benchmark project.ecf</tt></i></font>
+</pre>
+    </p>
+   
+  </div>
+  <div>
+   <h2>Descendants of two or more classes</h2>
+   
+   <p>
+    Sometimes it is useful to figure out what are the classes which are descendants
+    of two or more classes. For example when we have:
+    <pre>
+	<font color="#008080">class BAR [G -&gt; {COMPARABLE, NUMERIC}]</font>
+</pre>
+    the only valid actual generic parameters are classes which are descendants of both
+    <font color="#008080"><i><tt>COMPARABLE</tt></i></font> and <font color="#008080"><i><tt>NUMERIC</tt></i></font>.
+    In order to get the list of these classes, just type:
+    <pre>
+	<font color="#800000"><i><tt>gedoc --format=descendants --class=COMPARABLE --class=NUMERIC --no-benchmark project.ecf</tt></i></font>
+</pre>
+    </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2021, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>31 December 2021</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="html_ise_stylesheet.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="implicit_conversions.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -616,6 +616,12 @@
 	</font>
 </xsl:template>
 
+<xsl:template match="gobodoc:eiffelcode">
+	<font color="#008080">
+		<xsl:apply-templates/>
+	</font>
+</xsl:template>
+
 <xsl:template match="gobodoc:if">
 	<xsl:choose>
 		<xsl:when test="ancestor::gobodoc:programlisting">

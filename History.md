@@ -31,6 +31,11 @@
   to be tested. The default is either `gec`, `gelint`, `ec` which can
   be found in the `PATH`.
 
+### gedoc
+
+* Added format `descendants` to get the list of descendants classes
+  of a class or of a set of classes.
+
 ### gelint
 
 * Let the test in `$GOBO/tool/gelint/test/tool` run `gecop` with the

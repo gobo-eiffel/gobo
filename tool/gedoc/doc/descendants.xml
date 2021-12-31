@@ -1,0 +1,79 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Eiffel Descendant Classes"
+
+	tool: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2021, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/pretty_printer">
+<chapterinfo>
+	<copyright>
+		<year>2021</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>31 December 2021</date>
+</chapterinfo>
+
+<title>Eiffel Descendant Classes</title>
+
+<para>
+Eiffel classes can inherit from other classes (through single or multiple inheritance).
+Classes which inherit directly or indirectly from a given class are said to be the
+descendant classes of this class.
+</para>
+<para>
+<projectname>gedoc</projectname> can be used to get the list of descendants of a class or
+of a set of classes.
+</para>
+<para>
+Note that there are two kinds of inheritance: conforming inheritance (introduced by the
+keyword <eiffelcode>inherit</eiffelcode>) and non-conforming inheritance (introduced by 
+<eiffelcode>inherit {NONE}</eiffelcode>). The format described below only covers conforming
+inheritance.
+</para>
+
+<section><title>Descendants of a single class</title>
+<para>
+Here is how to get the list of all descendant classes of a single class <classname>FOO</classname>:
+<programlisting>
+	<filename>gedoc --format=descendants --class=FOO project.ecf</filename>
+</programlisting>
+where <filename>project.ecf</filename> is an ECF file describing an Eiffel project containing
+class <classname>FOO</classname>.
+</para>
+<para>
+The command-line option <filename>--no-benchmark</filename> can be used to avoid displaying
+information about the Eiffel code analysis before the actual list of descendant classes:
+<programlisting>
+	<filename>gedoc --format=descendants --class=FOO --no-benchmark project.ecf</filename>
+</programlisting>
+</para>
+</section>
+
+<section><title>Descendants of two or more classes</title>
+<para>
+Sometimes it is useful to figure out what are the classes which are descendants
+of two or more classes. For example when we have:
+<programlisting>
+	<eiffelcode>class BAR [G -> {COMPARABLE, NUMERIC}]</eiffelcode>
+</programlisting>
+the only valid actual generic parameters are classes which are descendants of both
+<classname>COMPARABLE</classname> and <classname>NUMERIC</classname>.
+In order to get the list of these classes, just type:
+<programlisting>
+	<filename>gedoc --format=descendants --class=COMPARABLE --class=NUMERIC --no-benchmark project.ecf</filename>
+</programlisting>
+</para>
+</section>
+</chapter>
