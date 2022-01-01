@@ -9,8 +9,6 @@
 
 # usage: install.sh [-v|-t][--thread=N] <c_compiler>
 
-echo "Executing install.sh..."
-
 gobo_usage() {
 	echo "usage: install.sh [-v|-t][--thread=N] <c_compiler>"
 	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | clang | cc | icc | tcc | no_c"
@@ -41,6 +39,10 @@ do
 done
 CC=$1
 EIF=ge
+
+if [ "$VERBOSE" != "-s" ]; then
+	echo "Executing install.sh..."
+fi
 
 if [ "$GOBO" = "" ]; then
 	echo "Environment variable GOBO must be set"

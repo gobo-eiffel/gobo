@@ -64,6 +64,7 @@ goto no_verbose_no_testonly
 	goto do_it
 
 :do_it
+	if not .%VERBOSE%. == .-s. echo Executing install.bat...
 	if .%GOBO%. == .. goto gobo
 	goto windows
 
