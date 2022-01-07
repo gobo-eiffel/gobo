@@ -5,7 +5,7 @@ note
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -186,6 +186,9 @@ feature {NONE} -- Initialization
 			create used_temp_variables.make (40)
 			create free_temp_variables.make (40)
 			create frozen_temp_variables.make (40)
+			create unused_equality_expressions.make (10)
+			create unused_equality_types.make (100)
+			create unused_object_equality_types.make (100)
 			create unused_unqualified_call_expressions.make (10)
 			create unused_qualified_call_expressions.make (10)
 			create unused_actual_argument_lists.make (10)
@@ -195,6 +198,7 @@ feature {NONE} -- Initialization
 			create non_conforming_types.make_with_capacity (100)
 			create equality_type_set.make_empty (current_dynamic_system.unknown_type)
 			create equality_common_types.make_with_capacity (100)
+			create equality_common_reference_types.make_with_capacity (100)
 			create unused_standalone_type_sets.make (50)
 			create operand_stack.make (5000)
 			create call_operands.make (5000)
@@ -206,7 +210,6 @@ feature {NONE} -- Initialization
 			create deep_equal_types.make (100)
 			create deep_feature_target_type_sets.make_map (100)
 			create current_object_tests.make (20)
-			create current_object_equalities.make (20)
 			create current_equalities.make (20)
 			create current_agents.make (20)
 			create agent_open_operands.make (20)
@@ -1448,6 +1451,7 @@ feature {NONE} -- Feature generation
 			old_feature: like current_feature
 			old_dynamic_type_sets: like current_dynamic_type_sets
 			i, nb: INTEGER
+			l_equality_types: ET_DYNAMIC_EQUALITY_TYPES
 		do
 			if not a_feature.is_semistrict (current_dynamic_system) then
 				old_type := current_type
@@ -1473,17 +1477,16 @@ feature {NONE} -- Feature generation
 					i := i + 1
 				end
 				current_object_tests.wipe_out
-					-- Print object-equality functions.
-				nb := current_object_equalities.count
-				from i := 1 until i > nb loop
-					print_object_equality_function (i, current_object_equalities.item (i))
-					i := i + 1
-				end
-				current_object_equalities.wipe_out
 					-- Print equality functions.
 				nb := current_equalities.count
 				from i := 1 until i > nb loop
-					print_equality_function (i, current_equalities.item (i))
+					l_equality_types := current_equalities.item (i)
+					print_equality_function (i, l_equality_types)
+					if attached {ET_DYNAMIC_OBJECT_EQUALITY_TYPES} l_equality_types as l_object_equality_types then
+						free_object_equality_types (l_object_equality_types)
+					else
+						free_equality_types (l_equality_types)
+					end
 					i := i + 1
 				end
 				current_equalities.wipe_out
@@ -10268,382 +10271,39 @@ feature {NONE} -- Expression generation
 			end
 		end
 
-	print_equality_expression (an_expression: ET_EQUALITY_EXPRESSION)
-			-- Print `an_expression'.
+	print_equality_expression (a_expression: ET_EQUALITY_EXPRESSION)
+			-- Print `a_expression'.
 		require
-			an_expression_not_void: an_expression /= Void
+			a_expression_not_void: a_expression /= Void
 		local
-			l_temp: detachable ET_IDENTIFIER
-			l_temp_index: INTEGER
-			l_assignment_target: like assignment_target
 			l_left_operand: ET_EXPRESSION
 			l_right_operand: ET_EXPRESSION
 			l_left_type_set: ET_DYNAMIC_TYPE_SET
 			l_right_type_set: ET_DYNAMIC_TYPE_SET
-			l_left_static_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_right_static_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
-			j, nb: INTEGER
-			l_formal_type: ET_DYNAMIC_TYPE
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_is_equal_feature: detachable ET_DYNAMIC_FEATURE
-			l_eif_true: STRING
-			l_eif_false: STRING
-			l_and_then: STRING
-			l_not_not: STRING
-			l_equal: STRING
-			l_not_equal: STRING
-			l_has_common_reference_types: BOOLEAN
-			l_common_expanded_type_count: INTEGER
-			l_common_expanded_type: detachable ET_DYNAMIC_PRIMARY_TYPE
-			l_boolean_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_equality_types: ET_DYNAMIC_EQUALITY_TYPES
+			l_assignment_target: like assignment_target
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
-			l_left_operand := an_expression.left
-			l_right_operand := an_expression.right
+			l_left_operand := a_expression.left
+			l_right_operand := a_expression.right
 			l_left_type_set := dynamic_type_set (l_left_operand)
 			l_right_type_set := dynamic_type_set (l_right_operand)
-			l_left_static_type := l_left_type_set.static_type.primary_type
-			l_right_static_type := l_right_type_set.static_type.primary_type
-				-- Find out whether expanded types are in the dynamic type set of both operands.
-			if l_left_type_set.count < l_right_type_set.count then
-				nb := l_left_type_set.count
-				from j := 1 until j > nb loop
-					l_dynamic_type := l_left_type_set.dynamic_type (j)
-					if l_right_type_set.has_type (l_dynamic_type) then
-						if l_dynamic_type.is_expanded then
-							l_common_expanded_type := l_dynamic_type
-							l_common_expanded_type_count := l_common_expanded_type_count + 1
-						else
-							l_has_common_reference_types := True
-						end
-					end
-					j := j + 1
-				end
-			else
-				nb := l_right_type_set.count
-				from j := 1 until j > nb loop
-					l_dynamic_type := l_right_type_set.dynamic_type (j)
-					if l_left_type_set.has_type (l_dynamic_type) then
-						if l_dynamic_type.is_expanded then
-							l_common_expanded_type := l_dynamic_type
-							l_common_expanded_type_count := l_common_expanded_type_count + 1
-						else
-							l_has_common_reference_types := True
-						end
-					end
-					j := j + 1
-				end
-			end
-			if l_common_expanded_type_count = 1 and not l_left_static_type.is_basic then
-					-- We will have to call 'is_equal' with `l_left_operand' as target.
-				print_target_operand (l_left_operand, l_left_static_type)
-				print_attachment_operand (l_right_operand, l_right_type_set)
-			else
-				print_operand (l_left_operand)
-				print_operand (l_right_operand)
-			end
+				-- Process operands.
+			print_operand (l_left_operand)
+				-- Call `print_attachment_operand' and not `print_operand'
+				-- because the right operand might be the argument of a call
+				-- to 'is_equal' and it will require some cloning if its
+				-- type is expanded.
+			print_attachment_operand (l_right_operand, l_right_type_set)
 			fill_call_operands (2)
-			if in_operand then
-				if l_assignment_target /= Void then
-					operand_stack.force (l_assignment_target)
-					print_indentation
-					print_writable (l_assignment_target)
-				else
-					l_boolean_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.boolean_type, current_type.base_type)
-					l_temp := new_temp_variable (l_boolean_type)
-						-- We will set the index of `l_temp' later because
-						-- it could still be used in `call_operands'.
-					l_temp_index := an_expression.index
-					operand_stack.force (l_temp)
-					print_indentation
-					print_temp_name (l_temp, current_file)
-				end
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-			end
-			l_left_operand := call_operands.item (1)
-			l_right_operand := call_operands.item (2)
-			if an_expression.operator.is_not_equal then
-				l_eif_true := c_eif_false
-				l_eif_false := c_eif_true
-				l_and_then := c_or_else
-				l_not_not := c_not
-				l_equal := c_not_equal
-				l_not_equal := c_equal
-			else
-				l_eif_true := c_eif_true
-				l_eif_false := c_eif_false
-				l_and_then := c_and_then
-				l_not_not := c_not_not
-				l_equal := c_equal
-				l_not_equal := c_not_equal
-			end
-			if l_common_expanded_type_count = 0 then
-					-- There is no expanded type in common between the dynamic type sets
-					-- of the left and right operands.
-				if l_left_static_type.is_expanded or l_right_static_type.is_expanded then
-					current_file.put_string (l_eif_false)
-				elseif l_left_type_set.is_empty and l_right_type_set.is_empty then
-						-- We know for sure that both operands are Void.
-					current_file.put_string (l_eif_true)
-				elseif not l_has_common_reference_types and (not l_left_type_set.can_be_void or not l_right_type_set.can_be_void) then
-						-- There is no type in common between the dynamic type sets
-						-- of the left and right operands. The only way for the equality
-						-- to succeed is that both operands be Void.
-					current_file.put_string (l_eif_false)
-				else
-					current_file.put_character ('(')
-					print_expression (l_left_operand)
-					current_file.put_character (')')
-					current_file.put_string (l_equal)
-					current_file.put_character ('(')
-					print_expression (l_right_operand)
-					current_file.put_character (')')
-				end
-			elseif l_common_expanded_type /= Void and l_common_expanded_type_count = 1 then
-					-- There is exactly one expanded type in common between the dynamic type sets
-					-- of the left and right operands.
-				l_dynamic_type := l_common_expanded_type
-				l_is_equal_feature := l_dynamic_type.seeded_dynamic_query (current_system.is_equal_seed, current_dynamic_system)
-				if l_is_equal_feature = Void then
-						-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					current_file.put_character ('(')
-					if l_left_type_set.can_be_void and l_right_type_set.can_be_void then
-							-- The equality succeeds if both operands are Void.
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						print_expression (l_left_operand)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_string (c_equal)
-						current_file.put_character (' ')
-						current_file.put_string (c_eif_void)
-						current_file.put_character (')')
-						current_file.put_character ('?')
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						print_expression (l_right_operand)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_string (l_equal)
-						current_file.put_character (' ')
-						current_file.put_string (c_eif_void)
-						current_file.put_character (')')
-						current_file.put_character (':')
-					end
-					current_file.put_character ('(')
-					if l_left_type_set.can_be_void then
-							-- We know for sure that the right operand cannot be Void.
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						print_expression (l_left_operand)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_string (l_not_equal)
-						current_file.put_character (' ')
-						current_file.put_string (c_eif_void)
-						current_file.put_character (')')
-						current_file.put_string (l_and_then)
-					elseif l_right_type_set.can_be_void then
-							-- We know for sure that the left operand cannot be Void.
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						print_expression (l_right_operand)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_string (l_not_equal)
-						current_file.put_character (' ')
-						current_file.put_string (c_eif_void)
-						current_file.put_character (')')
-						current_file.put_string (l_and_then)
-					end
-						-- Check that both operands are of the same type.
-					if l_left_type_set.count > 1 and l_right_type_set.count > 1 then
-							-- Both operands can have several types in their type set.
-							-- Check that they have the same type.
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						print_attribute_type_id_access (l_left_operand, l_left_static_type, False)
-						current_file.put_character (' ')
-						current_file.put_string (c_equal)
-						current_file.put_character (' ')
-						current_file.put_integer (l_dynamic_type.id)
-						current_file.put_character (')')
-						current_file.put_string (c_and_then)
-						current_file.put_character ('(')
-						print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
-						current_file.put_character (' ')
-						current_file.put_string (c_equal)
-						current_file.put_character (' ')
-						current_file.put_integer (l_dynamic_type.id)
-						current_file.put_character (')')
-						current_file.put_character (')')
-						current_file.put_character ('?')
-					elseif l_left_type_set.count > 1 then
-							-- We know that the type set of the right operand contains
-							-- only one type, which is `l_dynamic_type'. So we just have
-							-- to check that the left operand is of that type.
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						print_attribute_type_id_access (l_left_operand, l_left_static_type, False)
-						current_file.put_character (' ')
-						current_file.put_string (c_equal)
-						current_file.put_character (' ')
-						current_file.put_integer (l_dynamic_type.id)
-						current_file.put_character (')')
-						current_file.put_character ('?')
-					elseif l_right_type_set.count > 1 then
-							-- We know that the type set of the left operand contains
-							-- only one type, which is `l_dynamic_type'. So we just have
-							-- to check that the right operand is of that type.
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
-						current_file.put_character (' ')
-						current_file.put_string (c_equal)
-						current_file.put_character (' ')
-						current_file.put_integer (l_dynamic_type.id)
-						current_file.put_character (')')
-						current_file.put_character ('?')
-					else
-							-- The type sets of both operands contain only one type,
-							-- which is `l_dynamic_type'. So we know for sure that
-							-- both operands are of the same type.
-					end
-						-- Call 'is_equal'.
-					l_formal_type := argument_type_set_in_feature (1, l_is_equal_feature).static_type
-					if not l_dynamic_type.conforms_to_primary_type (l_formal_type.primary_type) then
-							-- We won't be able to call 'is_equal' because the type of the
-							-- actual argument does not conform to formal type. The only
-							-- way of the equality to be True as to have both operands Void.
-						current_file.put_string (l_eif_false)
-					else
-							-- The main purpose of object equality is to be CAT-call free.
-							-- Therefore we have to make sure that `l_dynamic_type' is the
-							-- only type in the dynamic type set of the right operand when
-							-- calling `print_attachment_expression'.
-						if l_right_static_type = l_dynamic_type then
-							l_actual_type_set := l_dynamic_type
-						elseif l_right_type_set.count = 1 then
-							l_actual_type_set := l_right_type_set
-						else
-							equality_type_set.reset (l_right_static_type)
-							equality_type_set.put_type (l_dynamic_type)
-							if l_right_type_set.is_never_void then
-								equality_type_set.set_never_void
-							end
-							l_actual_type_set := equality_type_set
-						end
-						if total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_32_type and then not l_dynamic_type.has_redefined_is_equal_routine then
-								-- Optimization: avoid a function call for basic types.
-							include_runtime_header_file ("ge_real.h", False, header_file)
-							current_file.put_string (l_not_not)
-							current_file.put_string (c_ge_real_32_is_equal)
-							current_file.put_character ('(')
-							print_unboxed_expression (l_left_operand, l_dynamic_type, False)
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
-							current_file.put_character (')')
-						elseif total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_64_type and then not l_dynamic_type.has_redefined_is_equal_routine then
-								-- Optimization: avoid a function call for basic types.
-							include_runtime_header_file ("ge_real.h", False, header_file)
-							current_file.put_string (l_not_not)
-							current_file.put_string (c_ge_real_64_is_equal)
-							current_file.put_character ('(')
-							print_unboxed_expression (l_left_operand, l_dynamic_type, False)
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
-							current_file.put_character (')')
-						elseif l_dynamic_type.is_basic and then not l_dynamic_type.has_redefined_is_equal_routine then
-								-- Optimization: avoid a function call for basic types.
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							print_unboxed_expression (l_left_operand, l_dynamic_type, False)
-							current_file.put_character (')')
-							current_file.put_character (' ')
-							current_file.put_string (l_equal)
-							current_file.put_character (' ')
-							current_file.put_character ('(')
-							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
-							current_file.put_character (')')
-							current_file.put_character (')')
-						else
-							register_called_feature (l_is_equal_feature)
-							current_file.put_string (l_not_not)
-							print_routine_name (l_is_equal_feature, l_dynamic_type, current_file)
-							current_file.put_character ('(')
-							current_file.put_string (c_ac)
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_target_expression (l_left_operand, l_dynamic_type, False)
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
-							current_file.put_character (')')
-						end
-							-- Clean up `equality_type_set'.
-						if l_actual_type_set = equality_type_set then
-							equality_type_set.reset (current_dynamic_system.unknown_type)
-						end
-					end
-					if l_left_type_set.count > 1 or l_right_type_set.count > 1 then
-						current_file.put_character (':')
-							-- Reference equality.
-						if l_left_static_type.is_expanded or l_right_static_type.is_expanded then
-							current_file.put_string (l_eif_false)
-						elseif not l_has_common_reference_types and (not l_left_type_set.can_be_void or not l_right_type_set.can_be_void) then
-								-- There is no reference type in common between the dynamic type sets
-								-- of the left and right operands. The only way for the equality
-								-- to succeed is that both operands be Void.
-							current_file.put_string (l_eif_false)
-						else
-							current_file.put_character ('(')
-							print_expression (l_left_operand)
-							current_file.put_character (')')
-							current_file.put_string (l_equal)
-							current_file.put_character ('(')
-							print_expression (l_right_operand)
-							current_file.put_character (')')
-						end
-						current_file.put_character (')')
-					end
-					current_file.put_character (')')
-					current_file.put_character (')')
-				end
-			else
-				current_equalities.force_last (an_expression)
-				print_equality_function_name (current_equalities.count, current_feature, current_type, current_file)
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				print_expression (l_left_operand)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				print_expression (l_right_operand)
-				current_file.put_character (')')
-			end
-			if in_operand then
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+			assignment_target := l_assignment_target
+			l_equality_types := new_equality_types (l_left_type_set, l_right_type_set)
+			print_equality_call (a_expression, a_expression.operator.is_not_equal, l_equality_types)
+			if current_equalities.is_empty or else current_equalities.last /= l_equality_types then
+				free_equality_types (l_equality_types)
 			end
 			call_operands.wipe_out
-			if l_temp /= Void and then l_temp_index /= 0 then
-					-- We had to wait until this stage to set the index of `l_temp'
-					-- because it could have still been used in `call_operands'.
-				l_temp.set_index (l_temp_index)
-			end
 		end
 
 	print_expression (an_expression: ET_EXPRESSION)
@@ -12179,373 +11839,39 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			in_operand := old_in_operand
 		end
 
-	print_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
-			-- Print `an_expression'.
+	print_object_equality_expression (a_expression: ET_OBJECT_EQUALITY_EXPRESSION)
+			-- Print `a_expression'.
 		require
-			an_expression_not_void: an_expression /= Void
+			a_expression_not_void: a_expression /= Void
 		local
-			l_temp: detachable ET_IDENTIFIER
-			l_temp_index: INTEGER
-			l_assignment_target: like assignment_target
 			l_left_operand: ET_EXPRESSION
 			l_right_operand: ET_EXPRESSION
 			l_left_type_set: ET_DYNAMIC_TYPE_SET
 			l_right_type_set: ET_DYNAMIC_TYPE_SET
-			l_left_static_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_right_static_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
-			j, nb: INTEGER
-			l_formal_type: ET_DYNAMIC_TYPE
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_is_equal_feature: detachable ET_DYNAMIC_FEATURE
-			l_eif_true: STRING
-			l_eif_false: STRING
-			l_and_then: STRING
-			l_not_not: STRING
-			l_equal: STRING
-			l_not_equal: STRING
-			l_common_type: detachable ET_DYNAMIC_PRIMARY_TYPE
-			l_common_type_count: INTEGER
+			l_equality_types: ET_DYNAMIC_OBJECT_EQUALITY_TYPES
+			l_assignment_target: like assignment_target
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
-			l_left_operand := an_expression.left
-			l_right_operand := an_expression.right
+			l_left_operand := a_expression.left
+			l_right_operand := a_expression.right
 			l_left_type_set := dynamic_type_set (l_left_operand)
 			l_right_type_set := dynamic_type_set (l_right_operand)
-			l_left_static_type := l_left_type_set.static_type.primary_type
-			l_right_static_type := l_right_type_set.static_type.primary_type
-				-- Find out which types are in the dynamic type set of both operands.
-			if l_left_type_set.count < l_right_type_set.count then
-				nb := l_left_type_set.count
-				from j := 1 until j > nb loop
-					l_dynamic_type := l_left_type_set.dynamic_type (j)
-					if l_right_type_set.has_type (l_dynamic_type) then
-						l_common_type := l_dynamic_type
-						l_common_type_count := l_common_type_count + 1
-					end
-					j := j + 1
-				end
-			else
-				nb := l_right_type_set.count
-				from j := 1 until j > nb loop
-					l_dynamic_type := l_right_type_set.dynamic_type (j)
-					if l_left_type_set.has_type (l_dynamic_type) then
-						l_common_type := l_dynamic_type
-						l_common_type_count := l_common_type_count + 1
-					end
-					j := j + 1
-				end
-			end
-			if l_common_type_count = 1 and not l_left_static_type.is_basic then
-					-- We will have to call 'is_equal' with `l_left_operand' as target.
-				print_target_operand (l_left_operand, l_left_static_type)
-				print_attachment_operand (l_right_operand, l_right_type_set)
-			else
-				print_operand (l_left_operand)
-				print_operand (l_right_operand)
-			end
+				-- Process operands.
+			print_operand (l_left_operand)
+				-- Call `print_attachment_operand' and not `print_operand'
+				-- because the right operand might be the argument of a call
+				-- to 'is_equal' and it will require some cloning if its
+				-- type is expanded.
+			print_attachment_operand (l_right_operand, l_right_type_set)
 			fill_call_operands (2)
-			if in_operand then
-				if l_assignment_target /= Void then
-					operand_stack.force (l_assignment_target)
-					print_indentation
-					print_writable (l_assignment_target)
-				else
-					l_temp := new_temp_variable (dynamic_type_set (an_expression).static_type.primary_type)
-						-- We will set the index of `l_temp' later because
-						-- it could still be used in `call_operands'.
-					l_temp_index := an_expression.index
-					operand_stack.force (l_temp)
-					print_indentation
-					print_temp_name (l_temp, current_file)
-				end
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-			end
-			l_left_operand := call_operands.item (1)
-			l_right_operand := call_operands.item (2)
-			if an_expression.operator.is_not_tilde then
-				l_eif_false := c_eif_true
-				l_eif_true := c_eif_false
-				l_and_then := c_or_else
-				l_not_not := c_not
-				l_equal := c_not_equal
-				l_not_equal := c_equal
-			else
-				l_eif_false := c_eif_false
-				l_eif_true := c_eif_true
-				l_and_then := c_and_then
-				l_not_not := c_not_not
-				l_equal := c_equal
-				l_not_equal := c_not_equal
-			end
-			if l_common_type_count = 0 then
-					-- There is no type in common between the dynamic type sets
-					-- of the left and right operands. The only way for the equality
-					-- to succeed is that both operands be Void.
-				current_file.put_character ('(')
-				if l_left_type_set.can_be_void and l_right_type_set.can_be_void then
-					if l_left_type_set.is_empty and l_right_type_set.is_empty then
-							-- We know for sure that both operands are Void.
-						current_file.put_string (l_eif_true)
-					elseif l_left_type_set.is_empty then
-							-- We know for sure that the left operand is Void.
-						current_file.put_character ('(')
-						print_expression (l_right_operand)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_string (l_equal)
-						current_file.put_character (' ')
-						current_file.put_string (c_eif_void)
-					elseif l_right_type_set.is_empty then
-							-- We know for sure that the right operand is Void.
-						current_file.put_character ('(')
-						print_expression (l_left_operand)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_string (l_equal)
-						current_file.put_character (' ')
-						current_file.put_string (c_eif_void)
-					else
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						print_expression (l_left_operand)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_string (l_equal)
-						current_file.put_character (' ')
-						current_file.put_string (c_eif_void)
-						current_file.put_character (')')
-						current_file.put_string (l_and_then)
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						print_expression (l_right_operand)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_string (l_equal)
-						current_file.put_character (' ')
-						current_file.put_string (c_eif_void)
-						current_file.put_character (')')
-					end
-				else
-					current_file.put_string (l_eif_false)
-				end
-				current_file.put_character (')')
-			elseif l_common_type /= Void and then l_common_type_count = 1 then
-					-- There is exactly one type in common between the dynamic type sets
-					-- of the left and right operands.
-				l_dynamic_type := l_common_type
-				l_is_equal_feature := l_dynamic_type.seeded_dynamic_query (current_system.is_equal_seed, current_dynamic_system)
-				if l_is_equal_feature = Void then
-						-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					current_file.put_character ('(')
-					if l_left_type_set.can_be_void and l_right_type_set.can_be_void then
-							-- The equality succeeds if both operands are Void.
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						print_expression (l_left_operand)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_string (c_equal)
-						current_file.put_character (' ')
-						current_file.put_string (c_eif_void)
-						current_file.put_character (')')
-						current_file.put_character ('?')
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						print_expression (l_right_operand)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_string (l_equal)
-						current_file.put_character (' ')
-						current_file.put_string (c_eif_void)
-						current_file.put_character (')')
-						current_file.put_character (':')
-					end
-					l_formal_type := argument_type_set_in_feature (1, l_is_equal_feature).static_type
-					if not l_dynamic_type.conforms_to_primary_type (l_formal_type.primary_type) then
-							-- We won't be able to call 'is_equal' because the type of the
-							-- actual argument does not conform to formal type. The only
-							-- way of the equality to be True as to have both operands Void.
-						current_file.put_string (c_eif_false)
-					else
-						current_file.put_character ('(')
-						if l_right_type_set.can_be_void then
-								-- We know for sure that the left operand cannot be Void.
-								-- Indeed, either `l_left_type_set.can_be_void' is False or we
-								-- already tested that it is not Void above in the case where
-								-- 'l_left_type_set.can_be_void and l_right_type_set.can_be_void'
-								-- is True.
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							print_expression (l_right_operand)
-							current_file.put_character (')')
-							current_file.put_character (' ')
-							current_file.put_string (l_not_equal)
-							current_file.put_character (' ')
-							current_file.put_string (c_eif_void)
-							current_file.put_character (')')
-							current_file.put_string (l_and_then)
-						elseif l_left_type_set.can_be_void then
-								-- We know for sure that the right operand cannot be Void.
-								-- It has been tested just above.
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							print_expression (l_left_operand)
-							current_file.put_character (')')
-							current_file.put_character (' ')
-							current_file.put_string (l_not_equal)
-							current_file.put_character (' ')
-							current_file.put_string (c_eif_void)
-							current_file.put_character (')')
-							current_file.put_string (l_and_then)
-						end
-							-- Check that both operands are of the same type.
-						if l_left_type_set.count > 1 and l_right_type_set.count > 1 then
-								-- Both operands can have several types in their type set.
-								-- Check that they have the same type.
-							current_file.put_character ('(')
-							print_attribute_type_id_access (l_left_operand, l_left_static_type, False)
-							current_file.put_character (' ')
-							current_file.put_string (l_equal)
-							current_file.put_character (' ')
-							print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
-							current_file.put_character (')')
-							current_file.put_string (l_and_then)
-						elseif l_left_type_set.count > 1 then
-								-- We know that the type set of the right operand contains
-								-- only one type, which is `l_dynamic_type'. So we just have
-								-- to check that the left operand is of that type.
-							current_file.put_character ('(')
-							print_attribute_type_id_access (l_left_operand, l_left_static_type, False)
-							current_file.put_character (' ')
-							current_file.put_string (l_equal)
-							current_file.put_character (' ')
-							current_file.put_integer (l_dynamic_type.id)
-							current_file.put_character (')')
-							current_file.put_string (l_and_then)
-						elseif l_right_type_set.count > 1 then
-								-- We know that the type set of the left operand contains
-								-- only one type, which is `l_dynamic_type'. So we just have
-								-- to check that the right operand is of that type.
-							current_file.put_character ('(')
-							print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
-							current_file.put_character (' ')
-							current_file.put_string (l_equal)
-							current_file.put_character (' ')
-							current_file.put_integer (l_dynamic_type.id)
-							current_file.put_character (')')
-							current_file.put_string (l_and_then)
-						else
-								-- The type sets of both operands contain only one type,
-								-- which is `l_dynamic_type'. So we know for sure that
-								-- both operands are of the same type.
-						end
-							-- Call 'is_equal'.
-							--
-							-- The main purpose of object equality is to be CAT-call free.
-							-- Therefore we have to make sure that `l_dynamic_type' is the
-							-- only type in the dynamic type set of the right operand when
-							-- calling `print_attachment_expression'.
-						if l_right_static_type = l_dynamic_type then
-							l_actual_type_set := l_dynamic_type
-						elseif l_right_type_set.count = 1 then
-							l_actual_type_set := l_right_type_set
-						else
-							equality_type_set.reset (l_right_static_type)
-							equality_type_set.put_type (l_dynamic_type)
-							if l_right_type_set.is_never_void then
-								equality_type_set.set_never_void
-							end
-							l_actual_type_set := equality_type_set
-						end
-						if total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_32_type and then not l_dynamic_type.has_redefined_is_equal_routine then
-								-- Optimization: avoid a function call for basic types.
-							include_runtime_header_file ("ge_real.h", False, header_file)
-							current_file.put_string (l_not_not)
-							current_file.put_string (c_ge_real_32_is_equal)
-							current_file.put_character ('(')
-							print_unboxed_expression (l_left_operand, l_dynamic_type, False)
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
-							current_file.put_character (')')
-						elseif total_order_on_reals_mode and then l_dynamic_type = current_dynamic_system.real_64_type and then not l_dynamic_type.has_redefined_is_equal_routine then
-								-- Optimization: avoid a function call for basic types.
-							include_runtime_header_file ("ge_real.h", False, header_file)
-							current_file.put_string (l_not_not)
-							current_file.put_string (c_ge_real_64_is_equal)
-							current_file.put_character ('(')
-							print_unboxed_expression (l_left_operand, l_dynamic_type, False)
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
-							current_file.put_character (')')
-						elseif l_dynamic_type.is_basic and then not l_dynamic_type.has_redefined_is_equal_routine then
-								-- Optimization: avoid a function call for basic types.
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							print_unboxed_expression (l_left_operand, l_dynamic_type, False)
-							current_file.put_character (')')
-							current_file.put_character (' ')
-							current_file.put_string (l_equal)
-							current_file.put_character (' ')
-							current_file.put_character ('(')
-							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
-							current_file.put_character (')')
-							current_file.put_character (')')
-						else
-							register_called_feature (l_is_equal_feature)
-							current_file.put_string (l_not_not)
-							print_routine_name (l_is_equal_feature, l_dynamic_type, current_file)
-							current_file.put_character ('(')
-							current_file.put_string (c_ac)
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_target_expression (l_left_operand, l_dynamic_type, False)
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
-							current_file.put_character (')')
-						end
-							-- Clean up `equality_type_set'.
-						if l_actual_type_set = equality_type_set then
-							equality_type_set.reset (current_dynamic_system.unknown_type)
-						end
-						current_file.put_character (')')
-					end
-					current_file.put_character (')')
-				end
-			else
-				current_object_equalities.force_last (an_expression)
-				print_object_equality_function_name (current_object_equalities.count, current_feature, current_type, current_file)
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				print_expression (l_left_operand)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				print_expression (l_right_operand)
-				current_file.put_character (')')
-			end
-			if in_operand then
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+			assignment_target := l_assignment_target
+			l_equality_types := new_object_equality_types (l_left_type_set, l_right_type_set)
+			print_equality_call (a_expression, a_expression.operator.is_not_tilde, l_equality_types)
+			if current_equalities.is_empty or else current_equalities.last /= l_equality_types then
+				free_object_equality_types (l_equality_types)
 			end
 			call_operands.wipe_out
-			if l_temp /= Void and then l_temp_index /= 0 then
-					-- We had to wait until this stage to set the index of `l_temp'
-					-- because it could have still been used in `call_operands'.
-				l_temp.set_index (l_temp_index)
-			end
 		end
 
 	print_object_test (an_expression: ET_OBJECT_TEST)
@@ -14408,15 +13734,352 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 
 feature {NONE} -- Equality generation
 
-	print_equality_function (i: INTEGER; an_expression: ET_EQUALITY_EXPRESSION)
-			-- Print function corresponding to `i'-th equality ('=' or '/=')
-			-- `an_expression' to `current_file' and its signature to `header_file'.
-			-- We need a function for equality when the dynamic type set of operands
-			-- contains expanded types.
+	print_equality_call (a_expression: ET_EXPRESSION; a_negated: BOOLEAN; a_equality_types: ET_DYNAMIC_EQUALITY_TYPES)
+			-- Print `a_expression' which is supposed to be equality expression
+			-- ('=' or '/=' as well as '~' or '/~') with operand types `a_equality_types'.
+			-- `a_negated' means that the operator is either "/=" or "/~".
+			-- Operands can be found in `call_operands'.
 		require
-			an_expression_not_void: an_expression /= Void
+			a_expression_not_void: a_expression /= Void
+			a_equality_types_not_void: a_equality_types /= Void
+		local
+			l_common_object_equality_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
+			l_common_reference_equality_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
+			l_temp: detachable ET_IDENTIFIER
+			l_temp_index: INTEGER
+			l_assignment_target: like assignment_target
+			l_left_operand: ET_EXPRESSION
+			l_right_operand: ET_EXPRESSION
+			l_left_type_set: ET_DYNAMIC_TYPE_SET
+			l_right_type_set: ET_DYNAMIC_TYPE_SET
+			l_boolean_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			l_assignment_target := assignment_target
+			assignment_target := Void
+			l_left_type_set := a_equality_types.left
+			l_right_type_set := a_equality_types.right
+			l_boolean_type := dynamic_type_set (a_expression).static_type.primary_type
+			if in_operand then
+				if l_assignment_target /= Void then
+					operand_stack.force (l_assignment_target)
+					print_indentation
+					print_writable (l_assignment_target)
+				else
+					l_temp := new_temp_variable (l_boolean_type)
+						-- We will set the index of `l_temp' later because
+						-- it could still be used in `call_operands'.
+					l_temp_index := a_expression.index
+					operand_stack.force (l_temp)
+					print_indentation
+					print_temp_name (l_temp, current_file)
+				end
+				print_assign_to
+			end
+				-- Find out which types are in the dynamic type set of both operands.
+			l_common_object_equality_types := equality_common_types
+			l_common_object_equality_types.resize (l_left_type_set.count.min (l_right_type_set.count))
+			l_common_reference_equality_types := equality_common_reference_types
+			l_common_reference_equality_types.resize (l_left_type_set.count.min (l_right_type_set.count))
+			a_equality_types.add_common_types_to_list (l_common_object_equality_types, l_common_reference_equality_types)
+			if l_common_object_equality_types.is_empty then
+				print_equality_call_with_zero_object_equality (a_negated, l_common_object_equality_types, l_common_reference_equality_types)
+			elseif l_common_object_equality_types.count = 1 then
+				print_equality_call_with_one_object_equality (a_negated, l_common_object_equality_types, l_common_reference_equality_types)
+			else
+				l_left_operand := call_operands.first
+				l_right_operand := call_operands.item (2)
+				current_equalities.force_last (a_equality_types)
+				if a_negated then
+					print_declaration_type_cast (l_boolean_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_not)
+				end
+				print_equality_function_name (current_equalities.count, current_feature, current_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
+				print_expression (l_left_operand)
+				print_comma
+				print_expression (l_right_operand)
+				current_file.put_character (')')
+				if a_negated then
+					current_file.put_character (')')
+				end
+			end
+			if in_operand then
+				print_semicolon_newline
+			end
+			l_common_object_equality_types.wipe_out
+			l_common_reference_equality_types.wipe_out
+			if l_temp /= Void and then l_temp_index /= 0 then
+					-- We had to wait until this stage to set the index of `l_temp'
+					-- because it could have still been used in `call_operands'.
+				l_temp.set_index (l_temp_index)
+			end
+		end
+
+	print_equality_call_with_zero_object_equality (a_negated: BOOLEAN; a_common_object_equality_types, a_common_reference_equality_types: ET_DYNAMIC_PRIMARY_TYPES)
+			-- Print equality call when there is no type in common between
+			-- the dynamic type sets of the left and right operands for which
+			-- object equality is needed.
+			-- `a_negated' means that the operator is either "/=" or "/~".
+			-- Operands can be found in `call_operands'.
+		require
+			a_common_object_equality_types_not_void: a_common_object_equality_types /= Void
+			a_common_object_equality_types_is_empty: a_common_object_equality_types.is_empty
+			a_common_reference_equality_types_not_void: a_common_reference_equality_types /= Void
+			two_operands: call_operands.count = 2
+		local
+			l_left_operand: ET_EXPRESSION
+			l_right_operand: ET_EXPRESSION
+			l_left_type_set: ET_DYNAMIC_TYPE_SET
+			l_right_type_set: ET_DYNAMIC_TYPE_SET
+			l_eif_true: STRING
+			l_eif_false: STRING
+			l_equal: STRING
+			l_boolean_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if a_negated then
+				l_eif_true := c_eif_false
+				l_eif_false := c_eif_true
+				l_equal := c_not_equal
+			else
+				l_eif_true := c_eif_true
+				l_eif_false := c_eif_false
+				l_equal := c_equal
+			end
+			l_left_operand := call_operands.first
+			l_right_operand := call_operands.item (2)
+			l_left_type_set := dynamic_type_set (l_left_operand)
+			l_right_type_set := dynamic_type_set (l_right_operand)
+			if l_left_type_set.is_expanded or l_right_type_set.is_expanded then
+				current_file.put_string (l_eif_false)
+			elseif l_left_type_set.is_empty and l_right_type_set.is_empty then
+					-- We know for sure that both operands are Void.
+				current_file.put_string (l_eif_true)
+			elseif a_common_reference_equality_types.is_empty and (not l_left_type_set.can_be_void or not l_right_type_set.can_be_void) then
+					-- There is no type in common between the dynamic type sets
+					-- of the left and right operands. The only way for the equality
+					-- to succeed is that both operands be Void.
+				current_file.put_string (l_eif_false)
+			else
+				l_boolean_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.boolean_type, current_type.base_type)
+				print_declaration_type_cast (l_boolean_type, current_file)
+				current_file.put_character ('(')
+				print_expression (l_left_operand)
+				current_file.put_string (l_equal)
+				print_expression (l_right_operand)
+				current_file.put_character (')')
+			end
+		end
+
+	print_equality_call_with_one_object_equality (a_negated: BOOLEAN; a_common_object_equality_types, a_common_reference_equality_types: ET_DYNAMIC_PRIMARY_TYPES)
+			-- Print equality call when there is exactly one type in common between
+			-- the dynamic type sets of the left and right operands for which
+			-- object equality is needed.
+			-- `a_negated' means that the operator is either "/=" or "/~".
+			-- Operands can be found in `call_operands'.
+		require
+			a_common_object_equality_types_not_void: a_common_object_equality_types /= Void
+			a_common_object_equality_types_count_one: a_common_object_equality_types.count = 1
+			a_common_reference_equality_types_not_void: a_common_reference_equality_types /= Void
+			two_operands: call_operands.count = 2
+		local
+			l_left_operand: ET_EXPRESSION
+			l_right_operand: ET_EXPRESSION
+			l_left_type_set: ET_DYNAMIC_TYPE_SET
+			l_right_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_parenthese_count: INTEGER
+			l_formal_type: ET_DYNAMIC_TYPE
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_left_static_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_right_static_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_eif_true: STRING
+			l_eif_false: STRING
+			l_equal: STRING
+			l_index: INTEGER
+			l_old_index: INTEGER
+			l_boolean_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if a_negated then
+				l_eif_true := c_eif_false
+				l_eif_false := c_eif_true
+				l_equal := c_not_equal
+			else
+				l_eif_true := c_eif_true
+				l_eif_false := c_eif_false
+				l_equal := c_equal
+			end
+			l_left_operand := call_operands.first
+			l_right_operand := call_operands.item (2)
+			l_left_type_set := dynamic_type_set (l_left_operand)
+			l_right_type_set := dynamic_type_set (l_right_operand)
+			l_left_static_type := l_left_type_set.static_type.primary_type
+			l_right_static_type := l_right_type_set.static_type.primary_type
+			l_dynamic_type := a_common_object_equality_types.dynamic_type (1)
+			if not attached l_dynamic_type.seeded_dynamic_query (current_system.is_equal_seed, current_dynamic_system) as l_is_equal_feature then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				if l_left_type_set.can_be_void then
+					l_parenthese_count := l_parenthese_count + 1
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					print_expression (l_left_operand)
+					print_equal_to
+					current_file.put_string (c_eif_void)
+					current_file.put_character (')')
+					current_file.put_character ('?')
+					if l_right_type_set.can_be_void then
+						l_boolean_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.boolean_type, current_type.base_type)
+						print_declaration_type_cast (l_boolean_type, current_file)
+						current_file.put_character ('(')
+						print_expression (l_right_operand)
+						current_file.put_string (l_equal)
+						current_file.put_string (c_eif_void)
+						current_file.put_character (')')
+					else
+						current_file.put_string (l_eif_false)
+					end
+					current_file.put_character (':')
+				elseif l_right_type_set.can_be_void then
+					l_parenthese_count := l_parenthese_count + 1
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					print_expression (l_right_operand)
+					print_equal_to
+					current_file.put_string (c_eif_void)
+					current_file.put_character (')')
+					current_file.put_character ('?')
+					current_file.put_string (l_eif_false)
+					current_file.put_character (':')
+				end
+					-- Check that both operands are of the same type.
+				if l_left_type_set.count > 1 and l_right_type_set.count > 1 then
+						-- Both operands can have several types in their type set.
+						-- Check that they have the same type.
+					l_parenthese_count := l_parenthese_count + 1
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					print_attribute_type_id_access (l_left_operand, l_left_static_type, False)
+					print_equal_to
+					print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
+					current_file.put_character (')')
+					current_file.put_character ('?')
+				elseif l_left_type_set.count > 1 then
+						-- We know that the type set of the right operand contains
+						-- only one type, which is `l_dynamic_type'. So we just have
+						-- to check that the left operand is of that type.
+					l_parenthese_count := l_parenthese_count + 1
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					print_attribute_type_id_access (l_left_operand, l_left_static_type, False)
+					print_equal_to
+					current_file.put_integer (l_dynamic_type.id)
+					current_file.put_character (')')
+					current_file.put_character ('?')
+				elseif l_right_type_set.count > 1 then
+						-- We know that the type set of the left operand contains
+						-- only one type, which is `l_dynamic_type'. So we just have
+						-- to check that the right operand is of that type.
+					l_parenthese_count := l_parenthese_count + 1
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
+					print_equal_to
+					current_file.put_integer (l_dynamic_type.id)
+					current_file.put_character (')')
+					current_file.put_character ('?')
+				else
+						-- The type sets of both operands contain only one type,
+						-- which is `l_dynamic_type'. So we know for sure that
+						-- both operands are of the same type.
+				end
+					-- Call 'is_equal'.
+				l_formal_type := argument_type_set_in_feature (1, l_is_equal_feature).static_type
+				if not l_dynamic_type.conforms_to_primary_type (l_formal_type.primary_type) then
+						-- We won't be able to call 'is_equal' because the type of the
+						-- actual argument does not conform to formal type. The only
+						-- way of the equality to be True as to have both operands Void.
+					current_file.put_string (l_eif_false)
+				else
+						-- The main purpose of object equality is to be CAT-call free.
+						-- Therefore we have to make sure that `l_dynamic_type' is the
+						-- only type in the dynamic type set of the right operand when
+						-- calling `print_attachment_expression'.
+					if l_right_static_type = l_dynamic_type then
+						l_actual_type_set := l_dynamic_type
+					elseif l_right_type_set.count = 1 then
+						l_actual_type_set := l_right_type_set
+					else
+						equality_type_set.reset (l_right_static_type)
+						equality_type_set.put_type (l_dynamic_type)
+						if l_right_type_set.is_never_void then
+							equality_type_set.set_never_void
+						end
+						l_actual_type_set := equality_type_set
+					end
+					extra_dynamic_type_sets.force_last (l_actual_type_set)
+					l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+					l_old_index := l_right_operand.index
+					l_right_operand.set_index (l_index)
+					if a_negated then
+						l_boolean_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.boolean_type, current_type.base_type)
+						print_declaration_type_cast (l_boolean_type, current_file)
+						current_file.put_character ('(')
+						current_file.put_string (c_not)
+					end
+					if not l_dynamic_type.has_redefined_is_equal_routine then
+						print_builtin_any_is_equal_call (l_is_equal_feature, l_dynamic_type, False)
+					else
+						register_called_feature (l_is_equal_feature)
+						print_routine_name (l_is_equal_feature, l_dynamic_type, current_file)
+						current_file.put_character ('(')
+						current_file.put_string (c_ac)
+						print_comma
+						print_target_expression (l_left_operand, l_dynamic_type, False)
+						print_comma
+						print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
+						current_file.put_character (')')
+					end
+					if a_negated then
+						current_file.put_character (')')
+					end
+					l_right_operand.set_index (l_old_index)
+					extra_dynamic_type_sets.remove_last
+						-- Clean up `equality_type_set'.
+					if l_actual_type_set = equality_type_set then
+						equality_type_set.reset (current_dynamic_system.unknown_type)
+					end
+				end
+				if l_left_type_set.count > 1 or l_right_type_set.count > 1 then
+					current_file.put_character (':')
+						-- Reference equality.
+					if a_common_reference_equality_types.is_empty then
+						current_file.put_string (l_eif_false)
+					else
+						print_equality_call_with_zero_object_equality (a_negated, current_dynamic_system.unknown_type, a_common_reference_equality_types)
+					end
+				end
+				from until l_parenthese_count = 0 loop
+					current_file.put_character (')')
+					l_parenthese_count := l_parenthese_count - 1
+				end
+			end
+		end
+
+	print_equality_function (i: INTEGER; a_equality_types: ET_DYNAMIC_EQUALITY_TYPES)
+			-- Print function corresponding to `i'-th equality ('=' or '/=', as well as
+			-- '~' or '/~') with operand types `a_equality_types' to `current_file' and
+			-- its signature to `header_file'.
+		require
+			a_equality_types_not_void: a_equality_types /= Void
 		local
 			old_file: KI_TEXT_OUTPUT_STREAM
+			l_common_object_equality_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
+			l_common_reference_equality_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
 			l_result_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_left_type_set: ET_DYNAMIC_TYPE_SET
 			l_right_type_set: ET_DYNAMIC_TYPE_SET
@@ -14424,20 +14087,10 @@ feature {NONE} -- Equality generation
 			l_right_static_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_left_operand: ET_IDENTIFIER
 			l_right_operand: ET_IDENTIFIER
-			l_is_equal_feature: detachable ET_DYNAMIC_FEATURE
-			l_formal_type: ET_DYNAMIC_TYPE
-			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_common_expanded_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			j, nb: INTEGER
-			l_eif_false: STRING
-			l_and_then: STRING
-			l_not_not: STRING
-			l_equal: STRING
-			l_has_common_reference_types: BOOLEAN
+			l_index: INTEGER
 		do
-			l_left_type_set := dynamic_type_set (an_expression.left)
-			l_right_type_set := dynamic_type_set (an_expression.right)
+			l_left_type_set := a_equality_types.left
+			l_right_type_set := a_equality_types.right
 			l_left_static_type := l_left_type_set.static_type.primary_type
 			l_right_static_type := l_right_type_set.static_type.primary_type
 				-- Print signature to `header_file' and `current_file'.
@@ -14445,7 +14098,7 @@ feature {NONE} -- Equality generation
 			current_file := current_function_header_buffer
 			header_file.put_string (c_extern)
 			header_file.put_character (' ')
-			l_result_type := dynamic_type_set (an_expression).static_type.primary_type
+			l_result_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.boolean_type, current_type.base_type)
 			print_type_declaration (l_result_type, header_file)
 			print_type_declaration (l_result_type, current_file)
 			header_file.put_character (' ')
@@ -14467,7 +14120,9 @@ feature {NONE} -- Equality generation
 			current_file.put_character (',')
 			current_file.put_character (' ')
 			l_left_operand := formal_argument (1)
-			l_left_operand.set_index (an_expression.left.index)
+			extra_dynamic_type_sets.force_last (l_left_type_set)
+			l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+			l_left_operand.set_index (l_index)
 			print_type_declaration (l_left_static_type, header_file)
 			header_file.put_character (' ')
 			print_argument_name (l_left_operand, header_file)
@@ -14479,360 +14134,9 @@ feature {NONE} -- Equality generation
 			current_file.put_character (',')
 			current_file.put_character (' ')
 			l_right_operand := formal_argument (2)
-			l_right_operand.set_index (an_expression.right.index)
-			print_type_declaration (l_right_static_type, header_file)
-			header_file.put_character (' ')
-			print_argument_name (l_right_operand, header_file)
-			print_type_declaration (l_right_static_type, current_file)
-			current_file.put_character (' ')
-			print_argument_name (l_right_operand, current_file)
-			header_file.put_character (')')
-			current_file.put_character (')')
-			header_file.put_character (';')
-			header_file.put_new_line
-			current_file.put_new_line
-				-- Print body to `current_file'.
-			current_file.put_character ('{')
-			current_file.put_new_line
-			indent
-			current_file := current_function_body_buffer
-				-- Find out which expanded types are in the dynamic type set of both operands.
-			l_common_expanded_types := equality_common_types
-			l_common_expanded_types.resize (l_left_type_set.count + l_right_type_set.count)
-			if l_left_type_set.count < l_right_type_set.count then
-				nb := l_left_type_set.count
-				from j := 1 until j > nb loop
-					l_dynamic_type := l_left_type_set.dynamic_type (j)
-					if l_right_type_set.has_type (l_dynamic_type) then
-						if l_dynamic_type.is_expanded then
-							l_common_expanded_types.put_last (l_dynamic_type)
-						else
-							l_has_common_reference_types := True
-						end
-					end
-					j := j + 1
-				end
-			else
-				nb := l_right_type_set.count
-				from j := 1 until j > nb loop
-					l_dynamic_type := l_right_type_set.dynamic_type (j)
-					if l_left_type_set.has_type (l_dynamic_type) then
-						if l_dynamic_type.is_expanded then
-							l_common_expanded_types.put_last (l_dynamic_type)
-						else
-							l_has_common_reference_types := True
-						end
-					end
-					j := j + 1
-				end
-			end
-			if l_common_expanded_types.count <= 1 then
-				print_indentation
-				current_file.put_string (c_return)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_equality_expression (an_expression)
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-			else
-					-- There are more than one expanded type in common between the dynamic type sets
-					-- of the left and right operands.
-				if an_expression.operator.is_not_equal then
-					l_eif_false := c_eif_true
-					l_and_then := c_or_else
-					l_not_not := c_not
-					l_equal := c_not_equal
-				else
-					l_eif_false := c_eif_false
-					l_and_then := c_and_then
-					l_not_not := c_not_not
-					l_equal := c_equal
-				end
-				print_indentation
-				if l_left_type_set.can_be_void then
-					current_file.put_string (c_if)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_expression (l_left_operand)
-					current_file.put_character (' ')
-					current_file.put_string (c_equal)
-					current_file.put_character (' ')
-					current_file.put_string (c_eif_void)
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
-					print_indentation
-					current_file.put_string (c_return)
-					current_file.put_character (' ')
-					if l_right_type_set.can_be_void then
-						current_file.put_character ('(')
-						print_expression (l_right_operand)
-						current_file.put_character (' ')
-						current_file.put_string (l_equal)
-						current_file.put_character (' ')
-						current_file.put_string (c_eif_void)
-						current_file.put_character (')')
-					else
-						current_file.put_string (l_eif_false)
-					end
-					current_file.put_character (';')
-					current_file.put_new_line
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_character (' ')
-					current_file.put_string (c_else)
-					current_file.put_character (' ')
-				end
-				if l_right_type_set.can_be_void then
-					current_file.put_string (c_if)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_expression (l_right_operand)
-					current_file.put_character (' ')
-					current_file.put_string (c_equal)
-					current_file.put_character (' ')
-					current_file.put_string (c_eif_void)
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
-					print_indentation
-					current_file.put_string (c_return)
-					current_file.put_character (' ')
-					current_file.put_string (l_eif_false)
-					current_file.put_character (';')
-					current_file.put_new_line
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_character (' ')
-					current_file.put_string (c_else)
-					current_file.put_character (' ')
-				end
-				current_file.put_string (c_switch)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_attribute_type_id_access (l_left_operand, l_left_static_type, False)
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				nb := l_common_expanded_types.count
-				from j := 1 until j > nb loop
-					l_dynamic_type := l_common_expanded_types.dynamic_type (j)
-					print_indentation
-					current_file.put_string (c_case)
-					current_file.put_character (' ')
-					current_file.put_integer (l_dynamic_type.id)
-					current_file.put_character (':')
-					current_file.put_new_line
-					indent
-					l_is_equal_feature := l_dynamic_type.seeded_dynamic_query (current_system.is_equal_seed, current_dynamic_system)
-					if l_is_equal_feature = Void then
-							-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_formal_type := argument_type_set_in_feature (1, l_is_equal_feature).static_type
-						if not l_dynamic_type.conforms_to_primary_type (l_formal_type.primary_type) then
-								-- We won't be able to call 'is_equal' because the type of the
-								-- actual argument does not conform to formal type.
-							print_indentation
-							current_file.put_string (c_return)
-							current_file.put_character (' ')
-							current_file.put_string (l_eif_false)
-							current_file.put_character (';')
-							current_file.put_new_line
-						else
-							print_indentation
-							current_file.put_string (c_return)
-							current_file.put_character (' ')
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
-							current_file.put_character (' ')
-							current_file.put_string (l_equal)
-							current_file.put_character (' ')
-							current_file.put_integer (l_dynamic_type.id)
-							current_file.put_character (')')
-							current_file.put_character (' ')
-							current_file.put_string (l_and_then)
-							current_file.put_character (' ')
-								-- Call 'is_equal'.
-								--
-								-- The main purpose of object equality is to be CAT-call free.
-								-- Therefore we have to make sure that `l_dynamic_type' is the
-								-- only type in the dynamic type set of the right operand when
-								-- calling `print_attachment_expression'.
-							if l_right_static_type = l_dynamic_type then
-								l_actual_type_set := l_dynamic_type
-							else
-								equality_type_set.reset (l_right_static_type)
-								equality_type_set.put_type (l_dynamic_type)
-								if l_right_type_set.is_never_void then
-									equality_type_set.set_never_void
-								end
-								l_actual_type_set := equality_type_set
-							end
-							if l_dynamic_type.is_basic then
-									-- Optimization: avoid a function call for basic types.
--- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
-								current_file.put_character ('(')
-								print_unboxed_expression (l_left_operand, l_dynamic_type, False)
-								current_file.put_character (' ')
-								current_file.put_string (l_equal)
-								current_file.put_character (' ')
-								print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
-								current_file.put_character (')')
-							else
-								register_called_feature (l_is_equal_feature)
-								current_file.put_string (l_not_not)
-								print_routine_name (l_is_equal_feature, l_dynamic_type, current_file)
-								current_file.put_character ('(')
-								current_file.put_string (c_ac)
-								current_file.put_character (',')
-								current_file.put_character (' ')
-								print_target_expression (l_left_operand, l_dynamic_type, False)
-								current_file.put_character (',')
-								current_file.put_character (' ')
-								print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
-								current_file.put_character (')')
-							end
-								-- Clean up `equality_type_set'.
-							if l_actual_type_set = equality_type_set then
-								equality_type_set.reset (current_dynamic_system.unknown_type)
-							end
-							current_file.put_character (')')
-							current_file.put_character (';')
-							current_file.put_new_line
-							print_indentation
-							current_file.put_string (c_break)
-							current_file.put_character (';')
-							current_file.put_new_line
-						end
-					end
-					dedent
-					j := j + 1
-				end
-					-- Reference equality.
-				print_indentation
-				current_file.put_string (c_default)
-				current_file.put_character (':')
-				current_file.put_new_line
-				indent
-				print_indentation
-				current_file.put_string (c_return)
-				current_file.put_character (' ')
-				if l_left_static_type.is_expanded or l_right_static_type.is_expanded then
-					current_file.put_string (l_eif_false)
-				elseif not l_has_common_reference_types and (not l_left_type_set.can_be_void or not l_right_type_set.can_be_void) then
-						-- There is no reference type in common between the dynamic type sets
-						-- of the left and right operands. The only way for the equality
-						-- to succeed is that both operands be Void.
-					current_file.put_string (l_eif_false)
-				else
-					current_file.put_character ('(')
-					print_expression (l_left_operand)
-					current_file.put_character (')')
-					current_file.put_string (l_equal)
-					current_file.put_character ('(')
-					print_expression (l_right_operand)
-					current_file.put_character (')')
-				end
-				current_file.put_character (';')
-				current_file.put_new_line
-				dedent
-				print_indentation
-				current_file.put_character ('}')
-				current_file.put_new_line
-			end
-			dedent
-			print_indentation
-			current_file.put_character ('}')
-			current_file.put_new_line
-			current_file.put_new_line
-			l_left_operand.set_index (1)
-			l_right_operand.set_index (2)
-			l_common_expanded_types.wipe_out
-			current_file := old_file
-			flush_to_c_file
-			reset_temp_variables
-		end
-
-	print_object_equality_function (i: INTEGER; an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
-			-- Print function corresponding to `i'-th object equality ('~' or '/~')
-			-- `an_expression' to `current_file' and its signature to `header_file'.
-		require
-			an_expression_not_void: an_expression /= Void
-		local
-			old_file: KI_TEXT_OUTPUT_STREAM
-			l_result_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_left_type_set: ET_DYNAMIC_TYPE_SET
-			l_right_type_set: ET_DYNAMIC_TYPE_SET
-			l_left_static_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_right_static_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_left_operand: ET_IDENTIFIER
-			l_right_operand: ET_IDENTIFIER
-			l_is_equal_feature: detachable ET_DYNAMIC_FEATURE
-			l_formal_type: ET_DYNAMIC_TYPE
-			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_common_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			j, nb: INTEGER
-			l_eif_false: STRING
-			l_and_then: STRING
-			l_not_not: STRING
-			l_equal: STRING
-		do
-			l_left_type_set := dynamic_type_set (an_expression.left)
-			l_right_type_set := dynamic_type_set (an_expression.right)
-			l_left_static_type := l_left_type_set.static_type.primary_type
-			l_right_static_type := l_right_type_set.static_type.primary_type
-				-- Print signature to `header_file' and `current_file'.
-			old_file := current_file
-			current_file := current_function_header_buffer
-			header_file.put_string (c_extern)
-			header_file.put_character (' ')
-			l_result_type := dynamic_type_set (an_expression).static_type.primary_type
-			print_type_declaration (l_result_type, header_file)
-			print_type_declaration (l_result_type, current_file)
-			header_file.put_character (' ')
-			current_file.put_character (' ')
-			print_object_equality_function_name (i, current_feature, current_type, header_file)
-			print_object_equality_function_name (i, current_feature, current_type, current_file)
-			header_file.put_character ('(')
-			current_file.put_character ('(')
-			header_file.put_string (c_ge_context)
-			header_file.put_character ('*')
-			header_file.put_character (' ')
-			header_file.put_string (c_ac)
-			header_file.put_character (',')
-			header_file.put_character (' ')
-			current_file.put_string (c_ge_context)
-			current_file.put_character ('*')
-			current_file.put_character (' ')
-			current_file.put_string (c_ac)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			l_left_operand := formal_argument (1)
-			l_left_operand.set_index (an_expression.left.index)
-			print_type_declaration (l_left_static_type, header_file)
-			header_file.put_character (' ')
-			print_argument_name (l_left_operand, header_file)
-			header_file.put_character (',')
-			header_file.put_character (' ')
-			print_type_declaration (l_left_static_type, current_file)
-			current_file.put_character (' ')
-			print_argument_name (l_left_operand, current_file)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			l_right_operand := formal_argument (2)
-			l_right_operand.set_index (an_expression.right.index)
+			extra_dynamic_type_sets.force_last (l_right_type_set)
+			l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+			l_right_operand.set_index (l_index)
 			print_type_declaration (l_right_static_type, header_file)
 			header_file.put_character (' ')
 			print_argument_name (l_right_operand, header_file)
@@ -14850,115 +14154,114 @@ feature {NONE} -- Equality generation
 			indent
 			current_file := current_function_body_buffer
 				-- Find out which types are in the dynamic type set of both operands.
-			l_common_types := equality_common_types
-			l_common_types.resize (l_left_type_set.count + l_right_type_set.count)
-			if l_left_type_set.count < l_right_type_set.count then
-				nb := l_left_type_set.count
-				from j := 1 until j > nb loop
-					l_dynamic_type := l_left_type_set.dynamic_type (j)
-					if l_right_type_set.has_type (l_dynamic_type) then
-						l_common_types.put_last (l_dynamic_type)
-					end
-					j := j + 1
-				end
-			else
-				nb := l_right_type_set.count
-				from j := 1 until j > nb loop
-					l_dynamic_type := l_right_type_set.dynamic_type (j)
-					if l_left_type_set.has_type (l_dynamic_type) then
-						l_common_types.put_last (l_dynamic_type)
-					end
-					j := j + 1
-				end
-			end
-			if l_common_types.count <= 1 then
+			l_common_object_equality_types := equality_common_types
+			l_common_object_equality_types.resize (l_left_type_set.count.min (l_right_type_set.count))
+			l_common_reference_equality_types := equality_common_reference_types
+			l_common_reference_equality_types.resize (l_left_type_set.count.min (l_right_type_set.count))
+			a_equality_types.add_common_types_to_list (l_common_object_equality_types, l_common_reference_equality_types)
+			operand_stack.force (l_left_operand)
+			operand_stack.force (l_right_operand)
+			fill_call_operands (2)
+			print_equality_function_body (l_common_object_equality_types, l_common_reference_equality_types)
+			call_operands.wipe_out
+			l_common_object_equality_types.wipe_out
+			l_common_reference_equality_types.wipe_out
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file.put_new_line
+			l_left_operand.set_index (1)
+			l_right_operand.set_index (2)
+			extra_dynamic_type_sets.remove_last
+			extra_dynamic_type_sets.remove_last
+			current_file := old_file
+			flush_to_c_file
+			reset_temp_variables
+		end
+
+	print_equality_function_body (a_common_object_equality_types, a_common_reference_equality_types: ET_DYNAMIC_PRIMARY_TYPES)
+			-- Print equality function body.
+			-- Operands can be found in `call_operands'.
+		require
+			a_common_object_equality_types_not_void: a_common_object_equality_types /= Void
+			a_common_reference_equality_types_not_void: a_common_reference_equality_types /= Void
+			two_operands: call_operands.count = 2
+		local
+			l_left_operand: ET_EXPRESSION
+			l_right_operand: ET_EXPRESSION
+			l_left_type_set: ET_DYNAMIC_TYPE_SET
+			l_right_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_formal_type: ET_DYNAMIC_TYPE
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_left_static_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_right_static_type: ET_DYNAMIC_PRIMARY_TYPE
+			i, nb: INTEGER
+			l_index: INTEGER
+			l_old_index: INTEGER
+			l_boolean_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if a_common_object_equality_types.is_empty then
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_object_equality_expression (an_expression)
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-			else
-					-- There are more than one type in common between the dynamic type sets
-					-- of the left and right operands.
-				if an_expression.operator.is_not_tilde then
-					l_eif_false := c_eif_true
-					l_and_then := c_or_else
-					l_not_not := c_not
-					l_equal := c_not_equal
-				else
-					l_eif_false := c_eif_false
-					l_and_then := c_and_then
-					l_not_not := c_not_not
-					l_equal := c_equal
-				end
+				print_equality_call_with_zero_object_equality (False, a_common_object_equality_types, a_common_reference_equality_types)
+				print_semicolon_newline
+			elseif a_common_object_equality_types.count = 1 then
 				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				print_equality_call_with_one_object_equality (False, a_common_object_equality_types, a_common_reference_equality_types)
+				print_semicolon_newline
+			else
+				l_left_operand := call_operands.first
+				l_right_operand := call_operands.item (2)
+				l_left_type_set := dynamic_type_set (l_left_operand)
+				l_right_type_set := dynamic_type_set (l_right_operand)
+				l_left_static_type := l_left_type_set.static_type.primary_type
+				l_right_static_type := l_right_type_set.static_type.primary_type
 				if l_left_type_set.can_be_void then
-					current_file.put_string (c_if)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
+					print_indentation_if
 					print_expression (l_left_operand)
-					current_file.put_character (' ')
-					current_file.put_string (c_equal)
-					current_file.put_character (' ')
+					print_equal_to
 					current_file.put_string (c_eif_void)
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
+					print_then_newline
 					indent
 					print_indentation
 					current_file.put_string (c_return)
 					current_file.put_character (' ')
 					if l_right_type_set.can_be_void then
+						l_boolean_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.boolean_type, current_type.base_type)
+						print_declaration_type_cast (l_boolean_type, current_file)
 						current_file.put_character ('(')
 						print_expression (l_right_operand)
-						current_file.put_character (' ')
-						current_file.put_string (l_equal)
-						current_file.put_character (' ')
+						print_equal_to
 						current_file.put_string (c_eif_void)
 						current_file.put_character (')')
 					else
-						current_file.put_string (l_eif_false)
+						current_file.put_string (c_eif_false)
 					end
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_character (' ')
-					current_file.put_string (c_else)
-					current_file.put_character (' ')
+					print_indentation_end_newline
 				end
 				if l_right_type_set.can_be_void then
-					current_file.put_string (c_if)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
+					print_indentation_if
 					print_expression (l_right_operand)
-					current_file.put_character (' ')
-					current_file.put_string (c_equal)
-					current_file.put_character (' ')
+					print_equal_to
 					current_file.put_string (c_eif_void)
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
+					print_then_newline
 					indent
 					print_indentation
 					current_file.put_string (c_return)
 					current_file.put_character (' ')
-					current_file.put_string (l_eif_false)
-					current_file.put_character (';')
-					current_file.put_new_line
+					current_file.put_string (c_eif_false)
+					print_semicolon_newline
 					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_character (' ')
-					current_file.put_string (c_else)
-					current_file.put_character (' ')
+					print_indentation_end_newline
 				end
+				print_indentation
 				current_file.put_string (c_switch)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
@@ -14967,9 +14270,9 @@ feature {NONE} -- Equality generation
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				current_file.put_new_line
-				nb := l_common_types.count
-				from j := 1 until j > nb loop
-					l_dynamic_type := l_common_types.dynamic_type (j)
+				nb := a_common_object_equality_types.count
+				from i := 1 until i > nb loop
+					l_dynamic_type := a_common_object_equality_types.dynamic_type (i)
 					print_indentation
 					current_file.put_string (c_case)
 					current_file.put_character (' ')
@@ -14977,8 +14280,7 @@ feature {NONE} -- Equality generation
 					current_file.put_character (':')
 					current_file.put_new_line
 					indent
-					l_is_equal_feature := l_dynamic_type.seeded_dynamic_query (current_system.is_equal_seed, current_dynamic_system)
-					if l_is_equal_feature = Void then
+					if not attached l_dynamic_type.seeded_dynamic_query (current_system.is_equal_seed, current_dynamic_system) as l_is_equal_feature then
 							-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 						set_fatal_error
 						error_handler.report_giaaa_error
@@ -14990,24 +14292,21 @@ feature {NONE} -- Equality generation
 							print_indentation
 							current_file.put_string (c_return)
 							current_file.put_character (' ')
-							current_file.put_string (l_eif_false)
-							current_file.put_character (';')
-							current_file.put_new_line
+							current_file.put_string (c_eif_false)
+							print_semicolon_newline
 						else
 							print_indentation
 							current_file.put_string (c_return)
 							current_file.put_character (' ')
+							l_boolean_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.boolean_type, current_type.base_type)
+							print_declaration_type_cast (l_boolean_type, current_file)
 							current_file.put_character ('(')
 							current_file.put_character ('(')
 							print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
-							current_file.put_character (' ')
-							current_file.put_string (l_equal)
-							current_file.put_character (' ')
+							print_equal_to
 							current_file.put_integer (l_dynamic_type.id)
 							current_file.put_character (')')
-							current_file.put_character (' ')
-							current_file.put_string (l_and_then)
-							current_file.put_character (' ')
+							print_and_then
 								-- Call 'is_equal'.
 								--
 								-- The main purpose of object equality is to be CAT-call free.
@@ -15024,47 +14323,37 @@ feature {NONE} -- Equality generation
 								end
 								l_actual_type_set := equality_type_set
 							end
-							if l_dynamic_type.is_basic then
-									-- Optimization: avoid a function call for basic types.
--- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
-								current_file.put_character ('(')
-								print_unboxed_expression (l_left_operand, l_dynamic_type, False)
-								current_file.put_character (' ')
-								current_file.put_string (l_equal)
-								current_file.put_character (' ')
-								print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
-								current_file.put_character (')')
+							extra_dynamic_type_sets.force_last (l_actual_type_set)
+							l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+							l_old_index := l_right_operand.index
+							l_right_operand.set_index (l_index)
+							if not l_dynamic_type.has_redefined_is_equal_routine then
+								print_builtin_any_is_equal_call (l_is_equal_feature, l_dynamic_type, False)
 							else
 								register_called_feature (l_is_equal_feature)
-								current_file.put_string (l_not_not)
 								print_routine_name (l_is_equal_feature, l_dynamic_type, current_file)
 								current_file.put_character ('(')
 								current_file.put_string (c_ac)
-								current_file.put_character (',')
-								current_file.put_character (' ')
+								print_comma
 								print_target_expression (l_left_operand, l_dynamic_type, False)
-								current_file.put_character (',')
-								current_file.put_character (' ')
+								print_comma
 								print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
 								current_file.put_character (')')
 							end
+							l_right_operand.set_index (l_old_index)
+							extra_dynamic_type_sets.remove_last
 								-- Clean up `equality_type_set'.
 							if l_actual_type_set = equality_type_set then
 								equality_type_set.reset (current_dynamic_system.unknown_type)
 							end
 							current_file.put_character (')')
-							current_file.put_character (';')
-							current_file.put_new_line
-							print_indentation
-							current_file.put_string (c_break)
-							current_file.put_character (';')
-							current_file.put_new_line
+							print_semicolon_newline
 						end
 					end
 					dedent
-					j := j + 1
+					i := i + 1
 				end
-					-- This type is not common to both operand type sets.
+					-- Reference equality.
 				print_indentation
 				current_file.put_string (c_default)
 				current_file.put_character (':')
@@ -15073,25 +14362,17 @@ feature {NONE} -- Equality generation
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
-				current_file.put_string (l_eif_false)
-				current_file.put_character (';')
-				current_file.put_new_line
+				if a_common_reference_equality_types.is_empty then
+					current_file.put_string (c_eif_false)
+				else
+					print_equality_call_with_zero_object_equality (False, current_dynamic_system.unknown_type, a_common_reference_equality_types)
+				end
+				print_semicolon_newline
 				dedent
 				print_indentation
 				current_file.put_character ('}')
 				current_file.put_new_line
 			end
-			dedent
-			print_indentation
-			current_file.put_character ('}')
-			current_file.put_new_line
-			current_file.put_new_line
-			l_left_operand.set_index (1)
-			l_right_operand.set_index (2)
-			l_common_types.wipe_out
-			current_file := old_file
-			flush_to_c_file
-			reset_temp_variables
 		end
 
 feature {NONE} -- Object-test generation
@@ -20046,7 +19327,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			valid_feature: current_feature.static_feature = a_feature
 		local
 			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
-			l_argument: ET_IDENTIFIER
+			l_argument: ET_EXPRESSION
 			l_target: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_argument_static_type: ET_DYNAMIC_PRIMARY_TYPE
@@ -20062,23 +19343,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: `current_feature' is a query.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif total_order_on_reals_mode and then current_type = current_dynamic_system.real_32_type then
-				include_runtime_header_file ("ge_real.h", False, header_file)
-				fill_call_formal_arguments (a_feature)
-				print_indentation_assign_to_result
-				print_builtin_query_c_call (current_feature, c_ge_real_32_is_equal, False, current_type, False)
-				print_semicolon_newline
-				call_operands.wipe_out
-			elseif total_order_on_reals_mode and then current_type = current_dynamic_system.real_64_type then
-				include_runtime_header_file ("ge_real.h", False, header_file)
-				fill_call_formal_arguments (a_feature)
-				print_indentation_assign_to_result
-				print_builtin_query_c_call (current_feature, c_ge_real_64_is_equal, False, current_type, False)
-				print_semicolon_newline
-				call_operands.wipe_out
 			else
-				l_target := tokens.current_keyword
-				l_argument := l_arguments.formal_argument (1).name
+				fill_call_formal_arguments (a_feature)
 				l_argument_type_set := argument_type_set_in_feature (1, current_feature)
 				l_argument_static_type := l_argument_type_set.static_type.primary_type
 				l_result_type := l_result_type_set.static_type.primary_type
@@ -20092,16 +19358,18 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_semicolon_newline
 				elseif not l_has_nested_custom_standard_is_equal_routine and current_type.is_expanded then
 					print_indentation_assign_to_result
-					print_builtin_any_standard_is_equal_call_with_expanded (l_target, current_type, l_argument, l_argument_static_type, l_argument_type_set, l_result_type, False)
+					print_builtin_any_standard_is_equal_call_with_expanded (current_feature, current_type, l_argument_static_type, l_argument_type_set, l_result_type, False)
 					print_semicolon_newline
 				elseif not l_has_nested_custom_standard_is_equal_routine and l_argument_type_set.count = 1 then
 						-- `current_type' is one of the types held in `l_argument_type_set'
 						-- (see the if-branch above). So when `l_argument_type_set' has
 						-- exactly one type then we know that `current_type' is this type.
 					print_indentation_assign_to_result
-					print_builtin_any_standard_is_equal_call_with_reference (l_target, current_type, l_argument, l_argument_static_type, l_argument_type_set, l_result_type, False)
+					print_builtin_any_standard_is_equal_call_with_reference (current_feature, current_type, l_argument_static_type, l_argument_type_set, l_result_type, False)
 					print_semicolon_newline
 				else
+					l_target := call_operands.first
+					l_argument := call_operands.item (2)
 					print_indentation_assign_to_result
 					if l_argument_type_set.count = 1 then
 							-- `current_type' is one of the types held in `l_argument_type_set'
@@ -20110,8 +19378,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						current_file.put_string (c_eif_true)
 					else
 							-- We know that the argument is equipped with a type-id:
-							-- * if 'l_argument_type_set.count = 0' then the argument is Void
-							--   to the argument static type has to be a reference type.
+							-- * if 'l_argument_type_set.count = 0' then the argument is Void,
+							--   so the argument static type has to be a reference type.
 							-- * if 'l_argument_type_set.count > 1' then the argument is
 							--   polymorphic.
 						print_declaration_type_cast (l_result_type, current_file)
@@ -20137,12 +19405,16 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						not current_type.base_class.is_type_class
 					then
 						print_indentation_assign_to_result
+						print_declaration_type_cast (l_result_type, current_file)
+						current_file.put_character ('(')
 						print_result_name (current_file)
 						print_and_then
-						print_builtin_any_standard_is_equal_call_with_reference (l_target, current_type, l_argument, l_argument_static_type, l_argument_type_set, l_result_type, False)
+						print_builtin_any_standard_is_equal_call_with_reference (current_feature, current_type, l_argument_static_type, l_argument_type_set, l_result_type, False)
+						current_file.put_character (')')
 						print_semicolon_newline
 					end
 				end
+				call_operands.wipe_out
 			end
 		end
 
@@ -20157,6 +19429,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_field_type_set_not_void: a_field_type_set /= Void
 		local
 			l_field_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_equality_expression: ET_EQUALITY_EXPRESSION
+			l_index: INTEGER
+			l_boolean_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			l_field_type := a_field_type_set.static_type.primary_type
 			if l_field_type.is_expanded then
@@ -20171,29 +19446,49 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_attachment_operand (a_source_field, a_field_type_set)
 					fill_call_operands (2)
 					print_indentation_assign_to_result
+					l_boolean_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.boolean_type, current_type.base_type)
+					print_declaration_type_cast (l_boolean_type, current_file)
+					current_file.put_character ('(')
 					print_result_name (current_file)
 					print_and_then
 					register_called_feature (l_is_equal_feature)
 					print_query_call (l_is_equal_feature, l_field_type, False)
+					current_file.put_character (')')
 					print_semicolon_newline
 					call_operands.wipe_out
 				end
---			elseif a_field_type_set.has_expanded then
+			elseif a_field_type_set.has_expanded then
 					-- Reference field which may be attached to an object with copy semantics.
--- TODO
+				extra_dynamic_type_sets.force_last (current_dynamic_system.boolean_type)
+				l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+				l_equality_expression := new_equality_expression (a_target_field, tokens.equal_symbol, a_source_field)
+				l_equality_expression.set_index (l_index)
+				print_indentation_assign_to_result
+				l_boolean_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.boolean_type, current_type.base_type)
+				print_declaration_type_cast (l_boolean_type, current_file)
+				current_file.put_character ('(')
+				print_result_name (current_file)
+				print_and_then
+				print_equality_expression (l_equality_expression)
+				current_file.put_character (')')
+				print_semicolon_newline
+				free_equality_expression (l_equality_expression)
+				extra_dynamic_type_sets.remove_last
 			else
 				print_operand (a_target_field)
 				print_operand (a_source_field)
 				fill_call_operands (2)
 				print_indentation_assign_to_result
+				l_boolean_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.boolean_type, current_type.base_type)
+				print_declaration_type_cast (l_boolean_type, current_file)
+				current_file.put_character ('(')
 				print_result_name (current_file)
 				print_and_then
-					-- Convert C boolean value to Eiffel boolean value.
-				current_file.put_string (c_eif_test)
 				current_file.put_character ('(')
 				print_target_expression (call_operands.first, l_field_type, False)
 				print_equal_to
 				print_attachment_expression (call_operands.item (2), a_field_type_set, l_field_type)
+				current_file.put_character (')')
 				current_file.put_character (')')
 				print_semicolon_newline
 				call_operands.wipe_out
@@ -20212,7 +19507,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			i, nb: INTEGER
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_attribute: ET_DYNAMIC_FEATURE
-			l_attribute_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_name: ET_FEATURE_NAME
 			l_index: INTEGER
 			l_target_attribute: ET_QUALIFIED_CALL_EXPRESSION
@@ -20227,9 +19521,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					l_attribute_type := l_attribute_type_set.static_type.primary_type
 						-- Prepare dynamic type sets of attribute expressions.
-					extra_dynamic_type_sets.force_last (l_attribute_type)
+					extra_dynamic_type_sets.force_last (l_attribute_type_set)
 					l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
 						-- Prepare call expressions to attribute feature.
 					l_name := l_attribute.static_feature.name
@@ -20268,6 +19561,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_target_item: ET_QUALIFIED_CALL_EXPRESSION
 			l_source_item: ET_QUALIFIED_CALL_EXPRESSION
 			l_actual_argument_list: ET_ACTUAL_ARGUMENT_LIST
+			l_boolean_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if a_special_type.attribute_count < 2 then
 					-- Internal error: class "SPECIAL" should have at least the
@@ -20332,7 +19626,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					extra_dynamic_type_sets.force_last (l_count_type)
 					l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
 					l_i_temp.set_index (l_index)
-					extra_dynamic_type_sets.force_last (l_item_type)
+					extra_dynamic_type_sets.force_last (l_item_type_set)
 					l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
 						-- Prepare call expressions to 'item' feature.
 					l_name := l_item_routine.static_feature.name
@@ -20355,10 +19649,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_indentation_end_newline
 				else
 					print_indentation_assign_to_result
+					l_boolean_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.boolean_type, current_type.base_type)
+					print_declaration_type_cast (l_boolean_type, current_file)
+					current_file.put_character ('(')
 					print_result_name (current_file)
 					print_and_then
-						-- Convert C boolean value to Eiffel boolean value.
-					current_file.put_string (c_eif_test)
 					current_file.put_character ('(')
 					current_file.put_character ('!')
 					current_file.put_string (c_memcmp)
@@ -20372,6 +19667,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_string (c_sizeof)
 					current_file.put_character ('(')
 					print_type_declaration (l_item_type, current_file)
+					current_file.put_character (')')
 					current_file.put_character (')')
 					current_file.put_character (')')
 					current_file.put_character (')')
@@ -20405,7 +19701,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			i, nb: INTEGER
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
-			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_index: INTEGER
 			l_tuple_label: ET_IDENTIFIER
 			l_target_item: ET_QUALIFIED_CALL_EXPRESSION
@@ -20415,9 +19710,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			nb := l_item_type_sets.count
 			from i := 1 until i > nb loop
 				l_item_type_set := l_item_type_sets.item (i)
-				l_item_type := l_item_type_set.static_type.primary_type
 					-- Prepare dynamic type sets of item expressions.
-				extra_dynamic_type_sets.force_last (l_item_type)
+				extra_dynamic_type_sets.force_last (l_item_type_set)
 				l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
 					-- Prepare call expressions to attribute feature.
 				l_tuple_label := new_tuple_label (i)
@@ -20459,12 +19753,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif total_order_on_reals_mode and then a_target_type = current_dynamic_system.real_32_type then
-				include_runtime_header_file ("ge_real.h", False, header_file)
-				print_builtin_query_c_call (a_feature, c_ge_real_32_is_equal, False, a_target_type, a_check_void_target)
-			elseif total_order_on_reals_mode and then a_target_type = current_dynamic_system.real_64_type then
-				include_runtime_header_file ("ge_real.h", False, header_file)
-				print_builtin_query_c_call (a_feature, c_ge_real_64_is_equal, False, a_target_type, a_check_void_target)
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -20487,34 +19775,39 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_attachment_expression (l_argument, l_argument_type_set, l_formal_type)
 					current_file.put_character (')')
 				elseif a_target_type.is_expanded then
-					print_builtin_any_standard_is_equal_call_with_expanded (l_target, a_target_type, l_argument, l_formal_type, l_argument_type_set, l_result_type, a_check_void_target)
+					print_builtin_any_standard_is_equal_call_with_expanded (a_feature, a_target_type, l_formal_type, l_argument_type_set, l_result_type, a_check_void_target)
 				else
 						-- `a_target_type' is one of the types held in `l_argument_type_set'
 						-- (see the if-branch above). So when `l_argument_type_set' has
 						-- exactly one type then we know that `a_target_type' is this type.
-					print_builtin_any_standard_is_equal_call_with_reference (l_target, a_target_type, l_argument, l_formal_type, l_argument_type_set, l_result_type, a_check_void_target)
+					print_builtin_any_standard_is_equal_call_with_reference (a_feature, a_target_type, l_formal_type, l_argument_type_set, l_result_type, a_check_void_target)
 				end
 			end
 		end
 
-	print_builtin_any_standard_is_equal_call_with_expanded (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE;
-		a_argument: ET_EXPRESSION; a_argument_formal_type: ET_DYNAMIC_TYPE; a_argument_type_set: ET_DYNAMIC_TYPE_SET;
+	print_builtin_any_standard_is_equal_call_with_expanded (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE;
+		a_argument_formal_type: ET_DYNAMIC_TYPE; a_argument_type_set: ET_DYNAMIC_TYPE_SET;
 		a_result_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
-			-- Print to `current_file' a call (static binding) to the built-in feature
-			-- 'ANY.standard_is_equal' with `a_target' as target and `a_argument' as argument.
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ANY.standard_is_equal'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_argument_formal_type' is the formal type of the argument.
 			-- `a_argument_type_set' is the dynamic type set of the argument.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
 		require
-			a_target_not_void: a_target /= Void
+			a_feature_not_void: a_feature /= Void
 			a_target_type_not_void: a_target_type /= Void
 			a_target_type_is_expanded: a_target_type.is_expanded
-			a_argument_not_void: a_argument /= Void
+			a_target_type_not_has_nested_custom_standard_is_equal_routine: not a_target_type.has_nested_custom_standard_is_equal_routine
 			a_argument_formal_type_not_void: a_argument_formal_type /= Void
 			a_argument_type_set_not_void: a_argument_type_set /= Void
 			a_argument_type_set_has_target_type: a_argument_type_set.has_type (a_target_type)
 			a_result_type_not_void: a_result_type /= Void
+			two_operands: call_operands.count = 2
+		local
+			l_target: ET_EXPRESSION
+			l_argument: ET_EXPRESSION
 		do
 				-- We know that the only type which conforms to an expanded
 				-- type is the type itself. So no need to check that the
@@ -20526,39 +19819,52 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				a_target_type.attribute_count = 0
 			then
 				current_file.put_string (c_eif_true)
+			elseif total_order_on_reals_mode and then a_target_type = current_dynamic_system.real_32_type and then not a_target_type.has_redefined_is_equal_routine then
+				include_runtime_header_file ("ge_real.h", False, header_file)
+				print_builtin_query_c_call (a_feature, c_ge_real_32_is_equal, False, a_target_type, a_check_void_target)
+			elseif total_order_on_reals_mode and then a_target_type = current_dynamic_system.real_64_type and then not a_target_type.has_redefined_is_equal_routine then
+				include_runtime_header_file ("ge_real.h", False, header_file)
+				print_builtin_query_c_call (a_feature, c_ge_real_64_is_equal, False, a_target_type, a_check_void_target)
 			else
+				l_target := call_operands.first
+				l_argument := call_operands.item (2)
 				print_declaration_type_cast (a_result_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				print_unboxed_expression (a_target, a_target_type, a_check_void_target)
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				print_equal_to
 				current_file.put_character ('(')
-				print_attachment_expression (a_argument, a_argument_type_set, a_argument_formal_type)
+				print_attachment_expression (l_argument, a_argument_type_set, a_argument_formal_type)
 				current_file.put_character (')')
 				current_file.put_character (')')
 			end
 		end
 
-	print_builtin_any_standard_is_equal_call_with_reference (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE;
-		a_argument: ET_EXPRESSION; a_argument_formal_type: ET_DYNAMIC_TYPE; a_argument_type_set: ET_DYNAMIC_TYPE_SET;
+	print_builtin_any_standard_is_equal_call_with_reference (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE;
+		a_argument_formal_type: ET_DYNAMIC_TYPE; a_argument_type_set: ET_DYNAMIC_TYPE_SET;
 		a_result_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
-			-- Print to `current_file' a call (static binding) to the built-in feature
-			-- 'ANY.standard_is_equal' with `a_target' as target and `a_argument' as argument.
-			-- `a_target' and `a_argument' are expected to have the same dynamic type.
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ANY.standard_is_equal'.
+			-- `The target and the argument are expected to have the same dynamic type.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_argument_formal_type' is the formal type of the argument.
 			-- `a_argument_type_set' is the dynamic type set of the argument.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
 		require
-			a_target_not_void: a_target /= Void
+			a_feature_not_void: a_feature /= Void
 			a_target_type_not_void: a_target_type /= Void
 			a_target_type_is_reference: not a_target_type.is_expanded
-			a_argument_not_void: a_argument /= Void
+			a_target_type_not_has_nested_custom_standard_is_equal_routine: not a_target_type.has_nested_custom_standard_is_equal_routine
 			a_argument_formal_type_not_void: a_argument_formal_type /= Void
 			a_argument_type_set_not_void: a_argument_type_set /= Void
 			a_argument_type_set_has_target_type: a_argument_type_set.has_type (a_target_type)
 			a_result_type_not_void: a_result_type /= Void
+			two_operands: call_operands.count = 2
+		local
+			l_target: ET_EXPRESSION
+			l_argument: ET_EXPRESSION
 		do
 			if a_target_type.base_class.is_type_class then
 					-- Cannot have two instances of class "TYPE" representing the same Eiffel type.
@@ -20572,7 +19878,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_string (c_eif_true)
 			else
 					-- Note: do not compare the flags.
-				print_declaration_type_cast_from_c (a_result_type, current_file)
+				l_target := call_operands.first
+				l_argument := call_operands.item (2)
+				print_declaration_type_cast (a_result_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('!')
 				current_file.put_string (c_memcmp)
@@ -20583,7 +19891,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character ('*')
 				current_file.put_character (')')
 				current_file.put_character ('(')
-				print_target_expression (a_target, a_target_type, a_check_void_target)
+				print_target_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character (')')
 				print_plus
@@ -20598,7 +19906,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character ('*')
 				current_file.put_character (')')
 				current_file.put_character ('(')
-				print_attachment_expression (a_argument, a_argument_type_set, a_argument_formal_type)
+				print_attachment_expression (l_argument, a_argument_type_set, a_argument_formal_type)
 				current_file.put_character (')')
 				current_file.put_character (')')
 				print_plus
@@ -20608,9 +19916,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character (')')
 				print_comma
 				if attached {ET_DYNAMIC_SPECIAL_TYPE} a_target_type as l_special_type then
-					print_attribute_special_offset_access (a_target, l_special_type, False)
+					print_attribute_special_offset_access (l_target, l_special_type, False)
 					print_plus
-					print_attribute_special_count_access (a_target, l_special_type, False)
+					print_attribute_special_count_access (l_target, l_special_type, False)
 					print_times
 					current_file.put_string (c_sizeof)
 					current_file.put_character ('(')
@@ -23913,6 +23221,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
+			--
+			-- Note: in C, the operators '<', '<=', '>', and '>=' always
+			-- return either 0 or 1. No need to call "EIF_TEST" on them.
+			-- See https://stackoverflow.com/questions/18097922/return-value-of-operator-in-c
 		require
 			a_feature_not_void: a_feature /= Void
 			a_target_type_not_void: a_target_type /= Void
@@ -27304,6 +26616,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
+			--
+			-- Note: in C, the operators '<', '<=', '>', and '>=' always
+			-- return either 0 or 1. No need to call "EIF_TEST" on them.
+			-- See https://stackoverflow.com/questions/18097922/return-value-of-operator-in-c
 		require
 			a_feature_not_void: a_feature /= Void
 			a_target_type_not_void: a_target_type /= Void
@@ -36716,9 +36032,8 @@ feature {NONE} -- Feature name generation
 		end
 
 	print_equality_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
-			-- Print name of `i'-th equality ('=' or '/=') function appearing in `a_routine' from `a_type' to `a_file'.
-			-- We need a function for equality when the dynamic type set of operands
-			-- contains expanded types.
+			-- Print name of `i'-th equality ('=' or '/=' as well as '~' or '/~') function
+			-- appearing in `a_routine' from `a_type' to `a_file'.
 		require
 			a_routine_not_void: a_routine /= Void
 			a_type_not_void: a_type /= Void
@@ -36730,24 +36045,6 @@ feature {NONE} -- Feature name generation
 			else
 				print_routine_name (a_routine, a_type, a_file)
 			end
-			a_file.put_character ('e')
-			a_file.put_integer (i)
-		end
-
-	print_object_equality_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
-			-- Print name of `i'-th object-equality ('~' or '/~') function appearing in `a_routine' from `a_type' to `a_file'.
-		require
-			a_routine_not_void: a_routine /= Void
-			a_type_not_void: a_type /= Void
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		do
-			if in_static_feature then
-				print_static_routine_name (a_routine, a_type, a_file)
-			else
-				print_routine_name (a_routine, a_type, a_file)
-			end
-			a_file.put_character ('o')
 			a_file.put_character ('e')
 			a_file.put_integer (i)
 		end
@@ -38988,13 +38285,9 @@ feature {NONE} -- Access
 			-- Object-tests appearing in `current_feature' for which
 			-- a function needs to be generated
 
-	current_object_equalities: DS_ARRAYED_LIST [ET_OBJECT_EQUALITY_EXPRESSION]
-			-- Object-equalities ('~' or '/~') appearing in `current_feature' for which
-			-- a function needs to be generated
-
-	current_equalities: DS_ARRAYED_LIST [ET_EQUALITY_EXPRESSION]
-			-- Equalities ('=' or '/=') appearing in `current_feature' for which
-			-- a function needs to be generated
+	current_equalities: DS_ARRAYED_LIST [ET_DYNAMIC_EQUALITY_TYPES]
+			-- Equalities ('=' or '/=', as well as '~' or '/~') appearing in
+			-- `current_feature' for which  a function needs to be generated
 
 	dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
 			-- Dynamic types in the system
@@ -39342,6 +38635,10 @@ feature {NONE} -- Dynamic type sets
 			-- List of types that are part of the dynamic type set of both
 			-- operands in an equality expression ('=', '/=', '~' or '/~')
 
+	equality_common_reference_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
+			-- List of reference types that are part of the dynamic type set of both
+			-- operands in an equality expression ('=', '/=', '~' or '/~')
+
 	dynamic_type_id_sorter: DS_QUICK_SORTER [INTEGER]
 			-- Dynamic type id sorter
 		local
@@ -39685,6 +38982,121 @@ feature {NONE} -- Temporary variables (Implementation)
 		ensure
 			temp_variable_not_void: Result /= Void
 		end
+
+feature {NONE} -- Equality expressions
+
+	new_equality_expression (a_left: ET_EXPRESSION; a_operator: ET_SYMBOL; a_right: ET_EXPRESSION): ET_EQUALITY_EXPRESSION
+			-- New equality expression
+		require
+			a_left_not_void: a_left /= Void
+			a_operator_not_void: a_operator /= Void
+			a_right_not_void: a_right /= Void
+		do
+			if unused_equality_expressions.is_empty then
+				create Result.make (a_left, a_operator, a_right)
+			else
+				Result := unused_equality_expressions.last
+				unused_equality_expressions.remove_last
+				Result.set_left (a_left)
+				Result.set_operator (a_operator)
+				Result.set_right (a_right)
+			end
+		ensure
+			new_equality_expression_not_void: Result /= Void
+			left_set: Result.left = a_left
+			operator_set: Result.operator = a_operator
+			right_set: Result.right = a_right
+		end
+
+	free_equality_expression (a_expression: ET_EQUALITY_EXPRESSION)
+			-- Free `a_expression' so that it can be reused.
+		require
+			a_expression_not_void: a_expression /= Void
+		do
+			unused_equality_expressions.force_last (a_expression)
+			a_expression.set_left (tokens.current_keyword)
+			a_expression.set_operator (tokens.equal_symbol)
+			a_expression.set_right (tokens.current_keyword)
+		end
+
+feature {NONE} -- Equality expressions (Implementation)
+
+	unused_equality_expressions: DS_ARRAYED_LIST [ET_EQUALITY_EXPRESSION]
+			-- Equality expressions that are not currently used
+
+feature {NONE} -- Equality types
+
+	new_equality_types (a_left: ET_DYNAMIC_TYPE_SET; a_right: ET_DYNAMIC_TYPE_SET): ET_DYNAMIC_EQUALITY_TYPES
+			-- New equality types
+		require
+			a_left_not_void: a_left /= Void
+			a_right_not_void: a_right /= Void
+		do
+			if unused_equality_types.is_empty then
+				create Result.make (a_left, a_right)
+			else
+				Result := unused_equality_types.last
+				unused_equality_types.remove_last
+				Result.set_left (a_left)
+				Result.set_right (a_right)
+			end
+		ensure
+			new_equality_types_not_void: Result /= Void
+			left_set: Result.left = a_left
+			right_set: Result.right = a_right
+		end
+
+	free_equality_types (a_types: ET_DYNAMIC_EQUALITY_TYPES)
+			-- Free `a_types' so that it can be reused.
+		require
+			a_types_not_void: a_types /= Void
+		do
+			unused_equality_types.force_last (a_types)
+			a_types.set_left (current_dynamic_system.unknown_type)
+			a_types.set_right (current_dynamic_system.unknown_type)
+		end
+
+feature {NONE} -- Equality types (Implementation)
+
+	unused_equality_types: DS_ARRAYED_LIST [ET_DYNAMIC_EQUALITY_TYPES]
+			-- Dynamic type sets of equality operands that are not currently used
+
+feature {NONE} -- Object equality types
+
+	new_object_equality_types (a_left: ET_DYNAMIC_TYPE_SET; a_right: ET_DYNAMIC_TYPE_SET): ET_DYNAMIC_OBJECT_EQUALITY_TYPES
+			-- New object equality types
+		require
+			a_left_not_void: a_left /= Void
+			a_right_not_void: a_right /= Void
+		do
+			if unused_object_equality_types.is_empty then
+				create Result.make (a_left, a_right)
+			else
+				Result := unused_object_equality_types.last
+				unused_object_equality_types.remove_last
+				Result.set_left (a_left)
+				Result.set_right (a_right)
+			end
+		ensure
+			new_object_equality_types_not_void: Result /= Void
+			left_set: Result.left = a_left
+			right_set: Result.right = a_right
+		end
+
+	free_object_equality_types (a_types: ET_DYNAMIC_OBJECT_EQUALITY_TYPES)
+			-- Free `a_types' so that it can be reused.
+		require
+			a_types_not_void: a_types /= Void
+		do
+			unused_object_equality_types.force_last (a_types)
+			a_types.set_left (current_dynamic_system.unknown_type)
+			a_types.set_right (current_dynamic_system.unknown_type)
+		end
+
+feature {NONE} -- Object equality types (Implementation)
+
+	unused_object_equality_types: DS_ARRAYED_LIST [ET_DYNAMIC_OBJECT_EQUALITY_TYPES]
+			-- Dynamic type sets of object equality operands that are not currently used
 
 feature {NONE} -- Unqualified call expressions
 
@@ -40895,6 +40307,7 @@ invariant
 	no_void_target_dynamic_type: not target_dynamic_types.has_void_item
 	equality_type_set_not_void: equality_type_set /= Void
 	equality_common_types_not_void: equality_common_types /= Void
+	equality_common_reference_types_not_void: equality_common_reference_types /= Void
 	standalone_type_sets_not_void: standalone_type_sets /= Void
 	unused_standalone_type_sets_not_void: unused_standalone_type_sets /= Void
 	no_void_unused_standalone_type_set: not unused_standalone_type_sets.has_void
@@ -40924,8 +40337,6 @@ invariant
 	no_void_manifest_tuple_type: not manifest_tuple_types.has_void
 	current_object_tests_not_void: current_object_tests /= Void
 	no_void_current_object_test: not current_object_tests.has_void
-	current_object_equalities_not_void: current_object_equalities /= Void
-	no_void_current_object_equality: not current_object_equalities.has_void
 	current_equalities_not_void: current_equalities /= Void
 	no_void_current_equality: not current_equalities.has_void
 	called_features_not_void: called_features /= Void
@@ -40957,6 +40368,15 @@ invariant
 	free_temp_variables_count: free_temp_variables.count = used_temp_variables.count
 	frozen_temp_variables_not_void: frozen_temp_variables /= Void
 	frozen_temp_variables_count: frozen_temp_variables.count = used_temp_variables.count
+		-- Equality expressions.
+	unused_equality_expressions_not_void: unused_equality_expressions /= Void
+	no_void_unused_equality_expression: not unused_equality_expressions.has_void
+		-- Equality types.
+	unused_equality_types_not_void: unused_equality_types /= Void
+	no_void_unused_equality_types: not unused_equality_types.has_void
+		-- Object equality types.
+	unused_object_equality_types_not_void: unused_object_equality_types /= Void
+	no_void_unused_object_equality_types: not unused_object_equality_types.has_void
 		-- Unqualified call expressions.
 	unused_unqualified_call_expressions_not_void: unused_unqualified_call_expressions /= Void
 	no_void_unused_unqualified_call_expression: not unused_unqualified_call_expressions.has_void

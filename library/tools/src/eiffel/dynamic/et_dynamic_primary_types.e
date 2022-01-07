@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic primary types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -122,6 +122,134 @@ feature -- Status report
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
+					i := i + 1
+				end
+			end
+		end
+
+feature -- Basic operations
+
+	add_common_types_to_list (a_other: ET_DYNAMIC_PRIMARY_TYPES; a_list: ET_DYNAMIC_PRIMARY_TYPE_LIST)
+			-- Add to `a_list' the types which are both in `Current' and `a_other'.
+		require
+			a_other_not_void: a_other /= Void
+			a_list_not_void: a_list /= Void
+		local
+			i, nb: INTEGER
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if a_other = Current then
+				nb := count
+				from i := 1 until i > nb loop
+					a_list.force_last (dynamic_type (i))
+					i := i + 1
+				end
+			elseif count < a_other.count then
+				nb := count
+				from i := 1 until i > nb loop
+					l_dynamic_type := dynamic_type (i)
+					if a_other.has_type (l_dynamic_type) then
+						a_list.force_last (l_dynamic_type)
+					end
+					i := i + 1
+				end
+			else
+				nb := a_other.count
+				from i := 1 until i > nb loop
+					l_dynamic_type := a_other.dynamic_type (i)
+					if has_type (l_dynamic_type) then
+						a_list.force_last (l_dynamic_type)
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	add_common_expanded_types_to_list (a_other: ET_DYNAMIC_PRIMARY_TYPES; a_list: ET_DYNAMIC_PRIMARY_TYPE_LIST)
+			-- Add to `a_list' the expanded types which are both in `Current' and `a_other'.
+		require
+			a_other_not_void: a_other /= Void
+			a_list_not_void: a_list /= Void
+		local
+			i, nb: INTEGER
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if a_other = Current then
+				nb := count
+				from i := 1 until i > nb loop
+					l_dynamic_type := dynamic_type (i)
+					if l_dynamic_type.is_expanded then
+						a_list.force_last (l_dynamic_type)
+					end
+					i := i + 1
+				end
+			elseif count < a_other.count then
+				nb := count
+				from i := 1 until i > nb loop
+					l_dynamic_type := dynamic_type (i)
+					if l_dynamic_type.is_expanded and then a_other.has_type (l_dynamic_type) then
+						a_list.force_last (l_dynamic_type)
+					end
+					i := i + 1
+				end
+			else
+				nb := a_other.count
+				from i := 1 until i > nb loop
+					l_dynamic_type := a_other.dynamic_type (i)
+					if l_dynamic_type.is_expanded and then has_type (l_dynamic_type) then
+						a_list.force_last (l_dynamic_type)
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	add_common_expanded_and_reference_types_to_lists (a_other: ET_DYNAMIC_PRIMARY_TYPES; a_expanded_list, a_reference_list: ET_DYNAMIC_PRIMARY_TYPE_LIST)
+			-- Add to `a_expanded_list' the expanded types and to `a_reference_list'
+			-- the reference types which are both in `Current' and `a_other'.
+		require
+			a_other_not_void: a_other /= Void
+			a_expanded_list_not_void: a_expanded_list /= Void
+			a_reference_list_not_void: a_reference_list /= Void
+		local
+			i, nb: INTEGER
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if a_other = Current then
+				nb := count
+				from i := 1 until i > nb loop
+					l_dynamic_type := dynamic_type (i)
+					if l_dynamic_type.is_expanded then
+						a_expanded_list.force_last (l_dynamic_type)
+					else
+						a_reference_list.force_last (l_dynamic_type)
+					end
+					i := i + 1
+				end
+			elseif count < a_other.count then
+				nb := count
+				from i := 1 until i > nb loop
+					l_dynamic_type := dynamic_type (i)
+					if a_other.has_type (l_dynamic_type) then
+						if l_dynamic_type.is_expanded then
+							a_expanded_list.force_last (l_dynamic_type)
+						else
+							a_reference_list.force_last (l_dynamic_type)
+						end
+					end
+					i := i + 1
+				end
+			else
+				nb := a_other.count
+				from i := 1 until i > nb loop
+					l_dynamic_type := a_other.dynamic_type (i)
+					if has_type (l_dynamic_type) then
+						if l_dynamic_type.is_expanded then
+							a_expanded_list.force_last (l_dynamic_type)
+						else
+							a_reference_list.force_last (l_dynamic_type)
+						end
+					end
 					i := i + 1
 				end
 			end

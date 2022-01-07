@@ -5,7 +5,7 @@ note
 		"Eiffel equality expressions (i.e. '=' and '/=')"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,6 +60,18 @@ feature -- Access
 
 	operator: ET_SYMBOL
 			-- Operator symbol ('=' or '/=')
+
+feature -- Setting
+
+	set_operator (a_operator: like operator)
+			-- Set `operator' to `a_operator'.
+		require
+			a_operator_not_void: a_operator /= Void
+		do
+			operator := a_operator
+		ensure
+			operator_set: operator = a_operator
+		end
 
 feature -- Processing
 
