@@ -19463,15 +19463,18 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
 				l_equality_expression := new_equality_expression (a_target_field, tokens.equal_symbol, a_source_field)
 				l_equality_expression.set_index (l_index)
+				print_operand (l_equality_expression)
+				fill_call_operands (1)
 				print_indentation_assign_to_result
 				l_boolean_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.boolean_type, current_type.base_type)
 				print_declaration_type_cast (l_boolean_type, current_file)
 				current_file.put_character ('(')
 				print_result_name (current_file)
 				print_and_then
-				print_equality_expression (l_equality_expression)
+				print_expression (call_operands.first)
 				current_file.put_character (')')
 				print_semicolon_newline
+				call_operands.wipe_out
 				free_equality_expression (l_equality_expression)
 				extra_dynamic_type_sets.remove_last
 			else
