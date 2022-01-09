@@ -21,6 +21,26 @@
   preprocessor statements `#line` now included in the generated C code.
 * Let the test in `$GOBO/tool/gec/test/tool` run `gecop` with the `gec`
   executable just built (the executable under test).
+* Added support for once-per-object.
+* Fixed C code generation for creation instruction when the target is 
+  declared of reference type and the creation type is expanded.
+* Fixed C code generation of creation expressions.
+* Fixed C code generation when extracting agent arguments from polymorphic
+  tuple.
+* Improved interoperability with ISE Eiffel when calling routines: for
+  each actual argument in the order listed, first it is evaluated, then
+  converted if needed, and finally if the resulting object has copy
+  semantics it is cloned. This is different from what is specified in 
+  `MUGC` in the ECMA Eiffel standard where the actual arguments are first
+  evaluated and converted (first traversal in step `4`) and then cloned
+  (second traversal in step `5`). So the two traversals in steps `4` and
+  `5` need to be merged into a single traversal.
+* Fixed C code generation when an external routine is of the form
+  `external "C : int | <file.h>` with no argument types in the signature.
+* Implemented copy semantics (reference entities attached to objects of
+  expanded types) in attachments (e.g. assignment and argument passing)
+  and comparisons (`=`, `/=`, `~` and `/~`) as well as in Kernel built-in
+  features (e.g. `ANY.standard_copy` or `ANY.standard_is_equal`).
 
 ### gecop
 
@@ -30,6 +50,12 @@
   executable filename (optionally with a pathname) of the Eiffel tool
   to be tested. The default is either `gec`, `gelint`, `ec` which can
   be found in the `PATH`.
+* Added test cases for semantics rules `MBAS`, `MBRE-1` and `MVOL`.
+  Added some comments about issues in the ECMA Eiffel standard
+  (Reattachment Semantics).
+* Added test cases for semantics rules `MUGC`.
+* Added test cases for rules `M1EE` and `M1IE` exercising the semantics
+  of equality and inequality expressions.
 
 ### gedoc
 
@@ -62,14 +88,23 @@
   constraints `G -> {TUPLE [f: INTEGER], TUPLE [f: INTEGER]}` because the
   two constraints have the same base type and the labels are at the same
   position.
+* Disallowed conformance of `B [C]` to `B [D]` when `B` is expanded and
+  `C` and `D` are not the same type. This is to avoid polymorphism when
+  the type of an entity is expanded, as implicitly implied in the rest of
+  the Eiffel language definition.
 * Added support for ECF 1.22.0 and its new option `is_obsolete_iteration`.
+* Fixed default value for ECF option `warning` when converting ECF files
+  to newer versions of ECF.
 * Added support for the notation `@i` to access the iteration cursor of
   an iteration whose iteration item is `i`, e.g. `∀ i: list ¦ i
   = @i.index` (1 is at the first position, 2 at the second position, etc.).
 
 ### Miscellaneous
 
+* Added test execution in [GitHub Actions](https://github.com/gobo-eiffel/gobo/actions) and [Azure DevOps](https://dev.azure.com/ericb0733/gobo/_build?definitionId=1).
 * Upgraded all ECF files to ECF 1.22.0.
+* Display more progress information when installing the Gobo Eiffel package
+  unless the option `-s` is specified.
 
 ## Version 20.05.31.5 - 31 May 2020
 
