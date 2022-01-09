@@ -6,7 +6,7 @@
 		"Limitations"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/limitations">
 <chapterinfo>
 	<copyright>
-		<year>2006-2017</year>
+		<year>2006-2022</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>5 Mai 2017</date>
+	<date>9 January 2022</date>
 </chapterinfo>
 
 <title>Gec Limitations</title>
@@ -51,22 +51,14 @@ The following Eiffel constructs have not been implemented yet:
 	<varlistentry>
 		<term>User-defined expanded classes</term>
 		<listitem><para>
-			semantics of attachement and comparison not fully implemented
+			creation procedure `default_create` is not called
 		</para></listitem>
-	</varlistentry>
-	<varlistentry>
-		<term>Unique constants</term>
-		<listitem></listitem>
 	</varlistentry>
 	<varlistentry>
 		<term>Non-conforming inheritance</term>
 		<listitem><para>
 			feature replication still uses the pre-ECMA semantics of 'select'
 		</para></listitem>
-	</varlistentry>
-	<varlistentry>
-		<term>Once-per-object</term>
-		<listitem></listitem>
 	</varlistentry>
 	<varlistentry>
 		<term>SCOOP</term>
