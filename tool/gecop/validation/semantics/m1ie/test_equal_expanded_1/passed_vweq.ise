@@ -1,0 +1,22 @@
+-------------------------------------------------------------------------------
+
+Warning code: VWEQ
+
+Type warning: incompatible Equality expression. 
+Possible to do: if you did not intend to have a incompatible Equality
+  expression, make sure that one of the operand types is compatible to the
+  other, otherwise, even if statically it should be False, it might
+  be True at runtime when both operands are attached to types which are
+  compatible.
+
+Class: AA
+Feature: make
+Left-hand type: INTEGER_8
+Right-hand type: CHARACTER_8
+Line: 16
+        d := '%/4/'
+->      if c /= d then
+          print ("Passed")
+
+-------------------------------------------------------------------------------
+Passed
