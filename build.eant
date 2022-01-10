@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel Ant file for Gobo Eiffel"
-		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2022, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -35,14 +35,16 @@
 		</description>
 		
 		<geant target="develop"/>
-		<delete>
-			<fileset directory="." include="@(**/.git*)"/>
-		</delete>
-		<delete file=".travis.yml"/>
-		<delete directory=".gitlab"/>
+		<delete directory=".azure"/>
+		<delete directory=".cicd"/>
+		<delete directory=".github"/>
 		<delete directory=".sourceforge"/>
 		<delete directory="library/structure/doc/visio"/>
 		<delete directory="library/time/doc/visio"/>
+		<delete>
+			<fileset directory="." include="@(**/.git*)"/>
+		</delete>
+		<delete file="azure-pipelines.yml"/>
 	</target>
 
 	<target name="web_site" depend="init">
