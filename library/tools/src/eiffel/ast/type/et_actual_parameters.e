@@ -5,7 +5,7 @@ note
 		"Eiffel lists of actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -266,6 +266,28 @@ feature -- Status report
 			nb := count
 			from i := 1 until i > nb loop
 				if actual_parameter (i).named_parameter_has_class (a_class, a_context) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	named_types_has_class_with_ancestors_not_built_successfully (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does one of the named type of current parameters contain
+			-- a class whose ancestors have not been built successfully
+			-- when it appears in `a_context'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if actual_parameter (i).named_parameter_has_class_with_ancestors_not_built_successfully (a_context) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else

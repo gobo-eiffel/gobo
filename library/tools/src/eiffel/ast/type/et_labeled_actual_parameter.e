@@ -5,7 +5,7 @@ note
 		"Eiffel labeled actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -122,6 +122,14 @@ feature -- Status report
 			-- when it appears in `a_context'?
 		do
 			Result := type.named_parameter_has_class (a_class, a_context)
+		end
+
+	named_parameter_has_class_with_ancestors_not_built_successfully (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does named parameter of current type contain  a class
+			-- whose ancestors have not been built successfully
+			-- when it appears in `a_context'?
+		do
+			Result := type.named_parameter_has_class_with_ancestors_not_built_successfully (a_context)
 		end
 
 feature -- Type processing

@@ -5,7 +5,7 @@ note
 		"Nested contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -568,6 +568,37 @@ feature -- Status report
 				l_type := last
 				remove_last
 				Result := l_type.named_type_has_class (a_class, Current)
+				put_last (l_type)
+			end
+		end
+
+	named_type_has_class_with_ancestors_not_built_successfully: BOOLEAN
+			-- Does the named type of current context contain a class
+			-- whose ancestors have not been built successfully?
+		local
+			l_type: ET_TYPE
+			l_index: INTEGER
+		do
+			if count = 0 then
+				Result := root_context.named_type_has_class_with_ancestors_not_built_successfully (Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.named_type_has_class_with_ancestors_not_built_successfully (Current)
+				elseif l_index >= count then
+					force_last (tokens.like_0)
+					Result := root_context.named_type_has_class_with_ancestors_not_built_successfully (Current)
+					remove_last
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.named_type_has_class_with_ancestors_not_built_successfully (Current)
+					put (l_like_n, count)
+				end
+			else
+				l_type := last
+				remove_last
+				Result := l_type.named_type_has_class_with_ancestors_not_built_successfully (Current)
 				put_last (l_type)
 			end
 		end

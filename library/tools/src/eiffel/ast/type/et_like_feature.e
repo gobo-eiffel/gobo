@@ -5,7 +5,7 @@ note
 		"Eiffel 'like feature' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -837,6 +837,41 @@ feature -- Status report
 						-- introduced in the AST since we resolved
 						-- current anchored type.
 					Result := a_class.is_unknown
+				end
+			end
+		end
+
+	named_type_has_class_with_ancestors_not_built_successfully (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does the named type of current type contain a class
+			-- whose ancestors have not been built successfully
+			-- when it appears in `a_context'?
+		local
+			a_base_class: ET_CLASS
+			l_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := False
+			elseif is_like_argument then
+				a_base_class := a_context.base_class
+				l_index := index
+				if attached a_base_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.named_type_has_class_with_ancestors_not_built_successfully (a_context)
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current anchored type.
+					Result := False
+				end
+			else
+				a_base_class := a_context.base_class
+				if attached a_base_class.seeded_query (seed) as l_query then
+					Result := l_query.type.named_type_has_class_with_ancestors_not_built_successfully (a_context)
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current anchored type.
+					Result := False
 				end
 			end
 		end

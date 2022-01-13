@@ -5,7 +5,7 @@ note
 		"Eiffel types directly based on a class"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -76,6 +76,7 @@ inherit
 			conforms_from_tuple_type_with_type_marks as context_conforms_from_tuple_type_with_type_marks,
 			base_type_has_class as context_base_type_has_class,
 			named_type_has_class as context_named_type_has_class,
+			named_type_has_class_with_ancestors_not_built_successfully as context_named_type_has_class_with_ancestors_not_built_successfully,
 			named_type_is_formal_type as context_named_type_is_formal_type
 		redefine
 			base_class,
@@ -353,6 +354,29 @@ feature -- Status report
 			end
 		end
 
+	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does the base type of current type contain `a_class'
+			-- when it appears in `a_context'?
+		do
+			if a_class = base_class then
+				Result := True
+			elseif attached actual_parameters as l_actual_parameters then
+				Result := l_actual_parameters.named_types_have_class (a_class, a_context)
+			end
+		end
+
+	named_type_has_class_with_ancestors_not_built_successfully (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does the named type of current type contain a class
+			-- whose ancestors have not been built successfully
+			-- when it appears in `a_context'?
+		do
+			if not base_class.ancestors_built_successfully then
+				Result := True
+			elseif attached actual_parameters as l_actual_parameters then
+				Result := l_actual_parameters.named_types_has_class_with_ancestors_not_built_successfully (a_context)
+			end
+		end
+
 feature -- Comparison
 
 	same_as_base_class: BOOLEAN
@@ -587,6 +611,13 @@ feature -- Type context
 			-- Does the named type of current context contain `a_class'?
 		do
 			Result := named_type_has_class (a_class, Current)
+		end
+
+	context_named_type_has_class_with_ancestors_not_built_successfully: BOOLEAN
+			-- Does the named type of current context contain a class
+			-- whose ancestors have not been built successfully?
+		do
+			Result := named_type_has_class_with_ancestors_not_built_successfully (Current)
 		end
 
 	context_named_type_is_formal_type: BOOLEAN

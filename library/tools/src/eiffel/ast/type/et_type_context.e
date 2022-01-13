@@ -5,7 +5,7 @@ note
 		"Contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -312,6 +312,15 @@ feature -- Status report
 			valid_context: is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
 			a_class_not_void: a_class /= Void
+		deferred
+		end
+
+	named_type_has_class_with_ancestors_not_built_successfully: BOOLEAN
+			-- Does the named type of current context contain a class
+			-- whose ancestors have not been built successfully?
+		require
+			valid_context: is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		end
 

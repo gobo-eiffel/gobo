@@ -1,5 +1,12 @@
 # Release History
 
+## Version ?? - ??
+
+### Gobo Eiffel Tools Library
+
+* Avoid reporting errors which are the consequence of other errors
+  already reported.
+
 ## Version 22.01.09.4 - 9 January 2022
 
 ### geant

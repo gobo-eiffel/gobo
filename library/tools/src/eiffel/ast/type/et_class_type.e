@@ -5,7 +5,7 @@ note
 		"Eiffel class types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright:  "Copyright (c) 1999-2020, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -364,17 +364,6 @@ feature -- Status report
 				Result := is_expanded
 			else
 				Result := is_attached
-			end
-		end
-
-	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Does the base type of current type contain `a_class'
-			-- when it appears in `a_context'?
-		do
-			if a_class = base_class then
-				Result := True
-			elseif attached actual_parameters as l_actual_parameters then
-				Result := l_actual_parameters.named_types_have_class (a_class, a_context)
 			end
 		end
 

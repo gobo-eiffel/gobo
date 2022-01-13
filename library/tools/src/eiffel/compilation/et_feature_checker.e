@@ -5,7 +5,7 @@ note
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -7471,8 +7471,13 @@ feature {NONE} -- Expression validity
 				l_had_error := True
 				l_had_iterable_error := True
 				set_fatal_error
-				l_named_type := l_expression_context.named_type
-				error_handler.report_voit1a_error (current_class, current_class_impl, l_iterable_expression, l_named_type)
+				if l_expression_context.named_type_has_class_with_ancestors_not_built_successfully then
+					-- An error has already been reported about the classes
+					-- involved into this conformance check.
+				else
+					l_named_type := l_expression_context.named_type
+					error_handler.report_voit1a_error (current_class, current_class_impl, l_iterable_expression, l_named_type)
+				end
 			end
 			free_context (l_expression_context)
 				-- Check iteration item name clashes (see VOIT-2).

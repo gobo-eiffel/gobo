@@ -5,7 +5,7 @@ note
 		"Eiffel types appearing in nested type contexts and representing n-th type in these contexts"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2015-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2015-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -457,6 +457,26 @@ feature -- Status report
 					-- We reached the root context.
 				l_previous_context.force_last (tokens.like_0)
 				Result := l_previous_context.root_context.named_type_has_class (a_class, l_previous_context)
+				l_previous_context.remove_last
+			end
+		end
+
+	named_type_has_class_with_ancestors_not_built_successfully (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does the named type of current type contain a class
+			-- whose ancestors have not been built successfully
+			-- when it appears in `a_context'?
+		local
+			l_previous_context: ET_NESTED_TYPE_CONTEXT
+		do
+			l_previous_context := a_context.as_nested_type_context
+			if l_previous_context.valid_index (index) then
+				l_previous_context.force_last (previous)
+				Result := l_previous_context.item (index).named_type_has_class_with_ancestors_not_built_successfully (l_previous_context)
+				l_previous_context.remove_last
+			else
+					-- We reached the root context.
+				l_previous_context.force_last (tokens.like_0)
+				Result := l_previous_context.root_context.named_type_has_class_with_ancestors_not_built_successfully (l_previous_context)
 				l_previous_context.remove_last
 			end
 		end

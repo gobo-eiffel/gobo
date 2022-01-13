@@ -558,7 +558,7 @@ feature {NONE} -- Validity checking
 										-- The actual parameter does not conform to the
 										-- constraint of its corresponding formal parameter.
 										--
-										-- Note that it is possible that the actual paramater conforms
+										-- Note that it is possible that the actual parameter conforms
 										-- to the constraint in `current_class_impl' but not in `current_class'.
 										-- Here is an example:
 										--
@@ -582,7 +582,12 @@ feature {NONE} -- Validity checking
 										-- to its constraint 'X [like Current]'.
 									set_fatal_error
 									if not class_interface_error_only then
-										error_handler.report_vtcg3a_error (current_class, current_class_impl, a_type, an_actual, a_constraint)
+										if an_actual.named_type_has_class_with_ancestors_not_built_successfully (current_context) then
+											-- An error has already been reported about the classes
+											-- involved into this conformance check.
+										else
+											error_handler.report_vtcg3a_error (current_class, current_class_impl, a_type, an_actual, a_constraint)
+										end
 									end
 								end
 								i := i + 1

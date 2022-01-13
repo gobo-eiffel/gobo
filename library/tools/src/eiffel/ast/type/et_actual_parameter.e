@@ -5,7 +5,7 @@ note
 		"Eiffel actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -77,6 +77,17 @@ feature -- Status report
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
 			a_class_not_void: a_class /= Void
+		deferred
+		end
+
+	named_parameter_has_class_with_ancestors_not_built_successfully (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does named parameter of current type contain  a class
+			-- whose ancestors have not been built successfully
+			-- when it appears in `a_context'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		end
 

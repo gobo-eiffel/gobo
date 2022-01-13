@@ -5,7 +5,7 @@ note
 		"Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -577,11 +577,30 @@ feature -- Status report
 			Result := base_type_has_class (a_class, a_context)
 		end
 
+	named_type_has_class_with_ancestors_not_built_successfully (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does the named type of current type contain a class
+			-- whose ancestors have not been built successfully
+			-- when it appears in `a_context'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
 	named_parameter_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does the named parameter of current type contain `a_class'
 			-- when it appears in `a_context'?
 		do
 			Result := named_type_has_class (a_class, a_context)
+		end
+
+	named_parameter_has_class_with_ancestors_not_built_successfully (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does named parameter of current type contain  a class
+			-- whose ancestors have not been built successfully
+			-- when it appears in `a_context'?
+		do
+			Result := named_type_has_class_with_ancestors_not_built_successfully (a_context)
 		end
 
 feature -- Basic operations

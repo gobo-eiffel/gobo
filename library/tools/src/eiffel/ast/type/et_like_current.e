@@ -5,7 +5,7 @@ note
 		"Eiffel 'like Current' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -265,6 +265,14 @@ feature -- Status report
 			-- when it appears in `a_context'?
 		do
 			Result := a_context.named_type_has_class (a_class)
+		end
+
+	named_type_has_class_with_ancestors_not_built_successfully (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does the named type of current type contain a class
+			-- whose ancestors have not been built successfully
+			-- when it appears in `a_context'?
+		do
+			Result := a_context.named_type_has_class_with_ancestors_not_built_successfully
 		end
 
 feature -- Basic operations

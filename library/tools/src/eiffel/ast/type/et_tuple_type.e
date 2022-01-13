@@ -5,7 +5,7 @@ note
 		"Eiffel TUPLE types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,8 @@ inherit
 			same_base_tuple_type_with_type_marks,
 			conforms_from_class_type_with_type_marks,
 			conforms_from_tuple_type_with_type_marks,
-			tuple_keyword, actual_parameters,
+			tuple_keyword,
+			actual_parameters,
 			resolved_formal_parameters_with_type_mark,
 			append_unaliased_to_string,
 			append_runtime_name_to_string,
@@ -273,17 +274,6 @@ feature -- Status report
 				Result := False
 			else
 				Result := is_attached
-			end
-		end
-
-	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Does the base type of current type contain `a_class'
-			-- when it appears in `a_context'?
-		do
-			if a_class = base_class then
-				Result := True
-			elseif attached actual_parameters as l_actual_parameters then
-				Result := l_actual_parameters.named_types_have_class (a_class, a_context)
 			end
 		end
 
