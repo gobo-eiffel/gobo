@@ -5,7 +5,7 @@ note
 		"Eiffel expression type finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/10/25 $"
 	revision: "$Revision: #6 $"
@@ -698,16 +698,9 @@ feature {NONE} -- Expression processing
 			l_query: detachable ET_QUERY
 			l_name: ET_FEATURE_NAME
 			l_seed: INTEGER
-			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
-			l_argument: ET_FORMAL_ARGUMENT
 			l_type: detachable ET_TYPE
-			l_locals: detachable ET_LOCAL_VARIABLE_LIST
-			l_local: ET_LOCAL_VARIABLE
 			l_typed_pointer_class: ET_NAMED_CLASS
 			l_typed_pointer_type: ET_CLASS_TYPE
-			l_object_test: ET_NAMED_OBJECT_TEST
-			l_object_tests: detachable ET_OBJECT_TEST_LIST
-			l_class_impl: ET_CLASS
 		do
 			reset_fatal_error (False)
 			l_name := an_expression.name
@@ -719,157 +712,20 @@ feature {NONE} -- Expression processing
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaaa_error
 				end
-			elseif l_name.is_argument then
-					-- This is of the form '$argument'.
-				if attached current_inline_agent as l_current_inline_agent then
-					l_arguments := l_current_inline_agent.formal_arguments
-					l_class_impl := current_class_impl
-				else
-						-- Use arguments of `current_feature' instead of `current_feature_impl'
-						-- because when processing inherited assertions the types of signature
-						-- should be those of the version of the feature in the current class.
-						-- For example:
-						--    deferred class A
-						--    feature
-						--       f (a: ANY)
-						--           require
-						--               pre: g ($a)
-						--           deferred
-						--           end
-						--      g (a: TYPED_POINTER [ANY]): BOOLEAN deferred end
-						--    end
-						--    class B
-						--    inherit
-						--        A
-						--    feature
-						--        f (a: STRING) do ... end
-						--        g (a: TYPED_POINTER [STRING]): BOOLEAN do ... end
-						--    end
-						-- `a' in the inherited precondition "pre" should be considered
-						-- of type STRING (and not ANY) is class B.
-						--
-						-- Use arguments of implementation feature because the types
-						-- of the signature of `current_feature' might not have been
-						-- resolved for `current_class' (when processing precursors
-						-- in the context of current class).
-					l_arguments := current_feature.implementation_feature.arguments
-					l_class_impl := current_feature.implementation_class
-				end
-				if l_arguments = Void then
-						-- Internal error.
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
-					end
-				elseif l_seed < 1 or l_seed > l_arguments.count then
-						-- Internal error.
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
-					end
-				else
-					l_argument := l_arguments.formal_argument (l_seed)
-					l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
-					l_typed_pointer_class := l_typed_pointer_type.named_base_class
-					if l_typed_pointer_class.actual_class.is_preparsed then
-							-- Class TYPED_POINTER has been found in the universe.
-							-- Use ISE's implementation: the type of '$argument' is 'TYPED_POINTER [<type-of-argument>]'.
-						l_type := l_argument.type
-						a_context.force_last (l_type)
-						a_context.force_last (l_typed_pointer_type)
-					else
-							-- Use the ETL2 implementation: the type of '$argument' is POINTER.
-						a_context.force_last (current_universe_impl.pointer_type)
-					end
-				end
-			elseif l_name.is_local then
-					-- This is of the form '$local'.
-				l_locals := current_closure_impl.locals
-				if l_locals = Void then
-						-- Internal error.
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
-					end
-				elseif l_seed < 1 or l_seed > l_locals.count then
-						-- Internal error.
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
-					end
-				else
-					l_local := l_locals.local_variable (l_seed)
-					l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
-					l_typed_pointer_class := l_typed_pointer_type.named_base_class
-					if l_typed_pointer_class.actual_class.is_preparsed then
-							-- Class TYPED_POINTER has been found in the universe.
-							-- Use ISE's implementation: the type of '$local' is 'TYPED_POINTER [<type-of-local>]'.
-						l_type := l_local.type
-						a_context.force_last (l_type)
-						a_context.force_last (l_typed_pointer_type)
-					else
-							-- Use the ETL2 implementation: the type of '$local' is POINTER.
-						a_context.force_last (current_universe_impl.pointer_type)
-					end
-				end
-			elseif l_name.is_object_test_local then
-				l_object_tests := current_closure_impl.object_tests
-				if l_object_tests = Void then
-						-- Internal error.
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
-					end
-				elseif l_seed < 1 or l_seed > l_object_tests.count then
-						-- Internal error.
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
-					end
-				else
-					l_object_test := l_object_tests.object_test (l_seed)
-					check is_object_test_local: attached {ET_IDENTIFIER} l_name end
-					l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
-					l_typed_pointer_class := l_typed_pointer_type.named_base_class
-					if l_typed_pointer_class.actual_class.is_preparsed then
-							-- Class TYPED_POINTER has been found in the universe.
-							-- Use ISE's implementation: the type of '$object_test_local' is
-							-- 'TYPED_POINTER [<type-of-object_test_local>]'.
-						l_type := l_object_test.type
-						if l_type /= Void then
-							a_context.force_last (l_type)
-							a_context.force_last (l_typed_pointer_type)
-						else
-							find_expression_type (l_object_test.expression, a_context, current_system.detachable_any_type)
-							if not has_fatal_error then
-								a_context.force_last (l_typed_pointer_type)
-							end
-						end
-					else
-							-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
-						a_context.force_last (current_universe_impl.pointer_type)
-					end
-				end
-			elseif l_name.is_iteration_item then
+			elseif
+				l_name.is_argument or
+				l_name.is_local or
+				l_name.is_object_test_local or
+				l_name.is_iteration_item or
+				l_name.is_separate_argument
+			then
 				l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 				l_typed_pointer_class := l_typed_pointer_type.named_base_class
 				if l_typed_pointer_class.actual_class.is_preparsed then
 						-- Class TYPED_POINTER has been found in the universe.
-						-- Use ISE's implementation: the type of '$iteration_item' is
-						-- 'TYPED_POINTER [<type-of-iteration-item>]'.
-					find_iteration_item_type (l_name.iteration_item_name, a_context)
+						-- Use ISE's implementation: the type of '$name' is
+						-- 'TYPED_POINTER [<type-of-name>]'.
+					find_expression_type (l_name.as_expression, a_context, current_system.detachable_separate_any_type)
 					if not has_fatal_error then
 						a_context.force_last (l_typed_pointer_type)
 					end
@@ -2217,6 +2073,44 @@ feature {NONE} -- Expression processing
 			end
 		end
 
+	find_separate_argument_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- `a_context' represents the type in which `a_name' appears.
+			-- It will be altered on exit to represent the type of `a_name'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_separate_argument: a_name.is_separate_argument
+			a_context_not_void: a_context /= Void
+		local
+			l_seed: INTEGER
+			l_separate_argument: ET_SEPARATE_ARGUMENT
+			l_separate_arguments: detachable ET_SEPARATE_ARGUMENT_LIST
+		do
+			reset_fatal_error (False)
+			l_seed := a_name.seed
+			l_separate_arguments := current_closure_impl.separate_arguments
+			if l_separate_arguments = Void then
+					-- Internal error.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
+			elseif l_seed < 1 or l_seed > l_separate_arguments.count then
+					-- Internal error.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
+			else
+				l_separate_argument := l_separate_arguments.separate_argument (l_seed)
+				find_expression_type (l_separate_argument.expression, a_context, current_system.detachable_separate_any_type)
+			end
+		end
+
 	find_special_manifest_string_type (a_string: ET_SPECIAL_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_string' appears.
 			-- It will be altered on exit to represent the type of `a_string'.
@@ -3405,6 +3299,8 @@ feature {ET_AST_NODE} -- Processing
 				find_object_test_local_type (an_identifier, current_context)
 			elseif an_identifier.is_iteration_item then
 				find_iteration_item_type (an_identifier, current_context)
+			elseif an_identifier.is_separate_argument then
+				find_separate_argument_type (an_identifier, current_context)
 			elseif an_identifier.is_feature_name then
 				find_unqualified_call_expression_type (an_identifier, current_context)
 			else

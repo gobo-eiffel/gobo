@@ -2,10 +2,10 @@ note
 
 	description:
 
-		"Error handlers"
+		"Eiffel error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -877,6 +877,150 @@ feature -- Validity errors
 					info_file.put_line ("----")
 				end
 				mutex.unlock
+			end
+		end
+
+	report_v1seg1a_error (a_class: ET_CLASS; arg1, arg2: ET_SEPARATE_ARGUMENT)
+			-- Report V1SE-G1 error: `arg1' and `arg2' are two arguments of
+			-- of a separate instruction in `a_class' with the same name.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg1_not_void: arg1 /= Void
+			arg2_not_void: arg2 /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_v1seg1_error (a_class) then
+				create l_error.make_v1seg1a (a_class, arg1, arg2)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_v1seg2a_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_feature: ET_FEATURE)
+			-- Report V1SE-G2 error: argument `arg' of a separate instruction
+		 	-- has the same name as `a_feature' in `a_class'.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg_not_void: arg /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_v1seg2_error (a_class) then
+				create l_error.make_v1seg2a (a_class, arg, a_feature)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_v1seg2b_error (a_class: ET_CLASS; a_separate_arg: ET_SEPARATE_ARGUMENT; a_formal_arg: ET_FORMAL_ARGUMENT)
+			-- Report V1SE-G2 error: argument `a_separate_arg' of a separate instruction
+		 	-- has the same name as argument `a_formal_arg' of an enclosing feature or
+			-- inline agent.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_separate_arg_not_void: a_separate_arg /= Void
+			a_formal_arg_not_void: a_formal_arg /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_v1seg2_error (a_class) then
+				create l_error.make_v1seg2b (a_class, a_separate_arg, a_formal_arg)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_v1seg2c_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_local: ET_LOCAL_VARIABLE)
+			-- Report V1SE-G2 error: argument `arg' of a separate instruction
+		 	-- has the same name as local variable `a_local' of an enclosing
+			-- feature or inline agent.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg_not_void: arg /= Void
+			a_local_not_void: a_local /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_v1seg2_error (a_class) then
+				create l_error.make_v1seg2c (a_class, arg, a_local)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_v1seg2d_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_object_test: ET_NAMED_OBJECT_TEST)
+			-- Report V1SE-G2 error: argument `arg' of a separate instruction
+			-- appears in the scope of the local of `a_object_test' with the same name.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg_not_void: arg /= Void
+			a_object_test_not_void: a_object_test /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_v1seg2_error (a_class) then
+				create l_error.make_v1seg2d (a_class, arg, a_object_test)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_v1seg2e_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_iteration_component: ET_ITERATION_COMPONENT)
+			-- Report V1SE-G2 error: argument `arg' of a separate instruction
+			-- appears in the scope of the cursor of `a_iteration_component' with
+			-- the same name.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg_not_void: arg /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_v1seg2_error (a_class) then
+				create l_error.make_v1seg2e (a_class, arg, a_iteration_component)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_v1seg2f_error (a_class: ET_CLASS; arg1, arg2: ET_SEPARATE_ARGUMENT)
+			-- Report V1SE-G2 error: argument `arg1' of a separate instruction
+			-- as the same name as argument `arg2' of another enclosing separate
+			-- instruction.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg1_not_void: arg1 /= Void
+			arg2_not_void: arg2 /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_v1seg2_error (a_class) then
+				create l_error.make_v1seg2f (a_class, arg1, arg2)
+				report_validity_error (l_error)
 			end
 		end
 
@@ -2310,6 +2454,47 @@ feature -- Validity errors
 			if reportable_veen9_error (a_class) then
 				create an_error.make_veen9b (a_class, an_identifier)
 				report_validity_error (an_error)
+			end
+		end
+
+	report_veen10a_error (a_class: ET_CLASS; a_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE)
+			-- Report VEEN-10 error: `a_identifier', appearing in `a_feature'
+			-- of `a_class' or one of its (possibly nested) inline agents, is
+			-- the name of a separate argument that is used outside of its scope.
+			--
+			-- Not in ECMA-367-2.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_identifier_not_void: a_identifier /= Void
+			a_identifier_separate_argument: a_identifier.is_separate_argument
+			a_feature_not_void: a_feature /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen10_error (a_class) then
+				create l_error.make_veen10a (a_class, a_identifier, a_feature)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_veen10b_error (a_class: ET_CLASS; a_identifier: ET_IDENTIFIER)
+			-- Report VEEN-10 error: `a_identifier', appearing in the invariant
+			-- of `a_class' or one of its (possibly nested) inline agents, is the
+			-- name of a separate argument that is used outside of its scope.
+			--
+			-- Not in ECMA-367-2.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_identifier_not_void: a_identifier /= Void
+			a_identifier_separate_argument: a_identifier.is_separate_argument
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen10_error (a_class) then
+				create l_error.make_veen10b (a_class, a_identifier)
+				report_validity_error (l_error)
 			end
 		end
 
@@ -5009,7 +5194,7 @@ feature -- Validity errors
 		end
 
 	report_voit1a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
-			-- Report VOIT-1 error: the type `a_type' of the across iterable expression
+			-- Report VOIT-1 error: the type `a_type' of the iterable expression
 			-- `an_expression' appearing in `a_class_impl' and viewed from one of its
 			-- descendants `a_class' (possibly itself) does not conform to "ITERABLE".
 			--
@@ -5109,7 +5294,7 @@ feature -- Validity errors
 
 	report_voit2e_error (a_class: ET_CLASS; a_iteration_component1, a_iteration_component2: ET_ITERATION_COMPONENT)
 			-- Report VOIT-2 error: `a_iteration_component1' appears in the scope
-			-- of the iteration item of `a_iteration_component2' with the same 
+			-- of the iteration item of `a_iteration_component2' with the same
 			-- iteration item name.
 			--
 			-- Not in ECMA.
@@ -5593,6 +5778,52 @@ feature -- Validity errors
 			if reportable_vpir1_error (a_class) then
 				create an_error.make_vpir1h (a_class, a_local, an_agent, a_iteration_component)
 				report_validity_error (an_error)
+			end
+		end
+
+	report_vpir1i_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; a_agent: ET_INLINE_AGENT; a_separate_argument: ET_SEPARATE_ARGUMENT)
+			-- Report VPIR-1 error: `arg' in inline agent `a_agent' has
+			-- the same name as the argument `a_separate_argument' of a
+			-- separate instruction in an enclosing feature or inline agent
+			-- whose compound (of the separate instruction) contains the
+			-- inline agent.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg_not_void: arg /= Void
+			a_agent_not_void: a_agent /= Void
+			a_separate_argument_not_void: a_separate_argument /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpir1_error (a_class) then
+				create l_error.make_vpir1i (a_class, arg, a_agent, a_separate_argument)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vpir1j_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; a_agent: ET_INLINE_AGENT; a_separate_argument: ET_SEPARATE_ARGUMENT)
+			-- Report VPIR-1 error: `a_local' in inline agent `an_agent' has
+			-- the same name as the argument `a_separate_argument' of a
+			-- separate instruction in an enclosing feature or inline agent
+			-- whose compound (of the separate instruction) contains
+			-- the inline agent.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			a_agent_not_void: a_agent /= Void
+			a_separate_argument_not_void: a_separate_argument /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpir1_error (a_class) then
+				create l_error.make_vpir1j (a_class, a_local, a_agent, a_separate_argument)
+				report_validity_error (l_error)
 			end
 		end
 
@@ -6922,7 +7153,26 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot1f_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST)
+	report_vuot1f_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_separate_argument: ET_SEPARATE_ARGUMENT)
+			-- Report VUOT-1 error: `a_object_test' appears in the scope
+			-- of `a_separate_argument' with the same local name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test_not_void: a_object_test /= Void
+			a_separate_argument_not_void: a_separate_argument /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuot1_error (a_class) then
+				create l_error.make_vuot1f (a_class, a_object_test, a_separate_argument)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vuot1g_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST)
 			-- Report VUOT-1 error: `a_object_test1' and `a_object_test2' have the same
 			-- local name and their scope overlap.
 			--
@@ -6936,7 +7186,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vuot1_error (a_class) then
-				create an_error.make_vuot1f (a_class, a_object_test1, a_object_test2)
+				create an_error.make_vuot1g (a_class, a_object_test1, a_object_test2)
 				report_validity_error (an_error)
 			end
 		end
@@ -7843,7 +8093,7 @@ feature -- Validity errors
 		end
 
 	report_gvuac0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
-			-- Report GVUAC error: `a_name' is an across cursor of
+			-- Report GVUAC error: `a_name' is an iteration item in
 			-- `a_feature' in `a_class', and hence cannot have actual
 			-- arguments.
 			--
@@ -7864,7 +8114,7 @@ feature -- Validity errors
 		end
 
 	report_gvuac0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
-			-- Report GVUAC error: `a_name' is an across cursor of
+			-- Report GVUAC error: `a_name' is an iteration item in
 			-- inline agent `an_agent' in `a_class', and hence cannot
 			-- have actual arguments.
 			--
@@ -7885,7 +8135,7 @@ feature -- Validity errors
 		end
 
 	report_gvuac0c_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
-			-- Report GVUAC error: `a_name' is an across cursor of
+			-- Report GVUAC error: `a_name' is an iteration item in
 			-- invariants `a_invariants' in `a_class', and hence cannot
 			-- have actual arguments.
 			--
@@ -8010,6 +8260,69 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvuas0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
+			-- Report GVUAS error: `a_name' is the name of an argument of
+			-- a separate instruction in `a_feature' in `a_class', and hence
+			-- cannot have actual arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAS: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuas_error (a_class) then
+				create l_error.make_gvuas0a (a_class, a_name, a_feature)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_gvuas0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
+			-- Report GVUAS error: `a_name' is the name of an argument
+			-- of a separate instruction in inline agent `an_agent' in
+			-- `a_class', and hence cannot have actual arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAS: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuas_error (a_class) then
+				create l_error.make_gvuas0b (a_class, a_name, an_agent)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_gvuas0c_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
+			-- Report GVUAS error: `a_name' is the name of an argument of
+			-- a separate instruction in invariants `a_invariants' in
+			-- `a_class', and hence cannot have actual arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAS: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_invariants_not_void: a_invariants /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuas_error (a_class) then
+				create l_error.make_gvuas0c (a_class, a_name, a_invariants)
+				report_validity_error (l_error)
+			end
+		end
+
 	report_gvuia0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report GVUIA error: `a_name' is a formal argument of
 			-- `a_feature' in `a_class', and hence cannot be an
@@ -8051,7 +8364,7 @@ feature -- Validity errors
 		end
 
 	report_gvuic0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
-			-- Report GVUIC error: `a_name' is an across cursor of
+			-- Report GVUIC error: `a_name' is an iteration item in
 			-- `a_feature' in `a_class', and hence cannot be an
 			-- instruction.
 			--
@@ -8071,7 +8384,7 @@ feature -- Validity errors
 		end
 
 	report_gvuic0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
-			-- Report GVUIC error: `a_name' is an across cursor of
+			-- Report GVUIC error: `a_name' is an iteration item in
 			-- inline agent `an_agent' in `a_class', and hence cannot
 			-- be an instruction.
 			--
@@ -8091,7 +8404,7 @@ feature -- Validity errors
 		end
 
 	report_gvuic0c_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
-			-- Report GVUIC error: `a_name' is an across cursor of
+			-- Report GVUIC error: `a_name' is an iteration item in
 			-- invariants `a_invariants' in `a_class', and hence cannot
 			-- be an instruction.
 			--
@@ -8210,6 +8523,66 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvuis0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
+			-- Report GVUIS error: `a_name' is the name of an argument
+			-- of a separate instruction in `a_feature' in `a_class',
+			-- and hence cannot be an instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuis_error (a_class) then
+				create l_error.make_gvuis0a (a_class, a_name, a_feature)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_gvuis0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
+			-- Report GVUIS error: `a_name' is the name of an argument
+			-- of a separate instruction in inline agent `an_agent' in
+			-- `a_class', and hence cannot be an instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			an_agent_not_void: an_agent /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuis_error (a_class) then
+				create l_error.make_gvuis0b (a_class, a_name, an_agent)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_gvuis0c_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
+			-- Report GVUIS error: `a_name' is the name of an argument of
+			-- a separate instruction in invariants `a_invariants' in `a_class',
+			-- and hence cannot be an instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_invariants_not_void: a_invariants /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuis_error (a_class) then
+				create l_error.make_gvuis0c (a_class, a_name, a_invariants)
+				report_validity_error (l_error)
+			end
+		end
+
 	report_gvwmc2a_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_INTEGER_CONSTANT; a_type: ET_NAMED_TYPE)
 			-- Report GVWMC-2 error: `a_constant' in `a_class_impl' and viewed
 			-- from one of its descendants `a_class' (possibly itself) is not
@@ -8274,6 +8647,36 @@ feature -- Validity errors
 		end
 
 feature -- Validity error status
+
+	reportable_v1seg1_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a V1SE-G1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_v1seg2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a V1SE-G2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_v1seg3_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a V1SE-G3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
 
 	reportable_vaol1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VAOL-1 error be reported when it
@@ -8607,6 +9010,16 @@ feature -- Validity error status
 
 	reportable_veen9_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VEEN-9 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_veen10_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VEEN-10 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -9795,6 +10208,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_gvuas_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a GVUAS error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_gvuia_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVUIA error be reported when it
 			-- appears in `a_class'?
@@ -9827,6 +10250,16 @@ feature -- Validity error status
 
 	reportable_gvuio_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVUIO error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvuis_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a GVUIS error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

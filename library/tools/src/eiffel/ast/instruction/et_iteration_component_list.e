@@ -5,7 +5,7 @@ note
 		"Eiffel lists of iteration components"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2012-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2012-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,8 +34,8 @@ feature -- Access
 		end
 
 	index_of_name (a_name: ET_IDENTIFIER): INTEGER
-			-- Index of first iteration component with iteration item named `a_name' 
-			-- which is in scope (by convention, we are in the scope of an iteration 
+			-- Index of last iteration component with iteration item named `a_name'
+			-- which is in scope (by convention, we are in the scope of an iteration
 			-- component if its `item_name' is not marked as 'is_iteration_item');
 			-- 0 if it does not exist
 		require

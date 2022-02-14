@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders where types are pushed to supersets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,7 +43,8 @@ inherit
 			propagate_tuple_label_argument_dynamic_types,
 			propagate_qualified_call_target_dynamic_types,
 			propagate_equality_expression_target_dynamic_types,
-			propagate_object_equality_expression_target_dynamic_types
+			propagate_object_equality_expression_target_dynamic_types,
+			propagate_separate_argument_dynamic_types
 		end
 
 create
@@ -768,6 +769,30 @@ feature {NONE} -- Implementation
 			-- Propagate the dynamic types of the target of `a_equality' to the object-equality itself.
 		do
 			a_equality.target_type_set.put_target (a_equality, current_dynamic_system)
+		end
+
+	propagate_separate_argument_dynamic_types (a_separate_argument: ET_SEPARATE_ARGUMENT)
+			-- Propagate dynamic types of the expression of `a_separate_argument'
+			-- to the dynamic type set of its name.
+		local
+			l_source_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
+		do
+			l_source_type_set := dynamic_type_set (a_separate_argument.expression)
+			l_target_type_set := dynamic_type_set (a_separate_argument.name)
+			if l_source_type_set = Void then
+					-- Internal error: the dynamic type sets of the expression
+					-- should be known at this stage.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_target_type_set = Void then
+					-- Internal error: the dynamic type sets of the separate argument
+					-- name should be known at this stage.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_source_type_set.put_target (l_target_type_set, current_dynamic_system)
+			end
 		end
 
 	propagate_tuple_label_argument_dynamic_types (a_label_type_set: ET_DYNAMIC_TYPE_SET; a_assigner: ET_ASSIGNER_INSTRUCTION)

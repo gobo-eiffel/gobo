@@ -6,6 +6,7 @@
 
 * Avoid reporting errors which are the consequence of other errors
   already reported.
+* Added support for separate instructions `separate ... do ... end`.
 
 ## Version 22.01.09.4 - 9 January 2022
 

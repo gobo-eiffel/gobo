@@ -5,7 +5,7 @@ note
 		"Eiffel AST null processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1009,6 +1009,26 @@ feature {ET_AST_NODE} -- Processing
 
 	process_semicolon_symbol (a_symbol: ET_SEMICOLON_SYMBOL)
 			-- Process `a_symbol'.
+		do
+		end
+
+	process_separate_argument (a_argument: ET_SEPARATE_ARGUMENT)
+			-- Process `a_argument'.
+		do
+		end
+
+	process_separate_argument_comma (a_argument_comma: ET_SEPARATE_ARGUMENT_COMMA)
+			-- Process `a_argument_comma'.
+		do
+		end
+
+	process_separate_arguments (a_arguments: ET_SEPARATE_ARGUMENTS)
+			-- Process `a_arguments'.
+		do
+		end
+
+	process_separate_instruction (a_instruction: ET_SEPARATE_INSTRUCTION)
+			-- Process `a_instruction'.
 		do
 		end
 

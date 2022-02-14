@@ -99,6 +99,7 @@ inherit
 			process_result_address,
 			process_retry_instruction,
 			process_semicolon_symbol,
+			process_separate_instruction,
 			process_special_manifest_string,
 			process_static_call_expression,
 			process_static_call_instruction,
@@ -8375,6 +8376,51 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			has_retry := True
 		end
 
+	print_separate_instruction (a_instruction: ET_SEPARATE_INSTRUCTION)
+			-- Print `a_instruction'.
+		require
+			a_instruction_not_void: a_instruction /= Void
+		local
+			l_arguments: ET_SEPARATE_ARGUMENTS
+			l_argument: ET_SEPARATE_ARGUMENT
+			l_name: ET_IDENTIFIER
+			i, nb: INTEGER
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type: ET_DYNAMIC_TYPE
+		do
+			if line_generation_mode then
+				print_position (a_instruction.position, current_feature.static_feature.implementation_class)
+			end
+			l_arguments := a_instruction.arguments
+			nb := l_arguments.count
+			from i := 1 until i > nb loop
+				l_argument := l_arguments.argument (i)
+				l_name := l_argument.name
+				l_dynamic_type_set := dynamic_type_set (l_name)
+				l_dynamic_type := l_dynamic_type_set.static_type
+					-- Declaration of the separate argument.
+				current_function_header_buffer.put_character ('%T')
+				print_type_declaration (l_dynamic_type.primary_type, current_function_header_buffer)
+				current_function_header_buffer.put_character (' ')
+				print_separate_argument_name (l_name, current_function_header_buffer)
+				current_function_header_buffer.put_character (';')
+				current_function_header_buffer.put_new_line
+					-- Call to separate argument expression.
+				print_assignment_operand (l_argument.expression, l_dynamic_type_set, l_name, l_dynamic_type)
+				fill_call_operands (1)
+				print_indentation
+				print_separate_argument_name (l_name, current_file)
+				print_assign_to
+				print_attachment_expression (call_operands.first, l_dynamic_type_set, l_dynamic_type)
+				print_semicolon_newline
+				call_operands.wipe_out
+				i := i + 1
+			end
+			if attached a_instruction.compound as l_compound then
+				print_compound (l_compound)
+			end
+		end
+
 	print_static_call_instruction (a_instruction: ET_STATIC_CALL_INSTRUCTION)
 			-- Print `a_instruction'.
 		require
@@ -13003,6 +13049,36 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			end
 		end
 
+	print_separate_argument (a_name: ET_IDENTIFIER)
+			-- Print separate argument `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_separate_argument: a_name.is_separate_argument
+		local
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_static_type: ET_DYNAMIC_TYPE
+		do
+			if in_operand then
+				operand_stack.force (a_name)
+			elseif attached call_target_type as l_call_target_type then
+				check in_call_target: in_call_target end
+				l_dynamic_type_set := dynamic_type_set (a_name)
+				l_static_type := l_dynamic_type_set.static_type
+				if l_static_type.is_expanded then
+						-- Pass the address of the expanded object.
+					current_file.put_character ('&')
+					print_separate_argument_name (a_name, current_file)
+				elseif l_call_target_type.is_expanded then
+						-- We need to unbox the object and then pass its address.
+					print_boxed_attribute_pointer_access (a_name, l_call_target_type, call_target_check_void)
+				else
+					print_separate_argument_name (a_name, current_file)
+				end
+			else
+				print_separate_argument_name (a_name, current_file)
+			end
+		end
+
 	print_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)
 			-- Print `a_string'.
 		require
@@ -13670,7 +13746,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 				elseif l_identifier.is_temporary then
 					print_temporary_variable (l_identifier)
 				elseif l_identifier.is_iteration_item then
+						-- An iteration item is not writable, but we
+						-- need this code here when initializing it.
 					print_iteration_item (l_identifier)
+				elseif l_identifier.is_separate_argument then
+						-- A separate argument is not writable, but we
+						-- need this code here when initializing it.
+					print_separate_argument (l_identifier)
 				elseif l_identifier.is_local then
 					if has_rescue then
 							-- Keep track of the fact that the value of this local variable
@@ -36034,6 +36116,25 @@ feature {NONE} -- Feature name generation
 			a_file.put_integer (i)
 		end
 
+	print_separate_argument_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print name of separate argument `a_name' to `a_file'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_separate_argument: a_name.is_separate_argument
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_character ('s')
+				a_file.put_integer (a_name.seed)
+			else
+-- TODO: long names
+				short_names := True
+				print_separate_argument_name (a_name, a_file)
+				short_names := False
+			end
+		end
+
 	print_equality_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of `i'-th equality ('=' or '/=' as well as '~' or '/~') function
 			-- appearing in `a_routine' from `a_type' to `a_file'.
@@ -37864,6 +37965,8 @@ feature {ET_AST_NODE} -- Processing
 				print_object_test_local (an_identifier)
 			elseif an_identifier.is_iteration_item then
 				print_iteration_item (an_identifier)
+			elseif an_identifier.is_separate_argument then
+				print_separate_argument (an_identifier)
 			elseif an_identifier.is_agent_open_operand then
 				print_agent_open_operand (an_identifier)
 			elseif an_identifier.is_agent_closed_operand then
@@ -38127,6 +38230,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_symbol'.
 		do
 			-- Do nothing.
+		end
+
+	process_separate_instruction (a_instruction: ET_SEPARATE_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			print_separate_instruction (a_instruction)
 		end
 
 	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)

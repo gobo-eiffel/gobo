@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+
+Error code: FRESH_IDENTIFIER
+
+Error: An entity should use a fresh identifier.
+What to do: make sure the name of the entity does not clash with the name of
+   another entity of the enclosing scope.
+
+Class: AA
+Feature: f
+Entity: x
+Line: 16
+      do
+->      separate g as x do
+          print ("Failed")
+
+-------------------------------------------------------------------------------

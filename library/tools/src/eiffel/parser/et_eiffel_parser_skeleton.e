@@ -5,7 +5,7 @@
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/01 $"
 	revision: "$Revision: #41 $"
@@ -76,6 +76,8 @@ feature {NONE} -- Initialization
 			create last_object_tests_pool.make (Initial_last_object_tests_capacity)
 			create last_iteration_components_stack.make (Initial_last_iteration_components_capacity)
 			create last_iteration_components_pool.make (Initial_last_iteration_components_capacity)
+			create last_separate_arguments_stack.make (Initial_last_separate_arguments_capacity)
+			create last_separate_arguments_pool.make (Initial_last_separate_arguments_capacity)
 			create assertions.make (Initial_assertions_capacity)
 			create assertion_counters.make (Initial_assertion_counters_capacity)
 			create assertion_kinds.make (Initial_assertion_counters_capacity)
@@ -100,6 +102,7 @@ feature -- Initialization
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
 			wipe_out_last_iteration_components_stack
+			wipe_out_last_separate_arguments_stack
 			last_keywords.wipe_out
 			last_symbols.wipe_out
 			providers.wipe_out
@@ -526,13 +529,18 @@ feature {NONE} -- Basic operations
 				if attached last_iteration_components as l_last_iteration_components then
 					a_query.set_iteration_components (l_last_iteration_components.cloned_iteration_component_list)
 				end
+				if attached last_separate_arguments as l_last_separate_arguments then
+					a_query.set_separate_arguments (l_last_separate_arguments.cloned_separate_argument_list)
+				end
 			end
-				-- Reset local variables, formal arguments, object-tests
-				-- and iteration components before reading the next feature.
+				-- Reset local variables, formal arguments, object-tests,
+				-- iteration components and separate arguments before
+				-- reading the next closure.
 			wipe_out_last_formal_arguments_stack
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
 			wipe_out_last_iteration_components_stack
+			wipe_out_last_separate_arguments_stack
 		end
 
 	register_query_synonym (a_query: detachable ET_QUERY)
@@ -559,13 +567,18 @@ feature {NONE} -- Basic operations
 				if attached last_iteration_components as l_last_iteration_components then
 					a_procedure.set_iteration_components (l_last_iteration_components.cloned_iteration_component_list)
 				end
+				if attached last_separate_arguments as l_last_separate_arguments then
+					a_procedure.set_separate_arguments (l_last_separate_arguments.cloned_separate_argument_list)
+				end
 			end
-				-- Reset local variables, formal arguments, object-tests
-				-- and iteration components before reading the next feature.
+				-- Reset local variables, formal arguments, object-tests,
+				-- iteration components and separate arguments before
+				-- reading the next closure.
 			wipe_out_last_formal_arguments_stack
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
 			wipe_out_last_iteration_components_stack
+			wipe_out_last_separate_arguments_stack
 		end
 
 	register_procedure_synonym (a_procedure: detachable ET_PROCEDURE)
@@ -589,6 +602,9 @@ feature {NONE} -- Basic operations
 				end
 				if attached last_iteration_components as l_last_iteration_components then
 					a_inline_agent.set_iteration_components (l_last_iteration_components.cloned_iteration_component_list)
+				end
+				if attached last_separate_arguments as l_last_separate_arguments then
+					a_inline_agent.set_separate_arguments (l_last_separate_arguments.cloned_separate_argument_list)
 				end
 					-- Clean up after the inline agent has been parsed.
 				set_end_closure
@@ -926,8 +942,9 @@ feature {NONE} -- Basic operations
 			-- Indicate the we just parsed the formal arguments of a
 			-- new closure (i.e. feature, invariant or inline agent).
 			-- Keep track of the values of `last_formal_arguments',
-			-- `last_local_variables', `last_object_tests' and
-			-- `last_iteration_components' for the enclosing closure.
+			-- `last_local_variables', `last_object_tests',
+			-- `last_iteration_components' and `last_separate_instructions'
+			-- for the enclosing closure.
 			-- They will be restored when we reach the end of the
 			-- closure by `set_end_closure'.
 		do
@@ -939,14 +956,16 @@ feature {NONE} -- Basic operations
 			last_object_tests := Void
 			last_iteration_components_stack.force (last_iteration_components)
 			last_iteration_components := Void
+			last_separate_arguments_stack.force (last_separate_arguments)
+			last_separate_arguments := Void
 		end
 
 	set_end_closure
 			-- Indicate that the end of the closure (i.e. feature, invariant
 			-- or inline agent) being parsed has been reached. Restore
 			-- `last_formal_arguments', `last_local_variables',
-			-- `last_object_tests' and `last_iteration_components'
-			-- for the enclosing closure if any.
+			-- `last_object_tests', `last_iteration_components' and
+			-- `last_separate_instructions' for the enclosing closure if any.
 		do
 			if not last_formal_arguments_stack.is_empty then
 				last_formal_arguments := last_formal_arguments_stack.item
@@ -979,6 +998,16 @@ feature {NONE} -- Basic operations
 				last_iteration_components_stack.remove
 			else
 				last_iteration_components := Void
+			end
+			if attached last_separate_arguments as l_last_separate_arguments then
+				l_last_separate_arguments.wipe_out
+				last_separate_arguments_pool.force (l_last_separate_arguments)
+			end
+			if not last_separate_arguments_stack.is_empty then
+				last_separate_arguments := last_separate_arguments_stack.item
+				last_separate_arguments_stack.remove
+			else
+				last_separate_arguments := Void
 			end
 		end
 
@@ -1361,38 +1390,47 @@ feature {NONE} -- AST factory
 	new_agent_identifier_target (an_identifier: detachable ET_IDENTIFIER): detachable ET_EXPRESSION
 			-- New agent identifier target
 		local
-			a_seed: INTEGER
+			l_seed: INTEGER
 		do
 			if an_identifier /= Void then
 				if attached last_formal_arguments as l_last_formal_arguments then
-					a_seed := l_last_formal_arguments.index_of (an_identifier)
-					if a_seed /= 0 then
-						an_identifier.set_seed (a_seed)
+					l_seed := l_last_formal_arguments.index_of (an_identifier)
+					if l_seed /= 0 then
+						an_identifier.set_seed (l_seed)
 						an_identifier.set_argument (True)
-						l_last_formal_arguments.formal_argument (a_seed).set_used (True)
+						l_last_formal_arguments.formal_argument (l_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then attached last_local_variables as l_last_local_variables then
-					a_seed := l_last_local_variables.index_of (an_identifier)
-					if a_seed /= 0 then
-						an_identifier.set_seed (a_seed)
+				if l_seed = 0 and then attached last_local_variables as l_last_local_variables then
+					l_seed := l_last_local_variables.index_of (an_identifier)
+					if l_seed /= 0 then
+						an_identifier.set_seed (l_seed)
 						an_identifier.set_local (True)
-						l_last_local_variables.local_variable (a_seed).set_used (True)
+						l_last_local_variables.local_variable (l_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
-					a_seed := l_last_iteration_components.index_of_name (an_identifier)
-					if a_seed /= 0 then
+				if l_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
+					l_seed := l_last_iteration_components.index_of_name (an_identifier)
+					if l_seed /= 0 then
 						an_identifier.set_iteration_item (True)
 					end
 				end
-				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
-					a_seed := l_last_object_tests.index_of_name (an_identifier)
-					if a_seed /= 0 then
+				if l_seed = 0 and then attached last_separate_arguments as l_last_separate_arguments then
+					l_seed := l_last_separate_arguments.index_of_name (an_identifier)
+					if l_seed /= 0 then
+						an_identifier.set_separate_argument (True)
+					end
+				end
+					-- Process object-tests last because contrary to the others above,
+					-- we don't have a way at this stage in the compilation to know the
+					-- scope of the local names of object-tests.
+				if l_seed = 0 and then attached last_object_tests as l_last_object_tests then
+					l_seed := l_last_object_tests.index_of_name (an_identifier)
+					if l_seed /= 0 then
 						an_identifier.set_object_test_local (True)
 					end
 				end
-				if a_seed = 0 then
+				if l_seed = 0 then
 					an_identifier.set_feature_name (True)
 					Result := ast_factory.new_unqualified_call_expression (an_identifier, Void)
 				else
@@ -1483,38 +1521,47 @@ feature {NONE} -- AST factory
 			-- New choice constant which is supposed to be the name of
 			-- a constant attribute or unique attribute
 		local
-			a_seed: INTEGER
+			l_seed: INTEGER
 		do
 			if a_name /= Void then
 				if attached last_formal_arguments as l_last_formal_arguments then
-					a_seed := l_last_formal_arguments.index_of (a_name)
-					if a_seed /= 0 then
-						a_name.set_seed (a_seed)
+					l_seed := l_last_formal_arguments.index_of (a_name)
+					if l_seed /= 0 then
+						a_name.set_seed (l_seed)
 						a_name.set_argument (True)
-						l_last_formal_arguments.formal_argument (a_seed).set_used (True)
+						l_last_formal_arguments.formal_argument (l_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then attached last_local_variables as l_last_local_variables then
-					a_seed := l_last_local_variables.index_of (a_name)
-					if a_seed /= 0 then
-						a_name.set_seed (a_seed)
+				if l_seed = 0 and then attached last_local_variables as l_last_local_variables then
+					l_seed := l_last_local_variables.index_of (a_name)
+					if l_seed /= 0 then
+						a_name.set_seed (l_seed)
 						a_name.set_local (True)
-						l_last_local_variables.local_variable (a_seed).set_used (True)
+						l_last_local_variables.local_variable (l_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
-					a_seed := l_last_iteration_components.index_of_name (a_name)
-					if a_seed /= 0 then
+				if l_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
+					l_seed := l_last_iteration_components.index_of_name (a_name)
+					if l_seed /= 0 then
 						a_name.set_iteration_item (True)
 					end
 				end
-				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
-					a_seed := l_last_object_tests.index_of_name (a_name)
-					if a_seed /= 0 then
+				if l_seed = 0 and then attached last_separate_arguments as l_last_separate_arguments then
+					l_seed := l_last_separate_arguments.index_of_name (a_name)
+					if l_seed /= 0 then
+						a_name.set_separate_argument (True)
+					end
+				end
+					-- Process object-tests last because contrary to the others above,
+					-- we don't have a way at this stage in the compilation to know the
+					-- scope of the local names of object-tests.
+				if l_seed = 0 and then attached last_object_tests as l_last_object_tests then
+					l_seed := l_last_object_tests.index_of_name (a_name)
+					if l_seed /= 0 then
 						a_name.set_object_test_local (True)
 					end
 				end
-				if a_seed = 0 then
+				if l_seed = 0 then
 					a_name.set_feature_name (True)
 					Result := ast_factory.new_unqualified_call_expression (a_name, Void)
 				else
@@ -1624,6 +1671,15 @@ feature {NONE} -- AST factory
 						l_identifier.set_iteration_item (True)
 					end
 				end
+				if l_seed = 0 and then attached last_separate_arguments as l_last_separate_arguments then
+					l_seed := l_last_separate_arguments.index_of_name (l_identifier)
+					if l_seed /= 0 then
+						l_identifier.set_separate_argument (True)
+					end
+				end
+					-- Process object-tests last because contrary to the others above,
+					-- we don't have a way at this stage in the compilation to know the
+					-- scope of the local names of object-tests.
 				if l_seed = 0 and then attached last_object_tests as l_last_object_tests then
 					l_seed := l_last_object_tests.index_of_name (l_identifier)
 					if l_seed /= 0 then
@@ -1733,13 +1789,18 @@ feature {NONE} -- AST factory
 				if attached last_iteration_components as l_last_iteration_components then
 					Result.set_iteration_components (l_last_iteration_components.cloned_iteration_component_list)
 				end
+				if attached last_separate_arguments as l_last_separate_arguments then
+					Result.set_separate_arguments (l_last_separate_arguments.cloned_separate_argument_list)
+				end
 			end
-				-- Reset local variables, formal arguments, object-tests
-				-- and across components before reading the next closure.
+				-- Reset local variables, formal arguments, object-tests,
+				-- iteration components and separate arguments before
+				-- reading the next closure.
 			wipe_out_last_formal_arguments_stack
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
 			wipe_out_last_iteration_components_stack
+			wipe_out_last_separate_arguments_stack
 		end
 
 	new_iteration_cursor (a_at_symbol: detachable ET_SYMBOL; a_identifier: detachable ET_IDENTIFIER): detachable ET_ITERATION_CURSOR
@@ -2117,6 +2178,45 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_separate_argument (a_expression: detachable ET_EXPRESSION; a_as: detachable ET_KEYWORD; a_name: detachable ET_IDENTIFIER): detachable ET_SEPARATE_ARGUMENT
+			-- New separate argument
+		local
+			l_last_separate_arguments: like last_separate_arguments
+			l_name: ET_IDENTIFIER
+		do
+			Result := ast_factory.new_separate_argument (a_expression, a_as, a_name)
+			if Result /= Void then
+				l_last_separate_arguments := last_separate_arguments
+				if l_last_separate_arguments = Void then
+					l_last_separate_arguments := new_separate_argument_list
+					last_separate_arguments := l_last_separate_arguments
+				end
+				l_last_separate_arguments.force_last (Result)
+					-- We set 'name.is_separate_argument' to False when
+					-- parsing within its scope.
+				l_name := Result.name
+				l_name.set_separate_argument (False)
+				l_name.set_seed (l_last_separate_arguments.count)
+			end
+		end
+
+	new_separate_instruction (a_arguments: detachable ET_SEPARATE_ARGUMENTS; a_compound: detachable ET_COMPOUND; a_end: detachable ET_KEYWORD): detachable ET_SEPARATE_INSTRUCTION
+			-- New separate instruction
+		local
+			l_arguments: ET_SEPARATE_ARGUMENTS
+			i, nb: INTEGER
+		do
+			Result := ast_factory.new_separate_instruction (a_arguments, a_compound, a_end)
+			if Result /= Void then
+				l_arguments := Result.arguments
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					l_arguments.argument (i).name.set_separate_argument (True)
+					i := i + 1
+				end
+			end
+		end
+
 	new_there_exists_quantifier_expression_header (a_quantifier_symbol: detachable ET_SYMBOL;
 		a_item_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
 		a_iterable_expression: detachable ET_EXPRESSION; a_bar_symbol: detachable ET_SYMBOL): detachable ET_QUANTIFIER_EXPRESSION
@@ -2170,38 +2270,47 @@ feature {NONE} -- AST factory
 	new_unqualified_call_expression (a_name: detachable ET_IDENTIFIER; args: detachable ET_ACTUAL_ARGUMENT_LIST): detachable ET_EXPRESSION
 			-- New unqualified call expression
 		local
-			a_seed: INTEGER
+			l_seed: INTEGER
 		do
 			if a_name /= Void then
 				if attached last_formal_arguments as l_last_formal_arguments then
-					a_seed := l_last_formal_arguments.index_of (a_name)
-					if a_seed /= 0 then
-						a_name.set_seed (a_seed)
+					l_seed := l_last_formal_arguments.index_of (a_name)
+					if l_seed /= 0 then
+						a_name.set_seed (l_seed)
 						a_name.set_argument (True)
-						l_last_formal_arguments.formal_argument (a_seed).set_used (True)
+						l_last_formal_arguments.formal_argument (l_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then attached last_local_variables as l_last_local_variables then
-					a_seed := l_last_local_variables.index_of (a_name)
-					if a_seed /= 0 then
-						a_name.set_seed (a_seed)
+				if l_seed = 0 and then attached last_local_variables as l_last_local_variables then
+					l_seed := l_last_local_variables.index_of (a_name)
+					if l_seed /= 0 then
+						a_name.set_seed (l_seed)
 						a_name.set_local (True)
-						l_last_local_variables.local_variable (a_seed).set_used (True)
+						l_last_local_variables.local_variable (l_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
-					a_seed := l_last_iteration_components.index_of_name (a_name)
-					if a_seed /= 0 then
+				if l_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
+					l_seed := l_last_iteration_components.index_of_name (a_name)
+					if l_seed /= 0 then
 						a_name.set_iteration_item (True)
 					end
 				end
-				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
-					a_seed := l_last_object_tests.index_of_name (a_name)
-					if a_seed /= 0 then
+				if l_seed = 0 and then attached last_separate_arguments as l_last_separate_arguments then
+					l_seed := l_last_separate_arguments.index_of_name (a_name)
+					if l_seed /= 0 then
+						a_name.set_separate_argument (True)
+					end
+				end
+					-- Process object-tests last because contrary to the others above,
+					-- we don't have a way at this stage in the compilation to know the
+					-- scope of the local names of object-tests.
+				if l_seed = 0 and then attached last_object_tests as l_last_object_tests then
+					l_seed := l_last_object_tests.index_of_name (a_name)
+					if l_seed /= 0 then
 						a_name.set_object_test_local (True)
 					end
 				end
-				if a_seed = 0 then
+				if l_seed = 0 then
 					a_name.set_feature_name (True)
 					Result := ast_factory.new_unqualified_call_expression (a_name, args)
 				elseif args /= Void then
@@ -2215,38 +2324,47 @@ feature {NONE} -- AST factory
 	new_unqualified_call_instruction (a_name: detachable ET_IDENTIFIER; args: detachable ET_ACTUAL_ARGUMENT_LIST): detachable ET_INSTRUCTION
 			-- New unqualified call instruction
 		local
-			a_seed: INTEGER
+			l_seed: INTEGER
 		do
 			if a_name /= Void then
 				if attached last_formal_arguments as l_last_formal_arguments then
-					a_seed := l_last_formal_arguments.index_of (a_name)
-					if a_seed /= 0 then
-						a_name.set_seed (a_seed)
+					l_seed := l_last_formal_arguments.index_of (a_name)
+					if l_seed /= 0 then
+						a_name.set_seed (l_seed)
 						a_name.set_argument (True)
-						l_last_formal_arguments.formal_argument (a_seed).set_used (True)
+						l_last_formal_arguments.formal_argument (l_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then attached last_local_variables as l_last_local_variables then
-					a_seed := l_last_local_variables.index_of (a_name)
-					if a_seed /= 0 then
-						a_name.set_seed (a_seed)
+				if l_seed = 0 and then attached last_local_variables as l_last_local_variables then
+					l_seed := l_last_local_variables.index_of (a_name)
+					if l_seed /= 0 then
+						a_name.set_seed (l_seed)
 						a_name.set_local (True)
-						l_last_local_variables.local_variable (a_seed).set_used (True)
+						l_last_local_variables.local_variable (l_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
-					a_seed := l_last_iteration_components.index_of_name (a_name)
-					if a_seed /= 0 then
+				if l_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
+					l_seed := l_last_iteration_components.index_of_name (a_name)
+					if l_seed /= 0 then
 						a_name.set_iteration_item (True)
 					end
 				end
-				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
-					a_seed := l_last_object_tests.index_of_name (a_name)
-					if a_seed /= 0 then
+				if l_seed = 0 and then attached last_separate_arguments as l_last_separate_arguments then
+					l_seed := l_last_separate_arguments.index_of_name (a_name)
+					if l_seed /= 0 then
+						a_name.set_separate_argument (True)
+					end
+				end
+					-- Process object-tests last because contrary to the others above,
+					-- we don't have a way at this stage in the compilation to know the
+					-- scope of the local names of object-tests.
+				if l_seed = 0 and then attached last_object_tests as l_last_object_tests then
+					l_seed := l_last_object_tests.index_of_name (a_name)
+					if l_seed /= 0 then
 						a_name.set_object_test_local (True)
 					end
 				end
-				if a_seed = 0 then
+				if l_seed = 0 then
 					a_name.set_feature_name (True)
 					Result := ast_factory.new_unqualified_call_instruction (a_name, args)
 				elseif args /= Void then
@@ -2286,6 +2404,15 @@ feature {NONE} -- AST factory
 						a_name.set_iteration_item (True)
 					end
 				end
+				if l_seed = 0 and then attached last_separate_arguments as l_last_separate_arguments then
+					l_seed := l_last_separate_arguments.index_of_name (a_name)
+					if l_seed /= 0 then
+						a_name.set_separate_argument (True)
+					end
+				end
+					-- Process object-tests last because contrary to the others above,
+					-- we don't have a way at this stage in the compilation to know the
+					-- scope of the local names of object-tests.
 				if l_seed = 0 and then attached last_object_tests as l_last_object_tests then
 					l_seed := l_last_object_tests.index_of_name (a_name)
 					if l_seed /= 0 then
@@ -2608,6 +2735,62 @@ feature {NONE} -- Iteration components
 			last_iteration_components_void: last_iteration_components = Void
 		end
 
+feature {NONE} -- Separate arguments
+
+	last_separate_arguments: detachable ET_SEPARATE_ARGUMENT_LIST
+			-- Separate arguments already found in the closure (i.e. feature,
+			-- invariant or inline agent) being parsed
+
+	last_separate_arguments_stack: DS_ARRAYED_STACK [detachable ET_SEPARATE_ARGUMENT_LIST]
+			-- Stack of separate arguments already found in the enclosing
+			-- closures (i.e. feature, invariant or inline agents)
+			-- of the closure being parsed
+
+	last_separate_arguments_pool: DS_ARRAYED_STACK [ET_SEPARATE_ARGUMENT_LIST]
+			-- Pool of separate argument lists available for usage
+			-- whenever needed
+
+	new_separate_argument_list: ET_SEPARATE_ARGUMENT_LIST
+			-- New separate argument list;
+			-- Reuse items from `last_separate_argument_pool' if available.
+		do
+			if not last_separate_arguments_pool.is_empty then
+				Result := last_separate_arguments_pool.item
+				last_separate_arguments_pool.remove
+			else
+				create Result.make_with_capacity (Initial_last_separate_arguments_capacity)
+			end
+		ensure
+			new_separate_argument_list_not_void: Result /= Void
+		end
+
+	wipe_out_last_separate_arguments_stack
+			-- Wipe out `last_separate_arguments_stack' and
+			-- set `last_separate_arguments' to Void.
+		local
+			l_separate_argument_list: detachable ET_SEPARATE_ARGUMENT_LIST
+			i, nb: INTEGER
+		do
+			if attached last_separate_arguments as l_last_separate_arguments then
+				l_last_separate_arguments.wipe_out
+				last_separate_arguments_pool.force (l_last_separate_arguments)
+				last_separate_arguments := Void
+			end
+			nb := last_separate_arguments_stack.count
+			from i := 1 until i > nb loop
+				l_separate_argument_list := last_separate_arguments_stack.i_th (i)
+				if l_separate_argument_list /= Void then
+					l_separate_argument_list.wipe_out
+					last_separate_arguments_pool.force (l_separate_argument_list)
+				end
+				i := i + 1
+			end
+			last_separate_arguments_stack.wipe_out
+		ensure
+			last_separate_arguments_stack_wiped_out: last_separate_arguments_stack.is_empty
+			last_separate_arguments_void: last_separate_arguments = Void
+		end
+
 feature {NONE} -- Formal arguments
 
 	last_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
@@ -2774,6 +2957,9 @@ feature {NONE} -- Constants
 	Initial_last_iteration_components_capacity: INTEGER = 50
 			-- Initial capacity for `last_iteration_components'
 
+	Initial_last_separate_arguments_capacity: INTEGER = 50
+			-- Initial capacity for `last_separate_instructions'
+
 	Initial_assertions_capacity: INTEGER = 20
 			-- Initial capacity for `assertions'
 
@@ -2868,6 +3054,10 @@ invariant
 	last_iteration_components_stack_not_void: last_iteration_components_stack /= Void
 	last_iteration_components_pool_not_void: last_iteration_components_pool /= Void
 	no_void_last_iteration_components_in_pool: not last_iteration_components_pool.has_void
+		-- Separate arguments.
+	last_separate_arguments_stack_not_void: last_separate_arguments_stack /= Void
+	last_separate_arguments_pool_not_void: last_separate_arguments_pool /= Void
+	no_void_last_separate_arguments_in_pool: not last_separate_arguments_pool.has_void
 		-- Input buffer.
 	eiffel_buffer_not_void: eiffel_buffer /= Void
 

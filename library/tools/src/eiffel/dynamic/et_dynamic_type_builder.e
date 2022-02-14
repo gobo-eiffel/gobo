@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -96,6 +96,8 @@ inherit
 			report_result,
 			report_result_assignment_target,
 			report_result_declaration,
+			report_separate_argument,
+			report_separate_argument_declaration,
 			report_static_call_expression,
 			report_static_call_instruction,
 			report_string_8_constant,
@@ -2572,6 +2574,30 @@ feature {NONE} -- Event handling
 			end
 		end
 
+	report_separate_argument (a_name: ET_IDENTIFIER; a_separate_argument: ET_SEPARATE_ARGUMENT)
+			-- Report that a call to separate argument `a_name' has been processed.
+		do
+			if current_type = current_dynamic_type.base_type then
+				a_name.set_index (a_separate_argument.name.index)
+			end
+		end
+
+	report_separate_argument_declaration (a_separate_argument: ET_SEPARATE_ARGUMENT; a_type: ET_TYPE_CONTEXT)
+			-- Report that the declaration of separate argument `a_separate_argument'
+			-- of type `a_type' has been processed.
+		local
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Take care of the type of the separate argument name.
+				l_dynamic_type := current_dynamic_system.dynamic_type (tokens.identity_type, a_type)
+				l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
+				set_dynamic_type_set (l_dynamic_type_set, a_separate_argument.name)
+				propagate_separate_argument_dynamic_types (a_separate_argument)
+			end
+		end
+
 	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY)
 			-- Report that a static call expression has been processed.
 		local
@@ -4161,6 +4187,15 @@ feature {NONE} -- Implementation
 			-- Propagate the dynamic types of the target of `a_equality' to the object-equality itself.
 		require
 			a_equality_not_void: a_equality /= Void
+		do
+			-- Do nothing.
+		end
+
+	propagate_separate_argument_dynamic_types (a_separate_argument: ET_SEPARATE_ARGUMENT)
+			-- Propagate dynamic types of the expression of `a_separate_argument'
+			-- to the dynamic type set of its name.
+		require
+			a_separate_argument_not_void: a_separate_argument /= Void
 		do
 			-- Do nothing.
 		end

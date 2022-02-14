@@ -5,7 +5,7 @@ note
 		"Eiffel identifiers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,10 @@ inherit
 			object_test_local_name,
 			is_object_test_local,
 			iteration_item_name,
-			is_iteration_item
+			is_iteration_item,
+			separate_argument_name,
+			is_separate_argument,
+			as_expression
 		end
 
 	ET_CLASS_NAME
@@ -354,6 +357,12 @@ feature -- Status report
 			Result := (status_code = agent_closed_operand_code)
 		end
 
+	is_separate_argument: BOOLEAN
+			-- Is current identifier a separate instruction argument name?
+		do
+			Result := (status_code = separate_argument_code)
+		end
+
 	is_never_void: BOOLEAN
 			-- Can current expression never be void?
 		do
@@ -499,6 +508,18 @@ feature -- Status setting
 			agent_closed_operand_set: is_agent_closed_operand = b
 		end
 
+	set_separate_argument (b: BOOLEAN)
+			-- Set `is_separate_argument' to `b'.
+		do
+			if b then
+				status_code := separate_argument_code
+			else
+				status_code := no_code
+			end
+		ensure
+			separate_argument_set: is_separate_argument = b
+		end
+
 feature -- Setting
 
 	set_name (a_name: like name)
@@ -624,6 +645,18 @@ feature -- Conversion
 			Result := Current
 		end
 
+	separate_argument_name: ET_IDENTIFIER
+			-- Current name viewed as a separate argument name
+		do
+			Result := Current
+		end
+
+	as_expression: ET_EXPRESSION
+			-- Current name viewed as an expression
+		do
+			Result := Current
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR)
@@ -670,6 +703,7 @@ feature {NONE} -- Implementation
 	tuple_label_code: CHARACTER = 't'
 	agent_open_operand_code: CHARACTER = 'o'
 	agent_closed_operand_code: CHARACTER = 'c'
+	separate_argument_code: CHARACTER = 's'
 	no_code: CHARACTER = '%U'
 			-- Status codes
 

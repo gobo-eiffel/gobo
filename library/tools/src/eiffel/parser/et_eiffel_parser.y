@@ -6,7 +6,7 @@ note
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -230,6 +230,10 @@ create
 %type <detachable ET_RENAME_LIST> Rename_clause Rename_list
 %type <detachable ET_REPEAT_INSTRUCTION> Repeat_instruction_header
 %type <detachable ET_SEMICOLON_SYMBOL> Semicolon_opt
+%type <detachable ET_SEPARATE_ARGUMENT> Separate_argument
+%type <detachable ET_SEPARATE_ARGUMENT_ITEM> Separate_argument_comma
+%type <detachable ET_SEPARATE_ARGUMENTS> Separate_arguments Separate_argument_list
+%type <detachable ET_SEPARATE_INSTRUCTION> Separate_instruction
 %type <detachable ET_STATIC_CALL_EXPRESSION> Static_call_expression
 %type <detachable ET_STRIP_EXPRESSION> Strip_expression Strip_feature_name_list
 %type <detachable ET_SYMBOL> Left_parenthesis
@@ -3154,6 +3158,8 @@ Instruction: Creation_instruction
 		{ $$ := new_across_instruction ($1, $2, $3, $4, $5, $6, $7) }
 	| Repeat_instruction_header Compound_opt E_CLOSE_REPEAT
 		{ $$ := new_repeat_instruction ($1, $2, $3) }
+	| Separate_instruction
+		{ $$ := $1 }
 	| Debug_instruction
 		{ $$ := $1 }
 	| Check_instruction
@@ -3513,6 +3519,62 @@ Untyped_manifest_string_list: Untyped_manifest_string ')'
 Untyped_manifest_string_comma: Untyped_manifest_string ','
 		{
 			$$ := ast_factory.new_manifest_string_comma ($1, $2)
+			if $$ /= Void then
+				increment_counter
+			end
+		}
+	;
+
+------------------------------------------------------------------------------------
+
+Separate_instruction: Separate_arguments Do_compound E_END
+		{
+			$$ := new_separate_instruction ($1, $2, $3)
+		}
+	;
+
+Separate_arguments: E_SEPARATE
+		{
+			add_keyword ($1)
+			add_counter
+		}
+	  Separate_argument_list
+		{
+			$$ := $3
+			remove_keyword
+			remove_counter
+		}
+	;
+
+Separate_argument_list: Separate_argument
+		{
+			if attached $1 as l_argument then
+				$$ := ast_factory.new_separate_arguments (last_keyword, counter_value + 1)
+				if $$ /= Void then
+					$$.put_first (l_argument)
+				end
+			else
+				$$ := ast_factory.new_separate_arguments (last_keyword, counter_value)
+			end
+		}
+	| Separate_argument_comma Separate_argument_list
+		{
+			$$ := $2
+			if $$ /= Void and attached $1 as l_argument then
+				$$.put_first (l_argument)
+			end
+		}
+	;
+
+Separate_argument: Expression E_AS Identifier
+		{
+			$$ := new_separate_argument ($1, $2, $3)
+		}
+	;
+
+Separate_argument_comma: Separate_argument ','
+		{
+			$$ := ast_factory.new_separate_argument_comma ($1, $2)
 			if $$ /= Void then
 				increment_counter
 			end

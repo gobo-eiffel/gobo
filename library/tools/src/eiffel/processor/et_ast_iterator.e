@@ -5,7 +5,7 @@ note
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2650,6 +2650,44 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_symbol'.
 		do
 			process_symbol (a_symbol)
+		end
+
+	process_separate_argument (a_argument: ET_SEPARATE_ARGUMENT)
+			-- Process `a_argument'.
+		do
+			a_argument.expression.process (Current)
+			a_argument.as_keyword.process (Current)
+			a_argument.name.process (Current)
+		end
+
+	process_separate_argument_comma (a_argument_comma: ET_SEPARATE_ARGUMENT_COMMA)
+			-- Process `a_argument_comma'.
+		do
+			a_argument_comma.argument.process (Current)
+			a_argument_comma.comma.process (Current)
+		end
+
+	process_separate_arguments (a_arguments: ET_SEPARATE_ARGUMENTS)
+			-- Process `a_arguments'.
+		local
+			i, nb: INTEGER
+		do
+			a_arguments.separate_keyword.process (Current)
+			nb := a_arguments.count
+			from i := 1 until i > nb loop
+				a_arguments.item (i).process (Current)
+				i := i + 1
+			end
+		end
+
+	process_separate_instruction (a_instruction: ET_SEPARATE_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			a_instruction.arguments.process (Current)
+			if attached a_instruction.compound as l_compound then
+				l_compound.process (Current)
+			end
+			a_instruction.end_keyword.process (Current)
 		end
 
 	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)

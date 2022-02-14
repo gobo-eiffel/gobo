@@ -5,7 +5,7 @@ note
 		"Eiffel object-test scope builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -140,7 +140,7 @@ feature {ET_AST_NODE} -- Processing
 							--      x.do_something
 							--   end
 						set_fatal_error
-						error_handler.report_vuot1f_error (current_class, an_expression, l_other_object_test)
+						error_handler.report_vuot1g_error (current_class, an_expression, l_other_object_test)
 					else
 						l_scope.add_object_test (an_expression)
 					end

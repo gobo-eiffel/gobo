@@ -5,7 +5,7 @@ note
 		"Eiffel provider processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -124,6 +124,10 @@ inherit
 			process_regular_manifest_string,
 			process_regular_real_constant,
 			process_repeat_instruction,
+			process_separate_argument,
+			process_separate_argument_comma,
+			process_separate_arguments,
+			process_separate_instruction,
 			process_special_manifest_string,
 			process_static_call_expression,
 			process_static_call_instruction,
@@ -1315,6 +1319,39 @@ feature {ET_AST_NODE} -- Processing
 			process_expression (a_instruction.iterable_expression)
 			if attached a_instruction.loop_compound as l_loop_compound then
 				process_compound (l_loop_compound)
+			end
+		end
+
+	process_separate_argument (a_argument: ET_SEPARATE_ARGUMENT)
+			-- Process `a_argument'.
+		do
+			process_expression (a_argument.expression)
+		end
+
+	process_separate_argument_comma (a_argument_comma: ET_SEPARATE_ARGUMENT_COMMA)
+			-- Process `a_argument_comma'.
+		do
+			process_separate_argument (a_argument_comma.argument)
+		end
+
+	process_separate_arguments (a_arguments: ET_SEPARATE_ARGUMENTS)
+			-- Process `a_arguments'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_arguments.count
+			from i := 1 until i > nb loop
+				process_separate_argument (a_arguments.argument (i))
+				i := i + 1
+			end
+		end
+
+	process_separate_instruction (a_instruction: ET_SEPARATE_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			process_separate_arguments (a_instruction.arguments)
+			if attached a_instruction.compound as l_compound then
+				process_compound (l_compound)
 			end
 		end
 

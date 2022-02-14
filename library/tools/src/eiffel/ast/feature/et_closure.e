@@ -5,7 +5,7 @@ note
 		"Eiffel closures, e.g. features, invariants, inline agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -93,6 +93,10 @@ feature -- Access
 			-- Iteration components declared in current closure;
 			-- Void if none
 
+	separate_arguments: detachable ET_SEPARATE_ARGUMENT_LIST
+			-- Separate arguments (in separate instructions) declared in current closure;
+			-- Void if none
+
 	implementation_closure: ET_CLOSURE
 			-- Current closure viewed from the class where it has been implemented
 			--
@@ -120,6 +124,14 @@ feature -- Setting
 			iteration_components := a_iteration_components
 		ensure
 			iteration_components_set: iteration_components = a_iteration_components
+		end
+
+	set_separate_arguments (a_separate_arguments: like separate_arguments)
+			-- Set `separate_arguments' to `a_separate_arguments'.
+		do
+			separate_arguments := a_separate_arguments
+		ensure
+			separate_arguments_set: separate_arguments = a_separate_arguments
 		end
 
 end

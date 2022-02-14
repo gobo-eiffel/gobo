@@ -2,10 +2,10 @@ note
 
 	description:
 
-		"Null error handlers"
+		"Eiffel null error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,6 +28,9 @@ inherit
 			reportable_gvsrc4_error,
 			reportable_gvsrc5_error,
 			reportable_gvsrc6_error,
+			reportable_v1seg1_error,
+			reportable_v1seg2_error,
+			reportable_v1seg3_error,
 			reportable_vaol1_error,
 			reportable_vape1_error,
 			reportable_vape2_error,
@@ -62,6 +65,7 @@ inherit
 			reportable_veen2_error,
 			reportable_veen8_error,
 			reportable_veen9_error,
+			reportable_veen10_error,
 			reportable_vevi_error,
 			reportable_vfac1_error,
 			reportable_vfac2_error,
@@ -182,10 +186,12 @@ inherit
 			reportable_gvuac_error,
 			reportable_gvual_error,
 			reportable_gvuao_error,
+			reportable_gvuas_error,
 			reportable_gvuia_error,
 			reportable_gvuic_error,
 			reportable_gvuil_error,
 			reportable_gvuio_error,
+			reportable_gvuis_error,
 			reportable_gvwmc2_error
 		end
 
@@ -294,6 +300,27 @@ feature -- System error status
 		end
 
 feature -- Validity error status
+
+	reportable_v1seg1_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a V1SE-G1 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_v1seg2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a V1SE-G2 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_v1seg3_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a V1SE-G3 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
 
 	reportable_vaol1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VAOL-1 error be reported when it
@@ -528,6 +555,13 @@ feature -- Validity error status
 
 	reportable_veen9_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VEEN-9 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_veen10_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VEEN-10 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
@@ -1359,6 +1393,13 @@ feature -- Validity error status
 			Result := False
 		end
 
+	reportable_gvuas_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a GVUAS error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
 	reportable_gvuia_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVUIA error be reported when it
 			-- appears in `a_class'?
@@ -1382,6 +1423,13 @@ feature -- Validity error status
 
 	reportable_gvuio_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVUIO error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_gvuis_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a GVUIS error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
