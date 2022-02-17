@@ -563,6 +563,40 @@ feature -- Status report
 			-- Only make sense in case of 'like argument',
 			-- otherwise the feature has to be a query.
 
+	is_type_separate_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `is_type_separate' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		local
+			a_class: ET_CLASS
+			l_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := False
+			elseif is_like_argument then
+				a_class := a_context.base_class
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.is_type_separate_with_type_mark (overridden_type_mark (a_type_mark), a_context)
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current anchored type.
+					Result := False
+				end
+			else
+				a_class := a_context.base_class
+				if attached a_class.seeded_query (seed) as l_query then
+					Result := l_query.type.is_type_separate_with_type_mark (overridden_type_mark (a_type_mark), a_context)
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current anchored type.
+					Result := False
+				end
+			end
+		end
+
 	is_type_expanded_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `is_type_expanded' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void

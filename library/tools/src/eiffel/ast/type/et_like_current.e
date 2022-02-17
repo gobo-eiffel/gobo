@@ -218,6 +218,13 @@ feature -- Status report
 	is_like_current: BOOLEAN = True
 			-- Is current type of the form 'like Current'?
 
+	is_type_separate_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `is_type_separate' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		do
+			Result := a_context.is_type_separate_with_type_mark (overridden_type_mark (a_type_mark))
+		end
+
 	is_type_expanded_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `is_type_expanded' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void

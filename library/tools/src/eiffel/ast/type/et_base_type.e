@@ -48,6 +48,8 @@ inherit
 			base_type_index_of_label as context_base_type_index_of_label,
 			named_type as context_named_type,
 			named_type_with_type_mark as context_named_type_with_type_mark,
+			is_type_separate as context_is_type_separate,
+			is_type_separate_with_type_mark as context_is_type_separate_with_type_mark,
 			is_type_expanded as context_is_type_expanded,
 			is_type_expanded_with_type_mark as context_is_type_expanded_with_type_mark,
 			is_type_reference as context_is_type_reference,
@@ -571,6 +573,13 @@ feature -- Type context
 					end
 				end
 			end
+		end
+
+	context_is_type_separate_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
+			-- Same as `context_is_type_separate' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		do
+			Result := is_type_separate_with_type_mark (a_type_mark, Current)
 		end
 
 	context_is_type_expanded_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): BOOLEAN

@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     356 tests
-    # FAILED:     125 tests
+    # Passed:     361 tests
+    # FAILED:     126 tests
     # Aborted:    0 test
-    # Total:      481 tests
+    # Total:      487 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo1/test\_bar\_2](definition/difo1/test\_bar\_2)\] test\_failed</br>
@@ -81,6 +81,7 @@ FAIL:  \[[semantics/muon4/test\_once\_per\_object\_2](semantics/muon4/test\_once
 FAIL:  \[[semantics/muon4/test\_once\_per\_object\_4](semantics/muon4/test\_once\_per\_object\_4)\] test\_failed</br>
 FAIL:  \[[validity/gvncc4/test1](validity/gvncc4/test1)\] test\_failed</br>
 FAIL:  \[[validity/gvncc4/test2](validity/gvncc4/test2)\] test\_failed</br>
+FAIL:  \[[validity/v1seg3/test3](validity/v1seg3/test3)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test10](validity/vape1/test10)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test11](validity/vape1/test11)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test13](validity/vape1/test13)\] test\_failed</br>

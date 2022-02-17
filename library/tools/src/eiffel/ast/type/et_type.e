@@ -391,6 +391,26 @@ feature -- Status report
 			named_type: Result implies is_named_type
 		end
 
+	is_type_separate (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Is current type separate when viewed from `a_context'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := is_type_separate_with_type_mark (Void, a_context)
+		end
+
+	is_type_separate_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `is_type_separate' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
 	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Is current type expanded when viewed from `a_context'?
 			-- (Note that the feature name `is_expanded_type' is

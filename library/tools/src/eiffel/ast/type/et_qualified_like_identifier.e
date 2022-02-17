@@ -618,6 +618,50 @@ feature -- Measurement
 
 feature -- Status report
 
+	is_type_separate_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `is_type_separate' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		local
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_target_type: ET_TYPE
+			l_target_context: ET_NESTED_TYPE_CONTEXT
+			l_query: detachable ET_QUERY
+			l_old_count: INTEGER
+		do
+			if seed = 0 then
+					-- Qualified anchored type not resolved yet.
+				Result := False
+			else
+				l_target_type := target_type
+				if implementation_class = a_context.root_context.base_class then
+					l_adapted_base_class := l_target_type.adapted_base_class_with_named_feature (name, a_context)
+					l_query := l_adapted_base_class.named_query (name)
+				else
+					l_adapted_base_class := l_target_type.adapted_base_class_with_seeded_feature (seed, a_context)
+					l_query := l_adapted_base_class.base_class.seeded_query (seed)
+				end
+				if l_query = Void then
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current qualified anchored type.
+						-- In the implementation class, we know that there is
+						-- extactly one constraint with a query of this name.
+						-- In descendant classes, we know that there is
+						-- at least one constraint with a query with this seed,
+						-- and if there are more than one, then they all have
+						-- the same type.
+					Result := False
+				else
+					l_target_context := a_context.as_nested_type_context
+					l_old_count := l_target_context.count
+					l_target_context.force_last (l_target_type)
+					{ET_ADAPTED_BASE_CLASS_CHECKER}.reset_context_if_multiple_constraints (not attached {ET_CLASS} l_adapted_base_class, l_adapted_base_class, l_target_context)
+					Result := l_query.type.is_type_separate_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.keep_first (l_old_count)
+				end
+			end
+		end
+
 	is_type_expanded_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `is_type_expanded' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void

@@ -231,6 +231,22 @@ feature -- Status report
 			definition: Result = (other.root_context = root_context)
 		end
 
+	is_type_separate: BOOLEAN
+			-- Is `base_type' separate?
+		require
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := is_type_separate_with_type_mark (Void)
+		end
+
+	is_type_separate_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
+			-- Same as `is_type_separate' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		require
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
 	is_type_expanded: BOOLEAN
 			-- Is `base_type' expanded?
 			-- (Note that the feature name `is_expanded_type' is

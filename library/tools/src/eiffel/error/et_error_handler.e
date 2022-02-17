@@ -1024,6 +1024,30 @@ feature -- Validity errors
 			end
 		end
 
+	report_v1seg3a_error (a_class, a_class_impl: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_type: ET_NAMED_TYPE)
+			-- Report V1SE-G3 error: the type of the argument `arg'
+			-- of a separate instruction in `a_class_impl' and view from
+			-- one of its descendants `a_class' (possibly itself)
+			-- is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			arg_not_void: arg /= Void
+			a_type_not_void: a_type /= Void
+			a_type_is_named_type: a_type.is_named_type
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_v1seg3_error (a_class) then
+				create l_error.make_v1seg3a (a_class, a_class_impl, arg, a_type)
+				report_validity_error (l_error)
+			end
+		end
+
 	report_vaol1a_error (a_class: ET_CLASS; an_expression: ET_OLD_EXPRESSION)
 			-- Report VAOL-1 error: `an_expression', found in `a_class',
 			-- does not appear in a postcondition.

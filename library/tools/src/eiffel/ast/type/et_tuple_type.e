@@ -219,19 +219,18 @@ feature -- Status report
 	is_separate: BOOLEAN
 			-- Is current type separate?
 		do
-			if attached type_mark as l_type_mark then
-				Result := l_type_mark.is_separate_mark
+			if not attached type_mark as l_type_mark then
+				Result := base_class.is_separate
+			elseif l_type_mark.is_separate_mark then
+				Result := True
 			else
 				Result := base_class.is_separate
 			end
 		end
 
 	is_type_separate_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Is current type separate when viewed from `a_context'?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
+			-- Same as `is_type_separate' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
 		do
 			if a_type_mark = Void then
 				Result := is_separate
@@ -445,6 +444,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := True
 			elseif other_context.attachment_type_conformance_mode and then not (is_type_attached_with_type_mark (a_type_mark, a_context) implies other.is_type_attached_with_type_mark (other_type_mark, other_context)) then
 				Result := False
+			elseif other_context.scoop_mode and then not (other.is_type_separate_with_type_mark (other_type_mark, other_context) implies is_type_separate_with_type_mark (a_type_mark, a_context)) then
+					Result := False
 			elseif not attached actual_parameters as l_actual_parameters then
 				check not_generic: not is_generic end
 				Result := True

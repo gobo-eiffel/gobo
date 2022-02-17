@@ -33,6 +33,7 @@ create
 	make_v1seg2d,
 	make_v1seg2e,
 	make_v1seg2f,
+	make_v1seg3a,
 	make_vaol1a,
 	make_vape1a,
 	make_vape1b,
@@ -710,6 +711,52 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = separate argument name
+		end
+
+	make_v1seg3a (a_class, a_class_impl: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_type: ET_NAMED_TYPE)
+			-- Report V1SE-G3 error: the type of the argument `arg'
+			-- of a separate instruction in `a_class_impl' and view from
+			-- one of its descendants `a_class' (possibly itself)
+			-- is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			arg_not_void: arg /= Void
+			a_type_not_void: a_type /= Void
+			a_type_is_named_type: a_type.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := arg.expression.position
+			code := template_code (v1seg3a_template_code)
+			etl_code := v1seg3_etl_code
+			default_template := default_message_template (v1seg3a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (arg.name.lower_name, 6)
+			parameters.put (a_type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = separate argument name
+			-- dollar7: $7 = type of separate argument
 		end
 
 	make_vaol1a (a_class: ET_CLASS; an_expression: ET_OLD_EXPRESSION)
@@ -17220,6 +17267,7 @@ feature {NONE} -- Implementation
 	v1seg2d_default_template: STRING = "argument '$6' of a separate instruction appears in the scope of an object-test local with the same name."
 	v1seg2e_default_template: STRING = "argument '$6' of a separate instruction appears in the scope of an iteration item with the same name."
 	v1seg2f_default_template: STRING = "argument '$6' of a separate instruction appears in another enclosing separate instruction with an argument of the same name."
+	v1seg3a_default_template: STRING = "the type '$7' of the argument '$6' of a separate instruction is not separate."
 	vaol1a_default_template: STRING = "old expression does not appear in a postcondition."
 	vape1a_default_template: STRING = "feature `$8' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
 	vape1b_default_template: STRING = "feature `$8' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
@@ -17771,6 +17819,7 @@ feature {NONE} -- Implementation
 	v1seg2d_template_code: STRING = "v1seg2d"
 	v1seg2e_template_code: STRING = "v1seg2e"
 	v1seg2f_template_code: STRING = "v1seg2f"
+	v1seg3a_template_code: STRING = "v1seg3a"
 	vaol1a_template_code: STRING = "vaol1a"
 	vape1a_template_code: STRING = "vape1a"
 	vape1b_template_code: STRING = "vape1b"

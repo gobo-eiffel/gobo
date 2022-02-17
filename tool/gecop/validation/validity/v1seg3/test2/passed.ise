@@ -1,0 +1,18 @@
+-------------------------------------------------------------------------------
+
+Error code: V1SE
+
+Error: An expression used in a separate instruction should be of a separate type.
+What to do: do not pass this expression as an argument to the separate instruction,
+  use it directly or assign its value to a local variable and use this variable
+  instead.
+
+Class: AA
+Feature: make
+Type: INTEGER_32
+Line: 11
+      do
+->      separate f as x do
+          print ("Failed")
+
+-------------------------------------------------------------------------------

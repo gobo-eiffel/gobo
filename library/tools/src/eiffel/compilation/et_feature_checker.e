@@ -10281,10 +10281,12 @@ feature {NONE} -- Expression validity
 				l_expression_context := new_context (current_type)
 				check_expression_validity (l_argument.expression, l_expression_context, current_system.detachable_separate_any_type)
 				if not has_fatal_error then
-					current_separate_argument_types.force_last (l_expression_context, l_argument)
-					report_separate_argument_declaration (l_argument, l_expression_context)
-				else
-					free_context (l_expression_context)
+						-- Check separate argument type (see V1SE-G3).
+					if not l_expression_context.is_type_separate then
+							-- The type of the separate argument needs to be separate.
+						set_fatal_error
+						error_handler.report_v1seg3a_error (current_class, current_class_impl, l_argument, l_expression_context.named_type)
+					end
 				end
 					-- Check separate argument name clashes (see V1SE-G1 and V1SE-G2).
 				if current_class = current_class_impl then
@@ -10368,7 +10370,13 @@ feature {NONE} -- Expression validity
 						error_handler.report_v1seg2f_error (current_class, l_argument, l_other_separate_argument)
 					end
 				end
-				had_error := had_error or has_fatal_error
+				if not has_fatal_error then
+					current_separate_argument_types.force_last (l_expression_context, l_argument)
+					report_separate_argument_declaration (l_argument, l_expression_context)
+				else
+					free_context (l_expression_context)
+					had_error := True
+				end
 				i := i + 1
 			end
 			if had_error then

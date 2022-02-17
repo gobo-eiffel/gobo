@@ -347,6 +347,25 @@ feature -- Setting
 
 feature -- Status report
 
+	is_type_separate_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `is_type_separate' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		local
+			l_previous_context: ET_NESTED_TYPE_CONTEXT
+		do
+			l_previous_context := a_context.as_nested_type_context
+			if l_previous_context.valid_index (index) then
+				l_previous_context.force_last (previous)
+				Result := l_previous_context.item (index).is_type_separate_with_type_mark (overridden_type_mark (a_type_mark), l_previous_context)
+				l_previous_context.remove_last
+			else
+					-- We reached the root context.
+				l_previous_context.force_last (tokens.like_0)
+				Result := l_previous_context.root_context.is_type_separate_with_type_mark (overridden_type_mark (a_type_mark), l_previous_context)
+				l_previous_context.remove_last
+			end
+		end
+
 	is_type_expanded_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `is_type_expanded' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void

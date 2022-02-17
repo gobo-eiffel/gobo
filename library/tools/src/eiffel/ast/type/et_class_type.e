@@ -288,24 +288,23 @@ feature -- Status report
 	is_separate: BOOLEAN
 			-- Is current type separate?
 		do
-			if attached type_mark as l_type_mark then
-				Result := l_type_mark.is_separate_mark
+			if not attached type_mark as l_type_mark then
+				Result := base_class.is_separate
+			elseif l_type_mark.is_separate_mark then
+				Result := not is_expanded
 			else
 				Result := base_class.is_separate
 			end
 		end
 
 	is_type_separate_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Is current type separate when viewed from `a_context'?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
+			-- Same as `is_type_separate' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
 		do
 			if a_type_mark = Void then
 				Result := is_separate
 			elseif a_type_mark.is_separate_mark then
-				Result := True
+				Result := not is_type_expanded_with_type_mark (a_type_mark, a_context)
 			else
 				Result := is_separate
 			end
@@ -326,7 +325,8 @@ feature -- Status report
 		end
 
 	is_type_expanded_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Is current type expanded when viewed from `a_context'?
+			-- Same as `is_type_expanded' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
 		do
 			if a_type_mark = Void then
 				Result := is_expanded
