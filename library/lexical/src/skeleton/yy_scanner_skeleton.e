@@ -129,7 +129,7 @@ feature -- Access
 			-- (Create a new string at each call.)
 			--
 			-- Note that `unicode_text' does not contain surrogate
-			-- or invalid Unicode characters, the the resulting
+			-- or invalid Unicode characters, therefore the resulting
 			-- string is valid UTF-8.
 		do
 			if yy_start < yy_end then
@@ -139,7 +139,7 @@ feature -- Access
 			end
 		end
 
-	text_item (i: INTEGER): CHARACTER
+	text_item (i: INTEGER): CHARACTER_8
 			-- `i'-th character of last token read
 		local
 			l_content_area: like yy_content_area
