@@ -18087,7 +18087,7 @@ feature {NONE} -- Deep features generation
 					current_file.put_character (';')
 					current_file.put_new_line
 					if not l_has_nested_reference_attributes then
-							-- Copy items if they are reference objects or expanded
+							-- Copy items if they are not reference objects or expanded
 							-- objects containing (recursively) reference attributes.
 						print_indentation
 						current_file.put_string (c_memcpy)
@@ -29627,7 +29627,26 @@ feature {NONE} -- C function generation
 			l_root_call: ET_QUALIFIED_CALL
 			l_temp: ET_IDENTIFIER
 			i: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+			nb: INTEGER
 		do
+			debug ("gobo_ids")
+					-- Code to keep track of the number of objects created by type ids.
+				header_file.put_string (c_extern)
+				header_file.put_character (' ')
+				header_file.put_string (c_int)
+				current_file.put_string (c_int)
+				header_file.put_character (' ')
+				current_file.put_character (' ')
+				header_file.put_string ("*gobo_ids")
+				current_file.put_string ("*gobo_ids")
+				header_file.put_character (';')
+				current_file.put_character (';')
+				header_file.put_new_line
+				current_file.put_new_line
+				header_file.put_line ("extern void reset_gobo_ids();")
+				current_file.put_line ("void reset_gobo_ids() {gobo_ids = calloc(" + current_dynamic_system.dynamic_types.count.out  + " + 1, sizeof(int));}")
+			end
 			current_file.put_line ("int GE_main(int argc, EIF_NATIVE_CHAR** argv)")
 			current_file.put_character ('{')
 			current_file.put_new_line
@@ -29684,6 +29703,9 @@ feature {NONE} -- C function generation
 				print_escaped_string (l_root_type.base_class.upper_name)
 				current_file.put_character (';')
 				current_file.put_new_line
+				debug ("gobo_ids")
+					current_file.put_line ("reset_gobo_ids();")
+				end
 				print_indentation
 				current_file.put_line ("GE_init_gc();")
 					-- Exception handling.
@@ -29821,6 +29843,16 @@ feature {NONE} -- C function generation
 				extra_dynamic_type_sets.remove_last
 				current_file.put_character (';')
 				current_file.put_new_line
+				debug ("gobo_ids")
+					nb := current_dynamic_system.dynamic_types.count
+					from i := 1 until i > nb loop
+						l_type := current_dynamic_system.dynamic_types.item (i)
+						if l_type.is_alive then
+							current_file.put_line ("fprintf(stdout, %"" + l_type.base_type.unaliased_to_text + "%T%%d\n%", gobo_ids[" + i.out + "]);")
+						end
+						i := i + 1
+					end
+				end
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
@@ -31687,6 +31719,11 @@ feature {NONE} -- Memory allocation
 			print_result_name (current_file)
 			current_file.put_character (';')
 			current_file.put_new_line
+			debug ("gobo_ids")
+					-- Keep track of the number of objects created by type ids.
+				current_file.put_line ("gobo_ids[" + a_type.id.out + "]++;")
+--				current_file.put_line ("fprintf(stderr, %"" + a_type.base_type.unaliased_to_text + "\n%");")
+			end
 			print_indentation
 			print_result_name (current_file)
 			current_file.put_character (' ')
