@@ -940,7 +940,7 @@ feature -- Test
 		end
 
 	test_deep_copy_reference
-			-- Test feature 'deep_copy' with referecne types.
+			-- Test feature 'deep_copy' with reference types.
 		local
 			sp1, sp2: SPECIAL [STRING]
 			a, b, c: STRING
