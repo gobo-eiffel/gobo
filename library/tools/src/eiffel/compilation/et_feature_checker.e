@@ -5632,6 +5632,7 @@ feature {NONE} -- Expression validity
 			--    * 'manifest_value' is representable as an instance of 'manifest_type'.
 			--  * otherwise, try to determine whether 'manifest_value' is representable
 			--    as an instance of the type expected in the surrounding context.
+			--  * otherwise, if "CHARACTER" is mapped to "CHARACTER_32", then use this type.
 			--  * otherwise, the constant will be of type "CHARACTER_8" if 'manifest_value'
 			--    is representable as a CHARACTER_8, otherwise of type "CHARACTER_32" if it
 			--    is representable as a CHARACTER_32.
@@ -5639,7 +5640,7 @@ feature {NONE} -- Expression validity
 			--
 			-- Note that ECMA 367-2 says that the type of a manifest character constant
 			-- with no explicit 'manifest_type' is "CHARACTER" (see 8.29.6 "Definition:
-			-- Type of a manifest constant", page 143). So the third bullet above is
+			-- Type of a manifest constant", page 143). So the fourth bullet above is
 			-- not quite compliant with ECMA. But this is the way it is implemented
 			-- in ISE (as of 20.05.10.xxxx) to be able to capture Unicode characters.
 			--
@@ -5703,6 +5704,14 @@ feature {NONE} -- Expression validity
 					-- Error: invalid cast type, it should be a sized variant of "CHARACTER".
 				set_fatal_error
 				error_handler.report_vwmq0c_error (current_class, current_class_impl, a_constant)
+			elseif current_universe_impl.character_type.same_named_type_with_type_marks (current_universe.character_32_type, tokens.implicit_attached_type_mark, current_class_impl, tokens.implicit_attached_type_mark, current_class_impl) then
+				if a_constant.is_character_32 then
+					l_type := current_universe_impl.character_32_type
+					report_character_32_constant (a_constant, l_type)
+				else
+					set_fatal_error
+					error_handler.report_gvwmc2b_error (current_class, current_class_impl, a_constant, current_universe_impl.character_32_type)
+				end
 			elseif a_constant.is_character_8 then
 				l_type := current_universe_impl.character_8_type
 				report_character_8_constant (a_constant, l_type)
