@@ -5,7 +5,7 @@ note
 		"Emitters that write XML."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -121,7 +121,7 @@ feature -- Events
 		local
 			l_display_name: detachable STRING
 			l_system_id, l_public_id: detachable STRING
-			l_bad_character_code: INTEGER
+			l_bad_character_code: NATURAL_32
 			l_message: STRING
 		do
 			if not is_error then
@@ -176,7 +176,7 @@ feature -- Events
 			-- Notify a namespace declaration.
 		local
 			a_namespace_prefix, a_namespace_uri: STRING
-			a_bad_character: INTEGER
+			a_bad_character: NATURAL_32
 			a_message: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
@@ -208,7 +208,7 @@ feature -- Events
 			-- Notify an attribute.
 		local
 			a_display_name: detachable STRING
-			a_bad_character: INTEGER
+			a_bad_character: NATURAL_32
 			a_message: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
@@ -269,7 +269,7 @@ feature -- Events
 	notify_characters (a_chars: STRING; a_properties: INTEGER)
 			-- Notify character data.
 		local
-			l_bad_character: INTEGER
+			l_bad_character: NATURAL_32
 		do
 			debug ("XSLT stripper")
 				std.error.put_string ("Is start tag open? " + is_open_start_tag.out)
@@ -314,7 +314,7 @@ feature -- Events
 			-- Notify a processing instruction.
 		local
 			l_string, l_message: STRING
-			l_bad_character_code: INTEGER
+			l_bad_character_code: NATURAL_32
 			l_error: XM_XPATH_ERROR_VALUE
 		do
 			if not is_error then
@@ -352,7 +352,7 @@ feature -- Events
 	notify_comment (a_content_string: STRING; properties: INTEGER)
 			-- Notify a comment.
 		local
-			l_bad_character_code: INTEGER
+			l_bad_character_code: NATURAL_32
 			l_message: STRING
 			l_error: XM_XPATH_ERROR_VALUE
 		do
@@ -630,7 +630,8 @@ feature {NONE} -- Implementation
 			document_opened: is_output_open
 		local
 			l_disabled: BOOLEAN
-			l_start_index, l_beyond_index, l_code: INTEGER
+			l_start_index, l_beyond_index: INTEGER
+			l_code: NATURAL_32
 			l_special_characters: ARRAY [BOOLEAN]
 		do
 			if a_is_attribute then
@@ -648,7 +649,7 @@ feature {NONE} -- Implementation
 					output (a_character_string.substring (l_start_index, l_beyond_index - 1))
 				end
 				if l_beyond_index <= a_character_string.count then
-					l_code := a_character_string.item_code (l_beyond_index)
+					l_code := a_character_string.code (l_beyond_index)
 					if l_code = 0 then -- enable/disable escaping toggle
 						l_disabled := not l_disabled
 					elseif l_disabled then
@@ -690,7 +691,8 @@ feature {NONE} -- Implementation
 			strictly_positive_start_index: a_start_index > 0
 			document_opened: is_output_open
 		local
-			l_index, l_code: INTEGER
+			l_index: INTEGER
+			l_code: NATURAL_32
 			l_finished: BOOLEAN
 		do
 			check attached outputter as l_outputter then
@@ -699,9 +701,9 @@ feature {NONE} -- Implementation
 				until
 					l_finished or l_index > a_character_string.count
 				loop
-					l_code := a_character_string.item_code (l_index)
+					l_code := a_character_string.code (l_index)
 					if l_code < 127 then -- ASCII
-						if a_special_characters.item (l_code) then
+						if a_special_characters.item (l_code.to_integer_32) then
 							l_finished := True
 						else
 							l_index := l_index + 1
@@ -720,7 +722,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	output_character_reference (a_code: INTEGER)
+	output_character_reference (a_code: NATURAL_32)
 			-- Output a character reference.
 		require
 			strictly_positive_code: a_code > 0
@@ -732,7 +734,7 @@ feature {NONE} -- Implementation
 				create l_string.make (10)
 				if is_hex_preferred then
 					l_string := "&#x"
-					l_string.append_string (INTEGER_.to_hexadecimal (a_code, True))
+					l_string.append_string ({KL_NATURAL_32_ROUTINES}.to_hexadecimal (a_code, True))
 				else
 					l_string := "&#"
 					l_string.append_string (a_code.out)
@@ -820,12 +822,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	bad_character_code (a_character_string: STRING): INTEGER
+	bad_character_code (a_character_string: STRING): NATURAL_32
 			-- Code point of first bad character in `a_character_string' (or 0)
 		require
 			string_not_void: a_character_string /= Void
 		local
-			l_index, a_code: INTEGER
+			l_index: INTEGER
+			a_code: NATURAL_32
 			l_finished: BOOLEAN
 		do
 			from
@@ -833,7 +836,7 @@ feature {NONE} -- Implementation
 			until
 				l_finished or else l_index > a_character_string.count
 			loop
-				a_code := a_character_string.item_code (l_index)
+				a_code := a_character_string.code (l_index)
 				if a_code > 127 then
 					check attached outputter as l_outputter then
 						if l_outputter.is_bad_character_code (a_code) then

@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,9 +53,9 @@ feature -- Test
 	test_is_endian_detection_character
 			-- Test feature `is_endian_detection_character'.
 		do
-			assert ("big_endian_char", utf16.is_endian_detection_character (Big_endian.item_code (1), Big_endian.item_code (2)))
-			assert ("little_endian_char", utf16.is_endian_detection_character (Little_endian.item_code (1), Little_endian.item_code (2)))
-			assert ("endian_not", not utf16.is_endian_detection_character (255, 255))
+			assert ("big_endian_char", utf16.is_endian_detection_character_natural_32 (Big_endian.code (1), Big_endian.code (2)))
+			assert ("little_endian_char", utf16.is_endian_detection_character_natural_32 (Little_endian.code (1), Little_endian.code (2)))
+			assert ("endian_not", not utf16.is_endian_detection_character_natural_32 (255, 255))
 		end
 
 	test_surrogate

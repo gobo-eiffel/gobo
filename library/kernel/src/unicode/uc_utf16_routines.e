@@ -5,7 +5,7 @@ note
 		"UTF-16 encoding routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,7 +37,7 @@ feature -- Status report
 			if Result and a_string.count > 0 then
 				from
 						-- Loop through most significant bytes, detecting starting point is enough.
-					if is_endian_detection_character_least_first (a_string.item_code (1), a_string.item_code (2)) then
+					if is_endian_detection_character_least_first_natural_32 (a_string.code (1), a_string.code (2)) then
 						i := 2
 					else
 						i := 1
@@ -136,8 +136,8 @@ feature -- Endian-ness detection
 			instance_free: class
 			bom_be_not_void: Result /= Void
 			two_bytes: Result.count = 2
-			first_byte: Result.item_code (1) = Hex_fe
-			second_byte: Result.item_code (2) = Hex_ff
+			first_byte: Result.code (1) = natural_32_hex_fe
+			second_byte: Result.code (2) = natural_32_hex_ff
 		end
 
 	bom_le: STRING_8
@@ -148,8 +148,8 @@ feature -- Endian-ness detection
 			instance_free: class
 			bom_le_not_void: Result /= Void
 			two_bytes: Result.count = 2
-			first_byte: Result.item_code (1) = Hex_ff
-			second_byte: Result.item_code (2) = Hex_fe
+			first_byte: Result.code (1) = natural_32_hex_ff
+			second_byte: Result.code (2) = natural_32_hex_fe
 		end
 
 	is_endian_detection_character_most_first (first, second: INTEGER): BOOLEAN
@@ -166,6 +166,20 @@ feature -- Endian-ness detection
 			definition: Result = (is_endian_detection_character (first, second) and (first = Hex_fe))
 		end
 
+	is_endian_detection_character_most_first_natural_32 (first, second: NATURAL_32): BOOLEAN
+			-- Do the two bytes `first' and `second' represent the character
+			-- 0xFEFF with `first' being the most significant byte?
+		require
+			a_byte_is_byte: is_byte_natural_32 (first)
+			other_byte_is_byte: is_byte_natural_32 (second)
+--			first_in_stream: the character represented by (first, second) is first in stream
+		do
+			Result := first = natural_32_hex_fe and second = natural_32_hex_ff
+		ensure
+			instance_free: class
+			definition: Result = (is_endian_detection_character_natural_32 (first, second) and (first = natural_32_hex_fe))
+		end
+
 	is_endian_detection_character_least_first (first, second: INTEGER): BOOLEAN
 			-- Do the two bytes `first' and `second' represent the character
 			-- 0xFEFF with `first' being the least significant byte?
@@ -180,6 +194,20 @@ feature -- Endian-ness detection
 			definition: Result = (is_endian_detection_character (first, second) and (first = Hex_ff))
 		end
 
+	is_endian_detection_character_least_first_natural_32 (first, second: NATURAL_32): BOOLEAN
+			-- Do the two bytes `first' and `second' represent the character
+			-- 0xFEFF with `first' being the least significant byte?
+		require
+			a_byte_is_byte: is_byte_natural_32 (first)
+			other_byte_is_byte: is_byte_natural_32 (second)
+--			first_in_stream: the character represented by (first, second) is first in stream
+		do
+			Result := first = natural_32_hex_ff and second = natural_32_hex_fe
+		ensure
+			instance_free: class
+			definition: Result = (is_endian_detection_character_natural_32 (first, second) and (first = natural_32_hex_ff))
+		end
+
 	is_endian_detection_character (a_byte, other_byte: INTEGER): BOOLEAN
 			-- Can these two bytes represent ZERO WIDTH NON-BREAKING SPACE?
 			-- (It has to be unicode character 0xFEFF, because 0xFFFE is not a valid character.)
@@ -191,6 +219,19 @@ feature -- Endian-ness detection
 		ensure
 			instance_free: class
 			definition: Result = (a_byte.min (other_byte) = Hex_fe and a_byte.max (other_byte) = Hex_ff)
+		end
+
+	is_endian_detection_character_natural_32 (a_byte, other_byte: NATURAL_32): BOOLEAN
+			-- Can these two bytes represent ZERO WIDTH NON-BREAKING SPACE?
+			-- (It has to be unicode character 0xFEFF, because 0xFFFE is not a valid character.)
+		require
+			a_byte_is_byte: is_byte_natural_32 (a_byte)
+			other_byte_is_byte: is_byte_natural_32 (other_byte)
+		do
+			Result := (a_byte = natural_32_hex_fe and other_byte = natural_32_hex_ff) or (a_byte = natural_32_hex_ff and other_byte = natural_32_hex_fe)
+		ensure
+			instance_free: class
+			definition: Result = (a_byte.min (other_byte) = natural_32_hex_fe and a_byte.max (other_byte) = natural_32_hex_ff)
 		end
 
 feature -- Surrogate
@@ -273,6 +314,15 @@ feature -- Surrogate
 			definition: Result = (a >= 0 and a < Hex_100)
 		end
 
+	is_byte_natural_32 (a: NATURAL_32): BOOLEAN
+			-- Is `a' a byte?
+		do
+			Result := a >= 0 and a < natural_32_hex_100
+		ensure
+			instance_free: class
+			definition: Result = (a >= 0 and a < natural_32_hex_100)
+		end
+
 	supplementary_to_high_surrogate (a_code: INTEGER): INTEGER
 			-- High surrogate for `a_code'
 		require
@@ -307,11 +357,21 @@ feature {NONE} -- Constants
 	Hex_100: INTEGER = 256
 			-- 2 ^ 8
 
+	natural_32_hex_100: NATURAL_32 = 256
+			-- 2 ^ 8
+
 	Hex_fe: INTEGER = 254
+			-- Endian detection character
+
+	natural_32_hex_fe: NATURAL_32 = 254
 			-- Endian detection character
 
 	Hex_ff: INTEGER = 255
 			-- Endian detection character
+
+	natural_32_hex_ff: NATURAL_32 = 255
+			-- Endian detection character
+
 
 	Hex_d8: INTEGER = 216
 			-- Hex_D800: start of so-called high-half zone or high surrogate area

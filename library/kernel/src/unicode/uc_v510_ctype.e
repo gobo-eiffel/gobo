@@ -5,7 +5,7 @@ note
 		"Routines for cased variants of Unicode 5.1.0 characters"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2008-2018, Colin Adams and others"
+	copyright: "Copyright (c) 2008-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,6 +46,15 @@ feature -- Status report
 		ensure
 			instance_free: class
 			definition: Result = (a_code >= minimum_unicode_character_code and a_code <= maximum_unicode_character_code)
+		end
+
+	valid_natural_32_code (a_code: NATURAL_32): BOOLEAN
+			-- Is `a_code' a valid unicode?
+		do
+			Result := (a_code >= minimum_unicode_character_natural_32_code and a_code <= maximum_unicode_character_natural_32_code)
+		ensure
+			instance_free: class
+			definition: Result = (a_code >= minimum_unicode_character_natural_32_code and a_code <= maximum_unicode_character_natural_32_code)
 		end
 
 feature -- Access

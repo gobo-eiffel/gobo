@@ -5,7 +5,7 @@ note
 		"Unicode routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -116,7 +116,32 @@ feature -- Status report
 			instance_free: class
 			string_not_void: Result /= Void
 			count_set: Result.count = 1
-			code_set: Result.item_code (1) = a_code
+			code_set: Result.code (1).to_integer_32 = a_code
+		end
+
+	natural_32_code_to_string (a_code: NATURAL_32): STRING_8
+			-- Return a string with `a_code' as its single character.
+			-- (If the character code is bigger than the maximum for
+			-- CHARACTER_8, the dynamic type of the result will be UC_STRING
+			-- or a descendant.)
+		require
+			a_code_valid: a_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_character_natural_32_code and then valid_code (a_code.to_integer_32)
+		local
+			a_unicode: UC_UTF8_STRING
+		do
+			if a_code <= Platform.Maximum_character_code.to_natural_32 then
+				create Result.make (1)
+				Result.append_character (a_code.to_character_8)
+			else
+				create a_unicode.make (1)
+				a_unicode.append_item_code (a_code.to_integer_32)
+				Result := a_unicode
+			end
+		ensure
+			instance_free: class
+			string_not_void: Result /= Void
+			count_set: Result.count = 1
+			code_set: Result.code (1) = a_code
 		end
 
 end

@@ -12,7 +12,7 @@ note
 		See also possible errata regarding time zones.
 	]"
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2007-2013, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1144,7 +1144,7 @@ feature {NONE} -- Implementation
 					-- precondition `primary_modifier_not_void'
 				primary_modifier_not_void: l_primary_modifier /= Void
 			then
-				Result := is_zeros_plus_one (l_primary_modifier) or (l_primary_modifier.count = 1 and then is_one (l_primary_modifier.item_code (1)))
+				Result := is_zeros_plus_one (l_primary_modifier) or (l_primary_modifier.count = 1 and then is_one (l_primary_modifier.code (1).to_integer_32))
 			end
 		end
 
@@ -1241,7 +1241,7 @@ feature {NONE} -- Implementation
 			primary_modifier := Void
 			if
 				is_zeros_plus_one (a_modifier)
-				or (a_modifier.count = 1 and then is_one (a_modifier.item_code (1)))
+				or (a_modifier.count = 1 and then is_one (a_modifier.code (1).to_integer_32))
 				or STRING_.same_string (a_modifier, "A")
 				or STRING_.same_string (a_modifier, "a")
 				or STRING_.same_string (a_modifier, "I")

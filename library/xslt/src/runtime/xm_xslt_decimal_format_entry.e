@@ -5,7 +5,7 @@ note
 		"Objects that are the compiled represntation of an xsl:decimal-format"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -102,38 +102,38 @@ feature -- Status report
 	are_all_distinct: BOOLEAN
 			-- Are all important picture characters distinct?
 		local
-			a_set: DS_HASH_SET [INTEGER]
-			a_character_code: INTEGER
+			a_set: DS_HASH_SET [NATURAL_32]
+			a_character_code: NATURAL_32
 		do
 			create a_set.make (7)
-			a_character_code := decimal_separator.item_code (1)
+			a_character_code := decimal_separator.code (1)
 			a_set.put (a_character_code)
-			a_character_code := grouping_separator.item_code (1)
+			a_character_code := grouping_separator.code (1)
 			if a_set.has (a_character_code) then
 				Result := False
 			else
 				a_set.put (a_character_code)
-				a_character_code := pattern_separator.item_code (1)
+				a_character_code := pattern_separator.code (1)
 				if a_set.has (a_character_code) then
 					Result := False
 				else
 					a_set.put (a_character_code)
-					a_character_code := percent.item_code (1)
+					a_character_code := percent.code (1)
 					if a_set.has (a_character_code) then
 						Result := False
 					else
 						a_set.put (a_character_code)
-						a_character_code := per_mille.item_code (1)
+						a_character_code := per_mille.code (1)
 						if a_set.has (a_character_code) then
 							Result := False
 						else
 							a_set.put (a_character_code)
-							a_character_code := zero_digit.item_code (1)
+							a_character_code := zero_digit.code (1)
 							if a_set.has (a_character_code) then
 								Result := False
 							else
 								a_set.put (a_character_code)
-								a_character_code := digit_sign.item_code (1)
+								a_character_code := digit_sign.code (1)
 							end
 							if a_set.has (a_character_code) then
 								Result := False

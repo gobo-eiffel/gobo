@@ -7,7 +7,7 @@ note
 	implements: "Appendix B of XML 1.0 -- second edition"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,7 +63,7 @@ inherit
 
 feature -- Valid characters (section 2.2)
 
-	is_char (a: INTEGER): BOOLEAN
+	is_char (a: NATURAL_32): BOOLEAN
 			-- Valid content character?
 		do
 			Result := a = 9 or else
@@ -74,23 +74,23 @@ feature -- Valid characters (section 2.2)
 				(a >= 65536 and a <= 1114111)
 		end
 
-	is_name_char (a: INTEGER): BOOLEAN
+	is_name_char (a: NATURAL_32): BOOLEAN
 			-- Character for name?
 		do
 			Result := is_name_first (a) or else
-					a = ('.').code or a = ('-').code or else
+					a = {UT_CHARACTER_32_CODES}.dot_code or a = {UT_CHARACTER_32_CODES}.minus_code or else
 					is_digit (a) or else
 					is_combining_char (a) or else
 					is_extender (a)
 		end
 
-	is_name_first (a: INTEGER): BOOLEAN
+	is_name_first (a: NATURAL_32): BOOLEAN
 			-- Valid first character of name?
 		do
-			Result := is_letter (a) or else a = ('_').code or else a = (':').code
+			Result := is_letter (a) or else a = {UT_CHARACTER_32_CODES}.underscore_code or else a = {UT_CHARACTER_32_CODES}.colon_code
 		end
 
-	is_space (a: INTEGER): BOOLEAN
+	is_space (a: NATURAL_32): BOOLEAN
 			-- Space character?
 		do
 			Result := a = 32 or else a = 9 or else a = 10 or else a = 13
@@ -98,14 +98,14 @@ feature -- Valid characters (section 2.2)
 
 feature -- Character classes (appendix B)
 
-	is_letter (a: INTEGER): BOOLEAN
+	is_letter (a: NATURAL_32): BOOLEAN
 			-- Letter class.
 		do
 			Result := is_base_char (a) or else
 				is_ideographic (a)
 		end
 
-	is_base_char (a: INTEGER): BOOLEAN
+	is_base_char (a: NATURAL_32): BOOLEAN
 			-- Base char class.
 		do
 				-- Do not use a big expression with 'or' because with SE 1.0b6
@@ -539,7 +539,7 @@ feature -- Character classes (appendix B)
 			end
 		end
 
-	is_ideographic (a: INTEGER): BOOLEAN
+	is_ideographic (a: NATURAL_32): BOOLEAN
 			-- Ideographic class.
 		do
 			Result := (a >= 19968 and a <= 40869) or
@@ -547,7 +547,7 @@ feature -- Character classes (appendix B)
 				(a >= 12321 and a <= 12329)
 		end
 
-	is_combining_char (a: INTEGER): BOOLEAN
+	is_combining_char (a: NATURAL_32): BOOLEAN
 			-- Combining char class.
 		do
 			Result := (a >= 768 and a <= 837) or
@@ -647,7 +647,7 @@ feature -- Character classes (appendix B)
 				a = 12442
 		end
 
-	is_digit(a: INTEGER): BOOLEAN
+	is_digit (a: NATURAL_32): BOOLEAN
 			-- Digit class.
 		do
 			Result := (a >= 48 and a <= 57) or
@@ -667,7 +667,7 @@ feature -- Character classes (appendix B)
 				(a >= 3872 and a <= 3881)
 		end
 
-	is_extender (a: INTEGER): BOOLEAN
+	is_extender (a: NATURAL_32): BOOLEAN
 			-- Extender class.
 		do
 			Result := a = 183 or

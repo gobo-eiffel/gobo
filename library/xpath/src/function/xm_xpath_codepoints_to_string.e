@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath codepoints-to-string() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -104,7 +104,7 @@ feature -- Evaluation
 							set_last_error_from_string ("Codepoint is not a valid XML Character", Xpath_errors_uri, "FOCH0001", Dynamic_error)
 						end
 						if not is_error then
-							if is_char (l_integer) then
+							if l_integer >= 0 and then is_char (l_integer.to_natural_32) then
 								l_string := STRING_.appended_string (l_string, unicode.code_to_string (l_integer))
 								l_iterator.forth
 								if attached l_iterator.error_value as l_error_value then

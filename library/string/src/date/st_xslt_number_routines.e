@@ -5,7 +5,7 @@ note
 		"Support routines for xsl:number"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,7 +64,7 @@ feature -- Access
 			a_unit, a_zero, a_count, an_index: INTEGER
 		do
 			if a_picture.count > 1 then
-				a_unit := a_picture.item_code (a_picture.count)
+				a_unit := a_picture.code (a_picture.count).to_integer_32
 				if is_one (a_unit) then
 					from
 						an_index := 1
@@ -74,7 +74,7 @@ feature -- Access
 					until
 						Result = False or else an_index = a_count
 					loop
-						Result := a_picture.item_code (an_index) = a_zero
+						Result := a_picture.code (an_index).to_integer_32 = a_zero
 						an_index := an_index + 1
 					end
 				end
@@ -87,18 +87,19 @@ feature -- Access
 			-- Set of decimal digits from 0 to 9
 		require
 			picture_not_empty: a_picture /= Void and then not a_picture.is_empty
-			zeros_plus_one: is_zeros_plus_one (a_picture) or (a_picture.count = 1 and then is_one (a_picture.item_code (1)))
+			zeros_plus_one: is_zeros_plus_one (a_picture) or (a_picture.count = 1 and then is_one (a_picture.code (1).to_integer_32))
 		local
-			a_zero, a_count: INTEGER
+			a_zero: NATURAL_32
+			a_count: INTEGER
 		do
-			a_zero := a_picture.item_code (a_picture.count) - 1
+			a_zero := a_picture.code (a_picture.count) - 1
 			Result := ""
 			from
 				a_count := 0
 			until
 				a_count > 9
 			loop
-				Result := STRING_.appended_string (Result, unicode.code_to_string (a_zero))
+				Result := STRING_.appended_string (Result, unicode.natural_32_code_to_string (a_zero))
 				a_zero := a_zero + 1
 				a_count := a_count + 1
 			end

@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,7 +43,7 @@ feature -- Tests
 			-- Test `code_to_string'.
 		do
 			assert ("code_to_string_ascii", unicode.code_to_string (97).item (1) = 'a')
-			assert ("code_to_string_unicode", unicode.code_to_string (1000).item_code (1) = 1000)
+			assert ("code_to_string_unicode", unicode.code_to_string (1000).code (1) = 1000)
 		end
 
 end

@@ -5,7 +5,7 @@ note
 		"Test URL encoding routines"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2022, Eric Bezault and others"
 	license: "MIT License"
 	revision: "$Revision$"
 	date: "$Date$"
@@ -74,7 +74,7 @@ feature -- Tests
 				-- by construction of the test
 			then
 				assert_integers_equal ("utf_decoding_count", 1, l_decoded_string.count)
-				assert_integers_equal ("utf_decoding", 8800, l_decoded_string.item_code (1))
+				assert_naturals_32_equal ("utf_decoding", 8800, l_decoded_string.code (1))
 			end
 		end
 

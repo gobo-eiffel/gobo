@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath string-to-codepoints() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -103,7 +103,7 @@ feature -- Evaluation
 					until
 						l_index > l_count
 					loop
-						create l_integer.make_from_integer (l_string.item_code (l_index))
+						create l_integer.make_from_integer (l_string.code (l_index).to_integer_32)
 						l_array.put (l_integer, l_index)
 						l_index := l_index + 1
 					end

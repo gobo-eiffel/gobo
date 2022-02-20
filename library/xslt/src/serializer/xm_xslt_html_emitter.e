@@ -5,7 +5,7 @@ note
 		"Emitters that write HTML."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -454,7 +454,8 @@ feature {NONE} -- Implementation
 			-- Output `a_character_string', escaping special characters.
 		local
 			disabled: BOOLEAN
-			a_start_index, a_beyond_index, a_code, another_code: INTEGER
+			a_start_index, a_beyond_index: INTEGER
+			a_code, another_code: NATURAL_32
 			special_characters: ARRAY [BOOLEAN]
 		do
 			check precondition_document_opened: attached outputter as l_outputter then
@@ -474,7 +475,7 @@ feature {NONE} -- Implementation
 						output (a_character_string.substring (a_start_index, a_beyond_index - 1))
 					end
 					if a_beyond_index <= a_character_string.count then
-						a_code := a_character_string.item_code (a_beyond_index)
+						a_code := a_character_string.code (a_beyond_index)
 						if a_code = 0 then -- enable/disable escaping toggle
 							disabled := not disabled
 						elseif disabled then
@@ -483,7 +484,7 @@ feature {NONE} -- Implementation
 							if a_beyond_index = a_character_string.count then
 								another_code := 0
 							else
-								another_code := a_character_string.item_code (a_beyond_index + 1)
+								another_code := a_character_string.code (a_beyond_index + 1)
 							end
 							output_special_ascii (a_code, another_code, in_attribute)
 						elseif a_code = 160 then
@@ -511,7 +512,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	output_special_ascii (a_character_code, a_second_character_code: INTEGER; in_attribute: BOOLEAN)
+	output_special_ascii (a_character_code, a_second_character_code: NATURAL_32; in_attribute: BOOLEAN)
 			-- Output `a_character_code'.
 		do
 			if in_attribute then
@@ -547,7 +548,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	output_non_ascii (a_character_code: INTEGER; in_attribute: BOOLEAN)
+	output_non_ascii (a_character_code: NATURAL_32; in_attribute: BOOLEAN)
 			-- Output non-ASCII character.
 		require
 			non_ascii_character: a_character_code > 127
@@ -555,14 +556,14 @@ feature {NONE} -- Implementation
 			inspect
 				non_ascii_representation
 			when Native_representation then
-				output (unicode.code_to_string (a_character_code))
+				output (unicode.natural_32_code_to_string (a_character_code))
 			when Entity_representation then
 				if a_character_code > 160 and then a_character_code <= 255 then
 
 					-- if chararacter in iso-8859-1, use an entity reference
 
 					output ("&")
-					if not is_error then output (latin1_entities.item (a_character_code)) end
+					if not is_error then output (latin1_entities.item (a_character_code.to_integer_32)) end
 					if not is_error then output (";") end
 				else
 					output_character_reference (a_character_code)
@@ -579,7 +580,8 @@ feature {NONE} -- Implementation
 	maximal_ordinary_string (a_character_string: STRING; a_start_index: INTEGER; special_characters: ARRAY [BOOLEAN]): INTEGER
 			-- Maximal sequence of ordinary characters
 		local
-			an_index, a_code: INTEGER
+			an_index: INTEGER
+			a_code: NATURAL_32
 			finished: BOOLEAN
 		do
 			check precondition_document_opened: attached outputter as l_outputter then
@@ -588,9 +590,9 @@ feature {NONE} -- Implementation
 				until
 					finished or else an_index > a_character_string.count
 				loop
-					a_code := a_character_string.item_code (an_index)
+					a_code := a_character_string.code (an_index)
 					if a_code < 128 then -- ASCII
-						if special_characters.item (a_code) then
+						if special_characters.item (a_code.to_integer_32) then
 							finished := True
 						else
 							an_index := an_index + 1

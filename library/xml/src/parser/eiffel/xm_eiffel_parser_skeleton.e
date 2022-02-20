@@ -7,7 +7,7 @@ note
 	implements: "XML 1.0 (Second Edition) - W3C Recommendation 6 October 2000"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -908,7 +908,7 @@ feature {NONE} -- String mode
 
 feature {NONE} -- String mode implementation
 
-	maximum_item_code (a_string: STRING): INTEGER
+	maximum_item_code (a_string: STRING): NATURAL_32
 			-- Return the largest character code used in
 			-- `a_string'.
 		require
@@ -916,7 +916,7 @@ feature {NONE} -- String mode implementation
 		local
 			i: INTEGER
 			cnt: INTEGER
-			a_code: INTEGER
+			a_code: NATURAL_32
 		do
 			from
 				i := 1
@@ -924,7 +924,7 @@ feature {NONE} -- String mode implementation
 			until
 				i > cnt
 			loop
-				a_code := a_string.item_code (i)
+				a_code := a_string.code (i)
 				if a_code > Result then
 					Result := a_code
 				end

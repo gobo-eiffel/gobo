@@ -5,7 +5,7 @@ note
 		"Fill default attribute values"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -199,13 +199,13 @@ feature {NONE} -- Attribute queue
 			values := Void
 		end
 
-	is_space (a: INTEGER): BOOLEAN
+	is_space (a: NATURAL_32): BOOLEAN
 			-- Is this a space character?
 		do
-			Result := a = Lf_char.code
-				or a = Cr_char.code
-				or a = Tab_char.code
-				or a = Space_char.code
+			Result := a = Lf_char.natural_32_code
+				or a = Cr_char.natural_32_code
+				or a = Tab_char.natural_32_code
+				or a = Space_char.natural_32_code
 		end
 
 	push_attribute (a_ns, a_prefix: detachable STRING; a_local, a_value: STRING)
@@ -388,7 +388,7 @@ feature {NONE} -- Tokens implementation
 					-- Should we also replace with a space character?
 				nb := a_string.count
 				from i := 2 until i > nb loop
-					if is_space (a_string.item_code (i - 1)) and is_space (a_string.item_code (i)) then
+					if is_space (a_string.code (i - 1)) and is_space (a_string.code (i)) then
 						a_string.remove (i)
 						nb := nb - 1
 					else
@@ -396,10 +396,10 @@ feature {NONE} -- Tokens implementation
 					end
 				end
 					-- At ends of string.
-				if a_string.count > 0 and then is_space (a_string.item_code (1)) then
+				if a_string.count > 0 and then is_space (a_string.code (1)) then
 					a_string.remove (1)
 				end
-				if a_string.count > 0 and then is_space (a_string.item_code (a_string.count)) then
+				if a_string.count > 0 and then is_space (a_string.code (a_string.count)) then
 					a_string.remove (a_string.count)
 				end
 			else

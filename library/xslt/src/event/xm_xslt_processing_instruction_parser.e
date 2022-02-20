@@ -5,7 +5,7 @@ note
 		"XML event handler that parses xml-stylesheet PIs"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005-2020, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -342,7 +342,8 @@ feature {NONE} -- Initialization
 			a_splitter: ST_SPLITTER
 			a_cursor: DS_LIST_CURSOR [STRING]
 			a_medium: STRING
-			an_index, a_code: INTEGER
+			an_index: INTEGER
+			a_code: NATURAL_32
 			all_ascii: BOOLEAN
 			l_applicable_media: like applicable_media
 		do
@@ -363,7 +364,7 @@ feature {NONE} -- Initialization
 				until
 					not all_ascii or else an_index > a_medium.count
 				loop
-					a_code := a_medium.item_code (an_index)
+					a_code := a_medium.code (an_index)
 					if a_code = 45 -- hyphen
 						or else (a_code >= 48 and then a_code <= 57) -- digit
 						or else (a_code >= 65 and then a_code <= 90) -- upper case

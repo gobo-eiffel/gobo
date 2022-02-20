@@ -5,7 +5,7 @@ note
 		"XSD dates and times parsers"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004-2013, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1785,7 +1785,7 @@ feature {NONE} -- Implementation
 			a_digit: INTEGER
 		do
 			if some_milliseconds.count > 3 then
-				a_digit := some_milliseconds.item_code (4) - ('0').code
+				a_digit := (some_milliseconds.code (4) - ('0').natural_32_code).to_integer_32
 			end
 			a_count := some_milliseconds
 			a_count.keep_head (3)

@@ -5,7 +5,7 @@ note
 		"XML unicode character classes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ feature -- Strings
 			Result := True
 			nb := a_string.count
 			from i := 1 until i > nb loop
-				if not is_char (a_string.item_code (i)) then
+				if not is_char (a_string.code (i)) then
 					Result := False
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -44,11 +44,11 @@ feature -- Strings
 		do
 			nb := a_name.count
 				-- First.
-			if nb > 0 and then is_name_first (a_name.item_code (1)) then
+			if nb > 0 and then is_name_first (a_name.code (1)) then
 				Result := True
 					-- Tail.
 				from i := 2 until i > nb loop
-					if not is_name_char (a_name.item_code (i)) then
+					if not is_name_char (a_name.code (i)) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -70,7 +70,7 @@ feature -- Strings
 			Result := True
 			nb := a_name.count
 			from i := 1 until i > nb loop
-				if not is_name_char (a_name.item_code (i)) then
+				if not is_name_char (a_name.code (i)) then
 					Result := False
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -88,11 +88,11 @@ feature -- Strings
 		do
 			nb := a_name.count
 				-- First.
-			if nb > 0 and then is_ncname_first (a_name.item_code (1)) then
+			if nb > 0 and then is_ncname_first (a_name.code (1)) then
 				Result := True
 					-- Tail.
 				from i := 2 until i > nb loop
-					if not is_ncname_char (a_name.item_code (i)) then
+					if not is_ncname_char (a_name.code (i)) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -125,42 +125,42 @@ feature -- Strings
 
 feature -- Characters
 
-	is_char (a: INTEGER): BOOLEAN
+	is_char (a: NATURAL_32): BOOLEAN
 			-- Valid content character?
 		deferred
 		end
 
-	is_name_char (a: INTEGER): BOOLEAN
+	is_name_char (a: NATURAL_32): BOOLEAN
 			-- Character for name?
 		deferred
 		end
 
-	is_name_first (a: INTEGER): BOOLEAN
+	is_name_first (a: NATURAL_32): BOOLEAN
 			-- Valid first character of name?
 		deferred
 		end
 
-	is_space (a: INTEGER): BOOLEAN
+	is_space (a: NATURAL_32): BOOLEAN
 			-- Space character?
 		deferred
 		end
 
 feature -- Namespace characters
 
-	is_ncname_char (a: INTEGER): BOOLEAN
+	is_ncname_char (a: NATURAL_32): BOOLEAN
 			-- Is this a valid 'NCName' character?
 		do
-			Result := a /= (':').code and then is_name_char (a)
+			Result := a /= {UT_CHARACTER_32_CODES}.colon_code and then is_name_char (a)
 		ensure
-			definition: Result = (a /= (':').code and is_name_char (a))
+			definition: Result = (a /= {UT_CHARACTER_32_CODES}.colon_code and is_name_char (a))
 		end
 
-	is_ncname_first(a: INTEGER): BOOLEAN
+	is_ncname_first(a: NATURAL_32): BOOLEAN
 			-- Is this a valid first character of a 'NCName'?
 		do
-			Result := a /= (':').code and then is_name_first (a)
+			Result := a /= {UT_CHARACTER_32_CODES}.colon_code and then is_name_first (a)
 		ensure
-			definition: Result = (a /= (':').code and is_name_first (a))
+			definition: Result = (a /= {UT_CHARACTER_32_CODES}.colon_code and is_name_first (a))
 		end
 
 end

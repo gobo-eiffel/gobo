@@ -5,7 +5,7 @@ note
 		"Compiled xsl:value-of elements"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,7 +39,8 @@ feature {NONE} -- Initialization
 		local
 			is_special: BOOLEAN
 			a_string: STRING
-			an_index, a_count, a_code: INTEGER
+			an_index, a_count: INTEGER
+			a_code: NATURAL_32
 		do
 			set_source_location (a_module_number, a_line_number)
 			executable := an_executable
@@ -54,7 +55,7 @@ feature {NONE} -- Initialization
 				until
 					is_special or else an_index > a_count
 				loop
-					a_code := a_string.item_code (an_index)
+					a_code := a_string.code (an_index)
 					if a_code < 33 or else a_code > 126
 						or else a_code = 60 or else a_code = 62 or else a_code = 38 then
 						-- <, > or &

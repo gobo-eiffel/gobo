@@ -5,7 +5,7 @@ note
 	"Receivers that indent XML by adding ignorable whitespace."
 
 library: "Gobo Eiffel XSLT Library"
-copyright: "Copyright (c) 2004, Colin Adams and others"
+copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 license: "MIT License"
 date: "$Date$"
 revision: "$Revision$"
@@ -113,14 +113,15 @@ feature -- Events
 	notify_characters (chars: STRING; properties: INTEGER)
 			-- Notify character data.
 		local
-			an_index, a_character_code: INTEGER
+			an_index: INTEGER
+			a_character_code: NATURAL_32
 		do
 			from
 				an_index := 1
 			until
 				an_index > chars.count
 			loop
-				a_character_code := chars.item_code (an_index)
+				a_character_code := chars.code (an_index)
 				if a_character_code = 10 then -- LF
 					is_same_line := False
 					line := line + 1
@@ -191,7 +192,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_whitespace (a_character_code: INTEGER): BOOLEAN
+	is_whitespace (a_character_code: NATURAL_32): BOOLEAN
 			-- Is `a_character_code' XML white space?
 		do
 			Result := a_character_code = 10 or else a_character_code = 13 or else

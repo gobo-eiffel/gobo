@@ -5,7 +5,7 @@ note
 		"Test unparsed-text() function."
 
 	library: "Gobo Eiffel XSLT test suite"
-	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -127,7 +127,8 @@ feature {NONE} -- Debug
 		require
 			string_not_void: a_string /= Void
 		local
-			an_index, a_code: INTEGER
+			an_index: INTEGER
+			a_code: NATURAL_32
 		do
 			from
 				Result := ""
@@ -135,8 +136,8 @@ feature {NONE} -- Debug
 			until
 				an_index > a_string.count
 			loop
-				a_code := a_string.item_code (an_index)
-				Result.append_string (INTEGER_.to_hexadecimal (a_code, True))
+				a_code := a_string.code (an_index)
+				Result.append_string ({KL_NATURAL_32_ROUTINES}.to_hexadecimal (a_code, True))
 				an_index := an_index + 1
 			variant
 				a_string.count + 1 - an_index

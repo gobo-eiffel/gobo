@@ -5,7 +5,7 @@ note
 		"Test gobo2html"
 
 	library: "Gobo Eiffel XSLT test suite"
-	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -163,7 +163,8 @@ feature {NONE} -- Debug
 		require
 			string_not_void: l_string /= Void
 		local
-			l_index, l_code: INTEGER
+			l_index: INTEGER
+			l_code: NATURAL_32
 		do
 			from
 				Result := ""
@@ -171,8 +172,8 @@ feature {NONE} -- Debug
 			until
 				l_index > l_string.count
 			loop
-				l_code := l_string.item_code (l_index)
-				Result.append_string (INTEGER_.to_hexadecimal (l_code, True))
+				l_code := l_string.code (l_index)
+				Result.append_string ({KL_NATURAL_32_ROUTINES}.to_hexadecimal (l_code, True))
 				l_index := l_index + 1
 			variant
 				l_string.count + 1 - l_index

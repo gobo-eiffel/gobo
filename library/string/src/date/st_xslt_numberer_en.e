@@ -5,7 +5,7 @@ note
 		"Objects that support number formatting for language en."
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,16 +35,16 @@ feature -- Access
 	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: INTEGER; a_group_separator, a_letter, an_ordinal: STRING): STRING
 			-- Formated number string
 		local
-			a_character_code: INTEGER
+			a_character_code: NATURAL_32
 		do
 			if a_number < decimal.zero then
 				Result := new_unicode_string (a_number.to_scientific_string)
 			elseif a_picture.count = 0 then
 				Result := new_unicode_string (a_number.to_scientific_string)
-			elseif is_zeros_plus_one (a_picture) or (a_picture.count = 1 and then is_one (a_picture.item_code (1))) then
+			elseif is_zeros_plus_one (a_picture) or (a_picture.count = 1 and then is_one (a_picture.code (1).to_integer_32)) then
 				Result := converted_number (a_number, decimal_digits_set (a_picture), a_picture.count, a_group_size, a_group_separator, an_ordinal)
 			elseif a_picture.count = 1 then
-				a_character_code := a_picture.item_code (1)
+				a_character_code := a_picture.code (1)
 				inspect a_character_code
 				when 105 then
 						-- 'i' - lower case Roman numerals

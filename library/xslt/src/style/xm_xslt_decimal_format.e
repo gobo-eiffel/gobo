@@ -5,7 +5,7 @@ note
 		"xsl:decimal-format element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 					create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE1295", Static_error)
 					report_compile_error (l_error)
 				else
-					l_code := l_zero_digit.item_code (1)
+					l_code := l_zero_digit.code (1).to_integer_32
 					if not unicode_character_class.is_decimal_digit (l_code) then
 						l_message := STRING_.appended_string ("xsl:decimal-format zero-digit must be a Unicode decimal digit. Found ", l_zero_digit)
 						create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE1295", Static_error)

@@ -5,7 +5,7 @@ note
 		"Test XML tree"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2022, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -444,7 +444,7 @@ feature {NONE} -- Walk assertions
 		local
 			i: INTEGER
 			a_string: STRING
-			space_code: INTEGER
+			space_code: NATURAL_32
 			l_character_data: detachable XM_CHARACTER_DATA
 		do
 			node.process (typer)
@@ -454,13 +454,13 @@ feature {NONE} -- Walk assertions
 			check asserted_above: l_character_data /= Void then end
 			from
 				a_string := l_character_data.content
-				space_code := (' ').code
+				space_code := (' ').natural_32_code
 				i := 1
 			until
 				i > a_string.count
 			loop
 				assert ("non space in character data",
-						a_string.item_code (i) <= space_code)
+						a_string.code (i) <= space_code)
 				i := i + 1
 			end
 		end

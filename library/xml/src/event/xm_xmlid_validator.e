@@ -5,7 +5,7 @@ note
 		"xml:id validator"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			until
 				i > an_id.count
 			loop
-				if is_space (an_id.item_code (i)) and is_space (an_id.item_code (i - 1)) then
+				if is_space (an_id.code (i)) and is_space (an_id.code (i - 1)) then
 					if last_start > 0 then
 							-- There has been valid chars since last duplicate space
 						Result := STRING_.appended_string (Result, an_id.substring (last_start, i - 1))
@@ -133,25 +133,25 @@ feature {NONE} -- Implementation
 			else
 				check
 					no_leftovers: last_start = 0
-					ends_with_space: is_space (an_id.item_code (an_id.count))
+					ends_with_space: is_space (an_id.code (an_id.count))
 				end
 			end
 
 				-- Remove heading and trailing space
-			if not Result.is_empty and then is_space (Result.item_code (1)) then
+			if not Result.is_empty and then is_space (Result.code (1)) then
 				Result := Result.substring (2, Result.count)
 			end
-			if not Result.is_empty and then is_space (Result.item_code (Result.count)) then
+			if not Result.is_empty and then is_space (Result.code (Result.count)) then
 				Result := Result.substring (1, Result.count - 1)
 			end
 		ensure
 			result_not_void: Result /= Void
 			fewer_or_equal_count: Result.count <= an_id.count
-			not_heading_space: Result.is_empty or else not is_space (Result.item_code (1))
-			not_trailing_space: Result.is_empty or else not is_space (Result.item_code (Result.count))
+			not_heading_space: Result.is_empty or else not is_space (Result.code (1))
+			not_trailing_space: Result.is_empty or else not is_space (Result.code (Result.count))
 		end
 
-	is_space (a_char: INTEGER): BOOLEAN
+	is_space (a_char: NATURAL_32): BOOLEAN
 			-- Is this character a space for the purpose of ID normalisation?
 		do
 			Result := characters_1_0.is_space (a_char)

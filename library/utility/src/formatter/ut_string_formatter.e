@@ -5,7 +5,7 @@ note
 		"String formatters"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -130,7 +130,7 @@ feature -- String handling
 				else
 					a_target.append_character ('%%')
 					a_target.append_character ('/')
-					INTEGER_.append_decimal_integer (a_string.item_code (i), a_target)
+					{KL_NATURAL_32_ROUTINES}.append_decimal_integer (a_string.code (i), a_target)
 					a_target.append_character ('/')
 				end
 				i := i + 1
@@ -218,7 +218,7 @@ feature -- File handling
 					a_file.put_string ("%%%"")
 				else
 					a_file.put_string ("%%/")
-					INTEGER_FORMATTER_.put_decimal_integer (a_file, a_string.item_code (i))
+					INTEGER_FORMATTER_.put_decimal_natural_32 (a_file, a_string.code (i))
 					a_file.put_character ('/')
 				end
 				i := i + 1

@@ -8,7 +8,7 @@ note
 		%checked at present."
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -105,7 +105,8 @@ feature -- Status report
 		require
 			a_string_not_void: a_string /= Void
 		local
-			an_index, a_count, a_code: INTEGER
+			an_index, a_count: INTEGER
+			a_code: NATURAL_32
 		do
 			from
 				Result := True
@@ -114,7 +115,7 @@ feature -- Status report
 			until
 				Result = False or else an_index > a_count
 			loop
-				a_code := a_string.item_code (an_index)
+				a_code := a_string.code (an_index)
 				if a_code < 21 then
 					Result := False
 				elseif a_code > 126 then

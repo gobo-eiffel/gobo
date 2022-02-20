@@ -5,7 +5,7 @@ note
 		"XSLT format-number() sub-pictures"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -194,18 +194,18 @@ feature {NONE} -- Implementation
 			decimal_format_not_void: a_format /= Void
 		local
 			l_index: INTEGER
-			l_per_mille, l_percent, l_decimal_separator, l_grouping_separator, l_digit_sign, l_zero_digit_sign: INTEGER
-			a_character: INTEGER
+			l_per_mille, l_percent, l_decimal_separator, l_grouping_separator, l_digit_sign, l_zero_digit_sign: NATURAL_32
+			a_character: NATURAL_32
 		do
-			l_per_mille := a_format.per_mille.item_code (1); l_percent := a_format.percent.item_code (1)
-			l_decimal_separator := a_format.decimal_separator.item_code (1);  l_grouping_separator := a_format.grouping_separator.item_code (1)
-			l_digit_sign := a_format.digit_sign.item_code (1); l_zero_digit_sign := a_format.zero_digit.item_code (1)
+			l_per_mille := a_format.per_mille.code (1); l_percent := a_format.percent.code (1)
+			l_decimal_separator := a_format.decimal_separator.code (1);  l_grouping_separator := a_format.grouping_separator.code (1)
+			l_digit_sign := a_format.digit_sign.code (1); l_zero_digit_sign := a_format.zero_digit.code (1)
 			from
 				l_index := 1
 			until
 				is_error or l_index > a_picture.count
 			loop
-				a_character := a_picture.item_code (l_index)
+				a_character := a_picture.code (l_index)
 				if a_character = l_per_mille or else a_character = l_percent then
 					if is_percent or else is_per_mille then
 						set_last_error_from_string ("Cannot have more than one percent or per-mille character in a sub-picture",
@@ -462,7 +462,8 @@ feature {NONE} -- Implementation
 			decimal_point_present: a_value.index_of ('.', 1) > 0
 			decimal_format_not_void: a_decimal_format /= Void
 		local
-			a_point, l_index, a_code, a_zero_code: INTEGER
+			a_point, l_index: INTEGER
+			a_code, a_zero_code: NATURAL_32
 			a_string: STRING
 			a_digit: CHARACTER
 		do
@@ -481,15 +482,15 @@ feature {NONE} -- Implementation
 				from
 					l_index := 1
 					a_string := ""
-					a_zero_code := a_decimal_format.zero_digit.item_code (1)
+					a_zero_code := a_decimal_format.zero_digit.code (1)
 				until
 					l_index > Result.count
 				loop
 					a_digit := Result.item (l_index)
-					a_code := a_digit.code
+					a_code := a_digit.natural_32_code
 					if a_code >= 48 and then a_code <= 57 then -- 0-9
 						a_code := a_zero_code + (a_code - 48)
-						a_string := STRING_.appended_string (a_string, unicode.code_to_string (a_code))
+						a_string := STRING_.appended_string (a_string, unicode.natural_32_code_to_string (a_code))
 					else
 						a_string := STRING_.appended_string (a_string, Result.substring (l_index, l_index))
 					end
@@ -588,9 +589,10 @@ feature {NONE} -- Implementation
 			a_whole_characters_small_enough: a_whole_characters /= a_value.count
 			a_decimal_format_not_void: a_decimal_format /= Void
 		local
-			l_index, l_max_truncation, l_zero_code: INTEGER
+			l_index, l_max_truncation: INTEGER
+			l_zero_code: NATURAL_32
 		do
-			l_zero_code := a_decimal_format.zero_digit.item_code (1)
+			l_zero_code := a_decimal_format.zero_digit.code (1)
 			create Result.make (a_value.count)
 			l_max_truncation := a_whole_characters - maximum_integral_part_size
 			from
@@ -598,13 +600,13 @@ feature {NONE} -- Implementation
 			until
 				l_index > a_value.count
 			loop
-				if l_index = l_max_truncation + 1 and a_value.item_code (l_index) = a_decimal_format.grouping_separator.item_code (1) then
+				if l_index = l_max_truncation + 1 and a_value.code (l_index) = a_decimal_format.grouping_separator.code (1) then
 					-- skip it
 				elseif l_index > l_max_truncation then
 					Result := STRING_.appended_string (Result, a_value.substring (l_index, l_index))
-				elseif a_value.item_code (l_index) = l_zero_code then
+				elseif a_value.code (l_index) = l_zero_code then
 					-- skip it
-				elseif a_value.item_code (l_index) = a_decimal_format.grouping_separator.item_code (1) then
+				elseif a_value.code (l_index) = a_decimal_format.grouping_separator.code (1) then
 					-- skip surplus grouping separators
 					l_max_truncation := l_max_truncation + 1
 				else

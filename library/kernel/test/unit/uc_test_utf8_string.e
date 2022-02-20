@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -378,52 +378,52 @@ feature -- Test
 			assert_equal ("item5", c, a_string.unicode_item (2))
 		end
 
-	test_item_code1
-			-- Test feature `item_code'.
+	test_code1
+			-- Test feature `code'.
 		local
 			a_string: UC_UTF8_STRING
 		do
 			create a_string.make_from_string ("bar")
-			assert_integers_equal ("item_code1", ('b').code, a_string.item_code (1))
-			assert_integers_equal ("item_code2", ('a').code, a_string.item_code (2))
-			assert_integers_equal ("item_code3", ('r').code, a_string.item_code (3))
+			assert_naturals_32_equal ("code1", ('b').natural_32_code, a_string.code (1))
+			assert_naturals_32_equal ("code2", ('a').natural_32_code, a_string.code (2))
+			assert_naturals_32_equal ("code3", ('r').natural_32_code, a_string.code (3))
 			a_string.put_item_code (543, 2)
-			assert_integers_equal ("item_code4", 543, a_string.item_code (2))
+			assert_naturals_32_equal ("code4", 543, a_string.code (2))
 			a_string.put_item_code (134, 2)
-			assert_integers_equal ("item_code5", 134, a_string.item_code (2))
+			assert_naturals_32_equal ("code5", 134, a_string.code (2))
 		end
 
-	test_item_code2
-			-- Test feature `item_code'.
+	test_code2
+			-- Test feature `code'.
 		local
 			a_string: UC_STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
-			assert_integers_equal ("item_code1", ('b').code, a_string.item_code (1))
-			assert_integers_equal ("item_code2", ('a').code, a_string.item_code (2))
-			assert_integers_equal ("item_code3", ('r').code, a_string.item_code (3))
+			assert_naturals_32_equal ("code1", ('b').natural_32_code, a_string.code (1))
+			assert_naturals_32_equal ("code2", ('a').natural_32_code, a_string.code (2))
+			assert_naturals_32_equal ("code3", ('r').natural_32_code, a_string.code (3))
 			a_string.put_item_code (543, 2)
-			assert_integers_equal ("item_code4", 543, a_string.item_code (2))
+			assert_naturals_32_equal ("code4", 543, a_string.code (2))
 			a_string.put_item_code (134, 2)
-			assert_integers_equal ("item_code5", 134, a_string.item_code (2))
+			assert_naturals_32_equal ("code5", 134, a_string.code (2))
 		end
 
-	test_item_code3
-			-- Test feature `item_code'.
+	test_code3
+			-- Test feature `code'.
 		local
 			a_string: STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("bar")
-			assert_integers_equal ("item_code1", ('b').code, a_string.item_code (1))
-			assert_integers_equal ("item_code2", ('a').code, a_string.item_code (2))
-			assert_integers_equal ("item_code3", ('r').code, a_string.item_code (3))
+			assert_naturals_32_equal ("code1", ('b').natural_32_code, a_string.code (1))
+			assert_naturals_32_equal ("code2", ('a').natural_32_code, a_string.code (2))
+			assert_naturals_32_equal ("code3", ('r').natural_32_code, a_string.code (3))
 			if not attached {UC_UTF8_STRING} a_string as utf8 then
 				assert ("utf8", False)
 			else
 				utf8.put_item_code (543, 2)
-				assert_integers_equal ("item_code4", 543, a_string.item_code (2))
+				assert_naturals_32_equal ("code4", 543, a_string.code (2))
 				utf8.put_item_code (134, 2)
-				assert_integers_equal ("item_code5", 134, a_string.item_code (2))
+				assert_naturals_32_equal ("code5", 134, a_string.code (2))
 			end
 		end
 
@@ -2942,14 +2942,14 @@ feature -- Test
 			create l_new_utf8.make_from_string_general (l_new_32)
 			l_str_utf8.replace_substring_all (l_original_utf8, l_new_utf8)
 			assert_integers_equal ("count_1", 8, l_str_utf8.count)
-			assert_integers_equal ("item1_1", ('f').code, l_str_utf8.item_code (1))
-			assert_integers_equal ("item2_1", 301, l_str_utf8.item_code (2))
-			assert_integers_equal ("item3_1", 303, l_str_utf8.item_code (3))
-			assert_integers_equal ("item4_1", ('o').code, l_str_utf8.item_code (4))
-			assert_integers_equal ("item5_1", ('b').code, l_str_utf8.item_code (5))
-			assert_integers_equal ("item6_1", 301, l_str_utf8.item_code (6))
-			assert_integers_equal ("item7_1", 303, l_str_utf8.item_code (7))
-			assert_integers_equal ("item8_1", ('r').code, l_str_utf8.item_code (8))
+			assert_naturals_32_equal ("item1_1", ('f').natural_32_code, l_str_utf8.code (1))
+			assert_naturals_32_equal ("item2_1", 301, l_str_utf8.code (2))
+			assert_naturals_32_equal ("item3_1", 303, l_str_utf8.code (3))
+			assert_naturals_32_equal ("item4_1", ('o').natural_32_code, l_str_utf8.code (4))
+			assert_naturals_32_equal ("item5_1", ('b').natural_32_code, l_str_utf8.code (5))
+			assert_naturals_32_equal ("item6_1", 301, l_str_utf8.code (6))
+			assert_naturals_32_equal ("item7_1", 303, l_str_utf8.code (7))
+			assert_naturals_32_equal ("item8_1", ('r').natural_32_code, l_str_utf8.code (8))
 		end
 
 	test_replace_substring_all2
@@ -2971,11 +2971,11 @@ feature -- Test
 			create l_new_utf8.make_from_string_general (l_new_32)
 			l_str_utf8.replace_substring_all (l_original_utf8, l_new_utf8)
 			assert_integers_equal ("count_1", 5, l_str_utf8.count)
-			assert_integers_equal ("item1_1", ('f').code, l_str_utf8.item_code (1))
-			assert_integers_equal ("item2_1", 300, l_str_utf8.item_code (2))
-			assert_integers_equal ("item3_1", ('b').code, l_str_utf8.item_code (3))
-			assert_integers_equal ("item4_1", ('a').code, l_str_utf8.item_code (4))
-			assert_integers_equal ("item5_1", ('r').code, l_str_utf8.item_code (5))
+			assert_naturals_32_equal ("item1_1", ('f').natural_32_code, l_str_utf8.code (1))
+			assert_naturals_32_equal ("item2_1", 300, l_str_utf8.code (2))
+			assert_naturals_32_equal ("item3_1", ('b').natural_32_code, l_str_utf8.code (3))
+			assert_naturals_32_equal ("item4_1", ('a').natural_32_code, l_str_utf8.code (4))
+			assert_naturals_32_equal ("item5_1", ('r').natural_32_code, l_str_utf8.code (5))
 		end
 
 	test_insert_unicode_character1

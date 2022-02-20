@@ -5,7 +5,7 @@ note
 		"UTF-8 output encoders."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,7 +63,7 @@ feature -- Status report
 			Result := False
 		end
 
-	is_bad_character_code (a_code: INTEGER): BOOLEAN
+	is_bad_character_code (a_code: NATURAL_32): BOOLEAN
 			-- Is `a_code' not representable in `encoding'?
 		do
 			Result := False

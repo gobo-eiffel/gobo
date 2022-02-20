@@ -5,7 +5,7 @@ note
 		"Split a string into tokens"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -84,7 +84,7 @@ feature -- Setting
 			until
 				i > nb
 			loop
-				separator_codes.put (a_string.item_code (i))
+				separator_codes.put (a_string.code (i))
 				i := i + 1
 			end
 		ensure
@@ -250,9 +250,9 @@ feature -- Operations
 
 feature {NONE} -- Implementation
 
-	separator_codes: DS_HASH_SET [INTEGER]
+	separator_codes: DS_HASH_SET [NATURAL_32]
 			-- Character codes of separators
-			-- (Hashed, and integer for unicode compatibility.)
+			-- (Hashed, and natural_32 for unicode compatibility.)
 
 	do_split (a_string: STRING; a_greedy: BOOLEAN): DS_LIST [STRING]
 			-- Split implementation.
@@ -260,15 +260,15 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			last_separator: INTEGER
 			last_escaped: INTEGER
-			escape_code: INTEGER
-			a_code: INTEGER
+			escape_code: NATURAL_32
+			a_code: NATURAL_32
 			an_item: detachable STRING
 		do
 			create {DS_LINKED_LIST [STRING]} Result.make
 			nb := a_string.count
 			if nb > 0 then
 				if has_escape_character then
-					escape_code := escape_character.code
+					escape_code := escape_character.natural_32_code
 				end
 				from
 					i := 1
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 				until
 					i > nb
 				loop
-					a_code := a_string.item_code (i)
+					a_code := a_string.code (i)
 					if has_escape_character and then a_code = escape_code and then i < nb then
 						if an_item = Void then
 							an_item := a_string.substring (last_escaped, i - 1)
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 		local
 			i, nb: INTEGER
 			last_after: INTEGER
-			a_code: INTEGER
+			a_code: NATURAL_32
 		do
 			Result := a_result
 			last_after := 1
@@ -380,8 +380,8 @@ feature {NONE} -- Implementation
 			until
 				i > nb
 			loop
-				a_code := a_string.item_code (i)
-				if a_code = escape_character.code or separator_codes.has (a_code) then
+				a_code := a_string.code (i)
+				if a_code = escape_character.natural_32_code or separator_codes.has (a_code) then
 					Result := STRING_.appended_substring (Result, a_string, last_after, i - 1)
 					Result.append_character (escape_character)
 					last_after := i

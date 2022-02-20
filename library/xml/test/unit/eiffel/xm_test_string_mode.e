@@ -5,7 +5,7 @@ note
 		"Test XML parser string modes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,8 +33,8 @@ feature {NONE} -- Test case
 	Utf8_large_content: STRING = "<doc>%/196/%/137/</doc>"
 
 	Ascii_char: CHARACTER = '{'
-	Latin1_char: INTEGER = 252
-	Large_char: INTEGER = 265
+	Latin1_char: NATURAL_32 = 252
+	Large_char: NATURAL_32 = 265
 
 feature -- Tests
 
@@ -56,7 +56,7 @@ feature -- Tests
 			l_parser.parse_from_string (new_unicode_string_from_utf8 (Utf8_latin1_content))
 			assert ("latin1 ok", l_parser.is_correct)
 			assert_string_type (l_content.content, True)
-			assert_integers_equal ("latin1 output", Latin1_char, l_content.content.item_code (1))
+			assert_naturals_32_equal ("latin1 output", Latin1_char, l_content.content.code (1))
 
 			l_parser.parse_from_string (new_unicode_string_from_utf8 (Utf8_large_content))
 			assert ("latin1 fail", not l_parser.is_correct)
@@ -103,12 +103,12 @@ feature -- Tests
 
 			l_parser.parse_from_string (new_unicode_string_from_utf8 (Utf8_latin1_content))
 			assert ("latin1 ok", l_parser.is_correct)
-			assert_integers_equal ("latin1 output", Latin1_char, l_content.content.item_code (1))
+			assert_naturals_32_equal ("latin1 output", Latin1_char, l_content.content.code (1))
 			assert_string_type (l_content.content, False)
 
 			l_parser.parse_from_string (new_unicode_string_from_utf8 (Utf8_large_content))
 			assert ("large ok", l_parser.is_correct)
-			assert_integers_equal ("large output", Large_char, l_content.content.item_code (1))
+			assert_naturals_32_equal ("large output", Large_char, l_content.content.code (1))
 
 			assert_string_type (l_content.content, False)
 		end

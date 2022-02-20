@@ -5,7 +5,7 @@ note
 		"Objects that output CDATA sections."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -175,7 +175,8 @@ feature {NONE} -- Initialization
 			output_encoder_not_void: output_encoder /= Void
 		local
 			l_is_cdata: BOOLEAN
-			l_code, l_index, l_start_index: INTEGER
+			l_code: NATURAL_32
+			l_index, l_start_index: INTEGER
 			l_buffer: STRING
 		do
 			check precondition_output_encoder_not_void: attached output_encoder as l_output_encoder then
@@ -196,7 +197,7 @@ feature {NONE} -- Initialization
 						until
 							l_index > l_buffer.count
 						loop
-							l_code := l_buffer.item_code (l_index)
+							l_code := l_buffer.code (l_index)
 							if l_code = 0 then
 								-- discard NULL markers
 								flush_cdata (l_buffer.substring (l_start_index, l_index - 1))
@@ -216,7 +217,7 @@ feature {NONE} -- Initialization
 										base_receiver.notify_characters (l_buffer.substring (l_index, l_index), 0)
 									end
 									l_index := l_index + 1
-									l_code := l_buffer.item_code (l_index)
+									l_code := l_buffer.code (l_index)
 								end
 							else
 								l_index := l_index + 1
@@ -253,7 +254,7 @@ feature {NONE} -- Initialization
 			until
 				l_index > l_count
 			loop
-				if a_character_string.item_code (l_index) = 0 then
+				if a_character_string.code (l_index) = 0 then
 					-- discard NULL markers
 					base_receiver.notify_characters (a_character_string.substring (l_start_index, l_index - 1), Disable_escaping)
 				elseif l_index <= l_count - 2 and then a_character_string.item (l_index) = ']' and then a_character_string.item (l_index + 1) = ']' and then a_character_string.item (l_index + 2) = '>' then

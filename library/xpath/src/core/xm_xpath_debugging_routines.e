@@ -5,7 +5,7 @@ note
 		"Debugging routines"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,7 +56,7 @@ feature -- Output
 			until
 				i > a_string.count
 			loop
-				std.output.put_string (a_string.item_code (i).out)
+				std.output.put_natural_32 (a_string.code (i))
 				std.output.put_string (",")
 				i := i+ 1
 			end

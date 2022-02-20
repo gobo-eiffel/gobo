@@ -5,7 +5,7 @@ note
 		"Literal result elements"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -365,7 +365,8 @@ feature {NONE} -- Implementation
 			expression_not_void: an_expression /= Void
 		local
 			a_string: STRING
-			an_index, a_character_code: INTEGER
+			an_index: INTEGER
+			a_character_code: NATURAL_32
 		do
 
 			-- If we can be sure the attribute value contains no special XML/HTML characters,
@@ -382,12 +383,12 @@ feature {NONE} -- Implementation
 					until
 						Result = False or else an_index > a_string.count
 					loop
-						a_character_code := a_string.item_code (an_index)
+						a_character_code := a_string.code (an_index)
 						if a_character_code < 33 or else a_character_code > 126
-							or else a_character_code = ('>').code
-							or else a_character_code = ('<').code
-							or else a_character_code = ('&').code
-							or else a_character_code = ('%"').code then
+							or else a_character_code = ('>').natural_32_code
+							or else a_character_code = ('<').natural_32_code
+							or else a_character_code = ('&').natural_32_code
+							or else a_character_code = ('%"').natural_32_code then
 							Result := False
 						end
 						an_index := an_index + 1

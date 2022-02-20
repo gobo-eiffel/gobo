@@ -5,7 +5,7 @@ note
 		"Objects that expand characters via character-maps."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			until
 				l_index > a_unmapped_string.count
 			loop
-				l_code := a_unmapped_string.item_code (l_index)
+				l_code := a_unmapped_string.code (l_index).to_integer_32
 				if l_code = 0 then
 					check
 						null_characters_used: are_null_characters_used

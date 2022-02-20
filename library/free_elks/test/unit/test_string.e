@@ -5,7 +5,7 @@ note
 		"Test features of class STRING"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -181,15 +181,15 @@ feature -- Test
 			assert_characters_equal ("item3", 'r', a_string.item (3))
 		end
 
-	test_item_code
-			-- Test feature 'item_code'.
+	test_code
+			-- Test feature 'code'.
 		local
 			a_string: STRING
 		do
 			a_string := "bar"
-			assert_integers_equal ("item_code1", ('b').code, a_string.item_code (1))
-			assert_integers_equal ("item_code2", ('a').code, a_string.item_code (2))
-			assert_integers_equal ("item_code3", ('r').code, a_string.item_code (3))
+			assert_naturals_32_equal ("item_code1", ('b').natural_32_code, a_string.code (1))
+			assert_naturals_32_equal ("item_code2", ('a').natural_32_code, a_string.code (2))
+			assert_naturals_32_equal ("item_code3", ('r').natural_32_code, a_string.code (3))
 		end
 
 	test_at

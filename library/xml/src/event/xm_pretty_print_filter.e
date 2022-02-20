@@ -5,7 +5,7 @@ note
 		"Pretty printer, output as XML document"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -162,25 +162,25 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Escaped
 
-	is_escaped (a_char: INTEGER): BOOLEAN
+	is_escaped (a_char: NATURAL_32): BOOLEAN
 			-- Is this an escapable character?
 		do
-			Result := a_char = Lt_char.code
-				or a_char = Gt_char.code
-				or a_char = Amp_char.code
+			Result := a_char = Lt_char.natural_32_code
+				or a_char = Gt_char.natural_32_code
+				or a_char = Amp_char.natural_32_code
 				or a_char >= 128
 		end
 
-	escaped_char (a_char: INTEGER): STRING
+	escaped_char (a_char: NATURAL_32): STRING
 			-- Escape char.
 		require
 			is_escaped: is_escaped (a_char)
 		do
-			if a_char = Lt_char.code then
+			if a_char = Lt_char.natural_32_code then
 				Result := Lt_entity
-			elseif a_char = Gt_char.code then
+			elseif a_char = Gt_char.natural_32_code then
 				Result := Gt_entity
-			elseif a_char = Amp_char.code then
+			elseif a_char = Amp_char.natural_32_code then
 				Result := Amp_entity
 			else
 				Result := STRING_.concat ("&#", a_char.out)
@@ -219,7 +219,7 @@ feature {NONE} -- Output
 			until
 				i > cnt
 			loop
-				if a_string.item_code (i) = Quot_char.code then
+				if a_string.code (i) = Quot_char.natural_32_code then
 					if last_escaped < i - 1 then
 						output_escaped (a_string.substring (last_escaped + 1, i - 1))
 					end
@@ -244,7 +244,7 @@ feature {NONE} -- Output
 			last_escaped: INTEGER
 			i: INTEGER
 			cnt: INTEGER
-			a_char: INTEGER
+			a_char: NATURAL_32
 		do
 			from
 				last_escaped := 0
@@ -255,7 +255,7 @@ feature {NONE} -- Output
 			until
 				i > cnt
 			loop
-				a_char := a_string.item_code (i)
+				a_char := a_string.code (i)
 				if is_escaped (a_char) then
 					if last_escaped < i - 1 then
 						output (a_string.substring (last_escaped + 1, i - 1))

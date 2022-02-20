@@ -5,7 +5,7 @@ note
 		"xsl:output-character element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,7 +57,7 @@ feature -- Element change
 							create an_error.make_from_string ("xsl:output-character's 'character' attribute must be a single XML character", Gexslt_eiffel_type_uri, "OUTPUT_CHARACTER", Static_error)
 							report_compile_error (an_error)
 						else
-							code := a_character_attribute.item_code (1)
+							code := a_character_attribute.code (1).to_integer_32
 						end
 					elseif STRING_.same_string (an_expanded_name, String_attribute) then
 						replacement_string := attribute_value_by_index (a_cursor.index)

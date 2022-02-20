@@ -2,13 +2,13 @@ note
 
 	description:
 
-	"Receivers that indent HTML by adding whitespace to character data"
+		"Receivers that indent HTML by adding whitespace to character data"
 
-library: "Gobo Eiffel XSLT Library"
-copyright: "Copyright (c) 2004, Colin Adams and others"
-license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_XSLT_HTML_INDENTER
 
@@ -107,15 +107,15 @@ feature -- Events
 				until
 					an_index > a_chars.count
 				loop
-					if a_chars.item_code (an_index) = 10 or else
-						(an_index - a_last_newline > 120 and then a_chars.item_code (an_index) = 32) then
+					if a_chars.code (an_index) = 10 or else
+						(an_index - a_last_newline > 120 and then a_chars.code (an_index) = 32) then
 						same_line := False
 						Precursor (a_chars.substring (a_last_newline, an_index - 1), a_properties)
 						indent
 						a_last_newline := an_index + 1
 						from
 						until
-							a_last_newline > a_chars.count or else a_chars.item_code (a_last_newline) /= 32
+							a_last_newline > a_chars.count or else a_chars.code (a_last_newline) /= 32
 						loop
 							a_last_newline := a_last_newline + 1
 						end

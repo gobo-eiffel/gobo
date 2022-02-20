@@ -5,7 +5,7 @@ note
 		"UTF-8 encoding routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -244,7 +244,19 @@ feature -- Access
 		require
 			is_encoded_first_byte: is_encoded_first_byte (a_byte)
 		do
-			Result := a_byte.code
+			Result := natural_32_encoded_first_value (a_byte).to_integer_32
+		ensure
+			instance_free: class
+			value_positive: Result >= 0
+			value_small_enough: Result < 128
+		end
+
+	natural_32_encoded_first_value (a_byte: CHARACTER_8): NATURAL_32
+			-- Value encoded in first byte
+		require
+			is_encoded_first_byte: is_encoded_first_byte (a_byte)
+		do
+			Result := a_byte.natural_32_code
 			if a_byte <= byte_127 then
 					-- 0xxxxxxx
 			elseif a_byte <= byte_223 then
@@ -269,7 +281,20 @@ feature -- Access
 			is_encoded_next_byte: is_encoded_next_byte (a_byte)
 		do
 				-- 10xxxxxx
-			Result := a_byte.code \\ 64
+			Result := natural_32_encoded_next_value (a_byte).to_integer_32
+		ensure
+			instance_free: class
+			value_positive: Result >= 0
+			value_small_enough: Result < 64
+		end
+
+	natural_32_encoded_next_value (a_byte: CHARACTER_8): NATURAL_32
+			-- Value encoded in one of the next bytes
+		require
+			is_encoded_next_byte: is_encoded_next_byte (a_byte)
+		do
+				-- 10xxxxxx
+			Result := a_byte.natural_32_code \\ 64
 		ensure
 			instance_free: class
 			value_positive: Result >= 0
@@ -686,7 +711,7 @@ feature -- Conversion
 				until
 					i > nb
 				loop
-					append_code_to_utf8 (Result, a_string.item_code (i))
+					append_natural_32_code_to_utf8 (Result, a_string.code (i))
 					i := i + 1
 				end
 			end

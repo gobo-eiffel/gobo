@@ -5,7 +5,7 @@ note
 		"Test features of class ST_UNICODE_NORMALIZATION_ROUTINES"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -54,11 +54,11 @@ feature -- Test
 			create changed.make (False)
 			a_string := string_from_codes (decomposition (a_acute_c_acute_cedilla, True, changed))
 			assert ("a_acute_c_acute_cedilla decomposes canonically to a_acute_c_cedilla_accute 1", a_string /= Void and then a_string.count = 5)
-			assert ("a_acute_c_acute_cedilla first character is a", a_string.item_code (1) = 97)
-			assert ("a_acute_c_acute_cedilla second character is acute", a_string.item_code (2) = 769)
-			assert ("a_acute_c_acute_cedilla third character is c", a_string.item_code (3) = 99)
-			assert ("a_acute_c_acute_cedilla fourth character is cedilla", a_string.item_code (4) = 807)
-			assert ("a_acute_c_acute_cedilla fifth character is acute", a_string.item_code (5) = 769)
+			assert ("a_acute_c_acute_cedilla first character is a", a_string.code (1) = 97)
+			assert ("a_acute_c_acute_cedilla second character is acute", a_string.code (2) = 769)
+			assert ("a_acute_c_acute_cedilla third character is c", a_string.code (3) = 99)
+			assert ("a_acute_c_acute_cedilla fourth character is cedilla", a_string.code (4) = 807)
+			assert ("a_acute_c_acute_cedilla fifth character is acute", a_string.code (5) = 769)
 		end
 
 	test_normalization
@@ -70,9 +70,9 @@ feature -- Test
 			a_hash, a_line_number: INTEGER
 			a_line, c1, c2, c3, c4, c5: STRING
 			is_part1: BOOLEAN
-			last_part1_code, c1_code: INTEGER
+			last_part1_code, c1_code: NATURAL_32
 		do
-			last_part1_code := -1
+			last_part1_code := 0
 			create a_file.make (normalization_test_filename)
 			a_file.open_read
 			if a_file.is_open_read then
@@ -99,11 +99,12 @@ feature -- Test
 									c1 := decoded_string (some_fields.item (1))
 									if is_part1 then
 										assert ("Single code point", c1.count = 1)
-										c1_code := c1.item_code (1)
-										from last_part1_code := last_part1_code + 1 until c1_code = last_part1_code loop
+										c1_code := c1.code (1)
+										from until c1_code = last_part1_code loop
 											check_all_normal_forms_identity (last_part1_code)
 											last_part1_code :=  last_part1_code + 1
 										end
+										last_part1_code := last_part1_code + 1
 									end
 									c2 := decoded_string (some_fields.item (2))
 									c3 := decoded_string (some_fields.item (3))
@@ -195,14 +196,14 @@ feature {NONE} -- Implementation
 			assert_strings_equal ("NFKC (column 5) equals column 4 on line " + a_line_number.out + " in NormalizationTest.txt", c4, to_nfkc (c5))
 		end
 
-	check_all_normal_forms_identity (a_code: INTEGER)
+	check_all_normal_forms_identity (a_code: NATURAL_32)
 			-- Check that NFX (`a_code') = `a_code' for all normal forms.
 		do
-			if unicode.valid_non_surrogate_code (a_code) then
-				assert (a_code.out + " is in NFD", is_nfd (unicode.code_to_string (a_code)))
-				assert (a_code.out + " is in NFKD", is_nfkd (unicode.code_to_string (a_code)))
-				assert (a_code.out + " is in NFC", is_nfc (unicode.code_to_string (a_code)))
-				assert (a_code.out + " is in NFKC", is_nfkc (unicode.code_to_string (a_code)))
+			if unicode.valid_non_surrogate_natural_32_code (a_code) then
+				assert (a_code.out + " is in NFD", is_nfd (unicode.natural_32_code_to_string (a_code)))
+				assert (a_code.out + " is in NFKD", is_nfkd (unicode.natural_32_code_to_string (a_code)))
+				assert (a_code.out + " is in NFC", is_nfc (unicode.natural_32_code_to_string (a_code)))
+				assert (a_code.out + " is in NFKC", is_nfkc (unicode.natural_32_code_to_string (a_code)))
 			else
 				-- need UTF-16 implementation to perform assertions
 			end

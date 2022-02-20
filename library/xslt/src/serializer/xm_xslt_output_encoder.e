@@ -5,7 +5,7 @@ note
 		"Objects that encode character strings and send them to a stream writer."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,7 +50,7 @@ feature -- Status report
 		deferred
 		end
 
-	is_bad_character_code (a_code: INTEGER): BOOLEAN
+	is_bad_character_code (a_code: NATURAL_32): BOOLEAN
 		-- Is `a_code' not representable in `encoding'?
 		require
 			valid_character_code: is_char (a_code)
@@ -60,7 +60,8 @@ feature -- Status report
 	is_valid_string (a_character_string: STRING): BOOLEAN
 			-- Is `a_character_string' valid for output prior to encoding?
 		local
-			l_index, l_code: INTEGER
+			l_index: INTEGER
+			l_code: NATURAL_32
 		do
 			if a_character_string /= Void then
 				Result := True
@@ -69,7 +70,7 @@ feature -- Status report
 				until
 					Result = False or else l_index > a_character_string.count
 				loop
-					l_code := a_character_string.item_code (l_index)
+					l_code := a_character_string.code (l_index)
 					if not is_char (l_code) or else is_bad_character_code (l_code) then
 						Result := False
 					end

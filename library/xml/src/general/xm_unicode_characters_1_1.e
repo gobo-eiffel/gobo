@@ -5,7 +5,7 @@ note
 		"XML 1.1 unicode character classes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ inherit
 
 feature -- Characters
 
-	is_char (a: INTEGER): BOOLEAN
+	is_char (a: NATURAL_32): BOOLEAN
 			-- Is this a character code matching XML 1.1's 'Char'?
 		do
 			Result := (a >= 1 and a <= 55295) --[#x1-#xD7FF]
@@ -26,13 +26,13 @@ feature -- Characters
 				or (a >= 65536 and a <= 1114111) -- [#x10000-#x10FFFF]
 		end
 
-	is_name_first (a: INTEGER): BOOLEAN
+	is_name_first (a: NATURAL_32): BOOLEAN
 			-- Is this a character code matching XML 1.1's 'NameStartChar'?
 		do
-			Result := (a = (':').code) --":"
-				or (a >= ('A').code and a <= ('Z').code) -- [A-Z]
-				or (a = ('_').code) -- "_"
-				or (a >= ('a').code and a <= ('z').code) -- [a-z]
+			Result := (a = {UT_CHARACTER_32_CODES}.colon_code) --":"
+				or (a >= {UT_CHARACTER_32_CODES}.upper_a_code and a <= {UT_CHARACTER_32_CODES}.upper_z_code) -- [A-Z]
+				or (a = {UT_CHARACTER_32_CODES}.underscore_code) -- "_"
+				or (a >= {UT_CHARACTER_32_CODES}.lower_a_code and a <= {UT_CHARACTER_32_CODES}.lower_z_code) -- [a-z]
 				or (a >= 192 and a <= 214) -- [#xC0-#xD6]
 				or (a >= 216 and a <= 246) -- [#xD8-#xF6]
 				or (a >= 248 and a <= 767) -- [#xF8-#x2FF]
@@ -47,19 +47,19 @@ feature -- Characters
 				or (a >= 65536 and a <= 983039) -- [#x10000-#xEFFFF]
 		end
 
-	is_name_char (a: INTEGER): BOOLEAN
+	is_name_char (a: NATURAL_32): BOOLEAN
 			-- Is this a character code matching XML 1.1's 'NameChar'?
 		do
 			Result := is_name_first (a)
-				or a = ('-').code
-				or a = ('.').code
-				or (a >= ('0').code and a <= ('9').code)
+				or a = {UT_CHARACTER_32_CODES}.minus_code
+				or a = {UT_CHARACTER_32_CODES}.dot_code
+				or (a >= {UT_CHARACTER_32_CODES}.zero_code and a <= {UT_CHARACTER_32_CODES}.nine_code)
 				or a = 183 -- #xB7
 				or (a >= 768 and a <= 879) -- [#x0300-#x036F]
 				or (a >= 8255 and a <= 8256) -- [#x203F-#x2040]
 		end
 
-	is_space (a: INTEGER): BOOLEAN
+	is_space (a: NATURAL_32): BOOLEAN
 			-- Is this a character code matching XML 1.1's 'S'?
 		do
 			Result := a = 32 or a = 9 or a = 10 or a = 13

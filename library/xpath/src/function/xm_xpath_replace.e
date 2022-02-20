@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath replace() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -195,7 +195,8 @@ feature {NONE} -- Implementation
 			a_result_not_void: a_result /= Void
 			a_result_empty: a_result.item = Void
 		local
-			l_index, l_character_code: INTEGER
+			l_index: INTEGER
+			l_character_code: NATURAL_32
 		do
 			check precondition_replacement_string_not_void: attached replacement_string as l_replacement_string then
 				from
@@ -203,15 +204,15 @@ feature {NONE} -- Implementation
 				until
 					regexp_error_value /= Void or else l_index > l_replacement_string.count
 				loop
-					l_character_code := l_replacement_string.item_code (l_index)
+					l_character_code := l_replacement_string.code (l_index)
 					inspect
 						l_character_code
 					when 36 then -- $
-						if l_index > 1 and then l_replacement_string.item_code (l_index - 1) =  92 then -- \
+						if l_index > 1 and then l_replacement_string.code (l_index - 1) =  92 then -- \
 							-- escaped $
 						else
 							if l_index < l_replacement_string.count then
-								l_character_code := l_replacement_string.item_code (l_index + 1)
+								l_character_code := l_replacement_string.code (l_index + 1)
 								if l_character_code < 48 or else l_character_code > 57 then -- not 0-9
 									a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid replacement string in fn:replace(): $ sign must be followed by digit 0-9",
 										Xpath_errors_uri, "FORX0004", Dynamic_error))
@@ -224,11 +225,11 @@ feature {NONE} -- Implementation
 							end
 						end
 					when 92 then -- \
-						if l_index > 1 and then l_replacement_string.item_code (l_index - 1) =  92 then -- \
+						if l_index > 1 and then l_replacement_string.code (l_index - 1) =  92 then -- \
 							-- escaped \
-						elseif l_index < l_replacement_string.count and then l_replacement_string.item_code (l_index + 1) = 36 then
+						elseif l_index < l_replacement_string.count and then l_replacement_string.code (l_index + 1) = 36 then
 							-- \$
-						elseif l_index < l_replacement_string.count and then l_replacement_string.item_code (l_index + 1) = 92 then
+						elseif l_index < l_replacement_string.count and then l_replacement_string.code (l_index + 1) = 92 then
 							-- escaped \
 						else
 							if l_index < l_replacement_string.count then
@@ -257,7 +258,8 @@ feature {NONE} -- Implementation
 			replacement_string_not_void: replacement_string /= Void
 			captured_substring_requests_detected: any_captures
 		local
-			l_index, l_character_code: INTEGER
+			l_index: INTEGER
+			l_character_code: NATURAL_32
 			l_substitution: STRING
 			l_substitution_just_performed: BOOLEAN
 		do
@@ -267,9 +269,9 @@ feature {NONE} -- Implementation
 				until
 					l_index > l_replacement_string.count
 				loop
-					l_character_code := l_replacement_string.item_code (l_index)
+					l_character_code := l_replacement_string.code (l_index)
 					if l_character_code = 36 then -- $
-						if l_index > 1 and then not l_substitution_just_performed and then l_replacement_string.item_code (l_index - 1) =  92 then -- \
+						if l_index > 1 and then not l_substitution_just_performed and then l_replacement_string.code (l_index - 1) =  92 then -- \
 							l_index := l_index + 2 -- escaped $
 							l_substitution_just_performed := False
 						else

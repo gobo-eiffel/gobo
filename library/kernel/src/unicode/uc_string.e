@@ -16,7 +16,7 @@
 		Use UC_UTF*_STRING to specify the encoding explicitly.
 	]"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -105,6 +105,7 @@ inherit
 			to_upper,
 			three_way_comparison,
 			item_code,
+			code,
 			byte_capacity,
 			has_substring,
 			insert_character,
@@ -131,7 +132,6 @@ inherit
 			old_left_adjust,
 			old_right_adjust,
 			old_wipe_out,
-			code,
 			append_code,
 			put_code,
 			has_code,
@@ -199,6 +199,7 @@ inherit
 			to_upper,
 			three_way_comparison,
 			item_code,
+			code,
 			byte_capacity,
 			count,
 			has_substring,
@@ -224,7 +225,6 @@ inherit
 			old_clear_all,
 			old_left_adjust,
 			old_right_adjust,
-			code,
 			append_code,
 			put_code,
 			has_code,
@@ -635,6 +635,22 @@ feature -- Access
 			valid_item_code: unicode.valid_code (Result)
 		end
 
+	code (i: INTEGER): NATURAL_32
+			-- Code of character at index `i'
+		local
+			k: INTEGER
+		do
+			if count = byte_count then
+				Result := byte_item (i).natural_32_code
+			else
+				k := byte_index (i)
+				Result := code_at_byte_index (k)
+			end
+		ensure then
+			code_not_negative: Result >= 0
+			valid_code: unicode.valid_natural_32_code (Result)
+		end
+
 	item (i: INTEGER): CHARACTER_8
 			-- Character at index `i';
 			-- '%U' if the unicode character at index
@@ -652,7 +668,7 @@ feature -- Access
 				Result := character_item_at_byte_index (k)
 			end
 		ensure then
-			code_small_enough: item_code (i) <= Platform.Maximum_character_code implies Result.code = item_code (i)
+			code_small_enough: item_code (i) <= Platform.Maximum_character_code implies Result.natural_32_code = code (i)
 			overflow: item_code (i) > Platform.Maximum_character_code implies Result = '%U'
 		end
 
@@ -676,7 +692,7 @@ feature -- Access
 				create Result.make_from_substring (Current, start_index, end_index)
 			end
 		ensure then
-			first_unicode_item: Result.count > 0 implies Result.item_code (1) = item_code (start_index)
+			first_unicode_item: Result.count > 0 implies Result.code (1) = code (start_index)
 		end
 
 	unicode_substring_index (other: READABLE_STRING_GENERAL; start_index: INTEGER): INTEGER
@@ -1514,7 +1530,7 @@ feature -- Comparison
 		ensure then
 			unicode_definition:
 				Result = (ANY_.same_types (Current, other) and then count = other.count and then
-				(count > 0 implies (item_code (1) = other.item_code (1) and
+				(count > 0 implies (code (1) = other.code (1) and
 				substring (2, count).is_equal (other.substring (2, count)))))
 		end
 
@@ -1525,8 +1541,8 @@ feature -- Comparison
 			Result := (three_way_comparison (other) = -1)
 		ensure then
 			unicode_definition: Result = (count = 0 and other.count > 0 or
-				count > 0 and then other.count > 0 and then (item_code (1) < other.item_code (1) or
-				item_code (1) = other.item_code (1) and substring (2, count) < other.substring (2, other.count)))
+				count > 0 and then other.count > 0 and then (code (1) < other.code (1) or
+				code (1) = other.code (1) and substring (2, count) < other.substring (2, other.count)))
 		end
 
 	same_string (other: READABLE_STRING_8): BOOLEAN
@@ -1923,7 +1939,7 @@ feature -- Element change
 			end
 			put_character_at_byte_index (c, new_count, k)
 		ensure then
-			unicode_replaced: item_code (i) = c.code
+			unicode_replaced: code (i) = c.natural_32_code
 		end
 
 	prepend (s: READABLE_STRING_8)
@@ -2018,7 +2034,7 @@ feature -- Element change
 				put_character_at_byte_index (c, nb, k)
 			end
 		ensure then
-			unicode_appended: item_code (count) = c.code
+			unicode_appended: code (count) = c.natural_32_code
 		end
 
 	append_string (s: detachable READABLE_STRING_8)
@@ -2213,12 +2229,12 @@ feature -- Element change
 			nb := s.count
 			msb_first := True
 			if nb >= 2 then
-				if utf16.is_endian_detection_character_most_first (s.item_code (1), s.item_code (2)) then
+				if utf16.is_endian_detection_character_most_first_natural_32 (s.code (1), s.code (2)) then
 					check
 						msb_first_set: msb_first
 					end
 					i := 3
-				elseif utf16.is_endian_detection_character_least_first (s.item_code (1), s.item_code (2)) then
+				elseif utf16.is_endian_detection_character_least_first_natural_32 (s.code (1), s.code (2)) then
 					msb_first := False
 					i := 3
 				end
@@ -2492,7 +2508,7 @@ feature -- Element change
 				put_character_at_byte_index (c, nb, k)
 			end
 		ensure then
-			code_inserted: item_code (i) = c.code
+			code_inserted: code (i) = c.natural_32_code
 		end
 
 	insert (s: READABLE_STRING_8; i: INTEGER)
@@ -3190,13 +3206,25 @@ feature -- Traversal
 			i_large_enough: i >= 1
 			i_small_enough: i <= byte_count
 			is_encoded_first_byte: is_encoded_first_byte (i)
+		do
+			Result := code_at_byte_index (i).to_integer_32
+		ensure
+			valid_item_code: unicode.valid_code (Result)
+		end
+
+	code_at_byte_index (i: INTEGER): NATURAL_32
+			-- Code of character at byte index `i'
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= byte_count
+			is_encoded_first_byte: is_encoded_first_byte (i)
 		local
 			k, nb: INTEGER
 			a_byte: CHARACTER_8
 		do
 			k := i
 			a_byte := byte_item (k)
-			Result := utf8.encoded_first_value (a_byte)
+			Result := utf8.natural_32_encoded_first_value (a_byte)
 			nb := k + utf8.encoded_byte_count (a_byte) - 1
 			from
 				k := k + 1
@@ -3204,11 +3232,11 @@ feature -- Traversal
 				k > nb
 			loop
 				a_byte := byte_item (k)
-				Result := Result * 64 + utf8.encoded_next_value (a_byte)
+				Result := Result * 64 + utf8.natural_32_encoded_next_value (a_byte)
 				k := k + 1
 			end
 		ensure
-			valid_item_code: unicode.valid_code (Result)
+			valid_code: unicode.valid_natural_32_code (Result)
 		end
 
 	character_item_at_byte_index (i: INTEGER): CHARACTER_8
@@ -3771,12 +3799,6 @@ feature {UC_STRING} -- Inapplicable
 				end
 			end
 			keep_head (nb)
-		end
-
-	code (i: INTEGER): NATURAL_32
-			-- Code at position `i'
-		do
-			Result := item_code (i).as_natural_32
 		end
 
 	index_of_code (c: like code; start_index: INTEGER): INTEGER

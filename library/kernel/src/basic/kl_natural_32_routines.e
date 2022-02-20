@@ -5,7 +5,7 @@ note
 		"Routines that ought to be in class NATURAL_32"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,6 +34,50 @@ feature -- Conversion
 		end
 
 feature -- Output
+
+	append_decimal_integer (an_int: NATURAL_32; a_string: STRING_GENERAL)
+			-- Append decimal representation of `an_int' to `a_string'.
+			-- Note: works even when `a_string' is a UC_STRING.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, k: NATURAL_32
+		do
+			if an_int = 0 then
+				a_string.append_code ({UC_CHARACTER_CODES}.zero_code)
+			else
+				k := an_int
+				i := k // 10
+				if i /= 0 then
+					append_decimal_integer (i, a_string)
+				end
+				inspect k \\ 10
+				when 0 then
+					a_string.append_code ({UC_CHARACTER_CODES}.zero_code)
+				when 1 then
+					a_string.append_code ({UC_CHARACTER_CODES}.one_code)
+				when 2 then
+					a_string.append_code ({UC_CHARACTER_CODES}.two_code)
+				when 3 then
+					a_string.append_code ({UC_CHARACTER_CODES}.three_code)
+				when 4 then
+					a_string.append_code ({UC_CHARACTER_CODES}.four_code)
+				when 5 then
+					a_string.append_code ({UC_CHARACTER_CODES}.five_code)
+				when 6 then
+					a_string.append_code ({UC_CHARACTER_CODES}.six_code)
+				when 7 then
+					a_string.append_code ({UC_CHARACTER_CODES}.seven_code)
+				when 8 then
+					a_string.append_code ({UC_CHARACTER_CODES}.eight_code)
+				when 9 then
+					a_string.append_code ({UC_CHARACTER_CODES}.nine_code)
+				end
+			end
+		ensure
+			instance_free: class
+--			regexp: (0|([1-9][0-9]*)).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
+		end
 
 	append_hexadecimal_integer (an_int: NATURAL_32; a_string: STRING; uppercase: BOOLEAN)
 			-- Append a hexadecimal representation of `an_int' to `a_string'.

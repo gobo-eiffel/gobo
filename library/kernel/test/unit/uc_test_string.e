@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2002-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -276,37 +276,37 @@ feature -- Test
 			assert_equal ("item5", c, a_string.unicode_item (2))
 		end
 
-	test_item_code1
-			-- Test feature `item_code'.
+	test_code1
+			-- Test feature `code'.
 		local
 			a_string: UC_STRING
 		do
 			create a_string.make_from_string ("bar")
-			assert_integers_equal ("item_code1", ('b').code, a_string.item_code (1))
-			assert_integers_equal ("item_code2", ('a').code, a_string.item_code (2))
-			assert_integers_equal ("item_code3", ('r').code, a_string.item_code (3))
+			assert_naturals_32_equal ("code1", ('b').natural_32_code, a_string.code (1))
+			assert_naturals_32_equal ("code2", ('a').natural_32_code, a_string.code (2))
+			assert_naturals_32_equal ("code3", ('r').natural_32_code, a_string.code (3))
 			a_string.put_item_code (543, 2)
-			assert_integers_equal ("item_code4", 543, a_string.item_code (2))
+			assert_naturals_32_equal ("code4", 543, a_string.code (2))
 			a_string.put_item_code (134, 2)
-			assert_integers_equal ("item_code5", 134, a_string.item_code (2))
+			assert_naturals_32_equal ("code5", 134, a_string.code (2))
 		end
 
-	test_item_code2
-			-- Test feature `item_code'.
+	test_code2
+			-- Test feature `code'.
 		local
 			a_string: STRING
 		do
 			create {UC_STRING} a_string.make_from_string ("bar")
-			assert_integers_equal ("item_code1", ('b').code, a_string.item_code (1))
-			assert_integers_equal ("item_code2", ('a').code, a_string.item_code (2))
-			assert_integers_equal ("item_code3", ('r').code, a_string.item_code (3))
+			assert_naturals_32_equal ("code1", ('b').natural_32_code, a_string.code (1))
+			assert_naturals_32_equal ("code2", ('a').natural_32_code, a_string.code (2))
+			assert_naturals_32_equal ("code3", ('r').natural_32_code, a_string.code (3))
 			if not attached {UC_STRING} a_string as uc_string then
 				assert ("uc_string", False)
 			else
 				uc_string.put_item_code (543, 2)
-				assert_integers_equal ("item_code4", 543, a_string.item_code (2))
+				assert_naturals_32_equal ("code4", 543, a_string.code (2))
 				uc_string.put_item_code (134, 2)
-				assert_integers_equal ("item_code5", 134, a_string.item_code (2))
+				assert_naturals_32_equal ("code5", 134, a_string.code (2))
 			end
 		end
 
@@ -595,28 +595,28 @@ feature -- Test
 			a_byte_string := a_unicode.to_utf16_be
 			assert ("not_void1", a_byte_string /= Void)
 			assert_integers_equal ("count1", 2, a_byte_string.count)
-			assert_integers_equal ("first_byte1", 0, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte1", 77, a_byte_string.item_code (2))
+			assert_naturals_32_equal ("first_byte1", 0, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte1", 77, a_byte_string.code (2))
 			create a_unicode.make_filled_code (1072, 1)
 			a_byte_string := a_unicode.to_utf16_be
 			assert ("not_void2", a_byte_string /= Void)
 			assert_integers_equal ("count2", 2, a_byte_string.count)
-			assert_integers_equal ("first_byte2", 4, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte2", 48, a_byte_string.item_code (2))
+			assert_naturals_32_equal ("first_byte2", 4, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte2", 48, a_byte_string.code (2))
 			create a_unicode.make_filled_code (20108, 1)
 			a_byte_string := a_unicode.to_utf16_be
 			assert ("not_void3", a_byte_string /= Void)
 			assert_integers_equal ("count3", 2, a_byte_string.count)
-			assert_integers_equal ("first_byte3", 78, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte3", 140, a_byte_string.item_code (2))
+			assert_naturals_32_equal ("first_byte3", 78, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte3", 140, a_byte_string.code (2))
 			create a_unicode.make_filled_code (66306, 1)
 			a_byte_string := a_unicode.to_utf16_be
 			assert ("not_void4", a_byte_string /= Void)
 			assert_integers_equal ("count4", 4, a_byte_string.count)
-			assert_integers_equal ("first_byte4", 216, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte4", 0, a_byte_string.item_code (2))
-			assert_integers_equal ("third_byte4", 223, a_byte_string.item_code (3))
-			assert_integers_equal ("fourth_byte4", 2, a_byte_string.item_code (4))
+			assert_naturals_32_equal ("first_byte4", 216, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte4", 0, a_byte_string.code (2))
+			assert_naturals_32_equal ("third_byte4", 223, a_byte_string.code (3))
+			assert_naturals_32_equal ("fourth_byte4", 2, a_byte_string.code (4))
 		end
 
 	test_to_utf16_le
@@ -629,28 +629,28 @@ feature -- Test
 			a_byte_string := a_unicode.to_utf16_le
 			assert ("not_void1", a_byte_string /= Void)
 			assert_integers_equal ("count1", 2, a_byte_string.count)
-			assert_integers_equal ("first_byte1", 77, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte1", 0, a_byte_string.item_code (2))
+			assert_naturals_32_equal ("first_byte1", 77, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte1", 0, a_byte_string.code (2))
 			create a_unicode.make_filled_code (1072, 1)
 			a_byte_string := a_unicode.to_utf16_le
 			assert ("not_void2", a_byte_string /= Void)
 			assert_integers_equal ("count2", 2, a_byte_string.count)
-			assert_integers_equal ("first_byte1", 48, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte1", 4, a_byte_string.item_code (2))
+			assert_naturals_32_equal ("first_byte1", 48, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte1", 4, a_byte_string.code (2))
 			create a_unicode.make_filled_code (20108, 1)
 			a_byte_string := a_unicode.to_utf16_le
 			assert ("not_void3", a_byte_string /= Void)
 			assert_integers_equal ("count3", 2, a_byte_string.count)
-			assert_integers_equal ("first_byte3", 140, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte3", 78, a_byte_string.item_code (2))
+			assert_naturals_32_equal ("first_byte3", 140, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte3", 78, a_byte_string.code (2))
 			create a_unicode.make_filled_code (66306, 1)
 			a_byte_string := a_unicode.to_utf16_le
 			assert ("not_void4", a_byte_string /= Void)
 			assert_integers_equal ("count4", 4, a_byte_string.count)
-			assert_integers_equal ("first_byte4", 0, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte4", 216, a_byte_string.item_code (2))
-			assert_integers_equal ("third_byte4", 2, a_byte_string.item_code (3))
-			assert_integers_equal ("fourth_byte4", 223, a_byte_string.item_code (4))
+			assert_naturals_32_equal ("first_byte4", 0, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte4", 216, a_byte_string.code (2))
+			assert_naturals_32_equal ("third_byte4", 2, a_byte_string.code (3))
+			assert_naturals_32_equal ("fourth_byte4", 223, a_byte_string.code (4))
 		end
 
 	test_to_utf32_be
@@ -663,34 +663,34 @@ feature -- Test
 			a_byte_string := a_unicode.to_utf32_be
 			assert ("not_void1", a_byte_string /= Void)
 			assert_integers_equal ("count1", 4, a_byte_string.count)
-			assert_integers_equal ("first_byte1", 0, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte1", 0, a_byte_string.item_code (2))
-			assert_integers_equal ("third_byte1", 0, a_byte_string.item_code (3))
-			assert_integers_equal ("fourth_byte1", 77, a_byte_string.item_code (4))
+			assert_naturals_32_equal ("first_byte1", 0, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte1", 0, a_byte_string.code (2))
+			assert_naturals_32_equal ("third_byte1", 0, a_byte_string.code (3))
+			assert_naturals_32_equal ("fourth_byte1", 77, a_byte_string.code (4))
 			create a_unicode.make_filled_code (1072, 1)
 			a_byte_string := a_unicode.to_utf32_be
 			assert ("not_void2", a_byte_string /= Void)
 			assert_integers_equal ("count2", 4, a_byte_string.count)
-			assert_integers_equal ("first_byte2", 0, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte2", 0, a_byte_string.item_code (2))
-			assert_integers_equal ("third_byte2", 4, a_byte_string.item_code (3))
-			assert_integers_equal ("fourth_byte2", 48, a_byte_string.item_code (4))
+			assert_naturals_32_equal ("first_byte2", 0, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte2", 0, a_byte_string.code (2))
+			assert_naturals_32_equal ("third_byte2", 4, a_byte_string.code (3))
+			assert_naturals_32_equal ("fourth_byte2", 48, a_byte_string.code (4))
 			create a_unicode.make_filled_code (20108, 1)
 			a_byte_string := a_unicode.to_utf32_be
 			assert ("not_void3", a_byte_string /= Void)
 			assert_integers_equal ("count3", 4, a_byte_string.count)
-			assert_integers_equal ("first_byte3", 0, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte3", 0, a_byte_string.item_code (2))
-			assert_integers_equal ("third_byte3", 78, a_byte_string.item_code (3))
-			assert_integers_equal ("fourth_byte3", 140, a_byte_string.item_code (4))
+			assert_naturals_32_equal ("first_byte3", 0, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte3", 0, a_byte_string.code (2))
+			assert_naturals_32_equal ("third_byte3", 78, a_byte_string.code (3))
+			assert_naturals_32_equal ("fourth_byte3", 140, a_byte_string.code (4))
 			create a_unicode.make_filled_code (66306, 1)
 			a_byte_string := a_unicode.to_utf32_be
 			assert ("not_void4", a_byte_string /= Void)
 			assert_integers_equal ("count4", 4, a_byte_string.count)
-			assert_integers_equal ("first_byte4", 0, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte4", 1, a_byte_string.item_code (2))
-			assert_integers_equal ("third_byte4", 3, a_byte_string.item_code (3))
-			assert_integers_equal ("fourth_byte4", 2, a_byte_string.item_code (4))
+			assert_naturals_32_equal ("first_byte4", 0, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte4", 1, a_byte_string.code (2))
+			assert_naturals_32_equal ("third_byte4", 3, a_byte_string.code (3))
+			assert_naturals_32_equal ("fourth_byte4", 2, a_byte_string.code (4))
 		end
 
 	test_to_utf32_le
@@ -703,34 +703,34 @@ feature -- Test
 			a_byte_string := a_unicode.to_utf32_le
 			assert ("not_void1", a_byte_string /= Void)
 			assert_integers_equal ("count1", 4, a_byte_string.count)
-			assert_integers_equal ("first_byte1", 77, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte1", 0, a_byte_string.item_code (2))
-			assert_integers_equal ("third_byte1", 0, a_byte_string.item_code (3))
-			assert_integers_equal ("fourth_byte1", 0, a_byte_string.item_code (4))
+			assert_naturals_32_equal ("first_byte1", 77, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte1", 0, a_byte_string.code (2))
+			assert_naturals_32_equal ("third_byte1", 0, a_byte_string.code (3))
+			assert_naturals_32_equal ("fourth_byte1", 0, a_byte_string.code (4))
 			create a_unicode.make_filled_code (1072, 1)
 			a_byte_string := a_unicode.to_utf32_le
 			assert ("not_void2", a_byte_string /= Void)
 			assert_integers_equal ("count2", 4, a_byte_string.count)
-			assert_integers_equal ("first_byte2", 48, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte2", 4, a_byte_string.item_code (2))
-			assert_integers_equal ("third_byte2", 0, a_byte_string.item_code (3))
-			assert_integers_equal ("fourth_byte2", 0, a_byte_string.item_code (4))
+			assert_naturals_32_equal ("first_byte2", 48, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte2", 4, a_byte_string.code (2))
+			assert_naturals_32_equal ("third_byte2", 0, a_byte_string.code (3))
+			assert_naturals_32_equal ("fourth_byte2", 0, a_byte_string.code (4))
 			create a_unicode.make_filled_code (20108, 1)
 			a_byte_string := a_unicode.to_utf32_le
 			assert ("not_void3", a_byte_string /= Void)
 			assert_integers_equal ("count3", 4, a_byte_string.count)
-			assert_integers_equal ("first_byte3", 140, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte3", 78, a_byte_string.item_code (2))
-			assert_integers_equal ("third_byte3", 0, a_byte_string.item_code (3))
-			assert_integers_equal ("fourth_byte3", 0, a_byte_string.item_code (4))
+			assert_naturals_32_equal ("first_byte3", 140, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte3", 78, a_byte_string.code (2))
+			assert_naturals_32_equal ("third_byte3", 0, a_byte_string.code (3))
+			assert_naturals_32_equal ("fourth_byte3", 0, a_byte_string.code (4))
 			create a_unicode.make_filled_code (66306, 1)
 			a_byte_string := a_unicode.to_utf32_le
 			assert ("not_void4", a_byte_string /= Void)
 			assert_integers_equal ("count4", 4, a_byte_string.count)
-			assert_integers_equal ("first_byte4", 2, a_byte_string.item_code (1))
-			assert_integers_equal ("second_byte4", 3, a_byte_string.item_code (2))
-			assert_integers_equal ("third_byte4", 1, a_byte_string.item_code (3))
-			assert_integers_equal ("fourth_byte4", 0, a_byte_string.item_code (4))
+			assert_naturals_32_equal ("first_byte4", 2, a_byte_string.code (1))
+			assert_naturals_32_equal ("second_byte4", 3, a_byte_string.code (2))
+			assert_naturals_32_equal ("third_byte4", 1, a_byte_string.code (3))
+			assert_naturals_32_equal ("fourth_byte4", 0, a_byte_string.code (4))
 		end
 
 	test_copy

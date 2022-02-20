@@ -5,7 +5,7 @@ note
 		"UTF-32 encoding routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2005-2020, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2022, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,7 +38,7 @@ feature -- Status report
 			Result := (a_string.count \\ 4) = 0
 			if Result and a_string.count > 0 then
 					-- Loop through most significant bytes, detecting starting point is enough.
-				if is_endian_detection_character_least_first (a_string.item_code (1), a_string.item_code (2), a_string.item_code (3), a_string.item_code (4)) then
+				if is_endian_detection_character_least_first_natural_32 (a_string.code (1), a_string.code (2), a_string.code (3), a_string.code (4)) then
 					least_endian := True
 				end
 				nb := a_string.count
@@ -47,7 +47,7 @@ feature -- Status report
 				until
 					i > nb
 				loop
-					Result := unicode.valid_non_surrogate_code (code (a_string.item_code (i), a_string.item_code (i + 1), a_string.item_code (i + 2), a_string.item_code (i + 3), least_endian))
+					Result := unicode.valid_non_surrogate_natural_32_code (code (a_string.code (i), a_string.code (i + 1), a_string.code (i + 2), a_string.code (i + 3), least_endian))
 					if not Result then
 						i := nb + 1
 					else
@@ -71,10 +71,10 @@ feature -- Endian-ness detection
 			instance_free: class
 			bom_be_not_void: Result /= Void
 			four_bytes: Result.count = 4
-			first_byte: Result.item_code (1) = 0
-			second_byte: Result.item_code (2) = 0
-			third_byte: Result.item_code (3) = Hex_fe
-			fourth_byte: Result.item_code (4) = Hex_ff
+			first_byte: Result.code (1) = 0
+			second_byte: Result.code (2) = 0
+			third_byte: Result.code (3) = natural_32_hex_fe
+			fourth_byte: Result.code (4) = natural_32_hex_ff
 		end
 
 	bom_le: STRING_8
@@ -85,10 +85,10 @@ feature -- Endian-ness detection
 			instance_free: class
 			bom_le_not_void: Result /= Void
 			four_bytes: Result.count = 4
-			first_byte: Result.item_code (1) = Hex_ff
-			second_byte: Result.item_code (2) = Hex_fe
-			third_byte: Result.item_code (3) = 0
-			fourth_byte: Result.item_code (4) = 0
+			first_byte: Result.code (1) = natural_32_hex_ff
+			second_byte: Result.code (2) = natural_32_hex_fe
+			third_byte: Result.code (3) = 0
+			fourth_byte: Result.code (4) = 0
 		end
 
 	is_endian_detection_character_most_first (first, second, third, fourth: INTEGER): BOOLEAN
@@ -123,6 +123,22 @@ feature -- Endian-ness detection
 			definition: Result = (first = Hex_ff and second = Hex_fe and third = 0 and fourth = 0)
 		end
 
+	is_endian_detection_character_least_first_natural_32 (first, second, third, fourth: NATURAL_32): BOOLEAN
+			-- Do the four bytes represent the character
+			-- 0xFEFF with `first' being the least significant byte?
+		require
+			first_is_byte: is_byte_natural_32 (first)
+			second_is_byte: is_byte_natural_32 (second)
+			third_is_byte: is_byte_natural_32 (third)
+			fourth_is_byte: is_byte_natural_32 (fourth)
+--			first_in_stream: the character represented by (first, second, third, fourth) is first in stream
+		do
+			Result := first = natural_32_hex_ff and second = natural_32_hex_fe and third = 0 and fourth = 0
+		ensure
+			instance_free: class
+			definition: Result = (first = natural_32_hex_ff and second = natural_32_hex_fe and third = 0 and fourth = 0)
+		end
+
 	is_byte (a: INTEGER): BOOLEAN
 			-- Is `a' a byte?
 		do
@@ -132,15 +148,24 @@ feature -- Endian-ness detection
 			definition: Result = (a >= 0 and a < Hex_100)
 		end
 
+	is_byte_natural_32 (a: NATURAL_32): BOOLEAN
+			-- Is `a' a byte?
+		do
+			Result := a >= 0 and a < natural_32_hex_100
+		ensure
+			instance_free: class
+			definition: Result = (a >= 0 and a < natural_32_hex_100)
+		end
+
 feature -- Access
 
-	code (first, second, third, fourth: INTEGER; least_endian: BOOLEAN): INTEGER
+	code (first, second, third, fourth: NATURAL_32; least_endian: BOOLEAN): NATURAL_32
 			-- Code point represented by four bytes
 		require
-			first_is_byte: is_byte (first)
-			second_is_byte: is_byte (second)
-			third_is_byte: is_byte (third)
-			fourth_is_byte: is_byte (fourth)
+			first_is_byte: is_byte_natural_32 (first)
+			second_is_byte: is_byte_natural_32 (second)
+			third_is_byte: is_byte_natural_32 (third)
+			fourth_is_byte: is_byte_natural_32 (fourth)
 		do
 			if least_endian then
 				Result := first + second * 256 + third * Two_byte_offset + fourth * Three_byte_offset
@@ -157,16 +182,25 @@ feature {NONE} -- Constants
 	Hex_100: INTEGER = 256
 			-- 2 ^ 8
 
+	natural_32_hex_100: NATURAL_32 = 256
+			-- 2 ^ 8
+
 	Hex_fe: INTEGER = 254
+			-- Endian detection character
+
+	natural_32_hex_fe: NATURAL_32 = 254
 			-- Endian detection character
 
 	Hex_ff: INTEGER = 255
 			-- Endian detection character
 
-	Two_byte_offset: INTEGER = 65536
+	natural_32_hex_ff: NATURAL_32 = 255
+			-- Endian detection character
+
+	Two_byte_offset: NATURAL_32 = 65536
 			-- 256 * 256
 
-	Three_byte_offset: INTEGER = 16777216
+	Three_byte_offset: NATURAL_32 = 16777216
 			-- 256 * 256 * 256
 
 end

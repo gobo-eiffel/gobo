@@ -5,7 +5,7 @@ note
 		"Remove head and tail whitespace (as defined by XML) from content; accounting for xml:space"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,7 +58,7 @@ feature -- Content
 				next.on_content (a_content)
 			else
 				if attached last_content as l_last_content then
-					if is_space (l_last_content.item.item_code (l_last_content.item.count)) then
+					if is_space (l_last_content.item.code (l_last_content.item.count)) then
 							-- We don't know if we are at the end, so this could
 							-- be tail whitespace.
 						l_last_content.append_string (a_content)
@@ -118,13 +118,13 @@ feature {NONE} -- Content
 			last_content_void: last_content = Void
 		end
 
-	is_space (a_code: INTEGER): BOOLEAN
+	is_space (a_code: NATURAL_32): BOOLEAN
 			-- Is `a_code' the character code of a white space character?
 		do
-			Result := a_code = Lf_char.code
-				or a_code = Cr_char.code
-				or a_code = Tab_char.code
-				or a_code = Space_char.code
+			Result := a_code = Lf_char.natural_32_code
+				or a_code = Cr_char.natural_32_code
+				or a_code = Tab_char.natural_32_code
+				or a_code = Space_char.natural_32_code
 		end
 
 	normalize_content_head
@@ -138,7 +138,7 @@ feature {NONE} -- Content
 				from
 					i := 1
 				until
-					i > l_last_content.item.count or else not is_space (l_last_content.item.item_code (i))
+					i > l_last_content.item.count or else not is_space (l_last_content.item.code (i))
 				loop
 					i := i + 1
 				variant
@@ -156,7 +156,7 @@ feature {NONE} -- Content
 				end
 			end
 		ensure
-			no_whitespace_at_head: attached last_content as l_last_content implies not is_space (l_last_content.item.item_code (1))
+			no_whitespace_at_head: attached last_content as l_last_content implies not is_space (l_last_content.item.code (1))
 		end
 
 	normalize_content_tail
@@ -170,7 +170,7 @@ feature {NONE} -- Content
 				from
 					i := l_last_content.item.count
 				until
-					i = 0 or else not is_space (l_last_content.item.item_code (i))
+					i = 0 or else not is_space (l_last_content.item.code (i))
 				loop
 					i := i - 1
 				variant

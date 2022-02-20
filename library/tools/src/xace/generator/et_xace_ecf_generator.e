@@ -6,7 +6,7 @@ note
 
 	remark: "Generate ECF version 1.15"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2022, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1421,7 +1421,7 @@ feature {NONE} -- Output
 			last_escaped: INTEGER
 			i: INTEGER
 			cnt: INTEGER
-			a_char: INTEGER
+			a_char: NATURAL_32
 		do
 			from
 				last_escaped := 0
@@ -1432,7 +1432,7 @@ feature {NONE} -- Output
 			until
 				i > cnt
 			loop
-				a_char := a_string.item_code (i)
+				a_char := a_string.code (i)
 				if is_escaped (a_char) then
 					if last_escaped < i - 1 then
 						a_file.put_string (a_string.substring (last_escaped + 1, i - 1))
@@ -1471,7 +1471,7 @@ feature {NONE} -- Output
 			until
 				i > cnt
 			loop
-				if a_string.item_code (i) = Quot_char.code then
+				if a_string.code (i) = {UT_CHARACTER_32_CODES}.double_quote_code then
 					if last_escaped < i - 1 then
 						print_escaped_string (a_string.substring (last_escaped + 1, i - 1), a_file)
 					end
@@ -1488,24 +1488,24 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_escaped_character (a_char: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM)
+	print_escaped_character (a_char: NATURAL_32; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print escaped version of `a_char' to `a_file'.
 		require
 			is_escaped: is_escaped (a_char)
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			if a_char = Lt_char.code then
+			if a_char = {UT_CHARACTER_32_CODES}.less_than_code then
 				a_file.put_string (Lt_entity)
-			elseif a_char = Gt_char.code then
+			elseif a_char = {UT_CHARACTER_32_CODES}.greater_than_code then
 				a_file.put_string (Gt_entity)
-			elseif a_char = Amp_char.code then
+			elseif a_char = {UT_CHARACTER_32_CODES}.ampersand_code then
 				a_file.put_string (Amp_entity)
-			elseif a_char = Quot_char.code then
+			elseif a_char = {UT_CHARACTER_32_CODES}.double_quote_code then
 				a_file.put_string (Quot_entity)
 			else
 				a_file.put_string ("&#")
-				a_file.put_integer (a_char)
+				a_file.put_natural_32 (a_char)
 				a_file.put_character (';')
 			end
 		end
@@ -1524,12 +1524,12 @@ feature {NONE} -- Output
 
 feature {NONE} -- Escaped
 
-	is_escaped (a_char: INTEGER): BOOLEAN
+	is_escaped (a_char: NATURAL_32): BOOLEAN
 			-- Is this an escapable character?
 		do
-			Result := a_char = Lt_char.code
-				or a_char = Gt_char.code
-				or a_char = Amp_char.code
+			Result := a_char = {UT_CHARACTER_32_CODES}.less_than_code
+				or a_char = {UT_CHARACTER_32_CODES}.greater_than_code
+				or a_char = {UT_CHARACTER_32_CODES}.ampersand_code
 		end
 
 end

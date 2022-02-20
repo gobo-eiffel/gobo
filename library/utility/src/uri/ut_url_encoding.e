@@ -5,7 +5,7 @@ note
 		"Routines to encode and decode url encoded (%HH in hex) strings"
 
 	library: "Gobo Eiffel Utility Library"
-	author: "Copyright (c) 2004-2018, Berend de Boer and others"
+	author: "Copyright (c) 2004-2022, Berend de Boer and others"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -70,7 +70,7 @@ feature -- Escape/unescape data characters
 			a_string_not_void: a_string /= Void
 			ascii_string: maximum_character_code_in_string (a_string) <= 127
 		local
-			l_high_code: INTEGER
+			l_high_code: NATURAL_32
 		do
 			Result := unescape_string (a_string)
 			l_high_code := maximum_character_code_in_string (Result)
@@ -178,17 +178,17 @@ feature -- Escape/unescape data characters
 
 feature -- Character sets
 
-	maximum_character_code_in_string (a_string: STRING): INTEGER
+	maximum_character_code_in_string (a_string: STRING): NATURAL_32
 			-- Maximum character code used in string
 		require
 			a_string_not_void: a_string /= Void
 		local
 			i, nb: INTEGER
-			a_code: INTEGER
+			a_code: NATURAL_32
 		do
 			nb := a_string.count
 			from i := 1 until i > nb loop
-				a_code := a_string.item_code (i)
+				a_code := a_string.code (i)
 				if a_code > Result then
 					Result := a_code
 				end
@@ -300,11 +300,12 @@ feature -- Valid characters
 		require
 			s_not_void: s /= Void
 		local
-			i,c, nb: INTEGER
+			i, nb: INTEGER
+			c: NATURAL_32
 		do
 			nb := s.count
 			from i := 1 until i > nb loop
-				c := s.item_code (i)
+				c := s.code (i)
 				inspect
 					c
 				when 0 .. 32 then
