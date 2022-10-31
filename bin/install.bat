@@ -148,7 +148,7 @@ goto no_verbose_no_testonly
 
 :usage
 	echo usage: install.bat [-v^|-s][-t] ^<c_compiler^>
-	echo    c_compiler:  msc ^| lcc-win32 ^| lcc-win64 ^| bcc ^| gcc ^| mingw ^| clang ^| cc ^| icc ^| tcc ^| no_c
+	echo    c_compiler:  msc ^| lcc-win32 ^| lcc-win64 ^| bcc ^| gcc ^| mingw ^| clang ^| cc ^| icc ^| tcc ^| occ ^| no_c
 	goto exit
 
 :exit
