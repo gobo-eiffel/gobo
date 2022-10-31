@@ -80,6 +80,7 @@ if .%CC%. == .clang. goto clang
 if .%CC%. == .cc. goto cc
 if .%CC%. == .icc. goto icc
 if .%CC%. == .tcc. goto tcc
+if .%CC%. == .occ. goto occ
 if .%CC%. == .no_c. goto install
 echo Unknown C compiler: %CC%
 goto exit
@@ -192,6 +193,17 @@ goto exit
 	echo tcc > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
 
+:occ
+	set CC=occ
+	set LD=occ
+	set CFLAGS=--nologo -O2 -w
+	set LFLAGS=--nologo
+	set LFLAG_OUT=-o 
+	set LLIBS=
+	set OBJ=.o
+	echo occ > %GOBO%\tool\gec\config\c\default.cfg
+	goto c_compilation
+
 :c_compilation
 	if not .%VERBOSE%. == .-s. echo Compiling gec (bootstrap 0)...
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec9.c
@@ -245,7 +257,7 @@ goto exit
 
 :usage
 	echo usage: bootstrap.bat [-v^|-s] ^<c_compiler^>
-	echo    c_compiler:  msc ^| lcc-win32 ^| lcc-win64 ^| bcc ^| gcc ^| mingw ^| clang ^| cc ^| icc ^| tcc ^| no_c
+	echo    c_compiler:  msc ^| lcc-win32 ^| lcc-win64 ^| bcc ^| gcc ^| mingw ^| clang ^| cc ^| icc ^| tcc ^| occ ^| no_c
 	goto exit
 
 :exit
