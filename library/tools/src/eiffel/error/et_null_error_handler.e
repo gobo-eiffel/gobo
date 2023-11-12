@@ -5,7 +5,7 @@ note
 		"Eiffel null error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,9 +28,9 @@ inherit
 			reportable_gvsrc4_error,
 			reportable_gvsrc5_error,
 			reportable_gvsrc6_error,
-			reportable_v1seg1_error,
-			reportable_v1seg2_error,
-			reportable_v1seg3_error,
+			reportable_v1se1g_error,
+			reportable_v1se2g_error,
+			reportable_v1se3g_error,
 			reportable_vaol1_error,
 			reportable_vape1_error,
 			reportable_vape2_error,
@@ -301,22 +301,22 @@ feature -- System error status
 
 feature -- Validity error status
 
-	reportable_v1seg1_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a V1SE-G1 error be reported when it
+	reportable_v1se1g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a V1SE-1G error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_v1seg2_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a V1SE-G2 error be reported when it
+	reportable_v1se2g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a V1SE-2G error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
 		end
 
-	reportable_v1seg3_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a V1SE-G3 error be reported when it
+	reportable_v1se3g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a V1SE-3G error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

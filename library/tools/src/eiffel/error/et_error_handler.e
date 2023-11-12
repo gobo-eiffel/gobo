@@ -5,7 +5,7 @@ note
 		"Eiffel error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -880,8 +880,8 @@ feature -- Validity errors
 			end
 		end
 
-	report_v1seg1a_error (a_class: ET_CLASS; arg1, arg2: ET_SEPARATE_ARGUMENT)
-			-- Report V1SE-G1 error: `arg1' and `arg2' are two arguments of
+	report_v1se1ga_error (a_class: ET_CLASS; arg1, arg2: ET_SEPARATE_ARGUMENT)
+			-- Report V1SE-1G error: `arg1' and `arg2' are two arguments of
 			-- of a separate instruction in `a_class' with the same name.
 			--
 			-- Not in ECMA-367-2.
@@ -894,14 +894,14 @@ feature -- Validity errors
 		local
 			l_error: ET_VALIDITY_ERROR
 		do
-			if reportable_v1seg1_error (a_class) then
-				create l_error.make_v1seg1a (a_class, arg1, arg2)
+			if reportable_v1se1g_error (a_class) then
+				create l_error.make_v1se1ga (a_class, arg1, arg2)
 				report_validity_error (l_error)
 			end
 		end
 
-	report_v1seg2a_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_feature: ET_FEATURE)
-			-- Report V1SE-G2 error: argument `arg' of a separate instruction
+	report_v1se2ga_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_feature: ET_FEATURE)
+			-- Report V1SE-2G error: argument `arg' of a separate instruction
 		 	-- has the same name as `a_feature' in `a_class'.
 			--
 			-- Not in ECMA-367-2.
@@ -914,14 +914,14 @@ feature -- Validity errors
 		local
 			l_error: ET_VALIDITY_ERROR
 		do
-			if reportable_v1seg2_error (a_class) then
-				create l_error.make_v1seg2a (a_class, arg, a_feature)
+			if reportable_v1se2g_error (a_class) then
+				create l_error.make_v1se2ga (a_class, arg, a_feature)
 				report_validity_error (l_error)
 			end
 		end
 
-	report_v1seg2b_error (a_class: ET_CLASS; a_separate_arg: ET_SEPARATE_ARGUMENT; a_formal_arg: ET_FORMAL_ARGUMENT)
-			-- Report V1SE-G2 error: argument `a_separate_arg' of a separate instruction
+	report_v1se2gb_error (a_class: ET_CLASS; a_separate_arg: ET_SEPARATE_ARGUMENT; a_formal_arg: ET_FORMAL_ARGUMENT)
+			-- Report V1SE-2G error: argument `a_separate_arg' of a separate instruction
 		 	-- has the same name as argument `a_formal_arg' of an enclosing feature or
 			-- inline agent.
 			--
@@ -935,14 +935,14 @@ feature -- Validity errors
 		local
 			l_error: ET_VALIDITY_ERROR
 		do
-			if reportable_v1seg2_error (a_class) then
-				create l_error.make_v1seg2b (a_class, a_separate_arg, a_formal_arg)
+			if reportable_v1se2g_error (a_class) then
+				create l_error.make_v1se2gb (a_class, a_separate_arg, a_formal_arg)
 				report_validity_error (l_error)
 			end
 		end
 
-	report_v1seg2c_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_local: ET_LOCAL_VARIABLE)
-			-- Report V1SE-G2 error: argument `arg' of a separate instruction
+	report_v1se2gc_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_local: ET_LOCAL_VARIABLE)
+			-- Report V1SE-2G error: argument `arg' of a separate instruction
 		 	-- has the same name as local variable `a_local' of an enclosing
 			-- feature or inline agent.
 			--
@@ -956,14 +956,14 @@ feature -- Validity errors
 		local
 			l_error: ET_VALIDITY_ERROR
 		do
-			if reportable_v1seg2_error (a_class) then
-				create l_error.make_v1seg2c (a_class, arg, a_local)
+			if reportable_v1se2g_error (a_class) then
+				create l_error.make_v1se2gc (a_class, arg, a_local)
 				report_validity_error (l_error)
 			end
 		end
 
-	report_v1seg2d_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_object_test: ET_NAMED_OBJECT_TEST)
-			-- Report V1SE-G2 error: argument `arg' of a separate instruction
+	report_v1se2gd_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_object_test: ET_NAMED_OBJECT_TEST)
+			-- Report V1SE-2G error: argument `arg' of a separate instruction
 			-- appears in the scope of the local of `a_object_test' with the same name.
 			--
 			-- Not in ECMA-367-2.
@@ -976,14 +976,14 @@ feature -- Validity errors
 		local
 			l_error: ET_VALIDITY_ERROR
 		do
-			if reportable_v1seg2_error (a_class) then
-				create l_error.make_v1seg2d (a_class, arg, a_object_test)
+			if reportable_v1se2g_error (a_class) then
+				create l_error.make_v1se2gd (a_class, arg, a_object_test)
 				report_validity_error (l_error)
 			end
 		end
 
-	report_v1seg2e_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_iteration_component: ET_ITERATION_COMPONENT)
-			-- Report V1SE-G2 error: argument `arg' of a separate instruction
+	report_v1se2ge_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_iteration_component: ET_ITERATION_COMPONENT)
+			-- Report V1SE-2G error: argument `arg' of a separate instruction
 			-- appears in the scope of the cursor of `a_iteration_component' with
 			-- the same name.
 			--
@@ -997,14 +997,14 @@ feature -- Validity errors
 		local
 			l_error: ET_VALIDITY_ERROR
 		do
-			if reportable_v1seg2_error (a_class) then
-				create l_error.make_v1seg2e (a_class, arg, a_iteration_component)
+			if reportable_v1se2g_error (a_class) then
+				create l_error.make_v1se2ge (a_class, arg, a_iteration_component)
 				report_validity_error (l_error)
 			end
 		end
 
-	report_v1seg2f_error (a_class: ET_CLASS; arg1, arg2: ET_SEPARATE_ARGUMENT)
-			-- Report V1SE-G2 error: argument `arg1' of a separate instruction
+	report_v1se2gf_error (a_class: ET_CLASS; arg1, arg2: ET_SEPARATE_ARGUMENT)
+			-- Report V1SE-2G error: argument `arg1' of a separate instruction
 			-- as the same name as argument `arg2' of another enclosing separate
 			-- instruction.
 			--
@@ -1018,14 +1018,14 @@ feature -- Validity errors
 		local
 			l_error: ET_VALIDITY_ERROR
 		do
-			if reportable_v1seg2_error (a_class) then
-				create l_error.make_v1seg2f (a_class, arg1, arg2)
+			if reportable_v1se2g_error (a_class) then
+				create l_error.make_v1se2gf (a_class, arg1, arg2)
 				report_validity_error (l_error)
 			end
 		end
 
-	report_v1seg3a_error (a_class, a_class_impl: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_type: ET_NAMED_TYPE)
-			-- Report V1SE-G3 error: the type of the argument `arg'
+	report_v1se3ga_error (a_class, a_class_impl: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_type: ET_NAMED_TYPE)
+			-- Report V1SE-3G error: the type of the argument `arg'
 			-- of a separate instruction in `a_class_impl' and view from
 			-- one of its descendants `a_class' (possibly itself)
 			-- is not separate.
@@ -1042,8 +1042,8 @@ feature -- Validity errors
 		local
 			l_error: ET_VALIDITY_ERROR
 		do
-			if reportable_v1seg3_error (a_class) then
-				create l_error.make_v1seg3a (a_class, a_class_impl, arg, a_type)
+			if reportable_v1se3g_error (a_class) then
+				create l_error.make_v1se3ga (a_class, a_class_impl, arg, a_type)
 				report_validity_error (l_error)
 			end
 		end
@@ -8672,8 +8672,8 @@ feature -- Validity errors
 
 feature -- Validity error status
 
-	reportable_v1seg1_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a V1SE-G1 error be reported when it
+	reportable_v1se1g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a V1SE-1G error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -8682,8 +8682,8 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_v1seg2_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a V1SE-G2 error be reported when it
+	reportable_v1se2g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a V1SE-2G error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -8692,8 +8692,8 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_v1seg3_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a V1SE-G3 error be reported when it
+	reportable_v1se3g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a V1SE-3G error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

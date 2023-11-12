@@ -5,7 +5,7 @@ note
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10294,7 +10294,7 @@ feature {NONE} -- Expression validity
 					if not l_expression_context.is_type_separate then
 							-- The type of the separate argument needs to be separate.
 						set_fatal_error
-						error_handler.report_v1seg3a_error (current_class, current_class_impl, l_argument, l_expression_context.named_type)
+						error_handler.report_v1se3ga_error (current_class, current_class_impl, l_argument, l_expression_context.named_type)
 					end
 				end
 					-- Check separate argument name clashes (see V1SE-G1 and V1SE-G2).
@@ -10305,7 +10305,7 @@ feature {NONE} -- Expression validity
 						if l_other_argument.name.same_identifier (l_name) then
 								-- Two separate arguments with the same name.
 							set_fatal_error
-							error_handler.report_v1seg1a_error (current_class, l_other_argument, l_argument)
+							error_handler.report_v1se1ga_error (current_class, l_other_argument, l_argument)
 						end
 						j := j + 1
 					end
@@ -10313,7 +10313,7 @@ feature {NONE} -- Expression validity
 							-- This separate argument has the same name as the
 							-- final name of a feature in `current_class'.
 						set_fatal_error
-						error_handler.report_v1seg2a_error (current_class, l_argument, l_feature)
+						error_handler.report_v1se2ga_error (current_class, l_argument, l_feature)
 					end
 					if attached current_inline_agent as l_current_inline_agent then
 						enclosing_inline_agents.force_last (l_current_inline_agent)
@@ -10326,7 +10326,7 @@ feature {NONE} -- Expression validity
 										-- This separate argument has the same name as a formal
 										-- argument of an enclosing inline agent.
 									set_fatal_error
-									error_handler.report_v1seg2b_error (current_class, l_argument, args.formal_argument (j))
+									error_handler.report_v1se2gb_error (current_class, l_argument, args.formal_argument (j))
 								end
 							end
 							if attached l_enclosing_agent.locals as l_locals then
@@ -10335,7 +10335,7 @@ feature {NONE} -- Expression validity
 										-- This separate argument has the same name as a
 										-- local variable of an enclosing inline agent.
 									set_fatal_error
-									error_handler.report_v1seg2c_error (current_class, l_argument, l_locals.local_variable (j))
+									error_handler.report_v1se2gc_error (current_class, l_argument, l_locals.local_variable (j))
 								end
 							end
 							i := i + 1
@@ -10348,7 +10348,7 @@ feature {NONE} -- Expression validity
 								-- This separate argument has the same name as a formal
 								-- argument of the enclosing feature.
 							set_fatal_error
-							error_handler.report_v1seg2b_error (current_class, l_argument, args.formal_argument (j))
+							error_handler.report_v1se2gb_error (current_class, l_argument, args.formal_argument (j))
 						end
 					end
 					if attached current_feature.locals as l_locals then
@@ -10357,26 +10357,26 @@ feature {NONE} -- Expression validity
 								-- This separate argument has the same name as a
 								-- local variable of the enclosing feature.
 							set_fatal_error
-							error_handler.report_v1seg2c_error (current_class, l_argument, l_locals.local_variable (j))
+							error_handler.report_v1se2gc_error (current_class, l_argument, l_locals.local_variable (j))
 						end
 					end
 					if attached current_object_test_scope.object_test (l_name) as l_object_test then
 							-- This separate argument appears in the scope of a
 							-- object-test local with the same name.
 						set_fatal_error
-						error_handler.report_v1seg2d_error (current_class, l_argument, l_object_test)
+						error_handler.report_v1se2gd_error (current_class, l_argument, l_object_test)
 					end
 					if attached current_iteration_item_scope.iteration_component (l_name) as l_iteration_component then
 							-- This separate argument appears in the scope of an iteration
 							-- item with the same name.
 						set_fatal_error
-						error_handler.report_v1seg2e_error (current_class, l_argument, l_iteration_component)
+						error_handler.report_v1se2ge_error (current_class, l_argument, l_iteration_component)
 					end
 					if attached current_separate_argument_scope.separate_argument (l_name) as l_other_separate_argument then
 							-- This separate argument appears in the scope of another separate
 							-- argument with the same name.
 						set_fatal_error
-						error_handler.report_v1seg2f_error (current_class, l_argument, l_other_separate_argument)
+						error_handler.report_v1se2gf_error (current_class, l_argument, l_other_separate_argument)
 					end
 				end
 				if not has_fatal_error then

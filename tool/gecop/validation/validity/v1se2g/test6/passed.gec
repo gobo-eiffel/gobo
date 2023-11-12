@@ -1,0 +1,2 @@
+[V1SE-2G] class AA (17,19): argument 'x' of a separate instruction appears in the scope of an object-test local with the same name.
+----

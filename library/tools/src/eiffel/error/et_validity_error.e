@@ -5,7 +5,7 @@ note
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,14 +26,14 @@ inherit
 create
 
 	make,
-	make_v1seg1a,
-	make_v1seg2a,
-	make_v1seg2b,
-	make_v1seg2c,
-	make_v1seg2d,
-	make_v1seg2e,
-	make_v1seg2f,
-	make_v1seg3a,
+	make_v1se1ga,
+	make_v1se2ga,
+	make_v1se2gb,
+	make_v1se2gc,
+	make_v1se2gd,
+	make_v1se2ge,
+	make_v1se2gf,
+	make_v1se3ga,
 	make_vaol1a,
 	make_vape1a,
 	make_vape1b,
@@ -427,8 +427,8 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 		end
 
-	make_v1seg1a (a_class: ET_CLASS; arg1, arg2: ET_SEPARATE_ARGUMENT)
-			-- Create a new V1SE-G1 error: `arg1' and `arg2' are two arguments of
+	make_v1se1ga (a_class: ET_CLASS; arg1, arg2: ET_SEPARATE_ARGUMENT)
+			-- Create a new V1SE-1G error: `arg1' and `arg2' are two arguments of
 			-- of a separate instruction in `a_class' with the same name.
 			--
 			-- Not in ECMA-367-2.
@@ -442,9 +442,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := arg2.name.position
-			code := template_code (v1seg1a_template_code)
-			etl_code := v1seg1_etl_code
-			default_template := default_message_template (v1seg1a_default_template)
+			code := template_code (v1se1ga_template_code)
+			etl_code := v1se1g_etl_code
+			default_template := default_message_template (v1se1ga_default_template)
 			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -469,8 +469,8 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = separate argument name
 		end
 
-	make_v1seg2a (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_feature: ET_FEATURE)
-			-- Create a new V1SE-G2 error: argument `arg' of a separate instruction
+	make_v1se2ga (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_feature: ET_FEATURE)
+			-- Create a new V1SE-2G error: argument `arg' of a separate instruction
 		 	-- has the same name as `a_feature' in `a_class'.
 			--
 			-- Not in ECMA-367-2.
@@ -484,9 +484,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := arg.name.position
-			code := template_code (v1seg2a_template_code)
-			etl_code := v1seg2_etl_code
-			default_template := default_message_template (v1seg2a_default_template)
+			code := template_code (v1se2ga_template_code)
+			etl_code := v1se2g_etl_code
+			default_template := default_message_template (v1se2ga_default_template)
 			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -509,8 +509,8 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = separate argument name
 		end
 
-	make_v1seg2b (a_class: ET_CLASS; a_separate_arg: ET_SEPARATE_ARGUMENT; a_formal_arg: ET_FORMAL_ARGUMENT)
-			-- Create a new V1SE-G2 error: argument `a_separate_arg' of a separate instruction
+	make_v1se2gb (a_class: ET_CLASS; a_separate_arg: ET_SEPARATE_ARGUMENT; a_formal_arg: ET_FORMAL_ARGUMENT)
+			-- Create a new V1SE-2G error: argument `a_separate_arg' of a separate instruction
 		 	-- has the same name as argument `a_formal_arg' of an enclosing feature or
 			-- inline agent.
 			--
@@ -525,9 +525,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := a_separate_arg.name.position
-			code := template_code (v1seg2b_template_code)
-			etl_code := v1seg2_etl_code
-			default_template := default_message_template (v1seg2b_default_template)
+			code := template_code (v1se2gb_template_code)
+			etl_code := v1se2g_etl_code
+			default_template := default_message_template (v1se2gb_default_template)
 			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -550,8 +550,8 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = separate argument name
 		end
 
-	make_v1seg2c (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_local: ET_LOCAL_VARIABLE)
-			-- Create a new V1SE-G2 error: argument `arg' of a separate instruction
+	make_v1se2gc (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_local: ET_LOCAL_VARIABLE)
+			-- Create a new V1SE-2G error: argument `arg' of a separate instruction
 		 	-- has the same name as local variable `a_local' of an enclosing
 			-- feature or inline agent.
 			--
@@ -566,9 +566,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := arg.name.position
-			code := template_code (v1seg2c_template_code)
-			etl_code := v1seg2_etl_code
-			default_template := default_message_template (v1seg2c_default_template)
+			code := template_code (v1se2gc_template_code)
+			etl_code := v1se2g_etl_code
+			default_template := default_message_template (v1se2gc_default_template)
 			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -591,8 +591,8 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = separate argument name
 		end
 
-	make_v1seg2d (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_object_test: ET_NAMED_OBJECT_TEST)
-			-- Create a new V1SE-G2 error: argument `arg' of a separate instruction
+	make_v1se2gd (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_object_test: ET_NAMED_OBJECT_TEST)
+			-- Create a new V1SE-2G error: argument `arg' of a separate instruction
 			-- appears in the scope of the local of `a_object_test' with the same name.
 			--
 			-- Not in ECMA-367-2.
@@ -606,9 +606,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := arg.name.position
-			code := template_code (v1seg2d_template_code)
-			etl_code := v1seg2_etl_code
-			default_template := default_message_template (v1seg2d_default_template)
+			code := template_code (v1se2gd_template_code)
+			etl_code := v1se2g_etl_code
+			default_template := default_message_template (v1se2gd_default_template)
 			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -631,8 +631,8 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = aeparate argument name
 		end
 
-	make_v1seg2e (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_iteration_component: ET_ITERATION_COMPONENT)
-			-- Create a new V1SE-G2 error: argument `arg' of a separate instruction
+	make_v1se2ge (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_iteration_component: ET_ITERATION_COMPONENT)
+			-- Create a new V1SE-2G error: argument `arg' of a separate instruction
 			-- appears in the scope of the cursor of `a_iteration_component' with
 			-- the same name.
 			--
@@ -647,9 +647,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := arg.name.position
-			code := template_code (v1seg2e_template_code)
-			etl_code := v1seg2_etl_code
-			default_template := default_message_template (v1seg2e_default_template)
+			code := template_code (v1se2ge_template_code)
+			etl_code := v1se2g_etl_code
+			default_template := default_message_template (v1se2ge_default_template)
 			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -672,8 +672,8 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = separate argument name
 		end
 
-	make_v1seg2f (a_class: ET_CLASS; arg1, arg2: ET_SEPARATE_ARGUMENT)
-			-- Create a new V1SE-G2 error: argument `arg1' of a separate instruction
+	make_v1se2gf (a_class: ET_CLASS; arg1, arg2: ET_SEPARATE_ARGUMENT)
+			-- Create a new V1SE-2G error: argument `arg1' of a separate instruction
 			-- as the same name as argument `arg2' of another enclosing separate
 			-- instruction.
 			--
@@ -688,9 +688,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := arg1.name.position
-			code := template_code (v1seg2f_template_code)
-			etl_code := v1seg2_etl_code
-			default_template := default_message_template (v1seg2f_default_template)
+			code := template_code (v1se2gf_template_code)
+			etl_code := v1se2g_etl_code
+			default_template := default_message_template (v1se2gf_default_template)
 			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -713,8 +713,8 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = separate argument name
 		end
 
-	make_v1seg3a (a_class, a_class_impl: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_type: ET_NAMED_TYPE)
-			-- Report V1SE-G3 error: the type of the argument `arg'
+	make_v1se3ga (a_class, a_class_impl: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_type: ET_NAMED_TYPE)
+			-- Report V1SE-3G error: the type of the argument `arg'
 			-- of a separate instruction in `a_class_impl' and view from
 			-- one of its descendants `a_class' (possibly itself)
 			-- is not separate.
@@ -732,9 +732,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class_impl
 			position := arg.expression.position
-			code := template_code (v1seg3a_template_code)
-			etl_code := v1seg3_etl_code
-			default_template := default_message_template (v1seg3a_default_template)
+			code := template_code (v1se3ga_template_code)
+			etl_code := v1se3g_etl_code
+			default_template := default_message_template (v1se3ga_default_template)
 			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -17260,14 +17260,14 @@ feature {NONE} -- Implementation
 			template_not_void: Result /= Void
 		end
 
-	v1seg1a_default_template: STRING = "two arguments of a separate instruction have the same name '$7'."
-	v1seg2a_default_template: STRING = "argument name '$6' of a separate instruction is also the final name of a feature."
-	v1seg2b_default_template: STRING = "argument '$6' of a separate instruction has the same name as a formal argument of an enclosing feature or inline agent."
-	v1seg2c_default_template: STRING = "argument '$6' of a separate instruction has the same name as a local variable of an enclosing feature or inline agent."
-	v1seg2d_default_template: STRING = "argument '$6' of a separate instruction appears in the scope of an object-test local with the same name."
-	v1seg2e_default_template: STRING = "argument '$6' of a separate instruction appears in the scope of an iteration item with the same name."
-	v1seg2f_default_template: STRING = "argument '$6' of a separate instruction appears in another enclosing separate instruction with an argument of the same name."
-	v1seg3a_default_template: STRING = "the type '$7' of the argument '$6' of a separate instruction is not separate."
+	v1se1ga_default_template: STRING = "two arguments of a separate instruction have the same name '$7'."
+	v1se2ga_default_template: STRING = "argument name '$6' of a separate instruction is also the final name of a feature."
+	v1se2gb_default_template: STRING = "argument '$6' of a separate instruction has the same name as a formal argument of an enclosing feature or inline agent."
+	v1se2gc_default_template: STRING = "argument '$6' of a separate instruction has the same name as a local variable of an enclosing feature or inline agent."
+	v1se2gd_default_template: STRING = "argument '$6' of a separate instruction appears in the scope of an object-test local with the same name."
+	v1se2ge_default_template: STRING = "argument '$6' of a separate instruction appears in the scope of an iteration item with the same name."
+	v1se2gf_default_template: STRING = "argument '$6' of a separate instruction appears in another enclosing separate instruction with an argument of the same name."
+	v1se3ga_default_template: STRING = "the type '$7' of the argument '$6' of a separate instruction is not separate."
 	vaol1a_default_template: STRING = "old expression does not appear in a postcondition."
 	vape1a_default_template: STRING = "feature `$8' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
 	vape1b_default_template: STRING = "feature `$8' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
@@ -17625,9 +17625,9 @@ feature {NONE} -- Implementation
 	gvzzz0a_default_template: STRING = "validity error"
 			-- Default templates
 
-	v1seg1_etl_code: STRING = "V1SE-G1"
-	v1seg2_etl_code: STRING = "V1SE-G2"
-	v1seg3_etl_code: STRING = "V1SE-G3"
+	v1se1g_etl_code: STRING = "V1SE-1G"
+	v1se2g_etl_code: STRING = "V1SE-2G"
+	v1se3g_etl_code: STRING = "V1SE-3G"
 	vaol1_etl_code: STRING = "VAOL-1"
 	vape1_etl_code: STRING = "VAPE-1"
 	vape2_etl_code: STRING = "VAPE-2"
@@ -17812,14 +17812,14 @@ feature {NONE} -- Implementation
 			template_code_not_void: Result /= Void
 		end
 
-	v1seg1a_template_code: STRING = "v1seg1a"
-	v1seg2a_template_code: STRING = "v1seg2a"
-	v1seg2b_template_code: STRING = "v1seg2b"
-	v1seg2c_template_code: STRING = "v1seg2c"
-	v1seg2d_template_code: STRING = "v1seg2d"
-	v1seg2e_template_code: STRING = "v1seg2e"
-	v1seg2f_template_code: STRING = "v1seg2f"
-	v1seg3a_template_code: STRING = "v1seg3a"
+	v1se1ga_template_code: STRING = "v1se1ga"
+	v1se2ga_template_code: STRING = "v1se2ga"
+	v1se2gb_template_code: STRING = "v1se2gb"
+	v1se2gc_template_code: STRING = "v1se2gc"
+	v1se2gd_template_code: STRING = "v1se2gd"
+	v1se2ge_template_code: STRING = "v1se2ge"
+	v1se2gf_template_code: STRING = "v1se2gf"
+	v1se3ga_template_code: STRING = "v1se3ga"
 	vaol1a_template_code: STRING = "vaol1a"
 	vape1a_template_code: STRING = "vape1a"
 	vape1b_template_code: STRING = "vape1b"
