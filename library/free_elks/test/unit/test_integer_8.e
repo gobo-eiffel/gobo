@@ -556,4 +556,37 @@ feature -- Test
 			assert ("item4", i = -10)
 		end
 
+	test_to_binary_string
+			-- Test feature 'to_binary_string'.
+		local
+			i: INTEGER_8
+		do
+			i := 0b101
+			assert_strings_equal ("to_binary_string_1", "00000101", i.to_binary_string)
+			i := 0b11111011
+			assert_strings_equal ("to_binary_string_2", "11111011", i.to_binary_string)
+		end
+
+	test_to_octal_string
+			-- Test feature 'to_octal_string'.
+		local
+			i: INTEGER_8
+		do
+			i := 0c124
+			assert_strings_equal ("to_octal_string_1", "124", i.to_octal_string)
+			i := 0c7
+			assert_strings_equal ("to_octal_string_2", "007", i.to_octal_string)
+		end
+
+	test_to_hex_string
+			-- Test feature 'to_hex_string'.
+		local
+			i: INTEGER_8
+		do
+			i := 0x9
+			assert_strings_equal ("to_hex_string_1", "09", i.to_hex_string)
+			i := 0xA8
+			assert_strings_equal ("to_hex_string_2", "A8", i.to_hex_string)
+		end
+
 end
