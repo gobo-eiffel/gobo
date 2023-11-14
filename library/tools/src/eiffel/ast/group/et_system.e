@@ -5,7 +5,7 @@ note
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #22 $"
@@ -415,6 +415,14 @@ feature -- Compilation options setting
 			multithreaded_mode := b
 		ensure
 			multithreaded_mode_mode_set: multithreaded_mode = b
+		end
+
+	set_scoop_mode (b: BOOLEAN)
+			-- Set `scoop_mode' to `b'.
+		do
+			scoop_mode := b
+		ensure
+			scoop_mode_mode_set: scoop_mode = b
 		end
 
 	set_attachment_type_conformance_mode (b: BOOLEAN)

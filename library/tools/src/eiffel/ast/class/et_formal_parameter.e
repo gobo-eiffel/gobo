@@ -5,7 +5,7 @@ note
 		"Eiffel formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -94,7 +94,7 @@ feature -- Access
 			-- Base types of `constraint'.
 			-- "detachable ANY" if no constraint.
 		do
-			Result := implementation_class.universe.detachable_any_type
+			Result := implementation_class.universe.detachable_separate_any_type
 		ensure
 			constraint_base_types_not_void: Result /= Void
 			constraint_base_types_are_named_types: Result.are_named_types

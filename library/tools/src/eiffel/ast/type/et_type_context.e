@@ -5,7 +5,7 @@ note
 		"Contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -310,6 +310,11 @@ feature -- Status report
 			-- overridden by `a_type_mark', if not Void
 		require
 			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
+	is_controlled: BOOLEAN
+			-- Is current type a controlled separate type?
 		deferred
 		end
 

@@ -5,7 +5,7 @@ note
 		"Eiffel formal parameter validity checkers, first pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -339,7 +339,7 @@ feature {NONE} -- Base type constraints
 		end
 
 	initalize_base_type_dependencies (a_formal_parameter_count: INTEGER)
-			-- Initialize `base_typel_dependencies' for
+			-- Initialize `base_type_dependencies' for
 			-- `a_formal_parameter_count' formal parameters.
 		require
 			a_formal_parameter_count_not_negative: a_formal_parameter_count >= 0
@@ -347,7 +347,7 @@ feature {NONE} -- Base type constraints
 			all_base_types.wipe_out
 			base_type_dependencies.wipe_out
 				-- Add "detachable ANY" in `all_base_types' at index 1.
-			all_base_types.force_last (current_universe.detachable_any_type)
+			all_base_types.force_last (current_universe.detachable_separate_any_type)
 			add_n_items_to_list (No_dependency, a_formal_parameter_count, base_type_dependencies)
 		end
 

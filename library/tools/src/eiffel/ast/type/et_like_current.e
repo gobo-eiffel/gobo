@@ -5,7 +5,7 @@ note
 		"Eiffel 'like Current' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,6 +36,7 @@ inherit
 			type_with_type_mark,
 			is_type_reference_with_type_mark,
 			is_type_detachable_with_type_mark,
+			is_controlled,
 			has_unqualified_anchored_type
 		end
 
@@ -253,6 +254,9 @@ feature -- Status report
 			Result := a_context.is_type_detachable_with_type_mark (overridden_type_mark (a_type_mark))
 		end
 
+	is_controlled: BOOLEAN
+			-- Is current type a controlled separate type?
+
 	has_unqualified_anchored_type: BOOLEAN
 			-- Does current type contain an unqualified anchored type
 			-- (i.e. 'like Current' or 'like feature_name')?
@@ -280,6 +284,16 @@ feature -- Status report
 			-- when it appears in `a_context'?
 		do
 			Result := a_context.named_type_has_class_with_ancestors_not_built_successfully
+		end
+
+feature -- Status setting
+
+	set_controlled (b: BOOLEAN)
+			-- Set `is_controlled' to `b'.
+		do
+			is_controlled := b
+		ensure
+			controlled_set: is_controlled = b
 		end
 
 feature -- Basic operations

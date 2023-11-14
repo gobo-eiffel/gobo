@@ -5,7 +5,7 @@ note
 		"Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -520,6 +520,12 @@ feature -- Status report
 			-- no_cycle: no cycle in anchored types involved.
 		do
 			Result := is_type_expanded_with_type_mark (a_type_mark, a_context) or is_type_detachable_with_type_mark (a_type_mark, a_context)
+		end
+
+	is_controlled: BOOLEAN
+			-- Is current type a controlled separate type?
+		do
+			-- Result := False
 		end
 
 	has_anchored_type: BOOLEAN

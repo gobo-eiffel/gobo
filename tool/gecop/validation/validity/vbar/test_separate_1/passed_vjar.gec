@@ -1,0 +1,2 @@
+[VJAR] class AA (21,9): the source of the assignment (of type '[attached] [separate] BB') does not conform nor convert to its target entity (of type 'detachable BB').
+----

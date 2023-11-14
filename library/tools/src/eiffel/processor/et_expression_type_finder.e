@@ -5,7 +5,7 @@ note
 		"Eiffel expression type finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/10/25 $"
 	revision: "$Revision: #6 $"
@@ -664,7 +664,7 @@ feature {NONE} -- Expression processing
 			if l_typed_pointer_class.actual_class.is_preparsed then
 					-- Class TYPED_POINTER has been found in the universe.
 					-- Use ISE's implementation: the type of '$(expr)' is 'TYPED_POINTER [<type-of-expr>]'.
-				find_expression_type (an_expression.expression, a_context, current_system.detachable_any_type)
+				find_expression_type (an_expression.expression, a_context, current_system.detachable_separate_any_type)
 				if not has_fatal_error then
 					a_context.force_last (l_typed_pointer_type)
 				end
@@ -872,7 +872,7 @@ feature {NONE} -- Expression processing
 			had_error: BOOLEAN
 			l_old_attachment_scope: like current_attachment_scope
 			l_else_attachment_scope: like current_attachment_scope
-			l_detachable_any_type: ET_CLASS_TYPE
+			l_detachable_separate_any_type: ET_CLASS_TYPE
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_result_context_list: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
 			l_old_result_context_list_count: INTEGER
@@ -889,11 +889,11 @@ feature {NONE} -- Expression processing
 				attachment_scope_builder.build_scope (l_conditional, current_attachment_scope)
 				attachment_scope_builder.build_negated_scope (l_conditional, l_else_attachment_scope)
 			end
-			l_detachable_any_type := current_system.detachable_any_type
+			l_detachable_separate_any_type := current_system.detachable_separate_any_type
 			l_result_context_list := common_ancestor_type_list
 			l_old_result_context_list_count := l_result_context_list.count
 			l_expression_context := new_context (current_type)
-			find_expression_type (a_expression.then_expression, l_expression_context, l_detachable_any_type)
+			find_expression_type (a_expression.then_expression, l_expression_context, l_detachable_separate_any_type)
 			if has_fatal_error then
 				had_error := True
 				free_context (l_expression_context)
@@ -913,7 +913,7 @@ feature {NONE} -- Expression processing
 						attachment_scope_builder.build_negated_scope (l_conditional, l_else_attachment_scope)
 					end
 					l_expression_context := new_context (current_type)
-					find_expression_type (l_elseif.then_expression, l_expression_context, l_detachable_any_type)
+					find_expression_type (l_elseif.then_expression, l_expression_context, l_detachable_separate_any_type)
 					if has_fatal_error then
 						had_error := True
 						free_context (l_expression_context)
@@ -927,7 +927,7 @@ feature {NONE} -- Expression processing
 				current_attachment_scope.copy_scope (l_else_attachment_scope)
 			end
 			l_expression_context := new_context (current_type)
-			find_expression_type (a_expression.else_expression, l_expression_context, l_detachable_any_type)
+			find_expression_type (a_expression.else_expression, l_expression_context, l_detachable_separate_any_type)
 			if has_fatal_error then
 				had_error := True
 				free_context (l_expression_context)
@@ -990,7 +990,7 @@ feature {NONE} -- Expression processing
 			l_name := an_expression.name
 			l_target := an_expression.left
 			l_seed := l_name.seed
-			find_expression_type (l_target, a_context, current_system.detachable_any_type)
+			find_expression_type (l_target, a_context, current_system.detachable_separate_any_type)
 			if has_fatal_error then
 				-- Do nothing.
 			elseif l_seed <= 0 then
@@ -1072,13 +1072,13 @@ feature {NONE} -- Expression processing
 			l_when_part: ET_WHEN_EXPRESSION
 			i, nb: INTEGER
 			had_error: BOOLEAN
-			l_detachable_any_type: ET_CLASS_TYPE
+			l_detachable_separate_any_type: ET_CLASS_TYPE
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_result_context_list: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
 			l_old_result_context_list_count: INTEGER
 		do
 			reset_fatal_error (False)
-			l_detachable_any_type := current_system.detachable_any_type
+			l_detachable_separate_any_type := current_system.detachable_separate_any_type
 			l_result_context_list := common_ancestor_type_list
 			l_old_result_context_list_count := l_result_context_list.count
 			if attached a_expression.when_parts as l_when_parts then
@@ -1086,7 +1086,7 @@ feature {NONE} -- Expression processing
 				from i := 1 until i > nb loop
 					l_when_part := l_when_parts.item (i)
 					l_expression_context := new_context (current_type)
-					find_expression_type (l_when_part.then_expression, l_expression_context, l_detachable_any_type)
+					find_expression_type (l_when_part.then_expression, l_expression_context, l_detachable_separate_any_type)
 					if has_fatal_error then
 						had_error := True
 						free_context (l_expression_context)
@@ -1098,7 +1098,7 @@ feature {NONE} -- Expression processing
 			end
 			if attached a_expression.else_part as l_else_part then
 				l_expression_context := new_context (current_type)
-				find_expression_type (l_else_part.expression, l_expression_context, l_detachable_any_type)
+				find_expression_type (l_else_part.expression, l_expression_context, l_detachable_separate_any_type)
 				if has_fatal_error then
 					had_error := True
 					free_context (l_expression_context)
@@ -1164,7 +1164,7 @@ feature {NONE} -- Expression processing
 				end
 			else
 				l_iteration_component := l_iteration_components.iteration_component (l_seed)
-				find_expression_type (l_iteration_component.new_cursor_expression, a_context, current_system.detachable_any_type)
+				find_expression_type (l_iteration_component.new_cursor_expression, a_context, current_system.detachable_separate_any_type)
 			end
 		end
 
@@ -1203,9 +1203,9 @@ feature {NONE} -- Expression processing
 			else
 				l_iteration_component := l_iteration_components.iteration_component (l_seed)
 				if a_name = l_iteration_component.unfolded_cursor_name or l_iteration_component.has_cursor_name then
-					find_expression_type (l_iteration_component.new_cursor_expression, a_context, current_system.detachable_any_type)
+					find_expression_type (l_iteration_component.new_cursor_expression, a_context, current_system.detachable_separate_any_type)
 				else
-					find_expression_type (l_iteration_component.cursor_item_expression, a_context, current_system.detachable_any_type)
+					find_expression_type (l_iteration_component.cursor_item_expression, a_context, current_system.detachable_separate_any_type)
 				end
 			end
 		end
@@ -1353,7 +1353,7 @@ feature {NONE} -- Expression processing
 		do
 			reset_fatal_error (False)
 			l_use_target_type := True
-			l_item_target_context := current_system.detachable_any_type
+			l_item_target_context := current_system.detachable_separate_any_type
 				-- Try to find out whether the manifest array is the source of
 				-- an attachment whose target is of type "ARRAY [T]". If this is
 				-- the case then the expected type for the items of the manifest
@@ -1491,7 +1491,7 @@ feature {NONE} -- Expression processing
 			l_tuple_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_parameter_context: ET_NESTED_TYPE_CONTEXT
-			l_detachable_any_type: ET_CLASS_TYPE
+			l_detachable_separate_any_type: ET_CLASS_TYPE
 		do
 			reset_fatal_error (False)
 				-- Try to find out whether the expected type (i.e. `current_target_type')
@@ -1509,7 +1509,7 @@ feature {NONE} -- Expression processing
 					nb2 := l_tuple_parameters.count
 				end
 			end
-			l_detachable_any_type := current_system.detachable_any_type
+			l_detachable_separate_any_type := current_system.detachable_separate_any_type
 			nb := an_expression.count
 			if nb = 0 then
 				l_tuple_type := current_universe_impl.tuple_type
@@ -1529,7 +1529,7 @@ feature {NONE} -- Expression processing
 					find_expression_type (an_expression.expression (1), a_context, l_parameter_context)
 					free_context (l_parameter_context)
 				else
-					find_expression_type (an_expression.expression (1), a_context, l_detachable_any_type)
+					find_expression_type (an_expression.expression (1), a_context, l_detachable_separate_any_type)
 				end
 				if not has_fatal_error then
 					l_tuple_type := current_universe_impl.tuple_identity_type
@@ -1540,7 +1540,7 @@ feature {NONE} -- Expression processing
 				create l_actuals.make_with_capacity (nb)
 				from i := nb until i <= nb2 loop
 						-- There is no matching tuple item type.
-					find_expression_type (an_expression.expression (i), l_expression_context, l_detachable_any_type)
+					find_expression_type (an_expression.expression (i), l_expression_context, l_detachable_separate_any_type)
 					if has_fatal_error then
 						had_error := True
 					else
@@ -1664,7 +1664,7 @@ feature {NONE} -- Expression processing
 				if l_type /= Void then
 					a_context.force_last (l_type)
 				else
-					find_expression_type (l_object_test.expression, a_context, current_system.detachable_any_type)
+					find_expression_type (l_object_test.expression, a_context, current_system.detachable_separate_any_type)
 				end
 				if not a_context.is_type_attached then
 					a_context.force_last (tokens.attached_like_current)
@@ -1805,7 +1805,7 @@ feature {NONE} -- Expression processing
 			l_name := a_call.name
 			l_actuals := a_call.arguments
 			l_seed := l_name.seed
-			find_expression_type (l_target, a_context, current_system.detachable_any_type)
+			find_expression_type (l_target, a_context, current_system.detachable_separate_any_type)
 			if has_fatal_error then
 				-- Do nothing.
 			elseif l_seed <= 0 then
@@ -2539,7 +2539,7 @@ feature {NONE} -- Agent validity
 			reset_fatal_error (False)
 			a_name := an_expression.name
 			a_seed := a_name.seed
-			find_expression_type (a_target, a_context, current_system.detachable_any_type)
+			find_expression_type (a_target, a_context, current_system.detachable_separate_any_type)
 			if has_fatal_error then
 				-- Do nothing.
 			elseif a_seed <= 0 then

@@ -9,7 +9,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -191,7 +191,7 @@ feature -- Conformance
 			i: INTEGER
 		do
 			if count = 0 then
-				Result := a_context.base_class.universe.detachable_any_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context, a_system_processor)
+				Result := a_context.base_class.universe.detachable_separate_any_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context, a_system_processor)
 			else
 				from
 					i := count - 1

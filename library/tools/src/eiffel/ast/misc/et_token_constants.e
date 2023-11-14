@@ -5,7 +5,7 @@
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -3596,6 +3596,28 @@ feature -- Types
 		ensure
 			instance_free: class
 			identity_type_not_void: Result /= Void
+		end
+
+	separate_type_modifier: ET_LIKE_CURRENT
+			-- Type 'separate like Current'
+		once
+			create Result.make (implicit_separate_type_mark)
+		ensure
+			instance_free: class
+			separate_type_modifier_not_void: Result /= Void
+			is_separate: attached Result.type_mark as l_type_mark and then l_type_mark.is_separate_mark
+		end
+
+	controlled_type_modifier: ET_LIKE_CURRENT
+			-- Type 'separate like Current' which is controlled
+		once
+			create Result.make (implicit_separate_type_mark)
+			Result.set_controlled (True)
+		ensure
+			instance_free: class
+			controlled_type_modifier_not_void: Result /= Void
+			is_separate: attached Result.type_mark as l_type_mark and then l_type_mark.is_separate_mark
+			is_controlled: Result.is_controlled
 		end
 
 	like_0: ET_LIKE_N

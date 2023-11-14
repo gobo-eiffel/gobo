@@ -7338,6 +7338,52 @@ feature -- Validity errors
 			end
 		end
 
+	report_vuta4ga_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_type: ET_NAMED_TYPE)
+			-- Report VUTA-4G error: the target, of type `a_target_type', of the call to feature `a_feature'
+			-- is not controlled when viewed from `a_class', one of the descendants of `a_class_impl' (possibly itself)
+			-- where the qualified call `a_name' appears.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuta4g_error (a_class) then
+				create an_error.make_vuta4ga (a_class, a_class_impl, a_name, a_feature, a_target_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuta4gb_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target_type: ET_NAMED_TYPE)
+			-- Report VUTA-4G error: the target, of type `a_target_type', of the call to Tuple label `a_name'
+			-- appearing in `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself), is not controlled.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_tuple_label: a_name.is_tuple_label
+			a_target_type_not_void: a_target_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuta4g_error (a_class) then
+				create an_error.make_vuta4gb (a_class, a_class_impl, a_name, a_target_type)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vvok1a_error (a_class: ET_CLASS; a_once_key1, a_once_key2: ET_MANIFEST_STRING)
 			-- Report VVOK-1 error: `a_once_key1' and `a_once_key2' cannot be
 			-- combined. The supported once keys "PROCESS", "THREAD" and "OBJECT"
@@ -9924,6 +9970,16 @@ feature -- Validity error status
 
 	reportable_vuta2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUTA-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vuta4g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUTA-4G error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

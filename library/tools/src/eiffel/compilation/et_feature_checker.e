@@ -2774,9 +2774,9 @@ feature {NONE} -- Instruction validity
 			if l_expected_type = Void then
 					-- The call is not valid. As a consequence its type has not
 					-- been computed correctly. We will consider that it is of
-					-- type 'detachable ANY' when checking the validity of the source.
+					-- type 'detachable separate ANY' when checking the validity of the source.
 				check has_fatal_error: has_fatal_error end
-				check_expression_validity (l_source, l_source_context, current_system.detachable_any_type)
+				check_expression_validity (l_source, l_source_context, current_system.detachable_separate_any_type)
 				has_fatal_error := True
 			else
 					-- After this, `l_source_context' will represent the type of the source.
@@ -2855,10 +2855,10 @@ feature {NONE} -- Instruction validity
 			if has_fatal_error then
 					-- The target is not valid. As a consequence its type might not
 					-- have been computed correctly. We will consider that it is of
-					-- type 'detachable ANY' when checking the validity of the source.
+					-- type 'detachable separate ANY' when checking the validity of the source.
 				had_error := True
 				l_target_context.wipe_out
-				l_target_context.force_last (current_system.detachable_any_type)
+				l_target_context.force_last (current_system.detachable_separate_any_type)
 			end
 				-- Check the validity of the source.
 				-- After this, `l_source_context' will represent the type of the source.
@@ -2984,10 +2984,10 @@ feature {NONE} -- Instruction validity
 			if has_fatal_error then
 					-- The target is not valid. As a consequence its type might not
 					-- have been computed correctly. We will consider that it is of
-					-- type 'detachable ANY' when checking the validity of the source.
+					-- type 'detachable separate ANY' when checking the validity of the source.
 				had_error := True
 				l_target_context.wipe_out
-				l_target_context.force_last (current_system.detachable_any_type)
+				l_target_context.force_last (current_system.detachable_separate_any_type)
 			elseif not (current_system.is_dotnet or system_processor.newer_or_same_ise_version (ise_5_7_0)) and not l_target_context.is_type_reference then
 					-- Assignment attempts with expanded targets are allowed in Eiffel for .NET
 					-- and versions of ISE greater than or equal to 5.7. Otherwise, report a
@@ -3777,7 +3777,7 @@ feature {NONE} -- Instruction validity
 			had_value_error: BOOLEAN
 			l_value_context: ET_NESTED_TYPE_CONTEXT
 			l_value_type: ET_TYPE
-			l_detachable_any_type: ET_CLASS_TYPE
+			l_detachable_separate_any_type: ET_CLASS_TYPE
 			l_value_named_type: ET_NAMED_TYPE
 			l_choices: ET_CHOICE_LIST
 			l_choice: ET_CHOICE
@@ -3794,10 +3794,10 @@ feature {NONE} -- Instruction validity
 			l_inspect_initialization_scope: detachable like current_initialization_scope
 		do
 			has_fatal_error := False
-			l_detachable_any_type := current_system.detachable_any_type
+			l_detachable_separate_any_type := current_system.detachable_separate_any_type
 			l_value_context := new_context (current_type)
 			l_expression := an_instruction.conditional.expression
-			check_expression_validity (l_expression, l_value_context, l_detachable_any_type)
+			check_expression_validity (l_expression, l_value_context, l_detachable_separate_any_type)
 			if has_fatal_error then
 				had_error := True
 			elseif l_value_context.same_named_type (current_universe_impl.integer_8_type, current_class_impl) then
@@ -4559,7 +4559,7 @@ feature {NONE} -- Instruction validity
 			l_context := new_context (current_type)
 			l_name := a_call.name
 			l_seed := l_name.seed
-			check_expression_validity (l_target, l_context, current_system.detachable_any_type)
+			check_expression_validity (l_target, l_context, current_system.detachable_separate_any_type)
 			l_context_count := l_context.count
 			l_adapted_base_classes := new_adapted_base_classes
 			if not has_fatal_error then
@@ -6235,18 +6235,18 @@ feature {NONE} -- Expression validity
 			l_right_context: ET_NESTED_TYPE_CONTEXT
 			l_left_convert_expression: detachable ET_CONVERT_EXPRESSION
 			l_right_convert_expression: detachable ET_CONVERT_EXPRESSION
-			l_detachable_any_type: ET_CLASS_TYPE
+			l_detachable_separate_any_type: ET_CLASS_TYPE
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
-			l_detachable_any_type := current_system.detachable_any_type
+			l_detachable_separate_any_type := current_system.detachable_separate_any_type
 			l_left_context := new_context (current_type)
 			l_right_context := new_context (current_type)
 			l_left_operand := an_expression.left
 			l_right_operand := an_expression.right
-			check_expression_validity (l_left_operand, l_left_context, l_detachable_any_type)
+			check_expression_validity (l_left_operand, l_left_context, l_detachable_separate_any_type)
 			if not has_fatal_error then
-				check_expression_validity (l_right_operand, l_right_context, l_detachable_any_type)
+				check_expression_validity (l_right_operand, l_right_context, l_detachable_separate_any_type)
 				if not has_fatal_error then
 					if current_class /= current_class_impl then
 						-- Possible convertibility should be resolved in the implementation class.
@@ -6294,7 +6294,7 @@ feature {NONE} -- Expression validity
 			else
 					-- The left expression is not valid. Check the right expression
 					-- anyway, and then restore `has_fatal_error' to True.
-				check_expression_validity (l_right_operand, l_right_context, l_detachable_any_type)
+				check_expression_validity (l_right_operand, l_right_context, l_detachable_separate_any_type)
 				set_fatal_error
 			end
 			free_context (l_right_context)
@@ -6313,17 +6313,17 @@ feature {NONE} -- Expression validity
 			l_typed_pointer_class: ET_NAMED_CLASS
 			l_typed_pointer_type: ET_CLASS_TYPE
 			l_pointer_type: ET_CLASS_TYPE
-			l_detachable_any_type: ET_CLASS_TYPE
+			l_detachable_separate_any_type: ET_CLASS_TYPE
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 		do
 			has_fatal_error := False
-			l_detachable_any_type := current_system.detachable_any_type
+			l_detachable_separate_any_type := current_system.detachable_separate_any_type
 			l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 			l_typed_pointer_class := l_typed_pointer_type.named_base_class
 			if l_typed_pointer_class.actual_class.is_preparsed then
 					-- Class TYPED_POINTER has been found in the universe.
 					-- Use ISE's implementation: the type of '$(expr)' is 'TYPED_POINTER [<type-of-expr>]'.
-				check_expression_validity (an_expression.expression, a_context, l_detachable_any_type)
+				check_expression_validity (an_expression.expression, a_context, l_detachable_separate_any_type)
 				if not has_fatal_error then
 					report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 					a_context.force_last (l_typed_pointer_type)
@@ -6334,7 +6334,7 @@ feature {NONE} -- Expression validity
 					-- expression because we don't want it to be altered and we
 					-- don't need the type of 'expr'.
 				l_expression_context := new_context (current_type)
-				check_expression_validity (an_expression.expression, l_expression_context, l_detachable_any_type)
+				check_expression_validity (an_expression.expression, l_expression_context, l_detachable_separate_any_type)
 				free_context (l_expression_context)
 				if not has_fatal_error then
 					l_pointer_type := current_universe_impl.pointer_type
@@ -6968,6 +6968,11 @@ feature {NONE} -- Expression validity
 							l_is_attached := True
 						end
 					end
+					if current_system.scoop_mode then
+						if a_context.is_type_separate then
+							a_context.force_last (tokens.controlled_type_modifier)
+						end
+					end
 					report_formal_argument (a_name, l_is_attached, l_formal)
 				end
 			end
@@ -7367,7 +7372,7 @@ feature {NONE} -- Expression validity
 			had_value_error: BOOLEAN
 			l_value_context: ET_NESTED_TYPE_CONTEXT
 			l_value_type: ET_TYPE
-			l_detachable_any_type: ET_CLASS_TYPE
+			l_detachable_separate_any_type: ET_CLASS_TYPE
 			l_value_named_type: ET_NAMED_TYPE
 			l_choices: ET_CHOICE_LIST
 			l_choice: ET_CHOICE
@@ -7383,10 +7388,10 @@ feature {NONE} -- Expression validity
 			l_old_result_context_list_count: INTEGER
 		do
 			has_fatal_error := False
-			l_detachable_any_type := current_system.detachable_any_type
+			l_detachable_separate_any_type := current_system.detachable_separate_any_type
 			l_value_context := new_context (current_type)
 			l_expression := a_expression.conditional.expression
-			check_expression_validity (l_expression, l_value_context, l_detachable_any_type)
+			check_expression_validity (l_expression, l_value_context, l_detachable_separate_any_type)
 			if has_fatal_error then
 				had_error := True
 			elseif l_value_context.same_named_type (current_universe_impl.integer_8_type, current_class_impl) then
@@ -7760,7 +7765,7 @@ feature {NONE} -- Expression validity
 			if not l_had_iterable_error then
 				l_expression_context := new_context (current_type)
 				a_iteration_component.new_cursor_expression.name.set_seed (current_system.iterable_new_cursor_seed)
-				check_expression_validity (a_iteration_component.new_cursor_expression, l_expression_context, current_system.detachable_any_type)
+				check_expression_validity (a_iteration_component.new_cursor_expression, l_expression_context, current_system.detachable_separate_any_type)
 				if has_fatal_error then
 					l_had_error := True
 					free_context (l_expression_context)
@@ -7802,7 +7807,7 @@ feature {NONE} -- Expression validity
 					if not a_iteration_component.has_cursor_name then
 						a_iteration_component.cursor_item_expression.name.set_seed (current_system.iteration_cursor_item_seed)
 						l_item_context := new_context (current_type)
-						check_expression_validity (a_iteration_component.cursor_item_expression, l_item_context, current_system.detachable_any_type)
+						check_expression_validity (a_iteration_component.cursor_item_expression, l_item_context, current_system.detachable_separate_any_type)
 						if has_fatal_error then
 							l_had_error := True
 						end
@@ -8357,7 +8362,7 @@ feature {NONE} -- Expression validity
 		do
 			has_fatal_error := False
 			l_use_target_type := True
-			l_item_target_context := current_system.detachable_any_type
+			l_item_target_context := current_system.detachable_separate_any_type
 				-- Try to find out whether the manifest array is the source of
 				-- an attachment whose target is of type "ARRAY [T]". If this is
 				-- the case then the expected type for the items of the manifest
@@ -8630,7 +8635,7 @@ feature {NONE} -- Expression validity
 			l_tuple_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_parameter_context: ET_NESTED_TYPE_CONTEXT
-			l_detachable_any_type: ET_CLASS_TYPE
+			l_detachable_separate_any_type: ET_CLASS_TYPE
 			l_tuple_type: ET_TUPLE_TYPE
 		do
 			has_fatal_error := False
@@ -8649,7 +8654,7 @@ feature {NONE} -- Expression validity
 					nb2 := l_tuple_parameters.count
 				end
 			end
-			l_detachable_any_type := current_system.detachable_any_type
+			l_detachable_separate_any_type := current_system.detachable_separate_any_type
 			nb := an_expression.count
 			if nb = 0 then
 				l_tuple_type := current_universe_impl.tuple_type
@@ -8670,7 +8675,7 @@ feature {NONE} -- Expression validity
 					check_expression_validity (an_expression.expression (1), a_context, l_parameter_context)
 					free_context (l_parameter_context)
 				else
-					check_expression_validity (an_expression.expression (1), a_context, l_detachable_any_type)
+					check_expression_validity (an_expression.expression (1), a_context, l_detachable_separate_any_type)
 				end
 				if not has_fatal_error then
 					l_tuple_type := current_universe_impl.tuple_identity_type
@@ -8682,7 +8687,7 @@ feature {NONE} -- Expression validity
 				create l_actuals.make_with_capacity (nb)
 				from i := nb until i <= nb2 loop
 						-- There is no matching tuple item type.
-					check_expression_validity (an_expression.expression (i), l_expression_context, l_detachable_any_type)
+					check_expression_validity (an_expression.expression (i), l_expression_context, l_detachable_separate_any_type)
 					if has_fatal_error then
 						had_error := True
 					else
@@ -8773,7 +8778,7 @@ feature {NONE} -- Expression validity
 						-- The type is not valid. We will consider that it is of
 						-- type 'detachable ANY' when checking the validity of the expression.
 					l_had_error := True
-					check_expression_validity (an_expression.expression, l_expression_context, current_system.detachable_any_type)
+					check_expression_validity (an_expression.expression, l_expression_context, current_system.detachable_separate_any_type)
 					has_fatal_error := has_fatal_error or l_had_error
 				else
 					l_expression_context.force_last (l_type)
@@ -8781,7 +8786,7 @@ feature {NONE} -- Expression validity
 					a_context.reset (current_type)
 				end
 			else
-				check_expression_validity (an_expression.expression, l_expression_context, current_system.detachable_any_type)
+				check_expression_validity (an_expression.expression, l_expression_context, current_system.detachable_separate_any_type)
 			end
 			if current_system.attachment_type_conformance_mode then
 				if not l_expression_context.is_type_attached then
@@ -8908,21 +8913,21 @@ feature {NONE} -- Expression validity
 			l_right_context: ET_NESTED_TYPE_CONTEXT
 			l_left_convert_expression: detachable ET_CONVERT_EXPRESSION
 			l_right_convert_expression: detachable ET_CONVERT_EXPRESSION
-			l_detachable_any_type: ET_CLASS_TYPE
+			l_detachable_separate_any_type: ET_CLASS_TYPE
 			l_target_type_context: ET_TYPE_CONTEXT
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
 			an_expression.name.set_seed (current_system.is_equal_seed)
-			l_detachable_any_type := current_system.detachable_any_type
+			l_detachable_separate_any_type := current_system.detachable_separate_any_type
 			l_left_context := new_context (current_type)
 			l_right_context := new_context (current_type)
 			l_left_operand := an_expression.left
 			l_right_operand := an_expression.right
-			check_expression_validity (l_left_operand, l_left_context, l_detachable_any_type)
+			check_expression_validity (l_left_operand, l_left_context, l_detachable_separate_any_type)
 			l_target_type_context := l_left_context
 			if not has_fatal_error then
-				check_expression_validity (l_right_operand, l_right_context, l_detachable_any_type)
+				check_expression_validity (l_right_operand, l_right_context, l_detachable_separate_any_type)
 				if not has_fatal_error then
 					if current_class /= current_class_impl then
 						-- Possible convertibility should be resolved in the implementation class.
@@ -8971,7 +8976,7 @@ feature {NONE} -- Expression validity
 			else
 					-- The left expression is not valid. Check the right expression
 					-- anyway, and then restore `has_fatal_error' to True.
-				check_expression_validity (l_right_operand, l_right_context, l_detachable_any_type)
+				check_expression_validity (l_right_operand, l_right_context, l_detachable_separate_any_type)
 				set_fatal_error
 			end
 			free_context (l_right_context)
@@ -8998,7 +9003,7 @@ feature {NONE} -- Expression validity
 						-- The type is not valid. We will consider that it is of
 						-- type 'detachable ANY' when checking the validity of the expression.
 					l_had_error := True
-					check_expression_validity (an_expression.expression, l_expression_context, current_system.detachable_any_type)
+					check_expression_validity (an_expression.expression, l_expression_context, current_system.detachable_separate_any_type)
 					has_fatal_error := has_fatal_error or l_had_error
 				else
 					report_object_test_type (an_expression, l_type, a_context)
@@ -9007,7 +9012,7 @@ feature {NONE} -- Expression validity
 					a_context.reset (current_type)
 				end
 			else
-				check_expression_validity (an_expression.expression, l_expression_context, current_system.detachable_any_type)
+				check_expression_validity (an_expression.expression, l_expression_context, current_system.detachable_separate_any_type)
 			end
 			free_context (l_expression_context)
 			if not has_fatal_error then
@@ -9371,7 +9376,7 @@ feature {NONE} -- Expression validity
 			l_target := a_call.target
 			l_name := a_call.name
 			l_seed := l_name.seed
-			check_expression_validity (l_target, a_context, current_system.detachable_any_type)
+			check_expression_validity (l_target, a_context, current_system.detachable_separate_any_type)
 			l_context_count := a_context.count
 			l_adapted_base_classes := new_adapted_base_classes
 			if not has_fatal_error then
@@ -9636,6 +9641,14 @@ feature {NONE} -- Expression validity
 					error_handler.report_vuta2a_error (current_class, current_class_impl, l_name, a_feature, a_context.named_type)
 				end
 			end
+				-- Check that the target of the call is controlled.
+			if current_system.scoop_mode then
+				if a_context.is_type_separate and then not a_context.is_controlled then
+						-- Error: the target of the call is not controlled.
+					set_fatal_error
+					error_handler.report_vuta4ga_error (current_class, current_class_impl, l_name, a_feature, a_context.named_type)
+				end
+			end
 				-- Check export status.
 			if not a_feature.is_exported_to (current_class, system_processor) then
 					-- The feature is not exported to `current_class'.
@@ -9767,6 +9780,14 @@ feature {NONE} -- Expression validity
 					error_handler.report_vuta2b_error (current_class, current_class_impl, l_name, a_context.named_type)
 				end
 			end
+				-- Check that the target of the call is controlled.
+			if current_system.scoop_mode then
+				if a_context.is_type_separate and then not a_context.is_controlled then
+						-- Error: the target of the call is not controlled.
+					set_fatal_error
+					error_handler.report_vuta4gb_error (current_class, current_class_impl, l_name, a_context.named_type)
+				end
+			end
 			if a_call.arguments_count > 0 then
 					-- A call to a Tuple label cannot have arguments.
 				set_fatal_error
@@ -9819,8 +9840,14 @@ feature {NONE} -- Expression validity
 			l_actual: ET_EXPRESSION
 			l_formal_context: ET_NESTED_TYPE_CONTEXT
 			l_class: ET_CLASS
+			l_is_target_separate: BOOLEAN
 		do
 			has_fatal_error := False
+			if current_system.scoop_mode then
+				if a_call.target /= Void then
+					l_is_target_separate := a_context.is_type_separate
+				end
+			end
 			l_type := a_query.type
 -- TODO: like argument (the following is just a workaround
 -- which works only in a limited number of cases, in particular
@@ -9843,15 +9870,22 @@ feature {NONE} -- Expression validity
 									-- then the converted version can still be chained with a conformance to
 									-- `current_target_type'.
 								a_context.reset (current_type)
-								a_context.force_last (l_builtin.type)
+								l_type := l_builtin.type
 							end
 						end
 					end
-				else
-					a_context.force_last (l_type)
 				end
-			else
-				a_context.force_last (l_type)
+			end
+			a_context.force_last (l_type)
+			if current_system.scoop_mode then
+				if l_is_target_separate and not l_type.is_type_separate (a_context.base_class) then
+						-- If the target of the call is separate, then the type of the call
+						-- is separate as well, even if the declared type of the query is not.
+						-- It is controlled as well because the target itself is supposed to
+						-- be controlled.
+					a_context.force_last (tokens.separate_type_modifier)
+					a_context.force_last (tokens.controlled_type_modifier)
+				end
 			end
 		end
 
@@ -10237,6 +10271,11 @@ feature {NONE} -- Expression validity
 							set_fatal_error
 						else
 							a_context.copy_type_context (current_separate_argument_types.found_item)
+							if current_system.scoop_mode then
+								if a_context.is_type_separate then
+									a_context.force_last (tokens.controlled_type_modifier)
+								end
+							end
 							report_separate_argument (a_name, l_separate_argument)
 						end
 					end
@@ -10263,6 +10302,11 @@ feature {NONE} -- Expression validity
 						error_handler.report_giaaa_error
 					else
 						a_context.copy_type_context (current_separate_argument_types.found_item)
+						if current_system.scoop_mode then
+							if a_context.is_type_separate then
+								a_context.force_last (tokens.controlled_type_modifier)
+							end
+						end
 						report_separate_argument (a_name, l_separate_argument)
 					end
 				end
@@ -11730,15 +11774,15 @@ feature {NONE} -- Expression validity
 			has_fatal_error: has_fatal_error
 		local
 			l_context: ET_NESTED_TYPE_CONTEXT
-			l_detachable_any_type: ET_CLASS_TYPE
+			l_detachable_separate_any_type: ET_CLASS_TYPE
 			i, nb: INTEGER
 		do
 			if attached a_call.arguments as l_actuals and then not l_actuals.is_empty then
-				l_detachable_any_type := current_system.detachable_any_type
+				l_detachable_separate_any_type := current_system.detachable_separate_any_type
 				l_context := new_context (current_type)
 				nb := l_actuals.count
 				from i := 1 until i > nb loop
-					check_expression_validity (l_actuals.actual_argument (i), l_context, l_detachable_any_type)
+					check_expression_validity (l_actuals.actual_argument (i), l_context, l_detachable_separate_any_type)
 					l_context.wipe_out
 					i := i + 1
 				end
@@ -12801,7 +12845,7 @@ feature {NONE} -- Agent validity
 			has_fatal_error := False
 			a_name := an_expression.name
 			a_seed := a_name.seed
-			check_expression_validity (a_target, a_context, current_system.detachable_any_type)
+			check_expression_validity (a_target, a_context, current_system.detachable_separate_any_type)
 			l_context_count := a_context.count
 			l_adapted_base_classes := new_adapted_base_classes
 			if not has_fatal_error then
@@ -12989,6 +13033,13 @@ feature {NONE} -- Agent validity
 					error_handler.report_vuta2a_error (current_class, current_class_impl, a_name, a_query, a_context.named_type)
 				end
 			end
+			if current_system.scoop_mode then
+				if a_context.is_type_separate and then not a_context.is_controlled then
+						-- Error: the target of the call is not controlled.
+					set_fatal_error
+					error_handler.report_vuta4ga_error (current_class, current_class_impl, a_name, a_query, a_context.named_type)
+				end
+			end
 			if not a_query.is_exported_to (current_class, system_processor) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
@@ -13056,6 +13107,13 @@ feature {NONE} -- Agent validity
 					error_handler.report_vuta2a_error (current_class, current_class_impl, a_name, a_procedure, a_context.named_type)
 				end
 			end
+			if current_system.scoop_mode then
+				if a_context.is_type_separate and then not a_context.is_controlled then
+						-- Error: the target of the call is not controlled.
+					set_fatal_error
+					error_handler.report_vuta4ga_error (current_class, current_class_impl, a_name, a_procedure, a_context.named_type)
+				end
+			end
 			if not a_procedure.is_exported_to (current_class, system_processor) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
@@ -13114,6 +13172,13 @@ feature {NONE} -- Agent validity
 						-- Error: the target of the call is not attached.
 					set_fatal_error
 					error_handler.report_vuta2b_error (current_class, current_class_impl, l_name, a_context.named_type)
+				end
+			end
+			if current_system.scoop_mode then
+				if a_context.is_type_separate and then not a_context.is_controlled then
+						-- Error: the target of the call is not controlled.
+					set_fatal_error
+					error_handler.report_vuta4gb_error (current_class, current_class_impl, l_name, a_context.named_type)
 				end
 			end
 			if attached an_expression.arguments as l_actuals and then not l_actuals.is_empty then

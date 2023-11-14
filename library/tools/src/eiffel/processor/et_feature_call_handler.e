@@ -5,7 +5,7 @@ note
 		"Eiffel feature call handlers: traverse features and report when feature calls are found."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/04/06 $"
 	revision: "$Revision: #12 $"
@@ -3237,11 +3237,11 @@ feature {NONE} -- Expression types
 		do
 			reset_fatal_error (False)
 			if attached current_inline_agent as l_current_inline_agent then
-				expression_type_finder.find_expression_type_in_agent (a_expression, l_current_inline_agent, current_feature, a_context, current_system.detachable_any_type)
+				expression_type_finder.find_expression_type_in_agent (a_expression, l_current_inline_agent, current_feature, a_context, current_system.detachable_separate_any_type)
 			elseif current_feature.is_feature then
-				expression_type_finder.find_expression_type_in_feature (a_expression, current_feature.as_feature, a_context, current_system.detachable_any_type)
+				expression_type_finder.find_expression_type_in_feature (a_expression, current_feature.as_feature, a_context, current_system.detachable_separate_any_type)
 			else
-				expression_type_finder.find_expression_type_in_invariant (a_expression, current_feature.as_invariants, a_context, current_system.detachable_any_type)
+				expression_type_finder.find_expression_type_in_invariant (a_expression, current_feature.as_invariants, a_context, current_system.detachable_separate_any_type)
 			end
 			reset_fatal_error (expression_type_finder.has_fatal_error)
 		end

@@ -1,0 +1,19 @@
+-------------------------------------------------------------------------------
+
+Error code: VJAR
+
+Type error: source of assignment is not compatible with target. 
+What to do: make sure that type of source (right-hand side)
+  is compatible with type of target. 
+
+Class: AA
+Feature: f
+Target name: x
+Target type: detachable BB
+Source type: separate BB
+Line: 21
+      do
+->      x := b.f
+      end
+
+-------------------------------------------------------------------------------

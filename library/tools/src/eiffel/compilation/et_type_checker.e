@@ -5,7 +5,7 @@ note
 		"Eiffel type checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -525,7 +525,7 @@ feature {NONE} -- Validity checking
 								end
 								a_constraint := a_formal.constraint
 								if a_constraint = Void then
-									a_constraint := current_system.detachable_any_type
+									a_constraint := current_system.detachable_separate_any_type
 								end
 									-- If we have:
 									--

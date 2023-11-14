@@ -5,7 +5,7 @@ note
 		"ECF targets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -537,10 +537,13 @@ feature -- Basic operations
 			if l_value /= Void then
 				if STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.thread_capability_value) then
 					a_system.set_multithreaded_mode (True)
+					a_system.set_scoop_mode (False)
 				elseif STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.scoop_capability_value) then
 					a_system.set_multithreaded_mode (False)
+					a_system.set_scoop_mode (True)
 				else
 					a_system.set_multithreaded_mode (False)
+					a_system.set_scoop_mode (False)
 				end
 			end
 				-- void_safety.

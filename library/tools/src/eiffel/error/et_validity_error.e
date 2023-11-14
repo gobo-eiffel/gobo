@@ -323,6 +323,8 @@ create
 	make_vuot4b,
 	make_vuta2a,
 	make_vuta2b,
+	make_vuta4ga,
+	make_vuta4gb,
 	make_vvok1a,
 	make_vvok1b,
 	make_vvok1c,
@@ -14290,6 +14292,102 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = type of the target
 		end
 
+	make_vuta4ga (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_type: ET_NAMED_TYPE)
+			-- Create a new VUTA-4G error: the target, of type `a_target_type', of the call to feature `a_feature'
+			-- is not controlled when viewed from `a_class', one of the descendants of `a_class_impl' (possibly itself)
+			-- where the qualified call `a_name' appears.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vuta4ga_template_code)
+			etl_code := vuta4g_etl_code
+			default_template := default_message_template (vuta4ga_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_feature.lower_name, 8)
+			parameters.put (a_target_type.to_text, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call
+			-- dollar8: $8 = name of corresponding feature in base class of $9
+			-- dollar9: $9 = type of the target
+		end
+
+	make_vuta4gb (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target_type: ET_NAMED_TYPE)
+			-- Create a new VUTA-4G error: the target, of type `a_target_type', of the call to Tuple label `a_name'
+			-- appearing in `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself), is not controlled.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_tuple_label: a_name.is_tuple_label
+			a_target_type_not_void: a_target_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vuta4gb_template_code)
+			etl_code := vuta4g_etl_code
+			default_template := default_message_template (vuta4gb_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_target_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = Tuple label
+			-- dollar8: $8 = type of the target
+		end
+
 	make_vvok1a (a_class: ET_CLASS; a_once_key1, a_once_key2: ET_MANIFEST_STRING)
 			-- Create a new VVOK-1 error: `a_once_key1' and `a_once_key2' cannot be
 			-- combined. The supported once keys "PROCESS", "THREAD" and "OBJECT"
@@ -17557,6 +17655,8 @@ feature {NONE} -- Implementation
 	vuot4b_default_template: STRING = "ISE does not support object-tests in check instructions."
 	vuta2a_default_template: STRING = "the target (of type '$9') of the call to feature `$8' is not attached."
 	vuta2b_default_template: STRING = "the target (of type '$8') of the call to Tuple label `$7' is not attached."
+	vuta4ga_default_template: STRING = "the target (of type '$9') of the call to feature `$8' is not controlled."
+	vuta4gb_default_template: STRING = "the target (of type '$8') of the call to Tuple label `$7' is not controlled."
 	vvok1a_default_template: STRING = "once keys %"$6%" and %"$7%" cannot be combined."
 	vvok1b_default_template: STRING = "indexing once status %"$6%" and once key %"$7%" cannot be combined."
 	vvok1c_default_template: STRING = "indexing once status %"$6%" and %"$7%" cannot be combined."
@@ -17753,6 +17853,7 @@ feature {NONE} -- Implementation
 	vuot3_etl_code: STRING = "VUOT-3"
 	vuot4_etl_code: STRING = "VUOT-4"
 	vuta2_etl_code: STRING = "VUTA-2"
+	vuta4g_etl_code: STRING = "VUTA-4G"
 	vvok1_etl_code: STRING = "VVOK-1"
 	vvok2_etl_code: STRING = "VVOK-2"
 	vwab_etl_code: STRING = "VWAB"
@@ -18114,6 +18215,8 @@ feature {NONE} -- Implementation
 	vuot4b_template_code: STRING = "vuot4b"
 	vuta2a_template_code: STRING = "vuta2a"
 	vuta2b_template_code: STRING = "vuta2b"
+	vuta4ga_template_code: STRING = "vuta4ga"
+	vuta4gb_template_code: STRING = "vuta4gb"
 	vvok1a_template_code: STRING = "vvok1a"
 	vvok1b_template_code: STRING = "vvok1b"
 	vvok1c_template_code: STRING = "vvok1c"
