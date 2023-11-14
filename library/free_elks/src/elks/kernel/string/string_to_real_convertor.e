@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "String to real/double convertor"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2023-03-13 09:36:33 +0000 (Mon, 13 Mar 2023) $"
+	revision: "$Revision: 106668 $"
 
 frozen class
 	STRING_TO_REAL_CONVERTOR
@@ -91,7 +91,7 @@ feature -- Status reporting
 		end
 
 	is_integral_real: BOOLEAN
-			-- Is character sequence that has been parsed represents a valid real?	
+			-- Is character sequence that has been parsed represents a valid real?
 		do
 			Result := is_integral_double
 		end
@@ -170,11 +170,11 @@ feature -- Parse
 			l_code: NATURAL_32
 		do
 			reset (type)
-			i := 0
-			nb := s.count
 			if attached {READABLE_STRING_8} s as l_str8 then
 				from
 					l_area8 := l_str8.area
+					i := l_str8.area_lower
+					nb := i + l_str8.count
 				until
 					i = nb or last_state = 9
 				loop
@@ -184,6 +184,8 @@ feature -- Parse
 			elseif attached {READABLE_STRING_32} s as l_str32 then
 				from
 					l_area32 := l_str32.area
+					i := l_str32.area_lower
+					nb := i + l_str32.count
 				until
 					i = nb or last_state = 9
 				loop
@@ -191,7 +193,7 @@ feature -- Parse
 					if l_c.is_character_8 then
 						parse_character (l_c.to_character_8)
 					else
-							-- Not a valid character.						
+							-- Not a valid character.
 						last_state := 9
 					end
 					i := i + 1
@@ -229,7 +231,7 @@ feature -- Parse
 				-- Integer_literal = [Sign] Integer
 				-- Sign			= "+" | "-"
 				-- Integer		= Digit | Digit Integer
-				-- Digit		= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9".			
+				-- Digit		= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9".
 
 					-- last_state = 0 : waiting sign or double value.
 					-- last_state = 1 : sign read, waiting double value.
@@ -237,7 +239,7 @@ feature -- Parse
 					-- last_state = 3 : decimal point read
 					-- last_state = 4 : in fractional part
 					-- last_state = 5 : read 'E' or 'e' for scientific notation
-					-- last_state = 6 : sign of exponent read, waiting for digit.				
+					-- last_state = 6 : sign of exponent read, waiting for digit.
 					-- last_state = 7 : in exponent
 					-- last_state = 8 : after the number.
 					-- last_state = 9 : error state.

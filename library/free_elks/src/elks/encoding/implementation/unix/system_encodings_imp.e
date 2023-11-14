@@ -2,8 +2,8 @@ note
 	description: "System encodings, Unix implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2023-02-21 16:22:12 +0000 (Tue, 21 Feb 2023) $"
+	revision: "$Revision: 106592 $"
 
 class
 	SYSTEM_ENCODINGS_IMP
@@ -19,7 +19,7 @@ inherit {NONE}
 
 feature -- Access
 
-	system_code_page: STRING
+	system_code_page: STRING_8
 			-- <Precursor>
 			-- Name of character set.
 		local
@@ -29,7 +29,7 @@ feature -- Access
 			Result := pointer_to_multi_byte (l_p, c_strlen (l_p))
 		end
 
-	console_code_page: STRING
+	console_code_page: STRING_8
 			-- Console code page
 		do
 			if is_utf8_activated then
@@ -42,7 +42,7 @@ feature -- Access
 			end
 		end
 
-	iso_8859_1_code_page: STRING
+	iso_8859_1_code_page: STRING_8
 			-- ISO-8859-1 code page.
 		do
 			Result := "ISO-8859-1"
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

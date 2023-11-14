@@ -6,8 +6,8 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2021-12-23 19:15:48 +0000 (Thu, 23 Dec 2021) $"
+	revision: "$Revision: 106074 $"
 
 class
 	STRING_8
@@ -1480,7 +1480,7 @@ feature -- Conversion
 		end
 
 	left_justify
-			-- Left justify Current using `count' as witdth.
+			-- Left justify Current using `count' as width.
 		local
 			i, nb: INTEGER
 			l_area: like area
@@ -1805,7 +1805,7 @@ invariant
 	compare_character: not object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

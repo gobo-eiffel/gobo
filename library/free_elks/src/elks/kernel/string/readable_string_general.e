@@ -3,8 +3,8 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2021-12-23 19:15:48 +0000 (Thu, 23 Dec 2021) $"
+	revision: "$Revision: 106074 $"
 
 deferred class
 	READABLE_STRING_GENERAL
@@ -856,7 +856,7 @@ feature -- Conversion
 				For 32-bit strings:
 					- use explicit conversion `to_string_8` with a test that the string is made of ASCII characters only.
 				For 8-bit strings:
-					- consider changing the type of reattachmanet target to READABLE_STRING_8 or
+					- consider changing the type of reattachment target to READABLE_STRING_8 or
 					- use explicit conversion `to_string_8` to avoid implicit performance penalty.
 				[2019-11-30]
 			]"

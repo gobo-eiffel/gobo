@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "Convertor to do hexadecimal string to integer/natural conversion"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2023-03-13 09:36:33 +0000 (Mon, 13 Mar 2023) $"
+	revision: "$Revision: 106668 $"
 
 frozen class
 	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER
@@ -108,11 +108,11 @@ feature -- Parse
 			l_c: CHARACTER_32
 		do
 			reset (type)
-			i := 0
-			nb := s.count
 			if attached {READABLE_STRING_8} s as l_str8 then
 				from
 					l_area8 := l_str8.area
+					i := l_str8.area_lower
+					nb := i + l_str8.count
 				until
 					i = nb or last_state >= 4
 				loop
@@ -127,6 +127,8 @@ feature -- Parse
 			elseif attached {READABLE_STRING_32} s as l_str32 then
 				from
 					l_area32 := l_str32.area
+					i := l_str32.area_lower
+					nb := i + l_str32.count
 				until
 					i = nb or last_state >= 4
 				loop
@@ -139,7 +141,7 @@ feature -- Parse
 					if l_c.is_character_8 then
 						parse_character (l_c.to_character_8)
 					else
-							-- Not a valid character.						
+							-- Not a valid character.
 						last_state := 4
 					end
 					i := i + 1
@@ -160,7 +162,7 @@ feature -- Parse
 					if l_code.is_valid_character_8_code then
 						parse_character (l_code.to_character_8)
 					else
-							-- Not a valid character.						
+							-- Not a valid character.
 						last_state := 4
 					end
 					i := i + 1
@@ -170,7 +172,7 @@ feature -- Parse
 
 	parse_character (c: CHARACTER)
 			-- Parse `c' in current parse session.
-			-- Make result available in `overflowed', `underflowed' and `parse_successful'.			
+			-- Make result available in `overflowed', `underflowed' and `parse_successful'.
 		local
 			temp_p1: like max_natural_type
 			temp_p2: like max_natural_type

@@ -3,8 +3,8 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2020-10-17 17:13:58 +0000 (Sat, 17 Oct 2020) $"
-	revision: "$Revision: 104784 $"
+	date: "$Date: 2023-01-21 16:41:20 +0000 (Sat, 21 Jan 2023) $"
+	revision: "$Revision: 106512 $"
 
 class
 	INTEGER_8_REF
@@ -396,10 +396,77 @@ feature -- Conversion
 			Result := item.to_double
 		end
 
-	to_hex_string: STRING
+	to_binary_string: STRING_8
+			-- Convert `item' into a binary string.
+		local
+			i: INTEGER
+			val: INTEGER_8
+		do
+			from
+				i := {PLATFORM}.integer_8_bits
+				create Result.make_filled ('0', i)
+				val := item
+			until
+				i = 0
+			loop
+				Result.put ((val & 0x1).to_binary_character, i)
+				val := val |>> 1
+				i := i - 1
+			end
+		ensure
+			result_not_void: Result /= Void
+			result_valid_count: Result.count = {PLATFORM}.integer_8_bits
+			binary: ∀ c: Result ¦ ("01").has (c)
+		end
+
+	to_binary_character: CHARACTER_8
+			-- Convert `item' into a binary character.
+		require
+			in_bounds: 0 <= item and item <= 1
+		do
+			Result := '0' + item.to_integer_32
+		ensure
+			valid_character: ("01").has (Result)
+		end
+
+	to_octal_string: STRING_8
+			-- Convert `item' into an octal string.
+		local
+			i: INTEGER
+			val: INTEGER_8
+		do
+			from
+				i := ({PLATFORM}.integer_8_bits / 3).ceiling_real_64.truncated_to_integer
+				create Result.make_filled ('0', i)
+				val := item
+			until
+				i = 0
+			loop
+				Result.put ((val & 0x7).to_octal_character, i)
+				val := val |>> 3
+				i := i - 1
+			end
+		ensure
+			result_not_void: Result /= Void
+			result_valid_count: Result.count = ({PLATFORM}.integer_8_bits / 3).ceiling_real_64.truncated_to_integer
+			octal: ∀ c: Result ¦ ("01234567").has (c)
+		end
+
+	to_octal_character: CHARACTER_8
+			-- Convert `item' into an octal character.
+		require
+			in_bounds: 0 <= item and item <= 7
+		do
+			Result := '0' + item.to_integer_32
+		ensure
+			valid_character: ("01234567").has (Result)
+		end
+
+	to_hex_string: STRING_8
 			-- Convert `item' into an hexadecimal string.
 		local
-			i, val: INTEGER
+			i: INTEGER
+			val: INTEGER_8
 		do
 			from
 				i := {PLATFORM}.integer_8_bits // 4
@@ -414,7 +481,8 @@ feature -- Conversion
 			end
 		ensure
 			result_not_void: Result /= Void
-			result_valid_count: Result.count = 2
+			result_valid_count: Result.count = {PLATFORM}.integer_8_bits // 4
+			hexadecimal: ∀ c: Result ¦ ("0123456789ABCDEF").has (c)
 		end
 
 	to_hex_character: CHARACTER_8
@@ -601,7 +669,7 @@ invariant
 	sign_times_abs: sign * abs = item
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

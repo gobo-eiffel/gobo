@@ -6,8 +6,8 @@
 	names: traversable_subset, set, subset
 	access: sequential
 	contents: generic
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2023-09-26 10:12:52 +0000 (Tue, 26 Sep 2023) $"
+	revision: "$Revision: 107311 $"
 
 deferred class TRAVERSABLE_SUBSET [G] inherit
 
@@ -195,7 +195,6 @@ feature {NONE} -- Implementation
 			-- Strategy to calculate several subset features selected depending
 			-- on the dynamic type of `v' and `other'
 		require
-			item_exists: v /= Void
 			other_exists: other /= Void
 		deferred
 		ensure

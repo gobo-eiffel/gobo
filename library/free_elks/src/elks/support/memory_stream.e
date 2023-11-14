@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2021-12-23 19:03:49 +0000 (Thu, 23 Dec 2021) $"
+	revision: "$Revision: 106072 $"
 
 class
 	MEMORY_STREAM
@@ -13,7 +13,7 @@ obsolete
 	"Use MANAGED_POINTER instead."
 
 inherit
-	DISPOSABLE
+	ANY
 		redefine
 			copy, is_equal
 		end
@@ -165,12 +165,6 @@ feature -- Duplication
 
 feature {NONE} -- Disposal
 
-	dispose
-			-- Release `area'.
-		do
-			area.item.memory_free
-		end
-
 	internal_area: MANAGED_POINTER
 
 invariant
@@ -178,7 +172,7 @@ invariant
 	area_not_null: area /= default_pointer
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

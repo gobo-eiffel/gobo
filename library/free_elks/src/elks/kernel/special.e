@@ -6,8 +6,8 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2023-09-06 08:25:14 +0000 (Wed, 06 Sep 2023) $"
+	revision: "$Revision: 107239 $"
 
 frozen class
 	SPECIAL [T]
@@ -180,7 +180,7 @@ feature -- Status report
 	filled_with (v: T; start_index, end_index: INTEGER): BOOLEAN
 			-- Are all items between index `start_index' and `end_index'
 			-- set to `v'?
-			-- (Use reference equality for comparison.)			
+			-- (Use reference equality for comparison.)
 		require
 			start_index_non_negative: start_index >= 0
 			start_index_not_too_big: start_index <= end_index + 1
@@ -214,7 +214,10 @@ feature -- Status report
 			i, j, nb: INTEGER
 		do
 			Result := True
-			if other /= Current then
+			if
+				other /= Current
+				or source_index /= destination_index
+			then
 				from
 					i := source_index
 					j := destination_index
@@ -224,10 +227,11 @@ feature -- Status report
 				loop
 					if other.item (i) /= item (j) then
 						Result := False
-						i := nb - 1
+						i := nb -- Exit the loop
+					else
+						i := i + 1
+						j := j + 1
 					end
-					i := i + 1
-					j := j + 1
 				end
 			end
 		ensure
@@ -430,7 +434,7 @@ feature -- Element change
 				end
 			end
 		ensure
-			copied:	same_items (other, source_index, destination_index, n)
+			copied:	other /= Current implies same_items (other, source_index, destination_index, n)
 			count_updated: count = (old count).max (destination_index + n)
 		end
 
@@ -877,7 +881,7 @@ invariant
 	consistent_count: count = upper - lower + 1
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2023, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

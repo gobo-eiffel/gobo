@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Subsets that are traversable linearly without commitment to a concrete
 		implementation.
@@ -9,8 +9,8 @@ note
 	names: linear_subset, subset, set;
 	access: membership;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2023-09-26 15:21:44 +0000 (Tue, 26 Sep 2023) $"
+	revision: "$Revision: 107318 $"
 
 deferred class LINEAR_SUBSET [G] inherit
 
@@ -35,11 +35,11 @@ feature -- Status report
 		deferred
 		end
 
-	valid_index (n: INTEGER): BOOLEAN
-			-- Is `n' a valid index?
+	valid_index (i: INTEGER): BOOLEAN
+			-- Is `i' a valid index?
 		deferred
 		ensure
-			index_valid: 0 <= n and n <= count + 1
+			valid_index_definition: Result = ((i >= 1) and (i <= count))
 		end
 
 feature -- Cursor movement
@@ -68,7 +68,7 @@ feature -- Element change
 	move_item (v: G)
 			-- Move `v' to the left of cursor.
 		require
-			item_exists: v /= Void
+			not_before: not before
 			item_in_set: has (v)
 		local
 			idx: INTEGER
@@ -92,6 +92,9 @@ feature -- Element change
 			check
 				found: found and not after
 					-- Because the precondition states that `v' is in the set.
+			end
+			if index < idx then
+				idx := idx - 1 -- Items are shifted to the left by one position
 			end
 			remove
 			go_i_th (idx)
