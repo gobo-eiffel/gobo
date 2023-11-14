@@ -11,16 +11,16 @@ jobs:
   linux_build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github
         shell: pwsh
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: gobo_bin_linux
           path: bin
           retention-days: 1
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: gobo_c_config_linux
           path: tool/gec/config/c/default.cfg
@@ -29,16 +29,16 @@ jobs:
   macos_build:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github
         shell: pwsh
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: gobo_bin_macos
           path: bin
           retention-days: 1
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: gobo_c_config_macos
           path: tool/gec/config/c/default.cfg
@@ -47,15 +47,15 @@ jobs:
   windows_build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: gobo_bin_windows
           path: bin
           retention-days: 1
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: gobo_c_config_windows
           path: tool/gec/config/c/default.cfg
@@ -74,12 +74,12 @@ jobs:
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v3
         with:
           name: gobo_bin_linux
           path: bin
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: gobo_c_config_linux
           path: tool/gec/config/c
@@ -96,12 +96,12 @@ jobs:
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v3
         with:
           name: gobo_bin_macos
           path: bin
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: gobo_c_config_macos
           path: tool/gec/config/c
@@ -118,12 +118,12 @@ jobs:
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v3
         with:
           name: gobo_bin_windows
           path: bin
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: gobo_c_config_windows
           path: tool/gec/config/c
