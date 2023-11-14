@@ -79,7 +79,7 @@ switch ($CiTool) {
 			"Windows_NT" {
 				$GOBO_CI_OS = "windows"
 				# Setting the environment variables for `cl`.
-				Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
+				Invoke-Environment('"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
 			}
 			default {
 				Write-Error "Platform not supported: $env:AGENT_OS"
@@ -100,7 +100,7 @@ switch ($CiTool) {
 				$GOBO_CI_OS = "windows"
 				# Setting the environment variables for `cl`.
 				# See https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
-				Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
+				Invoke-Environment('"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
 			}
 			default {
 				Write-Error "Platform not supported: $env:RUNNER_OS"
