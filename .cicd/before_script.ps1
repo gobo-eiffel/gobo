@@ -79,7 +79,7 @@ switch ($CiTool) {
 			"Windows_NT" {
 				$GOBO_CI_OS = "windows"
 				# Setting the environment variables for `cl`.
-				Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
+				Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
 			}
 			default {
 				Write-Error "Platform not supported: $env:AGENT_OS"
@@ -99,7 +99,8 @@ switch ($CiTool) {
 			"Windows" {
 				$GOBO_CI_OS = "windows"
 				# Setting the environment variables for `cl`.
-				Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
+				# See https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
+				Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
 			}
 			default {
 				Write-Error "Platform not supported: $env:RUNNER_OS"
@@ -123,6 +124,7 @@ switch ($CiTool) {
 				"windows" {
 					$GOBO_CI_OS = "windows"
 					# Setting the environment variables for `cl`.
+					# See https://gitlab.com/gitlab-org/ci-cd/shared-runners/images/gcp/windows-containers/blob/main/cookbooks/preinstalled-software/README.md
 					Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
 				}
 				default {
