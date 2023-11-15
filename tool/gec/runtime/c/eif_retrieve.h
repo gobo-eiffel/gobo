@@ -19,6 +19,9 @@
 #ifndef GE_EIFFEL_H
 #include "ge_eiffel.h"
 #endif
+#ifndef EIF_CECIL_H
+#include "eif_cecil.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
