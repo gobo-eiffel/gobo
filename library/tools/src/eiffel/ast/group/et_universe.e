@@ -16,7 +16,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #18 $"
@@ -887,8 +887,8 @@ feature -- Kernel types
 			-- where '[attached]' is an implicit type mark
 
 	iterable_detachable_separate_any_type: ET_CLASS_TYPE
-			-- Class type "[attached] ITERABLE [detachable separate ANY]",
-			-- where '[attached]' is an implicit type mark
+			-- Class type "[attached separate] ITERABLE [detachable separate ANY]",
+			-- where '[attached separate]' is an implicit type mark
 
 	natural_type: ET_CLASS_TYPE
 			-- Class type "NATURAL"
@@ -1360,10 +1360,10 @@ feature -- Kernel types
 			l_name := tokens.iterable_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_marked (True)
-				-- Type "[attached] ITERABLE [detachable separate ANY]".
+				-- Type "[attached separate] ITERABLE [detachable separate ANY]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (detachable_separate_any_type)
-			create iterable_detachable_separate_any_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+			create iterable_detachable_separate_any_type.make_generic (tokens.implicit_attached_separate_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_natural_type

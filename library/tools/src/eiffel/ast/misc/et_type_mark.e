@@ -5,7 +5,7 @@ note
 		"Eiffel type marks (e.g. 'attached', 'detachable', 'expanded', 'reference', 'separate', '!' or '?')"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,9 +75,9 @@ feature -- Status report
 			-- Is current type mark a mark to indicate whether
 			-- the type should be separate or not?
 		do
-			Result := is_separate_mark
+			Result := is_separate_mark or is_non_separate_mark
 		ensure
-			defintion: Result = is_separate_mark
+			defintion: Result = (is_separate_mark or is_non_separate_mark)
 		end
 
 	is_explicit_separateness_mark: BOOLEAN
@@ -95,6 +95,13 @@ feature -- Status report
 			-- the type should be separate?
 		do
 			Result := is_separate
+		end
+
+	is_non_separate_mark: BOOLEAN
+			-- Is current type mark a mark to indicate that
+			-- the type should be non-separate?
+		do
+			-- Result := False
 		end
 
 	is_separate: BOOLEAN
@@ -164,6 +171,7 @@ feature -- Access
 			l_result_expanded_mark: BOOLEAN
 			l_result_reference_mark: BOOLEAN
 			l_result_separate_mark: BOOLEAN
+			l_result_non_separate_mark: BOOLEAN
 			l_result_attached_mark: BOOLEAN
 			l_result_detachable_mark: BOOLEAN
 			l_current_ok: BOOLEAN
@@ -195,13 +203,26 @@ feature -- Access
 					end
 				end
 				if a_override_type_mark.is_separateness_mark then
-					l_result_separate_mark := True
-					if not is_separate_mark then
-						l_current_ok := False
+					if a_override_type_mark.is_separate_mark then
+						l_result_separate_mark := True
+						if not is_separate_mark then
+							l_current_ok := False
+						end
+					else
+						l_result_non_separate_mark := True
+						if not is_non_separate_mark then
+							l_current_ok := False
+						end
 					end
+
 				elseif is_separateness_mark then
 					l_other_ok := False
-					l_result_separate_mark := True
+					if is_separate_mark then
+						l_result_separate_mark := True
+					else
+						l_result_non_separate_mark := True
+					end
+
 				end
 				if a_override_type_mark.is_attachment_mark then
 					if a_override_type_mark.is_attached_mark then
@@ -228,7 +249,7 @@ feature -- Access
 				elseif l_other_ok then
 					Result := a_override_type_mark
 				else
-					Result := tokens.implicit_type_mark (l_result_expanded_mark, l_result_reference_mark, l_result_separate_mark, l_result_attached_mark, l_result_detachable_mark)
+					Result := tokens.implicit_type_mark (l_result_expanded_mark, l_result_reference_mark, l_result_separate_mark, l_result_non_separate_mark, l_result_attached_mark, l_result_detachable_mark)
 				end
 			end
 		ensure
@@ -339,5 +360,6 @@ invariant
 
 	expandedness_consistency: not (is_expanded_mark and is_reference_mark)
 	attachment_consistency: not (is_attached_mark and is_detachable_mark)
+	separateness_consistency: not (is_separate_mark and is_non_separate_mark)
 
 end

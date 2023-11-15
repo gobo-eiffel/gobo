@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -312,7 +312,7 @@ feature -- Types
 				in_dynamic_primary_type := True
 				l_old_dynamic_types_count := dynamic_types.count
 			end
-			l_implicit_type_mark := tokens.implicit_detachable_type_mark
+			l_implicit_type_mark := tokens.implicit_detachable_non_separate_type_mark
 			l_base_class := a_type.base_class (a_context)
 			i := l_base_class.index
 			if i >= 1 and i <= dynamic_types.count then

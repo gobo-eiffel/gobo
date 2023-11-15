@@ -5,7 +5,7 @@ note
 		"Eiffel implicit type marks"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,7 +20,8 @@ inherit
 			is_detachable_mark,
 			is_expanded_mark,
 			is_reference_mark,
-			is_separate_mark
+			is_separate_mark,
+			is_non_separate_mark
 		end
 
 create
@@ -67,6 +68,10 @@ feature -- Status report
 			-- Is current type mark a mark to indicate that
 			-- the type should be separate?
 
+	is_non_separate_mark: BOOLEAN
+			-- Is current type mark a mark to indicate that
+			-- the type should be non-separate?
+
 	is_expanded_mark: BOOLEAN
 			-- Is current type mark a mark to indicate whether
 			-- the type should be expanded?
@@ -103,8 +108,22 @@ feature -- Status setting
 			-- Set `is_separate_mark' to `b'.
 		do
 			is_separate_mark := b
+			if b then
+				is_non_separate_mark := False
+			end
 		ensure
 			separate_mark_set: is_separate_mark = b
+		end
+
+	set_non_separate_mark (b: BOOLEAN)
+			-- Set `is_non_separate_mark' to `b'.
+		do
+			is_non_separate_mark := b
+			if b then
+				is_separate_mark := False
+			end
+		ensure
+			non_separate_mark_set: is_non_separate_mark = b
 		end
 
 	set_expanded_mark (b: BOOLEAN)

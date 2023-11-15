@@ -3714,6 +3714,41 @@ feature -- Types
 			implicit_attached_separate_reference_type_mark_not_void: Result /= Void
 		end
 
+	implicit_attached_non_separate_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'attached non-separate' type mark
+		once
+			create Result.make
+			Result.set_attached_mark (True)
+			Result.set_non_separate_mark (True)
+		ensure
+			instance_free: class
+			implicit_attached_non_separate_type_mark_not_void: Result /= Void
+		end
+
+	implicit_attached_non_separate_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'attached non-separate expanded' type mark
+		once
+			create Result.make
+			Result.set_attached_mark (True)
+			Result.set_non_separate_mark (True)
+			Result.set_expanded_mark (True)
+		ensure
+			instance_free: class
+			implicit_attached_non_separate_expanded_type_mark_not_void: Result /= Void
+		end
+
+	implicit_attached_non_separate_reference_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'attached non-separate reference' type mark
+		once
+			create Result.make
+			Result.set_attached_mark (True)
+			Result.set_non_separate_mark (True)
+			Result.set_reference_mark (True)
+		ensure
+			instance_free: class
+			implicit_attached_non_separate_reference_type_mark_not_void: Result /= Void
+		end
+
 	implicit_detachable_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'detachable' type mark
 		once
@@ -3781,6 +3816,41 @@ feature -- Types
 			implicit_detachable_separate_reference_type_mark_not_void: Result /= Void
 		end
 
+	implicit_detachable_non_separate_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'detachable non-separate' type mark
+		once
+			create Result.make
+			Result.set_detachable_mark (True)
+			Result.set_non_separate_mark (True)
+		ensure
+			instance_free: class
+			implicit_detachable_non_separate_type_mark_not_void: Result /= Void
+		end
+
+	implicit_detachable_non_separate_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'detachable non-separate expanded' type mark
+		once
+			create Result.make
+			Result.set_detachable_mark (True)
+			Result.set_non_separate_mark (True)
+			Result.set_expanded_mark (True)
+		ensure
+			instance_free: class
+			implicit_detachable_non_separate_expanded_type_mark_not_void: Result /= Void
+		end
+
+	implicit_detachable_non_separate_reference_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'detachable non-separate reference' type mark
+		once
+			create Result.make
+			Result.set_detachable_mark (True)
+			Result.set_non_separate_mark (True)
+			Result.set_reference_mark (True)
+		ensure
+			instance_free: class
+			implicit_detachable_non_separate_reference_type_mark_not_void: Result /= Void
+		end
+
 	implicit_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'expanded' type mark
 		once
@@ -3833,6 +3903,38 @@ feature -- Types
 			implicit_separate_reference_type_mark_not_void: Result /= Void
 		end
 
+	implicit_non_separate_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'non-separate' type mark
+		once
+			create Result.make
+			Result.set_non_separate_mark (True)
+		ensure
+			instance_free: class
+			implicit_non_separate_type_mark_not_void: Result /= Void
+		end
+
+	implicit_non_separate_expanded_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'non-separate expanded' type mark
+		once
+			create Result.make
+			Result.set_non_separate_mark (True)
+			Result.set_expanded_mark (True)
+		ensure
+			instance_free: class
+			implicit_non_separate_expanded_type_mark_not_void: Result /= Void
+		end
+
+	implicit_non_separate_reference_type_mark: ET_IMPLICIT_TYPE_MARK
+			-- Implicit 'non-separate reference' type mark
+		once
+			create Result.make
+			Result.set_non_separate_mark (True)
+			Result.set_reference_mark (True)
+		ensure
+			instance_free: class
+			implicit_non_separate_reference_type_mark_not_void: Result /= Void
+		end
+
 	implicit_no_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit no type mark
 		once
@@ -3842,11 +3944,12 @@ feature -- Types
 			implicit_no_type_mark_not_void: Result /= Void
 		end
 
-	implicit_type_mark (a_expanded_mark, a_reference_mark, a_separate_mark, a_attached_mark, a_detachable_mark: BOOLEAN): ET_IMPLICIT_TYPE_MARK
+	implicit_type_mark (a_expanded_mark, a_reference_mark, a_separate_mark, a_non_separate_mark, a_attached_mark, a_detachable_mark: BOOLEAN): ET_IMPLICIT_TYPE_MARK
 			-- Implicity type mark
 		require
 			expandedness_consistency: not (a_expanded_mark and a_reference_mark)
 			attachment_consistency: not (a_attached_mark and a_detachable_mark)
+			separateness_consistency: not (a_separate_mark and a_non_separate_mark)
 		do
 			if a_attached_mark then
 				if a_separate_mark then
@@ -3856,6 +3959,14 @@ feature -- Types
 						Result := implicit_attached_separate_reference_type_mark
 					else
 						Result := implicit_attached_separate_type_mark
+					end
+				elseif a_non_separate_mark then
+					if a_expanded_mark then
+						Result := implicit_attached_non_separate_expanded_type_mark
+					elseif a_reference_mark then
+						Result := implicit_attached_non_separate_reference_type_mark
+					else
+						Result := implicit_attached_non_separate_type_mark
 					end
 				elseif a_expanded_mark then
 					Result := implicit_attached_expanded_type_mark
@@ -3873,6 +3984,14 @@ feature -- Types
 					else
 						Result := implicit_detachable_separate_type_mark
 					end
+				elseif a_non_separate_mark then
+					if a_expanded_mark then
+						Result := implicit_detachable_non_separate_expanded_type_mark
+					elseif a_reference_mark then
+						Result := implicit_detachable_non_separate_reference_type_mark
+					else
+						Result := implicit_detachable_non_separate_type_mark
+					end
 				elseif a_expanded_mark then
 					Result := implicit_detachable_expanded_type_mark
 				elseif a_reference_mark then
@@ -3887,6 +4006,14 @@ feature -- Types
 					Result := implicit_separate_reference_type_mark
 				else
 					Result := implicit_separate_type_mark
+				end
+			elseif a_non_separate_mark then
+				if a_expanded_mark then
+					Result := implicit_non_separate_expanded_type_mark
+				elseif a_reference_mark then
+					Result := implicit_non_separate_reference_type_mark
+				else
+					Result := implicit_non_separate_type_mark
 				end
 			elseif a_expanded_mark then
 				Result := implicit_expanded_type_mark

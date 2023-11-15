@@ -6175,6 +6175,10 @@ feature {NONE} -- Expression validity
 				set_fatal_error
 				error_handler.report_vucr0f_error (current_class, current_class_impl, an_expression)
 			else
+				if a_context.is_type_separate then
+					print ("separate")
+					print (a_context.last.generating_type)
+				end
 				if not a_context.is_type_attached then
 					a_context.force_last (tokens.attached_like_current)
 				end
@@ -8769,6 +8773,7 @@ feature {NONE} -- Expression validity
 			i, j, nb: INTEGER
 			l_enclosing_agent: ET_INLINE_AGENT
 			l_type_kept: BOOLEAN
+			l_is_controlled: BOOLEAN
 		do
 			has_fatal_error := False
 			l_expression_context := new_context (current_type)
@@ -8779,20 +8784,30 @@ feature {NONE} -- Expression validity
 						-- type 'detachable ANY' when checking the validity of the expression.
 					l_had_error := True
 					check_expression_validity (an_expression.expression, l_expression_context, current_system.detachable_separate_any_type)
+					l_is_controlled := l_expression_context.is_controlled
 					has_fatal_error := has_fatal_error or l_had_error
 				else
 					l_expression_context.force_last (l_type)
 					check_expression_validity (an_expression.expression, a_context, l_expression_context)
+					l_is_controlled := a_context.is_controlled
 					a_context.reset (current_type)
 				end
 			else
 				check_expression_validity (an_expression.expression, l_expression_context, current_system.detachable_separate_any_type)
+				l_is_controlled := l_expression_context.is_controlled
 			end
 			if current_system.attachment_type_conformance_mode then
 				if not l_expression_context.is_type_attached then
 						-- The type of the object-test local is attached even
 						-- when not explicitly declared as attached.
 					l_expression_context.force_last (tokens.attached_like_current)
+				end
+			end
+			if current_system.scoop_mode then
+				if l_is_controlled and l_expression_context.is_type_separate and not l_expression_context.is_controlled then
+						-- If expression is controlled and the type is separate
+						-- then the object-test local is controlled as well.
+					l_expression_context.force_last (tokens.controlled_type_modifier)
 				end
 			end
 			if not has_fatal_error then

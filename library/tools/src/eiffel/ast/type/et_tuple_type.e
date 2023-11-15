@@ -5,7 +5,7 @@ note
 		"Eiffel TUPLE types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,6 +66,7 @@ feature -- Access
 			l_result_expanded_mark: BOOLEAN
 			l_result_reference_mark: BOOLEAN
 			l_result_separate_mark: BOOLEAN
+			l_result_non_separate_mark: BOOLEAN
 			l_result_attached_mark: BOOLEAN
 			l_result_detachable_mark: BOOLEAN
 			l_current_ok: BOOLEAN
@@ -80,16 +81,28 @@ feature -- Access
 					l_other_ok := False
 				end
 				if a_override_type_mark.is_separateness_mark then
-					if not is_separate then
-						l_current_ok := False
-					end
-					if not base_class.is_separate then
-						l_result_separate_mark := True
+					if a_override_type_mark.is_separate_mark then
+						if not is_separate then
+							l_current_ok := False
+						end
+						if not base_class.is_separate then
+							l_result_separate_mark := True
+						end
+					else
+						if is_separate then
+							l_current_ok := False
+						end
+						l_result_non_separate_mark := True
 					end
 				elseif attached type_mark as l_type_mark and then l_type_mark.is_separateness_mark then
-					if not base_class.is_separate then
+					if l_type_mark.is_separate_mark then
+						if not base_class.is_separate then
+							l_other_ok := False
+							l_result_separate_mark := True
+						end
+					else
 						l_other_ok := False
-						l_result_separate_mark := True
+						l_result_non_separate_mark := True
 					end
 				end
 				if a_override_type_mark.is_attachment_mark then
@@ -118,7 +131,7 @@ feature -- Access
 				elseif l_other_ok then
 					Result := a_override_type_mark
 				else
-					Result := tokens.implicit_type_mark (l_result_expanded_mark, l_result_reference_mark, l_result_separate_mark, l_result_attached_mark, l_result_detachable_mark)
+					Result := tokens.implicit_type_mark (l_result_expanded_mark, l_result_reference_mark, l_result_separate_mark, l_result_non_separate_mark, l_result_attached_mark, l_result_detachable_mark)
 				end
 			end
 		end
