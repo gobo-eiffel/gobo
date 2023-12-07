@@ -5,7 +5,7 @@ note
 		"ECF parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -385,6 +385,7 @@ feature {NONE} -- Element change
 			l_library_capabilities: ET_ECF_CAPABILITIES
 			l_capability_name: STRING
 		do
+			build_ise_eiffel_to_gobo_uuid_mappings
 			l_libraries := a_universe.libraries
 			create l_result.make (Void)
 			nb := l_libraries.count
@@ -632,6 +633,59 @@ feature {NONE} -- Implementation
 			Result := file_system.canonical_pathname (Result)
 		ensure
 			full_filename_not_void: Result /= Void
+		end
+
+	ise_eiffel_to_gobo_uuid_mappings: detachable DS_HASH_TABLE [STRING, STRING]
+			-- Mappings between ISE Eiffel libraries ECF uuid and
+			-- the same library in Gobo Eiffel.
+			-- For example: ISE's EiffelBase and Gobo's free_elks libraries.
+
+	build_ise_eiffel_to_gobo_uuid_mappings
+			-- Build `ise_eiffel_to_gobo_uuid_mappings'.
+		local
+			l_uuid_mappings: like ise_eiffel_to_gobo_uuid_mappings
+		do
+			create l_uuid_mappings.make_map (2)
+			l_uuid_mappings.set_key_equality_tester (case_insensitive_string_equality_tester)
+			ise_eiffel_to_gobo_uuid_mappings := l_uuid_mappings
+			if
+				attached uuid_from_ecf_file (file_system.nested_pathname ("${ISE_EIFFEL}", <<"library", "base", "base.ecf">>)) as l_ise_eiffel_uuid and
+				attached uuid_from_ecf_file (file_system.nested_pathname ("${GOBO}", <<"library", "free_elks", "src", "library.ecf">>)) as l_gobo_uuid
+			then
+				l_uuid_mappings.put (l_gobo_uuid, l_ise_eiffel_uuid)
+			end
+			if
+				attached uuid_from_ecf_file (file_system.nested_pathname ("${ISE_EIFFEL}", <<"library", "thread", "thread.ecf">>)) as l_ise_eiffel_uuid and
+				attached uuid_from_ecf_file (file_system.nested_pathname ("${GOBO}", <<"library", "thread", "src", "library.ecf">>)) as l_gobo_uuid
+			then
+				l_uuid_mappings.put (l_gobo_uuid, l_ise_eiffel_uuid)
+			end
+		ensure
+			ise_eiffel_to_gobo_uuid_mappings_built: ise_eiffel_to_gobo_uuid_mappings /= Void
+		end
+
+	uuid_from_ecf_file (a_filename: STRING): detachable STRING
+			-- UUID read from ECF file `a_filename' if any
+		require
+			a_filename_not_void: a_filename /= Void
+		local
+			l_file: KL_TEXT_INPUT_FILE
+			l_filename: STRING
+			l_result: DS_CELL [detachable ET_ECF_CONFIG]
+			l_dummy_universe: ET_ECF_SYSTEM
+		do
+			l_filename := execution_environment.interpreted_string (a_filename)
+			create l_dummy_universe.make ("*dummy*", "dummy")
+			create l_result.make (Void)
+			create l_file.make (l_filename)
+			l_file.open_read
+			if l_file.is_open_read then
+				parse_file_with_action (l_file, False, agent build_config (?, ?, ?, l_dummy_universe, l_result))
+				l_file.close
+			end
+			if attached l_result.item as l_config then
+				Result := l_config.uuid
+			end
 		end
 
 invariant

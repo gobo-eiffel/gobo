@@ -5,7 +5,7 @@ note
 		"ECF parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1283,6 +1283,7 @@ feature {NONE} -- AST factory
 			l_unknown_library: ET_ECF_LIBRARY
 			l_parsed_libraries: like parsed_libraries
 			l_system: ET_SYSTEM
+			l_uuid_value: STRING
 		do
 			l_system := a_adapted_library.universe.current_system
 			if not attached a_element.attribute_by_name (xml_uuid) as l_uuid then
@@ -1294,8 +1295,15 @@ feature {NONE} -- AST factory
 				a_adapted_library.set_library (l_unknown_library)
 				error_handler.report_eatm_error (xml_uuid, element_name (a_element, a_position_table), l_unknown_library)
 			else
+				l_uuid_value := l_uuid.value
+				if attached ise_eiffel_to_gobo_uuid_mappings as l_ise_eiffel_to_gobo_uuid_mappings then
+					l_ise_eiffel_to_gobo_uuid_mappings.search (l_uuid_value)
+					if l_ise_eiffel_to_gobo_uuid_mappings.found then
+						l_uuid_value := l_ise_eiffel_to_gobo_uuid_mappings.found_item
+					end
+				end
 				l_parsed_libraries := parsed_libraries
-				l_parsed_libraries.search (l_uuid.value)
+				l_parsed_libraries.search (l_uuid_value)
 				if l_parsed_libraries.found then
 						-- Already parsed.
 					Result := l_parsed_libraries.found_item
@@ -1313,7 +1321,7 @@ feature {NONE} -- AST factory
 						Result := ast_factory.new_library (l_name.value, a_filename, l_system)
 						a_adapted_library.set_library (Result)
 						fill_system_config (Result, a_element, a_position_table)
-						l_parsed_libraries.force_last_new (Result, l_uuid.value)
+						l_parsed_libraries.force_last_new (Result, l_uuid_value)
 					end
 				end
 			end
@@ -2719,6 +2727,15 @@ feature {NONE} -- Implementation
 		ensure
 			parsed_dotnet_assemblies_not_void: Result /= Void
 			no_void_dotnet_assembly: not Result.has_void_item
+		end
+
+	ise_eiffel_to_gobo_uuid_mappings: detachable DS_HASH_TABLE [STRING, STRING]
+			-- Mappings between ISE Eiffel libraries ECF uuid and
+			-- the same library in Gobo Eiffel.
+			-- For example: ISE's EiffelBase and Gobo's free_elks libraries.
+		deferred
+		ensure
+			no_void_uuid: Result /= Void implies not Result.has_void and not Result.has_void_item
 		end
 
 	element_name (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE): ET_IDENTIFIER
