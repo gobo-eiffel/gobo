@@ -6137,10 +6137,6 @@ feature {NONE} -- Expression validity
 				set_fatal_error
 				error_handler.report_vucr0f_error (current_class, current_class_impl, an_expression)
 			else
-				if a_context.is_type_separate then
-					print ("separate")
-					print (a_context.last.generating_type)
-				end
 				if not a_context.is_type_attached then
 					a_context.force_last (tokens.attached_like_current)
 				end
