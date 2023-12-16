@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,6 +80,11 @@ feature -- Status report
 
 	is_attached: BOOLEAN
 			-- Is current type attached?
+		deferred
+		end
+
+	is_separate: BOOLEAN
+			-- Is current type separate?
 		deferred
 		end
 

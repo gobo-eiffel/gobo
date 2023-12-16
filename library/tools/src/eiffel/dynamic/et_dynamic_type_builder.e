@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1278,7 +1278,11 @@ feature {NONE} -- Event handling
 				mark_type_alive (l_dynamic_creation_primary_type)
 				if a_procedure /= Void then
 					l_dynamic_procedure := l_dynamic_creation_primary_type.dynamic_procedure (a_procedure, current_dynamic_system)
-					l_dynamic_procedure.set_creation (True)
+					if current_system.scoop_mode and l_dynamic_creation_type.is_separate then
+						l_dynamic_procedure.set_separate_creation (True)
+					else
+						l_dynamic_procedure.set_creation (True)
+					end
 					if attached an_expression.arguments as l_actuals then
 						nb := l_actuals.count
 						from i := 1 until i > nb loop
@@ -1289,6 +1293,9 @@ feature {NONE} -- Event handling
 					end
 				end
 				set_dynamic_type_set (l_dynamic_creation_type, an_expression)
+				if current_system.scoop_mode and l_dynamic_creation_type.is_separate then
+					set_dynamic_type_set (l_dynamic_creation_primary_type, an_expression.separate_target)
+				end
 			end
 		end
 
@@ -1309,7 +1316,11 @@ feature {NONE} -- Event handling
 				mark_type_alive (l_dynamic_creation_primary_type)
 				if a_procedure /= Void then
 					l_dynamic_procedure := l_dynamic_creation_primary_type.dynamic_procedure (a_procedure, current_dynamic_system)
-					l_dynamic_procedure.set_creation (True)
+					if current_system.scoop_mode and l_dynamic_creation_type.is_separate then
+						l_dynamic_procedure.set_separate_creation (True)
+					else
+						l_dynamic_procedure.set_creation (True)
+					end
 					if attached an_instruction.arguments as l_actuals then
 						nb := l_actuals.count
 						from i := 1 until i > nb loop
@@ -1320,6 +1331,9 @@ feature {NONE} -- Event handling
 					end
 				end
 				propagate_creation_dynamic_type (l_dynamic_creation_type, an_instruction)
+				if current_system.scoop_mode and l_dynamic_creation_type.is_separate then
+					set_dynamic_type_set (l_dynamic_creation_primary_type, an_instruction.separate_target)
+				end
 			end
 		end
 
@@ -1382,7 +1396,7 @@ feature {NONE} -- Event handling
 						error_handler.report_giaaa_error
 					else
 						l_dynamic_type := l_dynamic_type_set.static_type
-						l_dynamic_attached_type := current_dynamic_system.attached_type (l_dynamic_type.primary_type)
+						l_dynamic_attached_type := current_dynamic_system.attached_type (l_dynamic_type)
 						if l_dynamic_attached_type /= l_dynamic_type then
 								-- The dynamic type set for the attached version of the
 								-- formal argument has not been created yet.
@@ -1845,7 +1859,7 @@ feature {NONE} -- Event handling
 						error_handler.report_giaaa_error
 					else
 						l_dynamic_type := l_dynamic_type_set.static_type
-						l_dynamic_attached_type := current_dynamic_system.attached_type (l_dynamic_type.primary_type)
+						l_dynamic_attached_type := current_dynamic_system.attached_type (l_dynamic_type)
 						if l_dynamic_attached_type /= l_dynamic_type then
 								-- The dynamic type set for the attached version of the
 								-- local variable has not been created yet.
@@ -1867,15 +1881,17 @@ feature {NONE} -- Event handling
 			-- Report that the declaration of the local variable `a_local'
 			-- of a feature has been processed.
 		local
-			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_detachable_type: ET_DYNAMIC_TYPE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 					-- The local variable is assumed to be detachable
 					-- unless proven otherwise with a CAP (Certified Attachment Pattern).
 					-- So we use the primary type.
-				l_dynamic_type := current_dynamic_system.dynamic_primary_type (a_local.type, current_type)
-				l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
+				l_dynamic_type := current_dynamic_system.dynamic_type (a_local.type, current_type)
+				l_detachable_type := current_dynamic_system.detachable_type (l_dynamic_type)
+				l_dynamic_type_set := new_dynamic_type_set (l_detachable_type)
 				a_local.name.set_index (a_local.index)
 				set_dynamic_type_set (l_dynamic_type_set, a_local.name)
 				a_local.set_index (a_local.name.index)
@@ -2413,7 +2429,8 @@ feature {NONE} -- Event handling
 			-- that the result entity is attached at this position in the code.
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_dynamic_primary_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_detachable_type: ET_DYNAMIC_TYPE
+			l_dynamic_detachable_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_attached_type: ET_DYNAMIC_TYPE
 			l_dynamic_attached_type_set: ET_DYNAMIC_TYPE_SET
 			l_attached_result_index: INTEGER
@@ -2434,7 +2451,7 @@ feature {NONE} -- Event handling
 							error_handler.report_giaaa_error
 						else
 							l_dynamic_type := l_dynamic_type_set.static_type
-							l_dynamic_attached_type := current_dynamic_system.attached_type (l_dynamic_type.primary_type)
+							l_dynamic_attached_type := current_dynamic_system.attached_type (l_dynamic_type)
 							if l_dynamic_attached_type /= l_dynamic_type then
 									-- The dynamic type set for the attached version of
 									-- 'Result' has not been created yet.
@@ -2461,19 +2478,20 @@ feature {NONE} -- Event handling
 							-- The 'Result' is assumed to be detachable within the body of the function,
 							-- unless proven otherwise with a CAP (Certified Attachment Pattern).
 							-- So we use its primary type for `result_index'.
-						if l_dynamic_type.primary_type = l_dynamic_type then
+						l_dynamic_detachable_type := current_dynamic_system.detachable_type (l_dynamic_type)
+						if l_dynamic_detachable_type = l_dynamic_type then
 							a_result.set_index (result_index)
 							set_dynamic_type_set (l_result_type_set, a_result)
 							result_index := a_result.index
 						else
-							l_dynamic_primary_type_set := new_dynamic_type_set (l_dynamic_type.primary_type)
+							l_dynamic_detachable_type_set := new_dynamic_type_set (l_dynamic_detachable_type)
 							a_result.set_index (result_index)
-							set_dynamic_type_set (l_dynamic_primary_type_set, a_result)
+							set_dynamic_type_set (l_dynamic_detachable_type_set, a_result)
 							result_index := a_result.index
-							propagate_cap_dynamic_types (a_result, l_dynamic_primary_type_set, l_result_type_set)
+							propagate_cap_dynamic_types (a_result, l_dynamic_detachable_type_set, l_result_type_set)
 						end
 						a_result.set_index (attached_result_index)
-						l_dynamic_attached_type := current_dynamic_system.attached_type (l_dynamic_type.primary_type)
+						l_dynamic_attached_type := current_dynamic_system.attached_type (l_dynamic_type)
 						if l_dynamic_attached_type /= l_dynamic_type then
 							l_dynamic_attached_type_set := new_dynamic_type_set (l_dynamic_attached_type)
 							set_dynamic_type_set (l_dynamic_attached_type_set, a_result)
@@ -2497,17 +2515,18 @@ feature {NONE} -- Event handling
 						l_dynamic_type := l_result_type_set.static_type
 							-- The 'Result' is assumed to be detachable within the body of the function,
 							-- unless proven otherwise with a CAP (Certified Attachment Pattern).
-							-- So we use its primary type for `result_index'.
-						if l_dynamic_type.primary_type = l_dynamic_type then
+							-- So we use its primary type for `result_index'
+						l_dynamic_detachable_type := current_dynamic_system.detachable_type (l_dynamic_type)
+						if l_dynamic_detachable_type = l_dynamic_type then
 							a_result.set_index (result_index)
 							set_dynamic_type_set (l_result_type_set, a_result)
 							result_index := a_result.index
 						else
-							l_dynamic_primary_type_set := new_dynamic_type_set (l_dynamic_type.primary_type)
+							l_dynamic_detachable_type_set := new_dynamic_type_set (l_dynamic_detachable_type)
 							a_result.set_index (result_index)
-							set_dynamic_type_set (l_dynamic_primary_type_set, a_result)
+							set_dynamic_type_set (l_dynamic_detachable_type_set, a_result)
 							result_index := a_result.index
-							propagate_cap_dynamic_types (a_result, l_dynamic_primary_type_set, l_result_type_set)
+							propagate_cap_dynamic_types (a_result, l_dynamic_detachable_type_set, l_result_type_set)
 						end
 							-- Reserve a placeholder in `dynamic_type_sets' for the attached version
 							-- of 'Result', if later needed with a CAP (Certified Attachment Pattern).
@@ -2533,6 +2552,7 @@ feature {NONE} -- Event handling
 			-- of type `a_type', of a feature has been processed.
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_detachable_type: ET_DYNAMIC_TYPE
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -2555,7 +2575,8 @@ feature {NONE} -- Event handling
 						-- The 'Result' is assumed to be detachable within the body of the attribute,
 						-- unless proven otherwise with a CAP (Certified Attachment Pattern).
 						-- So we use its primary type for `result_index'.
-					l_result_type_set := new_dynamic_type_set (l_dynamic_type.primary_type)
+					l_detachable_type := current_dynamic_system.detachable_type (l_dynamic_type)
+					l_result_type_set := new_dynamic_type_set (l_detachable_type)
 					dynamic_type_sets.force_last (l_result_type_set)
 					result_index := dynamic_type_sets.count
 						-- Reserve a placeholder in `dynamic_type_sets' for the attached version

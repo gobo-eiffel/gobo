@@ -4,7 +4,7 @@
 		"C functions used to implement class THREAD and related threading facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,6 +29,12 @@
 #endif
 #ifndef GE_TIME_H
 #include "ge_time.h"
+#endif
+
+#ifdef GE_USE_SCOOP
+#ifndef GE_SCOOP_H
+#include "ge_scoop.h"
+#endif
 #endif
 
 #ifdef GE_USE_POSIX_THREADS
@@ -1343,7 +1349,20 @@ static void* GE_thread_routine(void* arg)
 	GE_register_thread_context(&l_context);
 	GE_thread_set_priority(l_thread_context->thread_id, l_thread_context->initial_priority);
 	SIGRESUME;
-	l_thread_context->routine(l_thread_context->current);
+	if (l_thread_context->current) {
+#ifdef GE_USE_SCOOP
+		l_context.scoop_processor = l_thread_context->current->scoop_processor;
+		if (l_thread_context->is_scoop_processor) {
+				/* Do not keep track of the current object so that it can be
+				reclaimed by the GC if it is not referenced anywhere else. */
+			l_thread_context->current = EIF_VOID;
+			GE_scoop_processor_run(&l_context);
+		} else
+#endif
+		if (l_thread_context->routine) {
+			l_thread_context->routine(l_thread_context->current, 0);
+		}
+	}
 	GE_thread_exit();
 #ifdef EIF_WINDOWS
 	return 0;
@@ -1378,24 +1397,32 @@ void GE_init_thread(GE_context* a_context)
  * Create a new thread with attributes `attr' and execute
  * Eiffel routine `routine' on object `current'.
  */
-void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFERENCE), void (*set_terminated)(EIF_REFERENCE,EIF_BOOLEAN), EIF_THR_ATTR_TYPE* attr)
+void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFERENCE, EIF_INTEGER), void (*set_terminated)(EIF_REFERENCE,EIF_BOOLEAN), EIF_THR_ATTR_TYPE* attr, int is_scoop_processor)
 {
 	EIF_THR_TYPE l_thread_id;
 	GE_thread_context* l_thread_context;
 	GE_thread_context* l_current_thread_context;
 	EIF_MUTEX_TYPE* l_mutex;
 	EIF_COND_TYPE* l_condition_variable;
+	unsigned int l_attr_stack_size = 0;
+	unsigned int l_attr_priority = GE_thread_default_priority();
 	int l_raise_error = 0;
-
 	l_thread_context = (GE_thread_context*)GE_unprotected_calloc_uncollectable(1, sizeof(GE_thread_context));
 	if (!l_thread_context) {
 		l_raise_error = 1;
 	} else {
+		if (attr) {
+			l_attr_stack_size = attr->stack_size;
+			l_attr_priority = attr->priority;
+		}
 		l_thread_context->current = current;
 		l_thread_context->routine = routine;
 		l_thread_context->set_terminated = set_terminated;
-		l_thread_context->initial_priority = attr->priority;
+		l_thread_context->initial_priority = l_attr_priority;
 		l_thread_context->is_alive = 1;
+#ifdef GE_USE_SCOOP
+		l_thread_context->is_scoop_processor = is_scoop_processor;
+#endif
 		l_current_thread_context = GE_thread_current_context()->thread;
 		l_thread_context->parent_context = l_current_thread_context;
 		if (!l_current_thread_context->children_mutex) {
@@ -1430,13 +1457,13 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 
 			if (pthread_attr_init(&l_attr) == 0) {
 					/* Initialize the stack size if more than the minimum. */
-				if (attr->stack_size >= PTHREAD_STACK_MIN) {
-					pthread_attr_setstacksize(&l_attr, attr->stack_size);
+				if (l_attr_stack_size >= PTHREAD_STACK_MIN) {
+					pthread_attr_setstacksize(&l_attr, l_attr_stack_size);
 				}
-				if (attr->priority != EIF_DEFAULT_THR_PRIORITY) {
+				if (l_attr_priority != EIF_DEFAULT_THR_PRIORITY) {
 					struct sched_param l_param;
 					memset(&l_param, 0, sizeof(struct sched_param));
-					l_param.sched_priority = attr->priority;
+					l_param.sched_priority = l_attr_priority;
 					pthread_attr_setschedpolicy(&l_attr, SCHED_OTHER);
 					pthread_attr_setschedparam(&l_attr, &l_param);
 				}
@@ -1464,7 +1491,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 		SIGBLOCK;
 		GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
 			/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
-		l_thread_id = (EIF_THR_TYPE)_beginthreadex(NULL, (unsigned int)attr->stack_size, GE_thread_routine, l_thread_context, 0, NULL);
+		l_thread_id = (EIF_THR_TYPE)_beginthreadex(NULL, (unsigned int)l_attr_stack_size, GE_thread_routine, l_thread_context, 0, NULL);
 		if (l_thread_id == 0) {
 			GE_free(l_thread_context);
 			l_current_thread_context->n_children--;
@@ -1705,6 +1732,9 @@ void GE_thread_exit(void)
 		EIF_TSD_SET(GE_thread_context_key, 0, "Cannot remove thread context to TSD.");
 		GE_free_onces(l_context->process_onces);
 		GE_free_onces(l_context->thread_onces);
+#ifdef GE_USE_SCOOP
+		GE_free_scoop_processor(l_context->scoop_processor);
+#endif
 		GE_free_exception(l_context);
 		if (l_context->wel_per_thread_data) {
 			GE_free(l_context->wel_per_thread_data);

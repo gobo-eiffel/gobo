@@ -1045,6 +1045,7 @@ feature {ET_AST_NODE} -- Processing
 			l_seed: INTEGER
 			l_context: ET_NESTED_TYPE_CONTEXT
 			l_class: ET_CLASS
+			l_name: ET_FEATURE_NAME
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
@@ -1053,8 +1054,9 @@ feature {ET_AST_NODE} -- Processing
 				process_type (l_type)
 				had_error := has_fatal_error
 			end
-			if attached an_expression.name as l_name then
-				if attached an_expression.arguments as l_arguments then
+			if attached an_expression.creation_call as l_creation_call then
+				l_name := l_creation_call.name
+				if attached l_creation_call.arguments as l_arguments then
 					process_actual_arguments (l_arguments)
 					had_error := had_error or has_fatal_error
 				end

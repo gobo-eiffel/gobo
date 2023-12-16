@@ -5,7 +5,7 @@ note
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -221,6 +221,10 @@ feature {NONE} -- Initialization
 			create agent_expression.make (agent_target, current_feature.static_feature.name, Void)
 			agent_closed_operands_type := current_dynamic_system.unknown_type
 			create agent_manifest_tuple.make_with_capacity (20)
+			create current_separate_calls.make (20)
+			create separate_call_feature_name.make (tokens.separate_keyword.text)
+			create separate_call_arguments.make_with_capacity (100)
+			create separate_call_instruction.make (tokens.current_keyword, separate_call_feature_name, Void)
 			create formal_arguments.make (20)
 			create manifest_array_types.make (100)
 			create big_manifest_array_types.make (100)
@@ -310,6 +314,19 @@ feature -- Compilation options
 			-- Should the generated application be thread-capable?
 		do
 			Result := current_system.multithreaded_mode
+		end
+
+	scoop_mode: BOOLEAN
+			-- Should the generated application be SCOOP-capable?
+		do
+			Result := current_system.scoop_mode
+		end
+
+	use_threads: BOOLEAN
+			-- Does the generated application use threads?
+			-- True in multithreaded or SCOOP modes.
+		do
+			Result := multithreaded_mode or scoop_mode
 		end
 
 	exception_trace_mode: BOOLEAN
@@ -863,8 +880,11 @@ feature {NONE} -- Compilation script generation
 				if console_application_mode then
 					l_c_config_parser.define_value ("True", "EIF_CONSOLE")
 				end
-				if multithreaded_mode then
+				if use_threads then
 					l_c_config_parser.define_value ("True", c_ge_use_threads)
+				end
+				if scoop_mode then
+					l_c_config_parser.define_value ("True", c_ge_use_scoop)
 				end
 				l_c_config_parser.parse_file (l_file)
 				l_file.close
@@ -907,6 +927,7 @@ feature {NONE} -- Compilation script generation
 			l_filename: STRING
 			l_extension: STRING
 			l_basename: STRING
+			l_newline_needed_in_header_file: BOOLEAN
 		do
 			l_c_filename := a_library_name + c_file_extension
 			l_cpp_filename := a_library_name + "_cpp" + cpp_file_extension
@@ -949,10 +970,19 @@ feature {NONE} -- Compilation script generation
 								l_basename := l_external_filename.twin
 								l_basename.remove_tail (l_extension.count)
 								a_external_c_filenames.force_last (l_extension, l_basename)
-								if multithreaded_mode then
+								if use_threads then
 									l_external_file.put_string (c_define)
 									l_external_file.put_character (' ')
 									l_external_file.put_line (c_ge_use_threads)
+									l_newline_needed_in_header_file := True
+								end
+								if scoop_mode then
+									l_external_file.put_string (c_define)
+									l_external_file.put_character (' ')
+									l_external_file.put_line (c_ge_use_scoop)
+									l_newline_needed_in_header_file := True
+								end
+								if l_newline_needed_in_header_file then
 									l_external_file.put_new_line
 								end
 								l_external_file.put_string (c_include)
@@ -1019,6 +1049,7 @@ feature {NONE} -- C code Generation
 			l_header_filename: STRING
 			l_header_file: KL_TEXT_OUTPUT_FILE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_newline_needed_in_header_file: BOOLEAN
 			old_in_static_feature: BOOLEAN
 		do
 			old_system_name := system_name
@@ -1041,24 +1072,33 @@ feature {NONE} -- C code Generation
 					header_file.put_string (c_define)
 					header_file.put_character (' ')
 					header_file.put_line (c_eif_trace)
-					header_file.put_new_line
+					l_newline_needed_in_header_file := True
 				end
 				if exception_trace_mode then
 					header_file.put_string (c_define)
 					header_file.put_character (' ')
 					header_file.put_line (c_eif_exception_trace)
-					header_file.put_new_line
+					l_newline_needed_in_header_file := True
 				end
 				if use_boehm_gc then
 					header_file.put_string (c_define)
 					header_file.put_character (' ')
 					header_file.put_line (c_ge_use_boehm_gc)
-					header_file.put_new_line
+					l_newline_needed_in_header_file := True
 				end
-				if multithreaded_mode then
+				if use_threads then
 					header_file.put_string (c_define)
 					header_file.put_character (' ')
 					header_file.put_line (c_ge_use_threads)
+					l_newline_needed_in_header_file := True
+				end
+				if scoop_mode then
+					header_file.put_string (c_define)
+					header_file.put_character (' ')
+					header_file.put_line (c_ge_use_scoop)
+					l_newline_needed_in_header_file := True
+				end
+				if l_newline_needed_in_header_file then
 					header_file.put_new_line
 				end
 				if current_system.any_type.base_class.universe.character_type.same_named_type_with_type_marks (current_system.any_type.base_class.universe.character_32_type, tokens.implicit_detachable_type_mark, current_system.any_type, tokens.implicit_detachable_type_mark, current_system.any_type) then
@@ -1071,7 +1111,7 @@ feature {NONE} -- C code Generation
 				end
 				include_runtime_header_file ("ge_eiffel.h", True, header_file)
 				header_file.put_new_line
-				if multithreaded_mode then
+				if use_threads then
 					include_runtime_header_file ("ge_thread_types.h", True, header_file)
 					header_file.put_new_line
 				end
@@ -1079,8 +1119,12 @@ feature {NONE} -- C code Generation
 				header_file.put_new_line
 				include_runtime_header_file ("ge_exception.h", True, header_file)
 				header_file.put_new_line
-				if multithreaded_mode then
+				if use_threads then
 					include_runtime_header_file ("ge_thread.h", True, header_file)
+					header_file.put_new_line
+				end
+				if scoop_mode then
+					include_runtime_header_file ("ge_scoop.h", True, header_file)
 					header_file.put_new_line
 				end
 				include_runtime_header_file ("ge_native_string.h", True, header_file)
@@ -1323,6 +1367,11 @@ feature {NONE} -- C code Generation
 							header_file.put_character (' ')
 							header_file.put_line (c_ge_use_type_object_size)
 						end
+						if not l_newline_needed_in_header_file then
+								-- A newline has not been written to the header file yet
+								-- for the "#define USE_...". Write a newline now.
+							header_file.put_new_line
+						end
 						include_file (l_header_filename + "ge", header_file)
 						l_header_file.close
 						file_system.delete_file (l_header_filename + "ge")
@@ -1491,6 +1540,15 @@ feature {NONE} -- Feature generation
 					i := i + 1
 				end
 				current_equalities.wipe_out
+				if scoop_mode then
+						-- Print declaration of separate calls appearing in `a_feature'.
+					nb := current_separate_calls.count
+					from i := 1 until i > nb loop
+						print_separate_call_declaration (i, current_separate_calls.item (i))
+						i := i + 1
+					end
+					current_separate_calls.wipe_out
+				end
 				current_dynamic_type_sets := old_dynamic_type_sets
 				current_feature := old_feature
 				current_type := old_type
@@ -6050,7 +6108,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				end
 				if l_is_once_per_object then
 						-- Create once-per-object data for 'Current' object if not created yet.
-					if multithreaded_mode then
+					if use_threads then
 						print_once_per_object_global_mutex_lock
 					end
 					print_indentation
@@ -6079,11 +6137,11 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					print_indentation
 					current_file.put_character ('}')
 					current_file.put_new_line
-					if multithreaded_mode then
+					if use_threads then
 						print_once_per_object_global_mutex_unlock
 					end
 				end
-				if not multithreaded_mode or else l_is_once_per_thread then
+				if not use_threads or else l_is_once_per_thread then
 					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
@@ -6106,7 +6164,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_new_line
 					indent
 				else
-					if multithreaded_mode and then l_is_once_per_process then
+					if use_threads and then l_is_once_per_process then
 						print_indentation
 						current_file.put_string (c_if)
 						current_file.put_character (' ')
@@ -6222,7 +6280,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_indentation
 				current_file.put_character ('}')
 				current_file.put_new_line
-				if multithreaded_mode and then l_is_once_per_process then
+				if use_threads and then l_is_once_per_process then
 					dedent
 					print_indentation
 					current_file.put_character ('}')
@@ -6314,7 +6372,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						-- Set it back to Result here.
 					print_assign_once_value_to_result (current_feature, l_once_kind, l_once_index)
 				end
-				if multithreaded_mode then
+				if use_threads then
 					if l_is_once_per_process then
 						if l_result_type /= Void then
 							print_assign_result_to_thread_safe_once_value (current_feature, l_once_kind, l_once_index)
@@ -6481,7 +6539,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				end
 				if l_is_once then
 					print_assign_last_exception_to_once_exception (current_feature, l_once_kind, l_once_index)
-					if multithreaded_mode then
+					if use_threads then
 						if a_feature.is_once_per_process then
 							print_assign_once_exception_to_thread_safe_once_exception (current_feature, l_once_kind, l_once_index)
 							print_assign_called_to_thread_safe_once_status (current_feature, l_once_kind, l_once_index)
@@ -7370,9 +7428,11 @@ feature {NONE} -- Instruction generation
 			an_instruction_not_void: an_instruction /= Void
 		local
 			l_target: ET_WRITABLE
-			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_static_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_static_type: ET_DYNAMIC_TYPE
+			l_static_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_seed: INTEGER
 			l_actuals: detachable ET_ACTUAL_ARGUMENT_LIST
 			l_actual: ET_EXPRESSION
@@ -7387,13 +7447,15 @@ feature {NONE} -- Instruction generation
 				-- Look for the static and dynamic types of the creation.
 			l_target := an_instruction.target
 			l_dynamic_type_set := dynamic_type_set (l_target)
-			l_static_type := l_dynamic_type_set.static_type.primary_type
+			l_static_type := l_dynamic_type_set.static_type
+			l_static_primary_type := l_static_type.primary_type
 			if attached an_instruction.type as l_type then
-				l_dynamic_type := current_dynamic_system.dynamic_primary_type (l_type, current_type.base_type)
+				l_dynamic_type := current_dynamic_system.dynamic_type (l_type, current_type.base_type)
 			else
 					-- Look for the type of the target.
 				l_dynamic_type := l_static_type
 			end
+			l_dynamic_primary_type := l_dynamic_type.primary_type
 			if attached an_instruction.creation_call as l_creation_call then
 				l_seed := l_creation_call.name.seed
 				l_actuals := l_creation_call.arguments
@@ -7401,7 +7463,7 @@ feature {NONE} -- Instruction generation
 				l_seed := current_system.default_create_seed
 				l_actuals := Void
 			end
-			l_dynamic_procedure := l_dynamic_type.seeded_dynamic_procedure (l_seed, current_dynamic_system)
+			l_dynamic_procedure := l_dynamic_primary_type.seeded_dynamic_procedure (l_seed, current_dynamic_system)
 			if l_dynamic_procedure = Void then
 					-- Internal error: there should be a procedure with `l_seed'.
 					-- It has been computed in ET_FEATURE_CHECKER or else an
@@ -7421,7 +7483,11 @@ feature {NONE} -- Instruction generation
 				print_indentation
 				print_writable (l_target)
 				print_assign_to
-				print_adapted_creation_procedure_call (l_dynamic_procedure, l_dynamic_type, l_static_type)
+				if scoop_mode and l_dynamic_type.is_separate then
+					print_adapted_separate_creation_procedure_call (an_instruction, l_dynamic_procedure, l_dynamic_primary_type, l_static_primary_type)
+				else
+					print_adapted_creation_procedure_call (l_dynamic_procedure, l_dynamic_primary_type, l_static_primary_type)
+				end
 				print_semicolon_newline
 				call_operands.wipe_out
 			end
@@ -7437,7 +7503,7 @@ feature {NONE} -- Instruction generation
 					-- So we need to use the content of the boxed value in place of Result
 					-- in case its fields get modified. Likewise for once-per-object functions.
 					-- even though the Result is not boxed in that case. (See `print_result'.)
-				if l_target.is_result and then not (l_static_type.is_expanded and then not l_static_type.is_basic) then
+				if l_target.is_result and then not (l_static_primary_type.is_expanded and then not l_static_primary_type.is_basic) then
 					once_features.search (current_feature.static_feature.implementation_feature)
 					if once_features.found then
 						l_once_index := once_features.found_item
@@ -8584,12 +8650,32 @@ feature {NONE} -- Procedure call generation
 			print_adapted_expression_with_agent (agent print_creation_procedure_call (a_feature, a_target_type), a_target_type, a_static_type, False)
 		end
 
+	print_adapted_separate_creation_procedure_call (a_separate_call: ET_SEPARATE_CALL; a_feature: ET_DYNAMIC_FEATURE; a_target_type, a_static_type: ET_DYNAMIC_PRIMARY_TYPE)
+			-- Print to `current_file' a call to separate creation procedure `a_feature' (static binding).
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_static_type' is the static type of the declared type of the target,
+			-- used to adapt the result of the creation if needed (see header comment of
+			-- `print_adapted_expression_with_agent' for details).
+			-- Operands can be found in `call_operands'.
+		require
+			a_separate_call_not_void: a_separate_call /= Void
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_separate_creation: a_feature.is_separate_creation
+			a_target_type_not_void: a_target_type /= Void
+			a_static_type_not_void: a_static_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+			scoop_mode: scoop_mode
+		do
+			print_adapted_expression_with_agent (agent print_separate_creation_procedure_call (a_separate_call, a_feature, a_target_type), a_target_type, a_static_type, False)
+		end
+
 	print_creation_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- Print to `current_file' a call to creation procedure `a_feature' (static binding).
 			-- `a_target_type' is the dynamic type of the target.
 			-- Operands can be found in `call_operands'.
 		require
 			a_feature_not_void: a_feature /= Void
+			a_feature_is_creation: a_feature.is_creation
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		local
@@ -8599,6 +8685,38 @@ feature {NONE} -- Procedure call generation
 		do
 			register_called_feature (a_feature)
 			print_creation_procedure_name (a_feature, a_target_type, current_file)
+			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			nb := call_operands.count
+			from i := 1 until i > nb loop
+				print_comma
+				l_actual_type_set := dynamic_type_set (call_operands.item (i))
+				l_formal_type_set := argument_type_set_in_feature (i, a_feature)
+				print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
+				i := i + 1
+			end
+			current_file.put_character (')')
+		end
+
+	print_separate_creation_procedure_call (a_separate_call: ET_SEPARATE_CALL; a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE)
+			-- Print to `current_file' a call to separate creation procedure `a_feature' (static binding).
+			-- `a_target_type' is the dynamic type of the target.
+			-- Operands can be found in `call_operands'.
+		require
+			a_separate_call_not_void: a_separate_call /= Void
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_separate_creation: a_feature.is_separate_creation
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+			scoop_mode: scoop_mode
+		local
+			i, nb: INTEGER
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			register_called_feature (a_feature)
+			current_separate_calls.force_last (a_separate_call)
+			print_separate_call_name (current_separate_calls.count, current_feature, current_type, current_file)
 			current_file.put_character ('(')
 			current_file.put_string (c_ac)
 			nb := call_operands.count
@@ -9305,6 +9423,8 @@ feature {NONE} -- Expression generation
 						current_file.put_string (c_ge_boxed_pointer)
 						current_file.put_integer (l_source_type.id)
 						current_file.put_character ('(')
+						current_file.put_string (c_ac)
+						print_comma
 						current_file.put_character ('&')
 						current_file.put_character ('(')
 						a_print_expression.call ([])
@@ -9314,6 +9434,8 @@ feature {NONE} -- Expression generation
 						current_file.put_string (c_ge_boxed)
 						current_file.put_integer (l_source_type.id)
 						current_file.put_character ('(')
+						current_file.put_string (c_ac)
+						print_comma
 						a_print_expression.call ([])
 						current_file.put_character (')')
 					end
@@ -9825,6 +9947,33 @@ feature {NONE} -- Expression generation
 			print_attribute_flags_name (a_target_type, current_file)
 		end
 
+	print_attribute_scoop_processor_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print access to 'scoop_processor' pseudo attribute applied to object `a_target' of type `a_target_type'.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+		require
+			a_target_not_void: a_target /= Void
+			a_target_type_not_void: a_target_type /= Void
+			scoop_mode: scoop_mode
+		do
+			if a_target_type.is_expanded then
+				current_file.put_character ('(')
+				print_expression (a_target)
+				current_file.put_character (')')
+				current_file.put_character ('.')
+			else
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				print_type_declaration (a_target_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				print_non_void_expression (a_target, a_check_void_target)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_string (c_arrow)
+			end
+			print_attribute_scoop_processor_name (a_target_type, current_file)
+		end
+
 	print_attribute_onces_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print access to 'onces' pseudo attribute applied to object `a_target' of type `a_target_type'.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
@@ -9911,6 +10060,31 @@ feature {NONE} -- Expression generation
 			print_attribute_flags_name (a_target_type, current_file)
 		end
 
+	print_boxed_attribute_scoop_processor_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print access to 'scoop_processor' pseudo attribute applied to `a_target' of type the boxed version of `a_target_type'.
+			-- The static type (i.e. declared type) of `a_target' is assumed to be of reference type.
+			-- There is no assumption about `a_target_type': it may be reference or expanded.
+			-- (The boxed version of a type makes sure that each object
+			-- of that type contains its type-id. It can be the type itself
+			-- if it already contains its type-id, or a wrapper otherwise.)
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+		require
+			a_target_not_void: a_target /= Void
+			a_target_type_not_void: a_target_type /= Void
+			scoop_mode: scoop_mode
+		do
+			current_file.put_character ('(')
+			current_file.put_character ('(')
+			print_boxed_type_declaration (a_target_type, current_file)
+			current_file.put_character (')')
+			current_file.put_character ('(')
+			print_non_void_expression (a_target, a_check_void_target)
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_string (c_arrow)
+			print_attribute_scoop_processor_name (a_target_type, current_file)
+		end
+
 	print_boxed_attribute_item_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print access to 'item' pseudo attribute applied to `a_target' of type the boxed version of `a_target_type'.
 			-- The static type (i.e. declared type) of `a_target' is assumed to be of reference type.
@@ -9992,6 +10166,8 @@ feature {NONE} -- Expression generation
 			current_file.put_string (c_ge_boxed)
 			current_file.put_integer (a_type.id)
 			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			print_comma
 			print_expression (an_expression)
 			current_file.put_character (')')
 		end
@@ -10170,7 +10346,8 @@ feature {NONE} -- Expression generation
 			an_expression_not_void: an_expression /= Void
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_target_type: ET_DYNAMIC_TYPE
+			l_target_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_seed: INTEGER
 			i, nb: INTEGER
 			l_temp: detachable ET_IDENTIFIER
@@ -10181,7 +10358,8 @@ feature {NONE} -- Expression generation
 			l_assignment_target := assignment_target
 			assignment_target := Void
 			l_target_type_set := dynamic_type_set (an_expression)
-			l_target_type := l_target_type_set.static_type.primary_type
+			l_target_type := l_target_type_set.static_type
+			l_target_primary_type := l_target_type.primary_type
 			if attached an_expression.arguments as l_actuals then
 				nb := l_actuals.count
 				from i := 1 until i > nb loop
@@ -10197,7 +10375,7 @@ feature {NONE} -- Expression generation
 					operand_stack.force (l_assignment_target)
 					print_writable (l_assignment_target)
 				else
-					l_temp := new_temp_variable (l_target_type)
+					l_temp := new_temp_variable (l_target_primary_type)
 						-- We will set the index of `l_temp' later because
 						-- it could still be used in `call_operands'.
 					l_temp_index := an_expression.index
@@ -10207,19 +10385,21 @@ feature {NONE} -- Expression generation
 				print_assign_to
 				current_file.put_character ('(')
 			end
-			if attached an_expression.name as l_name then
-				l_seed := l_name.seed
+			if attached an_expression.creation_call as l_creation_call then
+				l_seed := l_creation_call.name.seed
 			else
 				l_seed := current_system.default_create_seed
 			end
-			if not attached l_target_type.seeded_dynamic_procedure (l_seed, current_dynamic_system) as l_procedure then
+			if not attached l_target_primary_type.seeded_dynamic_procedure (l_seed, current_dynamic_system) as l_procedure then
 					-- Internal error: there should be a procedure with `l_seed'.
 					-- It has been computed in ET_FEATURE_CHECKER or else an
 					-- error should have already been reported.
 				set_fatal_error
 				error_handler.report_giaaa_error
+			elseif scoop_mode and l_target_type.is_separate then
+				print_separate_creation_procedure_call (an_expression, l_procedure, l_target_primary_type)
 			else
-				print_creation_procedure_call (l_procedure, l_target_type)
+				print_creation_procedure_call (l_procedure, l_target_primary_type)
 			end
 			if in_operand then
 				current_file.put_character (')')
@@ -11590,6 +11770,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				current_file.put_string (c_ge_ma)
 				current_file.put_integer (l_dynamic_type.id)
 				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
 				print_type_cast (l_integer_type, current_file)
 				current_file.put_integer (nb)
 				current_file.put_character (',')
@@ -11791,10 +11973,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				current_file.put_string (c_ge_mt)
 				current_file.put_integer (l_tuple_type.id)
 				current_file.put_character ('(')
+				current_file.put_string (c_ac)
 				from i := 1 until i > nb loop
-					if i /= 1 then
-						current_file.put_character (',')
-					end
+					print_comma
 					if in_operand then
 						l_item := call_operands.item (i)
 					else
@@ -16455,25 +16636,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				l_result := an_agent.implicit_result
 				if l_target.is_open_operand then
 					nb_open_operands := 1
-					if agent_open_operands.count < nb_open_operands then
-						create l_open_operand.make ("a" + nb_open_operands.out)
-						l_open_operand.set_agent_open_operand (True)
-						l_open_operand.set_seed (nb_open_operands)
-						agent_open_operands.force_last (l_open_operand)
-					else
-						l_open_operand := agent_open_operands.item (nb_open_operands)
-					end
+					l_open_operand := agent_open_operand (nb_open_operands)
 					l_open_operand.set_index (l_target.index)
 				else
 					nb_closed_operands := 1
-					if agent_closed_operands.count < nb_closed_operands then
-						create l_closed_operand.make ("z" + nb_closed_operands.out)
-						l_closed_operand.set_agent_closed_operand (True)
-						l_closed_operand.set_seed (nb_closed_operands)
-						agent_closed_operands.force_last (l_closed_operand)
-					else
-						l_closed_operand := agent_closed_operands.item (nb_closed_operands)
-					end
+					l_closed_operand := agent_closed_operand (nb_closed_operands)
 					l_closed_operand.set_index (l_target.index)
 				end
 				l_arguments := an_agent.arguments
@@ -16483,25 +16650,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 						l_argument := l_arguments.actual_argument (j)
 						if l_argument.is_open_operand then
 							nb_open_operands := nb_open_operands + 1
-							if agent_open_operands.count < nb_open_operands then
-								create l_open_operand.make ("a" + nb_open_operands.out)
-								l_open_operand.set_agent_open_operand (True)
-								l_open_operand.set_seed (nb_open_operands)
-								agent_open_operands.force_last (l_open_operand)
-							else
-								l_open_operand := agent_open_operands.item (nb_open_operands)
-							end
+							l_open_operand := agent_open_operand (nb_open_operands)
 							l_open_operand.set_index (l_argument.index)
 						else
 							nb_closed_operands := nb_closed_operands + 1
-							if agent_closed_operands.count < nb_closed_operands then
-								create l_closed_operand.make ("z" + nb_closed_operands.out)
-								l_closed_operand.set_agent_closed_operand (True)
-								l_closed_operand.set_seed (nb_closed_operands)
-								agent_closed_operands.force_last (l_closed_operand)
-							else
-								l_closed_operand := agent_closed_operands.item (nb_closed_operands)
-							end
+							l_closed_operand := agent_closed_operand (nb_closed_operands)
 							l_closed_operand.set_index (l_argument.index)
 						end
 						j := j + 1
@@ -16700,6 +16853,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 					-- Print creation function of the agent.
 					--
 					-- Print signature to `header_file' and `current_file'.
+				current_file := current_function_body_buffer
 				header_file.put_character ('/')
 				header_file.put_character ('*')
 				header_file.put_character (' ')
@@ -16792,6 +16946,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (l_agent_type.id)
 				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
 				current_file.put_string (c_eif_true)
 				current_file.put_character (')')
 				current_file.put_character (';')
@@ -16805,6 +16961,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (agent_closed_operands_type.id)
 				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
 				current_file.put_string (c_eif_true)
 				current_file.put_character (')')
 				current_file.put_character (';')
@@ -16890,8 +17048,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_character ('}')
 				current_file.put_new_line
 				current_file.put_new_line
-				flush_to_c_file
+					--
+					-- Clean up.
+				current_file := old_file
+				reset_temp_variables
 				agent_closed_operands_type := old_closed_operands_type
+					-- Flush to file.
+				flush_to_c_file
 			end
 		end
 
@@ -17061,8 +17224,72 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 	agent_open_operands: DS_ARRAYED_LIST [ET_IDENTIFIER]
 			-- Agent open operands
 
+	agent_open_operand (i: INTEGER): ET_IDENTIFIER
+			-- `i'-th agent open operands
+		require
+			i_large_enough: i >= 1
+		local
+			j: INTEGER
+		do
+			if i <= agent_open_operands.count then
+				Result := agent_open_operands.item (i)
+			else
+				from
+					j := agent_open_operands.count + 1
+					create Result.make ("a" + j.out)
+					Result.set_agent_open_operand (True)
+					Result.set_seed (j)
+					agent_open_operands.force_last (Result)
+					j := j + 1
+				until
+					j >= i
+				loop
+					create Result.make ("a" + j.out)
+					Result.set_agent_open_operand (True)
+					Result.set_seed (j)
+					agent_open_operands.force_last (Result)
+					j := j + 1
+				end
+			end
+		ensure
+			agent_open_operand_not_void: Result /= Void
+			in_agent_open_operands: i <= agent_open_operands.count and then agent_open_operands.item (i) = Result
+		end
+
 	agent_closed_operands: DS_ARRAYED_LIST [ET_IDENTIFIER]
 			-- Agent closed operands
+
+	agent_closed_operand (i: INTEGER): ET_IDENTIFIER
+			-- `i'-th agent closed operands
+		require
+			i_large_enough: i >= 1
+		local
+			j: INTEGER
+		do
+			if i <= agent_closed_operands.count then
+				Result := agent_closed_operands.item (i)
+			else
+				from
+					j := agent_closed_operands.count + 1
+					create Result.make ("z" + j.out)
+					Result.set_agent_closed_operand (True)
+					Result.set_seed (j)
+					agent_closed_operands.force_last (Result)
+					j := j + 1
+				until
+					j >= i
+				loop
+					create Result.make ("z" + j.out)
+					Result.set_agent_closed_operand (True)
+					Result.set_seed (j)
+					agent_closed_operands.force_last (Result)
+					j := j + 1
+				end
+			end
+		ensure
+			agent_closed_operand_not_void: Result /= Void
+			in_agent_closed_operands: i <= agent_closed_operands.count and then agent_closed_operands.item (i) = Result
+		end
 
 	agent_closed_operands_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type of attribute 'closed_operands' in Agent type
@@ -17981,6 +18208,18 @@ feature {NONE} -- Deep features generation
 			current_file.put_integer (a_type.id)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
+			header_file.put_string (c_ge_context)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string (c_ac)
+			header_file.put_character (',')
+			header_file.put_character (' ')
+			current_file.put_string (c_ge_context)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			print_type_declaration (current_type, header_file)
 			print_type_declaration (current_type, current_file)
 			if current_type.is_expanded then
@@ -18059,6 +18298,8 @@ feature {NONE} -- Deep features generation
 					current_file.put_string (c_ge_new)
 					current_file.put_integer (l_special_type.id)
 					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
 					print_attribute_special_capacity_access (tokens.current_keyword, l_special_type, False)
 					current_file.put_character (',')
 					current_file.put_character (' ')
@@ -18156,6 +18397,8 @@ feature {NONE} -- Deep features generation
 					current_file.put_string (c_ge_new)
 					current_file.put_integer (a_type.id)
 					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
 					current_file.put_string (c_eif_false)
 					current_file.put_character (')')
 					current_file.put_character (';')
@@ -18490,6 +18733,18 @@ feature {NONE} -- Deep features generation
 			current_file.put_character ('x')
 			header_file.put_character ('(')
 			current_file.put_character ('(')
+			header_file.put_string (c_ge_context)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string (c_ac)
+			header_file.put_character (',')
+			header_file.put_character (' ')
+			current_file.put_string (c_ge_context)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			print_type_declaration (current_type, header_file)
 			print_type_declaration (current_type, current_file)
 			if current_type.is_expanded then
@@ -18857,6 +19112,8 @@ feature {NONE} -- Deep features generation
 				current_file.put_integer (l_attribute_type.id)
 				current_file.put_character ('x')
 				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
 				print_target_expression (an_attribute, l_attribute_type, False)
 				current_file.put_character (',')
 				current_file.put_character (' ')
@@ -18897,6 +19154,8 @@ feature {NONE} -- Deep features generation
 			current_file.put_string (c_ge_deep_twin)
 			current_file.put_integer (a_target_type.id)
 			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			print_comma
 			print_target_expression (a_target, a_target_type, False)
 			current_file.put_character (',')
 			current_file.put_character (' ')
@@ -18914,6 +19173,710 @@ feature {NONE} -- Deep features generation
 	deep_feature_target_type_sets: DS_HASH_TABLE [ET_DYNAMIC_STANDALONE_TYPE_SET, ET_DYNAMIC_PRIMARY_TYPE]
 			-- Dynamic type sets of target of deep feature (deep twin or deep equal),
 			-- indexed by target static type
+
+feature {NONE} -- Separate calls
+
+	print_separate_call_declaration (i: INTEGER; a_separate_call: ET_SEPARATE_CALL)
+			-- Print functions associated with the `i'-th separate call `a_separate_call'
+			-- appearing in `current_feature`, to `current_file' and its signature to
+			-- `header_file'.
+		require
+			a_separate_call_not_void: a_separate_call /= Void
+			scoop_mode: scoop_mode
+		do
+			if attached {ET_CREATION_COMPONENT} a_separate_call then
+				print_separate_creation_call_declaration (i, a_separate_call)
+			end
+		end
+
+	print_separate_creation_call_declaration (i: INTEGER; a_separate_call: ET_SEPARATE_CALL)
+			-- Print function for the call to the `i'-th separate call `a_separate_call'
+			-- appearing in `current_feature', to `current_file' and its signature to
+			-- `header_file'.
+			-- `a_separate_call' is a creation instruction or expression whose
+			-- creation type is separate.
+		require
+			a_separate_call_not_void: a_separate_call /= Void
+			scoop_mode: scoop_mode
+		local
+			l_actual_argument: ET_EXPRESSION
+			l_formal_argument: ET_IDENTIFIER
+			j, nb_args: INTEGER
+			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_type: ET_DYNAMIC_TYPE
+			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_has_separate_actual_argument: BOOLEAN
+			l_old_current_type: like current_type
+			l_potentially_asynchronous: BOOLEAN
+			old_file: KI_TEXT_OUTPUT_STREAM
+		do
+			l_target_type := dynamic_type_set (a_separate_call.target).static_type.primary_type
+			if not attached l_target_type.seeded_dynamic_procedure (a_separate_call.name.seed, current_dynamic_system) as l_procedure then
+					-- Internal error: there should be a procedure with the seed.
+					-- It has been computed in ET_FEATURE_CHECKER or else an
+					-- error should have already been reported.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				old_file := current_file
+				current_file := current_function_header_buffer
+					-- Print signature to `header_file' and `current_file'.
+				header_file.put_character ('/')
+				header_file.put_character ('*')
+				header_file.put_character (' ')
+				header_file.put_string ("Function for separate call #")
+				header_file.put_integer (i)
+				header_file.put_string (" in feature ")
+				header_file.put_string (current_type.base_type.unaliased_to_text)
+				header_file.put_character ('.')
+				header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+				header_file.put_character (' ')
+				header_file.put_character ('*')
+				header_file.put_character ('/')
+				header_file.put_new_line
+				current_file.put_character ('/')
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string ("Function for separate call #")
+				current_file.put_integer (i)
+				current_file.put_string (" in feature ")
+				current_file.put_string (current_type.base_type.unaliased_to_text)
+				current_file.put_character ('.')
+				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+				current_file.put_character (' ')
+				current_file.put_character ('*')
+				current_file.put_character ('/')
+				current_file.put_new_line
+				header_file.put_string (c_extern)
+				header_file.put_character (' ')
+					-- Separate call target.
+				print_type_declaration (l_target_type, header_file)
+				header_file.put_character (' ')
+				print_type_declaration (l_target_type, current_file)
+				current_file.put_character (' ')
+				print_separate_call_name (i, current_feature, current_type, header_file)
+				print_separate_call_name (i, current_feature, current_type, current_file)
+				header_file.put_character ('(')
+				current_file.put_character ('(')
+				header_file.put_string (c_ge_context)
+				header_file.put_character ('*')
+				header_file.put_character (' ')
+				header_file.put_string (c_ac)
+				current_file.put_string (c_ge_context)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+					-- Separate call arguments.
+				if attached a_separate_call.arguments as l_actual_arguments then
+					nb_args := l_actual_arguments.count
+					from j := 1 until j > nb_args loop
+						l_actual_argument := l_actual_arguments.actual_argument (j)
+						l_formal_argument := formal_argument (j)
+						l_formal_argument.set_index (l_actual_argument.index)
+						l_type := dynamic_type_set (l_formal_argument).static_type
+						l_primary_type := l_type.primary_type
+						if l_type.is_separate then
+							l_has_separate_actual_argument := True
+						end
+						header_file.put_character (',')
+						header_file.put_character (' ')
+						current_file.put_character (',')
+						current_file.put_character (' ')
+						print_type_declaration (l_primary_type, header_file)
+						print_type_declaration (l_primary_type, current_file)
+						header_file.put_character (' ')
+						current_file.put_character (' ')
+						print_argument_name (l_formal_argument, header_file)
+						print_argument_name (l_formal_argument, current_file)
+						j := j + 1
+					end
+				end
+				header_file.put_character (')')
+				current_file.put_character (')')
+				header_file.put_character (';')
+				header_file.put_new_line
+				current_file.put_new_line
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+					-- Print body to `current_file'.
+				current_file := current_function_body_buffer
+				print_indentation
+				current_file.put_string (c_ge_scoop_processor)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_character ('s')
+				current_file.put_character ('p')
+				current_file.put_character ('1')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_ge_scoop_processor)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_character ('s')
+				current_file.put_character ('p')
+				current_file.put_character ('2')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_character ('s')
+				current_file.put_character ('p')
+				current_file.put_character ('1')
+				print_assign_to
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_scoop_processor)
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_ge_init_scoop_processor)
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				current_file.put_character (')')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_character ('s')
+				current_file.put_character ('p')
+				current_file.put_character ('2')
+				print_assign_to
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_scoop_processor)
+				print_semicolon_newline
+				if l_procedure.has_separate_argument and not l_has_separate_actual_argument then
+						-- Synchronous call.
+						--
+						-- Use impersonation (i.e. the creation code will be executed by
+						-- the current thread on behalf of the new SCOOP processor, pretending
+						-- that it is the new thread associated with this new processor).
+					current_file := current_function_header_buffer
+					print_indentation
+					print_type_declaration (l_target_type, current_file)
+					current_file.put_character (' ')
+					print_current_name (current_file)
+					print_semicolon_newline
+					current_file := current_function_body_buffer
+					print_indentation
+					print_current_name (current_file)
+					print_assign_to
+					print_creation_procedure_name (l_procedure, l_target_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					from j := 1 until j > nb_args loop
+						print_comma
+						l_formal_argument := formal_argument (j)
+						print_argument_name (l_formal_argument, current_file)
+						j := j + 1
+					end
+					current_file.put_character (')')
+					print_semicolon_newline
+				else
+					if l_procedure.has_separate_argument then
+						-- Potentially synchronous call
+						-- (if some of the separate arguments are controlled by the current processor).
+					else
+						-- Asynchronous call.
+					end
+						-- TODO: check whether some of the actual separate arguments
+						-- are controlled by the caller.
+					l_potentially_asynchronous := True
+					current_file := current_function_header_buffer
+					print_indentation
+					current_file.put_string (c_ge_scoop_session)
+					current_file.put_character ('*')
+					current_file.put_character (' ')
+					current_file.put_character ('s')
+					current_file.put_character ('e')
+					print_semicolon_newline
+					current_file := current_function_body_buffer
+					l_old_current_type := current_type
+					current_type := l_target_type
+					print_malloc_current (l_procedure.static_feature)
+					current_type := l_old_current_type
+					print_indentation
+					current_file.put_character ('s')
+					current_file.put_character ('e')
+					print_assign_to
+					current_file.put_string (c_ge_new_scoop_session)
+					current_file.put_character ('(')
+					current_file.put_character (')')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ge_add_scoop_call)
+					current_file.put_character ('(')
+					current_file.put_character ('s')
+					current_file.put_character ('e')
+					print_comma
+					print_separate_call_object_name (i, current_feature, current_type, current_file)
+					current_file.put_character ('(')
+					print_current_name (current_file)
+					from j := 1 until j > nb_args loop
+						print_comma
+						l_formal_argument := formal_argument (j)
+						print_argument_name (l_formal_argument, current_file)
+						j := j + 1
+					end
+					current_file.put_character (')')
+					current_file.put_character (')')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ge_add_scoop_session)
+					current_file.put_character ('(')
+					current_file.put_character ('s')
+					current_file.put_character ('p')
+					current_file.put_character ('2')
+					print_comma
+					current_file.put_character ('s')
+					current_file.put_character ('e')
+					current_file.put_character (')')
+					print_semicolon_newline
+				end
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_scoop_processor)
+				print_assign_to
+				current_file.put_character ('s')
+				current_file.put_character ('p')
+				current_file.put_character ('1')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_ge_thread_create_with_attr)
+				current_file.put_character ('(')
+				print_current_name (current_file);
+				print_comma
+				current_file.put_character ('0')
+				print_comma
+				current_file.put_character ('0')
+				print_comma
+				current_file.put_character ('0')
+				print_comma
+				current_file.put_character ('1')
+				current_file.put_character (')')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				print_current_name (current_file)
+				print_semicolon_newline
+				dedent
+				current_file.put_character ('}')
+				current_file.put_new_line
+				current_file.put_new_line
+					--
+					-- Clean up.
+					--
+				current_file := old_file
+				reset_temp_variables
+				from j := 1 until j > nb_args loop
+					formal_argument (j).set_index (j)
+					j := j + 1
+				end
+					-- Flush to file.
+				flush_to_c_file
+			end
+			if l_potentially_asynchronous then
+				print_separate_call_function_declaration (i, a_separate_call)
+				print_separate_call_object_declaration (i, a_separate_call)
+			end
+		end
+
+	print_separate_call_function_declaration (i: INTEGER; a_separate_call: ET_SEPARATE_CALL)
+			-- Print function to execute the `i'-th separate call `a_separate_call'
+			-- appearing in `current_feature`, to `current_file' and its signature to
+			-- `header_file'.
+		require
+			a_separate_call_not_void: a_separate_call /= Void
+			scoop_mode: scoop_mode
+		local
+			l_argument: ET_EXPRESSION
+			j, nb: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_operand: ET_IDENTIFIER
+			nb_operands: INTEGER
+			old_file: KI_TEXT_OUTPUT_STREAM
+		do
+			old_file := current_file
+			current_file := current_function_header_buffer
+				-- Print signature to `header_file' and `current_file'.
+			header_file.put_character ('/')
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string ("Function to execute separate call #")
+			header_file.put_integer (i)
+			header_file.put_string (" in feature ")
+			header_file.put_string (current_type.base_type.unaliased_to_text)
+			header_file.put_character ('.')
+			header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+			header_file.put_character (' ')
+			header_file.put_character ('*')
+			header_file.put_character ('/')
+			header_file.put_new_line
+			header_file.put_string (c_void)
+			header_file.put_character (' ')
+			print_separate_call_function_name (i, current_feature, current_type, header_file)
+			header_file.put_character ('(')
+			header_file.put_string (c_ge_context)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string (c_ac)
+			header_file.put_character (',')
+			header_file.put_character (' ')
+			header_file.put_string (c_ge_scoop_call)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string (c_sc)
+			header_file.put_character (')')
+			header_file.put_character (';')
+			header_file.put_new_line
+			current_file.put_character ('/')
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string ("Function to execute separate call #")
+			current_file.put_integer (i)
+			current_file.put_string (" in feature ")
+			current_file.put_string (current_type.base_type.unaliased_to_text)
+			current_file.put_character ('.')
+			current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+			current_file.put_character (' ')
+			current_file.put_character ('*')
+			current_file.put_character ('/')
+			current_file.put_new_line
+			current_file.put_string (c_void)
+			current_file.put_character (' ')
+			print_separate_call_function_name (i, current_feature, current_type, current_file)
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_context)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			current_file.put_string (c_ge_scoop_call)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_sc)
+			current_file.put_character (')')
+			current_file.put_new_line
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+				-- Print body to `current_file'.
+			current_file := current_function_body_buffer
+				-- Separate call target.
+			nb_operands := 1
+			l_operand := formal_argument (nb_operands)
+			l_operand.set_index (a_separate_call.target.index)
+			l_type := dynamic_type_set (l_operand).static_type.primary_type
+			print_indentation
+			print_type_declaration (l_type, current_file)
+			current_file.put_character (' ')
+			print_argument_name (l_operand, current_file)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			print_scoop_call_operand (nb_operands)
+			print_semicolon_newline
+				-- Separate call arguments.
+			if attached a_separate_call.arguments as l_arguments then
+				nb := l_arguments.count
+				from j := 1 until j > nb loop
+					l_argument := l_arguments.actual_argument (j)
+					nb_operands := nb_operands + 1
+					l_operand := formal_argument (nb_operands)
+					l_operand.set_index (l_argument.index)
+					l_type := dynamic_type_set (l_operand).static_type.primary_type
+					print_indentation
+					print_type_declaration (l_type, current_file)
+					current_file.put_character (' ')
+					print_argument_name (l_operand, current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_scoop_call_operand (nb_operands)
+					print_semicolon_newline
+					print_semicolon_newline
+					j := j + 1
+				end
+			end
+				--
+				-- Instructions.
+				--
+			separate_call_arguments.wipe_out
+			if nb_operands > 1 then
+				nb := nb_operands - 1
+				if separate_call_arguments.capacity < nb then
+					separate_call_arguments.resize (nb)
+				end
+				from j := nb_operands until j < 2 loop
+					separate_call_arguments.put_first (formal_argument (j))
+					j := j - 1
+				end
+			end
+			separate_call_instruction.set_target (formal_argument (1))
+			separate_call_feature_name.set_seed (a_separate_call.name.seed)
+			separate_call_instruction.set_name (separate_call_feature_name)
+			if nb_operands > 1 then
+				separate_call_instruction.set_arguments (separate_call_arguments)
+			else
+				separate_call_instruction.set_arguments (Void)
+			end
+			print_qualified_call_instruction (separate_call_instruction)
+			dedent
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file.put_new_line
+				--
+				-- Clean up.
+				--
+			current_file := old_file
+			reset_temp_variables
+			from j := 1 until j > nb_operands loop
+				formal_argument (j).set_index (j)
+				j := j + 1
+			end
+				-- Flush to file.
+			flush_to_c_file
+		end
+
+	print_separate_call_object_declaration (i: INTEGER; a_separate_call: ET_SEPARATE_CALL)
+			-- Print function to create the separate call object of
+			-- `i'-th separate call `a_separate_call' appearing in
+			-- `current_feature`, to `current_file' and its signature to
+			-- `header_file'.
+		require
+			a_separate_call_not_void: a_separate_call /= Void
+			scoop_mode: scoop_mode
+		local
+			l_argument: ET_EXPRESSION
+			j, nb: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_operand: ET_IDENTIFIER
+			nb_operands: INTEGER
+			old_file: KI_TEXT_OUTPUT_STREAM
+		do
+			old_file := current_file
+			current_file := current_function_header_buffer
+				-- Print signature to `header_file' and `current_file'.
+			header_file.put_character ('/')
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string ("Creation of separate call object #")
+			header_file.put_integer (i)
+			header_file.put_string (" in feature ")
+			header_file.put_string (current_type.base_type.unaliased_to_text)
+			header_file.put_character ('.')
+			header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+			header_file.put_character (' ')
+			header_file.put_character ('*')
+			header_file.put_character ('/')
+			header_file.put_new_line
+			header_file.put_string (c_ge_scoop_call)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			print_separate_call_object_name (i, current_feature, current_type, header_file)
+			header_file.put_character ('(')
+			current_file.put_character ('/')
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string ("Creation of separate call object #")
+			current_file.put_integer (i)
+			current_file.put_string (" in feature ")
+			current_file.put_string (current_type.base_type.unaliased_to_text)
+			current_file.put_character ('.')
+			current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+			current_file.put_character (' ')
+			current_file.put_character ('*')
+			current_file.put_character ('/')
+			current_file.put_new_line
+			current_file.put_string (c_ge_scoop_call)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			print_separate_call_object_name (i, current_feature, current_type, current_file)
+			current_file.put_character ('(')
+				-- Separate call target.
+			nb_operands := 1
+			l_operand := formal_argument (nb_operands)
+			l_operand.set_index (a_separate_call.target.index)
+			l_type := dynamic_type_set (l_operand).static_type.primary_type
+			print_type_declaration (l_type, header_file)
+			header_file.put_character (' ')
+			print_argument_name (l_operand, header_file)
+			print_type_declaration (l_type, current_file)
+			current_file.put_character (' ')
+			print_argument_name (l_operand, current_file)
+				-- Separate call arguments.
+			if attached a_separate_call.arguments as l_arguments then
+				nb := l_arguments.count
+				from j := 1 until j > nb loop
+					l_argument := l_arguments.actual_argument (j)
+					nb_operands := nb_operands + 1
+					l_operand := formal_argument (nb_operands)
+					l_operand.set_index (l_argument.index)
+					l_type := dynamic_type_set (l_operand).static_type.primary_type
+					header_file.put_character (',')
+					header_file.put_character (' ')
+					print_type_declaration (l_type, header_file)
+					header_file.put_character (' ')
+					print_argument_name (l_operand, header_file)
+					print_comma
+					print_type_declaration (l_type, current_file)
+					current_file.put_character (' ')
+					print_argument_name (l_operand, current_file)
+					j := j + 1
+				end
+			end
+			header_file.put_character (')')
+			header_file.put_character (';')
+			header_file.put_new_line
+			current_file.put_character (')')
+			current_file.put_new_line
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+				-- Print body to `current_file'.
+			current_file := current_function_body_buffer
+			print_indentation
+			current_file.put_string (c_ge_scoop_call)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_sc)
+			current_file.put_character (';')
+			current_file.put_new_line
+				-- Create separate call object.
+			print_indentation
+			current_file.put_string (c_sc)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_string (c_ge_new_scoop_call)
+			current_file.put_character ('(')
+			print_scoop_call_offset (nb_operands)
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+			print_indentation
+			current_file.put_string (c_sc)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_execute)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_string (c_void)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_context)
+			current_file.put_character ('*')
+			print_comma
+			current_file.put_string (c_ge_scoop_call)
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_character ('&')
+			print_separate_call_function_name (i, current_feature, current_type, current_file)
+			current_file.put_character (';')
+			current_file.put_new_line
+			from j := 1 until j > nb_operands loop
+				print_indentation
+				print_scoop_call_operand (j)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				l_operand := formal_argument (j)
+				print_argument_name (l_operand, current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+				j := j + 1
+			end
+				-- Return the separate call object.
+			print_indentation
+			current_file.put_string (c_return)
+			current_file.put_character (' ')
+			current_file.put_string (c_sc)
+			current_file.put_character (';')
+			current_file.put_new_line
+			dedent
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file.put_new_line
+				--
+				-- Clean up.
+				--
+			current_file := old_file
+			reset_temp_variables
+			from j := 1 until j > nb_operands loop
+				formal_argument (j).set_index (j)
+				j := j + 1
+			end
+				-- Flush to file.
+			flush_to_c_file
+		end
+
+	print_scoop_call_offset (a_operand_number: INTEGER)
+			-- Print offset in C struct 'GE_scoop_call' to access
+			-- the `a_operand_number'-th operand of the separate call
+			-- being processed, to `current_file'.
+		require
+			a_operand_number_large_enough: a_operand_number >= 0
+		local
+			i: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_scoop_call)
+			current_file.put_character (')')
+			from i := 1 until i > a_operand_number loop
+				current_file.put_character ('+')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				l_type := dynamic_type_set (formal_argument (i)).static_type.primary_type
+				print_type_declaration (l_type, current_file)
+				current_file.put_character (')')
+				i := i + 1
+			end
+		end
+
+	print_scoop_call_operand (a_operand_number: INTEGER)
+			-- Print access to the `a_operand_number'-th operand
+			-- in the separate call object being processed (C variable
+			-- 'sc' of type 'GE_scoop_call'), to `current_file'.
+		require
+			a_operand_number_large_enough: a_operand_number >= 1
+		local
+			l_operand: ET_IDENTIFIER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			l_operand := formal_argument (a_operand_number)
+			l_type := dynamic_type_set (l_operand).static_type.primary_type
+			current_file.put_character ('*')
+			current_file.put_character ('(')
+			print_type_declaration (l_type, current_file)
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			current_file.put_character ('(')
+			current_file.put_character ('(')
+			current_file.put_string (c_char)
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			current_file.put_character ('(')
+			current_file.put_string (c_sc)
+			current_file.put_character (')')
+			current_file.put_character ('+')
+			print_scoop_call_offset (a_operand_number - 1)
+			current_file.put_character (')')
+		end
+
+	separate_call_feature_name: ET_IDENTIFIER
+			-- Feature name to be used when generating separate call objects
+
+	separate_call_arguments: ET_ACTUAL_ARGUMENT_LIST
+			-- Arguments to be used when generating separate call objects
+
+	separate_call_instruction: ET_QUALIFIED_CALL_INSTRUCTION
+			-- Instruction to be used when generating separate call objects
 
 feature {NONE} -- Built-in feature generation
 
@@ -18977,12 +19940,13 @@ feature {NONE} -- Built-in feature generation
 			end
 		end
 
-	print_builtin_query_c_call (a_feature: ET_DYNAMIC_FEATURE; a_c_function_name: STRING; a_static: BOOLEAN; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+	print_builtin_query_c_call (a_feature: ET_DYNAMIC_FEATURE; a_c_function_name: STRING; a_static, a_context: BOOLEAN; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding a built-in feature which is a call to a C function
 			-- named `a_c_function_name'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_static' means that 'Current' is not passed to the C function.
+			-- `a_context' means that the call context is passed to the C function.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
 		require
@@ -18996,6 +19960,7 @@ feature {NONE} -- Built-in feature generation
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
+			l_comma_needed: BOOLEAN
 		do
 			nb := a_feature.static_feature.arguments_count
 			if call_operands.count /= nb + 1 then
@@ -19011,6 +19976,10 @@ feature {NONE} -- Built-in feature generation
 				current_file.put_character ('(')
 				current_file.put_string (a_c_function_name)
 				current_file.put_character ('(')
+				if a_context then
+					current_file.put_string (c_ac)
+					l_comma_needed := True
+				end
 				from
 					if a_static then
 						i := 1
@@ -19018,6 +19987,11 @@ feature {NONE} -- Built-in feature generation
 				until
 					i > nb
 				loop
+					if l_comma_needed then
+						print_comma
+					else
+						l_comma_needed := True
+					end
 					current_file.put_character ('(')
 					if i = 0 then
 						l_argument := call_operands.first
@@ -19030,10 +20004,6 @@ feature {NONE} -- Built-in feature generation
 					end
 					print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
 					current_file.put_character (')')
-					if i /= nb then
-						current_file.put_character (',')
-						current_file.put_character (' ')
-					end
 					i := i + 1
 				end
 				current_file.put_character (')')
@@ -19243,6 +20213,8 @@ feature {NONE} -- Built-in feature generation
 			current_file.put_string (c_ge_deep_twin)
 			current_file.put_integer (a_target_type.id)
 			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			print_comma
 			print_target_expression (call_operands.first, a_target_type, a_check_void_target)
 			current_file.put_character (',')
 			current_file.put_character (' ')
@@ -19906,10 +20878,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_string (c_eif_true)
 			elseif total_order_on_reals_mode and then a_target_type = current_dynamic_system.real_32_type and then not a_target_type.has_redefined_is_equal_routine then
 				include_runtime_header_file ("ge_real.h", False, header_file)
-				print_builtin_query_c_call (a_feature, c_ge_real_32_is_equal, False, a_target_type, a_check_void_target)
+				print_builtin_query_c_call (a_feature, c_ge_real_32_is_equal, False, False, a_target_type, a_check_void_target)
 			elseif total_order_on_reals_mode and then a_target_type = current_dynamic_system.real_64_type and then not a_target_type.has_redefined_is_equal_routine then
 				include_runtime_header_file ("ge_real.h", False, header_file)
-				print_builtin_query_c_call (a_feature, c_ge_real_64_is_equal, False, a_target_type, a_check_void_target)
+				print_builtin_query_c_call (a_feature, c_ge_real_64_is_equal, False, False, a_target_type, a_check_void_target)
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -20590,6 +21562,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (current_type.id)
 				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
 				current_file.put_string (c_eif_true)
 				current_file.put_character (')')
 				print_semicolon_newline
@@ -20634,6 +21608,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (a_special_type.id)
 				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
 				print_temp_name (l_count_temp, current_file)
 				print_comma
 				current_file.put_string (c_eif_true)
@@ -20798,6 +21774,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			current_file.put_string (c_ge_new)
 			current_file.put_integer (current_type.id)
 			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			print_comma
 			current_file.put_string (c_eif_true)
 			current_file.put_character (')')
 			print_semicolon_newline
@@ -20857,6 +21835,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (a_special_type.id)
 				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
 				print_temp_name (l_count_temp, current_file)
 				print_comma
 				current_file.put_string (c_eif_true)
@@ -23962,7 +24942,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_attached_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_attached_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_boolean_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -23978,7 +24958,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_boolean_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_boolean_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_boolean_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -23992,7 +24972,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_boolean_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_boolean_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_character_8_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24008,7 +24988,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_character_8_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_character_8_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_character_8_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24022,7 +25002,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_character_8_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_character_8_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_character_32_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24038,7 +25018,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_character_32_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_character_32_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_character_32_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24052,7 +25032,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_character_32_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_character_32_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_check_assert_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24066,7 +25046,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_check_assert, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_check_assert, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_compiler_version_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24080,7 +25060,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_compiler_version, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_compiler_version, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_detachable_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24094,7 +25074,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_non_attached_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_non_attached_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_dynamic_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24108,7 +25088,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_object_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_object_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_dynamic_type_at_offset_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24122,7 +25102,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_object_encoded_type_at_offset, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_object_encoded_type_at_offset, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_eif_gen_param_id_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24137,7 +25117,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			type_info_generic_parameters_used := True
-			print_builtin_query_c_call (a_feature, c_ge_generic_parameter_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_generic_parameter_of_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_field_count_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24152,7 +25132,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			type_info_attributes_used := True
-			print_builtin_query_c_call (a_feature, c_ge_field_count_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_field_count_of_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_field_name_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24168,7 +25148,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_name_used := True
-			print_builtin_query_c_call (a_feature, c_ge_field_name_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_field_name_of_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_field_offset_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24184,7 +25164,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_field_offset_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_field_offset_of_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_field_static_type_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24200,7 +25180,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_type_id_used := True
-			print_builtin_query_c_call (a_feature, c_ge_field_static_type_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_field_static_type_of_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_field_type_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24216,7 +25196,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_type_id_used := True
-			print_builtin_query_c_call (a_feature, c_ge_field_type_kind_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_field_type_kind_of_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_generating_type_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24231,7 +25211,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			type_info_name_used := True
-			print_builtin_query_c_call (a_feature, c_ge_generating_type_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_generating_type_of_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_generating_type_8_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24246,7 +25226,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			type_info_name_used := True
-			print_builtin_query_c_call (a_feature, c_ge_generating_type_8_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_generating_type_8_of_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_generator_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24261,7 +25241,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			type_info_generator_used := True
-			print_builtin_query_c_call (a_feature, c_ge_generator_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_generator_of_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_generator_8_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24276,7 +25256,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			type_info_generator_used := True
-			print_builtin_query_c_call (a_feature, c_ge_generator_8_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_generator_8_of_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_generic_parameter_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24291,7 +25271,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			type_info_generic_parameters_used := True
-			print_builtin_query_c_call (a_feature, c_ge_generic_parameter_count_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_generic_parameter_count_of_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_in_assertion_body (a_feature: ET_EXTERNAL_ROUTINE)
@@ -24329,7 +25309,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_integer_8_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_integer_8_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_integer_8_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24343,7 +25323,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_integer_8_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_integer_8_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_integer_16_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24359,7 +25339,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_integer_16_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_integer_16_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_integer_16_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24373,7 +25353,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_integer_16_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_integer_16_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_integer_32_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24389,7 +25369,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_integer_32_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_integer_32_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_integer_32_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24403,7 +25383,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_integer_32_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_integer_32_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_integer_64_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24419,7 +25399,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_integer_64_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_integer_64_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_integer_64_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24433,7 +25413,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_integer_64_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_integer_64_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_is_attached_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24447,7 +25427,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_is_attached_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_is_attached_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_is_copy_semantics_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24463,7 +25443,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_is_copy_semantics_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_is_copy_semantics_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_is_expanded_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24477,7 +25457,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_is_expanded_object, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_is_expanded_object, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_is_field_expanded_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24493,7 +25473,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_type_id_used := True
-			print_builtin_query_c_call (a_feature, c_ge_is_field_expanded_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_is_field_expanded_of_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_is_field_transient_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24507,7 +25487,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_is_field_transient_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_is_field_transient_of_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_is_object_marked_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24521,7 +25501,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_is_object_marked, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_is_object_marked, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_is_special_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24535,7 +25515,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_is_special_object, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_is_special_object, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_is_special_copy_semantics_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24551,7 +25531,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_is_special_copy_semantics_item, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_is_special_copy_semantics_item, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_is_special_of_expanded_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24566,7 +25546,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			type_info_generic_parameters_used := True
-			print_builtin_query_c_call (a_feature, c_ge_is_special_of_expanded_object, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_is_special_of_expanded_object, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_is_special_of_reference_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24581,7 +25561,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			type_info_generic_parameters_used := True
-			print_builtin_query_c_call (a_feature, c_ge_is_special_of_reference_object, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_is_special_of_reference_object, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_is_special_of_reference_or_basic_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24596,7 +25576,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			type_info_generic_parameters_used := True
-			print_builtin_query_c_call (a_feature, c_ge_is_special_of_reference_or_basic_expanded_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_is_special_of_reference_or_basic_expanded_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_is_special_of_reference_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24611,7 +25591,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			type_info_generic_parameters_used := True
-			print_builtin_query_c_call (a_feature, c_ge_is_special_of_reference_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_is_special_of_reference_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_is_tuple_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24625,7 +25605,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_is_tuple_object, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_is_tuple_object, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_is_tuple_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24639,7 +25619,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_is_tuple_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_is_tuple_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_lock_marking_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24683,7 +25663,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_natural_8_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_natural_8_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_natural_8_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24697,7 +25677,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_natural_8_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_natural_8_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_natural_16_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24713,7 +25693,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_natural_16_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_natural_16_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_natural_16_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24727,7 +25707,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_natural_16_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_natural_16_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_natural_32_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24743,7 +25723,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_natural_32_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_natural_32_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_natural_32_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24757,7 +25737,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_natural_32_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_natural_32_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_natural_64_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24773,7 +25753,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_natural_64_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_natural_64_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_natural_64_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24787,7 +25767,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_natural_64_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_natural_64_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_new_instance_of_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24801,7 +25781,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_new_instance_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_new_instance_of_encoded_type, True, True, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_new_special_of_reference_instance_of_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24815,7 +25795,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_new_special_of_reference_instance_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_new_special_of_reference_instance_of_encoded_type, True, True, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_new_tuple_instance_of_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24829,7 +25809,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_new_tuple_instance_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_new_tuple_instance_of_encoded_type, True, True, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_new_type_instance_of_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24843,7 +25823,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_new_type_instance_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_new_type_instance_of_encoded_type, True, True, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_object_size_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24859,7 +25839,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_object_size_used := True
 			type_info_generic_parameters_used := True
-			print_builtin_query_c_call (a_feature, c_ge_object_size, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_object_size, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_once_objects_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24874,7 +25854,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			include_runtime_header_file ("eif_traverse.h", False, header_file)
-			print_builtin_query_c_call (a_feature, c_once_objects, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_once_objects, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_persistent_field_count_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24889,7 +25869,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			type_info_attributes_used := True
-			print_builtin_query_c_call (a_feature, c_ge_persistent_field_count_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_persistent_field_count_of_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_pointer_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24905,7 +25885,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_pointer_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_pointer_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_pointer_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24919,7 +25899,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_pointer_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_pointer_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_pre_ecma_mapping_status_body (a_feature: ET_EXTERNAL_ROUTINE)
@@ -24955,7 +25935,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_raw_reference_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_raw_reference_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_raw_reference_field_at_offset_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24969,7 +25949,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_raw_object_at_offset, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_raw_object_at_offset, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_real_32_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24985,7 +25965,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_real_32_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_real_32_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_real_32_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24999,7 +25979,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_real_32_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_real_32_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_real_64_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -25015,7 +25995,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_real_64_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_real_64_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_real_64_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -25029,7 +26009,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_real_64_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_real_64_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_reference_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -25045,7 +26025,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			type_info_attributes_used := True
 			type_info_attribute_offset_used := True
-			print_builtin_query_c_call (a_feature, c_ge_reference_field, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_reference_field, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_reference_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -25059,7 +26039,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_reference_field_at, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_reference_field_at, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_reference_field_at_offset_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -25073,7 +26053,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_object_at_offset, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_object_at_offset, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_set_boolean_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -25562,7 +26542,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_query_c_call (a_feature, c_ge_storable_version_of_encoded_type, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_storable_version_of_encoded_type, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_type_conforms_to_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -25577,7 +26557,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			type_info_ancestors_used := True
-			print_builtin_query_c_call (a_feature, c_ge_encoded_type_conforms_to, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_encoded_type_conforms_to, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_type_id_from_name_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -25592,7 +26572,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			type_info_name_used := True
-			print_builtin_query_c_call (a_feature, c_ge_encoded_type_from_name, True, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, c_ge_encoded_type_from_name, True, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_ise_runtime_unlock_marking_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -25839,7 +26819,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			current_file.put_string (c_eif_false)
+			if scoop_mode then
+				current_file.put_string (c_eif_true)
+			else
+				current_file.put_string (c_eif_false)
+			end
 		end
 
 	print_builtin_platform_is_thread_capable_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -26560,7 +27544,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_c_function_name := c_ge_real_64_ieee_is_equal
 			end
 			include_runtime_header_file ("ge_real.h", False, header_file)
-			print_builtin_query_c_call (a_feature, l_c_function_name, False, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, l_c_function_name, False, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_real_n_ieee_is_greater_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -26582,7 +27566,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_c_function_name := c_ge_real_64_ieee_is_greater
 			end
 			include_runtime_header_file ("ge_real.h", False, header_file)
-			print_builtin_query_c_call (a_feature, l_c_function_name, False, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, l_c_function_name, False, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_real_n_ieee_is_greater_equal_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -26604,7 +27588,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_c_function_name := c_ge_real_64_ieee_is_greater_equal
 			end
 			include_runtime_header_file ("ge_real.h", False, header_file)
-			print_builtin_query_c_call (a_feature, l_c_function_name, False, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, l_c_function_name, False, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_real_n_ieee_is_less_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -26626,7 +27610,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_c_function_name := c_ge_real_64_ieee_is_less
 			end
 			include_runtime_header_file ("ge_real.h", False, header_file)
-			print_builtin_query_c_call (a_feature, l_c_function_name, False, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, l_c_function_name, False, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_real_n_ieee_is_less_equal_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -26648,7 +27632,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_c_function_name := c_ge_real_64_ieee_is_less_equal
 			end
 			include_runtime_header_file ("ge_real.h", False, header_file)
-			print_builtin_query_c_call (a_feature, l_c_function_name, False, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, l_c_function_name, False, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_real_n_ieee_maximum_number_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -26670,7 +27654,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_c_function_name := c_ge_real_64_ieee_maximum_number
 			end
 			include_runtime_header_file ("ge_real.h", False, header_file)
-			print_builtin_query_c_call (a_feature, l_c_function_name, False, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, l_c_function_name, False, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_real_n_ieee_minimum_number_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -26692,7 +27676,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_c_function_name := c_ge_real_64_ieee_minimum_number
 			end
 			include_runtime_header_file ("ge_real.h", False, header_file)
-			print_builtin_query_c_call (a_feature, l_c_function_name, False, a_target_type, a_check_void_target)
+			print_builtin_query_c_call (a_feature, l_c_function_name, False, False, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_real_n_is_less_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -26725,10 +27709,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				error_handler.report_giaaa_error
 			elseif total_order_on_reals_mode and then a_target_type = current_dynamic_system.real_32_type then
 				include_runtime_header_file ("ge_real.h", False, header_file)
-				print_builtin_query_c_call (a_feature, c_ge_real_32_is_less, False, a_target_type, a_check_void_target)
+				print_builtin_query_c_call (a_feature, c_ge_real_32_is_less, False, False, a_target_type, a_check_void_target)
 			elseif total_order_on_reals_mode and then a_target_type = current_dynamic_system.real_64_type then
 				include_runtime_header_file ("ge_real.h", False, header_file)
-				print_builtin_query_c_call (a_feature, c_ge_real_64_is_less, False, a_target_type, a_check_void_target)
+				print_builtin_query_c_call (a_feature, c_ge_real_64_is_less, False, False, a_target_type, a_check_void_target)
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -27877,6 +28861,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (l_special_type.id)
 				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
 				print_argument_name (l_argument_name, current_file)
 				print_comma
 				current_file.put_string (c_eif_true)
@@ -29468,6 +30454,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_string (c_ge_new)
 					current_file.put_integer (l_primary_type.id)
 					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
 					current_file.put_string (c_eif_true)
 					current_file.put_character (')')
 					current_file.put_character (')')
@@ -29551,6 +30539,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_string (c_ge_new)
 					current_file.put_integer (l_special_type.id)
 					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
 					l_argument := call_operands.item (2)
 					l_actual_type_set := dynamic_type_set (l_argument)
 					l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
@@ -29777,7 +30767,7 @@ feature {NONE} -- C function generation
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
-				if multithreaded_mode then
+				if use_threads then
 					print_indentation
 					current_file.put_string (c_ge_once_per_object_data_mutex)
 					current_file.put_character (' ')
@@ -29809,6 +30799,19 @@ feature {NONE} -- C function generation
 				end
 				print_indentation
 				current_file.put_line ("GE_init_exception(ac);")
+				if scoop_mode then
+					print_indentation
+					current_file.put_string (c_ge_init_scoop)
+					current_file.put_character ('(')
+					current_file.put_character (')')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ge_init_scoop_processor)
+					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					current_file.put_character (')')
+					print_semicolon_newline
+				end
 				print_indentation
 				current_file.put_line ("GE_init_console();")
 				print_indentation
@@ -29825,6 +30828,13 @@ feature {NONE} -- C function generation
 					current_file.put_line (c_eif_trace)
 					print_show_console_call
 					current_file.put_line (c_endif)
+				end
+				if scoop_mode then
+					print_indentation
+					current_file.put_string (c_ge_increment_scoop_sessions_count)
+					current_file.put_character ('(')
+					current_file.put_character (')')
+					print_semicolon_newline
 				end
 					-- Create root object.
 				print_indentation
@@ -29843,6 +30853,19 @@ feature {NONE} -- C function generation
 				extra_dynamic_type_sets.remove_last
 				current_file.put_character (';')
 				current_file.put_new_line
+				if scoop_mode then
+					print_indentation
+					current_file.put_string (c_ge_decrement_scoop_sessions_count)
+					current_file.put_character ('(')
+					current_file.put_character (')')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ge_scoop_processor_run)
+					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					current_file.put_character (')')
+					print_semicolon_newline
+				end
 				debug ("gobo_ids")
 					nb := current_dynamic_system.dynamic_types.count
 					from i := 1 until i > nb loop
@@ -29925,6 +30948,18 @@ feature {NONE} -- C function generation
 				print_result_name (current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
+				current_file.put_string (c_ge_context)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ge_current_context)
+				current_file.put_character ('(')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
 				current_file := current_function_body_buffer
 				if l_string_type.is_alive then
 					l_temp := new_temp_variable (l_area_type)
@@ -29937,6 +30972,8 @@ feature {NONE} -- C function generation
 					current_file.put_string (c_ge_new)
 					current_file.put_integer (l_area_type.id)
 					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
 					current_file.put_character ('c')
 					current_file.put_character ('+')
 					current_file.put_character ('1')
@@ -29957,6 +30994,19 @@ feature {NONE} -- C function generation
 					print_default_name (l_area_type, current_file)
 					current_file.put_character (';')
 					current_file.put_new_line
+					if scoop_mode then
+							-- Set 'scoop_processor' of 'area'.
+						print_indentation
+						print_attribute_scoop_processor_access (l_temp, l_area_type, False)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_string (c_ac)
+						current_file.put_string (c_arrow)
+						current_file.put_string (c_scoop_processor)
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
 						-- Set 'capacity' of 'area'.
 					print_indentation
 					print_attribute_special_capacity_access (l_temp, l_area_type, False)
@@ -29988,6 +31038,8 @@ feature {NONE} -- C function generation
 					current_file.put_string (c_ge_new)
 					current_file.put_integer (l_string_type.id)
 					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
 					current_file.put_string (c_eif_true)
 					current_file.put_character (')')
 					current_file.put_character (';')
@@ -30095,6 +31147,18 @@ feature {NONE} -- C function generation
 				print_result_name (current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
+				current_file.put_string (c_ge_context)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ge_current_context)
+				current_file.put_character ('(')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
 				current_file := current_function_body_buffer
 				if l_string_type.is_alive then
 					l_temp := new_temp_variable (l_area_type)
@@ -30107,6 +31171,8 @@ feature {NONE} -- C function generation
 					current_file.put_string (c_ge_new)
 					current_file.put_integer (l_area_type.id)
 					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
 					current_file.put_character ('c')
 					current_file.put_character ('+')
 					current_file.put_character ('1')
@@ -30127,6 +31193,19 @@ feature {NONE} -- C function generation
 					print_default_name (l_area_type, current_file)
 					current_file.put_character (';')
 					current_file.put_new_line
+					if scoop_mode then
+							-- Set 'scoop_processor' of 'area'.
+						print_indentation
+						print_attribute_scoop_processor_access (l_temp, l_area_type, False)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_string (c_ac)
+						current_file.put_string (c_arrow)
+						current_file.put_string (c_scoop_processor)
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
 						-- Set 'capacity' of 'area'.
 					print_indentation
 					print_attribute_special_capacity_access (l_temp, l_area_type, False)
@@ -30158,6 +31237,8 @@ feature {NONE} -- C function generation
 					current_file.put_string (c_ge_new)
 					current_file.put_integer (l_string_type.id)
 					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
 					current_file.put_string (c_eif_true)
 					current_file.put_character (')')
 					current_file.put_character (';')
@@ -30265,6 +31346,18 @@ feature {NONE} -- C function generation
 				print_result_name (current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
+				current_file.put_string (c_ge_context)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ge_current_context)
+				current_file.put_character ('(')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
 				current_file := current_function_body_buffer
 				if l_string_type.is_alive then
 					l_temp := new_temp_variable (l_area_type)
@@ -30277,6 +31370,8 @@ feature {NONE} -- C function generation
 					current_file.put_string (c_ge_new)
 					current_file.put_integer (l_area_type.id)
 					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
 					current_file.put_character ('c')
 					current_file.put_character ('+')
 					current_file.put_character ('1')
@@ -30297,6 +31392,19 @@ feature {NONE} -- C function generation
 					print_default_name (l_area_type, current_file)
 					current_file.put_character (';')
 					current_file.put_new_line
+					if scoop_mode then
+							-- Set 'scoop_processor' of 'area'.
+						print_indentation
+						print_attribute_scoop_processor_access (l_temp, l_area_type, False)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_string (c_ac)
+						current_file.put_string (c_arrow)
+						current_file.put_string (c_scoop_processor)
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
 						-- Set 'capacity' of 'area'.
 					print_indentation
 					print_attribute_special_capacity_access (l_temp, l_area_type, False)
@@ -30328,6 +31436,8 @@ feature {NONE} -- C function generation
 					current_file.put_string (c_ge_new)
 					current_file.put_integer (l_string_type.id)
 					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
 					current_file.put_string (c_eif_true)
 					current_file.put_character (')')
 					current_file.put_character (';')
@@ -30435,6 +31545,18 @@ feature {NONE} -- C function generation
 				print_result_name (current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
+				current_file.put_string (c_ge_context)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ge_current_context)
+				current_file.put_character ('(')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
 				current_file := current_function_body_buffer
 				if l_string_type.is_alive then
 					l_temp := new_temp_variable (l_area_type)
@@ -30447,6 +31569,8 @@ feature {NONE} -- C function generation
 					current_file.put_string (c_ge_new)
 					current_file.put_integer (l_area_type.id)
 					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
 					current_file.put_character ('c')
 					current_file.put_character ('+')
 					current_file.put_character ('1')
@@ -30467,6 +31591,19 @@ feature {NONE} -- C function generation
 					print_default_name (l_area_type, current_file)
 					current_file.put_character (';')
 					current_file.put_new_line
+					if scoop_mode then
+							-- Set 'scoop_processor' of 'area'.
+						print_indentation
+						print_attribute_scoop_processor_access (l_temp, l_area_type, False)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_string (c_ac)
+						current_file.put_string (c_arrow)
+						current_file.put_string (c_scoop_processor)
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
 						-- Set 'capacity' of 'area'.
 					print_indentation
 					print_attribute_special_capacity_access (l_temp, l_area_type, False)
@@ -30498,6 +31635,8 @@ feature {NONE} -- C function generation
 					current_file.put_string (c_ge_new)
 					current_file.put_integer (l_string_type.id)
 					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
 					current_file.put_string (c_eif_true)
 					current_file.put_character (')')
 					current_file.put_character (';')
@@ -30594,11 +31733,23 @@ feature {NONE} -- C function generation
 					-- makes the C compilation with the -O2 faster and
 					-- the resulting application is not slower.
 				header_file.put_character ('(')
+				header_file.put_string (c_ge_context)
+				header_file.put_character ('*')
+				header_file.put_character (' ')
+				header_file.put_string (c_ac)
+				header_file.put_character (',')
+				header_file.put_character (' ')
 				print_type_declaration (l_integer_type, header_file)
 				header_file.put_string (" c, ")
 				print_type_declaration (l_integer_type, header_file)
 				header_file.put_string (" n, ...)")
 				current_file.put_character ('(')
+				current_file.put_string (c_ge_context)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
 				print_type_declaration (l_integer_type, current_file)
 				current_file.put_string (" c, ")
 				print_type_declaration (l_integer_type, current_file)
@@ -30632,6 +31783,8 @@ feature {NONE} -- C function generation
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (l_special_type.id)
 				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
 				current_file.put_character ('c')
 				current_file.put_character (',')
 				current_file.put_character (' ')
@@ -30650,6 +31803,19 @@ feature {NONE} -- C function generation
 				print_default_name (l_special_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
+				if scoop_mode then
+						-- Set 'scoop_processor' of 'area'.
+					print_indentation
+					print_attribute_scoop_processor_access (l_temp, l_special_type, False)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_scoop_processor)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
 					-- Set 'capacity' of 'area'.
 				print_indentation
 				print_attribute_special_capacity_access (l_temp, l_special_type, False)
@@ -30743,6 +31909,8 @@ feature {NONE} -- C function generation
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (an_array_type.id)
 				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
 				current_file.put_string (c_eif_true)
 				current_file.put_character (')')
 				current_file.put_character (';')
@@ -30969,29 +32137,30 @@ feature {NONE} -- C function generation
 			current_file.put_integer (a_tuple_type.id)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
+			header_file.put_string (c_ge_context)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string (c_ac)
+			current_file.put_string (c_ge_context)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_ac)
 			nb := l_item_type_sets.count
-			if nb = 0 then
-				header_file.put_string (c_void)
-				current_file.put_string (c_void)
-			else
-				from i := 1 until i > nb loop
-					if i /= 1 then
-						header_file.put_character (',')
-						header_file.put_character (' ')
-						current_file.put_character (',')
-						current_file.put_character (' ')
-					end
-					l_item_type := l_item_type_sets.item (i).static_type.primary_type
-					print_type_declaration (l_item_type, header_file)
-					print_type_declaration (l_item_type, current_file)
-					header_file.put_character (' ')
-					header_file.put_character ('a')
-					header_file.put_integer (i)
-					current_file.put_character (' ')
-					current_file.put_character ('a')
-					current_file.put_integer (i)
-					i := i + 1
-				end
+			from i := 1 until i > nb loop
+				header_file.put_character (',')
+				header_file.put_character (' ')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				l_item_type := l_item_type_sets.item (i).static_type.primary_type
+				print_type_declaration (l_item_type, header_file)
+				print_type_declaration (l_item_type, current_file)
+				header_file.put_character (' ')
+				header_file.put_character ('a')
+				header_file.put_integer (i)
+				current_file.put_character (' ')
+				current_file.put_character ('a')
+				current_file.put_integer (i)
+				i := i + 1
 			end
 			header_file.put_character (')')
 			current_file.put_character (')')
@@ -31017,6 +32186,8 @@ feature {NONE} -- C function generation
 			current_file.put_string (c_ge_new)
 			current_file.put_integer (a_tuple_type.id)
 			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			print_comma
 			current_file.put_string (c_eif_true)
 			current_file.put_character (')')
 			current_file.put_character (';')
@@ -31069,6 +32240,18 @@ feature {NONE} -- C function generation
 			current_file.put_integer (a_type.id)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
+			header_file.put_string (c_ge_context)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string (c_ac)
+			header_file.put_character (',')
+			header_file.put_character (' ')
+			current_file.put_string (c_ge_context)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			print_type_declaration (a_type, header_file)
 			print_type_declaration (a_type, current_file)
 			header_file.put_character (' ')
@@ -31116,6 +32299,16 @@ feature {NONE} -- C function generation
 			print_assign_to
 			current_file.put_character ('0')
 			print_semicolon_newline
+			if scoop_mode then
+					-- Set 'scoop_processor'.
+				print_indentation
+				print_boxed_attribute_scoop_processor_access (tokens.result_keyword, a_type, False)
+				print_assign_to
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_scoop_processor)
+				print_semicolon_newline
+			end
 				-- Set pointer.
 			print_indentation
 			print_boxed_attribute_pointer_access (tokens.result_keyword, a_type, False)
@@ -31167,6 +32360,18 @@ feature {NONE} -- C function generation
 			current_file.put_integer (a_type.id)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
+			header_file.put_string (c_ge_context)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string (c_ac)
+			header_file.put_character (',')
+			header_file.put_character (' ')
+			current_file.put_string (c_ge_context)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			print_type_declaration (a_type, header_file)
 			header_file.put_character ('*')
 			print_type_declaration (a_type, current_file)
@@ -31216,6 +32421,16 @@ feature {NONE} -- C function generation
 			print_assign_to
 			current_file.put_character ('0')
 			print_semicolon_newline
+			if scoop_mode then
+					-- Set 'scoop_processor'.
+				print_indentation
+				print_boxed_attribute_scoop_processor_access (tokens.result_keyword, a_type, False)
+				print_assign_to
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_scoop_processor)
+				print_semicolon_newline
+			end
 				-- Set pointer.
 			print_indentation
 			print_boxed_attribute_pointer_access (tokens.result_keyword, a_type, False)
@@ -31593,6 +32808,8 @@ feature {NONE} -- Memory allocation
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (current_type.id)
 				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
 				if attached {ET_DYNAMIC_SPECIAL_TYPE} current_type as l_special_type then
 					l_arguments := a_feature.arguments
 					if l_arguments = Void or else l_arguments.is_empty then
@@ -31674,6 +32891,18 @@ feature {NONE} -- Memory allocation
 			current_file.put_integer (a_type.id)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
+			header_file.put_string (c_ge_context)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string (c_ac)
+			header_file.put_character (',')
+			header_file.put_character (' ')
+			current_file.put_string (c_ge_context)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			if l_special_type /= Void then
 				if l_special_type.attribute_count < 2 then
 						-- Internal error: class "SPECIAL" should have at least the
@@ -31793,6 +33022,16 @@ feature {NONE} -- Memory allocation
 			print_default_name (a_type, current_file)
 			current_file.put_character (';')
 			current_file.put_new_line
+			if scoop_mode then
+					-- Set SCOOP processor.
+				print_indentation
+				print_attribute_scoop_processor_access (tokens.result_keyword, a_type, False)
+				print_assign_to
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_scoop_processor)
+				print_semicolon_newline
+			end
 			if l_special_type /= Void and l_item_type /= Void then
 					-- Set 'capacity'.
 				print_indentation
@@ -31969,7 +33208,7 @@ feature {NONE} -- Memory allocation
 			current_file.put_new_line
 			current_file.put_line (c_endif)
 				-- Initialize mutexes.
-			if multithreaded_mode then
+			if use_threads then
 				l_queries := a_type.queries
 				i := a_type.attribute_count + 1
 				nb := l_queries.count
@@ -32079,7 +33318,7 @@ feature {NONE} -- Memory allocation
 			l_procedure: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER
 		do
-			if multithreaded_mode then
+			if use_threads then
 					-- Print signature to `header_file' and `current_file'.
 				header_file.put_string ("/* Dispose once-per-object data for type ")
 				header_file.put_string (a_type.base_type.unaliased_to_text)
@@ -32416,7 +33655,7 @@ feature {NONE} -- Once feature generation
 			l_once_prefix: STRING
 		do
 			l_once_prefix := once_prefixes.item (a_once_kind)
-			if multithreaded_mode then
+			if use_threads then
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
 				current_file.put_string (c_process_onces)
@@ -32443,7 +33682,7 @@ feature {NONE} -- Once feature generation
 			l_once_prefix: STRING
 		do
 			l_once_prefix := once_prefixes.item (a_once_kind)
-			if multithreaded_mode then
+			if use_threads then
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
 				current_file.put_string (c_thread_onces)
@@ -32530,7 +33769,7 @@ feature {NONE} -- Once feature generation
 			l_once_prefix: STRING
 		do
 			l_once_prefix := once_prefixes.item (a_once_kind)
-			if multithreaded_mode then
+			if use_threads then
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
 				current_file.put_string (c_process_onces)
@@ -32558,7 +33797,7 @@ feature {NONE} -- Once feature generation
 			l_once_prefix: STRING
 		do
 			l_once_prefix := once_prefixes.item (a_once_kind)
-			if multithreaded_mode then
+			if use_threads then
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
 				current_file.put_string (c_thread_onces)
@@ -32645,7 +33884,7 @@ feature {NONE} -- Once feature generation
 			l_once_prefix: STRING
 		do
 			l_once_prefix := once_prefixes.item (a_once_kind)
-			if multithreaded_mode then
+			if use_threads then
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
 				current_file.put_string (c_process_onces)
@@ -32672,7 +33911,7 @@ feature {NONE} -- Once feature generation
 			l_once_prefix: STRING
 		do
 			l_once_prefix := once_prefixes.item (a_once_kind)
-			if multithreaded_mode then
+			if use_threads then
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
 				current_file.put_string (c_thread_onces)
@@ -32754,7 +33993,7 @@ feature {NONE} -- Once feature generation
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once_per_process
-			multithreaded_mode: multithreaded_mode
+			use_threads: use_threads
 		do
 			print_indentation
 			print_thread_safe_once_per_process_status (a_feature, a_once_kind, a_once_index)
@@ -32838,6 +34077,8 @@ feature {NONE} -- Once feature generation
 					current_file.put_string (c_ge_boxed)
 					current_file.put_integer (l_result_type.id)
 					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
 					print_result_name (current_file)
 					current_file.put_character (')')
 				else
@@ -32858,7 +34099,7 @@ feature {NONE} -- Once feature generation
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once_per_process
 			a_feature_is_function: a_feature.is_function
-			multithreaded_mode: multithreaded_mode
+			use_threads: use_threads
 		local
 			l_result_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
@@ -32874,6 +34115,8 @@ feature {NONE} -- Once feature generation
 					current_file.put_string (c_ge_boxed)
 					current_file.put_integer (l_result_type.id)
 					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
 					print_result_name (current_file)
 					current_file.put_character (')')
 				else
@@ -32972,7 +34215,7 @@ feature {NONE} -- Once feature generation
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once_per_process
-			multithreaded_mode: multithreaded_mode
+			use_threads: use_threads
 		local
 			l_result_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
@@ -33032,7 +34275,7 @@ feature {NONE} -- Once feature generation
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once_per_process
-			multithreaded_mode: multithreaded_mode
+			use_threads: use_threads
 		do
 			print_indentation
 			print_thread_safe_once_per_process_exception (a_feature, a_once_kind, a_once_index)
@@ -33089,7 +34332,7 @@ feature {NONE} -- Once feature generation
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once_per_process: a_feature.is_once_per_process
-			multithreaded_mode: multithreaded_mode
+			use_threads: use_threads
 		do
 			print_indentation
 			current_file.put_string (c_if)
@@ -33125,7 +34368,7 @@ feature {NONE} -- Once feature generation
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once_per_process: a_feature.is_once_per_process
-			multithreaded_mode: multithreaded_mode
+			use_threads: use_threads
 		local
 			l_once_prefix: STRING
 		do
@@ -33145,7 +34388,7 @@ feature {NONE} -- Once feature generation
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once_per_object: a_feature.is_once_per_object
-			multithreaded_mode: multithreaded_mode
+			use_threads: use_threads
 		do
 			print_attribute_onces_access (tokens.current_keyword, current_type, False)
 			current_file.put_string (C_arrow)
@@ -33162,7 +34405,7 @@ feature {NONE} -- Once feature generation
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once
 			a_feature_not_once_per_thread: not a_feature.is_once_per_thread
-			multithreaded_mode: multithreaded_mode
+			use_threads: use_threads
 		do
 			if a_feature.is_once_per_object then
 				print_once_per_object_mutex (a_feature)
@@ -33185,7 +34428,7 @@ feature {NONE} -- Once feature generation
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once
 			a_feature_not_once_per_thread: not a_feature.is_once_per_thread
-			multithreaded_mode: multithreaded_mode
+			use_threads: use_threads
 		do
 			current_file.put_string (c_ge_mutex_try_lock)
 			current_file.put_character ('(')
@@ -33203,7 +34446,7 @@ feature {NONE} -- Once feature generation
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once
 			a_feature_not_once_per_thread: not a_feature.is_once_per_thread
-			multithreaded_mode: multithreaded_mode
+			use_threads: use_threads
 		do
 			print_indentation
 			current_file.put_string (c_ge_mutex_lock)
@@ -33224,7 +34467,7 @@ feature {NONE} -- Once feature generation
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once
 			a_feature_not_once_per_thread: not a_feature.is_once_per_thread
-			multithreaded_mode: multithreaded_mode
+			use_threads: use_threads
 		do
 			print_indentation
 			current_file.put_string (c_ge_mutex_unlock)
@@ -33239,7 +34482,7 @@ feature {NONE} -- Once feature generation
 			-- Print code to lock the global mutex to protect
 			-- creation of once-per-object data.
 		require
-			multithreaded_mode: multithreaded_mode
+			use_threads: use_threads
 		do
 			print_indentation
 			current_file.put_string (c_ge_mutex_lock)
@@ -33254,7 +34497,7 @@ feature {NONE} -- Once feature generation
 			-- Print code to unlock the global mutex to protect
 			-- creation of once-per-object data.
 		require
-			multithreaded_mode: multithreaded_mode
+			use_threads: use_threads
 		do
 			print_indentation
 			current_file.put_string (c_ge_mutex_unlock)
@@ -34113,6 +35356,15 @@ feature {NONE} -- Type generation
 					print_attribute_flags_name (a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_new_line
+					if scoop_mode then
+						a_file.put_character ('%T')
+						a_file.put_string (c_ge_scoop_processor)
+						a_file.put_character ('*')
+						a_file.put_character (' ')
+						print_attribute_scoop_processor_name (a_type, a_file)
+						a_file.put_character (';')
+						a_file.put_new_line
+					end
 					l_empty_struct := False
 				end
 				if a_type.is_special then
@@ -34260,6 +35512,15 @@ feature {NONE} -- Type generation
 				print_attribute_flags_name (a_type, a_file)
 				a_file.put_character (';')
 				a_file.put_new_line
+				if scoop_mode then
+					a_file.put_character ('%T')
+					a_file.put_string (c_ge_scoop_processor)
+					a_file.put_character ('*')
+					a_file.put_character (' ')
+					print_attribute_scoop_processor_name (a_type, a_file)
+					a_file.put_character (';')
+					a_file.put_new_line
+				end
 				a_file.put_character ('%T')
 				print_type_declaration (a_type, a_file)
 				a_file.put_character ('*')
@@ -34378,7 +35639,7 @@ feature {NONE} -- Type generation
 					print_once_per_object_exception_name (l_query, a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_new_line
-					if multithreaded_mode then
+					if use_threads then
 						a_file.put_character ('%T')
 						a_file.put_string (c_eif_pointer)
 						a_file.put_character (' ')
@@ -34416,7 +35677,7 @@ feature {NONE} -- Type generation
 					print_once_per_object_exception_name (l_procedure, a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_new_line
-					if multithreaded_mode then
+					if use_threads then
 						a_file.put_character ('%T')
 						a_file.put_string (c_eif_pointer)
 						a_file.put_character (' ')
@@ -35426,6 +36687,11 @@ feature {NONE} -- Default initialization values generation
 						-- Flags.
 					a_file.put_character (',')
 					a_file.put_character ('0')
+					if scoop_mode then
+							-- SCOOP processor.
+						a_file.put_character (',')
+						a_file.put_character ('0')
+					end
 					l_empty_struct := False
 				end
 				if a_type.is_special then
@@ -35746,6 +37012,24 @@ feature {NONE} -- Feature name generation
 -- TODO: long names
 				short_names := True
 				print_attribute_onces_name (a_type, a_file)
+				short_names := False
+			end
+		end
+
+	print_attribute_scoop_processor_name (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print to `a_file' the name of the 'scoop_processor' pseudo attribute for objects of type `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+			scoop_mode: scoop_mode
+		do
+			if short_names then
+				a_file.put_string (c_scoop_processor)
+			else
+-- TODO: long names
+				short_names := True
+				print_attribute_scoop_processor_name (a_type, a_file)
 				short_names := False
 			end
 		end
@@ -36308,6 +37592,63 @@ feature {NONE} -- Feature name generation
 			end
 			a_file.put_character ('a')
 			a_file.put_character ('f')
+			a_file.put_integer (i)
+		end
+
+	print_separate_call_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print name of function for `i'-th separate call appearing in `a_routine' from `a_type' to `a_file'.
+		require
+			a_routine_not_void: a_routine /= Void
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+			scoop_mode: scoop_mode
+		do
+			if in_static_feature then
+				print_static_routine_name (a_routine, a_type, a_file)
+			else
+				print_routine_name (a_routine, a_type, a_file)
+			end
+			a_file.put_character ('s')
+			a_file.put_character ('c')
+			a_file.put_integer (i)
+		end
+
+	print_separate_call_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print name of function to execute the `i'-th separate call appearing in `a_routine' from `a_type' to `a_file'.
+		require
+			a_routine_not_void: a_routine /= Void
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+			scoop_mode: scoop_mode
+		do
+			if in_static_feature then
+				print_static_routine_name (a_routine, a_type, a_file)
+			else
+				print_routine_name (a_routine, a_type, a_file)
+			end
+			a_file.put_character ('s')
+			a_file.put_character ('f')
+			a_file.put_integer (i)
+		end
+
+	print_separate_call_object_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print name of function to create the `i'-th separate call object appearing in `a_routine' from `a_type' to `a_file'.
+		require
+			a_routine_not_void: a_routine /= Void
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+			scoop_mode: scoop_mode
+		do
+			if in_static_feature then
+				print_static_routine_name (a_routine, a_type, a_file)
+			else
+				print_routine_name (a_routine, a_type, a_file)
+			end
+			a_file.put_character ('s')
+			a_file.put_character ('o')
 			a_file.put_integer (i)
 		end
 
@@ -37338,7 +38679,7 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("eif_threads.h") then
 					include_runtime_header_file ("eif_cecil.h", a_force, a_file)
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
-					if multithreaded_mode then
+					if use_threads then
 						include_runtime_header_file ("ge_thread.h", False, a_file)
 					end
 				elseif a_filename.same_string ("eif_traverse.h") then
@@ -37358,7 +38699,7 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("ge_exception.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					include_runtime_header_file ("ge_once.h", a_force, a_file)
-					if multithreaded_mode then
+					if use_threads then
 						include_runtime_header_file ("ge_thread_types.h", a_force, a_file)
 					end
 					l_c_filename := "ge_exception.c"
@@ -37379,6 +38720,10 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("ge_real.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					l_c_filename := "ge_real.c"
+				elseif a_filename.same_string ("ge_scoop.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					include_runtime_header_file ("ge_exception.h", a_force, a_file)
+					l_c_filename := "ge_scoop.c"
 				elseif a_filename.same_string ("ge_string.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					l_c_filename := "ge_string.c"
@@ -37471,7 +38816,7 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_console.h", False, a_header_file)
 					include_runtime_header_file ("ge_eiffel.h", False, a_header_file)
 					include_runtime_header_file ("ge_exception.h", False, a_header_file)
-					if multithreaded_mode then
+					if use_threads then
 						include_runtime_header_file ("ge_thread.h", False, a_header_file)
 					end
 				elseif a_filename.same_string ("ge_deep.c") then
@@ -37482,7 +38827,8 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_gc.h", False, a_header_file)
 					include_runtime_header_file ("ge_string.h", False, a_header_file)
 					include_runtime_header_file ("ge_console.h", False, a_header_file)
-					if multithreaded_mode then
+					include_runtime_header_file ("ge_main.h", False, a_header_file)
+					if use_threads then
 						include_runtime_header_file ("ge_thread.h", False, a_header_file)
 					end
 				elseif a_filename.same_string ("ge_gc.c") then
@@ -37499,11 +38845,15 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("ge_once.c") then
 					include_runtime_header_file ("ge_once.h", False, a_header_file)
 					include_runtime_header_file ("ge_gc.h", False, a_header_file)
-					if multithreaded_mode then
+					if use_threads then
 						include_runtime_header_file ("ge_thread.h", False, a_header_file)
 					end
 				elseif a_filename.same_string ("ge_real.c") then
 					include_runtime_header_file ("ge_real.h", False, a_header_file)
+				elseif a_filename.same_string ("ge_scoop.c") then
+					include_runtime_header_file ("ge_scoop.h", False, a_header_file)
+					include_runtime_header_file ("ge_gc.h", False, a_header_file)
+					include_runtime_header_file ("ge_thread.h", False, a_header_file)
 				elseif a_filename.same_string ("ge_string.c") then
 					include_runtime_header_file ("ge_string.h", False, a_header_file)
 					include_runtime_header_file ("ge_native_string.h", False, a_header_file)
@@ -37513,6 +38863,9 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_gc.h", False, a_header_file)
 					include_runtime_header_file ("ge_once.h", False, a_header_file)
 					include_runtime_header_file ("ge_time.h", False, a_header_file)
+					if scoop_mode then
+						include_runtime_header_file ("ge_scoop.h", False, a_header_file)
+					end
 				elseif a_filename.same_string ("ge_types.c") then
 					include_runtime_header_file ("ge_types.h", False, a_header_file)
 					include_runtime_header_file ("ge_string.h", False, a_header_file)
@@ -38438,6 +39791,9 @@ feature {NONE} -- Access
 			-- Equalities ('=' or '/=', as well as '~' or '/~') appearing in
 			-- `current_feature' for which  a function needs to be generated
 
+	current_separate_calls: DS_ARRAYED_LIST [ET_SEPARATE_CALL]
+			-- Separate calls (calls whose target type is separate) appearing in `current_feature'
+
 	dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
 			-- Dynamic types in the system
 
@@ -38488,7 +39844,7 @@ feature {NONE} -- Once features
 				once_features.search (l_once_feature)
 				if not once_features.found then
 					l_once_kind := once_kind (a_feature)
-					if not multithreaded_mode or else l_is_once_per_process then
+					if not use_threads or else l_is_once_per_process then
 						l_once_index := once_per_process_counts.item (l_once_kind)
 						once_per_process_counts.put (l_once_index + 1, l_once_kind)
 					else
@@ -40047,12 +41403,15 @@ feature {NONE} -- Constants
 	c_exception_manager: STRING = "exception_manager"
 	c_exception_suffix: STRING = "_exception"
 	c_exception_tag: STRING = "exception_tag"
+	c_execute: STRING = "execute"
 	c_extern: STRING = "extern"
 	c_find_referers: STRING = "find_referers"
 	c_flags: STRING = "flags"
 	c_float: STRING = "float"
 	c_for: STRING = "for"
 	c_fprintf: STRING = "fprintf"
+	c_ge_add_scoop_call: STRING = "GE_add_scoop_call"
+	c_ge_add_scoop_session: STRING = "GE_add_scoop_session"
 	c_ge_argc: STRING = "GE_argc"
 	c_ge_argv: STRING = "GE_argv"
 	c_ge_attached_encoded_type: STRING = "GE_attached_encoded_type"
@@ -40082,6 +41441,7 @@ feature {NONE} -- Constants
 	c_ge_context: STRING = "GE_context"
 	c_ge_current_context: STRING = "GE_current_context"
 	c_ge_decoded_type: STRING = "GE_decoded_type"
+	c_ge_decrement_scoop_sessions_count: STRING = "GE_decrement_scoop_sessions_count"
 	c_ge_deep: STRING = "GE_deep"
 	c_ge_deep_twin: STRING = "GE_deep_twin"
 	c_ge_default: STRING = "GE_default"
@@ -40112,8 +41472,11 @@ feature {NONE} -- Constants
 	c_ge_id_object: STRING = "GE_id_object"
 	c_ge_ims8: STRING = "GE_ims8"
 	c_ge_ims32_from_utf32le: STRING = "GE_ims32_from_utf32le"
+	c_ge_increment_scoop_sessions_count: STRING = "GE_increment_scoop_sessions_count"
 	c_ge_init_const: STRING = "GE_init_const"
 	c_ge_init_exception_manager: STRING = "GE_init_exception_manager"
+	c_ge_init_scoop: STRING = "GE_init_scoop"
+	c_ge_init_scoop_processor: STRING = "GE_init_scoop_processor"
 	c_ge_int8: STRING = "GE_int8"
 	c_ge_int16: STRING = "GE_int16"
 	c_ge_int32: STRING = "GE_int32"
@@ -40182,6 +41545,8 @@ feature {NONE} -- Constants
 	c_ge_new_istr8: STRING = "GE_new_istr8"
 	c_ge_new_istr32: STRING = "GE_new_istr32"
 	c_ge_new_once_per_object_data: STRING = "GE_new_once_per_object_data"
+	c_ge_new_scoop_call: STRING = "GE_new_scoop_call"
+	c_ge_new_scoop_session: STRING = "GE_new_scoop_session"
 	c_ge_new_special_of_reference_instance_of_encoded_type: STRING = "GE_new_special_of_reference_instance_of_encoded_type"
 	c_ge_new_str8: STRING = "GE_new_str8"
 	c_ge_new_str32: STRING = "GE_new_str32"
@@ -40246,6 +41611,10 @@ feature {NONE} -- Constants
 	c_ge_reference_field_at: STRING = "GE_reference_field_at"
 	c_ge_rescue: STRING = "GE_rescue"
 	c_ge_retry: STRING = "GE_retry"
+	c_ge_scoop_call: STRING = "GE_scoop_call"
+	c_ge_scoop_processor: STRING = "GE_scoop_processor"
+	c_ge_scoop_processor_run: STRING = "GE_scoop_processor_run"
+	c_ge_scoop_session: STRING = "GE_scoop_session"
 	c_ge_setjmp: STRING = "GE_setjmp"
 	c_ge_set_boolean_field: STRING = "GE_set_boolean_field"
 	c_ge_set_boolean_field_at: STRING = "GE_set_boolean_field_at"
@@ -40280,6 +41649,7 @@ feature {NONE} -- Constants
 	c_ge_set_reference_field_at: STRING = "GE_set_reference_field_at"
 	c_ge_show_console: STRING = "GE_show_console"
 	c_ge_storable_version_of_encoded_type: STRING = "GE_storable_version_of_encoded_type"
+	c_ge_thread_create_with_attr: STRING = "GE_thread_create_with_attr"
 	c_ge_thread_onces_set_counts: STRING = "GE_thread_onces_set_counts"
 	c_ge_type_flag_boolean: STRING = "GE_TYPE_FLAG_BOOLEAN"
 	c_ge_type_flag_character_8: STRING = "GE_TYPE_FLAG_CHARACTER_8"
@@ -40311,6 +41681,7 @@ feature {NONE} -- Constants
 	c_ge_use_attributes: STRING = "GE_USE_ATTRIBUTES"
 	c_ge_use_boehm_gc: STRING = "GE_USE_BOEHM_GC"
 	c_ge_use_posix_threads: STRING = "GE_USE_POSIX_THREADS"
+	c_ge_use_scoop: STRING = "GE_USE_SCOOP"
 	c_ge_use_threads: STRING = "GE_USE_THREADS"
 	c_ge_use_type_generator: STRING = "GE_USE_TYPE_GENERATOR"
 	c_ge_use_type_generic_parameters: STRING = "GE_USE_TYPE_GENERIC_PARAMETERS"
@@ -40351,6 +41722,8 @@ feature {NONE} -- Constants
 	c_previous: STRING = "previous"
 	c_process_onces: STRING = "process_onces"
 	c_return: STRING = "return"
+	c_sc: STRING = "sc"
+	c_scoop_processor: STRING = "scoop_processor"
 	c_sizeof: STRING = "sizeof"
 	c_status_suffix: STRING = "_status"
 	c_stderr: STRING = "stderr"
@@ -40478,6 +41851,9 @@ invariant
 	agent_closed_operands_not_void: agent_closed_operands /= Void
 	no_void_agent_closed_operand: not agent_closed_operands.has_void
 	agent_closed_operands_type_not_void: agent_closed_operands_type /= Void
+	separate_call_feature_name_not_void: separate_call_feature_name /= Void
+	separate_call_instruction_not_void: separate_call_instruction /= Void
+	separate_call_arguments_not_void: separate_call_arguments /= Void
 	manifest_array_types_not_void: manifest_array_types /= Void
 	no_void_manifest_array_type: not manifest_array_types.has_void
 	big_manifest_array_types_not_void: big_manifest_array_types /= Void
@@ -40488,6 +41864,8 @@ invariant
 	no_void_current_object_test: not current_object_tests.has_void
 	current_equalities_not_void: current_equalities /= Void
 	no_void_current_equality: not current_equalities.has_void
+	current_separate_calls_not_void: current_separate_calls /= Void
+	no_void_current_separate_call: not current_separate_calls.has_void
 	called_features_not_void: called_features /= Void
 	no_void_called_feature: not called_features.has_void
 	called_static_features_not_void: called_static_features /= Void

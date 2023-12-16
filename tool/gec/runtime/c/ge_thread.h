@@ -4,7 +4,7 @@
 		"C functions used to implement class THREAD and related threading facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -156,7 +156,7 @@ extern void GE_init_thread(GE_context* a_context);
  * Create a new thread with attributes `attr' and execute
  * Eiffel routine `routine' on object `current'.
  */
-extern void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFERENCE), void (*set_terminated)(EIF_REFERENCE,EIF_BOOLEAN), EIF_THR_ATTR_TYPE* attr);
+extern void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFERENCE, EIF_INTEGER), void (*set_terminated)(EIF_REFERENCE,EIF_BOOLEAN), EIF_THR_ATTR_TYPE* attr, int is_scoop_processor);
 
 /*
  * Execution context of current thread.

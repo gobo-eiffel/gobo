@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -91,6 +91,9 @@ feature -- Status report
 			Result := is_expanded
 		end
 
+	is_separate: BOOLEAN = False
+			-- Is current type separate?
+
 	has_static: BOOLEAN
 			-- Does current type contain features that are used as static features?
 
@@ -154,6 +157,12 @@ feature -- Access
 	attached_type: detachable ET_DYNAMIC_SECONDARY_TYPE
 			-- Attached version of current type, if already available
 
+	separate_type: detachable ET_DYNAMIC_SECONDARY_TYPE
+			-- Separate version of current type, if already available
+
+	attached_separate_type: detachable ET_DYNAMIC_SECONDARY_TYPE
+			-- Attached separate version of current type, if already available
+
 	hash_code: INTEGER
 			-- Hash code
 
@@ -174,6 +183,22 @@ feature -- Setting
 			attached_type := a_type
 		ensure
 			attached_type_set: attached_type = a_type
+		end
+
+	set_separate_type (a_type: like separate_type)
+			-- Set `separate_type' to `a_type'.
+		do
+			separate_type := a_type
+		ensure
+			separate_type_set: separate_type = a_type
+		end
+
+	set_attached_separate_type (a_type: like attached_separate_type)
+			-- Set `attached_separate_type' to `a_type'.
+		do
+			attached_separate_type := a_type
+		ensure
+			attached_separate_type_set: attached_separate_type = a_type
 		end
 
 	set_id (i: INTEGER)

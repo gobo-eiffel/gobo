@@ -5,7 +5,7 @@ note
 		"Eiffel create expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,6 +48,12 @@ feature -- Initialization
 			if attached creation_call as l_creation_call then
 				l_creation_call.reset
 			end
+			if attached default_create_name as l_default_create_name then
+				l_default_create_name.reset
+			end
+			if attached internal_separate_target as l_internal_separate_target then
+				l_internal_separate_target.reset
+			end
 		end
 
 feature -- Access
@@ -69,22 +75,6 @@ feature -- Access
 
 	creation_call: detachable ET_QUALIFIED_CALL
 			-- Call to creation procedure
-
-	name: detachable ET_FEATURE_NAME
-			-- Creation procedure name
-		do
-			if attached creation_call as l_creation_call then
-				Result := l_creation_call.name
-			end
-		end
-
-	arguments: detachable ET_ACTUAL_ARGUMENT_LIST
-			-- Arguments of creation call
-		do
-			if attached creation_call as l_creation_call then
-				Result := l_creation_call.arguments
-			end
-		end
 
 	position: ET_POSITION
 			-- Position of first character of

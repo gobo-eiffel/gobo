@@ -4,7 +4,7 @@
 		"C types used to implement class THREAD and related threading facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -89,8 +89,8 @@ typedef struct GE_thread_context_struct GE_thread_context;
 struct GE_thread_context_struct {
 	EIF_THR_TYPE thread_id; /* Thread identifier for associated thread. */
 	EIF_REFERENCE current; /* Eiffel root object. */
-	void (*routine)(EIF_REFERENCE); /* Eiffel routine. */
-	void (*set_terminated)(EIF_REFERENCE,EIF_BOOLEAN); /* Eiffel routine to set {THREAD}.terminated. */
+	void (*routine)(EIF_REFERENCE, EIF_INTEGER); /* Eiffel routine. */
+	void (*set_terminated)(EIF_REFERENCE, EIF_BOOLEAN); /* Eiffel routine to set {THREAD}.terminated. */
 	unsigned int initial_priority; /* Initial priority. */
 	EIF_THR_TYPE last_thread_id; /* Last thread created from current thread. */
 	volatile int n_children; /* Number of direct thread children. */
@@ -98,7 +98,10 @@ struct GE_thread_context_struct {
 	EIF_COND_TYPE* children_cond; /* Condition variable to wait for thread children. */
 	GE_thread_context* parent_context;	/* Context of parent thread, NULL if main thread. */
 	int thread_exiting; /* Has current thread already called GE_thread_exit? */
-	volatile int is_alive; /* Is Current thread still alive? */
+	volatile int is_alive; /* Is current thread still alive? */
+#ifdef GE_USE_SCOOP
+	int is_scoop_processor; /* Is current thread a SCOOP processor? */
+#endif
 };
 
 #ifdef __cplusplus

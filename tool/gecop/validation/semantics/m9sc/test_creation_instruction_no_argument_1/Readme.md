@@ -1,0 +1,7 @@
+# Semantics M9SC
+
+This [test](.) is exercising the semantics rule [M9SC](../Readme.md).
+
+### Description
+
+In this test, feature `f` of class `AA` contains a creation instruction with a target whose type is separate. This creates a new region with a new processor. The creation procedure `make` has no argument and is executed asynchronously on the new object in the new region by the new processor. The execution of `f` continues without waiting for the creation procedure to complete.

@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTION"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,6 +27,9 @@
 #endif
 #ifndef GE_CONSOLE_H
 #include "ge_console.h"
+#endif
+#ifndef GE_MAIN_H
+#include "ge_main.h"
 #endif
 #ifdef GE_USE_THREADS
 #ifndef GE_THREAD_H
@@ -413,6 +416,9 @@ GE_context GE_default_context = {0, 0, 0, 0, 0, 0, '\1', 0, 0, {0, 0, 0}, {0, 0,
 #ifdef GE_USE_THREADS
 	, 0, 0, 0, 0
 #endif
+#ifdef GE_USE_SCOOP
+	, 0
+#endif
 	};
 
 /*
@@ -442,7 +448,7 @@ void GE_init_exception(GE_context* a_context)
 
 	GE_init_exception_trace_buffer(&a_context->exception_trace_buffer);
 	GE_init_exception_trace_buffer(&a_context->last_exception_trace);
-	l_exception_manager = GE_new_exception_manager(EIF_TRUE);
+	l_exception_manager = GE_new_exception_manager(a_context, EIF_TRUE);
 	a_context->exception_manager = l_exception_manager;
 	GE_init_exception_manager(a_context, l_exception_manager);
 }
@@ -461,7 +467,7 @@ void GE_free_exception(GE_context* a_context)
  * Pointer to function to create a new exception manager object
  * (of type ISE_EXCEPTION_MANAGER).
  */
-EIF_REFERENCE (*GE_new_exception_manager)(EIF_BOOLEAN);
+EIF_REFERENCE (*GE_new_exception_manager)(GE_context*, EIF_BOOLEAN);
 
 /*
  * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.init_exception_manager.

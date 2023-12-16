@@ -5,7 +5,7 @@ note
 		"Eiffel features equipped with dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -226,7 +226,7 @@ feature -- Access
 		do
 			if not attached first_precursor as l_first_precursor then
 				create Result.make (a_feature, a_parent_type, Current, a_system)
-				Result.set_regular (is_regular or is_creation)
+				Result.set_regular (is_regular or is_creation or is_separate_creation)
 				first_precursor := Result
 			elseif l_first_precursor.parent_type = a_parent_type and l_first_precursor.static_feature = a_feature then
 				Result := l_first_precursor
@@ -309,6 +309,9 @@ feature -- Status report
 
 	is_creation: BOOLEAN
 			-- Is current feature used as a creation procedure?
+
+	is_separate_creation: BOOLEAN
+			-- Is current feature used as a creation procedure on a separate target?
 
 	is_regular: BOOLEAN
 			-- Is current feature used as a regular feature?
@@ -440,6 +443,21 @@ feature -- Status report
 				else
 					Result := False
 				end
+			end
+		end
+
+	has_separate_argument: BOOLEAN
+			-- Has current feature at least one separate argument?
+		local
+			i, nb: INTEGER
+		do
+			nb := static_feature.arguments_count.min (dynamic_type_sets.count)
+			from i := 1 until i > nb loop
+				if dynamic_type_sets.item (i).static_type.is_separate then
+					Result := True
+					i := nb -- Jump out of the loop.
+				end
+				i := i + 1
 			end
 		end
 
@@ -826,6 +844,16 @@ feature -- Status setting
 			end
 		ensure
 			creation_set: is_creation = b
+		end
+
+	set_separate_creation (b: BOOLEAN)
+			-- Set `is_separate_creation' to `b'.
+		do
+			is_separate_creation := b
+			set_creation (b and has_separate_argument or is_creation)
+			set_regular (b or is_regular)
+		ensure
+			separate_creation_set: is_separate_creation = b
 		end
 
 	set_regular (b: BOOLEAN)

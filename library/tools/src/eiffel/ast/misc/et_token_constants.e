@@ -3598,6 +3598,16 @@ feature -- Types
 			identity_type_not_void: Result /= Void
 		end
 
+	attached_type_modifier: ET_LIKE_CURRENT
+			-- Type 'attached like Current'
+		once
+			create Result.make (implicit_attached_type_mark)
+		ensure
+			instance_free: class
+			attached_type_modifier_not_void: Result /= Void
+			is_attached: attached Result.type_mark as l_type_mark and then l_type_mark.is_attached_mark
+		end
+
 	separate_type_modifier: ET_LIKE_CURRENT
 			-- Type 'separate like Current'
 		once
@@ -3606,6 +3616,16 @@ feature -- Types
 			instance_free: class
 			separate_type_modifier_not_void: Result /= Void
 			is_separate: attached Result.type_mark as l_type_mark and then l_type_mark.is_separate_mark
+		end
+
+	attached_separate_type_modifier: ET_LIKE_CURRENT
+			-- Type 'attached separate like Current'
+		once
+			create Result.make (implicit_attached_separate_type_mark)
+		ensure
+			instance_free: class
+			attached_separate_type_modifier_not_void: Result /= Void
+			is_attached_separate: attached Result.type_mark as l_type_mark and then l_type_mark.is_attached_mark and then l_type_mark.is_separate_mark
 		end
 
 	controlled_type_modifier: ET_LIKE_CURRENT

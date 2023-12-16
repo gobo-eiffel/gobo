@@ -4,7 +4,7 @@
 		"C functions used to implement type information"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -613,13 +613,13 @@ void GE_unmark_object(EIF_POINTER obj)
  * `a_type' cannot represent a SPECIAL type, use
  * `GE_new_special_of_reference_instance_of_type_index' instead.
  */
-EIF_REFERENCE GE_new_instance_of_type_index(EIF_TYPE_INDEX a_type)
+EIF_REFERENCE GE_new_instance_of_type_index(GE_context* a_context, EIF_TYPE_INDEX a_type)
 {
-	EIF_REFERENCE (*l_new)(EIF_BOOLEAN);
+	EIF_REFERENCE (*l_new)(GE_context*, EIF_BOOLEAN);
 
-	l_new = (EIF_REFERENCE (*)(EIF_BOOLEAN))GE_type_infos[a_type].new_instance;
+	l_new = (EIF_REFERENCE (*)(GE_context*, EIF_BOOLEAN))GE_type_infos[a_type].new_instance;
 	if (l_new) {
-		return l_new(EIF_TRUE);
+		return l_new(a_context, EIF_TRUE);
 	} else {
 		return EIF_VOID;
 	}
@@ -630,13 +630,13 @@ EIF_REFERENCE GE_new_instance_of_type_index(EIF_TYPE_INDEX a_type)
  * a SPECIAL with can contain `a_capacity' elements of reference type.
  * To create a SPECIAL of basic type, use class SPECIAL directly.
  */
-EIF_REFERENCE GE_new_special_of_reference_instance_of_type_index(EIF_TYPE_INDEX a_type, EIF_INTEGER a_capacity)
+EIF_REFERENCE GE_new_special_of_reference_instance_of_type_index(GE_context* a_context, EIF_TYPE_INDEX a_type, EIF_INTEGER a_capacity)
 {
-	EIF_REFERENCE (*l_new)(EIF_INTEGER,EIF_BOOLEAN);
+	EIF_REFERENCE (*l_new)(GE_context*, EIF_INTEGER, EIF_BOOLEAN);
 
-	l_new = (EIF_REFERENCE (*)(EIF_INTEGER,EIF_BOOLEAN))GE_type_infos[a_type].new_instance;
+	l_new = (EIF_REFERENCE (*)(GE_context*, EIF_INTEGER, EIF_BOOLEAN))GE_type_infos[a_type].new_instance;
 	if (l_new) {
-		return l_new(a_capacity, EIF_TRUE);
+		return l_new(a_context, a_capacity, EIF_TRUE);
 	} else {
 		return EIF_VOID;
 	}
@@ -645,7 +645,7 @@ EIF_REFERENCE GE_new_special_of_reference_instance_of_type_index(EIF_TYPE_INDEX 
 /*
  * New instance of TYPE for object of type `a_type'.
  */
-EIF_REFERENCE GE_new_type_instance_of_encoded_type(EIF_ENCODED_TYPE a_type)
+EIF_REFERENCE GE_new_type_instance_of_encoded_type(GE_context* a_context, EIF_ENCODED_TYPE a_type)
 {
 	EIF_TYPE l_decoded_type;
 	EIF_TYPE_INDEX l_type_index;

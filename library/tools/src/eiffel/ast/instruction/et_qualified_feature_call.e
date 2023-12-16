@@ -5,7 +5,7 @@ note
 		"Eiffel qualified feature calls"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2014-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,6 +18,11 @@ inherit
 		redefine
 			target,
 			is_qualified_call
+		end
+
+	ET_SEPARATE_CALL
+		redefine
+			target
 		end
 
 feature -- Access
@@ -37,5 +42,5 @@ feature -- Status report
 invariant
 
 	qualified_call: is_qualified_call
-	
+
 end

@@ -7,6 +7,8 @@ Click on the `[tests]` label following the condition numbers below to see tests 
 
 This rule is part of SCOOP, the Eiffel concurrency mechanism. SCOOP is not described in the ECMA Eiffel standard, therefore this rule is not part of the standard.
 
+However, SCOOP is described in the eiffel.org documentation [Concurrent programming with SCOOP](https://www.eiffel.org/doc/solutions/Concurrent_programming_with_SCOOP). *Separate\_instruction* is described in the section [Inline Separate](https://www.eiffel.org/doc/solutions/Exclusive_Access#Inline_Separate).
+
 ### ISE Eiffel (as of 21.11.10.6046 and after)
 
 * Error: An expression used in a separate instruction should be of a separate type.
@@ -25,6 +27,7 @@ The argument `expression as a` appearing in a *Separate\_instruction* is valid i
 * In condition `2G`, a fresh identifier means that `a` does not have the same lower name as any feature of the enclosing class, or any formal argument or local variable of any enclosing feature or *Inline\_agent*, or, if the separate instruction appears in the scope of an *Object\_test*, its Object-Test Local, or, if the separate instruction appears in the scope of an *Iteration*, its item identifier, or, if the separate instruction appears in the compound of another separate instruction, the name of any of its arguments.
 
 * Condition `3G` might be too constraining. For example, if we have:
+
   ```
   foo: separate FOO
 

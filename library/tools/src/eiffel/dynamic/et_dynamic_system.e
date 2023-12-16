@@ -268,10 +268,36 @@ feature -- Types
 		local
 			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_secondary_type: ET_DYNAMIC_SECONDARY_TYPE
+			l_is_separate: BOOLEAN
+			l_is_detachable: BOOLEAN
+			l_is_expanded: BOOLEAN
 		do
 			l_primary_type := dynamic_primary_type (a_type, a_context)
 			if current_system.attachment_type_conformance_mode then
-				if a_type.is_type_expanded (a_context) or a_type.is_type_detachable (a_context) then
+				l_is_separate := a_type.is_type_separate (a_context)
+				l_is_detachable := a_type.is_type_detachable (a_context)
+				l_is_expanded := a_type.is_type_expanded (a_context)
+				if current_system.scoop_mode and l_is_separate then
+					if l_is_detachable then
+						if attached l_primary_type.separate_type as l_separate_type then
+							Result := l_separate_type
+						else
+							create l_secondary_type.make (l_primary_type, tokens.implicit_separate_type_mark)
+							l_primary_type.set_separate_type (l_secondary_type)
+							propagate_type_of_type_result_type (l_secondary_type)
+							Result := l_secondary_type
+						end
+					else
+						if attached l_primary_type.attached_separate_type as l_attached_separate_type then
+							Result := l_attached_separate_type
+						else
+							create l_secondary_type.make (l_primary_type, tokens.implicit_attached_separate_type_mark)
+							l_primary_type.set_attached_separate_type (l_secondary_type)
+							propagate_type_of_type_result_type (l_secondary_type)
+							Result := l_secondary_type
+						end
+					end
+				elseif l_is_expanded or l_is_detachable then
 					Result := l_primary_type
 				elseif attached l_primary_type.attached_type as l_attached_type then
 					Result := l_attached_type
@@ -379,25 +405,85 @@ feature -- Types
 			dynamic_primary_type_not_void: Result /= Void
 		end
 
-	attached_type (a_type: ET_DYNAMIC_PRIMARY_TYPE): ET_DYNAMIC_TYPE
+	attached_type (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE
 			-- Attached version of `a_type', or `a_type' itself if it
-			-- is expanded or we are in non-void-safe mode
+			-- is expanded or we are in non-void-safe mode.
+			-- Keep the separateness status of `a_type'.
 		require
 			a_type_not_void: a_type /= Void
+		local
+			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
-			if current_system.attachment_type_conformance_mode then
-				if attached a_type.attached_type as l_attached_type then
+			if current_system.scoop_mode and a_type.is_separate then
+				Result := attached_separate_type (a_type.primary_type)
+			elseif current_system.attachment_type_conformance_mode then
+				l_primary_type := a_type.primary_type
+				if attached l_primary_type.attached_type as l_attached_type then
 					Result := l_attached_type
-				elseif a_type.is_expanded then
-					Result := a_type
+				elseif l_primary_type.is_expanded then
+					Result := l_primary_type
 				else
-					Result := dynamic_type (tokens.attached_like_current, a_type.base_type)
+					Result := dynamic_type (tokens.attached_type_modifier, a_type.base_type)
 				end
 			else
-				Result := a_type
+				Result := a_type.primary_type
 			end
 		ensure
 			attached_type_not_void: Result /= Void
+			same_separateness_status: current_system.scoop_mode implies Result.is_separate = a_type.is_separate
+		end
+
+	attached_separate_type (a_type: ET_DYNAMIC_PRIMARY_TYPE): ET_DYNAMIC_TYPE
+			-- Attached separate version of `a_type', or just
+			-- or the separate version if we are in non-void-safe mode.
+		require
+			a_type_not_void: a_type /= Void
+			scoop_mode: current_system.scoop_mode
+		do
+			if current_system.attachment_type_conformance_mode then
+				if attached a_type.attached_separate_type as l_attached_separate_type then
+					Result := l_attached_separate_type
+				else
+					Result := dynamic_type (tokens.attached_separate_type_modifier, a_type.base_type)
+				end
+			elseif attached a_type.separate_type as l_separate_type then
+				Result := l_separate_type
+			else
+				Result := dynamic_type (tokens.separate_type_modifier, a_type.base_type)
+			end
+		ensure
+			attached_separate_type_not_void: Result /= Void
+		end
+
+	detachable_type (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE
+			-- Detachable version of `a_type'.
+			-- Keep the separateness status of `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			if current_system.scoop_mode and a_type.is_separate then
+				Result := detachable_separate_type (a_type.primary_type)
+			else
+				Result := a_type.primary_type
+			end
+		ensure
+			detachable_type_not_void: Result /= Void
+			same_separateness_status: current_system.scoop_mode implies Result.is_separate = a_type.is_separate
+		end
+
+	detachable_separate_type (a_type: ET_DYNAMIC_PRIMARY_TYPE): ET_DYNAMIC_TYPE
+			-- Detachable separate version of `a_type'
+		require
+			a_type_not_void: a_type /= Void
+			scoop_mode: current_system.scoop_mode
+		do
+			if attached a_type.separate_type as l_separate_type then
+				Result := l_separate_type
+			else
+				Result := dynamic_type (tokens.separate_type_modifier, a_type.base_type)
+			end
+		ensure
+			detachable_separate_type_not_void: Result /= Void
 		end
 
 	meta_type (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_PRIMARY_TYPE

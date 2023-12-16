@@ -190,10 +190,6 @@ feature {NONE} -- Initialization
 			create common_ancestor_type_list.make (500)
 				-- Indexing.
 			create indexing_term_list.make (10)
-				-- Default creation call.
-			create default_creation_call_name.make (tokens.default_create_feature_name.name)
-			default_creation_call_name.set_seed (current_system.default_create_seed)
-			create default_creation_call.make (default_creation_call_name, Void)
 				-- VAPE validity check.
 			create vape_non_descendant_clients.make_with_capacity (20)
 			create vape_creation_clients.make_with_capacity (20)
@@ -3163,9 +3159,7 @@ feature {NONE} -- Instruction validity
 			l_target_context: ET_NESTED_TYPE_CONTEXT
 			l_explicit_creation_type: detachable ET_TYPE
 			l_seed: INTEGER
-			l_creation_call: detachable ET_QUALIFIED_CALL
 			l_name: ET_FEATURE_NAME
-			l_name_position: ET_POSITION
 			l_adapted_base_class: ET_ADAPTED_CLASS
 			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
@@ -3173,19 +3167,11 @@ feature {NONE} -- Instruction validity
 			l_had_error: BOOLEAN
 		do
 			has_fatal_error := False
-			l_creation_call := an_instruction.creation_call
-			if l_creation_call /= Void then
-					-- There is an explicit creation call.
-				l_name := l_creation_call.name
-				l_seed := l_name.seed
-			else
-					-- No explicit creation call. Use 'default_create' instead.
-				l_creation_call := default_creation_call
-				l_name_position := an_instruction.last_position
-				default_creation_call_name.set_position (l_name_position.line, l_name_position.column)
-				l_name := default_creation_call_name
-				l_seed := current_system.default_create_seed
+			l_name := an_instruction.name
+			if an_instruction.creation_call = Void then
+				l_name.set_seed (current_system.default_create_seed)
 			end
+			l_seed := l_name.seed
 			l_target := an_instruction.target
 			l_target_context := new_context (current_type)
 			l_explicit_creation_type := an_instruction.type
@@ -3208,13 +3194,13 @@ feature {NONE} -- Instruction validity
 				check_adapted_base_classes_validity (l_name, l_adapted_base_classes, l_creation_context)
 			end
 			if has_fatal_error then
-				check_orphan_actual_arguments_validity (l_creation_call)
+				check_orphan_actual_arguments_validity (an_instruction)
 			elseif l_seed = 0 then
 				l_adapted_base_class := l_adapted_base_classes.first
 				l_class := l_adapted_base_class.base_class
-				if l_creation_call = default_creation_call then
+				if an_instruction.creation_call = Void then
 						-- There is no explicit creation call.
-					check_creation_procedure_call_instruction_validity (an_instruction, l_creation_call, Void, l_adapted_base_class, l_has_multiple_constraints, l_target_context, l_creation_context)
+					check_creation_procedure_call_instruction_validity (an_instruction, Void, l_adapted_base_class, l_has_multiple_constraints, l_target_context, l_creation_context)
 				elseif current_class_impl /= current_class then
 						-- We need to resolve `l_name' in the implementation
 						-- class of `current_feature_impl' first.
@@ -3224,27 +3210,27 @@ feature {NONE} -- Instruction validity
 							-- the implementation feature.
 						error_handler.report_giaaa_error
 					end
-					check_orphan_actual_arguments_validity (l_creation_call)
+					check_orphan_actual_arguments_validity (an_instruction)
 				elseif l_class.is_dotnet then
 						-- A class coming from a .NET assembly can contain overloaded
 						-- features (i.e. several features with the same name).
 						-- We have to be careful about that here.
-					check_dotnet_creation_procedure_call_instruction_validity (an_instruction, l_creation_call, l_adapted_base_class, l_has_multiple_constraints, l_target_context, l_creation_context)
+					check_dotnet_creation_procedure_call_instruction_validity (an_instruction, l_adapted_base_class, l_has_multiple_constraints, l_target_context, l_creation_context)
 				elseif attached l_adapted_base_class.named_procedure (l_name) as l_procedure then
 					l_seed := l_procedure.first_seed
 					l_name.set_seed (l_seed)
-					check_creation_procedure_call_instruction_validity (an_instruction, l_creation_call, l_procedure, l_adapted_base_class, l_has_multiple_constraints, l_target_context, l_creation_context)
+					check_creation_procedure_call_instruction_validity (an_instruction, l_procedure, l_adapted_base_class, l_has_multiple_constraints, l_target_context, l_creation_context)
 				elseif attached l_adapted_base_class.named_query (l_name) as l_query then
 						-- This is not a procedure.
 					set_fatal_error
 					error_handler.report_vgcc6d_error (current_class, l_name, l_query, l_class)
-					check_orphan_actual_arguments_validity (l_creation_call)
+					check_orphan_actual_arguments_validity (an_instruction)
 				else
 					set_fatal_error
 						-- ISE Eiffel 5.4 reports this error as a VEEN,
 						-- but it is in fact a VUEX-2 (ETL2 p.368).
 					error_handler.report_vuex2a_error (current_class_impl, l_name, l_class)
-					check_orphan_actual_arguments_validity (l_creation_call)
+					check_orphan_actual_arguments_validity (an_instruction)
 				end
 			elseif l_adapted_base_classes.is_empty then
 					-- Internal error: the seed was already computed in a proper ancestor
@@ -3253,14 +3239,14 @@ feature {NONE} -- Instruction validity
 					-- be a procedure for this seed.
 				set_fatal_error
 				error_handler.report_giaaa_error
-				check_orphan_actual_arguments_validity (l_creation_call)
+				check_orphan_actual_arguments_validity (an_instruction)
 			else
 				nb := l_adapted_base_classes.count
 				from i := 1 until i > nb loop
 					l_adapted_base_class := l_adapted_base_classes.item (i)
 					l_class := l_adapted_base_class.base_class
 					if attached l_class.seeded_procedure (l_seed) as l_procedure then
-						check_creation_procedure_call_instruction_validity (an_instruction, l_creation_call, l_procedure, l_adapted_base_class, l_has_multiple_constraints, l_target_context, l_creation_context)
+						check_creation_procedure_call_instruction_validity (an_instruction, l_procedure, l_adapted_base_class, l_has_multiple_constraints, l_target_context, l_creation_context)
 					elseif l_class.is_none then
 -- TODO: "NONE" conforms to all reference types.
 						set_fatal_error
@@ -3285,7 +3271,7 @@ feature {NONE} -- Instruction validity
 			free_adapted_base_classes (l_adapted_base_classes)
 		end
 
-	check_dotnet_creation_procedure_call_instruction_validity (a_instruction: ET_CREATION_INSTRUCTION; a_creation_call: ET_CREATION_CALL; a_adapted_base_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_target_context, a_creation_context: ET_NESTED_TYPE_CONTEXT)
+	check_dotnet_creation_procedure_call_instruction_validity (a_instruction: ET_CREATION_INSTRUCTION; a_adapted_base_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_target_context, a_creation_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_instruction' with .NET creation type base class.
 			--
 			-- A class coming from a .NET assembly can contain overloaded
@@ -3294,7 +3280,6 @@ feature {NONE} -- Instruction validity
 			--
 			-- The validity of the creation type and of the target of the creation are
 			-- assumed to have already been checked.
-			-- `a_creation_call' is the creation call in `current_class_impl'.
 			-- `a_target_context' represents the type of the creation target.
 			-- `a_creation_context' represents the creation type of `a_instruction'.
 			-- `a_adapted_base_class' is the base class (or the best possible constraint in case of multiple
@@ -3304,7 +3289,6 @@ feature {NONE} -- Instruction validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_instruction_not_void: a_instruction /= Void
-			a_creation_call_not_void: a_creation_call /= Void
 			a_adapted_base_class_not_void: a_adapted_base_class /= Void
 			a_class_is_dotnet: a_adapted_base_class.base_class.is_dotnet
 			a_target_context_not_void: a_target_context /= Void
@@ -3319,45 +3303,44 @@ feature {NONE} -- Instruction validity
 		do
 			has_fatal_error := False
 			l_class := a_adapted_base_class.base_class
-			l_name := a_creation_call.name
+			l_name := a_instruction.name
 			l_overloaded_procedures := new_overloaded_procedures
 			a_adapted_base_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
 			if not l_overloaded_procedures.is_empty then
-				keep_best_overloaded_features (l_overloaded_procedures, adapted_name (l_name, a_adapted_base_class), a_creation_call.arguments, a_creation_context, False, True)
+				keep_best_overloaded_features (l_overloaded_procedures, adapted_name (l_name, a_adapted_base_class), a_instruction.arguments, a_creation_context, False, True)
 				if has_fatal_error then
-					check_orphan_actual_arguments_validity (a_creation_call)
+					check_orphan_actual_arguments_validity (a_instruction)
 				elseif l_overloaded_procedures.count = 1 then
 					l_procedure := l_overloaded_procedures.first
 					l_seed := l_procedure.first_seed
 					l_name.set_seed (l_seed)
-					check_creation_procedure_call_instruction_validity (a_instruction, a_creation_call, l_procedure, a_adapted_base_class, a_has_multiple_constraints, a_target_context, a_creation_context)
+					check_creation_procedure_call_instruction_validity (a_instruction, l_procedure, a_adapted_base_class, a_has_multiple_constraints, a_target_context, a_creation_context)
 				else
 					-- Ambiguity in overloaded procedures.
 -- TODO: report VIOF
 					set_fatal_error
 					error_handler.report_giaaa_error
-					check_orphan_actual_arguments_validity (a_creation_call)
+					check_orphan_actual_arguments_validity (a_instruction)
 				end
 			elseif attached a_adapted_base_class.named_query (l_name) as l_query then
 					-- This is not a procedure.
 				set_fatal_error
 				error_handler.report_vgcc6d_error (current_class, l_name, l_query, l_class)
-				check_orphan_actual_arguments_validity (a_creation_call)
+				check_orphan_actual_arguments_validity (a_instruction)
 			else
 				set_fatal_error
 					-- ISE Eiffel 5.4 reports this error as a VEEN,
 					-- but it is in fact a VUEX-2 (ETL2 p.368).
 				error_handler.report_vuex2a_error (current_class_impl, l_name, l_class)
-				check_orphan_actual_arguments_validity (a_creation_call)
+				check_orphan_actual_arguments_validity (a_instruction)
 			end
 			free_overloaded_procedures (l_overloaded_procedures)
 		end
 
-	check_creation_procedure_call_instruction_validity (a_instruction: ET_CREATION_INSTRUCTION; a_creation_call: ET_CREATION_CALL; a_procedure: detachable ET_PROCEDURE; a_adapted_base_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_target_context, a_creation_context: ET_NESTED_TYPE_CONTEXT)
+	check_creation_procedure_call_instruction_validity (a_instruction: ET_CREATION_INSTRUCTION; a_procedure: detachable ET_PROCEDURE; a_adapted_base_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_target_context, a_creation_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_instruction' with `a_procedure' as creation procedure.
 			-- The validity of the creation type and of the target of the creation are
 			-- assumed to have already been checked.
-			-- `a_creation_call' is the creation call in `current_class_impl'.
 			-- `a_target_context' represents the type of the creation target.
 			-- `a_creation_context' represents the creation type of `a_instruction'.
 			-- `a_adapted_base_class' is the base class (or the best possible constraint in case of multiple
@@ -3369,8 +3352,7 @@ feature {NONE} -- Instruction validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_instruction_not_void: a_instruction /= Void
-			a_creation_call_not_void: a_creation_call /= Void
-			no_call_if_not_procedure: a_procedure = Void implies a_creation_call = default_creation_call
+			no_call_if_not_procedure: a_procedure = Void implies a_instruction.creation_call = Void
 			no_default_create_if_not_procedure: a_procedure = Void implies current_system.default_create_seed = 0
 			a_adapted_base_class_not_void: a_adapted_base_class /= Void
 			a_target_context_not_void: a_target_context /= Void
@@ -3417,19 +3399,19 @@ feature {NONE} -- Instruction validity
 			end
 			had_error := had_error or has_fatal_error
 			if a_procedure = Void then
-				check_no_creation_procedure_call_validity (a_instruction, a_creation_call, l_class, a_creation_context)
+				check_no_creation_procedure_call_validity (a_instruction, l_class, a_creation_context)
 			elseif attached {ET_FORMAL_PARAMETER_TYPE} l_creation_named_type as l_formal_type then
 				if a_has_multiple_constraints then
 					l_creation_context := new_context (current_type)
 					l_creation_context.copy_type_context (a_creation_context)
 					adapted_base_class_checker.reset_context_if_multiple_constraints (a_has_multiple_constraints, a_adapted_base_class, l_creation_context)
-					check_formal_creation_procedure_call_validity (a_instruction, a_creation_call, a_procedure, l_class, l_formal_type, l_creation_context)
+					check_formal_creation_procedure_call_validity (a_instruction, a_procedure, l_class, l_formal_type, l_creation_context)
 					free_context (l_creation_context)
 				else
-					check_formal_creation_procedure_call_validity (a_instruction, a_creation_call, a_procedure, l_class, l_formal_type, a_creation_context)
+					check_formal_creation_procedure_call_validity (a_instruction, a_procedure, l_class, l_formal_type, a_creation_context)
 				end
 			else
-				check_creation_procedure_call_validity (a_instruction, a_creation_call, a_procedure, l_class, a_creation_context)
+				check_creation_procedure_call_validity (a_instruction, a_procedure, l_class, a_creation_context)
 			end
 			reset_fatal_error (had_error or has_fatal_error)
 			if not has_fatal_error then
@@ -3465,17 +3447,15 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	check_creation_procedure_call_validity (a_creation_component: ET_CREATION_COMPONENT; a_creation_call: ET_CREATION_CALL; a_procedure: ET_PROCEDURE; a_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_creation_procedure_call_validity (a_creation_component: ET_CREATION_COMPONENT; a_procedure: ET_PROCEDURE; a_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_creation_component' with `a_procedure' as creation procedure.
 			-- The validity of the creation type and of the target of the creation are
 			-- assumed to have already been checked.
-			-- `a_creation_call' is the creation call in `current_class_impl'.
 			-- `a_context' represents the creation type of `a_creation_component'.
 			-- `a_class' is the base class of the creation type.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_creation_component_not_void: a_creation_component /= Void
-			a_creation_call_not_void: a_creation_call /= Void
 			a_procedure_not_void: a_procedure /= Void
 			a_class_not_void: a_class /= Void
 			a_context_not_void: a_context /= Void
@@ -3486,7 +3466,7 @@ feature {NONE} -- Instruction validity
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
-			l_name := a_creation_call.name
+			l_name := a_creation_component.name
 			l_creation_type := a_context.first
 			if not a_procedure.is_creation_exported_to (current_class, a_class, system_processor) then
 					-- The procedure is not a creation procedure exported to `current_class',
@@ -3503,15 +3483,14 @@ feature {NONE} -- Instruction validity
 			had_error := has_fatal_error
 			check_creation_vape_validity (l_name, a_procedure, a_class)
 			had_error := had_error or has_fatal_error
-			check_actual_arguments_validity (a_creation_call, a_context, a_procedure, a_class, Void)
+			check_actual_arguments_validity (a_creation_component, a_context, a_procedure, a_class, Void)
 			reset_fatal_error (had_error or has_fatal_error)
 		end
 
-	check_formal_creation_procedure_call_validity (a_creation_component: ET_CREATION_COMPONENT; a_creation_call: ET_CREATION_CALL; a_procedure: ET_PROCEDURE; a_class: ET_CLASS; a_formal_type: ET_FORMAL_PARAMETER_TYPE; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_formal_creation_procedure_call_validity (a_creation_component: ET_CREATION_COMPONENT; a_procedure: ET_PROCEDURE; a_class: ET_CLASS; a_formal_type: ET_FORMAL_PARAMETER_TYPE; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_creation_component' with `a_procedure' as creation procedure.
 			-- The validity of the creation type and of the target of the creation are
 			-- assumed to have already been checked.
-			-- `a_creation_call' is the creation call in `current_class_impl'.
 			-- `a_context' represents the creation type of `a_creation_component'.
 			-- `a_formal_type' is the named type of the creation type when viewed
 			-- in the context of `current_type'.
@@ -3519,7 +3498,6 @@ feature {NONE} -- Instruction validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_creation_component_not_void: a_creation_component /= Void
-			a_creation_call_not_void: a_creation_call /= Void
 			a_procedure_not_void: a_procedure /= Void
 			a_class_not_void: a_class /= Void
 			a_formal_type_not_void: a_formal_type /= Void
@@ -3532,7 +3510,7 @@ feature {NONE} -- Instruction validity
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
-			l_name := a_creation_call.name
+			l_name := a_creation_component.name
 				-- The creation type if a formal generic parameter.
 				-- We need to find out what creation procedures are
 				-- declared with the associated constraint.
@@ -3555,24 +3533,22 @@ feature {NONE} -- Instruction validity
 				check_formal_parameter_creation_vape_validity (l_name, a_procedure, l_formal_parameter)
 			end
 			had_error := had_error or has_fatal_error
-			check_actual_arguments_validity (a_creation_call, a_context, a_procedure, a_class, Void)
+			check_actual_arguments_validity (a_creation_component, a_context, a_procedure, a_class, Void)
 			reset_fatal_error (had_error or has_fatal_error)
 		end
 
-	check_no_creation_procedure_call_validity (a_creation_component: ET_CREATION_COMPONENT; a_creation_call: ET_CREATION_CALL; a_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_no_creation_procedure_call_validity (a_creation_component: ET_CREATION_COMPONENT; a_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_creation_component' when there is no creation procedure.
 			-- This happens when there is no creation call, and feature 'default_create' is
 			-- not supported by the underlying Eiffel compiler.
 			-- The validity of the creation type and of the target of the creation are
 			-- assumed to have already been checked.
-			-- `a_creation_call' is the creation call in `current_class_impl'.
 			-- `a_context' represents the creation type of `a_creation_component'.
 			-- `a_class' is the base class of the creation type.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_creation_component_not_void: a_creation_component /= Void
-			a_creation_call_not_void: a_creation_call /= Void
-			no_call: a_creation_call = default_creation_call
+			no_call: a_creation_component.creation_call = Void
 			no_default_create: current_system.default_create_seed = 0
 			a_class_not_void: a_class /= Void
 			a_context_not_void: a_context /= Void
@@ -5921,27 +5897,17 @@ feature {NONE} -- Expression validity
 			l_creation_type: ET_TYPE
 			l_seed: INTEGER
 			l_name: ET_FEATURE_NAME
-			l_name_position: ET_POSITION
-			l_creation_call: detachable ET_CREATION_CALL
 			l_adapted_base_class: ET_ADAPTED_CLASS
 			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
 			l_has_multiple_constraints: BOOLEAN
 			i, nb: INTEGER
 		do
 			has_fatal_error := False
-			l_creation_call := an_expression.creation_call
-			if l_creation_call /= Void then
-					-- There is an explicit creation call.
-				l_name := l_creation_call.name
-				l_seed := l_name.seed
-			else
-					-- No explicit creation call. Use 'default_create' instead.
-				l_creation_call := default_creation_call
-				l_name_position := an_expression.last_position
-				default_creation_call_name.set_position (l_name_position.line, l_name_position.column)
-				l_name := default_creation_call_name
-				l_seed := current_system.default_create_seed
+			l_name := an_expression.name
+			if an_expression.creation_call = Void then
+				l_name.set_seed (current_system.default_create_seed)
 			end
+			l_seed := l_name.seed
 			l_creation_type := an_expression.type
 			a_context.force_last (l_creation_type)
 			check_type_validity (l_creation_type)
@@ -5952,13 +5918,13 @@ feature {NONE} -- Expression validity
 				check_adapted_base_classes_validity (l_name, l_adapted_base_classes, a_context)
 			end
 			if has_fatal_error then
-				check_orphan_actual_arguments_validity (l_creation_call)
+				check_orphan_actual_arguments_validity (an_expression)
 			elseif l_seed = 0 then
 				l_adapted_base_class := l_adapted_base_classes.first
 				l_class := l_adapted_base_class.base_class
-				if l_creation_call = default_creation_call then
+				if an_expression.creation_call = Void then
 						-- There is no explicit creation call.
-					check_creation_procedure_call_expression_validity (an_expression, l_creation_call, Void, l_adapted_base_class, l_has_multiple_constraints, a_context)
+					check_creation_procedure_call_expression_validity (an_expression, Void, l_adapted_base_class, l_has_multiple_constraints, a_context)
 				elseif current_class_impl /= current_class then
 						-- We need to resolve `l_name' in the implementation
 						-- class of `current_feature_impl' first.
@@ -5968,27 +5934,27 @@ feature {NONE} -- Expression validity
 							-- the implementation feature.
 						error_handler.report_giaaa_error
 					end
-					check_orphan_actual_arguments_validity (l_creation_call)
+					check_orphan_actual_arguments_validity (an_expression)
 				elseif l_class.is_dotnet then
 						-- A class coming from a .NET assembly can contain overloaded
 						-- features (i.e. several features with the same name).
 						-- We have to be careful about that here.
-					check_dotnet_creation_procedure_call_expression_validity (an_expression, l_creation_call, l_adapted_base_class, l_has_multiple_constraints, a_context)
+					check_dotnet_creation_procedure_call_expression_validity (an_expression, l_adapted_base_class, l_has_multiple_constraints, a_context)
 				elseif attached l_adapted_base_class.named_procedure (l_name) as l_procedure then
 					l_seed := l_procedure.first_seed
 					l_name.set_seed (l_seed)
-					check_creation_procedure_call_expression_validity (an_expression, l_creation_call, l_procedure, l_adapted_base_class, l_has_multiple_constraints, a_context)
+					check_creation_procedure_call_expression_validity (an_expression, l_procedure, l_adapted_base_class, l_has_multiple_constraints, a_context)
 				elseif attached l_adapted_base_class.named_query (l_name) as l_query then
 						-- This is not a procedure.
 					set_fatal_error
 					error_handler.report_vgcc6b_error (current_class, l_name, l_query, l_class)
-					check_orphan_actual_arguments_validity (l_creation_call)
+					check_orphan_actual_arguments_validity (an_expression)
 				else
 					set_fatal_error
 						-- ISE Eiffel 5.4 reports this error as a VEEN,
 						-- but it is in fact a VUEX-2 (ETL2 p.368).
 					error_handler.report_vuex2a_error (current_class, l_name, l_class)
-					check_orphan_actual_arguments_validity (l_creation_call)
+					check_orphan_actual_arguments_validity (an_expression)
 				end
 			elseif l_adapted_base_classes.is_empty then
 					-- Internal error: the seed was already computed in a proper ancestor
@@ -5997,14 +5963,14 @@ feature {NONE} -- Expression validity
 					-- be a procedure for this seed.
 				set_fatal_error
 				error_handler.report_giaaa_error
-				check_orphan_actual_arguments_validity (l_creation_call)
+				check_orphan_actual_arguments_validity (an_expression)
 			else
 				nb := l_adapted_base_classes.count
 				from i := 1 until i > nb loop
 					l_adapted_base_class := l_adapted_base_classes.item (i)
 					l_class := l_adapted_base_class.base_class
 					if attached l_class.seeded_procedure (l_seed) as l_procedure then
-						check_creation_procedure_call_expression_validity (an_expression, l_creation_call, l_procedure, l_adapted_base_class, l_has_multiple_constraints, a_context)
+						check_creation_procedure_call_expression_validity (an_expression, l_procedure, l_adapted_base_class, l_has_multiple_constraints, a_context)
 					elseif l_class.is_none then
 -- TODO: "NONE" conforms to all reference types.
 						set_fatal_error
@@ -6027,7 +5993,7 @@ feature {NONE} -- Expression validity
 			free_adapted_base_classes (l_adapted_base_classes)
 		end
 
-	check_dotnet_creation_procedure_call_expression_validity (a_expression: ET_CREATION_EXPRESSION; a_creation_call: ET_CREATION_CALL; a_adapted_base_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_dotnet_creation_procedure_call_expression_validity (a_expression: ET_CREATION_EXPRESSION; a_adapted_base_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_expression' with .NET creation type base class.
 			--
 			-- A class coming from a .NET assembly can contain overloaded
@@ -6035,7 +6001,6 @@ feature {NONE} -- Expression validity
 			-- We have to be careful about that here.
 			--
 			-- The validity of the type of the creation is assumed to have already been checked.
-			-- `a_creation_call' is the creation call in `current_class_impl'.
 			-- `a_context' represents the creation type of `a_expression'.
 			-- `a_adapted_base_class' is the base class (or the best possible constraint in case of multiple
 			-- constraint genericity) of the creation type.
@@ -6044,7 +6009,6 @@ feature {NONE} -- Expression validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_expression_not_void: a_expression /= Void
-			a_creation_call_not_void: a_creation_call /= Void
 			a_adapted_base_class_not_void: a_adapted_base_class /= Void
 			a_context_not_void: a_context /= Void
 			a_context_count: a_context.count = 1
@@ -6057,44 +6021,43 @@ feature {NONE} -- Expression validity
 		do
 			has_fatal_error := False
 			l_class := a_adapted_base_class.base_class
-			l_name := a_creation_call.name
+			l_name := a_expression.name
 			l_overloaded_procedures := new_overloaded_procedures
 			a_adapted_base_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
 			if not l_overloaded_procedures.is_empty then
-				keep_best_overloaded_features (l_overloaded_procedures, adapted_name (l_name, a_adapted_base_class), a_creation_call.arguments, a_context, False, True)
+				keep_best_overloaded_features (l_overloaded_procedures, adapted_name (l_name, a_adapted_base_class), a_expression.arguments, a_context, False, True)
 				if has_fatal_error then
-					check_orphan_actual_arguments_validity (a_creation_call)
+					check_orphan_actual_arguments_validity (a_expression)
 				elseif l_overloaded_procedures.count = 1 then
 					l_procedure := l_overloaded_procedures.first
 					l_seed := l_procedure.first_seed
 					l_name.set_seed (l_seed)
-					check_creation_procedure_call_expression_validity (a_expression, a_creation_call, l_procedure, a_adapted_base_class, a_has_multiple_constraints, a_context)
+					check_creation_procedure_call_expression_validity (a_expression, l_procedure, a_adapted_base_class, a_has_multiple_constraints, a_context)
 				else
 					-- Ambiguity in overloaded procedures.
 -- TODO: report VIOF
 					set_fatal_error
 					error_handler.report_giaaa_error
-					check_orphan_actual_arguments_validity (a_creation_call)
+					check_orphan_actual_arguments_validity (a_expression)
 				end
 			elseif attached a_adapted_base_class.named_query (l_name) as l_query then
 					-- This is not a procedure.
 				set_fatal_error
 				error_handler.report_vgcc6b_error (current_class, l_name, l_query, l_class)
-				check_orphan_actual_arguments_validity (a_creation_call)
+				check_orphan_actual_arguments_validity (a_expression)
 			else
 				set_fatal_error
 					-- ISE Eiffel 5.4 reports this error as a VEEN,
 					-- but it is in fact a VUEX-2 (ETL2 p.368).
 				error_handler.report_vuex2a_error (current_class, l_name, l_class)
-				check_orphan_actual_arguments_validity (a_creation_call)
+				check_orphan_actual_arguments_validity (a_expression)
 			end
 			free_overloaded_procedures (l_overloaded_procedures)
 		end
 
-	check_creation_procedure_call_expression_validity (a_expression: ET_CREATION_EXPRESSION; a_creation_call: ET_CREATION_CALL; a_procedure: detachable ET_PROCEDURE; a_adapted_base_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_context: ET_NESTED_TYPE_CONTEXT)
+	check_creation_procedure_call_expression_validity (a_expression: ET_CREATION_EXPRESSION; a_procedure: detachable ET_PROCEDURE; a_adapted_base_class: ET_ADAPTED_CLASS; a_has_multiple_constraints: BOOLEAN; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_expression' with `a_procedure' as creation procedure.
 			-- The validity of the type of the creation is assumed to have already been checked.
-			-- `a_creation_call' is the creation call in `current_class_impl'.
 			-- `a_context' represents the creation type of `a_expression'.
 			-- `a_adapted_base_class' is the base class (or the best possible constraint in case of multiple
 			-- constraint genericity) of the creation type.
@@ -6103,8 +6066,7 @@ feature {NONE} -- Expression validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_expression_not_void: a_expression /= Void
-			a_creation_call_not_void: a_creation_call /= Void
-			no_call_if_not_procedure: a_procedure = Void implies a_creation_call = default_creation_call
+			no_call_if_not_procedure: a_procedure = Void implies a_expression.creation_call = Void
 			no_default_create_if_not_procedure: a_procedure = Void implies current_system.default_create_seed = 0
 			a_adapted_base_class_not_void: a_adapted_base_class /= Void
 			a_context_not_void: a_context /= Void
@@ -6128,19 +6090,19 @@ feature {NONE} -- Expression validity
 				had_error := has_fatal_error
 			end
 			if a_procedure = Void then
-				check_no_creation_procedure_call_validity (a_expression, a_creation_call, l_class, a_context)
+				check_no_creation_procedure_call_validity (a_expression, l_class, a_context)
 			elseif attached {ET_FORMAL_PARAMETER_TYPE} l_creation_named_type as l_formal_type then
 				if a_has_multiple_constraints then
 					l_creation_context := new_context (current_type)
 					l_creation_context.copy_type_context (a_context)
 					adapted_base_class_checker.reset_context_if_multiple_constraints (a_has_multiple_constraints, a_adapted_base_class, l_creation_context)
-					check_formal_creation_procedure_call_validity (a_expression, a_creation_call, a_procedure, l_class, l_formal_type, l_creation_context)
+					check_formal_creation_procedure_call_validity (a_expression, a_procedure, l_class, l_formal_type, l_creation_context)
 					free_context (l_creation_context)
 				else
-					check_formal_creation_procedure_call_validity (a_expression, a_creation_call, a_procedure, l_class, l_formal_type, a_context)
+					check_formal_creation_procedure_call_validity (a_expression, a_procedure, l_class, l_formal_type, a_context)
 				end
 			else
-				check_creation_procedure_call_validity (a_expression, a_creation_call, a_procedure, l_class, a_context)
+				check_creation_procedure_call_validity (a_expression, a_procedure, l_class, a_context)
 			end
 			reset_fatal_error (had_error or has_fatal_error)
 			if not has_fatal_error then
@@ -17498,14 +17460,6 @@ feature {NONE} -- Common ancestor type
 			-- Note: For more details about Common Ancestor Type, see:
 			-- https://www.eiffel.org/doc/version/trunk/eiffel/Types#Common_ancestor_types
 
-feature {NONE} -- Default creation call
-
-	default_creation_call: ET_QUALIFIED_CALL
-			-- Creation call to 'default_create'
-
-	default_creation_call_name: ET_IDENTIFIER
-			-- Call name of `default_creation_call'
-
 feature {NONE} -- Feature checker
 
 	feature_checker: ET_FEATURE_CHECKER
@@ -17564,9 +17518,6 @@ invariant
 	unused_contexts_not_void: unused_contexts /= Void
 	no_void_unused_context: not unused_contexts.has_void
 	current_target_type_not_void: current_target_type /= Void
-	default_creation_call_not_void: default_creation_call /= Void
-	default_creation_call_name_not_void: default_creation_call_name /= Void
-	default_creation_call_name_definition: default_creation_call_name = default_creation_call.name
 		-- Object-tests.
 	current_object_test_types_not_void: current_object_test_types /= Void
 	no_void_object_test_type: not current_object_test_types.has_void_item

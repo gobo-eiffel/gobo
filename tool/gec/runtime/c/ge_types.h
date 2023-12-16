@@ -4,7 +4,7 @@
 		"C functions used to implement type information"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -513,29 +513,29 @@ extern void GE_unmark_object(EIF_POINTER obj);
  * `a_type' cannot represent a SPECIAL type, use
  * `GE_new_special_of_reference_instance_of_type_index' instead.
  */
-extern EIF_REFERENCE GE_new_instance_of_type_index(EIF_TYPE_INDEX a_type);
-#define GE_new_instance_of_encoded_type(a_type) GE_new_instance_of_type_index(GE_decoded_type(a_type).id)
+extern EIF_REFERENCE GE_new_instance_of_type_index(GE_context* a_context, EIF_TYPE_INDEX a_type);
+#define GE_new_instance_of_encoded_type(a_context, a_type) GE_new_instance_of_type_index((a_context), GE_decoded_type(a_type).id)
 
 /*
  * New instance of dynamic `a_type' that represents
  * a SPECIAL with can contain `a_capacity' elements of reference type.
  * To create a SPECIAL of basic type, use class SPECIAL directly.
  */
-extern EIF_REFERENCE GE_new_special_of_reference_instance_of_type_index(EIF_TYPE_INDEX a_type, EIF_INTEGER a_capacity);
-#define GE_new_special_of_reference_instance_of_encoded_type(a_type, a_capacity) GE_new_special_of_reference_instance_of_type_index(GE_decoded_type(a_type).id, (a_capacity))
+extern EIF_REFERENCE GE_new_special_of_reference_instance_of_type_index(GE_context* a_context, EIF_TYPE_INDEX a_type, EIF_INTEGER a_capacity);
+#define GE_new_special_of_reference_instance_of_encoded_type(a_context, a_type, a_capacity) GE_new_special_of_reference_instance_of_type_index(a_context), GE_decoded_type(a_type).id, (a_capacity))
 
 /*
  * New instance of tuple of type `a_type'.
  * Note: returned object is not initialized and may
  * hence violate its invariant.
  */
-#define GE_new_tuple_instance_of_type_index(a_type) GE_new_instance_of_type_index(a_type)
-#define GE_new_tuple_instance_of_encoded_type(a_type) GE_new_tuple_instance_of_type_index(GE_decoded_type(a_type).id)
+#define GE_new_tuple_instance_of_type_index(a_context, a_type) GE_new_instance_of_type_index((a_context), (a_type))
+#define GE_new_tuple_instance_of_encoded_type(a_context, a_type) GE_new_tuple_instance_of_type_index((a_context), GE_decoded_type(a_type).id)
 
 /*
  * New instance of TYPE for object of type `a_type'.
  */
-extern EIF_REFERENCE GE_new_type_instance_of_encoded_type(EIF_ENCODED_TYPE a_type);
+extern EIF_REFERENCE GE_new_type_instance_of_encoded_type(GE_context* a_context, EIF_ENCODED_TYPE a_type);
 
 #ifdef __cplusplus
 }

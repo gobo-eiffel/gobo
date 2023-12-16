@@ -5,7 +5,7 @@ note
 		"Eiffel conversion-from expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,9 @@ inherit
 	ET_CREATION_EXPRESSION
 		undefine
 			is_instance_free
+		redefine
+			name,
+			arguments
 		end
 
 	ET_CREATION_CALL

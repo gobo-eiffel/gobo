@@ -35,7 +35,8 @@ An *Object\_call* is target-valid if and only if it satisfies one of the followi
   * What to do: ensure the target of the call is controlled or is not separate.
 
 
-  A expression of separate type is controlled if:
+  An expression of separate type is controlled if:
+  
   * It is a formal argument of the enclosing feature.
   * It is a separate argument of a separate instruction.
   * It is a query whose result type is not separate and whose target is (recursively) controlled.

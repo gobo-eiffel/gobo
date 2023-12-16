@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTION"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -144,6 +144,9 @@ struct GE_context_struct {
 	GE_onces* thread_onces; /* Status and results of onces-per-thread */
 	void* wel_per_thread_data; /* WEL private data */
 #endif
+#ifdef GE_USE_SCOOP
+	GE_scoop_processor* scoop_processor; /* SCOOP processor executing the current code */
+#endif
 };
 
 /*
@@ -175,7 +178,7 @@ extern void GE_free_exception(GE_context* a_context);
  * Pointer to function to create a new exception manager object
  * (of type ISE_EXCEPTION_MANAGER).
  */
-extern EIF_REFERENCE (*GE_new_exception_manager)(EIF_BOOLEAN);
+extern EIF_REFERENCE (*GE_new_exception_manager)(GE_context*, EIF_BOOLEAN);
 
 /*
  * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.init_exception_manager.
