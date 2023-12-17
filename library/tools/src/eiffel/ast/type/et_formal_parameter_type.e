@@ -900,8 +900,6 @@ feature -- Status report
 			l_context_base_class: ET_CLASS
 			l_root_context: ET_NESTED_TYPE_CONTEXT
 			l_type_mark: detachable ET_TYPE_MARK
-			l_base_types: ET_CONSTRAINT_BASE_TYPES
-			i, nb: INTEGER
 		do
 			l_type_mark := overridden_type_mark (a_type_mark)
 			l_context_base_class := a_context.base_class
@@ -926,38 +924,15 @@ feature -- Status report
 						a_formal := l_formals.formal_parameter (an_index)
 						if a_formal.is_separate then
 							Result := True
-						elseif l_formal_type /= Current then
+						elseif l_formal_type = Current then
+							Result := l_type_mark /= Void and then l_type_mark.is_separate_mark
+						else
 							if a_context.is_root_context then
 								Result := l_formal_type.is_type_separate_with_type_mark (l_type_mark, a_context)
 							else
 								l_root_context := a_context.as_nested_type_context
 								l_root_context.force_last (tokens.like_0)
 								Result := l_formal_type.is_type_separate_with_type_mark (l_type_mark, l_root_context)
-								l_root_context.remove_last
-							end
-						elseif l_type_mark /= Void and then l_type_mark.is_separate_mark then
-							Result := True
-						else
-							l_base_types := a_formal.constraint_base_types
-							nb := l_base_types.count
-							if a_context.is_root_context then
-								from i := 1 until i > nb loop
-									if l_base_types.type_constraint (i).type.is_type_separate_with_type_mark (l_type_mark, a_context) then
-										Result := True
-										i := nb -- Jump out of the loop
-									end
-									i := i + 1
-								end
-							else
-								l_root_context := a_context.as_nested_type_context
-								l_root_context.force_last (tokens.like_0)
-								from i := 1 until i > nb loop
-									if l_base_types.type_constraint (i).type.is_type_separate_with_type_mark (l_type_mark, l_root_context) then
-										Result := True
-										i := nb -- Jump out of the loop
-									end
-									i := i + 1
-								end
 								l_root_context.remove_last
 							end
 						end

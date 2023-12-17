@@ -20,7 +20,7 @@ An *Object\_call* is target-valid if and only if it satisfies one of the followi
 2. It is an *Object\_call* without a *Target*.
 3. It is an *Object\_call* with a *Target* which is an attached expression.
 
-###  Notes
+##  Notes
 
 * Another condition is needed in the context of SCOOP, the Eiffel concurrency mechanism:
 
@@ -33,7 +33,6 @@ An *Object\_call* is target-valid if and only if it satisfies one of the followi
   * Error code: VUTA(3)
   * Error: separate target of the Object_call is not controlled.
   * What to do: ensure the target of the call is controlled or is not separate.
-
 
   An expression of separate type is controlled if:
   

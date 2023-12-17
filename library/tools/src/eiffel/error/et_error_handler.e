@@ -2522,6 +2522,25 @@ feature -- Validity errors
 			end
 		end
 
+	report_veen11a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME)
+			-- Report VEEN-11 error: `a_name', appearing in an
+			-- expression of Address form $`a_name' in `a_class', is
+			-- not the final name of a feature in `a_class'.
+			--
+			-- This used to be VUAR-4 in ETL2: p.369
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen11_error (a_class) then
+				create an_error.make_veen11a (a_class, a_name)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vevi0a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
 			-- Report VEVI error: the local variable `a_local', declared of attached type
 			-- is used before being initialized in class `a_class_impl' and viewed from
@@ -6726,21 +6745,59 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar4a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME)
-			-- Report VUAR-4 error: `a_name', appearing in an
-			-- expression of Address form $`a_name' in `a_class', is
-			-- not the final name of a feature in `a_class'.
+	report_vuar4ga_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE)
+			-- Report VUAR-4G error: the separate call `a_name' appearing in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself) is applied
+			-- to feature `a_feature' in class `a_target' whose `arg'-th formal argument
+			-- has a reference type which is not separate.
 			--
-			-- ETL2: p.369
+			-- Not in ECMA-367-2.
+			-- SCOOP.
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vuar4_error (a_class) then
-				create an_error.make_vuar4a (a_class, a_name)
+			if reportable_vuar4g_error (a_class) then
+				create an_error.make_vuar4ga (a_class, a_class_impl, a_name, a_feature, a_target, arg, an_actual, a_formal)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuar4gb_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target, an_actual, a_formal: ET_NAMED_TYPE)
+			-- Report VUAR-4G error: the separate call `a_name' appearing in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself) is setting
+			-- tuple label `a_name' (in tuple type `a_target') whose whose type is reference
+			-- but not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_tuple_label: a_name.is_tuple_label
+			a_target_not_void: a_target /= Void
+			a_target_named_type: a_target.is_named_type
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuar4g_error (a_class) then
+				create an_error.make_vuar4gb (a_class, a_class_impl, a_name, a_target, an_actual, a_formal)
 				report_validity_error (an_error)
 			end
 		end
@@ -9098,6 +9155,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_veen11_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VEEN-11 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vevi_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VEVI error be reported when it
 			-- appears in `a_class'?
@@ -9878,8 +9945,8 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vuar4_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VUAR-4 error be reported when it
+	reportable_vuar4g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUAR-4G error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

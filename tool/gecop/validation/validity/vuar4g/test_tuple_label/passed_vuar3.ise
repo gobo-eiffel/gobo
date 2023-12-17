@@ -1,0 +1,22 @@
+-------------------------------------------------------------------------------
+
+Error code: VUAR(3)
+
+Type error: formal argument or tuple field of a separate call should be of
+  a separate type if the actual argument or the source expression is of a
+  reference type.
+What to do: make sure that type of the formal argument or of the tuple
+  field is separate.
+
+Class: AA
+Feature: f
+Tuple field name: name
+Tuple field position: 1
+Tuple field type: STRING_8
+Source expression type: STRING_8
+Line: 19
+      do
+->      t.name := "eiffel"
+      end
+
+-------------------------------------------------------------------------------

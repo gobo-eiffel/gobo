@@ -103,6 +103,7 @@ create
 	make_veen9b,
 	make_veen10a,
 	make_veen10b,
+	make_veen11a,
 	make_vevi0a,
 	make_vevi0b,
 	make_vevi0c,
@@ -293,7 +294,8 @@ create
 	make_vuar1c,
 	make_vuar2a,
 	make_vuar2b,
-	make_vuar4a,
+	make_vuar4ga,
+	make_vuar4gb,
 	make_vucr0a,
 	make_vucr0b,
 	make_vucr0c,
@@ -3923,6 +3925,47 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = separate argument name
+		end
+
+	make_veen11a (a_class: ET_CLASS; a_name: ET_FEATURE_NAME)
+			-- Create a new VEEN-11 error: `a_name', appearing in an
+			-- expression of Address form $`a_name' in `a_class', is
+			-- not the final name of a feature in `a_class'.
+			--
+			-- This used to be VUAR-4 in ETL2: p.369
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (veen11a_template_code)
+			etl_code := veen11_etl_code
+			default_template := default_message_template (veen11a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name in the Address form
 		end
 
 	make_vevi0a (a_class, a_class_impl: ET_CLASS; a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
@@ -13032,24 +13075,33 @@ feature {NONE} -- Initialization
 			-- dollar11: $11 = formal type
 		end
 
-	make_vuar4a (a_class: ET_CLASS; a_name: ET_FEATURE_NAME)
-			-- Create a new VUAR-4 error: `a_name', appearing in an
-			-- expression of Address form $`a_name' in `a_class', is
-			-- not the final name of a feature in `a_class'.
+	make_vuar4ga (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE)
+			-- Create a new VUAR-4G error: the separate call `a_name' appearing in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself) is applied
+			-- to feature `a_feature' in class `a_target' whose `arg'-th formal argument
+			-- has a reference type which is not separate.
 			--
-			-- ETL2: p.369
+			-- Not in ECMA-367-2.
+			-- SCOOP.
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
 		do
 			current_class := a_class
-			class_impl := a_class
+			class_impl := a_class_impl
 			position := a_name.position
-			code := template_code (vuar4a_template_code)
-			etl_code := vuar4_etl_code
-			default_template := default_message_template (vuar4a_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
+			code := template_code (vuar4ga_template_code)
+			etl_code := vuar4g_etl_code
+			default_template := default_message_template (vuar4ga_default_template)
+			create parameters.make_filled (empty_string, 1, 12)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
@@ -13057,10 +13109,15 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_feature.lower_name, 8)
+			parameters.put (a_target.upper_name, 9)
+			parameters.put (arg.out, 10)
+			parameters.put (an_actual.to_text, 11)
+			parameters.put (a_formal.to_text, 12)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
+			class_impl_set: class_impl = a_class_impl
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -13070,7 +13127,69 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name in the Address form
+			-- dollar7: $7 = feature name of the call
+			-- dollar8: $8 = name of corresponding feature in class $9
+			-- dollar9: $9 = base class of target of the call
+			-- dollar10: $10 = argument index
+			-- dollar11: $11 = actual type
+			-- dollar12: $12 = formal type
+		end
+
+	make_vuar4gb (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target, an_actual, a_formal: ET_NAMED_TYPE)
+			-- Create a new VUAR-4G error: the separate call `a_name' appearing in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself) is setting
+			-- tuple label `a_name' (in tuple type `a_target') whose whose type is reference
+			-- but not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_tuple_label: a_name.is_tuple_label
+			a_target_not_void: a_target /= Void
+			a_target_named_type: a_target.is_named_type
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vuar4gb_template_code)
+			etl_code := vuar4g_etl_code
+			default_template := default_message_template (vuar4gb_default_template)
+			create parameters.make_filled (empty_string, 1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_target.to_text, 8)
+			parameters.put (an_actual.to_text, 9)
+			parameters.put (a_formal.to_text, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = name of tuple label in type $8
+			-- dollar8: $8 = tuple type of target
+			-- dollar9: $9 = actual type
+			-- dollar10: $10 = formal type
 		end
 
 	make_vucr0a (a_class: ET_CLASS; a_feature: ET_FEATURE)
@@ -17435,6 +17554,7 @@ feature {NONE} -- Implementation
 	veen9b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an iteration item that is used outside of its scope."
 	veen10a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is the name of a separate argument that is used outside of its scope."
 	veen10b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is the name of a separate argument that is used outside of its scope."
+	veen11a_default_template: STRING = "`$7' is not the final name of a feature in class $5."
 	vevi0a_default_template: STRING = "local entity `$7' declared as attached is used before being initialized."
 	vevi0b_default_template: STRING = "entity 'Result' declared as attached is used before being initialized."
 	vevi0c_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of the body of function `$7'."
@@ -17625,7 +17745,8 @@ feature {NONE} -- Implementation
 	vuar1c_default_template: STRING = "call to Tuple label `$7' cannot have arguments."
 	vuar2a_default_template: STRING = "the $10-th actual argument (of type '$11') does not conform to the corresponding formal argument (of type '$12') of feature `$8' in class $9."
 	vuar2b_default_template: STRING = "the $9-th actual argument (of type '$10') does not conform to the corresponding formal argument (of type '$11') of feature `$8'."
-	vuar4a_default_template: STRING = "`$7' is not the final name of a feature in class $5."
+	vuar4ga_default_template: STRING = "the type '$12' of the $10-th formal argument of feature `$8' in class $9 called in a separate call is a reference type which is not separate."
+	vuar4gb_default_template: STRING = "the type '$10' of the tuple label `$7' in type '$8' set in a separate assigner call is a reference type which is not separate."
 	vucr0a_default_template: STRING = "feature `$7' is an attribute, so it cannot be used in static calls."
 	vucr0b_default_template: STRING = "feature `$7' is a once-per-object feature, so it cannot be used in static calls."
 	vucr0c_default_template: STRING = "attribute '$7' cannot be used as target of an assignment or creation instruction in a static feature."
@@ -17764,6 +17885,7 @@ feature {NONE} -- Implementation
 	veen8_etl_code: STRING = "VEEN-8"
 	veen9_etl_code: STRING = "VEEN-9"
 	veen10_etl_code: STRING = "VEEN-10"
+	veen11_etl_code: STRING = "VEEN-11"
 	vevi_etl_code: STRING = "VEVI"
 	vfac1_etl_code: STRING = "VFAC-1"
 	vfac2_etl_code: STRING = "VFAC-2"
@@ -17843,7 +17965,7 @@ feature {NONE} -- Implementation
 	vtug2_etl_code: STRING = "VTUG-2"
 	vuar1_etl_code: STRING = "VUAR-1"
 	vuar2_etl_code: STRING = "VUAR-2"
-	vuar4_etl_code: STRING = "VUAR-4"
+	vuar4g_etl_code: STRING = "VUAR-4G"
 	vucr_etl_code: STRING = "VUCR"
 	vuex1_etl_code: STRING = "VUEX-1"
 	vuex2_etl_code: STRING = "VUEX-2"
@@ -17990,6 +18112,7 @@ feature {NONE} -- Implementation
 	veen9b_template_code: STRING = "veen9b"
 	veen10a_template_code: STRING = "veen10a"
 	veen10b_template_code: STRING = "veen10b"
+	veen11a_template_code: STRING = "veen11a"
 	vevi0a_template_code: STRING = "vevi0a"
 	vevi0b_template_code: STRING = "vevi0b"
 	vevi0c_template_code: STRING = "vevi0c"
@@ -18185,7 +18308,8 @@ feature {NONE} -- Implementation
 	vuar1c_template_code: STRING = "vuar1c"
 	vuar2a_template_code: STRING = "vuar2a"
 	vuar2b_template_code: STRING = "vuar2b"
-	vuar4a_template_code: STRING = "vuar4a"
+	vuar4ga_template_code: STRING = "vuar4ga"
+	vuar4gb_template_code: STRING = "vuar4gb"
 	vucr0a_template_code: STRING = "vucr0a"
 	vucr0b_template_code: STRING = "vucr0b"
 	vucr0c_template_code: STRING = "vucr0c"

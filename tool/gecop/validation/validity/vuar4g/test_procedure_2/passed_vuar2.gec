@@ -1,0 +1,2 @@
+[VUAR-2] class AA (22,6): the 1-th actual argument (of type '[attached] separate STRING') does not conform to the corresponding formal argument (of type '[attached] STRING') of feature `f' in class BB.
+----

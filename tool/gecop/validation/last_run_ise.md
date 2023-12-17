@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     387 tests
-    # FAILED:     125 tests
+    # Passed:     392 tests
+    # FAILED:     126 tests
     # Aborted:    0 test
-    # Total:      512 tests
+    # Total:      518 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo1/test\_bar\_2](definition/difo1/test\_bar\_2)\] test\_failed</br>
@@ -134,4 +134,5 @@ FAIL:  \[[validity/vgmc/test\_typed\_agent\_1](validity/vgmc/test\_typed\_agent\
 FAIL:  \[[validity/vgmc/test\_typed\_agent\_2](validity/vgmc/test\_typed\_agent\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_unary\_call\_1](validity/vgmc/test\_unary\_call\_1)\] test\_failed</br>
 FAIL:  \[[validity/vncc4/test1](validity/vncc4/test1)\] test\_failed</br>
-FAIL:  \[[validity/vncc4/test2](validity/vncc4/test2)\] test\_failed
+FAIL:  \[[validity/vncc4/test2](validity/vncc4/test2)\] test\_failed</br>
+FAIL:  \[[validity/vuar4g/test\_generic\_parameter\_1](validity/vuar4g/test\_generic\_parameter\_1)\] test\_failed

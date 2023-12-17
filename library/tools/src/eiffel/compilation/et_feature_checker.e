@@ -2640,9 +2640,13 @@ feature {NONE} -- Instruction validity
 			l_seed: INTEGER
 			l_query: detachable ET_QUERY
 			l_convert_expression: detachable ET_CONVERT_EXPRESSION
+			l_is_target_type_separate: BOOLEAN
+			l_formal_argument_index: INTEGER
+			l_target_named_type: ET_NAMED_TYPE
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
+			l_formal_argument_index := 1
 			l_call := an_instruction.call
 			l_target_context := new_context (current_type)
 			l_call_info := new_call_info (l_target_context)
@@ -2724,9 +2728,10 @@ feature {NONE} -- Instruction validity
 						error_handler.report_giaaa_error
 					elseif l_target_base_class.is_dotnet then
 							-- Under .NET the value is passed as the last argument of the assigner.
-						l_expected_type := l_assigner_procedure_arguments.formal_argument (l_assigner_procedure.arguments_count).type
+						l_formal_argument_index := l_assigner_procedure.arguments_count
+						l_expected_type := l_assigner_procedure_arguments.formal_argument (l_formal_argument_index).type
 					else
-						l_expected_type := l_assigner_procedure_arguments.formal_argument (1).type
+						l_expected_type := l_assigner_procedure_arguments.formal_argument (l_formal_argument_index).type
 					end
 				else
 					l_expected_type := l_query.type
@@ -2782,6 +2787,9 @@ feature {NONE} -- Instruction validity
 					-- where 'f' is declared of type 'ARRAY [COMPARABLE]' in the base class of 'target'.
 					-- The type of the manifest array will be 'ARRAY [COMPARABLE]'. Without the
 					-- this hint it could have been 'ARRAY [HASHABLE]' or even 'ARRAY [ANY]'.
+				if current_system.scoop_mode then
+					l_is_target_type_separate := l_target_context.is_type_separate
+				end
 				l_target_context.force_last (l_expected_type)
 				l_expected_type_context := l_target_context
 				had_error := has_fatal_error
@@ -2806,6 +2814,25 @@ feature {NONE} -- Instruction validity
 								-- to the type of the call. See VBAC-1, ECMA 367-2 p.119.
 							set_fatal_error
 							error_handler.report_vbac1a_error (current_class, current_class_impl, an_instruction, l_source_context.named_type, l_expected_type_context.named_type)
+						end
+					end
+				end
+				if not has_fatal_error then
+					if l_is_target_type_separate and not l_expected_type_context.is_type_expanded and not l_expected_type_context.is_type_separate then
+							-- Error: It's a separate call (qualified call with a target of separate type),
+							-- the formal argument has a reference type (potentially, if it a formal generic
+							-- parameter, hence the test 'not is_type_expanded' instead of just
+							-- 'is_type_reference'), but this type is not separate.
+						set_fatal_error
+						if l_assigner_procedure /= Void then
+							error_handler.report_vuar4ga_error (current_class, current_class_impl, l_name, l_assigner_procedure, l_target_base_class, l_formal_argument_index, l_source_context.named_type, l_expected_type_context.named_type)
+						else
+							check tuple_label: l_name.is_tuple_label end
+							l_target_context.remove_last
+							l_target_named_type := l_target_context.named_type
+							l_target_context.force_last (l_expected_type)
+							error_handler.report_vuar4gb_error (current_class, current_class_impl, l_name, l_target_named_type, l_source_context.named_type, l_expected_type_context.named_type)
+							l_target_context.force_last (l_expected_type)
 						end
 					end
 				end
@@ -6596,9 +6623,8 @@ feature {NONE} -- Expression validity
 						end
 					else
 						set_fatal_error
-							-- ISE Eiffel 5.4 reports this error as a VEEN,
-							-- but it is in fact a VUAR-4 (ETL2 p.369).
-						error_handler.report_vuar4a_error (current_class_impl, l_name)
+							-- It used to be a validity error VUAR-4 (ETL2 p.369).
+						error_handler.report_veen11a_error (current_class_impl, l_name)
 					end
 				end
 			end
@@ -11531,7 +11557,8 @@ feature {NONE} -- Expression validity
 	check_actual_arguments_validity (a_call: ET_CALL_WITH_ACTUAL_ARGUMENTS; a_context: ET_NESTED_TYPE_CONTEXT; a_feature: ET_FEATURE; a_class: detachable ET_CLASS; a_call_info: detachable like new_call_info)
 			-- Check actual arguments validity of `a_call' when calling `a_feature'
 			-- in context of its target `a_context'. `a_class' is the base class of the
-			-- target, or void in case of an unqualified call.
+			-- target (or the parent class of a precursor call), or void in case of
+			-- an unqualified call.
 			--
 			-- `a_call_info', if provided, is information requested by the caller of this routine
 			-- to get information about the routine called, its target class and context.
@@ -11542,6 +11569,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 			a_feature_not_void: a_feature /= Void
 		local
+			l_is_target_type_separate: BOOLEAN
 			l_actuals: detachable ET_ACTUAL_ARGUMENTS
 			l_name: ET_CALL_NAME
 			l_actual: ET_EXPRESSION
@@ -11556,6 +11584,7 @@ feature {NONE} -- Expression validity
 			had_error: BOOLEAN
 			l_tuple_argument_position: INTEGER
 			l_is_not_compatible: BOOLEAN
+			l_to_be_reprocessed: BOOLEAN
 			l_old_target: ET_EXPRESSION
 			l_class: detachable ET_CLASS
 		do
@@ -11639,6 +11668,12 @@ feature {NONE} -- Expression validity
 					end
 				end
 			else
+				if current_system.scoop_mode then
+					if a_class /= Void and not l_name.is_precursor then
+							-- Qualified call.
+						l_is_target_type_separate := a_context.is_type_separate
+					end
+				end
 				l_tuple_argument_position := -1
 				l_actual_context := new_context (current_type)
 				l_formal_context := a_context
@@ -11652,6 +11687,7 @@ feature {NONE} -- Expression validity
 					l_formal_context.force_last (l_formal.type)
 					check_actual_argument_validity (l_actual, l_actual_context, l_formal_context, a_call, a_class)
 					l_is_not_compatible := False
+					l_to_be_reprocessed := False
 					if has_fatal_error then
 						had_error := True
 					elseif l_actual_context.conforms_to_context (l_formal_context, system_processor) then
@@ -11707,6 +11743,7 @@ feature {NONE} -- Expression validity
 							l_call.set_arguments (l_actual_list)
 								-- Reprocess this actual argument now that it has been
 								-- converted to a Tuple argument.
+							l_to_be_reprocessed := True
 							i := i - 1
 						else
 							l_is_not_compatible := True
@@ -11725,6 +11762,23 @@ feature {NONE} -- Expression validity
 							end
 						else
 							error_handler.report_vuar2b_error (current_class, current_class_impl, l_name, a_feature, i, l_actual_named_type, l_formal_named_type)
+						end
+					elseif not l_to_be_reprocessed then
+						if l_is_target_type_separate and not l_formal_context.is_type_expanded and not l_formal_context.is_type_separate then
+								-- Error: Its a separate call (qualified call with a target of separate type),
+								-- the formal argument has a reference type (potentially, if it a formal generic
+								-- parameter, hence the test 'not is_type_expanded' instead of just
+								-- 'is_type_reference')'but this type is not separate.
+							had_error := True
+							set_fatal_error
+							l_actual_named_type := l_actual_context.named_type
+							l_formal_named_type := l_formal_context.named_type
+							l_class := a_class
+								-- Use a local variable because ISE does not support
+								-- this CAP (i.e. considering `l_class' as attached
+								-- after the check-instruction) for formal arguments!
+							check qualified_call: l_class /= Void then end
+							error_handler.report_vuar4ga_error (current_class, current_class_impl, l_name, a_feature, l_class, i, l_actual_named_type, l_formal_named_type)
 						end
 					end
 					l_formal_context.remove_last

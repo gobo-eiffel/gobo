@@ -66,6 +66,7 @@ inherit
 			reportable_veen8_error,
 			reportable_veen9_error,
 			reportable_veen10_error,
+			reportable_veen11_error,
 			reportable_vevi_error,
 			reportable_vfac1_error,
 			reportable_vfac2_error,
@@ -146,7 +147,7 @@ inherit
 			reportable_vtug2_error,
 			reportable_vuar1_error,
 			reportable_vuar2_error,
-			reportable_vuar4_error,
+			reportable_vuar4g_error,
 			reportable_vucr_error,
 			reportable_vuex1_error,
 			reportable_vuex2_error,
@@ -562,6 +563,13 @@ feature -- Validity error status
 
 	reportable_veen10_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VEEN-10 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_veen11_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VEEN-11 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
@@ -1113,8 +1121,8 @@ feature -- Validity error status
 			Result := False
 		end
 
-	reportable_vuar4_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VUAR-4 error be reported when it
+	reportable_vuar4g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUAR-4G error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

@@ -1,0 +1,23 @@
+-------------------------------------------------------------------------------
+
+Error code: VUAR(3)
+
+Type error: formal argument or tuple field of a separate call should be of
+  a separate type if the actual argument or the source expression is of a
+  reference type.
+What to do: make sure that type of the formal argument or of the tuple
+  field is separate.
+
+Class: AA
+Feature: g
+Called feature: f (a: AA) from BB
+Argument name: a
+Argument position: 1
+Formal argument type: AA
+Actual argument type: [attached like Current] attached AA
+Line: 19
+      do
+->      b.f (Current)
+      end
+
+-------------------------------------------------------------------------------
