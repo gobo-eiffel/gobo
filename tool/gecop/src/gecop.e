@@ -7,7 +7,7 @@ note
 			An Eiffel language conformance validation suite.
 		]"
 
-	copyright: "Copyright (c) 2018-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,6 +24,7 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_OPERATING_SYSTEM
 	KL_SHARED_STANDARD_FILES
+	KL_SHARED_STREAMS
 	KL_IMPORTED_STRING_ROUTINES
 
 create
@@ -229,13 +230,28 @@ feature {NONE} -- Processing
 			l_has_test_case: BOOLEAN
 			l_thread_count: INTEGER
 			l_old_test_suite: TS_TEST_SUITE
+			l_progress_flag: BOOLEAN
+			l_process_stream: TS_PROGRESS_STREAM
+			l_max_line_count: INTEGER
+			l_eraser: STRING
 		do
 			if a_aggregate then
+				l_progress_flag := progress_flag.was_found
 				std.output.put_new_line
 				std.output.put_line ("Testing " + a_tester.suite.name + "...")
-				std.output.put_line ("Running Test Cases")
-				std.output.put_new_line
-				create l_summary.make
+				if l_progress_flag then
+					std.output.put_string ("Running Test Cases")
+					create l_process_stream.make_empty
+					l_process_stream.set_output_file (std.output)
+					l_process_stream.set_total_test_count (a_tester.suite.count)
+					l_max_line_count := 70
+					l_process_stream.set_max_line_count (l_max_line_count)
+					create {TS_PROGRESS_SUMMARY} l_summary.make (l_process_stream)
+				else
+					std.output.put_line ("Running Test Cases")
+					std.output.put_new_line
+					create l_summary.make
+				end
 				l_summary.set_sort_errors (True)
 				l_thread_count := thread_count
 				if l_thread_count > 1 then
@@ -243,10 +259,25 @@ feature {NONE} -- Processing
 					l_test_suite := {TS_TEST_SUITE_FACTORY}.new_test_suite (l_old_test_suite.name, l_old_test_suite.variables, l_thread_count)
 					l_old_test_suite.add_test_cases_to_suite (l_test_suite)
 					a_tester.set_suite (l_test_suite)
-					a_tester.execute_with_summary (l_summary, std.output)
+					a_tester.execute_with_summary (l_summary, null_output_stream)
 					a_tester.set_suite (l_old_test_suite)
 				else
-					a_tester.execute_with_summary (l_summary, std.output)
+					a_tester.execute_with_summary (l_summary, null_output_stream)
+				end
+				if l_progress_flag then
+					if l_max_line_count > 0 then
+						create l_eraser.make (l_max_line_count)
+						l_eraser.fill_character (' ')
+						l_eraser.put ('%R', l_max_line_count)
+						std.output.put_string (l_eraser)
+					end
+					std.output.put_line ("Running Test Cases")
+					std.output.put_new_line
+				end
+				l_summary.print_summary_without_assertions (a_tester.suite, std.output)
+				if not l_summary.is_successful then
+					std.output.put_new_line
+					l_summary.print_errors (std.output)
 				end
 					-- Write to `a_output_file'.
 				a_output_file.put_new_line
@@ -474,6 +505,9 @@ feature -- Argument parsing
 	thread_option: AP_INTEGER_OPTION
 			-- Option for '--thread=<thread_count>'
 
+	progress_flag: AP_FLAG
+			-- Flag for '--progress'
+
 	version_flag: AP_FLAG
 			-- Flag for '--version'
 
@@ -539,6 +573,10 @@ feature -- Argument parsing
 			if {PLATFORM}.is_thread_capable then
 				l_parser.options.force_last (thread_option)
 			end
+				-- progress
+			create progress_flag.make_with_long_form ("progress")
+			progress_flag.set_description ("Display progress status during execution of the validation suite. (default: no progress displayed)")
+			l_parser.options.force_last (progress_flag)
 				-- version
 			create version_flag.make ('V', "version")
 			version_flag.set_description ("Print the version number of gecop and exit.")
@@ -620,6 +658,7 @@ invariant
 	diff_option_not_void: diff_option /= Void
 	keep_testdir_flag_not_void: keep_testdir_flag /= Void
 	thread_option_not_void: thread_option /= Void
+	progress_flag_not_void: progress_flag /= Void
 	version_flag_not_void: version_flag /= Void
 
 end

@@ -5,7 +5,7 @@ note
 		"Character output streams based on strings"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,8 +37,11 @@ feature {NONE} -- Initialization
 
 	make_empty
 			-- Create string for output.
+		local
+			l_string: like string
 		do
-			create string.make (256)
+			create l_string.make (256)
+			make (l_string)
 		ensure
 			empty: string.count = 0
 		end
