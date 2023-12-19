@@ -294,6 +294,8 @@ create
 	make_vuar1c,
 	make_vuar2a,
 	make_vuar2b,
+	make_vuar3ga,
+	make_vuar3gb,
 	make_vuar4ga,
 	make_vuar4gb,
 	make_vucr0a,
@@ -13075,11 +13077,11 @@ feature {NONE} -- Initialization
 			-- dollar11: $11 = formal type
 		end
 
-	make_vuar4ga (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE)
-			-- Create a new VUAR-4G error: the separate call `a_name' appearing in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself) is applied
-			-- to feature `a_feature' in class `a_target' whose `arg'-th formal argument
-			-- has a reference type which is not separate.
+	make_vuar3ga (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; arg: INTEGER; an_actual_type, a_formal_type: ET_NAMED_TYPE)
+			-- Create a new VUAR-3G error: the `arg'-th actual argument of the separate call `a_name', appearing
+			-- in `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself), has a
+			-- reference type, but the type of the formal argument of feature `a_feature' in class `a_target'
+			-- is not separate.
 			--
 			-- Not in ECMA-367-2.
 			-- SCOOP.
@@ -13089,18 +13091,18 @@ feature {NONE} -- Initialization
 			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-			an_actual_not_void: an_actual /= Void
-			an_actual_named_type: an_actual.is_named_type
-			a_formal_not_void: a_formal /= Void
-			a_formal_named_type: a_formal.is_named_type
+			a_target_class_not_void: a_target_class /= Void
+			an_actual_type_not_void: an_actual_type /= Void
+			an_actual_type_named_type: an_actual_type.is_named_type
+			a_formal_type_not_void: a_formal_type /= Void
+			a_formal_type_named_type: a_formal_type.is_named_type
 		do
 			current_class := a_class
 			class_impl := a_class_impl
 			position := a_name.position
-			code := template_code (vuar4ga_template_code)
-			etl_code := vuar4g_etl_code
-			default_template := default_message_template (vuar4ga_default_template)
+			code := template_code (vuar3ga_template_code)
+			etl_code := vuar3g_etl_code
+			default_template := default_message_template (vuar3ga_default_template)
 			create parameters.make_filled (empty_string, 1, 12)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -13110,10 +13112,10 @@ feature {NONE} -- Initialization
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_name.lower_name, 7)
 			parameters.put (a_feature.lower_name, 8)
-			parameters.put (a_target.upper_name, 9)
+			parameters.put (a_target_class.upper_name, 9)
 			parameters.put (arg.out, 10)
-			parameters.put (an_actual.to_text, 11)
-			parameters.put (a_formal.to_text, 12)
+			parameters.put (an_actual_type.to_text, 11)
+			parameters.put (a_formal_type.to_text, 12)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -13131,15 +13133,15 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = name of corresponding feature in class $9
 			-- dollar9: $9 = base class of target of the call
 			-- dollar10: $10 = argument index
-			-- dollar11: $11 = actual type
-			-- dollar12: $12 = formal type
+			-- dollar11: $11 = type of actual argument
+			-- dollar12: $12 = type of formal argument
 		end
 
-	make_vuar4gb (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target, an_actual, a_formal: ET_NAMED_TYPE)
-			-- Create a new VUAR-4G error: the separate call `a_name' appearing in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself) is setting
-			-- tuple label `a_name' (in tuple type `a_target') whose whose type is reference
-			-- but not separate.
+	make_vuar3gb (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target_type, a_source_type, a_label_type: ET_NAMED_TYPE)
+			-- Create a new VUAR-3G error: the source of the separate assigner call `a_name', appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself),
+			-- has a reference type, but the type of the tuple label `a_name' in tuple type `a_target_type'
+			-- is not separate.
 			--
 			-- Not in ECMA-367-2.
 			-- SCOOP.
@@ -13149,19 +13151,19 @@ feature {NONE} -- Initialization
 			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_name_is_tuple_label: a_name.is_tuple_label
-			a_target_not_void: a_target /= Void
-			a_target_named_type: a_target.is_named_type
-			an_actual_not_void: an_actual /= Void
-			an_actual_named_type: an_actual.is_named_type
-			a_formal_not_void: a_formal /= Void
-			a_formal_named_type: a_formal.is_named_type
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_named_type: a_target_type.is_named_type
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_named_type: a_source_type.is_named_type
+			a_label_type_not_void: a_label_type /= Void
+			a_label_type_named_type: a_label_type.is_named_type
 		do
 			current_class := a_class
 			class_impl := a_class_impl
 			position := a_name.position
-			code := template_code (vuar4gb_template_code)
-			etl_code := vuar4g_etl_code
-			default_template := default_message_template (vuar4gb_default_template)
+			code := template_code (vuar3gb_template_code)
+			etl_code := vuar3g_etl_code
+			default_template := default_message_template (vuar3gb_default_template)
 			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -13170,9 +13172,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_name.lower_name, 7)
-			parameters.put (a_target.to_text, 8)
-			parameters.put (an_actual.to_text, 9)
-			parameters.put (a_formal.to_text, 10)
+			parameters.put (a_target_type.to_text, 8)
+			parameters.put (a_source_type.to_text, 9)
+			parameters.put (a_label_type.to_text, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -13188,8 +13190,125 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = name of tuple label in type $8
 			-- dollar8: $8 = tuple type of target
-			-- dollar9: $9 = actual type
-			-- dollar10: $10 = formal type
+			-- dollar9: $9 = source type
+			-- dollar10: $10 = label type
+		end
+
+	make_vuar4ga (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; arg: INTEGER; an_actual_type, a_formal_type: ET_NAMED_TYPE)
+			-- Create a new VUAR-4G error: the `arg'-th actual argument of the separate call `a_name', appearing
+			-- in `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself), has an
+			-- expanded type, but it contains (directly or indirectly) an attribute of reference type which
+			-- is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_class_not_void: a_target_class /= Void
+			an_actual_type_not_void: an_actual_type /= Void
+			an_actual_type_named_type: an_actual_type.is_named_type
+			a_formal_type_not_void: a_formal_type /= Void
+			a_formal_type_named_type: a_formal_type.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vuar4ga_template_code)
+			etl_code := vuar4g_etl_code
+			default_template := default_message_template (vuar4ga_default_template)
+			create parameters.make_filled (empty_string, 1, 12)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_feature.lower_name, 8)
+			parameters.put (a_target_class.upper_name, 9)
+			parameters.put (arg.out, 10)
+			parameters.put (an_actual_type.to_text, 11)
+			parameters.put (a_formal_type.to_text, 12)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call
+			-- dollar8: $8 = name of corresponding feature in class $9
+			-- dollar9: $9 = base class of target of the call
+			-- dollar10: $10 = argument index
+			-- dollar11: $11 = type of actual argument
+			-- dollar12: $12 = type of formal argument
+		end
+
+	make_vuar4gb (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target_type, a_source_type, a_label_type: ET_NAMED_TYPE)
+			-- Create a new VUAR-4G error: the source of the separate assigner call `a_name', appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself),
+			-- has an expanded type, but it contains (directly or indirectly) an attribute of reference
+			-- type which is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_tuple_label: a_name.is_tuple_label
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_named_type: a_target_type.is_named_type
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_named_type: a_source_type.is_named_type
+			a_label_type_not_void: a_label_type /= Void
+			a_label_type_named_type: a_label_type.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vuar4gb_template_code)
+			etl_code := vuar4g_etl_code
+			default_template := default_message_template (vuar4gb_default_template)
+			create parameters.make_filled (empty_string, 1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_target_type.to_text, 8)
+			parameters.put (a_source_type.to_text, 9)
+			parameters.put (a_label_type.to_text, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = name of tuple label in type $8
+			-- dollar8: $8 = tuple type of target
+			-- dollar9: $9 = source type
+			-- dollar10: $10 = label type
 		end
 
 	make_vucr0a (a_class: ET_CLASS; a_feature: ET_FEATURE)
@@ -17745,8 +17864,10 @@ feature {NONE} -- Implementation
 	vuar1c_default_template: STRING = "call to Tuple label `$7' cannot have arguments."
 	vuar2a_default_template: STRING = "the $10-th actual argument (of type '$11') does not conform to the corresponding formal argument (of type '$12') of feature `$8' in class $9."
 	vuar2b_default_template: STRING = "the $9-th actual argument (of type '$10') does not conform to the corresponding formal argument (of type '$11') of feature `$8'."
-	vuar4ga_default_template: STRING = "the type '$12' of the $10-th formal argument of feature `$8' in class $9 called in a separate call is a reference type which is not separate."
-	vuar4gb_default_template: STRING = "the type '$10' of the tuple label `$7' in type '$8' set in a separate assigner call is a reference type which is not separate."
+	vuar3ga_default_template: STRING = "the $10-th actual argument of the separate call `$7' has a reference type '$11', but the type '$12' of the formal argument of feature `$8' in class $9 is not separate."
+	vuar3gb_default_template: STRING = "the source of separate assigner call has a reference type '$9', but the type '$10' of the tuple label `$7' in type '$8' is not separate."
+	vuar4ga_default_template: STRING = "the $10-th actual argument of the separate call `$7' has an expanded type '$11', but it contains directly or indirectly attributes of reference types which are not separate."
+	vuar4gb_default_template: STRING = "the source of separate assigner call has an expanded type '$9', but it contains directly or indirectly attributes of reference types which are not separate."
 	vucr0a_default_template: STRING = "feature `$7' is an attribute, so it cannot be used in static calls."
 	vucr0b_default_template: STRING = "feature `$7' is a once-per-object feature, so it cannot be used in static calls."
 	vucr0c_default_template: STRING = "attribute '$7' cannot be used as target of an assignment or creation instruction in a static feature."
@@ -17965,6 +18086,7 @@ feature {NONE} -- Implementation
 	vtug2_etl_code: STRING = "VTUG-2"
 	vuar1_etl_code: STRING = "VUAR-1"
 	vuar2_etl_code: STRING = "VUAR-2"
+	vuar3g_etl_code: STRING = "VUAR-3G"
 	vuar4g_etl_code: STRING = "VUAR-4G"
 	vucr_etl_code: STRING = "VUCR"
 	vuex1_etl_code: STRING = "VUEX-1"
@@ -18308,6 +18430,8 @@ feature {NONE} -- Implementation
 	vuar1c_template_code: STRING = "vuar1c"
 	vuar2a_template_code: STRING = "vuar2a"
 	vuar2b_template_code: STRING = "vuar2b"
+	vuar3ga_template_code: STRING = "vuar3ga"
+	vuar3gb_template_code: STRING = "vuar3gb"
 	vuar4ga_template_code: STRING = "vuar4ga"
 	vuar4gb_template_code: STRING = "vuar4gb"
 	vucr0a_template_code: STRING = "vucr0a"

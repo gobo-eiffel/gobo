@@ -4,7 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # PASSED:     518 tests
-    # Failed:     0 test
+    # Passed:     529 tests
+    # FAILED:     1 test
     # Aborted:    0 test
-    # Total:      518 tests
+    # Total:      530 tests
+
+Test Results:</br>
+FAIL:  \[[validity/vuar4g/test\_procedure\_5](validity/vuar4g/test\_procedure\_5)\] test\_failed

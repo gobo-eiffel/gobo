@@ -5,7 +5,7 @@ note
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #46 $"
@@ -2748,7 +2748,7 @@ feature -- Type context
 			-- is preparsed and if its `root_context' is only made up
 			-- of class names and formal generic parameter names, and if
 			-- the actual parameters of these formal parameters are
-			-- themselves
+			-- themselves in `root_context'?
 
 feature -- Duplication
 

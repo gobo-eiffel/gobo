@@ -8,14 +8,13 @@ feature
 
 	make
 		do
-			name := "gobo"
 		end
 
-	name: STRING assign set_name
+	c: CC assign set_c
 
-	set_name (a_name: STRING)
+	set_c (a_c: CC)
 		do
-			name := a_name
+			c := a_c
 			print ("Failed")
 		end
 

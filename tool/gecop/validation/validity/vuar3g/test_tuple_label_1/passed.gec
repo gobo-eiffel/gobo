@@ -1,0 +1,2 @@
+[VUAR-3G] class AA (19,6): the source of separate assigner call has a reference type '[attached] STRING_8', but the type '[attached] STRING' of the tuple label `name' in type '[attached] separate TUPLE [name: [attached] STRING]' is not separate.
+----

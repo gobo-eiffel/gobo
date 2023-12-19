@@ -4,7 +4,7 @@ Running Test Cases
 
 Test Summary for validation
 
-    # PASSED:     518 tests
+    # PASSED:     530 tests
     # Failed:     0 test
     # Aborted:    0 test
-    # Total:      518 tests
+    # Total:      530 tests

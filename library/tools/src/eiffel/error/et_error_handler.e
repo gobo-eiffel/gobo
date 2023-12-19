@@ -6745,11 +6745,11 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar4ga_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE)
-			-- Report VUAR-4G error: the separate call `a_name' appearing in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself) is applied
-			-- to feature `a_feature' in class `a_target' whose `arg'-th formal argument
-			-- has a reference type which is not separate.
+	report_vuar3ga_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; arg: INTEGER; an_actual_type, a_formal_type: ET_NAMED_TYPE)
+			-- Report VUAR-3G error: the `arg'-th actual argument of the separate call `a_name', appearing
+			-- in `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself), has a
+			-- reference type, but the type of the formal argument of feature `a_feature' in class `a_target_class'
+			-- is not separate.
 			--
 			-- Not in ECMA-367-2.
 			-- SCOOP.
@@ -6759,25 +6759,25 @@ feature -- Validity errors
 			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-			an_actual_not_void: an_actual /= Void
-			an_actual_named_type: an_actual.is_named_type
-			a_formal_not_void: a_formal /= Void
-			a_formal_named_type: a_formal.is_named_type
+			a_target_class_not_void: a_target_class /= Void
+			an_actual_type_not_void: an_actual_type /= Void
+			an_actual_type_named_type: an_actual_type.is_named_type
+			a_formal_type_not_void: a_formal_type /= Void
+			a_formal_type_named_type: a_formal_type.is_named_type
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vuar4g_error (a_class) then
-				create an_error.make_vuar4ga (a_class, a_class_impl, a_name, a_feature, a_target, arg, an_actual, a_formal)
+			if reportable_vuar3g_error (a_class) then
+				create an_error.make_vuar3ga (a_class, a_class_impl, a_name, a_feature, a_target_class, arg, an_actual_type, a_formal_type)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vuar4gb_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target, an_actual, a_formal: ET_NAMED_TYPE)
-			-- Report VUAR-4G error: the separate call `a_name' appearing in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself) is setting
-			-- tuple label `a_name' (in tuple type `a_target') whose whose type is reference
-			-- but not separate.
+	report_vuar3gb_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target_type, a_source_type, a_label_type: ET_NAMED_TYPE)
+			-- Report VUAR-3G error: the source of the separate assigner call `a_name', appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself),
+			-- has a reference type, but the type of the tuple label `a_name' in tuple type `a_target_type'
+			-- is not separate.
 			--
 			-- Not in ECMA-367-2.
 			-- SCOOP.
@@ -6787,17 +6787,74 @@ feature -- Validity errors
 			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_name_is_tuple_label: a_name.is_tuple_label
-			a_target_not_void: a_target /= Void
-			a_target_named_type: a_target.is_named_type
-			an_actual_not_void: an_actual /= Void
-			an_actual_named_type: an_actual.is_named_type
-			a_formal_not_void: a_formal /= Void
-			a_formal_named_type: a_formal.is_named_type
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_named_type: a_target_type.is_named_type
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_named_type: a_source_type.is_named_type
+			a_label_type_not_void: a_label_type /= Void
+			a_label_type_named_type: a_label_type.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuar3g_error (a_class) then
+				create an_error.make_vuar3gb (a_class, a_class_impl, a_name, a_target_type, a_source_type, a_label_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuar4ga_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; arg: INTEGER; an_actual_type, a_formal_type: ET_NAMED_TYPE)
+			-- Report VUAR-4G error: the `arg'-th actual argument of the separate call `a_name', appearing
+			-- in `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself), has an
+			-- expanded type, but it contains (directly or indirectly) an attribute of reference type which
+			-- is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_class_not_void: a_target_class /= Void
+			an_actual_type_not_void: an_actual_type /= Void
+			an_actual_type_named_type: an_actual_type.is_named_type
+			a_formal_type_not_void: a_formal_type /= Void
+			a_formal_type_named_type: a_formal_type.is_named_type
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vuar4g_error (a_class) then
-				create an_error.make_vuar4gb (a_class, a_class_impl, a_name, a_target, an_actual, a_formal)
+				create an_error.make_vuar4ga (a_class, a_class_impl, a_name, a_feature, a_target_class, arg, an_actual_type, a_formal_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuar4gb_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target_type, a_source_type, a_label_type: ET_NAMED_TYPE)
+			-- Report VUAR-4G error: the source of the separate assigner call `a_name', appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself),
+			-- has an expanded type, but it contains (directly or indirectly) an attribute of reference
+			-- type which is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_tuple_label: a_name.is_tuple_label
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_named_type: a_target_type.is_named_type
+			a_source_type_not_void: a_source_type /= Void
+			a_source_type_named_type: a_source_type.is_named_type
+			a_label_type_not_void: a_label_type /= Void
+			a_label_type_named_type: a_label_type.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuar4g_error (a_class) then
+				create an_error.make_vuar4gb (a_class, a_class_impl, a_name, a_target_type, a_source_type, a_label_type)
 				report_validity_error (an_error)
 			end
 		end
@@ -9937,6 +9994,16 @@ feature -- Validity error status
 
 	reportable_vuar2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUAR-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vuar3g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUAR-3G error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

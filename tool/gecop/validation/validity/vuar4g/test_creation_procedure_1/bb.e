@@ -6,7 +6,7 @@ create
 
 feature
 
-	make (a: AA)
+	make (c: CC)
 		do
 			print ("Failed")
 		end

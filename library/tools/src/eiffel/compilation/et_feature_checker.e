@@ -2818,21 +2818,41 @@ feature {NONE} -- Instruction validity
 					end
 				end
 				if not has_fatal_error then
-					if l_is_target_type_separate and not l_expected_type_context.is_type_expanded and not l_expected_type_context.is_type_separate then
-							-- Error: It's a separate call (qualified call with a target of separate type),
-							-- the formal argument has a reference type (potentially, if it a formal generic
-							-- parameter, hence the test 'not is_type_expanded' instead of just
-							-- 'is_type_reference'), but this type is not separate.
-						set_fatal_error
-						if l_assigner_procedure /= Void then
-							error_handler.report_vuar4ga_error (current_class, current_class_impl, l_name, l_assigner_procedure, l_target_base_class, l_formal_argument_index, l_source_context.named_type, l_expected_type_context.named_type)
-						else
-							check tuple_label: l_name.is_tuple_label end
-							l_target_context.remove_last
-							l_target_named_type := l_target_context.named_type
-							l_target_context.force_last (l_expected_type)
-							error_handler.report_vuar4gb_error (current_class, current_class_impl, l_name, l_target_named_type, l_source_context.named_type, l_expected_type_context.named_type)
-							l_target_context.force_last (l_expected_type)
+					if l_is_target_type_separate then
+						if not l_source_context.is_type_expanded and not l_expected_type_context.is_type_separate then
+								-- Error: It's a separate call (qualified call with a target of separate type),
+								-- the actual argument has a reference type (potentially, if it a formal generic
+								-- parameter, hence the test 'not is_type_expanded' instead of just
+								-- 'is_type_reference'), but the type of ther formal argument is not separate.
+							set_fatal_error
+							if l_assigner_procedure /= Void then
+								error_handler.report_vuar3ga_error (current_class, current_class_impl, l_name, l_assigner_procedure, l_target_base_class, l_formal_argument_index, l_source_context.named_type, l_expected_type_context.named_type)
+							else
+								check tuple_label: l_name.is_tuple_label end
+								l_target_context.remove_last
+								l_target_named_type := l_target_context.named_type
+								l_target_context.force_last (l_expected_type)
+								error_handler.report_vuar3gb_error (current_class, current_class_impl, l_name, l_target_named_type, l_source_context.named_type, l_expected_type_context.named_type)
+								l_target_context.force_last (l_expected_type)
+							end
+						end
+						if not l_source_context.is_type_reference and tokens.identity_type.has_nested_non_separate_reference_attributes (l_source_context) then
+								-- Error: It's a separate call (qualified call with a target of separate type),
+								-- the actual argument has an expanded type (potentially, if it a formal generic
+								-- parameter, hence the test 'not is_type_reference' instead of just
+								-- 'is_is_type_expanded'), but it contains attributes of reference types which
+								-- are not separate.
+							set_fatal_error
+							if l_assigner_procedure /= Void then
+								error_handler.report_vuar4ga_error (current_class, current_class_impl, l_name, l_assigner_procedure, l_target_base_class, l_formal_argument_index, l_source_context.named_type, l_expected_type_context.named_type)
+							else
+								check tuple_label: l_name.is_tuple_label end
+								l_target_context.remove_last
+								l_target_named_type := l_target_context.named_type
+								l_target_context.force_last (l_expected_type)
+								error_handler.report_vuar4gb_error (current_class, current_class_impl, l_name, l_target_named_type, l_source_context.named_type, l_expected_type_context.named_type)
+								l_target_context.force_last (l_expected_type)
+							end
 						end
 					end
 				end
@@ -11764,21 +11784,40 @@ feature {NONE} -- Expression validity
 							error_handler.report_vuar2b_error (current_class, current_class_impl, l_name, a_feature, i, l_actual_named_type, l_formal_named_type)
 						end
 					elseif not l_to_be_reprocessed then
-						if l_is_target_type_separate and not l_formal_context.is_type_expanded and not l_formal_context.is_type_separate then
-								-- Error: Its a separate call (qualified call with a target of separate type),
-								-- the formal argument has a reference type (potentially, if it a formal generic
-								-- parameter, hence the test 'not is_type_expanded' instead of just
-								-- 'is_type_reference')'but this type is not separate.
-							had_error := True
-							set_fatal_error
-							l_actual_named_type := l_actual_context.named_type
-							l_formal_named_type := l_formal_context.named_type
-							l_class := a_class
-								-- Use a local variable because ISE does not support
-								-- this CAP (i.e. considering `l_class' as attached
-								-- after the check-instruction) for formal arguments!
-							check qualified_call: l_class /= Void then end
-							error_handler.report_vuar4ga_error (current_class, current_class_impl, l_name, a_feature, l_class, i, l_actual_named_type, l_formal_named_type)
+						if l_is_target_type_separate then
+							if not l_actual_context.is_type_expanded and not l_formal_context.is_type_separate then
+									-- Error: It's a separate call (qualified call with a target of separate type),
+									-- the actual argument has a reference type (potentially, if it a formal generic
+									-- parameter, hence the test 'not is_type_expanded' instead of just
+									-- 'is_type_reference'), but the type of the formal argument is not separate.
+								had_error := True
+								set_fatal_error
+								l_actual_named_type := l_actual_context.named_type
+								l_formal_named_type := l_formal_context.named_type
+								l_class := a_class
+									-- Use a local variable because ISE does not support
+									-- this CAP (i.e. considering `l_class' as attached
+									-- after the check-instruction) for formal arguments!
+								check qualified_call: l_class /= Void then end
+								error_handler.report_vuar3ga_error (current_class, current_class_impl, l_name, a_feature, l_class, i, l_actual_named_type, l_formal_named_type)
+							end
+							if not l_actual_context.is_type_reference and l_actual_context.named_type.has_nested_non_separate_reference_attributes (l_actual_context.root_context) then
+									-- Error: It's a separate call (qualified call with a target of separate type),
+									-- the actual argument has an expanded type (potentially, if it a formal generic
+									-- parameter, hence the test 'not is_type_reference' instead of just
+									-- 'is_is_type_expanded'), but it contains attributes of reference types which
+									-- are not separate.
+								had_error := True
+								set_fatal_error
+								l_actual_named_type := l_actual_context.named_type
+								l_formal_named_type := l_formal_context.named_type
+								l_class := a_class
+									-- Use a local variable because ISE does not support
+									-- this CAP (i.e. considering `l_class' as attached
+									-- after the check-instruction) for formal arguments!
+								check qualified_call: l_class /= Void then end
+								error_handler.report_vuar4ga_error (current_class, current_class_impl, l_name, a_feature, l_class, i, l_actual_named_type, l_formal_named_type)
+							end
 						end
 					end
 					l_formal_context.remove_last

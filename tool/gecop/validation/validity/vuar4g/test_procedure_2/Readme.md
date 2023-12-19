@@ -4,10 +4,10 @@ This [test](.) is exercising the condition [4G](../Readme.md) of the validity ru
 
 ### Description
 
-In this test, there is a separate call to the procedure `f` from class `BB`. The type of the formal argument of `f` is reference, but it is not separate. This violates `VUAR-4G`.
+In this test, there is a separate call to the procedure `f` from class `BB`. The type `CC` of the actual argument of `f` is expanded, but it contains an attribute `name` whose type is reference but not separate. This violates `VUAR-4G`.
 
-### Notes
+### Note
 
-* This test also violates `VUAR-2`. Indeed the actual argument of `f` is of type `separate STRING` which does not conform to the type of the formal argument `STRING`.
+* It does not matter whether the type of the formal argument of `f` is reference separate. The copy of the expanded object of type `CC` will be in the region of the target of the call where it attribute object will still be in the region of the caller.
 
-* Gobo Eiffel and ISE Eiffel (as of 23.09.10.7341 and after) only report the violation of `VUAR-2`.
+* ISE Eiffel (as of 23.09.10.7341 and after) reports a violation of rule `VUAR-2` instead. This is because apparently it considers that an expanded type which has, directly or indirectly, an attribute of reference type which is not separate, does not conform to any separate type. So `CC` does not conform to `separate ANY`. This is flawed because `CC` conforms to `ANY` which conforms to `separate ANY`.

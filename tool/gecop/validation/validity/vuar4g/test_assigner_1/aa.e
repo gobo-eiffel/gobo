@@ -15,8 +15,11 @@ feature
 		end
 
 	g (b: separate BB)
+		local
+			c: CC
 		do
-			b.name := "eiffel"
+			c.set_name ("eiffel")
+			b.c := c
 		end
 
 end

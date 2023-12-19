@@ -378,7 +378,7 @@ feature -- Status report
 			-- A context is valid if its `root_context' is only made up
 			-- of class names and formal generic parameter names, and if
 			-- the actual parameters of these formal parameters are
-			-- themselves
+			-- themselves in `root_context'?
 
 	is_root_context: BOOLEAN
 			-- Is current context its own root context?
@@ -539,6 +539,71 @@ feature -- Status report
 				l_type := last
 				remove_last
 				Result := l_type.is_type_detachable_with_type_mark (a_type_mark, Current)
+				put_last (l_type)
+			end
+		end
+
+	has_non_separate_reference_attributes: BOOLEAN
+			-- Does current type context contain attributes whose types are declared
+			-- of non-separate reference types when viewed from `a_context'?
+			-- True in case of a formal generic parameter because the actual
+			-- generic parameter may contain non-separate reference attributes.
+		local
+			l_type: ET_TYPE
+			l_index: INTEGER
+		do
+			if count = 0 then
+				Result := root_context.has_non_separate_reference_attributes (Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.has_non_separate_reference_attributes (Current)
+				elseif l_index >= count then
+					force_last (tokens.like_0)
+					Result := root_context.has_non_separate_reference_attributes (Current)
+					remove_last
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.has_non_separate_reference_attributes (Current)
+					put (l_like_n, count)
+				end
+			else
+				l_type := last
+				remove_last
+				Result := l_type.has_non_separate_reference_attributes (Current)
+				put_last (l_type)
+			end
+		end
+
+	has_nested_non_separate_reference_attributes: BOOLEAN
+			-- Does current type context contain non-separate reference attributes when
+			-- viewed from `a_context', or recursively does it contain expanded
+			-- attributes whose types contain non-separate reference attributes?
+		local
+			l_type: ET_TYPE
+			l_index: INTEGER
+		do
+			if count = 0 then
+				Result := root_context.has_nested_non_separate_reference_attributes (Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.has_nested_non_separate_reference_attributes (Current)
+				elseif l_index >= count then
+					force_last (tokens.like_0)
+					Result := root_context.has_nested_non_separate_reference_attributes (Current)
+					remove_last
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.has_nested_non_separate_reference_attributes (Current)
+					put (l_like_n, count)
+				end
+			else
+				l_type := last
+				remove_last
+				Result := l_type.has_nested_non_separate_reference_attributes (Current)
 				put_last (l_type)
 			end
 		end

@@ -254,6 +254,23 @@ feature -- Status report
 			Result := a_context.is_type_detachable_with_type_mark (overridden_type_mark (a_type_mark))
 		end
 
+	has_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does current type contain attributes whose types are declared
+			-- of non-separate reference types when viewed from `a_context'?
+			-- True in case of a formal generic parameter because the actual
+			-- generic parameter may contain non-separate reference attributes.
+		do
+			Result := a_context.has_non_separate_reference_attributes
+		end
+
+	has_nested_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does current type contain non-separate reference attributes when
+			-- viewed from `a_context', or recursively does it contain expanded
+			-- attributes whose types contain non-separate reference attributes?
+		do
+			Result := a_context.has_nested_non_separate_reference_attributes
+		end
+
 	is_controlled: BOOLEAN
 			-- Is current type a controlled separate type?
 

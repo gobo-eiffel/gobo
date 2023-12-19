@@ -1,0 +1,2 @@
+[VUAR-3G] class AA (18,13): the 1-th actual argument of the separate call `make' has a reference type 'AA', but the type '[attached] AA' of the formal argument of feature `make' in class BB is not separate.
+----

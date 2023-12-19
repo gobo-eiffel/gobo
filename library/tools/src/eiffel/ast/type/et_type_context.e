@@ -209,7 +209,7 @@ feature -- Status report
 			-- A context is valid if its `root_context' is only made up
 			-- of class names and formal generic parameter names, and if
 			-- the actual parameters of these formal parameters are
-			-- themselves
+			-- themselves in `root_context'?
 		deferred
 		end
 
@@ -308,6 +308,25 @@ feature -- Status report
 	is_type_detachable_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Same as `is_type_detachable' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
+		require
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
+	has_non_separate_reference_attributes: BOOLEAN
+			-- Does current type context contain attributes whose types are declared
+			-- of non-separate reference types when viewed from `a_context'?
+			-- True in case of a formal generic parameter because the actual
+			-- generic parameter may contain non-separate reference attributes.
+		require
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
+	has_nested_non_separate_reference_attributes: BOOLEAN
+			-- Does current type context contain non-separate reference attributes when
+			-- viewed from `a_context', or recursively does it contain expanded
+			-- attributes whose types contain non-separate reference attributes?
 		require
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
