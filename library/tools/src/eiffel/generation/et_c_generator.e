@@ -38554,6 +38554,8 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("eif_hector.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_lmalloc.h%"") then
 					include_runtime_header_file ("eif_lmalloc.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_macros.h%"") then
+					include_runtime_header_file ("eif_macros.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_main.h%"") then
 					include_runtime_header_file ("eif_main.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_memory.h%"") then
@@ -38652,6 +38654,8 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_exception.h", a_force, a_file)
 					include_runtime_header_file ("eif_threads.h", a_force, a_file)
 					include_runtime_header_file ("eif_size.h", a_force, a_file)
+				elseif a_filename.same_string ("eif_macros.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 				elseif a_filename.same_string ("eif_main.h") then
 					l_c_filename := "eif_main.c"
 				elseif a_filename.same_string ("eif_memory.h") then
