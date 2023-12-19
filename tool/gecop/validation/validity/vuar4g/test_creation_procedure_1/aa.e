@@ -14,8 +14,10 @@ feature
 	f
 		local
 			b: separate BB
+			c: CC
 		do
-			create b.make (Current)
+			c.set_name ("eiffel")
+			create b.make (c)
 		end
 
 end

@@ -10,7 +10,7 @@ feature
 		do
 		end
 
-	f (s: STRING)
+	f (a: separate ANY)
 		do
 			print ("Failed")
 		end

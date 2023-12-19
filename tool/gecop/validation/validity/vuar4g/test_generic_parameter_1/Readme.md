@@ -4,8 +4,10 @@ This [test](.) is exercising the condition [4G](../Readme.md) of the validity ru
 
 ### Description
 
-In this test, in class `BB` there is a separate call to the procedure `f` from class `CC`. The type of the formal argument of `f` is the formal generic parameter of `CC`, whose actual generic parameter may be a reference type. But this type will not necessarily be separate. This violates `VUAR-4G`.
+In this test, in class `BB` there is a separate call to the procedure `f` from class `CC`. The type of the actual argument of `f` is the formal generic parameter of `BB`, whose actual generic parameter may be an expanded type with attributes whose type is reference but not separate. This violates `VUAR-4G`.
 
-### Notes
+### Note
 
 * ISE Eiffel (as of 23.09.10.7341 and after) fails to report this validity rule violation.
+
+* Gobo Eiffel also reports the violation of rule `VUAR-3G`. This is because the actual generic parameter may also be a reference type which is not separate.

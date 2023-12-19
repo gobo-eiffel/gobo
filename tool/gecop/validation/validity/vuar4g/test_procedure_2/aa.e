@@ -16,10 +16,10 @@ feature
 
 	g (b: separate BB)
 		local
-			s: separate STRING
+			c: CC
 		do
-			create s.make (0)
-			b.f (s)
+			c.set_name ("eiffel")
+			b.f (c)
 		end
 
 end

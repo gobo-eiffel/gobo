@@ -1,0 +1,23 @@
+-------------------------------------------------------------------------------
+
+Error code: VUAR(4)
+
+Type error: base type of an actual argument of a separate call or of a
+  source expression of a tuple field assignment is expanded and includes,
+  directly or indirectly, a non-separate reference attribute.
+What to do: make sure the type of the actual argument or the source
+  expression is reference or does not include, directly or indirectly,
+  any non-separate reference attribute.
+
+Class: AA
+Feature: f
+Tuple field name: b
+Tuple field position: 1
+Tuple field type: BB
+Source expression type: BB
+Line: 23
+        b.set_name ("eiffel")
+->      t.b := b
+      end
+
+-------------------------------------------------------------------------------

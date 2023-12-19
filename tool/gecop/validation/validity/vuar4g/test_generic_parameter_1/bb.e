@@ -1,4 +1,4 @@
-class BB [G]
+class BB [G -> ANY]
 
 create
 

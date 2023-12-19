@@ -34601,7 +34601,7 @@ feature {NONE} -- Type generation
 							l_expanded_sorter.force (l_type)
 						end
 							-- For expanded types, there is no type other than themselves
-							-- that conform to them. Therefore  we do not keep the type-id
+							-- that conform to them. Therefore we do not keep the type-id
 							-- in each object for those types because if it is used as
 							-- static type of an entity there will be no polymorphic call.
 							-- A boxed version (containing the type-id) is nevertheless

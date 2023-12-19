@@ -4,8 +4,4 @@ This [test](.) is exercising the condition [4G](../Readme.md) of the validity ru
 
 ### Description
 
-In this test, there is a separate *Assigner\_call* to set the value of an attribute `name` in an object of separate type `separate BB`. The type of the formal argument of the assigner procedure `set_name` is reference, but it is not separate. This violates `VUAR-4G`.
-
-### Notes
-
-* ISE Eiffel (as of 23.09.10.7341 and after) reports this validity rule violation using the code `VUAR-3`.
+In this test, there is a separate *Assigner\_call* to set the value of an attribute `c` in an object of separate type `separate BB`. The type `CC` of the source of the *Assigner\_call* is expanded, but `CC` contains an attribute whose type is reference but not separate. This violates `VUAR-4G`.

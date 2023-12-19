@@ -22,20 +22,36 @@ An export-valid *Call* of target type `ST` and feature `sf` is argument-valid if
 
 ##  Notes
 
-* Another condition is needed in the context of SCOOP, the Eiffel concurrency mechanism:
+* Gobo Eiffel checks validity rules on the flat version of each class by default. Therefore the condition `3` above is redundant with the condition `2` checked on the flat version of the class.
 
-  4. `G` [\[tests\]](../vuar4g) In case of a separate call, when the target type `ST` is separate, the type of every formal argument of `sf` which is reference is also separate.
+* Two other conditions are needed in the context of SCOOP, the Eiffel concurrency mechanism:
 
-  This also applies to the unfolded form of this *Assigner\_call*:
-  ```
-    t.label := value
-  ```
-  where the type of `t` is `separate TUPLE [...; label: X; ...]`. If `X` is a reference type it should also be separate.
+  3. `G` [\[tests\]](../vuar3g) In case of a separate call (when the target type `ST` is separate) the type of a formal argument of `sf` is separate when the type of associated actual argument is reference.
+  
+      This also applies when `sf` is the assign procedure of an *Assigner\_call*, as well as when the *Assigner\_call* is of the form:
+      ```
+      t.label := value
+      ```
+      where the type of `t` is `separate TUPLE [...; label: X; ...]`. If the type of `value` is reference, the type `X` should be separate.
 
-  This condition is reported as `VUAR-3` in ISE Eiffel 23.09.10.7341 and after:
+  4. `G` [\[tests\]](../vuar4g) In case of a separate call (when the target type `ST` is separate) every actual argument of expanded type does not contain (directly or indirectly) attributes of reference types which are not separate.
+  
+      This also applies when `sf` is the assign procedure of an *Assigner\_call*, as well as when the *Assigner\_call* is of the form:
+      ```
+      t.label := value
+      ```
+      where the type of `t` is `separate TUPLE [...; label: X; ...]`. If the type of `value` is expanded, it should not contain (directly or indirectly) attributes of reference type which is not separate.
 
-  * Error code: VUTA(3)
+  These conditions are reported by ISE Eiffel 23.09.10.7341 and after as follows:
+
+  * Error code: VUAR(3)
   * Type error: formal argument or tuple field of a separate call should be of a separate type if the actual argument or the source expression is of a reference type.
   * What to do: make sure that type of the formal argument or of the tuple field is separate.
+
+  and:
+
+  * Error code: VUAR(4)
+  * Type error: base type of an actual argument of a separate call or of a source expression of a tuple field assignment is expanded and includes, directly or indirectly, a non-separate reference attribute.
+  * What to do: make sure the type of the actual argument or the source expression is reference or does not include, directly or indirectly, any non-separate reference attribute.
    
-  SCOOP is not described in the ECMA Eiffel standard, therefore this condition is not part of the standard.
+  SCOOP is not described in the ECMA Eiffel standard, therefore these conditions are not part of the standard.

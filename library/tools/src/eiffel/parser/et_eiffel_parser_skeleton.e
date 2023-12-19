@@ -5,7 +5,7 @@
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/01 $"
 	revision: "$Revision: #41 $"
@@ -736,6 +736,7 @@ feature {NONE} -- Basic operations
 			l_procedures: ET_PROCEDURE_LIST
 			l_procedure: ET_PROCEDURE
 			i, nb: INTEGER
+			l_attribute_count: INTEGER
 		do
 			a_class := last_class
 			if a_class /= Void then
@@ -754,9 +755,14 @@ feature {NONE} -- Basic operations
 					if attached {ET_UNIQUE_ATTRIBUTE} l_query as l_unique_attribute then
 						l_unique_attribute.constant.set_value (l_unique_attribute.id.to_natural_64)
 					end
+					if l_query.is_attribute then
+						l_attribute_count := l_attribute_count + 1
+					end
 					i := i + 1
 				end
 				l_queries.set_declared_count (nb)
+				l_queries.set_attribute_count (l_attribute_count)
+				l_queries.set_declared_attribute_count (l_attribute_count)
 				a_class.set_queries (l_queries)
 				nb := procedures.count
 				create l_procedures.make_with_capacity (nb)

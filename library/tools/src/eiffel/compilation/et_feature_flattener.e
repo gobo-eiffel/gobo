@@ -5,7 +5,7 @@ note
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -249,6 +249,8 @@ feature {NONE} -- Feature flattening
 			l_alias_name: ET_ALIAS_NAME
 			l_alias_names: detachable ET_ALIAS_NAME_LIST
 			j, l_alias_names_count: INTEGER
+			l_attribute_count: INTEGER
+			l_declared_attribute_count: INTEGER
 		do
 			has_signature_error := False
 			resolve_feature_adaptations
@@ -267,6 +269,7 @@ feature {NONE} -- Feature flattening
 				end
 				nb := queries.count
 				l_declared_query_count := current_class.queries.declared_count
+				l_declared_attribute_count := current_class.queries.declared_attribute_count
 				if l_declared_query_count > nb then
 						-- Internal error: the number of queries declared in
 						-- `current_class' should be less than or equal to the
@@ -281,10 +284,32 @@ feature {NONE} -- Feature flattening
 				end
 				create l_queries.make_with_capacity (nb)
 				from i := 1 until i > nb loop
-					l_queries.put_first (queries.item (i))
+					l_query := queries.item (i)
+					l_queries.put_first (l_query)
+					if l_query.is_attribute then
+						l_attribute_count := l_attribute_count + 1
+					end
 					i := i + 1
 				end
 				l_queries.set_declared_count (l_declared_query_count)
+				l_queries.set_attribute_count (l_attribute_count)
+				if l_declared_attribute_count > l_attribute_count then
+						-- Internal error: the number of attributes declared in
+						-- `current_class' should be less than or equal to the
+						-- total number of attributes in `current_class'.
+					set_fatal_error (current_class)
+					error_handler.report_giaaa_error
+					l_declared_attribute_count := l_attribute_count
+				end
+				if l_declared_attribute_count > l_declared_query_count then
+						-- Internal error: the number of attributes declared in
+						-- `current_class' should be less than or equal to the
+						-- number of queries declared in `current_class'.
+					set_fatal_error (current_class)
+					error_handler.report_giaaa_error
+					l_declared_attribute_count := l_declared_query_count
+				end
+				l_queries.set_declared_attribute_count (l_declared_attribute_count)
 				current_class.set_queries (l_queries)
 				queries.wipe_out
 				nb := procedures.count

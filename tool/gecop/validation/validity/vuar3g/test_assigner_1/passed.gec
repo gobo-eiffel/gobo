@@ -1,0 +1,2 @@
+[VUAR-3G] class AA (19,6): the 1-th actual argument of the separate call `name' has a reference type '[attached] STRING_8', but the type '[attached] STRING' of the formal argument of feature `set_name' in class BB is not separate.
+----

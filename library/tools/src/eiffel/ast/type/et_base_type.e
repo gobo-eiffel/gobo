@@ -5,7 +5,7 @@ note
 		"Eiffel types directly based on a class"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,6 +58,8 @@ inherit
 			is_type_attached_with_type_mark as context_is_type_attached_with_type_mark,
 			is_type_detachable as context_is_type_detachable,
 			is_type_detachable_with_type_mark as context_is_type_detachable_with_type_mark,
+			has_non_separate_reference_attributes as context_has_non_separate_reference_attributes,
+			has_nested_non_separate_reference_attributes as context_has_nested_non_separate_reference_attributes,
 			add_adapted_base_classes_to_list as context_add_adapted_base_classes_to_list,
 			adapted_base_class_with_named_feature as context_adapted_base_class_with_named_feature,
 			adapted_base_class_with_seeded_feature as context_adapted_base_class_with_seeded_feature,
@@ -313,6 +315,121 @@ feature -- Status report
 			Result := is_expanded or not is_attached
 		end
 
+	has_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does current type contain attributes whose types are declared
+			-- of non-separate reference types when viewed from `a_context'?
+			-- True in case of a formal generic parameter because the actual
+			-- generic parameter may contain non-separate reference attributes.
+		local
+			l_class: ET_CLASS
+			l_queries: ET_QUERY_LIST
+			i, nb: INTEGER
+			l_attribute_count: INTEGER
+			l_attributes_found: INTEGER
+			l_query: ET_QUERY
+			l_type: ET_TYPE
+			l_context: ET_NESTED_TYPE_CONTEXT
+		do
+			l_class := base_class
+			if l_class.is_basic then
+				-- Result := False
+			else
+				l_queries := l_class.queries
+				l_attribute_count := l_queries.attribute_count
+				if l_attribute_count > 0 then
+					nb := l_queries.count
+					l_context := a_context.as_nested_type_context
+					l_context.force_last (Current)
+					from i := 1 until i > nb loop
+						l_query := l_queries.item (i)
+						if l_query.is_attribute then
+							l_attributes_found := l_attributes_found + 1
+							l_type := l_queries.item (i).type
+							if not l_type.is_type_expanded (l_context) and not l_type.is_type_separate (l_context) then
+									-- Use 'not is_type_expanded' instead of 'is_type_reference'
+									-- because for a formal generic parameter the actual generic
+									-- parameter may be a reference type (or not).
+								Result := True
+								i := nb -- Jump out of the loop.
+							elseif l_attributes_found >= l_attribute_count then
+									-- No more attributes.
+								i := nb -- Jump out of the loop.
+							end
+						end
+						i := i + 1
+					end
+					l_context.remove_last
+				end
+			end
+		end
+
+	has_nested_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does current type contain non-separate reference attributes when
+			-- viewed from `a_context', or recursively does it contain expanded
+			-- attributes whose types contain non-separate reference attributes?
+		local
+			l_class: ET_CLASS
+			l_queries: ET_QUERY_LIST
+			i, nb: INTEGER
+			l_type: ET_TYPE
+			l_attribute_count: INTEGER
+			l_attributes_found: INTEGER
+			l_query: ET_QUERY
+			l_old_declared_attribute_count: INTEGER
+			l_old_attribute_count: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
+		do
+			if has_non_separate_reference_attributes (a_context) then
+				Result := True
+			else
+				l_class := base_class
+				if l_class.is_basic then
+					-- Result := False
+				else
+						-- Look for reference attributes in the types of
+						-- expanded attributes, if any.
+					l_queries := l_class.queries
+					l_attribute_count := l_queries.attribute_count
+					if l_attribute_count > 0 then
+							-- We should not have cyclic recursive expanded objects.
+							-- This is either rejected by Eiffel validity rule (see VLEC in ETL2),
+							-- or by another proper handling if ECMA relaxed this rule
+							-- (through the introduction of attached types). But in case
+							-- such a cyclic recursion has slipped through, we temporarily
+							-- set the number of attributes to zero to break that cycle.
+						l_old_declared_attribute_count := l_queries.declared_attribute_count
+						l_old_attribute_count := l_queries.attribute_count
+						l_queries.set_declared_attribute_count (0)
+						l_queries.set_attribute_count (0)
+						l_context := a_context.as_nested_type_context
+						l_context.force_last (Current)
+						nb := l_queries.count
+						from i := 1 until i > nb loop
+							l_query := l_queries.item (i)
+							if l_query.is_attribute then
+								l_attributes_found := l_attributes_found + 1
+								l_type := l_queries.item (i).type
+								if not l_type.is_type_reference (l_context) and then l_type.has_nested_non_separate_reference_attributes (l_context) then
+										-- Use 'not is_type_reference' instead of 'is_type_expanded'
+										-- because for a formal generic parameter the actual generic
+										-- parameter may be an expanded type (or not).
+									Result := True
+									i := nb -- Jump out of the loop.
+								elseif l_attributes_found >= l_attribute_count then
+										-- No more attributes.
+									i := nb -- Jump out of the loop.
+								end
+							end
+							i := i + 1
+						end
+						l_context.remove_last
+						l_queries.set_attribute_count (l_old_attribute_count)
+						l_queries.set_declared_attribute_count (l_old_declared_attribute_count)
+					end
+				end
+			end
+		end
+
 	has_anchored_type: BOOLEAN
 			-- Does current type contain an anchored type?
 		do
@@ -548,7 +665,7 @@ feature -- Type context
 			-- A context is valid if its `root_context' is only made up
 			-- of class names and formal generic parameter names, and if
 			-- the actual parameters of these formal parameters are
-			-- themselves
+			-- themselves in `root_context'?
 		do
 			Result := is_valid_context_type (Current)
 		end
@@ -608,6 +725,23 @@ feature -- Type context
 			-- overridden by `a_type_mark', if not Void
 		do
 			Result := is_type_detachable_with_type_mark (a_type_mark, Current)
+		end
+
+	context_has_non_separate_reference_attributes: BOOLEAN
+			-- Does current type context contain attributes whose types are declared
+			-- of non-separate reference types when viewed from `a_context'?
+			-- True in case of a formal generic parameter because the actual
+			-- generic parameter may contain non-separate reference attributes.
+		do
+			Result := has_non_separate_reference_attributes (Current)
+		end
+
+	context_has_nested_non_separate_reference_attributes: BOOLEAN
+			-- Does current type context contain non-separate reference attributes when
+			-- viewed from `a_context', or recursively does it contain expanded
+			-- attributes whose types contain non-separate reference attributes?
+		do
+			Result := has_nested_non_separate_reference_attributes (Current)
 		end
 
 	context_base_type_has_class (a_class: ET_CLASS): BOOLEAN

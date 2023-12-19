@@ -5,7 +5,7 @@ note
 		"Eiffel types appearing in nested type contexts and representing n-th type in these contexts"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2015-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2015-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -438,6 +438,47 @@ feature -- Status report
 					-- We reached the root context.
 				l_previous_context.force_last (tokens.like_0)
 				Result := l_previous_context.root_context.is_type_detachable_with_type_mark (overridden_type_mark (a_type_mark), l_previous_context)
+				l_previous_context.remove_last
+			end
+		end
+
+	has_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does current type contain attributes whose types are declared
+			-- of non-separate reference types when viewed from `a_context'?
+			-- True in case of a formal generic parameter because the actual
+			-- generic parameter may contain non-separate reference attributes.
+		local
+			l_previous_context: ET_NESTED_TYPE_CONTEXT
+		do
+			l_previous_context := a_context.as_nested_type_context
+			if l_previous_context.valid_index (index) then
+				l_previous_context.force_last (previous)
+				Result := l_previous_context.item (index).has_non_separate_reference_attributes (l_previous_context)
+				l_previous_context.remove_last
+			else
+					-- We reached the root context.
+				l_previous_context.force_last (tokens.like_0)
+				Result := l_previous_context.root_context.has_non_separate_reference_attributes (l_previous_context)
+				l_previous_context.remove_last
+			end
+		end
+
+	has_nested_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does current type contain non-separate reference attributes when
+			-- viewed from `a_context', or recursively does it contain expanded
+			-- attributes whose types contain non-separate reference attributes?
+		local
+			l_previous_context: ET_NESTED_TYPE_CONTEXT
+		do
+			l_previous_context := a_context.as_nested_type_context
+			if l_previous_context.valid_index (index) then
+				l_previous_context.force_last (previous)
+				Result := l_previous_context.item (index).has_nested_non_separate_reference_attributes (l_previous_context)
+				l_previous_context.remove_last
+			else
+					-- We reached the root context.
+				l_previous_context.force_last (tokens.like_0)
+				Result := l_previous_context.root_context.has_nested_non_separate_reference_attributes (l_previous_context)
 				l_previous_context.remove_last
 			end
 		end

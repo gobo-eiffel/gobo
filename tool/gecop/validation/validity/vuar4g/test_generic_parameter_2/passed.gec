@@ -1,0 +1,2 @@
+[VUAR-4G] class BB (18,6): the 1-th actual argument of the separate call `f' has an expanded type 'G', but it contains directly or indirectly attributes of reference types which are not separate.
+----

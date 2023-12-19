@@ -1224,6 +1224,95 @@ feature -- Status report
 			end
 		end
 
+	has_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does current type contain attributes whose types are declared
+			-- of non-separate reference types when viewed from `a_context'?
+			-- True in case of a formal generic parameter because the actual
+			-- generic parameter may contain non-separate reference attributes.
+		local
+			an_actual: ET_NAMED_TYPE
+			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
+		do
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
+					Result := l_actual_parameters.type (index).has_non_separate_reference_attributes (a_context)
+				else
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+						-- So `l_ancestor' should not be Void. Furthermore `implementation_class' is the
+						-- base class of `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				end
+			elseif index <= a_context.base_type_actual_count then
+				an_actual := a_context.base_type_actual (index)
+				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+						-- Consider that some actual generic parameter
+						-- may contain non-separate reference attributes.
+					Result := True
+				else
+					if a_context.is_root_context then
+						Result := an_actual.has_non_separate_reference_attributes (a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.has_non_separate_reference_attributes (l_root_context)
+						l_root_context.remove_last
+					end
+				end
+			else
+					-- Internal error: does current type really appear in `a_context'?
+				Result := False
+			end
+		end
+
+	has_nested_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does current type contain non-separate reference attributes when
+			-- viewed from `a_context', or recursively does it contain expanded
+			-- attributes whose types contain non-separate reference attributes?
+		local
+			an_actual: ET_NAMED_TYPE
+			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
+		do
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
+					Result := l_actual_parameters.type (index).has_nested_non_separate_reference_attributes (a_context)
+				else
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+						-- So `l_ancestor' should not be Void. Furthermore `implementation_class' is the
+						-- base class of `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				end
+			elseif index <= a_context.base_type_actual_count then
+				an_actual := a_context.base_type_actual (index)
+				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+						-- Consider that some actual generic parameter
+						-- may contain non-separate reference attributes.
+					Result := True
+				else
+					if a_context.is_root_context then
+						Result := an_actual.has_nested_non_separate_reference_attributes (a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.has_nested_non_separate_reference_attributes (l_root_context)
+						l_root_context.remove_last
+					end
+				end
+			else
+					-- Internal error: does current type really appear in `a_context'?
+				Result := False
+			end
+		end
+
 	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does current type contain a formal generic parameter
 			-- when viewed from `a_context'?

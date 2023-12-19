@@ -1,2 +1,2 @@
-[VUAR-4G] class AA (19,6): the type '[attached] STRING' of the 1-th formal argument of feature `set_name' in class BB called in a separate call is a reference type which is not separate.
+[VUAR-4G] class AA (22,6): the 1-th actual argument of the separate call `c' has an expanded type '[attached] CC', but it contains directly or indirectly attributes of reference types which are not separate.
 ----

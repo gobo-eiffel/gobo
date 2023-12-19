@@ -1,0 +1,21 @@
+-------------------------------------------------------------------------------
+
+Error code: VUAR(2)
+
+Type error: incompatible actual argument in feature call. 
+What to do: make sure that type of actual argument is compatible with
+  the type of corresponding formal argument. 
+
+Class: AA
+Feature: g
+Called feature: f (s: STRING_8) from BB
+Argument name: s
+Argument position: 1
+Formal argument type: STRING_8
+Actual argument type: separate STRING_8
+Line: 22
+        create s.make (0)
+->      b.f (s)
+      end
+
+-------------------------------------------------------------------------------

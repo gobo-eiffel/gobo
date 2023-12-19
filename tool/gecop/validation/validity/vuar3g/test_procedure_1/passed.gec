@@ -1,0 +1,2 @@
+[VUAR-3G] class AA (19,6): the 1-th actual argument of the separate call `f' has a reference type 'AA', but the type '[attached] AA' of the formal argument of feature `f' in class BB is not separate.
+----
