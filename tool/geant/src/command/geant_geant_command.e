@@ -5,7 +5,7 @@ note
 		"Geant commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2023, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -398,6 +398,10 @@ feature {NONE} -- Implementation
 			if project.options.no_exec then
 				Result.append_string (" -n")
 			end
+			if project.options.use_thread_count then
+				Result.append_string (" --thread_count=")
+				Result.append_integer (project.options.thread_count)
+			end
 				-- Pass arguments:
 			cs := arguments.new_cursor
 			from cs.start until cs.after loop
@@ -410,7 +414,7 @@ feature {NONE} -- Implementation
 				cs.forth
 			end
 		ensure
-			options_and_arguments_for_cmdline_not_void: options_and_arguments_for_cmdline /= Void
+			options_and_arguments_for_cmdline_not_void: Result /= Void
 		end
 
 	has_fork_been_set: BOOLEAN

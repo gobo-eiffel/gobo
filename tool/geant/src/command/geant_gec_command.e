@@ -5,7 +5,7 @@ note
 		"Gec commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2005-2020, Sven Ehrke and others"
+	copyright: "Copyright (c) 2005-2023, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,7 +50,7 @@ feature -- Status report
 		end
 
 	is_ecf_configuration: BOOLEAN
-			-- Does ace file configuration apply?
+			-- Does ECF file configuration apply?
 		do
 			Result := (attached ecf_filename as l_ecf_filename and then l_ecf_filename.count > 0)
 		ensure
@@ -99,10 +99,13 @@ feature -- Access
 	garbage_collector: detachable STRING
 			-- Name of GC being used
 
+	use_thread_count: BOOLEAN
+			-- Should the number of threads to be used when running gec
+			-- be overridden with `thread_count'?
+
 	thread_count: INTEGER
 			-- Number of threads to be used to run gec.
 			-- Negative numbers -N mean "number of CPUs - N".
-			-- (default: number of CPUs)
 
 	new_instance_types_filename: detachable STRING
 			-- Filename containing the list of types which can have instances
@@ -227,7 +230,9 @@ feature -- Setting
 			-- Set `thread_count' to `a_thread_count'.
 		do
 			thread_count := a_thread_count
+			use_thread_count := True
 		ensure
+			use_thread_count_set: use_thread_count
 			thread_count_set: thread_count = a_thread_count
 		end
 
@@ -495,7 +500,11 @@ feature -- Command-line
 				Result.append_string (l_new_instance_types_filename)
 				Result.append_character (' ')
 			end
-			if thread_count /= 0 then
+			if project.options.use_thread_count then
+				Result.append_string ("--thread=")
+				INTEGER_.append_decimal_integer (project.options.thread_count, Result)
+				Result.append_character (' ')
+			elseif use_thread_count then
 				Result.append_string ("--thread=")
 				INTEGER_.append_decimal_integer (thread_count, Result)
 				Result.append_character (' ')

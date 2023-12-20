@@ -6,7 +6,7 @@
 		"Task Overview"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002-2019, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2023, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geant_tasks">
 <chapterinfo>
 	<copyright>
-		<year>2002-2019</year>
+		<year>2002-2023</year>
 		<holder>Sven Ehrke</holder>
 	</copyright>
 	<author>
 		<firstname>Sven</firstname><surname>Ehrke</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>15 March 2019</date>
+	<date>20 December 2023</date>
 </chapterinfo>
 
 	<title>Geant's Tasks</title>
@@ -57,6 +57,9 @@
 	</para>
 	<para>
 		<link linkend="gec_task">gec</link>
+	</para>
+	<para>
+		<link linkend="gecc_task">gecc</link>
 	</para>
 	<para>
 		<link linkend="gelex_task">gelex</link>

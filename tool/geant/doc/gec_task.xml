@@ -6,7 +6,7 @@
 		"Gec Tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2006-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec_task">
 <chapterinfo>
 	<copyright>
-		<year>2006-2020</year>
+		<year>2006-2023</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
@@ -23,7 +23,7 @@
 		<surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>16 November 2020</date>
+	<date>20 December 2023</date>
 </chapterinfo>
 
 	<title>gec</title>
@@ -180,7 +180,7 @@
 					<para><emphasis>Domain: </emphasis>Integer</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Default: </emphasis>Number of CPUs</para>
+					<para><emphasis>Default: </emphasis>-3, aka &quot;max (number of CPUs -3, 1)&quot;</para>
 				</listitem>
 			</varlistentry>
 

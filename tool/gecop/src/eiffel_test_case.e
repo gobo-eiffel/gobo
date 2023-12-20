@@ -4,7 +4,7 @@ note
 
 		"Eiffel standard test cases"
 
-	copyright: "Copyright (c) 2002-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -101,6 +101,7 @@ feature -- Test Gobo Eiffel Compiler
 			a_geant_filename: STRING
 			l_directory: KL_DIRECTORY
 			l_executable: STRING
+			l_thread_option: STRING
 		do
 			if variables.has ("debug") then
 				a_debug := "debug_"
@@ -112,9 +113,14 @@ feature -- Test Gobo Eiffel Compiler
 			else
 				l_executable := ""
 			end
+			if use_thread_count then
+				l_thread_option := " --thread=" + thread_count.out
+			else
+				l_thread_option := ""
+			end
 			a_geant_filename := geant_filename
 				-- Compile program.
-			execute_shell ("geant -b %"" + a_geant_filename + "%"" + l_executable + " -Dgelint_option=true compile_" + a_debug + "ge" + output1_log)
+			execute_shell ("geant -b %"" + a_geant_filename + "%"" + l_executable + l_thread_option + " -Dgelint_option=true compile_" + a_debug + "ge" + output1_log)
 			concat_output1 (agent filter_output_gec)
 				-- Execute program.
 			if file_system.file_exists (file_system.pathname (testrun_dirname, program_exe)) then
@@ -240,6 +246,7 @@ feature -- Test gelint
 			a_debug: STRING
 			l_directory: KL_DIRECTORY
 			l_executable: STRING
+			l_thread_option: STRING
 		do
 			if variables.has ("debug") then
 				a_debug := "debug_"
@@ -251,7 +258,12 @@ feature -- Test gelint
 			else
 				l_executable := "gelint"
 			end
-			execute_shell (l_executable + " --variable=GOBO_EIFFEL=ge --flat %"" + ecf_filename + "%"" + output1_log)
+			if use_thread_count then
+				l_thread_option := " --thread=" + thread_count.out
+			else
+				l_thread_option := ""
+			end
+			execute_shell (l_executable + l_thread_option + " --variable=GOBO_EIFFEL=ge --flat %"" + ecf_filename + "%"" + output1_log)
 			concat_output1 (agent filter_output_gelint)
 				-- Test.
 			create l_directory.make (program_dirname)
@@ -675,6 +687,24 @@ feature -- Execution
 		end
 
 feature -- Multi-threading
+
+	use_thread_count: BOOLEAN
+			-- Should the number of threads to be used when running thread-capable
+			-- compilers be overridden with `thread_count'?
+
+	thread_count: INTEGER
+			-- Number of threads to be used when running thread-capable compilers.
+			-- Negative numbers -N mean "number of CPUs - N".
+
+	set_thread_count (a_thread_count: INTEGER)
+			-- Set `thread_count' to `a_thread_count'.
+		do
+			thread_count := a_thread_count
+			use_thread_count := True
+		ensure
+			use_thread_count_set: use_thread_count
+			thread_count_set: thread_count = a_thread_count
+		end
 
 	set_up_mutex: detachable MUTEX
 			-- Mutex to create directories in `set_up'

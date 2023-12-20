@@ -3,7 +3,7 @@
 <!--
 	description: "Eiffel Ant RelaxNG specification"
 	system: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002-2021, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2023, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -97,6 +97,7 @@
 				<ref name="exit"/>
 				<ref name="geant"/>
 				<ref name="gec"/>
+				<ref name="gecc"/>
 				<ref name="gelex"/>
 				<ref name="geyacc"/>
 				<ref name="gepp"/>
@@ -349,9 +350,27 @@
 					<optional>
 						<attribute name="metrics"/>
 					</optional>
+					<optional>
+						<attribute name="executable"/>
+					</optional>
 				</group>
 				<attribute name="clean"/>
 			</choice>
+		</element>
+	</define>
+	<define name="gecc">
+		<element name="gecc">
+			<ref name="dir_if_unless"/>
+			<optional>
+				<attribute name="exit_code_variable"/>
+			</optional>
+			<attribute name="script"/>
+			<optional>
+				<attribute name="thread"/>
+			</optional>
+			<optional>
+				<attribute name="executable"/>
+			</optional>
 		</element>
 	</define>
 	<define name="gelex">
@@ -492,6 +511,9 @@
 					</optional>
 					<optional>
 						<attribute name="finish_freezing"/>
+					</optional>
+					<optional>
+						<attribute name="executable"/>
 					</optional>
 				</group>
 				<attribute name="clean"/>

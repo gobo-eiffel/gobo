@@ -202,6 +202,7 @@ feature {NONE} -- Processing
 							l_test_case.set_test (l_test_name, agent l_test_case.compile_and_test (a_tested_eiffel_tool))
 							l_test_case.set_variables (a_tester.variables)
 							l_test_case.set_set_up_mutex (a_set_up_mutex)
+							l_test_case.set_thread_count (thread_count)
 							l_test_suite.put_test (l_test_case)
 						end
 					else
@@ -462,7 +463,7 @@ feature -- Access
 	thread_count: INTEGER
 			-- Number of threads to be used
 		do
-			Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32
+			Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 - 3
 			if thread_option.was_found then
 				Result := thread_option.parameter
 				if Result <= 0 then
@@ -568,7 +569,7 @@ feature -- Argument parsing
 			l_parser.options.force_last (keep_testdir_flag)
 				-- thread
 			create thread_option.make_with_long_form ("thread")
-			thread_option.set_description ("Number of threads to be used. Negative numbers -N mean %"number of CPUs - N%". (default: number of CPUs)")
+			thread_option.set_description ("Number of threads to be used. Negative numbers -N mean %"number of CPUs - N%". (default: -3)")
 			thread_option.set_parameter_description ("thread_count")
 			if {PLATFORM}.is_thread_capable then
 				l_parser.options.force_last (thread_option)

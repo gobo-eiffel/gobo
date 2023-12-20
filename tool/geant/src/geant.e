@@ -5,7 +5,7 @@ note
 		"Gobo Eiffel Ant: build tool for Eiffel, based on the concepts of Jakarta Ant"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2023, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,6 +57,9 @@ feature {NONE} -- Initialization
 			a_project_options.set_verbose (verbose)
 			a_project_options.set_debug_mode (debug_mode)
 			a_project_options.set_no_exec (no_exec)
+			if use_thread_count then
+				a_project_options.set_thread_count (thread_count)
+			end
 
 				-- Store absolute pathname of buildfile in project variable:
 			s1 := file_system.pathname_from_file_system (build_filename, unix_file_system)
@@ -127,6 +130,14 @@ feature -- Access
 	no_exec: BOOLEAN
 			-- Do not execute commands (only show what they would do)?
 
+	use_thread_count: BOOLEAN
+			-- Should the number of threads to be used when running thread-capable
+			-- tasks be overridden with `thread_count'?
+
+	thread_count: INTEGER
+			-- Number of threads to be used when running thread-capable tasks.
+			-- Negative numbers -N mean "number of CPUs - N".
+
 feature {NONE} -- Command line parsing
 
 	read_command_line
@@ -141,6 +152,7 @@ feature {NONE} -- Command line parsing
 			debug_flag: AP_FLAG
 			targets_flag: AP_FLAG
 			argument_option: AP_STRING_OPTION
+			thread_option: AP_INTEGER_OPTION
 			arg_parser: AP_PARSER
 			l_cursor: DS_LIST_CURSOR [detachable STRING]
 			p: INTEGER
@@ -183,6 +195,11 @@ feature {NONE} -- Command line parsing
 			create debug_flag.make ('d', "debug")
 			debug_flag.set_description ("Show internal messages")
 			arg_parser.options.force_last (debug_flag)
+				-- Option --thread.
+			create thread_option.make_with_long_form ("thread")
+			thread_option.set_description ("Number of threads to be used when running thread-capable tasks. Negative numbers -N mean %"number of CPUs - N%". (default: use default of each task)")
+			thread_option.set_parameter_description ("thread_count")
+			arg_parser.options.force_last (thread_option)
 				-- Option --targets.
 			create targets_flag.make ('t', "targets")
 			targets_flag.set_description ("List all targets")
@@ -195,6 +212,9 @@ feature {NONE} -- Command line parsing
 			end
 			set_verbose (verbose_flag.was_found)
 			set_no_exec (noexec_flag.was_found)
+			if thread_option.was_found then
+				set_thread_count (thread_option.parameter)
+			end
 			set_debug_mode (debug_flag.was_found)
 			if buildfilename_option.was_found and then attached buildfilename_option.parameter as l_build_filename then
 				build_filename := l_build_filename
@@ -275,6 +295,16 @@ feature -- Setting
 			no_exec := a_no_exec
 		ensure
 			no_exec_set: no_exec = a_no_exec
+		end
+
+	set_thread_count (a_thread_count: INTEGER)
+			-- Set `thread_count' to `a_thread_count'.
+		do
+			thread_count := a_thread_count
+			use_thread_count := True
+		ensure
+			use_thread_count_set: use_thread_count
+			thread_count_set: thread_count = a_thread_count
 		end
 
 feature {NONE} -- Error handling

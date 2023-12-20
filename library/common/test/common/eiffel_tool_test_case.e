@@ -4,7 +4,7 @@ note
 
 		"Eiffel tools test cases"
 
-	copyright: "Copyright (c) 2019-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,9 +21,15 @@ feature -- Test
 			-- Run Eiffel validation suite with `program_name'.
 		local
 			l_program_full_filename: STRING
+			l_thread_option: STRING
 		do
 			l_program_full_filename := file_system.pathname (file_system.current_working_directory, program_name + file_system.exe_extension)
-			assert_execute ("gecop --tool=" + program_name + " --tool-executable=" + l_program_full_filename + output_log)
+			if use_thread_count then
+				l_thread_option := " --thread=" + thread_count.out
+			else
+				l_thread_option := ""
+			end
+			assert_execute ("gecop --tool=" + program_name + " --tool-executable=" + l_program_full_filename + l_thread_option + output_log)
 			assert_expected_validation_results
 		end
 

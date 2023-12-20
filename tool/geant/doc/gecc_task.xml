@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Gecc Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2023, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gecc_task">
+<chapterinfo>
+	<copyright>
+		<year>2023</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname>
+		<surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>20 December 2023</date>
+</chapterinfo>
+
+	<title>gecc</title>
+
+	<section id="gecc_description">
+		<title>Description</title>
+		<para>
+			Execute gecc.
+		</para>
+	</section>
+
+	<section id="gecc_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>script</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of script file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>thread</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Number of threads to be used to run gec. Negative numbers -N mean &quot;number of CPUs - N&quot;</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Integer</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-3, aka &quot;max (number of CPUs -3, 1)&quot;</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>executable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Filename (optionally with a pathname) of gecc executable.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing executable</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>Version of 'gecc' in the PATH</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>exit_code_variable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of variable holding the C compiler process's return code after it's run
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Integer (usually 0 for OK, and any other number for not OK)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>`Void' (no variable is set if attribute is not specified)</para>
+				</listitem>
+			</varlistentry>
+
+		</variablelist>
+	</section>
+
+	<section id="gecc_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+  <define name="gecc">
+    <element name="gecc">
+      <ref name="dir_if_unless"/>
+      <attribute name="script"/>
+      <optional>
+        <attribute name="thread"/>
+      </optional>
+      <optional>
+        <attribute name="executable"/>
+      </optional>
+      <optional>
+        <attribute name="exit_code_variable"/>
+      </optional>
+    </element>
+  </define>
+]]>
+	</programlisting>
+
+	</section>
+
+	<section id="gecc_examples">
+		<title>Examples</title>
+	<programlisting><![CDATA[
+  <gecc script="my_program.bat"/>
+
+  <gecc script="my_program.sh" thread="4"/>
+]]>
+	</programlisting>
+	</section>
+
+</chapter>

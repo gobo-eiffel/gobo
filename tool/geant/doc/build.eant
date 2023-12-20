@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Gobo Eiffel Ant Documentation"
-		copyright: "Copyright (c) 2002-2021, Sven Ehrke and others"
+		copyright: "Copyright (c) 2002-2023, Sven Ehrke and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -42,6 +42,7 @@
 		<geant target="${target}" arguments="exit_task"/>
 		<geant target="${target}" arguments="geant_task"/>
 		<geant target="${target}" arguments="gec_task"/>
+		<geant target="${target}" arguments="gecc_task"/>
 		<geant target="${target}" arguments="gelex_task"/>
 		<geant target="${target}" arguments="geyacc_task"/>
 		<geant target="${target}" arguments="gepp_task"/>

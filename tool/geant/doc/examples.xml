@@ -6,7 +6,7 @@
 		"Geant's examples"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2003-2019, Sven Ehrke and others"
+	copyright: "Copyright (c) 2003-2023, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geant_examples">
 <chapterinfo>
 	<copyright>
-		<year>2002-2019</year>
+		<year>2002-2023</year>
 		<holder>Sven Ehrke</holder>
 	</copyright>
 	<author>
 		<firstname>Sven</firstname><surname>Ehrke</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>15 March 2019</date>
+	<date>20 December 2023</date>
 </chapterinfo>
 
 	<title>Geant examples</title>
@@ -33,7 +33,7 @@
 		All examples should be invoked from the commandline.
 	</para>
 	<para>Here ist the commandline syntax of geant:</para>
-	<programlisting>geant [-V][-v|--verbose][-b|--buildfile &lt;buildfile>] [-D&lt;varname>=&lt;varvalue>]* [target]</programlisting>
+	<programlisting>geant [-V][-v|--verbose][--thread=&lt;thread_count&gt;][-b &lt;buildfile&gt;|--buildfile=&lt;buildfile&gt;] [-D&lt;varname&gt;=&lt;varvalue&gt;]* [target]</programlisting>
 
 	<section id="introduction">
 		<title>Getting started</title>
@@ -61,7 +61,7 @@
 			name (build.eant) is used. With the option '-b' respectively
 			'--buildfile' it is possible to use a different file.  There is no
 			target specified on the commandline either. In this case geant tries
-			to find a 'default' attribute in the &lt;project> element by which the
+			to find a 'default' attribute in the &lt;project&gt; element by which the
 			start target for the build process can be specified. When there is no
 			default attribute geant gives up and terminates with the message
 			'Cannot determine start target.'.
@@ -88,13 +88,13 @@ Loading Project's configuration from build.eant
 			starting the build process.
 		</para>
 		<para>
-			A &lt;target> element may contain zero or more task elements as direct
+			A &lt;target&gt; element may contain zero or more task elements as direct
 			children. Each task element is executed in sequential order. The
 			specific action which is performed is dependent on the individual
 			tasks.
 		</para>
 		<para>
-			The only task which our 'hi' target contains is &lt;echo>. &lt;echo> has a
+			The only task which our 'hi' target contains is &lt;echo&gt;. &lt;echo&gt; has a
 			single attribute called 'message' and this message is printed to
 			stdout. This is the reason why you see 'Hello world' on your screen.
 		</para>
@@ -132,9 +132,9 @@ Loading Project's configuration from build.eant
   Hello world
         	]]></programlisting>
 		<para>
-			With the &lt;set> task a variable can be defined. The 'name' attribute specifies
+			With the &lt;set&gt; task a variable can be defined. The 'name' attribute specifies
 			the name of the variable and the 'value' attribute it's value.
-			The values of variables can be retrieved using the ${&lt;variablename>} syntax.
+			The values of variables can be retrieved using the ${&lt;variablename&gt;} syntax.
 			Thus ${who} in the examples returns 'world'.
 		</para>
 		<para>The value of a variable can be overridden by a -D option on the commandline</para>
@@ -307,12 +307,12 @@ after call of ../variables/variables5.eant
 			At the moment the big difference is that for an invocation in the
 			same scope all defined variables are still available in the called build
 			file. The example makes this visible by displaying 'Hello ${who}'
-			instead of 'Hello Bart' for the first &lt;geant> invokation. The
-			second &lt;geant> invocation passes all variables and thats why you see
+			instead of 'Hello Bart' for the first &lt;geant&gt; invokation. The
+			second &lt;geant&gt; invocation passes all variables and thats why you see
 			'Hello Bart'.
 		</para>
 		<para>
-			In the future &lt;geant> will be able to take arguments which can be passed
+			In the future &lt;geant&gt; will be able to take arguments which can be passed
 			to the called build project exactly like you can do it on the commandline already.
 		</para>
 	</section>
@@ -559,6 +559,30 @@ if_demo2.list:
   </project>
         	]]></programlisting>
 		<para>
+		</para>
+	</section>
+	<section>
+		<title>thread</title>
+		<para>
+			For tasks which are thread-capable, there are several ways to indicate the maximum number of threads that this task should use. With no explicit indication, the task will use its default maximum number of threads (which most of the time will be the number of CPUs - 3, or 1 if the resulting number is not positive).
+		</para>
+		<para>
+			These defaults can be overridden on a task by task basis using the attribute <filename>thread</filename>. For example:
+			<programlisting><![CDATA[
+	<gec ... thread="4"/>
+			]]></programlisting>
+		</para>
+		<para>
+			These defaults can also be overridden globally using <projectname>geant</projectname>'s command-line option <filename>--thread</filename>. For example:
+			<programlisting>
+	geant --thread=4 compile
+			</programlisting>
+		</para>
+		<para>
+			Note that the command-line option <filename>--thread</filename> takes precedence over the tasks' attribute <filename>thread</filename>. Also, specifying a negative number -N for the number of threads means &quot;number of CPUs - N&quot;.
+		</para>
+		<para>
+			The tasks which are currently thread-capable are <filename>&lt;gec&gt;</filename> and <filename>&lt;gecc&gt;</filename>.
 		</para>
 	</section>
 </chapter>

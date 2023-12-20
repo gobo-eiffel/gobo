@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Doc"
 
-	copyright: "Copyright (c) 2017-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -255,7 +255,7 @@ feature -- Argument parsing
 			l_parser.options.force_last (variable_option)
 				-- thread.
 			create thread_option.make_with_long_form ("thread")
-			thread_option.set_description ("Number of threads to be used. Negative numbers -N mean %"number of CPUs - N%". (default: number of CPUs)")
+			thread_option.set_description ("Number of threads to be used. Negative numbers -N mean %"number of CPUs - N%". (default: -3)")
 			thread_option.set_parameter_description ("thread_count")
 			if {PLATFORM}.is_thread_capable then
 				l_parser.options.force_last (thread_option)
@@ -592,7 +592,7 @@ feature -- Argument parsing
 		local
 			l_thread_count: INTEGER
 		do
-			l_thread_count := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32
+			l_thread_count := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 - 3
 			if a_thread_option.was_found then
 				l_thread_count := a_thread_option.parameter
 				if l_thread_count <= 0 then

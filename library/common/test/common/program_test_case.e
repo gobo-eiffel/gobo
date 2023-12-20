@@ -4,7 +4,7 @@ note
 
 		"Program test cases"
 
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,6 +44,7 @@ feature -- Test
 		local
 			a_debug: STRING
 			a_geant_filename: STRING
+			l_thread_option: STRING
 		do
 				-- Compile program.
 			if variables.has ("debug") then
@@ -51,8 +52,13 @@ feature -- Test
 			else
 				a_debug := ""
 			end
+			if use_thread_count then
+				l_thread_option := " --thread=" + thread_count.out
+			else
+				l_thread_option := ""
+			end
 			a_geant_filename := geant_filename
-			assert_execute_with_command_output ("geant -b " + a_geant_filename + " compile_" + a_debug + eiffel_compiler.vendor + output_log, output_log)
+			assert_execute_with_command_output ("geant -b " + a_geant_filename + l_thread_option + " compile_" + a_debug + eiffel_compiler.vendor + output_log, output_log)
 				-- Clean.
 			assert_execute_with_command_output ("geant -b " + a_geant_filename + " clean" + output_log, output_log)
 				-- Check compilation.
@@ -86,6 +92,26 @@ feature -- Execution
 
 	old_cwd: detachable STRING
 			-- Initial current working directory
+
+feature -- Multi-threading
+
+	use_thread_count: BOOLEAN
+			-- Should the number of threads to be used when running thread-capable
+			-- compilers be overridden with `thread_count'?
+
+	thread_count: INTEGER
+			-- Number of threads to be used when running thread-capable compilers.
+			-- Negative numbers -N mean "number of CPUs - N".
+
+	set_thread_count (a_thread_count: INTEGER)
+			-- Set `thread_count' to `a_thread_count'.
+		do
+			thread_count := a_thread_count
+			use_thread_count := True
+		ensure
+			use_thread_count_set: use_thread_count
+			thread_count_set: thread_count = a_thread_count
+		end
 
 feature {NONE} -- Implementation
 

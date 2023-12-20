@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Compiler"
 
-	copyright: "Copyright (c) 2005-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -411,7 +411,7 @@ feature -- Arguments
 	thread_count: INTEGER
 			-- Number of threads to be used
 		do
-			Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32
+			Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 - 3
 			if thread_option.was_found then
 				Result := thread_option.parameter
 				if Result <= 0 then
@@ -605,7 +605,7 @@ feature -- Argument parsing
 			a_parser.options.force_last (gc_option)
 				-- thread
 			create thread_option.make_with_long_form ("thread")
-			thread_option.set_description ("Number of threads to be used. Negative numbers -N mean %"number of CPUs - N%". (default: number of CPUs)")
+			thread_option.set_description ("Number of threads to be used. Negative numbers -N mean %"number of CPUs - N%". (default: -3)")
 			thread_option.set_parameter_description ("thread_count")
 			if {PLATFORM}.is_thread_capable then
 				a_parser.options.force_last (thread_option)

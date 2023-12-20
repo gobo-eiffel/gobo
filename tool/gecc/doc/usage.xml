@@ -6,7 +6,7 @@
 		"Using gecc"
 
 	tool: "Gobo Eiffel C Compilation"
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gecc/usage">
 <chapterinfo>
 	<copyright>
-		<year>2018</year>
+		<year>2018-2023</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>6 October 2018</date>
+	<date>20 December 2023</date>
 </chapterinfo>
 
 <title>Using gecc</title>
@@ -61,7 +61,7 @@ Here is the list of options that can be used with <projectname>gecc</projectname
 		<listitem><para>
 			Number of threads to be used to run <projectname>gecc</projectname>.
 			Negative numbers -N mean &quot;number of CPUs - N&quot;.
-			(default: number of CPUs)
+			(default: -3, aka &quot;max (number of CPUs -3, 1)&quot;)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

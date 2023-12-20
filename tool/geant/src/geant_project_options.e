@@ -5,7 +5,7 @@ note
 		"Geant project options"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2023, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,6 +33,14 @@ feature -- Access
 
 	no_exec: BOOLEAN
 			-- Do not execute commands (only show what they would do)?
+
+	use_thread_count: BOOLEAN
+			-- Should the number of threads to be used when running thread-capable
+			-- tasks be overridden with `thread_count'?
+
+	thread_count: INTEGER
+			-- Number of threads to be used when running thread-capable tasks.
+			-- Negative numbers -N mean "number of CPUs - N".
 
 	variable_local_by_default: BOOLEAN
 			-- Variable are local variable by default ?
@@ -62,6 +70,16 @@ feature -- Setting
 			no_exec := a_no_exec
 		ensure
 			no_exec_set: no_exec = a_no_exec
+		end
+
+	set_thread_count (a_thread_count: INTEGER)
+			-- Set `thread_count' to `a_thread_count'.
+		do
+			thread_count := a_thread_count
+			use_thread_count := True
+		ensure
+			use_thread_count_set: use_thread_count
+			thread_count_set: thread_count = a_thread_count
 		end
 
 	set_variable_local_by_default (a_variable_local_by_default: BOOLEAN)

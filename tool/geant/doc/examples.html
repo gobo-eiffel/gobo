@@ -17,7 +17,7 @@
    		All examples should be invoked from the commandline.
    	
   </p>
-  <p>Here ist the commandline syntax of geant:</p><pre>geant [-V][-v|--verbose][-b|--buildfile &lt;buildfile&gt;] [-D&lt;varname&gt;=&lt;varvalue&gt;]* [target]</pre><div><a name="introduction"></a>
+  <p>Here ist the commandline syntax of geant:</p><pre>geant [-V][-v|--verbose][--thread=&lt;thread_count&gt;][-b &lt;buildfile&gt;|--buildfile=&lt;buildfile&gt;] [-D&lt;varname&gt;=&lt;varvalue&gt;]* [target]</pre><div><a name="introduction"></a>
    		
    <h2>Getting started</h2>
    
@@ -603,11 +603,47 @@ if_demo2.list:
    </p>
    	
   </div>
+  <div>
+   		
+   <h2>thread</h2>
+   		
+   <p>
+    			For tasks which are thread-capable, there are several ways to indicate the maximum number of threads that this task should
+    use. With no explicit indication, the task will use its default maximum number of threads (which most of the time will be
+    the number of CPUs - 3, or 1 if the resulting number is not positive).
+    		
+   </p>
+   		
+   <p>
+    			These defaults can be overridden on a task by task basis using the attribute <font color="#800000"><i><tt>thread</tt></i></font>. For example:
+    			<pre>
+	&lt;gec ... thread="4"/&gt;
+			</pre>
+    		</p>
+   		
+   <p>
+    			These defaults can also be overridden globally using <i>geant</i>'s command-line option <font color="#800000"><i><tt>--thread</tt></i></font>. For example:
+    			<pre>
+	geant --thread=4 compile
+			</pre>
+    		</p>
+   		
+   <p>
+    			Note that the command-line option <font color="#800000"><i><tt>--thread</tt></i></font> takes precedence over the tasks' attribute <font color="#800000"><i><tt>thread</tt></i></font>. Also, specifying a negative number -N for the number of threads means "number of CPUs - N".
+    		
+   </p>
+   		
+   <p>
+    			The tasks which are currently thread-capable are <font color="#800000"><i><tt>&lt;gec&gt;</tt></i></font> and <font color="#800000"><i><tt>&lt;gecc&gt;</tt></i></font>.
+    		
+   </p>
+   	
+  </div>
   <hr size="1" />
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2002-2019, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>15 March 2019</font></address>
+     <address><font size="2"><b>Copyright © 2002-2023, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>20 December 2023</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="introduction.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="builtin_variables.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>
