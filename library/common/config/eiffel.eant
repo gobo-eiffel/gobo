@@ -193,6 +193,9 @@
 		<delete file="${system}.pdb"/>
 		<delete file="${system}.ilk"/>
 		<delete file="${system}.suo"/>
+		<delete file="${system}.exe.manifest"/>
+		<delete file="wel.c"/>
+		<delete file="wel.obj"/>
 		<geant target="other_clean"/>
 	</target>
 
