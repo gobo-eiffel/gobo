@@ -55,6 +55,29 @@ GE_scoop_session* GE_new_scoop_session()
 }
 
 /* 
+ * Get SCOOP session to register calls from `a_caller' to be executed by `a_callee'.
+ * Return NULL if `a_caller' and `a_callee' are the same SCOOP processor.
+ */
+GE_scoop_session* GE_get_scoop_session(GE_scoop_processor* a_callee, GE_scoop_processor* a_caller)
+{
+	if (a_callee != a_caller) {
+		return GE_new_scoop_session();
+	} else {
+		return 0;
+	}
+}
+
+/* 
+ * Exit from SCOOP session `a_session' at the end of a feature with arguments of separate type
+ * or at the end of an inline separate instruction. Note that some emclosing feature or inline
+ * separate instruction might still be using this session to register subsequent calls.
+ */
+void GE_exit_scoop_session(GE_scoop_session* a_session)
+{
+
+}
+
+/* 
  * Add SCOOP call.
  */
 void GE_add_scoop_call(GE_scoop_session* a_session, GE_scoop_call* a_call)

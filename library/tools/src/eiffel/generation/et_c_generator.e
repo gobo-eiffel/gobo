@@ -6429,6 +6429,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 		local
 			i, nb: INTEGER
 			l_name: ET_IDENTIFIER
+			l_argument_type: ET_DYNAMIC_TYPE
+			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+			l_argument: ET_FORMAL_ARGUMENT
 			l_local_type_set: ET_DYNAMIC_TYPE_SET
 			l_local_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_rescue: detachable ET_COMPOUND
@@ -6440,6 +6443,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			l_is_once: BOOLEAN
 			l_once_kind: INTEGER
 			l_once_index: INTEGER
+			l_has_separate_arguments: BOOLEAN
+			l_has_separate_formal_arguments: BOOLEAN
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
@@ -6457,8 +6462,54 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					end
 				end
 			end
+			if scoop_mode then
+					-- Declaration of SCOOP sessions to register separate calls,
+					-- even for those of inline separate instructions contained
+					-- in `a_feature'.
+				if attached a_feature.separate_arguments as l_separate_arguments then
+					nb := l_separate_arguments.count
+					l_has_separate_arguments := nb > 0
+					from i := 1 until i > nb loop
+						print_indentation
+						current_file.put_string (c_ge_scoop_session)
+						current_file.put_character ('*')
+						current_file.put_character (' ')
+						print_inline_separate_argument_session_name (l_separate_arguments.item (i).name, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_character ('0')
+						print_semicolon_newline
+						i := i + 1
+					end
+				end
+				l_arguments := a_feature.arguments
+				if l_arguments /= Void then
+					nb := l_arguments.count
+					from i := 1 until i > nb loop
+						l_argument := l_arguments.formal_argument (i)
+						l_name := l_argument.name
+						l_argument_type := dynamic_type_set (l_name).static_type
+						if l_argument_type.is_separate then
+							l_has_separate_formal_arguments := True
+							l_has_separate_arguments := True
+							print_indentation
+							current_file.put_string (c_ge_scoop_session)
+							current_file.put_character ('*')
+							current_file.put_character (' ')
+							print_separate_argument_session_name (l_name, current_file)
+							current_file.put_character (' ')
+							current_file.put_character ('=')
+							current_file.put_character (' ')
+							current_file.put_character ('0')
+							print_semicolon_newline
+						end
+						i := i + 1
+					end
+				end
+			end
 			l_rescue := a_feature.rescue_clause
-			if l_rescue /= Void or l_is_once then
+			if l_rescue /= Void or l_is_once or l_has_separate_arguments then
 				print_indentation
 				current_file.put_string (c_ge_rescue)
 				current_file.put_character (' ')
@@ -6482,10 +6533,51 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				-- Instructions.
 				--
 			current_file := current_function_body_buffer
+			if l_has_separate_formal_arguments then
+					-- Start the current SCOOP sessions.
+				check l_has_separate_formal_arguments: l_arguments /= Void then end
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					l_argument := l_arguments.formal_argument (i)
+					l_name := l_argument.name
+					l_argument_type := dynamic_type_set (l_name).static_type
+					if l_argument_type.is_separate then
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_formal_argument (l_name)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+						print_indentation
+						print_separate_argument_session_name (l_name, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_string (c_ge_get_scoop_session)
+						current_file.put_character ('(')
+						current_file.put_string (c_ac)
+						current_file.put_string (c_arrow)
+						current_file.put_string (c_scoop_processor)
+						print_comma
+						print_attribute_scoop_processor_access (l_name, l_argument_type.primary_type, False)
+						current_file.put_character (')')
+						print_semicolon_newline
+						dedent
+						print_indentation
+						current_file.put_character ('}')
+						current_file.put_new_line
+					end
+					i := i + 1
+				end
+			end
 			reset_rescue_data
 			locals_written := locals_written_in_rescue
 			locals_read := locals_read_in_rescue
-			if l_rescue /= Void or l_is_once then
+			if l_rescue /= Void or l_is_once or l_has_separate_arguments then
 				print_indentation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
@@ -6550,6 +6642,70 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						end
 					end
 				end
+					-- Make sure to exit from the current SCOOP sessions
+					-- before propagating the exception.
+				if l_has_separate_formal_arguments then
+					check l_has_separate_formal_arguments: l_arguments /= Void then end
+					nb := l_arguments.count
+					from i := 1 until i > nb loop
+						l_argument := l_arguments.formal_argument (i)
+						l_name := l_argument.name
+						l_argument_type := dynamic_type_set (l_name).static_type
+						if l_argument_type.is_separate then
+							print_indentation
+							current_file.put_string (c_if)
+							current_file.put_character (' ')
+							current_file.put_character ('(')
+							print_separate_argument_session_name (l_name, current_file)
+							current_file.put_character (')')
+							current_file.put_character (' ')
+							current_file.put_character ('{')
+							current_file.put_new_line
+							indent
+							print_indentation
+							current_file.put_string (c_ge_exit_scoop_session)
+							current_file.put_character ('(')
+							print_separate_argument_session_name (l_name, current_file)
+							current_file.put_character (')')
+							print_semicolon_newline
+							dedent
+							print_indentation
+							current_file.put_character ('}')
+							current_file.put_new_line
+						end
+						i := i + 1
+					end
+				end
+				if l_has_separate_arguments then
+						-- Even the SCOOP sessions from the inline separate instructions.
+					if attached a_feature.separate_arguments as l_separate_arguments then
+						nb := l_separate_arguments.count
+						from i := 1 until i > nb loop
+							l_name := l_separate_arguments.item (i).name
+							print_indentation
+							current_file.put_string (c_if)
+							current_file.put_character (' ')
+							current_file.put_character ('(')
+							print_inline_separate_argument_session_name (l_name, current_file)
+							current_file.put_character (')')
+							current_file.put_character (' ')
+							current_file.put_character ('{')
+							current_file.put_new_line
+							indent
+							print_indentation
+							current_file.put_string (c_ge_exit_scoop_session)
+							current_file.put_character ('(')
+							print_inline_separate_argument_session_name (l_name, current_file)
+							current_file.put_character (')')
+							print_semicolon_newline
+							dedent
+							print_indentation
+							current_file.put_character ('}')
+							current_file.put_new_line
+							i := i + 1
+						end
+					end
+				end
 				if l_rescue /= Void then
 					print_indentation
 					current_file.put_string (c_ge_raise)
@@ -6607,7 +6763,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			end
 			l_result_written_in_body := result_written
 			l_result_read_in_body := result_read
-			if l_rescue /= Void or l_is_once then
+			if l_rescue /= Void or l_is_once or l_has_separate_arguments then
 				print_indentation
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
@@ -6624,6 +6780,39 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if a_result_type /= Void then
 					-- The 'Result' entity is always implicitly read in the body to return its value.
 				l_result_read_in_body := True
+			end
+			if l_has_separate_formal_arguments then
+					-- Exit from the current SCOOP sessions.
+				check l_has_separate_formal_arguments: l_arguments /= Void then end
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					l_argument := l_arguments.formal_argument (i)
+					l_name := l_argument.name
+					l_argument_type := dynamic_type_set (l_name).static_type
+					if l_argument_type.is_separate then
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_separate_argument_session_name (l_name, current_file)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+						print_indentation
+						current_file.put_string (c_ge_exit_scoop_session)
+						current_file.put_character ('(')
+						print_separate_argument_session_name (l_name, current_file)
+						current_file.put_character (')')
+						print_semicolon_newline
+						dedent
+						print_indentation
+						current_file.put_character ('}')
+						current_file.put_new_line
+					end
+					i := i + 1
+				end
 			end
 				--
 				-- Local variables and result declaration.
@@ -8453,6 +8642,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			i, nb: INTEGER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if line_generation_mode then
 				print_position (a_instruction.position, current_feature.static_feature.implementation_class)
@@ -8465,13 +8655,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 				l_dynamic_type_set := dynamic_type_set (l_name)
 				l_dynamic_type := l_dynamic_type_set.static_type
 					-- Declaration of the separate argument.
-				current_function_header_buffer.put_character ('%T')
-				print_type_declaration (l_dynamic_type.primary_type, current_function_header_buffer)
-				current_function_header_buffer.put_character (' ')
-				print_separate_argument_name (l_name, current_function_header_buffer)
-				current_function_header_buffer.put_character (';')
-				current_function_header_buffer.put_new_line
+				current_file := current_function_header_buffer
+				current_file.put_character ('%T')
+				print_type_declaration (l_dynamic_type.primary_type, current_file)
+				current_file.put_character (' ')
+				print_separate_argument_name (l_name, current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
 					-- Call to separate argument expression.
+				current_file := current_function_body_buffer
 				print_assignment_operand (l_argument.expression, l_dynamic_type_set, l_name, l_dynamic_type)
 				fill_call_operands (1)
 				print_indentation
@@ -8483,7 +8675,78 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 				i := i + 1
 			end
 			if attached a_instruction.compound as l_compound then
+					-- Start the current SCOOP sessions.
+				from i := 1 until i > nb loop
+					l_argument := l_arguments.argument (i)
+					l_name := l_argument.name
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_separate_argument_name (l_name, current_file)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					print_inline_separate_argument_session_name (l_name, current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_ge_get_scoop_session)
+					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_scoop_processor)
+					print_comma
+					l_dynamic_type_set := dynamic_type_set (l_name)
+					l_dynamic_primary_type := l_dynamic_type_set.static_type.primary_type
+					print_attribute_scoop_processor_access (l_name, l_dynamic_primary_type, False)
+					current_file.put_character (')')
+					print_semicolon_newline
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+					i := i + 1
+				end
 				print_compound (l_compound)
+					-- Exit from the current SCOOP sessions.
+				from i := 1 until i > nb loop
+					l_argument := l_arguments.argument (i)
+					l_name := l_argument.name
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_inline_separate_argument_session_name (l_name, current_file)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					current_file.put_string (c_ge_exit_scoop_session)
+					current_file.put_character ('(')
+					print_inline_separate_argument_session_name (l_name, current_file)
+					current_file.put_character (')')
+					print_semicolon_newline
+						-- Set the session to NULL so that we don't try to
+						-- exit again from it in case of an exception.
+					print_indentation
+					print_inline_separate_argument_session_name (l_name, current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('0')
+					print_semicolon_newline
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+					i := i + 1
+				end
 			end
 		end
 
@@ -37456,6 +37719,46 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
+	print_separate_argument_session_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print name of SCOOP session for separate argument `a_name' to `a_file'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_argument: a_name.is_argument
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_character ('s')
+				a_file.put_character ('e')
+				print_argument_name (a_name, a_file)
+			else
+-- TODO: long names
+				short_names := True
+				print_separate_argument_session_name (a_name, a_file)
+				short_names := False
+			end
+		end
+
+	print_inline_separate_argument_session_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print name of SCOOP session for inline separate argument `a_name' to `a_file'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_separate_argument: a_name.is_separate_argument
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_character ('s')
+				a_file.put_character ('e')
+				print_separate_argument_name (a_name, a_file)
+			else
+-- TODO: long names
+				short_names := True
+				print_separate_argument_session_name (a_name, a_file)
+				short_names := False
+			end
+		end
+
 	print_equality_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of `i'-th equality ('=' or '/=' as well as '~' or '/~') function
 			-- appearing in `a_routine' from `a_type' to `a_file'.
@@ -41461,6 +41764,7 @@ feature {NONE} -- Constants
 	c_ge_ex_fatal: STRING = "GE_EX_FATAL"
 	c_ge_ex_prog: STRING = "GE_EX_PROG"
 	c_ge_ex_when: STRING = "GE_EX_WHEN"
+	c_ge_exit_scoop_session: STRING = "GE_exit_scoop_session"
 	c_ge_field_count_of_encoded_type: STRING = "GE_field_count_of_encoded_type"
 	c_ge_field_name_of_encoded_type: STRING = "GE_field_name_of_encoded_type"
 	c_ge_field_offset_of_encoded_type: STRING = "GE_field_offset_of_encoded_type"
@@ -41473,6 +41777,7 @@ feature {NONE} -- Constants
 	c_ge_generator_8_of_encoded_type: STRING = "GE_generator_8_of_encoded_type"
 	c_ge_generic_parameter_of_encoded_type: STRING = "GE_generic_parameter_of_encoded_type"
 	c_ge_generic_parameter_count_of_encoded_type: STRING = "GE_generic_parameter_count_of_encoded_type"
+	c_ge_get_scoop_session: STRING = "GE_get_scoop_session"
 	c_ge_id_object: STRING = "GE_id_object"
 	c_ge_ims8: STRING = "GE_ims8"
 	c_ge_ims32_from_utf32le: STRING = "GE_ims32_from_utf32le"

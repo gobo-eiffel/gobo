@@ -5,7 +5,7 @@ note
 		"Eiffel arguments in separate instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2022-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"

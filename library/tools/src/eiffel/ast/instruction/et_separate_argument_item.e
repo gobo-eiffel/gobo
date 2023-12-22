@@ -2,10 +2,10 @@ note
 
 	description:
 
-		"Eiffel separate arguments which appear in a comma-separated list of separate arguments"
+		"Eiffel arguments of separate instructions which appear in a comma-separated list of separate arguments"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2022-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
