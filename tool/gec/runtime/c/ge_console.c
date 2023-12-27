@@ -111,46 +111,63 @@ extern int _open_osfhandle(long, int);
 					a Windows application that tries to output something.
 					Therefore we need to correctly associated all standard
 					handles `stdin', `stdout' and `stderr' to the new created console.
-					Code was taken from http://codeguru.earthweb.com/console/Console.html
-					But also checkout Microsoft support web site:
-					http://support.microsoft.com/default.aspx?scid=kb;EN-US;q105305
 					Note: For Borland, the above trick does not work, one has to
 					duplicate the handle, unfortunately the solution does not work
 					with Microsoft which explains the ifdef statement.
 				*/
-			hCrt = _open_osfhandle((intptr_t)hconout, _O_TEXT);
 #if defined(__LCC__) || defined(EIF_BORLAND)
+			hCrt = _open_osfhandle((intptr_t)hconout, _O_TEXT);
 			dup2(hCrt, _fileno(stdout));
-#else
 			hf = _fdopen (hCrt, "w");
 			*stdout = *hf;
-#endif
 			setvbuf(stdout, NULL, _IONBF, 0);
-			hCrt = _open_osfhandle((intptr_t)hconerr, _O_TEXT);
-#if defined(__LCC__) || defined(EIF_BORLAND)
-			dup2(hCrt, _fileno(stderr));
 #else
+			if (!freopen("CONOUT$", "w", stdout)) {
+#ifdef GE_USE_THREADS
+				GE_mutex_unlock(GE_console_mutex);
+#endif
+				GE_raise(GE_EX_PROG);
+			}
+#endif
+#if defined(__LCC__) || defined(EIF_BORLAND)
+			hCrt = _open_osfhandle((intptr_t)hconerr, _O_TEXT);
+			dup2(hCrt, _fileno(stderr));
 			hf = _fdopen(hCrt, "w");
 			*stderr = *hf;
-#endif
 			setvbuf(stderr, NULL, _IONBF, 0);
-			hCrt = _open_osfhandle((intptr_t)hconin, _O_TEXT | _O_RDONLY);
-#if defined(__LCC__) || defined(EIF_BORLAND)
-			dup2(hCrt, _fileno(stdin));
 #else
+			/* There is no "CONERR$". Use "CONOUT$ instead. "*/
+			if (!freopen("CONOUT$", "w", stderr)) {
+#ifdef GE_USE_THREADS
+				GE_mutex_unlock(GE_console_mutex);
+#endif
+				GE_raise(GE_EX_PROG);
+			}
+#endif
+#if defined(__LCC__) || defined(EIF_BORLAND)
+			hCrt = _open_osfhandle((intptr_t)hconin, _O_TEXT | _O_RDONLY);
+			dup2(hCrt, _fileno(stdin));
 			hf = _fdopen(hCrt, "r");
 			*stdin = *hf;
+#else
+			if (!freopen("CONIN$", "r", stdin)) {
+#ifdef GE_USE_THREADS
+				GE_mutex_unlock(GE_console_mutex);
+#endif
+				GE_raise(GE_EX_PROG);
+			}
 #endif
 		}
 			/*
 				We are computing the cursor position to figure out, if the application
 				has been launched from a DOS console or from the Windows Shell.
 			*/
+/*
 		GetConsoleScreenBufferInfo(hconout, &csbi);
 		bLaunched = ((csbi.dwCursorPosition.X == 0) && (csbi.dwCursorPosition.Y == 0));
 		if ((csbi.dwSize.X <= 0) || (csbi.dwSize.Y <= 0))
 			bLaunched = FALSE;
-/*
+
 		if (bLaunched == TRUE)
 			eif_register_cleanup (eif_console_cleanup);
 */
