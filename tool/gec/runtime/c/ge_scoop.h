@@ -48,17 +48,20 @@ struct GE_scoop_session_struct {
 	GE_scoop_session* next_same_caller;
 	GE_scoop_call* first_call;
 	GE_scoop_call* last_call;
-	EIF_MUTEX_TYPE* mutex;
-	EIF_COND_TYPE* condition_variable;
+	EIF_MUTEX_TYPE* mutex; /* To add, remove and access SCOOP calls . */
+	EIF_COND_TYPE* condition_variable; /* To add, remove and access SCOOP calls . */
 };
 
 /* Struct for a SCOOP region and its processor if any. */
 struct GE_scoop_processor_struct {
+	GE_context* context;
 	GE_scoop_processor* next;
 	GE_scoop_session* first_session;
 	GE_scoop_session* last_session;
-	EIF_MUTEX_TYPE* mutex;
-	EIF_COND_TYPE* condition_variable;
+	EIF_MUTEX_TYPE* mutex; /* To add, remove and access SCOOP sessions. */
+	EIF_COND_TYPE* condition_variable; /* To add, remove and access SCOOP sessions. */
+	EIF_MUTEX_TYPE* sync_mutex; /* For synchronization in case of synchronous calls. */
+	EIF_COND_TYPE* sync_condition_variable; /* For synchronization in case of synchronous calls. */
 };
 
 /**
@@ -74,7 +77,7 @@ extern uint32_t GE_decrement_scoop_sessions_count(void);
 /*
  * New of SCOOP processor.
  */
-extern GE_scoop_processor* GE_new_scoop_processor(void);
+extern GE_scoop_processor* GE_new_scoop_processor(GE_context* a_context);
 
 /* 
  * Get SCOOP session to register calls from `a_caller' to be executed by `a_callee'.
@@ -98,6 +101,16 @@ extern GE_scoop_call* GE_new_scoop_call(size_t a_size);
  * Add SCOOP call `a_call' to `a_session'.
  */
 extern void GE_add_scoop_call(GE_scoop_session* a_session, GE_scoop_call* a_call);
+
+/* 
+ * Add SCOOP synchronization call to `a_session'.
+ */
+extern void GE_add_scoop_sync_call(GE_scoop_session* a_session);
+
+/*
+ * Let the thread of `a_caller' execute the calls of `a_callee' and vice-versa.
+ */
+extern void GE_impersonate_scoop_processor(GE_scoop_processor* a_callee, GE_scoop_processor* a_caller);
 
 /*
  * Execute the main loop of the SCOOP processor `a_context->scoop_processor'.

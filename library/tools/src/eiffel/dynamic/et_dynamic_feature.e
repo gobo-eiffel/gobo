@@ -908,9 +908,9 @@ feature -- Calls
 			-- Use the name of the call as key because for call agents (e.g. 'agent a.f')
 			-- we use a temporary qualified call expression or instruction instead of the
 			-- actual call agent as static call to generate the C code in ET_C_GENERATOR.
-			-- (See ET_C_GENERATOR.print_call_agent_body_declaration.) This is so that
-			-- `query_call' can get the right dynamic call despite the static call object
-			-- being different.
+			-- (See ET_C_GENERATOR.print_call_agent_body_declaration and
+			-- ET_C_GENERATOR.print_separate_call_declaration.) This is so that `query_call'
+			-- can get the right dynamic call despite the static call object being different.
 
 	procedure_call (a_static_call: ET_CALL_COMPONENT): detachable ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 			-- Qualified procedure call in current feature whose static call is `a_static_call', if any
@@ -928,9 +928,8 @@ feature -- Calls
 			-- Use the name of the call as key because for call agents (e.g. 'agent a.f')
 			-- we use a temporary qualified call expression or instruction instead of the
 			-- actual call agent as static call to generate the C code in ET_C_GENERATOR.
-			-- (See ET_C_GENERATOR.print_call_agent_body_declaration.) This is so that
-			-- `procedure_call' can get the right dynamic call despite the static call object
-			-- being different.
+			-- (See ET_C_GENERATOR.print_call_agent_body_declaration and `procedure_call'
+			-- can get the right dynamic call despite the static call object being different.
 
 feature {ET_DYNAMIC_PRIMARY_TYPE} -- Calls
 

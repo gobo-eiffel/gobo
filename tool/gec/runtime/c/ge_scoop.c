@@ -106,13 +106,16 @@ uint32_t GE_decrement_scoop_sessions_count()
 /*
  * New of SCOOP processor.
  */
-GE_scoop_processor* GE_new_scoop_processor()
+GE_scoop_processor* GE_new_scoop_processor(GE_context* a_context)
 {
 	GE_scoop_processor* l_processor;
 
 	l_processor = (GE_scoop_processor*)GE_calloc_uncollectable(1, sizeof(GE_scoop_processor));
+	l_processor->context = a_context;
 	l_processor->mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
 	l_processor->condition_variable = (EIF_COND_TYPE*)GE_condition_variable_create();
+	l_processor->sync_mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
+	l_processor->sync_condition_variable = (EIF_COND_TYPE*)GE_condition_variable_create();
 	GE_mutex_lock((EIF_POINTER)GE_scoop_sessions_count_mutex);
 	l_processor->next = GE_all_scoop_processors;
 	GE_all_scoop_processors = l_processor;
@@ -197,7 +200,9 @@ void GE_exit_scoop_session(GE_scoop_session* a_session)
 {
 	GE_mutex_lock((EIF_POINTER)a_session->mutex);
 	a_session->nested_level--;
-	GE_condition_variable_broadcast((EIF_POINTER)a_session->condition_variable);
+	if (a_session->nested_level <= 0) {
+		GE_condition_variable_broadcast((EIF_POINTER)a_session->condition_variable);
+	}
 	GE_mutex_unlock((EIF_POINTER)a_session->mutex);
 }
 
@@ -265,6 +270,55 @@ void GE_add_scoop_call(GE_scoop_session* a_session, GE_scoop_call* a_call)
 }
 
 /*
+ * Function to synchronize with the caller processor.
+ */
+static void GE_synchronize_scoop_call(GE_context* ac, GE_scoop_call* sc)
+{
+	GE_scoop_processor* l_processor = *(GE_scoop_processor**)(((char*)(sc))+sizeof(GE_scoop_call));
+	GE_mutex_lock((EIF_POINTER)l_processor->sync_mutex);
+	GE_condition_variable_broadcast((EIF_POINTER)l_processor->sync_condition_variable);
+	GE_mutex_unlock((EIF_POINTER)l_processor->sync_mutex);
+}
+
+/* 
+ * Add SCOOP synchronization call to `a_session'.
+ */
+void GE_add_scoop_sync_call(GE_scoop_session* a_session)
+{
+	GE_scoop_call* l_call;
+	GE_scoop_processor* l_caller;
+
+	l_call = GE_new_scoop_call(sizeof(GE_scoop_call) + sizeof(GE_scoop_processor*));
+	l_call->execute = (void (*)(GE_context*, GE_scoop_call*))&GE_synchronize_scoop_call;
+	l_caller = a_session->caller;
+	*(GE_scoop_processor**)(((char*)(l_call))+sizeof(GE_scoop_call)) = l_caller;
+	GE_mutex_lock((EIF_POINTER)l_caller->sync_mutex);
+	GE_add_scoop_call(a_session, l_call);
+	GE_condition_variable_wait((EIF_POINTER)l_caller->sync_condition_variable, (EIF_POINTER)l_caller->sync_mutex);
+	GE_mutex_unlock((EIF_POINTER)l_caller->sync_mutex);
+}
+
+/*
+ * Let the thread of `a_caller' execute the calls of `a_callee' and vice-versa.
+ */
+void GE_impersonate_scoop_processor(GE_scoop_processor* a_callee, GE_scoop_processor* a_caller)
+{
+	GE_context* l_callee_context;
+	GE_context* l_caller_context;
+	GE_context l_temp_context;
+
+	l_caller_context = a_caller->context;
+	l_callee_context = a_callee->context;
+	l_temp_context = *l_caller_context;
+	*l_caller_context = *l_callee_context;
+	*l_callee_context = l_temp_context;
+	l_callee_context->thread = l_caller_context->thread;
+	l_callee_context->scoop_processor->context = l_callee_context;
+	l_caller_context->thread = l_temp_context.thread;
+	l_caller_context->scoop_processor->context = l_caller_context;
+}
+
+/*
  * Execute `a_call'.
  */
 static void GE_execute_scoop_call(GE_context* a_context, GE_scoop_call* a_call)
@@ -275,7 +329,7 @@ static void GE_execute_scoop_call(GE_context* a_context, GE_scoop_call* a_call)
 /*
  * Execute `a_session'.
  */
-static GE_execute_scoop_session(GE_context* a_context, GE_scoop_session* a_session)
+static void GE_execute_scoop_session(GE_context* a_context, GE_scoop_session* a_session)
 {
 	GE_scoop_call* l_call;
 	GE_scoop_call* l_next_call;
@@ -375,6 +429,8 @@ void GE_free_scoop_processor(GE_scoop_processor* a_processor)
 {
 	GE_mutex_destroy((EIF_POINTER)a_processor->mutex);
 	GE_condition_variable_destroy((EIF_POINTER)a_processor->condition_variable);
+	GE_mutex_destroy((EIF_POINTER)a_processor->sync_mutex);
+	GE_condition_variable_destroy((EIF_POINTER)a_processor->sync_condition_variable);
 	GE_free(a_processor);
 }
 
