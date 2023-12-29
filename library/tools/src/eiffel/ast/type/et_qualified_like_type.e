@@ -6,7 +6,7 @@ note
 		or 'like Current.b.c' or 'like {A}.b.c'
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -93,11 +93,21 @@ feature -- Type processing
 feature -- Output
 
 	append_to_string (a_string: STRING)
-			-- Append textual representation of
-			-- current type to `a_string'.
+			-- Append `to_text' to `a_string'.
 		do
 			if attached type_mark as l_type_mark then
 				l_type_mark.append_to_string_with_space (a_string)
+			end
+			target_type.append_to_string (a_string)
+			a_string.append_character ('.')
+			a_string.append_string (name.lower_name)
+		end
+
+	append_runtime_name_to_string (a_string: STRING)
+			-- Append `runtime_name_to_text' to `a_string'.
+		do
+			if attached type_mark as l_type_mark and then (l_type_mark.is_attached_mark or not l_type_mark.is_expanded_mark) then
+				a_string.append_character ('!')
 			end
 			target_type.append_to_string (a_string)
 			a_string.append_character ('.')

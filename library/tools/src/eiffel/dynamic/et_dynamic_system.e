@@ -1186,16 +1186,9 @@ feature -- New instance types
 			-- created by 'TYPE.new_instance' or 'TYPE.new_special_any_instance'?
 		require
 			a_type_not_void: a_type /= Void
-		local
-			l_name: STRING
 		do
 			if attached new_instance_types as l_new_instance_types then
-				l_name := a_type.base_type.unaliased_to_text
-				l_name.replace_substring_all ("attached ", "")
-				l_name.replace_substring_all ("[attached] ", "")
-				l_name.replace_substring_all ("detachable ", "")
-				l_name.replace_substring_all ("[detachable] ", "")
-				Result := l_new_instance_types.has (l_name)
+				Result := l_new_instance_types.has (a_type.base_type.canonical_to_text)
 			else
 				Result := True
 			end

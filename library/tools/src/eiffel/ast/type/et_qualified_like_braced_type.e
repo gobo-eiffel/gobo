@@ -5,7 +5,7 @@ note
 		"Eiffel qualified anchored types of the form 'like {A}.b'"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,9 @@ inherit
 	ET_QUALIFIED_LIKE_IDENTIFIER
 		redefine
 			resolved_formal_parameters_with_type_mark,
-			type_with_type_mark
+			type_with_type_mark,
+			append_unaliased_to_string,
+			append_canonical_to_string
 		end
 
 create
@@ -134,8 +136,7 @@ feature -- Type processing
 feature -- Output
 
 	append_to_string (a_string: STRING)
-			-- Append textual representation of
-			-- current type to `a_string'.
+			-- Append `to_text' to `a_string'.
 		do
 			if attached type_mark as l_type_mark then
 				l_type_mark.append_to_string_with_space (a_string)
@@ -143,6 +144,45 @@ feature -- Output
 			a_string.append_string (like_space)
 			a_string.append_character ('{')
 			target_type.append_to_string (a_string)
+			a_string.append_character ('}')
+			a_string.append_character ('.')
+			a_string.append_string (name.lower_name)
+		end
+
+	append_unaliased_to_string (a_string: STRING)
+			-- Append `unaliased_to_text' to `a_string'.
+		do
+			if attached type_mark as l_type_mark then
+				l_type_mark.append_to_string_with_space (a_string)
+			end
+			a_string.append_string (like_space)
+			a_string.append_character ('{')
+			target_type.append_unaliased_to_string (a_string)
+			a_string.append_character ('}')
+			a_string.append_character ('.')
+			a_string.append_string (name.lower_name)
+		end
+
+	append_canonical_to_string (a_string: STRING)
+			-- Append `canonical_to_text' to `a_string'.
+		do
+			a_string.append_string (like_space)
+			a_string.append_character ('{')
+			target_type.append_canonical_actual_parameter_to_string (a_string)
+			a_string.append_character ('}')
+			a_string.append_character ('.')
+			a_string.append_string (name.lower_name)
+		end
+
+	append_runtime_name_to_string (a_string: STRING)
+			-- Append `runtime_name_to_text' to `a_string'.
+		do
+			if attached type_mark as l_type_mark and then (l_type_mark.is_attached_mark or not l_type_mark.is_expanded_mark) then
+				a_string.append_character ('!')
+			end
+			a_string.append_string (like_space)
+			a_string.append_character ('{')
+			target_type.append_runtime_name_to_string (a_string)
 			a_string.append_character ('}')
 			a_string.append_character ('.')
 			a_string.append_string (name.lower_name)
