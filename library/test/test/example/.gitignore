@@ -11,6 +11,7 @@ compile_*.*
 *.o
 *.obj
 *.rc
+*.res
 *.pdb
 *.ilk
 *.wb
