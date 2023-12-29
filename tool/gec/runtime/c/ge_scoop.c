@@ -116,6 +116,7 @@ GE_scoop_processor* GE_new_scoop_processor(GE_context* a_context)
 	l_processor->condition_variable = (EIF_COND_TYPE*)GE_condition_variable_create();
 	l_processor->sync_mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
 	l_processor->sync_condition_variable = (EIF_COND_TYPE*)GE_condition_variable_create();
+	l_processor->lock_mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
 	GE_mutex_lock((EIF_POINTER)GE_scoop_sessions_count_mutex);
 	l_processor->next = GE_all_scoop_processors;
 	GE_all_scoop_processors = l_processor;
@@ -272,7 +273,7 @@ void GE_add_scoop_call(GE_scoop_session* a_session, GE_scoop_call* a_call)
 /*
  * Function to synchronize with the caller processor.
  */
-static void GE_synchronize_scoop_call(GE_context* ac, GE_scoop_call* sc)
+static void GE_scoop_call_synchronize(GE_context* ac, GE_scoop_call* sc)
 {
 	GE_scoop_processor* l_processor = *(GE_scoop_processor**)(((char*)(sc))+sizeof(GE_scoop_call));
 	GE_mutex_lock((EIF_POINTER)l_processor->sync_mutex);
@@ -281,27 +282,29 @@ static void GE_synchronize_scoop_call(GE_context* ac, GE_scoop_call* sc)
 }
 
 /* 
- * Add SCOOP synchronization call to `a_session'.
+ * Add SCOOP synchronization call to `a_session' if not synchronized yet.
  */
 void GE_add_scoop_sync_call(GE_scoop_session* a_session)
 {
 	GE_scoop_call* l_call;
 	GE_scoop_processor* l_caller;
 
-	l_call = GE_new_scoop_call(sizeof(GE_scoop_call) + sizeof(GE_scoop_processor*));
-	l_call->execute = (void (*)(GE_context*, GE_scoop_call*))&GE_synchronize_scoop_call;
-	l_caller = a_session->caller;
-	*(GE_scoop_processor**)(((char*)(l_call))+sizeof(GE_scoop_call)) = l_caller;
-	GE_mutex_lock((EIF_POINTER)l_caller->sync_mutex);
-	GE_add_scoop_call(a_session, l_call);
-	GE_condition_variable_wait((EIF_POINTER)l_caller->sync_condition_variable, (EIF_POINTER)l_caller->sync_mutex);
-	GE_mutex_unlock((EIF_POINTER)l_caller->sync_mutex);
+	if (!GE_scoop_processor_is_locked_by(a_session->caller, a_session->callee)) {
+		l_call = GE_new_scoop_call(sizeof(GE_scoop_call) + sizeof(GE_scoop_processor*));
+		l_call->execute = (void (*)(GE_context*, GE_scoop_call*))&GE_scoop_call_synchronize;
+		l_caller = a_session->caller;
+		*(GE_scoop_processor**)(((char*)(l_call))+sizeof(GE_scoop_call)) = l_caller;
+		GE_mutex_lock((EIF_POINTER)l_caller->sync_mutex);
+		GE_add_scoop_call(a_session, l_call);
+		GE_condition_variable_wait((EIF_POINTER)l_caller->sync_condition_variable, (EIF_POINTER)l_caller->sync_mutex);
+		GE_mutex_unlock((EIF_POINTER)l_caller->sync_mutex);
+	}
 }
 
 /*
  * Let the thread of `a_caller' execute the calls of `a_callee' and vice-versa.
  */
-void GE_impersonate_scoop_processor(GE_scoop_processor* a_callee, GE_scoop_processor* a_caller)
+void GE_scoop_processor_impersonate(GE_scoop_processor* a_callee, GE_scoop_processor* a_caller)
 {
 	GE_context* l_callee_context;
 	GE_context* l_caller_context;
@@ -319,9 +322,67 @@ void GE_impersonate_scoop_processor(GE_scoop_processor* a_callee, GE_scoop_proce
 }
 
 /*
+ * Make sure that `a_caller' is locked by `a_callee'.
+ */
+void GE_scoop_processor_lock(GE_scoop_processor* a_callee, GE_scoop_processor* a_caller)
+{
+	GE_mutex_lock((EIF_POINTER)a_caller->lock_mutex);
+	if (!a_caller->locked_by) {
+		a_caller->locked_by = a_callee;
+		a_caller->lock_level = 1;
+	} else if (a_caller->locked_by == a_caller) {
+		a_caller->lock_level++;
+	}
+	GE_mutex_unlock((EIF_POINTER)a_caller->lock_mutex);
+}
+
+/*
+ * Undo last call to `GE_scoop_processor_lock'.
+ */
+void GE_scoop_processor_unlock(GE_scoop_processor* a_callee, GE_scoop_processor* a_caller)
+{
+	GE_mutex_lock((EIF_POINTER)a_caller->lock_mutex);
+	if (a_caller->locked_by == a_callee) {
+		a_caller->lock_level--;
+		if (a_caller->lock_level <= 0) {
+			a_caller->locked_by = 0;
+			a_caller->lock_level = 0;
+		}
+	}
+	GE_mutex_unlock((EIF_POINTER)a_caller->lock_mutex);
+}
+
+/*
+ * Is `a_caller' locked (directly or indirectly) by `a_callee'?
+ */
+char GE_scoop_processor_is_locked_by(GE_scoop_processor* a_callee, GE_scoop_processor* a_caller)
+{
+	GE_scoop_processor* l_locked_by;
+	char l_result = 0;
+
+	if (a_caller == a_callee) {
+		return '\1';
+	}
+	GE_mutex_lock((EIF_POINTER)a_caller->lock_mutex);
+	if (a_caller->locked_by == a_callee) {
+		l_result = '\1';
+	} else {
+		l_locked_by = a_caller->locked_by;
+		if (l_locked_by) {
+			/* Avoid infinite loop. */
+			a_caller->locked_by = 0;
+			l_result = GE_scoop_processor_is_locked_by(a_callee, l_locked_by);
+			a_caller->locked_by = l_locked_by;
+		}
+	}
+	GE_mutex_unlock((EIF_POINTER)a_caller->lock_mutex);
+	return l_result;
+}
+
+/*
  * Execute `a_call'.
  */
-static void GE_execute_scoop_call(GE_context* a_context, GE_scoop_call* a_call)
+static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_call* a_call)
 {
 	a_call->execute(a_context, a_call);
 }
@@ -329,7 +390,7 @@ static void GE_execute_scoop_call(GE_context* a_context, GE_scoop_call* a_call)
 /*
  * Execute `a_session'.
  */
-static void GE_execute_scoop_session(GE_context* a_context, GE_scoop_session* a_session)
+static void GE_scoop_session_execute(GE_context* a_context, GE_scoop_session* a_session)
 {
 	GE_scoop_call* l_call;
 	GE_scoop_call* l_next_call;
@@ -339,7 +400,7 @@ static void GE_execute_scoop_session(GE_context* a_context, GE_scoop_session* a_
 		l_call = a_session->first_call;
 		if (l_call) {
 			GE_mutex_unlock((EIF_POINTER)a_session->mutex);
-			GE_execute_scoop_call(a_context, l_call);
+			GE_scoop_call_execute(a_context, l_call);
 			GE_mutex_lock((EIF_POINTER)a_session->mutex);
 			l_next_call = l_call->next;
 			a_session->first_call = l_next_call;
@@ -386,7 +447,7 @@ void GE_scoop_processor_run(GE_context* a_context)
 		}
 		GE_mutex_unlock((EIF_POINTER)l_processor->mutex);
 		if (l_session) {
-			GE_execute_scoop_session(a_context, l_session);
+			GE_scoop_session_execute(a_context, l_session);
 			GE_remove_scoop_session(l_session);
 			GE_free_scoop_session(l_session);
 			GE_decrement_scoop_sessions_count();
@@ -431,6 +492,7 @@ void GE_free_scoop_processor(GE_scoop_processor* a_processor)
 	GE_condition_variable_destroy((EIF_POINTER)a_processor->condition_variable);
 	GE_mutex_destroy((EIF_POINTER)a_processor->sync_mutex);
 	GE_condition_variable_destroy((EIF_POINTER)a_processor->sync_condition_variable);
+	GE_mutex_destroy((EIF_POINTER)a_processor->lock_mutex);
 	GE_free(a_processor);
 }
 

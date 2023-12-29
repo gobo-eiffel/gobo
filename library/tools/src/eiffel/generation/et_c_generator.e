@@ -6549,10 +6549,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						print_formal_argument (l_name)
 						current_file.put_character (')')
 						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-						print_indentation
 						print_separate_argument_session_name (l_name, current_file)
 						current_file.put_character (' ')
 						current_file.put_character ('=')
@@ -6566,10 +6562,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						current_file.put_string (c_scoop_processor)
 						current_file.put_character (')')
 						print_semicolon_newline
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-						current_file.put_new_line
 					end
 					i := i + 1
 				end
@@ -6659,19 +6651,11 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 							print_separate_argument_session_name (l_name, current_file)
 							current_file.put_character (')')
 							current_file.put_character (' ')
-							current_file.put_character ('{')
-							current_file.put_new_line
-							indent
-							print_indentation
 							current_file.put_string (c_ge_exit_scoop_session)
 							current_file.put_character ('(')
 							print_separate_argument_session_name (l_name, current_file)
 							current_file.put_character (')')
 							print_semicolon_newline
-							dedent
-							print_indentation
-							current_file.put_character ('}')
-							current_file.put_new_line
 						end
 						i := i + 1
 					end
@@ -6689,19 +6673,11 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 							print_inline_separate_argument_session_name (l_name, current_file)
 							current_file.put_character (')')
 							current_file.put_character (' ')
-							current_file.put_character ('{')
-							current_file.put_new_line
-							indent
-							print_indentation
 							current_file.put_string (c_ge_exit_scoop_session)
 							current_file.put_character ('(')
 							print_inline_separate_argument_session_name (l_name, current_file)
 							current_file.put_character (')')
 							print_semicolon_newline
-							dedent
-							print_indentation
-							current_file.put_character ('}')
-							current_file.put_new_line
 							i := i + 1
 						end
 					end
@@ -6797,19 +6773,11 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						print_separate_argument_session_name (l_name, current_file)
 						current_file.put_character (')')
 						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-						print_indentation
 						current_file.put_string (c_ge_exit_scoop_session)
 						current_file.put_character ('(')
 						print_separate_argument_session_name (l_name, current_file)
 						current_file.put_character (')')
 						print_semicolon_newline
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-						current_file.put_new_line
 					end
 					i := i + 1
 				end
@@ -19879,12 +19847,14 @@ feature {NONE} -- Separate calls
 			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_result_type: detachable ET_DYNAMIC_PRIMARY_TYPE
 			l_is_synchronous_call: BOOLEAN
-			l_is_potentially_asynchronous_call: BOOLEAN
+			l_is_asynchronous_call: BOOLEAN
 			l_separate_call_arguments: like separate_call_arguments
-			l_has_separate_actual_argument: BOOLEAN
+			l_has_reference_actual_argument: BOOLEAN
+			l_has_non_separate_reference_actual_argument: BOOLEAN
 			l_index: INTEGER
 			l_is_creation_call: BOOLEAN
 			l_called_feature: ET_DYNAMIC_FEATURE
+			l_and_then_needed: BOOLEAN
 			l_old_current_type: like current_type
 			old_file: KI_TEXT_OUTPUT_STREAM
 		do
@@ -19915,6 +19885,12 @@ feature {NONE} -- Separate calls
 			header_file.put_character (' ')
 			header_file.put_string ("Function for separate call #")
 			header_file.put_integer (i)
+			header_file.put_character (' ')
+			header_file.put_character ('(')
+			header_file.put_string (l_target_type.base_type.unaliased_to_text)
+			header_file.put_character ('.')
+			header_file.put_string (STRING_.replaced_all_substrings (l_called_feature.static_feature.lower_name, "*/", "star/"))
+			header_file.put_character (')')
 			header_file.put_string (" in feature ")
 			header_file.put_string (current_type.base_type.unaliased_to_text)
 			header_file.put_character ('.')
@@ -19928,6 +19904,12 @@ feature {NONE} -- Separate calls
 			current_file.put_character (' ')
 			current_file.put_string ("Function for separate call #")
 			current_file.put_integer (i)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_string (l_target_type.base_type.unaliased_to_text)
+			current_file.put_character ('.')
+			current_file.put_string (STRING_.replaced_all_substrings (l_called_feature.static_feature.lower_name, "*/", "star/"))
+			current_file.put_character (')')
 			current_file.put_string (" in feature ")
 			current_file.put_string (current_type.base_type.unaliased_to_text)
 			current_file.put_character ('.')
@@ -20001,8 +19983,11 @@ feature {NONE} -- Separate calls
 					l_formal_argument := formal_argument (nb_operands)
 					l_formal_argument.set_index (l_actual_argument.index)
 					l_type := dynamic_type_set (l_formal_argument).static_type
-					if l_type.is_separate or l_type.is_expanded then
-						l_has_separate_actual_argument := True
+					if not l_type.is_expanded then
+						l_has_reference_actual_argument := True
+						if not l_type.is_separate then
+							l_has_non_separate_reference_actual_argument := True
+						end
 					end
 					l_primary_type := l_type.primary_type
 					header_file.put_character (',')
@@ -20143,63 +20128,56 @@ feature {NONE} -- Separate calls
 				print_assign_to
 				print_current_name (current_file)
 				print_semicolon_newline
-			else
-					-- TODO: check whether some of the actual separate arguments
-					-- are controlled by the caller.
-				print_indentation
-				current_file.put_string (c_if)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_attribute_scoop_processor_access (formal_argument (1), l_target_type, True)
-				current_file.put_character (' ')
-				current_file.put_character ('!')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_scoop_processor)
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				indent
 			end
-			l_is_synchronous_call := l_result_type /= Void or (l_called_feature.has_separate_argument and not l_has_separate_actual_argument)
-			if l_is_synchronous_call then
-				print_indentation
-				current_file.put_string (c_ge_add_scoop_sync_call)
-				current_file.put_character ('(')
-				current_file.put_character ('s')
-				current_file.put_character ('e')
-				current_file.put_character (')')
-				print_semicolon_newline
-					-- Use impersonation (i.e. the call will be executed by
-					-- the current thread on behalf of the other SCOOP processor, pretending
-					-- that it is the thread associated with this other SCOOP processor).
-				print_indentation
-				current_file.put_string (c_ge_impersonate_scoop_processor)
-				current_file.put_character ('(')
-				current_file.put_character ('s')
-				current_file.put_character ('e')
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_callee)
-				print_comma
-				current_file.put_character ('s')
-				current_file.put_character ('e')
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_caller)
-				current_file.put_character (')')
-				print_semicolon_newline
-			else
-				if l_called_feature.has_separate_argument then
-					-- Potentially synchronous call
-					-- (if some of the separate arguments are controlled by the current processor).
-				else
-					-- Asynchronous call.
+			l_is_synchronous_call := l_result_type /= Void or l_has_non_separate_reference_actual_argument
+			l_is_asynchronous_call := l_result_type = Void and not l_has_reference_actual_argument
+			if not l_is_synchronous_call then
+					-- Potentially asynchronous call.
+				if not l_is_creation_call or not l_is_asynchronous_call then
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					if not l_is_creation_call then
+						current_file.put_character ('s')
+						current_file.put_character ('e')
+						l_and_then_needed := True
+					end
+					if not l_is_asynchronous_call then
+						from j := 1 until j > nb_args loop
+								-- The first formal argument is is fact used for the target of the call.
+							l_formal_argument := formal_argument (j + 1)
+							l_primary_type := dynamic_type_set (l_formal_argument).static_type.primary_type
+							if not l_primary_type.is_expanded then
+									-- Synchronous call when locked by current processor
+								if l_and_then_needed then
+									print_and_then
+								end
+								l_and_then_needed := True
+								current_file.put_character ('!')
+								current_file.put_character ('(')
+								print_argument_name (l_formal_argument, current_file)
+								print_and_then
+								current_file.put_string (c_ge_scoop_processor_is_locked_by)
+								current_file.put_character ('(')
+								current_file.put_string (c_ac)
+								current_file.put_string (c_arrow)
+								current_file.put_string (c_scoop_processor)
+								print_comma
+								print_attribute_scoop_processor_access (l_formal_argument, l_primary_type, False)
+								current_file.put_character (')')
+								current_file.put_character (')')
+							end
+							j := j + 1
+						end
+					end
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
 				end
-					-- TODO: check whether some of the actual separate arguments
-					-- are controlled by the caller.
-				l_is_potentially_asynchronous_call := True
+					-- Asynchronous call.
 				print_indentation
 				current_file.put_string (c_ge_add_scoop_call)
 				current_file.put_character ('(')
@@ -20217,24 +20195,67 @@ feature {NONE} -- Separate calls
 				current_file.put_character (')')
 				current_file.put_character (')')
 				print_semicolon_newline
+				if not l_is_creation_call or not l_is_asynchronous_call then
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					if not l_is_asynchronous_call then
+						current_file.put_character (' ')
+						current_file.put_string (c_else)
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+					else
+						current_file.put_new_line
+					end
+				end
 			end
-			if not l_is_creation_call then
-				dedent
-				print_indentation
-				current_file.put_character ('}')
-				if l_is_synchronous_call then
-					current_file.put_new_line
-				else
+			if not l_is_asynchronous_call then
+					-- Synchronous call.
+				if not l_is_creation_call then
+					print_indentation
+					current_file.put_string (c_if)
 					current_file.put_character (' ')
-					current_file.put_string (c_else)
+					current_file.put_character ('(')
+					current_file.put_character ('s')
+					current_file.put_character ('e')
+					current_file.put_character (')')
 					current_file.put_character (' ')
 					current_file.put_character ('{')
 					current_file.put_new_line
 					indent
 				end
-			end
-			if not l_is_creation_call or l_is_synchronous_call then
-					-- Synchronous call.
+				print_indentation
+				current_file.put_string (c_ge_add_scoop_sync_call)
+				current_file.put_character ('(')
+				current_file.put_character ('s')
+				current_file.put_character ('e')
+				current_file.put_character (')')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_ge_scoop_session_lock)
+				current_file.put_character ('(')
+				current_file.put_character ('s')
+				current_file.put_character ('e')
+				current_file.put_character (')')
+				print_semicolon_newline
+					-- Use impersonation (i.e. the call will be executed by
+					-- the current thread on behalf of the other SCOOP processor, pretending
+					-- that it is the thread associated with this other SCOOP processor).
+				print_indentation
+				current_file.put_string (c_ge_scoop_session_impersonate)
+				current_file.put_character ('(')
+				current_file.put_character ('s')
+				current_file.put_character ('e')
+				current_file.put_character (')')
+				print_semicolon_newline
+				if not l_is_creation_call then
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+				end
 				separate_call_arguments.wipe_out
 				if nb_args > 0 then
 					l_separate_call_arguments := separate_call_arguments
@@ -20262,26 +20283,45 @@ feature {NONE} -- Separate calls
 					separate_call_instruction.set_arguments (l_separate_call_arguments)
 					print_qualified_call_instruction (separate_call_instruction)
 				end
-			end
-			if l_is_synchronous_call then
+				if not l_is_creation_call then
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_character ('s')
+					current_file.put_character ('e')
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+				end
 				print_indentation
-				current_file.put_string (c_ge_impersonate_scoop_processor)
+				current_file.put_string (c_ge_scoop_session_impersonate)
 				current_file.put_character ('(')
 				current_file.put_character ('s')
 				current_file.put_character ('e')
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_caller)
-				print_comma
-				current_file.put_character ('s')
-				current_file.put_character ('e')
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_callee)
 				current_file.put_character (')')
 				print_semicolon_newline
-			elseif not l_is_creation_call then
-				dedent
-				current_file.put_character ('}')
-				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_ge_scoop_session_unlock)
+				current_file.put_character ('(')
+				current_file.put_character ('s')
+				current_file.put_character ('e')
+				current_file.put_character (')')
+				print_semicolon_newline
+				if not l_is_creation_call then
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+				end
+				if not l_is_synchronous_call then
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+				end
 			end
 			if l_result_type /= Void then
 				print_indentation
@@ -20318,7 +20358,7 @@ feature {NONE} -- Separate calls
 			end
 				-- Flush to file.
 			flush_to_c_file
-			if l_is_potentially_asynchronous_call then
+			if not l_is_synchronous_call then
 				print_separate_call_function_declaration (i, a_separate_call)
 				print_separate_call_object_declaration (i, a_separate_call)
 			end
@@ -42361,7 +42401,6 @@ feature {NONE} -- Constants
 	c_ge_generic_parameter_count_of_encoded_type: STRING = "GE_generic_parameter_count_of_encoded_type"
 	c_ge_get_scoop_session: STRING = "GE_get_scoop_session"
 	c_ge_id_object: STRING = "GE_id_object"
-	c_ge_impersonate_scoop_processor: STRING = "GE_impersonate_scoop_processor"
 	c_ge_ims8: STRING = "GE_ims8"
 	c_ge_ims32_from_utf32le: STRING = "GE_ims32_from_utf32le"
 	c_ge_increment_scoop_sessions_count: STRING = "GE_increment_scoop_sessions_count"
@@ -42504,8 +42543,12 @@ feature {NONE} -- Constants
 	c_ge_retry: STRING = "GE_retry"
 	c_ge_scoop_call: STRING = "GE_scoop_call"
 	c_ge_scoop_processor: STRING = "GE_scoop_processor"
+	c_ge_scoop_processor_is_locked_by: STRING = "GE_scoop_processor_is_locked_by"
 	c_ge_scoop_processor_run: STRING = "GE_scoop_processor_run"
 	c_ge_scoop_session: STRING = "GE_scoop_session"
+	c_ge_scoop_session_impersonate: STRING = "GE_scoop_session_impersonate"
+	c_ge_scoop_session_lock: STRING = "GE_scoop_session_lock"
+	c_ge_scoop_session_unlock: STRING = "GE_scoop_session_unlock"
 	c_ge_setjmp: STRING = "GE_setjmp"
 	c_ge_set_boolean_field: STRING = "GE_set_boolean_field"
 	c_ge_set_boolean_field_at: STRING = "GE_set_boolean_field_at"
