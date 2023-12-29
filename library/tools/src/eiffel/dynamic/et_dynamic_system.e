@@ -361,7 +361,7 @@ feature -- Types
 					l_base_type := a_type.base_type_with_type_mark (l_implicit_type_mark, a_context)
 					l_type_name := type_name_buffer
 					l_type_name.wipe_out
-					l_base_type.append_runtime_name_to_string (l_type_name)
+					l_base_type.append_canonical_to_string (l_type_name)
 					dynamic_generic_types_by_name.search (l_type_name)
 					if dynamic_generic_types_by_name.found then
 						l_result := dynamic_generic_types_by_name.found_item
@@ -393,7 +393,7 @@ feature -- Types
 				l_base_type := a_type.base_type_with_type_mark (l_implicit_type_mark, a_context)
 				Result := new_dynamic_primary_type (l_base_type)
 				if l_base_class.is_generic or l_base_class.is_tuple_class then
-					l_type_name := l_base_type.runtime_name_to_text
+					l_type_name := l_base_type.canonical_to_text
 					dynamic_generic_types_by_name.force_last (Result, l_type_name)
 				end
 			end
