@@ -64,6 +64,7 @@ inherit
 			process_if_instruction,
 			process_infix_cast_expression,
 			process_infix_expression,
+			process_inline_separate_instruction,
 			process_inspect_expression,
 			process_inspect_instruction,
 			process_iteration_cursor,
@@ -99,7 +100,6 @@ inherit
 			process_result_address,
 			process_retry_instruction,
 			process_semicolon_symbol,
-			process_separate_instruction,
 			process_special_manifest_string,
 			process_static_call_expression,
 			process_static_call_instruction,
@@ -6466,15 +6466,15 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Declaration of SCOOP sessions to register separate calls,
 					-- even for those of inline separate instructions contained
 					-- in `a_feature'.
-				if attached a_feature.separate_arguments as l_separate_arguments then
-					nb := l_separate_arguments.count
+				if attached a_feature.inline_separate_arguments as l_inline_separate_arguments then
+					nb := l_inline_separate_arguments.count
 					l_has_separate_arguments := nb > 0
 					from i := 1 until i > nb loop
 						print_indentation
 						current_file.put_string (c_ge_scoop_session)
 						current_file.put_character ('*')
 						current_file.put_character (' ')
-						print_inline_separate_argument_session_name (l_separate_arguments.item (i).name, current_file)
+						print_separate_argument_session_name (l_inline_separate_arguments.item (i).name, current_file)
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
@@ -6662,20 +6662,20 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				end
 				if l_has_separate_arguments then
 						-- Even the SCOOP sessions from the inline separate instructions.
-					if attached a_feature.separate_arguments as l_separate_arguments then
-						nb := l_separate_arguments.count
+					if attached a_feature.inline_separate_arguments as l_inline_separate_arguments then
+						nb := l_inline_separate_arguments.count
 						from i := 1 until i > nb loop
-							l_name := l_separate_arguments.item (i).name
+							l_name := l_inline_separate_arguments.item (i).name
 							print_indentation
 							current_file.put_string (c_if)
 							current_file.put_character (' ')
 							current_file.put_character ('(')
-							print_inline_separate_argument_session_name (l_name, current_file)
+							print_separate_argument_session_name (l_name, current_file)
 							current_file.put_character (')')
 							current_file.put_character (' ')
 							current_file.put_string (c_ge_exit_scoop_session)
 							current_file.put_character ('(')
-							print_inline_separate_argument_session_name (l_name, current_file)
+							print_separate_argument_session_name (l_name, current_file)
 							current_file.put_character (')')
 							print_semicolon_newline
 							i := i + 1
@@ -7766,6 +7766,129 @@ feature {NONE} -- Instruction generation
 			current_file.put_new_line
 		end
 
+	print_inline_separate_instruction (a_instruction: ET_INLINE_SEPARATE_INSTRUCTION)
+			-- Print `a_instruction'.
+		require
+			a_instruction_not_void: a_instruction /= Void
+		local
+			l_arguments: ET_INLINE_SEPARATE_ARGUMENTS
+			l_argument: ET_INLINE_SEPARATE_ARGUMENT
+			l_name: ET_IDENTIFIER
+			i, nb: INTEGER
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_primary_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if line_generation_mode then
+				print_position (a_instruction.position, current_feature.static_feature.implementation_class)
+			end
+			l_arguments := a_instruction.arguments
+			nb := l_arguments.count
+			from i := 1 until i > nb loop
+				l_argument := l_arguments.argument (i)
+				l_name := l_argument.name
+				l_dynamic_type_set := dynamic_type_set (l_name)
+				l_dynamic_type := l_dynamic_type_set.static_type
+					-- Declaration of the inline separate argument.
+				current_file := current_function_header_buffer
+				current_file.put_character ('%T')
+				print_type_declaration (l_dynamic_type.primary_type, current_file)
+				current_file.put_character (' ')
+				print_inline_separate_argument_name (l_name, current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Call to inline separate argument expression.
+				current_file := current_function_body_buffer
+				print_assignment_operand (l_argument.expression, l_dynamic_type_set, l_name, l_dynamic_type)
+				fill_call_operands (1)
+				print_indentation
+				print_inline_separate_argument_name (l_name, current_file)
+				print_assign_to
+				print_attachment_expression (call_operands.first, l_dynamic_type_set, l_dynamic_type)
+				print_semicolon_newline
+				call_operands.wipe_out
+				i := i + 1
+			end
+			if attached a_instruction.compound as l_compound then
+				if scoop_mode then
+						-- Start the current SCOOP sessions.
+					from i := 1 until i > nb loop
+						l_argument := l_arguments.argument (i)
+						l_name := l_argument.name
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_inline_separate_argument_name (l_name, current_file)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+						print_indentation
+						print_separate_argument_session_name (l_name, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_string (c_ge_get_scoop_session)
+						current_file.put_character ('(')
+						l_dynamic_type_set := dynamic_type_set (l_name)
+						l_dynamic_primary_type := l_dynamic_type_set.static_type.primary_type
+						print_attribute_scoop_processor_access (l_name, l_dynamic_primary_type, False)
+						print_comma
+						current_file.put_string (c_ac)
+						current_file.put_string (c_arrow)
+						current_file.put_string (c_scoop_processor)
+						current_file.put_character (')')
+						print_semicolon_newline
+						dedent
+						print_indentation
+						current_file.put_character ('}')
+						current_file.put_new_line
+						i := i + 1
+					end
+				end
+				print_compound (l_compound)
+				if scoop_mode then
+						-- Exit from the current SCOOP sessions.
+					from i := 1 until i > nb loop
+						l_argument := l_arguments.argument (i)
+						l_name := l_argument.name
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_separate_argument_session_name (l_name, current_file)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+						print_indentation
+						current_file.put_string (c_ge_exit_scoop_session)
+						current_file.put_character ('(')
+						print_separate_argument_session_name (l_name, current_file)
+						current_file.put_character (')')
+						print_semicolon_newline
+							-- Set the session to NULL so that we don't try to
+							-- exit again from it in case of an exception.
+						print_indentation
+						print_separate_argument_session_name (l_name, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_character ('0')
+						print_semicolon_newline
+						dedent
+						print_indentation
+						current_file.put_character ('}')
+						current_file.put_new_line
+						i := i + 1
+					end
+				end
+			end
+		end
+
 	print_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Print `an_instruction'.
 		require
@@ -8557,11 +8680,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			current_file.put_character ('(')
 			current_file.put_string (c_ac)
 			print_comma
-			if a_controlled_object.is_separate_argument then
-				print_inline_separate_argument_session_name (a_controlled_object, current_file)
-			else
-				print_separate_argument_session_name (a_controlled_object, current_file)
-			end
+			print_separate_argument_session_name (a_controlled_object, current_file)
 			nb := call_operands.count
 			from i := 1 until i > nb loop
 				print_comma
@@ -8648,129 +8767,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			current_file.put_character (';')
 			current_file.put_new_line
 			has_retry := True
-		end
-
-	print_separate_instruction (a_instruction: ET_SEPARATE_INSTRUCTION)
-			-- Print `a_instruction'.
-		require
-			a_instruction_not_void: a_instruction /= Void
-		local
-			l_arguments: ET_SEPARATE_ARGUMENTS
-			l_argument: ET_SEPARATE_ARGUMENT
-			l_name: ET_IDENTIFIER
-			i, nb: INTEGER
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_dynamic_primary_type: ET_DYNAMIC_PRIMARY_TYPE
-		do
-			if line_generation_mode then
-				print_position (a_instruction.position, current_feature.static_feature.implementation_class)
-			end
-			l_arguments := a_instruction.arguments
-			nb := l_arguments.count
-			from i := 1 until i > nb loop
-				l_argument := l_arguments.argument (i)
-				l_name := l_argument.name
-				l_dynamic_type_set := dynamic_type_set (l_name)
-				l_dynamic_type := l_dynamic_type_set.static_type
-					-- Declaration of the separate argument.
-				current_file := current_function_header_buffer
-				current_file.put_character ('%T')
-				print_type_declaration (l_dynamic_type.primary_type, current_file)
-				current_file.put_character (' ')
-				print_separate_argument_name (l_name, current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
-					-- Call to separate argument expression.
-				current_file := current_function_body_buffer
-				print_assignment_operand (l_argument.expression, l_dynamic_type_set, l_name, l_dynamic_type)
-				fill_call_operands (1)
-				print_indentation
-				print_separate_argument_name (l_name, current_file)
-				print_assign_to
-				print_attachment_expression (call_operands.first, l_dynamic_type_set, l_dynamic_type)
-				print_semicolon_newline
-				call_operands.wipe_out
-				i := i + 1
-			end
-			if attached a_instruction.compound as l_compound then
-				if scoop_mode then
-						-- Start the current SCOOP sessions.
-					from i := 1 until i > nb loop
-						l_argument := l_arguments.argument (i)
-						l_name := l_argument.name
-						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_separate_argument_name (l_name, current_file)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-						print_indentation
-						print_inline_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_string (c_ge_get_scoop_session)
-						current_file.put_character ('(')
-						l_dynamic_type_set := dynamic_type_set (l_name)
-						l_dynamic_primary_type := l_dynamic_type_set.static_type.primary_type
-						print_attribute_scoop_processor_access (l_name, l_dynamic_primary_type, False)
-						print_comma
-						current_file.put_string (c_ac)
-						current_file.put_string (c_arrow)
-						current_file.put_string (c_scoop_processor)
-						current_file.put_character (')')
-						print_semicolon_newline
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-						current_file.put_new_line
-						i := i + 1
-					end
-				end
-				print_compound (l_compound)
-				if scoop_mode then
-						-- Exit from the current SCOOP sessions.
-					from i := 1 until i > nb loop
-						l_argument := l_arguments.argument (i)
-						l_name := l_argument.name
-						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_inline_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-						print_indentation
-						current_file.put_string (c_ge_exit_scoop_session)
-						current_file.put_character ('(')
-						print_inline_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (')')
-						print_semicolon_newline
-							-- Set the session to NULL so that we don't try to
-							-- exit again from it in case of an exception.
-						print_indentation
-						print_inline_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_character ('0')
-						print_semicolon_newline
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-						current_file.put_new_line
-						i := i + 1
-					end
-				end
-			end
 		end
 
 	print_static_call_instruction (a_instruction: ET_STATIC_CALL_INSTRUCTION)
@@ -11302,6 +11298,36 @@ feature {NONE} -- Expression generation
 			print_qualified_call_expression (an_expression)
 		end
 
+	print_inline_separate_argument (a_name: ET_IDENTIFIER)
+			-- Print inline separate argument `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_inline_separate_argument: a_name.is_inline_separate_argument
+		local
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_static_type: ET_DYNAMIC_TYPE
+		do
+			if in_operand then
+				operand_stack.force (a_name)
+			elseif attached call_target_type as l_call_target_type then
+				check in_call_target: in_call_target end
+				l_dynamic_type_set := dynamic_type_set (a_name)
+				l_static_type := l_dynamic_type_set.static_type
+				if l_static_type.is_expanded then
+						-- Pass the address of the expanded object.
+					current_file.put_character ('&')
+					print_inline_separate_argument_name (a_name, current_file)
+				elseif l_call_target_type.is_expanded then
+						-- We need to unbox the object and then pass its address.
+					print_boxed_attribute_pointer_access (a_name, l_call_target_type, call_target_check_void)
+				else
+					print_inline_separate_argument_name (a_name, current_file)
+				end
+			else
+				print_inline_separate_argument_name (a_name, current_file)
+			end
+		end
+
 	print_integer_constant (a_constant: ET_INTEGER_CONSTANT)
 			-- Print `a_constant'.
 		require
@@ -13232,11 +13258,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			current_file.put_character ('(')
 			current_file.put_string (c_ac)
 			print_comma
-			if a_controlled_object.is_separate_argument then
-				print_inline_separate_argument_session_name (a_controlled_object, current_file)
-			else
-				print_separate_argument_session_name (a_controlled_object, current_file)
-			end
+			print_separate_argument_session_name (a_controlled_object, current_file)
 			nb := call_operands.count
 			from i := 1 until i > nb loop
 				print_comma
@@ -13573,36 +13595,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			if not l_pointer then
 				current_file.put_character (';')
 				current_file.put_new_line
-			end
-		end
-
-	print_separate_argument (a_name: ET_IDENTIFIER)
-			-- Print separate argument `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_separate_argument: a_name.is_separate_argument
-		local
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_static_type: ET_DYNAMIC_TYPE
-		do
-			if in_operand then
-				operand_stack.force (a_name)
-			elseif attached call_target_type as l_call_target_type then
-				check in_call_target: in_call_target end
-				l_dynamic_type_set := dynamic_type_set (a_name)
-				l_static_type := l_dynamic_type_set.static_type
-				if l_static_type.is_expanded then
-						-- Pass the address of the expanded object.
-					current_file.put_character ('&')
-					print_separate_argument_name (a_name, current_file)
-				elseif l_call_target_type.is_expanded then
-						-- We need to unbox the object and then pass its address.
-					print_boxed_attribute_pointer_access (a_name, l_call_target_type, call_target_check_void)
-				else
-					print_separate_argument_name (a_name, current_file)
-				end
-			else
-				print_separate_argument_name (a_name, current_file)
 			end
 		end
 
@@ -14276,10 +14268,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 						-- An iteration item is not writable, but we
 						-- need this code here when initializing it.
 					print_iteration_item (l_identifier)
-				elseif l_identifier.is_separate_argument then
-						-- A separate argument is not writable, but we
+				elseif l_identifier.is_inline_separate_argument then
+						-- An inline separate argument is not writable, but we
 						-- need this code here when initializing it.
-					print_separate_argument (l_identifier)
+					print_inline_separate_argument (l_identifier)
 				elseif l_identifier.is_local then
 					if has_rescue then
 							-- Keep track of the fact that the value of this local variable
@@ -38013,7 +38005,22 @@ feature {NONE} -- Feature name generation
 			-- Print name of separate argument `a_name' to `a_file'.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_separate_argument: a_name.is_separate_argument
+			a_name_separate_argument: a_name.is_argument or a_name.is_inline_separate_argument
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if a_name.is_argument then
+				print_separate_argument_name (a_name, a_file)
+			else
+				print_inline_separate_argument_name (a_name, a_file)
+			end
+		end
+
+	print_inline_separate_argument_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print name of inline separate argument `a_name' to `a_file'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_inline_separate_argument: a_name.is_inline_separate_argument
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
@@ -38023,7 +38030,7 @@ feature {NONE} -- Feature name generation
 			else
 -- TODO: long names
 				short_names := True
-				print_separate_argument_name (a_name, a_file)
+				print_inline_separate_argument_name (a_name, a_file)
 				short_names := False
 			end
 		end
@@ -38032,27 +38039,7 @@ feature {NONE} -- Feature name generation
 			-- Print name of SCOOP session for separate argument `a_name' to `a_file'.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_argument: a_name.is_argument
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		do
-			if short_names then
-				a_file.put_character ('s')
-				a_file.put_character ('e')
-				print_argument_name (a_name, a_file)
-			else
--- TODO: long names
-				short_names := True
-				print_separate_argument_session_name (a_name, a_file)
-				short_names := False
-			end
-		end
-
-	print_inline_separate_argument_session_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM)
-			-- Print name of SCOOP session for inline separate argument `a_name' to `a_file'.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_separate_argument: a_name.is_separate_argument
+			a_name_separate_argument: a_name.is_argument or a_name.is_inline_separate_argument
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
@@ -39991,8 +39978,8 @@ feature {ET_AST_NODE} -- Processing
 				print_object_test_local (an_identifier)
 			elseif an_identifier.is_iteration_item then
 				print_iteration_item (an_identifier)
-			elseif an_identifier.is_separate_argument then
-				print_separate_argument (an_identifier)
+			elseif an_identifier.is_inline_separate_argument then
+				print_inline_separate_argument (an_identifier)
 			elseif an_identifier.is_agent_open_operand then
 				print_agent_open_operand (an_identifier)
 			elseif an_identifier.is_agent_closed_operand then
@@ -40022,6 +40009,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			print_infix_expression (an_expression)
+		end
+
+	process_inline_separate_instruction (a_instruction: ET_INLINE_SEPARATE_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			print_inline_separate_instruction (a_instruction)
 		end
 
 	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
@@ -40256,12 +40249,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_symbol'.
 		do
 			-- Do nothing.
-		end
-
-	process_separate_instruction (a_instruction: ET_SEPARATE_INSTRUCTION)
-			-- Process `a_instruction'.
-		do
-			print_separate_instruction (a_instruction)
 		end
 
 	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)

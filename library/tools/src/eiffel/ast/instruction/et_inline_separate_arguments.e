@@ -2,7 +2,7 @@ note
 
 	description:
 
-		"Eiffel comma-separated lists of arguments in separate instructions"
+		"Eiffel comma-separated lists of arguments in inline separate instructions"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2022-2023, Eric Bezault and others"
@@ -10,13 +10,13 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_SEPARATE_ARGUMENTS
+class ET_INLINE_SEPARATE_ARGUMENTS
 
 inherit
 
 	ET_AST_NODE
 
-	ET_HEAD_LIST [ET_SEPARATE_ARGUMENT_ITEM]
+	ET_HEAD_LIST [ET_INLINE_SEPARATE_ARGUMENT_ITEM]
 		redefine
 			make, make_with_capacity
 		end
@@ -28,14 +28,14 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Create a new separate argument list.
+			-- Create a new inline separate argument list.
 		do
 			separate_keyword := tokens.separate_keyword
 			precursor
 		end
 
 	make_with_capacity (nb: INTEGER)
-			-- Create a new separate argument list with capacity `nb'.
+			-- Create a new inline separate argument list with capacity `nb'.
 		do
 			separate_keyword := tokens.separate_keyword
 			precursor (nb)
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset
-			-- Reset separate argument as they were when they were last parsed.
+			-- Reset inline separate arguments as they were when they were last parsed.
 		local
 			i, nb: INTEGER
 		do
@@ -57,8 +57,8 @@ feature -- Initialization
 
 feature -- Access
 
-	argument (i: INTEGER): ET_SEPARATE_ARGUMENT
-			-- Separate argument at index `i' in list
+	argument (i: INTEGER): ET_INLINE_SEPARATE_ARGUMENT
+			-- Inline separate argument at index `i' in list
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
@@ -114,12 +114,12 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
-			a_processor.process_separate_arguments (Current)
+			a_processor.process_inline_separate_arguments (Current)
 		end
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_SEPARATE_ARGUMENT_ITEM]
+	fixed_array: KL_SPECIAL_ROUTINES [ET_INLINE_SEPARATE_ARGUMENT_ITEM]
 			-- Fixed array routines
 		once
 			create Result

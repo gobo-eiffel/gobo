@@ -2,15 +2,15 @@ note
 
 	description:
 
-		"Eiffel separate instructions"
+		"Eiffel inline separate instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2022-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_SEPARATE_INSTRUCTION
+class ET_INLINE_SEPARATE_INSTRUCTION
 
 inherit
 
@@ -26,7 +26,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_arguments: like arguments; a_compound: like compound)
-			-- Create a new separate instruction.
+			-- Create a new inline separate instruction.
 		do
 			arguments := a_arguments
 			compound := a_compound
@@ -49,7 +49,7 @@ feature -- Initialization
 
 feature -- Access
 
-	arguments: ET_SEPARATE_ARGUMENTS
+	arguments: ET_INLINE_SEPARATE_ARGUMENTS
 			-- Separate arguments
 
 	compound: detachable ET_COMPOUND
@@ -102,7 +102,7 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
-			a_processor.process_separate_instruction (Current)
+			a_processor.process_inline_separate_instruction (Current)
 		end
 
 invariant

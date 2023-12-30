@@ -2,7 +2,7 @@ note
 
 	description:
 
-		"Eiffel arguments in separate instructions"
+		"Eiffel arguments in inline separate instructions"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2022-2023, Eric Bezault and others"
@@ -10,11 +10,11 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_SEPARATE_ARGUMENT
+class ET_INLINE_SEPARATE_ARGUMENT
 
 inherit
 
-	ET_SEPARATE_ARGUMENT_ITEM
+	ET_INLINE_SEPARATE_ARGUMENT_ITEM
 
 	HASHABLE
 
@@ -25,7 +25,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_expression: like expression; a_name: like name)
-			-- Create a new separate argument.
+			-- Create a new inline separate argument.
 		require
 			a_expression_not_void: a_expression /= Void
 			a_name_not_void: a_name /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset
-			-- Reset separate argument as it was when it was last parsed.
+			-- Reset inline separate argument as it was when it was last parsed.
 		do
 			expression.reset
 			name.reset
@@ -58,8 +58,8 @@ feature -- Access
 	name: ET_IDENTIFIER
 			-- Name of argument
 
-	argument: ET_SEPARATE_ARGUMENT
-			-- Separate argument in comma-separated list
+	argument: ET_INLINE_SEPARATE_ARGUMENT
+			-- Inline separate argument in comma-separated list
 		do
 			Result := Current
 		end
@@ -106,7 +106,7 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
-			a_processor.process_separate_argument (Current)
+			a_processor.process_inline_separate_argument (Current)
 		end
 
 invariant

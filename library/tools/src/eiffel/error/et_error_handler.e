@@ -880,9 +880,9 @@ feature -- Validity errors
 			end
 		end
 
-	report_v1se1ga_error (a_class: ET_CLASS; arg1, arg2: ET_SEPARATE_ARGUMENT)
+	report_v1se1ga_error (a_class: ET_CLASS; arg1, arg2: ET_INLINE_SEPARATE_ARGUMENT)
 			-- Report V1SE-1G error: `arg1' and `arg2' are two arguments of
-			-- of a separate instruction in `a_class' with the same name.
+			-- of an inline separate instruction in `a_class' with the same name.
 			--
 			-- Not in ECMA-367-2.
 			-- SCOOP.
@@ -900,8 +900,8 @@ feature -- Validity errors
 			end
 		end
 
-	report_v1se2ga_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_feature: ET_FEATURE)
-			-- Report V1SE-2G error: argument `arg' of a separate instruction
+	report_v1se2ga_error (a_class: ET_CLASS; arg: ET_INLINE_SEPARATE_ARGUMENT; a_feature: ET_FEATURE)
+			-- Report V1SE-2G error: argument `arg' of an inline separate instruction
 		 	-- has the same name as `a_feature' in `a_class'.
 			--
 			-- Not in ECMA-367-2.
@@ -920,8 +920,8 @@ feature -- Validity errors
 			end
 		end
 
-	report_v1se2gb_error (a_class: ET_CLASS; a_separate_arg: ET_SEPARATE_ARGUMENT; a_formal_arg: ET_FORMAL_ARGUMENT)
-			-- Report V1SE-2G error: argument `a_separate_arg' of a separate instruction
+	report_v1se2gb_error (a_class: ET_CLASS; a_inline_separate_arg: ET_INLINE_SEPARATE_ARGUMENT; a_formal_arg: ET_FORMAL_ARGUMENT)
+			-- Report V1SE-2G error: argument `a_inline_separate_arg' of an inline separate instruction
 		 	-- has the same name as argument `a_formal_arg' of an enclosing feature or
 			-- inline agent.
 			--
@@ -930,19 +930,19 @@ feature -- Validity errors
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_separate_arg_not_void: a_separate_arg /= Void
+			a_inline_separate_arg_not_void: a_inline_separate_arg /= Void
 			a_formal_arg_not_void: a_formal_arg /= Void
 		local
 			l_error: ET_VALIDITY_ERROR
 		do
 			if reportable_v1se2g_error (a_class) then
-				create l_error.make_v1se2gb (a_class, a_separate_arg, a_formal_arg)
+				create l_error.make_v1se2gb (a_class, a_inline_separate_arg, a_formal_arg)
 				report_validity_error (l_error)
 			end
 		end
 
-	report_v1se2gc_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_local: ET_LOCAL_VARIABLE)
-			-- Report V1SE-2G error: argument `arg' of a separate instruction
+	report_v1se2gc_error (a_class: ET_CLASS; arg: ET_INLINE_SEPARATE_ARGUMENT; a_local: ET_LOCAL_VARIABLE)
+			-- Report V1SE-2G error: argument `arg' of an nline separate instruction
 		 	-- has the same name as local variable `a_local' of an enclosing
 			-- feature or inline agent.
 			--
@@ -962,8 +962,8 @@ feature -- Validity errors
 			end
 		end
 
-	report_v1se2gd_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_object_test: ET_NAMED_OBJECT_TEST)
-			-- Report V1SE-2G error: argument `arg' of a separate instruction
+	report_v1se2gd_error (a_class: ET_CLASS; arg: ET_INLINE_SEPARATE_ARGUMENT; a_object_test: ET_NAMED_OBJECT_TEST)
+			-- Report V1SE-2G error: argument `arg' of an inline separate instruction
 			-- appears in the scope of the local of `a_object_test' with the same name.
 			--
 			-- Not in ECMA-367-2.
@@ -982,8 +982,8 @@ feature -- Validity errors
 			end
 		end
 
-	report_v1se2ge_error (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_iteration_component: ET_ITERATION_COMPONENT)
-			-- Report V1SE-2G error: argument `arg' of a separate instruction
+	report_v1se2ge_error (a_class: ET_CLASS; arg: ET_INLINE_SEPARATE_ARGUMENT; a_iteration_component: ET_ITERATION_COMPONENT)
+			-- Report V1SE-2G error: argument `arg' of an inline separate instruction
 			-- appears in the scope of the cursor of `a_iteration_component' with
 			-- the same name.
 			--
@@ -1003,9 +1003,9 @@ feature -- Validity errors
 			end
 		end
 
-	report_v1se2gf_error (a_class: ET_CLASS; arg1, arg2: ET_SEPARATE_ARGUMENT)
-			-- Report V1SE-2G error: argument `arg1' of a separate instruction
-			-- as the same name as argument `arg2' of another enclosing separate
+	report_v1se2gf_error (a_class: ET_CLASS; arg1, arg2: ET_INLINE_SEPARATE_ARGUMENT)
+			-- Report V1SE-2G error: argument `arg1' of an inline separate instruction
+			-- as the same name as argument `arg2' of another enclosing inline separate
 			-- instruction.
 			--
 			-- Not in ECMA-367-2.
@@ -1024,9 +1024,9 @@ feature -- Validity errors
 			end
 		end
 
-	report_v1se3ga_error (a_class, a_class_impl: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_type: ET_NAMED_TYPE)
+	report_v1se3ga_error (a_class, a_class_impl: ET_CLASS; arg: ET_INLINE_SEPARATE_ARGUMENT; a_type: ET_NAMED_TYPE)
 			-- Report V1SE-3G error: the type of the argument `arg'
-			-- of a separate instruction in `a_class_impl' and view from
+			-- of an inline separate instruction in `a_class_impl' and view from
 			-- one of its descendants `a_class' (possibly itself)
 			-- is not separate.
 			--
@@ -2484,14 +2484,14 @@ feature -- Validity errors
 	report_veen10a_error (a_class: ET_CLASS; a_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report VEEN-10 error: `a_identifier', appearing in `a_feature'
 			-- of `a_class' or one of its (possibly nested) inline agents, is
-			-- the name of a separate argument that is used outside of its scope.
+			-- the name of an inline separate argument that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_identifier_not_void: a_identifier /= Void
-			a_identifier_separate_argument: a_identifier.is_separate_argument
+			a_identifier_inline_separate_argument: a_identifier.is_inline_separate_argument
 			a_feature_not_void: a_feature /= Void
 		local
 			l_error: ET_VALIDITY_ERROR
@@ -2505,14 +2505,14 @@ feature -- Validity errors
 	report_veen10b_error (a_class: ET_CLASS; a_identifier: ET_IDENTIFIER)
 			-- Report VEEN-10 error: `a_identifier', appearing in the invariant
 			-- of `a_class' or one of its (possibly nested) inline agents, is the
-			-- name of a separate argument that is used outside of its scope.
+			-- name of an inline separate argument that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_identifier_not_void: a_identifier /= Void
-			a_identifier_separate_argument: a_identifier.is_separate_argument
+			a_identifier_inline_separate_argument: a_identifier.is_inline_separate_argument
 		local
 			l_error: ET_VALIDITY_ERROR
 		do
@@ -5824,11 +5824,11 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpir1i_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; a_agent: ET_INLINE_AGENT; a_separate_argument: ET_SEPARATE_ARGUMENT)
+	report_vpir1i_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; a_agent: ET_INLINE_AGENT; a_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT)
 			-- Report VPIR-1 error: `arg' in inline agent `a_agent' has
-			-- the same name as the argument `a_separate_argument' of a
-			-- separate instruction in an enclosing feature or inline agent
-			-- whose compound (of the separate instruction) contains the
+			-- the same name as the argument `a_inline_separate_argument' of an
+			-- inline separate instruction in an enclosing feature or inline agent
+			-- whose compound (of the inline separate instruction) contains the
 			-- inline agent.
 			--
 			-- Not in ECMA.
@@ -5837,21 +5837,21 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			arg_not_void: arg /= Void
 			a_agent_not_void: a_agent /= Void
-			a_separate_argument_not_void: a_separate_argument /= Void
+			a_inline_separate_argument_not_void: a_inline_separate_argument /= Void
 		local
 			l_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vpir1_error (a_class) then
-				create l_error.make_vpir1i (a_class, arg, a_agent, a_separate_argument)
+				create l_error.make_vpir1i (a_class, arg, a_agent, a_inline_separate_argument)
 				report_validity_error (l_error)
 			end
 		end
 
-	report_vpir1j_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; a_agent: ET_INLINE_AGENT; a_separate_argument: ET_SEPARATE_ARGUMENT)
+	report_vpir1j_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; a_agent: ET_INLINE_AGENT; a_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT)
 			-- Report VPIR-1 error: `a_local' in inline agent `an_agent' has
-			-- the same name as the argument `a_separate_argument' of a
-			-- separate instruction in an enclosing feature or inline agent
-			-- whose compound (of the separate instruction) contains
+			-- the same name as the argument `a_inline_separate_argument' of an
+			-- inline separate instruction in an enclosing feature or inline agent
+			-- whose compound (of the inline separate instruction) contains
 			-- the inline agent.
 			--
 			-- Not in ECMA.
@@ -5860,12 +5860,12 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_local_not_void: a_local /= Void
 			a_agent_not_void: a_agent /= Void
-			a_separate_argument_not_void: a_separate_argument /= Void
+			a_inline_separate_argument_not_void: a_inline_separate_argument /= Void
 		local
 			l_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vpir1_error (a_class) then
-				create l_error.make_vpir1j (a_class, a_local, a_agent, a_separate_argument)
+				create l_error.make_vpir1j (a_class, a_local, a_agent, a_inline_separate_argument)
 				report_validity_error (l_error)
 			end
 		end
@@ -7291,21 +7291,21 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot1f_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_separate_argument: ET_SEPARATE_ARGUMENT)
+	report_vuot1f_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT)
 			-- Report VUOT-1 error: `a_object_test' appears in the scope
-			-- of `a_separate_argument' with the same local name.
+			-- of `a_inline_separate_argument' with the same local name.
 			--
 			-- Not in ECMA.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_object_test_not_void: a_object_test /= Void
-			a_separate_argument_not_void: a_separate_argument /= Void
+			a_inline_separate_argument_not_void: a_inline_separate_argument /= Void
 		local
 			l_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vuot1_error (a_class) then
-				create l_error.make_vuot1f (a_class, a_object_test, a_separate_argument)
+				create l_error.make_vuot1f (a_class, a_object_test, a_inline_separate_argument)
 				report_validity_error (l_error)
 			end
 		end
@@ -8446,7 +8446,7 @@ feature -- Validity errors
 
 	report_gvuas0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report GVUAS error: `a_name' is the name of an argument of
-			-- a separate instruction in `a_feature' in `a_class', and hence
+			-- an inline separate instruction in `a_feature' in `a_class', and hence
 			-- cannot have actual arguments.
 			--
 			-- Not in ETL as validity error but as syntax error
@@ -8467,7 +8467,7 @@ feature -- Validity errors
 
 	report_gvuas0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
 			-- Report GVUAS error: `a_name' is the name of an argument
-			-- of a separate instruction in inline agent `an_agent' in
+			-- of an inline separate instruction in inline agent `an_agent' in
 			-- `a_class', and hence cannot have actual arguments.
 			--
 			-- Not in ETL as validity error but as syntax error
@@ -8488,7 +8488,7 @@ feature -- Validity errors
 
 	report_gvuas0c_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
 			-- Report GVUAS error: `a_name' is the name of an argument of
-			-- a separate instruction in invariants `a_invariants' in
+			-- an inline separate instruction in invariants `a_invariants' in
 			-- `a_class', and hence cannot have actual arguments.
 			--
 			-- Not in ETL as validity error but as syntax error
@@ -8709,7 +8709,7 @@ feature -- Validity errors
 
 	report_gvuis0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report GVUIS error: `a_name' is the name of an argument
-			-- of a separate instruction in `a_feature' in `a_class',
+			-- of an inline separate instruction in `a_feature' in `a_class',
 			-- and hence cannot be an instruction.
 			--
 			-- Not in ETL as validity error but as syntax error
@@ -8729,7 +8729,7 @@ feature -- Validity errors
 
 	report_gvuis0b_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
 			-- Report GVUIS error: `a_name' is the name of an argument
-			-- of a separate instruction in inline agent `an_agent' in
+			-- of an inline separate instruction in inline agent `an_agent' in
 			-- `a_class', and hence cannot be an instruction.
 			--
 			-- Not in ETL as validity error but as syntax error
@@ -8749,7 +8749,7 @@ feature -- Validity errors
 
 	report_gvuis0c_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
 			-- Report GVUIS error: `a_name' is the name of an argument of
-			-- a separate instruction in invariants `a_invariants' in `a_class',
+			-- an inline separate instruction in invariants `a_invariants' in `a_class',
 			-- and hence cannot be an instruction.
 			--
 			-- Not in ETL as validity error but as syntax error

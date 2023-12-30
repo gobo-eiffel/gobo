@@ -5,7 +5,7 @@
 		"Eiffel feature call names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -116,8 +116,8 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_separate_argument: BOOLEAN
-			-- Is current call name a separate instruction argument name?
+	is_inline_separate_argument: BOOLEAN
+			-- Is current call name an inline separate instruction argument name?
 		do
 			-- Result := False
 		end
@@ -400,12 +400,12 @@ feature -- Conversion
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	separate_argument_name: ET_IDENTIFIER
-			-- Current name viewed as a separate argument name
+	inline_separate_argument_name: ET_IDENTIFIER
+			-- Current name viewed as an inline separate argument name
 		require
-			is_separate_argument: is_separate_argument
+			is_inline_separate_argument: is_inline_separate_argument
 		do
-			check is_separate_argument: False then end
+			check is_inline_separate_argument: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
@@ -423,7 +423,7 @@ feature -- Conversion
 	as_expression: ET_EXPRESSION
 			-- Current name viewed as an expression
 		require
-			is_expression: is_argument or is_local or is_object_test_local or is_iteration_item or is_separate_argument
+			is_expression: is_argument or is_local or is_object_test_local or is_iteration_item or is_inline_separate_argument
 		do
 			check is_expression: False then end
 		ensure

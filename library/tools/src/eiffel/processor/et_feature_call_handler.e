@@ -85,6 +85,10 @@ inherit
 			process_if_instruction,
 			process_infix_cast_expression,
 			process_infix_expression,
+			process_inline_separate_argument,
+			process_inline_separate_argument_comma,
+			process_inline_separate_arguments,
+			process_inline_separate_instruction,
 			process_inspect_expression,
 			process_inspect_instruction,
 			process_invariants,
@@ -124,10 +128,6 @@ inherit
 			process_regular_manifest_string,
 			process_regular_real_constant,
 			process_repeat_instruction,
-			process_separate_argument,
-			process_separate_argument_comma,
-			process_separate_arguments,
-			process_separate_instruction,
 			process_special_manifest_string,
 			process_static_call_expression,
 			process_static_call_instruction,
@@ -1718,6 +1718,47 @@ feature {ET_AST_NODE} -- Processing
 			process_qualified_feature_call_expression (an_expression)
 		end
 
+	process_inline_separate_argument (a_argument: ET_INLINE_SEPARATE_ARGUMENT)
+			-- Process `a_argument'.
+		do
+			process_expression (a_argument.expression)
+		end
+
+	process_inline_separate_argument_comma (a_argument_comma: ET_INLINE_SEPARATE_ARGUMENT_COMMA)
+			-- Process `a_argument_comma'.
+		do
+			process_inline_separate_argument (a_argument_comma.argument)
+		end
+
+	process_inline_separate_arguments (a_arguments: ET_INLINE_SEPARATE_ARGUMENTS)
+			-- Process `a_arguments'.
+		local
+			i, nb: INTEGER
+			had_error: BOOLEAN
+		do
+			nb := a_arguments.count
+			from i := 1 until i > nb loop
+				process_inline_separate_argument (a_arguments.argument (i))
+				had_error := had_error or has_fatal_error
+				i := i + 1
+			end
+			reset_fatal_error (had_error)
+		end
+
+	process_inline_separate_instruction (a_instruction: ET_INLINE_SEPARATE_INSTRUCTION)
+			-- Process `a_instruction'.
+		local
+			had_error: BOOLEAN
+		do
+			process_inline_separate_arguments (a_instruction.arguments)
+			had_error := has_fatal_error
+			if attached a_instruction.compound as l_compound then
+				process_compound (l_compound)
+				had_error := had_error or has_fatal_error
+			end
+			reset_fatal_error (had_error)
+		end
+
 	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
 			-- Process `a_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2614,47 +2655,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_iteration_instruction (a_instruction)
-		end
-
-	process_separate_argument (a_argument: ET_SEPARATE_ARGUMENT)
-			-- Process `a_argument'.
-		do
-			process_expression (a_argument.expression)
-		end
-
-	process_separate_argument_comma (a_argument_comma: ET_SEPARATE_ARGUMENT_COMMA)
-			-- Process `a_argument_comma'.
-		do
-			process_separate_argument (a_argument_comma.argument)
-		end
-
-	process_separate_arguments (a_arguments: ET_SEPARATE_ARGUMENTS)
-			-- Process `a_arguments'.
-		local
-			i, nb: INTEGER
-			had_error: BOOLEAN
-		do
-			nb := a_arguments.count
-			from i := 1 until i > nb loop
-				process_separate_argument (a_arguments.argument (i))
-				had_error := had_error or has_fatal_error
-				i := i + 1
-			end
-			reset_fatal_error (had_error)
-		end
-
-	process_separate_instruction (a_instruction: ET_SEPARATE_INSTRUCTION)
-			-- Process `a_instruction'.
-		local
-			had_error: BOOLEAN
-		do
-			process_separate_arguments (a_instruction.arguments)
-			had_error := has_fatal_error
-			if attached a_instruction.compound as l_compound then
-				process_compound (l_compound)
-				had_error := had_error or has_fatal_error
-			end
-			reset_fatal_error (had_error)
 		end
 
 	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)

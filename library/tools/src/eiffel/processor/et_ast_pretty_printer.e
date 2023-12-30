@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -113,6 +113,10 @@ inherit
 			process_infix_and_then_operator,
 			process_infix_expression,
 			process_infix_or_else_operator,
+			process_inline_separate_argument,
+			process_inline_separate_argument_comma,
+			process_inline_separate_arguments,
+			process_inline_separate_instruction,
 			process_inspect_expression,
 			process_inspect_instruction,
 			process_invariants,
@@ -169,10 +173,6 @@ inherit
 			process_result_address,
 			process_retry_instruction,
 			process_semicolon_symbol,
-			process_separate_argument,
-			process_separate_argument_comma,
-			process_separate_arguments,
-			process_separate_instruction,
 			process_special_manifest_string,
 			process_static_call_expression,
 			process_static_call_instruction,
@@ -3504,6 +3504,86 @@ feature {ET_AST_NODE} -- Processing
 			an_operator.else_keyword.process (Current)
 		end
 
+	process_inline_separate_argument (a_argument: ET_INLINE_SEPARATE_ARGUMENT)
+			-- Process `a_argument'.
+		do
+			a_argument.expression.process (Current)
+			print_space
+			a_argument.as_keyword.process (Current)
+			print_space
+			a_argument.name.process (Current)
+		end
+
+	process_inline_separate_argument_comma (a_argument_comma: ET_INLINE_SEPARATE_ARGUMENT_COMMA)
+			-- Process `a_argument_comma'.
+		do
+			process_inline_separate_argument (a_argument_comma.argument)
+			a_argument_comma.comma.process (Current)
+		end
+
+	process_inline_separate_arguments (a_arguments: ET_INLINE_SEPARATE_ARGUMENTS)
+			-- Process `a_arguments'.
+		local
+			i, nb: INTEGER
+			l_item: ET_INLINE_SEPARATE_ARGUMENT_ITEM
+			l_argument: ET_INLINE_SEPARATE_ARGUMENT
+		do
+			a_arguments.separate_keyword.process (Current)
+			nb := a_arguments.count
+			inspect nb
+			when 0 then
+				print_space
+			when 1 then
+				print_space
+				l_item := a_arguments.item (1)
+				l_argument := l_item.argument
+				process_inline_separate_argument (l_argument)
+				comment_finder.add_excluded_node (l_argument.expression)
+				comment_finder.add_excluded_node (l_argument.as_keyword)
+				comment_finder.add_excluded_node (l_argument.name)
+				comment_finder.find_comments (l_item, comment_list)
+				comment_finder.reset_excluded_nodes
+				print_space
+			else
+				indent
+				from i := 1 until i > nb loop
+					process_comments
+					print_new_line
+					l_item := a_arguments.item (i)
+					l_argument := l_item.argument
+					process_inline_separate_argument (l_argument)
+					comment_finder.add_excluded_node (l_argument.expression)
+					comment_finder.add_excluded_node (l_argument.as_keyword)
+					comment_finder.add_excluded_node (l_argument.name)
+					comment_finder.find_comments (l_item, comment_list)
+					comment_finder.reset_excluded_nodes
+					if i /= nb then
+							-- The AST may or may not contain the comma.
+							-- So we have to print it explicitly here.
+						tokens.comma_symbol.process (Current)
+					end
+					i := i + 1
+				end
+				dedent
+				process_comments
+				print_new_line
+			end
+		end
+
+	process_inline_separate_instruction (a_instruction: ET_INLINE_SEPARATE_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			process_inline_separate_arguments (a_instruction.arguments)
+			if attached a_instruction.compound as l_compound then
+				process_compound (l_compound)
+			else
+				tokens.do_keyword.process (Current)
+			end
+			process_comments
+			print_new_line
+			a_instruction.end_keyword.process (Current)
+		end
+
 	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
 			-- Process `a_expression'.
 		local
@@ -5149,86 +5229,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			process_symbol (tokens.semicolon_symbol)
 			comment_finder.find_comments (a_symbol, comment_list)
-		end
-
-	process_separate_argument (a_argument: ET_SEPARATE_ARGUMENT)
-			-- Process `a_argument'.
-		do
-			a_argument.expression.process (Current)
-			print_space
-			a_argument.as_keyword.process (Current)
-			print_space
-			a_argument.name.process (Current)
-		end
-
-	process_separate_argument_comma (a_argument_comma: ET_SEPARATE_ARGUMENT_COMMA)
-			-- Process `a_argument_comma'.
-		do
-			process_separate_argument (a_argument_comma.argument)
-			a_argument_comma.comma.process (Current)
-		end
-
-	process_separate_arguments (a_arguments: ET_SEPARATE_ARGUMENTS)
-			-- Process `a_arguments'.
-		local
-			i, nb: INTEGER
-			l_item: ET_SEPARATE_ARGUMENT_ITEM
-			l_argument: ET_SEPARATE_ARGUMENT
-		do
-			a_arguments.separate_keyword.process (Current)
-			nb := a_arguments.count
-			inspect nb
-			when 0 then
-				print_space
-			when 1 then
-				print_space
-				l_item := a_arguments.item (1)
-				l_argument := l_item.argument
-				process_separate_argument (l_argument)
-				comment_finder.add_excluded_node (l_argument.expression)
-				comment_finder.add_excluded_node (l_argument.as_keyword)
-				comment_finder.add_excluded_node (l_argument.name)
-				comment_finder.find_comments (l_item, comment_list)
-				comment_finder.reset_excluded_nodes
-				print_space
-			else
-				indent
-				from i := 1 until i > nb loop
-					process_comments
-					print_new_line
-					l_item := a_arguments.item (i)
-					l_argument := l_item.argument
-					process_separate_argument (l_argument)
-					comment_finder.add_excluded_node (l_argument.expression)
-					comment_finder.add_excluded_node (l_argument.as_keyword)
-					comment_finder.add_excluded_node (l_argument.name)
-					comment_finder.find_comments (l_item, comment_list)
-					comment_finder.reset_excluded_nodes
-					if i /= nb then
-							-- The AST may or may not contain the comma.
-							-- So we have to print it explicitly here.
-						tokens.comma_symbol.process (Current)
-					end
-					i := i + 1
-				end
-				dedent
-				process_comments
-				print_new_line
-			end
-		end
-
-	process_separate_instruction (a_instruction: ET_SEPARATE_INSTRUCTION)
-			-- Process `a_instruction'.
-		do
-			process_separate_arguments (a_instruction.arguments)
-			if attached a_instruction.compound as l_compound then
-				process_compound (l_compound)
-			else
-				tokens.do_keyword.process (Current)
-			end
-			process_comments
-			print_new_line
-			a_instruction.end_keyword.process (Current)
 		end
 
 	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)

@@ -5,7 +5,7 @@ note
 		"Eiffel identifiers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,8 +33,8 @@ inherit
 			is_object_test_local,
 			iteration_item_name,
 			is_iteration_item,
-			separate_argument_name,
-			is_separate_argument,
+			inline_separate_argument_name,
+			is_inline_separate_argument,
 			as_expression
 		end
 
@@ -357,10 +357,10 @@ feature -- Status report
 			Result := (status_code = agent_closed_operand_code)
 		end
 
-	is_separate_argument: BOOLEAN
-			-- Is current identifier a separate instruction argument name?
+	is_inline_separate_argument: BOOLEAN
+			-- Is current identifier an inline separate instruction argument name?
 		do
-			Result := (status_code = separate_argument_code)
+			Result := (status_code = inline_separate_argument_code)
 		end
 
 	is_never_void: BOOLEAN
@@ -508,16 +508,16 @@ feature -- Status setting
 			agent_closed_operand_set: is_agent_closed_operand = b
 		end
 
-	set_separate_argument (b: BOOLEAN)
-			-- Set `is_separate_argument' to `b'.
+	set_inline_separate_argument (b: BOOLEAN)
+			-- Set `is_inline_separate_argument' to `b'.
 		do
 			if b then
-				status_code := separate_argument_code
+				status_code := inline_separate_argument_code
 			else
 				status_code := no_code
 			end
 		ensure
-			separate_argument_set: is_separate_argument = b
+			inline_separate_argument_set: is_inline_separate_argument = b
 		end
 
 feature -- Setting
@@ -645,8 +645,8 @@ feature -- Conversion
 			Result := Current
 		end
 
-	separate_argument_name: ET_IDENTIFIER
-			-- Current name viewed as a separate argument name
+	inline_separate_argument_name: ET_IDENTIFIER
+			-- Current name viewed as an inline separate argument name
 		do
 			Result := Current
 		end
@@ -703,7 +703,7 @@ feature {NONE} -- Implementation
 	tuple_label_code: CHARACTER = 't'
 	agent_open_operand_code: CHARACTER = 'o'
 	agent_closed_operand_code: CHARACTER = 'c'
-	separate_argument_code: CHARACTER = 's'
+	inline_separate_argument_code: CHARACTER = 's'
 	no_code: CHARACTER = '%U'
 			-- Status codes
 

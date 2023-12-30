@@ -2,19 +2,19 @@ note
 
 	description:
 
-		"Eiffel separate arguments followed by a comma"
+		"Eiffel inline separate arguments followed by a comma"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2022-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_SEPARATE_ARGUMENT_COMMA
+class ET_INLINE_SEPARATE_ARGUMENT_COMMA
 
 inherit
 
-	ET_SEPARATE_ARGUMENT_ITEM
+	ET_INLINE_SEPARATE_ARGUMENT_ITEM
 
 create
 
@@ -23,7 +23,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_argument: like argument; a_comma: like comma)
-			-- Create a new separate_argument-comma.
+			-- Create a new inline_separate_argument-comma.
 		require
 			a_argument_not_void: a_argument /= Void
 			a_comma_not_void: a_comma /= Void
@@ -37,8 +37,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	argument: ET_SEPARATE_ARGUMENT
-			-- Separate argument in comma-separated list
+	argument: ET_INLINE_SEPARATE_ARGUMENT
+			-- Inline separate argument in comma-separated list
 
 	comma: ET_SYMBOL
 			-- Comma separator
@@ -67,7 +67,7 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
-			a_processor.process_separate_argument_comma (Current)
+			a_processor.process_inline_separate_argument_comma (Current)
 		end
 
 invariant
