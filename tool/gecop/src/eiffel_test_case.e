@@ -168,7 +168,7 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
 			a_regexp2.optimize
-			a_pattern3 := "(Degree -?[0-9]+|Total Time): [ 0-9:./]*"
+			a_pattern3 := "(Degree -?[0-9]+|Total Time): [ 0-9:./\-]*"
 			create a_regexp3.make
 			a_regexp3.compile (a_pattern3)
 			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
@@ -298,7 +298,7 @@ feature {NONE} -- Test gelint
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
 			a_regexp1.optimize
-			a_pattern2 := "(Degree -?[0-9]+|Total Time): [ 0-9:./]*"
+			a_pattern2 := "(Degree -?[0-9]+|Total Time): [ 0-9:./\-]*"
 			create a_regexp2.make
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
