@@ -19523,310 +19523,6 @@ feature {NONE} -- Separate calls
 		require
 			a_separate_call_not_void: a_separate_call /= Void
 			scoop_mode: scoop_mode
-		do
-			print_separate_qualified_call_declaration (i, a_separate_call)
-		end
-
-	print_separate_creation_call_declaration (i: INTEGER; a_separate_call: ET_SEPARATE_CALL)
-			-- Print function for the call to the `i'-th separate call `a_separate_call'
-			-- appearing in `current_feature', to `current_file' and its signature to
-			-- `header_file'.
-			-- `a_separate_call' is a creation instruction or expression whose
-			-- creation type is separate.
-		require
-			a_separate_call_not_void: a_separate_call /= Void
-			scoop_mode: scoop_mode
-		local
-			l_actual_argument: ET_EXPRESSION
-			l_formal_argument: ET_IDENTIFIER
-			j, nb_args: INTEGER
-			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_type: ET_DYNAMIC_TYPE
-			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_has_separate_actual_argument: BOOLEAN
-			l_old_current_type: like current_type
-			l_potentially_asynchronous: BOOLEAN
-			old_file: KI_TEXT_OUTPUT_STREAM
-		do
-			l_target_type := dynamic_type_set (a_separate_call.target).static_type.primary_type
-			if not attached l_target_type.seeded_dynamic_procedure (a_separate_call.name.seed, current_dynamic_system) as l_procedure then
-					-- Internal error: there should be a procedure with the seed.
-					-- It has been computed in ET_FEATURE_CHECKER or else an
-					-- error should have already been reported.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				old_file := current_file
-				current_file := current_function_header_buffer
-					-- Print signature to `header_file' and `current_file'.
-				header_file.put_character ('/')
-				header_file.put_character ('*')
-				header_file.put_character (' ')
-				header_file.put_string ("Function for separate call #")
-				header_file.put_integer (i)
-				header_file.put_string (" in feature ")
-				print_feature_name_in_comment (current_feature, current_type, header_file)
-				header_file.put_character (' ')
-				header_file.put_character ('*')
-				header_file.put_character ('/')
-				header_file.put_new_line
-				current_file.put_character ('/')
-				current_file.put_character ('*')
-				current_file.put_character (' ')
-				current_file.put_string ("Function for separate call #")
-				current_file.put_integer (i)
-				current_file.put_string (" in feature ")
-				print_feature_name_in_comment (current_feature, current_type, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('*')
-				current_file.put_character ('/')
-				current_file.put_new_line
-				header_file.put_string (c_extern)
-				header_file.put_character (' ')
-					-- Separate call target.
-				print_type_declaration (l_target_type, header_file)
-				header_file.put_character (' ')
-				print_type_declaration (l_target_type, current_file)
-				current_file.put_character (' ')
-				print_separate_call_name (i, current_feature, current_type, header_file)
-				print_separate_call_name (i, current_feature, current_type, current_file)
-				header_file.put_character ('(')
-				current_file.put_character ('(')
-				header_file.put_string (c_ge_context)
-				header_file.put_character ('*')
-				header_file.put_character (' ')
-				header_file.put_string (c_ac)
-				current_file.put_string (c_ge_context)
-				current_file.put_character ('*')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-					-- Separate call arguments.
-				if attached a_separate_call.arguments as l_actual_arguments then
-					nb_args := l_actual_arguments.count
-					from j := 1 until j > nb_args loop
-						l_actual_argument := l_actual_arguments.actual_argument (j)
-						l_formal_argument := formal_argument (j)
-						l_formal_argument.set_index (l_actual_argument.index)
-						l_type := dynamic_type_set (l_formal_argument).static_type
-						l_primary_type := l_type.primary_type
-						if l_type.is_separate then
-							l_has_separate_actual_argument := True
-						end
-						header_file.put_character (',')
-						header_file.put_character (' ')
-						current_file.put_character (',')
-						current_file.put_character (' ')
-						print_type_declaration (l_primary_type, header_file)
-						print_type_declaration (l_primary_type, current_file)
-						header_file.put_character (' ')
-						current_file.put_character (' ')
-						print_argument_name (l_formal_argument, header_file)
-						print_argument_name (l_formal_argument, current_file)
-						j := j + 1
-					end
-				end
-				header_file.put_character (')')
-				current_file.put_character (')')
-				header_file.put_character (';')
-				header_file.put_new_line
-				current_file.put_new_line
-				current_file.put_character ('{')
-				current_file.put_new_line
-				indent
-					-- Print body to `current_file'.
-				current_file := current_function_body_buffer
-				print_indentation
-				current_file.put_string (c_ge_scoop_processor)
-				current_file.put_character ('*')
-				current_file.put_character (' ')
-				current_file.put_character ('s')
-				current_file.put_character ('p')
-				current_file.put_character ('1')
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_ge_scoop_processor)
-				current_file.put_character ('*')
-				current_file.put_character (' ')
-				current_file.put_character ('s')
-				current_file.put_character ('p')
-				current_file.put_character ('2')
-				print_semicolon_newline
-				print_indentation
-				current_file.put_character ('s')
-				current_file.put_character ('p')
-				current_file.put_character ('2')
-				print_assign_to
-				current_file.put_string (c_ge_new_scoop_processor)
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				current_file.put_character (')')
-				print_semicolon_newline
-				print_indentation
-				current_file.put_character ('s')
-				current_file.put_character ('p')
-				current_file.put_character ('1')
-				print_assign_to
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_scoop_processor)
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_scoop_processor)
-				print_assign_to
-				current_file.put_character ('s')
-				current_file.put_character ('p')
-				current_file.put_character ('2')
-				print_semicolon_newline
-				if l_procedure.has_separate_argument and not l_has_separate_actual_argument then
-						-- Synchronous call.
-						--
-						-- Use impersonation (i.e. the creation code will be executed by
-						-- the current thread on behalf of the new SCOOP processor, pretending
-						-- that it is the new thread associated with this new processor).
-					current_file := current_function_header_buffer
-					print_indentation
-					print_type_declaration (l_target_type, current_file)
-					current_file.put_character (' ')
-					print_current_name (current_file)
-					print_semicolon_newline
-					current_file := current_function_body_buffer
-					print_indentation
-					print_current_name (current_file)
-					print_assign_to
-					print_creation_procedure_name (l_procedure, l_target_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_string (c_ac)
-					from j := 1 until j > nb_args loop
-						print_comma
-						l_formal_argument := formal_argument (j)
-						print_argument_name (l_formal_argument, current_file)
-						j := j + 1
-					end
-					current_file.put_character (')')
-					print_semicolon_newline
-				else
-					if l_procedure.has_separate_argument then
-						-- Potentially synchronous call
-						-- (if some of the separate arguments are controlled by the current processor).
-					else
-						-- Asynchronous call.
-					end
-						-- TODO: check whether some of the actual separate arguments
-						-- are controlled by the caller.
-					l_potentially_asynchronous := True
-					current_file := current_function_header_buffer
-					print_indentation
-					current_file.put_string (c_ge_scoop_session)
-					current_file.put_character ('*')
-					current_file.put_character (' ')
-					current_file.put_character ('s')
-					current_file.put_character ('e')
-					print_semicolon_newline
-					current_file := current_function_body_buffer
-					l_old_current_type := current_type
-					current_type := l_target_type
-					print_malloc_current (l_procedure.static_feature)
-					current_type := l_old_current_type
-					print_indentation
-					current_file.put_character ('s')
-					current_file.put_character ('e')
-					print_assign_to
-					current_file.put_string (c_ge_get_scoop_session)
-					current_file.put_character ('(')
-					current_file.put_character ('s')
-					current_file.put_character ('p')
-					current_file.put_character ('2')
-					print_comma
-					current_file.put_character ('s')
-					current_file.put_character ('p')
-					current_file.put_character ('1')
-					current_file.put_character (')')
-					print_semicolon_newline
-					print_indentation
-					current_file.put_string (c_ge_add_scoop_call)
-					current_file.put_character ('(')
-					current_file.put_character ('s')
-					current_file.put_character ('e')
-					print_comma
-					print_separate_call_object_name (i, current_feature, current_type, current_file)
-					current_file.put_character ('(')
-					print_current_name (current_file)
-					from j := 1 until j > nb_args loop
-						print_comma
-						l_formal_argument := formal_argument (j)
-						print_argument_name (l_formal_argument, current_file)
-						j := j + 1
-					end
-					current_file.put_character (')')
-					current_file.put_character (')')
-					print_semicolon_newline
-					print_indentation
-					current_file.put_string (c_ge_exit_scoop_session)
-					current_file.put_character ('(')
-					current_file.put_character ('s')
-					current_file.put_character ('e')
-					current_file.put_character (')')
-					print_semicolon_newline
-				end
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_scoop_processor)
-				print_assign_to
-				current_file.put_character ('s')
-				current_file.put_character ('p')
-				current_file.put_character ('1')
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_ge_thread_create_with_attr)
-				current_file.put_character ('(')
-				print_current_name (current_file);
-				print_comma
-				current_file.put_character ('0')
-				print_comma
-				current_file.put_character ('0')
-				print_comma
-				current_file.put_character ('0')
-				print_comma
-				current_file.put_character ('1')
-				current_file.put_character (')')
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_return)
-				current_file.put_character (' ')
-				print_current_name (current_file)
-				print_semicolon_newline
-				dedent
-				current_file.put_character ('}')
-				current_file.put_new_line
-				current_file.put_new_line
-					--
-					-- Clean up.
-					--
-				current_file := old_file
-				reset_temp_variables
-				from j := 1 until j > nb_args loop
-					formal_argument (j).set_index (j)
-					j := j + 1
-				end
-					-- Flush to file.
-				flush_to_c_file
-			end
-			if l_potentially_asynchronous then
-				print_separate_call_function_declaration (i, a_separate_call)
-				print_separate_call_object_declaration (i, a_separate_call)
-			end
-		end
-
-	print_separate_qualified_call_declaration (i: INTEGER; a_separate_call: ET_SEPARATE_CALL)
-			-- Print function for the call to the `i'-th separate call `a_separate_call'
-			-- appearing in `current_feature', to `current_file' and its signature to
-			-- `header_file'.
-		require
-			a_separate_call_not_void: a_separate_call /= Void
-			scoop_mode: scoop_mode
 		local
 			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_actual_argument: ET_EXPRESSION
@@ -19877,14 +19573,10 @@ feature {NONE} -- Separate calls
 			header_file.put_integer (i)
 			header_file.put_character (' ')
 			header_file.put_character ('(')
-			header_file.put_string (l_target_type.base_type.unaliased_to_text)
-			header_file.put_character ('.')
-			header_file.put_string (STRING_.replaced_all_substrings (l_called_feature.static_feature.lower_name, "*/", "star/"))
+			print_feature_name_in_comment (l_called_feature, l_target_type, header_file)
 			header_file.put_character (')')
 			header_file.put_string (" in feature ")
-			header_file.put_string (current_type.base_type.unaliased_to_text)
-			header_file.put_character ('.')
-			header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+			print_feature_name_in_comment (current_feature, current_type, header_file)
 			header_file.put_character (' ')
 			header_file.put_character ('*')
 			header_file.put_character ('/')
@@ -19896,14 +19588,10 @@ feature {NONE} -- Separate calls
 			current_file.put_integer (i)
 			current_file.put_character (' ')
 			current_file.put_character ('(')
-			current_file.put_string (l_target_type.base_type.unaliased_to_text)
-			current_file.put_character ('.')
-			current_file.put_string (STRING_.replaced_all_substrings (l_called_feature.static_feature.lower_name, "*/", "star/"))
+			print_feature_name_in_comment (l_called_feature, l_target_type, current_file)
 			current_file.put_character (')')
 			current_file.put_string (" in feature ")
-			current_file.put_string (current_type.base_type.unaliased_to_text)
-			current_file.put_character ('.')
-			current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+			print_feature_name_in_comment (current_feature, current_type, current_file)
 			current_file.put_character (' ')
 			current_file.put_character ('*')
 			current_file.put_character ('/')
@@ -20364,6 +20052,7 @@ feature {NONE} -- Separate calls
 		local
 			l_argument: ET_EXPRESSION
 			j, nb_args: INTEGER
+			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_operand: ET_IDENTIFIER
 			nb_operands: INTEGER
@@ -20373,11 +20062,16 @@ feature {NONE} -- Separate calls
 			old_file := current_file
 			current_file := current_function_header_buffer
 				-- Print signature to `header_file' and `current_file'.
+			l_target_type := dynamic_type_set (a_separate_call.target).static_type.primary_type
 			header_file.put_character ('/')
 			header_file.put_character ('*')
 			header_file.put_character (' ')
 			header_file.put_string ("Function to execute separate call #")
 			header_file.put_integer (i)
+			header_file.put_character (' ')
+			header_file.put_character ('(')
+			print_call_name_in_comment (a_separate_call.name, l_target_type, header_file)
+			header_file.put_character (')')
 			header_file.put_string (" in feature ")
 			print_feature_name_in_comment (current_feature, current_type, header_file)
 			header_file.put_character (' ')
@@ -20406,6 +20100,10 @@ feature {NONE} -- Separate calls
 			current_file.put_character (' ')
 			current_file.put_string ("Function to execute separate call #")
 			current_file.put_integer (i)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_call_name_in_comment (a_separate_call.name, l_target_type, current_file)
+			current_file.put_character (')')
 			current_file.put_string (" in feature ")
 			print_feature_name_in_comment (current_feature, current_type, current_file)
 			current_file.put_character (' ')
@@ -20437,9 +20135,8 @@ feature {NONE} -- Separate calls
 			nb_operands := 1
 			l_operand := formal_argument (nb_operands)
 			l_operand.set_index (a_separate_call.target.index)
-			l_type := dynamic_type_set (l_operand).static_type.primary_type
 			print_indentation
-			print_type_declaration (l_type, current_file)
+			print_type_declaration (l_target_type, current_file)
 			current_file.put_character (' ')
 			print_argument_name (l_operand, current_file)
 			current_file.put_character (' ')
@@ -20514,6 +20211,7 @@ feature {NONE} -- Separate calls
 		local
 			l_argument: ET_EXPRESSION
 			j, nb: INTEGER
+			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_operand: ET_IDENTIFIER
 			nb_operands: INTEGER
@@ -20522,11 +20220,16 @@ feature {NONE} -- Separate calls
 			old_file := current_file
 			current_file := current_function_header_buffer
 				-- Print signature to `header_file' and `current_file'.
+			l_target_type := dynamic_type_set (a_separate_call.target).static_type.primary_type
 			header_file.put_character ('/')
 			header_file.put_character ('*')
 			header_file.put_character (' ')
 			header_file.put_string ("Creation of separate call object #")
 			header_file.put_integer (i)
+			header_file.put_character (' ')
+			header_file.put_character ('(')
+			print_call_name_in_comment (a_separate_call.name, l_target_type, header_file)
+			header_file.put_character (')')
 			header_file.put_string (" in feature ")
 			print_feature_name_in_comment (current_feature, current_type, header_file)
 			header_file.put_character (' ')
@@ -20543,6 +20246,10 @@ feature {NONE} -- Separate calls
 			current_file.put_character (' ')
 			current_file.put_string ("Creation of separate call object #")
 			current_file.put_integer (i)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_call_name_in_comment (a_separate_call.name, l_target_type, current_file)
+			current_file.put_character (')')
 			current_file.put_string (" in feature ")
 			print_feature_name_in_comment (current_feature, current_type, current_file)
 			current_file.put_character (' ')
@@ -20558,11 +20265,10 @@ feature {NONE} -- Separate calls
 			nb_operands := 1
 			l_operand := formal_argument (nb_operands)
 			l_operand.set_index (a_separate_call.target.index)
-			l_type := dynamic_type_set (l_operand).static_type.primary_type
-			print_type_declaration (l_type, header_file)
+			print_type_declaration (l_target_type, header_file)
 			header_file.put_character (' ')
 			print_argument_name (l_operand, header_file)
-			print_type_declaration (l_type, current_file)
+			print_type_declaration (l_target_type, current_file)
 			current_file.put_character (' ')
 			print_argument_name (l_operand, current_file)
 				-- Separate call arguments.
