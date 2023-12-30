@@ -36,7 +36,7 @@ inherit
 			resolved_formal_parameters_with_type_mark,
 			type_with_type_mark,
 			is_valid_context_type,
-			append_canonical_to_string
+			append_canonical_actual_parameter_to_string
 		end
 
 	ET_TYPE_CONTEXT
@@ -900,7 +900,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Type context
 
 feature -- Output
 
-	append_canonical_to_string (a_string: STRING)
+	append_canonical_actual_parameter_to_string (a_string: STRING)
 			-- Append textual representation of canonical version of current
 			-- actual generic parameter to `a_string'.
 			-- A canonical version is an unaliased version, that is when
@@ -930,7 +930,7 @@ feature -- Output
 					a_string.append_string (tokens.reference_keyword.text)
 					a_string.append_character (' ')
 				end
-				if l_type_mark.is_separate_mark and not l_base_class.is_separate then
+				if scoop_mode and l_type_mark.is_separate_mark and not l_base_class.is_separate then
 					a_string.append_string (tokens.separate_keyword.text)
 					a_string.append_character (' ')
 				end
