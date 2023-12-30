@@ -5,7 +5,7 @@ note
 		"Eiffel actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -105,6 +105,45 @@ feature -- Type processing
 			-- been replaced by `a_type'
 		do
 			Result := Current
+		end
+
+feature -- Output
+
+	append_canonical_to_string (a_string: STRING)
+			-- Append textual representation of canonical version of current
+			-- actual generic parameter to `a_string'.
+			-- A canonical version is an unaliased version, that is when
+			-- aliased types such as INTEGER are replaced with the associated
+			-- types such as INTEGER_32. Also, implicit type marks are
+			-- replaced with explicit type marks, except when the actual
+			-- generic parameters are base types where the type mark is not
+			-- shown at all if 'attached', or if 'expanded' and thebase class
+			-- is expanded, or if 'separate' and the base class is separate
+			-- (e.g. "FOO [BAR, INTEGER_8, detachable BAZ]" instead of
+			-- "FOO [attached BAR, expanded INTEGER_8, detachable BAZ]").
+			-- Also, tuple types have no labels.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			if attached type.type_mark as l_type_mark then
+				if l_type_mark.is_detachable_mark then
+					a_string.append_string (tokens.detachable_keyword.text)
+					a_string.append_character (' ')
+				end
+				if l_type_mark.is_expanded_mark then
+					a_string.append_string (tokens.expanded_keyword.text)
+					a_string.append_character (' ')
+				end
+				if l_type_mark.is_reference_mark then
+					a_string.append_string (tokens.reference_keyword.text)
+					a_string.append_character (' ')
+				end
+				if l_type_mark.is_separate_mark then
+					a_string.append_string (tokens.separate_keyword.text)
+					a_string.append_character (' ')
+				end
+			end
+			type.append_canonical_to_string (a_string)
 		end
 
 end

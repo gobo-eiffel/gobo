@@ -5,7 +5,7 @@ note
 		"Eiffel anchored types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,6 @@ inherit
 
 	ET_TYPE
 		redefine
-			type_mark,
 			has_anchored_type,
 			type_with_type_mark,
 			resolved_formal_parameters,
@@ -26,10 +25,6 @@ inherit
 	HASHABLE
 
 feature -- Access
-
-	type_mark: detachable ET_TYPE_MARK
-			-- 'attached' or 'detachable' keyword,
-			-- or '!' or '?' symbol
 
 	like_keyword: ET_KEYWORD
 			-- 'like' keyword

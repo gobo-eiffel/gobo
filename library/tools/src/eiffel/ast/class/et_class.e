@@ -45,6 +45,8 @@ inherit
 			is_named_type, is_valid_context,
 			debug_output, copy, is_equal,
 			append_unaliased_to_string,
+			append_canonical_to_string,
+			append_runtime_name_to_string,
 			named_query,
 			named_procedure,
 			add_overloaded_queries,
@@ -2819,8 +2821,7 @@ feature -- Comparison
 feature -- Output
 
 	append_to_string (a_string: STRING)
-			-- Append textual representation of
-			-- current type to `a_string'.
+			-- Append `to_text' to `a_string'.
 		do
 			a_string.append_string (upper_name)
 			if attached formal_parameters as l_formal_parameters and then not l_formal_parameters.is_empty then
@@ -2830,15 +2831,32 @@ feature -- Output
 		end
 
 	append_unaliased_to_string (a_string: STRING)
-			-- Append textual representation of unaliased
-			-- version of current type to `a_string'.
-			-- An unaliased version if when aliased types such as INTEGER
-			-- are replaced by the associated types such as INTEGER_32.
+			-- Append `unaliased_to_text' to `a_string'.
 		do
 			a_string.append_string (upper_name)
 			if attached formal_parameters as l_formal_parameters and then not l_formal_parameters.is_empty then
 				a_string.append_character (' ')
 				l_formal_parameters.append_unaliased_to_string (a_string)
+			end
+		end
+
+	append_canonical_to_string (a_string: STRING)
+			-- Append `canonical_to_text' to `a_string'.
+		do
+			a_string.append_string (upper_name)
+			if attached formal_parameters as l_formal_parameters and then not l_formal_parameters.is_empty then
+				a_string.append_character (' ')
+				l_formal_parameters.append_canonical_to_string (a_string)
+			end
+		end
+
+	append_runtime_name_to_string (a_string: STRING)
+			-- Append `runtime_name_to_text' to `a_string'.
+		do
+			a_string.append_string (upper_name)
+			if attached formal_parameters as l_formal_parameters and then not l_formal_parameters.is_empty then
+				a_string.append_character (' ')
+				l_formal_parameters.append_runtime_name_to_string (a_string)
 			end
 		end
 

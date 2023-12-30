@@ -27,7 +27,7 @@ inherit
 			actual_parameters,
 			resolved_formal_parameters_with_type_mark,
 			append_unaliased_to_string,
-			append_runtime_name_to_string,
+			append_canonical_to_string,
 			type_with_type_mark,
 			type_mark,
 			overridden_type_mark
@@ -496,8 +496,7 @@ feature -- Type processing
 feature -- Output
 
 	append_to_string (a_string: STRING)
-			-- Append textual representation of
-			-- current type to `a_string'.
+			-- Append `to_text' to `a_string'.
 		do
 			if attached type_mark as l_type_mark then
 				l_type_mark.append_to_string_with_space (a_string)
@@ -510,10 +509,7 @@ feature -- Output
 		end
 
 	append_unaliased_to_string (a_string: STRING)
-			-- Append textual representation of unaliased
-			-- version of current type to `a_string'.
-			-- An unaliased version if when aliased types such as INTEGER
-			-- are replaced by the associated types such as INTEGER_32.
+			-- Append `unaliased_to_text' to `a_string'.
 		do
 			if attached type_mark as l_type_mark then
 				l_type_mark.append_to_string_with_space (a_string)
@@ -525,11 +521,18 @@ feature -- Output
 			end
 		end
 
+	append_canonical_to_string (a_string: STRING)
+			-- Append `canonical_to_text' to `a_string'.
+		do
+			a_string.append_string (tuple_string)
+			if attached actual_parameters as l_actual_parameters and then not l_actual_parameters.is_empty then
+				a_string.append_character (' ')
+				l_actual_parameters.append_canonical_to_string (a_string)
+			end
+		end
+
 	append_runtime_name_to_string (a_string: STRING)
-			-- Append to `a_string' textual representation of unaliased
-			-- version of current type as returned by 'TYPE.runtime_name'.
-			-- An unaliased version if when aliased types such as INTEGER
-			-- are replaced by the associated types such as INTEGER_32.
+			-- Append `runtime_name_to_text' to `a_string'.
 		do
 			if base_class.current_system.attachment_type_conformance_mode then
 					-- Void-safe mode.

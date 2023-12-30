@@ -361,7 +361,7 @@ feature -- Types
 					l_base_type := a_type.base_type_with_type_mark (l_implicit_type_mark, a_context)
 					l_type_name := type_name_buffer
 					l_type_name.wipe_out
-					l_base_type.append_runtime_name_to_string (l_type_name)
+					l_base_type.append_canonical_to_string (l_type_name)
 					dynamic_generic_types_by_name.search (l_type_name)
 					if dynamic_generic_types_by_name.found then
 						l_result := dynamic_generic_types_by_name.found_item
@@ -393,7 +393,7 @@ feature -- Types
 				l_base_type := a_type.base_type_with_type_mark (l_implicit_type_mark, a_context)
 				Result := new_dynamic_primary_type (l_base_type)
 				if l_base_class.is_generic or l_base_class.is_tuple_class then
-					l_type_name := l_base_type.runtime_name_to_text
+					l_type_name := l_base_type.canonical_to_text
 					dynamic_generic_types_by_name.force_last (Result, l_type_name)
 				end
 			end
@@ -1186,16 +1186,9 @@ feature -- New instance types
 			-- created by 'TYPE.new_instance' or 'TYPE.new_special_any_instance'?
 		require
 			a_type_not_void: a_type /= Void
-		local
-			l_name: STRING
 		do
 			if attached new_instance_types as l_new_instance_types then
-				l_name := a_type.base_type.unaliased_to_text
-				l_name.replace_substring_all ("attached ", "")
-				l_name.replace_substring_all ("[attached] ", "")
-				l_name.replace_substring_all ("detachable ", "")
-				l_name.replace_substring_all ("[detachable] ", "")
-				Result := l_new_instance_types.has (l_name)
+				Result := l_new_instance_types.has (a_type.base_type.canonical_to_text)
 			else
 				Result := True
 			end

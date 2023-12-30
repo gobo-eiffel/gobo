@@ -5,7 +5,7 @@ note
 		"Eiffel lists of actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -562,8 +562,9 @@ feature -- Output
 	append_unaliased_to_string (a_string: STRING)
 			-- Append textual representation of unaliased
 			-- version of current actual parameters to `a_string'.
-			-- An unaliased version if when aliased types such as INTEGER
-			-- are replaced by the associated types such as INTEGER_32.
+			-- An unaliased version is when aliased types such as INTEGER
+			-- are replaced with the associated types such as INTEGER_32.
+			-- Also, tuple types have no labels.
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -585,11 +586,46 @@ feature -- Output
 			a_string.append_character (']')
 		end
 
+	append_canonical_to_string (a_string: STRING)
+			-- Append textual representation of canonical version of current
+			-- actual generic parameters to `a_string'.
+			-- A canonical version is an unaliased version, that is when
+			-- aliased types such as INTEGER are replaced with the associated
+			-- types such as INTEGER_32. Also, implicit type marks are
+			-- replaced with explicit type marks, except when the actual
+			-- generic parameters are base types where the type mark is not
+			-- shown at all if 'attached', or if 'expanded' and thebase class
+			-- is expanded, or if 'separate' and the base class is separate
+			-- (e.g. "FOO [BAR, INTEGER_8, detachable BAZ]" instead of
+			-- "FOO [attached BAR, expanded INTEGER_8, detachable BAZ]").
+			-- Also, tuple types have no labels.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, nb: INTEGER
+			a_parameter: ET_ACTUAL_PARAMETER
+		do
+			a_string.append_character ('[')
+			nb := count
+			if nb >= 1 then
+				a_parameter := actual_parameter (1)
+				a_parameter.append_canonical_to_string (a_string)
+				from i := 2 until i > nb loop
+					a_string.append_string (", ")
+					a_parameter := actual_parameter (i)
+					a_parameter.append_canonical_to_string (a_string)
+					i := i + 1
+				end
+			end
+			a_string.append_character (']')
+		end
+
 	append_runtime_name_to_string (a_string: STRING)
 			-- Append to `a_string' textual representation of unaliased
 			-- version of current actual parameters as returned by 'TYPE.runtime_name'.
-			-- An unaliased version if when aliased types such as INTEGER
-			-- are replaced by the associated types such as INTEGER_32.
+			-- An unaliased version is when aliased types such as INTEGER
+			-- are replaced with the associated types such as INTEGER_32.
+			-- Also, tuple types have no labels.
 		require
 			a_string_not_void: a_string /= Void
 		local

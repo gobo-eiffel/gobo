@@ -1573,8 +1573,8 @@ feature {NONE} -- Feature generation
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
-			print_feature_name_comment (a_feature, current_type, header_file)
-			print_feature_name_comment (a_feature, current_type, current_file)
+			print_feature_name_comment (current_feature, current_type, header_file)
+			print_feature_name_comment (current_feature, current_type, current_file)
 			l_result_type_set := current_feature.result_type_set
 			if l_result_type_set /= Void then
 				l_result_type := l_result_type_set.static_type.primary_type
@@ -1856,8 +1856,8 @@ feature {NONE} -- Feature generation
 				--
 				-- Print signature to `header_file' and `current_file'.
 				--
-			print_feature_name_comment (a_feature, current_type, header_file)
-			print_feature_name_comment (a_feature, current_type, current_file)
+			print_feature_name_comment (current_feature, current_type, header_file)
+			print_feature_name_comment (current_feature, current_type, current_file)
 			header_file.put_string (c_extern)
 			header_file.put_character (' ')
 			l_result_type_set := current_feature.result_type_set
@@ -5953,8 +5953,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
-			print_feature_name_comment (a_feature, current_type, header_file)
-			print_feature_name_comment (a_feature, current_type, current_file)
+			print_feature_name_comment (current_feature, current_type, header_file)
+			print_feature_name_comment (current_feature, current_type, current_file)
 			l_result_type_set := current_feature.result_type_set
 			if l_result_type_set /= Void then
 				l_result_type := l_result_type_set.static_type.primary_type
@@ -6953,8 +6953,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				--
 				-- Print signature to `header_file' and `current_file'.
 				--
-			print_feature_name_comment (a_feature, current_type, header_file)
-			print_feature_name_comment (a_feature, current_type, current_file)
+			print_feature_name_comment (current_feature, current_type, header_file)
+			print_feature_name_comment (current_feature, current_type, current_file)
 			header_file.put_string (c_extern)
 			header_file.put_character (' ')
 			l_result_type_set := current_feature.result_type_set
@@ -17025,9 +17025,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_string ("Function for agent #")
 				current_file.put_integer (i)
 				current_file.put_string (" in feature ")
-				current_file.put_string (current_type.base_type.unaliased_to_text)
-				current_file.put_character ('.')
-				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+				print_feature_name_in_comment (current_feature, current_type, current_file)
 				current_file.put_character (' ')
 				current_file.put_character ('*')
 				current_file.put_character ('/')
@@ -17206,9 +17204,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				header_file.put_string ("Creation of agent #")
 				header_file.put_integer (i)
 				header_file.put_string (" in feature ")
-				header_file.put_string (current_type.base_type.unaliased_to_text)
-				header_file.put_character ('.')
-				header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+				print_feature_name_in_comment (current_feature, current_type, header_file)
 				header_file.put_character (' ')
 				header_file.put_character ('*')
 				header_file.put_character ('/')
@@ -17219,9 +17215,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_string ("Creation of agent #")
 				current_file.put_integer (i)
 				current_file.put_string (" in feature ")
-				current_file.put_string (current_type.base_type.unaliased_to_text)
-				current_file.put_character ('.')
-				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+				print_feature_name_in_comment (current_feature, current_type, current_file)
 				current_file.put_character (' ')
 				current_file.put_character ('*')
 				current_file.put_character ('/')
@@ -19571,9 +19565,7 @@ feature {NONE} -- Separate calls
 				header_file.put_string ("Function for separate call #")
 				header_file.put_integer (i)
 				header_file.put_string (" in feature ")
-				header_file.put_string (current_type.base_type.unaliased_to_text)
-				header_file.put_character ('.')
-				header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+				print_feature_name_in_comment (current_feature, current_type, header_file)
 				header_file.put_character (' ')
 				header_file.put_character ('*')
 				header_file.put_character ('/')
@@ -19584,9 +19576,7 @@ feature {NONE} -- Separate calls
 				current_file.put_string ("Function for separate call #")
 				current_file.put_integer (i)
 				current_file.put_string (" in feature ")
-				current_file.put_string (current_type.base_type.unaliased_to_text)
-				current_file.put_character ('.')
-				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+				print_feature_name_in_comment (current_feature, current_type, current_file)
 				current_file.put_character (' ')
 				current_file.put_character ('*')
 				current_file.put_character ('/')
@@ -20389,9 +20379,7 @@ feature {NONE} -- Separate calls
 			header_file.put_string ("Function to execute separate call #")
 			header_file.put_integer (i)
 			header_file.put_string (" in feature ")
-			header_file.put_string (current_type.base_type.unaliased_to_text)
-			header_file.put_character ('.')
-			header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+			print_feature_name_in_comment (current_feature, current_type, header_file)
 			header_file.put_character (' ')
 			header_file.put_character ('*')
 			header_file.put_character ('/')
@@ -20419,9 +20407,7 @@ feature {NONE} -- Separate calls
 			current_file.put_string ("Function to execute separate call #")
 			current_file.put_integer (i)
 			current_file.put_string (" in feature ")
-			current_file.put_string (current_type.base_type.unaliased_to_text)
-			current_file.put_character ('.')
-			current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+			print_feature_name_in_comment (current_feature, current_type, current_file)
 			current_file.put_character (' ')
 			current_file.put_character ('*')
 			current_file.put_character ('/')
@@ -20542,9 +20528,7 @@ feature {NONE} -- Separate calls
 			header_file.put_string ("Creation of separate call object #")
 			header_file.put_integer (i)
 			header_file.put_string (" in feature ")
-			header_file.put_string (current_type.base_type.unaliased_to_text)
-			header_file.put_character ('.')
-			header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+			print_feature_name_in_comment (current_feature, current_type, header_file)
 			header_file.put_character (' ')
 			header_file.put_character ('*')
 			header_file.put_character ('/')
@@ -20560,9 +20544,7 @@ feature {NONE} -- Separate calls
 			current_file.put_string ("Creation of separate call object #")
 			current_file.put_integer (i)
 			current_file.put_string (" in feature ")
-			current_file.put_string (current_type.base_type.unaliased_to_text)
-			current_file.put_character ('.')
-			current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+			print_feature_name_in_comment (current_feature, current_type, current_file)
 			current_file.put_character (' ')
 			current_file.put_character ('*')
 			current_file.put_character ('/')
@@ -22560,7 +22542,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			current_file.put_character (' ')
 			current_file.put_character ('=')
 			current_file.put_character (' ')
-			l_string := current_type.base_type.unaliased_to_text
+			l_string := current_type.base_type.canonical_to_text
 			if attached current_feature.result_type_set as l_result_type_set and then l_result_type_set.static_type.base_type.same_named_type_with_type_marks (current_system.string_32_type, tokens.implicit_detachable_type_mark, current_system.any_type, tokens.implicit_detachable_type_mark, current_system.any_type) then
 				current_file.put_string (c_ge_ms32)
 			else
@@ -31755,7 +31737,7 @@ feature {NONE} -- C function generation
 					from i := 1 until i > nb loop
 						l_type := current_dynamic_system.dynamic_types.item (i)
 						if l_type.is_alive then
-							current_file.put_line ("fprintf(stdout, %"" + l_type.base_type.unaliased_to_text + "%T%%d\n%", gobo_ids[" + i.out + "]);")
+							current_file.put_line ("fprintf(stdout, %"" + l_type.base_type.canonical_to_text + "%T%%d\n%", gobo_ids[" + i.out + "]);")
 						end
 						i := i + 1
 					end
@@ -33758,10 +33740,10 @@ feature {NONE} -- Memory allocation
 			end
 				-- Print signature to `header_file' and `current_file'.
 			header_file.put_string ("/* New instance of type ")
-			header_file.put_string (a_type.base_type.unaliased_to_text)
+			header_file.put_string (a_type.base_type.canonical_to_text)
 			header_file.put_line (" */")
 			current_file.put_string ("/* New instance of type ")
-			current_file.put_string (a_type.base_type.unaliased_to_text)
+			current_file.put_string (a_type.base_type.canonical_to_text)
 			current_file.put_line (" */")
 			header_file.put_string (c_extern)
 			header_file.put_character (' ')
@@ -34019,10 +34001,10 @@ feature {NONE} -- Memory allocation
 		do
 				-- Print signature to `header_file' and `current_file'.
 			header_file.put_string ("/* New once-per-object data for type ")
-			header_file.put_string (a_type.base_type.unaliased_to_text)
+			header_file.put_string (a_type.base_type.canonical_to_text)
 			header_file.put_line (" */")
 			current_file.put_string ("/* New once-per-object data for type ")
-			current_file.put_string (a_type.base_type.unaliased_to_text)
+			current_file.put_string (a_type.base_type.canonical_to_text)
 			current_file.put_line (" */")
 			header_file.put_string (c_extern)
 			header_file.put_character (' ')
@@ -34205,10 +34187,10 @@ feature {NONE} -- Memory allocation
 			if use_threads then
 					-- Print signature to `header_file' and `current_file'.
 				header_file.put_string ("/* Dispose once-per-object data for type ")
-				header_file.put_string (a_type.base_type.unaliased_to_text)
+				header_file.put_string (a_type.base_type.canonical_to_text)
 				header_file.put_line (" */")
 				current_file.put_string ("/* Dispose once-per-object data for type ")
-				current_file.put_string (a_type.base_type.unaliased_to_text)
+				current_file.put_string (a_type.base_type.canonical_to_text)
 				current_file.put_line (" */")
 				header_file.put_string (c_extern)
 				header_file.put_character (' ')
@@ -34461,7 +34443,7 @@ feature {NONE} -- Trace generation
 			print_escaped_string (a_message)
 			current_file.put_character (',')
 			current_file.put_character (' ')
-			print_escaped_string (current_type.base_type.unaliased_to_text)
+			print_escaped_string (current_type.base_type.canonical_to_text)
 			current_file.put_character (',')
 			current_file.put_character (' ')
 			print_escaped_string (current_feature.static_feature.lower_name)
@@ -35474,7 +35456,7 @@ feature {NONE} -- Type generation
 					a_file.put_character ('/')
 					a_file.put_character ('*')
 					a_file.put_character (' ')
-					a_file.put_string (l_type.base_type.unaliased_to_text)
+					a_file.put_string (l_type.base_type.canonical_to_text)
 					a_file.put_character (' ')
 					a_file.put_character ('*')
 					a_file.put_character ('/')
@@ -36216,7 +36198,7 @@ feature {NONE} -- Type generation
 				a_file.put_character ('*')
 				a_file.put_character (' ')
 				a_file.put_string ("Struct for type ")
-				a_file.put_string (a_type.base_type.unaliased_to_text)
+				a_file.put_string (a_type.base_type.canonical_to_text)
 				a_file.put_character (' ')
 				a_file.put_character ('*')
 				a_file.put_character ('/')
@@ -36373,7 +36355,7 @@ feature {NONE} -- Type generation
 				a_file.put_character ('*')
 				a_file.put_character (' ')
 				a_file.put_string ("Struct for boxed version of type ")
-				a_file.put_string (a_type.base_type.unaliased_to_text)
+				a_file.put_string (a_type.base_type.canonical_to_text)
 				a_file.put_character (' ')
 				a_file.put_character ('*')
 				a_file.put_character ('/')
@@ -36472,7 +36454,7 @@ feature {NONE} -- Type generation
 			a_file.put_character ('*')
 			a_file.put_character (' ')
 			a_file.put_string ("Struct for once-per-object data of type ")
-			a_file.put_string (a_type.base_type.unaliased_to_text)
+			a_file.put_string (a_type.base_type.canonical_to_text)
 			a_file.put_character (' ')
 			a_file.put_character ('*')
 			a_file.put_character ('/')
@@ -38591,7 +38573,32 @@ feature {NONE} -- Feature name generation
 			a_file.put_integer (a_constant.id)
 		end
 
-	print_feature_name_comment (a_feature: ET_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+	print_call_name_in_comment (a_name: ET_CALL_NAME; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print name `a_name' of a call with `a_type' as target static type,
+			-- in a C comment to `a_file'.
+		require
+			a_name_not_void: a_name /= Void
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (a_type.base_type.canonical_to_text)
+			a_file.put_character ('.')
+			a_file.put_string (STRING_.replaced_all_substrings (a_name.lower_name, "*/", "star/"))
+		end
+
+	print_feature_name_in_comment (a_feature: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print name of `a_feature' from `a_type' in a C comment to `a_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			print_call_name_in_comment (a_feature.static_feature.name, a_type, a_file)
+		end
+
+	print_feature_name_comment (a_feature: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of `a_feature' from `a_type' as a C comment to `a_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -38602,9 +38609,7 @@ feature {NONE} -- Feature name generation
 			a_file.put_character ('/')
 			a_file.put_character ('*')
 			a_file.put_character (' ')
-			a_file.put_string (a_type.base_type.unaliased_to_text)
-			a_file.put_character ('.')
-			a_file.put_string (STRING_.replaced_all_substrings (a_feature.lower_name, "*/", "star/"))
+			print_feature_name_in_comment (a_feature, a_type, a_file)
 			a_file.put_character (' ')
 			a_file.put_character ('*')
 			a_file.put_character ('/')
@@ -38635,9 +38640,7 @@ feature {NONE} -- Feature name generation
 			a_file.put_character ('t')
 			a_file.put_character ('o')
 			a_file.put_character (' ')
-			a_file.put_string (a_target_type.base_type.unaliased_to_text)
-			a_file.put_character ('.')
-			a_file.put_string (STRING_.replaced_all_substrings (a_call.name.lower_name, "*/", "star/"))
+			print_call_name_in_comment (a_call.name, a_target_type, a_file)
 			l_seed := a_call.name.seed
 			if a_call.is_tuple_label then
 				a_file.put_string (once " (label on item #")
@@ -38647,10 +38650,9 @@ feature {NONE} -- Feature name generation
 				l_arguments := a_call.arguments
 				if l_arguments /= Void and then l_arguments.count = 1 then
 					if attached {ET_MANIFEST_TUPLE} l_arguments.actual_argument (1) as l_manifest_tuple then
-						a_file.put_string (once " with a manifest tuple argument")
+						a_file.put_string (once " with a manifest tuple argument of type ")
 						l_argument_type_set := dynamic_type_set_in_feature (l_manifest_tuple, a_caller)
-						a_file.put_string (once " of type ")
-						a_file.put_string (l_argument_type_set.static_type.primary_type.base_type.unaliased_to_text)
+						a_file.put_string (l_argument_type_set.static_type.primary_type.base_type.canonical_to_text)
 					end
 				end
 			end

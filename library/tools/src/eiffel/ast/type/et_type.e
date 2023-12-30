@@ -17,6 +17,8 @@ inherit
 	ET_TYPE_ITEM
 
 	ET_ACTUAL_PARAMETER
+		rename
+			append_canonical_to_string as append_canonical_actual_parameter_to_string
 		undefine
 			resolved_syntactical_constraint_with_type
 		end
@@ -62,9 +64,6 @@ feature -- Access
 	type_mark: detachable ET_TYPE_MARK
 			-- 'attached', 'detachable', 'expanded', 'reference' or 'separate' keyword,
 			-- or '!' or '?' symbol
-		do
-			-- Result := Void
-		end
 
 	overridden_type_mark (a_override_type_mark: detachable ET_TYPE_MARK): detachable ET_TYPE_MARK
 			-- Version of `type_mark' overridden by `a_override_type_mark'
@@ -1219,8 +1218,7 @@ feature -- Output
 		end
 
 	append_to_string (a_string: STRING)
-			-- Append textual representation of
-			-- current type to `a_string'.
+			-- Append `to_text' to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		deferred
@@ -1229,8 +1227,9 @@ feature -- Output
 	unaliased_to_text: STRING
 			-- Textual representation of unaliased version of current type
 			-- (Create a new string at each call.)
-			-- An unaliased version if when aliased types such as INTEGER
-			-- are replaced by the associated types such as INTEGER_32.
+			-- An unaliased version is when aliased types such as INTEGER
+			-- are replaced with the associated types such as INTEGER_32.
+			-- Also, tuple types have no labels.
 		do
 			create Result.make (15)
 			append_unaliased_to_string (Result)
@@ -1239,22 +1238,54 @@ feature -- Output
 		end
 
 	append_unaliased_to_string (a_string: STRING)
-			-- Append textual representation of unaliased
-			-- version of current type to `a_string'.
-			-- An unaliased version if when aliased types such as INTEGER
-			-- are replaced by the associated types such as INTEGER_32.
+			-- Append `unaliased_to_text' to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		do
 			append_to_string (a_string)
 		end
 
+	canonical_to_text: STRING
+			-- Textual representation of canonical version of current type
+			-- (Create a new string at each call.)
+			-- A canonical version is an unaliased version, that is when
+			-- aliased types such as INTEGER are replaced with the associated
+			-- types such as INTEGER_32. Also, the canonical version has no
+			-- leading type mark (e.g. "FOO" instead of "detachable FOO").
+			-- And implicit type marks of actual generic parameters are
+			-- replaced with explicit type marks, except when the actual
+			-- generic parameters are base types where the type mark is not
+			-- shown at all if 'attached', or if 'expanded' and the base class
+			-- is expanded, or if 'separate' and the base class is separate
+			-- (e.g. "FOO [BAR, INTEGER_8, detachable BAZ]" instead of
+			-- "FOO [attached BAR, expanded INTEGER_8, detachable BAZ]").
+			-- Also, tuple types have no labels.
+		do
+			create Result.make (15)
+			append_canonical_to_string (Result)
+		ensure
+			canonical_to_text_not_void: Result /= Void
+		end
+
+	append_canonical_to_string (a_string: STRING)
+			-- Append `canonical_to_text' to `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			l_old_type_mark: like type_mark
+		do
+			l_old_type_mark := type_mark
+			append_unaliased_to_string (a_string)
+			type_mark := l_old_type_mark
+		end
+
 	runtime_name_to_text: STRING
 			-- Textual representation of unaliased version of current type
 			-- as returned by 'TYPE.runtime_name'.
 			-- (Create a new string at each call.)
-			-- An unaliased version if when aliased types such as INTEGER
-			-- are replaced by the associated types such as INTEGER_32.
+			-- An unaliased version is when aliased types such as INTEGER
+			-- are replaced with the associated types such as INTEGER_32.
+			-- Also, tuple types have no labels.
 		do
 			create Result.make (15)
 			append_runtime_name_to_string (Result)
@@ -1263,20 +1294,16 @@ feature -- Output
 		end
 
 	append_runtime_name_to_string (a_string: STRING)
-			-- Append to `a_string' textual representation of unaliased
-			-- version of current type as returned by 'TYPE.runtime_name'.
-			-- An unaliased version if when aliased types such as INTEGER
-			-- are replaced by the associated types such as INTEGER_32.
+			-- Append `runtime_name_to_text' to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
-		do
-			append_unaliased_to_string (a_string)
+		deferred
 		end
 
 	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'
 		do
-			Result := unaliased_to_text
+			Result := canonical_to_text
 		end
 
 end
