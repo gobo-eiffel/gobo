@@ -38010,7 +38010,7 @@ feature {NONE} -- Feature name generation
 			a_file_open_write: a_file.is_open_write
 		do
 			if a_name.is_argument then
-				print_separate_argument_name (a_name, a_file)
+				print_argument_name (a_name, a_file)
 			else
 				print_inline_separate_argument_name (a_name, a_file)
 			end
