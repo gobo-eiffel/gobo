@@ -1,2 +1,2 @@
-[V1SE-1G] class AA (11,26): two arguments of a separate instruction have the same name 'x'.
+[V1SE-1G] class AA (11,26): two arguments of an inline separate instruction have the same name 'x'.
 ----

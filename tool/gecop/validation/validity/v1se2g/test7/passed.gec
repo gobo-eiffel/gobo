@@ -1,2 +1,2 @@
-[V1SE-2G] class AA (17,19): argument 'x' of a separate instruction appears in the scope of an iteration item with the same name.
+[V1SE-2G] class AA (17,19): argument 'x' of an inline separate instruction appears in the scope of an iteration item with the same name.
 ----
