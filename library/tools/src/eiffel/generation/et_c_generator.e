@@ -7238,6 +7238,7 @@ feature {NONE} -- Instruction generation
 			l_can_be_void: BOOLEAN
 			l_once_index: INTEGER
 			l_once_kind: INTEGER
+			l_same_scoop_processor: BOOLEAN
 		do
 			if line_generation_mode then
 				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
@@ -7332,6 +7333,50 @@ feature {NONE} -- Instruction generation
 					current_file.put_character (' ')
 					current_file.put_string (c_else)
 					current_file.put_character (' ')
+				end
+				l_same_scoop_processor := scoop_mode and then (not l_target_type.is_separate and l_source_type.is_separate)
+				if l_same_scoop_processor then
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_attribute_scoop_processor_access (call_operands.first, l_target_primary_type, False)
+					current_file.put_character (' ')
+					current_file.put_character ('!')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_scoop_processor)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					if l_target_type.is_expanded then
+						-- ISE 6.3 does not change the value of the target
+						-- when the type of the target is expanded and the
+						-- assignment attempt fails. Note that it would have
+						-- made more sense to set the target to its default
+						-- value in that case.
+					else
+						print_indentation
+						print_writable (l_target)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_string (c_eif_void)
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_character (' ')
+					current_file.put_string (c_else)
+					current_file.put_character (' ')
+				end
+				if l_can_be_void or l_same_scoop_processor then
 					current_file.put_character ('{')
 					current_file.put_new_line
 					indent
@@ -7460,7 +7505,7 @@ feature {NONE} -- Instruction generation
 				print_indentation
 				current_file.put_character ('}')
 				current_file.put_new_line
-				if l_can_be_void then
+				if l_can_be_void or l_same_scoop_processor then
 					dedent
 					print_indentation
 					current_file.put_character ('}')
@@ -12454,6 +12499,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			l_can_be_void: BOOLEAN
 			l_name: detachable ET_IDENTIFIER
 			l_type: detachable ET_TYPE
+			l_same_scoop_processor: BOOLEAN
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -12529,6 +12575,20 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					current_file.put_character ('?')
 					current_file.put_character ('(')
 				end
+				l_same_scoop_processor := scoop_mode and then l_type /= Void and then (not l_target_type.is_separate and l_source_type.is_separate)
+				if l_same_scoop_processor then
+					current_file.put_character ('(')
+					print_attribute_scoop_processor_access (call_operands.first, l_target_primary_type, False)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_scoop_processor)
+					current_file.put_character ('?')
+					current_file.put_character ('(')
+				end
 				if l_name /= Void then
 					current_file.put_character ('(')
 					print_object_test_local_name (l_name, current_file)
@@ -12543,6 +12603,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				else
 					current_file.put_string (c_eif_true)
 				end
+				if l_same_scoop_processor then
+					current_file.put_character (')')
+					current_file.put_character (':')
+					current_file.put_string (c_eif_false)
+					current_file.put_character (')')
+				end
 				if l_can_be_void then
 					current_file.put_character (')')
 					current_file.put_character (':')
@@ -12556,6 +12622,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				current_object_tests.force_last (an_expression)
 				print_object_test_function_name (current_object_tests.count, current_feature, current_type, current_file)
 				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
 				print_expression (call_operands.first)
 				if l_name /= Void then
 					current_file.put_character (',')
@@ -15024,6 +15092,7 @@ feature {NONE} -- Object-test generation
 			l_can_be_void: BOOLEAN
 			l_name: detachable ET_IDENTIFIER
 			l_type: detachable ET_TYPE
+			l_same_scoop_processor: BOOLEAN
 		do
 			l_name := a_object_test.name
 			l_type := a_object_test.type
@@ -15052,7 +15121,19 @@ feature {NONE} -- Object-test generation
 			print_object_test_function_name (i, current_feature, current_type, header_file)
 			print_object_test_function_name (i, current_feature, current_type, current_file)
 			header_file.put_character ('(')
+			header_file.put_string (c_ge_context)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string (c_ac)
+			header_file.put_character (',')
+			header_file.put_character (' ')
 			current_file.put_character ('(')
+			current_file.put_string (c_ge_context)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			l_source_argument := formal_argument (1)
 			print_type_declaration (l_source_primary_type, header_file)
 			header_file.put_character (' ')
@@ -15136,6 +15217,39 @@ feature {NONE} -- Object-test generation
 					current_file.put_character (' ')
 					current_file.put_string (c_else)
 					current_file.put_character (' ')
+				end
+				l_same_scoop_processor := scoop_mode and then l_type /= Void and then (not l_target_type.is_separate and l_source_type.is_separate)
+				if l_same_scoop_processor then
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_attribute_scoop_processor_access (l_source_argument, l_target_primary_type, False)
+					current_file.put_character (' ')
+					current_file.put_character ('!')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_scoop_processor)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					current_file.put_string (c_return)
+					current_file.put_character (' ')
+					current_file.put_string (c_eif_false)
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_character (' ')
+					current_file.put_string (c_else)
+					current_file.put_character (' ')
+				end
+				if l_can_be_void or l_same_scoop_processor then
 					current_file.put_character ('{')
 					current_file.put_new_line
 					indent
@@ -15280,7 +15394,7 @@ feature {NONE} -- Object-test generation
 					current_file.put_character ('}')
 					current_file.put_new_line
 				end
-				if l_can_be_void then
+				if l_can_be_void or l_same_scoop_processor then
 					dedent
 					print_indentation
 					current_file.put_character ('}')
