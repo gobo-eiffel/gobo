@@ -5,7 +5,7 @@ note
 		"Eiffel parenthesized expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,8 @@ inherit
 			unparenthesized_expression,
 			reset, index, is_current,
 			is_false, is_true,
-			is_instance_free
+			is_instance_free,
+			add_separate_arguments
 		end
 
 	ET_AGENT_TARGET
@@ -152,6 +153,21 @@ feature -- Setting
 			right_parenthesis := r
 		ensure
 			right_parenthesis_set: right_parenthesis = r
+		end
+
+feature -- SCOOP
+
+	add_separate_arguments (a_list: DS_ARRAYED_LIST [ET_IDENTIFIER]; a_closure: ET_CLOSURE)
+			-- Add to `a_list' inline separate arguments or formal arguments which
+			-- when controlled (i.e. when their type is separate) implies that when
+			-- the current expression is involved in the target of a separate call
+			-- this target is also controlled.
+			-- `a_closure' is the closure (i.e. inline agent or enclosing feature)
+			-- in which the current expression appears.
+			-- (Used when determining the SCOOP sessions to be used when recording
+			-- a separate call to another SCOOP processor.)
+		do
+			expression.add_separate_arguments (a_list, a_closure)
 		end
 
 feature -- Processing

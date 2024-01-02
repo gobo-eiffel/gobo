@@ -37,8 +37,11 @@ An *Object\_call* is target-valid if and only if it satisfies one of the followi
   An expression of separate type is controlled if:
   
   * It is a formal argument of the enclosing feature.
-  * It is a separate argument of a separate instruction.
+  * It is an inline separate argument of an inline separate instruction.
   * It is a query whose result type is not separate and whose target is (recursively) controlled.
+  * It is the local name of an object-test whose expression is (recursively) controlled.
+  * It is an if expression or an inspect expression and the expressions in all branches are either (recursively) controlled or not of a separate type.
+  * It is a parenthesized expression and the expression within the parentheses is (recursively) controlled.
 
   See [Exclusive Access](https://www.eiffel.org/doc/solutions/Exclusive_Access) in [eiffel.org](https://www.eiffel.org) for more details.
 

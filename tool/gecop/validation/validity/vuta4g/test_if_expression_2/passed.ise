@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+
+Error code: VUTA(3)
+
+Error: separate target of the Object_call is not controlled.
+What to do: ensure the target of the call is controlled or is not separate.
+
+Class: AA
+Feature: g
+Type: separate BB
+Called feature: f
+Line: 24
+        create c.make
+->      i := (if x then b else c end).f
+      end
+
+-------------------------------------------------------------------------------

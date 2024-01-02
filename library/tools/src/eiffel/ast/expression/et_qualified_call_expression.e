@@ -5,7 +5,7 @@ note
 		"Eiffel qualified call expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2014-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +30,8 @@ inherit
 	ET_CALL_EXPRESSION
 		undefine
 			reset,
-			is_qualified_call
+			is_qualified_call,
+			add_separate_arguments
 		end
 
 create

@@ -5,7 +5,7 @@ note
 		"Eiffel type checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -362,7 +362,25 @@ feature -- Type conversion
 				a_source_base_class.process (system_processor.eiffel_parser)
 			end
 			Result := a_source_base_class.convert_to_feature (a_target_type, a_source_type)
-			if Result = Void then
+			if Result /= Void then
+				if a_source_type.scoop_mode then
+					if a_source_type.is_type_separate then
+						if not a_source_type.is_controlled then
+								-- This is a separate call. So the target of the call needs
+								-- to be controlled.
+							Result := Void
+						elseif not a_target_type.is_type_separate then
+								-- If the target of a call is separate, then the type of the call
+								-- is separate as well, even if the declared type of the query is not.
+								-- Here we have `a.to_b`, where `a` is of type `a_source_type`. If
+								-- `a_source_type` is separate then `a.to_b` will be separate as well.
+								-- But the type of `a.to_b` needs to conform to `a_target_type`. So
+								-- `a_target_type` need to be separate as well.
+							Result := Void
+						end
+					end
+				end
+			else
 				a_target_base_class := a_target_type.base_class
 					-- Make sure that the class has been parsed before
 					-- asking for its conversion features.

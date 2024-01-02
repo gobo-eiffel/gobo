@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2216,7 +2216,8 @@ feature {NONE} -- Event handling
 			-- Report that a qualified call expression has been processed.
 		local
 			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
-			l_target_primary_type: detachable ET_DYNAMIC_PRIMARY_TYPE
+			l_target_type: ET_DYNAMIC_TYPE
+			l_target_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 			l_target: ET_EXPRESSION
@@ -2234,7 +2235,8 @@ feature {NONE} -- Event handling
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					l_target_primary_type := l_target_type_set.static_type.primary_type
+					l_target_type := l_target_type_set.static_type
+					l_target_primary_type := l_target_type.primary_type
 					l_type := a_query.type
 -- TODO: like argument (the following is just a workaround
 -- which works only in a limited number of cases, in particular
@@ -2255,6 +2257,11 @@ feature {NONE} -- Event handling
 					end
 					if l_dynamic_type = Void then
 						l_dynamic_type := current_dynamic_system.dynamic_type (l_type, l_target_primary_type.base_type)
+					end
+					if current_system.scoop_mode and l_target_type.is_separate then
+							-- If the target of the call is separate, then the type of the call
+							-- is separate as well, even if the declared type of the query is not.
+						l_dynamic_type := current_dynamic_system.separate_type (l_dynamic_type)
 					end
 					l_result_type_set := new_dynamic_type_set (l_dynamic_type)
 						-- Unless proven otherwise after possible attachments,

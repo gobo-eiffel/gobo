@@ -5,7 +5,7 @@ note
 		"Eiffel 'if' expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,8 @@ inherit
 	ET_EXPRESSION
 		redefine
 			reset,
-			is_instance_free
+			is_instance_free,
+			add_separate_arguments
 		end
 
 create
@@ -157,6 +158,31 @@ feature -- Setting
 			end_keyword := an_end
 		ensure
 			end_keyword_set: end_keyword = an_end
+		end
+
+feature -- SCOOP
+
+	add_separate_arguments (a_list: DS_ARRAYED_LIST [ET_IDENTIFIER]; a_closure: ET_CLOSURE)
+			-- Add to `a_list' inline separate arguments or formal arguments which
+			-- when controlled (i.e. when their type is separate) implies that when
+			-- the current expression is involved in the target of a separate call
+			-- this target is also controlled.
+			-- `a_closure' is the closure (i.e. inline agent or enclosing feature)
+			-- in which the current expression appears.
+			-- (Used when determining the SCOOP sessions to be used when recording
+			-- a separate call to another SCOOP processor.)
+		local
+			i, nb: INTEGER
+		do
+			then_expression.add_separate_arguments (a_list, a_closure)
+			if attached elseif_parts as l_elseif_parts then
+				nb := l_elseif_parts.count
+				from i := 1 until i > nb loop
+					l_elseif_parts.item (i).then_expression.add_separate_arguments (a_list, a_closure)
+					i := i + 1
+				end
+			end
+			else_expression.add_separate_arguments (a_list, a_closure)
 		end
 
 feature -- Processing

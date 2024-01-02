@@ -5,7 +5,7 @@ note
 		"Eiffel object equality expressions (i.e. '~' and '/~')"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ class ET_OBJECT_EQUALITY_EXPRESSION
 inherit
 
 	ET_BINARY_EXPRESSION
+		undefine
+			add_separate_arguments
 		redefine
 			reset
 		end

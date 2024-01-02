@@ -5,7 +5,7 @@
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -3608,6 +3608,16 @@ feature -- Types
 			is_attached: attached Result.type_mark as l_type_mark and then l_type_mark.is_attached_mark
 		end
 
+	detachable_type_modifier: ET_LIKE_CURRENT
+			-- Type 'detachable like Current'
+		once
+			create Result.make (implicit_detachable_type_mark)
+		ensure
+			instance_free: class
+			detachable_type_modifier_not_void: Result /= Void
+			is_detachable: attached Result.type_mark as l_type_mark and then l_type_mark.is_detachable_mark
+		end
+
 	separate_type_modifier: ET_LIKE_CURRENT
 			-- Type 'separate like Current'
 		once
@@ -3626,6 +3636,16 @@ feature -- Types
 			instance_free: class
 			attached_separate_type_modifier_not_void: Result /= Void
 			is_attached_separate: attached Result.type_mark as l_type_mark and then l_type_mark.is_attached_mark and then l_type_mark.is_separate_mark
+		end
+
+	detachable_separate_type_modifier: ET_LIKE_CURRENT
+			-- Type 'detachable separate like Current'
+		once
+			create Result.make (implicit_detachable_separate_type_mark)
+		ensure
+			instance_free: class
+			detachable_separate_type_modifier_not_void: Result /= Void
+			is_detachable_separate: attached Result.type_mark as l_type_mark and then l_type_mark.is_detachable_mark and then l_type_mark.is_separate_mark
 		end
 
 	controlled_type_modifier: ET_LIKE_CURRENT

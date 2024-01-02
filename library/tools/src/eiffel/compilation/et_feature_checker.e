@@ -5,7 +5,7 @@ note
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -7022,6 +7022,8 @@ feature {NONE} -- Expression validity
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_result_context_list: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
 			l_old_result_context_list_count: INTEGER
+			l_is_controlled: BOOLEAN
+			l_is_separate: BOOLEAN
 		do
 			has_fatal_error := False
 			boolean_type := current_universe_impl.boolean_type
@@ -7061,6 +7063,18 @@ feature {NONE} -- Expression validity
 				had_error := True
 				free_context (l_expression_context)
 			else
+				if current_system.scoop_mode then
+					l_is_controlled := True
+					if l_expression_context.is_type_separate then
+						l_is_separate := True
+						if not l_expression_context.is_controlled then
+							l_is_controlled := False
+						else
+								-- Remove 'controlled' type modifier.
+							l_expression_context.remove_last
+						end
+					end
+				end
 				update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 			end
 			current_object_test_scope.keep_object_tests (l_old_object_test_scope)
@@ -7098,6 +7112,17 @@ feature {NONE} -- Expression validity
 						had_error := True
 						free_context (l_expression_context)
 					else
+						if current_system.scoop_mode then
+							if l_expression_context.is_type_separate then
+								l_is_separate := True
+								if not l_expression_context.is_controlled then
+									l_is_controlled := False
+								else
+										-- Remove 'controlled' type modifier.
+									l_expression_context.remove_last
+								end
+							end
+						end
 						update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 					end
 					current_object_test_scope.keep_object_tests (l_old_elseif_object_test_scope)
@@ -7115,6 +7140,17 @@ feature {NONE} -- Expression validity
 				had_error := True
 				free_context (l_expression_context)
 			else
+				if current_system.scoop_mode then
+					if l_expression_context.is_type_separate then
+						l_is_separate := True
+						if not l_expression_context.is_controlled then
+							l_is_controlled := False
+						else
+								-- Remove 'controlled' type modifier.
+							l_expression_context.remove_last
+						end
+					end
+				end
 				update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 			end
 			current_object_test_scope.keep_object_tests (l_old_object_test_scope)
@@ -7136,6 +7172,11 @@ feature {NONE} -- Expression validity
 					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 				end
 				a_context.copy_type_context (l_result_context_list.last)
+				if current_system.scoop_mode then
+					if l_is_separate and l_is_controlled then
+						a_context.force_last (tokens.controlled_type_modifier)
+					end
+				end
 				report_if_expression (a_expression, tokens.identity_type, a_context)
 			end
 			free_common_ancestor_types (l_result_context_list, l_old_result_context_list_count)
@@ -7610,6 +7651,8 @@ feature {NONE} -- Expression validity
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_result_context_list: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
 			l_old_result_context_list_count: INTEGER
+			l_is_controlled: BOOLEAN
+			l_is_separate: BOOLEAN
 		do
 			has_fatal_error := False
 			l_detachable_separate_any_type := current_system.detachable_separate_any_type
@@ -7812,6 +7855,7 @@ feature {NONE} -- Expression validity
 				end
 				free_context (l_choice_context)
 				free_context (l_value_context)
+				l_is_controlled := True
 				from i := 1 until i > nb loop
 					l_when_part := l_when_parts.item (i)
 					l_expression_context := new_context (current_type)
@@ -7820,6 +7864,17 @@ feature {NONE} -- Expression validity
 						had_error := True
 						free_context (l_expression_context)
 					else
+						if current_system.scoop_mode then
+							if l_expression_context.is_type_separate then
+								l_is_separate := True
+								if not l_expression_context.is_controlled then
+									l_is_controlled := False
+								else
+										-- Remove 'controlled' type modifier.
+									l_expression_context.remove_last
+								end
+							end
+						end
 						update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 					end
 					i := i + 1
@@ -7834,6 +7889,17 @@ feature {NONE} -- Expression validity
 					had_error := True
 					free_context (l_expression_context)
 				else
+					if current_system.scoop_mode then
+						if l_expression_context.is_type_separate then
+							l_is_separate := True
+							if not l_expression_context.is_controlled then
+								l_is_controlled := False
+							else
+									-- Remove 'controlled' type modifier.
+								l_expression_context.remove_last
+							end
+						end
+					end
 					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 				end
 			end
@@ -7854,6 +7920,11 @@ feature {NONE} -- Expression validity
 					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 				end
 				a_context.copy_type_context (l_result_context_list.last)
+				if current_system.scoop_mode then
+					if l_is_separate and l_is_controlled then
+						a_context.force_last (tokens.controlled_type_modifier)
+					end
+				end
 				report_inspect_expression (a_expression, tokens.identity_type, a_context)
 			end
 			free_common_ancestor_types (l_result_context_list, l_old_result_context_list_count)
@@ -8661,6 +8732,12 @@ feature {NONE} -- Expression validity
 								end
 							end
 						end
+						if current_system.scoop_mode then
+							if l_item_context.is_type_separate and l_item_context.is_controlled then
+									-- Remove 'controlled' type modifier.
+								l_item_context.remove_last
+							end
+						end
 						update_common_ancestor_type_list (l_item_context, l_result_context_list, l_old_result_context_list_count)
 					end
 					i := i + 1
@@ -8902,6 +8979,12 @@ feature {NONE} -- Expression validity
 					check_expression_validity (an_expression.expression (1), a_context, l_detachable_separate_any_type)
 				end
 				if not has_fatal_error then
+					if current_system.scoop_mode then
+						if a_context.is_type_separate and a_context.is_controlled then
+								-- Remove 'controlled' type modifier.
+							a_context.remove_last
+						end
+					end
 					l_tuple_type := current_universe_impl.tuple_identity_type
 					report_manifest_tuple (an_expression, l_tuple_type, a_context)
 					a_context.force_last (l_tuple_type)
@@ -17468,6 +17551,9 @@ feature {NONE} -- Common ancestor type
 			i, nb: INTEGER
 			l_add_type: BOOLEAN
 			l_other_type: ET_NESTED_TYPE_CONTEXT
+			l_type_modifier: ET_LIKE_CURRENT
+			j: INTEGER
+			l_done: BOOLEAN
 		do
 			l_add_type := True
 			from
@@ -17486,23 +17572,45 @@ feature {NONE} -- Common ancestor type
 					a_list.remove (i)
 					nb := nb - 1
 				else
-						-- Try with different attachment marks.
--- TODO: do the same thing with separateness marks.
-					l_other_type.force_last (tokens.detachable_like_current)
-					if a_type.conforms_to_context (l_other_type, system_processor) then
-						l_add_type := False
-							-- Jump out of the loop.
-						i := nb + 1
-					else
-						l_other_type.remove_last
-						a_type.force_last (tokens.detachable_like_current)
-						if l_other_type.conforms_to_context (a_type, system_processor) then
-							free_context (l_other_type)
-							a_list.remove (i)
-							nb := nb - 1
+						-- Try with different attachment and separateness marks.
+					from
+						j := 1
+						l_type_modifier := tokens.detachable_type_modifier
+						l_done := False
+					until
+						l_done or j > 3
+					loop
+						l_other_type.force_last (l_type_modifier)
+						if a_type.conforms_to_context (l_other_type, system_processor) then
+							l_add_type := False
+							l_done := True
+								-- Jump out of the loop.
+							i := nb + 1
 						else
-							a_type.remove_last
-							i := i + 1
+							l_other_type.remove_last
+							a_type.force_last (l_type_modifier)
+							if l_other_type.conforms_to_context (a_type, system_processor) then
+								free_context (l_other_type)
+								a_list.remove (i)
+								l_done := True
+								nb := nb - 1
+							else
+								a_type.remove_last
+								if current_system.scoop_mode then
+									j := j + 1
+									if j = 2 then
+										l_type_modifier := tokens.separate_type_modifier
+									else
+										l_type_modifier := tokens.detachable_separate_type_modifier
+									end
+								else
+									j := 4
+								end
+								if j > 3 then
+									l_done := True
+									i := i + 1
+								end
+							end
 						end
 					end
 				end

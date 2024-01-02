@@ -5,7 +5,7 @@ note
 		"Eiffel infix expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,6 +24,8 @@ inherit
 		end
 
 	ET_BINARY_EXPRESSION
+		undefine
+			add_separate_arguments
 		redefine
 			reset
 		end

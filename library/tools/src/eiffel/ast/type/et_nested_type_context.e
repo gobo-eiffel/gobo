@@ -5,7 +5,7 @@ note
 		"Nested contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -611,7 +611,6 @@ feature -- Status report
 	is_controlled: BOOLEAN
 			-- Is current type a controlled separate type?
 		local
-			l_type: ET_TYPE
 			l_index: INTEGER
 		do
 			if count = 0 then
@@ -621,20 +620,12 @@ feature -- Status report
 				if l_index = 0 then
 					Result := root_context.is_controlled
 				elseif l_index >= count then
-					force_last (tokens.like_0)
 					Result := root_context.is_controlled
-					remove_last
 				else
-					l_type := item (l_index)
-					put (l_like_n.previous, count)
-					Result := l_type.is_controlled
-					put (l_like_n, count)
+					Result := item (l_index).is_controlled
 				end
 			else
-				l_type := last
-				remove_last
-				Result := l_type.is_controlled
-				put_last (l_type)
+				Result := last.is_controlled
 			end
 		end
 
