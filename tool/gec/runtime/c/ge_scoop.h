@@ -4,7 +4,7 @@
 		"C functions used to implement SCOOP facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2023-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,13 +31,15 @@ extern "C" {
 
 /* Struct for separate calls. */
 typedef struct GE_scoop_call_struct GE_scoop_call;
+typedef struct GE_scoop_session_struct GE_scoop_session;
 struct GE_scoop_call_struct {
+	GE_scoop_session* session;
+	char is_synchronous; /* Should the caller wait for the call to be executed? */
 	GE_scoop_call* next;
 	void (*execute)(GE_context*, GE_scoop_call*);
 };
 
 /* Struct for separate sessions. */
-typedef struct GE_scoop_session_struct GE_scoop_session;
 struct GE_scoop_session_struct {
 	GE_scoop_processor* callee;
 	GE_scoop_processor* caller;
@@ -57,6 +59,7 @@ struct GE_scoop_processor_struct {
 	GE_context* context;
 	GE_scoop_processor* locked_by; /* Used in case of synchronous calls where `locked_by' is the direct caller. */
 	uint32_t lock_level; /* How many times the current processor is locked by `locked_by' (in case of callbacks). */
+	char is_impersonation_allowed;
 	GE_scoop_processor* next;
 	GE_scoop_session* first_session;
 	GE_scoop_session* last_session;
@@ -67,7 +70,7 @@ struct GE_scoop_processor_struct {
 	EIF_MUTEX_TYPE* lock_mutex; /* To modify the lock status . */
 };
 
-/**
+/*
  * Increment number SCOOP sessions.
  */
 extern uint32_t GE_increment_scoop_sessions_count(void);
@@ -103,7 +106,7 @@ extern GE_scoop_call* GE_new_scoop_call(size_t a_size);
 /* 
  * Add SCOOP call `a_call' to `a_session'.
  */
-extern void GE_add_scoop_call(GE_scoop_session* a_session, GE_scoop_call* a_call);
+extern void GE_add_scoop_call(GE_scoop_session* a_session, GE_scoop_call* a_call, char a_is_synchronous);
 
 /* 
  * Add SCOOP synchronization call to `a_session'.
@@ -119,6 +122,21 @@ extern void GE_scoop_processor_impersonate(GE_scoop_processor* a_callee, GE_scoo
  * Let the thread of the caller of `a_caller' execute the calls of `a_callee' and vice-versa.
  */
 #define GE_scoop_session_impersonate(a_session) GE_scoop_processor_impersonate((a_session)->callee, (a_session)->caller)
+
+/*
+ * Does `a_processor' allow the thread of callers to execute separate calls on its behalf?
+ */
+extern char GE_scoop_processor_is_impersonation_allowed(GE_scoop_processor* a_processor);
+
+/*
+ * Does the processor `a_session->callee' allow the thread of `a_session->caller' to execute separate calls on its behalf?
+ */
+#define GE_scoop_session_is_impersonation_allowed(a_session) GE_scoop_processor_is_impersonation_allowed((a_session)->callee)
+
+/*
+ * Indicate whether `a_processor' allow or not the thread of callers to execute separate calls on its behalf.
+ */
+extern void GE_scoop_processor_set_impersonation_allowed(GE_scoop_processor* a_processor, char a_value);
 
 /*
  * Make sure that `a_caller' is locked by `a_callee'.

@@ -5954,6 +5954,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			l_is_self_initialized_attribute: BOOLEAN
 		do
 			old_file := current_file
+			current_separate_calls.wipe_out
 			current_file := current_function_header_buffer
 			print_feature_name_comment (current_feature, current_type, header_file)
 			print_feature_name_comment (current_feature, current_type, current_file)
@@ -6476,7 +6477,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						current_file.put_string (c_ge_scoop_session)
 						current_file.put_character ('*')
 						current_file.put_character (' ')
-						print_separate_argument_session_name (l_inline_separate_arguments.item (i).name, current_file)
+						print_separate_argument_session_name (l_inline_separate_arguments.argument (i).name, current_file)
 						current_file.put_character (' ')
 						current_file.put_character ('=')
 						current_file.put_character (' ')
@@ -6667,7 +6668,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					if attached a_feature.inline_separate_arguments as l_inline_separate_arguments then
 						nb := l_inline_separate_arguments.count
 						from i := 1 until i > nb loop
-							l_name := l_inline_separate_arguments.item (i).name
+							l_name := l_inline_separate_arguments.argument (i).name
 							print_indentation
 							current_file.put_string (c_if)
 							current_file.put_character (' ')
@@ -19656,6 +19657,7 @@ feature {NONE} -- Separate calls
 			l_separate_arguments: like separate_arguments
 			l_separate_argument: ET_IDENTIFIER
 			l_se: STRING
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_type: ET_DYNAMIC_TYPE
 			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_result_type: detachable ET_DYNAMIC_PRIMARY_TYPE
@@ -19802,14 +19804,15 @@ feature {NONE} -- Separate calls
 					l_actual_argument := l_actual_arguments.actual_argument (j)
 					l_formal_argument := formal_argument (nb_operands)
 					l_formal_argument.set_index (l_actual_argument.index)
-					l_type := dynamic_type_set (l_formal_argument).static_type
-					if not l_type.is_expanded then
+					l_dynamic_type_set := dynamic_type_set (l_formal_argument)
+					l_type := l_dynamic_type_set.static_type
+					l_primary_type := l_type.primary_type
+					if not l_type.is_expanded and (l_primary_type /= current_dynamic_system.none_type) and not l_dynamic_type_set.is_empty then
 						l_has_reference_actual_argument := True
 						if not l_type.is_separate then
 							l_has_non_separate_reference_actual_argument := True
 						end
 					end
-					l_primary_type := l_type.primary_type
 					header_file.put_character (',')
 					header_file.put_character (' ')
 					current_file.put_character (',')
@@ -19986,10 +19989,10 @@ feature {NONE} -- Separate calls
 				end
 			end
 			l_is_synchronous_call := l_result_type /= Void or l_has_non_separate_reference_actual_argument
-			l_is_asynchronous_call := l_result_type = Void and not l_has_reference_actual_argument
+			l_is_asynchronous_call := l_is_creation_call and not l_has_reference_actual_argument
 			if not l_is_synchronous_call then
 					-- Potentially asynchronous call.
-				if not l_is_creation_call or not l_is_asynchronous_call then
+				if not l_is_asynchronous_call then
 					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
@@ -19998,10 +20001,10 @@ feature {NONE} -- Separate calls
 						current_file.put_string (l_se)
 						l_and_then_needed := True
 					end
-					if not l_is_asynchronous_call then
-						from j := 1 until j > nb_args loop
-								-- The first formal argument is is fact used for the target of the call.
-							l_formal_argument := formal_argument (j + 1)
+					from j := 1 until j > nb_operands loop
+							-- The first formal argument is is fact used for the target of the call.
+						if j /= 1 or not l_is_creation_call then
+							l_formal_argument := formal_argument (j)
 							l_primary_type := dynamic_type_set (l_formal_argument).static_type.primary_type
 							if not l_primary_type.is_expanded then
 									-- Synchronous call when locked by current processor
@@ -20023,8 +20026,8 @@ feature {NONE} -- Separate calls
 								current_file.put_character (')')
 								current_file.put_character (')')
 							end
-							j := j + 1
 						end
+						j := j + 1
 					end
 					current_file.put_character (')')
 					current_file.put_character (' ')
@@ -20040,6 +20043,11 @@ feature {NONE} -- Separate calls
 				print_comma
 				print_separate_call_object_name (i, current_feature, current_type, current_file)
 				current_file.put_character ('(')
+				if l_result_type /= Void then
+					current_file.put_character ('&')
+					print_result_name (current_file)
+					print_comma
+				end
 				print_argument_name (formal_argument (1), current_file)
 				from j := 2 until j > nb_operands loop
 					print_comma
@@ -20047,26 +20055,79 @@ feature {NONE} -- Separate calls
 					j := j + 1
 				end
 				current_file.put_character (')')
+				print_comma
+				current_file.put_character ('0')
 				current_file.put_character (')')
 				print_semicolon_newline
-				if not l_is_creation_call or not l_is_asynchronous_call then
+				if not l_is_asynchronous_call then
 					dedent
 					print_indentation
 					current_file.put_character ('}')
-					if not l_is_asynchronous_call then
-						current_file.put_character (' ')
-						current_file.put_string (c_else)
-						current_file.put_character (' ')
+					current_file.put_character (' ')
+					current_file.put_string (c_else)
+					current_file.put_character (' ')
+					if l_is_creation_call then
 						current_file.put_character ('{')
 						current_file.put_new_line
 						indent
-					else
-						current_file.put_new_line
 					end
 				end
 			end
 			if not l_is_asynchronous_call then
-					-- Synchronous call.
+					-- Synchronous call with no impersonation.
+				if not l_is_creation_call then
+					if l_is_synchronous_call then
+						print_indentation
+					end
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_string (l_se)
+					print_and_then
+					current_file.put_character ('!')
+					current_file.put_string (c_ge_scoop_session_is_impersonation_allowed)
+					current_file.put_character ('(')
+					current_file.put_string (l_se)
+					current_file.put_character (')')
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					current_file.put_string (c_ge_add_scoop_call)
+					current_file.put_character ('(')
+					current_file.put_string (l_se)
+					print_comma
+					print_separate_call_object_name (i, current_feature, current_type, current_file)
+					current_file.put_character ('(')
+					if l_result_type /= Void then
+						current_file.put_character ('&')
+						print_result_name (current_file)
+						print_comma
+					end
+					print_argument_name (formal_argument (1), current_file)
+					from j := 2 until j > nb_operands loop
+						print_comma
+						print_argument_name (formal_argument (j), current_file)
+						j := j + 1
+					end
+					current_file.put_character (')')
+					print_comma
+					current_file.put_character ('1')
+					current_file.put_character (')')
+					print_semicolon_newline
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_character (' ')
+					current_file.put_string (c_else)
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+				end
+					-- Synchronous call with impersonation.
 				if not l_is_creation_call then
 					print_indentation
 					current_file.put_string (c_if)
@@ -20163,11 +20224,19 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('}')
 					current_file.put_new_line
 				end
-				if not l_is_synchronous_call then
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_new_line
+				if not l_is_asynchronous_call then
+					if not l_is_synchronous_call and l_is_creation_call then
+						dedent
+						print_indentation
+						current_file.put_character ('}')
+						current_file.put_new_line
+					end
+					if not l_is_creation_call then
+						dedent
+						print_indentation
+						current_file.put_character ('}')
+						current_file.put_new_line
+					end
 				end
 			end
 			if l_result_type /= Void then
@@ -20204,10 +20273,8 @@ feature {NONE} -- Separate calls
 			end
 				-- Flush to file.
 			flush_to_c_file
-			if not l_is_synchronous_call then
-				print_separate_call_function_declaration (i, a_separate_call)
-				print_separate_call_object_declaration (i, a_separate_call)
-			end
+			print_separate_call_function_declaration (i, a_separate_call)
+			print_separate_call_object_declaration (i, a_separate_call)
 		end
 
 	print_separate_call_function_declaration (i: INTEGER; a_separate_call: ET_SEPARATE_CALL)
@@ -20218,6 +20285,8 @@ feature {NONE} -- Separate calls
 			a_separate_call_not_void: a_separate_call /= Void
 			scoop_mode: scoop_mode
 		local
+			l_index: INTEGER
+			l_result_type: detachable ET_DYNAMIC_PRIMARY_TYPE
 			l_argument: ET_EXPRESSION
 			j, nb_args: INTEGER
 			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
@@ -20299,6 +20368,20 @@ feature {NONE} -- Separate calls
 			indent
 				-- Print body to `current_file'.
 			current_file := current_function_body_buffer
+			if attached {ET_QUALIFIED_FEATURE_CALL_EXPRESSION} a_separate_call as l_call_expression then
+				l_index := l_call_expression.index
+				l_result_type := dynamic_type_set (l_call_expression).static_type.primary_type
+				print_indentation
+				print_type_declaration (l_result_type, current_file)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_scoop_call_result (a_separate_call)
+				print_semicolon_newline
+			end
 				-- Separate call target.
 			nb_operands := 1
 			l_operand := formal_argument (nb_operands)
@@ -20310,7 +20393,7 @@ feature {NONE} -- Separate calls
 			current_file.put_character (' ')
 			current_file.put_character ('=')
 			current_file.put_character (' ')
-			print_scoop_call_operand (nb_operands)
+			print_scoop_call_operand (nb_operands, a_separate_call)
 			print_semicolon_newline
 				-- Separate call arguments.
 			if attached a_separate_call.arguments as l_arguments then
@@ -20328,7 +20411,7 @@ feature {NONE} -- Separate calls
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					print_scoop_call_operand (nb_operands)
+					print_scoop_call_operand (nb_operands, a_separate_call)
 					print_semicolon_newline
 					j := j + 1
 				end
@@ -20347,10 +20430,23 @@ feature {NONE} -- Separate calls
 					j := j - 1
 				end
 			end
-			separate_call_instruction.set_target (formal_argument (1))
-			separate_call_instruction.set_name (a_separate_call.name)
-			separate_call_instruction.set_arguments (l_separate_call_arguments)
-			print_qualified_call_instruction (separate_call_instruction)
+			if l_result_type /= Void then
+				print_indentation
+				current_file.put_character ('*')
+				print_result_name (current_file)
+				print_assign_to
+				separate_call_expression.set_target (formal_argument (1))
+				separate_call_expression.set_name (a_separate_call.name)
+				separate_call_expression.set_arguments (l_separate_call_arguments)
+				separate_call_expression.set_index (l_index)
+				print_qualified_call_expression (separate_call_expression)
+				print_semicolon_newline
+			else
+				separate_call_instruction.set_target (formal_argument (1))
+				separate_call_instruction.set_name (a_separate_call.name)
+				separate_call_instruction.set_arguments (l_separate_call_arguments)
+				print_qualified_call_instruction (separate_call_instruction)
+			end
 			dedent
 			current_file.put_character ('}')
 			current_file.put_new_line
@@ -20377,6 +20473,7 @@ feature {NONE} -- Separate calls
 			a_separate_call_not_void: a_separate_call /= Void
 			scoop_mode: scoop_mode
 		local
+			l_is_query: BOOLEAN
 			l_argument: ET_EXPRESSION
 			j, nb: INTEGER
 			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
@@ -20429,6 +20526,19 @@ feature {NONE} -- Separate calls
 			current_file.put_character (' ')
 			print_separate_call_object_name (i, current_feature, current_type, current_file)
 			current_file.put_character ('(')
+			if attached {ET_QUALIFIED_FEATURE_CALL_EXPRESSION} a_separate_call then
+				l_is_query := True
+				print_type_declaration (current_dynamic_system.pointer_type, header_file)
+				header_file.put_character (' ')
+				print_result_name (header_file)
+				header_file.put_character (',')
+				header_file.put_character (' ')
+				print_type_declaration (current_dynamic_system.pointer_type, current_file)
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+			end
 				-- Separate call target.
 			nb_operands := 1
 			l_operand := formal_argument (nb_operands)
@@ -20485,7 +20595,7 @@ feature {NONE} -- Separate calls
 			current_file.put_character (' ')
 			current_file.put_string (c_ge_new_scoop_call)
 			current_file.put_character ('(')
-			print_scoop_call_offset (nb_operands)
+			print_scoop_call_offset (nb_operands, a_separate_call)
 			current_file.put_character (')')
 			current_file.put_character (';')
 			current_file.put_new_line
@@ -20512,18 +20622,25 @@ feature {NONE} -- Separate calls
 			current_file.put_character (')')
 			current_file.put_character ('&')
 			print_separate_call_function_name (i, current_feature, current_type, current_file)
-			current_file.put_character (';')
-			current_file.put_new_line
+			print_semicolon_newline
+			if l_is_query then
+				print_indentation
+				print_scoop_call_result (a_separate_call)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				print_semicolon_newline
+			end
 			from j := 1 until j > nb_operands loop
 				print_indentation
-				print_scoop_call_operand (j)
+				print_scoop_call_operand (j, a_separate_call)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
 				l_operand := formal_argument (j)
 				print_argument_name (l_operand, current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				j := j + 1
 			end
 				-- Return the separate call object.
@@ -20550,12 +20667,13 @@ feature {NONE} -- Separate calls
 			flush_to_c_file
 		end
 
-	print_scoop_call_offset (a_operand_number: INTEGER)
+	print_scoop_call_offset (a_operand_number: INTEGER; a_separate_call: ET_SEPARATE_CALL)
 			-- Print offset in C struct 'GE_scoop_call' to access
-			-- the `a_operand_number'-th operand of the separate call
-			-- being processed, to `current_file'.
+			-- the `a_operand_number'-th operand of `a_separate_call',
+			-- to `current_file'.
 		require
 			a_operand_number_large_enough: a_operand_number >= 0
+			a_separate_call_not_void: a_separate_call /= Void
 		local
 			i: INTEGER
 			l_type: ET_DYNAMIC_PRIMARY_TYPE
@@ -20573,14 +20691,22 @@ feature {NONE} -- Separate calls
 				current_file.put_character (')')
 				i := i + 1
 			end
+			if attached {ET_QUALIFIED_FEATURE_CALL_EXPRESSION} a_separate_call then
+				current_file.put_character ('+')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_declaration (current_dynamic_system.pointer_type, current_file)
+				current_file.put_character (')')
+			end
 		end
 
-	print_scoop_call_operand (a_operand_number: INTEGER)
+	print_scoop_call_operand (a_operand_number: INTEGER; a_separate_call: ET_SEPARATE_CALL)
 			-- Print access to the `a_operand_number'-th operand
 			-- in the separate call object being processed (C variable
 			-- 'sc' of type 'GE_scoop_call'), to `current_file'.
 		require
 			a_operand_number_large_enough: a_operand_number >= 1
+			a_separate_call_not_void: a_separate_call /= Void
 		local
 			l_operand: ET_IDENTIFIER
 			l_type: ET_DYNAMIC_PRIMARY_TYPE
@@ -20601,7 +20727,35 @@ feature {NONE} -- Separate calls
 			current_file.put_string (c_sc)
 			current_file.put_character (')')
 			current_file.put_character ('+')
-			print_scoop_call_offset (a_operand_number - 1)
+			print_scoop_call_offset (a_operand_number - 1, a_separate_call)
+			current_file.put_character (')')
+		end
+
+	print_scoop_call_result (a_separate_call: ET_SEPARATE_CALL)
+			-- Print access to the address of the result
+			-- in the separate call object being processed (C variable
+			-- 'sc' of type 'GE_scoop_call'), to `current_file'.
+		require
+			a_separate_call_is_query: attached {ET_QUALIFIED_FEATURE_CALL_EXPRESSION} a_separate_call
+		do
+			current_file.put_character ('*')
+			current_file.put_character ('(')
+			print_type_declaration (current_dynamic_system.pointer_type, current_file)
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			current_file.put_character ('(')
+			current_file.put_character ('(')
+			current_file.put_string (c_char)
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			current_file.put_character ('(')
+			current_file.put_string (c_sc)
+			current_file.put_character (')')
+			current_file.put_character ('+')
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_scoop_call)
+			current_file.put_character (')')
 			current_file.put_character (')')
 		end
 
@@ -29513,7 +29667,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 							print_comma
 							print_attachment_expression (l_tuple_item_expression, l_tuple_item_type_set, l_open_operand_type_sets.item (i).static_type)
 								-- Clean up.
-							if l_query_call = Void then
+							if l_query_call = Void and not l_tuple_target_type.is_separate then
 								free_qualified_call_expression (l_tuple_item_expression)
 								free_tuple_label (l_tuple_label)
 							end
@@ -39375,6 +39529,8 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("<eif_retrieve.h>") then
 						-- This notation is used in class MISMATCH_INFORMATION.
 					include_runtime_header_file ("eif_retrieve.h", False, a_file)
+				elseif a_filename.same_string ("%"eif_scoop.h%"") then
+					include_runtime_header_file ("eif_scoop.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_sig.h%"") then
 					include_runtime_header_file ("eif_sig.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_size.h%"") then
@@ -39477,6 +39633,11 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("eif_retrieve.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					l_c_filename := "eif_retrieve.c"
+				elseif a_filename.same_string ("eif_scoop.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					if scoop_mode then
+						include_runtime_header_file ("ge_scoop.h", a_force, a_file)
+					end
 				elseif a_filename.same_string ("eif_sig.h") then
 					l_c_filename := "eif_sig.c"
 				elseif a_filename.same_string ("eif_store.h") then
@@ -42440,6 +42601,7 @@ feature {NONE} -- Constants
 	c_ge_scoop_processor_run: STRING = "GE_scoop_processor_run"
 	c_ge_scoop_session: STRING = "GE_scoop_session"
 	c_ge_scoop_session_impersonate: STRING = "GE_scoop_session_impersonate"
+	c_ge_scoop_session_is_impersonation_allowed: STRING = "GE_scoop_session_is_impersonation_allowed"
 	c_ge_scoop_session_lock: STRING = "GE_scoop_session_lock"
 	c_ge_scoop_session_unlock: STRING = "GE_scoop_session_unlock"
 	c_ge_setjmp: STRING = "GE_setjmp"

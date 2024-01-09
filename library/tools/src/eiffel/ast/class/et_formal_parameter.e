@@ -5,7 +5,7 @@ note
 		"Eiffel formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -152,7 +152,7 @@ feature -- Status report
 	is_separate: BOOLEAN
 			-- Has formal parameter been declared as separate?
 		do
-				-- Note: With the current ECMA standard it is not poissble to
+				-- Note: With the current ECMA standard it is not possible to
 				-- declare 'class FOO [separate G]'. So the test below should fail.
 				-- It has been added here for completeness.
 			if attached type_mark as l_type_mark and then l_type_mark.is_separate then

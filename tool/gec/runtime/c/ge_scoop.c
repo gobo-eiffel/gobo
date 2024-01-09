@@ -4,7 +4,7 @@
 		"C functions used to implement SCOOP facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2023-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -117,6 +117,7 @@ GE_scoop_processor* GE_new_scoop_processor(GE_context* a_context)
 	l_processor->sync_mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
 	l_processor->sync_condition_variable = (EIF_COND_TYPE*)GE_condition_variable_create();
 	l_processor->lock_mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
+	l_processor->is_impersonation_allowed = '\1';
 	GE_mutex_lock((EIF_POINTER)GE_scoop_sessions_count_mutex);
 	l_processor->next = GE_all_scoop_processors;
 	GE_all_scoop_processors = l_processor;
@@ -254,11 +255,17 @@ GE_scoop_call* GE_new_scoop_call(size_t a_size)
 /* 
  * Add SCOOP call `a_call' to `a_session'.
  */
-void GE_add_scoop_call(GE_scoop_session* a_session, GE_scoop_call* a_call)
+void GE_add_scoop_call(GE_scoop_session* a_session, GE_scoop_call* a_call, char a_is_synchronous)
 {
 	GE_scoop_call* l_last_call;
+	GE_scoop_processor* l_caller = a_session->caller;
 
+	if (a_is_synchronous) {
+		GE_mutex_lock((EIF_POINTER)l_caller->sync_mutex);
+	}
 	GE_mutex_lock((EIF_POINTER)a_session->mutex);
+	a_call->session = a_session;
+	a_call->is_synchronous = a_is_synchronous;
 	l_last_call = a_session->last_call;
 	a_session->last_call = a_call;
 	if (l_last_call) {
@@ -268,17 +275,10 @@ void GE_add_scoop_call(GE_scoop_session* a_session, GE_scoop_call* a_call)
 	}
 	GE_condition_variable_broadcast((EIF_POINTER)a_session->condition_variable);
 	GE_mutex_unlock((EIF_POINTER)a_session->mutex);
-}
-
-/*
- * Function to synchronize with the caller processor.
- */
-static void GE_scoop_call_synchronize(GE_context* ac, GE_scoop_call* sc)
-{
-	GE_scoop_processor* l_processor = *(GE_scoop_processor**)(((char*)(sc))+sizeof(GE_scoop_call));
-	GE_mutex_lock((EIF_POINTER)l_processor->sync_mutex);
-	GE_condition_variable_broadcast((EIF_POINTER)l_processor->sync_condition_variable);
-	GE_mutex_unlock((EIF_POINTER)l_processor->sync_mutex);
+	if (a_is_synchronous) {
+		GE_condition_variable_wait((EIF_POINTER)l_caller->sync_condition_variable, (EIF_POINTER)l_caller->sync_mutex);
+		GE_mutex_unlock((EIF_POINTER)l_caller->sync_mutex);
+	}
 }
 
 /* 
@@ -287,17 +287,10 @@ static void GE_scoop_call_synchronize(GE_context* ac, GE_scoop_call* sc)
 void GE_add_scoop_sync_call(GE_scoop_session* a_session)
 {
 	GE_scoop_call* l_call;
-	GE_scoop_processor* l_caller;
 
 	if (!GE_scoop_processor_is_locked_by(a_session->caller, a_session->callee)) {
 		l_call = GE_new_scoop_call(sizeof(GE_scoop_call) + sizeof(GE_scoop_processor*));
-		l_call->execute = (void (*)(GE_context*, GE_scoop_call*))&GE_scoop_call_synchronize;
-		l_caller = a_session->caller;
-		*(GE_scoop_processor**)(((char*)(l_call))+sizeof(GE_scoop_call)) = l_caller;
-		GE_mutex_lock((EIF_POINTER)l_caller->sync_mutex);
-		GE_add_scoop_call(a_session, l_call);
-		GE_condition_variable_wait((EIF_POINTER)l_caller->sync_condition_variable, (EIF_POINTER)l_caller->sync_mutex);
-		GE_mutex_unlock((EIF_POINTER)l_caller->sync_mutex);
+		GE_add_scoop_call(a_session, l_call, '\1');
 	}
 }
 
@@ -319,6 +312,29 @@ void GE_scoop_processor_impersonate(GE_scoop_processor* a_callee, GE_scoop_proce
 	l_callee_context->scoop_processor->context = l_callee_context;
 	l_caller_context->thread = l_temp_context.thread;
 	l_caller_context->scoop_processor->context = l_caller_context;
+}
+
+/*
+ * Does `a_processor' allow the thread of callers to execute separate calls on its behalf?
+ */
+char GE_scoop_processor_is_impersonation_allowed(GE_scoop_processor* a_processor)
+{
+	char l_result;
+
+	GE_mutex_lock((EIF_POINTER)a_processor->lock_mutex);
+	l_result = (a_processor->is_impersonation_allowed || a_processor->locked_by);
+	GE_mutex_unlock((EIF_POINTER)a_processor->lock_mutex);
+	return l_result;
+}
+
+/*
+ * Indicate whether `a_processor' allow or not the thread of callers to execute separate calls on its behalf.
+ */
+void GE_scoop_processor_set_impersonation_allowed(GE_scoop_processor* a_processor, char a_value)
+{
+	GE_mutex_lock((EIF_POINTER)a_processor->lock_mutex);
+	a_processor->is_impersonation_allowed = a_value;
+	GE_mutex_unlock((EIF_POINTER)a_processor->lock_mutex);
 }
 
 /*
@@ -384,7 +400,25 @@ char GE_scoop_processor_is_locked_by(GE_scoop_processor* a_callee, GE_scoop_proc
  */
 static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_call* a_call)
 {
-	a_call->execute(a_context, a_call);
+	GE_scoop_processor* l_caller;
+	GE_scoop_session* l_session = a_call->session;
+	char l_is_synchronous = a_call->is_synchronous;
+
+	if (a_call->execute) {
+		if (l_is_synchronous) {
+			GE_scoop_session_lock(l_session);
+		}
+		a_call->execute(a_context, a_call);
+		if (l_is_synchronous) {
+			GE_scoop_session_lock(l_session);
+		}
+	}
+	if (l_is_synchronous) {
+		l_caller = l_session->caller;
+		GE_mutex_lock((EIF_POINTER)l_caller->sync_mutex);
+		GE_condition_variable_broadcast((EIF_POINTER)l_caller->sync_condition_variable);
+		GE_mutex_unlock((EIF_POINTER)l_caller->sync_mutex);
+	}
 }
 
 /*

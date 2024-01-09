@@ -5,7 +5,7 @@ note
 		"Eiffel formal generic parameter types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -966,7 +966,8 @@ feature -- Status report
 			a_formal: ET_FORMAL_PARAMETER
 			an_index: INTEGER
 			l_context_base_class: ET_CLASS
-			l_root_context: ET_NESTED_TYPE_CONTEXT
+			l_root_context: detachable ET_NESTED_TYPE_CONTEXT
+			l_actual_context: ET_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -981,6 +982,13 @@ feature -- Status report
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
+				if a_context.is_root_context then
+					l_actual_context := a_context
+				else
+					l_root_context := a_context.as_nested_type_context
+					l_root_context.force_last (tokens.like_0)
+					l_actual_context := l_root_context
+				end
 				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
@@ -988,21 +996,19 @@ feature -- Status report
 					an_index := l_formal_type.index
 					if attached a_class.formal_parameters as l_formals and then an_index <= l_formals.count then
 						a_formal := l_formals.formal_parameter (an_index)
-						Result := a_formal.is_expanded
+						Result := a_formal.is_expanded or
+							attached a_formal.constraint_base_types as l_constraint and then
+							l_constraint.has_expanded_type (l_actual_context)
 					else
 							-- Internal error: does current type really
 							-- appear in `a_context'?
 						Result := False
 					end
 				else
-					if a_context.is_root_context then
-						Result := an_actual.is_type_expanded_with_type_mark (overridden_type_mark (a_type_mark), a_context)
-					else
-						l_root_context := a_context.as_nested_type_context
-						l_root_context.force_last (tokens.like_0)
-						Result := an_actual.is_type_expanded_with_type_mark (overridden_type_mark (a_type_mark), l_root_context)
-						l_root_context.remove_last
-					end
+					Result := an_actual.is_type_expanded_with_type_mark (overridden_type_mark (a_type_mark), l_actual_context)
+				end
+				if l_root_context /= Void then
+					l_root_context.remove_last
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1075,7 +1081,8 @@ feature -- Status report
 			l_type_mark: detachable ET_TYPE_MARK
 			l_base_types: ET_CONSTRAINT_BASE_TYPES
 			i, nb: INTEGER
-			l_root_context: ET_NESTED_TYPE_CONTEXT
+			l_root_context: detachable ET_NESTED_TYPE_CONTEXT
+			l_actual_context: ET_TYPE_CONTEXT
 		do
 			l_type_mark := overridden_type_mark (a_type_mark)
 			l_context_base_class := a_context.base_class
@@ -1091,6 +1098,13 @@ feature -- Status report
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
+				if a_context.is_root_context then
+					l_actual_context := a_context
+				else
+					l_root_context := a_context.as_nested_type_context
+					l_root_context.force_last (tokens.like_0)
+					l_actual_context := l_root_context
+				end
 				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
@@ -1098,41 +1112,31 @@ feature -- Status report
 					an_index := l_formal_type.index
 					if attached a_class.formal_parameters as l_formals and then an_index <= l_formals.count then
 						a_formal := l_formals.formal_parameter (an_index)
-						if a_formal.is_expanded then
+						if
+							a_formal.is_expanded or
+							attached a_formal.constraint_base_types as l_constraint and then
+							l_constraint.has_expanded_type (l_actual_context)
+						then
 							Result := True
 						elseif l_formal_type /= Current then
-							if a_context.is_root_context then
-								Result := l_formal_type.is_type_attached_with_type_mark (l_type_mark, a_context)
-							else
-								l_root_context := a_context.as_nested_type_context
-								l_root_context.force_last (tokens.like_0)
-								Result := l_formal_type.is_type_attached_with_type_mark (l_type_mark, l_root_context)
-								l_root_context.remove_last
-							end
+							Result := l_formal_type.is_type_attached_with_type_mark (l_type_mark, l_actual_context)
 						elseif l_type_mark /= Void and then l_type_mark.is_attached_mark then
+							Result := True
+						elseif
+							(l_type_mark = Void or else not l_type_mark.is_detachable_mark) and
+							attached a_formal.constraint_base_types as l_constraint and then
+							l_constraint.has_attached_type (l_actual_context)
+						then
 							Result := True
 						else
 							l_base_types := a_formal.constraint_base_types
 							nb := l_base_types.count
-							if a_context.is_root_context then
-								from i := 1 until i > nb loop
-									if l_base_types.type_constraint (i).type.is_type_attached_with_type_mark (l_type_mark, a_context) then
-										Result := True
-										i := nb -- Jump out of the loop
-									end
-									i := i + 1
+							from i := 1 until i > nb loop
+								if l_base_types.type_constraint (i).type.is_type_attached_with_type_mark (l_type_mark, l_actual_context) then
+									Result := True
+									i := nb -- Jump out of the loop
 								end
-							else
-								l_root_context := a_context.as_nested_type_context
-								l_root_context.force_last (tokens.like_0)
-								from i := 1 until i > nb loop
-									if l_base_types.type_constraint (i).type.is_type_attached_with_type_mark (l_type_mark, l_root_context) then
-										Result := True
-										i := nb -- Jump out of the loop
-									end
-									i := i + 1
-								end
-								l_root_context.remove_last
+								i := i + 1
 							end
 						end
 					else
@@ -1141,14 +1145,11 @@ feature -- Status report
 						Result := False
 					end
 				else
-					if a_context.is_root_context then
-						Result := an_actual.is_type_attached_with_type_mark (l_type_mark, a_context)
-					else
-						l_root_context := a_context.as_nested_type_context
-						l_root_context.force_last (tokens.like_0)
-						Result := an_actual.is_type_attached_with_type_mark (l_type_mark, l_root_context)
-						l_root_context.remove_last
-					end
+					Result := an_actual.is_type_attached_with_type_mark (l_type_mark, l_actual_context)
+
+				end
+				if l_root_context /= Void then
+					l_root_context.remove_last
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1231,8 +1232,12 @@ feature -- Status report
 			-- generic parameter may contain non-separate reference attributes.
 		local
 			an_actual: ET_NAMED_TYPE
+			a_class: ET_CLASS
+			a_formal: ET_FORMAL_PARAMETER
+			an_index: INTEGER
 			l_context_base_class: ET_CLASS
-			l_root_context: ET_NESTED_TYPE_CONTEXT
+			l_root_context: detachable ET_NESTED_TYPE_CONTEXT
+			l_actual_context: ET_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1247,21 +1252,41 @@ feature -- Status report
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
-				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual then
+				if a_context.is_root_context then
+					l_actual_context := a_context
+				else
+					l_root_context := a_context.as_nested_type_context
+					l_root_context.force_last (tokens.like_0)
+					l_actual_context := l_root_context
+				end
+				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-						-- Consider that some actual generic parameter
-						-- may contain non-separate reference attributes.
-					Result := True
-				else
-					if a_context.is_root_context then
-						Result := an_actual.has_non_separate_reference_attributes (a_context)
+					a_class := a_context.root_context.base_class
+					an_index := l_formal_type.index
+					if attached a_class.formal_parameters as l_formals and then an_index <= l_formals.count then
+						a_formal := l_formals.formal_parameter (an_index)
+						if
+							attached a_formal.constraint_base_types as l_constraint and then
+							l_constraint.has_expanded_type (l_actual_context) and then
+							not l_constraint.has_non_separate_reference_attributes (l_actual_context)
+						then
+							Result := False
+						else
+								-- Consider that some actual generic parameter
+								-- may contain non-separate reference attributes.
+							Result := True
+						end
 					else
-						l_root_context := a_context.as_nested_type_context
-						l_root_context.force_last (tokens.like_0)
-						Result := an_actual.has_non_separate_reference_attributes (l_root_context)
-						l_root_context.remove_last
+							-- Internal error: does current type really
+							-- appear in `a_context'?
+						Result := False
 					end
+				else
+					Result := an_actual.has_non_separate_reference_attributes (l_actual_context)
+				end
+				if l_root_context /= Void then
+					l_root_context.remove_last
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1275,8 +1300,12 @@ feature -- Status report
 			-- attributes whose types contain non-separate reference attributes?
 		local
 			an_actual: ET_NAMED_TYPE
+			a_class: ET_CLASS
+			a_formal: ET_FORMAL_PARAMETER
+			an_index: INTEGER
 			l_context_base_class: ET_CLASS
-			l_root_context: ET_NESTED_TYPE_CONTEXT
+			l_root_context: detachable ET_NESTED_TYPE_CONTEXT
+			l_actual_context: ET_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1291,21 +1320,41 @@ feature -- Status report
 				end
 			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
-				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual then
+				if a_context.is_root_context then
+					l_actual_context := a_context
+				else
+					l_root_context := a_context.as_nested_type_context
+					l_root_context.force_last (tokens.like_0)
+					l_actual_context := l_root_context
+				end
+				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-						-- Consider that some actual generic parameter
-						-- may contain non-separate reference attributes.
-					Result := True
-				else
-					if a_context.is_root_context then
-						Result := an_actual.has_nested_non_separate_reference_attributes (a_context)
+					a_class := a_context.root_context.base_class
+					an_index := l_formal_type.index
+					if attached a_class.formal_parameters as l_formals and then an_index <= l_formals.count then
+						a_formal := l_formals.formal_parameter (an_index)
+						if
+							attached a_formal.constraint_base_types as l_constraint and then
+							l_constraint.has_expanded_type (l_actual_context) and then
+							not l_constraint.has_nested_non_separate_reference_attributes (l_actual_context)
+						then
+							Result := False
+						else
+								-- Consider that some actual generic parameter
+								-- may contain non-separate reference attributes.
+							Result := True
+						end
 					else
-						l_root_context := a_context.as_nested_type_context
-						l_root_context.force_last (tokens.like_0)
-						Result := an_actual.has_nested_non_separate_reference_attributes (l_root_context)
-						l_root_context.remove_last
+							-- Internal error: does current type really
+							-- appear in `a_context'?
+						Result := False
 					end
+				else
+					Result := an_actual.has_nested_non_separate_reference_attributes (l_actual_context)
+				end
+				if l_root_context /= Void then
+					l_root_context.remove_last
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?

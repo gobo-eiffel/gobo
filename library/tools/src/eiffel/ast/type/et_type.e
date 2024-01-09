@@ -5,7 +5,7 @@ note
 		"Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -414,10 +414,6 @@ feature -- Status report
 			-- Is current type expanded when viewed from `a_context'?
 			-- (Note that the feature name `is_expanded_type' is
 			-- already the name of a feature in SmartEiffel's GENERAL.)
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
 		do
 			Result := is_type_expanded_with_type_mark (Void, a_context)
 		end
@@ -455,10 +451,6 @@ feature -- Status report
 
 	is_type_attached (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Is current type attached when viewed from `a_context'?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
 		do
 			Result := is_type_attached_with_type_mark (Void, a_context)
 		end
@@ -519,29 +511,6 @@ feature -- Status report
 			-- no_cycle: no cycle in anchored types involved.
 		do
 			Result := is_type_expanded_with_type_mark (a_type_mark, a_context) or is_type_detachable_with_type_mark (a_type_mark, a_context)
-		end
-
-	has_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Does current type contain attributes whose types are declared
-			-- of non-separate reference types when viewed from `a_context'?
-			-- True in case of a formal generic parameter because the actual
-			-- generic parameter may contain non-separate reference attributes.
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
-		deferred
-		end
-
-	has_nested_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Does current type contain non-separate reference attributes when
-			-- viewed from `a_context', or recursively does it contain expanded
-			-- attributes whose types contain non-separate reference attributes?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
-		deferred
 		end
 
 	is_controlled: BOOLEAN

@@ -9,7 +9,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -149,6 +149,83 @@ feature -- Status report
 			loop
 				if not storage.item (j).is_named_type then
 					Result := False
+					j := 0 -- Jump out of the loop.
+				end
+				j := j - 1
+			end
+		end
+
+	has_expanded_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Is one of the constraint types an expanded type when viewed from `a_context'?
+		local
+			j: INTEGER
+		do
+			from
+				j := count - 1
+			until
+				j < 0
+			loop
+				if storage.item (j).is_type_expanded (a_context) then
+					Result := True
+					j := 0 -- Jump out of the loop.
+				end
+				j := j - 1
+			end
+		end
+
+	has_attached_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Is one of the constraint types attached when viewed from `a_context'?
+		local
+			j: INTEGER
+		do
+			from
+				j := count - 1
+			until
+				j < 0
+			loop
+				if storage.item (j).is_type_attached (a_context) then
+					Result := True
+					j := 0 -- Jump out of the loop.
+				end
+				j := j - 1
+			end
+		end
+
+	has_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does one of the constraint types contain attributes whose types are declared
+			-- of non-separate reference types when viewed from `a_context'?
+			-- True in case of a formal generic parameter because the actual
+			-- generic parameter may contain non-separate reference attributes.
+		local
+			j: INTEGER
+		do
+			from
+				j := count - 1
+			until
+				j < 0
+			loop
+				if storage.item (j).has_non_separate_reference_attributes (a_context) then
+					Result := True
+					j := 0 -- Jump out of the loop.
+				end
+				j := j - 1
+			end
+		end
+
+	has_nested_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does one of the constraint types contain non-separate reference attributes
+			-- when viewed from `a_context', or recursively does it contain expanded
+			-- attributes whose types contain non-separate reference attributes?
+		local
+			j: INTEGER
+		do
+			from
+				j := count - 1
+			until
+				j < 0
+			loop
+				if storage.item (j).has_nested_non_separate_reference_attributes (a_context) then
+					Result := True
 					j := 0 -- Jump out of the loop.
 				end
 				j := j - 1

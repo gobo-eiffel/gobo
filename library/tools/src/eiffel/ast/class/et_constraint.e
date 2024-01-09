@@ -5,7 +5,7 @@ note
 		"Eiffel constraints on formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,6 +51,47 @@ feature -- Status report
 
 	are_named_types: BOOLEAN
 			-- Are all types named types (only made up of named types)?
+		deferred
+		end
+
+	has_expanded_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Is one of the constraint types an expanded type when viewed from `a_context'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
+	has_attached_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Is one of the constraint types attached when viewed from `a_context'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
+	has_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does one of the constraint types contain attributes whose types are declared
+			-- of non-separate reference types when viewed from `a_context'?
+			-- True in case of a formal generic parameter because the actual
+			-- generic parameter may contain non-separate reference attributes.
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
+	has_nested_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does one of the constraint types contain non-separate reference attributes
+			-- when viewed from `a_context', or recursively does it contain expanded
+			-- attributes whose types contain non-separate reference attributes?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		end
 
