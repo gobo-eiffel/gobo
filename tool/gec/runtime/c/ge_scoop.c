@@ -387,13 +387,32 @@ static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_session* a_ses
 	GE_scoop_session* l_old_locked_sessions;
 	GE_scoop_processor* l_caller;
 	char l_is_synchronous = a_call->is_synchronous;
+	GE_rescue r;
+	uint32_t tr = a_context->in_rescue;
 
 	if (a_call->execute) {
 		if (l_is_synchronous) {
 			l_old_locked_sessions = a_session->callee->first_locked_session;
 			GE_scoop_session_pass_locks(a_session);
 		}
+		if (GE_setjmp(r.jb) != 0) {
+			GE_show_console();
+			fprintf(stderr, "Exception in GE_scoop_call_execute\n");
+			a_context->in_rescue = tr + 1;
+			if (l_is_synchronous) {
+				GE_scoop_session_release_locks(a_session);
+				a_session->callee->first_locked_session = l_old_locked_sessions;
+				l_caller = a_session->caller;
+				GE_mutex_lock((EIF_POINTER)l_caller->sync_mutex);
+				GE_condition_variable_broadcast((EIF_POINTER)l_caller->sync_condition_variable);
+				GE_mutex_unlock((EIF_POINTER)l_caller->sync_mutex);
+			}
+			GE_jump_to_last_rescue(a_context);
+		}
+		r.previous = a_context->last_rescue;
+		a_context->last_rescue = &r;
 		a_call->execute(a_context, a_session, a_call);
+		a_context->last_rescue = r.previous;
 		if (l_is_synchronous) {
 			GE_scoop_session_release_locks(a_session);
 			a_session->callee->first_locked_session = l_old_locked_sessions;

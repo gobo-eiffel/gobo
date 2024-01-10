@@ -19878,6 +19878,38 @@ feature {NONE} -- Separate calls
 				print_semicolon_newline
 				l_se := c_se
 			end
+			l_is_synchronous_call := l_result_type /= Void or l_has_non_separate_reference_actual_argument
+			l_is_asynchronous_call := l_is_creation_call and not l_has_reference_actual_argument
+			if not l_is_creation_call then
+				print_indentation
+				current_file.put_string (c_ge_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_uint32_t)
+				current_file.put_character (' ')
+				current_file.put_string (c_tr)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_in_rescue)
+				current_file.put_character (';')
+				current_file.put_new_line
+				current_file.put_character ('%T')
+				current_file.put_string (c_ge_scoop_session)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string ("l_old_locked_sessions")
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('0')
+				print_semicolon_newline
+			end
 				-- Print body to `current_file'.
 			current_file := current_function_body_buffer
 			if l_is_creation_call then
@@ -19988,8 +20020,6 @@ feature {NONE} -- Separate calls
 					j := j + 1
 				end
 			end
-			l_is_synchronous_call := l_result_type /= Void or l_has_non_separate_reference_actual_argument
-			l_is_asynchronous_call := l_is_creation_call and not l_has_reference_actual_argument
 			if not l_is_synchronous_call then
 					-- Potentially asynchronous call.
 				if not l_is_asynchronous_call then
@@ -20156,18 +20186,6 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('{')
 					current_file.put_new_line
 					indent
-					current_file := current_function_header_buffer
-					current_file.put_character ('%T')
-					current_file.put_string (c_ge_scoop_session)
-					current_file.put_character ('*')
-					current_file.put_character (' ')
-					current_file.put_string ("l_old_locked_sessions")
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('0')
-					print_semicolon_newline
-					current_file := current_function_body_buffer
 					print_indentation
 					current_file.put_string (c_ge_add_scoop_sync_call)
 					current_file.put_character ('(')
@@ -20204,6 +20222,118 @@ feature {NONE} -- Separate calls
 					print_indentation
 					current_file.put_character ('}')
 					current_file.put_new_line
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_setjmp)
+					current_file.put_character ('(')
+					current_file.put_character ('r')
+					current_file.put_character ('.')
+					current_file.put_character ('j')
+					current_file.put_character ('b')
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('!')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('0')
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_in_rescue)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_tr)
+					current_file.put_character (' ')
+					current_file.put_character ('+')
+					current_file.put_character (' ')
+					current_file.put_character ('1')
+					current_file.put_character (';')
+					current_file.put_new_line
+
+					current_file.put_line("GE_show_console(); fprintf(stderr, %"Exception in GE_scoop_call_execute\n%");")
+
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_string (l_se)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					current_file.put_string (c_ge_scoop_session_impersonate)
+					current_file.put_character ('(')
+					current_file.put_string (l_se)
+					current_file.put_character (')')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ge_scoop_session_release_locks)
+					current_file.put_character ('(')
+					current_file.put_string (l_se)
+					current_file.put_character (')')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (l_se)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_callee)
+					current_file.put_string (c_arrow)
+					current_file.put_string ("first_locked_session")
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string ("l_old_locked_sessions")
+					print_semicolon_newline
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_string (c_ge_jump_to_last_rescue)
+					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+					current_file.put_string (c_ge_retry)
+					current_file.put_character (':')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_character ('r')
+					current_file.put_character ('.')
+					current_file.put_string (c_previous)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_last_rescue)
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_last_rescue)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('&')
+					current_file.put_character ('r')
+					current_file.put_character (';')
+					current_file.put_new_line
 					separate_call_arguments.wipe_out
 					if nb_args > 0 then
 						l_separate_call_arguments := separate_call_arguments
@@ -20231,6 +20361,18 @@ feature {NONE} -- Separate calls
 						separate_call_instruction.set_arguments (l_separate_call_arguments)
 						print_qualified_call_instruction (separate_call_instruction)
 					end
+					print_indentation
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_last_rescue)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('r')
+					current_file.put_character ('.')
+					current_file.put_string (c_previous)
+					current_file.put_character (';')
+					current_file.put_new_line
 					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
