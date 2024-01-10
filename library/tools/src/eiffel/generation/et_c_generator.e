@@ -6558,11 +6558,11 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						current_file.put_character (' ')
 						current_file.put_string (c_ge_get_scoop_session)
 						current_file.put_character ('(')
-						print_attribute_scoop_processor_access (l_name, l_argument_type.primary_type, False)
-						print_comma
 						current_file.put_string (c_ac)
 						current_file.put_string (c_arrow)
 						current_file.put_string (c_scoop_processor)
+						print_comma
+						print_attribute_scoop_processor_access (l_name, l_argument_type.primary_type, False)
 						current_file.put_character (')')
 						print_semicolon_newline
 					end
@@ -7880,13 +7880,13 @@ feature {NONE} -- Instruction generation
 						current_file.put_character (' ')
 						current_file.put_string (c_ge_get_scoop_session)
 						current_file.put_character ('(')
-						l_dynamic_type_set := dynamic_type_set (l_name)
-						l_dynamic_primary_type := l_dynamic_type_set.static_type.primary_type
-						print_attribute_scoop_processor_access (l_name, l_dynamic_primary_type, False)
-						print_comma
 						current_file.put_string (c_ac)
 						current_file.put_string (c_arrow)
 						current_file.put_string (c_scoop_processor)
+						print_comma
+						l_dynamic_type_set := dynamic_type_set (l_name)
+						l_dynamic_primary_type := l_dynamic_type_set.static_type.primary_type
+						print_attribute_scoop_processor_access (l_name, l_dynamic_primary_type, False)
 						current_file.put_character (')')
 						print_semicolon_newline
 						dedent
@@ -19924,10 +19924,10 @@ feature {NONE} -- Separate calls
 				current_file.put_string (c_ge_get_scoop_session)
 				current_file.put_character ('(')
 				current_file.put_string (c_sp)
-				current_file.put_character ('2')
+				current_file.put_character ('1')
 				print_comma
 				current_file.put_string (c_sp)
-				current_file.put_character ('1')
+				current_file.put_character ('2')
 				current_file.put_character (')')
 				print_semicolon_newline
 				print_indentation
@@ -20003,11 +20003,26 @@ feature {NONE} -- Separate calls
 					end
 					from j := 1 until j > nb_operands loop
 							-- The first formal argument is is fact used for the target of the call.
-						if j /= 1 or not l_is_creation_call then
+						if j = 1 then
+							if not l_is_creation_call then
+									-- Synchronous call in case of callbacks.
+								if l_and_then_needed then
+									print_and_then
+								end
+								l_and_then_needed := True
+								current_file.put_character ('!')
+								current_file.put_string (c_ge_scoop_session_is_synchronized)
+								current_file.put_character ('(')
+								current_file.put_string (l_se)
+								current_file.put_character (')')
+							end
+						else
 							l_formal_argument := formal_argument (j)
-							l_primary_type := dynamic_type_set (l_formal_argument).static_type.primary_type
-							if not l_primary_type.is_expanded then
-									-- Synchronous call when locked by current processor
+							l_dynamic_type_set := dynamic_type_set (l_formal_argument)
+							l_type := l_dynamic_type_set.static_type
+							l_primary_type := l_type.primary_type
+							if not l_type.is_expanded and (l_primary_type /= current_dynamic_system.none_type) and not l_dynamic_type_set.is_empty then
+									-- Synchronous call when locked by current processor.
 								if l_and_then_needed then
 									print_and_then
 								end
@@ -20016,7 +20031,7 @@ feature {NONE} -- Separate calls
 								current_file.put_character ('(')
 								print_argument_name (l_formal_argument, current_file)
 								print_and_then
-								current_file.put_string (c_ge_scoop_processor_is_locked_by)
+								current_file.put_string (c_ge_scoop_processor_has_lock_on)
 								current_file.put_character ('(')
 								current_file.put_string (c_ac)
 								current_file.put_string (c_arrow)
@@ -20075,6 +20090,8 @@ feature {NONE} -- Separate calls
 			end
 			if not l_is_asynchronous_call then
 					-- Synchronous call with no impersonation.
+					-- Always the case for creation procedures (to give them
+					-- a chance to disable impersonation during creation).
 				if not l_is_creation_call then
 					if l_is_synchronous_call then
 						print_indentation
@@ -20094,29 +20111,31 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('{')
 					current_file.put_new_line
 					indent
-					print_indentation
-					current_file.put_string (c_ge_add_scoop_call)
-					current_file.put_character ('(')
-					current_file.put_string (l_se)
+				end
+				print_indentation
+				current_file.put_string (c_ge_add_scoop_call)
+				current_file.put_character ('(')
+				current_file.put_string (l_se)
+				print_comma
+				print_separate_call_object_name (i, current_feature, current_type, current_file)
+				current_file.put_character ('(')
+				if l_result_type /= Void then
+					current_file.put_character ('&')
+					print_result_name (current_file)
 					print_comma
-					print_separate_call_object_name (i, current_feature, current_type, current_file)
-					current_file.put_character ('(')
-					if l_result_type /= Void then
-						current_file.put_character ('&')
-						print_result_name (current_file)
-						print_comma
-					end
-					print_argument_name (formal_argument (1), current_file)
-					from j := 2 until j > nb_operands loop
-						print_comma
-						print_argument_name (formal_argument (j), current_file)
-						j := j + 1
-					end
-					current_file.put_character (')')
+				end
+				print_argument_name (formal_argument (1), current_file)
+				from j := 2 until j > nb_operands loop
 					print_comma
-					current_file.put_character ('1')
-					current_file.put_character (')')
-					print_semicolon_newline
+					print_argument_name (formal_argument (j), current_file)
+					j := j + 1
+				end
+				current_file.put_character (')')
+				print_comma
+				current_file.put_character ('1')
+				current_file.put_character (')')
+				print_semicolon_newline
+				if not l_is_creation_call then
 					dedent
 					print_indentation
 					current_file.put_character ('}')
@@ -20126,9 +20145,7 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('{')
 					current_file.put_new_line
 					indent
-				end
-					-- Synchronous call with impersonation.
-				if not l_is_creation_call then
+						-- Synchronous call with impersonation.
 					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
@@ -20139,62 +20156,81 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('{')
 					current_file.put_new_line
 					indent
-				end
-				print_indentation
-				current_file.put_string (c_ge_add_scoop_sync_call)
-				current_file.put_character ('(')
-				current_file.put_string (l_se)
-				current_file.put_character (')')
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_ge_scoop_session_lock)
-				current_file.put_character ('(')
-				current_file.put_string (l_se)
-				current_file.put_character (')')
-				print_semicolon_newline
-					-- Use impersonation (i.e. the call will be executed by
-					-- the current thread on behalf of the other SCOOP processor, pretending
-					-- that it is the thread associated with this other SCOOP processor).
-				print_indentation
-				current_file.put_string (c_ge_scoop_session_impersonate)
-				current_file.put_character ('(')
-				current_file.put_string (l_se)
-				current_file.put_character (')')
-				print_semicolon_newline
-				if not l_is_creation_call then
+					current_file := current_function_header_buffer
+					current_file.put_character ('%T')
+					current_file.put_string (c_ge_scoop_session)
+					current_file.put_character ('*')
+					current_file.put_character (' ')
+					current_file.put_string ("l_old_locked_sessions")
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('0')
+					print_semicolon_newline
+					current_file := current_function_body_buffer
+					print_indentation
+					current_file.put_string (c_ge_add_scoop_sync_call)
+					current_file.put_character ('(')
+					current_file.put_string (l_se)
+					current_file.put_character (')')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string ("l_old_locked_sessions")
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (l_se)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_callee)
+					current_file.put_string (c_arrow)
+					current_file.put_string ("first_locked_session")
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ge_scoop_session_pass_locks)
+					current_file.put_character ('(')
+					current_file.put_string (l_se)
+					current_file.put_character (')')
+					print_semicolon_newline
+						-- Use impersonation (i.e. the call will be executed by
+						-- the current thread on behalf of the other SCOOP processor, pretending
+						-- that it is the thread associated with this other SCOOP processor).
+					print_indentation
+					current_file.put_string (c_ge_scoop_session_impersonate)
+					current_file.put_character ('(')
+					current_file.put_string (l_se)
+					current_file.put_character (')')
+					print_semicolon_newline
 					dedent
 					print_indentation
 					current_file.put_character ('}')
 					current_file.put_new_line
-				end
-				separate_call_arguments.wipe_out
-				if nb_args > 0 then
-					l_separate_call_arguments := separate_call_arguments
-					if l_separate_call_arguments.capacity < nb_args then
-						l_separate_call_arguments.resize (nb_args)
+					separate_call_arguments.wipe_out
+					if nb_args > 0 then
+						l_separate_call_arguments := separate_call_arguments
+						if l_separate_call_arguments.capacity < nb_args then
+							l_separate_call_arguments.resize (nb_args)
+						end
+						from j := nb_operands until j < 2 loop
+							l_separate_call_arguments.put_first (formal_argument (j))
+							j := j - 1
+						end
 					end
-					from j := nb_operands until j < 2 loop
-						l_separate_call_arguments.put_first (formal_argument (j))
-						j := j - 1
+					if l_result_type /= Void then
+						print_indentation
+						print_result_name (current_file)
+						print_assign_to
+						separate_call_expression.set_target (formal_argument (1))
+						separate_call_expression.set_name (a_separate_call.name)
+						separate_call_expression.set_arguments (l_separate_call_arguments)
+						separate_call_expression.set_index (l_index)
+						print_qualified_call_expression (separate_call_expression)
+						print_semicolon_newline
+					else
+						separate_call_instruction.set_target (formal_argument (1))
+						separate_call_instruction.set_name (a_separate_call.name)
+						separate_call_instruction.set_arguments (l_separate_call_arguments)
+						print_qualified_call_instruction (separate_call_instruction)
 					end
-				end
-				if l_result_type /= Void then
-					print_indentation
-					print_result_name (current_file)
-					print_assign_to
-					separate_call_expression.set_target (formal_argument (1))
-					separate_call_expression.set_name (a_separate_call.name)
-					separate_call_expression.set_arguments (l_separate_call_arguments)
-					separate_call_expression.set_index (l_index)
-					print_qualified_call_expression (separate_call_expression)
-					print_semicolon_newline
-				else
-					separate_call_instruction.set_target (formal_argument (1))
-					separate_call_instruction.set_name (a_separate_call.name)
-					separate_call_instruction.set_arguments (l_separate_call_arguments)
-					print_qualified_call_instruction (separate_call_instruction)
-				end
-				if not l_is_creation_call then
 					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
@@ -20205,20 +20241,29 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('{')
 					current_file.put_new_line
 					indent
-				end
-				print_indentation
-				current_file.put_string (c_ge_scoop_session_impersonate)
-				current_file.put_character ('(')
-				current_file.put_string (l_se)
-				current_file.put_character (')')
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_ge_scoop_session_unlock)
-				current_file.put_character ('(')
-				current_file.put_string (l_se)
-				current_file.put_character (')')
-				print_semicolon_newline
-				if not l_is_creation_call then
+					print_indentation
+					current_file.put_string (c_ge_scoop_session_impersonate)
+					current_file.put_character ('(')
+					current_file.put_string (l_se)
+					current_file.put_character (')')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ge_scoop_session_release_locks)
+					current_file.put_character ('(')
+					current_file.put_string (l_se)
+					current_file.put_character (')')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (l_se)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_callee)
+					current_file.put_string (c_arrow)
+					current_file.put_string ("first_locked_session")
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string ("l_old_locked_sessions")
+					print_semicolon_newline
 					dedent
 					print_indentation
 					current_file.put_character ('}')
@@ -20325,6 +20370,12 @@ feature {NONE} -- Separate calls
 			header_file.put_string (c_ac)
 			header_file.put_character (',')
 			header_file.put_character (' ')
+			header_file.put_string (c_ge_scoop_session)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string (c_se)
+			header_file.put_character (',')
+			header_file.put_character (' ')
 			header_file.put_string (c_ge_scoop_call)
 			header_file.put_character ('*')
 			header_file.put_character (' ')
@@ -20355,6 +20406,12 @@ feature {NONE} -- Separate calls
 			current_file.put_character ('*')
 			current_file.put_character (' ')
 			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			current_file.put_string (c_ge_scoop_session)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_se)
 			current_file.put_character (',')
 			current_file.put_character (' ')
 			current_file.put_string (c_ge_scoop_call)
@@ -20614,6 +20671,9 @@ feature {NONE} -- Separate calls
 			current_file.put_character (')')
 			current_file.put_character ('(')
 			current_file.put_string (c_ge_context)
+			current_file.put_character ('*')
+			print_comma
+			current_file.put_string (c_ge_scoop_session)
 			current_file.put_character ('*')
 			print_comma
 			current_file.put_string (c_ge_scoop_call)
@@ -42597,13 +42657,14 @@ feature {NONE} -- Constants
 	c_ge_retry: STRING = "GE_retry"
 	c_ge_scoop_call: STRING = "GE_scoop_call"
 	c_ge_scoop_processor: STRING = "GE_scoop_processor"
-	c_ge_scoop_processor_is_locked_by: STRING = "GE_scoop_processor_is_locked_by"
+	c_ge_scoop_processor_has_lock_on: STRING = "GE_scoop_processor_has_lock_on"
 	c_ge_scoop_processor_run: STRING = "GE_scoop_processor_run"
 	c_ge_scoop_session: STRING = "GE_scoop_session"
 	c_ge_scoop_session_impersonate: STRING = "GE_scoop_session_impersonate"
 	c_ge_scoop_session_is_impersonation_allowed: STRING = "GE_scoop_session_is_impersonation_allowed"
-	c_ge_scoop_session_lock: STRING = "GE_scoop_session_lock"
-	c_ge_scoop_session_unlock: STRING = "GE_scoop_session_unlock"
+	c_ge_scoop_session_is_synchronized: STRING = "GE_scoop_session_is_synchronized"
+	c_ge_scoop_session_pass_locks: STRING = "GE_scoop_session_pass_locks"
+	c_ge_scoop_session_release_locks: STRING = "GE_scoop_session_release_locks"
 	c_ge_setjmp: STRING = "GE_setjmp"
 	c_ge_set_boolean_field: STRING = "GE_set_boolean_field"
 	c_ge_set_boolean_field_at: STRING = "GE_set_boolean_field_at"

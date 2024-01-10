@@ -33,17 +33,18 @@ extern "C" {
 typedef struct GE_scoop_call_struct GE_scoop_call;
 typedef struct GE_scoop_session_struct GE_scoop_session;
 struct GE_scoop_call_struct {
-	GE_scoop_session* session;
 	char is_synchronous; /* Should the caller wait for the call to be executed? */
+	void (*execute)(GE_context*, GE_scoop_session*, GE_scoop_call*);
 	GE_scoop_call* next;
-	void (*execute)(GE_context*, GE_scoop_call*);
 };
 
 /* Struct for separate sessions. */
 struct GE_scoop_session_struct {
-	GE_scoop_processor* callee;
-	GE_scoop_processor* caller;
-	int32_t nested_level;
+	GE_scoop_processor* caller; /* Processor of the callers of the calls. */
+	GE_scoop_processor* callee; /* Processor of the targets of the calls. */
+	char is_synchronized; /* Did `a_callee' synchronously trigger directly or indirectly the calls of this session? Needed in case of callbacks. */
+	int32_t nested_level; /* Number of times this session is being used. When 0, no more calls will be added. */
+	GE_scoop_session* next_locked_session;
 	GE_scoop_session* previous;
 	GE_scoop_session* next;
 	GE_scoop_session* previous_same_caller;
@@ -57,8 +58,7 @@ struct GE_scoop_session_struct {
 /* Struct for a SCOOP region and its processor if any. */
 struct GE_scoop_processor_struct {
 	GE_context* context;
-	GE_scoop_processor* locked_by; /* Used in case of synchronous calls where `locked_by' is the direct caller. */
-	uint32_t lock_level; /* How many times the current processor is locked by `locked_by' (in case of callbacks). */
+	GE_scoop_session* first_locked_session;
 	char is_impersonation_allowed;
 	GE_scoop_processor* next;
 	GE_scoop_session* first_session;
@@ -67,7 +67,6 @@ struct GE_scoop_processor_struct {
 	EIF_COND_TYPE* condition_variable; /* To add, remove and access SCOOP sessions. */
 	EIF_MUTEX_TYPE* sync_mutex; /* For synchronization in case of synchronous calls. */
 	EIF_COND_TYPE* sync_condition_variable; /* For synchronization in case of synchronous calls. */
-	EIF_MUTEX_TYPE* lock_mutex; /* To modify the lock status . */
 };
 
 /*
@@ -88,13 +87,17 @@ extern GE_scoop_processor* GE_new_scoop_processor(GE_context* a_context);
 /* 
  * Get SCOOP session to register calls from `a_caller' to be executed by `a_callee'.
  * Return NULL if `a_caller' and `a_callee' are the same SCOOP processor.
+ * To be executed by the processor of `a_caller' (or by other processors
+ * which are synchronized with `a_caller').
  */
-extern GE_scoop_session* GE_get_scoop_session(GE_scoop_processor* a_callee, GE_scoop_processor* a_caller);
+extern GE_scoop_session* GE_get_scoop_session(GE_scoop_processor* a_caller, GE_scoop_processor* a_callee);
 
 /* 
  * Exit from SCOOP session `a_session' at the end of a feature with arguments of separate type
  * or at the end of an inline separate instruction. Note that some enclosing feature or inline
  * separate instruction might still be using this session to register subsequent calls.
+ * To be executed from the processor of `a_session->caller' (or by other processors
+ * which are synchronized with `a_session->caller').
  */
 extern void GE_exit_scoop_session(GE_scoop_session* a_session);
 
@@ -109,29 +112,27 @@ extern GE_scoop_call* GE_new_scoop_call(size_t a_size);
 extern void GE_add_scoop_call(GE_scoop_session* a_session, GE_scoop_call* a_call, char a_is_synchronous);
 
 /* 
- * Add SCOOP synchronization call to `a_session'.
+ * Add SCOOP synchronization call to `a_session' if not synchronized yet.
  */
 extern void GE_add_scoop_sync_call(GE_scoop_session* a_session);
 
 /*
  * Let the thread of `a_caller' execute the calls of `a_callee' and vice-versa.
  */
-extern void GE_scoop_processor_impersonate(GE_scoop_processor* a_callee, GE_scoop_processor* a_caller);
+extern void GE_scoop_processor_impersonate(GE_scoop_processor* a_caller, GE_scoop_processor* a_callee);
 
 /*
- * Let the thread of the caller of `a_caller' execute the calls of `a_callee' and vice-versa.
+ * Let the thread of `a_session->caller' execute the calls of `a_session->callee' and vice-versa.
  */
-#define GE_scoop_session_impersonate(a_session) GE_scoop_processor_impersonate((a_session)->callee, (a_session)->caller)
+#define GE_scoop_session_impersonate(a_session) GE_scoop_processor_impersonate((a_session)->caller, (a_session)->callee)
 
 /*
- * Does `a_processor' allow the thread of callers to execute separate calls on its behalf?
+ * Does the callee processor of `a_session' allow the thread of its caller
+ * to execute separate calls on its behalf?
+ * Note that impersonation is forced when `a_session' is synchronized
+ * (which means that we're calling back the callee in a synchronous call).
  */
-extern char GE_scoop_processor_is_impersonation_allowed(GE_scoop_processor* a_processor);
-
-/*
- * Does the processor `a_session->callee' allow the thread of `a_session->caller' to execute separate calls on its behalf?
- */
-#define GE_scoop_session_is_impersonation_allowed(a_session) GE_scoop_processor_is_impersonation_allowed((a_session)->callee)
+extern char GE_scoop_session_is_impersonation_allowed(GE_scoop_session* a_session);
 
 /*
  * Indicate whether `a_processor' allow or not the thread of callers to execute separate calls on its behalf.
@@ -139,29 +140,35 @@ extern char GE_scoop_processor_is_impersonation_allowed(GE_scoop_processor* a_pr
 extern void GE_scoop_processor_set_impersonation_allowed(GE_scoop_processor* a_processor, char a_value);
 
 /*
- * Make sure that `a_caller' is locked by `a_callee'.
+ * Is `a_callee' locked (directly or indirectly) by `a_caller'?
  */
-extern void GE_scoop_processor_lock(GE_scoop_processor* a_callee, GE_scoop_processor* a_caller);
+extern char GE_scoop_processor_has_lock_on(GE_scoop_processor* a_caller, GE_scoop_processor* a_callee);
 
 /*
- * Make sure that the caller of `a_session' is locked by its callee.
+ * Did the callee processor of `a_session' synchronously trigger directly or indirectly
+ * the calls of this session? Needed in case of callbacks.
  */
-#define GE_scoop_session_lock(a_session) GE_scoop_processor_lock((a_session)->callee, (a_session)->caller)
+#define GE_scoop_session_is_synchronized(a_session) (a_session)->is_synchronized
 
 /*
- * Undo last call to `GE_scoop_processor_lock'.
+ * Perform lock passing from `a_caller' to `a_callee' in case of a synchronous call.
  */
-extern void GE_scoop_processor_unlock(GE_scoop_processor* a_callee, GE_scoop_processor* a_caller);
+extern void GE_scoop_processor_pass_locks(GE_scoop_processor* a_caller, GE_scoop_processor* a_callee);
 
 /*
- * Undo last call to `GE_soop_session_lock'.
+ * Perform lock passing from `a_session->caller' to `a_session->callee' in case of a synchronous call.
  */
-#define GE_scoop_session_unlock(a_session) GE_scoop_processor_unlock((a_session)->callee, (a_session)->caller)
+#define GE_scoop_session_pass_locks(a_session) GE_scoop_processor_pass_locks((a_session)->caller, (a_session)->callee)
 
 /*
- * Is `a_caller' locked (directly or indirectly) by `a_callee'?
+ * Release locks which were passed to `a_processor' in case of a synchronous call.
  */
-extern char GE_scoop_processor_is_locked_by(GE_scoop_processor* a_callee, GE_scoop_processor* a_caller);
+extern void GE_scoop_processor_release_locks(GE_scoop_processor* a_processor);
+
+/*
+ * Release locks which were passed to `a_session->callee' in case of a synchronous call.
+ */
+#define GE_scoop_session_release_locks(a_session) GE_scoop_processor_release_locks((a_session)->callee)
 
 /*
  * Execute the main loop of the SCOOP processor `a_context->scoop_processor'.
