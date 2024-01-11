@@ -163,6 +163,10 @@ feature {NONE} -- Initialization
 			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_buffer: STRING
+			l_inline_separate_arguments: ET_INLINE_SEPARATE_ARGUMENTS
+			l_inline_separate_argument_name: ET_IDENTIFIER
+			l_compound: ET_COMPOUND
+			l_result: ET_RESULT
 		do
 			system_processor := a_system_processor
 			current_dynamic_system := a_system
@@ -183,6 +187,10 @@ feature {NONE} -- Initialization
 			create current_function_header_buffer.make (l_buffer)
 			create l_buffer.make (100000)
 			create current_function_body_buffer.make (l_buffer)
+			create l_buffer.make (1024)
+			create current_separate_function_header_buffer.make (l_buffer)
+			create l_buffer.make (10000)
+			create current_separate_function_body_buffer.make (l_buffer)
 			create temp_variables.make (40)
 			create used_temp_variables.make (40)
 			create free_temp_variables.make (40)
@@ -219,9 +227,22 @@ feature {NONE} -- Initialization
 			create agent_arguments.make_with_capacity (100)
 			create agent_instruction.make (agent_target, current_feature.static_feature.name, Void)
 			create agent_expression.make (agent_target, current_feature.static_feature.name, Void)
+			create l_inline_separate_argument_name.make ("sa")
+			l_inline_separate_argument_name.set_inline_separate_argument (True)
+			l_inline_separate_argument_name.set_seed (1)
+			create agent_inline_separate_argument.make (agent_target, l_inline_separate_argument_name)
+			create l_inline_separate_arguments.make_with_capacity (1)
+			l_inline_separate_arguments.put_first (agent_inline_separate_argument)
+			create l_compound.make_with_capacity (1)
+			l_compound.put_first (agent_instruction)
+			create agent_controlled_target_instruction.make (l_inline_separate_arguments, l_compound)
+			create l_result.make
+			create agent_expression_assignment.make (l_result, agent_expression)
+			create l_compound.make_with_capacity (1)
+			l_compound.put_first (agent_instruction)
+			create agent_controlled_target_expression.make (l_inline_separate_arguments, l_compound)
 			agent_closed_operands_type := current_dynamic_system.unknown_type
 			create agent_manifest_tuple.make_with_capacity (20)
-			create current_separate_calls.make_map (20)
 			create separate_call_arguments.make_with_capacity (100)
 			create separate_call_instruction.make (tokens.current_keyword, current_feature.static_feature.name, Void)
 			create separate_call_expression.make (tokens.current_keyword, current_feature.static_feature.name, Void)
@@ -1542,14 +1563,8 @@ feature {NONE} -- Feature generation
 				end
 				current_equalities.wipe_out
 				if scoop_mode then
-						-- Print declaration of separate calls appearing in `a_feature'.
-					i := 0
-					from current_separate_calls.start until current_separate_calls.after loop
-						i := i + 1
-						print_separate_call_declaration (i, current_separate_calls.key_for_iteration, current_separate_calls.item_for_iteration)
-						current_separate_calls.forth
-					end
-					current_separate_calls.wipe_out
+						-- Reset the number of separate calls appearing in `a_feature'.
+					current_separate_call_count := 0
 				end
 				current_dynamic_type_sets := old_dynamic_type_sets
 				current_feature := old_feature
@@ -2387,12 +2402,240 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_builtin: a_feature.is_builtin
 			valid_feature: current_feature.static_feature = a_feature
+		local
+			i, nb: INTEGER
+			l_name: ET_IDENTIFIER
+			l_argument_type: ET_DYNAMIC_TYPE
+			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+			l_argument: ET_FORMAL_ARGUMENT
+			old_file: KI_TEXT_OUTPUT_STREAM
+			l_has_separate_arguments: BOOLEAN
 		do
+			old_file := current_file
+			current_file := current_function_header_buffer
+				--
+				-- Declaration of variables.
+				--
+			if scoop_mode then
+					-- Declaration of SCOOP sessions to register separate calls.
+				l_arguments := a_feature.arguments
+				if l_arguments /= Void then
+					nb := l_arguments.count
+					from i := 1 until i > nb loop
+						l_argument := l_arguments.formal_argument (i)
+						l_name := l_argument.name
+						l_argument_type := dynamic_type_set (l_name).static_type
+						if l_argument_type.is_separate then
+							l_has_separate_arguments := True
+							print_indentation
+							current_file.put_string (c_ge_scoop_session)
+							current_file.put_character ('*')
+							current_file.put_character (' ')
+							print_separate_argument_session_name (l_name, current_file)
+							current_file.put_character (' ')
+							current_file.put_character ('=')
+							current_file.put_character (' ')
+							current_file.put_character ('0')
+							print_semicolon_newline
+						end
+						i := i + 1
+					end
+				end
+			end
+			if l_has_separate_arguments then
+				print_indentation
+				current_file.put_string (c_ge_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_uint32_t)
+				current_file.put_character (' ')
+				current_file.put_string (c_tr)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_in_rescue)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+				--
+				-- Instructions.
+				--
+			current_file := current_function_body_buffer
+			if l_has_separate_arguments then
+					-- Start the current SCOOP sessions.
+				check l_has_separate_arguments: l_arguments /= Void then end
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					l_argument := l_arguments.formal_argument (i)
+					l_name := l_argument.name
+					l_argument_type := dynamic_type_set (l_name).static_type
+					if l_argument_type.is_separate then
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_formal_argument (l_name)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						print_separate_argument_session_name (l_name, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_string (c_ge_get_scoop_session)
+						current_file.put_character ('(')
+						current_file.put_string (c_ac)
+						current_file.put_string (c_arrow)
+						current_file.put_string (c_scoop_processor)
+						print_comma
+						print_attribute_scoop_processor_access (l_name, l_argument_type.primary_type, False)
+						current_file.put_character (')')
+						print_semicolon_newline
+					end
+					i := i + 1
+				end
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_ge_setjmp)
+				current_file.put_character ('(')
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_character ('j')
+				current_file.put_character ('b')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('!')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('0')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_in_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_tr)
+				current_file.put_character (' ')
+				current_file.put_character ('+')
+				current_file.put_character (' ')
+				current_file.put_character ('1')
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Make sure to exit from the current SCOOP sessions
+					-- before propagating the exception.
+				check l_has_separate_arguments: l_arguments /= Void then end
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					l_argument := l_arguments.formal_argument (i)
+					l_name := l_argument.name
+					l_argument_type := dynamic_type_set (l_name).static_type
+					if l_argument_type.is_separate then
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_separate_argument_session_name (l_name, current_file)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_string (c_ge_exit_scoop_session)
+						current_file.put_character ('(')
+						print_separate_argument_session_name (l_name, current_file)
+						current_file.put_character (')')
+						print_semicolon_newline
+					end
+					i := i + 1
+				end
+				print_indentation
+				current_file.put_string (c_ge_jump_to_last_rescue)
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('&')
+				current_file.put_character ('r')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
 			if a_feature.is_function then
 				print_external_builtin_function_body (a_feature)
 			else
 				print_external_builtin_procedure_body (a_feature)
 			end
+			if l_has_separate_arguments then
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Exit from the current SCOOP sessions.
+				check l_has_separate_arguments: l_arguments /= Void then end
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					l_argument := l_arguments.formal_argument (i)
+					l_name := l_argument.name
+					l_argument_type := dynamic_type_set (l_name).static_type
+					if l_argument_type.is_separate then
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_separate_argument_session_name (l_name, current_file)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_string (c_ge_exit_scoop_session)
+						current_file.put_character ('(')
+						print_separate_argument_session_name (l_name, current_file)
+						current_file.put_character (')')
+						print_semicolon_newline
+					end
+					i := i + 1
+				end
+			end
+				-- Clean up.
+			current_file := old_file
 		end
 
 	print_external_builtin_function_body (a_feature: ET_EXTERNAL_ROUTINE)
@@ -2852,11 +3095,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_semicolon_newline
 				call_operands.wipe_out
 			when {ET_TOKEN_CODES}.builtin_function_item then
-				fill_call_formal_arguments (a_feature)
-				print_indentation_assign_to_result
-				print_builtin_function_item_call (current_feature, current_type, False)
-				print_semicolon_newline
-				call_operands.wipe_out
+				print_builtin_function_item_body (a_feature)
 			else
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
@@ -4681,9 +4920,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 		do
 			inspect a_feature.builtin_feature_code
 			when {ET_TOKEN_CODES}.builtin_procedure_call then
-				fill_call_formal_arguments (a_feature)
-				print_builtin_procedure_call_call (current_feature, current_type, False)
-				call_operands.wipe_out
+				print_builtin_procedure_call_body (a_feature)
 			when {ET_TOKEN_CODES}.builtin_procedure_fast_call then
 				fill_call_formal_arguments (a_feature)
 				print_builtin_procedure_fast_call_call (current_feature, current_type, False)
@@ -5954,7 +6191,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			l_is_self_initialized_attribute: BOOLEAN
 		do
 			old_file := current_file
-			current_separate_calls.wipe_out
 			current_file := current_function_header_buffer
 			print_feature_name_comment (current_feature, current_type, header_file)
 			print_feature_name_comment (current_feature, current_type, current_file)
@@ -6303,6 +6539,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_character ('{')
 				current_file.put_new_line
 				indent
+				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
 				print_attribute_access (current_feature, tokens.current_keyword, current_type, False)
@@ -6706,9 +6943,11 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_indentation
 				current_file.put_character ('}')
 				current_file.put_new_line
-				current_file.put_string (c_ge_retry)
-				current_file.put_character (':')
-				current_file.put_new_line
+				if l_rescue /= Void then
+					current_file.put_string (c_ge_retry)
+					current_file.put_character (':')
+					current_file.put_new_line
+				end
 				print_indentation
 				current_file.put_character ('r')
 				current_file.put_character ('.')
@@ -7190,7 +7429,11 @@ feature {NONE} -- Instruction generation
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				print_attachment_expression (call_operands.first, l_source_type_set, l_target_type)
+				if an_instruction.no_target_twin then
+					print_expression (call_operands.first)
+				else
+					print_attachment_expression (call_operands.first, l_source_type_set, l_target_type)
+				end
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -7645,6 +7888,7 @@ feature {NONE} -- Instruction generation
 			i, nb: INTEGER
 			l_once_index: INTEGER
 			l_once_kind: INTEGER
+			l_is_separate_call: BOOLEAN
 		do
 			if line_generation_mode then
 				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
@@ -7690,6 +7934,7 @@ feature {NONE} -- Instruction generation
 				print_assign_to
 				if scoop_mode and l_dynamic_type.is_separate then
 					print_adapted_separate_creation_procedure_call (an_instruction, l_dynamic_procedure, l_dynamic_primary_type, l_static_primary_type)
+					l_is_separate_call := True
 				else
 					print_adapted_creation_procedure_call (l_dynamic_procedure, l_dynamic_primary_type, l_static_primary_type)
 				end
@@ -7716,6 +7961,12 @@ feature {NONE} -- Instruction generation
 					end
 					print_assign_result_to_once_value (current_feature, l_once_kind, l_once_index)
 				end
+			end
+			if l_is_separate_call then
+					-- Print the separate call declaration now, otherwise some
+					-- temporary data (temporary dynamic type sets, reused calls,
+					-- etc.) may not be available anymore.
+				print_separate_call_declaration (current_separate_call_count, an_instruction, current_closure)
 			end
 		end
 
@@ -7849,11 +8100,13 @@ feature {NONE} -- Instruction generation
 				current_file := current_function_body_buffer
 				print_assignment_operand (l_argument.expression, l_dynamic_type_set, l_name, l_dynamic_type)
 				fill_call_operands (1)
-				print_indentation
-				print_inline_separate_argument_name (l_name, current_file)
-				print_assign_to
-				print_attachment_expression (call_operands.first, l_dynamic_type_set, l_dynamic_type)
-				print_semicolon_newline
+				if call_operands.first /= l_name then
+					print_indentation
+					print_inline_separate_argument_name (l_name, current_file)
+					print_assign_to
+					print_attachment_expression (call_operands.first, l_dynamic_type_set, l_dynamic_type)
+					print_semicolon_newline
+				end
 				call_operands.wipe_out
 				i := i + 1
 			end
@@ -8485,6 +8738,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			nb2: INTEGER
 			l_switch: BOOLEAN
 			l_printed: BOOLEAN
+			l_is_separate_call: BOOLEAN
 		do
 			if line_generation_mode then
 				print_position (a_call.position, current_feature.static_feature.implementation_class)
@@ -8549,6 +8803,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			end
 			if scoop_mode and a_call /= separate_call_instruction and l_target_type.is_separate then
 				print_separate_qualified_call_instruction (a_call)
+				l_is_separate_call := True
 			else
 				nb2 := l_target_type_set.count
 				if nb2 = 0 then
@@ -8701,6 +8956,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 				l_manifest_tuple_operand.wipe_out
 			end
 			call_operands.wipe_out
+			if l_is_separate_call then
+					-- Print the separate call declaration now, otherwise some
+					-- temporary data (temporary dynamic type sets, reused calls,
+					-- etc.) may not be available anymore.
+				print_separate_call_declaration (current_separate_call_count, a_call, current_closure)
+			end
 		end
 
 	print_separate_qualified_call_instruction (a_call: ET_QUALIFIED_FEATURE_CALL_INSTRUCTION)
@@ -8715,9 +8976,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			l_separate_arguments: like separate_arguments
 			l_separate_argument: ET_IDENTIFIER
 		do
-			current_separate_calls.force_last (current_closure, a_call)
+			current_separate_call_count := current_separate_call_count + 1
 			print_indentation
-			print_separate_call_name (current_separate_calls.count, current_feature, current_type, current_file)
+			print_separate_call_name (current_separate_call_count, current_feature, current_type, current_file)
 			current_file.put_character ('(')
 			current_file.put_string (c_ac)
 			l_separate_arguments := separate_arguments
@@ -9051,9 +9312,9 @@ feature {NONE} -- Procedure call generation
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 		do
+			current_separate_call_count := current_separate_call_count + 1
 			register_called_feature (a_feature)
-			current_separate_calls.force_last (current_closure, a_separate_call)
-			print_separate_call_name (current_separate_calls.count, current_feature, current_type, current_file)
+			print_separate_call_name (current_separate_call_count, current_feature, current_type, current_file)
 			current_file.put_character ('(')
 			current_file.put_string (c_ac)
 			nb := call_operands.count
@@ -10702,6 +10963,7 @@ feature {NONE} -- Expression generation
 			l_temp_index: INTEGER
 			l_assignment_target: like assignment_target
 			l_actual: ET_EXPRESSION
+			l_is_separate_call: BOOLEAN
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -10746,6 +11008,7 @@ feature {NONE} -- Expression generation
 				error_handler.report_giaaa_error
 			elseif scoop_mode and l_target_type.is_separate then
 				print_separate_creation_procedure_call (an_expression, l_procedure, l_target_primary_type)
+				l_is_separate_call := True
 			else
 				print_creation_procedure_call (l_procedure, l_target_primary_type)
 			end
@@ -10758,6 +11021,12 @@ feature {NONE} -- Expression generation
 					-- We had to wait until this stage to set the index of `l_temp'
 					-- because it could have still been used in `call_operands'.
 				l_temp.set_index (l_temp_index)
+			end
+			if l_is_separate_call then
+					-- Print the separate call declaration now, otherwise some
+					-- temporary data (temporary dynamic type sets, reused calls,
+					-- etc.) may not be available anymore.
+				print_separate_call_declaration (current_separate_call_count, an_expression, current_closure)
 			end
 		end
 
@@ -12975,6 +13244,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			l_dynamic_call: detachable ET_DYNAMIC_QUALIFIED_QUERY_CALL
 			l_actual: ET_EXPRESSION
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_is_separate_call: BOOLEAN
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -13192,6 +13462,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 				end
 				if scoop_mode and a_call /= separate_call_expression and l_target_type.is_separate then
 					print_separate_qualified_call_expression (a_call)
+					l_is_separate_call := True
 				else
 					nb2 := l_target_type_set.count
 					if nb2 = 0 then
@@ -13215,14 +13486,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					else
 							-- Dynamic binding.
 						if l_name.is_tuple_label then
--- TODO: fields in Tuples are not necessarily aligned, and some need (un)boxing,
--- for example:
---    t1: TUPLE [a: ANY; b: INTEGER]
---    t2: TUPLE [a: CHARACTER; b: INTEGER]
---    t1 := t2
---    any := t1.a
---    int := t1.b
--- But when there are aligned with no (un)boxing, we should avoid having polymorphic calls.
+							-- Fields in Tuples are not necessarily aligned, and some need (un)boxing,
+							-- for example:
+							--    t1: TUPLE [a: ANY; b: INTEGER]
+							--    t2: TUPLE [a: CHARACTER; b: INTEGER]
+							--    t1 := t2
+							--    any := t1.a
+							--    int := t1.b
+							-- TODO (optimization): But when there are aligned with no (un)boxing,
+							-- we could avoid having polymorphic calls.
 						else
 							l_query := l_target_static_type.base_class.seeded_query (l_seed)
 							if l_query = Void then
@@ -13310,6 +13582,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					-- because it could have still been used in `call_operands'.
 				l_temp.set_index (l_temp_index)
 			end
+			if l_is_separate_call then
+					-- Print the separate call declaration now, otherwise some
+					-- temporary data (temporary dynamic type sets, reused calls,
+					-- etc.) may not be available anymore.
+				print_separate_call_declaration (current_separate_call_count, a_call, current_closure)
+			end
 		end
 
 	print_separate_qualified_call_expression (a_call: ET_QUALIFIED_FEATURE_CALL_EXPRESSION)
@@ -13324,8 +13602,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			l_separate_arguments: like separate_arguments
 			l_separate_argument: ET_IDENTIFIER
 		do
-			current_separate_calls.force_last (current_closure, a_call)
-			print_separate_call_name (current_separate_calls.count, current_feature, current_type, current_file)
+			current_separate_call_count := current_separate_call_count + 1
+			print_separate_call_name (current_separate_call_count, current_feature, current_type, current_file)
 			current_file.put_character ('(')
 			current_file.put_string (c_ac)
 			l_separate_arguments := separate_arguments
@@ -17544,12 +17822,46 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			l_name: ET_FEATURE_NAME
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_result_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_target_type: ET_DYNAMIC_TYPE
+			l_target_type_is_separate: BOOLEAN
 			old_file: KI_TEXT_OUTPUT_STREAM
 		do
 			old_file := current_file
 			l_name := an_agent.name
 			l_arguments := an_agent.arguments
 			l_result := an_agent.implicit_result
+			l_target_type := dynamic_type_set (agent_target).static_type
+			if scoop_mode and l_target_type.is_separate then
+				l_target_type_is_separate := True
+				print_indentation
+				current_file.put_string (c_ge_scoop_session)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				print_separate_argument_session_name (agent_inline_separate_argument.name, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('0')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_ge_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_uint32_t)
+				current_file.put_character (' ')
+				current_file.put_string (c_tr)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_in_rescue)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
 			if l_result /= Void then
 					-- Query or Tuple label.
 				l_result_type_set := dynamic_type_set (l_result)
@@ -17560,15 +17872,92 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_character (' ')
 				print_result_name (current_file)
 				print_semicolon_newline
-				current_file := current_function_body_buffer
-				agent_expression.set_target (agent_target)
-				agent_expression.set_name (l_name)
-				if l_arguments /= Void then
-					agent_expression.set_arguments (agent_arguments)
-				else
-					agent_expression.set_arguments (Void)
-				end
-				agent_expression.set_index (l_result.index)
+			end
+			current_file := current_function_body_buffer
+			if l_target_type_is_separate then
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_ge_setjmp)
+				current_file.put_character ('(')
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_character ('j')
+				current_file.put_character ('b')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('!')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('0')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_in_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_tr)
+				current_file.put_character (' ')
+				current_file.put_character ('+')
+				current_file.put_character (' ')
+				current_file.put_character ('1')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_separate_argument_session_name (agent_inline_separate_argument.name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_string (c_ge_exit_scoop_session)
+				current_file.put_character ('(')
+				print_separate_argument_session_name (agent_inline_separate_argument.name, current_file)
+				current_file.put_character (')')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_ge_jump_to_last_rescue)
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('&')
+				current_file.put_character ('r')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			if l_result /= Void then
 					-- Note that we don't call `print_attachment_operand' or
 					-- `print_assignment_operand' here because we don't want
 					-- the result of the call to the feature `l_name' to be
@@ -17576,23 +17965,55 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 					-- (e.g. `agent a.some_function_with_expanded_result`).
 					-- This will be done later if the result is assigned to
 					-- some entity (e.g. `x := my_agent.item ([])`).
-				print_operand (agent_expression)
-				fill_call_operands (1)
-				print_indentation_assign_to_result
-				print_expression (call_operands.first)
-				print_semicolon_newline
-				call_operands.wipe_out
+					-- Hence setting 'no_target_twin'.
+				agent_expression_assignment.set_no_target_twin (True)
+				agent_expression_assignment.target.set_index (l_result.index)
+				agent_expression.set_index (l_result.index)
+				agent_expression.set_name (l_name)
+				if l_arguments /= Void then
+					agent_expression.set_arguments (agent_arguments)
+				else
+					agent_expression.set_arguments (Void)
+				end
+				if l_target_type_is_separate then
+					agent_inline_separate_argument.set_expression (agent_target)
+					agent_inline_separate_argument.name.set_index (agent_target.index)
+					agent_expression.set_target (agent_inline_separate_argument.name)
+					print_inline_separate_instruction (agent_controlled_target_expression)
+				else
+					agent_expression.set_target (agent_target)
+					print_assignment (agent_expression_assignment)
+				end
 			else
 					-- Procedure.
-				current_file := current_function_body_buffer
-				agent_instruction.set_target (agent_target)
 				agent_instruction.set_name (l_name)
 				if l_arguments /= Void then
 					agent_instruction.set_arguments (agent_arguments)
 				else
 					agent_instruction.set_arguments (Void)
 				end
-				print_qualified_call_instruction (agent_instruction)
+				if l_target_type_is_separate then
+					agent_inline_separate_argument.set_expression (agent_target)
+					agent_inline_separate_argument.name.set_index (agent_target.index)
+					agent_instruction.set_target (agent_inline_separate_argument.name)
+					print_inline_separate_instruction (agent_controlled_target_instruction)
+				else
+					agent_instruction.set_target (agent_target)
+					print_qualified_call_instruction (agent_instruction)
+				end
+			end
+			if l_target_type_is_separate then
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				print_semicolon_newline
 			end
 				-- Clean up.
 			current_file := old_file
@@ -17683,6 +18104,23 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 
 	agent_arguments: ET_ACTUAL_ARGUMENT_LIST
 			-- Agent arguments
+
+	agent_expression_assignment: ET_ASSIGNMENT
+			-- Assignment of agent expression to 'Result'
+
+	agent_controlled_target_instruction: ET_INLINE_SEPARATE_INSTRUCTION
+			-- Inline separate instruction in case of an agent target
+			-- of separate type for a qualified procedure call (so that
+			-- this target is controlled)
+
+	agent_controlled_target_expression: ET_INLINE_SEPARATE_INSTRUCTION
+			-- Inline separate instruction in case of an agent target
+			-- of separate type for a qualified query call (so that
+			-- this target is controlled)
+
+	agent_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT
+			-- Inline separate argument for `agent_controlled_target_instruction'
+			-- and `agent_controlled_target_expression'
 
 	agent_open_operands: DS_ARRAYED_LIST [ET_IDENTIFIER]
 			-- Agent open operands
@@ -19668,11 +20106,33 @@ feature {NONE} -- Separate calls
 			l_has_non_separate_reference_actual_argument: BOOLEAN
 			l_index: INTEGER
 			l_is_creation_call: BOOLEAN
-			l_called_feature: ET_DYNAMIC_FEATURE
 			l_and_then_needed: BOOLEAN
 			l_old_current_type: like current_type
 			old_file: KI_TEXT_OUTPUT_STREAM
+			old_function_header_buffer: like current_function_header_buffer
+			old_function_body_buffer: like current_function_body_buffer
+			old_indentation: INTEGER
+			old_assignment_target: like assignment_target
+			old_in_operand: BOOLEAN
+			old_call_target_type: like call_target_type
+			old_current_agent: like current_agent
 		do
+			old_indentation := indentation
+			indentation := 0
+			old_in_operand := in_operand
+			in_operand := False
+			old_assignment_target := assignment_target
+			assignment_target := Void
+			old_call_target_type := call_target_type
+			call_target_type := Void
+			old_current_agent := current_agent
+			current_agent := Void
+			old_file := current_file
+			old_function_header_buffer := current_function_header_buffer
+			old_function_body_buffer := current_function_body_buffer
+			current_function_header_buffer := current_separate_function_header_buffer
+			current_function_body_buffer := current_separate_function_body_buffer
+			current_file := current_function_header_buffer
 			if attached {ET_QUALIFIED_FEATURE_CALL_EXPRESSION} a_separate_call as l_call_expression then
 				l_index := l_call_expression.index
 				l_result_type := dynamic_type_set (l_call_expression).static_type.primary_type
@@ -19680,20 +20140,6 @@ feature {NONE} -- Separate calls
 				l_is_creation_call := True
 			end
 			l_target_type := dynamic_type_set (a_separate_call.target).static_type.primary_type
-			if l_result_type /= Void and then attached l_target_type.seeded_dynamic_query (a_separate_call.name.seed, current_dynamic_system) as l_query then
-				l_called_feature := l_query
-			elseif l_result_type = Void and then attached l_target_type.seeded_dynamic_procedure (a_separate_call.name.seed, current_dynamic_system) as l_procedure then
-				l_called_feature := l_procedure
-			else
-					-- Internal error: there should be a feature with the seed.
-					-- It has been computed in ET_FEATURE_CHECKER or else an
-					-- error should have already been reported.
-				set_fatal_error
-				error_handler.report_giaaa_error
-				l_called_feature := current_feature
-			end
-			old_file := current_file
-			current_file := current_function_header_buffer
 				-- Print signature to `header_file' and `current_file'.
 			header_file.put_character ('/')
 			header_file.put_character ('*')
@@ -19702,7 +20148,7 @@ feature {NONE} -- Separate calls
 			header_file.put_integer (i)
 			header_file.put_character (' ')
 			header_file.put_character ('(')
-			print_feature_name_in_comment (l_called_feature, l_target_type, header_file)
+			print_call_name_in_comment (a_separate_call.name, l_target_type, header_file)
 			header_file.put_character (')')
 			header_file.put_string (" in feature ")
 			print_feature_name_in_comment (current_feature, current_type, header_file)
@@ -19717,7 +20163,7 @@ feature {NONE} -- Separate calls
 			current_file.put_integer (i)
 			current_file.put_character (' ')
 			current_file.put_character ('(')
-			print_feature_name_in_comment (l_called_feature, l_target_type, current_file)
+			print_call_name_in_comment (a_separate_call.name, l_target_type, current_file)
 			current_file.put_character (')')
 			current_file.put_string (" in feature ")
 			print_feature_name_in_comment (current_feature, current_type, current_file)
@@ -19938,10 +20384,18 @@ feature {NONE} -- Separate calls
 				current_file.put_string (c_sp)
 				current_file.put_character ('2')
 				print_semicolon_newline
-				l_old_current_type := current_type
-				current_type := l_target_type
-				print_malloc_current (l_called_feature.static_feature)
-				current_type := l_old_current_type
+				if attached l_target_type.seeded_dynamic_procedure (a_separate_call.name.seed, current_dynamic_system) as l_procedure then
+					l_old_current_type := current_type
+					current_type := l_target_type
+					print_malloc_current (l_procedure.static_feature)
+					current_type := l_old_current_type
+				else
+						-- Internal error: there should be a procedure with the seed.
+						-- It has been computed in ET_FEATURE_CHECKER or else an
+						-- error should have already been reported.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				end
 				print_indentation
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
@@ -20308,9 +20762,6 @@ feature {NONE} -- Separate calls
 					print_indentation
 					current_file.put_character ('}')
 					current_file.put_new_line
-					current_file.put_string (c_ge_retry)
-					current_file.put_character (':')
-					current_file.put_new_line
 					print_indentation
 					current_file.put_character ('r')
 					current_file.put_character ('.')
@@ -20371,8 +20822,7 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('r')
 					current_file.put_character ('.')
 					current_file.put_string (c_previous)
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
@@ -20449,19 +20899,28 @@ feature {NONE} -- Separate calls
 			current_file.put_character ('}')
 			current_file.put_new_line
 			current_file.put_new_line
+				-- Flush to file.
+			flush_to_c_file
 				--
 				-- Clean up.
 				--
-			current_file := old_file
-			reset_temp_variables
 			from j := 1 until j > nb_operands loop
 				formal_argument (j).set_index (j)
 				j := j + 1
 			end
-				-- Flush to file.
-			flush_to_c_file
 			print_separate_call_function_declaration (i, a_separate_call)
 			print_separate_call_object_declaration (i, a_separate_call)
+				--
+				-- Clean up.
+				--
+			current_function_header_buffer := old_function_header_buffer
+			current_function_body_buffer := old_function_body_buffer
+			current_file := old_file
+			indentation := old_indentation
+			in_operand := old_in_operand
+			assignment_target := old_assignment_target
+			call_target_type := old_call_target_type
+			current_agent := old_current_agent
 		end
 
 	print_separate_call_function_declaration (i: INTEGER; a_separate_call: ET_SEPARATE_CALL)
@@ -20650,17 +21109,16 @@ feature {NONE} -- Separate calls
 			current_file.put_character ('}')
 			current_file.put_new_line
 			current_file.put_new_line
+				-- Flush to file.
+			flush_to_c_file
 				--
 				-- Clean up.
 				--
 			current_file := old_file
-			reset_temp_variables
 			from j := 1 until j > nb_operands loop
 				formal_argument (j).set_index (j)
 				j := j + 1
 			end
-				-- Flush to file.
-			flush_to_c_file
 		end
 
 	print_separate_call_object_declaration (i: INTEGER; a_separate_call: ET_SEPARATE_CALL)
@@ -20856,17 +21314,16 @@ feature {NONE} -- Separate calls
 			current_file.put_character ('}')
 			current_file.put_new_line
 			current_file.put_new_line
+				-- Flush to file.
+			flush_to_c_file
 				--
 				-- Clean up.
 				--
 			current_file := old_file
-			reset_temp_variables
 			from j := 1 until j > nb_operands loop
 				formal_argument (j).set_index (j)
 				j := j + 1
 			end
-				-- Flush to file.
-			flush_to_c_file
 		end
 
 	print_scoop_call_offset (a_operand_number: INTEGER; a_separate_call: ET_SEPARATE_CALL)
@@ -24542,6 +24999,20 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			current_file.put_character (')')
 		end
 
+	print_builtin_function_item_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'FUNCTION.item'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			fill_call_formal_arguments (a_feature)
+			print_indentation_assign_to_result
+			print_builtin_routine_call_call (current_feature, current_type, False)
+			print_semicolon_newline
+			call_operands.wipe_out
+		end
+
 	print_builtin_function_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_feature' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'FUNCTION.item'.
@@ -24553,7 +25024,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_routine_call_call (a_feature, a_target_type, a_check_void_target)
+			if scoop_mode then
+				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
+			else
+				print_builtin_routine_call_call (a_feature, a_target_type, a_check_void_target)
+			end
 		end
 
 	print_builtin_identified_routines_eif_current_object_id_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -28401,6 +28876,18 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			end
 		end
 
+	print_builtin_procedure_call_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'PROCEDURE.call'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			fill_call_formal_arguments (a_feature)
+			print_builtin_routine_call_call (current_feature, current_type, False)
+			call_operands.wipe_out
+		end
+
 	print_builtin_procedure_call_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PROCEDURE.call'.
@@ -28412,7 +28899,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			print_builtin_routine_call_call (a_feature, a_target_type, a_check_void_target)
+			if scoop_mode then
+				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
+			else
+				print_builtin_routine_call_call (a_feature, a_target_type, a_check_void_target)
+			end
 		end
 
 	print_builtin_procedure_fast_call_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -29869,7 +30360,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 							print_comma
 							print_attachment_expression (l_tuple_item_expression, l_tuple_item_type_set, l_open_operand_type_sets.item (i).static_type)
 								-- Clean up.
-							if l_query_call = Void and not l_tuple_target_type.is_separate then
+							if l_query_call = Void then
 								free_qualified_call_expression (l_tuple_item_expression)
 								free_tuple_label (l_tuple_label)
 							end
@@ -40243,6 +40734,17 @@ feature {NONE} -- Output files/buffers
 	current_function_body_buffer: KL_STRING_OUTPUT_STREAM
 			-- Buffer to write the C body of the current function
 
+	current_separate_function_header_buffer: KL_STRING_OUTPUT_STREAM
+			-- Buffer to write the C header of the current separate function
+			-- (for SCOOP separate calls);
+			-- This is useful when we need to declare local variables
+			-- on the fly while generating the code for the body of
+			-- the C function.
+
+	current_separate_function_body_buffer: KL_STRING_OUTPUT_STREAM
+			-- Buffer to write the C body of the current separate function
+			-- (for SCOOP separate calls
+
 feature {ET_AST_NODE} -- Processing
 
 	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
@@ -40974,9 +41476,9 @@ feature {NONE} -- Access
 			-- Equalities ('=' or '/=', as well as '~' or '/~') appearing in
 			-- `current_feature' for which a function needs to be generated
 
-	current_separate_calls: DS_HASH_TABLE [ET_CLOSURE, ET_SEPARATE_CALL]
-			-- Separate calls (calls whose target type is separate) appearing in `current_feature',
-			-- and the closure (i.e. inline agent or enclosing feature) in which they appear
+	current_separate_call_count: INTEGER
+			-- Number of separate calls (calls whose target type is separate)
+			-- appearing in `current_feature'
 
 	dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
 			-- Dynamic types in the system
@@ -43010,6 +43512,8 @@ invariant
 	header_file_open_write: header_file.is_open_write
 	current_function_header_buffer_not_void: current_function_header_buffer /= Void
 	current_function_body_buffer_not_void: current_function_body_buffer /= Void
+	current_separate_function_header_buffer_not_void: current_separate_function_header_buffer /= Void
+	current_separate_function_body_buffer_not_void: current_separate_function_body_buffer /= Void
 	current_feature_not_void: current_feature /= Void
 	current_type_not_void: current_type /= Void
 	operand_stack_not_void: operand_stack /= Void
@@ -43041,6 +43545,10 @@ invariant
 	agent_expression_not_void: agent_expression /= Void
 	agent_target_not_void: agent_target /= Void
 	agent_arguments_not_void: agent_arguments /= Void
+	agent_expression_assignment_not_void: agent_expression_assignment /= Void
+	agent_controlled_target_instruction_not_void: agent_controlled_target_instruction /= Void
+	agent_controlled_target_expression_not_void: agent_controlled_target_expression /= Void
+	agent_inline_separate_argument_not_void: agent_inline_separate_argument /= Void
 	agent_open_operands_not_void: agent_open_operands /= Void
 	no_void_agent_open_operand: not agent_open_operands.has_void
 	agent_closed_operands_not_void: agent_closed_operands /= Void
@@ -43061,9 +43569,6 @@ invariant
 	no_void_current_object_test: not current_object_tests.has_void
 	current_equalities_not_void: current_equalities /= Void
 	no_void_current_equality: not current_equalities.has_void
-	current_separate_calls_not_void: current_separate_calls /= Void
-	no_void_current_separate_call: not current_separate_calls.has_void
-	no_void_current_separate_call_closure: not current_separate_calls.has_void_item
 	called_features_not_void: called_features /= Void
 	no_void_called_feature: not called_features.has_void
 	called_static_features_not_void: called_static_features /= Void

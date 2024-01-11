@@ -5,7 +5,7 @@ note
 		"Eiffel arguments in inline separate instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2022-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2022-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -90,6 +90,16 @@ feature -- Access
 		end
 
 feature -- Setting
+
+	set_expression (a_expression: like expression)
+			-- Set `expression' to `a_expression'.
+		require
+			a_expression_not_void: a_expression /= Void
+		do
+			expression := a_expression
+		ensure
+			expression_set: expression = a_expression
+		end
 
 	set_as_keyword (a_as: like as_keyword)
 			-- Set `as_keyword' to `a_as'.
