@@ -14908,7 +14908,8 @@ feature {NONE} -- Equality generation
 						current_file.put_string (l_eif_false)
 					end
 					current_file.put_character (':')
-				elseif l_right_type_set.can_be_void then
+				end
+				if l_right_type_set.can_be_void then
 					l_parenthese_count := l_parenthese_count + 1
 					current_file.put_character ('(')
 					current_file.put_character ('(')
