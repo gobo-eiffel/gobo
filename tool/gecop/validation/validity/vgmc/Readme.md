@@ -16,7 +16,7 @@ A feature of name `fname` is applicable in a class `C` to a target `x` whose typ
 
 A feature of name `fname` is applicable in a class `C` to a target `x` whose type is a *Formal\_generic\_name* `G` constrained by two or more types `CONST1`, `CONST2`, ..., if and only if exactly one of the `CONSTi` has a feature available to `C` whose generically constrained name for `G` in `C` is `fname`.
 
-## Notes
+### Notes
 
 * The code of this validity rule was `VTMC` in ECMA 367-2 and before.
 * The wording is misleading: it makes us think that it's possible to have several `CONSTi` with this feature, but only one is available to `C`. But in fact, the availability status comes after we guaranteed that there was exactly one feature with this name.

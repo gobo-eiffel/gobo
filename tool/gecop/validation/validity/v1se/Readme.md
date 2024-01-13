@@ -22,7 +22,7 @@ The argument `expression as a` appearing in a *Separate\_instruction* is valid i
 2. `G` [\[tests\]](../v1se2g) The name `a` is a fresh identifier.
 3. `G` [\[tests\]](../v1se3g) The type of `expression` is separate.
 
-## Notes
+### Notes
 
 * In condition `2G`, a fresh identifier means that `a` does not have the same lower name as any feature of the enclosing class, or any formal argument or local variable of any enclosing feature or *Inline\_agent*, or, if the separate instruction appears in the scope of an *Object\_test*, its Object-Test Local, or, if the separate instruction appears in the scope of an *Iteration*, its item identifier, or, if the separate instruction appears in the compound of another separate instruction, the name of any of its arguments.
 

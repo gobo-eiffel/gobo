@@ -18,6 +18,6 @@ The value produced by the run-time evaluation of a variable `x` is:
 
 Same as above.
 
-## Notes
+### Notes
 
 * It would be less confusing to have case 3 before case 2. If the user provides self-initializing code for an attribute, it's because he expects it to be executed if case 1 does not hold. Furthermore, it would allow to have the same behavior if the code is compiled in void-safe mode or not.

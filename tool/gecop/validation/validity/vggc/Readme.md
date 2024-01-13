@@ -21,7 +21,7 @@ the following conditions for every *Single\_constraint* listing a type `T` in it
 1. [\[tests\]](../vggc1) `T` involves no anchored type.
 2. [\[tests\]](../vggc2) If a *Renaming* clause `rename rename_list end` is present, a class definition of the form `class NEW inherit BT rename rename_list end` (preceded by `deferred` if the base class of `T` is deferred), where `BT` is the base class of `T`, would be valid.
 
-## Notes
+### Notes
 
 * The code of this validity rule was `VTGC` in ECMA 367-2 and before.
 * There was a condition `VCFG-3` in ETR (between ETL2 and ECMA 367-1). It is now covered by `VGGC-1`.

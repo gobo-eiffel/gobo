@@ -18,6 +18,6 @@ The effect of executing a once routine `df` on a target object `O` is:
 
 Same as above.
 
-## Notes
+### Notes
 
 * Case 2 above mentions `f`. It should be `df`.

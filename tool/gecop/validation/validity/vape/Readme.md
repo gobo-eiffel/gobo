@@ -19,7 +19,7 @@ A *Precondition* of a feature `r` of a class `S` is valid if and only if every f
 1. [\[tests\]](../vape1) If `f` appears as the static feature of a call in `u` or any of its subexpressions, `f` is available to `C`.
 2. [\[tests\]](../vape2) If `u` or any of its subexpressions uses `f` as creation procedure of a *Creation_expression*, `f` is available for creation to `C`.
 
-## Notes
+### Notes
 
 * We should also take into account the instructions in inline agents, not just the subexpressions.
 * We should also take into account creation instructions appearing in inline agents, not just creation expressions.

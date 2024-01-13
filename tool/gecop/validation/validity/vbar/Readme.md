@@ -13,7 +13,7 @@ An *Assignment* is valid if and only if its source expression is compatible with
 
 Same as above.
 
-## Notes
+### Notes
 
 * The code of this validity rule was `VJAR` in ETL-2 and before.
 * The code of this validity rule is now `VBAS` in ECMA 367-3 and after.

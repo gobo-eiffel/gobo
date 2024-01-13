@@ -24,6 +24,6 @@ The instruction `create my_x.make` does a lot of things at the same time:
 * It creates a new processor for the new region.
 * It creates a new object of type `X` which is placed into the newly created region.
 
-## Notes
+### Notes
 
 * The call to the creation procedure also follows the semantics of synchronous vs. asynchronous calls.

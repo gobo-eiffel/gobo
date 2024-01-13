@@ -20,7 +20,7 @@ A *Formal\_generics* part of a *Class\_declaration* is valid if and only if ever
 1. [\[tests\]](../vgfg1) `G` is different from the name of any class in the universe.
 2. [\[tests\]](../vgfg2) `G` is different from any other *Formal\_generic\_name* appearing in the same *Formal\_generics* part.
 
-## Notes
+### Notes
 
 * The code of this validity rule was `VCFG` in ECMA 367-2 and before.
 * There was a third condition `VCFG-3` in ETR (between ETL2 and ECMA 367-1). It is now covered by [VGGC](../vggc\Readme.md)-1.
