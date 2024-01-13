@@ -34,7 +34,7 @@ conditions:
 4. [\[tests\]](../vfav4) No other *Alias* of `f` has the same *Alias_name*.
 5. [\[tests\]](../vfav5) If it includes a `convert` mark: it lists an *Operator* and `f` has one argument.
 
-## Notes
+### Notes
 
 * The `convert` mark is not part of the syntax in ECMA 367-3, so the last condition is useless. In ECMA 367-2, it was possible to write `f alias "+" convert (a: A): B`.
 * Both ISE Eiffel (as of 18.11.10.2592 and after) and Gobo Eiffel support target conversion without the explicit `convert` mark.

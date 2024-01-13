@@ -6,7 +6,7 @@ This [test](.) is exercising the condition [4G](../Readme.md) of the validity ru
 
 In this test, there is a separate call to the procedure `f` from class `BB`. The type `CC` of the actual argument of `f` is expanded, but it contains an attribute `name` whose type is reference but not separate. This violates `VUAR-4G`.
 
-### Note
+### Notes
 
 * It does not matter whether the type of the formal argument of `f` is reference separate. The copy of the expanded object of type `CC` will be in the region of the target of the call where it attribute object will still be in the region of the caller.
 

@@ -46,7 +46,7 @@ The effect of an *Object_call* of feature `sf` is, in the absence of any excepti
 
 An exception occurring during any of these steps causes the execution to skip the remaining parts of this process and instead handle the exception according to the *Exception Semantics* rule.
 
-## Notes
+### Notes
 
 * For each actual argument in the order listed, first it is evaluated, then converted if needed, and finally if the resulting object has copy semantics it is cloned. This is different from what is specified above where the actual arguments are first evaluated and converted (first traversal in step `4`) and then cloned (second traversal in step `5`). So the two traversals in steps `4` and `5` need to be merged into a single traversal. See this [test](../mugc5/test_expanded_convert_1) as an example.
 

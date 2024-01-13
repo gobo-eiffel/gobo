@@ -21,7 +21,7 @@ specify `frozen`, conforms (recursively) to `Xi`.
 
 Same as above.
 
-## Notes
+### Notes
 
 * Condition 4 allows `B [C]` to conform to `B [D]` when class `B` is expanded, even when `C` and `D` are different types. This means that an entity of that type can be polymorphic even though it's expanded. However one of the main purposes of using expanded types, apart from copy semantics, is that objects of that type will not be allocated on the heap but be subobjects of other objects. This permits runtime optimizations, but is incompatible with polymorphism. 
 * [GVNCC-4](../gvncc4/Readme.md) is a non-standard extension of the condition 4 which disallows polymorphism when the type of the entity is expanded. The associated [tests](../gvncc4) show what can go wrong when this non-standard extension is not enforced.

@@ -17,7 +17,7 @@ from all special symbols.
 A *Free\_unary* is a free operator that is distinct from all *standard unary operators*.
 A *Free\_binary* is a free operator that is distinct from all *standard binary operators*.
 
-## Notes
+### Notes
 
 * If we want to allow `∀∀` as free operator (but not `∀`), I think that we need add `∀`, `∃`, `⟳`, `⟲` and `¦` (symbols used in symbolic forms of *across loops*) to:
   * DISP: Special symbol
