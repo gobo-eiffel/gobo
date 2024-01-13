@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders where types are pulled from subsets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,11 +38,11 @@ inherit
 			propagate_extended_attribute_result_dynamic_types,
 			propagate_if_expression_dynamic_types,
 			propagate_inline_agent_result_dynamic_types,
+			propagate_inline_separate_argument_dynamic_types,
 			propagate_inspect_expression_dynamic_types,
 			propagate_like_argument_dynamic_types,
 			propagate_manifest_string_area_dynamic_type,
 			propagate_named_object_test_dynamic_types,
-			propagate_separate_argument_dynamic_types,
 			propagate_tuple_label_result_dynamic_types,
 			propagate_tuple_label_argument_dynamic_types
 		end
@@ -1254,6 +1254,32 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	propagate_inline_separate_argument_dynamic_types (a_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT)
+			-- Propagate dynamic types of the expression of `a_inline_separate_argument'
+			-- to the dynamic type set of its name.
+		local
+			l_source_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_dynamic_inline_separate_argument: ET_DYNAMIC_INLINE_SEPARATE_ARGUMENT
+		do
+			l_source_type_set := dynamic_type_set (a_inline_separate_argument.expression)
+			l_target_type_set := dynamic_type_set (a_inline_separate_argument.name)
+			if l_source_type_set = Void then
+					-- Internal error: the dynamic type sets of the expression
+					-- should be known at this stage.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_target_type_set = Void then
+					-- Internal error: the dynamic type sets of the inline separate argument
+					-- name should be known at this stage.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif not l_target_type_set.is_expanded then
+				create l_dynamic_inline_separate_argument.make (l_source_type_set, a_inline_separate_argument, current_dynamic_feature, current_dynamic_type)
+				l_target_type_set.put_source (l_dynamic_inline_separate_argument, current_dynamic_system)
+			end
+		end
+
 	propagate_inspect_expression_dynamic_types (a_inspect_expression: ET_INSPECT_EXPRESSION; a_sub_expression: ET_EXPRESSION; a_source_type_set, a_target_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate dynamic types of `a_source_type_set' (which is the dynamic
 			-- type set of the sub-expressions `a_sub_expression' within `a_inspect_expression')
@@ -1316,32 +1342,6 @@ feature {NONE} -- Implementation
 			elseif not l_target_type_set.is_expanded then
 				create l_dynamic_object_test.make (l_source_type_set, a_object_test, current_dynamic_feature, current_dynamic_type)
 				l_target_type_set.put_source (l_dynamic_object_test, current_dynamic_system)
-			end
-		end
-
-	propagate_separate_argument_dynamic_types (a_separate_argument: ET_SEPARATE_ARGUMENT)
-			-- Propagate dynamic types of the expression of `a_separate_argument'
-			-- to the dynamic type set of its name.
-		local
-			l_source_type_set: detachable ET_DYNAMIC_TYPE_SET
-			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
-			l_dynamic_separate_argument: ET_DYNAMIC_SEPARATE_ARGUMENT
-		do
-			l_source_type_set := dynamic_type_set (a_separate_argument.expression)
-			l_target_type_set := dynamic_type_set (a_separate_argument.name)
-			if l_source_type_set = Void then
-					-- Internal error: the dynamic type sets of the expression
-					-- should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif l_target_type_set = Void then
-					-- Internal error: the dynamic type sets of the separate argument
-					-- name should be known at this stage.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif not l_target_type_set.is_expanded then
-				create l_dynamic_separate_argument.make (l_source_type_set, a_separate_argument, current_dynamic_feature, current_dynamic_type)
-				l_target_type_set.put_source (l_dynamic_separate_argument, current_dynamic_system)
 			end
 		end
 

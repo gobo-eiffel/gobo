@@ -5,7 +5,7 @@
 		"Eiffel decorated Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -263,6 +263,10 @@ inherit
 			new_indexing_term_comma,
 			new_infix_and_then_operator,
 			new_infix_or_else_operator,
+			new_inline_separate_argument,
+			new_inline_separate_argument_comma,
+			new_inline_separate_arguments,
+			new_inline_separate_instruction,
 			new_inspect_expression,
 			new_inspect_instruction,
 			new_invariants,
@@ -314,10 +318,6 @@ inherit
 			new_repeat_instruction,
 			new_rescue_compound,
 			new_result_address,
-			new_separate_argument,
-			new_separate_argument_comma,
-			new_separate_arguments,
-			new_separate_instruction,
 			new_static_call_expression,
 			new_static_call_instruction,
 			new_strip_expression,
@@ -3236,6 +3236,47 @@ feature -- AST nodes
 			end
 		end
 
+	new_inline_separate_argument (a_expression: detachable ET_EXPRESSION; a_as: detachable ET_KEYWORD; a_name: detachable ET_IDENTIFIER): detachable ET_INLINE_SEPARATE_ARGUMENT
+			-- New inline separate argument
+		do
+			if a_expression /= Void and a_name /= Void then
+				create Result.make (a_expression, a_name)
+				if a_as /= Void then
+					Result.set_as_keyword (a_as)
+				end
+			end
+		end
+
+	new_inline_separate_argument_comma (a_inline_separate_argument: detachable ET_INLINE_SEPARATE_ARGUMENT; a_comma: detachable ET_SYMBOL): detachable ET_INLINE_SEPARATE_ARGUMENT_ITEM
+			-- Newinline_separate_argument-comma
+		do
+			if a_comma = Void then
+				Result := a_inline_separate_argument
+			elseif a_inline_separate_argument /= Void then
+				create {ET_INLINE_SEPARATE_ARGUMENT_COMMA} Result.make (a_inline_separate_argument, a_comma)
+			end
+		end
+
+	new_inline_separate_arguments (a_separate: detachable ET_KEYWORD; nb: INTEGER): detachable ET_INLINE_SEPARATE_ARGUMENTS
+			-- New inline_separate_argument list with capacity `nb'
+		do
+			create Result.make_with_capacity (nb)
+			if a_separate /= Void then
+				Result.set_separate_keyword (a_separate)
+			end
+		end
+
+	new_inline_separate_instruction (a_arguments: detachable ET_INLINE_SEPARATE_ARGUMENTS; a_compound: detachable ET_COMPOUND; a_end: detachable ET_KEYWORD): detachable ET_INLINE_SEPARATE_INSTRUCTION
+			-- New inline separate instruction
+		do
+			if a_arguments /= Void then
+				create Result.make (a_arguments, a_compound)
+				if a_end /= Void then
+					Result.set_end_keyword (a_end)
+				end
+			end
+		end
+
 	new_inspect_expression (a_conditional: detachable ET_CONDITIONAL; a_when_parts: detachable ET_WHEN_EXPRESSION_LIST;
 		an_else_part: detachable ET_CONDITIONAL; an_end: detachable ET_KEYWORD): detachable ET_INSPECT_EXPRESSION
 			-- New inspect expression
@@ -3947,47 +3988,6 @@ feature -- AST nodes
 			end
 			if r /= Void then
 				Result.set_result_keyword (r)
-			end
-		end
-
-	new_separate_argument (a_expression: detachable ET_EXPRESSION; a_as: detachable ET_KEYWORD; a_name: detachable ET_IDENTIFIER): detachable ET_SEPARATE_ARGUMENT
-			-- New separate argument
-		do
-			if a_expression /= Void and a_name /= Void then
-				create Result.make (a_expression, a_name)
-				if a_as /= Void then
-					Result.set_as_keyword (a_as)
-				end
-			end
-		end
-
-	new_separate_argument_comma (a_separate_argument: detachable ET_SEPARATE_ARGUMENT; a_comma: detachable ET_SYMBOL): detachable ET_SEPARATE_ARGUMENT_ITEM
-			-- New separate_argument-comma
-		do
-			if a_comma = Void then
-				Result := a_separate_argument
-			elseif a_separate_argument /= Void then
-				create {ET_SEPARATE_ARGUMENT_COMMA} Result.make (a_separate_argument, a_comma)
-			end
-		end
-
-	new_separate_arguments (a_separate: detachable ET_KEYWORD; nb: INTEGER): detachable ET_SEPARATE_ARGUMENTS
-			-- New separate_argument list with capacity `nb'
-		do
-			create Result.make_with_capacity (nb)
-			if a_separate /= Void then
-				Result.set_separate_keyword (a_separate)
-			end
-		end
-
-	new_separate_instruction (a_arguments: detachable ET_SEPARATE_ARGUMENTS; a_compound: detachable ET_COMPOUND; a_end: detachable ET_KEYWORD): detachable ET_SEPARATE_INSTRUCTION
-			-- New separate instruction
-		do
-			if a_arguments /= Void then
-				create Result.make (a_arguments, a_compound)
-				if a_end /= Void then
-					Result.set_end_keyword (a_end)
-				end
 			end
 		end
 

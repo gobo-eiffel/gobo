@@ -5,7 +5,7 @@ note
 		"Eiffel functions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -132,6 +132,7 @@ feature -- Conversion
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
 			Result.set_iteration_components (iteration_components)
+			Result.set_inline_separate_arguments (inline_separate_arguments)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
 		end

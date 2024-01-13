@@ -717,7 +717,7 @@ feature {NONE} -- Expression processing
 				l_name.is_local or
 				l_name.is_object_test_local or
 				l_name.is_iteration_item or
-				l_name.is_separate_argument
+				l_name.is_inline_separate_argument
 			then
 				l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 				l_typed_pointer_class := l_typed_pointer_type.named_base_class
@@ -1040,6 +1040,44 @@ feature {NONE} -- Expression processing
 						a_context.force_last (l_type)
 					end
 				end
+			end
+		end
+
+	find_inline_separate_argument_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- `a_context' represents the type in which `a_name' appears.
+			-- It will be altered on exit to represent the type of `a_name'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_inline_separate_argument: a_name.is_inline_separate_argument
+			a_context_not_void: a_context /= Void
+		local
+			l_seed: INTEGER
+			l_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT
+			l_inline_separate_arguments: detachable ET_INLINE_SEPARATE_ARGUMENT_LIST
+		do
+			reset_fatal_error (False)
+			l_seed := a_name.seed
+			l_inline_separate_arguments := current_closure_impl.inline_separate_arguments
+			if l_inline_separate_arguments = Void then
+					-- Internal error.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
+			elseif l_seed < 1 or l_seed > l_inline_separate_arguments.count then
+					-- Internal error.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
+			else
+				l_inline_separate_argument := l_inline_separate_arguments.argument (l_seed)
+				find_expression_type (l_inline_separate_argument.expression, a_context, current_system.detachable_separate_any_type)
 			end
 		end
 
@@ -2070,44 +2108,6 @@ feature {NONE} -- Expression processing
 						-- Use the ETL2 implementation: the type of '$argument' is POINTER.
 					a_context.force_last (current_universe_impl.pointer_type)
 				end
-			end
-		end
-
-	find_separate_argument_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
-			-- `a_context' represents the type in which `a_name' appears.
-			-- It will be altered on exit to represent the type of `a_name'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_separate_argument: a_name.is_separate_argument
-			a_context_not_void: a_context /= Void
-		local
-			l_seed: INTEGER
-			l_separate_argument: ET_SEPARATE_ARGUMENT
-			l_separate_arguments: detachable ET_SEPARATE_ARGUMENT_LIST
-		do
-			reset_fatal_error (False)
-			l_seed := a_name.seed
-			l_separate_arguments := current_closure_impl.separate_arguments
-			if l_separate_arguments = Void then
-					-- Internal error.
-					-- This error should have already been reported when checking
-					-- `current_feature' (using ET_FEATURE_CHECKER for example).
-				set_fatal_error
-				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
-				end
-			elseif l_seed < 1 or l_seed > l_separate_arguments.count then
-					-- Internal error.
-					-- This error should have already been reported when checking
-					-- `current_feature' (using ET_FEATURE_CHECKER for example).
-				set_fatal_error
-				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
-				end
-			else
-				l_separate_argument := l_separate_arguments.separate_argument (l_seed)
-				find_expression_type (l_separate_argument.expression, a_context, current_system.detachable_separate_any_type)
 			end
 		end
 
@@ -3299,8 +3299,8 @@ feature {ET_AST_NODE} -- Processing
 				find_object_test_local_type (an_identifier, current_context)
 			elseif an_identifier.is_iteration_item then
 				find_iteration_item_type (an_identifier, current_context)
-			elseif an_identifier.is_separate_argument then
-				find_separate_argument_type (an_identifier, current_context)
+			elseif an_identifier.is_inline_separate_argument then
+				find_inline_separate_argument_type (an_identifier, current_context)
 			elseif an_identifier.is_feature_name then
 				find_unqualified_call_expression_type (an_identifier, current_context)
 			else

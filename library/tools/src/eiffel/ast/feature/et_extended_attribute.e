@@ -5,7 +5,7 @@ note
 		"Eiffel variable attributes with extended syntax"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #5 $"
@@ -138,6 +138,7 @@ feature -- Duplication
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
 			Result.set_iteration_components (iteration_components)
+			Result.set_inline_separate_arguments (inline_separate_arguments)
 			Result.set_synonym (Current)
 		end
 
@@ -166,6 +167,7 @@ feature -- Conversion
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
 			Result.set_iteration_components (iteration_components)
+			Result.set_inline_separate_arguments (inline_separate_arguments)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
 		end

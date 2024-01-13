@@ -5,7 +5,7 @@
 		"Eiffel Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2941,6 +2941,39 @@ feature -- AST nodes
 			end
 		end
 
+	new_inline_separate_argument (a_expression: detachable ET_EXPRESSION; a_as: detachable ET_KEYWORD; a_name: detachable ET_IDENTIFIER): detachable ET_INLINE_SEPARATE_ARGUMENT
+			-- New inline separate argument
+		do
+			if a_expression /= Void and a_name /= Void then
+				create Result.make (a_expression, a_name)
+			end
+		end
+
+	new_inline_separate_argument_comma (a_inline_separate_argument: detachable ET_INLINE_SEPARATE_ARGUMENT; a_comma: detachable ET_SYMBOL): detachable ET_INLINE_SEPARATE_ARGUMENT_ITEM
+			-- New inline_separate_argument-comma
+		do
+			Result := a_inline_separate_argument
+		end
+
+	new_inline_separate_arguments (a_separate: detachable ET_KEYWORD; nb: INTEGER): detachable ET_INLINE_SEPARATE_ARGUMENTS
+			-- New inline_separate_argument list with capacity `nb'
+		require
+			nb_positive: nb >= 0
+		do
+			create Result.make_with_capacity (nb)
+			if a_separate /= Void and nb = 0 then
+				Result.set_separate_keyword (a_separate)
+			end
+		end
+
+	new_inline_separate_instruction (a_arguments: detachable ET_INLINE_SEPARATE_ARGUMENTS; a_compound: detachable ET_COMPOUND; a_end: detachable ET_KEYWORD): detachable ET_INLINE_SEPARATE_INSTRUCTION
+			-- New inline separate instruction
+		do
+			if a_arguments /= Void then
+				create Result.make (a_arguments, a_compound)
+			end
+		end
+
 	new_inspect_expression (a_conditional: detachable ET_CONDITIONAL; a_when_parts: detachable ET_WHEN_EXPRESSION_LIST;
 		an_else_part: detachable ET_CONDITIONAL; an_end: detachable ET_KEYWORD): detachable ET_INSPECT_EXPRESSION
 			-- New inspect expression
@@ -3635,39 +3668,6 @@ feature -- AST nodes
 			create Result.make
 			if d /= Void and then not d.position.is_null then
 				Result.set_dollar (d)
-			end
-		end
-
-	new_separate_argument (a_expression: detachable ET_EXPRESSION; a_as: detachable ET_KEYWORD; a_name: detachable ET_IDENTIFIER): detachable ET_SEPARATE_ARGUMENT
-			-- New separate argument
-		do
-			if a_expression /= Void and a_name /= Void then
-				create Result.make (a_expression, a_name)
-			end
-		end
-
-	new_separate_argument_comma (a_separate_argument: detachable ET_SEPARATE_ARGUMENT; a_comma: detachable ET_SYMBOL): detachable ET_SEPARATE_ARGUMENT_ITEM
-			-- New separate_argument-comma
-		do
-			Result := a_separate_argument
-		end
-
-	new_separate_arguments (a_separate: detachable ET_KEYWORD; nb: INTEGER): detachable ET_SEPARATE_ARGUMENTS
-			-- New separate_argument list with capacity `nb'
-		require
-			nb_positive: nb >= 0
-		do
-			create Result.make_with_capacity (nb)
-			if a_separate /= Void and nb = 0 then
-				Result.set_separate_keyword (a_separate)
-			end
-		end
-
-	new_separate_instruction (a_arguments: detachable ET_SEPARATE_ARGUMENTS; a_compound: detachable ET_COMPOUND; a_end: detachable ET_KEYWORD): detachable ET_SEPARATE_INSTRUCTION
-			-- New separate instruction
-		do
-			if a_arguments /= Void then
-				create Result.make (a_arguments, a_compound)
 			end
 		end
 

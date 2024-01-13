@@ -5,7 +5,7 @@ note
 		"Eiffel identifiers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,8 +33,8 @@ inherit
 			is_object_test_local,
 			iteration_item_name,
 			is_iteration_item,
-			separate_argument_name,
-			is_separate_argument,
+			inline_separate_argument_name,
+			is_inline_separate_argument,
 			as_expression
 		end
 
@@ -56,7 +56,8 @@ inherit
 			break
 		redefine
 			is_instance_free,
-			is_never_void
+			is_never_void,
+			add_separate_arguments
 		end
 
 	ET_OBJECT_TEST_LOCAL_NAME
@@ -68,7 +69,8 @@ inherit
 			break
 		redefine
 			is_instance_free,
-			is_never_void
+			is_never_void,
+			add_separate_arguments
 		end
 
 	ET_ARGUMENT_NAME
@@ -80,7 +82,8 @@ inherit
 			break
 		redefine
 			is_instance_free,
-			is_never_void
+			is_never_void,
+			add_separate_arguments
 		end
 
 	ET_LABEL
@@ -108,7 +111,8 @@ inherit
 			break
 		redefine
 			is_instance_free,
-			is_never_void
+			is_never_void,
+			add_separate_arguments
 		end
 
 	ET_CHOICE_CONSTANT
@@ -120,7 +124,8 @@ inherit
 			break
 		redefine
 			is_instance_free,
-			is_never_void
+			is_never_void,
+			add_separate_arguments
 		end
 
 	ET_INDEXING_TERM
@@ -154,7 +159,8 @@ inherit
 			break
 		redefine
 			is_instance_free,
-			is_never_void
+			is_never_void,
+			add_separate_arguments
 		end
 
 	ET_UNQUALIFIED_FEATURE_CALL_INSTRUCTION
@@ -357,10 +363,10 @@ feature -- Status report
 			Result := (status_code = agent_closed_operand_code)
 		end
 
-	is_separate_argument: BOOLEAN
-			-- Is current identifier a separate instruction argument name?
+	is_inline_separate_argument: BOOLEAN
+			-- Is current identifier an inline separate instruction argument name?
 		do
-			Result := (status_code = separate_argument_code)
+			Result := (status_code = inline_separate_argument_code)
 		end
 
 	is_never_void: BOOLEAN
@@ -508,16 +514,16 @@ feature -- Status setting
 			agent_closed_operand_set: is_agent_closed_operand = b
 		end
 
-	set_separate_argument (b: BOOLEAN)
-			-- Set `is_separate_argument' to `b'.
+	set_inline_separate_argument (b: BOOLEAN)
+			-- Set `is_inline_separate_argument' to `b'.
 		do
 			if b then
-				status_code := separate_argument_code
+				status_code := inline_separate_argument_code
 			else
 				status_code := no_code
 			end
 		ensure
-			separate_argument_set: is_separate_argument = b
+			inline_separate_argument_set: is_inline_separate_argument = b
 		end
 
 feature -- Setting
@@ -645,8 +651,8 @@ feature -- Conversion
 			Result := Current
 		end
 
-	separate_argument_name: ET_IDENTIFIER
-			-- Current name viewed as a separate argument name
+	inline_separate_argument_name: ET_IDENTIFIER
+			-- Current name viewed as an inline separate argument name
 		do
 			Result := Current
 		end
@@ -655,6 +661,63 @@ feature -- Conversion
 			-- Current name viewed as an expression
 		do
 			Result := Current
+		end
+
+feature -- SCOOP
+
+	add_separate_arguments (a_list: DS_ARRAYED_LIST [ET_IDENTIFIER]; a_closure: ET_CLOSURE)
+			-- Add to `a_list' inline separate arguments or formal arguments which
+			-- when controlled (i.e. when their type is separate) implies that when
+			-- the current expression is involved in the target of a separate call
+			-- this target is also controlled.
+			-- `a_closure' is the closure (i.e. inline agent or enclosing feature)
+			-- in which the current expression appears.
+			-- (Used when determining the SCOOP sessions to be used when recording
+			-- a separate call to another SCOOP processor.)
+		local
+			i, nb: INTEGER
+			l_found: BOOLEAN
+			l_id: ET_IDENTIFIER
+		do
+			if is_inline_separate_argument then
+					-- Avoid adding twice the same inline separate argument.
+					-- Linear search is fine here because it is not expected
+					-- to have many items in `a_list'.
+				nb := a_list.count
+				from i := 1 until i > nb loop
+					l_id := a_list.item (i)
+					if l_id.is_inline_separate_argument and then l_id.seed = seed then
+						l_found := True
+							-- Jump out of the loop.
+						i := nb
+					end
+					i := i + 1
+				end
+				if not l_found then
+					a_list.force_last (Current)
+				end
+			elseif is_argument then
+					-- Avoid adding twice the same formal argument.
+					-- Linear search is fine here because it is not expected
+					-- to have many items in `a_list'.
+				nb := a_list.count
+				from i := 1 until i > nb loop
+					l_id := a_list.item (i)
+					if l_id.is_argument and then l_id.seed = seed then
+						l_found := True
+							-- Jump out of the loop.
+						i := nb
+					end
+					i := i + 1
+				end
+				if not l_found then
+					a_list.force_last (Current)
+				end
+			elseif is_object_test_local then
+				if attached a_closure.object_tests as l_object_tests and then (seed >= 1 and seed <= l_object_tests.count) then
+					l_object_tests.object_test (seed).expression.add_separate_arguments (a_list, a_closure)
+				end
+			end
 		end
 
 feature -- Processing
@@ -703,7 +766,7 @@ feature {NONE} -- Implementation
 	tuple_label_code: CHARACTER = 't'
 	agent_open_operand_code: CHARACTER = 'o'
 	agent_closed_operand_code: CHARACTER = 'c'
-	separate_argument_code: CHARACTER = 's'
+	inline_separate_argument_code: CHARACTER = 's'
 	no_code: CHARACTER = '%U'
 			-- Status codes
 

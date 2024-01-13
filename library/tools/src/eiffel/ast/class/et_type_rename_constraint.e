@@ -9,7 +9,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -100,6 +100,35 @@ feature -- Status report
 			-- Is `type' a named type (only made up of named types)?
 		do
 			Result := type.is_named_type
+		end
+
+	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Is the type of the current constraint an expanded type when viewed from `a_context'?
+		do
+			Result := type.is_type_expanded (a_context)
+		end
+
+	is_type_attached (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Is the type of the current constraint attached when viewed from `a_context'?
+		do
+			Result := type.is_type_attached (a_context)
+		end
+
+	has_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does the type of the current constraint contain attributes whose types are declared
+			-- of non-separate reference types when viewed from `a_context'?
+			-- True in case of a formal generic parameter because the actual
+			-- generic parameter may contain non-separate reference attributes.
+		do
+			Result := type.has_non_separate_reference_attributes (a_context)
+		end
+
+	has_nested_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Does the type of the current constraint contain non-separate reference attributes
+			-- when viewed from `a_context', or recursively does it contain expanded
+			-- attributes whose types contain non-separate reference attributes?
+		do
+			Result := type.has_nested_non_separate_reference_attributes (a_context)
 		end
 
 feature -- Setting

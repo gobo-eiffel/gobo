@@ -433,9 +433,9 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 		end
 
-	make_v1se1ga (a_class: ET_CLASS; arg1, arg2: ET_SEPARATE_ARGUMENT)
+	make_v1se1ga (a_class: ET_CLASS; arg1, arg2: ET_INLINE_SEPARATE_ARGUMENT)
 			-- Create a new V1SE-1G error: `arg1' and `arg2' are two arguments of
-			-- of a separate instruction in `a_class' with the same name.
+			-- of an inline separate instruction in `a_class' with the same name.
 			--
 			-- Not in ECMA-367-2.
 			-- SCOOP.
@@ -472,11 +472,11 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = separate argument name
+			-- dollar7: $7 = inline separate argument name
 		end
 
-	make_v1se2ga (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_feature: ET_FEATURE)
-			-- Create a new V1SE-2G error: argument `arg' of a separate instruction
+	make_v1se2ga (a_class: ET_CLASS; arg: ET_INLINE_SEPARATE_ARGUMENT; a_feature: ET_FEATURE)
+			-- Create a new V1SE-2G error: argument `arg' of an inline separate instruction
 		 	-- has the same name as `a_feature' in `a_class'.
 			--
 			-- Not in ECMA-367-2.
@@ -512,25 +512,25 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = separate argument name
+			-- dollar6: $6 = inline separate argument name
 		end
 
-	make_v1se2gb (a_class: ET_CLASS; a_separate_arg: ET_SEPARATE_ARGUMENT; a_formal_arg: ET_FORMAL_ARGUMENT)
-			-- Create a new V1SE-2G error: argument `a_separate_arg' of a separate instruction
-		 	-- has the same name as argument `a_formal_arg' of an enclosing feature or
-			-- inline agent.
+	make_v1se2gb (a_class: ET_CLASS; a_inline_separate_arg: ET_INLINE_SEPARATE_ARGUMENT; a_formal_arg: ET_FORMAL_ARGUMENT)
+			-- Create a new V1SE-2G error: argument `a_inline_separate_arg' of an inline
+			-- separate instruction has the same name as argument `a_formal_arg' of an
+			-- enclosing feature or inline agent.
 			--
 			-- Not in ECMA-367-2.
 			-- SCOOP.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_separate_arg_not_void: a_separate_arg /= Void
+			a_inline_separate_arg_not_void: a_inline_separate_arg /= Void
 			a_formal_arg_not_void: a_formal_arg /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_separate_arg.name.position
+			position := a_inline_separate_arg.name.position
 			code := template_code (v1se2gb_template_code)
 			etl_code := v1se2g_etl_code
 			default_template := default_message_template (v1se2gb_default_template)
@@ -540,7 +540,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_separate_arg.name.lower_name, 6)
+			parameters.put (a_inline_separate_arg.name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -553,11 +553,11 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = separate argument name
+			-- dollar6: $6 = inline separate argument name
 		end
 
-	make_v1se2gc (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_local: ET_LOCAL_VARIABLE)
-			-- Create a new V1SE-2G error: argument `arg' of a separate instruction
+	make_v1se2gc (a_class: ET_CLASS; arg: ET_INLINE_SEPARATE_ARGUMENT; a_local: ET_LOCAL_VARIABLE)
+			-- Create a new V1SE-2G error: argument `arg' of an inline separate instruction
 		 	-- has the same name as local variable `a_local' of an enclosing
 			-- feature or inline agent.
 			--
@@ -594,11 +594,11 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = separate argument name
+			-- dollar6: $6 = inlineseparate argument name
 		end
 
-	make_v1se2gd (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_object_test: ET_NAMED_OBJECT_TEST)
-			-- Create a new V1SE-2G error: argument `arg' of a separate instruction
+	make_v1se2gd (a_class: ET_CLASS; arg: ET_INLINE_SEPARATE_ARGUMENT; a_object_test: ET_NAMED_OBJECT_TEST)
+			-- Create a new V1SE-2G error: argument `arg' of an inline separate instruction
 			-- appears in the scope of the local of `a_object_test' with the same name.
 			--
 			-- Not in ECMA-367-2.
@@ -637,8 +637,8 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = aeparate argument name
 		end
 
-	make_v1se2ge (a_class: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_iteration_component: ET_ITERATION_COMPONENT)
-			-- Create a new V1SE-2G error: argument `arg' of a separate instruction
+	make_v1se2ge (a_class: ET_CLASS; arg: ET_INLINE_SEPARATE_ARGUMENT; a_iteration_component: ET_ITERATION_COMPONENT)
+			-- Create a new V1SE-2G error: argument `arg' of an inline separate instruction
 			-- appears in the scope of the cursor of `a_iteration_component' with
 			-- the same name.
 			--
@@ -675,12 +675,12 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = separate argument name
+			-- dollar6: $6 = inline separate argument name
 		end
 
-	make_v1se2gf (a_class: ET_CLASS; arg1, arg2: ET_SEPARATE_ARGUMENT)
-			-- Create a new V1SE-2G error: argument `arg1' of a separate instruction
-			-- as the same name as argument `arg2' of another enclosing separate
+	make_v1se2gf (a_class: ET_CLASS; arg1, arg2: ET_INLINE_SEPARATE_ARGUMENT)
+			-- Create a new V1SE-2G error: argument `arg1' of an inline separate instruction
+			-- as the same name as argument `arg2' of another enclosing inline separate
 			-- instruction.
 			--
 			-- Not in ECMA-367-2.
@@ -716,12 +716,12 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = separate argument name
+			-- dollar6: $6 = inline separate argument name
 		end
 
-	make_v1se3ga (a_class, a_class_impl: ET_CLASS; arg: ET_SEPARATE_ARGUMENT; a_type: ET_NAMED_TYPE)
+	make_v1se3ga (a_class, a_class_impl: ET_CLASS; arg: ET_INLINE_SEPARATE_ARGUMENT; a_type: ET_NAMED_TYPE)
 			-- Report V1SE-3G error: the type of the argument `arg'
-			-- of a separate instruction in `a_class_impl' and view from
+			-- of an inline separate instruction in `a_class_impl' and view from
 			-- one of its descendants `a_class' (possibly itself)
 			-- is not separate.
 			--
@@ -761,8 +761,8 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = separate argument name
-			-- dollar7: $7 = type of separate argument
+			-- dollar6: $6 = inline separate argument name
+			-- dollar7: $7 = type of inline separate argument
 		end
 
 	make_vaol1a (a_class: ET_CLASS; an_expression: ET_OLD_EXPRESSION)
@@ -3845,14 +3845,14 @@ feature {NONE} -- Initialization
 	make_veen10a (a_class: ET_CLASS; a_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Create a new VEEN-10 error: `a_identifier', appearing in `a_feature'
 			-- of `a_class' or one of its (possibly nested) inline agents, is the
-			-- name of a separate argument that is used outside of its scope.
+			-- name of an inline separate argument that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_identifier_not_void: a_identifier /= Void
-			a_identifier_iteration_item: a_identifier.is_separate_argument
+			a_identifier_inline_separate_argument: a_identifier.is_inline_separate_argument
 			a_feature_not_void: a_feature /= Void
 		do
 			current_class := a_class
@@ -3883,21 +3883,21 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = separate argument name
+			-- dollar7: $7 = inline separate argument name
 			-- dollar8: $8 = feature name
 		end
 
 	make_veen10b (a_class: ET_CLASS; a_identifier: ET_IDENTIFIER)
 			-- Create a new VEEN-10 error: `a_identifier', appearing in the invariant
 			-- of `a_class' or one of its (possibly nested) inline agents, is the
-			-- name of a separate argument that is used outside of its scope.
+			-- name of an inline separate argument that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_identifier_not_void: a_identifier /= Void
-			a_identifier_iteration_item: a_identifier.is_separate_argument
+			a_identifier_inline_separate_argument: a_identifier.is_inline_separate_argument
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -3926,7 +3926,7 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = separate argument name
+			-- dollar7: $7 = inline separate argument name
 		end
 
 	make_veen11a (a_class: ET_CLASS; a_name: ET_FEATURE_NAME)
@@ -10968,11 +10968,11 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = local name
 		end
 
-	make_vpir1i (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; a_agent: ET_INLINE_AGENT; a_separate_argument: ET_SEPARATE_ARGUMENT)
+	make_vpir1i (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; a_agent: ET_INLINE_AGENT; a_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT)
 			-- Create a new VPIR-1 error: `arg' in inline agent `a_agent' has
-			-- the same name as the argument `a_separate_argument' of a
-			-- separate instruction in an enclosing feature or inline agent
-			-- whose compound (of the separate instruction) contains the
+			-- the same name as the argument `a_inline_separate_argument' of an
+			-- inline separate instruction in an enclosing feature or inline agent
+			-- whose compound (of the inline separate instruction) contains the
 			-- inline agent.
 			--
 			-- Not in ECMA.
@@ -10981,7 +10981,7 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			arg_not_void: arg /= Void
 			a_agent_not_void: a_agent /= Void
-			a_separate_argument_not_void: a_separate_argument /= Void
+			a_inline_separate_argument_not_void: a_inline_separate_argument /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -11013,11 +11013,11 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = argument name
 		end
 
-	make_vpir1j (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; a_agent: ET_INLINE_AGENT; a_separate_argument: ET_SEPARATE_ARGUMENT)
+	make_vpir1j (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; a_agent: ET_INLINE_AGENT; a_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT)
 			-- Create a new VPIR-1 error: `a_local' in inline agent `an_agent' has
-			-- the same name as the argument `a_separate_argument' of a
-			-- separate instruction in an enclosing feature or inline agent
-			-- whose compound (of the separate instruction) contains
+			-- the same name as the argument `a_inline_separate_argument' of an
+			-- inline separate instruction in an enclosing feature or inline agent
+			-- whose compound (of the inline separate instruction) contains
 			-- the inline agent.
 			--
 			-- Not in ECMA.
@@ -11026,7 +11026,7 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			a_local_not_void: a_local /= Void
 			a_agent_not_void: a_agent /= Void
-			a_separate_argument_not_void: a_separate_argument /= Void
+			a_inline_separate_argument_not_void: a_inline_separate_argument /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -14197,16 +14197,16 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = object-test local name
 		end
 
-	make_vuot1f (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_separate_argument: ET_SEPARATE_ARGUMENT)
+	make_vuot1f (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT)
 			-- Create a new VUOT-1 error: `a_object_test' appears in the scope
-			-- of `a_separate_argument' with the same local name.
+			-- of `a_inline_separate_argument' with the same local name.
 			--
 			-- Not in ECMA.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_object_test_not_void: a_object_test /= Void
-			a_separate_argument_not_void: a_separate_argument /= Void
+			a_inline_separate_argument_not_void: a_inline_separate_argument /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -16681,7 +16681,7 @@ feature {NONE} -- Initialization
 
 	make_gvuas0a (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Create a new GVUAS error: `a_name' is the name of an argument of
-			-- a separate instruction in `a_feature' in `a_class', and hence
+			-- an inline separate instruction in `a_feature' in `a_class', and hence
 			-- cannot have actual arguments.
 			--
 			-- Not in ETL as validity error but as syntax error
@@ -16720,13 +16720,13 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = separate argument name
+			-- dollar7: $7 = inline separate argument name
 			-- dollar8: $8 = feature name
 		end
 
 	make_gvuas0b (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
 			-- Create a new GVUAS error: `a_name' is the name of an argument
-			-- of a separate instruction in inline agent `an_agent' in
+			-- of an inline separate instruction in inline agent `an_agent' in
 			-- `a_class', and hence cannot have actual arguments.
 			--
 			-- Not in ETL as validity error but as syntax error
@@ -16764,12 +16764,12 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = separate argument name
+			-- dollar7: $7 = inline separate argument name
 		end
 
 	make_gvuas0c (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
 			-- Create a new GVUAS error: `a_name' is the name of an argument of
-			-- a separate instruction in invariants `a_invariants' in
+			-- an inline separate instruction in invariants `a_invariants' in
 			-- `a_class', and hence cannot have actual arguments.
 			--
 			-- Not in ETL as validity error but as syntax error
@@ -16807,7 +16807,7 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = separate argument name
+			-- dollar7: $7 = inline separate argument name
 		end
 
 	make_gvuia0a (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
@@ -17240,7 +17240,7 @@ feature {NONE} -- Initialization
 
 	make_gvuis0a (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Create a new GVUIS error: `a_name' is the name of an argument
-			-- of a separate instruction in `a_feature' in `a_class',
+			-- of an inline separate instruction in `a_feature' in `a_class',
 			-- and hence cannot be an instruction.
 			--
 			-- Not in ETL as validity error but as syntax error
@@ -17278,13 +17278,13 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = separate argument name
+			-- dollar7: $7 = inline separate argument name
 			-- dollar8: $8 = feature name
 		end
 
 	make_gvuis0b (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
 			-- Create a new GVUIS error: `a_name' is the name of an argument
-			-- of a separate instruction in inline agent `an_agent' in
+			-- of an inline separate instruction in inline agent `an_agent' in
 			-- `a_class', and hence cannot be an instruction.
 			--
 			-- Not in ETL as validity error but as syntax error
@@ -17321,12 +17321,12 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = separate argument name
+			-- dollar7: $7 = inline separate argument name
 		end
 
 	make_gvuis0c (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_invariants: ET_INVARIANTS)
 			-- Create a new GVUIS error: `a_name' is the name of an argument of
-			-- a separate instruction in invariants `a_invariants' in `a_class',
+			-- an inline separate instruction in invariants `a_invariants' in `a_class',
 			-- and hence cannot be an instruction.
 			--
 			-- Not in ETL as validity error but as syntax error
@@ -17363,7 +17363,7 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = separate argument name
+			-- dollar7: $7 = inline separate argument name
 		end
 
 	make_gvwmc2a (a_class, a_class_impl: ET_CLASS; a_constant: ET_INTEGER_CONSTANT; a_type: ET_NAMED_TYPE)
@@ -17596,14 +17596,14 @@ feature {NONE} -- Implementation
 			template_not_void: Result /= Void
 		end
 
-	v1se1ga_default_template: STRING = "two arguments of a separate instruction have the same name '$7'."
-	v1se2ga_default_template: STRING = "argument name '$6' of a separate instruction is also the final name of a feature."
-	v1se2gb_default_template: STRING = "argument '$6' of a separate instruction has the same name as a formal argument of an enclosing feature or inline agent."
-	v1se2gc_default_template: STRING = "argument '$6' of a separate instruction has the same name as a local variable of an enclosing feature or inline agent."
-	v1se2gd_default_template: STRING = "argument '$6' of a separate instruction appears in the scope of an object-test local with the same name."
-	v1se2ge_default_template: STRING = "argument '$6' of a separate instruction appears in the scope of an iteration item with the same name."
-	v1se2gf_default_template: STRING = "argument '$6' of a separate instruction appears in another enclosing separate instruction with an argument of the same name."
-	v1se3ga_default_template: STRING = "the type '$7' of the argument '$6' of a separate instruction is not separate."
+	v1se1ga_default_template: STRING = "two arguments of an inline separate instruction have the same name '$7'."
+	v1se2ga_default_template: STRING = "argument name '$6' of an inline separate instruction is also the final name of a feature."
+	v1se2gb_default_template: STRING = "argument '$6' of an inline separate instruction has the same name as a formal argument of an enclosing feature or inline agent."
+	v1se2gc_default_template: STRING = "argument '$6' of an inline separate instruction has the same name as a local variable of an enclosing feature or inline agent."
+	v1se2gd_default_template: STRING = "argument '$6' of an inline separate instruction appears in the scope of an object-test local with the same name."
+	v1se2ge_default_template: STRING = "argument '$6' of an inline separate instruction appears in the scope of an iteration item with the same name."
+	v1se2gf_default_template: STRING = "argument '$6' of an inline separate instruction appears in another enclosing inline separate instruction with an argument of the same name."
+	v1se3ga_default_template: STRING = "the type '$7' of the argument '$6' of an inline separate instruction is not separate."
 	vaol1a_default_template: STRING = "old expression does not appear in a postcondition."
 	vape1a_default_template: STRING = "feature `$8' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
 	vape1b_default_template: STRING = "feature `$8' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
@@ -17671,8 +17671,8 @@ feature {NONE} -- Implementation
 	veen8b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
 	veen9a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an iteration item that is used outside of its scope."
 	veen9b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an iteration item that is used outside of its scope."
-	veen10a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is the name of a separate argument that is used outside of its scope."
-	veen10b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is the name of a separate argument that is used outside of its scope."
+	veen10a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is the name of an inline separate argument that is used outside of its scope."
+	veen10b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is the name of an inline separate argument that is used outside of its scope."
 	veen11a_default_template: STRING = "`$7' is not the final name of a feature in class $5."
 	vevi0a_default_template: STRING = "local entity `$7' declared as attached is used before being initialized."
 	vevi0b_default_template: STRING = "entity 'Result' declared as attached is used before being initialized."
@@ -17820,8 +17820,8 @@ feature {NONE} -- Implementation
 	vpir1f_default_template: STRING = "local variable name '$7' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent."
 	vpir1g_default_template: STRING = "argument name '$7' in inline agent is also the name of an iteration item of an enclosing feature or inline agent whose scope contains the inline agent."
 	vpir1h_default_template: STRING = "local variable name '$7' in inline agent is also the name of an iteration item of an enclosing feature or inline agent whose scope contains the inline agent."
-	vpir1i_default_template: STRING = "argument name '$7' in inline agent is also the name of the argument of a separate instruction of an enclosing feature or inline agent whose scope contains the inline agent."
-	vpir1j_default_template: STRING = "local variable name '$7' in inline agent is also the name of the argument of a separate instruction of an enclosing feature or inline agent whose scope contains the inline agent."
+	vpir1i_default_template: STRING = "argument name '$7' in inline agent is also the name of the argument of an inline separate instruction of an enclosing feature or inline agent whose scope contains the inline agent."
+	vpir1j_default_template: STRING = "local variable name '$7' in inline agent is also the name of the argument of an inline separate instruction of an enclosing feature or inline agent whose scope contains the inline agent."
 	vpir3a_default_template: STRING = "inline agents cannot be of the once form."
 	vpir3b_default_template: STRING = "inline agents cannot be of the external form."
 	vqmc1a_default_template: STRING = "boolean constant attribute `$7' is not declared of type BOOLEAN."
@@ -17889,7 +17889,7 @@ feature {NONE} -- Implementation
 	vuot1c_default_template: STRING = "object-test local name '$6' is also the name of a local variable of an enclosing feature or inline agent."
 	vuot1d_default_template: STRING = "object-test with local name '$6' appears in the scope of another object-test local with the same name."
 	vuot1e_default_template: STRING = "object-test with local name '$6' appears in the scope of an iteration item with the same name."
-	vuot1f_default_template: STRING = "object-test with local name '$6' appears in a separate instruction with an argument of the same name."
+	vuot1f_default_template: STRING = "object-test with local name '$6' appears in an inline separate instruction with an argument of the same name."
 	vuot1g_default_template: STRING = "the scope of object-test with local name '$6' overlaps with the scope of another object-test with the same local name."
 	vuot3a_default_template: STRING = "object-test with local name '$6' has the same name as another object-test local appearing in the same feature `$7' or in the same inline agent."
 	vuot3b_default_template: STRING = "object-test with local name '$6' has the same name as another object-test local appearing in the invariant or in the same inline agent."
@@ -17945,9 +17945,9 @@ feature {NONE} -- Implementation
 	gvuao0a_default_template: STRING = "`$7' is an object-test local in feature `$8' and hence cannot have actual arguments."
 	gvuao0b_default_template: STRING = "`$7' is an object-test local in an inline agent and hence cannot have actual arguments."
 	gvuao0c_default_template: STRING = "`$7' is an object-test local in an invariant and hence cannot have actual arguments."
-	gvuas0a_default_template: STRING = "`$7' is a separate argument in feature `$8' and hence cannot have actual arguments."
-	gvuas0b_default_template: STRING = "`$7' is a separate argument in an inline agent and hence cannot have actual arguments."
-	gvuas0c_default_template: STRING = "`$7' is a separate argument in an invariant and hence cannot have actual arguments."
+	gvuas0a_default_template: STRING = "`$7' is an inline separate argument in feature `$8' and hence cannot have actual arguments."
+	gvuas0b_default_template: STRING = "`$7' is an inline separate argument in an inline agent and hence cannot have actual arguments."
+	gvuas0c_default_template: STRING = "`$7' is an inline separate argument in an invariant and hence cannot have actual arguments."
 	gvuia0a_default_template: STRING = "`$7' is a formal argument of feature `$8' and hence cannot be an instruction."
 	gvuia0b_default_template: STRING = "`$7' is a formal argument of an inline agent and hence cannot be an instruction."
 	gvuic0a_default_template: STRING = "`$7' is an iteration item in feature `$8' and hence cannot be an instruction."
@@ -17958,9 +17958,9 @@ feature {NONE} -- Implementation
 	gvuio0a_default_template: STRING = "`$7' is an object-test local in feature `$8' and hence cannot be an instruction."
 	gvuio0b_default_template: STRING = "`$7' is an object-test local in an inline agent and hence cannot be an instruction."
 	gvuio0c_default_template: STRING = "`$7' is an object-test local in an invariant and hence cannot be an instruction."
-	gvuis0a_default_template: STRING = "`$7' is a separate argument in feature `$8' and hence cannot be an instruction."
-	gvuis0b_default_template: STRING = "`$7' is a separate argument in an inline agent and hence cannot be an instruction."
-	gvuis0c_default_template: STRING = "`$7' is a separate argument in an invariant and hence cannot be an instruction."
+	gvuis0a_default_template: STRING = "`$7' is an inline separate argument in feature `$8' and hence cannot be an instruction."
+	gvuis0b_default_template: STRING = "`$7' is an inline separate argument in an inline agent and hence cannot be an instruction."
+	gvuis0c_default_template: STRING = "`$7' is an inline separate argument in an invariant and hence cannot be an instruction."
 	gvwmc2a_default_template: STRING = "integer constant '$7' is not representable as an instance of '$8'."
 	gvwmc2b_default_template: STRING = "character constant $7 is not representable (too big or surrogate) as an instance of '$8'."
 	gvwmc2c_default_template: STRING = "manifest string is not representable (contains too big or surrogate characters) as an instance of '$7'."

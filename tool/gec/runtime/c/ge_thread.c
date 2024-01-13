@@ -1355,6 +1355,7 @@ static void* GE_thread_routine(void* arg)
 		if (l_thread_context->is_scoop_processor) {
 				/* Do not keep track of the current object so that it can be
 				reclaimed by the GC if it is not referenced anywhere else. */
+			l_context.scoop_processor->context = &l_context;
 			l_thread_context->current = EIF_VOID;
 			GE_scoop_processor_run(&l_context);
 		} else

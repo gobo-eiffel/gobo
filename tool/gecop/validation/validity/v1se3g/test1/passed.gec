@@ -1,2 +1,2 @@
-[V1SE-3G] class AA (11,13): the type '[attached] STRING_32' of the argument 'x' of a separate instruction is not separate.
+[V1SE-3G] class AA (11,13): the type '[attached] STRING_32' of the argument 'x' of an inline separate instruction is not separate.
 ----

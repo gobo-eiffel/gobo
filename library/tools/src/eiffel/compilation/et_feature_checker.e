@@ -5,7 +5,7 @@ note
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,6 +73,7 @@ inherit
 			process_if_instruction,
 			process_infix_cast_expression,
 			process_infix_expression,
+			process_inline_separate_instruction,
 			process_inspect_expression,
 			process_inspect_instruction,
 			process_iteration_cursor,
@@ -108,7 +109,6 @@ inherit
 			process_result_address,
 			process_retry_instruction,
 			process_semicolon_symbol,
-			process_separate_instruction,
 			process_special_manifest_string,
 			process_static_call_expression,
 			process_static_call_instruction,
@@ -177,9 +177,9 @@ feature {NONE} -- Initialization
 			create current_iteration_cursor_types.make_map (50)
 			create current_iteration_item_types.make_map (50)
 			create current_iteration_item_scope.make
-				-- Separate arguments.
-			create current_separate_argument_types.make_map (50)
-			create current_separate_argument_scope.make
+				-- Inline separate arguments.
+			create current_inline_separate_argument_types.make_map (50)
+			create current_inline_separate_argument_scope.make
 				-- Attachments.
 			create current_initialization_scope.make
 			create current_attachment_scope.make
@@ -355,7 +355,7 @@ feature -- Validity checking
 				end
 				current_iteration_item_types.wipe_out
 				current_iteration_item_scope.wipe_out
-				current_separate_argument_scope.wipe_out
+				current_inline_separate_argument_scope.wipe_out
 				current_attachment_scope.wipe_out
 				current_initialization_scope.wipe_out
 				current_class := old_class
@@ -514,7 +514,7 @@ feature -- Validity checking
 				end
 				current_iteration_item_types.wipe_out
 				current_iteration_item_scope.wipe_out
-				current_separate_argument_scope.wipe_out
+				current_inline_separate_argument_scope.wipe_out
 				current_attachment_scope.wipe_out
 				current_initialization_scope.wipe_out
 				current_class := old_class
@@ -669,7 +669,7 @@ feature -- Validity checking
 				end
 				current_iteration_item_types.wipe_out
 				current_iteration_item_scope.wipe_out
-				current_separate_argument_scope.wipe_out
+				current_inline_separate_argument_scope.wipe_out
 				current_attachment_scope.wipe_out
 				current_initialization_scope.wipe_out
 				current_class := old_class
@@ -801,7 +801,7 @@ feature -- Validity checking
 				end
 				current_iteration_item_types.wipe_out
 				current_iteration_item_scope.wipe_out
-				current_separate_argument_scope.wipe_out
+				current_inline_separate_argument_scope.wipe_out
 				current_attachment_scope.wipe_out
 				current_initialization_scope.wipe_out
 				current_class := old_class
@@ -1962,12 +1962,12 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 						set_fatal_error
 						error_handler.report_vpir1g_error (current_class, l_formal, an_agent, l_iteration_component)
 					end
-					if attached current_separate_argument_scope.hidden_separate_argument (l_name) as l_separate_argument then
-							-- This formal argument has the same name as the argument of a
-							-- separate instruction in an enclosing feature or inline agent
+					if attached current_inline_separate_argument_scope.hidden_inline_separate_argument (l_name) as l_inline_separate_argument then
+							-- This formal argument has the same name as the argument of an
+							-- inline separate instruction in an enclosing feature or inline agent
 							-- whose scope contains the inline agent `an_agent'.
 						set_fatal_error
-						error_handler.report_vpir1i_error (current_class, l_formal, an_agent, l_separate_argument)
+						error_handler.report_vpir1i_error (current_class, l_formal, an_agent, l_inline_separate_argument)
 					end
 					l_type := l_formal.type
 					had_error := had_error or has_fatal_error
@@ -2172,12 +2172,12 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 						set_fatal_error
 						error_handler.report_vpir1h_error (current_class, l_local, an_agent, l_iteration_component)
 					end
-					if attached current_separate_argument_scope.hidden_separate_argument (l_name) as l_separate_argument then
-							-- This local variable has the same name as the argument of a
-							-- separate instruction in an enclosing feature or inline agent
+					if attached current_inline_separate_argument_scope.hidden_inline_separate_argument (l_name) as l_inline_separate_argument then
+							-- This local variable has the same name as the argument of an
+							-- inline separate instruction in an enclosing feature or inline agent
 							-- whose scope contains the inline agent `an_agent'.
 						set_fatal_error
-						error_handler.report_vpir1j_error (current_class, l_local, an_agent, l_separate_argument)
+						error_handler.report_vpir1j_error (current_class, l_local, an_agent, l_inline_separate_argument)
 					end
 					l_type := l_local.type
 					had_error := had_error or has_fatal_error
@@ -3786,6 +3786,46 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
+	check_inline_separate_instruction_validity (a_instruction: ET_INLINE_SEPARATE_INSTRUCTION)
+			-- Check validity of `a_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_instruction_not_void: a_instruction /= Void
+		local
+			had_error: BOOLEAN
+			i, nb: INTEGER
+			l_arguments: ET_INLINE_SEPARATE_ARGUMENTS
+			l_argument: ET_INLINE_SEPARATE_ARGUMENT
+		do
+			has_fatal_error := False
+			l_arguments := a_instruction.arguments
+			nb := l_arguments.count
+			check_inline_separate_arguments_validity (l_arguments)
+			had_error := has_fatal_error
+			if attached a_instruction.compound as l_compound then
+				from i := 1 until i > nb loop
+					l_argument := l_arguments.argument (i)
+					current_inline_separate_argument_scope.add_inline_separate_argument (l_argument)
+					i := i + 1
+				end
+				check_instructions_validity (l_compound)
+				had_error := had_error or has_fatal_error
+				current_inline_separate_argument_scope.remove_inline_separate_arguments (nb)
+			end
+			from i := 1 until i > nb loop
+				l_argument := l_arguments.argument (i)
+				current_inline_separate_argument_types.search (l_argument)
+				if current_inline_separate_argument_types.found then
+					free_context (current_inline_separate_argument_types.found_item)
+					current_inline_separate_argument_types.remove_found_item
+				end
+				i := i + 1
+			end
+			if had_error then
+				set_fatal_error
+			end
+		end
+
 	check_inspect_instruction_validity (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -4839,46 +4879,6 @@ feature {NONE} -- Instruction validity
 			end
 		end
 
-	check_separate_instruction_validity (a_instruction: ET_SEPARATE_INSTRUCTION)
-			-- Check validity of `a_instruction'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_instruction_not_void: a_instruction /= Void
-		local
-			had_error: BOOLEAN
-			i, nb: INTEGER
-			l_arguments: ET_SEPARATE_ARGUMENTS
-			l_argument: ET_SEPARATE_ARGUMENT
-		do
-			has_fatal_error := False
-			l_arguments := a_instruction.arguments
-			nb := l_arguments.count
-			check_separate_arguments_validity (l_arguments)
-			had_error := has_fatal_error
-			if attached a_instruction.compound as l_compound then
-				from i := 1 until i > nb loop
-					l_argument := l_arguments.argument (i)
-					current_separate_argument_scope.add_separate_argument (l_argument)
-					i := i + 1
-				end
-				check_instructions_validity (l_compound)
-				had_error := had_error or has_fatal_error
-				current_separate_argument_scope.remove_separate_arguments (nb)
-			end
-			from i := 1 until i > nb loop
-				l_argument := l_arguments.argument (i)
-				current_separate_argument_types.search (l_argument)
-				if current_separate_argument_types.found then
-					free_context (current_separate_argument_types.found_item)
-					current_separate_argument_types.remove_found_item
-				end
-				i := i + 1
-			end
-			if had_error then
-				set_fatal_error
-			end
-		end
-
 	check_static_call_instruction_validity (an_instruction: ET_STATIC_CALL_INSTRUCTION)
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -5130,8 +5130,8 @@ feature {NONE} -- Instruction validity
 				elseif l_identifier.is_iteration_item then
 					check_unqualified_iteration_item_call_instruction_validity (a_call, l_identifier)
 					l_checked := True
-				elseif l_identifier.is_separate_argument then
-					check_unqualified_separate_argument_call_instruction_validity (a_call, l_identifier)
+				elseif l_identifier.is_inline_separate_argument then
+					check_unqualified_inline_separate_argument_call_instruction_validity (a_call, l_identifier)
 					l_checked := True
 				elseif l_identifier.is_object_test_local then
 					check_unqualified_object_test_local_call_instruction_validity (a_call, l_identifier)
@@ -5246,6 +5246,68 @@ feature {NONE} -- Instruction validity
 						error_handler.report_gvuia0a_error (current_class, a_name, current_feature_impl.as_feature)
 					else
 							-- Internal error: invariants don't have formal arguments.
+						error_handler.report_giaaa_error
+					end
+					check_orphan_actual_arguments_validity (a_call)
+				end
+			end
+		end
+
+	check_unqualified_inline_separate_argument_call_instruction_validity (a_call: ET_UNQUALIFIED_FEATURE_CALL_INSTRUCTION; a_name: ET_IDENTIFIER)
+			-- Check validity of unqualified call `a_call' whose
+			-- name `a_name' appears to be the name of an argument
+			-- of an inline separate instruction.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_call_not_void: a_call /= Void
+			a_name_not_void: a_name /= Void
+			is_inline_separate_argument: a_name.is_inline_separate_argument
+		local
+			l_context: ET_NESTED_TYPE_CONTEXT
+		do
+			has_fatal_error := False
+			if current_class_impl /= current_class then
+				set_fatal_error
+				if not has_implementation_error (current_feature_impl) then
+						-- Internal error: `a_name' should have been resolved in
+						-- the implementation feature.
+					error_handler.report_giaaa_error
+				end
+				check_orphan_actual_arguments_validity (a_call)
+			else
+				l_context := new_context (current_type)
+				check_inline_separate_argument_parenthesis_call_validity (a_call, a_name, l_context)
+				free_context (l_context)
+				if has_fatal_error then
+					-- Do nothing.
+				elseif a_call.parenthesis_call /= Void then
+					-- The validity checking has already been done with the
+					-- unfolded form of the parenthesis call.
+				else
+					if a_call.arguments /= Void then
+							-- Syntax error: an inline separate argument cannot have arguments.
+						set_fatal_error
+						if attached current_inline_agent as l_current_inline_agent then
+							error_handler.report_gvuas0b_error (current_class, a_name, l_current_inline_agent)
+						elseif current_feature_impl.is_feature then
+							error_handler.report_gvuas0a_error (current_class, a_name, current_feature_impl.as_feature)
+						elseif current_feature_impl.is_invariants then
+							error_handler.report_gvuas0c_error (current_class, a_name, current_feature_impl.as_invariants)
+						else
+							error_handler.report_giaaa_error
+						end
+					end
+						-- Syntax error: an inline separate argument cannot be an instruction.
+					set_fatal_error
+						-- Note: ISE 5.4 reports a VKCN-1 here. However
+						-- `a_name' is not a function nor an attribute name.
+					if attached current_inline_agent as l_current_inline_agent then
+						error_handler.report_gvuis0b_error (current_class, a_name, l_current_inline_agent)
+					elseif current_feature_impl.is_feature then
+						error_handler.report_gvuis0a_error (current_class, a_name, current_feature_impl.as_feature)
+					elseif current_feature_impl.is_invariants then
+						error_handler.report_gvuis0c_error (current_class, a_name, current_feature_impl.as_invariants)
+					else
 						error_handler.report_giaaa_error
 					end
 					check_orphan_actual_arguments_validity (a_call)
@@ -5465,68 +5527,6 @@ feature {NONE} -- Instruction validity
 			reset_fatal_error (l_had_error or has_fatal_error)
 			if not has_fatal_error then
 				report_unqualified_call_instruction (a_call, a_procedure)
-			end
-		end
-
-	check_unqualified_separate_argument_call_instruction_validity (a_call: ET_UNQUALIFIED_FEATURE_CALL_INSTRUCTION; a_name: ET_IDENTIFIER)
-			-- Check validity of unqualified call `a_call' whose
-			-- name `a_name' appears to be the name of an argument
-			-- of a separate instruction.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_call_not_void: a_call /= Void
-			a_name_not_void: a_name /= Void
-			is_separate_argument: a_name.is_separate_argument
-		local
-			l_context: ET_NESTED_TYPE_CONTEXT
-		do
-			has_fatal_error := False
-			if current_class_impl /= current_class then
-				set_fatal_error
-				if not has_implementation_error (current_feature_impl) then
-						-- Internal error: `a_name' should have been resolved in
-						-- the implementation feature.
-					error_handler.report_giaaa_error
-				end
-				check_orphan_actual_arguments_validity (a_call)
-			else
-				l_context := new_context (current_type)
-				check_separate_argument_parenthesis_call_validity (a_call, a_name, l_context)
-				free_context (l_context)
-				if has_fatal_error then
-					-- Do nothing.
-				elseif a_call.parenthesis_call /= Void then
-					-- The validity checking has already been done with the
-					-- unfolded form of the parenthesis call.
-				else
-					if a_call.arguments /= Void then
-							-- Syntax error: a separate argument cannot have arguments.
-						set_fatal_error
-						if attached current_inline_agent as l_current_inline_agent then
-							error_handler.report_gvuas0b_error (current_class, a_name, l_current_inline_agent)
-						elseif current_feature_impl.is_feature then
-							error_handler.report_gvuas0a_error (current_class, a_name, current_feature_impl.as_feature)
-						elseif current_feature_impl.is_invariants then
-							error_handler.report_gvuas0c_error (current_class, a_name, current_feature_impl.as_invariants)
-						else
-							error_handler.report_giaaa_error
-						end
-					end
-						-- Syntax error: a separate argument cannot be an instruction.
-					set_fatal_error
-						-- Note: ISE 5.4 reports a VKCN-1 here. However
-						-- `a_name' is not a function nor an attribute name.
-					if attached current_inline_agent as l_current_inline_agent then
-						error_handler.report_gvuis0b_error (current_class, a_name, l_current_inline_agent)
-					elseif current_feature_impl.is_feature then
-						error_handler.report_gvuis0a_error (current_class, a_name, current_feature_impl.as_feature)
-					elseif current_feature_impl.is_invariants then
-						error_handler.report_gvuis0c_error (current_class, a_name, current_feature_impl.as_invariants)
-					else
-						error_handler.report_giaaa_error
-					end
-					check_orphan_actual_arguments_validity (a_call)
-				end
 			end
 		end
 
@@ -6528,7 +6528,7 @@ feature {NONE} -- Expression validity
 								already_checked := True
 							end
 						end
-					elseif l_name.is_separate_argument then
+					elseif l_name.is_inline_separate_argument then
 							-- We need to resolve `a_name' in the implementation
 							-- class of `current_feature_impl' first.
 						if current_class_impl /= current_class then
@@ -6539,9 +6539,9 @@ feature {NONE} -- Expression validity
 								error_handler.report_giaaa_error
 							end
 						else
-							l_identifier := l_name.separate_argument_name
-							if not attached current_separate_argument_scope.separate_argument (l_identifier) as l_separate_argument then
-									-- Error: `l_identifier' is a separate argument that is used outside of its scope.
+							l_identifier := l_name.inline_separate_argument_name
+							if not attached current_inline_separate_argument_scope.inline_separate_argument (l_identifier) as l_inline_separate_argument then
+									-- Error: `l_identifier' is an inline separate argument that is used outside of its scope.
 								set_fatal_error
 								if current_feature_impl.is_feature then
 									error_handler.report_veen10a_error (current_class, l_identifier, current_feature_impl.as_feature)
@@ -6549,32 +6549,32 @@ feature {NONE} -- Expression validity
 									error_handler.report_veen10b_error (current_class, l_identifier)
 								end
 							else
-								report_separate_argument (l_identifier, l_separate_argument)
-								l_seed := l_separate_argument.name.seed
+								report_inline_separate_argument (l_identifier, l_inline_separate_argument)
+								l_seed := l_inline_separate_argument.name.seed
 								l_identifier.set_seed (l_seed)
 								l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 								l_typed_pointer_class := l_typed_pointer_type.named_base_class
 								if l_typed_pointer_class.actual_class.is_preparsed then
 										-- Class TYPED_POINTER has been found in the universe.
-										-- Use ISE's implementation: the type of '$separate_argument'
-										-- is 'TYPED_POINTER [<type-of-separate-argument>]'.
-									current_separate_argument_types.search (l_separate_argument)
-									if not current_separate_argument_types.found then
-											-- The type of the separate argument should have been determined
-											-- when processing the arguments of the separate instruction.
+										-- Use ISE's implementation: the type of '$inline_separate_argument'
+										-- is 'TYPED_POINTER [<type-of-inline-separate-argument>]'.
+									current_inline_separate_argument_types.search (l_inline_separate_argument)
+									if not current_inline_separate_argument_types.found then
+											-- The type of the inline separate argument should have been determined
+											-- when processing the arguments of the inline separate instruction.
 											-- And this should have already been done since we are in the
-											-- scope of that separate argument (i.e the body of the separate
-											-- instruction). Here we don't have this type, which means that
+											-- scope of that inline separate argument (i.e the body of the inline
+											-- separate instruction). Here we don't have this type, which means that
 											-- an error had occurred (and had been reported) when processing
-											-- the argument expressions of the separate instruction.
+											-- the argument expressions of the inline separate instruction.
 										set_fatal_error
 									else
-										a_context.copy_type_context (current_separate_argument_types.found_item)
+										a_context.copy_type_context (current_inline_separate_argument_types.found_item)
 										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 										a_context.force_last (l_typed_pointer_type)
 									end
 								else
-										-- Use the ETL2 implementation: the type of '$separate_argument' is POINTER.
+										-- Use the ETL2 implementation: the type of '$inline_separate_argument' is POINTER.
 									l_pointer_type := current_universe_impl.pointer_type
 									a_context.force_last (l_pointer_type)
 									report_pointer_expression (an_expression, l_pointer_type)
@@ -7022,6 +7022,8 @@ feature {NONE} -- Expression validity
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_result_context_list: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
 			l_old_result_context_list_count: INTEGER
+			l_is_controlled: BOOLEAN
+			l_is_separate: BOOLEAN
 		do
 			has_fatal_error := False
 			boolean_type := current_universe_impl.boolean_type
@@ -7061,6 +7063,18 @@ feature {NONE} -- Expression validity
 				had_error := True
 				free_context (l_expression_context)
 			else
+				if current_system.scoop_mode then
+					l_is_controlled := True
+					if l_expression_context.is_type_separate then
+						l_is_separate := True
+						if not l_expression_context.is_controlled then
+							l_is_controlled := False
+						else
+								-- Remove 'controlled' type modifier.
+							l_expression_context.remove_last
+						end
+					end
+				end
 				update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 			end
 			current_object_test_scope.keep_object_tests (l_old_object_test_scope)
@@ -7098,6 +7112,17 @@ feature {NONE} -- Expression validity
 						had_error := True
 						free_context (l_expression_context)
 					else
+						if current_system.scoop_mode then
+							if l_expression_context.is_type_separate then
+								l_is_separate := True
+								if not l_expression_context.is_controlled then
+									l_is_controlled := False
+								else
+										-- Remove 'controlled' type modifier.
+									l_expression_context.remove_last
+								end
+							end
+						end
 						update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 					end
 					current_object_test_scope.keep_object_tests (l_old_elseif_object_test_scope)
@@ -7115,6 +7140,17 @@ feature {NONE} -- Expression validity
 				had_error := True
 				free_context (l_expression_context)
 			else
+				if current_system.scoop_mode then
+					if l_expression_context.is_type_separate then
+						l_is_separate := True
+						if not l_expression_context.is_controlled then
+							l_is_controlled := False
+						else
+								-- Remove 'controlled' type modifier.
+							l_expression_context.remove_last
+						end
+					end
+				end
 				update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 			end
 			current_object_test_scope.keep_object_tests (l_old_object_test_scope)
@@ -7136,6 +7172,11 @@ feature {NONE} -- Expression validity
 					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 				end
 				a_context.copy_type_context (l_result_context_list.last)
+				if current_system.scoop_mode then
+					if l_is_separate and l_is_controlled then
+						a_context.force_last (tokens.controlled_type_modifier)
+					end
+				end
 				report_if_expression (a_expression, tokens.identity_type, a_context)
 			end
 			free_common_ancestor_types (l_result_context_list, l_old_result_context_list_count)
@@ -7178,6 +7219,222 @@ feature {NONE} -- Expression validity
 			check_qualified_call_expression_validity (an_expression, a_context, l_call_info)
 			free_call_info (l_call_info)
 			free_context (l_target_context)
+		end
+
+	check_inline_separate_argument_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- Check validity of inline separate argument `a_name'.
+			-- `a_context' represents the type in which `a_name' appears.
+			-- It will be altered on exit to represent the type of `a_name'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_inline_separate_argument: a_name.is_inline_separate_argument
+			a_context_not_void: a_context /= Void
+		local
+			l_seed: INTEGER
+			l_inline_separate_argument: detachable ET_INLINE_SEPARATE_ARGUMENT
+		do
+			has_fatal_error := False
+			l_seed := a_name.seed
+			if l_seed = 0 then
+					-- We need to resolve `a_name' in the implementation
+					-- class of `current_feature_impl' first.
+				if current_class_impl /= current_class then
+					set_fatal_error
+					if not has_implementation_error (current_feature_impl) then
+							-- Internal error: `a_name' should have been resolved in
+							-- the implementation feature.
+						error_handler.report_giaaa_error
+					end
+				else
+					l_inline_separate_argument := current_inline_separate_argument_scope.inline_separate_argument (a_name)
+					if l_inline_separate_argument = Void then
+							-- Error: `a_name' is the name of an inline separate argument that is used outside of its scope.
+						set_fatal_error
+						if current_feature_impl.is_feature then
+							error_handler.report_veen10a_error (current_class, a_name, current_feature_impl.as_feature)
+						else
+							error_handler.report_veen10b_error (current_class, a_name)
+						end
+					else
+						l_seed := l_inline_separate_argument.name.seed
+						a_name.set_seed (l_seed)
+						current_inline_separate_argument_types.search (l_inline_separate_argument)
+						if not current_inline_separate_argument_types.found then
+								-- The type of the inline separate argument should have been determined
+								-- when processing the arguments of the inline separate instruction.
+								-- And this should have already been done since we are in the
+								-- scope of that inline separate argument (i.e the body of the inline
+								-- separate instruction). Here we don't have this type, which means that
+								-- an error had occurred (and had been reported) when processing
+								-- the argument expressions of the inline separate instruction.
+							set_fatal_error
+						else
+							a_context.copy_type_context (current_inline_separate_argument_types.found_item)
+							if current_system.scoop_mode then
+								if a_context.is_type_separate then
+									a_context.force_last (tokens.controlled_type_modifier)
+								end
+							end
+							report_inline_separate_argument (a_name, l_inline_separate_argument)
+						end
+					end
+				end
+			else
+				if not attached current_closure_impl.inline_separate_arguments as l_inline_separate_arguments then
+						-- Internal error.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif l_seed < 1 or l_seed > l_inline_separate_arguments.count then
+						-- Internal error.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_inline_separate_argument := l_inline_separate_arguments.argument (l_seed)
+					current_inline_separate_argument_types.search (l_inline_separate_argument)
+					if not current_inline_separate_argument_types.found then
+							-- Internal error: the type of the inline separate argument should
+							-- have been determined when processing the arguments of the
+							-- inline separate instruction. And this should have already been
+							-- done since we are in the scope of that inline separate argument
+							-- (i.e the body of the inline separate instruction).
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						a_context.copy_type_context (current_inline_separate_argument_types.found_item)
+						if current_system.scoop_mode then
+							if a_context.is_type_separate then
+								a_context.force_last (tokens.controlled_type_modifier)
+							end
+						end
+						report_inline_separate_argument (a_name, l_inline_separate_argument)
+					end
+				end
+			end
+		end
+
+	check_inline_separate_arguments_validity (a_arguments: ET_INLINE_SEPARATE_ARGUMENTS)
+			-- Check validity of `a_arguments'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_arguments_not_void: a_arguments /= Void
+		local
+			had_error: BOOLEAN
+			i, j, nb: INTEGER
+			l_argument: ET_INLINE_SEPARATE_ARGUMENT
+			l_other_argument: ET_INLINE_SEPARATE_ARGUMENT
+			l_expression_context: ET_NESTED_TYPE_CONTEXT
+			l_name: ET_IDENTIFIER
+			l_enclosing_agent: ET_INLINE_AGENT
+		do
+			has_fatal_error := False
+			nb := a_arguments.count
+			from i := 1 until i > nb loop
+				l_argument := a_arguments.argument (i)
+				l_expression_context := new_context (current_type)
+				check_expression_validity (l_argument.expression, l_expression_context, current_system.detachable_separate_any_type)
+				if not has_fatal_error then
+						-- Check inline separate argument type (see V1SE-G3).
+					if not l_expression_context.is_type_separate then
+							-- The type of the inline separate argument needs to be separate.
+						set_fatal_error
+						error_handler.report_v1se3ga_error (current_class, current_class_impl, l_argument, l_expression_context.named_type)
+					end
+				end
+					-- Check inline separate argument name clashes (see V1SE-G1 and V1SE-G2).
+				if current_class = current_class_impl then
+					l_name := l_argument.name
+					from j := 1 until j >= i loop
+						l_other_argument := a_arguments.argument (j)
+						if l_other_argument.name.same_identifier (l_name) then
+								-- Two inline separate arguments with the same name.
+							set_fatal_error
+							error_handler.report_v1se1ga_error (current_class, l_other_argument, l_argument)
+						end
+						j := j + 1
+					end
+					if attached current_class.named_feature (l_name) as l_feature then
+							-- This inline separate argument has the same name as the
+							-- final name of a feature in `current_class'.
+						set_fatal_error
+						error_handler.report_v1se2ga_error (current_class, l_argument, l_feature)
+					end
+					if attached current_inline_agent as l_current_inline_agent then
+						enclosing_inline_agents.force_last (l_current_inline_agent)
+						nb := enclosing_inline_agents.count
+						from i := 1 until i > nb loop
+							l_enclosing_agent := enclosing_inline_agents.item (i)
+							if attached l_enclosing_agent.formal_arguments as args then
+								j := args.index_of (l_name)
+								if j /= 0 then
+										-- This inline separate argument has the same name as a formal
+										-- argument of an enclosing inline agent.
+									set_fatal_error
+									error_handler.report_v1se2gb_error (current_class, l_argument, args.formal_argument (j))
+								end
+							end
+							if attached l_enclosing_agent.locals as l_locals then
+								j := l_locals.index_of (l_name)
+								if j /= 0 then
+										-- This inline separate argument has the same name as a
+										-- local variable of an enclosing inline agent.
+									set_fatal_error
+									error_handler.report_v1se2gc_error (current_class, l_argument, l_locals.local_variable (j))
+								end
+							end
+							i := i + 1
+						end
+						enclosing_inline_agents.remove_last
+					end
+					if attached current_feature.arguments as args then
+						j := args.index_of (l_name)
+						if j /= 0 then
+								-- This inline separate argument has the same name as a formal
+								-- argument of the enclosing feature.
+							set_fatal_error
+							error_handler.report_v1se2gb_error (current_class, l_argument, args.formal_argument (j))
+						end
+					end
+					if attached current_feature.locals as l_locals then
+						j := l_locals.index_of (l_name)
+						if j /= 0 then
+								-- This inline separate argument has the same name as a
+								-- local variable of the enclosing feature.
+							set_fatal_error
+							error_handler.report_v1se2gc_error (current_class, l_argument, l_locals.local_variable (j))
+						end
+					end
+					if attached current_object_test_scope.object_test (l_name) as l_object_test then
+							-- This inline separate argument appears in the scope of a
+							-- object-test local with the same name.
+						set_fatal_error
+						error_handler.report_v1se2gd_error (current_class, l_argument, l_object_test)
+					end
+					if attached current_iteration_item_scope.iteration_component (l_name) as l_iteration_component then
+							-- This inline separate argument appears in the scope of an iteration
+							-- item with the same name.
+						set_fatal_error
+						error_handler.report_v1se2ge_error (current_class, l_argument, l_iteration_component)
+					end
+					if attached current_inline_separate_argument_scope.inline_separate_argument (l_name) as l_other_inline_separate_argument then
+							-- This inline separate argument appears in the scope of
+							-- another inline separate argument with the same name.
+						set_fatal_error
+						error_handler.report_v1se2gf_error (current_class, l_argument, l_other_inline_separate_argument)
+					end
+				end
+				if not has_fatal_error then
+					current_inline_separate_argument_types.force_last (l_expression_context, l_argument)
+					report_inline_separate_argument_declaration (l_argument, l_expression_context)
+				else
+					free_context (l_expression_context)
+					had_error := True
+				end
+				i := i + 1
+			end
+			if had_error then
+				set_fatal_error
+			end
 		end
 
 	check_integer_constant_validity (a_constant: ET_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -7394,6 +7651,8 @@ feature {NONE} -- Expression validity
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_result_context_list: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
 			l_old_result_context_list_count: INTEGER
+			l_is_controlled: BOOLEAN
+			l_is_separate: BOOLEAN
 		do
 			has_fatal_error := False
 			l_detachable_separate_any_type := current_system.detachable_separate_any_type
@@ -7596,6 +7855,7 @@ feature {NONE} -- Expression validity
 				end
 				free_context (l_choice_context)
 				free_context (l_value_context)
+				l_is_controlled := True
 				from i := 1 until i > nb loop
 					l_when_part := l_when_parts.item (i)
 					l_expression_context := new_context (current_type)
@@ -7604,6 +7864,17 @@ feature {NONE} -- Expression validity
 						had_error := True
 						free_context (l_expression_context)
 					else
+						if current_system.scoop_mode then
+							if l_expression_context.is_type_separate then
+								l_is_separate := True
+								if not l_expression_context.is_controlled then
+									l_is_controlled := False
+								else
+										-- Remove 'controlled' type modifier.
+									l_expression_context.remove_last
+								end
+							end
+						end
 						update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 					end
 					i := i + 1
@@ -7618,6 +7889,17 @@ feature {NONE} -- Expression validity
 					had_error := True
 					free_context (l_expression_context)
 				else
+					if current_system.scoop_mode then
+						if l_expression_context.is_type_separate then
+							l_is_separate := True
+							if not l_expression_context.is_controlled then
+								l_is_controlled := False
+							else
+									-- Remove 'controlled' type modifier.
+								l_expression_context.remove_last
+							end
+						end
+					end
 					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 				end
 			end
@@ -7638,6 +7920,11 @@ feature {NONE} -- Expression validity
 					update_common_ancestor_type_list (l_expression_context, l_result_context_list, l_old_result_context_list_count)
 				end
 				a_context.copy_type_context (l_result_context_list.last)
+				if current_system.scoop_mode then
+					if l_is_separate and l_is_controlled then
+						a_context.force_last (tokens.controlled_type_modifier)
+					end
+				end
 				report_inspect_expression (a_expression, tokens.identity_type, a_context)
 			end
 			free_common_ancestor_types (l_result_context_list, l_old_result_context_list_count)
@@ -8445,6 +8732,12 @@ feature {NONE} -- Expression validity
 								end
 							end
 						end
+						if current_system.scoop_mode then
+							if l_item_context.is_type_separate and l_item_context.is_controlled then
+									-- Remove 'controlled' type modifier.
+								l_item_context.remove_last
+							end
+						end
 						update_common_ancestor_type_list (l_item_context, l_result_context_list, l_old_result_context_list_count)
 					end
 					i := i + 1
@@ -8686,6 +8979,12 @@ feature {NONE} -- Expression validity
 					check_expression_validity (an_expression.expression (1), a_context, l_detachable_separate_any_type)
 				end
 				if not has_fatal_error then
+					if current_system.scoop_mode then
+						if a_context.is_type_separate and a_context.is_controlled then
+								-- Remove 'controlled' type modifier.
+							a_context.remove_last
+						end
+					end
 					l_tuple_type := current_universe_impl.tuple_identity_type
 					report_manifest_tuple (an_expression, l_tuple_type, a_context)
 					a_context.force_last (l_tuple_type)
@@ -8884,11 +9183,11 @@ feature {NONE} -- Expression validity
 					set_fatal_error
 					error_handler.report_vuot1e_error (current_class, an_expression, l_iteration_component)
 				end
-				if attached current_separate_argument_scope.separate_argument (l_name) as l_separate_argument then
-						-- This object-test appears in the scope of a separate
+				if attached current_inline_separate_argument_scope.inline_separate_argument (l_name) as l_inline_separate_argument then
+						-- This object-test appears in the scope of an inline separate
 						-- argument with the same name.
 					set_fatal_error
-					error_handler.report_vuot1f_error (current_class, an_expression, l_separate_argument)
+					error_handler.report_vuot1f_error (current_class, an_expression, l_inline_separate_argument)
 				end
 				if system_processor.older_ise_version (ise_6_3_7_5660) then
 						-- ISE did not support object-tests in preconditions before 6.3.7.5660.
@@ -10240,222 +10539,6 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_separate_argument_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
-			-- Check validity of separate argument `a_name'.
-			-- `a_context' represents the type in which `a_name' appears.
-			-- It will be altered on exit to represent the type of `a_name'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_separate_argument: a_name.is_separate_argument
-			a_context_not_void: a_context /= Void
-		local
-			l_seed: INTEGER
-			l_separate_argument: detachable ET_SEPARATE_ARGUMENT
-		do
-			has_fatal_error := False
-			l_seed := a_name.seed
-			if l_seed = 0 then
-					-- We need to resolve `a_name' in the implementation
-					-- class of `current_feature_impl' first.
-				if current_class_impl /= current_class then
-					set_fatal_error
-					if not has_implementation_error (current_feature_impl) then
-							-- Internal error: `a_name' should have been resolved in
-							-- the implementation feature.
-						error_handler.report_giaaa_error
-					end
-				else
-					l_separate_argument := current_separate_argument_scope.separate_argument (a_name)
-					if l_separate_argument = Void then
-							-- Error: `a_name' is the name of a separate argument that is used outside of its scope.
-						set_fatal_error
-						if current_feature_impl.is_feature then
-							error_handler.report_veen10a_error (current_class, a_name, current_feature_impl.as_feature)
-						else
-							error_handler.report_veen10b_error (current_class, a_name)
-						end
-					else
-						l_seed := l_separate_argument.name.seed
-						a_name.set_seed (l_seed)
-						current_separate_argument_types.search (l_separate_argument)
-						if not current_separate_argument_types.found then
-								-- The type of the separate argument should have been determined
-								-- when processing the arguments of the separate instruction.
-								-- And this should have already been done since we are in the
-								-- scope of that separate argument (i.e the body of the separate
-								-- instruction). Here we don't have this type, which means that
-								-- an error had occurred (and had been reported) when processing
-								-- the argument expressions of the separate instruction.
-							set_fatal_error
-						else
-							a_context.copy_type_context (current_separate_argument_types.found_item)
-							if current_system.scoop_mode then
-								if a_context.is_type_separate then
-									a_context.force_last (tokens.controlled_type_modifier)
-								end
-							end
-							report_separate_argument (a_name, l_separate_argument)
-						end
-					end
-				end
-			else
-				if not attached current_closure_impl.separate_arguments as l_separate_arguments then
-						-- Internal error.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_seed < 1 or l_seed > l_separate_arguments.count then
-						-- Internal error.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					l_separate_argument := l_separate_arguments.separate_argument (l_seed)
-					current_separate_argument_types.search (l_separate_argument)
-					if not current_separate_argument_types.found then
-							-- Internal error: the type of the separate argument should
-							-- have been determined when processing the arguments of the
-							-- separate instruction. And this should have already been
-							-- done since we are in the scope of that separate argument
-							-- (i.e the body of the separate instruction).
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						a_context.copy_type_context (current_separate_argument_types.found_item)
-						if current_system.scoop_mode then
-							if a_context.is_type_separate then
-								a_context.force_last (tokens.controlled_type_modifier)
-							end
-						end
-						report_separate_argument (a_name, l_separate_argument)
-					end
-				end
-			end
-		end
-
-	check_separate_arguments_validity (a_arguments: ET_SEPARATE_ARGUMENTS)
-			-- Check validity of `a_arguments'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_arguments_not_void: a_arguments /= Void
-		local
-			had_error: BOOLEAN
-			i, j, nb: INTEGER
-			l_argument: ET_SEPARATE_ARGUMENT
-			l_other_argument: ET_SEPARATE_ARGUMENT
-			l_expression_context: ET_NESTED_TYPE_CONTEXT
-			l_name: ET_IDENTIFIER
-			l_enclosing_agent: ET_INLINE_AGENT
-		do
-			has_fatal_error := False
-			nb := a_arguments.count
-			from i := 1 until i > nb loop
-				l_argument := a_arguments.argument (i)
-				l_expression_context := new_context (current_type)
-				check_expression_validity (l_argument.expression, l_expression_context, current_system.detachable_separate_any_type)
-				if not has_fatal_error then
-						-- Check separate argument type (see V1SE-G3).
-					if not l_expression_context.is_type_separate then
-							-- The type of the separate argument needs to be separate.
-						set_fatal_error
-						error_handler.report_v1se3ga_error (current_class, current_class_impl, l_argument, l_expression_context.named_type)
-					end
-				end
-					-- Check separate argument name clashes (see V1SE-G1 and V1SE-G2).
-				if current_class = current_class_impl then
-					l_name := l_argument.name
-					from j := 1 until j >= i loop
-						l_other_argument := a_arguments.argument (j)
-						if l_other_argument.name.same_identifier (l_name) then
-								-- Two separate arguments with the same name.
-							set_fatal_error
-							error_handler.report_v1se1ga_error (current_class, l_other_argument, l_argument)
-						end
-						j := j + 1
-					end
-					if attached current_class.named_feature (l_name) as l_feature then
-							-- This separate argument has the same name as the
-							-- final name of a feature in `current_class'.
-						set_fatal_error
-						error_handler.report_v1se2ga_error (current_class, l_argument, l_feature)
-					end
-					if attached current_inline_agent as l_current_inline_agent then
-						enclosing_inline_agents.force_last (l_current_inline_agent)
-						nb := enclosing_inline_agents.count
-						from i := 1 until i > nb loop
-							l_enclosing_agent := enclosing_inline_agents.item (i)
-							if attached l_enclosing_agent.formal_arguments as args then
-								j := args.index_of (l_name)
-								if j /= 0 then
-										-- This separate argument has the same name as a formal
-										-- argument of an enclosing inline agent.
-									set_fatal_error
-									error_handler.report_v1se2gb_error (current_class, l_argument, args.formal_argument (j))
-								end
-							end
-							if attached l_enclosing_agent.locals as l_locals then
-								j := l_locals.index_of (l_name)
-								if j /= 0 then
-										-- This separate argument has the same name as a
-										-- local variable of an enclosing inline agent.
-									set_fatal_error
-									error_handler.report_v1se2gc_error (current_class, l_argument, l_locals.local_variable (j))
-								end
-							end
-							i := i + 1
-						end
-						enclosing_inline_agents.remove_last
-					end
-					if attached current_feature.arguments as args then
-						j := args.index_of (l_name)
-						if j /= 0 then
-								-- This separate argument has the same name as a formal
-								-- argument of the enclosing feature.
-							set_fatal_error
-							error_handler.report_v1se2gb_error (current_class, l_argument, args.formal_argument (j))
-						end
-					end
-					if attached current_feature.locals as l_locals then
-						j := l_locals.index_of (l_name)
-						if j /= 0 then
-								-- This separate argument has the same name as a
-								-- local variable of the enclosing feature.
-							set_fatal_error
-							error_handler.report_v1se2gc_error (current_class, l_argument, l_locals.local_variable (j))
-						end
-					end
-					if attached current_object_test_scope.object_test (l_name) as l_object_test then
-							-- This separate argument appears in the scope of a
-							-- object-test local with the same name.
-						set_fatal_error
-						error_handler.report_v1se2gd_error (current_class, l_argument, l_object_test)
-					end
-					if attached current_iteration_item_scope.iteration_component (l_name) as l_iteration_component then
-							-- This separate argument appears in the scope of an iteration
-							-- item with the same name.
-						set_fatal_error
-						error_handler.report_v1se2ge_error (current_class, l_argument, l_iteration_component)
-					end
-					if attached current_separate_argument_scope.separate_argument (l_name) as l_other_separate_argument then
-							-- This separate argument appears in the scope of another separate
-							-- argument with the same name.
-						set_fatal_error
-						error_handler.report_v1se2gf_error (current_class, l_argument, l_other_separate_argument)
-					end
-				end
-				if not has_fatal_error then
-					current_separate_argument_types.force_last (l_expression_context, l_argument)
-					report_separate_argument_declaration (l_argument, l_expression_context)
-				else
-					free_context (l_expression_context)
-					had_error := True
-				end
-				i := i + 1
-			end
-			if had_error then
-				set_fatal_error
-			end
-		end
-
 	check_special_manifest_string_validity (a_string: ET_SPECIAL_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check validity of `a_string'.
 			-- `a_context' represents the type in which `a_string' appears.
@@ -10931,8 +11014,8 @@ feature {NONE} -- Expression validity
 				elseif l_identifier.is_iteration_item then
 					check_unqualified_iteration_item_call_expression_validity (a_call, l_identifier, a_context)
 					l_checked := True
-				elseif l_identifier.is_separate_argument then
-					check_unqualified_separate_argument_call_expression_validity (a_call, l_identifier, a_context)
+				elseif l_identifier.is_inline_separate_argument then
+					check_unqualified_inline_separate_argument_call_expression_validity (a_call, l_identifier, a_context)
 					l_checked := True
 				elseif l_identifier.is_object_test_local then
 					check_unqualified_object_test_local_call_expression_validity (a_call, l_identifier, a_context)
@@ -11031,6 +11114,52 @@ feature {NONE} -- Expression validity
 						error_handler.report_gvuaa0a_error (current_class, a_name, current_feature_impl.as_feature)
 					else
 							-- Internal error: invariants don't have arguments.
+						error_handler.report_giaaa_error
+					end
+					check_orphan_actual_arguments_validity (a_call)
+				end
+			end
+		end
+
+	check_unqualified_inline_separate_argument_call_expression_validity (a_call: ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION; a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- Check validity of unqualified call `a_call' whose name `a_name'
+			-- appears to be the name of an argument of an inline separate instruction.
+			-- `a_context' represents the type in which `a_call' appears.
+			-- It will be altered on exit to represent the type of `a_call'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_call_not_void: a_call /= Void
+			a_name_not_void: a_name /= Void
+			is_inline_separate_argument: a_name.is_inline_separate_argument
+			a_context_not_void: a_context /= Void
+		do
+			has_fatal_error := False
+			if a_call.arguments = Void then
+				check_inline_separate_argument_validity (a_name, a_context)
+			elseif current_class_impl /= current_class then
+				set_fatal_error
+				if not has_implementation_error (current_feature_impl) then
+						-- Internal error: `a_name' should have been resolved in
+						-- the implementation feature.
+					error_handler.report_giaaa_error
+				end
+				check_orphan_actual_arguments_validity (a_call)
+			else
+				check_inline_separate_argument_parenthesis_call_validity (a_call, a_name, a_context)
+				if has_fatal_error then
+					-- Do nothing.
+				elseif attached a_call.parenthesis_call as l_parenthesis_call then
+					a_call.set_index (l_parenthesis_call.index)
+				else
+						-- Syntax error: an inline separate argument cannot have arguments.
+					set_fatal_error
+					if attached current_inline_agent as l_current_inline_agent then
+						error_handler.report_gvuas0b_error (current_class, a_name, l_current_inline_agent)
+					elseif current_feature_impl.is_feature then
+						error_handler.report_gvuas0a_error (current_class, a_name, current_feature_impl.as_feature)
+					elseif current_feature_impl.is_invariants then
+						error_handler.report_gvuas0c_error (current_class, a_name, current_feature_impl.as_invariants)
+					else
 						error_handler.report_giaaa_error
 					end
 					check_orphan_actual_arguments_validity (a_call)
@@ -11219,52 +11348,6 @@ feature {NONE} -- Expression validity
 					end
 				end
 				reset_fatal_error (l_had_error or has_fatal_error)
-			end
-		end
-
-	check_unqualified_separate_argument_call_expression_validity (a_call: ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION; a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
-			-- Check validity of unqualified call `a_call' whose name `a_name'
-			-- appears to be the name of an argument of a separate instruction.
-			-- `a_context' represents the type in which `a_call' appears.
-			-- It will be altered on exit to represent the type of `a_call'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_call_not_void: a_call /= Void
-			a_name_not_void: a_name /= Void
-			is_separate_argument: a_name.is_separate_argument
-			a_context_not_void: a_context /= Void
-		do
-			has_fatal_error := False
-			if a_call.arguments = Void then
-				check_separate_argument_validity (a_name, a_context)
-			elseif current_class_impl /= current_class then
-				set_fatal_error
-				if not has_implementation_error (current_feature_impl) then
-						-- Internal error: `a_name' should have been resolved in
-						-- the implementation feature.
-					error_handler.report_giaaa_error
-				end
-				check_orphan_actual_arguments_validity (a_call)
-			else
-				check_separate_argument_parenthesis_call_validity (a_call, a_name, a_context)
-				if has_fatal_error then
-					-- Do nothing.
-				elseif attached a_call.parenthesis_call as l_parenthesis_call then
-					a_call.set_index (l_parenthesis_call.index)
-				else
-						-- Syntax error: a separate argument cannot have arguments.
-					set_fatal_error
-					if attached current_inline_agent as l_current_inline_agent then
-						error_handler.report_gvuas0b_error (current_class, a_name, l_current_inline_agent)
-					elseif current_feature_impl.is_feature then
-						error_handler.report_gvuas0a_error (current_class, a_name, current_feature_impl.as_feature)
-					elseif current_feature_impl.is_invariants then
-						error_handler.report_gvuas0c_error (current_class, a_name, current_feature_impl.as_invariants)
-					else
-						error_handler.report_giaaa_error
-					end
-					check_orphan_actual_arguments_validity (a_call)
-				end
 			end
 		end
 
@@ -12099,7 +12182,7 @@ feature {NONE} -- Parenthesis call validity
 
 	check_identifier_parenthesis_call_validity (a_call: ET_REGULAR_FEATURE_CALL; a_name: ET_IDENTIFIER; a_actuals: ET_ACTUAL_ARGUMENT_LIST; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- Check whether `a_call', whose name `a_name' might be a formal argument, a local
-			-- variable, an iteration item, the name of the argument of a separate instruction
+			-- variable, an iteration item, the name of the argument of an inline separate instruction
 			-- or an object-test local, is in fact a parenthesis call.
 			-- For example, if `a_name' is 'foo' and `a_call' is 'foo (args)', a parenthesis
 			-- call will be 'foo.g (args)' where 'g' is declared as 'g alias "()"'.
@@ -12167,6 +12250,44 @@ feature {NONE} -- Parenthesis call validity
 						error_handler.report_giaaa_error
 						check_orphan_actual_arguments_validity (a_call)
 					end
+				end
+			end
+		end
+
+	check_inline_separate_argument_parenthesis_call_validity (a_call: ET_FEATURE_CALL; a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
+			-- Check whether `a_call', whose name `a_name' appears to be the name of
+			-- the argument of an inline separate instruction, is in fact a parenthesis call.
+			-- For example, if `a_name' is 'foo' and `a_call' is 'foo (args)', a parenthesis
+			-- call will be 'foo.g (args)' where 'g' is declared as 'g alias "()"'.
+			-- If it's indeed a parenthesis call, check its validity and set
+			-- `a_call.parenthesis_call' to its unfolded form.
+			--
+			-- `a_context' represents the type in which `a_call' appears.
+			-- If `a_call' is a parenthesis call, it will be altered on exit
+			-- to represent the type of `a_call'. Otherwise, it will be
+			-- altered on exit to represent the type of the inline separate argument
+			-- name.
+			--
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_call_not_void: a_call /= Void
+			unqualified_call: not a_call.is_qualified_call
+			a_name_not_void: a_name /= Void
+			is_inline_separate_argument: a_name.is_inline_separate_argument
+			a_context_not_void: a_context /= Void
+			in_implementation_class: current_class_impl = current_class
+		do
+			has_fatal_error := False
+			if not attached {ET_REGULAR_FEATURE_CALL} a_call as l_regular_call then
+				-- Do nothing.
+			elseif not attached l_regular_call.arguments as l_actuals or else l_actuals.is_empty then
+				-- Do nothing.
+			else
+				check_inline_separate_argument_validity (a_name, a_context)
+				if has_fatal_error then
+					check_orphan_actual_arguments_validity (a_call)
+				else
+					check_identifier_parenthesis_call_validity (l_regular_call, a_name, l_actuals, a_context)
 				end
 			end
 		end
@@ -12443,44 +12564,6 @@ feature {NONE} -- Parenthesis call validity
 							check_orphan_actual_arguments_validity (a_call)
 						end
 					end
-				end
-			end
-		end
-
-	check_separate_argument_parenthesis_call_validity (a_call: ET_FEATURE_CALL; a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
-			-- Check whether `a_call', whose name `a_name' appears to be the name of
-			-- the argument of a separate instruction, is in fact a parenthesis call.
-			-- For example, if `a_name' is 'foo' and `a_call' is 'foo (args)', a parenthesis
-			-- call will be 'foo.g (args)' where 'g' is declared as 'g alias "()"'.
-			-- If it's indeed a parenthesis call, check its validity and set
-			-- `a_call.parenthesis_call' to its unfolded form.
-			--
-			-- `a_context' represents the type in which `a_call' appears.
-			-- If `a_call' is a parenthesis call, it will be altered on exit
-			-- to represent the type of `a_call'. Otherwise, it will be
-			-- altered on exit to represent the type of the separate argument
-			-- name.
-			--
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_call_not_void: a_call /= Void
-			unqualified_call: not a_call.is_qualified_call
-			a_name_not_void: a_name /= Void
-			is_separate_argument: a_name.is_separate_argument
-			a_context_not_void: a_context /= Void
-			in_implementation_class: current_class_impl = current_class
-		do
-			has_fatal_error := False
-			if not attached {ET_REGULAR_FEATURE_CALL} a_call as l_regular_call then
-				-- Do nothing.
-			elseif not attached l_regular_call.arguments as l_actuals or else l_actuals.is_empty then
-				-- Do nothing.
-			else
-				check_separate_argument_validity (a_name, a_context)
-				if has_fatal_error then
-					check_orphan_actual_arguments_validity (a_call)
-				else
-					check_identifier_parenthesis_call_validity (l_regular_call, a_name, l_actuals, a_context)
 				end
 			end
 		end
@@ -13660,7 +13743,7 @@ feature {NONE} -- Agent validity
 			l_compound: detachable ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
 			l_old_hidden_iteration_item_scope: INTEGER
-			l_old_hidden_separate_argument_scope: INTEGER
+			l_old_hidden_inline_separate_argument_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_error: BOOLEAN
@@ -13686,8 +13769,8 @@ feature {NONE} -- Agent validity
 			current_iteration_item_scope.hide_iteration_components (current_iteration_item_scope.count)
 				-- Make sure that we do not use separate arguments declared
 				-- in an enclosing feature or inline agent.
-			l_old_hidden_separate_argument_scope := current_separate_argument_scope.hidden_count
-			current_separate_argument_scope.hide_separate_arguments (current_separate_argument_scope.count)
+			l_old_hidden_inline_separate_argument_scope := current_inline_separate_argument_scope.hidden_count
+			current_inline_separate_argument_scope.hide_inline_separate_arguments (current_inline_separate_argument_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
@@ -13786,9 +13869,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope iteration items declared
 				-- in the enclosing feature or inline agent.
 			current_iteration_item_scope.hide_iteration_components (l_old_hidden_iteration_item_scope)
-				-- Restore the scope separate arguments declared
+				-- Restore the scope inline separate arguments declared
 				-- in the enclosing feature or inline agent.
-			current_separate_argument_scope.hide_separate_arguments (l_old_hidden_separate_argument_scope)
+			current_inline_separate_argument_scope.hide_inline_separate_arguments (l_old_hidden_inline_separate_argument_scope)
 			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -13817,7 +13900,7 @@ feature {NONE} -- Agent validity
 			l_compound: detachable ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
 			l_old_hidden_iteration_item_scope: INTEGER
-			l_old_hidden_separate_argument_scope: INTEGER
+			l_old_hidden_inline_separate_argument_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_error: BOOLEAN
@@ -13841,10 +13924,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_iteration_item_scope := current_iteration_item_scope.hidden_count
 			current_iteration_item_scope.hide_iteration_components (current_iteration_item_scope.count)
-				-- Make sure that we do not use separate arguments declared
+				-- Make sure that we do not use inline separate arguments declared
 				-- in an enclosing feature or inline agent.
-			l_old_hidden_separate_argument_scope := current_separate_argument_scope.hidden_count
-			current_separate_argument_scope.hide_separate_arguments (current_separate_argument_scope.count)
+			l_old_hidden_inline_separate_argument_scope := current_inline_separate_argument_scope.hidden_count
+			current_inline_separate_argument_scope.hide_inline_separate_arguments (current_inline_separate_argument_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
@@ -13918,9 +14001,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope iteration items declared
 				-- in the enclosing feature or inline agent.
 			current_iteration_item_scope.hide_iteration_components (l_old_hidden_iteration_item_scope)
-				-- Restore the scope separate arguments declared
+				-- Restore the scope inline separate arguments declared
 				-- in the enclosing feature or inline agent.
-			current_separate_argument_scope.hide_separate_arguments (l_old_hidden_separate_argument_scope)
+			current_inline_separate_argument_scope.hide_inline_separate_arguments (l_old_hidden_inline_separate_argument_scope)
 			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -13949,7 +14032,7 @@ feature {NONE} -- Agent validity
 			l_type: ET_TYPE
 			l_old_hidden_object_test_scope: INTEGER
 			l_old_hidden_iteration_item_scope: INTEGER
-			l_old_hidden_separate_argument_scope: INTEGER
+			l_old_hidden_inline_separate_argument_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_error: BOOLEAN
@@ -13968,10 +14051,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_iteration_item_scope := current_iteration_item_scope.hidden_count
 			current_iteration_item_scope.hide_iteration_components (current_iteration_item_scope.count)
-				-- Make sure that we do not use separate arguments declared
+				-- Make sure that we do not use inline separate arguments declared
 				-- in an enclosing feature or inline agent.
-			l_old_hidden_separate_argument_scope := current_separate_argument_scope.hidden_count
-			current_separate_argument_scope.hide_separate_arguments (current_separate_argument_scope.count)
+			l_old_hidden_inline_separate_argument_scope := current_inline_separate_argument_scope.hidden_count
+			current_inline_separate_argument_scope.hide_inline_separate_arguments (current_inline_separate_argument_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
@@ -14010,9 +14093,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope iteration items declared
 				-- in the enclosing feature or inline agent.
 			current_iteration_item_scope.hide_iteration_components (l_old_hidden_iteration_item_scope)
-				-- Restore the scope separate arguments declared
+				-- Restore the scope inline separate arguments declared
 				-- in the enclosing feature or inline agent.
-			current_separate_argument_scope.hide_separate_arguments (l_old_hidden_separate_argument_scope)
+			current_inline_separate_argument_scope.hide_inline_separate_arguments (l_old_hidden_inline_separate_argument_scope)
 			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -14045,7 +14128,7 @@ feature {NONE} -- Agent validity
 		local
 			l_old_hidden_object_test_scope: INTEGER
 			l_old_hidden_iteration_item_scope: INTEGER
-			l_old_hidden_separate_argument_scope: INTEGER
+			l_old_hidden_inline_separate_argument_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_error: BOOLEAN
@@ -14064,10 +14147,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_iteration_item_scope := current_iteration_item_scope.hidden_count
 			current_iteration_item_scope.hide_iteration_components (current_iteration_item_scope.count)
-				-- Make sure that we do not use separate arguments declared
+				-- Make sure that we do not use inline separate arguments declared
 				-- in an enclosing feature or inline agent.
-			l_old_hidden_separate_argument_scope := current_separate_argument_scope.hidden_count
-			current_separate_argument_scope.hide_separate_arguments (current_separate_argument_scope.count)
+			l_old_hidden_inline_separate_argument_scope := current_inline_separate_argument_scope.hidden_count
+			current_inline_separate_argument_scope.hide_inline_separate_arguments (current_inline_separate_argument_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
@@ -14099,9 +14182,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope iteration items declared
 				-- in the enclosing feature or inline agent.
 			current_iteration_item_scope.hide_iteration_components (l_old_hidden_iteration_item_scope)
-				-- Restore the scope separate arguments declared
+				-- Restore the scope inline separate arguments declared
 				-- in the enclosing feature or inline agent.
-			current_separate_argument_scope.hide_separate_arguments (l_old_hidden_separate_argument_scope)
+			current_inline_separate_argument_scope.hide_inline_separate_arguments (l_old_hidden_inline_separate_argument_scope)
 			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -14136,7 +14219,7 @@ feature {NONE} -- Agent validity
 			l_compound: detachable ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
 			l_old_hidden_iteration_item_scope: INTEGER
-			l_old_hidden_separate_argument_scope: INTEGER
+			l_old_hidden_inline_separate_argument_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_key_error: BOOLEAN
@@ -14161,10 +14244,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_iteration_item_scope := current_iteration_item_scope.hidden_count
 			current_iteration_item_scope.hide_iteration_components (current_iteration_item_scope.count)
-				-- Make sure that we do not use separate arguments declared
+				-- Make sure that we do not use inline separate arguments declared
 				-- in an enclosing feature or inline agent.
-			l_old_hidden_separate_argument_scope := current_separate_argument_scope.hidden_count
-			current_separate_argument_scope.hide_separate_arguments (current_separate_argument_scope.count)
+			l_old_hidden_inline_separate_argument_scope := current_inline_separate_argument_scope.hidden_count
+			current_inline_separate_argument_scope.hide_inline_separate_arguments (current_inline_separate_argument_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
@@ -14265,9 +14348,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope iteration items declared
 				-- in the enclosing feature or inline agent.
 			current_iteration_item_scope.hide_iteration_components (l_old_hidden_iteration_item_scope)
-				-- Restore the scope separate arguments declared
+				-- Restore the scope inline_ separate arguments declared
 				-- in the enclosing feature or inline agent.
-			current_separate_argument_scope.hide_separate_arguments (l_old_hidden_separate_argument_scope)
+			current_inline_separate_argument_scope.hide_inline_separate_arguments (l_old_hidden_inline_separate_argument_scope)
 			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -14301,7 +14384,7 @@ feature {NONE} -- Agent validity
 			l_compound: detachable ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
 			l_old_hidden_iteration_item_scope: INTEGER
-			l_old_hidden_separate_argument_scope: INTEGER
+			l_old_hidden_inline_separate_argument_scope: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
 			had_key_error: BOOLEAN
@@ -14326,10 +14409,10 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_iteration_item_scope := current_iteration_item_scope.hidden_count
 			current_iteration_item_scope.hide_iteration_components (current_iteration_item_scope.count)
-				-- Make sure that we do not use separate arguments declared
+				-- Make sure that we do not use inline separate arguments declared
 				-- in an enclosing feature or inline agent.
-			l_old_hidden_separate_argument_scope := current_separate_argument_scope.hidden_count
-			current_separate_argument_scope.hide_separate_arguments (current_separate_argument_scope.count)
+			l_old_hidden_inline_separate_argument_scope := current_inline_separate_argument_scope.hidden_count
+			current_inline_separate_argument_scope.hide_inline_separate_arguments (current_inline_separate_argument_scope.count)
 			l_old_initialization_scope := current_initialization_scope
 			l_old_attachment_scope := current_attachment_scope
 			if current_system.attachment_type_conformance_mode then
@@ -14405,9 +14488,9 @@ feature {NONE} -- Agent validity
 				-- Restore the scope iteration items declared
 				-- in the enclosing feature or inline agent.
 			current_iteration_item_scope.hide_iteration_components (l_old_hidden_iteration_item_scope)
-				-- Restore the scope separate arguments declared
+				-- Restore the scope inline separate arguments declared
 				-- in the enclosing feature or inline agent.
-			current_separate_argument_scope.hide_separate_arguments (l_old_hidden_separate_argument_scope)
+			current_inline_separate_argument_scope.hide_inline_separate_arguments (l_old_hidden_inline_separate_argument_scope)
 			if current_system.attachment_type_conformance_mode then
 				free_attachment_scope (current_initialization_scope)
 				current_initialization_scope := l_old_initialization_scope
@@ -15201,6 +15284,26 @@ feature {NONE} -- Event handling
 		do
 		end
 
+	report_inline_separate_argument (a_name: ET_IDENTIFIER; a_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT)
+			-- Report that a call to inline separate argument `a_name' has been processed.
+		require
+			no_error: not has_fatal_error
+			a_name_not_void: a_name /= Void
+			a_inline_separate_argument_not_void: a_inline_separate_argument /= Void
+		do
+		end
+
+	report_inline_separate_argument_declaration (a_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT; a_type: ET_TYPE_CONTEXT)
+			-- Report that the declaration of inline separate argument `a_inline_separate_argument'
+			-- of type `a_type' has been processed.
+		require
+			no_error: not has_fatal_error
+			a_inline_separate_argument_not_void: a_inline_separate_argument /= Void
+			a_type_not_void: a_type /= Void
+			a_type_valid: a_type.is_valid_context
+		do
+		end
+
 	report_integer_8_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a integer_8 of type `a_type' in the context
 			-- of `current_type' has been processed.
@@ -15608,26 +15711,6 @@ feature {NONE} -- Event handling
 		require
 			no_error: not has_fatal_error
 			a_type_not_void: a_type /= Void
-		do
-		end
-
-	report_separate_argument (a_name: ET_IDENTIFIER; a_separate_argument: ET_SEPARATE_ARGUMENT)
-			-- Report that a call to separate argument `a_name' has been processed.
-		require
-			no_error: not has_fatal_error
-			a_name_not_void: a_name /= Void
-			a_separate_argument_not_void: a_separate_argument /= Void
-		do
-		end
-
-	report_separate_argument_declaration (a_separate_argument: ET_SEPARATE_ARGUMENT; a_type: ET_TYPE_CONTEXT)
-			-- Report that the declaration of separate argument `a_separate_argument'
-			-- of type `a_type' has been processed.
-		require
-			no_error: not has_fatal_error
-			a_separate_argument_not_void: a_separate_argument /= Void
-			a_type_not_void: a_type /= Void
-			a_type_valid: a_type.is_valid_context
 		do
 		end
 
@@ -16248,8 +16331,8 @@ feature {ET_AST_NODE} -- Processing
 				check_object_test_local_validity (an_identifier, current_context)
 			elseif an_identifier.is_iteration_item then
 				check_iteration_item_validity (an_identifier, current_context)
-			elseif an_identifier.is_separate_argument then
-				check_separate_argument_validity (an_identifier, current_context)
+			elseif an_identifier.is_inline_separate_argument then
+				check_inline_separate_argument_validity (an_identifier, current_context)
 			else
 					-- Internal error: invalid kind of identifier.
 				set_fatal_error
@@ -16279,6 +16362,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			check_infix_expression_validity (an_expression, current_context)
+		end
+
+	process_inline_separate_instruction (a_instruction: ET_INLINE_SEPARATE_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			check_inline_separate_instruction_validity (a_instruction)
 		end
 
 	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
@@ -16509,12 +16598,6 @@ feature {ET_AST_NODE} -- Processing
 			has_fatal_error := False
 		end
 
-	process_separate_instruction (a_instruction: ET_SEPARATE_INSTRUCTION)
-			-- Process `a_instruction'.
-		do
-			check_separate_instruction_validity (a_instruction)
-		end
-
 	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)
 			-- Process `a_string'.
 		do
@@ -16719,13 +16802,13 @@ feature {NONE} -- Iteration components
 			-- Iteration components for which we are currently in the
 			-- scope of their iteration items
 
-feature {NONE} -- Separate arguments
+feature {NONE} -- Inline separate arguments
 
-	current_separate_argument_types: DS_HASH_TABLE [ET_NESTED_TYPE_CONTEXT, ET_SEPARATE_ARGUMENT]
-			-- Types of separate arguments (in separate instructios)
+	current_inline_separate_argument_types: DS_HASH_TABLE [ET_NESTED_TYPE_CONTEXT, ET_INLINE_SEPARATE_ARGUMENT]
+			-- Types of inline separate arguments (in inline separate instructions)
 
-	current_separate_argument_scope: ET_SEPARATE_ARGUMENT_SCOPE
-			-- Separate arguments for which we are currently in their scope
+	current_inline_separate_argument_scope: ET_INLINE_SEPARATE_ARGUMENT_SCOPE
+			-- Inline separate arguments for which we are currently in their scope
 
 feature {NONE} -- Attachments
 
@@ -17468,6 +17551,9 @@ feature {NONE} -- Common ancestor type
 			i, nb: INTEGER
 			l_add_type: BOOLEAN
 			l_other_type: ET_NESTED_TYPE_CONTEXT
+			l_type_modifier: ET_LIKE_CURRENT
+			j: INTEGER
+			l_done: BOOLEAN
 		do
 			l_add_type := True
 			from
@@ -17486,23 +17572,45 @@ feature {NONE} -- Common ancestor type
 					a_list.remove (i)
 					nb := nb - 1
 				else
-						-- Try with different attachment marks.
--- TODO: do the same thing with separateness marks.
-					l_other_type.force_last (tokens.detachable_like_current)
-					if a_type.conforms_to_context (l_other_type, system_processor) then
-						l_add_type := False
-							-- Jump out of the loop.
-						i := nb + 1
-					else
-						l_other_type.remove_last
-						a_type.force_last (tokens.detachable_like_current)
-						if l_other_type.conforms_to_context (a_type, system_processor) then
-							free_context (l_other_type)
-							a_list.remove (i)
-							nb := nb - 1
+						-- Try with different attachment and separateness marks.
+					from
+						j := 1
+						l_type_modifier := tokens.detachable_type_modifier
+						l_done := False
+					until
+						l_done or j > 3
+					loop
+						l_other_type.force_last (l_type_modifier)
+						if a_type.conforms_to_context (l_other_type, system_processor) then
+							l_add_type := False
+							l_done := True
+								-- Jump out of the loop.
+							i := nb + 1
 						else
-							a_type.remove_last
-							i := i + 1
+							l_other_type.remove_last
+							a_type.force_last (l_type_modifier)
+							if l_other_type.conforms_to_context (a_type, system_processor) then
+								free_context (l_other_type)
+								a_list.remove (i)
+								l_done := True
+								nb := nb - 1
+							else
+								a_type.remove_last
+								if current_system.scoop_mode then
+									j := j + 1
+									if j = 2 then
+										l_type_modifier := tokens.separate_type_modifier
+									else
+										l_type_modifier := tokens.detachable_separate_type_modifier
+									end
+								else
+									j := 4
+								end
+								if j > 3 then
+									l_done := True
+									i := i + 1
+								end
+							end
 						end
 					end
 				end
@@ -17620,11 +17728,11 @@ invariant
 	no_void_iteration_item_type: not current_iteration_item_types.has_void_item
 	no_void_item_type_iteration_component: not current_iteration_item_types.has_void
 	current_iteration_item_scope_not_void: current_iteration_item_scope /= Void
-		-- Separate arguments.
-	current_separate_argument_types_not_void: current_separate_argument_types /= Void
-	no_void_separate_argument_type: not current_separate_argument_types.has_void_item
-	no_void_separate_argument: not current_separate_argument_types.has_void
-	current_separate_argument_scope_not_void: current_separate_argument_scope /= Void
+		-- Inline separate arguments.
+	current_inline_separate_argument_types_not_void: current_inline_separate_argument_types /= Void
+	no_void_inline_separate_argument_type: not current_inline_separate_argument_types.has_void_item
+	no_void_inline_separate_argument: not current_inline_separate_argument_types.has_void
+	current_inline_separate_argument_scope_not_void: current_inline_separate_argument_scope /= Void
 		-- Attachments.
 	current_initialization_scope_not_void: current_initialization_scope /= Void
 	current_attachment_scope_not_void: current_attachment_scope /= Void

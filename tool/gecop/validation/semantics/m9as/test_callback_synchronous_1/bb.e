@@ -1,0 +1,20 @@
+class BB
+
+create
+
+	make
+
+feature
+
+	make
+		do
+		end
+
+	g (a: separate AA)
+		do
+			{EXECUTION_ENVIRONMENT}.sleep (1_000_000_000)
+			a.h
+			print ("End of BB.g%N")
+		end
+
+end

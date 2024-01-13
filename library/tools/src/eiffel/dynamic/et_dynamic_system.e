@@ -486,6 +486,26 @@ feature -- Types
 			detachable_separate_type_not_void: Result /= Void
 		end
 
+	separate_type (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE
+			-- Separate version of `a_type'.
+			-- Keep the attachment status of `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			if current_system.scoop_mode then
+				if a_type.is_attached then
+					Result := attached_separate_type (a_type.primary_type)
+				else
+					Result := detachable_separate_type (a_type.primary_type)
+				end
+			else
+				Result := a_type
+			end
+		ensure
+			separate_type_not_void: Result /= Void
+			same_attachment_status: current_system.attachment_type_conformance_mode implies Result.is_attached = a_type.is_attached
+		end
+
 	meta_type (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_PRIMARY_TYPE
 			-- Dynamic type corresponding to the meta type of `a_type';
 			-- Create a new one if it does not exist yet

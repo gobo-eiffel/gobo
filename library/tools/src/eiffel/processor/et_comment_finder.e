@@ -5,7 +5,7 @@ note
 		"Eiffel AST comment finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2023, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -136,6 +136,10 @@ inherit
 			process_infix_and_then_operator,
 			process_infix_expression,
 			process_infix_or_else_operator,
+			process_inline_separate_argument,
+			process_inline_separate_argument_comma,
+			process_inline_separate_arguments,
+			process_inline_separate_instruction,
 			process_inspect_expression,
 			process_inspect_instruction,
 			process_invariants,
@@ -195,10 +199,6 @@ inherit
 			process_rename_list,
 			process_repeat_instruction,
 			process_result_address,
-			process_separate_argument,
-			process_separate_argument_comma,
-			process_separate_arguments,
-			process_separate_instruction,
 			process_special_manifest_string,
 			process_static_call_expression,
 			process_static_call_instruction,
@@ -1264,6 +1264,38 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_inline_separate_argument (a_argument: ET_INLINE_SEPARATE_ARGUMENT)
+			-- Process `a_argument'.
+		do
+			if not excluded_nodes.has (a_argument) then
+				precursor (a_argument)
+			end
+		end
+
+	process_inline_separate_argument_comma (a_argument_comma: ET_INLINE_SEPARATE_ARGUMENT_COMMA)
+			-- Process `a_argument_comma'.
+		do
+			if not excluded_nodes.has (a_argument_comma) then
+				precursor (a_argument_comma)
+			end
+		end
+
+	process_inline_separate_arguments (a_arguments: ET_INLINE_SEPARATE_ARGUMENTS)
+			-- Process `a_arguments'.
+		do
+			if not excluded_nodes.has (a_arguments) then
+				precursor (a_arguments)
+			end
+		end
+
+	process_inline_separate_instruction (a_instruction: ET_INLINE_SEPARATE_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			if not excluded_nodes.has (a_instruction) then
+				precursor (a_instruction)
+			end
+		end
+
 	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
 			-- Process `a_expression'.
 		do
@@ -1747,38 +1779,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (an_expression) then
 				precursor (an_expression)
-			end
-		end
-
-	process_separate_argument (a_argument: ET_SEPARATE_ARGUMENT)
-			-- Process `a_argument'.
-		do
-			if not excluded_nodes.has (a_argument) then
-				precursor (a_argument)
-			end
-		end
-
-	process_separate_argument_comma (a_argument_comma: ET_SEPARATE_ARGUMENT_COMMA)
-			-- Process `a_argument_comma'.
-		do
-			if not excluded_nodes.has (a_argument_comma) then
-				precursor (a_argument_comma)
-			end
-		end
-
-	process_separate_arguments (a_arguments: ET_SEPARATE_ARGUMENTS)
-			-- Process `a_arguments'.
-		do
-			if not excluded_nodes.has (a_arguments) then
-				precursor (a_arguments)
-			end
-		end
-
-	process_separate_instruction (a_instruction: ET_SEPARATE_INSTRUCTION)
-			-- Process `a_instruction'.
-		do
-			if not excluded_nodes.has (a_instruction) then
-				precursor (a_instruction)
 			end
 		end
 

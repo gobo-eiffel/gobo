@@ -5,7 +5,7 @@ note
 		"Eiffel assignment instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,6 +51,12 @@ feature -- Initialization
 			source.reset
 		end
 
+feature -- Status report
+
+	no_target_twin: BOOLEAN
+			-- Should the target object not be cloned even when needed
+			-- (e.g. when its type is expanded)?
+
 feature -- Access
 
 	target: ET_WRITABLE
@@ -79,6 +85,16 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := source.last_leaf
+		end
+
+feature -- Status setting
+
+	set_no_target_twin (b: BOOLEAN)
+			-- Set `no_target_twin' to `b'.
+		do
+			no_target_twin := b
+		ensure
+			no_target_twin_set: no_target_twin = b
 		end
 
 feature -- Setting

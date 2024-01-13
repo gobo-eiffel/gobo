@@ -5,7 +5,7 @@ note
 		"Eiffel expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -143,6 +143,26 @@ feature -- Type conversion
 			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := Void
+		end
+
+feature -- SCOOP
+
+	add_separate_arguments (a_list: DS_ARRAYED_LIST [ET_IDENTIFIER]; a_closure: ET_CLOSURE)
+			-- Add to `a_list' inline separate arguments or formal arguments which
+			-- when controlled (i.e. when their type is separate) implies that when
+			-- the current expression is involved in the target of a separate call
+			-- this target is also controlled.
+			-- `a_closure' is the closure (i.e. inline agent or enclosing feature)
+			-- in which the current expression appears.
+			-- (Used when determining the SCOOP sessions to be used when recording
+			-- a separate call to another SCOOP processor.)
+		require
+			a_list_not_void: a_list /= Void
+			a_closure_not_void: a_closure /= Void
+			valid_items: across a_list as l_item all l_item.is_argument or l_item.is_inline_separate_argument end
+		do
+		ensure
+			valid_items: across a_list as l_item all l_item.is_argument or l_item.is_inline_separate_argument end
 		end
 
 invariant
