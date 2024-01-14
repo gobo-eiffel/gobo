@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2008, Sven Ehrke and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class GEANT_FUNCTIONAL_SET_TEST
 
@@ -25,11 +23,11 @@ feature -- Test
 	test_set_simple
 			-- Test task 'set' in it's simplest form.
 		do
- 			verbose := True
+			verbose := True
 			tasks := "{
 				<set name="who" value="world"/>
 				}"
- 			expected_task_output := "{
+			expected_task_output := "{
 				|  [set global] who=world
 			}"
 			expected_stdout_txt := default_expected_stdout_txt
@@ -39,12 +37,12 @@ feature -- Test
 	test_set_var
 			-- Test task 'set'
 		do
- 			verbose := True
+			verbose := True
 			tasks := "{
 				<set name="n" value="world"/>
 				<set name="who" value="${n}"/>
 				}"
- 			expected_task_output := "{
+			expected_task_output := "{
 				|  [set global] n=world
 				|  [set global] who=world
 			}"
@@ -55,7 +53,7 @@ feature -- Test
 	test_reset_var
 			-- Test task 'set'
 		do
- 			verbose := True
+			verbose := True
 			tasks := "{
 				<set name="who" value="world"/>
 				<set name="who" value="you"/>
@@ -72,7 +70,7 @@ feature -- Test
 	test_unset_var
 			-- Test task 'unset'
 		do
- 			verbose := True
+			verbose := True
 			tasks := "{
 				<set name="who" value="world"/>
 				<unset name="who"/>
@@ -93,7 +91,7 @@ feature -- Test
 	test_two_levels
 			-- Test task 'set'
 		do
- 			verbose := True
+			verbose := True
 			tasks := "{
 				<set name="programming_language" value="Eiffel"/>
 				<set name="message1" value="programming language is ${programming_language}"/>
@@ -121,7 +119,7 @@ feature -- Test
 	test_template0
 			-- Test task 'set'
 		do
- 			verbose := True
+			verbose := True
 			tasks := "{
 				<set name="message" value="This is case ${case}"/>
 				<set name="case" value="A"/>
@@ -138,7 +136,7 @@ feature -- Test
 	test_template1
 			-- Test task 'set'
 		do
- 			verbose := True
+			verbose := True
 			tasks := "{
 				<set name="message" value="This is case ${case}"/>
 				<set name="case" value="A"/>
@@ -168,7 +166,7 @@ feature -- Test
 	test_template2
 			-- Test task 'set'
 		do
- 			verbose := True
+			verbose := True
 			tasks := "{
 				<set name="message2" value="My favorite ${message1}"/>
 				<set name="message1" value="programming language is ${programming_language}"/>

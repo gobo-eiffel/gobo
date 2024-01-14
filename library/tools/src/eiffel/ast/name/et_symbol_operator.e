@@ -7,8 +7,6 @@
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2002-2020, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class ET_SYMBOL_OPERATOR
 

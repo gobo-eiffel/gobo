@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?> 
+﻿<?xml version="1.0" encoding="UTF-8"?> 
 
 <!--
 	description:
@@ -8,8 +8,6 @@
 	library: "Gobo Eiffel XSLT"
 	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 -->
 
   <chapterinfo>
@@ -44,39 +42,39 @@
   <section>
     <title>Exit codes</title>
     <para>
-     The following are the meanings of the various exit codes from the processor:
+      The following are the meanings of the various exit codes from the processor:
     <variablelist>
 	<varlistentry>
-	  <term>0</term>
-	  <listitem>
-	    <para>
-	     Successful execution.
-	    </para>
-	  </listitem>
+    <term>0</term>
+    <listitem>
+      <para>
+        Successful execution.
+      </para>
+    </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term>1</term>
-	  <listitem>
-	    <para>
-	     Syntax error in the command line.
-	    </para>
-	  </listitem>
+    <term>1</term>
+    <listitem>
+      <para>
+        Syntax error in the command line.
+      </para>
+    </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term>2</term>
-	  <listitem>
-	    <para>
-	     Syntax error in the stylesheet.
-	    </para>
-	  </listitem>
+    <term>2</term>
+    <listitem>
+      <para>
+        Syntax error in the stylesheet.
+      </para>
+    </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term>3</term>
-	  <listitem>
-	    <para>
-	     Runtime error in the transformation. This includes termination via <xslt>xsl:message terminate='yes'</xslt>.
-	    </para>
-	  </listitem>
+    <term>3</term>
+    <listitem>
+      <para>
+        Runtime error in the transformation. This includes termination via <xslt>xsl:message terminate='yes'</xslt>.
+      </para>
+    </listitem>
 	</varlistentry>
     </variablelist>
     </para>

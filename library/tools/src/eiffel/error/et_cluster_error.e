@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2009/03/03 $"
-	revision: "$Revision: #10 $"
 
 class ET_CLUSTER_ERROR
 

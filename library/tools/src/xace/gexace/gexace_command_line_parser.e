@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	system: "Gobo Eiffel Xace"
 	copyright: "Copyright (c) 2001-2019, Andreas Leitner and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class GEXACE_COMMAND_LINE_PARSER
 

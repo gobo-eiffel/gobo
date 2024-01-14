@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -6,8 +6,6 @@ note
 
 	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class EXAMPLE_TEST_CASE
 

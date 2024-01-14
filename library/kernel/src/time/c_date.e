@@ -1,7 +1,5 @@
-note
+﻿note
 	description: "Representation of a date at C level"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	C_DATE

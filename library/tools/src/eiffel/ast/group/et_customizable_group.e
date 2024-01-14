@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -13,8 +13,6 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2011-2016, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class ET_CUSTOMIZABLE_GROUP
 

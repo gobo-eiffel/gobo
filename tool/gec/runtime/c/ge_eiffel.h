@@ -1,4 +1,4 @@
-/*
+﻿/*
 	description:
 
 		"C declarations for the Gobo Eiffel runtime."
@@ -6,8 +6,6 @@
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2005-2023, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 */
 
 #ifndef GE_EIFFEL_H

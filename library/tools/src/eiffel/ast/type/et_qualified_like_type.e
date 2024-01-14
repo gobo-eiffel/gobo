@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 	"[
@@ -8,8 +8,6 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class ET_QUALIFIED_LIKE_TYPE
 

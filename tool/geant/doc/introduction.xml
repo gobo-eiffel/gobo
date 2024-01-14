@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <!--
 	description:
@@ -8,8 +8,6 @@
 	library: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2002-2019, Sven Ehrke and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geant_introduction">
@@ -78,8 +76,6 @@
 		author:      "John Doe [john@doe.net]"
 		copyright:   "Copyright (c) 2004, John Doe and others"
 		license:     "MIT License"
-		date:        "$Date$"
-		revision:    "$Revision$"
 	</description>
 
 	<target name="init_system">

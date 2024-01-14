@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -121,8 +121,6 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/04/20 $"
-	revision: "$Revision: #7 $"
 
 class ET_SYSTEM_FEATURE_MARKER
 

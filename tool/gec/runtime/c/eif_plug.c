@@ -1,4 +1,4 @@
-/*
+﻿/*
 	description:
 
 		"Part of ISE Eiffel runtime. Needed to compile the EiffelCOM library."
@@ -6,8 +6,6 @@
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2010-2017, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 */
 
 #ifndef EIF_PLUG_C

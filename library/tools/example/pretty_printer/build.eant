@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="pretty_printer" default="help">
 
@@ -6,8 +6,6 @@
 		system: "Eiffel pretty-printer"
 		copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>

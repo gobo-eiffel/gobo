@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2008, Sven Ehrke and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class GEANT_FUNCTIONAL_ECHO_TEST
 
@@ -26,7 +24,7 @@ feature -- Test
 			-- Test task 'echo' in it's simplest form.
 		do
 			tasks := "<echo message='hello world'/>"
- 			expected_task_output := "hello world"
+			expected_task_output := "hello world"
 			expected_stdout_txt := default_expected_stdout_txt
 			basic_test ("test_echo")
 		end

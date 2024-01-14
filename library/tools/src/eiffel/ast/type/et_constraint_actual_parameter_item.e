@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -10,8 +10,6 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM
 

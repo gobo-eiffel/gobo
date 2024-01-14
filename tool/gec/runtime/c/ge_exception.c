@@ -1,4 +1,4 @@
-/*
+﻿/*
 	description:
 
 		"C functions used to implement class EXCEPTION"
@@ -6,8 +6,6 @@
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2007-2023, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 */
 
 #ifndef GE_EXCEPTION_C

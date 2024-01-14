@@ -1,4 +1,4 @@
-/*
+﻿/*
 	description:
 
 		"C functions used to implement features 'deep_twin' and 'is_deep_equal' from class ANY"
@@ -6,8 +6,6 @@
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 */
 
 #ifndef GE_DEEP_H

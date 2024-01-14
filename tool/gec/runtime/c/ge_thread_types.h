@@ -1,4 +1,4 @@
-/*
+﻿/*
 	description:
 
 		"C types used to implement class THREAD and related threading facilities"
@@ -6,8 +6,6 @@
 	system: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2017-2023, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 */
 
 #ifndef GE_THREAD_TYPES_H

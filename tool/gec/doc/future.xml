@@ -1,4 +1,4 @@
-<?xml version="1.0"?> 
+﻿<?xml version="1.0"?> 
 
 <!--
 	description:
@@ -8,8 +8,6 @@
 	tool: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/future">

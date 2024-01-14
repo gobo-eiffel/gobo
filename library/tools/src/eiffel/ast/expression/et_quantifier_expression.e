@@ -7,8 +7,6 @@
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2019-2021, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class ET_QUANTIFIER_EXPRESSION
 

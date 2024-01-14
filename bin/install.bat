@@ -1,10 +1,8 @@
-@echo off
+﻿@echo off
 
 rem description: "Install Gobo Eiffel tools"
 rem copyright: "Copyright (c) 2007-2021, Eric Bezault and others"
 rem license: "MIT License"
-rem date: "$Date$"
-rem revision: "$Revision$"
 
 
 rem "usage: install.bat [-v|-s][-t] <c_compiler>"

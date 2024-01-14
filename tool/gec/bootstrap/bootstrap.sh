@@ -1,10 +1,8 @@
-#!/bin/sh
+﻿#!/bin/sh
 
 # description: "Bootstrap Gobo Eiffel Compiler in $GOBO/bin"
 # copyright: "Copyright (c) 2016-2021, Eric Bezault and others"
 # license: "MIT License"
-# date: "$Date$"
-# revision: "$Revision$"
 
 
 # usage: bootstrap.sh [-v|-s][--thread=N] <c_compiler>

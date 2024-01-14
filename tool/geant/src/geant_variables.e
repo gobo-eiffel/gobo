@@ -1,14 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Variables for GEANT"
 
 	library: "Gobo Eiffel Ant"
-	copyright:"Copyright (c) 2004-2005, Sven Ehrke and others"
-	license:"MIT License"
-	date: "$Date$"
-	revision:"$Revision$"
+	copyright: "Copyright (c) 2004-2005, Sven Ehrke and others"
+	license: "MIT License"
 
 class GEANT_VARIABLES
 
