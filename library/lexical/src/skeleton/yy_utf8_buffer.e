@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 	"[
@@ -11,8 +11,6 @@ note
 	library: "Gobo Eiffel Lexical Library"
 	copyright: "Copyright (c) 2019, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class YY_UTF8_BUFFER
 

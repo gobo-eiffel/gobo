@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -21,8 +21,6 @@ note
 	library: "Gobo Eiffel Lexical Library"
 	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class LX_TEMPLATE_LIST
 
