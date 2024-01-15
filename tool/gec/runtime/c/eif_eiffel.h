@@ -1,4 +1,4 @@
-﻿/*
+/*
 	description:
 
 		"C declarations for the ISE Eiffel runtime."

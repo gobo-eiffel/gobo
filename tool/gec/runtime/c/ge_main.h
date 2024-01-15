@@ -1,4 +1,4 @@
-﻿/*
+/*
 	description:
 
 		"C functions used to implement the program initialization"

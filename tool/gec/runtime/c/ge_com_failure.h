@@ -1,4 +1,4 @@
-﻿/*
+/*
 	description:
 
 		"C functions used to implement class COM_FAILURE"

@@ -1,4 +1,4 @@
-﻿/*
+/*
 	description:
 
 		"C functions used to access garbage collector facilities"

@@ -1,4 +1,4 @@
-﻿/*
+/*
 	description:
 
 		"C functions used to implement features 'deep_twin' and 'is_deep_equal' from class ANY"

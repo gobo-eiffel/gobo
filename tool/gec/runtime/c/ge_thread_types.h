@@ -1,4 +1,4 @@
-﻿/*
+/*
 	description:
 
 		"C types used to implement class THREAD and related threading facilities"

@@ -1,4 +1,4 @@
-﻿/*
+/*
 	description:
 
 		"Part of ISE Eiffel runtime. Needed to compile class ISE_SCOOP_RUNTIME."
