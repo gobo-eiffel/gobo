@@ -1,4 +1,4 @@
-﻿ï»¿note
+﻿note
 
 	description:
 
@@ -7,6 +7,8 @@
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ET_TOKEN_CONSTANTS
 
@@ -4134,7 +4136,7 @@ feature -- Symbols
 		end
 
 	bar_symbol: ET_SYMBOL
-			-- 'Â¦' symbol
+			-- '¦' symbol
 		once
 			create Result.make_bar
 		ensure
@@ -4143,7 +4145,7 @@ feature -- Symbols
 		end
 
 	close_repeat_symbol: ET_SYMBOL
-			-- 'â²' symbol
+			-- '⟲' symbol
 		once
 			create Result.make_close_repeat
 		ensure
@@ -4206,7 +4208,7 @@ feature -- Symbols
 		end
 
 	for_all_symbol: ET_SYMBOL
-			-- 'â' symbol
+			-- '∀' symbol
 		once
 			create Result.make_for_all
 		ensure
@@ -4269,7 +4271,7 @@ feature -- Symbols
 		end
 
 	open_repeat_symbol: ET_SYMBOL
-			-- 'â³' symbol
+			-- '⟳' symbol
 		once
 			create Result.make_open_repeat
 		ensure
@@ -4332,7 +4334,7 @@ feature -- Symbols
 		end
 
 	there_exists_symbol: ET_SYMBOL
-			-- 'â' symbol
+			-- '∃' symbol
 		once
 			create Result.make_there_exists
 		ensure
@@ -6042,16 +6044,16 @@ feature -- Keyword and symbol names
 	no_type_mark_name: STRING = ""
 			-- Type mark names
 
-	and_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "â§") end
-	and_then_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "â§â¦") end
+	and_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∧") end
+	and_then_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∧…") end
 	arrow_symbol_name: STRING = "->"
 	assign_symbol_name: STRING = ":="
 	assign_attempt_symbol_name: STRING = "?="
 	at_symbol_name: STRING = "@"
 	bang_symbol_name: STRING = "!"
-	bar_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "Â¦") end
+	bar_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "¦") end
 	brackets_symbol_name: STRING = "[]"
-	close_repeat_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "â²") end
+	close_repeat_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "⟲") end
 	colon_symbol_name: STRING = ":"
 	comma_symbol_name: STRING = ","
 	div_symbol_name: STRING = "//"
@@ -6060,10 +6062,10 @@ feature -- Keyword and symbol names
 	dot_symbol_name: STRING = "."
 	dotdot_symbol_name: STRING = ".."
 	equal_symbol_name: STRING = "="
-	for_all_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "â") end
+	for_all_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∀") end
 	ge_symbol_name: STRING = ">="
 	gt_symbol_name: STRING = ">"
-	implies_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "â") end
+	implies_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "⇒") end
 	le_symbol_name: STRING = "<="
 	left_array_symbol_name: STRING = "<<"
 	left_brace_symbol_name: STRING = "{"
@@ -6072,12 +6074,12 @@ feature -- Keyword and symbol names
 	lt_symbol_name: STRING = "<"
 	minus_symbol_name: STRING = "-"
 	mod_symbol_name: STRING = "\\"
-	not_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "Â¬") end
+	not_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "¬") end
 	not_equal_symbol_name: STRING = "/="
 	not_tilde_symbol_name: STRING = "/~"
-	open_repeat_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "â³") end
-	or_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "â¨") end
-	or_else_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "â¨â¦") end
+	open_repeat_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "⟳") end
+	or_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∨") end
+	or_else_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∨…") end
 	parentheses_symbol_name: STRING = "()"
 	plus_symbol_name: STRING = "+"
 	power_symbol_name: STRING = "^"
@@ -6087,10 +6089,10 @@ feature -- Keyword and symbol names
 	right_bracket_symbol_name: STRING = "]"
 	right_parenthesis_symbol_name: STRING = ")"
 	semicolon_symbol_name: STRING = ";"
-	there_exists_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "â") end
+	there_exists_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∃") end
 	tilde_symbol_name: STRING = "~"
 	times_symbol_name: STRING = "*"
-	xor_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "â»") end
+	xor_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "⊻") end
 			-- Eiffel symbol names
 
 	unknown_name: STRING = "***unknown_name***"
@@ -6123,15 +6125,15 @@ feature -- Keyword and symbol names (used for compatibility with 5.6.0610, to be
 feature -- Alias names
 
 	alias_and_name: STRING = "alias %"and%""
-	alias_and_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"â§%"") end
-	alias_and_then_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"â§â¦%"") end
+	alias_and_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"∧%"") end
+	alias_and_then_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"∧…%"") end
 	alias_implies_name: STRING = "alias %"implies%""
-	alias_implies_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"â%"") end
+	alias_implies_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"⇒%"") end
 	alias_or_name: STRING = "alias %"or%""
-	alias_or_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"â¨%"") end
-	alias_or_else_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"â¨â¦%"") end
+	alias_or_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"∨%"") end
+	alias_or_else_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"∨…%"") end
 	alias_xor_name: STRING = "alias %"xor%""
-	alias_xor_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"â»%"") end
+	alias_xor_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"⊻%"") end
 	alias_div_name: STRING = "alias %"//%""
 	alias_divide_name: STRING = "alias %"/%""
 	alias_ge_name: STRING = "alias %">=%""
@@ -6147,7 +6149,7 @@ feature -- Alias names
 	alias_and_then_name: STRING = "alias %"and then%""
 	alias_or_else_name: STRING = "alias %"or else%""
 	alias_not_name: STRING = "alias %"not%""
-	alias_not_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"Â¬%"") end
+	alias_not_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "alias %"¬%"") end
 	alias_bracket_name: STRING = "alias %"[]%""
 	alias_parenthesis_name: STRING = "alias %"()%""
 			-- Alias feature names

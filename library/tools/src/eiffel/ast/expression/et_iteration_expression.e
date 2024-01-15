@@ -1,4 +1,4 @@
-﻿ï»¿note
+﻿note
 
 	description:
 	"[
@@ -8,6 +8,8 @@
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2019, Eric Bezault and others"
 	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class ET_ITERATION_EXPRESSION
 
@@ -36,12 +38,12 @@ feature -- Initialization
 feature -- Status report
 
 	is_all: BOOLEAN
-			-- Is the iteration of form 'all' or 'â'?
+			-- Is the iteration of form 'all' or '∀'?
 		deferred
 		end
 
 	is_some: BOOLEAN
-			-- Is the iteration of form 'some' or 'â'?
+			-- Is the iteration of form 'some' or '∃'?
 		do
 			Result := not is_all
 		end
