@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 
 rem description: "Bootstrap Gobo Eiffel Compiler in $GOBO/bin"
 rem copyright: "Copyright (c) 2016-2021, Eric Bezault and others"

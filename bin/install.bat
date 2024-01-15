@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 
 rem description: "Install Gobo Eiffel tools"
 rem copyright: "Copyright (c) 2007-2021, Eric Bezault and others"
