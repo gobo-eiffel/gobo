@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel Regexp Library"
 	copyright: "Copyright (c) 2001-2021, Harald Erdbruegger and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class RX_CHARACTER_SET
 

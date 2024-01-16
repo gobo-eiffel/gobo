@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -13,8 +13,6 @@ note
 	library: "Gobo Eiffel Regexp Library"
 	copyright: "Copyright (c) 2001-2019, Harald Erdbruegger and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class RX_PCRE_BYTE_CODE_CONSTANTS
 

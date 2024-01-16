@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="pcre" default="help">
 
@@ -6,8 +6,6 @@
 		system: "PCRE regular expression usage example"
 		copyright: "Copyright (c) 2002-2016, Harald Erdbruegger and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>
