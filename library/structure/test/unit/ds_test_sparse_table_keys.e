@@ -1,15 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Test features of class DS_SPARSE_TABLE_KEYS"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2007-2011, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class DS_TEST_SPARSE_TABLE_KEYS
 

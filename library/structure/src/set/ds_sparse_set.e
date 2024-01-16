@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -9,8 +9,6 @@ note
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class DS_SPARSE_SET [G]
 

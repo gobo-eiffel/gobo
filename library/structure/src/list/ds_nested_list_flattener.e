@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -11,8 +11,6 @@ note
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 1998, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class DS_NESTED_LIST_FLATTENER [G]
 

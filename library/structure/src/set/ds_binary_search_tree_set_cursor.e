@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -8,8 +8,6 @@ note
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2008-2019, Daniel Tuser and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class DS_BINARY_SEARCH_TREE_SET_CURSOR [G]
 

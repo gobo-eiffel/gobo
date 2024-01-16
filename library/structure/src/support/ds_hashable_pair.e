@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class DS_HASHABLE_PAIR [G -> detachable HASHABLE, H -> detachable HASHABLE]
 

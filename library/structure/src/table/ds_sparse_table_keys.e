@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -12,8 +12,6 @@ note
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/10/06 $"
-	revision: "$Revision: #9 $"
 
 class DS_SPARSE_TABLE_KEYS [G, K]
 

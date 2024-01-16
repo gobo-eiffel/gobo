@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 	"[
@@ -10,8 +10,6 @@ note
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2008-2013, Daniel Tuser and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class DS_RED_BLACK_TREE_CONTAINER [G, K]
 
