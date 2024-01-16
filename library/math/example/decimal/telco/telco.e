@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	specification: "http://www2.hursley.ibm.com/decimal/telco.html"
 	copyright: "Copyright (c) 2005, Paul G. Crismer and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class TELCO
 
