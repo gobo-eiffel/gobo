@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 	"[
@@ -14,8 +14,6 @@ note
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2007-2022, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class ST_XSLT_FORMAT_DATE_TIME
 

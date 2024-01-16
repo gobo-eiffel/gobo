@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -8,8 +8,6 @@ note
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2008-2017, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class ST_TEST_XSD_DATE_TIME_PARSER
 

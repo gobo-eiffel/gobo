@@ -1,13 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Full Unicode case mappings"
 
+	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2007-2022, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class ST_UNICODE_CASE_MAPPING_INTERFACE
 

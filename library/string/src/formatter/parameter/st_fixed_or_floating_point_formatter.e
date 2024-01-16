@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -15,8 +15,6 @@ note
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004-2005, Object-Tools and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class ST_FIXED_OR_FLOATING_POINT_FORMATTER
 

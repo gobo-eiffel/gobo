@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -9,8 +9,6 @@ note
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2005-2013, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class ST_UNICODE_V510_NORMALIZATION_ROUTINES
 

@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -11,8 +11,6 @@ note
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2005-2022, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class ST_UNICODE_NORMALIZATION_INTERFACE
 

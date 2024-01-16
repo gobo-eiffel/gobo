@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -6,7 +6,7 @@ note
 
 	formatting_rules: "[
 		The double parameter is rounded and formatted in the style
-		[-]d.ddde�dd where there is one digit before the decimal-point
+		[-]d.ddde±dd where there is one digit before the decimal-point
 		character and the number of digits after it is equal to the
 		precision; if the precision is missing, it is taken as 6; if
 		the precision is zero, no decimal-point character appears. An E
@@ -17,8 +17,6 @@ note
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004-2005, Object-Tools and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class ST_FLOATING_POINT_FORMATTER
 
