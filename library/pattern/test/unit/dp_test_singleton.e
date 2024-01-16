@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -8,8 +8,6 @@ note
 	library: "Gobo Eiffel Pattern Library"
 	copyright: "Copyright (c) 2002, Berend de Boer and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class DP_TEST_SINGLETON
 

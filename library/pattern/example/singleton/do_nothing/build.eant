@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="do_nothing" default="help">
 
@@ -6,8 +6,6 @@
 		system: "Example for the Singleton pattern with does nothing"
 		copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>

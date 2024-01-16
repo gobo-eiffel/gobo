@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -8,8 +8,6 @@ note
 	library: "Gobo Eiffel Pattern Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class DP_CALLBACK_IMPLEMENTATION
 
