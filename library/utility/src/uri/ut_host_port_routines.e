@@ -1,13 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Validation routines for UT_HOST_PORT"
 
 	library: "Gobo Eiffel Utility Library"
-	author: "Copyright (c) 2004-2018, Franck Arnaud and others"
-	revision: "$Revision$"
-	date: "$Date$"
+	copyright: "Copyright (c) 2004-2018, Franck Arnaud and others"
+	license: "MIT License"
 
 class UT_HOST_PORT_ROUTINES
 

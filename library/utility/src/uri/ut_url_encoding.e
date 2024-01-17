@@ -1,13 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Routines to encode and decode url encoded (%HH in hex) strings"
 
 	library: "Gobo Eiffel Utility Library"
-	author: "Copyright (c) 2004-2022, Berend de Boer and others"
-	date: "$Date$"
-	revision: "$Revision$"
+	copyright: "Copyright (c) 2004-2022, Berend de Boer and others"
+	license: "MIT License"
 
 class UT_URL_ENCODING
 

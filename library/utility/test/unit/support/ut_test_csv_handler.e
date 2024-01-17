@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
-	revision: "$Revision$"
-	date: "$Date$"
 
 class UT_TEST_CSV_HANDLER
 

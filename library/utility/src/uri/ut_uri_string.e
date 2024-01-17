@@ -1,13 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Percent-encoded string for URI components"
 
 	library: "Gobo Eiffel Utility Library"
-	author: "Copyright (c) 2004, Franck Arnaud and others"
-	date: "$Date$"
-	revision: "$Revision$"
+	copyright: "Copyright (c) 2004, Franck Arnaud and others"
+	license: "MIT License"
 
 class UT_URI_STRING
 
