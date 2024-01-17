@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="bang2create" default="help">
 
@@ -6,8 +6,6 @@
 		system: "Tool to replace !! creation instructions by 'create' keywords"
 		copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<target name="help">

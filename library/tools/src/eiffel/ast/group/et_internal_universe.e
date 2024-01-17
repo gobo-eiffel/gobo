@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 	"[
@@ -8,8 +8,6 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2008-12-23 16:09:12 +0100 (Tue, 23 Dec 2008) $"
-	revision: "$Revision: 6570 $"
 
 deferred class ET_INTERNAL_UNIVERSE
 

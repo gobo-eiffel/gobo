@@ -3,8 +3,6 @@
 # description: "Install Gobo Eiffel tools"
 # copyright: "Copyright (c) 2007-2021, Eric Bezault and others"
 # license: "MIT License"
-# date: "$Date$"
-# revision: "$Revision$"
 
 
 # usage: install.sh [-v|-t][--thread=N] <c_compiler>

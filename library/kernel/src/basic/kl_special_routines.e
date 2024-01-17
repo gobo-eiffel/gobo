@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -9,8 +9,6 @@ note
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class KL_SPECIAL_ROUTINES [G]
 

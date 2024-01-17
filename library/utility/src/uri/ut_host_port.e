@@ -1,13 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Objects that holds a TCP hostname and port number"
 
 	library: "Gobo Eiffel Utility Library"
-	author: "Copyright (c) 2004, Franck Arnaud and others"
-	revision: "$Revision$"
-	date: "$Date$"
+	copyright: "Copyright (c) 2004, Franck Arnaud and others"
+	license: "MIT License"
 
 class UT_HOST_PORT
 

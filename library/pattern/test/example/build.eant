@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="pattern_example_test" default="help">
 
@@ -6,8 +6,6 @@
 		system: "Gobo Eiffel Pattern Example Tester"
 		copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>

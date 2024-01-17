@@ -1,16 +1,13 @@
-note
+﻿note
 
 	description:
 
 		"Sparse tables implemented with multi-arrays. Ancestor of %
 		%hash tables which should supply its hashing mechanism."
 
-	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class DS_MULTIARRAYED_SPARSE_TABLE [G, K]
 

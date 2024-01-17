@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="gecop_source" default="help">
 
@@ -7,8 +7,6 @@
 		system: "Gobo Eiffel Cop"
 		copyright: "Copyright (c) 2018, Eric Bezault and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>

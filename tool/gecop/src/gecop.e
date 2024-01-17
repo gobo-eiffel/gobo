@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -9,8 +9,6 @@ note
 
 	copyright: "Copyright (c) 2018-2023, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class GECOP
 

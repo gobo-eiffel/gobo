@@ -1,15 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Test examples mentioned in documentation for class ST_SCIENTIFIC_FORMATTER"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004-2005, Object-Tools and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class ST_TEST_SCIENTIFIC_FORMATTER_EXAMPLES
 

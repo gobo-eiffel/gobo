@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="gexslt_extensions_doc" default="help">
 
@@ -7,8 +7,6 @@
 		system: "Gobo Eiffel XSLT"
 		copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>

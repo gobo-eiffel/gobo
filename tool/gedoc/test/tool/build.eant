@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="gedoc_tool_test" default="help">
 
@@ -6,8 +6,6 @@
 		system: "Gobo Eiffel Doc Tester"
 		copyright: "Copyright (c) 2017, Eric Bezault and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>

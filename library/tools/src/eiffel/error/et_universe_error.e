@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2009-2014, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: $"
-	revision: "$Revision: 5877 $"
 
 class ET_UNIVERSE_ERROR
 

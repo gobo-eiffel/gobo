@@ -1,15 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Sparse containers. Used for implementation of sparse tables and sparse sets."
 
-	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/10/06 $"
-	revision: "$Revision: #16 $"
 
 deferred class DS_SPARSE_CONTAINER [G, K]
 

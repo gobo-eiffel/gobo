@@ -1,16 +1,13 @@
-note
+﻿note
 
 	description:
 
 		"Sparse tables, implemented with arrays. Ancestor of hash tables %
 		%which should supply their hashing mechanisms."
 
-	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class DS_SPARSE_TABLE [G, K]
 

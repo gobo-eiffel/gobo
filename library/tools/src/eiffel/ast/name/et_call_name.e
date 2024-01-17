@@ -7,8 +7,6 @@
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2005-2023, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class ET_CALL_NAME
 

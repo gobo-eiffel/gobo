@@ -1,15 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Interpreters for Strings using variable resolvers"
 
 	library: "Gobo Eiffel Ant"
-	copyright:"Copyright (c) 2004-2018, Sven Ehrke and others"
+	copyright: "Copyright (c) 2004-2018, Sven Ehrke and others"
 	license:"MIT License"
-	date: "$Date$"
-	revision:"$Revision$"
-
 
 class GEANT_STRING_INTERPRETER
 

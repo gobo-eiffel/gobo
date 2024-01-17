@@ -4,12 +4,9 @@ note
 
 		"Tests from James Clark's xmltest suite from the OASIS xml test suite"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel XML Library test"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_TEST_XMLTEST
 

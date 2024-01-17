@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <!--
 	description:
@@ -7,9 +7,6 @@
 
 	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
-
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/programming_style">
@@ -77,8 +74,6 @@ _   _   </text>"Short description of the class"
 _   </text>library:    "Gobo Eiffel Lexical Library"
 <text>_   </text>copyright:  "Copyright (c) 2000-2016, Eric Bezault and others"
 <text>_   </text>license:    "MIT License"
-<text>_   </text>date:       "$Date$"
-<text>_   </text>revision:   "$Revision$"
 </programlisting>
 </para>
 

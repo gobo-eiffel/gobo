@@ -1,15 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Test features of class UC_UTF16_ROUTINES"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2002-2022, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class UC_TEST_UTF16_ROUTINES
 

@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -121,8 +121,6 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2009/06/22 $"
-	revision: "$Revision: #4 $"
 
 class ET_SYSTEM_FEATURE_FUZZY_MARKER
 

@@ -1,13 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Error: Too many nested include files"
 
+	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2007-2011, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class UT_TOO_MANY_INCLUDES_ERROR
 

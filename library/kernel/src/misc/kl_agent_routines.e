@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2009-2018, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/10/06 $"
-	revision: "$Revision: #3 $"
 
 class KL_AGENT_ROUTINES [G]
 

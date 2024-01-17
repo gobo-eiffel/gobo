@@ -1,13 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Equality testers for UT_URI, based on full_reference equality"
 
 	library: "Gobo Eiffel Utility Library"
-	author: "Copyright (c) 2004, Eric Bezault and others"
-	revision: "$Revision$"
-	date: "$Date$"
+	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	license: "MIT License"
 
 class UT_URI_EQUALITY_TESTER
 

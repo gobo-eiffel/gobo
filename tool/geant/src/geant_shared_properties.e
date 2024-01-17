@@ -1,14 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Common properties for GEANT"
 
 	library: "Gobo Eiffel Ant"
-	copyright:"Copyright (c) 2001-2018, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
-	date: "$Date: 2008-08-03 21:54:22 +0200 (Sun, 03 Aug 2008) $"
-	revision: "$Revision: 6460 $"
 
 class GEANT_SHARED_PROPERTIES
 

@@ -1,15 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Test features of KL_CHARACTER_ROUTINES"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2006, Berend de Boer and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class KL_TEST_CHARACTER_ROUTINES
 

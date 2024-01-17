@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 	"[
@@ -21,8 +21,6 @@ note
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2008-2018, Daniel Tuser and others"
 	license: "MIT License"
-	date: "$Date: 2010/10/06 $"
-	revision: "$Revision: #11 $"
 
 deferred class DS_BINARY_SEARCH_TREE_CONTAINER [G, K]
 

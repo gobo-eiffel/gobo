@@ -1,12 +1,10 @@
-note
+﻿note
 
 	description: "Dynamic type sets of the operands of equality expressions"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2022, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class ET_DYNAMIC_EQUALITY_TYPES
 

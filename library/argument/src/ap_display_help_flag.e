@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel Argument Library"
 	copyright: "Copyright (c) 2006-2018, Bernd Schoeller and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class AP_DISPLAY_HELP_FLAG
 

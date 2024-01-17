@@ -1,14 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Tester for features of PCRE regexps"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2002-2019, Harald Erdbr�gger and others"
+	copyright: "Copyright (c) 2002-2019, Harald Erdbrügger and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class PCRETEST
 

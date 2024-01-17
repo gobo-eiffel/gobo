@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -16,8 +16,6 @@ note
 	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2005-2019, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class UT_BASE64_ENCODING_OUTPUT_STREAM
 

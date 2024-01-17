@@ -1,15 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Test features of class ST_DATE_TIME_ROUTINES"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2008, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class ST_TEST_DATE_TIME_ROUTINES
 

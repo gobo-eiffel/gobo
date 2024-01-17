@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="execute">
 
@@ -6,8 +6,6 @@
 		description: "Execute a command in a directory"
 		copyright: "Copyright (c) 2020, Eric Bezault and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<target name="execute">

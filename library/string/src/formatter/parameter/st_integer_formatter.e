@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -13,8 +13,6 @@ note
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004-2013, Object-Tools and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class ST_INTEGER_FORMATTER
 

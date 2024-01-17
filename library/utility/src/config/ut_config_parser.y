@@ -1,14 +1,13 @@
-%{
+﻿%{
 note
 
 	description:
 
 		"Parsers for config files made up of name/value pairs and preprocessor instructions"
 
+	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2007-2019, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class UT_CONFIG_PARSER
 

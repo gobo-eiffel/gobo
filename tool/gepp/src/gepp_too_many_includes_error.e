@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -6,8 +6,6 @@ note
 
 	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class GEPP_TOO_MANY_INCLUDES_ERROR
 

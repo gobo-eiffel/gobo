@@ -1,15 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Test features of class ST_WORD_WRAPPER"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class ST_TEST_WORD_WRAPPER
 

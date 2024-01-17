@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -10,8 +10,6 @@ note
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2017-2020, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class KL_BUFFERED_OUTPUT_FILE
 

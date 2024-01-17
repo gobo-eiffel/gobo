@@ -1,15 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Test features of class KL_UNIX_INPUT_FILE"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2001, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class KL_TEST_UNIX_INPUT_FILE
 

@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -16,8 +16,6 @@ note
 	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2019-2020, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class UT_CHARACTER_32_CODES
 

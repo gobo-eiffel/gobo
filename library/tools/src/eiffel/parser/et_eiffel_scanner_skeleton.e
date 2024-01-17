@@ -7,8 +7,6 @@
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2013/09/19 $"
-	revision: "$Revision: #1 $"
 
 deferred class ET_EIFFEL_SCANNER_SKELETON
 

@@ -7,8 +7,6 @@
 	library: "Gobo Eiffel Lexical Library"
 	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class LX_PATTERN_MATCHER
 

@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -11,8 +11,6 @@ note
 	library: "Gobo Eiffel Test Library"
 	copyright: "Copyright (c) 2023, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class TS_PROGRESS_STREAM
 

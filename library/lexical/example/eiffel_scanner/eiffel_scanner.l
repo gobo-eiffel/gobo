@@ -1,4 +1,4 @@
-%{
+﻿%{
 note
 
 	description:
@@ -7,8 +7,6 @@ note
 
 	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class EIFFEL_SCANNER
 

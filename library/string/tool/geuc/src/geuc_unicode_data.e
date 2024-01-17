@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -6,8 +6,6 @@ note
 
 	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class GEUC_UNICODE_DATA
 

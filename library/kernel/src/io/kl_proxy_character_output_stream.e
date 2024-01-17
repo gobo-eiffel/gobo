@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -13,8 +13,6 @@ note
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2005-2019, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class KL_PROXY_CHARACTER_OUTPUT_STREAM
 

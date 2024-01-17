@@ -1,13 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Shared instance of UT_URL_ENCODING"
 
 	library: "Gobo Eiffel Utility Library"
-	author: "Copyright (c) 2004-2018, Eric Bezault and others"
-	date: "$Date$"
-	revision: "$Revision$"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	license: "MIT License"
 
 class UT_SHARED_URL_ENCODING
 

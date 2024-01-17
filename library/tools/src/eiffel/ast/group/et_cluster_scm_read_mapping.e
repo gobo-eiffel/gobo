@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 	"[
@@ -13,8 +13,6 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2008, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class ET_CLUSTER_SCM_READ_MAPPING
 

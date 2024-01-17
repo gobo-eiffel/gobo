@@ -1,12 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <!--
 	description: "Eiffel Ant RelaxNG specification"
 	system: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2002-2023, Sven Ehrke and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 -->
 
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">

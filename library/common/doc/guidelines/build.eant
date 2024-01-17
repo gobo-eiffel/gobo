@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="guidelines_doc" default="help">
 
@@ -6,8 +6,6 @@
 		description: "Gobo Eiffel Developer Guidelines"
 		copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>

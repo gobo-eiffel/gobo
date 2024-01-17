@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2009-2024, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2011/09/15 $"
-	revision: "$Revision: #5 $"
 
 class ET_EXTENDED_ATTRIBUTE
 

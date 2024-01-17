@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="do_all">
 
@@ -6,8 +6,6 @@
 		description: "Execute geant builds in all subfolders"
 		copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 <!-- Implementation -->

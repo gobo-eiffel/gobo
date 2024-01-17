@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -6,8 +6,6 @@ note
 
 	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class GEUC
 
@@ -416,9 +414,7 @@ feature -- Code generation
 			l_output_file.put_string ("%Tgenerator: %"geuc%"%N%N")
 			l_output_file.put_string ("%Tlibrary: %"Gobo Eiffel String Library%"%N")
 			l_output_file.put_string ("%Tcopyright: %"Copyright (c) 2005-2013, Colin Adams and others%"%N")
-			l_output_file.put_string ("%Tlicense: %"MIT License%"%N")
-			l_output_file.put_string ("%Tdate: %"$Date$%"%N")
-			l_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
+			l_output_file.put_string ("%Tlicense: %"MIT License%"%N%N")
 			l_output_file.put_string ("class ")
 			l_output_file.put_string (class_name_prefix)
 			l_output_file.put_string ("CHARACTER_CLASS_ROUTINES%N%N")
@@ -452,9 +448,7 @@ feature -- Code generation
 			l_output_file.put_string ("%Tgenerator: %"geuc%"%N%N")
 			l_output_file.put_string ("%Tlibrary: %"Gobo Eiffel Kernel Library%"%N")
 			l_output_file.put_string ("%Tcopyright: %"Copyright (c) 2005-2013, Colin Adams and others%"%N")
-			l_output_file.put_string ("%Tlicense: %"MIT License%"%N")
-			l_output_file.put_string ("%Tdate: %"$Date$%"%N")
-			l_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
+			l_output_file.put_string ("%Tlicense: %"MIT License%"%N%N")
 			l_output_file.put_string ("class ")
 			l_output_file.put_string (kernel_class_name_prefix)
 			l_output_file.put_string ("CTYPE_LOWERCASE%N%N")
@@ -483,9 +477,7 @@ feature -- Code generation
 			l_output_file.put_string ("%Tgenerator: %"geuc%"%N%N")
 			l_output_file.put_string ("%Tlibrary: %"Gobo Eiffel Kernel Library%"%N")
 			l_output_file.put_string ("%Tcopyright: %"Copyright (c) 2005-2013, Colin Adams and others%"%N")
-			l_output_file.put_string ("%Tlicense: %"MIT License%"%N")
-			l_output_file.put_string ("%Tdate: %"$Date$%"%N")
-			l_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
+			l_output_file.put_string ("%Tlicense: %"MIT License%"%N%N")
 			l_output_file.put_string ("class ")
 			l_output_file.put_string (kernel_class_name_prefix)
 			l_output_file.put_string ("CTYPE_UPPERCASE%N%N")
@@ -514,9 +506,7 @@ feature -- Code generation
 			l_output_file.put_string ("%Tgenerator: %"geuc%"%N%N")
 			l_output_file.put_string ("%Tlibrary: %"Gobo Eiffel Kernel Library%"%N")
 			l_output_file.put_string ("%Tcopyright: %"Copyright (c) 2005-2013, Colin Adams and others%"%N")
-			l_output_file.put_string ("%Tlicense: %"MIT License%"%N")
-			l_output_file.put_string ("%Tdate: %"$Date$%"%N")
-			l_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
+			l_output_file.put_string ("%Tlicense: %"MIT License%"%N%N")
 			l_output_file.put_string ("class ")
 			l_output_file.put_string (kernel_class_name_prefix)
 			l_output_file.put_string ("CTYPE_TITLECASE%N%N")
@@ -545,9 +535,7 @@ feature -- Code generation
 			l_output_file.put_string ("%Tgenerator: %"geuc%"%N%N")
 			l_output_file.put_string ("%Tlibrary: %"Gobo Eiffel String Library%"%N")
 			l_output_file.put_string ("%Tcopyright: %"Copyright (c) 2005-2013, Colin Adams and others%"%N")
-			l_output_file.put_string ("%Tlicense: %"MIT License%"%N")
-			l_output_file.put_string ("%Tdate: %"$Date$%"%N")
-			l_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
+			l_output_file.put_string ("%Tlicense: %"MIT License%"%N%N")
 			l_output_file.put_string ("class ")
 			l_output_file.put_string (class_name_prefix)
 			l_output_file.put_string ("NORMALIZATION_ROUTINES%N%N")
@@ -589,9 +577,7 @@ feature -- Code generation
 			l_output_file.put_string ("%Tgenerator: %"geuc%"%N%N")
 			l_output_file.put_string ("%Tlibrary: %"Gobo Eiffel String Library%"%N")
 			l_output_file.put_string ("%Tcopyright: %"Copyright (c) 2007-2013, Colin Adams and others%"%N")
-			l_output_file.put_string ("%Tlicense: %"MIT License%"%N")
-			l_output_file.put_string ("%Tdate: %"$Date$%"%N")
-			l_output_file.put_string ("%Trevision: %"$Revision$%"%N%N")
+			l_output_file.put_string ("%Tlicense: %"MIT License%"%N%N")
 			l_output_file.put_string ("class ")
 			l_output_file.put_string (class_name_prefix)
 			l_output_file.put_string ("FULL_CASE_MAPPING%N%N")

@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,17 +7,15 @@ note
 	library: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class GEANT_MKDIR_COMMAND
 
 inherit
 
 	GEANT_COMMAND
- 		redefine
- 			make
- 		end
+		redefine
+			make
+		end
 
 create
 

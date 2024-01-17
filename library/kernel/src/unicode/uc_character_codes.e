@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -16,8 +16,6 @@ note
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2020-2022, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class UC_CHARACTER_CODES
 

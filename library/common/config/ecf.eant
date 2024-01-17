@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="ecf">
 
@@ -6,8 +6,6 @@
 		description: "Generate/update ECF files"
 		copyright: "Copyright (c) 2019, Eric Bezault and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 	
 <!-- Implementation -->

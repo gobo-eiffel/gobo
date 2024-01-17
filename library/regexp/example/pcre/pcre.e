@@ -1,4 +1,4 @@
-note
+ï»¿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel Regexp Library"
 	copyright: "Copyright (c) 2002, Harald Erdbruegger and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class PCRE
 
@@ -154,11 +152,11 @@ feature -- Examples
 			res: STRING
 		do
 				-- German umlaute added.
-			create word_set.make ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_ÄÖÜäöü")
+			create word_set.make ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_Ã„Ã–ÃœÃ¤Ã¶Ã¼")
 			create regexp.make
 				-- Compile a pattern: match a word.
 			regexp.compile ("\w+")
-			regexp.match ("Erdbrügger - my Name")
+			regexp.match ("ErdbrÃ¼gger - my Name")
 			res := regexp.captured_substring (0)
 			check
 				matched1: res.is_equal ("Erdbr")
@@ -170,10 +168,10 @@ feature -- Examples
 			regexp.set_word_set (word_set)
 				-- Compile a pattern: match a word.
 			regexp.compile ("\w+")
-			regexp.match ("Erdbrügger - my Name")
+			regexp.match ("ErdbrÃ¼gger - my Name")
 			res := regexp.captured_substring (0)
 			check
-				matched2: res.is_equal ("Erdbrügger")
+				matched2: res.is_equal ("ErdbrÃ¼gger")
 			end
 			std.output.put_line (res)
 			std.output.put_line ("----------------")
@@ -184,8 +182,8 @@ feature -- Examples
 				-- the (?i) in the pattern is the same as the statements:
 				--     regexp.reset -- not needed after regexp.make
 				--     regexp.set_caseless (True)
-			regexp.compile ("(?i)[A-ZÄÖÜ]+")
-			regexp.match ("Erdbrügger - my Name")
+			regexp.compile ("(?i)[A-ZÃ„Ã–Ãœ]+")
+			regexp.match ("ErdbrÃ¼gger - my Name")
 			res := regexp.captured_substring (0)
 			check
 				matched3: res.is_equal ("Erdbr")
@@ -197,8 +195,8 @@ feature -- Examples
 			regexp.reset
 			regexp.set_caseless (False)
 				-- A new pattern.
-			regexp.compile ("[A-ZÄÖÜ]+")
-			regexp.match ("Erdbrügger - my Name")
+			regexp.compile ("[A-ZÃ„Ã–Ãœ]+")
+			regexp.match ("ErdbrÃ¼gger - my Name")
 			res := regexp.captured_substring (0)
 			check
 				matched4: res.is_equal ("E")
@@ -206,13 +204,13 @@ feature -- Examples
 			std.output.put_line (res)
 			std.output.put_line ("----------------")
 				-- German umlaute added for case insensitivity.
-			create case_mapping.make ("ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ", "abcdefghijklmnopqrstuvwxyzäöü")
+			create case_mapping.make ("ABCDEFGHIJKLMNOPQRSTUVWXYZÃ„Ã–Ãœ", "abcdefghijklmnopqrstuvwxyzÃ¤Ã¶Ã¼")
 				-- Changing the character case mapping need
 				-- a reset (not is_compiled).
 			regexp.reset
 			regexp.set_character_case_mapping (case_mapping)
-			regexp.compile ("[A-ZÄÖÜ]+")
-			regexp.match ("Erdbrügger - my Name")
+			regexp.compile ("[A-ZÃ„Ã–Ãœ]+")
+			regexp.match ("ErdbrÃ¼gger - my Name")
 			res := regexp.captured_substring (0)
 			check
 				matched5: res.is_equal ("E")
@@ -220,24 +218,24 @@ feature -- Examples
 			std.output.put_line (res)
 			std.output.put_line ("----------------")
 				-- Now we use the caseless-mode.
-			regexp.compile ("(?i)[A-ZÄÖÜ]+")
+			regexp.compile ("(?i)[A-ZÃ„Ã–Ãœ]+")
 			check
 				is_caseless: regexp.is_caseless
 			end
-			regexp.match ("Erdbrügger - my Name")
+			regexp.match ("ErdbrÃ¼gger - my Name")
 			res := regexp.captured_substring (0)
 			check
-				matched6: res.is_equal ("Erdbrügger")
+				matched6: res.is_equal ("ErdbrÃ¼gger")
 			end
 			std.output.put_line (res)
 			std.output.put_line ("----------------")
 				-- If you want to make all regular expressions localized change the
 				-- `default_character_case_mapping' and/or `default_word_set'.
 			regexp.default_character_case_mapping.clear
-			regexp.default_character_case_mapping.add ("ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ", "abcdefghijklmnopqrstuvwxyzäöü")
+			regexp.default_character_case_mapping.add ("ABCDEFGHIJKLMNOPQRSTUVWXYZÃ„Ã–Ãœ", "abcdefghijklmnopqrstuvwxyzÃ¤Ã¶Ã¼")
 			word_set := regexp.default_word_set
 			word_set.wipe_out
-			word_set.add_string ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_ÄÖÜäöü")
+			word_set.add_string ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_Ã„Ã–ÃœÃ¤Ã¶Ã¼")
 				-- After these instructions all new created regular expressions uses
 				-- the `character_case_mapping' and `word_set' of the changed default values
 				-- defined above. Only a explicit setting of `regexp.set_character_case_mapping'

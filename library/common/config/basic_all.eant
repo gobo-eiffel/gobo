@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="basic_all">
 
@@ -6,8 +6,6 @@
 		description: "Execute basic build targets in all subfolders"
 		copyright: "Copyright (c) 2019, Eric Bezault and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>

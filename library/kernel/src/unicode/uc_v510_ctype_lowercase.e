@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -9,8 +9,6 @@ note
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2005-2013, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class UC_V510_CTYPE_LOWERCASE
 

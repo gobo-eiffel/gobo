@@ -1,14 +1,13 @@
-%{
+﻿%{
 note
 
 	description:
 
 		"Scanners for config files made up of name/value pairs and preprocessor instructions"
 
+	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2007-2013, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class UT_CONFIG_SCANNER
 

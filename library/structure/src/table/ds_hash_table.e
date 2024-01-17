@@ -1,16 +1,13 @@
-note
+﻿note
 
 	description:
 
 		"Hash tables, implemented with single arrays. %
 		%Keys are hashed using `hash_code' from HASHABLE by default."
 
-	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2000-2014, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class DS_HASH_TABLE [G, K -> detachable HASHABLE]
 

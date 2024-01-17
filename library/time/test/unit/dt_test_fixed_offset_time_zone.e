@@ -1,15 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Test features of class DT_FIXED_OFFSET_TIME_ZONE"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Time Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class DT_TEST_FIXED_OFFSET_TIME_ZONE
 

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="argument_example" default="help">
 
@@ -6,8 +6,6 @@
 		system: "Argument parsing example"
 		copyright: "Copyright (c) 2006-2016, Bernd Schoeller and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>

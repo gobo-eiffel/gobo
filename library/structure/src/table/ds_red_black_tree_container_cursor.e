@@ -1,15 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Cursors for in-order traversal of containers using red-black tree algorithms"
 
-	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2009-2013, Daniel Tuser and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class DS_RED_BLACK_TREE_CONTAINER_CURSOR [G, K]
 

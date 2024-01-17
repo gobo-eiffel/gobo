@@ -1,15 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Lists implemented with arrays"
 
-	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class DS_ARRAYED_LIST [G]
 

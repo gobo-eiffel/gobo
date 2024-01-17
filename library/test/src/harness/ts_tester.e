@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel Test Library"
 	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/12/24 $"
-	revision: "$Revision: #13 $"
 
 class TS_TESTER
 

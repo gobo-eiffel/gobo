@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="formatter_doc" default="help">
 
@@ -6,8 +6,6 @@
 		description: "Gobo Eiffel String Formatter Library documentation"
 		copyright: "Copyright (c) 2004-2016, Berend de Boer and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>
