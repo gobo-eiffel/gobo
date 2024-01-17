@@ -283,7 +283,7 @@ feature -- Test
 			uc_parameter_1: UC_STRING
 		do
 			create uc_format_string_1.make_from_string ("$s")
-			uc_parameter_1_utf8 := "RAVEL MÃÂBLE"
+			uc_parameter_1_utf8 := "RAVEL MÃÂÃÂBLE"
 			create uc_parameter_1.make_from_utf8 (uc_parameter_1_utf8)
 			assert ("test1", STRING_.same_string ("hello", format (uc_format_string_1, <<"hello">>)))
 			assert ("test2", ANY_.same_types (uc_format_string_1, format (uc_format_string_1, <<"hello">>)))
@@ -296,7 +296,7 @@ feature -- Test
 			uc_parameter_1_utf8: STRING
 			uc_parameter_1: UC_STRING
 		do
-			uc_parameter_1_utf8 := "RAVEL MÃÂBLE"
+			uc_parameter_1_utf8 := "RAVEL MÃÂÃÂBLE"
 			create uc_parameter_1.make_from_utf8 (uc_parameter_1_utf8)
 			assert ("test1", STRING_.same_string (uc_parameter_1_utf8, format ("$s", <<uc_parameter_1>>)))
 		end
