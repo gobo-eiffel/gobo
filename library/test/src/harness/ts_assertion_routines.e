@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel Test Library"
 	copyright: "Copyright (c) 2000-2020, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2011/03/17 $"
-	revision: "$Revision: #17 $"
 
 deferred class TS_ASSERTION_ROUTINES
 
