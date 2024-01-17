@@ -142,6 +142,7 @@ feature {NONE} -- Test
 				create l_output.make_empty
 				create l_tokenizer.make_null
 				l_tokenizer.set_separator ("")
+				l_tokenizer.set_bom_enabled (False)
 				l_tokenizer.set_file (l_output)
 				a_class.process (l_tokenizer)
 				l_tokenizer.set_null_file
@@ -153,7 +154,7 @@ feature {NONE} -- Implementation
 
 	stripped_file (a_filename: STRING): STRING
 			-- Content of `a_filename' where spaces, tabs,
-			-- new-lines and comments have been removed.
+			-- new-lines, BOM, and comments have been removed.
 		require
 			a_filename_not_void: a_filename /= Void
 		local
