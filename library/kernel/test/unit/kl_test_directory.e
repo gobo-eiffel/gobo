@@ -4,7 +4,6 @@
 
 		"Test features of class KL_DIRECTORY"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"

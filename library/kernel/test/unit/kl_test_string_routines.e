@@ -4,7 +4,6 @@
 
 		"Test features of class KL_STRING_ROUTINES"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2002-2022, Eric Bezault and others"
 	license: "MIT License"

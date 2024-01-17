@@ -4,7 +4,6 @@
 
 		"Test features of KL_INTEGER_ROUTINES"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "MIT License"

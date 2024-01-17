@@ -4,7 +4,6 @@
 
 		"Test features of KL_CHARACTER_ROUTINES"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2006, Berend de Boer and others"
 	license: "MIT License"

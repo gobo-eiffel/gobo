@@ -4,7 +4,6 @@
 
 		"Test features of class UC_UNICODE_ROUTINES"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2004-2022, Eric Bezault and others"
 	license: "MIT License"

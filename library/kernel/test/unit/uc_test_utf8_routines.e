@@ -4,7 +4,6 @@
 
 		"Test features of class UC_UTF8_ROUTINES"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2005-2020, Colin Adams and others"
 	license: "MIT License"

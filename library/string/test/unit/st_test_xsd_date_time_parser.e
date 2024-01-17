@@ -4,7 +4,6 @@
 
 		"Test features of class ST_XSD_DATE_TIME_PARSER and ST_XSD_DATE_TIME_FORMAT"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2008-2017, Colin Adams and others"
 	license: "MIT License"
