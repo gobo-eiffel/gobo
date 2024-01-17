@@ -1,11 +1,10 @@
-note
+﻿note
 
 	description:
 
 		"Lists implemented with linked cells"
 
-	library:    "Gobo Eiffel Structure Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
+	library:    "Gobo Eiffel Parse Library"
 	copyright:  "Copyright (c) 1999, Eric Bezault and others"
 	license:    "MIT License"
 

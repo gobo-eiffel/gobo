@@ -73,7 +73,6 @@
 
 	<description>
 		system:      "My example"
-		author:      "John Doe [john@doe.net]"
 		copyright:   "Copyright (c) 2004, John Doe and others"
 		license:     "MIT License"
 	</description>
@@ -143,7 +142,6 @@
 
 	<description>
 		system:      "tests for my project"
-		author:      "John Doe [john@doe.com]"
 		copyright:   "Copyright (c) 2004, John Doe Ltd."
 	</description>
 
