@@ -5,7 +5,7 @@
 		"Eiffel boolean constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_BOOLEAN_CONSTANT
@@ -23,7 +23,7 @@ inherit
 			is_boolean_constant
 		end
 
-	ET_INDEXING_TERM
+	ET_NOTE_TERM
 		undefine
 			first_position,
 			last_position,
@@ -41,8 +41,8 @@ feature -- Status report
 	is_boolean_constant: BOOLEAN = True
 			-- Is current constant a BOOLEAN constant?
 
-	has_indexing_term_value (a_value: STRING): BOOLEAN
-			-- Does current indexing term have value `a_value'?
+	has_note_term_value (a_value: STRING): BOOLEAN
+			-- Does current note term have value `a_value'?
 			-- (case-insensitive comparison)
 		do
 			Result := STRING_.same_case_insensitive (text, a_value)
@@ -50,8 +50,8 @@ feature -- Status report
 
 feature -- Access
 
-	indexing_term_value: STRING
-			-- Value of current indexing term
+	note_term_value: STRING
+			-- Value of current note term
 		do
 			Result := text
 		end

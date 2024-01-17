@@ -5,7 +5,7 @@
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_AST_ITERATOR
@@ -463,8 +463,8 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_class'.
 		do
 			process_break (a_class.leading_break)
-			if attached a_class.first_indexing as l_first_indexing then
-				l_first_indexing.process (Current)
+			if attached a_class.first_note_clause as l_first_note_clause then
+				l_first_note_clause.process (Current)
 			end
 			if attached a_class.frozen_keyword as l_frozen_keyword then
 				l_frozen_keyword.process (Current)
@@ -496,8 +496,8 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_class.invariants as l_invariants then
 				l_invariants.process (Current)
 			end
-			if attached a_class.second_indexing as l_second_indexing then
-				l_second_indexing.process (Current)
+			if attached a_class.second_note_clause as l_second_note_clause then
+				l_second_note_clause.process (Current)
 			end
 			a_class.end_keyword.process (Current)
 		end
@@ -826,8 +826,8 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_feature.is_keyword as l_is_keyword then
 				l_is_keyword.process (Current)
 			end
-			if attached a_feature.first_indexing as l_first_indexing then
-				l_first_indexing.process (Current)
+			if attached a_feature.first_note as l_first_note then
+				l_first_note.process (Current)
 			end
 			if attached a_feature.obsolete_message as l_obsolete_message then
 				l_obsolete_message.process (Current)
@@ -867,8 +867,8 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_feature.is_keyword as l_is_keyword then
 				l_is_keyword.process (Current)
 			end
-			if attached a_feature.first_indexing as l_first_indexing then
-				l_first_indexing.process (Current)
+			if attached a_feature.first_note as l_first_note then
+				l_first_note.process (Current)
 			end
 			if attached a_feature.obsolete_message as l_obsolete_message then
 				l_obsolete_message.process (Current)
@@ -912,8 +912,8 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_feature.is_keyword as l_is_keyword then
 				l_is_keyword.process (Current)
 			end
-			if attached a_feature.first_indexing as l_first_indexing then
-				l_first_indexing.process (Current)
+			if attached a_feature.first_note as l_first_note then
+				l_first_note.process (Current)
 			end
 			if attached a_feature.obsolete_message as l_obsolete_message then
 				l_obsolete_message.process (Current)
@@ -990,8 +990,8 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_feature.is_keyword as l_is_keyword then
 				l_is_keyword.process (Current)
 			end
-			if attached a_feature.first_indexing as l_first_indexing then
-				l_first_indexing.process (Current)
+			if attached a_feature.first_note as l_first_note then
+				l_first_note.process (Current)
 			end
 			if attached a_feature.obsolete_message as l_obsolete_message then
 				l_obsolete_message.process (Current)
@@ -1232,8 +1232,8 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_feature.assigner as l_assigner then
 				l_assigner.process (Current)
 			end
-			if attached a_feature.first_indexing as l_first_indexing then
-				l_first_indexing.process (Current)
+			if attached a_feature.first_note as l_first_note then
+				l_first_note.process (Current)
 			end
 			if attached a_feature.obsolete_message as l_obsolete_message then
 				l_obsolete_message.process (Current)
@@ -1292,8 +1292,8 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_feature.is_keyword as l_is_keyword then
 				l_is_keyword.process (Current)
 			end
-			if attached a_feature.first_indexing as l_first_indexing then
-				l_first_indexing.process (Current)
+			if attached a_feature.first_note as l_first_note then
+				l_first_note.process (Current)
 			end
 			if attached a_feature.obsolete_message as l_obsolete_message then
 				l_obsolete_message.process (Current)
@@ -1360,8 +1360,8 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_feature.is_keyword as l_is_keyword then
 				l_is_keyword.process (Current)
 			end
-			if attached a_feature.first_indexing as l_first_indexing then
-				l_first_indexing.process (Current)
+			if attached a_feature.first_note as l_first_note then
+				l_first_note.process (Current)
 			end
 			if attached a_feature.obsolete_message as l_obsolete_message then
 				l_obsolete_message.process (Current)
@@ -1698,18 +1698,18 @@ feature {ET_AST_NODE} -- Processing
 			-- Implicit type marks are ignored.
 		end
 
-	process_indexing (an_indexing: ET_INDEXING)
-			-- Process `an_indexing'.
+	process_note (a_note: ET_NOTE)
+			-- Process `a_note'.
 		do
-			an_indexing.terms.process (Current)
+			a_note.terms.process (Current)
 		end
 
-	process_indexing_list (a_list: ET_INDEXING_LIST)
+	process_note_list (a_list: ET_NOTE_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
 		do
-			a_list.indexing_keyword.process (Current)
+			a_list.note_keyword.process (Current)
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				a_list.item (i).process (Current)
@@ -1717,21 +1717,21 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_indexing_semicolon (an_indexing: ET_INDEXING_SEMICOLON)
-			-- Process `an_indexing'.
+	process_note_semicolon (a_note: ET_NOTE_SEMICOLON)
+			-- Process `a_note'.
 		do
-			an_indexing.indexing_item.process (Current)
-			an_indexing.semicolon.process (Current)
+			a_note.note_item.process (Current)
+			a_note.semicolon.process (Current)
 		end
 
-	process_indexing_term_comma (an_indexing_term: ET_INDEXING_TERM_COMMA)
-			-- Process `an_indexing_term'.
+	process_note_term_comma (a_note_term: ET_NOTE_TERM_COMMA)
+			-- Process `a_note_term'.
 		do
-			an_indexing_term.indexing_term.process (Current)
-			an_indexing_term.comma.process (Current)
+			a_note_term.note_term.process (Current)
+			a_note_term.comma.process (Current)
 		end
 
-	process_indexing_term_list (a_list: ET_INDEXING_TERM_LIST)
+	process_note_term_list (a_list: ET_NOTE_TERM_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -2157,8 +2157,8 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_feature.is_keyword as l_is_keyword then
 				l_is_keyword.process (Current)
 			end
-			if attached a_feature.first_indexing as l_first_indexing then
-				l_first_indexing.process (Current)
+			if attached a_feature.first_note as l_first_note then
+				l_first_note.process (Current)
 			end
 			if attached a_feature.obsolete_message as l_obsolete_message then
 				l_obsolete_message.process (Current)
@@ -2265,8 +2265,8 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_feature.is_keyword as l_is_keyword then
 				l_is_keyword.process (Current)
 			end
-			if attached a_feature.first_indexing as l_first_indexing then
-				l_first_indexing.process (Current)
+			if attached a_feature.first_note as l_first_note then
+				l_first_note.process (Current)
 			end
 			if attached a_feature.obsolete_message as l_obsolete_message then
 				l_obsolete_message.process (Current)
@@ -2757,11 +2757,11 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_tagged_indexing (an_indexing: ET_TAGGED_INDEXING)
-			-- Process `an_indexing'.
+	process_tagged_note (a_note: ET_TAGGED_NOTE)
+			-- Process `a_note'.
 		do
-			an_indexing.tag.process (Current)
-			process_indexing (an_indexing)
+			a_note.tag.process (Current)
+			process_note (a_note)
 		end
 
 	process_token (a_token: ET_TOKEN)

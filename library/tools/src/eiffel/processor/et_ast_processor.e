@@ -5,7 +5,7 @@
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_AST_PROCESSOR
@@ -867,35 +867,35 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_indexing (an_indexing: ET_INDEXING)
-			-- Process `an_indexing'.
+	process_note (a_note: ET_NOTE)
+			-- Process `a_note'.
 		require
-			an_indexing_not_void: an_indexing /= Void
+			a_note_not_void: a_note /= Void
 		deferred
 		end
 
-	process_indexing_semicolon (an_indexing: ET_INDEXING_SEMICOLON)
-			-- Process `an_indexing'.
+	process_note_semicolon (a_note: ET_NOTE_SEMICOLON)
+			-- Process `a_note'.
 		require
-			an_indexing_not_void: an_indexing /= Void
+			a_note_not_void: a_note /= Void
 		deferred
 		end
 
-	process_indexing_term_comma (an_indexing_term: ET_INDEXING_TERM_COMMA)
-			-- Process `an_indexing_term'.
+	process_note_term_comma (a_note_term: ET_NOTE_TERM_COMMA)
+			-- Process `a_note_term'.
 		require
-			an_indexing_term_not_void: an_indexing_term /= Void
+			a_note_term_not_void: a_note_term /= Void
 		deferred
 		end
 
-	process_indexing_term_list (a_list: ET_INDEXING_TERM_LIST)
+	process_note_term_list (a_list: ET_NOTE_TERM_LIST)
 			-- Process `a_list'.
 		require
 			a_list_not_void: a_list /= Void
 		deferred
 		end
 
-	process_indexing_list (a_list: ET_INDEXING_LIST)
+	process_note_list (a_list: ET_NOTE_LIST)
 			-- Process `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -1492,10 +1492,10 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_tagged_indexing (an_indexing: ET_TAGGED_INDEXING)
-			-- Process `an_indexing'.
+	process_tagged_note (a_note: ET_TAGGED_NOTE)
+			-- Process `a_note'.
 		require
-			an_indexing_not_void: an_indexing /= Void
+			a_note_not_void: a_note /= Void
 		deferred
 		end
 

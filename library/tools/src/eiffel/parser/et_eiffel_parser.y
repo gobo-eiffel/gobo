@@ -6,7 +6,7 @@ note
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_EIFFEL_PARSER
@@ -187,11 +187,6 @@ create
 %type <detachable ET_IDENTIFIER> Identifier Class_name
 %type <detachable ET_IF_EXPRESSION> Conditional_expression
 %type <detachable ET_IF_INSTRUCTION> Conditional_instruction
-%type <detachable ET_INDEXING_LIST> Indexing_clause Indexing_clause_opt Index_list Note_list
-%type <detachable ET_INDEXING_ITEM> Index_clause Index_clause_semicolon Index_clause_impl Note_item Note_item_semicolon Note_item_impl
-%type <detachable ET_INDEXING_TERM> Index_value
-%type <detachable ET_INDEXING_TERM_ITEM> Index_value_comma
-%type <detachable ET_INDEXING_TERM_LIST> Index_terms
 %type <detachable ET_INLINE_AGENT> Inline_agent Inline_agent_no_actual_arguments
 %type <detachable ET_INLINE_SEPARATE_ARGUMENT> Inline_separate_argument
 %type <detachable ET_INLINE_SEPARATE_ARGUMENT_ITEM> Inline_separate_argument_comma
@@ -215,6 +210,11 @@ create
 %type <detachable ET_MANIFEST_STRING_ITEM> Untyped_manifest_string_comma
 %type <detachable ET_MANIFEST_STRING_LIST> Untyped_manifest_string_list Parenthesized_untyped_manifest_string_list_opt
 %type <detachable ET_MANIFEST_TUPLE> Manifest_tuple Manifest_tuple_expression_list
+%type <detachable ET_NOTE_LIST> Note_clause Note_clause_opt Indexing_list Note_list
+%type <detachable ET_NOTE_ITEM> Indexing_item Indexing_item_semicolon Indexing_item_impl Note_item Note_item_semicolon Note_item_impl
+%type <detachable ET_NOTE_TERM> Note_value
+%type <detachable ET_NOTE_TERM_ITEM> Note_value_comma
+%type <detachable ET_NOTE_TERM_LIST> Note_terms
 %type <detachable ET_OBSOLETE> Obsolete_opt
 %type <detachable ET_PARENTHESIZED_EXPRESSION> Parenthesized_expression
 %type <detachable ET_PARENT> Parent
@@ -266,11 +266,11 @@ Class_declarations: Class_declaration
 		}
 	;
 
-Class_declaration: Indexing_clause_opt Class_to_end
+Class_declaration: Note_clause_opt Class_to_end
 		{
 			$$ := $2
 			if $$ /= Void then
-				$$.set_first_indexing ($1)
+				$$.set_first_note_clause ($1)
 			end
 		}
 	;
@@ -288,7 +288,7 @@ Class_declaration_opt: -- Empty
 	;
 
 Class_to_end: Class_header Formal_parameters_opt Obsolete_opt Inheritance_opt Creators_opt
-	Convert_clause_opt Features_opt Invariant_clause_opt Indexing_clause_opt E_END Set_providers Class_declaration_opt
+	Convert_clause_opt Features_opt Invariant_clause_opt Note_clause_opt E_END Set_providers Class_declaration_opt
 		{
 			$$ := $1
 			set_class_to_end ($$, $3, $4, $5, $6, $7, $8, $9, $10)
@@ -300,21 +300,21 @@ Set_providers: { set_class_providers }
 
 --------------------------------------------------------------------------------
 
-Indexing_clause: E_INDEXING
-		{ $$ := ast_factory.new_indexings ($1, 0) }
+Note_clause: E_INDEXING
+		{ $$ := ast_factory.new_notes ($1, 0) }
 	| E_INDEXING
 		{
 			add_keyword ($1)
 			add_counter
 		}
-	Index_list
+	Indexing_list
 		{
 			$$ := $3
 			remove_keyword
 			remove_counter
 		}
 	| E_NOTE
-		{ $$ := ast_factory.new_indexings ($1, 0) }
+		{ $$ := ast_factory.new_notes ($1, 0) }
 	| E_NOTE
 		{
 			add_keyword ($1)
@@ -328,21 +328,21 @@ Indexing_clause: E_INDEXING
 		}
 	;
 
-Indexing_clause_opt: -- Empty
+Note_clause_opt: -- Empty
 		-- { $$ := Void }
-	| Indexing_clause
+	| Note_clause
 		{ $$ := $1 }
 	;
 
 Note_list: Note_item
 		{
 			if attached $1 as l_note then
-				$$ := ast_factory.new_indexings (last_keyword, counter_value + 1)
+				$$ := ast_factory.new_notes (last_keyword, counter_value + 1)
 				if $$ /= Void then
 					$$.put_first (l_note)
 				end
 			else
-				$$ := ast_factory.new_indexings (last_keyword, counter_value)
+				$$ := ast_factory.new_notes (last_keyword, counter_value)
 			end
 		}
 	| Note_item
@@ -372,104 +372,104 @@ Note_item: Add_counter Note_item_impl
 		}
 	;
 
-Note_item_impl: Identifier ':' Index_terms
+Note_item_impl: Identifier ':' Note_terms
 		{
-			$$ := ast_factory.new_tagged_indexing (ast_factory.new_tag ($1, $2), $3)
+			$$ := ast_factory.new_tagged_note (ast_factory.new_tag ($1, $2), $3)
 		}
 	;
 
 Note_item_semicolon: Note_item ';'
-		{ $$ := ast_factory.new_indexing_semicolon ($1, $2) }
+		{ $$ := ast_factory.new_note_semicolon ($1, $2) }
 	;
 
-Index_list: Index_clause
+Indexing_list: Indexing_item
 		{
-			if attached $1 as l_indexing_clause then
-				$$ := ast_factory.new_indexings (last_keyword, counter_value + 1)
+			if attached $1 as l_note then
+				$$ := ast_factory.new_notes (last_keyword, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first (l_indexing_clause)
+					$$.put_first (l_note)
 				end
 			else
-				$$ := ast_factory.new_indexings (last_keyword, counter_value)
+				$$ := ast_factory.new_notes (last_keyword, counter_value)
 			end
 		}
-	| Index_clause_semicolon
+	| Indexing_item_semicolon
 		-- TODO: Syntax error
 		{
-			if attached $1 as l_indexing_clause then
-				$$ := ast_factory.new_indexings (last_keyword, counter_value + 1)
+			if attached $1 as l_note then
+				$$ := ast_factory.new_notes (last_keyword, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first (l_indexing_clause)
+					$$.put_first (l_note)
 				end
 			else
-				$$ := ast_factory.new_indexings (last_keyword, counter_value)
+				$$ := ast_factory.new_notes (last_keyword, counter_value)
 			end
 		}
-	| Index_clause
+	| Indexing_item
 		{ increment_counter }
-	  Index_list
+	  Indexing_list
 		{
 			$$ := $3
-			if $$ /= Void and attached $1 as l_indexing_clause then
-				$$.put_first (l_indexing_clause)
+			if $$ /= Void and attached $1 as l_note then
+				$$.put_first (l_note)
 			end
 		}
-	| Index_clause_semicolon
+	| Indexing_item_semicolon
 		{ increment_counter }
-	  Index_list
+	  Indexing_list
 		{
 			$$ := $3
-			if $$ /= Void and attached $1 as l_indexing_clause then
-				$$.put_first (l_indexing_clause)
+			if $$ /= Void and attached $1 as l_note then
+				$$.put_first (l_note)
 			end
 		}
 	;
 
-Index_clause: Add_counter Index_clause_impl
+Indexing_item: Add_counter Indexing_item_impl
 		{
 			$$ := $2
 			remove_counter
 		}
 	;
 
-Index_clause_impl: Index_terms
+Indexing_item_impl: Note_terms
 		{
-			$$ := ast_factory.new_indexing ($1)
+			$$ := ast_factory.new_note ($1)
 		}
-	| Identifier ':' Index_terms
+	| Identifier ':' Note_terms
 		{
-			$$ := ast_factory.new_tagged_indexing (ast_factory.new_tag ($1, $2), $3)
+			$$ := ast_factory.new_tagged_note (ast_factory.new_tag ($1, $2), $3)
 		}
 	;
 
-Index_clause_semicolon: Index_clause ';'
-		{ $$ := ast_factory.new_indexing_semicolon ($1, $2) }
-	| Index_clause_semicolon ';'
+Indexing_item_semicolon: Indexing_item ';'
+		{ $$ := ast_factory.new_note_semicolon ($1, $2) }
+	| Indexing_item_semicolon ';'
 		-- TODO: Syntax error
-		{ $$ := ast_factory.new_indexing_semicolon ($1, $2) }
+		{ $$ := ast_factory.new_note_semicolon ($1, $2) }
 	;
 
-Index_terms: Index_value
+Note_terms: Note_value
 		{
-			if attached $1 as l_index_value then
-				$$ := ast_factory.new_indexing_terms (counter_value + 1)
+			if attached $1 as l_note_value then
+				$$ := ast_factory.new_note_terms (counter_value + 1)
 				if $$ /= Void then
-					$$.put_first (l_index_value)
+					$$.put_first (l_note_value)
 				end
 			else
-				$$ := ast_factory.new_indexing_terms (counter_value)
+				$$ := ast_factory.new_note_terms (counter_value)
 			end
 		}
-	| Index_value_comma Index_terms
+	| Note_value_comma Note_terms
 		{
 			$$ := $2
-			if $$ /= Void and attached $1 as l_index_value then
-				$$.put_first (l_index_value)
+			if $$ /= Void and attached $1 as l_note_value then
+				$$.put_first (l_note_value)
 			end
 		}
 	;
 
-Index_value: Identifier
+Note_value: Identifier
 		{ $$ := $1 }
 	| Boolean_constant
 		{ $$ := $1 }
@@ -487,9 +487,9 @@ Index_value: Identifier
 		{ $$ := ast_factory.new_custom_attribute ($1, $2, $3) }
 	;
 
-Index_value_comma: Index_value ','
+Note_value_comma: Note_value ','
 		{
-			$$ := ast_factory.new_indexing_term_comma ($1, $2)
+			$$ := ast_factory.new_note_term_comma ($1, $2)
 			if $$ /= Void then
 				increment_counter
 			end
@@ -1907,7 +1907,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		{ $$ := ast_factory.new_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, Void, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt ';'
 		{ $$ := ast_factory.new_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt Attribute_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
+	| Extended_feature_name ':' Type Assigner_opt Note_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt Attribute_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
 			$$ := ast_factory.new_extended_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
 		}
@@ -1931,10 +1931,10 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 				$$ := ast_factory.new_unique_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class)
 			end
 		}
-	| Extended_feature_name ':' Type Assigner_opt E_IS Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
+	| Extended_feature_name ':' Type Assigner_opt E_IS Note_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_do_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
+	| Extended_feature_name ':' Type Assigner_opt Note_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
 			if system_processor.older_ise_version (ise_5_7_59914) then
@@ -1943,11 +1943,11 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 				$$ := ast_factory.new_do_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
 			end
 		}
-	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt E_IS Note_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_do_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Note_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
@@ -1957,10 +1957,10 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 				$$ := ast_factory.new_do_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class)
 			end
 		}
-	| Extended_feature_name ':' Type Assigner_opt E_IS Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
+	| Extended_feature_name ':' Type Assigner_opt E_IS Note_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $11, ast_factory.new_once_compound ($10, $12), $13, $14, $15, $16, last_clients, last_feature_clause, last_class) }	
-	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
+	| Extended_feature_name ':' Type Assigner_opt Note_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
 			if system_processor.older_ise_version (ise_5_7_59914) then
@@ -1969,11 +1969,11 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 				$$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $10, ast_factory.new_once_compound ($9, $11), $12, $13, $14, $15, last_clients, last_feature_clause, last_class)
 			end
 		}
-	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt E_IS Note_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $12, ast_factory.new_once_compound ($11, $13), $14, $15, $16, $17, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Note_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
@@ -1983,9 +1983,9 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 				$$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $11, ast_factory.new_once_compound ($10, $12), $13, $14, $15, $16, last_clients, last_feature_clause, last_class)
 			end
 		}
-	| Extended_feature_name ':' Type Assigner_opt E_IS Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
+	| Extended_feature_name ':' Type Assigner_opt E_IS Note_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_deferred_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
+	| Extended_feature_name ':' Type Assigner_opt Note_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{
 			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
@@ -1993,10 +1993,10 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 				$$ := ast_factory.new_deferred_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class)
 			end
 		}
-	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt E_IS Note_clause_opt
 	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_deferred_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Note_clause_opt
 	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{
 			if system_processor.older_ise_version (ise_5_7_59914) then
@@ -2005,10 +2005,10 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 				$$ := ast_factory.new_deferred_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class)
 			end
 		}
-	| Extended_feature_name ':' Type Assigner_opt E_IS Indexing_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Untyped_manifest_string
+	| Extended_feature_name ':' Type Assigner_opt E_IS Note_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Untyped_manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{ $$ := new_external_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, ast_factory.new_external_language ($9, $10), $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Untyped_manifest_string
+	| Extended_feature_name ':' Type Assigner_opt Note_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Untyped_manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{
 			if system_processor.older_ise_version (ise_5_7_59914) then
@@ -2017,11 +2017,11 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 				$$ := new_external_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, ast_factory.new_external_language ($8, $9), $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
 			end
 		}
-	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt E_IS Note_clause_opt
 	Obsolete_opt Precondition_opt E_EXTERNAL Untyped_manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{ $$ := new_external_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, ast_factory.new_external_language ($10, $11), $12, $13, $14, $15, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Note_clause_opt
 	Obsolete_opt Precondition_opt E_EXTERNAL Untyped_manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{
@@ -2033,29 +2033,29 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		}
 	;
 
-Single_procedure_declaration: Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
+Single_procedure_declaration: Extended_feature_name Is_opt Note_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_do_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Feature_formal_arguments Is_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments Is_opt Note_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_do_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
+	| Extended_feature_name Is_opt Note_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_procedure ($1, Void, $2, $3, $4, $5, $6, $8, ast_factory.new_once_compound ($7, $9), $10, $11, $12, $13, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Feature_formal_arguments Is_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments Is_opt Note_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_procedure ($1, $2, $3, $4, $5, $6, $7, $9, ast_factory.new_once_compound ($8, $10), $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
+	| Extended_feature_name Is_opt Note_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_deferred_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Feature_formal_arguments Is_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments Is_opt Note_clause_opt
 	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_deferred_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Untyped_manifest_string
+	| Extended_feature_name Is_opt Note_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Untyped_manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{ $$ := new_external_procedure ($1, Void, $2, $3, $4, $5, ast_factory.new_external_language ($6, $7), $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Feature_formal_arguments Is_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments Is_opt Note_clause_opt
 	Obsolete_opt Precondition_opt E_EXTERNAL Untyped_manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{ $$ := new_external_procedure ($1, $2, $3, $4, $5, $6, ast_factory.new_external_language ($7, $8), $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }

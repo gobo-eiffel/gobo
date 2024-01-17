@@ -5,7 +5,7 @@
 		"Eiffel internal (do, once or attribute) features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2020-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_INTERNAL_FEATURE
@@ -27,7 +27,7 @@ inherit
 		rename
 			implementation_closure as implementation_feature
 		undefine
-			first_indexing,
+			first_note,
 			implementation_feature
 		end
 

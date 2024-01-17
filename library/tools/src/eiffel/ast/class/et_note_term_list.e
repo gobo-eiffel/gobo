@@ -2,19 +2,19 @@
 
 	description:
 
-		"Eiffel lists of indexing terms"
+		"Eiffel lists of note terms"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
-class ET_INDEXING_TERM_LIST
+class ET_NOTE_TERM_LIST
 
 inherit
 
 	ET_AST_NODE
 
-	ET_HEAD_LIST [ET_INDEXING_TERM_ITEM]
+	ET_HEAD_LIST [ET_NOTE_TERM_ITEM]
 
 create
 
@@ -55,8 +55,8 @@ feature -- Access
 
 feature -- Status report
 
-	has_indexing_term_value (a_value: STRING): BOOLEAN
-			-- Does current indexing term list contain one
+	has_note_term_value (a_value: STRING): BOOLEAN
+			-- Does current note term list contain one
 			-- which has value `a_value'?
 			-- (case-insensitive comparison)
 		require
@@ -70,7 +70,7 @@ feature -- Status report
 			until
 				i < 0
 			loop
-				if storage.item (i).has_indexing_term_value (a_value) then
+				if storage.item (i).has_note_term_value (a_value) then
 					Result := True
 						-- Jump out of the loop.
 					i := 0
@@ -81,8 +81,8 @@ feature -- Status report
 
 feature -- Basic operations
 
-	append_indexing_terms_to_list (a_list: DS_ARRAYED_LIST [ET_INDEXING_TERM])
-			-- Append indexing terms to `a_list'.
+	append_note_terms_to_list (a_list: DS_ARRAYED_LIST [ET_NOTE_TERM])
+			-- Append note terms to `a_list'.
 		require
 			a_list_not_void: a_list /= Void
 		local
@@ -93,7 +93,7 @@ feature -- Basic operations
 			until
 				i < 0
 			loop
-				a_list.force_last (storage.item (i).indexing_term)
+				a_list.force_last (storage.item (i).note_term)
 				i := i - 1
 			end
 		end
@@ -103,12 +103,12 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
-			a_processor.process_indexing_term_list (Current)
+			a_processor.process_note_term_list (Current)
 		end
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_INDEXING_TERM_ITEM]
+	fixed_array: KL_SPECIAL_ROUTINES [ET_NOTE_TERM_ITEM]
 			-- Fixed array routines
 		once
 			create Result

@@ -47,7 +47,7 @@ inherit
 			implementation_closure as implementation_feature
 		undefine
 			arguments,
-			first_indexing,
+			first_note,
 			implementation_feature
 		end
 
@@ -133,7 +133,7 @@ feature -- Duplication
 			Result.set_end_keyword (end_keyword)
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
-			Result.set_first_indexing (first_indexing)
+			Result.set_first_note (first_note)
 			Result.set_object_tests (object_tests)
 			Result.set_iteration_components (iteration_components)
 			Result.set_inline_separate_arguments (inline_separate_arguments)
@@ -162,7 +162,7 @@ feature -- Conversion
 			Result.set_frozen_keyword (frozen_keyword)
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
-			Result.set_first_indexing (first_indexing)
+			Result.set_first_note (first_note)
 			Result.set_object_tests (object_tests)
 			Result.set_iteration_components (iteration_components)
 			Result.set_inline_separate_arguments (inline_separate_arguments)

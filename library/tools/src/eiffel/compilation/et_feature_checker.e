@@ -186,8 +186,8 @@ feature {NONE} -- Initialization
 			create assertions_by_feature.make_map (30)
 				-- Common Ancestor Types.
 			create common_ancestor_type_list.make (500)
-				-- Indexing.
-			create indexing_term_list.make (10)
+				-- Note clauses.
+			create note_term_list.make (10)
 				-- VAPE validity check.
 			create vape_non_descendant_clients.make_with_capacity (20)
 			create vape_creation_clients.make_with_capacity (20)
@@ -1591,7 +1591,7 @@ feature {NONE} -- Feature validity
 				check_locals_validity (l_locals, a_feature)
 				had_error := had_error or has_fatal_error
 			end
-			check_once_keys_validity (a_feature.keys, a_feature.first_indexing)
+			check_once_keys_validity (a_feature.keys, a_feature.first_note)
 			had_key_error := has_fatal_error
 			if not had_error then
 				l_compound := a_feature.compound
@@ -1691,7 +1691,7 @@ feature {NONE} -- Feature validity
 				check_locals_validity (l_locals, a_feature)
 				had_error := had_error or has_fatal_error
 			end
-			check_once_keys_validity (a_feature.keys, a_feature.first_indexing)
+			check_once_keys_validity (a_feature.keys, a_feature.first_note)
 			had_key_error := has_fatal_error
 			if not had_error then
 				l_compound := a_feature.compound
@@ -2483,50 +2483,50 @@ feature {NONE} -- Type checking
 
 feature {NONE} -- Once key validity
 
-	check_once_keys_validity (a_keys: detachable ET_MANIFEST_STRING_LIST; a_indexing_list: detachable ET_INDEXING_LIST)
+	check_once_keys_validity (a_keys: detachable ET_MANIFEST_STRING_LIST; a_note_list: detachable ET_NOTE_LIST)
 			-- Check validity of once keys `a_keys'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			l_indexing_term_list: like indexing_term_list
-			l_indexing_term: ET_INDEXING_TERM
+			l_note_term_list: like note_term_list
+			l_note_term: ET_NOTE_TERM
 			l_object_key: detachable ET_MANIFEST_STRING
 			l_thread_key: detachable ET_MANIFEST_STRING
 			l_process_key: detachable ET_MANIFEST_STRING
-			l_thread_indexing: detachable ET_INDEXING_TERM
-			l_process_indexing: detachable ET_INDEXING_TERM
+			l_thread_note: detachable ET_NOTE_TERM
+			l_process_note: detachable ET_NOTE_TERM
 			i, nb: INTEGER
 			l_key: ET_MANIFEST_STRING
 		do
 			has_fatal_error := False
-			if a_indexing_list /= Void then
-				l_indexing_term_list := indexing_term_list
-				a_indexing_list.append_tagged_indexing_terms_to_list (tokens.once_indexing_tag, l_indexing_term_list)
-				nb := l_indexing_term_list.count
+			if a_note_list /= Void then
+				l_note_term_list := note_term_list
+				a_note_list.append_tagged_note_terms_to_list (tokens.once_note_tag, l_note_term_list)
+				nb := l_note_term_list.count
 				from i := 1 until i > nb loop
-					l_indexing_term := l_indexing_term_list.item (i)
-					if l_indexing_term.has_indexing_term_value (tokens.global_once_indexing_value) then
-						l_process_indexing := l_indexing_term
-						if l_thread_indexing /= Void then
+					l_note_term := l_note_term_list.item (i)
+					if l_note_term.has_note_term_value (tokens.global_once_note_value) then
+						l_process_note := l_note_term
+						if l_thread_note /= Void then
 								-- Error: once keys "THREAD" and "PROCESS" cannot be combined.
 							set_fatal_error
-							error_handler.report_vvok1c_error (current_class, l_thread_indexing, l_indexing_term)
+							error_handler.report_vvok1c_error (current_class, l_thread_note, l_note_term)
 						end
-					elseif l_indexing_term.has_indexing_term_value (tokens.thread_once_indexing_value) then
-						l_thread_indexing := l_indexing_term
-						if l_process_indexing /= Void then
+					elseif l_note_term.has_note_term_value (tokens.thread_once_note_value) then
+						l_thread_note := l_note_term
+						if l_process_note /= Void then
 								-- Error: once keys "PROCESS" and "THREAD" cannot be combined.
 							set_fatal_error
-							error_handler.report_vvok1c_error (current_class, l_process_indexing, l_indexing_term)
+							error_handler.report_vvok1c_error (current_class, l_process_note, l_note_term)
 						end
 					else
 							-- Error: this once key is not supported. The supported once keys
 							-- are "THREAD", "PROCESS" and "OBJECT".
 						set_fatal_error
-						error_handler.report_vvok2b_error (current_class, l_indexing_term)
+						error_handler.report_vvok2b_error (current_class, l_note_term)
 					end
 					i := i + 1
 				end
-				l_indexing_term_list.wipe_out
+				l_note_term_list.wipe_out
 			end
 			if a_keys /= Void then
 				nb := a_keys.count
@@ -2542,14 +2542,14 @@ feature {NONE} -- Once key validity
 								-- Error: once keys "PROCESS" and "OBJECT" cannot be combined.
 							set_fatal_error
 							error_handler.report_vvok1a_error (current_class, l_process_key, l_key)
-						elseif l_thread_indexing /= Void then
+						elseif l_thread_note /= Void then
 								-- Error: once keys "THREAD" and "OBJECT" cannot be combined.
 							set_fatal_error
-							error_handler.report_vvok1b_error (current_class, l_thread_indexing, l_key)
-						elseif l_process_indexing /= Void then
+							error_handler.report_vvok1b_error (current_class, l_thread_note, l_key)
+						elseif l_process_note /= Void then
 								-- Error: once keys "PROCESS" and "OBJECT" cannot be combined.
 							set_fatal_error
-							error_handler.report_vvok1b_error (current_class, l_process_indexing, l_key)
+							error_handler.report_vvok1b_error (current_class, l_process_note, l_key)
 						end
 					elseif standard_once_keys.is_thread_key (l_key) then
 						l_thread_key := l_key
@@ -2561,10 +2561,10 @@ feature {NONE} -- Once key validity
 								-- Error: once keys "PROCESS" and "THREAD" cannot be combined.
 							set_fatal_error
 							error_handler.report_vvok1a_error (current_class, l_process_key, l_key)
-						elseif l_process_indexing /= Void then
+						elseif l_process_note /= Void then
 								-- Error: once keys "PROCESS" and "THREAD" cannot be combined.
 							set_fatal_error
-							error_handler.report_vvok1b_error (current_class, l_process_indexing, l_key)
+							error_handler.report_vvok1b_error (current_class, l_process_note, l_key)
 						end
 					elseif standard_once_keys.is_process_key (l_key) then
 						l_process_key := l_key
@@ -2576,10 +2576,10 @@ feature {NONE} -- Once key validity
 								-- Error: once keys "THREAD" and "PROCESS" cannot be combined.
 							set_fatal_error
 							error_handler.report_vvok1a_error (current_class, l_thread_key, l_key)
-						elseif l_thread_indexing /= Void then
+						elseif l_thread_note /= Void then
 								-- Error: once keys "THREAD" and "PROCESS" cannot be combined.
 							set_fatal_error
-							error_handler.report_vvok1b_error (current_class, l_thread_indexing, l_key)
+							error_handler.report_vvok1b_error (current_class, l_thread_note, l_key)
 						end
 					else
 							-- Error: this once key is not supported. The supported once keys
@@ -14282,7 +14282,7 @@ feature {NONE} -- Agent validity
 				check_inline_agent_locals_validity (l_locals, an_expression)
 				had_error := had_error or has_fatal_error
 			end
-			check_once_keys_validity (an_expression.keys, an_expression.first_indexing)
+			check_once_keys_validity (an_expression.keys, an_expression.first_note)
 			had_key_error := has_fatal_error
 			if not had_error then
 				l_compound := an_expression.compound
@@ -14440,7 +14440,7 @@ feature {NONE} -- Agent validity
 				check_inline_agent_locals_validity (l_locals, an_expression)
 				had_error := had_error or has_fatal_error
 			end
-			check_once_keys_validity (an_expression.keys, an_expression.first_indexing)
+			check_once_keys_validity (an_expression.keys, an_expression.first_note)
 			had_key_error := has_fatal_error
 			if not had_error then
 				l_compound := an_expression.compound
@@ -17059,10 +17059,10 @@ feature {NONE} -- Choice constants
 			integer_choice_constant_not_void: Result /= Void
 		end
 
-feature {NONE} -- Indexing
+feature {NONE} -- Note clauses
 
-	indexing_term_list: DS_ARRAYED_LIST [ET_INDEXING_TERM]
-			-- List to store indexing terms
+	note_term_list: DS_ARRAYED_LIST [ET_NOTE_TERM]
+			-- List to store note terms
 
 feature {NONE} -- Overloading (useful in .NET)
 
@@ -17695,8 +17695,8 @@ invariant
 	current_class_impl_definition: current_class_impl = current_feature_impl.implementation_class
 	-- implementation_checked: if inherited, then the code being analyzed has already been checked in implementation class of `current_feature_impl'
 	type_checker_not_void: type_checker /= Void
-	indexing_term_list_not_void: indexing_term_list /= Void
-	no_void_indexing_term: not indexing_term_list.has_void
+	note_term_list_not_void: note_term_list /= Void
+	no_void_note_term: not note_term_list.has_void
 	unused_overloaded_procedures_list_not_void: unused_overloaded_procedures_list /= Void
 	no_void_unused_overloaded_procedures: not unused_overloaded_procedures_list.has_void
 	-- SE 1.2r7 crashes when compiling this line:

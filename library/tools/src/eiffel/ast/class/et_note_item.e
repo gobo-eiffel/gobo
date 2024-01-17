@@ -5,10 +5,10 @@
 		"Eiffel note clauses which appear in a semicolon-separated list of note clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
-deferred class ET_INDEXING_ITEM
+deferred class ET_NOTE_ITEM
 
 inherit
 
@@ -16,11 +16,11 @@ inherit
 
 feature -- Access
 
-	indexing_clause: ET_INDEXING
+	note_clause: ET_NOTE
 			-- Note clause in semicolon-separated list
 		deferred
 		ensure
-			indexing_clause_not_void: Result /= Void
+			note_clause_not_void: Result /= Void
 		end
 
 end

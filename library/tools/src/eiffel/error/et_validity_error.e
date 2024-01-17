@@ -5,7 +5,7 @@
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_VALIDITY_ERROR
@@ -14666,8 +14666,8 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = second once key
 		end
 
-	make_vvok1b (a_class: ET_CLASS; a_indexing_term1: ET_INDEXING_TERM; a_once_key2: ET_MANIFEST_STRING)
-			-- Create a new VVOK-1 error: `a_indexing_term1' and `a_once_key2' cannot be
+	make_vvok1b (a_class: ET_CLASS; a_note_term1: ET_NOTE_TERM; a_once_key2: ET_MANIFEST_STRING)
+			-- Create a new VVOK-1 error: `a_note_term1' and `a_once_key2' cannot be
 			-- combined. The supported once keys "PROCESS", "THREAD" and "OBJECT"
 			-- cannot be combined.
 			--
@@ -14675,7 +14675,7 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_indexing_term1_not_void: a_indexing_term1 /= Void
+			a_note_term1_not_void: a_note_term1 /= Void
 			a_once_key2_not_void: a_once_key2 /= Void
 		do
 			current_class := a_class
@@ -14690,7 +14690,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_indexing_term1.indexing_term_value, 6)
+			parameters.put (a_note_term1.note_term_value, 6)
 			parameters.put (a_once_key2.value, 7)
 			set_compilers (True)
 		ensure
@@ -14704,12 +14704,12 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = first once indexing term
+			-- dollar6: $6 = first once note term
 			-- dollar7: $7 = second once key
 		end
 
-	make_vvok1c (a_class: ET_CLASS; a_indexing_term1, a_indexing_term2: ET_INDEXING_TERM)
-			-- Create a new VVOK-1 error: `a_indexing_term1' and `a_indexing_term2' cannot be
+	make_vvok1c (a_class: ET_CLASS; a_note_term1, a_note_term2: ET_NOTE_TERM)
+			-- Create a new VVOK-1 error: `a_note_term1' and `a_note_term2' cannot be
 			-- combined. The supported once keys "PROCESS", "THREAD" and "OBJECT"
 			-- cannot be combined.
 			--
@@ -14717,12 +14717,12 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_indexing_term1_not_void: a_indexing_term1 /= Void
-			a_indexing_term2_not_void: a_indexing_term2 /= Void
+			a_note_term1_not_void: a_note_term1 /= Void
+			a_note_term2_not_void: a_note_term2 /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_indexing_term2.position
+			position := a_note_term2.position
 			code := template_code (vvok1c_template_code)
 			etl_code := vvok1_etl_code
 			default_template := default_message_template (vvok1c_default_template)
@@ -14732,8 +14732,8 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_indexing_term1.indexing_term_value, 6)
-			parameters.put (a_indexing_term2.indexing_term_value, 7)
+			parameters.put (a_note_term1.note_term_value, 6)
+			parameters.put (a_note_term2.note_term_value, 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -14746,8 +14746,8 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = first once indexing term
-			-- dollar7: $7 = second once indexing term
+			-- dollar6: $6 = first once note term
+			-- dollar7: $7 = second once note term
 		end
 
 	make_vvok2a (a_class: ET_CLASS; a_once_key: ET_MANIFEST_STRING)
@@ -14788,19 +14788,19 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = once key
 		end
 
-	make_vvok2b (a_class: ET_CLASS; a_indexing_term: ET_INDEXING_TERM)
-			-- Create a new VVOK-2 error: `a_indexing_term' is not one of the supported
+	make_vvok2b (a_class: ET_CLASS; a_note_term: ET_NOTE_TERM)
+			-- Create a new VVOK-2 error: `a_note_term' is not one of the supported
 			-- once keys. The supported once keys are "PROCESS", "THREAD" and "OBJECT".
 			--
 			-- Not in ECMA, only in ISE
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_indexing_term_not_void: a_indexing_term /= Void
+			a_note_term_not_void: a_note_term /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_indexing_term.position
+			position := a_note_term.position
 			code := template_code (vvok2b_template_code)
 			etl_code := vvok2_etl_code
 			default_template := default_message_template (vvok2b_default_template)
@@ -14810,7 +14810,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_indexing_term.indexing_term_value, 6)
+			parameters.put (a_note_term.note_term_value, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -14823,7 +14823,7 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = once indexing term
+			-- dollar6: $6 = once note term
 		end
 
 	make_vwab0a (a_class, a_class_impl: ET_CLASS; a_attribute: ET_EXTENDED_ATTRIBUTE)
@@ -17898,10 +17898,10 @@ feature {NONE} -- Implementation
 	vuta4ga_default_template: STRING = "the target (of type '$9') of the call to feature `$8' is not controlled."
 	vuta4gb_default_template: STRING = "the target (of type '$8') of the call to Tuple label `$7' is not controlled."
 	vvok1a_default_template: STRING = "once keys %"$6%" and %"$7%" cannot be combined."
-	vvok1b_default_template: STRING = "indexing once status %"$6%" and once key %"$7%" cannot be combined."
-	vvok1c_default_template: STRING = "indexing once status %"$6%" and %"$7%" cannot be combined."
+	vvok1b_default_template: STRING = "note once status %"$6%" and once key %"$7%" cannot be combined."
+	vvok1c_default_template: STRING = "note once status %"$6%" and %"$7%" cannot be combined."
 	vvok2a_default_template: STRING = "once key %"$6%" is not supported. The supported once keys are %"THREAD%", %"PROCESS%" and %"OBJECT%"."
-	vvok2b_default_template: STRING = "indexing once status %"$6%" is not supported. Use one of the supported once keys %"THREAD%", %"PROCESS%" or %"OBJECT%"."
+	vvok2b_default_template: STRING = "note once status %"$6%" is not supported. Use one of the supported once keys %"THREAD%", %"PROCESS%" or %"OBJECT%"."
 	vwab0a_default_template: STRING = "self-initializing code for attribue `$7' will never be executed because its type is either detachable or expanded."
 	vwbe0a_default_template: STRING = "boolean expression of non-BOOLEAN type '$7'."
 	vwce0a_default_template: STRING = "expressions of types '$8' and '$7' in branches of conditional expression do not conform to each other."

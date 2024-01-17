@@ -10,7 +10,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_AST_PRETTY_PRINTER
@@ -106,8 +106,8 @@ inherit
 			process_hexadecimal_integer_constant,
 			process_if_expression,
 			process_if_instruction,
-			process_indexing_list,
-			process_indexing_term_list,
+			process_note_list,
+			process_note_term_list,
 			process_infix_and_then_operator,
 			process_infix_expression,
 			process_infix_or_else_operator,
@@ -177,7 +177,7 @@ inherit
 			process_strip_expression,
 			process_symbol,
 			process_tagged_assertion,
-			process_tagged_indexing,
+			process_tagged_note,
 			process_token,
 			process_true_constant,
 			process_tuple_type,
@@ -1084,8 +1084,8 @@ feature {ET_AST_NODE} -- Processing
 						-- Add an extra line after the comment.
 					print_new_line
 				end
-				if attached a_class.first_indexing as l_indexing then
-					l_indexing.process (Current)
+				if attached a_class.first_note_clause as l_note_clause then
+					l_note_clause.process (Current)
 					process_comments
 					print_new_line
 					print_new_line
@@ -1156,7 +1156,7 @@ feature {ET_AST_NODE} -- Processing
 					l_invariants.process (Current)
 					process_comments
 				end
-				if attached a_class.second_indexing as l_indexing then
+				if attached a_class.second_note_clause as l_note_clause then
 					if (not attached a_class.invariants as l_invariants or else l_invariants.is_empty) and then a_class.queries.declared_count > 0 and then a_class.queries.item (a_class.queries.declared_count).is_attribute and then (a_class.procedures.declared_count = 0 or else a_class.procedures.item (a_class.procedures.declared_count).position < a_class.queries.item (a_class.queries.declared_count).position) then
 							-- Print a semicolon in order to avoid syntax error.
 							-- For example if we have:
@@ -1179,7 +1179,7 @@ feature {ET_AST_NODE} -- Processing
 							-- of the class is missing.
 						tokens.semicolon_symbol.process (Current)
 					end
-					l_indexing.process (Current)
+					l_note_clause.process (Current)
 					process_comments
 					print_new_line
 					print_new_line
@@ -1743,8 +1743,8 @@ feature {ET_AST_NODE} -- Processing
 			indent
 			process_comments
 			print_new_line
-			if attached a_feature.first_indexing as l_indexing then
-				process_indexing_clause (l_indexing, False)
+			if attached a_feature.first_note as l_note then
+				process_note_clause (l_note, False)
 				process_comments
 				print_new_line
 			end
@@ -1824,8 +1824,8 @@ feature {ET_AST_NODE} -- Processing
 			indent
 			process_comments
 			print_new_line
-			if attached a_feature.first_indexing as l_indexing then
-				process_indexing_clause (l_indexing, False)
+			if attached a_feature.first_note as l_note then
+				process_note_clause (l_note, False)
 				process_comments
 				print_new_line
 			end
@@ -1921,8 +1921,8 @@ feature {ET_AST_NODE} -- Processing
 			indent
 			process_comments
 			print_new_line
-			if attached a_feature.first_indexing as l_indexing then
-				process_indexing_clause (l_indexing, False)
+			if attached a_feature.first_note as l_note then
+				process_note_clause (l_note, False)
 				process_comments
 				print_new_line
 			end
@@ -2079,8 +2079,8 @@ feature {ET_AST_NODE} -- Processing
 			indent
 			process_comments
 			print_new_line
-			if attached a_feature.first_indexing as l_indexing then
-				process_indexing_clause (l_indexing, False)
+			if attached a_feature.first_note as l_note then
+				process_note_clause (l_note, False)
 				process_comments
 				print_new_line
 			end
@@ -2543,8 +2543,8 @@ feature {ET_AST_NODE} -- Processing
 			indent
 			process_comments
 			print_new_line
-			if attached a_feature.first_indexing as l_indexing then
-				process_indexing_clause (l_indexing, False)
+			if attached a_feature.first_note as l_note then
+				process_note_clause (l_note, False)
 				process_comments
 				print_new_line
 			end
@@ -2695,8 +2695,8 @@ feature {ET_AST_NODE} -- Processing
 			indent
 			process_comments
 			print_new_line
-			if attached a_feature.first_indexing as l_indexing then
-				process_indexing_clause (l_indexing, False)
+			if attached a_feature.first_note as l_note then
+				process_note_clause (l_note, False)
 				process_comments
 				print_new_line
 			end
@@ -2881,8 +2881,8 @@ feature {ET_AST_NODE} -- Processing
 			indent
 			process_comments
 			print_new_line
-			if attached a_feature.first_indexing as l_indexing then
-				process_indexing_clause (l_indexing, False)
+			if attached a_feature.first_note as l_note then
+				process_note_clause (l_note, False)
 				process_comments
 				print_new_line
 			end
@@ -3397,26 +3397,26 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.end_keyword.process (Current)
 		end
 
-	process_indexing_list (a_list: ET_INDEXING_LIST)
+	process_note_list (a_list: ET_NOTE_LIST)
 			-- Process `a_list'.
 		do
-			process_indexing_clause (a_list, True)
+			process_note_clause (a_list, True)
 		end
 
-	process_indexing_clause (a_list: ET_INDEXING_LIST; a_new_line: BOOLEAN)
+	process_note_clause (a_list: ET_NOTE_LIST; a_new_line: BOOLEAN)
 			-- Process `a_list'.
 			-- `a_new_line' indicates that an empty new-line should
-			-- appear between the 'indexing' keyword and the first item.
+			-- appear between the 'note' keyword and the first item.
 		local
 			i, nb: INTEGER
-			l_item: ET_INDEXING_ITEM
-			l_indexing: ET_INDEXING
+			l_item: ET_NOTE_ITEM
+			l_note: ET_NOTE
 		do
 			if a_list.is_empty then
 					-- Do not print empty note clause, but keep the comments if any.
 				comment_finder.find_comments (a_list, comment_list)
 			else
-				a_list.indexing_keyword.process (Current)
+				a_list.note_keyword.process (Current)
 				indent
 				process_comments
 				if a_new_line then
@@ -3427,14 +3427,14 @@ feature {ET_AST_NODE} -- Processing
 					process_comments
 					print_new_line
 					l_item := a_list.item (i)
-					l_indexing := l_item.indexing_clause
-					if attached {ET_TAGGED_INDEXING} l_indexing as l_tagged_indexing and then STRING_.same_string (l_tagged_indexing.tag.identifier.lower_name, "description") then
-						process_tagged_indexing_indented (l_tagged_indexing)
+					l_note := l_item.note_clause
+					if attached {ET_TAGGED_NOTE} l_note as l_tagged_note and then STRING_.same_string (l_tagged_note.tag.identifier.lower_name, "description") then
+						process_tagged_note_indented (l_tagged_note)
 						print_new_line
 					else
-						l_indexing.process (Current)
+						l_note.process (Current)
 					end
-					comment_finder.add_excluded_node (l_indexing)
+					comment_finder.add_excluded_node (l_note)
 					comment_finder.find_comments (l_item, comment_list)
 					comment_finder.reset_excluded_nodes
 					i := i + 1
@@ -3443,27 +3443,27 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_indexing_tag (a_tag: ET_TAG)
-			-- Process `a_tag' when appearing in an indexing clause.
+	process_note_tag (a_tag: ET_TAG)
+			-- Process `a_tag' when appearing in a note clause.
 		require
 			a_tag_not_void: a_tag /= Void
 		do
 			process_tag (a_tag)
 		end
 
-	process_indexing_term_list (a_list: ET_INDEXING_TERM_LIST)
+	process_note_term_list (a_list: ET_NOTE_TERM_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
-			l_item: ET_INDEXING_TERM_ITEM
-			l_indexing_term: ET_INDEXING_TERM
+			l_item: ET_NOTE_TERM_ITEM
+			l_note_term: ET_NOTE_TERM
 		do
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				l_item := a_list.item (i)
-				l_indexing_term := l_item.indexing_term
-				l_indexing_term.process (Current)
-				comment_finder.add_excluded_node (l_indexing_term)
+				l_note_term := l_item.note_term
+				l_note_term.process (Current)
+				comment_finder.add_excluded_node (l_note_term)
 				comment_finder.find_comments (l_item, comment_list)
 				comment_finder.reset_excluded_nodes
 				if i /= nb then
@@ -4312,8 +4312,8 @@ feature {ET_AST_NODE} -- Processing
 			indent
 			process_comments
 			print_new_line
-			if attached a_feature.first_indexing as l_indexing then
-				process_indexing_clause (l_indexing, False)
+			if attached a_feature.first_note as l_note then
+				process_note_clause (l_note, False)
 				process_comments
 				print_new_line
 			end
@@ -4510,8 +4510,8 @@ feature {ET_AST_NODE} -- Processing
 			indent
 			process_comments
 			print_new_line
-			if attached a_feature.first_indexing as l_indexing then
-				process_indexing_clause (l_indexing, False)
+			if attached a_feature.first_note as l_note then
+				process_note_clause (l_note, False)
 				process_comments
 				print_new_line
 			end
@@ -5357,36 +5357,36 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_tagged_indexing (an_indexing: ET_TAGGED_INDEXING)
-			-- Process `an_indexing'.
+	process_tagged_note (a_note: ET_TAGGED_NOTE)
+			-- Process `a_note'.
 		do
-			process_indexing_tag (an_indexing.tag)
+			process_note_tag (a_note.tag)
 			print_space
-			process_indexing (an_indexing)
+			process_note (a_note)
 		end
 
-	process_tagged_indexing_indented (an_indexing: ET_TAGGED_INDEXING)
-			-- Process `an_indexing'.
+	process_tagged_note_indented (a_note: ET_TAGGED_NOTE)
+			-- Process `a_note'.
 			-- Print the tag, then the note terms indented two lines below.
 		require
-			an_indexing_not_void: an_indexing /= Void
+			a_note_not_void: a_note /= Void
 		local
-			l_terms: ET_INDEXING_TERM_LIST
+			l_terms: ET_NOTE_TERM_LIST
 		do
-			process_indexing_tag (an_indexing.tag)
-			l_terms := an_indexing.terms
-			if l_terms.count = 1 and then attached {ET_VERBATIM_STRING} l_terms.first.indexing_term as l_verbatim_string then
+			process_note_tag (a_note.tag)
+			l_terms := a_note.terms
+			if l_terms.count = 1 and then attached {ET_VERBATIM_STRING} l_terms.first.note_term as l_verbatim_string then
 				print_new_line
-				process_indexing (an_indexing)
+				process_note (a_note)
 					-- We make as if a comment was printed so that
 					-- a subsequent call to `print_new_line' in
-					-- `process_indexing_list' will not print anything.
+					-- `process_note_list' will not print anything.
 				comment_printed := True
 			else
 				print_new_line
 				print_new_line
 				indent
-				process_indexing (an_indexing)
+				process_note (a_note)
 				dedent
 			end
 		end

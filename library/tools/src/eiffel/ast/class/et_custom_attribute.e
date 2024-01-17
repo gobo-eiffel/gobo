@@ -5,14 +5,14 @@
 		"Eiffel for .NET custom attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CUSTOM_ATTRIBUTE
 
 inherit
 
-	ET_INDEXING_TERM
+	ET_NOTE_TERM
 
 create
 
@@ -44,8 +44,8 @@ feature -- Access
 	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
-	indexing_term_value: STRING = "create [...] end"
-			-- Value of current indexing term
+	note_term_value: STRING = "create [...] end"
+			-- Value of current note term
 
 	position: ET_POSITION
 			-- Position of first character of
@@ -68,8 +68,8 @@ feature -- Access
 
 feature -- Status report
 
-	has_indexing_term_value (a_value: STRING): BOOLEAN
-			-- Does current indexing term have value `a_value'?
+	has_note_term_value (a_value: STRING): BOOLEAN
+			-- Does current note term have value `a_value'?
 			-- (case-insensitive comparison)
 		do
 			-- Result := False

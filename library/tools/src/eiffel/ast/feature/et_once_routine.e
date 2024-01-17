@@ -5,7 +5,7 @@
 		"Eiffel once routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_ONCE_ROUTINE
@@ -24,7 +24,7 @@ inherit
 		rename
 			implementation_closure as implementation_feature
 		undefine
-			first_indexing,
+			first_note,
 			implementation_feature
 		end
 

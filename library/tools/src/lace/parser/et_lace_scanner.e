@@ -49,182 +49,182 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
---|#line 36 "et_lace_scanner.l"
+--|#line 34 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 36")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 34")
 end
 -- Ignore separators
 when 2 then
---|#line 37 "et_lace_scanner.l"
+--|#line 35 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 37")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 35")
 end
 eif_lineno := eif_lineno + text_count
 when 3 then
---|#line 42 "et_lace_scanner.l"
+--|#line 40 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 42")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 40")
 end
 -- Ignore comments
 when 4 then
---|#line 43 "et_lace_scanner.l"
+--|#line 41 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 43")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 41")
 end
 eif_lineno := eif_lineno + 1
 when 5 then
+--|#line 46 "et_lace_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 46")
+end
+last_token := Semicolon_code
+when 6 then
+--|#line 47 "et_lace_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 47")
+end
+last_token := Colon_code
+when 7 then
 --|#line 48 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 48")
 end
-last_token := Semicolon_code
-when 6 then
+last_token := Comma_code
+when 8 then
 --|#line 49 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 49")
 end
-last_token := Colon_code
-when 7 then
+last_token := Left_parenthesis_code
+when 9 then
 --|#line 50 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 50")
 end
-last_token := Comma_code
-when 8 then
---|#line 51 "et_lace_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 51")
-end
-last_token := Left_parenthesis_code
-when 9 then
---|#line 52 "et_lace_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 52")
-end
 last_token := Right_parenthesis_code
 when 10 then
---|#line 57 "et_lace_scanner.l"
+--|#line 55 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 57")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 55")
 end
 last_token := L_ABSTRACT
 when 11 then
---|#line 58 "et_lace_scanner.l"
+--|#line 56 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 58")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 56")
 end
 
 										last_token := L_ALL
 										last_et_identifier_value := new_identifier (text)
 									
 when 12 then
+--|#line 60 "et_lace_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 60")
+end
+last_token := L_ASSEMBLY
+when 13 then
+--|#line 61 "et_lace_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 61")
+end
+last_token := L_CLUSTER
+when 14 then
 --|#line 62 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 62")
 end
-last_token := L_ASSEMBLY
-when 13 then
+last_token := L_DEFAULT
+when 15 then
 --|#line 63 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 63")
 end
-last_token := L_CLUSTER
-when 14 then
+last_token := L_END
+when 16 then
 --|#line 64 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 64")
 end
-last_token := L_DEFAULT
-when 15 then
+last_token := L_EXCLUDE
+when 17 then
 --|#line 65 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 65")
 end
-last_token := L_END
-when 16 then
+last_token := L_EXTERNAL
+when 18 then
 --|#line 66 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 66")
 end
-last_token := L_EXCLUDE
-when 17 then
+last_token := L_GENERATE
+when 19 then
 --|#line 67 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 67")
 end
-last_token := L_EXTERNAL
-when 18 then
+last_token := L_LIBRARY
+when 20 then
 --|#line 68 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 68")
 end
-last_token := L_GENERATE
-when 19 then
+last_token := L_OPTION
+when 21 then
 --|#line 69 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 69")
 end
-last_token := L_LIBRARY
-when 20 then
+last_token := L_PREFIX
+when 22 then
 --|#line 70 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 70")
 end
-last_token := L_OPTION
-when 21 then
+last_token := L_ROOT
+when 23 then
 --|#line 71 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 71")
 end
-last_token := L_PREFIX
-when 22 then
+last_token := L_SYSTEM
+when 24 then
 --|#line 72 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 72")
 end
-last_token := L_ROOT
-when 23 then
---|#line 73 "et_lace_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 73")
-end
-last_token := L_SYSTEM
-when 24 then
---|#line 74 "et_lace_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 74")
-end
 last_token := L_VISIBLE
 when 25 then
---|#line 79 "et_lace_scanner.l"
+--|#line 77 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 79")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 77")
 end
 
 				last_token := L_IDENTIFIER
 				last_et_identifier_value := new_identifier (text)
 			
 when 26 then
---|#line 87 "et_lace_scanner.l"
+--|#line 85 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 87")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 85")
 end
 
 				last_token := L_STRERR
 			
 when 27 then
---|#line 90 "et_lace_scanner.l"
+--|#line 88 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 90")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 88")
 end
 
 				last_token := L_STRING
 				last_et_identifier_value := new_identifier (text_substring (2, text_count - 1))
 			
 when 28 then
---|#line 94 "et_lace_scanner.l"
+--|#line 92 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 94")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 92")
 end
 
 				if text_count > 1 then
@@ -233,141 +233,141 @@ end
 				set_start_condition (IN_STR)
 			
 when 29 then
+--|#line 98 "et_lace_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 98")
+end
+eif_buffer.append_string (text)
+when 30 then
+--|#line 99 "et_lace_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 99")
+end
+eif_buffer.append_character ('%A')
+when 31 then
 --|#line 100 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 100")
 end
-eif_buffer.append_string (text)
-when 30 then
+eif_buffer.append_character ('%B')
+when 32 then
 --|#line 101 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 101")
 end
-eif_buffer.append_character ('%A')
-when 31 then
+eif_buffer.append_character ('%C')
+when 33 then
 --|#line 102 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 102")
 end
-eif_buffer.append_character ('%B')
-when 32 then
+eif_buffer.append_character ('%D')
+when 34 then
 --|#line 103 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 103")
 end
-eif_buffer.append_character ('%C')
-when 33 then
+eif_buffer.append_character ('%F')
+when 35 then
 --|#line 104 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 104")
 end
-eif_buffer.append_character ('%D')
-when 34 then
+eif_buffer.append_character ('%H')
+when 36 then
 --|#line 105 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 105")
 end
-eif_buffer.append_character ('%F')
-when 35 then
+eif_buffer.append_character ('%L')
+when 37 then
 --|#line 106 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 106")
 end
-eif_buffer.append_character ('%H')
-when 36 then
+eif_buffer.append_character ('%N')
+when 38 then
 --|#line 107 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 107")
 end
-eif_buffer.append_character ('%L')
-when 37 then
+eif_buffer.append_character ('%Q')
+when 39 then
 --|#line 108 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 108")
 end
-eif_buffer.append_character ('%N')
-when 38 then
+eif_buffer.append_character ('%R')
+when 40 then
 --|#line 109 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 109")
 end
-eif_buffer.append_character ('%Q')
-when 39 then
+eif_buffer.append_character ('%S')
+when 41 then
 --|#line 110 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 110")
 end
-eif_buffer.append_character ('%R')
-when 40 then
+eif_buffer.append_character ('%T')
+when 42 then
 --|#line 111 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 111")
 end
-eif_buffer.append_character ('%S')
-when 41 then
+eif_buffer.append_character ('%U')
+when 43 then
 --|#line 112 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 112")
 end
-eif_buffer.append_character ('%T')
-when 42 then
+eif_buffer.append_character ('%V')
+when 44 then
 --|#line 113 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 113")
 end
-eif_buffer.append_character ('%U')
-when 43 then
+eif_buffer.append_character ('%%')
+when 45 then
 --|#line 114 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 114")
 end
-eif_buffer.append_character ('%V')
-when 44 then
+eif_buffer.append_character ('%'')
+when 46 then
 --|#line 115 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 115")
 end
-eif_buffer.append_character ('%%')
-when 45 then
+eif_buffer.append_character ('%"')
+when 47 then
 --|#line 116 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 116")
 end
-eif_buffer.append_character ('%'')
-when 46 then
+eif_buffer.append_character ('%(')
+when 48 then
 --|#line 117 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 117")
 end
-eif_buffer.append_character ('%"')
-when 47 then
+eif_buffer.append_character ('%)')
+when 49 then
 --|#line 118 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 118")
 end
-eif_buffer.append_character ('%(')
-when 48 then
+eif_buffer.append_character ('%<')
+when 50 then
 --|#line 119 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 119")
 end
-eif_buffer.append_character ('%)')
-when 49 then
+eif_buffer.append_character ('%>')
+when 51 then
 --|#line 120 "et_lace_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 120")
-end
-eif_buffer.append_character ('%<')
-when 50 then
---|#line 121 "et_lace_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 121")
-end
-eif_buffer.append_character ('%>')
-when 51 then
---|#line 122 "et_lace_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 122")
 end
 
 			code_ := text_substring (3, text_count - 1).to_integer
@@ -379,15 +379,15 @@ end
 			end
 		
 when 52 then
---|#line 135 "et_lace_scanner.l"
+--|#line 133 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 135")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 133")
 end
 eif_lineno := eif_lineno + 1
 when 53 then
---|#line 136 "et_lace_scanner.l"
+--|#line 134 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 136")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 134")
 end
 
 			if text_count > 1 then
@@ -403,18 +403,18 @@ end
 			set_start_condition (INITIAL)
 		
 when 54, 55, 56 then
---|#line 150 "et_lace_scanner.l"
+--|#line 148 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 150")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 148")
 end
 	-- Catch-all rules (no backing up)
 							last_token := L_STRERR
 							set_start_condition (INITIAL)
 						
 when 57 then
---|#line 162 "et_lace_scanner.l"
+--|#line 160 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 162")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 160")
 end
 last_token := text_item (1).code
 when 58 then
@@ -435,15 +435,15 @@ fatal_error ("scanner jammed")
 		do
 			inspect yy_sc
 when 0 then
---|#line 161 "et_lace_scanner.l"
+--|#line 159 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 161")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 159")
 end
 terminate
 when 1 then
---|#line 153 "et_lace_scanner.l"
+--|#line 151 "et_lace_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 153")
+	std.error.put_line ("Executing scanner user-code from file 'et_lace_scanner.l' at line 151")
 end
 	-- Catch-all rules (no backing up)
 							last_token := L_STRERR

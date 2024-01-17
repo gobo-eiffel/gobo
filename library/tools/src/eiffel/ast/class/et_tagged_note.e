@@ -5,16 +5,16 @@
 		"Eiffel tagged note clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
-class ET_TAGGED_INDEXING
+class ET_TAGGED_NOTE
 
 inherit
 
-	ET_INDEXING
+	ET_NOTE
 		rename
-			make as make_untagged_indexing
+			make as make_untagged_note
 		redefine
 			tag, process
 		end
@@ -48,7 +48,7 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
-			a_processor.process_tagged_indexing (Current)
+			a_processor.process_tagged_note (Current)
 		end
 
 invariant

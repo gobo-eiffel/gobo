@@ -5,7 +5,7 @@
 		"Eiffel closures, e.g. features, invariants, inline agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_CLOSURE
@@ -60,7 +60,7 @@ feature -- Access
 		do
 		end
 
-	first_indexing: detachable ET_INDEXING_LIST
+	first_note: detachable ET_NOTE_LIST
 			-- Note clause at the beginning of the closure
 		do
 		end
