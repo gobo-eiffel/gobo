@@ -1,4 +1,4 @@
-%{
+﻿%{
 note
 
 	description: 
@@ -11,8 +11,6 @@ note
 	library: "Gobo Eiffel XML library"
 	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 	-- TODO:
 	-- system literal accepts non-CHAR

@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -9,8 +9,6 @@ note
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002-2022, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class XM_EIFFEL_PARSER_SKELETON
 
