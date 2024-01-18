@@ -5,7 +5,7 @@
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_EIFFEL_PARSER_SKELETON
@@ -800,7 +800,7 @@ feature {NONE} -- Basic operations
 	set_class_to_end (a_class: detachable ET_CLASS; an_obsolete: detachable ET_OBSOLETE; a_parents: detachable ET_PARENT_CLAUSE_LIST;
 		a_creators: detachable ET_CREATOR_LIST; a_convert_features: detachable ET_CONVERT_FEATURE_LIST;
 		a_feature_clauses: detachable ET_FEATURE_CLAUSE_LIST; an_invariants: detachable ET_INVARIANTS;
-		a_second_indexing: detachable ET_INDEXING_LIST; an_end: detachable ET_KEYWORD)
+		a_second_note: detachable ET_NOTE_LIST; an_end: detachable ET_KEYWORD)
 			-- Set various elements to `a_class'.
 		do
 			if a_class /= Void then
@@ -810,7 +810,7 @@ feature {NONE} -- Basic operations
 				a_class.set_convert_features (a_convert_features)
 				a_class.set_feature_clauses (a_feature_clauses)
 				a_class.set_invariants (an_invariants)
-				a_class.set_second_indexing (a_second_indexing)
+				a_class.set_second_note_clause (a_second_note)
 				if an_end /= Void then
 					a_class.set_end_keyword (an_end)
 				end
@@ -1619,7 +1619,7 @@ feature {NONE} -- AST factory
 
 	new_external_function (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
 		a_type: detachable ET_DECLARED_TYPE; an_assigner: detachable ET_ASSIGNER;
-		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST;
+		an_is: detachable ET_KEYWORD; a_first_note: detachable ET_NOTE_LIST;
 		an_obsolete: detachable ET_OBSOLETE; a_preconditions: detachable ET_PRECONDITIONS;
 		a_language: detachable ET_EXTERNAL_LANGUAGE;
 		an_alias: detachable ET_EXTERNAL_ALIAS; a_postconditions: detachable ET_POSTCONDITIONS;
@@ -1629,20 +1629,20 @@ feature {NONE} -- AST factory
 		a_class: detachable ET_CLASS): detachable ET_EXTERNAL_FUNCTION
 			-- New external function
 		do
-			Result := ast_factory.new_external_function (a_name, args, a_type, an_assigner, an_is, a_first_indexing,
+			Result := ast_factory.new_external_function (a_name, args, a_type, an_assigner, an_is, a_first_note,
 				an_obsolete, a_preconditions, a_language, an_alias, a_postconditions,
 				an_end, a_semicolon, a_clients, a_feature_clause, a_class)
 		end
 
 	new_external_procedure (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
-		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST; an_obsolete: detachable ET_OBSOLETE;
+		an_is: detachable ET_KEYWORD; a_first_note: detachable ET_NOTE_LIST; an_obsolete: detachable ET_OBSOLETE;
 		a_preconditions: detachable ET_PRECONDITIONS; a_language: detachable ET_EXTERNAL_LANGUAGE; an_alias: detachable ET_EXTERNAL_ALIAS;
 		a_postconditions: detachable ET_POSTCONDITIONS; an_end: detachable ET_KEYWORD;
 		a_semicolon: detachable ET_SEMICOLON_SYMBOL; a_clients: detachable ET_CLIENT_LIST;
 		a_feature_clause: detachable ET_FEATURE_CLAUSE; a_class: detachable ET_CLASS): detachable ET_EXTERNAL_PROCEDURE
 			-- New external procedure
 		do
-			Result := ast_factory.new_external_procedure (a_name, args, an_is, a_first_indexing,
+			Result := ast_factory.new_external_procedure (a_name, args, an_is, a_first_note,
 				an_obsolete, a_preconditions, a_language, an_alias, a_postconditions,
 				an_end, a_semicolon, a_clients, a_feature_clause, a_class)
 		end

@@ -5,7 +5,7 @@
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_FEATURE
@@ -33,7 +33,7 @@ inherit
 		redefine
 			is_feature,
 			as_feature,
-			first_indexing
+			first_note
 		end
 
 	DEBUG_OUTPUT
@@ -151,7 +151,7 @@ feature -- Access
 		do
 		end
 
-	first_indexing: detachable ET_INDEXING_LIST
+	first_note: detachable ET_NOTE_LIST
 			-- Note clause at the beginning of the feature
 
 	id: INTEGER
@@ -738,12 +738,12 @@ feature -- Setting
 			feature_clause_set: feature_clause = a_feature_clause
 		end
 
-	set_first_indexing (an_indexing: like first_indexing)
-			-- Set `first_indexing' to `an_indexing'
+	set_first_note (a_note: like first_note)
+			-- Set `first_note' to `a_note'
 		do
-			first_indexing := an_indexing
+			first_note := a_note
 		ensure
-			first_indexing_set: first_indexing = an_indexing
+			first_note_set: first_note = a_note
 		end
 
 	set_version (a_version: INTEGER)

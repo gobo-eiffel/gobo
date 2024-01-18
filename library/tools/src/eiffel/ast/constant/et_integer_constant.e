@@ -5,7 +5,7 @@
 		"Eiffel integer constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_INTEGER_CONSTANT
@@ -42,7 +42,7 @@ inherit
 			break
 		end
 
-	ET_INDEXING_TERM
+	ET_NOTE_TERM
 		undefine
 			last_position,
 			break
@@ -175,8 +175,8 @@ feature -- Access
 			-- Type of integer constant;
 			-- Void if not determined yet
 
-	indexing_term_value: STRING_8
-			-- Value of current indexing term
+	note_term_value: STRING_8
+			-- Value of current note term
 		do
 			if attached sign as l_sign then
 				Result := l_sign.text + literal
@@ -353,8 +353,8 @@ feature -- Status report
 			end
 		end
 
-	has_indexing_term_value (a_value: STRING_8): BOOLEAN
-			-- Does current indexing term have value `a_value'?
+	has_note_term_value (a_value: STRING_8): BOOLEAN
+			-- Does current note term have value `a_value'?
 			-- (case-insensitive comparison)
 		do
 			if not attached sign as l_sign then

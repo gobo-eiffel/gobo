@@ -5,14 +5,14 @@
 		"Eiffel note clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
-class ET_INDEXING
+class ET_NOTE
 
 inherit
 
-	ET_INDEXING_ITEM
+	ET_NOTE_ITEM
 
 create
 
@@ -37,10 +37,10 @@ feature -- Access
 		do
 		end
 
-	terms: ET_INDEXING_TERM_LIST
+	terms: ET_NOTE_TERM_LIST
 			-- Note terms
 
-	indexing_clause: ET_INDEXING
+	note_clause: ET_NOTE
 			-- Note clause in semicolon-separated list
 		do
 			Result := Current
@@ -78,7 +78,7 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
-			a_processor.process_indexing (Current)
+			a_processor.process_note (Current)
 		end
 
 invariant

@@ -47,149 +47,165 @@ feature {NONE} -- Implementation
 			inspect yy_act
 when 1 then
 yy_set_line_column
+--|#line 35 "et_eiffel_preparser.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 35")
+end
+
+			
+when 2 then
+	yy_column := yy_column + 1
+--|#line 36 "et_eiffel_preparser.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 36")
+end
+
+			
+when 3 then
+	yy_column := yy_column + 2
 --|#line 37 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 37")
 end
 
 			
-when 2 then
-	yy_column := yy_column + 1
---|#line 38 "et_eiffel_preparser.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 38")
-end
-
-			
-when 3 then
-	yy_column := yy_column + 2
---|#line 39 "et_eiffel_preparser.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 39")
-end
-
-			
 when 4 then
 	yy_column := yy_column + 5
+--|#line 42 "et_eiffel_preparser.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 42")
+end
+
+			
+when 5 then
+	yy_column := yy_column + 5
+--|#line 43 "et_eiffel_preparser.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 43")
+end
+
+			
+when 6 then
+	yy_column := yy_column + 3
 --|#line 44 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 44")
 end
 
 			
-when 5 then
-	yy_column := yy_column + 5
+when 7 then
+	yy_column := yy_column + 3
 --|#line 45 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 45")
 end
 
 			
-when 6 then
-	yy_column := yy_column + 3
+when 8 then
+	yy_column := yy_column + 2
 --|#line 46 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 46")
 end
 
 			
-when 7 then
-	yy_column := yy_column + 3
+when 9 then
+	yy_column := yy_column + 6
 --|#line 47 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 47")
 end
 
 			
-when 8 then
-	yy_column := yy_column + 2
+when 10 then
+	yy_column := yy_column + 5
 --|#line 48 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 48")
 end
 
 			
-when 9 then
-	yy_column := yy_column + 6
+when 11 then
+	yy_column := yy_column + 7
 --|#line 49 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 49")
 end
 
 			
-when 10 then
-	yy_column := yy_column + 5
+when 12 then
+	yy_column := yy_column + 6
 --|#line 50 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 50")
 end
 
 			
-when 11 then
-	yy_column := yy_column + 7
+when 13 then
+	yy_column := yy_column + 8
 --|#line 51 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 51")
 end
 
 			
-when 12 then
-	yy_column := yy_column + 6
+when 14 then
+	yy_column := yy_column + 7
 --|#line 52 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 52")
 end
 
 			
-when 13 then
-	yy_column := yy_column + 8
+when 15 then
+	yy_column := yy_column + 5
 --|#line 53 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 53")
 end
 
 			
-when 14 then
-	yy_column := yy_column + 7
+when 16 then
+	yy_column := yy_column + 8
 --|#line 54 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 54")
 end
 
 			
-when 15 then
-	yy_column := yy_column + 5
+when 17 then
+	yy_column := yy_column + 2
 --|#line 55 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 55")
 end
 
 			
-when 16 then
-	yy_column := yy_column + 8
+when 18 then
+	yy_column := yy_column + 4
 --|#line 56 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 56")
 end
 
 			
-when 17 then
-	yy_column := yy_column + 2
+when 19 then
+	yy_column := yy_column + 6
 --|#line 57 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 57")
 end
 
 			
-when 18 then
-	yy_column := yy_column + 4
+when 20 then
+	yy_column := yy_column + 3
 --|#line 58 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 58")
 end
 
 			
-when 19 then
+when 21 then
 	yy_column := yy_column + 6
 --|#line 59 "et_eiffel_preparser.l"
 debug ("GELEX")
@@ -197,15 +213,15 @@ debug ("GELEX")
 end
 
 			
-when 20 then
-	yy_column := yy_column + 3
+when 22 then
+	yy_column := yy_column + 8
 --|#line 60 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 60")
 end
 
 			
-when 21 then
+when 23 then
 	yy_column := yy_column + 6
 --|#line 61 "et_eiffel_preparser.l"
 debug ("GELEX")
@@ -213,7 +229,7 @@ debug ("GELEX")
 end
 
 			
-when 22 then
+when 24 then
 	yy_column := yy_column + 8
 --|#line 62 "et_eiffel_preparser.l"
 debug ("GELEX")
@@ -221,63 +237,63 @@ debug ("GELEX")
 end
 
 			
-when 23 then
-	yy_column := yy_column + 6
+when 25 then
+	yy_column := yy_column + 5
 --|#line 63 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 63")
 end
 
 			
-when 24 then
-	yy_column := yy_column + 8
+when 26 then
+	yy_column := yy_column + 7
 --|#line 64 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 64")
 end
 
 			
-when 25 then
-	yy_column := yy_column + 5
+when 27 then
+	yy_column := yy_column + 4
 --|#line 65 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 65")
 end
 
 			
-when 26 then
-	yy_column := yy_column + 7
+when 28 then
+	yy_column := yy_column + 6
 --|#line 66 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 66")
 end
 
 			
-when 27 then
-	yy_column := yy_column + 4
+when 29 then
+	yy_column := yy_column + 2
 --|#line 67 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 67")
 end
 
 			
-when 28 then
-	yy_column := yy_column + 6
+when 30 then
+	yy_column := yy_column + 7
 --|#line 68 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 68")
 end
 
 			
-when 29 then
-	yy_column := yy_column + 2
+when 31 then
+	yy_column := yy_column + 8
 --|#line 69 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 69")
 end
 
 			
-when 30 then
+when 32 then
 	yy_column := yy_column + 7
 --|#line 70 "et_eiffel_preparser.l"
 debug ("GELEX")
@@ -285,47 +301,47 @@ debug ("GELEX")
 end
 
 			
-when 31 then
-	yy_column := yy_column + 8
+when 33 then
+	yy_column := yy_column + 7
 --|#line 71 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 71")
 end
 
 			
-when 32 then
-	yy_column := yy_column + 7
+when 34 then
+	yy_column := yy_column + 9
 --|#line 72 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 72")
 end
 
 			
-when 33 then
-	yy_column := yy_column + 7
+when 35 then
+	yy_column := yy_column + 2
 --|#line 73 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 73")
 end
 
 			
-when 34 then
-	yy_column := yy_column + 9
+when 36 then
+	yy_column := yy_column + 4
 --|#line 74 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 74")
 end
 
 			
-when 35 then
-	yy_column := yy_column + 2
+when 37 then
+	yy_column := yy_column + 5
 --|#line 75 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 75")
 end
 
 			
-when 36 then
+when 38 then
 	yy_column := yy_column + 4
 --|#line 76 "et_eiffel_preparser.l"
 debug ("GELEX")
@@ -333,23 +349,23 @@ debug ("GELEX")
 end
 
 			
-when 37 then
-	yy_column := yy_column + 5
+when 39 then
+	yy_column := yy_column + 3
 --|#line 77 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 77")
 end
 
 			
-when 38 then
-	yy_column := yy_column + 4
+when 40 then
+	yy_column := yy_column + 8
 --|#line 78 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 78")
 end
 
 			
-when 39 then
+when 41 then
 	yy_column := yy_column + 3
 --|#line 79 "et_eiffel_preparser.l"
 debug ("GELEX")
@@ -357,55 +373,55 @@ debug ("GELEX")
 end
 
 			
-when 40 then
-	yy_column := yy_column + 8
+when 42 then
+	yy_column := yy_column + 4
 --|#line 80 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 80")
 end
 
 			
-when 41 then
-	yy_column := yy_column + 3
+when 43 then
+	yy_column := yy_column + 2
 --|#line 81 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 81")
 end
 
 			
-when 42 then
-	yy_column := yy_column + 4
+when 44 then
+	yy_column := yy_column + 9
 --|#line 82 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 82")
 end
 
 			
-when 43 then
-	yy_column := yy_column + 2
+when 45 then
+	yy_column := yy_column + 8
 --|#line 83 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 83")
 end
 
 			
-when 44 then
-	yy_column := yy_column + 9
+when 46 then
+	yy_column := yy_column + 6
 --|#line 84 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 84")
 end
 
 			
-when 45 then
-	yy_column := yy_column + 8
+when 47 then
+	yy_column := yy_column + 7
 --|#line 85 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 85")
 end
 
 			
-when 46 then
+when 48 then
 	yy_column := yy_column + 6
 --|#line 86 "et_eiffel_preparser.l"
 debug ("GELEX")
@@ -413,23 +429,23 @@ debug ("GELEX")
 end
 
 			
-when 47 then
-	yy_column := yy_column + 7
+when 49 then
+	yy_column := yy_column + 6
 --|#line 87 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 87")
 end
 
 			
-when 48 then
-	yy_column := yy_column + 6
+when 50 then
+	yy_column := yy_column + 5
 --|#line 88 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 88")
 end
 
 			
-when 49 then
+when 51 then
 	yy_column := yy_column + 6
 --|#line 89 "et_eiffel_preparser.l"
 debug ("GELEX")
@@ -437,124 +453,108 @@ debug ("GELEX")
 end
 
 			
-when 50 then
-	yy_column := yy_column + 5
+when 52 then
+	yy_column := yy_column + 8
 --|#line 90 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 90")
 end
 
 			
-when 51 then
-	yy_column := yy_column + 6
+when 53 then
+	yy_column := yy_column + 5
 --|#line 91 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 91")
 end
 
 			
-when 52 then
-	yy_column := yy_column + 8
+when 54 then
+	yy_column := yy_column + 4
 --|#line 92 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 92")
 end
 
 			
-when 53 then
-	yy_column := yy_column + 5
+when 55 then
+	yy_column := yy_column + 4
 --|#line 93 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 93")
 end
 
 			
-when 54 then
-	yy_column := yy_column + 4
+when 56 then
+	yy_column := yy_column + 8
 --|#line 94 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 94")
 end
 
 			
-when 55 then
-	yy_column := yy_column + 4
+when 57 then
+	yy_column := yy_column + 6
 --|#line 95 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 95")
 end
 
 			
-when 56 then
-	yy_column := yy_column + 8
+when 58 then
+	yy_column := yy_column + 5
 --|#line 96 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 96")
 end
 
 			
-when 57 then
-	yy_column := yy_column + 6
+when 59 then
+	yy_column := yy_column + 7
 --|#line 97 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 97")
 end
 
 			
-when 58 then
-	yy_column := yy_column + 5
+when 60 then
+	yy_column := yy_column + 4
 --|#line 98 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 98")
 end
 
 			
-when 59 then
-	yy_column := yy_column + 7
+when 61 then
+	yy_column := yy_column + 4
 --|#line 99 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 99")
 end
 
 			
-when 60 then
-	yy_column := yy_column + 4
+when 62 then
+	yy_column := yy_column + 3
 --|#line 100 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 100")
 end
 
 			
-when 61 then
-	yy_column := yy_column + 4
---|#line 101 "et_eiffel_preparser.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 101")
-end
-
-			
-when 62 then
-	yy_column := yy_column + 3
+when 63 then
+	yy_column := yy_column + 5
 --|#line 102 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 102")
-end
-
-			
-when 63 then
-	yy_column := yy_column + 5
---|#line 104 "et_eiffel_preparser.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 104")
 end
 
 				class_keyword_found := True
 			
 when 64 then
 	yy_column := yy_column + 8
---|#line 107 "et_eiffel_preparser.l"
+--|#line 105 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 107")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 105")
 end
 
 				if use_attached_keyword then
@@ -570,9 +570,9 @@ end
 			
 when 65 then
 	yy_column := yy_column + 9
---|#line 119 "et_eiffel_preparser.l"
+--|#line 117 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 119")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 117")
 end
 
 				if use_attribute_keyword then
@@ -588,9 +588,9 @@ end
 			
 when 66 then
 	yy_column := yy_column + 10
---|#line 131 "et_eiffel_preparser.l"
+--|#line 129 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 131")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 129")
 end
 
 				if use_detachable_keyword then
@@ -606,9 +606,9 @@ end
 			
 when 67 then
 	yy_column := yy_column + 4
---|#line 143 "et_eiffel_preparser.l"
+--|#line 141 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 143")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 141")
 end
 
 				if use_note_keyword then
@@ -624,9 +624,9 @@ end
 			
 when 68 then
 	yy_column := yy_column + 9
---|#line 155 "et_eiffel_preparser.l"
+--|#line 153 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 155")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 153")
 end
 
 				if use_reference_keyword then
@@ -642,9 +642,9 @@ end
 			
 when 69 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 171 "et_eiffel_preparser.l"
+--|#line 169 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 171")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 169")
 end
 
 				if class_keyword_found then
@@ -658,49 +658,49 @@ end
 			
 when 70 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 190 "et_eiffel_preparser.l"
+--|#line 188 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 190")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 188")
 end
 
 			
 when 71 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 195 "et_eiffel_preparser.l"
+--|#line 193 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 195")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 193")
 end
 
 			
 when 72 then
 	yy_column := yy_column + 3
+--|#line 198 "et_eiffel_preparser.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 198")
+end
+
+			
+when 73 then
+	yy_column := yy_column + 4
+--|#line 199 "et_eiffel_preparser.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 199")
+end
+
+			
+when 74 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
 --|#line 200 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 200")
 end
 
 			
-when 73 then
-	yy_column := yy_column + 4
---|#line 201 "et_eiffel_preparser.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 201")
-end
-
-			
-when 74 then
+when 75 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 --|#line 202 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 202")
-end
-
-			
-when 75 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 204 "et_eiffel_preparser.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 204")
 end
 
 					-- Syntax error: missing character / at end
@@ -713,9 +713,9 @@ end
 			
 when 76 then
 	yy_column := yy_column + 3
---|#line 213 "et_eiffel_preparser.l"
+--|#line 211 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 213")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 211")
 end
 
 					-- Syntax error: missing character code in
@@ -728,9 +728,9 @@ end
 			
 when 77 then
 	yy_column := yy_column + 2
---|#line 222 "et_eiffel_preparser.l"
+--|#line 220 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 222")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 220")
 end
 
 					-- Syntax error: missing character between quotes.
@@ -742,9 +742,9 @@ end
 			
 when 78 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 230 "et_eiffel_preparser.l"
+--|#line 228 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 230")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 228")
 end
 
 					-- Syntax error: missing quote at
@@ -757,17 +757,17 @@ end
 			
 when 79 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 243 "et_eiffel_preparser.l"
+--|#line 241 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 243")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 241")
 end
 
 			
 when 80 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 246 "et_eiffel_preparser.l"
+--|#line 244 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 246")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 244")
 end
 
 					-- Verbatim string.
@@ -779,9 +779,9 @@ end
 when 81 then
 	yy_line := yy_line + 1
 	yy_column := 1
---|#line 256 "et_eiffel_preparser.l"
+--|#line 254 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 256")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 254")
 end
 
 				last_literal_start := 1
@@ -790,9 +790,9 @@ end
 			
 when 82 then
 	yy_column := yy_column + 1
---|#line 261 "et_eiffel_preparser.l"
+--|#line 259 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 261")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 259")
 end
 
 					-- No final brace-double-quote.
@@ -802,9 +802,9 @@ end
 			
 when 83 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 277 "et_eiffel_preparser.l"
+--|#line 275 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 277")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 275")
 end
 
 				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
@@ -818,9 +818,9 @@ end
 			
 when 84 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 287 "et_eiffel_preparser.l"
+--|#line 285 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 287")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 285")
 end
 
 				more
@@ -829,9 +829,9 @@ end
 when 85 then
 	yy_line := yy_line + 1
 	yy_column := 1
---|#line 291 "et_eiffel_preparser.l"
+--|#line 289 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 291")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 289")
 end
 
 				more
@@ -840,9 +840,9 @@ end
 when 86 then
 	yy_line := yy_line + 1
 	yy_column := 1
---|#line 295 "et_eiffel_preparser.l"
+--|#line 293 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 295")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 293")
 end
 
 				more
@@ -850,9 +850,9 @@ end
 			
 when 87 then
 	yy_column := yy_column + 1
---|#line 299 "et_eiffel_preparser.l"
+--|#line 297 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 299")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 297")
 end
 
 					-- No final brace-double-quote.
@@ -863,9 +863,9 @@ end
 when 88 then
 	yy_line := yy_line + 1
 	yy_column := 1
---|#line 315 "et_eiffel_preparser.l"
+--|#line 313 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 315")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 313")
 end
 
 				more
@@ -875,9 +875,9 @@ end
 when 89 then
 	yy_line := yy_line + 1
 	yy_column := 1
---|#line 320 "et_eiffel_preparser.l"
+--|#line 318 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 320")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 318")
 end
 
 				more
@@ -886,9 +886,9 @@ end
 			
 when 90 then
 	yy_column := yy_column + 1
---|#line 325 "et_eiffel_preparser.l"
+--|#line 323 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 325")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 323")
 end
 
 					-- No final brace-double-quote.
@@ -898,18 +898,18 @@ end
 			
 when 91 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 339 "et_eiffel_preparser.l"
+--|#line 337 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 339")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 337")
 end
 
 					-- Manifest string with special characters.
 			
 when 92 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 342 "et_eiffel_preparser.l"
+--|#line 340 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 342")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 340")
 end
 
 					-- Manifest string with special characters which may be made
@@ -923,9 +923,9 @@ end
 when 93 then
 	yy_line := yy_line + 1
 	yy_column := 1
---|#line 353 "et_eiffel_preparser.l"
+--|#line 351 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 353")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 351")
 end
 
 					-- Multi-line manifest string.
@@ -934,18 +934,18 @@ end
 			
 when 94 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 358 "et_eiffel_preparser.l"
+--|#line 356 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 358")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 356")
 end
 
 				more
 			
 when 95 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 361 "et_eiffel_preparser.l"
+--|#line 359 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 361")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 359")
 end
 
 					-- Syntax error: missing character / at end of special
@@ -961,9 +961,9 @@ end
 			
 when 96 then
 	yy_column := yy_column + 2
---|#line 373 "et_eiffel_preparser.l"
+--|#line 371 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 373")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 371")
 end
 
 					-- Syntax error: missing ASCII code in special character
@@ -979,9 +979,9 @@ end
 			
 when 97 then
 	yy_column := yy_column + 2
---|#line 385 "et_eiffel_preparser.l"
+--|#line 383 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 385")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 383")
 end
 
 					-- Syntax error: special character specification
@@ -998,27 +998,27 @@ end
 			
 when 98 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 398 "et_eiffel_preparser.l"
+--|#line 396 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 398")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 396")
 end
 
 				more
 			
 when 99 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 401 "et_eiffel_preparser.l"
+--|#line 399 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 401")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 399")
 end
 
 				set_start_condition (INITIAL)
 			
 when 100 then
 	yy_column := yy_column + 2
---|#line 404 "et_eiffel_preparser.l"
+--|#line 402 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 404")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 402")
 end
 
 					-- Syntax error: Invalid special character
@@ -1033,9 +1033,9 @@ end
 			
 when 101 then
 	yy_column := yy_column + 1
---|#line 415 "et_eiffel_preparser.l"
+--|#line 413 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 415")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 413")
 end
 
 					-- Syntax error: invalid special character
@@ -1052,9 +1052,9 @@ end
 when 102 then
 	yy_line := yy_line + 1
 	yy_column := 1
---|#line 427 "et_eiffel_preparser.l"
+--|#line 425 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 427")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 425")
 end
 
 					-- Syntax error: Invalid new-line in manifest string.
@@ -1070,9 +1070,9 @@ end
 when 103 then
 	yy_line := yy_line + 1
 	yy_column := 1
---|#line 453 "et_eiffel_preparser.l"
+--|#line 451 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 453")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 451")
 end
 
 				more
@@ -1080,9 +1080,9 @@ end
 			
 when 104 then
 	yy_column := yy_column + 1
---|#line 457 "et_eiffel_preparser.l"
+--|#line 455 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 457")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 455")
 end
 
 					-- Should never happen.
@@ -1092,9 +1092,9 @@ end
 			
 when 105 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 472 "et_eiffel_preparser.l"
+--|#line 470 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 472")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 470")
 end
 
 				more
@@ -1103,9 +1103,9 @@ end
 when 106 then
 	yy_line := yy_line + 1
 	yy_column := 1
---|#line 476 "et_eiffel_preparser.l"
+--|#line 474 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 476")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 474")
 end
 
 					-- Syntax error: empty line in middle of
@@ -1120,9 +1120,9 @@ end
 			
 when 107 then
 	yy_column := yy_column + 1
---|#line 487 "et_eiffel_preparser.l"
+--|#line 485 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 487")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 485")
 end
 
 					-- Syntax error: missing character % at beginning
@@ -1138,25 +1138,25 @@ end
 			
 when 108 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
+--|#line 514 "et_eiffel_preparser.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 514")
+end
+
+			
+when 109 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
 --|#line 516 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 516")
 end
 
 			
-when 109 then
+when 110 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 --|#line 518 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 518")
-end
-
-			
-when 110 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 520 "et_eiffel_preparser.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 520")
 end
 
 					-- Syntax error: an underscore may not be
@@ -1167,9 +1167,9 @@ end
 			
 when 111 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 527 "et_eiffel_preparser.l"
+--|#line 525 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 527")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 525")
 end
 
 					-- Syntax error: an underscore may not be
@@ -1180,17 +1180,17 @@ end
 			
 when 112 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 534 "et_eiffel_preparser.l"
+--|#line 532 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 534")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 532")
 end
 
 			
 when 113 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 536 "et_eiffel_preparser.l"
+--|#line 534 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 536")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 534")
 end
 
 					-- Syntax error: an underscore may not be
@@ -1201,9 +1201,9 @@ end
 			
 when 114 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 543 "et_eiffel_preparser.l"
+--|#line 541 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 543")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 541")
 end
 
 					-- Syntax error: an underscore may not be
@@ -1214,17 +1214,17 @@ end
 			
 when 115 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 550 "et_eiffel_preparser.l"
+--|#line 548 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 550")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 548")
 end
 
 			
 when 116 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 552 "et_eiffel_preparser.l"
+--|#line 550 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 552")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 550")
 end
 
 					-- Syntax error: an underscore may not be
@@ -1235,9 +1235,9 @@ end
 			
 when 117 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 559 "et_eiffel_preparser.l"
+--|#line 557 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 559")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 557")
 end
 
 					-- Syntax error: an underscore may not be
@@ -1248,17 +1248,17 @@ end
 			
 when 118 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 566 "et_eiffel_preparser.l"
+--|#line 564 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 566")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 564")
 end
 
 			
 when 119 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 568 "et_eiffel_preparser.l"
+--|#line 566 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 568")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 566")
 end
 
 					-- Syntax error: an underscore may not be
@@ -1269,9 +1269,9 @@ end
 			
 when 120 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 575 "et_eiffel_preparser.l"
+--|#line 573 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 575")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 573")
 end
 
 					-- Syntax error: an underscore may not be
@@ -1283,21 +1283,30 @@ end
 when 121 then
 	yy_end := yy_end - 1
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
+--|#line 584 "et_eiffel_preparser.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 584")
+end
+
+			
+when 122 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+--|#line 585 "et_eiffel_preparser.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 585")
+end
+
+			
+when 123 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
 --|#line 586 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 586")
 end
 
 			
-when 122 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 587 "et_eiffel_preparser.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 587")
-end
-
-			
-when 123 then
+when 124 then
+	yy_end := yy_end - 1
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 --|#line 588 "et_eiffel_preparser.l"
 debug ("GELEX")
@@ -1305,8 +1314,15 @@ debug ("GELEX")
 end
 
 			
-when 124 then
-	yy_end := yy_end - 1
+when 125 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+--|#line 589 "et_eiffel_preparser.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 589")
+end
+
+			
+when 126 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 --|#line 590 "et_eiffel_preparser.l"
 debug ("GELEX")
@@ -1314,27 +1330,11 @@ debug ("GELEX")
 end
 
 			
-when 125 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 591 "et_eiffel_preparser.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 591")
-end
-
-			
-when 126 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 592 "et_eiffel_preparser.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 592")
-end
-
-			
 when 127 then
 	yy_column := yy_column + 1
---|#line 602 "et_eiffel_preparser.l"
+--|#line 600 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 602")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 600")
 end
 
 				last_token := E_UNKNOWN
@@ -1358,15 +1358,15 @@ fatal_error ("scanner jammed")
 		do
 			inspect yy_sc
 when 0 then
---|#line 601 "et_eiffel_preparser.l"
+--|#line 599 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 601")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 599")
 end
 terminate
 when 1 then
---|#line 438 "et_eiffel_preparser.l"
+--|#line 436 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 438")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 436")
 end
 
 					-- Syntax error: missing double quote at
@@ -1381,9 +1381,9 @@ end
 				set_start_condition (INITIAL)
 			
 when 2 then
---|#line 499 "et_eiffel_preparser.l"
+--|#line 497 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 499")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 497")
 end
 
 					-- Syntax error: missing character % at beginning
@@ -1398,9 +1398,9 @@ end
 				set_start_condition (INITIAL)
 			
 when 3 then
---|#line 463 "et_eiffel_preparser.l"
+--|#line 461 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 463")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 461")
 end
 
 					-- Should never happen.
@@ -1409,9 +1409,9 @@ end
 				set_start_condition (INITIAL)
 			
 when 4 then
---|#line 267 "et_eiffel_preparser.l"
+--|#line 265 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 267")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 265")
 end
 
 					-- No final brace-double-quote.
@@ -1420,9 +1420,9 @@ end
 				set_start_condition (INITIAL)
 			
 when 5 then
---|#line 305 "et_eiffel_preparser.l"
+--|#line 303 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 305")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 303")
 end
 
 					-- No final brace-double-quote.
@@ -1431,9 +1431,9 @@ end
 				set_start_condition (INITIAL)
 			
 when 6 then
---|#line 331 "et_eiffel_preparser.l"
+--|#line 329 "et_eiffel_preparser.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 331")
+	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 329")
 end
 
 					-- No final brace-double-quote.

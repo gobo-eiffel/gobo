@@ -6,7 +6,7 @@
 		"Code Analysis Technology"
 
 	tool: "Gobo Eiffel Lint"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
 	license: "MIT License"
 -->
 
@@ -65,7 +65,7 @@ memory, <projectname>gelint</projectname> only keeps track
 of what is strictly necessary in order to analyze the Eiffel
 code and to report useful messages in case of validity errors.
 For example the Gobo Eiffel parser can be configured to ignore
-comments, indexing clauses, etc. which are Eiffel constructs
+comments, note clauses, etc. which are Eiffel constructs
 with no validity rules associated with them. Furthermore,
 the AST (Abstract Syntax Tree) is built in such a way that 
 whenever an object can be shared, it will not be duplicated.

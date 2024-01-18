@@ -5,7 +5,7 @@
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CLASS
@@ -610,10 +610,10 @@ feature -- Access
 	obsolete_message: detachable ET_OBSOLETE
 			-- Obsolete message
 
-	first_indexing: detachable ET_INDEXING_LIST
+	first_note_clause: detachable ET_NOTE_LIST
 			-- Note clause at the beginning of the class
 
-	second_indexing: detachable ET_INDEXING_LIST
+	second_note_clause: detachable ET_NOTE_LIST
 			-- Note clause at the end of the class
 
 	class_keyword: ET_KEYWORD
@@ -639,8 +639,8 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if attached first_indexing as l_first_indexing then
-				Result := l_first_indexing.position
+			if attached first_note_clause as l_first_note_clause then
+				Result := l_first_note_clause.position
 			elseif attached class_mark as l_class_mark then
 				Result := l_class_mark.position
 			else
@@ -655,8 +655,8 @@ feature -- Access
 	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
-			if attached first_indexing as l_first_indexing then
-				Result := l_first_indexing.first_leaf
+			if attached first_note_clause as l_first_note_clause then
+				Result := l_first_note_clause.first_leaf
 			elseif attached class_mark as l_class_mark then
 				Result := l_class_mark
 			else
@@ -693,20 +693,20 @@ feature -- Setting
 			obsolete_message_set: obsolete_message = an_obsolete_message
 		end
 
-	set_first_indexing (an_indexing: like first_indexing)
-			-- Set `first_indexing' to `an_indexing'
+	set_first_note_clause (a_note_clause: like first_note_clause)
+			-- Set `first_note_clause' to `a_note_clause'
 		do
-			first_indexing := an_indexing
+			first_note_clause := a_note_clause
 		ensure
-			first_indexing_set: first_indexing = an_indexing
+			first_note_clause_set: first_note_clause = a_note_clause
 		end
 
-	set_second_indexing (an_indexing: like second_indexing)
-			-- Set `second_indexing' to `an_indexing'
+	set_second_note_clause (a_note_clause: like second_note_clause)
+			-- Set `second_note_clause' to `a_note_clause'
 		do
-			second_indexing := an_indexing
+			second_note_clause := a_note_clause
 		ensure
-			second_indexing_set: second_indexing = an_indexing
+			second_note_clause_set: second_note_clause = a_note_clause
 		end
 
 	set_class_keyword (a_class: like class_keyword)
@@ -1123,8 +1123,8 @@ feature -- Parsing status
 			creators := Void
 			convert_features := Void
 			feature_clauses := Void
-			first_indexing := Void
-			second_indexing := Void
+			first_note_clause := Void
+			second_note_clause := Void
 			formal_parameters := Void
 			tuple_constraint_position := 0
 			invariants := Void

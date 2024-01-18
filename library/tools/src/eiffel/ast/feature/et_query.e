@@ -70,7 +70,7 @@ feature -- Conversion
 			Result.set_first_precursor (Current)
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
-			Result.set_first_indexing (first_indexing)
+			Result.set_first_note (first_note)
 			Result.set_object_tests (object_tests)
 			Result.set_iteration_components (iteration_components)
 			Result.set_inline_separate_arguments (inline_separate_arguments)

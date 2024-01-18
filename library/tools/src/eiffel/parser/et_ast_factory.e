@@ -5,7 +5,7 @@
 		"Eiffel Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_AST_FACTORY
@@ -2316,7 +2316,7 @@ feature -- AST nodes
 
 	new_deferred_function (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
 		a_type: detachable ET_DECLARED_TYPE; an_assigner: detachable ET_ASSIGNER; an_is: detachable ET_KEYWORD;
-		a_first_indexing: detachable ET_INDEXING_LIST; an_obsolete: detachable ET_OBSOLETE;
+		a_first_note: detachable ET_NOTE_LIST; an_obsolete: detachable ET_OBSOLETE;
 		a_preconditions: detachable ET_PRECONDITIONS; a_deferred: detachable ET_KEYWORD;
 		a_postconditions: detachable ET_POSTCONDITIONS; an_end: detachable ET_KEYWORD;
 		a_semicolon: detachable ET_SEMICOLON_SYMBOL; a_clients: detachable ET_CLIENT_LIST;
@@ -2333,12 +2333,12 @@ feature -- AST nodes
 				Result.set_preconditions (a_preconditions)
 				Result.set_postconditions (a_postconditions)
 				Result.set_clients (a_clients)
-				Result.set_first_indexing (a_first_indexing)
+				Result.set_first_note (a_first_note)
 			end
 		end
 
 	new_deferred_procedure (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
-		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST; an_obsolete: detachable ET_OBSOLETE;
+		an_is: detachable ET_KEYWORD; a_first_note: detachable ET_NOTE_LIST; an_obsolete: detachable ET_OBSOLETE;
 		a_preconditions: detachable ET_PRECONDITIONS; a_deferred: detachable ET_KEYWORD; a_postconditions: detachable ET_POSTCONDITIONS;
 		an_end: detachable ET_KEYWORD; a_semicolon: detachable ET_SEMICOLON_SYMBOL; a_clients: detachable ET_CLIENT_LIST;
 		a_feature_clause: detachable ET_FEATURE_CLAUSE; a_class: detachable ET_CLASS): detachable ET_DEFERRED_PROCEDURE
@@ -2353,7 +2353,7 @@ feature -- AST nodes
 				Result.set_preconditions (a_preconditions)
 				Result.set_postconditions (a_postconditions)
 				Result.set_clients (a_clients)
-				Result.set_first_indexing (a_first_indexing)
+				Result.set_first_note (a_first_note)
 			end
 		end
 
@@ -2368,7 +2368,7 @@ feature -- AST nodes
 
 	new_do_function (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
 		a_type: detachable ET_DECLARED_TYPE; an_assigner: detachable ET_ASSIGNER;
-		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST;
+		an_is: detachable ET_KEYWORD; a_first_note: detachable ET_NOTE_LIST;
 		an_obsolete: detachable ET_OBSOLETE; a_preconditions: detachable ET_PRECONDITIONS;
 		a_locals: detachable ET_LOCAL_VARIABLE_LIST; a_compound: detachable ET_COMPOUND;
 		a_postconditions: detachable ET_POSTCONDITIONS; a_rescue: detachable ET_COMPOUND;
@@ -2390,7 +2390,7 @@ feature -- AST nodes
 				Result.set_postconditions (a_postconditions)
 				Result.set_rescue_clause (a_rescue)
 				Result.set_clients (a_clients)
-				Result.set_first_indexing (a_first_indexing)
+				Result.set_first_note (a_first_note)
 			end
 		end
 
@@ -2415,7 +2415,7 @@ feature -- AST nodes
 		end
 
 	new_do_procedure (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
-		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST; an_obsolete: detachable ET_OBSOLETE;
+		an_is: detachable ET_KEYWORD; a_first_note: detachable ET_NOTE_LIST; an_obsolete: detachable ET_OBSOLETE;
 		a_preconditions: detachable ET_PRECONDITIONS; a_locals: detachable ET_LOCAL_VARIABLE_LIST;
 		a_compound: detachable ET_COMPOUND; a_postconditions: detachable ET_POSTCONDITIONS;
 		a_rescue: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD; a_semicolon: detachable ET_SEMICOLON_SYMBOL;
@@ -2435,7 +2435,7 @@ feature -- AST nodes
 				Result.set_postconditions (a_postconditions)
 				Result.set_rescue_clause (a_rescue)
 				Result.set_clients (a_clients)
-				Result.set_first_indexing (a_first_indexing)
+				Result.set_first_note (a_first_note)
 			end
 		end
 
@@ -2545,7 +2545,7 @@ feature -- AST nodes
 		end
 
 	new_extended_attribute (a_name: detachable ET_EXTENDED_FEATURE_NAME;
-		a_type: detachable ET_DECLARED_TYPE; an_assigner: detachable ET_ASSIGNER;  a_first_indexing: detachable ET_INDEXING_LIST;
+		a_type: detachable ET_DECLARED_TYPE; an_assigner: detachable ET_ASSIGNER;  a_first_note: detachable ET_NOTE_LIST;
 		an_obsolete: detachable ET_OBSOLETE; a_preconditions: detachable ET_PRECONDITIONS; a_locals: detachable ET_LOCAL_VARIABLE_LIST;
 		a_compound: detachable ET_COMPOUND; a_postconditions: detachable ET_POSTCONDITIONS;
 		a_rescue_clause: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD; a_semicolon: detachable ET_SEMICOLON_SYMBOL;
@@ -2562,7 +2562,7 @@ feature -- AST nodes
 				Result.set_postconditions (a_postconditions)
 				Result.set_rescue_clause (a_rescue_clause)
 				Result.set_clients (a_clients)
-				Result.set_first_indexing (a_first_indexing)
+				Result.set_first_note (a_first_note)
 			end
 		end
 
@@ -2580,7 +2580,7 @@ feature -- AST nodes
 
 	new_external_function (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
 		a_type: detachable ET_DECLARED_TYPE; an_assigner: detachable ET_ASSIGNER;
-		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST;
+		an_is: detachable ET_KEYWORD; a_first_note: detachable ET_NOTE_LIST;
 		an_obsolete: detachable ET_OBSOLETE; a_preconditions: detachable ET_PRECONDITIONS;
 		a_language: detachable ET_EXTERNAL_LANGUAGE;
 		an_alias: detachable ET_EXTERNAL_ALIAS; a_postconditions: detachable ET_POSTCONDITIONS;
@@ -2599,7 +2599,7 @@ feature -- AST nodes
 				Result.set_postconditions (a_postconditions)
 				Result.set_alias_clause (an_alias)
 				Result.set_clients (a_clients)
-				Result.set_first_indexing (a_first_indexing)
+				Result.set_first_note (a_first_note)
 			end
 		end
 
@@ -2629,7 +2629,7 @@ feature -- AST nodes
 		end
 
 	new_external_procedure (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
-		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST; an_obsolete: detachable ET_OBSOLETE;
+		an_is: detachable ET_KEYWORD; a_first_note: detachable ET_NOTE_LIST; an_obsolete: detachable ET_OBSOLETE;
 		a_preconditions: detachable ET_PRECONDITIONS; a_language: detachable ET_EXTERNAL_LANGUAGE; an_alias: detachable ET_EXTERNAL_ALIAS;
 		a_postconditions: detachable ET_POSTCONDITIONS; an_end: detachable ET_KEYWORD;
 		a_semicolon: detachable ET_SEMICOLON_SYMBOL; a_clients: detachable ET_CLIENT_LIST;
@@ -2646,7 +2646,7 @@ feature -- AST nodes
 				Result.set_postconditions (a_postconditions)
 				Result.set_alias_clause (an_alias)
 				Result.set_clients (a_clients)
-				Result.set_first_indexing (a_first_indexing)
+				Result.set_first_note (a_first_note)
 			end
 		end
 
@@ -2837,42 +2837,42 @@ feature -- AST nodes
 			end
 		end
 
-	new_indexing (a_terms: detachable ET_INDEXING_TERM_LIST): detachable ET_INDEXING
-			-- New indexing clause
+	new_note (a_terms: detachable ET_NOTE_TERM_LIST): detachable ET_NOTE
+			-- New note clause
 		do
 			if a_terms /= Void then
 				create Result.make (a_terms)
 			end
 		end
 
-	new_indexing_semicolon (an_indexing: detachable ET_INDEXING_ITEM; a_semicolon: detachable ET_SYMBOL): detachable ET_INDEXING_ITEM
-			-- New indexing-semicolon
+	new_note_semicolon (a_note: detachable ET_NOTE_ITEM; a_semicolon: detachable ET_SYMBOL): detachable ET_NOTE_ITEM
+			-- New note-semicolon
 		do
-			Result := an_indexing
+			Result := a_note
 		end
 
-	new_indexing_term_comma (a_term: detachable ET_INDEXING_TERM; a_comma: detachable ET_SYMBOL): detachable ET_INDEXING_TERM_ITEM
-			-- New indexing_term-comma
+	new_note_term_comma (a_term: detachable ET_NOTE_TERM; a_comma: detachable ET_SYMBOL): detachable ET_NOTE_TERM_ITEM
+			-- New note_term-comma
 		do
 			Result := a_term
 		end
 
-	new_indexing_terms (nb: INTEGER): detachable ET_INDEXING_TERM_LIST
-			-- New indexing terms with given capacity
+	new_note_terms (nb: INTEGER): detachable ET_NOTE_TERM_LIST
+			-- New note terms with given capacity
 		require
 			nb_positive: nb >= 0
 		do
 			create Result.make_with_capacity (nb)
 		end
 
-	new_indexings (an_indexing: detachable ET_KEYWORD; nb: INTEGER): detachable ET_INDEXING_LIST
-			-- New indexing clause with given capacity
+	new_notes (a_note: detachable ET_KEYWORD; nb: INTEGER): detachable ET_NOTE_LIST
+			-- New note clause with given capacity
 		require
 			nb_positive: nb >= 0
 		do
 			create Result.make_with_capacity (nb)
-			if an_indexing /= Void then
-				Result.set_indexing_keyword (an_indexing)
+			if a_note /= Void then
+				Result.set_note_keyword (a_note)
 			end
 		end
 
@@ -3304,7 +3304,7 @@ feature -- AST nodes
 
 	new_once_function (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
 		a_type: detachable ET_DECLARED_TYPE; an_assigner: detachable ET_ASSIGNER;
-		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST;
+		an_is: detachable ET_KEYWORD; a_first_note: detachable ET_NOTE_LIST;
 		an_obsolete: detachable ET_OBSOLETE; a_preconditions: detachable ET_PRECONDITIONS;
 		a_locals: detachable ET_LOCAL_VARIABLE_LIST; a_keys: detachable ET_MANIFEST_STRING_LIST;
 		a_compound: detachable ET_COMPOUND; a_postconditions: detachable ET_POSTCONDITIONS;
@@ -3327,7 +3327,7 @@ feature -- AST nodes
 				Result.set_postconditions (a_postconditions)
 				Result.set_rescue_clause (a_rescue)
 				Result.set_clients (a_clients)
-				Result.set_first_indexing (a_first_indexing)
+				Result.set_first_note (a_first_note)
 			end
 		end
 
@@ -3366,7 +3366,7 @@ feature -- AST nodes
 		end
 
 	new_once_procedure (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
-		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST;
+		an_is: detachable ET_KEYWORD; a_first_note: detachable ET_NOTE_LIST;
 		an_obsolete: detachable ET_OBSOLETE; a_preconditions: detachable ET_PRECONDITIONS;
 		a_locals: detachable ET_LOCAL_VARIABLE_LIST; a_keys: detachable ET_MANIFEST_STRING_LIST;
 		a_compound: detachable ET_COMPOUND;
@@ -3389,7 +3389,7 @@ feature -- AST nodes
 				Result.set_postconditions (a_postconditions)
 				Result.set_rescue_clause (a_rescue)
 				Result.set_clients (a_clients)
-				Result.set_first_indexing (a_first_indexing)
+				Result.set_first_note (a_first_note)
 			end
 		end
 
@@ -3718,8 +3718,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_tagged_indexing (a_tag: detachable ET_TAG; a_terms: detachable ET_INDEXING_TERM_LIST): detachable ET_TAGGED_INDEXING
-			-- New tagged indexing clause
+	new_tagged_note (a_tag: detachable ET_TAG; a_terms: detachable ET_NOTE_TERM_LIST): detachable ET_TAGGED_NOTE
+			-- New tagged note clause
 		do
 			if a_tag /= Void and a_terms /= Void then
 				create Result.make (a_tag, a_terms)

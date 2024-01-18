@@ -5,7 +5,7 @@
 		"Eiffel closures with components common to once routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_ONCE_ROUTINE_CLOSURE
@@ -36,8 +36,8 @@ feature -- Status report
 		do
 			if attached keys as l_keys then
 				Result := standard_once_keys.has_process_key (l_keys)
-			elseif attached first_indexing as l_indexing then
-				Result := l_indexing.has_tagged_indexing_term_value (tokens.once_indexing_tag, tokens.global_once_indexing_value)
+			elseif attached first_note as l_note then
+				Result := l_note.has_tagged_note_term_value (tokens.once_note_tag, tokens.global_once_note_value)
 			end
 		end
 
@@ -46,10 +46,10 @@ feature -- Status report
 		do
 			if attached keys as l_keys then
 				Result := standard_once_keys.has_thread_key (l_keys)
-			elseif attached first_indexing as l_indexing then
-				if l_indexing.has_tagged_indexing_term_value (tokens.once_indexing_tag, tokens.thread_once_indexing_value) then
+			elseif attached first_note as l_note then
+				if l_note.has_tagged_note_term_value (tokens.once_note_tag, tokens.thread_once_note_value) then
 					Result := True
-				elseif not l_indexing.has_indexing_term_with_tag (tokens.once_indexing_tag) then
+				elseif not l_note.has_note_term_with_tag (tokens.once_note_tag) then
 						-- Once-per-thread by default.
 					Result := True
 				end

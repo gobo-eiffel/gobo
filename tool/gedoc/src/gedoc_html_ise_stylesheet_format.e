@@ -9,7 +9,7 @@
 			ec -filter html-stylesheet -all -config project.ecf
 	]"
 
-	copyright: "Copyright (c) 2017-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class GEDOC_HTML_ISE_STYLESHEET_FORMAT
@@ -1354,7 +1354,7 @@ feature {NONE} -- Relations
 			l_class_set.force_last (a_other_class)
 		end
 
-feature {NONE} -- Indexing clause
+feature {NONE} -- Note clause
 
 	class_description (a_class: ET_CLASS): detachable STRING
 			-- Description of `a_class'
@@ -1362,16 +1362,16 @@ feature {NONE} -- Indexing clause
 			a_class_not_void: a_class /= Void
 		local
 			i, nb: INTEGER
-			l_indexing_item: ET_INDEXING
-			l_indexing_item_terms: ET_INDEXING_TERM_LIST
+			l_note_item: ET_NOTE
+			l_note_item_terms: ET_NOTE_TERM_LIST
 		do
-			if attached a_class.first_indexing as l_indexing then
-				nb := l_indexing.count
+			if attached a_class.first_note_clause as l_note_clause then
+				nb := l_note_clause.count
 				from i := 1 until i > nb loop
-					l_indexing_item := l_indexing.item (i).indexing_clause
-					if attached l_indexing_item.tag as l_tag and then STRING_.same_string (l_tag.identifier.lower_name, tag_description) then
-						l_indexing_item_terms := l_indexing_item.terms
-						Result := indexing_field_value_from_terms (l_indexing_item_terms)
+					l_note_item := l_note_clause.item (i).note_clause
+					if attached l_note_item.tag as l_tag and then STRING_.same_string (l_tag.identifier.lower_name, tag_description) then
+						l_note_item_terms := l_note_item.terms
+						Result := note_field_value_from_terms (l_note_item_terms)
 							-- Jump out of the loop.
 						i := nb + 1
 					end
@@ -1380,47 +1380,47 @@ feature {NONE} -- Indexing clause
 			end
 		end
 
-	indexing_field_value_from_terms (a_indexing_terms: ET_INDEXING_TERM_LIST): STRING
-			-- Indexing field value corresponding to `a_indexing_terms'
+	note_field_value_from_terms (a_note_terms: ET_NOTE_TERM_LIST): STRING
+			-- Note field value corresponding to `a_note_terms'
 		require
-			a_indexing_terms_not_void: a_indexing_terms /= Void
+			a_note_terms_not_void: a_note_terms /= Void
 		local
-			l_indexing_term: ET_INDEXING_TERM_ITEM
+			l_note_term: ET_NOTE_TERM_ITEM
 			i, l_terms_count: INTEGER
 			l_sign: ET_SYMBOL_OPERATOR
 			l_value: STRING
 			l_default_field_value_capacity: INTEGER
 		do
-			l_terms_count := a_indexing_terms.count
+			l_terms_count := a_note_terms.count
 			l_default_field_value_capacity := 15
 			create Result.make (l_terms_count * l_default_field_value_capacity)
 			from i := 1 until i > l_terms_count loop
 				if i /= 1 then
 					Result.append_string (", ")
 				end
-				l_indexing_term := a_indexing_terms.item (i).indexing_term
-				if attached {ET_MANIFEST_STRING} l_indexing_term as l_manifest_string then
+				l_note_term := a_note_terms.item (i).note_term
+				if attached {ET_MANIFEST_STRING} l_note_term as l_manifest_string then
 					l_value := left_aligned_string (l_manifest_string.value)
 					Result.append_string (l_value)
-				elseif attached {ET_IDENTIFIER} l_indexing_term as l_identifier then
+				elseif attached {ET_IDENTIFIER} l_note_term as l_identifier then
 					Result.append_string (l_identifier.name)
-				elseif attached {ET_C1_CHARACTER_CONSTANT} l_indexing_term as l_character_1 then
+				elseif attached {ET_C1_CHARACTER_CONSTANT} l_note_term as l_character_1 then
 					Result.append_character ('%'')
 					{UC_UTF8_ROUTINES}.append_natural_32_code_to_utf8 (Result, l_character_1.literal.natural_32_code)
 					Result.append_character ('%'')
-				elseif attached {ET_C2_CHARACTER_CONSTANT} l_indexing_term as l_character_2 then
+				elseif attached {ET_C2_CHARACTER_CONSTANT} l_note_term as l_character_2 then
 					Result.append_character ('%'')
 					Result.append_character ('%%')
 					Result.append_character (l_character_2.literal)
 					Result.append_character ('%'')
-				elseif attached {ET_C3_CHARACTER_CONSTANT} l_indexing_term as l_character_3 then
+				elseif attached {ET_C3_CHARACTER_CONSTANT} l_note_term as l_character_3 then
 					Result.append_character ('%'')
 					Result.append_character ('%%')
 					Result.append_character ('/')
 					Result.append_string (l_character_3.literal)
 					Result.append_character ('/')
 					Result.append_character ('%'')
-				elseif attached {ET_INTEGER_CONSTANT} l_indexing_term as l_integer then
+				elseif attached {ET_INTEGER_CONSTANT} l_note_term as l_integer then
 					l_sign := l_integer.sign
 					if l_sign /= Void then
 						if l_sign.is_minus then
@@ -1430,7 +1430,7 @@ feature {NONE} -- Indexing clause
 						end
 					end
 					Result.append_string (l_integer.literal)
-				elseif attached {ET_REAL_CONSTANT} l_indexing_term as l_real then
+				elseif attached {ET_REAL_CONSTANT} l_note_term as l_real then
 					l_sign := l_real.sign
 					if l_sign /= Void then
 						if l_sign.is_minus then
@@ -1440,13 +1440,13 @@ feature {NONE} -- Indexing clause
 						end
 					end
 					Result.append_string (l_real.literal)
-				elseif attached {ET_BOOLEAN_CONSTANT} l_indexing_term as l_boolean then
+				elseif attached {ET_BOOLEAN_CONSTANT} l_note_term as l_boolean then
 					Result.append_string (l_boolean.text)
 				end
 				i := i + 1
 			end
 		ensure
-			indexing_field_value_not_void: Result /= Void
+			note_field_value_not_void: Result /= Void
 		end
 
 	left_aligned_string (a_string: STRING): STRING

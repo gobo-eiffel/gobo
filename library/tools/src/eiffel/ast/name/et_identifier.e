@@ -126,7 +126,7 @@ inherit
 			add_separate_arguments
 		end
 
-	ET_INDEXING_TERM
+	ET_NOTE_TERM
 		undefine
 			first_position,
 			last_position,
@@ -294,8 +294,8 @@ feature -- Access
 			Result := Current
 		end
 
-	indexing_term_value: STRING
-			-- Value of current indexing term
+	note_term_value: STRING
+			-- Value of current note term
 		do
 			Result := name
 		end
@@ -384,8 +384,8 @@ feature -- Status report
 				not is_feature_name and not is_tuple_label
 		end
 
-	has_indexing_term_value (a_value: STRING): BOOLEAN
-			-- Does current indexing term have value `a_value'?
+	has_note_term_value (a_value: STRING): BOOLEAN
+			-- Does current note term have value `a_value'?
 			-- (case-insensitive comparison)
 		do
 			Result := STRING_.same_case_insensitive (name, a_value)

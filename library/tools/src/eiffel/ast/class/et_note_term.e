@@ -5,18 +5,18 @@
 		"Eiffel note terms"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
-deferred class ET_INDEXING_TERM
+deferred class ET_NOTE_TERM
 
 inherit
 
-	ET_INDEXING_TERM_ITEM
+	ET_NOTE_TERM_ITEM
 
 feature -- Access
 
-	indexing_term: ET_INDEXING_TERM
+	note_term: ET_NOTE_TERM
 			-- Note term in comma-separated list
 		do
 			Result := Current
