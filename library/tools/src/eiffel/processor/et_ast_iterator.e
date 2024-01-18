@@ -1631,6 +1631,26 @@ feature {ET_AST_NODE} -- Processing
 			process_token (an_operator)
 		end
 
+	process_general_qualified_feature_call_expression (a_expression: ET_GENERAL_QUALIFIED_FEATURE_CALL_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			a_expression.target.process (Current)
+			a_expression.name.process (Current)
+			if attached a_expression.arguments as l_arguments then
+				l_arguments.process (Current)
+			end
+		end
+
+	process_general_qualified_feature_call_instruction (a_instruction: ET_GENERAL_QUALIFIED_FEATURE_CALL_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			a_instruction.target.process (Current)
+			a_instruction.name.process (Current)
+			if attached a_instruction.arguments as l_arguments then
+				l_arguments.process (Current)
+			end
+		end
+
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do

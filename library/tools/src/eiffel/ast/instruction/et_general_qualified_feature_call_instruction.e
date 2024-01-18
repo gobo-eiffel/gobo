@@ -1,14 +1,16 @@
 ﻿note
 
-	description:
-
-		"Eiffel fake qualified feature call instructions, with no possible processing"
-
+	description: "[
+		Eiffel qualified feature call instructions, with no specific associated concrete
+		syntax as opposed to other descendants of ET_QUALIFIED_FEATURE_CALL_INSTRUCTION.
+		Useful when creating qualified feature call instruction objects on the fly with
+		no specific concrete syntax in mind (or with no equivalent concrete syntax).
+	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2023-2024, Eric Bezault and others"
 	license: "MIT License"
 
-class ET_FAKE_QUALIFIED_FEATURE_CALL_INSTRUCTION
+class ET_GENERAL_QUALIFIED_FEATURE_CALL_INSTRUCTION
 
 inherit
 
@@ -21,7 +23,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_target: like target; a_name: like name; a_arguments: like arguments)
-			-- Create a new fake qualified feature call instruction.
+			-- Create a new general qualified feature call instruction.
 		require
 			a_target_not_void: a_target /= Void
 			a_name_not_void: a_name /= Void
@@ -106,6 +108,7 @@ feature -- Processing
 	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
+			a_processor.process_general_qualified_feature_call_instruction (Current)
 		end
 
 end

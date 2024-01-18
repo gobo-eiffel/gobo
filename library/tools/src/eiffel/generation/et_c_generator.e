@@ -21420,10 +21420,10 @@ feature {NONE} -- Separate calls
 	separate_call_arguments: ET_ACTUAL_ARGUMENT_LIST
 			-- Arguments to be used when generating separate call objects
 
-	separate_call_instruction: ET_FAKE_QUALIFIED_FEATURE_CALL_INSTRUCTION
+	separate_call_instruction: ET_GENERAL_QUALIFIED_FEATURE_CALL_INSTRUCTION
 			-- Instruction to be used when generating separate call objects
 
-	separate_call_expression: ET_FAKE_QUALIFIED_FEATURE_CALL_EXPRESSION
+	separate_call_expression: ET_GENERAL_QUALIFIED_FEATURE_CALL_EXPRESSION
 			-- Expression to be used when generating separate call objects
 
 	separate_arguments: DS_ARRAYED_LIST [ET_IDENTIFIER]

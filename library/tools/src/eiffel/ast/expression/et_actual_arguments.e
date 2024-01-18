@@ -5,7 +5,7 @@
 		"Eiffel actual arguments"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_ACTUAL_ARGUMENTS
@@ -23,6 +23,8 @@ inherit
 		redefine
 			actual_argument
 		end
+
+	ET_AST_NODE
 
 feature -- Access
 
