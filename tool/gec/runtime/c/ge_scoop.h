@@ -42,13 +42,14 @@ struct GE_scoop_session_struct {
 	GE_scoop_processor* callee; /* Processor of the targets of the calls. */
 	uint32_t is_synchronized; /* Did `callee' synchronously trigger directly (=1) or indirectly (>1) the calls of this session? Needed in case of callbacks. Not protected by a mutex. */
 	uint32_t is_open; /* Number of times this session is being open. When 0, no more calls will be added. Protected by `mutex'. */
+	char is_submitted; /* Has this sesssion been submitted for execution to its callee's processor? Protected by `mutex'. */
 	GE_scoop_session* next_locked_session; /* Not protected by a mutex. */
 	GE_scoop_session* previous; /* Protected by `mutex' of enclosing processor. */
 	GE_scoop_session* next; /* Protected by `mutex' of enclosing processor. */
 	GE_scoop_call* first_call; /* Protected by `mutex'. */
 	GE_scoop_call* last_call; /* Protected by `mutex'. */
-	EIF_MUTEX_TYPE* mutex; /* To add, remove and access SCOOP calls, and to update `is_open'. */
-	EIF_COND_TYPE* condition_variable; /* To add, remove and access SCOOP calls, and to update `is_open'. */
+	EIF_MUTEX_TYPE* mutex; /* To add, remove and access SCOOP calls, and to update `is_open' and `is_submitted'. */
+	EIF_COND_TYPE* condition_variable; /* To add, remove and access SCOOP calls, and to update `is_open' and `is_submitted'. */
 };
 
 /* Struct for a SCOOP region and its processor if any. */

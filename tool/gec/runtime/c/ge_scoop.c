@@ -123,6 +123,7 @@ static GE_scoop_session* GE_new_scoop_session(GE_scoop_processor* a_callee)
 	l_session->callee = a_callee;
 	l_session->mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
 	l_session->condition_variable = (EIF_COND_TYPE*)GE_condition_variable_create();
+	GE_increment_scoop_sessions_count();
 	return l_session;
 }
 
@@ -156,18 +157,6 @@ GE_scoop_session* GE_scoop_session_open(GE_scoop_processor* a_caller, GE_scoop_p
 	l_new_session->is_open = 1;
 	l_new_session->next_locked_session = a_caller->first_locked_session;
 	a_caller->first_locked_session = l_new_session;
-	GE_mutex_lock((EIF_POINTER)a_callee->mutex);
-	l_last_session = a_callee->last_session;
-	if (l_last_session) {
-		l_last_session->next = l_new_session;
-		l_new_session->previous = l_last_session;
-	} else {
-		a_callee->first_session = l_new_session;
-	}
-	a_callee->last_session = l_new_session;
-	GE_increment_scoop_sessions_count();
-	GE_condition_variable_broadcast((EIF_POINTER)a_callee->condition_variable);
-	GE_mutex_unlock((EIF_POINTER)a_callee->mutex);
 	return l_new_session;
 }
 
@@ -181,6 +170,7 @@ GE_scoop_session* GE_scoop_session_open(GE_scoop_processor* a_caller, GE_scoop_p
 void GE_scoop_session_close(GE_scoop_processor* a_caller, GE_scoop_session* a_session)
 {
 	GE_scoop_session* l_locked_session;
+	char l_to_be_freed = 0;
 
 	GE_mutex_lock((EIF_POINTER)a_session->mutex);
 	if (a_session->is_open) {
@@ -197,10 +187,39 @@ void GE_scoop_session_close(GE_scoop_processor* a_caller, GE_scoop_session* a_se
 				l_locked_session = l_locked_session->next_locked_session;
 			}
 			a_session->next_locked_session = 0;
-			GE_condition_variable_broadcast((EIF_POINTER)a_session->condition_variable);
+			if (!a_session->is_submitted) {
+				l_to_be_freed = '\1';
+			} else {
+				GE_condition_variable_broadcast((EIF_POINTER)a_session->condition_variable);
+			}
 		}
 	}
 	GE_mutex_unlock((EIF_POINTER)a_session->mutex);
+	if (l_to_be_freed) {
+		GE_free_scoop_session(a_session);
+	}
+}
+
+/* 
+ * Add SCOOP session `a_session' from its callee processor.
+ */
+static void GE_add_scoop_session(GE_scoop_session* a_session)
+{
+	GE_scoop_processor* l_processor;
+	GE_scoop_session* l_last_session;
+
+	l_processor = a_session->callee;
+	GE_mutex_lock((EIF_POINTER)l_processor->mutex);
+	l_last_session = l_processor->last_session;
+	if (l_last_session) {
+		l_last_session->next = a_session;
+		a_session->previous = l_last_session;
+	} else {
+		l_processor->first_session = a_session;
+	}
+	l_processor->last_session = a_session;
+	GE_condition_variable_broadcast((EIF_POINTER)l_processor->condition_variable);
+	GE_mutex_unlock((EIF_POINTER)l_processor->mutex);
 }
 
 /* 
@@ -226,6 +245,7 @@ static void GE_remove_scoop_session(GE_scoop_session* a_session)
 		l_processor->last_session = a_session->previous;
 	}
 	GE_mutex_unlock((EIF_POINTER)l_processor->mutex);
+	GE_free_scoop_session(a_session);
 }
 
 /* 
@@ -253,6 +273,11 @@ void GE_scoop_session_add_call(GE_scoop_session* a_session, GE_scoop_call* a_cal
 	}
 	GE_mutex_lock((EIF_POINTER)a_session->mutex);
 	a_call->is_synchronous = a_is_synchronous;
+	if (!a_session->is_submitted) {
+		/* First call added to `a_session'. */
+		a_session->is_submitted = '\1';
+		GE_add_scoop_session(a_session);
+	}
 	l_last_call = a_session->last_call;
 	a_session->last_call = a_call;
 	if (l_last_call) {
@@ -261,7 +286,7 @@ void GE_scoop_session_add_call(GE_scoop_session* a_session, GE_scoop_call* a_cal
 		a_session->first_call = a_call;
 	}
 	GE_condition_variable_broadcast((EIF_POINTER)a_session->condition_variable);
-	GE_mutex_unlock((EIF_POINTER)a_session->mutex);
+	GE_mutex_unlock((EIF_POINTER)a_session->mutex); 
 	if (a_is_synchronous) {
 		GE_condition_variable_wait((EIF_POINTER)l_caller->sync_condition_variable, (EIF_POINTER)l_caller->sync_mutex);
 		GE_mutex_unlock((EIF_POINTER)l_caller->sync_mutex);
@@ -509,8 +534,6 @@ void GE_scoop_processor_run(GE_context* a_context)
 		if (l_session) {
 			GE_scoop_session_execute(a_context, l_session);
 			GE_remove_scoop_session(l_session);
-			GE_free_scoop_session(l_session);
-			GE_decrement_scoop_sessions_count();
 		}
 	}
 }
@@ -540,6 +563,7 @@ void GE_free_scoop_session(GE_scoop_session* a_session)
 	GE_mutex_destroy((EIF_POINTER)a_session->mutex);
 	GE_condition_variable_destroy((EIF_POINTER)a_session->condition_variable);
 	GE_free(a_session);
+	GE_decrement_scoop_sessions_count();
 }
 
 /*
