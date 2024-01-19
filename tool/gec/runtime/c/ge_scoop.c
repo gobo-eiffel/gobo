@@ -131,19 +131,19 @@ static GE_scoop_session* GE_new_scoop_session(GE_scoop_processor* a_callee)
 
 	l_session = (GE_scoop_session*)GE_calloc_uncollectable(1, sizeof(GE_scoop_session));
 	l_session->callee = a_callee;
-	l_session->is_open = 1;
 	l_session->mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
 	l_session->condition_variable = (EIF_COND_TYPE*)GE_condition_variable_create();
 	return l_session;
 }
 
 /* 
- * Get SCOOP session to register calls from `a_caller' to be executed by `a_callee'.
+ * Create (or reuse an existing) SCOOP session to register calls from
+ * `a_caller' to be executed by `a_callee'.
  * Return NULL if `a_caller' and `a_callee' are the same SCOOP processor.
  * To be executed by the processor of `a_caller' (or by other processors
  * which are synchronized with `a_caller').
  */
-GE_scoop_session* GE_get_scoop_session(GE_scoop_processor* a_caller, GE_scoop_processor* a_callee)
+GE_scoop_session* GE_scoop_session_open(GE_scoop_processor* a_caller, GE_scoop_processor* a_callee)
 {
 	GE_scoop_session* l_session;
 	GE_scoop_session* l_new_session;
@@ -163,6 +163,7 @@ GE_scoop_session* GE_get_scoop_session(GE_scoop_processor* a_caller, GE_scoop_pr
 		l_session = l_session->next_locked_session;
 	}
 	l_new_session = GE_new_scoop_session(a_callee);
+	l_new_session->is_open = 1;
 	l_new_session->next_locked_session = a_caller->first_locked_session;
 	a_caller->first_locked_session = l_new_session;
 	GE_mutex_lock((EIF_POINTER)a_callee->mutex);
@@ -187,7 +188,7 @@ GE_scoop_session* GE_get_scoop_session(GE_scoop_processor* a_caller, GE_scoop_pr
  * To be executed from the processor of `a_caller' (or by other processors
  * which are synchronized with `a_caller').
  */
-void GE_exit_scoop_session(GE_scoop_processor* a_caller, GE_scoop_session* a_session)
+void GE_scoop_session_close(GE_scoop_processor* a_caller, GE_scoop_session* a_session)
 {
 	GE_scoop_session* l_locked_session;
 
@@ -252,7 +253,7 @@ GE_scoop_call* GE_new_scoop_call(GE_scoop_processor* a_caller, size_t a_size)
 /* 
  * Add SCOOP call `a_call' to `a_session'.
  */
-void GE_add_scoop_call(GE_scoop_session* a_session, GE_scoop_call* a_call, char a_is_synchronous)
+void GE_scoop_session_add_call(GE_scoop_session* a_session, GE_scoop_call* a_call, char a_is_synchronous)
 {
 	GE_scoop_call* l_last_call;
 	GE_scoop_processor* l_caller = a_call->caller;
@@ -280,13 +281,13 @@ void GE_add_scoop_call(GE_scoop_session* a_session, GE_scoop_call* a_call, char 
 /*
  * Add a synchronization call between `a_caller' and the callee of `a_session' if not synchronized yet.
  */
-void GE_add_scoop_sync_call(GE_scoop_processor* a_caller, GE_scoop_session* a_session)
+void GE_scoop_session_add_sync_call(GE_scoop_processor* a_caller, GE_scoop_session* a_session)
 {
 	GE_scoop_call* l_call;
 
 	if (!GE_scoop_session_is_synchronized(a_session)) {
 		l_call = GE_new_scoop_call(a_caller, sizeof(GE_scoop_call));
-		GE_add_scoop_call(a_session, l_call, '\1');
+		GE_scoop_session_add_call(a_session, l_call, '\1');
 	}
 }
 
@@ -460,7 +461,7 @@ void GE_scoop_processor_pass_locks(GE_scoop_processor* a_caller, GE_scoop_proces
 			l_session = l_session->next_locked_session;
 		}
 		if (!l_caller_session) {
-			l_caller_session = GE_get_scoop_session(a_callee, a_caller);
+			l_caller_session = GE_scoop_session_open(a_callee, a_caller);
 		}
 		l_caller_session->is_synchronized++;
 	}
@@ -481,7 +482,7 @@ void GE_scoop_processor_release_locks(GE_scoop_processor* a_caller, GE_scoop_pro
 				l_session->is_synchronized--;
 			}
 			l_next_session = l_session->next_locked_session;
-			GE_exit_scoop_session(a_callee, l_session);
+			GE_scoop_session_close(a_callee, l_session);
 			l_session = l_next_session;
 		}
 		a_caller->first_locked_session = a_callee->first_locked_session;

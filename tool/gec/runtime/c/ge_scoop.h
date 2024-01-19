@@ -81,12 +81,13 @@ extern uint32_t GE_decrement_scoop_sessions_count(void);
 extern GE_scoop_processor* GE_new_scoop_processor(GE_context* a_context);
 
 /* 
- * Get SCOOP session to register calls from `a_caller' to be executed by `a_callee'.
+ * Create (or reuse an existing) SCOOP session to register calls from
+ * `a_caller' to be executed by `a_callee'.
  * Return NULL if `a_caller' and `a_callee' are the same SCOOP processor.
  * To be executed by the processor of `a_caller' (or by other processors
  * which are synchronized with `a_caller').
  */
-extern GE_scoop_session* GE_get_scoop_session(GE_scoop_processor* a_caller, GE_scoop_processor* a_callee);
+extern GE_scoop_session* GE_scoop_session_open(GE_scoop_processor* a_caller, GE_scoop_processor* a_callee);
 
 /* 
  * Exit from SCOOP session `a_session' at the end of a feature with arguments of separate type
@@ -95,7 +96,7 @@ extern GE_scoop_session* GE_get_scoop_session(GE_scoop_processor* a_caller, GE_s
  * To be executed from the processor of `a_caller' (or by other processors
  * which are synchronized with `a_caller').
  */
-extern void GE_exit_scoop_session(GE_scoop_processor* a_caller, GE_scoop_session* a_session);
+extern void GE_scoop_session_close(GE_scoop_processor* a_caller, GE_scoop_session* a_session);
 
 /* 
  * New SCOOP call.
@@ -105,12 +106,12 @@ extern GE_scoop_call* GE_new_scoop_call(GE_scoop_processor* a_caller, size_t a_s
 /* 
  * Add SCOOP call `a_call' to `a_session'.
  */
-extern void GE_add_scoop_call(GE_scoop_session* a_session, GE_scoop_call* a_call, char a_is_synchronous);
+extern void GE_scoop_session_add_call(GE_scoop_session* a_session, GE_scoop_call* a_call, char a_is_synchronous);
 
 /*
  * Add a synchronization call between `a_caller' and the callee of `a_session' if not synchronized yet.
  */
-extern void GE_add_scoop_sync_call(GE_scoop_processor* a_caller, GE_scoop_session* a_session);
+extern void GE_scoop_session_add_sync_call(GE_scoop_processor* a_caller, GE_scoop_session* a_session);
 
 /*
  * Let the thread of `a_caller' execute the calls of `a_callee' and vice-versa.
