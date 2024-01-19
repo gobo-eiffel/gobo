@@ -56,7 +56,6 @@ struct GE_scoop_processor_struct {
 	GE_context* context;
 	GE_scoop_session* first_locked_session; /* Not protected by a mutex. */
 	char is_impersonation_allowed; /* Protected by `mutex'. */
-	GE_scoop_processor* next;
 	GE_scoop_session* first_session; /* Protected by `mutex'. */
 	GE_scoop_session* last_session; /* Protected by `mutex'. */
 	EIF_MUTEX_TYPE* mutex; /* To add, remove and access SCOOP sessions, and to access `is_impersonation_allowed'. */

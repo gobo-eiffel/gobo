@@ -41,11 +41,6 @@ static uint32_t GE_unprotected_scoop_sessions_count;
  */
 static EIF_MUTEX_TYPE* GE_scoop_sessions_count_mutex;
 
-/*
- * Linked list of all scoop processors.
- */
-static GE_scoop_processor* GE_all_scoop_processors;
-
 /* 
  * Number SCOOP sessions not fully executed yet.
  */
@@ -87,15 +82,14 @@ uint32_t GE_decrement_scoop_sessions_count()
 	if (l_result <= 0) {
 			/*
 				No more SCOOP session to be executed.
-				We can stop all SCOOP processors.
+				We can stop the process. Do that by
+				exiting the SCOOP execution loop of
+				the SCOOP processor of the main thread.
 			*/
-		l_processor = GE_all_scoop_processors;
-		while (l_processor) {
-			GE_mutex_lock((EIF_POINTER)l_processor->mutex);
-			GE_condition_variable_broadcast((EIF_POINTER)l_processor->condition_variable);
-			GE_mutex_unlock((EIF_POINTER)l_processor->mutex);
-			l_processor = l_processor->next;
-		}
+		l_processor = GE_main_context->scoop_processor;
+		GE_mutex_lock((EIF_POINTER)l_processor->mutex);
+		GE_condition_variable_broadcast((EIF_POINTER)l_processor->condition_variable);
+		GE_mutex_unlock((EIF_POINTER)l_processor->mutex);
 	}
 	GE_mutex_unlock((EIF_POINTER)GE_scoop_sessions_count_mutex);
 	return l_result;
@@ -115,10 +109,6 @@ GE_scoop_processor* GE_new_scoop_processor(GE_context* a_context)
 	l_processor->sync_mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
 	l_processor->sync_condition_variable = (EIF_COND_TYPE*)GE_condition_variable_create();
 	l_processor->is_impersonation_allowed = '\1';
-	GE_mutex_lock((EIF_POINTER)GE_scoop_sessions_count_mutex);
-	l_processor->next = GE_all_scoop_processors;
-	GE_all_scoop_processors = l_processor;
-	GE_mutex_unlock((EIF_POINTER)GE_scoop_sessions_count_mutex);
 	return l_processor;
 }
 
@@ -531,7 +521,6 @@ void GE_scoop_processor_run(GE_context* a_context)
 void GE_init_scoop()
 {
 	GE_unprotected_scoop_sessions_count = 0;
-	GE_all_scoop_processors = 0;
 	GE_scoop_sessions_count_mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
 }
 
