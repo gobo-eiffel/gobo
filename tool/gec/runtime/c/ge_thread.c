@@ -1344,11 +1344,6 @@ static void* GE_thread_routine(void* arg)
 #ifdef GE_USE_SCOOP
 	if (l_thread_context->is_scoop_processor) {
 		l_thread_context->parent_context = 0;
-	} else {
-#endif
-		l_parent_thread_context->last_thread_id = l_thread_context->thread_id;
-		l_parent_thread_context->n_children++;
-#ifdef GE_USE_SCOOP
 	}
 #endif
 	GE_unprotected_mutex_unlock((EIF_POINTER)l_parent_thread_context->children_mutex);
@@ -1482,6 +1477,14 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 					/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
 				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, l_thread_context) == 0) {
 					l_thread_context->thread_id = l_thread_id;
+#ifdef GE_USE_SCOOP
+					if (!l_thread_context->is_scoop_processor) {
+#endif
+						l_current_thread_context->last_thread_id = l_thread_id;
+						l_current_thread_context->n_children++;
+#ifdef GE_USE_SCOOP
+					}
+#endif
 				} else {
 					l_raise_error = 1;
 				}
@@ -1501,6 +1504,14 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 			l_raise_error = 1;
 		} else {
 			l_thread_context->thread_id = l_thread_id;
+#ifdef GE_USE_SCOOP
+			if (!l_thread_context->is_scoop_processor) {
+#endif
+				l_current_thread_context->last_thread_id = l_thread_id;
+				l_current_thread_context->n_children++;
+#ifdef GE_USE_SCOOP
+			}
+#endif
 		}
 		GE_unprotected_mutex_unlock((EIF_POINTER)l_current_thread_context->children_mutex);
 		SIGRESUME;
