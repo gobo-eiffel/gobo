@@ -4,7 +4,7 @@
 		"C functions used to implement class THREAD and related threading facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -1335,27 +1335,29 @@ static void* GE_thread_routine(void* arg)
 #endif
 {
 	GE_thread_context* l_thread_context = (GE_thread_context*)arg;
-	GE_context l_context = GE_default_context;
+	GE_context* l_context;
 
 	SIGBLOCK;
 	GE_unprotected_mutex_lock((EIF_POINTER)l_thread_context->parent_context->children_mutex);
 	/* Wait for the parent thread to set the thread id. */
 	GE_unprotected_mutex_unlock((EIF_POINTER)l_thread_context->parent_context->children_mutex);
-	l_context.thread = l_thread_context;
-	GE_thread_init_onces(&l_context);
-	GE_init_exception(&l_context);
-	GE_register_thread_context(&l_context);
+	l_context = (GE_context*)GE_malloc_atomic_uncollectable(sizeof(GE_context));
+	*l_context = GE_default_context;
+	l_context->thread = l_thread_context;
+	GE_thread_init_onces(l_context);
+	GE_init_exception(l_context);
+	GE_register_thread_context(l_context);
 	GE_thread_set_priority(l_thread_context->thread_id, l_thread_context->initial_priority);
 	SIGRESUME;
 	if (l_thread_context->current) {
 #ifdef GE_USE_SCOOP
-		l_context.scoop_processor = l_thread_context->current->scoop_processor;
+		l_context->scoop_processor = l_thread_context->current->scoop_processor;
 		if (l_thread_context->is_scoop_processor) {
 				/* Do not keep track of the current object so that it can be
 				reclaimed by the GC if it is not referenced anywhere else. */
-			l_context.scoop_processor->context = &l_context;
+			l_context->scoop_processor->context = l_context;
 			l_thread_context->current = EIF_VOID;
-			GE_scoop_processor_run(&l_context);
+			GE_scoop_processor_run(l_context);
 		} else
 #endif
 		if (l_thread_context->routine) {
@@ -1739,6 +1741,7 @@ void GE_thread_exit(void)
 			GE_free(l_context->wel_per_thread_data);
 			l_context->wel_per_thread_data = 0;
 		}
+		GE_free(l_context);
 #ifdef GE_USE_POSIX_THREADS
 		pthread_exit(NULL);
 #elif defined EIF_WINDOWS

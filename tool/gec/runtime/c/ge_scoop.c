@@ -510,30 +510,23 @@ void GE_scoop_processor_release_locks(GE_scoop_processor* a_caller, GE_scoop_pro
  */
 void GE_scoop_processor_run(GE_context* a_context)
 {
-	GE_scoop_processor* l_processor;
 	GE_scoop_session* l_session;
-	GE_scoop_session* l_next_session;
+	EIF_POINTER l_mutex = (EIF_POINTER)a_context->scoop_processor->mutex;
+	EIF_POINTER l_condition_variable = (EIF_POINTER)a_context->scoop_processor->condition_variable;
 
-	l_processor = a_context->scoop_processor;
-	while (1) {
-		GE_mutex_lock((EIF_POINTER)l_processor->mutex);
-		l_session = l_processor->first_session;
+	while (a_context->scoop_processor) {
+		GE_mutex_lock(l_mutex);
+		l_session = a_context->scoop_processor->first_session;
 		if (l_session) {
-
-		} else if (GE_scoop_sessions_count() <= 0) {
-			GE_mutex_unlock((EIF_POINTER)l_processor->mutex);
-			break;
-		} else {
-			GE_condition_variable_wait((EIF_POINTER)l_processor->condition_variable, (EIF_POINTER)l_processor->mutex);
-			if (!l_processor->first_session && GE_scoop_sessions_count() <= 0) {
-				GE_mutex_unlock((EIF_POINTER)l_processor->mutex);
-				break;
-			}
-		}
-		GE_mutex_unlock((EIF_POINTER)l_processor->mutex);
-		if (l_session) {
+			GE_mutex_unlock(l_mutex);
 			GE_scoop_session_execute(a_context, l_session);
 			GE_remove_scoop_session(l_session);
+		} else if (GE_scoop_sessions_count() <= 0) {
+			GE_mutex_unlock(l_mutex);
+			break;
+		} else {
+			GE_condition_variable_wait(l_condition_variable, l_mutex);
+			GE_mutex_unlock(l_mutex);
 		}
 	}
 }
