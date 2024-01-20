@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTION"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -448,6 +448,9 @@ void GE_init_exception(GE_context* a_context)
 	GE_init_exception_trace_buffer(&a_context->last_exception_trace);
 	l_exception_manager = GE_new_exception_manager(a_context, EIF_TRUE);
 	a_context->exception_manager = l_exception_manager;
+#ifdef GE_USE_THREADS
+	a_context->thread->exception_manager = l_exception_manager;
+#endif
 	GE_init_exception_manager(a_context, l_exception_manager);
 }
 
@@ -459,6 +462,9 @@ void GE_free_exception(GE_context* a_context)
 	GE_free_exception_trace_buffer(&a_context->exception_trace_buffer);
 	GE_free_exception_trace_buffer(&a_context->last_exception_trace);
 	a_context->exception_manager = EIF_VOID;
+#ifdef GE_USE_THREADS
+	a_context->thread->exception_manager = EIF_VOID;
+#endif
 }
 
 /*
