@@ -38,8 +38,11 @@ param
 
 . "$PSScriptRoot/install_ge.ps1" $CiTool
 if ($EiffelCompiler.EndsWith("ise")) {
-  . "$PSScriptRoot/install_ise.ps1" $CiTool
+	. "$PSScriptRoot/install_ise.ps1" $CiTool
 }
 Set-Location "$env:GOBO/$SystemUnderTest"
+if ($EiffelCompiler -eq "ge" -and $SystemUnderTest -eq "tool") {
+	gecop --tool=gec --progress --thread=1
+}
 geant test_$EiffelCompiler
 if ($LastExitCode -ne 0) { exit $LastExitCode }
