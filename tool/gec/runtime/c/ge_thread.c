@@ -1482,7 +1482,6 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 					/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
 				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, l_thread_context) == 0) {
 					l_thread_context->thread_id = l_thread_id;
-					l_current_thread_context->last_thread_id = l_thread_id;
 				} else {
 					l_raise_error = 1;
 				}
@@ -1502,20 +1501,19 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 			l_raise_error = 1;
 		} else {
 			l_thread_context->thread_id = l_thread_id;
-			l_current_thread_context->last_thread_id = l_thread_id;
 		}
 		GE_unprotected_mutex_unlock((EIF_POINTER)l_current_thread_context->children_mutex);
 		SIGRESUME;
+#endif
+#if defined GE_USE_POSIX_THREADS || defined EIF_WINDOWS
+		if (l_raise_error) {
+#endif
+			GE_free(l_thread_context);
+			GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
+#if defined GE_USE_POSIX_THREADS || defined EIF_WINDOWS
+		}
+#endif
 	}
-#endif
-#if defined(GE_USE_POSIX_THREADS) || defined(EIF_WINDOWS)
-	if (l_raise_error) {
-#endif
-		GE_free(l_thread_context);
-		GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
-#if defined(GE_USE_POSIX_THREADS) || defined(EIF_WINDOWS)
-	}
-#endif
 }
 
 /*
