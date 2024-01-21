@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date: 2010/05/03 $"
-	revision: "$Revision: #8 $"
 
 class XM_XPATH_STANDARD_NAMESPACES
 

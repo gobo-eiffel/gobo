@@ -1,4 +1,4 @@
-<?xml version="1.0"?> 
+﻿<?xml version="1.0"?> 
 
 <!--
 	description:
@@ -8,8 +8,6 @@
 	library: "Gobo Eiffel XPath"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 -->
 
 <!DOCTYPE chapter [

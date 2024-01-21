@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,14 +7,12 @@ note
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XPATH_DEFAULT_SECURITY_MANAGER
 
 inherit
 
-	 XM_XPATH_SECURITY_MANAGER
+	XM_XPATH_SECURITY_MANAGER
 
 feature -- Access
 

@@ -1,4 +1,4 @@
-note
+ï»¿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XPATH_EXPRESSION_PARSER
 
@@ -2817,9 +2815,9 @@ feature {NONE} -- Implementation
 					else
 						s := STRING_.appended_string (s, "in")
 					end
-					s := STRING_.appended_string (s, " «")
+					s := STRING_.appended_string (s, " Â«")
 					s := STRING_.appended_string (s, l_tokenizer.recent_text)
-					s := STRING_.appended_string (s, "»:%N    ")
+					s := STRING_.appended_string (s, "Â»:%N    ")
 					internal_last_parse_error := STRING_.appended_string (s, a_message)
 					first_parse_error_code := l_code
 					first_parse_error_line_number := l
@@ -2854,9 +2852,9 @@ feature {NONE} -- Implementation
 				else
 					s := STRING_.appended_string (s, "in")
 				end
-				s := STRING_.appended_string (s, " «")
+				s := STRING_.appended_string (s, " Â«")
 				s := STRING_.appended_string (s, l_tokenizer.recent_text)
-				s := STRING_.appended_string (s, "»:%N    ")
+				s := STRING_.appended_string (s, "Â»:%N    ")
 				l_environment.issue_warning (STRING_.appended_string (s, a_message))
 			end
 		end

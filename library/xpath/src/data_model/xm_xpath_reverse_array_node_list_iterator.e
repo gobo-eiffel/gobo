@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2005-2012, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XPATH_REVERSE_ARRAY_NODE_LIST_ITERATOR
 

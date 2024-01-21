@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class XM_XPATH_ATTRIBUTE
 
@@ -29,7 +27,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE
 			-- Type
 		do
-			 Result := attribute_node_kind_test
+			Result := attribute_node_kind_test
 		end
 
 	path: STRING
