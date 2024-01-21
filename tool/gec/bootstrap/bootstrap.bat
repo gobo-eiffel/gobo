@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Bootstrap Gobo Eiffel Compiler in $GOBO/bin"
-rem copyright: "Copyright (c) 2016-2021, Eric Bezault and others"
+rem copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
 rem license: "MIT License"
 
 
@@ -75,6 +75,7 @@ if .%CC%. == .bcc32. goto bcc32
 if .%CC%. == .gcc. goto gcc
 if .%CC%. == .mingw. goto mingw
 if .%CC%. == .clang. goto clang
+if .%CC%. == .zig. goto zig
 if .%CC%. == .cc. goto cc
 if .%CC%. == .icc. goto icc
 if .%CC%. == .tcc. goto tcc
@@ -130,7 +131,7 @@ goto exit
 	set CFLAGS=-O2
 	set LFLAGS=
 	set LFLAG_OUT=-o 
-	set LLIBS=-lm -lpthread
+	set LLIBS=-lm -pthread
 	set OBJ=.o
 	echo gcc > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
@@ -141,7 +142,7 @@ goto exit
 	set CFLAGS=-O2
 	set LFLAGS=
 	set LFLAG_OUT=-o 
-	set LLIBS=-lm
+	set LLIBS=-lm -pthread
 	set OBJ=.o
 	echo mingw > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
@@ -149,19 +150,34 @@ goto exit
 :clang
 	set CC=clang
 	set LD=clang
-	set CFLAGS=-Wno-unused-value -Wno-deprecated-declarations -O2
+	rem `gec` compiled with `clang -O2` crashes from time to time with a call-on-void-target error.
+	rem set CFLAGS=-Wno-unused-value -Wno-deprecated-declarations -O2
+	set CFLAGS=-Wno-unused-value -Wno-deprecated-declarations
 	set LFLAGS=
 	set LFLAG_OUT=-o 
-	set LLIBS=-lm -lpthread
-	set OBJ=.o
+	set LLIBS=-lm -pthread
+	set OBJ=.obj
 	echo clang > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
-	
+
+:zig
+	set CC=zig cc
+	set LD=zig cc
+	rem `gec` compiled with `clang -O2` crashes from time to time with a call-on-void-target error.
+	rem set CFLAGS=-Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined -O2
+	set CFLAGS=-Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined
+	set LFLAGS=
+	set LFLAG_OUT=-o 
+	set LLIBS=-lm -pthread
+	set OBJ=.obj
+	echo zig > %GOBO%\tool\gec\config\c\default.cfg
+	goto c_compilation
+
 :cc
 	set CC=cc
 	set LD=cc
 	set CFLAGS='-fast'
-	set LFLAGS='-lm'
+	set LFLAGS='-lm -pthread'
 	set LFLAG_OUT=-o 
 	set LLIBS=
 	set OBJ=.o
@@ -201,9 +217,9 @@ goto exit
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec3.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec2.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec1.c
-	%LD% %LFLAGS% %LFLAG_OUT%gec%EXE% gec*%OBJ% %LLIBS%
+	%LD% %LFLAGS% %LFLAG_OUT%gec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% %LLIBS%
 	%RM% gec*%OBJ%
-	if .%CC%. == .bcc32. %RM% gec.tds
+	if ".%CC%." == ".bcc32." %RM% gec.tds
 	goto install
 
 :install
@@ -238,12 +254,12 @@ goto exit
 	rem Make sure 'gec.make' exists to avoid getting some warning when removing it.
 	echo "" > gec.make
 	%RM% gec*.make
-	if .%CC%. == .bcc32. %RM% gec.tds
+	if ".%CC%." == ".bcc32." %RM% gec.tds
 	goto exit
 
 :usage
 	echo usage: bootstrap.bat [-v^|-s] ^<c_compiler^>
-	echo    c_compiler:  msc ^| lcc-win32 ^| lcc-win64 ^| bcc ^| gcc ^| mingw ^| clang ^| cc ^| icc ^| tcc ^| no_c
+	echo    c_compiler:  msc ^| lcc-win32 ^| lcc-win64 ^| bcc ^| gcc ^| mingw ^| clang ^| zig ^| cc ^| icc ^| tcc ^| no_c
 	goto exit
 
 :exit
