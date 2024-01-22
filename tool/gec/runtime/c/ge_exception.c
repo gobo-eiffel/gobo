@@ -121,7 +121,7 @@ static void GE_free_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
 	a_trace->count = 0;
 	a_trace->capacity = 0;
 	if (a_trace->area) {
-	 GE_free(a_trace->area);
+		GE_free(a_trace->area);
 	}
 }
 

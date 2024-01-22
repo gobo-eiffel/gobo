@@ -101,12 +101,12 @@ extern void GE_scoop_session_close(GE_scoop_processor* a_caller, GE_scoop_sessio
 /* 
  * New SCOOP call.
  */
-extern GE_scoop_call* GE_new_scoop_call(GE_scoop_processor* a_caller, size_t a_size);
+extern GE_scoop_call* GE_new_scoop_call(GE_scoop_processor* a_caller, char a_is_synchronous, void (*a_execute)(GE_context*, GE_scoop_session*, GE_scoop_call*), size_t a_size);
 
 /* 
  * Add SCOOP call `a_call' to `a_session'.
  */
-extern void GE_scoop_session_add_call(GE_scoop_session* a_session, GE_scoop_call* a_call, char a_is_synchronous);
+extern void GE_scoop_session_add_call(GE_scoop_session* a_session, GE_scoop_call* a_call);
 
 /*
  * Add a synchronization call between `a_caller' and the callee of `a_session' if not synchronized yet.
