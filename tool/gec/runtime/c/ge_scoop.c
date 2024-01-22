@@ -392,7 +392,6 @@ static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_session* a_ses
 			GE_scoop_processor_pass_locks(a_call->caller, a_session->callee);
 		}
 		if (GE_setjmp(r.jb) != 0) {
-			GE_show_console();
 			a_context->in_rescue = tr + 1;
 			if (l_is_synchronous) {
 				l_caller = a_call->caller;

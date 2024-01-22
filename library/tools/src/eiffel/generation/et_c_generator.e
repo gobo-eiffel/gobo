@@ -2442,26 +2442,36 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						i := i + 1
 					end
 				end
-			end
-			if l_has_separate_arguments then
-				print_indentation
-				current_file.put_string (c_ge_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('r')
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_string (c_uint32_t)
-				current_file.put_character (' ')
-				current_file.put_string (c_tr)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_in_rescue)
-				current_file.put_character (';')
-				current_file.put_new_line
+				if l_has_separate_arguments then
+					print_indentation
+					current_file.put_string (c_ge_scoop_processor)
+					current_file.put_character ('*')
+					current_file.put_character (' ')
+					current_file.put_string (c_sp)
+					print_assign_to
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_scoop_processor)
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ge_rescue)
+					current_file.put_character (' ')
+					current_file.put_character ('r')
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_string (c_uint32_t)
+					current_file.put_character (' ')
+					current_file.put_string (c_tr)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_in_rescue)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
 			end
 				--
 				-- Instructions.
@@ -2489,9 +2499,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						current_file.put_character (' ')
 						current_file.put_string (c_ge_scoop_session_open)
 						current_file.put_character ('(')
-						current_file.put_string (c_ac)
-						current_file.put_string (c_arrow)
-						current_file.put_string (c_scoop_processor)
+						current_file.put_string (c_sp)
 						print_comma
 						print_attribute_scoop_processor_access (l_name, l_argument_type.primary_type, False)
 						current_file.put_character (')')
@@ -2552,9 +2560,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						current_file.put_character (' ')
 						current_file.put_string (c_ge_scoop_session_close)
 						current_file.put_character ('(')
-						current_file.put_string (c_ac)
-						current_file.put_string (c_arrow)
-						current_file.put_string (c_scoop_processor)
+						current_file.put_string (c_sp)
 						print_comma
 						print_separate_argument_session_name (l_name, current_file)
 						current_file.put_character (')')
@@ -2632,9 +2638,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						current_file.put_character (' ')
 						current_file.put_string (c_ge_scoop_session_close)
 						current_file.put_character ('(')
-						current_file.put_string (c_ac)
-						current_file.put_string (c_arrow)
-						current_file.put_string (c_scoop_processor)
+						current_file.put_string (c_sp)
 						print_comma
 						print_separate_argument_session_name (l_name, current_file)
 						current_file.put_character (')')
@@ -6756,6 +6760,18 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						i := i + 1
 					end
 				end
+				if l_has_separate_arguments then
+					print_indentation
+					current_file.put_string (c_ge_scoop_processor)
+					current_file.put_character ('*')
+					current_file.put_character (' ')
+					current_file.put_string (c_sp)
+					print_assign_to
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_scoop_processor)
+					print_semicolon_newline
+				end
 			end
 			l_rescue := a_feature.rescue_clause
 			if l_rescue /= Void or l_is_once or l_has_separate_arguments then
@@ -6804,9 +6820,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						current_file.put_character (' ')
 						current_file.put_string (c_ge_scoop_session_open)
 						current_file.put_character ('(')
-						current_file.put_string (c_ac)
-						current_file.put_string (c_arrow)
-						current_file.put_string (c_scoop_processor)
+						current_file.put_string (c_sp)
 						print_comma
 						print_attribute_scoop_processor_access (l_name, l_argument_type.primary_type, False)
 						current_file.put_character (')')
@@ -6902,9 +6916,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 							current_file.put_character (' ')
 							current_file.put_string (c_ge_scoop_session_close)
 							current_file.put_character ('(')
-							current_file.put_string (c_ac)
-							current_file.put_string (c_arrow)
-							current_file.put_string (c_scoop_processor)
+							current_file.put_string (c_sp)
 							print_comma
 							print_separate_argument_session_name (l_name, current_file)
 							current_file.put_character (')')
@@ -6928,9 +6940,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 							current_file.put_character (' ')
 							current_file.put_string (c_ge_scoop_session_close)
 							current_file.put_character ('(')
-							current_file.put_string (c_ac)
-							current_file.put_string (c_arrow)
-							current_file.put_string (c_scoop_processor)
+							current_file.put_string (c_sp)
 							print_comma
 							print_separate_argument_session_name (l_name, current_file)
 							current_file.put_character (')')
@@ -7034,9 +7044,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						current_file.put_character (' ')
 						current_file.put_string (c_ge_scoop_session_close)
 						current_file.put_character ('(')
-						current_file.put_string (c_ac)
-						current_file.put_string (c_arrow)
-						current_file.put_string (c_scoop_processor)
+						current_file.put_string (c_sp)
 						print_comma
 						print_separate_argument_session_name (l_name, current_file)
 						current_file.put_character (')')
@@ -8154,9 +8162,7 @@ feature {NONE} -- Instruction generation
 						current_file.put_character (' ')
 						current_file.put_string (c_ge_scoop_session_open)
 						current_file.put_character ('(')
-						current_file.put_string (c_ac)
-						current_file.put_string (c_arrow)
-						current_file.put_string (c_scoop_processor)
+						current_file.put_string (c_sp)
 						print_comma
 						l_dynamic_type_set := dynamic_type_set (l_name)
 						l_dynamic_primary_type := l_dynamic_type_set.static_type.primary_type
@@ -8189,9 +8195,7 @@ feature {NONE} -- Instruction generation
 						print_indentation
 						current_file.put_string (c_ge_scoop_session_close)
 						current_file.put_character ('(')
-						current_file.put_string (c_ac)
-						current_file.put_string (c_arrow)
-						current_file.put_string (c_scoop_processor)
+						current_file.put_string (c_sp)
 						print_comma
 						print_separate_argument_session_name (l_name, current_file)
 						current_file.put_character (')')
@@ -17870,6 +17874,16 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_character ('0')
 				print_semicolon_newline
 				print_indentation
+				current_file.put_string (c_ge_scoop_processor)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_sp)
+				print_assign_to
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_scoop_processor)
+				print_semicolon_newline
+				print_indentation
 				current_file.put_string (c_ge_rescue)
 				current_file.put_character (' ')
 				current_file.put_character ('r')
@@ -17945,9 +17959,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_character (' ')
 				current_file.put_string (c_ge_scoop_session_close)
 				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_scoop_processor)
+				current_file.put_string (c_sp)
 				print_comma
 				print_separate_argument_session_name (agent_inline_separate_argument.name, current_file)
 				current_file.put_character (')')
@@ -20310,6 +20322,7 @@ feature {NONE} -- Separate calls
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
+			print_indentation
 			current_file.put_string (c_ge_scoop_processor)
 			current_file.put_character ('*')
 			current_file.put_character (' ')
@@ -32407,6 +32420,23 @@ feature {NONE} -- C function generation
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
+				if scoop_mode then
+					print_indentation
+					current_file.put_string (c_ge_init_scoop)
+					current_file.put_character ('(')
+					current_file.put_character (')')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_scoop_processor)
+					print_assign_to
+					current_file.put_string (c_ge_new_scoop_processor)
+					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					current_file.put_character (')')
+					print_semicolon_newline
+				end
 				if use_threads then
 					print_indentation
 					current_file.put_string (c_ge_once_per_object_data_mutex)
@@ -32439,23 +32469,6 @@ feature {NONE} -- C function generation
 				end
 				print_indentation
 				current_file.put_line ("GE_init_exception(ac);")
-				if scoop_mode then
-					print_indentation
-					current_file.put_string (c_ge_init_scoop)
-					current_file.put_character ('(')
-					current_file.put_character (')')
-					print_semicolon_newline
-					print_indentation
-					current_file.put_string (c_ac)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_scoop_processor)
-					print_assign_to
-					current_file.put_string (c_ge_new_scoop_processor)
-					current_file.put_character ('(')
-					current_file.put_string (c_ac)
-					current_file.put_character (')')
-					print_semicolon_newline
-				end
 				print_indentation
 				current_file.put_line ("GE_init_console();")
 				print_indentation
