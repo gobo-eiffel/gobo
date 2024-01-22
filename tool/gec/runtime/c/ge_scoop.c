@@ -251,33 +251,30 @@ static void GE_remove_scoop_session(GE_scoop_session* a_session)
 /* 
  * New SCOOP call.
  */
-GE_scoop_call* GE_new_scoop_call(GE_scoop_processor* a_caller, size_t a_size)
+GE_scoop_call* GE_new_scoop_call(GE_scoop_processor* a_caller, char a_is_synchronous, void (*a_execute)(GE_context*, GE_scoop_session*, GE_scoop_call*), size_t a_size)
 {
 	GE_scoop_call* l_call;
 
 	l_call = (GE_scoop_call*)GE_calloc_uncollectable(1, a_size);
 	l_call->caller = a_caller;
+	l_call->is_synchronous = a_is_synchronous;
+	l_call->execute = a_execute;
 	return l_call;
 }
 
 /* 
  * Add SCOOP call `a_call' to `a_session'.
  */
-void GE_scoop_session_add_call(GE_scoop_session* a_session, GE_scoop_call* a_call, char a_is_synchronous)
+void GE_scoop_session_add_call(GE_scoop_session* a_session, GE_scoop_call* a_call)
 {
 	GE_scoop_call* l_last_call;
 	GE_scoop_processor* l_caller = a_call->caller;
+	char l_is_synchronous = a_call->is_synchronous;
 
-	if (a_is_synchronous) {
+	if (l_is_synchronous) {
 		GE_mutex_lock((EIF_POINTER)l_caller->sync_mutex);
 	}
 	GE_mutex_lock((EIF_POINTER)a_session->mutex);
-	a_call->is_synchronous = a_is_synchronous;
-	if (!a_session->is_submitted) {
-		/* First call added to `a_session'. */
-		a_session->is_submitted = '\1';
-		GE_add_scoop_session(a_session);
-	}
 	l_last_call = a_session->last_call;
 	a_session->last_call = a_call;
 	if (l_last_call) {
@@ -285,9 +282,15 @@ void GE_scoop_session_add_call(GE_scoop_session* a_session, GE_scoop_call* a_cal
 	} else {
 		a_session->first_call = a_call;
 	}
-	GE_condition_variable_broadcast((EIF_POINTER)a_session->condition_variable);
+	if (!a_session->is_submitted) {
+		/* First call added to `a_session'. */
+		a_session->is_submitted = '\1';
+		GE_add_scoop_session(a_session);
+	} else {
+		GE_condition_variable_broadcast((EIF_POINTER)a_session->condition_variable);
+	}
 	GE_mutex_unlock((EIF_POINTER)a_session->mutex); 
-	if (a_is_synchronous) {
+	if (l_is_synchronous) {
 		GE_condition_variable_wait((EIF_POINTER)l_caller->sync_condition_variable, (EIF_POINTER)l_caller->sync_mutex);
 		GE_mutex_unlock((EIF_POINTER)l_caller->sync_mutex);
 	}
@@ -301,8 +304,8 @@ void GE_scoop_session_add_sync_call(GE_scoop_processor* a_caller, GE_scoop_sessi
 	GE_scoop_call* l_call;
 
 	if (!GE_scoop_session_is_synchronized(a_session)) {
-		l_call = GE_new_scoop_call(a_caller, sizeof(GE_scoop_call));
-		GE_scoop_session_add_call(a_session, l_call, '\1');
+		l_call = GE_new_scoop_call(a_caller, '\1', 0, sizeof(GE_scoop_call));
+		GE_scoop_session_add_call(a_session, l_call);
 	}
 }
 
@@ -392,7 +395,6 @@ static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_session* a_ses
 			GE_scoop_processor_pass_locks(a_call->caller, a_session->callee);
 		}
 		if (GE_setjmp(r.jb) != 0) {
-			GE_show_console();
 			a_context->in_rescue = tr + 1;
 			if (l_is_synchronous) {
 				l_caller = a_call->caller;
