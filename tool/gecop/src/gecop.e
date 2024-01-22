@@ -241,7 +241,7 @@ feature {NONE} -- Processing
 				if l_progress_flag then
 					std.output.put_string ("Running Test Cases")
 					create l_process_stream.make_empty
-					l_process_stream.set_output_file (std.output)
+					l_process_stream.set_output_file (std.error)
 					l_process_stream.set_total_test_count (a_tester.suite.count)
 					l_max_line_count := 70
 					l_process_stream.set_max_line_count (l_max_line_count)
