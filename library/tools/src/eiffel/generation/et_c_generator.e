@@ -891,6 +891,9 @@ feature {NONE} -- Compilation script generation
 			l_file.open_read
 			if l_file.is_open_read then
 				create l_c_config_parser.make (error_handler)
+				if operating_system.is_windows then
+					l_c_config_parser.define_value ("True", c_eif_windows)
+				end
 				if not finalize_mode then
 					l_c_config_parser.define_value ("True", "EIF_WORKBENCH")
 				end
@@ -25633,6 +25636,30 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_argument := call_operands.item (2)
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
 				current_file.put_character ('(')
+					-- Avoid getting crashes with clang because of undefined behavior
+					-- in the specification of the C language.
+					-- See https://stackoverflow.com/questions/21909412/why-would-the-outcome-of-this-shift-left-operation-be-deemed-undefined
+					--   6.5.7 Bitwise shift operators
+					--   The result of E1 << E2 is E1 left-shifted E2 bit positions; vacated bits
+					--   are filled with zeros. If E1 has an unsigned type, the value of the result
+					--   is E1 × 2^E2, reduced modulo one more than the maximum value representable
+					--   in the result type. If E1 has a signed type and nonnegative value, and
+					--   E1 × 2^E2 is representable in the result type, then that is the resulting value;
+					--   otherwise, the behavior is undefined.
+					-- We also have:
+					--   The integer promotions are performed on each of the operands. The type of the result is
+					--   that of the promoted left operand. If the value of the right operand is negative or is
+					--   greater than or equal to the width of the promoted left operand, the behavior is undefined.
+					-- But this is guaranteed by the precondition in the Eiffel code.
+				if a_target_type = current_dynamic_system.integer_8_type then
+					print_type_cast (current_dynamic_system.natural_8_type, current_file)
+				elseif a_target_type = current_dynamic_system.integer_16_type then
+					print_type_cast (current_dynamic_system.natural_16_type, current_file)
+				elseif a_target_type = current_dynamic_system.integer_32_type then
+					print_type_cast (current_dynamic_system.natural_32_type, current_file)
+				elseif a_target_type = current_dynamic_system.integer_64_type then
+					print_type_cast (current_dynamic_system.natural_64_type, current_file)
+				end
 				current_file.put_character ('(')
 				if a_target_type.is_basic then
 					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
@@ -28744,8 +28771,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				current_file.put_string (c_char)
-				current_file.put_character ('*')
+				current_file.put_string (c_intptr_t)
 				current_file.put_character (')')
 				current_file.put_character ('(')
 				if a_target_type.is_basic then
@@ -43420,6 +43446,7 @@ feature {NONE} -- Constants
 	c_int16_t: STRING = "int16_t"
 	c_int32_t: STRING = "int32_t"
 	c_int64_t: STRING = "int64_t"
+	c_intptr_t: STRING = "intptr_t"
 	c_is_special: STRING = "is_special"
 	c_last_rescue: STRING = "last_rescue"
 	c_line: STRING = "#line"

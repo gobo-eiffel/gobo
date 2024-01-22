@@ -4,7 +4,7 @@
 		"C functions used to implement class FILE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -669,15 +669,14 @@ EIF_INTEGER eif_file_gs(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start)
 			/* Raise exception */
 		eise_io("FILE: unable to read current line.");
 	}
-	if (c == EOF || c == '\n')
+	if (c == EOF || c == '\n') {
 #ifdef EIF_WINDOWS
-		if ((read > 0) && (*(s-1) == '\r'))
+		if ((read > 0) && (*(s-1) == '\r')) {
 			return read - 1;
-		else
-			return read;
-#else
-		return read;
+		}
 #endif
+		return read;
+	}
 	if (amount == -1)
 		return (read + 1);
 	return bound - start + 1;
@@ -1476,7 +1475,7 @@ EIF_BOOLEAN eif_file_eaccess(rt_stat_buf* buf, int op)
     switch (op) {
 	case 0: /* Is file readable */
 #ifdef EIF_WINDOWS
-	return ((mode && S_IREAD) ? EIF_TRUE : EIF_FALSE);
+	return ((mode & S_IREAD) ? EIF_TRUE : EIF_FALSE);
 #elif defined HAS_GETEUID
 		euid = geteuid();
 		egid = getegid();

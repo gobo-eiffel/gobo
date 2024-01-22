@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Bootstrap Gobo Eiffel Compiler in $GOBO/bin"
-# copyright: "Copyright (c) 2016-2021, Eric Bezault and others"
+# copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
 # license: "MIT License"
 
 
@@ -9,7 +9,7 @@
 
 gobo_usage() {
 	echo "usage: bootstrap.sh [-v|-s][--thread=N] <c_compiler>"
-	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | clang | cc | icc | tcc | no_c"
+	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | clang | zig | cc | icc | tcc | no_c"
 }
 
 VERBOSE=
@@ -146,7 +146,7 @@ elif [ "$CC" = "gcc" ]; then
 	CFLAGS=''
 	LFLAGS=''
 	LFLAG_OUT='-o '
-	LLIBS='-lm -lpthread'
+	LLIBS='-lm -pthread'
 	echo gcc > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "mingw" ]; then
@@ -157,24 +157,36 @@ elif [ "$CC" = "mingw" ]; then
 	CFLAGS=''
 	LFLAGS=''
 	LFLAG_OUT='-o '
-	LLIBS='-lm -liconv'
+	LLIBS='-lm -pthread -liconv'
 	echo mingw > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "clang" ]; then
 	CC=clang
 	LD=clang
+# `gec` compiled with `clang -O2` crashes from time to time with a call-on-void-target error.
 #	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations -O2'
 	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations'
 	LFLAGS=''
 	LFLAG_OUT='-o '
-	LLIBS='-lm -lpthread -liconv'
+	LLIBS='-lm -pthread -liconv'
 	echo clang > $GOBO/tool/gec/config/c/default.cfg
+	c_compilation
+elif [ "$CC" = "zig" ]; then
+	CC='zig cc'
+	LD='zig cc'
+# `gec` compiled with `clang -O2` crashes from time to time with a call-on-void-target error.
+#	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined -O2'
+	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined'
+	LFLAGS=''
+	LFLAG_OUT='-o '
+	LLIBS='-lm -pthread -liconv'
+	echo zig > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "cc" ]; then
 	CC='cc'
 	LD=cc
 	CFLAGS='-fast'
-	LDFLAGS='-lm'
+	LDFLAGS='-lm -pthread'
 	LFLAG_OUT='-o '
 	LLIBS=''
 	echo cc > $GOBO/tool/gec/config/c/default.cfg
