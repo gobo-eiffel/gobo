@@ -1,9 +1,9 @@
-note
+﻿note
 
 	description:
 
 	"[
-		"Test building XPath tree.
+		Test building XPath tree.
 		These tests test the ability to build a tiny-tree,
 		and exercise the DOM-like navigation features,
 		and the XPath axes.
@@ -12,8 +12,6 @@ note
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2001-2018, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XPATH_TEST_TINY_BUILDER
 

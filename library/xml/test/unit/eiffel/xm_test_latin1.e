@@ -1,4 +1,4 @@
-note
+ï»¿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2003, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_TEST_LATIN1
 
@@ -32,13 +30,13 @@ feature -- Test
 			-- Test valid tag.
 		do
 			assert_output(
-				"<?xml version='1.0' encoding='iso-8859-1'?><é></é>",
+				"<?xml version='1.0' encoding='iso-8859-1'?><Ã©></Ã©>",
 				"<%/195/%/169/></%/195/%/169/>")
 			assert_output(
-				"<?xml version='1.0' encoding='iso-8859-1'?><é/>",
+				"<?xml version='1.0' encoding='iso-8859-1'?><Ã©/>",
 				"<%/195/%/169/></%/195/%/169/>")
 			assert_output(
-				"<?xml version='1.0' encoding='iso-8859-1'?><doc é=''/>",
+				"<?xml version='1.0' encoding='iso-8859-1'?><doc Ã©=''/>",
 				"<doc %/195/%/169/=%"%"></doc>")
 		end
 
@@ -46,10 +44,10 @@ feature -- Test
 			-- Test valid content.
 		do
 			assert_output(
-				"<?xml version='1.0' encoding='iso-8859-1'?><doc>é</doc>",
+				"<?xml version='1.0' encoding='iso-8859-1'?><doc>Ã©</doc>",
 				"<doc>%/195/%/169/</doc>")
 			assert_output(
-				"<?xml version='1.0' encoding='iso-8859-1'?><doc a='é'/>",
+				"<?xml version='1.0' encoding='iso-8859-1'?><doc a='Ã©'/>",
 				"<doc a=%"%/195/%/169/%"></doc>")
 		end
 

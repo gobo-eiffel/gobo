@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XPATH_TREE_CHILD_ENUMERATION
 
@@ -39,7 +37,7 @@ feature {NONE} -- Initialization
 			a_node := starting_node.first_child
 			if a_node /= Void and then a_node.is_tree_node then
 				from
-					 next_node := a_node.as_tree_node
+					next_node := a_node.as_tree_node
 				until
 					is_conforming (next_node)
 				loop

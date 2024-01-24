@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="xml_example_test" default="help">
 
@@ -6,8 +6,6 @@
 		system: "Gobo Eiffel XML Example Tester"
 		copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>

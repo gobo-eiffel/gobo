@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Andreas Leitner and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class XM_EXPAT_ENCODING_CALLBACK
 

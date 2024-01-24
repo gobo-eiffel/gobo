@@ -1,16 +1,14 @@
-note
+﻿note
 
 	description:
 
 		"Expressions that must not be evaluated eagerly, %
-	   %as a failure must not be reported until the value%
-	   %is referenced"
+		%as a failure must not be reported until the value%
+		%is referenced"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XPATH_LAZY_EXPRESSION
 

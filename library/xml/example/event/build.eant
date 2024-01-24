@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="xml_event" default="help">
 
@@ -6,8 +6,6 @@
 		description: "Eiffel Ant file for Gobo Eiffel XML Library 'event' examples"
 		copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>

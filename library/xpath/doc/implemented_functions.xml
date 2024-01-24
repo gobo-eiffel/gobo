@@ -1,15 +1,13 @@
-<?xml version="1.0"?> 
+﻿<?xml version="1.0"?> 
 
 <!--
-description:
+	description:
 
-"Implemented core functions"
+		"Implemented core functions"
 
-library: "Gobo Eiffel XPath Library"
-copyright: "Copyright (c) 2004-2016, Colin Adams and others"
-license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel XPath Library"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+	license: "MIT License"
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xpath_implemented_functions">

@@ -1,15 +1,13 @@
-note
+﻿note
 
 	description:
 
 	"Objects that iterate over a node sequence consisting of a reservoir%
-% of items that have already been read, and a base iterator, "
+	% of items that have already been read, and a base iterator, "
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XPATH_PROGRESSIVE_NODE_ITERATOR
 

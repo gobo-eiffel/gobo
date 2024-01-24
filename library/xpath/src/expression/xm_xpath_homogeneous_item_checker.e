@@ -1,14 +1,12 @@
-note
+﻿note
 
 	description:
 
-	"Objects that implement type checking for a homogeneuous sequence."
+		"Objects that implement type checking for a homogeneuous sequence."
+
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
-
 class XM_XPATH_HOMOGENEOUS_ITEM_CHECKER
 
 inherit

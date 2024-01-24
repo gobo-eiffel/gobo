@@ -1,4 +1,4 @@
-note
+ï»¿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XPATH_TEST_UNICODE_FUNCTIONS
 
@@ -99,7 +97,7 @@ feature -- Tests
 		end
 
 	test_string_to_codepoints
-			-- Test fn:string-to-codepoints ("Thérèse")
+			-- Test fn:string-to-codepoints ("ThÃ©rÃ¨se")
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -107,7 +105,7 @@ feature -- Tests
 			create an_evaluator.make (18, False)
 			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successful", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("string-to-codepoints ('Thérèse')")
+			an_evaluator.evaluate ("string-to-codepoints ('ThÃ©rÃ¨se')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("Seven evaluated items", evaluated_items /= Void and then evaluated_items.count = 7)

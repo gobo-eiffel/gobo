@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -6,10 +6,7 @@ note
 
 	library: "Gobo Eiffel XPointer Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
-	derivation: "See notice at bottom of file"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XPOINTER_TOKENS
 

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="tagcount" default="help" >
 
@@ -6,8 +6,6 @@
 		system: "Tutorial event example"
 		copyright: "Copyright (c) 2003-2016, Andreas Leitner and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>
