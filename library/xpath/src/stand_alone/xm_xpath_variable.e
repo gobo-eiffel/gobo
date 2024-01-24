@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -8,8 +8,6 @@ note
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XPATH_VARIABLE
 

@@ -1,4 +1,4 @@
-note
+Ôªønote
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XPATH_TEST_MATCHES
 
@@ -111,7 +109,7 @@ feature -- Test
 		end
 
 	test_matches_four
-			-- Test fn:matches(., "Kaum.*kr‰hen") returns false when applied to poem.
+			-- Test fn:matches(., "Kaum.*kr√§hen") returns false when applied to poem.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -120,7 +118,7 @@ feature -- Test
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (poem_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successful", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("matches(/*[1], 'Kaum.*kr‰hen')")
+			an_evaluator.evaluate ("matches(/*[1], 'Kaum.*kr√§hen')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
@@ -133,7 +131,7 @@ feature -- Test
 		end
 
 	test_matches_five
-			-- Test fn:matches(., "Kaum.*kr‰hen", "s") returns true when applied to poem.
+			-- Test fn:matches(., "Kaum.*kr√§hen", "s") returns true when applied to poem.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: detachable DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -142,7 +140,7 @@ feature -- Test
 			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context (poem_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successful", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("matches(/*[1], 'Kaum.*kr‰hen', 's')")
+			an_evaluator.evaluate ("matches(/*[1], 'Kaum.*kr√§hen', 's')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)

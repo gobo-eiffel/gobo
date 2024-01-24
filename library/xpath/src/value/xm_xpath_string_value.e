@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,14 +7,12 @@ note
         This class is also used for untyped atomic values, in order to save
         memory allocation costs when converting between the two types.
         These conversions happen in vast quantities.
-       ]"
+		]"
 
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XPATH_STRING_VALUE
 

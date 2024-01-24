@@ -1,15 +1,12 @@
-note
+﻿note
 
 	description:
 
 		"Sequence values implemented extensionally (i.e. memory is allocated to each item in the sequence)"
 
-	storable_version: "20130823"
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XPATH_SEQUENCE_EXTENT
 

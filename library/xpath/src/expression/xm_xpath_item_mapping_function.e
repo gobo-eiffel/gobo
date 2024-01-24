@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -11,8 +11,6 @@ note
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class XM_XPATH_ITEM_MAPPING_FUNCTION
 

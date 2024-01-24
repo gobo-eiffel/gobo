@@ -1,17 +1,15 @@
-note
+﻿note
 
 	description:
 
 		"[
-        	Objects that merge a sequence of node sequences into a single flat sequence.
-        	The resulting sequence is never longer than the number of input sequences.
+			Objects that merge a sequence of node sequences into a single flat sequence.
+			The resulting sequence is never longer than the number of input sequences.
         ]"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2007-2014, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XPATH_SINGLETON_NODE_MAPPING_ITERATOR
 
