@@ -43702,7 +43702,6 @@ feature {NONE} -- Constants
 	c_ge_is_tuple_encoded_type: STRING = "GE_is_tuple_encoded_type"
 	c_ge_is_tuple_object: STRING = "GE_is_tuple_object"
 	c_ge_istr32_from_nstr: STRING = "GE_istr32_from_nstr"
-	c_ge_jmp_buf: STRING = "GE_jmp_buf"
 	c_ge_jump_to_last_rescue: STRING = "GE_jump_to_last_rescue"
 	c_ge_last_exception: STRING = "GE_last_exception"
 	c_ge_last_exception_raised: STRING = "GE_last_exception_raised"
