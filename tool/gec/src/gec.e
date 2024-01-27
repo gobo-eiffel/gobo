@@ -632,6 +632,7 @@ feature -- Argument parsing
 			create version_flag.make ('V', "version")
 			version_flag.set_description ("Print the version number of gec and exit.")
 			create a_list.make (version_flag)
+			a_list.force_last (verbose_flag)
 			a_parser.alternative_options_lists.force_last (a_list)
 				-- Parsing.
 			a_parser.parse_array (a_args)
@@ -894,8 +895,22 @@ feature -- Error handling
 			-- Report version number.
 		local
 			a_message: UT_VERSION_NUMBER
+			l_text: STRING
 		do
-			create a_message.make (Version_number)
+			if is_verbose then
+				create l_text.make (50)
+				l_text.append_string (Version_number)
+				l_text.append_string (" (")
+				l_text.append_integer (thread_count)
+				l_text.append_string (" thread")
+				if thread_count > 1 then
+					l_text.append_character ('s')
+				end
+				l_text.append_character (')')
+			else
+				l_text := Version_number
+			end
+			create a_message.make (l_text)
 			error_handler.report_info (a_message)
 		end
 
