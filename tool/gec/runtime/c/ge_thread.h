@@ -39,7 +39,7 @@ extern "C" {
 #	define EIF_TSD_TYPE            pthread_key_t
 #	define EIF_TSD_CREATE(key,msg) \
 		if (pthread_key_create(&(key),NULL)) \
-	        GE_raise_with_message(GE_EX_EXT, msg)
+			GE_raise_with_message(GE_EX_EXT, msg)
 #	define EIF_TSD_SET(key,val,msg) \
 		if (pthread_setspecific((key), (EIF_TSD_VAL_TYPE)(val))) \
 			GE_raise_with_message(GE_EX_EXT, msg)

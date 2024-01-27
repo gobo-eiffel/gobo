@@ -115,7 +115,7 @@ struct GE_call_struct {
 typedef struct GE_rescue_struct GE_rescue;
 struct GE_rescue_struct {
 	GE_jmp_buf jb;
-	GE_rescue* previous; /* previous context in the call chain */
+	volatile GE_rescue* previous; /* previous context in the call chain */
 };
 
 /*
@@ -126,7 +126,7 @@ typedef struct GE_context_struct GE_context;
 struct GE_context_struct {
 	GE_call* call; /* Call stack */
 	uint32_t in_assertion; /* Is an assertion evaluated? */
-	GE_rescue* last_rescue; /* Context of last feature entered containing a rescue clause */
+	volatile GE_rescue* last_rescue; /* Context of last feature entered containing a rescue clause */
 	uint32_t in_rescue; /* Number of rescue clauses currently being executed */
 	EIF_REFERENCE exception_manager; /* Exception manager */
 	char raising_exception; /* Is an exception currently being raised? */

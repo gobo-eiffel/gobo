@@ -501,11 +501,11 @@ void GE_jump_to_last_rescue(GE_context* a_context)
 {
 	char* l_exception_trace;
 
-	GE_rescue* r = a_context->last_rescue;
+	volatile GE_rescue* r = a_context->last_rescue;
 	if (r != 0) {
 		a_context->last_rescue = r->previous;
 		a_context->raising_exception = '\0';
-		GE_longjmp(r->jb, 1);
+		GE_longjmp(((GE_rescue*)r)->jb, 1);
 	}
 	if (a_context->exception_trace_enabled) {
 		GE_show_console();
@@ -727,7 +727,7 @@ EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, EIF_TYPE_INDEX type_ids[], int
 					fprintf(stderr, "CAT-call error!\n");
 #ifdef EIF_DEBUG
 					{
-						char c;
+						volatile char c;
 						fprintf(stderr, "Press Enter...\n");
 						scanf("%c", &c);
 					}
@@ -756,7 +756,7 @@ EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
 		fprintf(stderr, "Call on Void target!\n");
 #ifdef EIF_DEBUG
 		{
-			char c;
+			volatile char c;
 			fprintf(stderr, "Press Enter...\n");
 			scanf("%c", &c);
 		}
@@ -778,7 +778,7 @@ void* GE_check_null(void* ptr)
 		fprintf(stderr, "No more memory!\n");
 #ifdef EIF_DEBUG
 		{
-			char c;
+			volatile char c;
 			fprintf(stderr, "Press Enter...\n");
 			scanf("%c", &c);
 		}

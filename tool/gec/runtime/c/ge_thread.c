@@ -297,7 +297,7 @@ static EIF_POINTER GE_unprotected_mutex_create(uintptr_t a_spin_count)
 	if (l_mutex) {
 			/* Make the mutex recursive by default. */
 			/* This allows a thread to lock the mutex several times without blocking itself. */
-		pthread_mutexattr_t l_attr;
+		volatile pthread_mutexattr_t l_attr;
 		pthread_mutexattr_init(&l_attr);
 		pthread_mutexattr_settype(&l_attr, PTHREAD_MUTEX_RECURSIVE);
 		if (pthread_mutex_init(l_mutex, &l_attr)) {
@@ -834,7 +834,7 @@ static struct timespec GE_timeout_to_timespec(uintptr_t a_timeout)
 	time_t l_seconds = a_timeout / 1000;	/* `a_timeout' is in millisecond */
 	long l_nano_seconds = (a_timeout % 1000) * 1000000;	/* Reminder in nanoseconds */
 	struct timespec tspec;
-	struct timeval now;
+	volatile struct timeval now;
 	GE_ftime(&now);
 	tspec.tv_sec = now.tv_sec + l_seconds;
 	l_nano_seconds += (now.tv_usec * 1000);
@@ -856,7 +856,7 @@ static struct timespec GE_timeout_to_timespec(uintptr_t a_timeout)
 static int GE_unprotected_condition_variable_wait_with_timeout(EIF_POINTER a_condition_variable, EIF_POINTER a_mutex, uintptr_t a_timeout)
 {
 #ifdef GE_USE_POSIX_THREADS
-	struct timespec l_tspec = GE_timeout_to_timespec(a_timeout);
+	volatile struct timespec l_tspec = GE_timeout_to_timespec(a_timeout);
 	switch (pthread_cond_timedwait((EIF_COND_TYPE*)a_condition_variable, (EIF_MUTEX_TYPE*)a_mutex, &l_tspec)) {
 	case 0:
 		return GE_THREAD_OK;
@@ -1299,7 +1299,7 @@ static void GE_register_thread_context(GE_context* a_context)
 static void GE_thread_set_priority(EIF_THR_TYPE a_thread_id, unsigned int a_priority)
 {
 #ifdef GE_USE_POSIX_THREADS
-	struct sched_param l_param;
+	volatile struct sched_param l_param;
 	memset(&l_param, 0, sizeof(struct sched_param));
 	l_param.sched_priority = a_priority;
 	pthread_setschedparam(a_thread_id, SCHED_OTHER, &l_param);
@@ -1409,7 +1409,7 @@ void GE_init_thread(GE_context* a_context)
  */
 void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFERENCE, EIF_INTEGER), void (*set_terminated)(EIF_REFERENCE,EIF_BOOLEAN), EIF_THR_ATTR_TYPE* attr, int is_scoop_processor)
 {
-	EIF_THR_TYPE l_thread_id;
+	volatile EIF_THR_TYPE l_thread_id;
 	GE_thread_context* l_thread_context;
 	GE_thread_context* l_current_thread_context;
 	EIF_MUTEX_TYPE* l_mutex;
@@ -1455,7 +1455,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 		}
 #ifdef GE_USE_POSIX_THREADS
 		{
-			pthread_attr_t l_attr;
+			volatile pthread_attr_t l_attr;
 			int res;
 
 			if (pthread_attr_init(&l_attr) == 0) {
@@ -1464,7 +1464,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 					pthread_attr_setstacksize(&l_attr, l_attr_stack_size);
 				}
 				if (l_attr_priority != EIF_DEFAULT_THR_PRIORITY) {
-					struct sched_param l_param;
+					volatile struct sched_param l_param;
 					memset(&l_param, 0, sizeof(struct sched_param));
 					l_param.sched_priority = l_attr_priority;
 					pthread_attr_setschedpolicy(&l_attr, SCHED_OTHER);

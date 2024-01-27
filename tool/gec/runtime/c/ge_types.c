@@ -36,9 +36,9 @@ int GE_type_info_count;
  * The lower part of EIF_ENCODED_TYPE contains the .id field,
  * and the upper part the .annotations.
  */
-EIF_ENCODED_TYPE GE_encoded_type(EIF_TYPE a_type)
+EIF_ENCODED_TYPE GE_encoded_type(volatile EIF_TYPE a_type)
 {
-	EIF_ENCODED_TYPE l_result;
+	volatile EIF_ENCODED_TYPE l_result;
 
 #if defined(_MSC_VER)
 		/* This code below is just optimized as one move by cl on x86 platforms.
@@ -58,9 +58,9 @@ EIF_ENCODED_TYPE GE_encoded_type(EIF_TYPE a_type)
  * The lower part of EIF_ENCODED_TYPE contains the .id field,
  * and the upper part the .annotations.
  */
-EIF_TYPE GE_decoded_type(EIF_ENCODED_TYPE a_type)
+EIF_TYPE GE_decoded_type(volatile EIF_ENCODED_TYPE a_type)
 {
-	EIF_TYPE l_result;
+	volatile EIF_TYPE l_result;
 
 #if defined(_MSC_VER)
 		/* This code below is just optimized as one move by cl on x86 platforms.

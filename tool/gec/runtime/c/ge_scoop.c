@@ -387,14 +387,14 @@ static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_session* a_ses
 {
 	GE_scoop_processor* l_caller;
 	char l_is_synchronous = a_call->is_synchronous;
-	GE_rescue r;
+	volatile GE_rescue r;
 	uint32_t tr = a_context->in_rescue;
 
 	if (a_call->execute) {
 		if (l_is_synchronous) {
 			GE_scoop_processor_pass_locks(a_call->caller, a_session->callee);
 		}
-		if (GE_setjmp(r.jb) != 0) {
+		if (GE_setjmp(((GE_rescue)r).jb) != 0) {
 			a_context->in_rescue = tr + 1;
 			if (l_is_synchronous) {
 				l_caller = a_call->caller;
