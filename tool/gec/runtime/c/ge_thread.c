@@ -834,7 +834,7 @@ static struct timespec GE_timeout_to_timespec(uintptr_t a_timeout)
 	time_t l_seconds = a_timeout / 1000;	/* `a_timeout' is in millisecond */
 	long l_nano_seconds = (a_timeout % 1000) * 1000000;	/* Reminder in nanoseconds */
 	struct timespec tspec;
-	struct timeval now;
+	volatile struct timeval now;
 	GE_ftime(&now);
 	tspec.tv_sec = now.tv_sec + l_seconds;
 	l_nano_seconds += (now.tv_usec * 1000);

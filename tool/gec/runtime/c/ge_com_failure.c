@@ -74,7 +74,7 @@ EIF_INTEGER GE_ccom_hresult_facility(EIF_INTEGER an_hresult)
 EIF_POINTER GE_ccom_error_text(EIF_INTEGER a_code)
 {
 #ifdef EIF_WINDOWS
-	LPVOID result;
+	volatile LPVOID result;
 	FormatMessage(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 		NULL,

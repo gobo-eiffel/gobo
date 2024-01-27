@@ -193,6 +193,7 @@ feature {NONE} -- Initialization
 			create used_temp_variables.make (40)
 			create free_temp_variables.make (40)
 			create frozen_temp_variables.make (40)
+			create volatile_temp_variables.make (40)
 			create unused_equality_expressions.make (10)
 			create unused_equality_types.make (100)
 			create unused_object_equality_types.make (100)
@@ -217,6 +218,9 @@ feature {NONE} -- Initialization
 			create deep_equal_types.make (100)
 			create deep_feature_target_type_sets.make_map (100)
 			create current_object_tests.make (20)
+			create current_object_test_locals.make (20)
+			create current_iteration_cursors.make (20)
+			create current_inline_separate_arguments.make (20)
 			create current_equalities.make (20)
 			create current_agents.make (20)
 			create agent_open_operands.make (20)
@@ -270,6 +274,7 @@ feature {NONE} -- Initialization
 			create c_filenames.make_map (100)
 			c_filenames.set_key_equality_tester (string_equality_tester)
 			make_rescue_data
+			make_volatile_data
 			make_external_regexps
 		ensure
 			current_dynamic_system_set: current_dynamic_system = a_system
@@ -1179,17 +1184,9 @@ feature {NONE} -- C code Generation
 				flush_to_c_file
 				header_file.put_new_line
 				print_new_string_8_function
-				current_file.put_new_line
-				flush_to_c_file
 				print_new_string_32_function
-				current_file.put_new_line
-				flush_to_c_file
 				print_new_immutable_string_8_function
-				current_file.put_new_line
-				flush_to_c_file
 				print_new_immutable_string_32_function
-				current_file.put_new_line
-				flush_to_c_file
 					-- Print object allocation functions.
 				print_object_allocation_functions
 				print_once_per_object_data_allocation_functions
@@ -1615,11 +1612,18 @@ feature {NONE} -- Feature generation
 			print_address_routine_name (current_feature, current_type, current_file)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
-			print_type_declaration (current_type, header_file)
-			print_type_declaration (current_type, current_file)
 			if current_type.is_expanded then
+				header_file.put_string (c_volatile)
+				header_file.put_character (' ')
+				print_type_declaration (current_type, header_file)
 				header_file.put_character ('*')
+				current_file.put_string (c_volatile)
+				current_file.put_character (' ')
+				print_type_declaration (current_type, current_file)
 				current_file.put_character ('*')
+			else
+				print_type_declaration (current_type, header_file)
+				print_type_declaration (current_type, current_file)
 			end
 			header_file.put_character (' ')
 			current_file.put_character (' ')
@@ -1948,11 +1952,18 @@ feature {NONE} -- Feature generation
 				current_file.put_string (c_ac)
 				current_file.put_character (',')
 				current_file.put_character (' ')
-				print_type_declaration (current_type, header_file)
-				print_type_declaration (current_type, current_file)
 				if current_type.is_expanded then
+					header_file.put_string (c_volatile)
+					header_file.put_character (' ')
+					print_type_declaration (current_type, header_file)
 					header_file.put_character ('*')
+					current_file.put_string (c_volatile)
+					current_file.put_character (' ')
+					print_type_declaration (current_type, current_file)
 					current_file.put_character ('*')
+				else
+					print_type_declaration (current_type, header_file)
+					print_type_declaration (current_type, current_file)
 				end
 				header_file.put_character (' ')
 				current_file.put_character (' ')
@@ -2381,17 +2392,19 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			current_file.put_character ('}')
 			current_file.put_new_line
 			current_file.put_new_line
-				--
-				-- Clean up.
-				--
-			current_file := old_file
-			reset_temp_variables
+				-- Declarations of temporary variables.
+			current_file := current_function_header_buffer
+			print_temporary_variable_declarations
 				-- Flush to file.
 			if l_is_cpp then
 				flush_to_cpp_file
 			else
 				flush_to_c_file
 			end
+				--
+				-- Clean up.
+				--
+			current_file := old_file
 			if (exception_trace_mode or trace_mode) and l_is_inline and not a_inline then
 				print_external_routine (a_feature, False, True)
 			end
@@ -6271,11 +6284,18 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_string (c_ac)
 				current_file.put_character (',')
 				current_file.put_character (' ')
-				print_type_declaration (current_type, header_file)
-				print_type_declaration (current_type, current_file)
 				if current_type.is_expanded then
+					header_file.put_string (c_volatile)
+					header_file.put_character (' ')
+					print_type_declaration (current_type, header_file)
 					header_file.put_character ('*')
+					current_file.put_string (c_volatile)
+					current_file.put_character (' ')
+					print_type_declaration (current_type, current_file)
 					current_file.put_character ('*')
+				else
+					print_type_declaration (current_type, header_file)
+					print_type_declaration (current_type, current_file)
 				end
 				header_file.put_character (' ')
 				current_file.put_character (' ')
@@ -6665,17 +6685,19 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			current_file.put_character ('}')
 			current_file.put_new_line
 			current_file.put_new_line
+				-- Declarations of temporary variables.
+			current_file := current_function_header_buffer
+			print_temporary_variable_declarations
+				-- Flush to file.
+			flush_to_c_file
 				--
 				-- Clean up.
 				--
 			current_file := old_file
-			reset_temp_variables
-				-- Flush to file.
-			flush_to_c_file
 		end
 
 	print_internal_feature_body_declaration (a_feature: ET_INTERNAL_FEATURE_CLOSURE; a_result_type: detachable ET_DYNAMIC_PRIMARY_TYPE)
-			-- Print the local variables declaration, the compound and the
+			-- Print the local variable declarations, the compound and the
 			-- rescue clause of `a_feature' to `current_file'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -6829,6 +6851,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					i := i + 1
 				end
 			end
+			reset_volatile_data
 			reset_rescue_data
 			locals_written := locals_written_in_rescue
 			locals_read := locals_read_in_rescue
@@ -7060,21 +7083,36 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				-- Variable for 'Result' entity.
 			if a_result_type /= Void then
 				print_indentation
-				print_type_declaration (a_result_type, current_file)
-				current_file.put_character (' ')
-				if has_rescue and then (l_result_written_in_body or l_result_written_in_rescue) and then (has_retry or l_result_read_in_rescue) then
+				if
+					volatile_result or
+					has_rescue and then
+						(l_result_written_in_body or l_result_written_in_rescue) and then
+						(has_retry or l_result_read_in_rescue)
+				then
 						-- The implementation of the rescue mechanism in C uses 'setjmp'
 						-- and 'longjmp'. The use of these two C functions requires that
 						-- any local variable modified between the call to 'setjmp' and
 						-- the call to 'longjmp' to be declared as 'volatile', otherwise its
 						-- value may be lost after calling 'longjmp' if the C optimizer
-						-- decided to implement it with 'register'. For more details, see:
-						--  http://www.programmersheaven.com/articles/pathak/article1.htm
-						--  http://www.freetype.org/david/reliable-c.html#annex-A
-						--  http://msdn2.microsoft.com/en-us/library/xe7acxfb(VS.80).aspx
-					current_file.put_string (c_volatile)
-					current_file.put_character (' ')
+						-- decided to implement it with 'register'.
+						--
+						-- Likewise, if the address of 'Result' is used, we have to make
+						-- sure that he C optimizer will not implement it with 'register'.
+						--
+						-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+					if a_result_type.is_expanded then
+						current_file.put_string (c_volatile)
+						current_file.put_character (' ')
+						print_type_declaration (a_result_type, current_file)
+					else
+						print_type_declaration (a_result_type, current_file)
+						current_file.put_character (' ')
+						current_file.put_string (c_volatile)
+					end
+				else
+					print_type_declaration (a_result_type, current_file)
 				end
+				current_file.put_character (' ')
 				print_result_name (current_file)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
@@ -7091,21 +7129,37 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					l_local_type_set := dynamic_type_set (l_name)
 					l_local_type := l_local_type_set.static_type.primary_type
 					print_indentation
-					print_type_declaration (l_local_type, current_file)
-					current_file.put_character (' ')
-					if has_rescue and then (locals_written_in_body.has (l_name) or locals_written_in_rescue.has (l_name)) and then (has_retry or locals_read_in_rescue.has (l_name)) then
+					if
+						volatile_locals.has (l_name.seed) or
+						has_rescue and then
+							(locals_written_in_body.has (l_name.seed) or locals_written_in_rescue.has (l_name.seed)) and then
+							(has_retry or locals_read_in_rescue.has (l_name.seed))
+					then
 							-- The implementation of the rescue mechanism in C uses 'setjmp'
 							-- and 'longjmp'. The use of these two C functions requires that
 							-- any local variable modified between the call to 'setjmp' and
 							-- the call to 'longjmp' to be declared as 'volatile', otherwise its
 							-- value may be lost after calling 'longjmp' if the C optimizer
-							-- decided to implement it with 'register'. For more details, see:
-							--  http://www.programmersheaven.com/articles/pathak/article1.htm
-							--  http://www.freetype.org/david/reliable-c.html#annex-A
-							--  http://msdn2.microsoft.com/en-us/library/xe7acxfb(VS.80).aspx
-						current_file.put_string (c_volatile)
-						current_file.put_character (' ')
+							-- decided to implement it with 'register'.
+							--
+							-- Likewise, if the address of the local variable is used, we
+							-- have to make sure that the C optimizer will not implement it
+							-- with 'register'.
+							--
+							-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+						if l_local_type.is_expanded then
+							current_file.put_string (c_volatile)
+							current_file.put_character (' ')
+							print_type_declaration (l_local_type, current_file)
+						else
+							print_type_declaration (l_local_type, current_file)
+							current_file.put_character (' ')
+							current_file.put_string (c_volatile)
+						end
+					else
+						print_type_declaration (l_local_type, current_file)
 					end
+					current_file.put_character (' ')
 					print_local_name (l_name, current_file)
 					current_file.put_character (' ')
 					current_file.put_character ('=')
@@ -7116,7 +7170,11 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					i := i + 1
 				end
 			end
+			print_object_test_local_declarations (a_feature)
+			print_iteration_cursor_declarations (a_feature)
+			print_inline_separate_argument_declarations (a_feature)
 				-- Clean up.
+			reset_volatile_data
 			reset_rescue_data
 			current_file := old_file
 		end
@@ -7269,11 +7327,18 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_string (c_ac)
 					current_file.put_character (',')
 					current_file.put_character (' ')
-					print_type_declaration (current_type, header_file)
-					print_type_declaration (current_type, current_file)
 					if current_type.is_expanded then
+						header_file.put_string (c_volatile)
+						header_file.put_character (' ')
+						print_type_declaration (current_type, header_file)
 						header_file.put_character ('*')
+						current_file.put_string (c_volatile)
+						current_file.put_character (' ')
+						print_type_declaration (current_type, current_file)
 						current_file.put_character ('*')
+					else
+						print_type_declaration (current_type, header_file)
+						print_type_declaration (current_type, current_file)
 					end
 					header_file.put_character (' ')
 					current_file.put_character (' ')
@@ -7400,13 +7465,190 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_new_line
 				current_file.put_new_line
 			end
+				-- Declarations of temporary variables.
+			current_file := current_function_header_buffer
+			print_temporary_variable_declarations
+				-- Flush to file.
+			flush_to_c_file
 				--
 				-- Clean up.
 				--
 			current_file := old_file
+		end
+
+	print_object_test_local_declarations (a_feature: ET_CLOSURE)
+			-- Print the object-test local declarations of
+			-- `a_feature' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			i, nb: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if attached a_feature.object_tests as l_object_tests then
+				nb := l_object_tests.count
+				from i := 1 until i > nb loop
+					if attached l_object_tests.object_test (i).name as l_name then
+						if current_object_test_locals.has (l_name.seed) then
+								-- If the address of the iobject-test local is used, we have
+								-- to make sure that the C optimizer will not implement it
+								-- with 'register'.
+								--
+								-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+							l_type := dynamic_type_set (l_name).static_type.primary_type
+							print_indentation
+							if not volatile_object_test_locals.has (l_name.seed) then
+								print_type_declaration (l_type, current_file)
+							elseif l_type.is_expanded then
+								current_file.put_string (c_volatile)
+								current_file.put_character (' ')
+								print_type_declaration (l_type, current_file)
+							else
+								print_type_declaration (l_type, current_file)
+								current_file.put_character (' ')
+								current_file.put_string (c_volatile)
+							end
+							current_file.put_character (' ')
+							print_object_test_local_name (l_name, current_file)
+							print_assign_to
+							print_default_entity_value (l_type, current_file)
+							print_semicolon_newline
+						end
+					end
+					i := i + 1
+				end
+			end
+			current_object_test_locals.wipe_out
+		end
+
+	print_iteration_cursor_declarations (a_feature: ET_CLOSURE)
+			-- Print the iteration cursor declarations of
+			-- `a_feature' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			i, nb: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if attached a_feature.iteration_components as l_iteration_components then
+				nb := l_iteration_components.count
+				from i := 1 until i > nb loop
+					if attached l_iteration_components.iteration_component (i).unfolded_cursor_name as l_name then
+						if current_iteration_cursors.has (l_name.seed) then
+								-- If the address of the iteration cursor is used, we have
+								-- to make sure that the C optimizer will not implement it
+								-- with 'register'.
+								--
+								-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+							l_type := dynamic_type_set (l_name).static_type.primary_type
+							print_indentation
+							if not volatile_iteration_cursors.has (l_name.seed) then
+								print_type_declaration (l_type, current_file)
+							elseif l_type.is_expanded then
+								current_file.put_string (c_volatile)
+								current_file.put_character (' ')
+								print_type_declaration (l_type, current_file)
+							else
+								print_type_declaration (l_type, current_file)
+								current_file.put_character (' ')
+								current_file.put_string (c_volatile)
+							end
+							current_file.put_character (' ')
+							print_iteration_cursor_name (l_name, current_file)
+							print_semicolon_newline
+						end
+					end
+					i := i + 1
+				end
+			end
+			current_iteration_cursors.wipe_out
+		end
+
+	print_inline_separate_argument_declarations (a_feature: ET_CLOSURE)
+			-- Print the inline separate argument declarations of
+			-- `a_feature' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			i, nb: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if attached a_feature.inline_separate_arguments as l_inline_separate_arguments then
+				nb := l_inline_separate_arguments.count
+				from i := 1 until i > nb loop
+					if attached l_inline_separate_arguments.argument (i).name as l_name then
+						if current_inline_separate_arguments.has (l_name.seed) then
+								-- If the address of the inline separate argument is used, we have
+								-- to make sure that the C optimizer will not implement it
+								-- with 'register'.
+								--
+								-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+							l_type := dynamic_type_set (l_name).static_type.primary_type
+							print_indentation
+							if not volatile_inline_separate_arguments.has (l_name.seed) then
+								print_type_declaration (l_type, current_file)
+							elseif l_type.is_expanded then
+								current_file.put_string (c_volatile)
+								current_file.put_character (' ')
+								print_type_declaration (l_type, current_file)
+							else
+								print_type_declaration (l_type, current_file)
+								current_file.put_character (' ')
+								current_file.put_string (c_volatile)
+							end
+							current_file.put_character (' ')
+							print_inline_separate_argument_name (l_name, current_file)
+							print_semicolon_newline
+						end
+					end
+					i := i + 1
+				end
+			end
+			current_inline_separate_arguments.wipe_out
+		end
+
+	print_temporary_variable_declarations
+			-- Print the temporary variable declarations used in the
+			-- generated C function to `current_file'.
+		local
+			i, nb: INTEGER
+			l_type: detachable ET_DYNAMIC_PRIMARY_TYPE
+			l_name: ET_IDENTIFIER
+		do
+			indent
+			nb := used_temp_variables.count
+			from i := 1 until i > nb loop
+				l_type := used_temp_variables.item (i)
+				if l_type = Void then
+					l_type := free_temp_variables.item (i)
+				end
+				if l_type /= Void then
+					l_name := temp_variables.item (i)
+						-- If the address of the temporary variable is used, we have
+						-- to make sure that the C optimizer will not implement it
+						-- with 'register'.
+						--
+						-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+					print_indentation
+					if not volatile_temp_variables.item (i) then
+						print_type_declaration (l_type, current_file)
+					elseif l_type.is_expanded then
+						current_file.put_string (c_volatile)
+						current_file.put_character (' ')
+						print_type_declaration (l_type, current_file)
+					else
+						print_type_declaration (l_type, current_file)
+						current_file.put_character (' ')
+						current_file.put_string (c_volatile)
+					end
+					current_file.put_character (' ')
+					print_temp_name (l_name, current_file)
+					print_semicolon_newline
+				end
+				i := i + 1
+			end
+			dedent
 			reset_temp_variables
-				-- Flush to file.
-			flush_to_c_file
 		end
 
 feature {NONE} -- Instruction generation
@@ -8115,18 +8357,10 @@ feature {NONE} -- Instruction generation
 			from i := 1 until i > nb loop
 				l_argument := l_arguments.argument (i)
 				l_name := l_argument.name
+				current_inline_separate_arguments.force_last (l_name.seed)
 				l_dynamic_type_set := dynamic_type_set (l_name)
 				l_dynamic_type := l_dynamic_type_set.static_type
-					-- Declaration of the inline separate argument.
-				current_file := current_function_header_buffer
-				current_file.put_character ('%T')
-				print_type_declaration (l_dynamic_type.primary_type, current_file)
-				current_file.put_character (' ')
-				print_inline_separate_argument_name (l_name, current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
 					-- Call to inline separate argument expression.
-				current_file := current_function_body_buffer
 				print_assignment_operand (l_argument.expression, l_dynamic_type_set, l_name, l_dynamic_type)
 				fill_call_operands (1)
 				if call_operands.first /= l_name then
@@ -8495,16 +8729,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			if line_generation_mode then
 				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
 			end
-				-- Declaration of the iteration cursor.
 			l_cursor_name := an_instruction.unfolded_cursor_name
+			current_iteration_cursors.force_last (l_cursor_name.seed)
 			l_cursor_type_set := dynamic_type_set (l_cursor_name)
 			l_cursor_type := l_cursor_type_set.static_type
-			current_function_header_buffer.put_character ('%T')
-			print_type_declaration (l_cursor_type.primary_type, current_function_header_buffer)
-			current_function_header_buffer.put_character (' ')
-			print_iteration_cursor_name (l_cursor_name, current_function_header_buffer)
-			current_function_header_buffer.put_character (';')
-			current_function_header_buffer.put_new_line
 				-- Call to `new_cursor'.
 			print_assignment_operand (an_instruction.new_cursor_expression, l_cursor_type_set, l_cursor_name, l_cursor_type)
 			fill_call_operands (1)
@@ -10304,6 +10532,7 @@ feature {NONE} -- Expression generation
 						print_writable (l_assignment_target)
 					else
 						l_temp := new_temp_variable (l_source_primary_type)
+						mark_temp_variable_frozen (l_temp)
 							-- We will set the index of `l_temp' later because
 							-- it could still be used in `call_operands'.
 						l_temp_index := l_call_operand.index
@@ -10354,10 +10583,13 @@ feature {NONE} -- Expression generation
 					print_expression (l_call_operand)
 					current_file.put_character (')')
 					print_semicolon_newline
-					if l_temp /= Void and then l_temp_index /= 0 then
-							-- We had to wait until this stage to set the index of `l_temp'
-							-- because it could have still been used in `call_operands'.
-						l_temp.set_index (l_temp_index)
+					if l_temp /= Void then
+						mark_temp_variable_unfrozen (l_temp)
+						if l_temp_index /= 0 then
+								-- We had to wait until this stage to set the index of `l_temp'
+								-- because it could have still been used in `call_operands'.
+							l_temp.set_index (l_temp_index)
+						end
 					end
 						-- Clean up.
 					if l_query_call = Void then
@@ -10924,6 +11156,7 @@ feature {NONE} -- Expression generation
 						print_writable (l_assignment_target)
 					else
 						l_temp := new_temp_variable (l_target_type)
+						mark_temp_variable_frozen (l_temp)
 							-- We will set the index of `l_temp' later because
 							-- it could still be used in `call_operands'.
 						l_temp_index := an_expression.index
@@ -10946,10 +11179,13 @@ feature {NONE} -- Expression generation
 					current_file.put_new_line
 				end
 				call_operands.wipe_out
-				if l_temp /= Void and then l_temp_index /= 0 then
-						-- We had to wait until this stage to set the index of `l_temp'
-						-- because it could have still been used in `call_operands'.
-					l_temp.set_index (l_temp_index)
+				if l_temp /= Void then
+					mark_temp_variable_unfrozen (l_temp)
+					if l_temp_index /= 0 then
+							-- We had to wait until this stage to set the index of `l_temp'
+							-- because it could have still been used in `call_operands'.
+						l_temp.set_index (l_temp_index)
+					end
 				end
 			end
 		end
@@ -11015,6 +11251,7 @@ feature {NONE} -- Expression generation
 					print_writable (l_assignment_target)
 				else
 					l_temp := new_temp_variable (l_target_primary_type)
+					mark_temp_variable_frozen (l_temp)
 						-- We will set the index of `l_temp' later because
 						-- it could still be used in `call_operands'.
 					l_temp_index := an_expression.index
@@ -11046,10 +11283,13 @@ feature {NONE} -- Expression generation
 				print_semicolon_newline
 			end
 			call_operands.wipe_out
-			if l_temp /= Void and then l_temp_index /= 0 then
-					-- We had to wait until this stage to set the index of `l_temp'
-					-- because it could have still been used in `call_operands'.
-				l_temp.set_index (l_temp_index)
+			if l_temp /= Void then
+				mark_temp_variable_unfrozen (l_temp)
+				if l_temp_index /= 0 then
+						-- We had to wait until this stage to set the index of `l_temp'
+						-- because it could have still been used in `call_operands'.
+					l_temp.set_index (l_temp_index)
+				end
 			end
 			if l_is_separate_call then
 					-- Print the separate call declaration now, otherwise some
@@ -11302,25 +11542,59 @@ feature {NONE} -- Expression generation
 			else
 				current_file.put_character ('(')
 				l_name := an_expression.name
-				if l_name.is_argument then
-					l_name_expression := l_name.argument_name
-				elseif l_name.is_local then
+				if not attached {ET_IDENTIFIER} l_name as l_identifier then
+					-- Do nothing here.
+				elseif l_identifier.is_argument then
+					l_name_expression := l_identifier
+					l_value_type_set := dynamic_type_set (l_identifier)
+				elseif l_identifier.is_local then
+					l_name_expression := l_identifier
 					if has_rescue then
 							-- Keep track of the fact that the value of this local variable can
 							-- possibly be modified. Useful to determine the 'volatile' status
 							-- of the local variable when current feature has a rescue clause.
-						locals_written.force_last (l_name.local_name.identifier)
+						locals_written.force_last (l_identifier.seed)
 					end
-					l_name_expression := l_name.local_name
-				elseif l_name.is_object_test_local then
-					l_name_expression := l_name.object_test_local_name
-				elseif l_name.is_iteration_item then
-					l_name_expression := l_name.iteration_item_name
-				elseif attached {ET_IDENTIFIER} l_name as l_identifier and then l_identifier.is_temporary then
+					l_value_type_set := dynamic_type_set (l_identifier)
+					if l_value_type_set.is_expanded then
+							-- The address of the local variable is used, we have to make
+							-- sure that the C optimizer will not implement it with 'register'.
+						volatile_locals.force_last (l_identifier.seed)
+					end
+				elseif l_identifier.is_object_test_local then
 					l_name_expression := l_identifier
+					l_value_type_set := dynamic_type_set (l_identifier)
+					if l_value_type_set.is_expanded then
+							-- The address of the object-test local is used, we have to make
+							-- sure that the C optimizer will not implement it with 'register'.
+						volatile_object_test_locals.force_last (l_identifier.seed)
+					end
+				elseif l_identifier.is_iteration_item then
+					l_name_expression := l_identifier
+					l_value_type_set := dynamic_type_set (l_identifier)
+					if l_value_type_set.is_expanded then
+							-- The address of the iteration cursor is used, we have to make
+							-- sure that the C optimizer will not implement it with 'register'.
+						volatile_iteration_cursors.force_last (l_identifier.seed)
+					end
+				elseif l_identifier.is_inline_separate_argument then
+					l_name_expression := l_identifier
+					l_value_type_set := dynamic_type_set (l_identifier)
+					if l_value_type_set.is_expanded then
+							-- The address of the inline separate argument is used, we have to make
+							-- sure that the C optimizer will not implement it with 'register'.
+						volatile_inline_separate_arguments.force_last (l_identifier.seed)
+					end
+				elseif l_identifier.is_temporary then
+					l_name_expression := l_identifier
+					l_value_type_set := dynamic_type_set (l_identifier)
+					if l_value_type_set.is_expanded then
+							-- The address of the temporary variable is used, we have to make
+							-- sure that the C optimizer will not implement it with 'register'.
+						mark_temp_variable_volatile (l_identifier)
+					end
 				end
-				if l_name_expression /= Void then
-					l_value_type_set := dynamic_type_set (l_name_expression)
+				if l_name_expression /= Void and l_value_type_set /= Void then
 					if l_value_type_set.is_expanded then
 						print_type_cast (l_pointer_type, current_file)
 						current_file.put_character ('&')
@@ -11668,6 +11942,10 @@ feature {NONE} -- Expression generation
 				l_static_type := l_dynamic_type_set.static_type
 				if l_static_type.is_expanded then
 						-- Pass the address of the expanded object.
+						--
+						-- The address of the inline separate argument is used, we have to make
+						-- sure that the C optimizer will not implement it with 'register'.
+					volatile_inline_separate_arguments.force_last (a_name.seed)
 					current_file.put_character ('&')
 					print_inline_separate_argument_name (a_name, current_file)
 				elseif l_call_target_type.is_expanded then
@@ -12078,6 +12356,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				l_static_type := l_dynamic_type_set.static_type
 				if l_static_type.is_expanded then
 						-- Pass the address of the expanded object.
+						--
+						-- The address of the iteration cursor is used, we have to make
+						-- sure that the C optimizer will not implement it with 'register'.
+					volatile_iteration_cursors.force_last (l_name.seed)
 					current_file.put_character ('&')
 					print_iteration_cursor_name (l_name, current_file)
 				elseif l_call_target_type.is_expanded then
@@ -12131,6 +12413,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				l_static_type := l_dynamic_type_set.static_type
 				if l_static_type.is_expanded then
 						-- Pass the address of the expanded object.
+						--
+						-- The address of the iteration cursor is used, we have to make
+						-- sure that the C optimizer will not implement it with 'register'.
+					volatile_iteration_cursors.force_last (a_name.seed)
 					current_file.put_character ('&')
 					print_iteration_cursor_name (a_name, current_file)
 				elseif l_call_target_type.is_expanded then
@@ -12159,16 +12445,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			l_expression_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			assignment_target := Void
-				-- Declaration of the iteration cursor.
 			l_cursor_name := an_expression.unfolded_cursor_name
+			current_iteration_cursors.force_last (l_cursor_name.seed)
 			l_cursor_type_set := dynamic_type_set (l_cursor_name)
 			l_cursor_type := l_cursor_type_set.static_type
-			current_function_header_buffer.put_character ('%T')
-			print_type_declaration (l_cursor_type.primary_type, current_function_header_buffer)
-			current_function_header_buffer.put_character (' ')
-			print_iteration_cursor_name (l_cursor_name, current_function_header_buffer)
-			current_function_header_buffer.put_character (';')
-			current_function_header_buffer.put_new_line
 				-- Call to `new_cursor'.
 			print_assignment_operand (an_expression.new_cursor_expression, l_cursor_type_set, l_cursor_name, l_cursor_type)
 			fill_call_operands (1)
@@ -12186,6 +12466,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				-- Declaration of temporary result.
 			l_boolean_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.boolean_type, current_type.base_type)
 			l_temp := new_temp_variable (l_boolean_type)
+			mark_temp_variable_frozen (l_temp)
 				-- We will set the index of `l_temp' later because
 				-- it could still be used in `call_operands'.
 			l_temp_index := an_expression.index
@@ -12278,6 +12559,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			print_indentation
 			current_file.put_character ('}')
 			current_file.put_new_line
+			mark_temp_variable_unfrozen (l_temp)
 			if l_temp_index /= 0 then
 					-- We had to wait until this stage to set the index of `l_temp'
 					-- because it could have still been used in `call_operands'.
@@ -12298,10 +12580,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				operand_stack.force (a_name)
 			else
 				if has_rescue then
-					-- Keep track of the fact that this local variable has been
-					-- read. Useful to determine the 'volatile' status of the local
-					-- variable when current feature has a rescue clause.
-					locals_read.force_last (a_name)
+						-- Keep track of the fact that this local variable has been
+						-- read. Useful to determine the 'volatile' status of the local
+						-- variable when current feature has a rescue clause.
+					locals_read.force_last (a_name.seed)
 				end
 				if attached call_target_type as l_call_target_type then
 					check in_call_target: in_call_target end
@@ -12309,17 +12591,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					l_static_type := l_dynamic_type_set.static_type.primary_type
 					if l_static_type.is_expanded then
 							-- Pass the address of the expanded object.
+							--
+							-- The address of the local variable is used, we have to make
+							-- sure that the C optimizer will not implement it with 'register'.
+						volatile_locals.force_last (a_name.seed)
 						current_file.put_character ('(')
-						if has_rescue then
-								-- When there is a rescue clause, the local variable might
-								-- have been declared with a 'volatile' qualifier. In that
-								-- case we need a type cast here to avoid C compiler warning
-								-- (at least with MSVC 12).
-							current_file.put_character ('(')
-							print_type_declaration (l_static_type, current_file)
-							current_file.put_character ('*')
-							current_file.put_character (')')
-						end
 						current_file.put_character ('&')
 						print_local_name (a_name, current_file)
 						current_file.put_character (')')
@@ -12432,6 +12708,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 						print_writable (l_assignment_target)
 					else
 						l_temp := new_temp_variable (l_dynamic_type)
+						mark_temp_variable_frozen (l_temp)
 							-- We will set the index of `l_temp' later because
 							-- it could still be used in `call_operands'.
 						l_temp_index := an_expression.index
@@ -12508,10 +12785,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					current_file.put_new_line
 				end
 				call_operands.wipe_out
-				if l_temp /= Void and then l_temp_index /= 0 then
-						-- We had to wait until this stage to set the index of `l_temp'
-						-- because it could have still been used in `call_operands'.
-					l_temp.set_index (l_temp_index)
+				if l_temp /= Void then
+					mark_temp_variable_unfrozen (l_temp)
+					if l_temp_index /= 0 then
+							-- We had to wait until this stage to set the index of `l_temp'
+							-- because it could have still been used in `call_operands'.
+						l_temp.set_index (l_temp_index)
+					end
 				end
 			end
 		end
@@ -12635,6 +12915,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 						print_writable (l_assignment_target)
 					else
 						l_temp := new_temp_variable (l_tuple_type)
+						mark_temp_variable_frozen (l_temp)
 							-- We will set the index of `l_temp' later because
 							-- it could still be used in `call_operands'.
 						l_temp_index := an_expression.index
@@ -12666,10 +12947,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					current_file.put_character (';')
 					current_file.put_new_line
 					call_operands.wipe_out
-					if l_temp /= Void and then l_temp_index /= 0 then
-							-- We had to wait until this stage to set the index of `l_temp'
-							-- because it could have still been used in `call_operands'.
-						l_temp.set_index (l_temp_index)
+					if l_temp /= Void then
+						mark_temp_variable_unfrozen (l_temp)
+						if l_temp_index /= 0 then
+								-- We had to wait until this stage to set the index of `l_temp'
+								-- because it could have still been used in `call_operands'.
+							l_temp.set_index (l_temp_index)
+						end
 					end
 				end
 			end
@@ -12799,6 +13083,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			l_name: detachable ET_IDENTIFIER
 			l_type: detachable ET_TYPE
 			l_same_scoop_processor: BOOLEAN
+			l_conforming_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -12808,6 +13093,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			l_name := an_expression.name
 			l_type := an_expression.type
 			if l_name /= Void then
+				current_object_test_locals.force_last (l_name.seed)
 				l_target_type_set := dynamic_type_set (l_name)
 				l_target_type := l_target_type_set.static_type
 			elseif l_type /= Void then
@@ -12825,6 +13111,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					print_writable (l_assignment_target)
 				else
 					l_temp := new_temp_variable (dynamic_type_set (an_expression).static_type.primary_type)
+					mark_temp_variable_frozen (l_temp)
 						-- We will set the index of `l_temp' later because
 						-- it could still be used in `call_operands'.
 					l_temp_index := an_expression.index
@@ -12835,19 +13122,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-			end
-				-- Declaration of the object-test local.
-			if l_name /= Void then
-				current_function_header_buffer.put_character ('%T')
-				print_type_declaration (l_target_primary_type, current_function_header_buffer)
-				current_function_header_buffer.put_character (' ')
-				print_object_test_local_name (l_name, current_function_header_buffer)
-				current_function_header_buffer.put_character (' ')
-				current_function_header_buffer.put_character ('=')
-				current_function_header_buffer.put_character (' ')
-				print_default_entity_value (l_target_primary_type, current_function_header_buffer)
-				current_function_header_buffer.put_character (';')
-				current_function_header_buffer.put_new_line
 			end
 				-- Check type conformance.
 			nb := l_source_type_set.count
@@ -12865,8 +13139,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					i := i + 1
 				end
 			end
-			if nb_non_conforming_types = 0 then
-					-- All types in the source type set conform to the target type.
+			if nb_conforming_types = 0 then
+					-- No type in the source type set conform to the target type.
+				current_file.put_string (c_eif_false)
+			else
 				l_can_be_void := l_source_type_set.can_be_void
 				if l_can_be_void then
 					current_file.put_character ('(')
@@ -12894,13 +13170,29 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					print_attachment_expression (call_operands.first, l_source_type_set, l_target_type)
+					l_conforming_type_set := new_standalone_type_set (l_source_type)
+					if l_source_type_set.is_never_void then
+						l_conforming_type_set.set_never_void
+					end
+					print_attachment_expression (call_operands.first, l_conforming_type_set, l_target_type)
+					free_standalone_type_set (l_conforming_type_set)
 					current_file.put_character (',')
 					current_file.put_character (' ')
+				end
+				if nb_non_conforming_types = 0 then
+					-- All types in the source type set conform to the target type.
 					current_file.put_string (c_eif_true)
-					current_file.put_character (')')
 				else
-					current_file.put_string (c_eif_true)
+					current_object_tests.force_last (an_expression)
+					print_object_test_function_name (current_object_tests.count, current_feature, current_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
+					print_expression (call_operands.first)
+					current_file.put_character (')')
+				end
+				if l_name /= Void then
+					current_file.put_character (')')
 				end
 				if l_same_scoop_processor then
 					current_file.put_character (')')
@@ -12914,32 +13206,18 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					current_file.put_string (c_eif_false)
 					current_file.put_character (')')
 				end
-			elseif nb_conforming_types = 0 then
-					-- All types in the source type set conform to the target type.
-				current_file.put_string (c_eif_false)
-			else
-				current_object_tests.force_last (an_expression)
-				print_object_test_function_name (current_object_tests.count, current_feature, current_type, current_file)
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				print_comma
-				print_expression (call_operands.first)
-				if l_name /= Void then
-					current_file.put_character (',')
-					current_file.put_character (' ')
-					current_file.put_character ('&')
-					print_object_test_local_name (l_name, current_file)
-				end
-				current_file.put_character (')')
 			end
 			call_operands.wipe_out
 			if in_operand then
 				current_file.put_character (';')
 				current_file.put_new_line
-				if l_temp /= Void and then l_temp_index /= 0 then
-						-- We had to wait until this stage to set the index of `l_temp'
-						-- because it could have still been used in `call_operands'.
-					l_temp.set_index (l_temp_index)
+				if l_temp /= Void then
+					mark_temp_variable_unfrozen (l_temp)
+					if l_temp_index /= 0 then
+							-- We had to wait until this stage to set the index of `l_temp'
+							-- because it could have still been used in `call_operands'.
+						l_temp.set_index (l_temp_index)
+					end
 				end
 			end
 		end
@@ -12961,6 +13239,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				l_static_type := l_dynamic_type_set.static_type
 				if l_static_type.is_expanded then
 						-- Pass the address of the expanded object.
+						--
+						-- The address of the object-test local is used, we have to make
+						-- sure that the C optimizer will not implement it with 'register'.
+					volatile_object_test_locals.force_last (a_name.seed)
 					current_file.put_character ('&')
 					print_object_test_local_name (a_name, current_file)
 				elseif l_call_target_type.is_expanded then
@@ -13129,6 +13411,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 								l_dynamic_type_set := dynamic_type_set (an_expression)
 								l_dynamic_type := l_dynamic_type_set.static_type.primary_type
 								l_temp := new_temp_variable (l_dynamic_type)
+								mark_temp_variable_frozen (l_temp)
 									-- We will set the index of `l_temp' later because
 									-- it could still be used in `call_operands'.
 								l_temp_index := an_expression.index
@@ -13175,10 +13458,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 				end
 			end
 			call_operands.wipe_out
-			if l_temp /= Void and then l_temp_index /= 0 then
-					-- We had to wait until this stage to set the index of `l_temp'
-					-- because it could have still been used in `call_operands'.
-				l_temp.set_index (l_temp_index)
+			if l_temp /= Void then
+				mark_temp_variable_unfrozen (l_temp)
+				if l_temp_index /= 0 then
+						-- We had to wait until this stage to set the index of `l_temp'
+						-- because it could have still been used in `call_operands'.
+					l_temp.set_index (l_temp_index)
+				end
 			end
 		end
 
@@ -13348,7 +13634,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 							l_temp := l_identifier
 						end
 					else
-						if attached {ET_IDENTIFIER} call_operands.first as l_identifier and then l_identifier.is_temporary then
+						if attached {ET_IDENTIFIER} call_operands.first as l_identifier and then l_identifier.is_temporary and then is_temp_variable_free (l_identifier) then
 							l_temp_target := l_identifier
 							l_temp := l_temp_target
 							mark_temp_variable_used (l_temp)
@@ -13358,6 +13644,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 								-- it could still be used in `call_operands'.
 							l_temp_index := call_operands.first.index
 						end
+						mark_temp_variable_frozen (l_temp)
 						l_semistrict_target := l_temp
 					end
 					call_operands.wipe_out
@@ -13376,10 +13663,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 						current_file.put_character (')')
 						current_file.put_character (';')
 						current_file.put_new_line
-					elseif l_semistrict_target = l_temp then
-						check l_temp_not_void: l_temp /= Void then
-							mark_temp_variable_used (l_temp)
-						end
 					end
 					dedent
 					print_indentation
@@ -13473,6 +13756,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 						print_writable (l_assignment_target)
 					else
 						l_temp := new_temp_variable (l_call_type)
+						mark_temp_variable_frozen (l_temp)
 							-- We will set the index of `l_temp' later because
 							-- it could still be used in `call_operands'.
 						l_temp_index := a_call.index
@@ -13606,10 +13890,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 				mark_expressions_unfrozen (l_manifest_tuple_operand)
 				l_manifest_tuple_operand.wipe_out
 			end
-			if l_temp /= Void and then l_temp_index /= 0 then
-					-- We had to wait until this stage to set the index of `l_temp'
-					-- because it could have still been used in `call_operands'.
-				l_temp.set_index (l_temp_index)
+			if l_temp /= Void then
+				mark_temp_variable_unfrozen (l_temp)
+				if l_temp_index /= 0 then
+						-- We had to wait until this stage to set the index of `l_temp'
+						-- because it could have still been used in `call_operands'.
+					l_temp.set_index (l_temp_index)
+				end
 			end
 			if l_is_separate_call then
 					-- Print the separate call declaration now, otherwise some
@@ -13748,17 +14035,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					l_static_type := l_dynamic_type_set.static_type.primary_type
 					if l_static_type.is_expanded then
 							-- Pass the address of the expanded object.
+							--
+							-- The address of the 'Result' entity is used, we have to make
+							-- sure that the C optimizer will not implement it with 'register'.
+						volatile_result := True
 						current_file.put_character ('(')
-						if has_rescue then
-								-- When there is a rescue clause, the result entity might
-								-- have been declared with a 'volatile' qualifier. In that
-								-- case we need a type cast here to avoid C compiler warning
-								-- (at least with MSVC 12).
-							current_file.put_character ('(')
-							print_type_declaration (l_static_type, current_file)
-							current_file.put_character ('*')
-							current_file.put_character (')')
-						end
 						if current_agent = Void and then current_feature.is_once then
 								-- Make sure that if a once-function is called
 								-- recursively, the semantics specified by ECMA will be satisfied.
@@ -13876,6 +14157,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 				result_read := True
 				result_written := True
 			end
+				-- The address of the 'Result' entity is used, we have to make
+				-- sure that the C optimizer will not implement it with 'register'.
+			volatile_result := True
 			l_dynamic_type_set := dynamic_type_set (an_expression)
 			l_dynamic_type := l_dynamic_type_set.static_type.primary_type
 			l_pointer := (l_dynamic_type = l_pointer_type)
@@ -14055,6 +14339,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					l_dynamic_type_set := dynamic_type_set (a_expression)
 					l_dynamic_type := l_dynamic_type_set.static_type.primary_type
 					l_temp := new_temp_variable (l_dynamic_type)
+					mark_temp_variable_frozen (l_temp)
 						-- We will set the index of `l_temp' later because
 						-- it could still be used in `call_operands'.
 					l_temp_index := a_expression.index
@@ -14130,10 +14415,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 				current_file.put_new_line
 			end
 			call_operands.wipe_out
-			if l_temp /= Void and then l_temp_index /= 0 then
-					-- We had to wait until this stage to set the index of `l_temp'
-					-- because it could have still been used in `call_operands'.
-				l_temp.set_index (l_temp_index)
+			if l_temp /= Void then
+				mark_temp_variable_unfrozen (l_temp)
+				if l_temp_index /= 0 then
+						-- We had to wait until this stage to set the index of `l_temp'
+						-- because it could have still been used in `call_operands'.
+					l_temp.set_index (l_temp_index)
+				end
 			end
 		end
 
@@ -14225,6 +14513,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 						error_handler.report_giaaa_error
 					elseif l_static_type.is_expanded then
 							-- Pass the address of the expanded object.
+							--
+							-- The address of the temporary variable is used, we have to make
+							-- sure that the C optimizer will not implement it with 'register'.
+						mark_temp_variable_volatile (a_name)
 						current_file.put_character ('&')
 						print_temp_name (a_name, current_file)
 					elseif l_call_target_type.is_expanded then
@@ -14459,6 +14751,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 								if l_call_type.is_expanded then
 									in_operand := False
 									l_temp := new_temp_variable (l_call_type)
+									mark_temp_variable_frozen (l_temp)
 									print_indentation
 									print_temp_name (l_temp, current_file)
 									current_file.put_character (' ')
@@ -14545,6 +14838,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 						end
 						if l_manifest_tuple_operand = Void then
 							operand_stack.force (tokens.current_keyword)
+							nb := 0
 							if l_actuals /= Void then
 								nb := l_actuals.count
 								from i := 1 until i > nb loop
@@ -14564,6 +14858,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 								print_writable (l_assignment_target)
 							else
 								l_temp := new_temp_variable (l_call_type)
+								mark_temp_variable_frozen (l_temp)
 									-- We will set the index of `l_temp' later because
 									-- it could still be used in `call_operands'.
 								l_temp_index := a_call.index
@@ -14603,10 +14898,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 							mark_expressions_unfrozen (l_manifest_tuple_operand)
 							l_manifest_tuple_operand.wipe_out
 						end
-						if l_temp /= Void and then l_temp_index /= 0 then
-								-- We had to wait until this stage to set the index of `l_temp'
-								-- because it could have still been used in `call_operands'.
-							l_temp.set_index (l_temp_index)
+						if l_temp /= Void then
+							mark_temp_variable_unfrozen (l_temp)
+							if l_temp_index /= 0 then
+									-- We had to wait until this stage to set the index of `l_temp'
+									-- because it could have still been used in `call_operands'.
+								l_temp.set_index (l_temp_index)
+							end
 						end
 					end
 				end
@@ -14674,13 +14972,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 							-- Set `has_rescue' to False before calling `print_local_variable'
 							-- because the fact that we are in a rescue clause has already
 							-- been taken into account.
-						locals_written.force_last (l_identifier)
-						l_was_read := locals_read.has (l_identifier)
+						l_seed := l_identifier.seed
+						locals_written.force_last (l_seed)
+						l_was_read := locals_read.has (l_seed)
 						has_rescue := False
 						print_local_variable (l_identifier)
 						has_rescue := True
-						if not l_was_read and locals_read.has (l_identifier) then
-							locals_read.remove (l_identifier)
+						if not l_was_read and locals_read.has (l_seed) then
+							locals_read.remove (l_seed)
 						end
 					else
 						print_local_variable (l_identifier)
@@ -14759,6 +15058,7 @@ feature {NONE} -- Equality generation
 					print_writable (l_assignment_target)
 				else
 					l_temp := new_temp_variable (l_boolean_type)
+					mark_temp_variable_frozen (l_temp)
 						-- We will set the index of `l_temp' later because
 						-- it could still be used in `call_operands'.
 					l_temp_index := a_expression.index
@@ -14804,10 +15104,13 @@ feature {NONE} -- Equality generation
 			end
 			l_common_object_equality_types.wipe_out
 			l_common_reference_equality_types.wipe_out
-			if l_temp /= Void and then l_temp_index /= 0 then
-					-- We had to wait until this stage to set the index of `l_temp'
-					-- because it could have still been used in `call_operands'.
-				l_temp.set_index (l_temp_index)
+			if l_temp /= Void then
+				mark_temp_variable_unfrozen (l_temp)
+				if l_temp_index /= 0 then
+						-- We had to wait until this stage to set the index of `l_temp'
+						-- because it could have still been used in `call_operands'.
+					l_temp.set_index (l_temp_index)
+				end
 			end
 		end
 
@@ -15165,13 +15468,19 @@ feature {NONE} -- Equality generation
 			current_file.put_character ('}')
 			current_file.put_new_line
 			current_file.put_new_line
+				-- Declarations of temporary variables.
+			current_file := current_function_header_buffer
+			print_temporary_variable_declarations
+				-- Flush to file.
+			flush_to_c_file
+				--
+				-- Clean up.
+				--
 			l_left_operand.set_index (1)
 			l_right_operand.set_index (2)
 			extra_dynamic_type_sets.remove_last
 			extra_dynamic_type_sets.remove_last
 			current_file := old_file
-			flush_to_c_file
-			reset_temp_variables
 		end
 
 	print_equality_function_body (a_common_object_equality_types, a_common_reference_equality_types: ET_DYNAMIC_PRIMARY_TYPES)
@@ -15375,10 +15684,10 @@ feature {NONE} -- Object-test generation
 			-- Print function corresponding to `i'-th object-test `a_object_test'
 			-- to `current_file' and its signature to `header_file'.
 			-- This function will return True or False depending if it's
-			-- successful or not. And if the object-test has a local name,
-			-- then it will attach, when the object-test is successful,
-			-- the value of the expression passed as first argument to the
-			-- object-test local whose address is passed as second argument.
+			-- successful or not.
+			-- The object passed as argument is guaranteed (by the caller) to
+			-- be non-Void and in the SCOOP current processor if the object-test
+			-- checks for that (i.e. the type is not separate but the expression is).
 		require
 			a_object_test_not_void: a_object_test /= Void
 		local
@@ -15396,12 +15705,9 @@ feature {NONE} -- Object-test generation
 			l_non_conforming_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
 			l_conforming_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
 			l_old_conforming_types: ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST
-			l_target_argument: detachable ET_IDENTIFIER
 			l_source_argument: ET_IDENTIFIER
-			l_can_be_void: BOOLEAN
 			l_name: detachable ET_IDENTIFIER
 			l_type: detachable ET_TYPE
-			l_same_scoop_processor: BOOLEAN
 		do
 			l_name := a_object_test.name
 			l_type := a_object_test.type
@@ -15450,21 +15756,6 @@ feature {NONE} -- Object-test generation
 			print_type_declaration (l_source_primary_type, current_file)
 			current_file.put_character (' ')
 			print_argument_name (l_source_argument, current_file)
-			if l_name /= Void then
-				l_target_argument := formal_argument (2)
-				header_file.put_character (',')
-				header_file.put_character (' ')
-				print_type_declaration (l_target_primary_type, header_file)
-				header_file.put_character ('*')
-				header_file.put_character (' ')
-				print_argument_name (l_target_argument, header_file)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				print_type_declaration (l_target_primary_type, current_file)
-				current_file.put_character ('*')
-				current_file.put_character (' ')
-				print_argument_name (l_target_argument, current_file)
-			end
 			header_file.put_character (')')
 			current_file.put_character (')')
 			header_file.put_character (';')
@@ -15497,86 +15788,8 @@ feature {NONE} -- Object-test generation
 				current_file.put_character (';')
 				current_file.put_new_line
 			else
-				l_can_be_void := l_source_type_set.can_be_void
-				if l_can_be_void then
-					print_indentation
-					current_file.put_string (c_if)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					print_expression (l_source_argument)
-					current_file.put_character (')')
-					current_file.put_character ('=')
-					current_file.put_character ('=')
-					current_file.put_string (c_eif_void)
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
-					print_indentation
-					current_file.put_string (c_return)
-					current_file.put_character (' ')
-					current_file.put_string (c_eif_false)
-					current_file.put_character (';')
-					current_file.put_new_line
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_character (' ')
-					current_file.put_string (c_else)
-					current_file.put_character (' ')
-				end
-				l_same_scoop_processor := scoop_mode and then l_type /= Void and then (not l_target_type.is_separate and l_source_type.is_separate)
-				if l_same_scoop_processor then
-					current_file.put_string (c_if)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_attribute_scoop_processor_access (l_source_argument, l_target_primary_type, False)
-					current_file.put_character (' ')
-					current_file.put_character ('!')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_string (c_ac)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_scoop_processor)
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
-					print_indentation
-					current_file.put_string (c_return)
-					current_file.put_character (' ')
-					current_file.put_string (c_eif_false)
-					current_file.put_character (';')
-					current_file.put_new_line
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_character (' ')
-					current_file.put_string (c_else)
-					current_file.put_character (' ')
-				end
-				if l_can_be_void or l_same_scoop_processor then
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
-				end
 				if l_non_conforming_types.is_empty then
 						-- Direct assignment.
-					if l_target_argument /= Void then
-						check l_name_not_void: l_name /= Void end
-						print_indentation
-						current_file.put_character ('*')
-						print_argument_name (l_target_argument, current_file)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						print_attachment_expression (l_source_argument, l_source_type_set, l_target_type)
-						current_file.put_character (';')
-						current_file.put_new_line
-					end
 					print_indentation
 					current_file.put_string (c_return)
 					current_file.put_character (' ')
@@ -15605,9 +15818,7 @@ feature {NONE} -- Object-test generation
 					l_conforming_type_set := new_standalone_type_set (l_source_type)
 					l_old_conforming_types := l_conforming_type_set.dynamic_types
 					l_conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
-					if l_source_type_set.is_never_void then
-						l_conforming_type_set.set_never_void
-					end
+					l_conforming_type_set.set_never_void
 					if l_non_conforming_types.count < l_conforming_types.count then
 						nb := l_non_conforming_types.count
 						from j := 1 until j > nb loop
@@ -15633,18 +15844,6 @@ feature {NONE} -- Object-test generation
 						current_file.put_character (':')
 						current_file.put_new_line
 						indent
-						if l_target_argument /= Void then
-							check l_name_not_void: l_name /= Void end
-							print_indentation
-							current_file.put_character ('*')
-							print_argument_name (l_target_argument, current_file)
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
-							print_attachment_expression (l_source_argument, l_conforming_type_set, l_target_type)
-							current_file.put_character (';')
-							current_file.put_new_line
-						end
 						print_indentation
 						current_file.put_string (c_return)
 						current_file.put_character (' ')
@@ -15665,18 +15864,6 @@ feature {NONE} -- Object-test generation
 							j := j + 1
 						end
 						indent
-						if l_target_argument /= Void then
-							check l_name_not_void: l_name /= Void end
-							print_indentation
-							current_file.put_character ('*')
-							print_argument_name (l_target_argument, current_file)
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
-							print_attachment_expression (l_source_argument, l_conforming_type_set, l_target_type)
-							current_file.put_character (';')
-							current_file.put_new_line
-						end
 						print_indentation
 						current_file.put_string (c_return)
 						current_file.put_character (' ')
@@ -15703,23 +15890,23 @@ feature {NONE} -- Object-test generation
 					current_file.put_character ('}')
 					current_file.put_new_line
 				end
-				if l_can_be_void or l_same_scoop_processor then
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_new_line
-				end
 			end
 			dedent
 			print_indentation
 			current_file.put_character ('}')
 			current_file.put_new_line
 			current_file.put_new_line
+				-- Declarations of temporary variables.
+			current_file := current_function_header_buffer
+			print_temporary_variable_declarations
+				-- Flush to file.
+			flush_to_c_file
+				--
+				-- Clean up.
+				--
 			l_conforming_types.wipe_out
 			l_non_conforming_types.wipe_out
 			current_file := old_file
-			flush_to_c_file
-			reset_temp_variables
 		end
 
 feature {NONE} -- Query call generation
@@ -17057,6 +17244,7 @@ feature {NONE} -- Agent generation
 					print_writable (l_assignment_target)
 				else
 					l_temp := new_temp_variable (l_agent_type)
+					mark_temp_variable_frozen (l_temp)
 						-- We will set the index of `l_temp' later because
 						-- it could still be used in `call_operands'.
 					l_temp_index := an_agent.index
@@ -17084,10 +17272,13 @@ feature {NONE} -- Agent generation
 				print_semicolon_newline
 			end
 			call_operands.wipe_out
-			if l_temp /= Void and then l_temp_index /= 0 then
-					-- We had to wait until this stage to set the index of `l_temp'
-					-- because it could have still been used in `call_operands'.
-				l_temp.set_index (l_temp_index)
+			if l_temp /= Void then
+				mark_temp_variable_unfrozen (l_temp)
+				if l_temp_index /= 0 then
+						-- We had to wait until this stage to set the index of `l_temp'
+						-- because it could have still been used in `call_operands'.
+					l_temp.set_index (l_temp_index)
+				end
 			end
 		end
 
@@ -17617,13 +17808,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_character ('}')
 				current_file.put_new_line
 				current_file.put_new_line
-				current_file := old_file
+					-- Declarations of temporary variables.
+				current_file := current_function_header_buffer
+				print_temporary_variable_declarations
 					-- Do not flush code to C file here (no call to `flush_to_c_file')
 					-- because we want the function associated with this agent and the
 					-- creation of the agent (printed just below) to be in the same C file.
 					-- Indeed, the associated function is not declared in the C header file,
 					-- but it is used in the creation of the agent.
-				reset_temp_variables
+				current_file := old_file
 					--
 					-- Print creation function of the agent.
 					--
@@ -17695,6 +17888,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_new_line
 				indent
 				print_indentation
+				if l_agent_type.is_expanded then
+					current_file.put_string (c_volatile)
+					current_file.put_character (' ')
+				end
 				print_type_declaration (l_agent_type, current_file)
 				current_file.put_character (' ')
 				print_result_name (current_file)
@@ -17819,13 +18016,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_character ('}')
 				current_file.put_new_line
 				current_file.put_new_line
-					--
-					-- Clean up.
-				current_file := old_file
-				reset_temp_variables
-				agent_closed_operands_type := old_closed_operands_type
 					-- Flush to file.
 				flush_to_c_file
+					--
+					-- Clean up.
+					--
+				current_file := old_file
+				agent_closed_operands_type := old_closed_operands_type
 			end
 		end
 
@@ -19634,9 +19831,15 @@ feature {NONE} -- Deep features generation
 			current_file.put_character ('}')
 			current_file.put_new_line
 			current_file.put_new_line
-			current_file := old_file
+				-- Declarations of temporary variables.
+			current_file := current_function_header_buffer
+			print_temporary_variable_declarations
+				-- Flush to file.
 			flush_to_c_file
-			reset_temp_variables
+				--
+				-- Clean up.
+				--
+			current_file := old_file
 			current_type := old_type
 		end
 
@@ -20333,7 +20536,20 @@ feature {NONE} -- Separate calls
 			print_semicolon_newline
 			if l_result_type /= Void then
 				print_indentation
-				print_type_declaration (l_result_type, current_file)
+					-- Declare the 'Result' as 'volatile' because we will pass
+					-- its address during the separate call so that it is set
+					-- from the other SCOOP processor. This prevents the C optimizer
+					-- to implement it with 'register'.
+					-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+				if l_result_type.is_expanded then
+					current_file.put_string (c_volatile)
+					current_file.put_character (' ')
+					print_type_declaration (l_result_type, current_file)
+				else
+					print_type_declaration (l_result_type, current_file)
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
+				end
 				current_file.put_character (' ')
 				print_result_name (current_file)
 				print_semicolon_newline
@@ -21066,7 +21282,15 @@ feature {NONE} -- Separate calls
 				l_index := l_call_expression.index
 				l_result_type := dynamic_type_set (l_call_expression).static_type.primary_type
 				print_indentation
-				print_type_declaration (l_result_type, current_file)
+				if l_result_type.is_expanded then
+					current_file.put_string (c_volatile)
+					current_file.put_character (' ')
+					print_type_declaration (l_result_type, current_file)
+				else
+					print_type_declaration (l_result_type, current_file)
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
+				end
 				current_file.put_character ('*')
 				current_file.put_character (' ')
 				print_result_name (current_file)
@@ -21172,7 +21396,7 @@ feature {NONE} -- Separate calls
 			a_separate_call_not_void: a_separate_call /= Void
 			scoop_mode: scoop_mode
 		local
-			l_is_query: BOOLEAN
+			l_result_type: detachable ET_DYNAMIC_PRIMARY_TYPE
 			l_argument: ET_EXPRESSION
 			j, nb: INTEGER
 			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
@@ -21237,14 +21461,29 @@ feature {NONE} -- Separate calls
 			current_file.put_string (c_ac)
 			current_file.put_character (',')
 			current_file.put_character (' ')
-			if attached {ET_QUALIFIED_FEATURE_CALL_EXPRESSION} a_separate_call then
-				l_is_query := True
-				print_type_declaration (current_dynamic_system.pointer_type, header_file)
+			if attached {ET_QUALIFIED_FEATURE_CALL_EXPRESSION} a_separate_call as l_call_expression then
+				l_result_type := dynamic_type_set (l_call_expression).static_type.primary_type
+				if l_result_type.is_expanded then
+					header_file.put_string (c_volatile)
+					header_file.put_character (' ')
+					print_type_declaration (l_result_type, header_file)
+					current_file.put_string (c_volatile)
+					current_file.put_character (' ')
+					print_type_declaration (l_result_type, current_file)
+				else
+					print_type_declaration (l_result_type, header_file)
+					header_file.put_character (' ')
+					header_file.put_string (c_volatile)
+					print_type_declaration (l_result_type, current_file)
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
+				end
+				header_file.put_character ('*')
 				header_file.put_character (' ')
 				print_result_name (header_file)
 				header_file.put_character (',')
 				header_file.put_character (' ')
-				print_type_declaration (current_dynamic_system.pointer_type, current_file)
+				current_file.put_character ('*')
 				current_file.put_character (' ')
 				print_result_name (current_file)
 				current_file.put_character (',')
@@ -21352,7 +21591,7 @@ feature {NONE} -- Separate calls
 			current_file.put_character (')')
 			current_file.put_character (';')
 			current_file.put_new_line
-			if l_is_query then
+			if l_result_type /= Void then
 				print_indentation
 				current_file.put_string (c_sc)
 				current_file.put_string (c_arrow)
@@ -21417,6 +21656,7 @@ feature {NONE} -- Separate calls
 			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_operand: ET_IDENTIFIER
 			nb_operands: INTEGER
+			l_result_type: ET_DYNAMIC_PRIMARY_TYPE
 			old_file: KI_TEXT_OUTPUT_STREAM
 		do
 			old_file := current_file
@@ -21468,9 +21708,19 @@ feature {NONE} -- Separate calls
 			print_indentation
 			current_file.put_string ("GE_scoop_call* next;")
 			current_file.put_new_line
-			if attached {ET_QUALIFIED_FEATURE_CALL_EXPRESSION} a_separate_call then
+			if attached {ET_QUALIFIED_FEATURE_CALL_EXPRESSION} a_separate_call as l_call_expression then
+				l_result_type := dynamic_type_set (l_call_expression).static_type.primary_type
 				print_indentation
-				print_type_declaration (current_dynamic_system.pointer_type, current_file)
+				if l_result_type.is_expanded then
+					current_file.put_string (c_volatile)
+					current_file.put_character (' ')
+					print_type_declaration (l_result_type, current_file)
+				else
+					print_type_declaration (l_result_type, current_file)
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
+				end
+				current_file.put_character ('*')
 				current_file.put_character (' ')
 				print_result_name (current_file)
 				print_semicolon_newline
@@ -32799,8 +33049,16 @@ feature {NONE} -- C function generation
 				dedent
 				current_file.put_character ('}')
 				current_file.put_new_line
+				current_file.put_new_line
+					-- Declarations of temporary variables.
+				current_file := current_function_header_buffer
+				print_temporary_variable_declarations
+					-- Flush to file.
+				flush_to_c_file
+					--
+					-- Clean up.
+					--
 				current_file := old_file
-				reset_temp_variables
 			end
 		end
 
@@ -32998,8 +33256,16 @@ feature {NONE} -- C function generation
 				dedent
 				current_file.put_character ('}')
 				current_file.put_new_line
+				current_file.put_new_line
+					-- Declarations of temporary variables.
+				current_file := current_function_header_buffer
+				print_temporary_variable_declarations
+					-- Flush to file.
+				flush_to_c_file
+					--
+					-- Clean up.
+					--
 				current_file := old_file
-				reset_temp_variables
 			end
 		end
 
@@ -33197,8 +33463,16 @@ feature {NONE} -- C function generation
 				dedent
 				current_file.put_character ('}')
 				current_file.put_new_line
+				current_file.put_new_line
+					-- Declarations of temporary variables.
+				current_file := current_function_header_buffer
+				print_temporary_variable_declarations
+					-- Flush to file.
+				flush_to_c_file
+					--
+					-- Clean up.
+					--
 				current_file := old_file
-				reset_temp_variables
 			end
 		end
 
@@ -33396,8 +33670,16 @@ feature {NONE} -- C function generation
 				dedent
 				current_file.put_character ('}')
 				current_file.put_new_line
+				current_file.put_new_line
+					-- Declarations of temporary variables.
+				current_file := current_function_header_buffer
+				print_temporary_variable_declarations
+					-- Flush to file.
+				flush_to_c_file
+					--
+					-- Clean up.
+					--
 				current_file := old_file
-				reset_temp_variables
 			end
 		end
 
@@ -34480,29 +34762,29 @@ feature {NONE} -- Memory allocation
 				old_file := current_file
 				current_file := current_function_header_buffer
 				l_temp := new_temp_variable (current_type)
+				mark_temp_variable_volatile (l_temp)
 				print_indentation
+				current_file.put_string (c_volatile)
+				current_file.put_character (' ')
 				print_type_declaration (current_type, current_file)
 				current_file.put_character ('*')
 				current_file.put_character (' ')
 				print_current_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('&')
-				print_temp_name (l_temp, current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 					-- Instructions.
 					-- They go to the current location in the generated C function.
 				current_file := old_file
 				print_indentation
 				print_temp_name (l_temp, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				print_default_name (current_type, current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
+				print_indentation
+				print_current_name (current_file)
+				print_assign_to
+				current_file.put_character ('&')
+				print_temp_name (l_temp, current_file)
+				print_semicolon_newline
 			else
 					-- Variable declarations.
 					-- They go to the beginning of the generated C function.
@@ -41615,6 +41897,12 @@ feature {NONE} -- Access
 			-- Object-tests appearing in `current_feature' for which
 			-- a function needs to be generated
 
+	current_object_test_locals: DS_HASH_SET [INTEGER]
+			-- Object-test local seeds which are used in `current_feature'
+
+	current_iteration_cursors: DS_HASH_SET [INTEGER]
+			-- Iteration cursor seeds which are used in `current_feature'
+
 	current_equalities: DS_ARRAYED_LIST [ET_DYNAMIC_EQUALITY_TYPES]
 			-- Equalities ('=' or '/=', as well as '~' or '/~') appearing in
 			-- `current_feature' for which a function needs to be generated
@@ -41622,6 +41910,9 @@ feature {NONE} -- Access
 	current_separate_call_count: INTEGER
 			-- Number of separate calls (calls whose target type is separate)
 			-- appearing in `current_feature'
+
+	current_inline_separate_arguments: DS_HASH_SET [INTEGER]
+			-- Inline separate argument seeds which are used in `current_feature'
 
 	dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
 			-- Dynamic types in the system
@@ -42036,7 +42327,7 @@ feature {NONE} -- Temporary variables
 		do
 			nb := free_temp_variables.count
 			from i := 1 until i > nb loop
-				if frozen_temp_variables.item (i) = 0 then
+				if frozen_temp_variables.item (i) = 0 and not volatile_temp_variables.item (i) then
 					l_type := free_temp_variables.item (i)
 					if l_type /= Void and then same_declaration_types (a_type, l_type) then
 						used_temp_variables.replace (a_type, i)
@@ -42068,12 +42359,7 @@ feature {NONE} -- Temporary variables
 				free_temp_variables.force_last (Void)
 				used_temp_variables.force_last (a_type)
 				frozen_temp_variables.force_last (0)
-				current_function_header_buffer.put_character ('%T')
-				print_type_declaration (a_type, current_function_header_buffer)
-				current_function_header_buffer.put_character (' ')
-				print_temp_name (Result, current_function_header_buffer)
-				current_function_header_buffer.put_character (';')
-				current_function_header_buffer.put_new_line
+				volatile_temp_variables.force_last (False)
 			end
 		ensure
 			variable_not_void: Result /= Void
@@ -42082,6 +42368,7 @@ feature {NONE} -- Temporary variables
 			used_variable: is_temp_variable_used (Result)
 			not_free_variable: not is_temp_variable_free (Result)
 			not_frozen_variable: not is_temp_variable_frozen (Result)
+			not_volatile_variable: not is_temp_variable_volatile (Result)
 		end
 
 	is_temp_variable_known (a_temp: ET_IDENTIFIER): BOOLEAN
@@ -42132,6 +42419,18 @@ feature {NONE} -- Temporary variables
 			definition: Result = (frozen_temp_variables.item (a_temp.seed) /= 0)
 		end
 
+	is_temp_variable_volatile (a_temp: ET_IDENTIFIER): BOOLEAN
+			-- Has temporary variable `a_temp' been marked as volatile?
+		require
+			a_temp_not_void: a_temp /= Void
+			a_temp_is_temporary: a_temp.is_temporary
+			a_temp_known: is_temp_variable_known (a_temp)
+		do
+			Result := volatile_temp_variables.item (a_temp.seed)
+		ensure
+			definition: Result = volatile_temp_variables.item (a_temp.seed)
+		end
+
 	temp_variable_type (a_temp: ET_IDENTIFIER): detachable ET_DYNAMIC_PRIMARY_TYPE
 			-- Type of `a_temp', if known
 		require
@@ -42176,12 +42475,36 @@ feature {NONE} -- Temporary variables
 			a_temp_not_frozen: not is_temp_variable_frozen (a_temp)
 		local
 			l_seed: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			l_seed := a_temp.seed
-			free_temp_variables.replace (used_temp_variables.item (l_seed), l_seed)
-			used_temp_variables.replace (Void, l_seed)
+			l_type := used_temp_variables.item (l_seed)
+			if l_type /= Void then
+				free_temp_variables.replace (l_type, l_seed)
+				used_temp_variables.replace (Void, l_seed)
+			else
+					-- Internal error: the precondition `a_temp_used'
+					-- has been violated.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
 		ensure
 			a_temp_free: is_temp_variable_free (a_temp)
+		end
+
+	mark_temp_variable_volatile (a_temp: ET_IDENTIFIER)
+			-- Mark temporary variable `a_temp' as volatile.
+		require
+			a_temp_not_void: a_temp /= Void
+			a_temp_is_temporary: a_temp.is_temporary
+			a_temp_known: is_temp_variable_known (a_temp)
+		local
+			l_seed: INTEGER
+		do
+			l_seed := a_temp.seed
+			volatile_temp_variables.replace (True, l_seed)
+		ensure
+			a_temp_volatile: is_temp_variable_volatile (a_temp)
 		end
 
 	mark_temp_variable_frozen (a_temp: ET_IDENTIFIER)
@@ -42282,6 +42605,7 @@ feature {NONE} -- Temporary variables
 			used_temp_variables.wipe_out
 			free_temp_variables.wipe_out
 			frozen_temp_variables.wipe_out
+			volatile_temp_variables.wipe_out
 		end
 
 feature {NONE} -- Temporary variables (Implementation)
@@ -42300,6 +42624,10 @@ feature {NONE} -- Temporary variables (Implementation)
 			-- Temporary variables currently marked as frozen (which means
 			-- that we need to keep them in their current used/free state);
 			-- 0 means not frozen, N means that it was been frozen N times.
+
+	volatile_temp_variables: DS_ARRAYED_LIST [BOOLEAN]
+			-- Temporary variables which need to be declared as 'volatile'
+			-- (e.g. because their address is used).
 
 	temp_variable: ET_IDENTIFIER
 			-- Shared temporary variable, to be used in non-Eiffel features
@@ -42843,31 +43171,31 @@ feature {NONE} -- Rescue clauses
 	has_retry: BOOLEAN
 			-- Is 'retry' being called in the rescue clause of current feature or inline agent?
 
-	locals_written: DS_HASH_SET [ET_IDENTIFIER]
-			-- Local variables which are written in the code of current feature
+	locals_written: DS_HASH_SET [INTEGER]
+			-- Seeds of local variables which are written in the code of current feature
 			-- or inline agent being processed
 			-- (Can be either in the body or the rescue clause of the
 			-- current feature or inline agent.)
 
-	locals_written_in_body: DS_HASH_SET [ET_IDENTIFIER]
-			-- Local variables which are written in the body of
+	locals_written_in_body: DS_HASH_SET [INTEGER]
+			-- Seeds of local variables which are written in the body of
 			-- current feature or inline agent
 
-	locals_written_in_rescue: DS_HASH_SET [ET_IDENTIFIER]
-			-- Local variables which are written in the rescue clause of
+	locals_written_in_rescue: DS_HASH_SET [INTEGER]
+			-- Seeds of local variables which are written in the rescue clause of
 			-- current feature or inline agent
 
-	locals_read: DS_HASH_SET [ET_IDENTIFIER]
-			-- Local variables which are read in the code of current feature
+	locals_read: DS_HASH_SET [INTEGER]
+			-- Seeds of local variables which are read in the code of current feature
 			-- or inline agent being processed
 			-- (Can be either in the body or the rescue clause of the
 			-- current feature or inline agent.)
 
-	locals_read_in_body: DS_HASH_SET [ET_IDENTIFIER]
-			-- Local variables which are read in the body of current feature or inline agent
+	locals_read_in_body: DS_HASH_SET [INTEGER]
+			-- Seeds of local variables which are read in the body of current feature or inline agent
 
-	locals_read_in_rescue: DS_HASH_SET [ET_IDENTIFIER]
-			-- Local variables which are read in the rescue clause of
+	locals_read_in_rescue: DS_HASH_SET [INTEGER]
+			-- Seeds of local variables which are read in the rescue clause of
 			-- current feature or inline agent
 
 	result_written: BOOLEAN
@@ -42887,14 +43215,10 @@ feature {NONE} -- Rescue clauses
 			-- in features or inline agents with a rescue clause.
 		do
 			create locals_written_in_body.make (50)
-			locals_written_in_body.set_equality_tester (identifier_tester)
 			create locals_written_in_rescue.make (50)
-			locals_written_in_rescue.set_equality_tester (identifier_tester)
 			locals_written := locals_written_in_body
 			create locals_read_in_body.make (50)
-			locals_read_in_body.set_equality_tester (identifier_tester)
 			create locals_read_in_rescue.make (50)
-			locals_read_in_rescue.set_equality_tester (identifier_tester)
 			locals_read := locals_read_in_body
 		end
 
@@ -42910,6 +43234,51 @@ feature {NONE} -- Rescue clauses
 			result_read := False
 			has_retry := False
 			has_rescue := False
+		end
+
+feature {NONE} -- Volatile variables
+
+	volatile_locals: DS_HASH_SET [INTEGER]
+			-- Seeds of local variables which need to be declared as 'volatile'
+			-- (e.g. because their address is used)
+
+	volatile_object_test_locals: DS_HASH_SET [INTEGER]
+			-- Seeds of object-test locals which need to be declared as 'volatile'
+			-- (e.g. because their address is used)
+
+	volatile_iteration_cursors: DS_HASH_SET [INTEGER]
+			-- Seeds of iteration cursors which need to be declared as 'volatile'
+			-- (e.g. because their address is used)
+
+	volatile_inline_separate_arguments: DS_HASH_SET [INTEGER]
+			-- Seeds of inline separate arguments which need to be declared as 'volatile'
+			-- (e.g. because their address is used)
+
+	volatile_result: BOOLEAN
+			-- Need the Result entity to be declared as 'volatile'?
+			-- (e.g. because its address is used)
+
+	make_volatile_data
+			-- Create data to determine the 'volatile' status of entities
+			-- in features or inline agents (e.g. because their address
+			-- is used).
+		do
+			create volatile_locals.make (50)
+			create volatile_object_test_locals.make (50)
+			create volatile_iteration_cursors.make (50)
+			create volatile_inline_separate_arguments.make (50)
+		end
+
+	reset_volatile_data
+			-- Reset data to determine the 'volatile' status of entities
+			-- in features or inline agents (e.g. because their address
+			-- is used).
+		do
+			volatile_locals.wipe_out
+			volatile_object_test_locals.wipe_out
+			volatile_iteration_cursors.wipe_out
+			volatile_inline_separate_arguments.wipe_out
+			volatile_result := False
 		end
 
 feature {NONE} -- Implementation
@@ -43711,6 +44080,9 @@ invariant
 	no_void_manifest_tuple_type: not manifest_tuple_types.has_void
 	current_object_tests_not_void: current_object_tests /= Void
 	no_void_current_object_test: not current_object_tests.has_void
+	current_object_test_locals_not_void: current_object_test_locals /= Void
+	current_iteration_cursors_not_void: current_iteration_cursors /= Void
+	current_inline_separate_arguments_not_void: current_inline_separate_arguments /= Void
 	current_equalities_not_void: current_equalities /= Void
 	no_void_current_equality: not current_equalities.has_void
 	called_features_not_void: called_features /= Void
@@ -43742,6 +44114,8 @@ invariant
 	free_temp_variables_count: free_temp_variables.count = used_temp_variables.count
 	frozen_temp_variables_not_void: frozen_temp_variables /= Void
 	frozen_temp_variables_count: frozen_temp_variables.count = used_temp_variables.count
+	volatile_temp_variables_not_void: volatile_temp_variables /= Void
+	volatile_temp_variables_count: volatile_temp_variables.count = used_temp_variables.count
 		-- Equality expressions.
 	unused_equality_expressions_not_void: unused_equality_expressions /= Void
 	no_void_unused_equality_expression: not unused_equality_expressions.has_void
@@ -43780,17 +44154,16 @@ invariant
 	no_void_c_file_extension: not c_filenames.has_void_item
 		-- Rescue clauses.
 	locals_written_not_void: locals_written /= Void
-	no_void_local_written: not locals_written.has_void
 	locals_written_in_body_not_void: locals_written_in_body /= Void
-	no_void_local_written_in_body: not locals_written_in_body.has_void
 	locals_written_in_rescue_not_void: locals_written_in_rescue /= Void
-	no_void_local_written_in_rescue: not locals_written_in_rescue.has_void
 	locals_read_not_void: locals_read /= Void
-	no_void_local_read: not locals_read.has_void
 	locals_read_in_body_not_void: locals_read_in_body /= Void
-	no_void_local_read_in_body: not locals_read_in_body.has_void
 	locals_read_in_rescue_not_void: locals_read_in_rescue /= Void
-	no_void_local_read_in_rescue: not locals_read_in_rescue.has_void
+		-- Volatile entities.
+	volatile_locals_not_void: volatile_locals /= Void
+	volatile_object_test_locals_not_void: volatile_object_test_locals /= Void
+	volatile_iteration_cursors_not_void: volatile_iteration_cursors /= Void
+	volatile_inline_separate_arguments_not_void: volatile_inline_separate_arguments /= Void
 		-- Regular expressions for external features.
 	external_c_regexp_not_void: external_c_regexp /= Void
 	external_c_regexp_compiled: external_c_regexp.is_compiled

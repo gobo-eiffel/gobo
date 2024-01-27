@@ -4,7 +4,7 @@
 		"C functions used to implement type information"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 

@@ -1320,7 +1320,7 @@ EIF_BOOLEAN eif_file_creatable(EIF_FILENAME path, EIF_INTEGER nbytes)
  */
 EIF_INTEGER eif_file_gi(FILE* f)
 {
-	EIF_INTEGER i;
+	volatile EIF_INTEGER i;
 
 	errno = 0;
 	if (fscanf(f, "%d", &i) < 0) {
@@ -1335,7 +1335,7 @@ EIF_INTEGER eif_file_gi(FILE* f)
  */
 EIF_REAL_32 eif_file_gr(FILE* f)
 {
-	EIF_REAL_32 r;
+	volatile EIF_REAL_32 r;
 	errno = 0;
 	if (fscanf(f, "%f", &r) < 0) {
 		eise_io("FILE: unable to read REAL value.");
@@ -1349,7 +1349,7 @@ EIF_REAL_32 eif_file_gr(FILE* f)
  */
 EIF_REAL_64 eif_file_gd(FILE* f)
 {
-	EIF_REAL_64 d;
+	volatile EIF_REAL_64 d;
 	errno = 0;
 	if (fscanf(f, "%lf", &d) < 0) {
 		eise_io("FILE: unable to read DOUBLE value.");
@@ -1824,9 +1824,9 @@ static EIF_INTEGER eif_file_date_for(EIF_FILENAME name, int mode)
 		 * you are in different time zone.
 		 */
 
-		 /* WARNING: This is using the Ansi version of the Win32 API. Remember
-		  * that if you are doing any change below.
-		  */
+		/* WARNING: This is using the Ansi version of the Win32 API. Remember
+		 * that if you are doing any change below.
+		 */
 
 	WIN32_FIND_DATAW l_find_data;
 	HANDLE l_file_handle;
@@ -1859,7 +1859,7 @@ static EIF_INTEGER eif_file_date_for(EIF_FILENAME name, int mode)
 		result = (EIF_INTEGER)(l_date.QuadPart / GE_nat64(10000000) - GE_nat64(11644473600));
 	}
 #else
-	rt_stat_buf	info;
+	rt_stat_buf info;
 	if (-1 != eif_file_stat(name, &info, 1)) {
 		result = (mode ? (EIF_INTEGER)info.st_mtime: (EIF_INTEGER)info.st_atime);
 	}

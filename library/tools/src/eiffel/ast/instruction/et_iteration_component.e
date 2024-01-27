@@ -8,7 +8,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_ITERATION_COMPONENT
@@ -55,7 +55,7 @@ feature -- Access
 	item_name: ET_IDENTIFIER
 			-- Iteration item name
 			--
-			-- It's either then folded form for the calls to the 'item'
+			-- It's either the folded form for the calls to the 'item'
 			-- feature of the iteration cursor (the unfolded form is
 			-- `unfolded_cursor_name'.item), or the name of the iteration
 			-- cursor when `has_item_cursor' is False.

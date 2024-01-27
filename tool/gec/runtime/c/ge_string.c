@@ -406,14 +406,15 @@ EIF_REFERENCE GE_ms32_from_utf32le(const char* s, EIF_INTEGER c)
 #else
 	{
 		int i;
-		EIF_CHARACTER_32 l_little, l_big;
+		volatile EIF_CHARACTER_32 l_little;
+		EIF_CHARACTER_32 l_big;
 		for (i = 0; i < c ; i++) {
 			memcpy(&l_little, s + (i * 4), 4);
 				/* Convert our little endian to big endian. */
 			l_big = ((l_little >> 24) & 0xFF) |
 				((l_little >> 8) & 0xFF00) |
-			   	((l_little << 8) & 0xFF0000) |
-			   	((l_little << 24) & 0xFF000000);
+				((l_little << 8) & 0xFF0000) |
+				((l_little << 24) & 0xFF000000);
 			l_area_base_address[i] = l_big;
 		}
 	}
@@ -476,14 +477,15 @@ EIF_REFERENCE GE_ims32_from_utf32le(const char* s, EIF_INTEGER c)
 #else
 	{
 		int i;
-		EIF_CHARACTER_32 l_little, l_big;
+		volatile EIF_CHARACTER_32 l_little;
+		EIF_CHARACTER_32 l_big;
 		for (i = 0; i < c ; i++) {
 			memcpy(&l_little, s + (i * 4), 4);
 				/* Convert our little endian to big endian. */
 			l_big = ((l_little >> 24) & 0xFF) |
 				((l_little >> 8) & 0xFF00) |
-			   	((l_little << 8) & 0xFF0000) |
-			   	((l_little << 24) & 0xFF000000);
+				((l_little << 8) & 0xFF0000) |
+				((l_little << 24) & 0xFF000000);
 			l_area_base_address[i] = l_big;
 		}
 	}

@@ -25,7 +25,7 @@ extern "C" {
 /*
  * Bit representation of `v'.
  */
-EIF_NATURAL_32 GE_real_32_to_bits(EIF_REAL_32 v)
+EIF_NATURAL_32 GE_real_32_to_bits(volatile EIF_REAL_32 v)
 {
 	return *(EIF_NATURAL_32*)&v;
 }
@@ -33,7 +33,7 @@ EIF_NATURAL_32 GE_real_32_to_bits(EIF_REAL_32 v)
 /*
  * Bit representation of `v'.
  */
-EIF_NATURAL_64 GE_real_64_to_bits(EIF_REAL_64 v)
+EIF_NATURAL_64 GE_real_64_to_bits(volatile EIF_REAL_64 v)
 {
 	return *(EIF_NATURAL_64*)&v;
 }
@@ -41,7 +41,7 @@ EIF_NATURAL_64 GE_real_64_to_bits(EIF_REAL_64 v)
 /*
  * Real value with `v' as bit representation.
  */
-EIF_REAL_32 GE_real_32_from_bits(EIF_NATURAL_32 v)
+EIF_REAL_32 GE_real_32_from_bits(volatile EIF_NATURAL_32 v)
 {
 	return *(EIF_REAL_32*)&v;
 }
@@ -49,7 +49,7 @@ EIF_REAL_32 GE_real_32_from_bits(EIF_NATURAL_32 v)
 /*
  * Real value with `v' as bit representation.
  */
-EIF_REAL_64 GE_real_64_from_bits(EIF_NATURAL_64 v)
+EIF_REAL_64 GE_real_64_from_bits(volatile EIF_NATURAL_64 v)
 {
 	return *(EIF_REAL_64*)&v;
 }

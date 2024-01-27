@@ -727,7 +727,7 @@ EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, EIF_TYPE_INDEX type_ids[], int
 					fprintf(stderr, "CAT-call error!\n");
 #ifdef EIF_DEBUG
 					{
-						char c;
+						volatile char c;
 						fprintf(stderr, "Press Enter...\n");
 						scanf("%c", &c);
 					}
@@ -756,7 +756,7 @@ EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
 		fprintf(stderr, "Call on Void target!\n");
 #ifdef EIF_DEBUG
 		{
-			char c;
+			volatile char c;
 			fprintf(stderr, "Press Enter...\n");
 			scanf("%c", &c);
 		}
@@ -778,7 +778,7 @@ void* GE_check_null(void* ptr)
 		fprintf(stderr, "No more memory!\n");
 #ifdef EIF_DEBUG
 		{
-			char c;
+			volatile char c;
 			fprintf(stderr, "Press Enter...\n");
 			scanf("%c", &c);
 		}
