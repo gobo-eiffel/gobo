@@ -1859,7 +1859,7 @@ static EIF_INTEGER eif_file_date_for(EIF_FILENAME name, int mode)
 		result = (EIF_INTEGER)(l_date.QuadPart / GE_nat64(10000000) - GE_nat64(11644473600));
 	}
 #else
-	volatile rt_stat_buf	info;
+	rt_stat_buf info;
 	if (-1 != eif_file_stat(name, &info, 1)) {
 		result = (mode ? (EIF_INTEGER)info.st_mtime: (EIF_INTEGER)info.st_atime);
 	}
