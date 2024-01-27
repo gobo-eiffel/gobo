@@ -2467,8 +2467,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_string (c_scoop_processor)
 					print_semicolon_newline
 					print_indentation
-					current_file.put_string (c_volatile)
-					current_file.put_character (' ')
 					current_file.put_string (c_ge_rescue)
 					current_file.put_character (' ')
 					current_file.put_character ('r')
@@ -2528,12 +2526,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_character ('(')
 				current_file.put_string (c_ge_setjmp)
 				current_file.put_character ('(')
-				current_file.put_character ('(')
-				current_file.put_character ('(')
-				current_file.put_string (c_ge_rescue)
-				current_file.put_character (')')
 				current_file.put_character ('r')
-				current_file.put_character (')')
 				current_file.put_character ('.')
 				current_file.put_character ('j')
 				current_file.put_character ('b')
@@ -6805,8 +6798,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			l_rescue := a_feature.rescue_clause
 			if l_rescue /= Void or l_is_once or l_has_separate_arguments then
 				print_indentation
-				current_file.put_string (c_volatile)
-				current_file.put_character (' ')
 				current_file.put_string (c_ge_rescue)
 				current_file.put_character (' ')
 				current_file.put_character ('r')
@@ -6871,12 +6862,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_character ('(')
 				current_file.put_string (c_ge_setjmp)
 				current_file.put_character ('(')
-				current_file.put_character ('(')
-				current_file.put_character ('(')
-				current_file.put_string (c_ge_rescue)
-				current_file.put_character (')')
 				current_file.put_character ('r')
-				current_file.put_character (')')
 				current_file.put_character ('.')
 				current_file.put_character ('j')
 				current_file.put_character ('b')
@@ -18095,8 +18081,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_string (c_scoop_processor)
 				print_semicolon_newline
 				print_indentation
-				current_file.put_string (c_volatile)
-				current_file.put_character (' ')
 				current_file.put_string (c_ge_rescue)
 				current_file.put_character (' ')
 				current_file.put_character ('r')
@@ -18134,12 +18118,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_character ('(')
 				current_file.put_string (c_ge_setjmp)
 				current_file.put_character ('(')
-				current_file.put_character ('(')
-				current_file.put_character ('(')
-				current_file.put_string (c_ge_rescue)
-				current_file.put_character (')')
 				current_file.put_character ('r')
-				current_file.put_character (')')
 				current_file.put_character ('.')
 				current_file.put_character ('j')
 				current_file.put_character ('b')
@@ -20604,8 +20583,6 @@ feature {NONE} -- Separate calls
 			l_is_asynchronous_call := l_is_creation_call and not l_has_reference_actual_argument
 			if not l_is_creation_call then
 				print_indentation
-				current_file.put_string (c_volatile)
-				current_file.put_character (' ')
 				current_file.put_string (c_ge_rescue)
 				current_file.put_character (' ')
 				current_file.put_character ('r')
@@ -20946,12 +20923,7 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('(')
 					current_file.put_string (c_ge_setjmp)
 					current_file.put_character ('(')
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					current_file.put_string (c_ge_rescue)
-					current_file.put_character (')')
 					current_file.put_character ('r')
-					current_file.put_character (')')
 					current_file.put_character ('.')
 					current_file.put_character ('j')
 					current_file.put_character ('b')

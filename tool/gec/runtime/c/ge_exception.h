@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTION"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -115,7 +115,7 @@ struct GE_call_struct {
 typedef struct GE_rescue_struct GE_rescue;
 struct GE_rescue_struct {
 	GE_jmp_buf jb;
-	volatile GE_rescue* previous; /* previous context in the call chain */
+	GE_rescue* previous; /* previous context in the call chain */
 };
 
 /*
@@ -126,7 +126,7 @@ typedef struct GE_context_struct GE_context;
 struct GE_context_struct {
 	GE_call* call; /* Call stack */
 	uint32_t in_assertion; /* Is an assertion evaluated? */
-	volatile GE_rescue* last_rescue; /* Context of last feature entered containing a rescue clause */
+	GE_rescue* last_rescue; /* Context of last feature entered containing a rescue clause */
 	uint32_t in_rescue; /* Number of rescue clauses currently being executed */
 	EIF_REFERENCE exception_manager; /* Exception manager */
 	char raising_exception; /* Is an exception currently being raised? */

@@ -501,11 +501,11 @@ void GE_jump_to_last_rescue(GE_context* a_context)
 {
 	char* l_exception_trace;
 
-	volatile GE_rescue* r = a_context->last_rescue;
+	GE_rescue* r = a_context->last_rescue;
 	if (r != 0) {
 		a_context->last_rescue = r->previous;
 		a_context->raising_exception = '\0';
-		GE_longjmp(((GE_rescue*)r)->jb, 1);
+		GE_longjmp(r->jb, 1);
 	}
 	if (a_context->exception_trace_enabled) {
 		GE_show_console();
