@@ -146,6 +146,7 @@ struct GE_context_struct {
 	GE_scoop_processor* scoop_processor; /* SCOOP processor executing the current code */
 #endif
 };
+#define TC GE_context
 
 /*
  * Default initialization for `GE_context'.
