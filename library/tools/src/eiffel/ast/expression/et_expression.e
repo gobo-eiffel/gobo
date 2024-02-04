@@ -36,39 +36,52 @@ inherit
 			valid_index as valid_index_actual_argument
 		undefine
 			is_instance_free
+		redefine
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test
 		end
 
 	ET_ARGUMENT_OPERAND
 		redefine
-			index
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test
 		end
 
 	ET_AGENT_ARGUMENT_OPERAND
 		undefine
 			reset, set_index
 		redefine
-			index
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test
 		end
 
 	ET_TARGET_OPERAND
 		undefine
 			reset, set_index
 		redefine
-			index
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test
 		end
 
 	ET_AGENT_TARGET
 		undefine
 			reset, set_index
 		redefine
-			index
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test
 		end
 
 feature -- Access
-
-	index: INTEGER
-			-- Index of expression in enclosing feature;
-			-- Used to get dynamic information about this expression.
 
 	actual_argument (i: INTEGER): ET_EXPRESSION
 			-- Actual argument at index `i'
@@ -116,6 +129,34 @@ feature -- Status report
 
 	is_prefix_expression: BOOLEAN
 			-- Is current expression a prefix expression?
+		do
+			-- Result := False
+		end
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			-- Result := False
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			-- Result := False
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			-- Result := False
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test appear in current expression
+			-- or (recursively) in one of its subexpressions?
 		do
 			-- Result := False
 		end

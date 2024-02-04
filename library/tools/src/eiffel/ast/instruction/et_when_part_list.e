@@ -5,7 +5,7 @@
 		"Eiffel lists of inspect when parts"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_WHEN_PART_LIST
@@ -64,6 +64,108 @@ feature -- Access
 				Result := last.last_leaf
 			else
 				Result := tokens.null_leaf
+			end
+		end
+
+feature -- Status report
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in one of current when parts or
+			-- (recursively) in one of their subinstructions or subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).has_result then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in one of current when parts or
+			-- (recursively) in one of their subinstructions or subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).has_address_expression then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in one of current when parts or
+			-- (recursively) in one of their subinstructions or subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).has_agent then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does an typed object-test appear in one of current when parts or
+			-- (recursively) in one of their subinstructions or subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).has_typed_object_test then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
+	has_inline_separate_instruction: BOOLEAN
+			-- Does an inline separate instruction appear in current when parts or
+			-- (recursively) in one of their subinstructions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).has_inline_separate_instruction then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
+feature -- Measurement
+
+	nested_instruction_count: INTEGER
+			-- Number of instructions contained in current when parts and
+			-- (recursively) in their subinstructions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				Result := Result + storage.item (i).nested_instruction_count
+				i := i + 1
 			end
 		end
 

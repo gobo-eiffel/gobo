@@ -18,7 +18,8 @@ inherit
 			last_position,
 			break
 		redefine
-			is_result
+			is_result,
+			has_result
 		end
 
 	ET_KEYWORD
@@ -41,6 +42,10 @@ feature -- Status report
 
 	is_result: BOOLEAN = True
 			-- Is current expression the 'Result' entity?
+
+	has_result: BOOLEAN = True
+			-- Does the entity 'Result' appear in current expression
+			-- or (recursively) in one of its subexpressions?
 
 feature -- Processing
 

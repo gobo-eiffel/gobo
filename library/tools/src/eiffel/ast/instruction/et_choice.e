@@ -5,7 +5,7 @@
 		"Eiffel choices in 'when' parts of inspect instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_CHOICE
@@ -27,6 +27,30 @@ feature -- Status report
 			-- Is current choice a range?
 		do
 			-- Result := False
+		end
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in current choice
+			-- or (recursively) in one of its subexpressions?
+		deferred
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in current choice
+			-- or (recursively) in one of its subexpressions?
+		deferred
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in current choice
+			-- or (recursively) in one of its subexpressions?
+		deferred
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test: appear in current choice
+			-- or (recursively) in one of its subexpressions?
+		deferred
 		end
 
 feature -- Access

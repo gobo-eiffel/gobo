@@ -5,7 +5,7 @@
 		"Eiffel conversion expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_CONVERT_EXPRESSION
@@ -14,7 +14,11 @@ inherit
 
 	ET_EXPRESSION
 		redefine
-			is_instance_free
+			is_instance_free,
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test
 		end
 
 feature -- Access
@@ -54,6 +58,36 @@ feature -- Status report
 			-- or not.
 		do
 			Result := expression.is_instance_free
+		end
+
+feature -- Status report
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_result
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expresssion appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_address_expression
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_agent
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_typed_object_test
 		end
 
 invariant

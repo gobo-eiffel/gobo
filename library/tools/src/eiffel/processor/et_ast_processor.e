@@ -972,6 +972,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_inlined_expression (a_expression: ET_INLINED_EXPRESSION)
+			-- Process `a_expression'.
+		require
+			a_expression_not_void: a_expression /= Void
+		deferred
+		end
+
 	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
 			-- Process `a_expression'.
 		require

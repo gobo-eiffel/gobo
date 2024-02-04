@@ -15,9 +15,13 @@ inherit
 	ET_EXPRESSION
 		redefine
 			unparenthesized_expression,
-			reset, index, is_current,
+			reset, is_current,
 			is_false, is_true,
 			is_instance_free,
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test,
 			add_separate_arguments
 		end
 
@@ -25,8 +29,11 @@ inherit
 		undefine
 			reset, set_index
 		redefine
-			index,
 			is_instance_free,
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test,
 			is_current
 		end
 
@@ -76,6 +83,44 @@ feature -- Status report
 			Result := expression.is_true
 		end
 
+	is_instance_free: BOOLEAN
+			-- Does current expression not depend on 'Current' or its attributes?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		do
+			Result := expression.is_instance_free
+		end
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_result
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_address_expression
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_agent
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_typed_object_test
+		end
+
 feature -- Access
 
 	expression: ET_EXPRESSION
@@ -92,10 +137,6 @@ feature -- Access
 		do
 			Result := expression.unparenthesized_expression
 		end
-
-	index: INTEGER
-			-- Index of expression in enclosing feature;
-			-- Used to get dynamic information about this expression.
 
 	position: ET_POSITION
 			-- Position of first character of
@@ -117,18 +158,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := right_parenthesis
-		end
-
-feature -- Status report
-
-	is_instance_free: BOOLEAN
-			-- Does current expression not depend on 'Current' or its attributes?
-			-- Note that we do not consider unqualified calls and Precursors as
-			-- instance-free because it's not always possible syntactically
-			-- to determine whether the feature being called is a class feature
-			-- or not.
-		do
-			Result := expression.is_instance_free
 		end
 
 feature -- Setting

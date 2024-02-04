@@ -81,6 +81,48 @@ feature -- Access
 			Result := item_name.hash_code
 		end
 
+feature -- Status report
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in current iteration component
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := iterable_expression.has_result or
+				attached until_conditional as l_until_conditional and then  l_until_conditional.expression.has_result or
+				attached invariant_part as l_invariant_part and then l_invariant_part.has_result or
+				attached variant_part as l_variant_part and then l_variant_part.expression.has_result
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in current iteration component
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := iterable_expression.has_address_expression or
+				attached until_conditional as l_until_conditional and then  l_until_conditional.expression.has_address_expression or
+				attached invariant_part as l_invariant_part and then l_invariant_part.has_address_expression or
+				attached variant_part as l_variant_part and then l_variant_part.expression.has_address_expression
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in current iteration component
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := iterable_expression.has_agent or
+				attached until_conditional as l_until_conditional and then  l_until_conditional.expression.has_agent or
+				attached invariant_part as l_invariant_part and then l_invariant_part.has_agent or
+				attached variant_part as l_variant_part and then l_variant_part.expression.has_agent
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test appear in current iteration component
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := iterable_expression.has_typed_object_test or
+				attached until_conditional as l_until_conditional and then  l_until_conditional.expression.has_typed_object_test or
+				attached invariant_part as l_invariant_part and then l_invariant_part.has_typed_object_test or
+				attached variant_part as l_variant_part and then l_variant_part.expression.has_typed_object_test
+		end
+
 feature -- Unfolded form
 
 	unfolded_cursor_name: ET_IDENTIFIER

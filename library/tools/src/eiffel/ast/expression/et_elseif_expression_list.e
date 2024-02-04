@@ -5,7 +5,7 @@
 		"Eiffel lists of 'elseif' parts in 'if' expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ELSEIF_EXPRESSION_LIST
@@ -84,6 +84,74 @@ feature -- Status report
 			from i := 1 until i > nb loop
 				if not item (i).is_instance_free then
 					Result := False
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in one of elseif parts
+			-- or (recursively) in one of their subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if item (i).has_result then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in one of elseif parts
+			-- or (recursively) in one of their subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if item (i).has_address_expression then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in one of elseif parts
+			-- or (recursively) in one of their subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if item (i).has_agent then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test in one of elseif parts
+			-- or (recursively) in one of their subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if item (i).has_typed_object_test then
+					Result := True
 						-- Jump out of the loop.
 					i := nb
 				end

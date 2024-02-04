@@ -5,7 +5,7 @@
 		"Eiffel addresses of Result"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_RESULT_ADDRESS
@@ -13,6 +13,9 @@ class ET_RESULT_ADDRESS
 inherit
 
 	ET_ADDRESS_EXPRESSION
+		redefine
+			has_result
+		end
 
 create
 
@@ -37,6 +40,12 @@ feature -- Access
 		do
 			Result := result_keyword
 		end
+
+feature -- Status report
+
+	has_result: BOOLEAN = True
+			-- Does the entity 'Result' appear in current expression
+			-- or (recursively) in one of its subexpressions?
 
 feature -- Setting
 

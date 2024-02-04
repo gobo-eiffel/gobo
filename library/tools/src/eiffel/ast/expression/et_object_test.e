@@ -5,7 +5,7 @@
 		"Eiffel object-test expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_OBJECT_TEST
@@ -15,7 +15,11 @@ inherit
 	ET_EXPRESSION
 		redefine
 			reset,
-			is_instance_free
+			is_instance_free,
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test
 		end
 
 create
@@ -110,6 +114,34 @@ feature -- Status report
 			-- or not.
 		do
 			Result := expression.is_instance_free
+		end
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_result
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_address_expression
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_agent
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := type /= Void or expression.has_typed_object_test
 		end
 
 feature -- Setting

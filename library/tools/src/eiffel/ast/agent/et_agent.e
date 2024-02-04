@@ -5,7 +5,7 @@
 		"Eiffel agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_AGENT
@@ -14,7 +14,11 @@ inherit
 
 	ET_EXPRESSION
 		redefine
-			is_never_void
+			is_never_void,
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test
 		end
 
 feature -- Access
@@ -62,6 +66,40 @@ feature -- Status report
 
 	is_never_void: BOOLEAN = True
 			-- Can current expression never be void?
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in current expression
+			-- or (recursively) in one of its subexpressions?
+			-- Do not take into account the code inside inline agent,
+			-- just the target and arguments of the agent.
+		do
+			Result := target.has_result or
+				attached arguments as l_arguments and then l_arguments.has_result
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in current expression
+			-- or (recursively) in one of its subexpressions?
+			-- Do not take into account the code inside inline agent,
+			-- just the target and arguments of the agent.
+		do
+			Result := target.has_address_expression or
+				attached arguments as l_arguments and then l_arguments.has_address_expression
+		end
+
+	has_agent: BOOLEAN = True
+			-- Does an agent appear in current expression
+			-- or (recursively) in one of its subexpressions?
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test appear in current expression
+			-- or (recursively) in one of its subexpressions?
+			-- Do not take into account the code inside inline agent,
+			-- just the target and arguments of the agent.
+		do
+			Result := target.has_typed_object_test or
+				attached arguments as l_arguments and then l_arguments.has_typed_object_test
+		end
 
 feature -- Setting
 

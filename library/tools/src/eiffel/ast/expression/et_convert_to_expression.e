@@ -21,7 +21,11 @@ inherit
 		rename
 			target as expression
 		undefine
-			is_instance_free
+			is_instance_free,
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test
 		end
 
 create

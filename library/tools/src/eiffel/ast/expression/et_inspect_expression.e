@@ -16,6 +16,10 @@ inherit
 		redefine
 			reset,
 			is_instance_free,
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test,
 			add_separate_arguments
 		end
 
@@ -105,6 +109,42 @@ feature -- Status report
 			Result := expression.is_instance_free and
 				(attached when_parts as l_when_parts implies l_when_parts.is_instance_free) and
 				(attached else_part as l_else_part implies l_else_part.expression.is_instance_free)
+		end
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_result or
+				attached when_parts as l_when_parts and then l_when_parts.has_result or
+				attached else_part as l_else_part and then l_else_part.expression.has_result
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_address_expression or
+				attached when_parts as l_when_parts and then l_when_parts.has_address_expression or
+				attached else_part as l_else_part and then l_else_part.expression.has_address_expression
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_agent or
+				attached when_parts as l_when_parts and then l_when_parts.has_agent or
+				attached else_part as l_else_part and then l_else_part.expression.has_agent
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test appear in current expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_typed_object_test or
+				attached when_parts as l_when_parts and then l_when_parts.has_typed_object_test or
+				attached else_part as l_else_part and then l_else_part.expression.has_typed_object_test
 		end
 
 feature -- Setting

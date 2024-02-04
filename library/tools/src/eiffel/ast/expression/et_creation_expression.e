@@ -5,7 +5,7 @@
 		"Eiffel creation expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_CREATION_EXPRESSION
@@ -13,6 +13,11 @@ deferred class ET_CREATION_EXPRESSION
 inherit
 
 	ET_EXPRESSION
+		undefine
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test
 		redefine
 			is_never_void
 		end

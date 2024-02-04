@@ -5,7 +5,7 @@
 		"Eiffel comma-separated lists of inspect choices"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CHOICE_LIST
@@ -92,6 +92,74 @@ feature -- Access
 				Result := when_keyword
 			else
 				Result := last.last_leaf
+			end
+		end
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in one of current choices
+			-- or (recursively) in one of its subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).choice.has_result then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in one of current choices
+			-- or (recursively) in one of its subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).choice.has_address_expression then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in one of current choices
+			-- or (recursively) in one of its subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).choice.has_agent then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test appear in one of current choices
+			-- or (recursively) in one of its subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).choice.has_typed_object_test then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
 			end
 		end
 

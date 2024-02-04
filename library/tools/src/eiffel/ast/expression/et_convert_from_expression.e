@@ -5,7 +5,7 @@
 		"Eiffel conversion-from expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CONVERT_FROM_EXPRESSION
@@ -19,13 +19,23 @@ inherit
 
 	ET_CREATION_EXPRESSION
 		undefine
-			is_instance_free
+			is_instance_free,
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test
 		redefine
 			name,
 			arguments
 		end
 
 	ET_CREATION_CALL
+		undefine
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test
+		end
 
 create
 
