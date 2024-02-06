@@ -266,7 +266,7 @@ feature {NONE} -- Initialization
 			create unused_inlined_operands.make (1000)
 			create used_call_contexts.make (100)
 			create unused_call_contexts.make (100)
-			max_nested_inlining_count := 5
+			max_nested_inlining_count := 0
 			create called_features.make (1000)
 			create called_static_features.make (1000)
 			create inlined_features.make (10000)
