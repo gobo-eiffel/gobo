@@ -9685,7 +9685,7 @@ feature {NONE} -- Procedure call generation
 		do
 			if a_feature.is_builtin then
 				print_builtin_procedure_call (a_feature, a_target_type, a_check_void_target)
-			elseif is_inlinable_procedure (a_feature) then
+			elseif is_inlinable_procedure (a_feature, a_target_type) then
 				print_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
@@ -9735,9 +9735,9 @@ feature {NONE} -- Procedure call generation
 			-- Operands can be found in `call_operands'.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_is_inlinable: is_inlinable_procedure (a_feature)
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
+			a_feature_is_inlinable: is_inlinable_procedure (a_feature, a_target_type)
 		local
 			l_old_call_target_type: like call_target_type
 			l_old_in_static_feature: like in_static_feature
@@ -9745,6 +9745,7 @@ feature {NONE} -- Procedure call generation
 			l_old_inlining_context: ET_DYNAMIC_CALL_CONTEXT
 			l_caller_inlining_context: ET_DYNAMIC_CALL_CONTEXT
 			l_inlining_context: ET_DYNAMIC_CALL_CONTEXT
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			l_operands_count := call_operands.count
 			if l_operands_count /= a_feature.static_feature.arguments_count + 1 then
@@ -9763,6 +9764,7 @@ feature {NONE} -- Procedure call generation
 				if l_caller_inlining_context = Void then
 					l_caller_inlining_context := new_call_context (current_feature)
 				end
+				l_target_type_set := dynamic_type_set (call_operands.first)
 				l_inlining_context := new_call_context (a_feature)
 				fill_inlining_operands (a_target_type, l_inlining_context, l_caller_inlining_context)
 				inlining_context := l_inlining_context
@@ -9782,7 +9784,7 @@ feature {NONE} -- Procedure call generation
 				print_indentation
 				current_file.put_string ("/* <- */")
 				current_file.put_new_line
-				free_inlining_operands (l_inlining_context)
+				free_inlining_operands (l_target_type_set, l_inlining_context, l_caller_inlining_context)
 				current_feature := l_caller_inlining_context.current_feature
 				current_type := current_feature.target_type
 				current_dynamic_type_sets := current_feature.dynamic_type_sets
@@ -10547,15 +10549,16 @@ feature {NONE} -- Expression generation
 			l_source_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_twin_feature_name: ET_IDENTIFIER
 			l_twin_expression: ET_QUALIFIED_CALL_EXPRESSION
+			l_twin_operand: ET_EXPRESSION
+			l_inlined_twin_operand: ET_DYNAMIC_INLINED_EXPRESSION
+			l_inlined_call_operand: ET_DYNAMIC_INLINED_EXPRESSION
+			l_call_context: ET_DYNAMIC_CALL_CONTEXT
 			l_twin_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
 			l_twin_static_type: ET_DYNAMIC_TYPE
 			l_query_call: detachable ET_DYNAMIC_QUALIFIED_QUERY_CALL
-			l_index: INTEGER
-			l_old_index: INTEGER
 			l_checked_void: BOOLEAN
 			l_call_operand: ET_EXPRESSION
 			l_temp: detachable ET_IDENTIFIER
-			l_temp_index: INTEGER
 			l_assignment_target: like assignment_target
 		do
 			l_source_type := a_source_type_set.static_type
@@ -10567,8 +10570,20 @@ feature {NONE} -- Expression generation
 				else
 					l_twin_feature_name := new_twin_feature_name
 					l_twin_expression := new_qualified_call_expression (a_operand, l_twin_feature_name, Void)
-					l_twin_expression.set_index (a_operand.index)
-					print_operand (l_twin_expression)
+					if attached {ET_DYNAMIC_INLINED_EXPRESSION} a_operand as l_inlined_operand then
+						l_call_context := inlining_context
+						if l_call_context = Void then
+							l_call_context := new_call_context (current_feature)
+						end
+						l_inlined_twin_operand := new_inlined_operand (a_operand, l_call_context)
+						l_inlined_twin_operand.set_expression (l_twin_expression)
+						l_inlined_twin_operand.set_context (l_call_context)
+						l_twin_operand := l_inlined_twin_operand
+					else
+						l_twin_expression.set_index (a_operand.index)
+						l_twin_operand := l_twin_expression
+					end
+					print_operand (l_twin_operand)
 					free_qualified_call_expression (l_twin_expression)
 					free_twin_feature_name (l_twin_feature_name)
 				end
@@ -10598,6 +10613,10 @@ feature {NONE} -- Expression generation
 					fill_call_operands (1)
 					l_call_operand := call_operands.first
 					call_operands.wipe_out
+					l_call_context := inlining_context
+					if l_call_context = Void then
+						l_call_context := new_call_context (current_feature)
+					end
 					print_indentation
 					if l_assignment_target /= Void then
 						operand_stack.force (l_assignment_target)
@@ -10605,10 +10624,10 @@ feature {NONE} -- Expression generation
 					else
 						l_temp := new_temp_variable (l_source_primary_type)
 						mark_temp_variable_frozen (l_temp)
-							-- We will set the index of `l_temp' later because
-							-- it could still be used in `call_operands'.
-						l_temp_index := l_call_operand.index
-						operand_stack.force (l_temp)
+						l_inlined_call_operand := new_inlined_operand (l_call_operand, l_call_context)
+						l_inlined_call_operand.set_expression (l_temp)
+						l_inlined_call_operand.set_context (l_call_context)
+						operand_stack.force (l_inlined_call_operand)
 						print_temp_name (l_temp, current_file)
 					end
 					print_assign_to
@@ -10633,13 +10652,13 @@ feature {NONE} -- Expression generation
 						current_file.put_character (')')
 					end
 					current_file.put_character ('?')
-					extra_dynamic_type_sets.force_last (l_twin_type_set)
-					l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
-					l_old_index := l_call_operand.index
-					l_call_operand.set_index (l_index)
+					l_inlined_call_operand := new_inlined_operand (l_call_operand, l_call_context)
+					l_inlined_call_operand.set_dynamic_type_set (l_twin_type_set)
 					l_twin_feature_name := new_twin_feature_name
-					l_twin_expression := new_qualified_call_expression (l_call_operand, l_twin_feature_name, Void)
-					l_twin_expression.set_index (l_index)
+					l_twin_expression := new_qualified_call_expression (l_inlined_call_operand, l_twin_feature_name, Void)
+					l_inlined_twin_operand := new_inlined_operand (l_inlined_call_operand, l_call_context)
+					l_inlined_twin_operand.set_expression (l_twin_expression)
+					l_inlined_twin_operand.set_context (l_call_context)
 						-- Register the call to 'twin' so that it is handled correctly
 						-- in case of polymorphism.
 						-- The special treatment for polymorphism only occurs
@@ -10648,20 +10667,13 @@ feature {NONE} -- Expression generation
 						create l_query_call.make (l_twin_expression, l_twin_type_set, l_twin_type_set, current_feature, current_type)
 						l_source_primary_type.put_query_call (l_query_call)
 					end
-					print_expression (l_twin_expression)
-					l_call_operand.set_index (l_old_index)
-					extra_dynamic_type_sets.remove_last
+					print_expression (l_inlined_twin_operand)
 					current_file.put_character (':')
 					print_expression (l_call_operand)
 					current_file.put_character (')')
 					print_semicolon_newline
 					if l_temp /= Void then
 						mark_temp_variable_unfrozen (l_temp)
-						if l_temp_index /= 0 then
-								-- We had to wait until this stage to set the index of `l_temp'
-								-- because it could have still been used in `call_operands'.
-							l_temp.set_index (l_temp_index)
-						end
 					end
 						-- Clean up.
 					if l_query_call = Void then
@@ -12052,6 +12064,9 @@ feature {NONE} -- Expression generation
 			l_new_inlined_operand: ET_DYNAMIC_INLINED_EXPRESSION
 			l_old_inlining_context: ET_DYNAMIC_CALL_CONTEXT
 			l_inlining_context: ET_DYNAMIC_CALL_CONTEXT
+			l_expression: ET_EXPRESSION
+			l_index: INTEGER
+			l_old_index: INTEGER
 		do
 			if not attached {ET_DYNAMIC_INLINED_EXPRESSION} a_expression as l_inlined_expression then
 					-- Internal error: not supported.
@@ -12065,19 +12080,26 @@ feature {NONE} -- Expression generation
 				current_feature := l_inlining_context.current_feature
 				current_type := current_feature.target_type
 				current_dynamic_type_sets := current_feature.dynamic_type_sets
-				a_expression.expression.process (Current)
+				l_expression := l_inlined_expression.expression
+				l_old_index := l_expression.index
+				extra_dynamic_type_sets.force_last (l_inlined_expression.dynamic_type_set)
+				l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+				l_expression.set_index (l_index)
+				l_expression.process (Current)
 				if in_operand then
 					if operand_stack.is_empty then
 							-- Internal error: an operand should have been added.
 						set_fatal_error
 						error_handler.report_giaaa_error
-					elseif l_inlined_expression.expression = operand_stack.item then
+					elseif operand_stack.item = l_expression then
 						operand_stack.replace (l_inlined_expression)
 					else
 						l_new_inlined_operand := new_inlined_operand (operand_stack.item, l_inlining_context)
 						operand_stack.replace (l_new_inlined_operand)
 					end
 				end
+				l_expression.set_index (l_old_index)
+				extra_dynamic_type_sets.remove_last
 				current_feature := l_old_feature
 				current_type := current_feature.target_type
 				current_dynamic_type_sets := current_feature.dynamic_type_sets
@@ -13879,10 +13901,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 				l_is_separate_call := scoop_mode and a_call /= separate_call_expression and l_target_type.is_separate
 				nb2 := l_target_type_set.count
 				if nb2 = 1 and not l_is_separate_call and not l_name.is_tuple_label then
+						-- We can inline the call only if it's not a separate call,
+						-- it's not a tuple access, and the call is not polymorphic.
 					l_target_dynamic_type := l_target_type_set.dynamic_type (1)
 					if
 						attached l_target_dynamic_type.seeded_dynamic_query (l_name.seed, current_dynamic_system) as l_dynamic_feature
-						and then is_inlinable_function (l_dynamic_feature)
+						and then is_inlinable_function (l_dynamic_feature, l_target_dynamic_type)
 					then
 						print_adapted_query_call (l_dynamic_feature, l_target_dynamic_type, l_call_type, True)
 						l_inlined_call := True
@@ -14804,16 +14828,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			l_constant: ET_CONSTANT
 			l_force_result_boxing: BOOLEAN
 			l_inlined_call: BOOLEAN
-			l_current: ET_EXPRESSION
 		do
 			if in_static_feature then
 				print_expression_static_call (a_call, current_type, a_call.name, a_call.arguments)
 			else
-				if attached inlining_context as l_inlining_context then
-					l_current := l_inlining_context.target
-				else
-					l_current := tokens.current_keyword
-				end
 				l_assignment_target := assignment_target
 				assignment_target := Void
 				l_call_type_set := dynamic_type_set (a_call)
@@ -14843,10 +14861,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 								-- while processing the current call to the built-in attribute, for
 								-- which only the target ('Current') needs to be on `call_operands'.
 							if call_operands.is_empty then
-								call_operands.force_last (l_current)
+								call_operands.force_last (tokens.current_keyword)
 							else
 								l_old_call_target := call_operands.first
-								call_operands.replace (l_current, 1)
+								call_operands.replace (tokens.current_keyword, 1)
 							end
 							if in_call_target and l_call_type.is_expanded then
 									-- Pass the address of the built-in attribute expanded object.
@@ -14875,7 +14893,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 									-- Pass the address of the expanded object.
 								current_file.put_character ('&')
 								current_file.put_character ('(')
-								print_attribute_access (l_dynamic_feature, l_current, current_type, False)
+								print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
 								current_file.put_character (')')
 							elseif l_call_target_type.is_expanded then
 									-- We need to unbox the object and then pass its address.
@@ -14884,10 +14902,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 								print_boxed_attribute_item_access (a_call, l_call_target_type, call_target_check_void)
 								current_file.put_character (')')
 							else
-								print_attribute_access (l_dynamic_feature, l_current, current_type, False)
+								print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
 							end
 						else
-							print_attribute_access (l_dynamic_feature, l_current, current_type, False)
+							print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
 						end
 					elseif l_dynamic_feature.is_constant_attribute then
 						if in_operand then
@@ -14954,7 +14972,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 						if l_seed = current_system.function_item_seed and then not a_call.is_call_agent then
 							if l_actuals /= Void and then l_actuals.count = 1 then
 								if attached {ET_MANIFEST_TUPLE} l_actuals.actual_argument (1) as l_manifest_tuple then
-									operand_stack.force (l_current)
+									operand_stack.force (tokens.current_keyword)
 									nb := l_manifest_tuple.count
 									from i := 1 until i > nb loop
 										l_actual := l_manifest_tuple.expression (i)
@@ -14981,7 +14999,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 							end
 						end
 						if l_manifest_tuple_operand = Void then
-							operand_stack.force (l_current)
+							operand_stack.force (tokens.current_keyword)
 							nb := 0
 							if l_actuals /= Void then
 								nb := l_actuals.count
@@ -14995,7 +15013,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 							nb := nb + 1
 							fill_call_operands (nb)
 						end
-						if is_inlinable_function (l_dynamic_feature) then
+						if is_inlinable_function (l_dynamic_feature, current_type) then
 								-- When there is no result type of the form 'like argument',
 								-- then there is no need to call `print_adapted_query_call'
 								-- because an unqualified call is not polymorphic, and therefore
@@ -16316,7 +16334,7 @@ feature {NONE} -- Query call generation
 				print_adapted_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
 			elseif a_feature.is_builtin then
 				print_builtin_query_call (a_feature, a_target_type, a_check_void_target)
-			elseif is_inlinable_function (a_feature) then
+			elseif is_inlinable_function (a_feature,  a_target_type) then
 				print_inlined_query_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
@@ -16367,9 +16385,9 @@ feature {NONE} -- Query call generation
 			-- Operands can be found in `call_operands'.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_is_inlinable: is_inlinable_function (a_feature)
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
+			a_feature_is_inlinable: is_inlinable_function (a_feature, a_target_type)
 		local
 			l_old_call_target_type: like call_target_type
 			l_old_in_static_feature: like in_static_feature
@@ -16379,6 +16397,7 @@ feature {NONE} -- Query call generation
 			l_old_inlining_context: ET_DYNAMIC_CALL_CONTEXT
 			l_caller_inlining_context: ET_DYNAMIC_CALL_CONTEXT
 			l_inlining_context: ET_DYNAMIC_CALL_CONTEXT
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			l_operands_count := call_operands.count
 			if l_operands_count /= a_feature.static_feature.arguments_count + 1 then
@@ -16417,6 +16436,7 @@ feature {NONE} -- Query call generation
 				if l_caller_inlining_context = Void then
 					l_caller_inlining_context := new_call_context (current_feature)
 				end
+				l_target_type_set := dynamic_type_set (call_operands.first)
 				l_inlining_context := new_call_context (a_feature)
 				fill_inlining_operands (a_target_type, l_inlining_context, l_caller_inlining_context)
 				inlining_context := l_inlining_context
@@ -16441,7 +16461,7 @@ feature {NONE} -- Query call generation
 				if not operand_stack.is_empty and then not attached {ET_DYNAMIC_INLINED_EXPRESSION} operand_stack.item then
 					operand_stack.replace (new_inlined_operand (operand_stack.item, l_inlining_context))
 				end
-				free_inlining_operands (l_inlining_context)
+				free_inlining_operands (l_target_type_set, l_inlining_context, l_caller_inlining_context)
 				current_feature := l_caller_inlining_context.current_feature
 				current_type := current_feature.target_type
 				current_dynamic_type_sets := current_feature.dynamic_type_sets
@@ -36789,11 +36809,13 @@ feature {NONE} -- Inlining
 			filled: a_context.arguments.count = old call_operands.count - 1
 		end
 
-	free_inlining_operands (a_context: ET_DYNAMIC_CALL_CONTEXT)
+	free_inlining_operands (a_target_type_set: ET_DYNAMIC_TYPE_SET; a_context, a_caller_context: ET_DYNAMIC_CALL_CONTEXT)
 			-- Free inlining operands of `a_context'
 			-- and put then back to `call_operands'.
 		require
+			a_target_type_set_not_void: a_target_type_set /= Void
 			a_context_not_void: a_context /= Void
+			a_caller_context_not_void: a_caller_context /= Void
 			call_operands_empty: call_operands.is_empty
 		local
 			i, nb: INTEGER
@@ -36806,12 +36828,19 @@ feature {NONE} -- Inlining
 			end
 			l_operand := a_context.target
 			if attached {ET_DYNAMIC_INLINED_EXPRESSION} l_operand as l_inlined_operand then
-				l_operand := l_inlined_operand.expression
+				if l_inlined_operand.context = a_caller_context then
+					l_operand := l_inlined_operand.expression
+				else
+					l_inlined_operand.set_dynamic_type_set (a_target_type_set)
+				end
 			end
 			call_operands.put_last (l_operand)
 			from i := 1 until i > nb loop
 				l_operand := a_context.arguments.item (i)
-				if attached {ET_DYNAMIC_INLINED_EXPRESSION} l_operand as l_inlined_operand then
+				if
+					attached {ET_DYNAMIC_INLINED_EXPRESSION} l_operand as l_inlined_operand and then
+					l_inlined_operand.context = a_caller_context
+				then
 					l_operand := l_inlined_operand.expression
 				end
 				call_operands.put_last (l_operand)
@@ -36823,12 +36852,18 @@ feature {NONE} -- Inlining
 			call_operands_count: call_operands.count = old a_context.arguments.count + 1
 		end
 
-	is_inlinable_procedure (a_feature: ET_DYNAMIC_FEATURE): BOOLEAN
+	is_inlinable_procedure (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE): BOOLEAN
 			-- Can calls to procedure `a_feature' be inlined?
+			-- `a_target_type` is the dynamic type of the target.
+			-- Operands can be found in `call_operands`.
 		require
 			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
 		do
 			if nested_inlining_count >= max_nested_inlining_count then
+				Result := False
+			elseif not are_inlinable_call_operands (a_feature, a_target_type) then
 				Result := False
 			elseif scoop_mode and then a_feature.has_separate_argument then
 				Result := False
@@ -36861,12 +36896,18 @@ feature {NONE} -- Inlining
 			end
 		end
 
-	is_inlinable_function (a_feature: ET_DYNAMIC_FEATURE): BOOLEAN
+	is_inlinable_function (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE): BOOLEAN
 			-- Can calls to function `a_feature' be inlined?
+			-- `a_target_type` is the dynamic type of the target.
+			-- Operands can be found in `call_operands`.
 		require
 			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
 		do
 			if nested_inlining_count >= max_nested_inlining_count then
+				Result := False
+			elseif not are_inlinable_call_operands (a_feature, a_target_type) then
 				Result := False
 			elseif scoop_mode and then a_feature.has_separate_argument then
 				Result := False
@@ -36897,6 +36938,69 @@ feature {NONE} -- Inlining
 			elseif l_assignment.source.has_typed_object_test then
 				Result := False
 			else
+				Result := True
+			end
+		end
+
+	are_inlinable_call_operands (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE): BOOLEAN
+			-- Can the operands `call_operands' of a call to `a_feature' (static binding),
+			-- where the target is of type `a_type_type', be used without boxing or unboxing
+			-- and without CAT-call checks?
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+			i, nb: INTEGER
+		do
+				-- We do not inline a call if the target needs to be unboxed (i.e.
+				-- its static type is a reference type and its dynamic type is expanded).
+			Result := dynamic_type_set (call_operands.first).is_expanded = a_target_type.is_expanded
+			if Result then
+				nb := call_operands.count
+				from i := 2 until i > nb loop
+					l_actual_type_set := dynamic_type_set (call_operands.item (i))
+					l_formal_type_set := argument_type_set_in_feature (i - 1, a_feature)
+					if not is_inlinable_argument (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type) then
+						Result := False
+							-- Jump out of the loop.
+						i := nb
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	is_inlinable_argument (a_expression: ET_EXPRESSION; a_actual_type_set: ET_DYNAMIC_TYPE_SET; a_formal_type: ET_DYNAMIC_TYPE): BOOLEAN
+			-- Does `print_attachment_expression' not require to check for CAT-calls
+			-- or to perform some boxing (when the formal argument type is a reference
+			-- type and the argument argument type is expanded) when `a_expression'
+			-- is an argument of a call to be inlined?
+		require
+			a_expression_not_void: a_expression /= Void
+			a_actual_type_set_not_void: a_actual_type_set /= Void
+			a_formal_type_not_void: a_formal_type /= Void
+		local
+			l_actual_type: ET_DYNAMIC_TYPE
+			l_formal_primary_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_actual_primary_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			l_actual_type := a_actual_type_set.static_type
+			l_actual_primary_type := l_actual_type.primary_type
+			l_formal_primary_type := a_formal_type.primary_type
+			if not l_actual_primary_type.conforms_to_primary_type (l_formal_primary_type) then
+					-- Possible CAT-call error.
+				Result := False
+			elseif l_formal_primary_type.is_expanded then
+				Result := True
+			elseif l_actual_primary_type.is_expanded then
+					-- We need to box the source object.
+				Result := False
+			else
+-- TODO: Deal with void-safety: when `a_formal_type' is attached,
+-- then we need to check that we don't pass Void.
 				Result := True
 			end
 		end
@@ -43405,10 +43509,17 @@ feature {NONE} -- Inlined operands
 				Result.set_context (a_context)
 			end
 			used_inlined_operands.force_last (Result)
+			if attached {ET_DYNAMIC_INLINED_EXPRESSION} a_expression as l_inlined_expression then
+				Result.set_expression (l_inlined_expression.expression)
+				Result.set_context (l_inlined_expression.context)
+			end
 		ensure
 			new_inlined_operand_not_void: Result /= Void
-			expression_set: Result.expression = a_expression
-			context_set: Result.context = a_context
+			expression_set: not attached {ET_DYNAMIC_INLINED_EXPRESSION} a_expression implies (Result.expression = a_expression)
+			context_set: not attached {ET_DYNAMIC_INLINED_EXPRESSION} a_expression implies (Result.context = a_context)
+			expression_kept: attached {ET_DYNAMIC_INLINED_EXPRESSION} a_expression as l_inlined_expression implies (Result.expression = l_inlined_expression.expression)
+			context_kept: attached {ET_DYNAMIC_INLINED_EXPRESSION} a_expression as l_inlined_expression implies (Result.context = l_inlined_expression.context)
+			dynamic_type_set_set: Result.dynamic_type_set = dynamic_type_set (a_expression)
 		end
 
 	free_inlined_operands
