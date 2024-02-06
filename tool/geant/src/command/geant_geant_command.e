@@ -397,7 +397,7 @@ feature {NONE} -- Implementation
 				Result.append_string (" -n")
 			end
 			if project.options.use_thread_count then
-				Result.append_string (" --thread_count=")
+				Result.append_string (" --thread=")
 				Result.append_integer (project.options.thread_count)
 			end
 				-- Pass arguments:
