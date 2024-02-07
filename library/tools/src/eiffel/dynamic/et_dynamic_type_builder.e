@@ -27,6 +27,7 @@ inherit
 			current_system
 		redefine
 			has_fatal_error,
+			check_do_procedure_validity,
 			check_external_function_validity,
 			check_external_procedure_validity,
 			check_check_instruction_validity,
@@ -904,6 +905,32 @@ feature {NONE} -- CAT-calls
 		end
 
 feature {NONE} -- Feature validity
+
+	check_do_procedure_validity (a_feature: ET_DO_PROCEDURE)
+			-- Check validity of `a_feature'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			i, nb: INTEGER
+			l_string_8_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			Precursor (a_feature)
+			if not has_fatal_error then
+				if current_dynamic_feature = current_dynamic_system.ise_exception_manager_set_exception_data_feature then
+						-- This feature is called from C, where is will pass some STRING_8 arguments.
+					if attached a_feature.arguments as l_arguments then
+						l_string_8_type := current_dynamic_system.string_8_type
+						nb := l_arguments.count
+						from i := 1 until i > nb loop
+							if current_universe_impl.string_8_type.same_named_type_with_type_marks (l_arguments.formal_argument (i).type, tokens.implicit_detachable_type_mark, current_type, tokens.implicit_detachable_type_mark, current_type) then
+								mark_string_type_alive (l_string_8_type)
+								propagate_builtin_actual_argument_dynamic_types (l_string_8_type, i, current_dynamic_feature)
+							end
+							i := i + 1
+						end
+					end
+				end
+			end
+		end
 
 	check_external_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of `a_feature'.
