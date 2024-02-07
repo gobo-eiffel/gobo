@@ -5,7 +5,7 @@
 		"Eiffel instruction compounds"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_COMPOUND
@@ -71,6 +71,91 @@ feature -- Status report
 			end
 		end
 
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in one of the instructions
+			-- or (recursively) in one of their subinstructions or subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).has_result then
+					Result := True
+						-- Jump out of the loop.
+					i := nb + 1
+				end
+				i := i + 1
+			end
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in one of the instructions
+			-- or (recursively) in one of their subinstructions or subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).has_address_expression then
+					Result := True
+						-- Jump out of the loop.
+					i := nb + 1
+				end
+				i := i + 1
+			end
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in one of the instructions
+			-- or (recursively) in one of their subinstructions or subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).has_agent then
+					Result := True
+						-- Jump out of the loop.
+					i := nb + 1
+				end
+				i := i + 1
+			end
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test appear in one of the instructions
+			-- or (recursively) in one of their subinstructions or subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).has_typed_object_test then
+					Result := True
+						-- Jump out of the loop.
+					i := nb + 1
+				end
+				i := i + 1
+			end
+		end
+
+	has_inline_separate_instruction: BOOLEAN
+			-- Does an inline separate instruction appear in current compound or
+			-- (recursively) in one of its subinstructions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).has_inline_separate_instruction then
+					Result := True
+						-- Jump out of the loop.
+					i := nb + 1
+				end
+				i := i + 1
+			end
+		end
+
 feature -- Access
 
 	keyword: ET_KEYWORD
@@ -99,6 +184,21 @@ feature -- Access
 				Result := keyword
 			else
 				Result := last.last_leaf
+			end
+		end
+
+feature -- Measurement
+
+	nested_instruction_count: INTEGER
+			-- Number of instructions contained in current compound and
+			-- (recursively) in its subinstructions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				Result := Result + storage.item (i).nested_instruction_count
+				i := i + 1
 			end
 		end
 

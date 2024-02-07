@@ -5,7 +5,7 @@
 		"Eiffel argument or target components appearing in feature calls or agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_OPERAND
@@ -41,6 +41,34 @@ feature -- Status setting
 
 	is_current: BOOLEAN
 			-- Is current operand the 'Current' entity (possibly parenthesized)?
+		do
+			-- Result := False
+		end
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in current operand
+			-- or (recursively) in one of its subexpressions?
+		do
+			-- Result := False
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in current operand
+			-- or (recursively) in one of its subexpressions?
+		do
+			-- Result := False
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in current operand
+			-- or (recursively) in one of its subexpressions?
+		do
+			-- Result := False
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test appear in current operand
+			-- or (recursively) in one of its subexpressions?
 		do
 			-- Result := False
 		end

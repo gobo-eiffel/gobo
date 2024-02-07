@@ -5,7 +5,7 @@
 		"Eiffel features equipped with dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_DYNAMIC_FEATURE
@@ -13,6 +13,8 @@ class ET_DYNAMIC_FEATURE
 inherit
 
 	DEBUG_OUTPUT
+
+	HASHABLE
 
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
@@ -266,6 +268,15 @@ feature -- Access
 	id: INTEGER
 			-- ID
 
+	hash_code: INTEGER
+			-- Hash value
+		do
+			Result := target_type.id * 100 + id
+			if Result < 0 then
+				Result := -(Result + 1)
+			end
+		end
+
 feature -- Setting
 
 	set_dynamic_type_sets (a_dynamic_type_sets: like dynamic_type_sets)
@@ -286,6 +297,16 @@ feature -- Setting
 			result_type_set_set: result_type_set = a_result_type_set
 		end
 
+	set_target_type (a_target_type: like target_type)
+			-- Set `target_type' to `a_target_type'.
+		require
+			a_target_type_not_void: a_target_type /= Void
+		do
+			target_type := a_target_type
+		ensure
+			target_type_set: target_type = a_target_type
+		end
+
 	set_id (i: INTEGER)
 			-- Set `id' to `i'.
 		do
@@ -304,6 +325,9 @@ feature -- Status report
 
 	is_static_generated: BOOLEAN
 			-- Has code for the statically called version of current feature been registered to be generated?
+
+	is_inlined: BOOLEAN
+			-- Has code for current feature been inlined?
 
 	is_creation: BOOLEAN
 			-- Is current feature used as a creation procedure?
@@ -820,6 +844,14 @@ feature -- Status setting
 			is_static_generated := b
 		ensure
 			static_generated_set: is_static_generated = b
+		end
+
+	set_inlined (b: BOOLEAN)
+			-- Set `is_inlined' to `b'.
+		do
+			is_inlined := b
+		ensure
+			inlined_set: is_inlined = b
 		end
 
 	set_creation (b: BOOLEAN)

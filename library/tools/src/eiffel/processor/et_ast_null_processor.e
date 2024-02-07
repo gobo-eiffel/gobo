@@ -695,6 +695,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_inlined_expression (a_expression: ET_INLINED_EXPRESSION)
+			-- Process `a_expression'.
+		do
+		end
+
 	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
 			-- Process `a_expression'.
 		do

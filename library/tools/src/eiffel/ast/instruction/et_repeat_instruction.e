@@ -5,7 +5,7 @@
 		"Eiffel loop instruction of the form '⟳ ... ⟲'"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_REPEAT_INSTRUCTION
@@ -13,6 +13,10 @@ class ET_REPEAT_INSTRUCTION
 inherit
 
 	ET_ITERATION_INSTRUCTION
+		redefine
+			has_inline_separate_instruction,
+			nested_instruction_count
+		end
 
 create
 
@@ -49,6 +53,14 @@ feature -- Status report
 			-- Otherwise it represents the items being traversed.
 			-- True in case of 'across ... as ...' when 'obsolete_iteration_mode'
 			-- is set to True in the surrounding universe, False otherwise.
+
+	has_inline_separate_instruction: BOOLEAN
+			-- Does an inline separate instruction appear in current instruction or
+			-- (recursively) in one of its subinstructions?
+		do
+			Result := attached from_compound as l_from_compound and then l_from_compound.has_inline_separate_instruction or
+				attached loop_compound as l_loop_compound and then l_loop_compound.has_inline_separate_instruction
+		end
 
 feature -- Access
 
@@ -112,6 +124,21 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := close_repeat_symbol
+		end
+
+feature -- Measurement
+
+	nested_instruction_count: INTEGER
+			-- Number of instructions contained in current instruction and
+			-- (recursively) in its subinstructions?
+		do
+			Result := 1
+			if attached from_compound as l_from_compound then
+				Result := Result + l_from_compound.nested_instruction_count
+			end
+			if attached loop_compound as l_loop_compound then
+				Result := Result + l_loop_compound.nested_instruction_count
+			end
 		end
 
 feature -- Setting

@@ -152,6 +152,10 @@ inherit
 			first_position,
 			last_position,
 			is_tuple_label,
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test,
 			reset,
 			is_equal,
 			break
@@ -169,6 +173,10 @@ inherit
 			first_position,
 			last_position,
 			is_tuple_label,
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test,
 			reset,
 			is_equal,
 			break

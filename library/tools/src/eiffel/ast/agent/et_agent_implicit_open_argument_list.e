@@ -5,7 +5,7 @@
 		"Eiffel lists of agent implicit open arguments"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
@@ -39,6 +39,37 @@ feature -- Status report
 			-- or not.
 		do
 			Result := True
+		end
+
+
+feature -- Status report
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in one of the current operands
+			-- or (recursively) in one of their subexpressions?
+		do
+			-- Result := False
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in one of the current operands
+			-- or (recursively) in one of their subexpressions?
+		do
+			-- Result := False
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in one of the current operands
+			-- or (recursively) in one of their subexpressions?
+		do
+			-- Result := False
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test appear in one of the current operands
+			-- or (recursively) in one of their subexpressions?
+		do
+			-- Result := False
 		end
 
 feature {NONE} -- Implementation

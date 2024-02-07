@@ -5,7 +5,7 @@
 		"Eiffel precursor expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_PRECURSOR_EXPRESSION
@@ -19,7 +19,11 @@ inherit
 
 	ET_EXPRESSION
 		undefine
-			reset
+			reset,
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test
 		redefine
 			is_instance_free
 		end

@@ -87,6 +87,36 @@ feature -- Access
 			Result := name.hash_code
 		end
 
+feature -- Status report
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in current inline separate
+			-- argument or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_result
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in current inline separate
+			-- argument or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_address_expression
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in current inline separate
+			-- argument or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_agent
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test appear in current inline separate
+			-- argument or (recursively) in one of its subexpressions?
+		do
+			Result := expression.has_typed_object_test
+		end
+
 feature -- Setting
 
 	set_expression (a_expression: like expression)

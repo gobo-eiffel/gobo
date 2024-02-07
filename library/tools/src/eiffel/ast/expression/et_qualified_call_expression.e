@@ -29,6 +29,10 @@ inherit
 		undefine
 			reset,
 			is_qualified_call,
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test,
 			add_separate_arguments
 		end
 

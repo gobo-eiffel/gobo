@@ -1829,6 +1829,12 @@ feature {ET_AST_NODE} -- Processing
 			a_instruction.end_keyword.process (Current)
 		end
 
+	process_inlined_expression (a_expression: ET_INLINED_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			a_expression.expression.process (Current)
+		end
+
 	process_inspect_expression (a_expression: ET_INSPECT_EXPRESSION)
 			-- Process `a_expression'.
 		do

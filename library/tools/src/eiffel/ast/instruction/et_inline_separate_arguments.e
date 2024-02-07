@@ -5,7 +5,7 @@
 		"Eiffel comma-separated lists of arguments in inline separate instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2022-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2022-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_INLINE_SEPARATE_ARGUMENTS
@@ -92,6 +92,76 @@ feature -- Access
 				Result := separate_keyword
 			else
 				Result := last.last_leaf
+			end
+		end
+
+feature -- Status report
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in one of the current inline
+			-- separate arguments or (recursively) in one of their subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).argument.has_result then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in one of the current inline
+			-- separate arguments or (recursively) in one of their subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).argument.has_address_expression then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in one of the current inline
+			-- separate arguments or (recursively) in one of their subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).argument.has_agent then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test appear in one of the current inline
+			-- separate arguments or (recursively) in one of their subexpressions?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).argument.has_typed_object_test then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
 			end
 		end
 

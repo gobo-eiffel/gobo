@@ -5,7 +5,7 @@
 		"Eiffel static call instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_STATIC_CALL_INSTRUCTION
@@ -19,6 +19,10 @@ inherit
 
 	ET_INSTRUCTION
 		undefine
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test,
 			reset
 		end
 

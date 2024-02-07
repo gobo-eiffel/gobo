@@ -6,7 +6,7 @@
 		or quantifier expressions).
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_ITERATION_EXPRESSION
@@ -15,10 +15,19 @@ inherit
 
 	ET_ITERATION_COMPONENT
 		redefine
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test,
 			reset
 		end
 
 	ET_EXPRESSION
+		undefine
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test
 		redefine
 			reset,
 			is_instance_free
@@ -58,6 +67,34 @@ feature -- Status report
 				(attached until_conditional as l_until_conditional implies l_until_conditional.expression.is_instance_free) and
 				(attached invariant_part as l_invariant_part implies l_invariant_part.is_instance_free) and
 				(attached variant_part as l_variant_part implies l_variant_part.expression.is_instance_free)
+		end
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in current iteration expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := iteration_expression.has_result or precursor {ET_ITERATION_COMPONENT}
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in current iteration expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := iteration_expression.has_address_expression or precursor {ET_ITERATION_COMPONENT}
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in current iteration expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := iteration_expression.has_agent or precursor {ET_ITERATION_COMPONENT}
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test appear in current iteration expression
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := iteration_expression.has_typed_object_test or precursor {ET_ITERATION_COMPONENT}
 		end
 
 feature -- Access

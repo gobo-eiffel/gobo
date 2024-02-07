@@ -5,7 +5,7 @@
 		"Eiffel choice ranges in when parts of inspect instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CHOICE_RANGE
@@ -50,6 +50,34 @@ feature -- Status report
 
 	is_range: BOOLEAN = True
 			-- Is current choice a range?
+
+	has_result: BOOLEAN
+			-- Does the entity 'Result' appear in current choice range
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := lower.has_result or upper.has_result
+		end
+
+	has_address_expression: BOOLEAN
+			-- Does an address expression appear in current choice range
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := lower.has_address_expression or upper.has_address_expression
+		end
+
+	has_agent: BOOLEAN
+			-- Does an agent appear in current choice range
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := lower.has_agent or upper.has_agent
+		end
+
+	has_typed_object_test: BOOLEAN
+			-- Does a typed object-test appear in current choice range
+			-- or (recursively) in one of its subexpressions?
+		do
+			Result := lower.has_typed_object_test or upper.has_typed_object_test
+		end
 
 feature -- Access
 
