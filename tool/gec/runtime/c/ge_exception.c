@@ -767,6 +767,30 @@ EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
 }
 
 /*
+ * Check whether `obj' is Void.
+ * If it is, then raise a call-on-void-target exception.
+ * Include the id `i' in the message displayed in the console
+ * to help debugging when `obj' is Void.
+ * Return `obj'.
+ */
+EIF_REFERENCE GE_check_void2(EIF_REFERENCE obj, EIF_INTEGER i)
+{
+	if (!obj) {
+		GE_show_console();
+		fprintf(stderr, "Call on Void target! (%d)\n", i);
+#ifdef EIF_DEBUG
+		{
+			volatile char c;
+			fprintf(stderr, "Press Enter...\n");
+			scanf("%c", &c);
+		}
+#endif
+		GE_raise(GE_EX_VOID);
+	}
+	return (obj);
+}
+
+/*
  * Check whether `ptr' is a null pointer.
  * If it is, then raise a no-more-memory exception.
  * Return `ptr'.

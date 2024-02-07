@@ -47,6 +47,9 @@ feature -- Execution
 			execute_with_arguments (Arguments.to_array)
 			Exceptions.die (exit_code)
 		rescue
+			if attached {EXCEPTIONS}.exception_trace as l_trace then
+				std.error.put_string ({UTF_CONVERTER}.escaped_utf_32_string_to_utf_8_string_8 (l_trace))
+			end
 			Exceptions.die (4)
 		end
 
