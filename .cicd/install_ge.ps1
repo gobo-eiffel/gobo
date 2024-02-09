@@ -29,13 +29,15 @@ param
 switch ($GOBO_CI_OS) {
 	"linux" {
 		# See limitations (Permission Loss) in https://github.com/actions/download-artifact
-		bash -c 'chmod a+x "$GOBO/bin/gec"'
-		bash -c 'chmod a+x "$GOBO/bin/ge*"'
+		Get-ChildItem "$env:GOBO/bin/ge*" | ForEach-Object {
+			bash -c "chmod a+x '$_'"
+		}
 	}
 	"macos" {
 		# See limitations (Permission Loss) in https://github.com/actions/download-artifact
-		bash -c 'chmod a+x "$GOBO/bin/gec"'
-		bash -c 'chmod a+x "$GOBO/bin/ge*"'
+		Get-ChildItem "$env:GOBO/bin/ge*" | ForEach-Object {
+			bash -c "chmod a+x '$_'"
+		}
 	}
 }
 
