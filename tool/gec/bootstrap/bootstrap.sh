@@ -163,9 +163,7 @@ elif [ "$CC" = "mingw" ]; then
 elif [ "$CC" = "clang" ]; then
 	CC=clang
 	LD=clang
-# `gec` compiled with `clang -O2` crashes from time to time with a call-on-void-target error.
-#	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations -O2'
-	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations'
+	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations -O2'
 	LFLAGS=''
 	LFLAG_OUT='-o '
 	LLIBS='-lm -pthread -liconv'
@@ -174,9 +172,7 @@ elif [ "$CC" = "clang" ]; then
 elif [ "$CC" = "zig" ]; then
 	CC='zig cc'
 	LD='zig cc'
-# `gec` compiled with `clang -O2` crashes from time to time with a call-on-void-target error.
-#	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined -O2'
-	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined'
+	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined -O2'
 	LFLAGS=''
 	LFLAG_OUT='-o '
 	LLIBS='-lm -pthread -liconv'
