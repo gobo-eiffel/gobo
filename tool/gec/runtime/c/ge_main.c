@@ -4,7 +4,7 @@
 		"C functions used to implement the program initialization"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -73,7 +73,7 @@ void GE_get_argcargv(EIF_NATIVE_CHAR* cmd, int* argc, EIF_NATIVE_CHAR*** argvp)
 		; /* empty */
 	if (p <= pe) {
 		*argc = *argc + 1; /* at least one argument */
-		qb = q = GE_unprotected_malloc_atomic_uncollectable((pe - p + 2) * sizeof(EIF_NATIVE_CHAR));
+		qb = q = malloc((pe - p + 2) * sizeof(EIF_NATIVE_CHAR));
 		if (!qb) {
 			return;
 		}
@@ -119,13 +119,13 @@ void GE_get_argcargv(EIF_NATIVE_CHAR* cmd, int* argc, EIF_NATIVE_CHAR*** argvp)
 	}
 
 	if (!argvp) {
-		GE_free(qb);
+		free(qb);
 		return;
 	}
 
-	*argvp = (EIF_NATIVE_CHAR**)GE_unprotected_malloc_atomic_uncollectable((*argc+1)*sizeof(EIF_NATIVE_CHAR*));
+	*argvp = (EIF_NATIVE_CHAR**)malloc((*argc+1)*sizeof(EIF_NATIVE_CHAR*));
 	if (!(*argvp)) {
-		GE_free(qb);
+		free(qb);
 		return;
 	}
 
@@ -154,9 +154,9 @@ int main(int dummy_arg1, char** dummy_argv)
 	code = GE_main(argc, argv);
 	free(cmd);
 	if (argc > 0) {
-		GE_free(argv[0]);
+		free(argv[0]);
 	}
-	GE_free(argv);
+	free(argv);
 	return code;
 }
 

@@ -4,7 +4,7 @@
 		"C functions used to access garbage collector facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -44,34 +44,12 @@ void* GE_unprotected_calloc_atomic_uncollectable(size_t nelem, size_t elsize)
  * Allocate more memory for the given pointer.
  * The reallocated pointer keeps the same properties (e.g. atomic or not, collectable or not).
  * The extra allocated memory is zeroed.
- * Raise an exception when no-more-memory.
- */
-void* GE_recalloc(void* p, size_t old_nelem, size_t new_nelem, size_t elsize)
-{
-	void* new_p;
-#ifdef GE_USE_BOEHM_GC
-	new_p = GE_null(GC_REALLOC(p, new_nelem * elsize));
-#else /* No GC */
-	new_p = GE_null(realloc(p, new_nelem * elsize));
-#endif
-	memset(((char*)new_p) + (old_nelem * elsize), 0, (new_nelem - old_nelem) * elsize);
-	return new_p;
-}
-
-/*
- * Allocate more memory for the given pointer.
- * The reallocated pointer keeps the same properties (e.g. atomic or not, collectable or not).
- * The extra allocated memory is zeroed.
  * Do not raise an exception when no-more-memory.
  */
 void* GE_unprotected_recalloc(void* p, size_t old_nelem, size_t new_nelem, size_t elsize)
 {
 	void* new_p;
-#ifdef GE_USE_BOEHM_GC
-	new_p = GC_REALLOC(p, new_nelem * elsize);
-#else /* No GC */
-	new_p = realloc(p, new_nelem * elsize);
-#endif
+	new_p = GE_unprotected_realloc(p, new_nelem * elsize);
 	if (new_p) {
 		memset(((char*)new_p) + (old_nelem * elsize), 0, (new_nelem - old_nelem) * elsize);
 	}
