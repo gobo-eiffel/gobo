@@ -1709,8 +1709,8 @@ void GE_thread_exit(void)
 				GE_unprotected_mutex_destroy((EIF_POINTER)l_parent_thread_context->children_mutex);
 				GE_unprotected_condition_variable_destroy((EIF_POINTER)l_parent_thread_context->children_cond);
 				GE_free(l_parent_thread_context);
-				l_thread_context->parent_context = NULL;
 			}
+			l_thread_context->parent_context = NULL;
 		}
 		l_thread_id = l_thread_context->thread_id;
 		if (l_thread_context->children_mutex) {
@@ -1732,7 +1732,8 @@ void GE_thread_exit(void)
 				GE_unprotected_mutex_destroy((EIF_POINTER)l_thread_context->children_mutex);
 				GE_unprotected_condition_variable_destroy((EIF_POINTER)l_thread_context->children_cond);
 			}
-			GE_free(l_thread_context);
+			l_thread_context->children_mutex = NULL;
+			l_thread_context->children_cond = NULL;
 		}
 #ifdef EIF_WINDOWS
 		if (!CloseHandle(l_thread_id)) {
@@ -1749,6 +1750,9 @@ void GE_thread_exit(void)
 		if (l_context->wel_per_thread_data) {
 			GE_free(l_context->wel_per_thread_data);
 			l_context->wel_per_thread_data = 0;
+		}
+		if (l_free_thread_context) {
+			GE_free(l_thread_context);
 		}
 		GE_free(l_context);
 #ifdef GE_USE_POSIX_THREADS
