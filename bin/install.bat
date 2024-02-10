@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Install Gobo Eiffel tools"
-rem copyright: "Copyright (c) 2007-2021, Eric Bezault and others"
+rem copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
 rem license: "MIT License"
 
 
@@ -146,7 +146,7 @@ goto no_verbose_no_testonly
 
 :usage
 	echo usage: install.bat [-v^|-s][-t] ^<c_compiler^>
-	echo    c_compiler:  msc ^| lcc-win32 ^| lcc-win64 ^| bcc ^| gcc ^| mingw ^| clang ^| cc ^| icc ^| tcc ^| no_c
+	echo    c_compiler:  msc ^| lcc-win32 ^| lcc-win64 ^| bcc ^| gcc ^| mingw ^| clang ^| zig ^| cc ^| icc ^| tcc ^| no_c
 	goto exit
 
 :exit

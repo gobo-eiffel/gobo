@@ -150,9 +150,7 @@ goto exit
 :clang
 	set CC=clang
 	set LD=clang
-	rem `gec` compiled with `clang -O2` crashes from time to time with a call-on-void-target error.
-	rem set CFLAGS=-Wno-unused-value -Wno-deprecated-declarations -O2
-	set CFLAGS=-Wno-unused-value -Wno-deprecated-declarations
+	set CFLAGS=-Wno-unused-value -Wno-deprecated-declarations -O2
 	set LFLAGS=
 	set LFLAG_OUT=-o 
 	set LLIBS=-lm -pthread
@@ -163,9 +161,7 @@ goto exit
 :zig
 	set CC=zig cc
 	set LD=zig cc
-	rem `gec` compiled with `clang -O2` crashes from time to time with a call-on-void-target error.
-	rem set CFLAGS=-Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined -O2
-	set CFLAGS=-Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined
+	set CFLAGS=-Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined -O2
 	set LFLAGS=
 	set LFLAG_OUT=-o 
 	set LLIBS=-lm -pthread
