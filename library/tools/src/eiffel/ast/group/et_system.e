@@ -5,7 +5,7 @@
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_SYSTEM
@@ -370,6 +370,13 @@ feature -- Compilation options
 			-- Should information about positions of constructs in the Eiffel code
 			-- be included in the generated C code (e.g. using #line clauses)?
 
+	inlining_mode: BOOLEAN
+			-- Should small instructions and expressions be inlined in the
+			-- generated C code?
+
+	inlining_size: INTEGER
+			-- Maximum number of nested inlinining in the generated C code?
+
 	use_boehm_gc: BOOLEAN
 			-- Should the application be compiled with the Boehm GC?
 
@@ -469,6 +476,22 @@ feature -- Compilation options setting
 			line_generation_mode := b
 		ensure
 			line_generation_mode_set: line_generation_mode = b
+		end
+
+	set_inlining_mode (b: BOOLEAN)
+			-- Set `inlining_mode' to `b'.
+		do
+			inlining_mode := b
+		ensure
+			inlining_mode_set: inlining_mode = b
+		end
+
+	set_inlining_size (a_size: INTEGER)
+			-- Set `inlining_size' to `a_size'.
+		do
+			inlining_size := a_size
+		ensure
+			inlining_size_set: inlining_size = a_size
 		end
 
 	set_use_boehm_gc (b: BOOLEAN)

@@ -5,7 +5,7 @@
 		"Xace Eiffel system parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2019, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2024, Andreas Leitner and others"
 	license: "MIT License"
 
 class ET_XACE_SYSTEM_PARSER
@@ -130,6 +130,8 @@ feature {NONE} -- Xace AST factory
 			Result.set_trace_mode (attached l_options.value ({ET_XACE_OPTION_NAMES}.trace_option_name) as l_value and then STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.true_option_value))
 			Result.set_use_boehm_gc (attached l_options.value ({ET_XACE_OPTION_NAMES}.garbage_collector_option_name) as l_value and then STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.boehm_option_value))
 			Result.set_multithreaded_mode (attached l_options.value ({ET_XACE_OPTION_NAMES}.multithreaded_option_name) as l_value and then STRING_.same_case_insensitive (l_value, {ET_XACE_OPTION_NAMES}.true_option_value))
+			Result.set_inlining_mode (attached l_options.multivalue ({ET_XACE_OPTION_NAMES}.inlining_option_name) as l_multivalue and then l_multivalue.has ({ET_XACE_OPTION_NAMES}.all_option_value))
+			Result.set_inlining_size (if attached l_options.value ({ET_XACE_OPTION_NAMES}.inlining_size_option_name) as l_value and then l_value.is_integer then l_value.to_integer else 0 end)
 		end
 
 end

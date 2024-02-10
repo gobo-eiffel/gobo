@@ -5,7 +5,7 @@
 		"ECF targets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ECF_TARGET
@@ -517,6 +517,16 @@ feature -- Basic operations
 			l_value := settings.value ({ET_ECF_SETTING_NAMES}.line_generation_setting_name)
 			if l_value /= Void and then l_value.is_boolean then
 				a_system.set_line_generation_mode (l_value.to_boolean)
+			end
+				-- "inlining".
+			l_value := settings.value ({ET_ECF_SETTING_NAMES}.inlining_setting_name)
+			if l_value /= Void and then l_value.is_boolean then
+				a_system.set_inlining_mode (l_value.to_boolean)
+			end
+				-- "inlining_size".
+			l_value := settings.value ({ET_ECF_SETTING_NAMES}.inlining_size_setting_name)
+			if l_value /= Void and then l_value.is_integer then
+				a_system.set_inlining_size (l_value.to_integer)
 			end
 		end
 
