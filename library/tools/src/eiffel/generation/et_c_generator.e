@@ -32938,8 +32938,6 @@ feature {NONE} -- C function generation
 				debug ("gobo_ids")
 					current_file.put_line ("reset_gobo_ids();")
 				end
-				print_indentation
-				current_file.put_line ("GE_init_gc();")
 					-- Exception handling.
 				print_indentation
 				current_file.put_string (c_ge_new_exception_manager)
@@ -41312,6 +41310,9 @@ feature {NONE} -- Include files
 					l_c_filename := "ge_exception.c"
 				elseif a_filename.same_string ("ge_gc.h") then
 					include_runtime_header_file ("ge_exception.h", a_force, a_file)
+					if use_threads then
+						include_runtime_header_file ("ge_thread_types.h", a_force, a_file)
+					end
 					l_c_filename := "ge_gc.c"
 				elseif a_filename.same_string ("ge_identified.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)

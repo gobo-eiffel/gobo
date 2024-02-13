@@ -4,7 +4,7 @@
 		"C declarations for the Gobo Eiffel runtime."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2005-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -167,9 +167,9 @@ typedef int intptr_t;
 #ifndef _UINTPTR_T_DEFINED
 #define _UINTPTR_T_DEFINED
 #ifdef _WIN64
-  typedef unsigned __int64 uintptr_t;
+typedef unsigned __int64 uintptr_t;
 #else
-  typedef unsigned int uintptr_t;
+typedef unsigned int uintptr_t;
 #endif
 #endif
 #endif

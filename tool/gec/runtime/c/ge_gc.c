@@ -21,6 +21,10 @@
 #include "ge_types.h"
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * Allocate memory that does not contain pointers to collectable objects.
  * The allocated memory is zeroed.
@@ -69,6 +73,10 @@ void GE_boehm_dispose(void* C, void* disp) {
  */
 void GE_boehm_dispose_once_per_object_data(void* data, void* disp) {
 	((void (*) (void*)) disp)(data);
+}
+#endif
+
+#ifdef __cplusplus
 }
 #endif
 

@@ -25,12 +25,42 @@
  *		http://en.wikipedia.org/wiki/Boehm_GC
  *		http://www.hpl.hp.com/personal/Hans_Boehm/gc/
  */
-#define GC_IGNORE_WARN
+
+/* 
+ * In the case of multithreaded code, gc.h should be included after the threads header file, 
+ * and after defining the appropriate GC_XXXX_THREADS macro. (For 6.2alpha4 and later, 
+ * simply defining GC_THREADS should suffice.) The header file gc.h must be included in files 
+ * that use either GC or threads primitives, since threads primitives will be redefined to 
+ * cooperate with the GC on many platforms. 
+ * See: https://hboehm.info/gc/gcinterface.html
+*/
 #ifdef GE_USE_THREADS
+#ifndef GE_THREAD_TYPES_H
+#include "ge_thread_types.h"
+#endif
 #define GC_THREADS
+#define THREAD_LOCAL_ALLOC
+#undef GC_NO_THREAD_DECLS
 #undef GC_NO_THREAD_REDIRECTS
 #endif
+
+#define GC_IGNORE_WARN
+#define GC_NOT_DLL
+#define PARALLEL_MARK
+#define LARGE_CONFIG
+#define ALL_INTERIOR_POINTERS
+#define ENABLE_DISCLAIM
+#define GC_ATOMIC_UNCOLLECTABLE
+#define GC_GCJ_SUPPORT
+#define JAVA_FINALIZATION
+#define NO_EXECUTE_PERMISSION
+#define USE_MUNMAP
+
 #include "gc.h"
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /*
@@ -137,7 +167,7 @@
 #ifdef GE_USE_BOEHM_GC
 #define GE_unprotected_malloc_uncollectable(size) GC_MALLOC_UNCOLLECTABLE(size)
 #else /* No GC */
-#define GE_unprotected_malloc_uncollectable(size) GE_unprotected_malloc(size)
+#define GE_unprotected_malloc_uncollectable(size) malloc(size)
 #endif
 
 /*
@@ -157,7 +187,7 @@
 #ifdef GE_USE_BOEHM_GC
 #define GE_unprotected_malloc_atomic_uncollectable(size) GC_malloc_atomic_uncollectable(size)
 #else /* No GC */
-#define GE_unprotected_malloc_atomic_uncollectable(size) GE_unprotected_malloc(size)
+#define GE_unprotected_malloc_atomic_uncollectable(size) malloc(size)
 #endif
 
 /*
@@ -176,7 +206,7 @@
 #ifdef GE_USE_BOEHM_GC
 #define GE_unprotected_calloc_uncollectable(nelem, elsize) GC_MALLOC_UNCOLLECTABLE((nelem) * (elsize))
 #else /* No GC */
-#define GE_unprotected_calloc_uncollectable(nelem, elsize) GE_unprotected_calloc((nelem), (elsize))
+#define GE_unprotected_calloc_uncollectable(nelem, elsize) calloc((nelem), (elsize))
 #endif
 
 /*
@@ -187,17 +217,6 @@
  */
 #define GE_calloc_uncollectable(nelem, elsize) GE_null(GE_unprotected_calloc_uncollectable((nelem), (elsize)))
 
-/*
- * Allocate memory that does not contain pointers to collectable objects.
- * The allocated memory is zeroed.
- * The allocated object is itself not collectable.
- * Raise an exception when no-more-memory.
- */
-#ifdef GE_USE_BOEHM_GC
-#define GE_calloc_atomic_uncollectable(nelem, elsize) memset(GE_null(GC_malloc_atomic_uncollectable((nelem) * (elsize))), 0, (nelem) * (elsize))
-#else /* No GC */
-#define GE_calloc_atomic_uncollectable(nelem, elsize) GE_calloc((nelem), (elsize))
-#endif
 
 /*
  * Allocate memory that does not contain pointers to collectable objects.
@@ -210,6 +229,14 @@ extern void* GE_unprotected_calloc_atomic_uncollectable(size_t nelem, size_t els
 #else /* No GC */
 #define GE_unprotected_calloc_atomic_uncollectable(nelem, elsize) GE_unprotected_calloc((nelem), (elsize))
 #endif
+
+/*
+ * Allocate memory that does not contain pointers to collectable objects.
+ * The allocated memory is zeroed.
+ * The allocated object is itself not collectable.
+ * Raise an exception when no-more-memory.
+ */
+#define GE_calloc_atomic_uncollectable(nelem, elsize) GE_null(GE_unprotected_calloc_atomic_uncollectable((nelem), (elsize)))
 
 /*
  * Allocate more memory for the given pointer.
@@ -321,5 +348,9 @@ extern void GE_boehm_dispose_once_per_object_data(void* data, void* disp); /* Ca
 #define eif_frozen(obj) 1
 /* Always frozen since they do not move. */
 #define spfrozen(obj) 1
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
