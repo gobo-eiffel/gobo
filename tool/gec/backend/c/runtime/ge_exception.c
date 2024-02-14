@@ -107,10 +107,9 @@ static void GE_init_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
 {
 	a_trace->count = 0;
 	a_trace->capacity = 0;
-	a_trace->area = (char*)GE_unprotected_calloc_atomic_uncollectable(4096, 1);
-	if (a_trace->area) {
-		a_trace->capacity = 4096;
-	}
+	a_trace->area = (char*)GE_malloc_atomic(4096);
+	a_trace->area[0] = '\0';
+	a_trace->capacity = 4096;
 }
 
 /*
@@ -138,18 +137,19 @@ static void GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_tra
 	if (a_trace->area) {
 		if ((a_trace->capacity - a_trace->count) <= l_length) {
 			l_new_capacity = a_trace->capacity + l_length + 512;
-			l_new_area = (char*)GE_unprotected_recalloc(a_trace->area, a_trace->capacity, l_new_capacity, 1);
+			l_new_area = (char*)GE_realloc(a_trace->area, l_new_capacity);
 			if (l_new_area) {
 				a_trace->area = l_new_area;
 				a_trace->capacity = l_new_capacity;
 			}
 		}
+		if ((a_trace->capacity - a_trace->count) > l_length) {
+			strcpy(a_trace->area + a_trace->count, a_string);
+			a_trace->count += l_length;
+		}
 	} else {
 		GE_init_exception_trace_buffer(a_trace);
-	}
-	if ((a_trace->capacity - a_trace->count) > l_length) {
-		strcpy(a_trace->area + a_trace->count, a_string);
-		a_trace->count += l_length;
+		GE_append_to_exception_trace_buffer(a_trace, a_string);
 	}
 }
 
@@ -459,8 +459,8 @@ void GE_init_exception(GE_context* a_context)
  */
 void GE_free_exception(GE_context* a_context)
 {
-	GE_free_exception_trace_buffer(&a_context->exception_trace_buffer);
-	GE_free_exception_trace_buffer(&a_context->last_exception_trace);
+	GE_free_exception_trace_buffer(&(a_context->exception_trace_buffer));
+	GE_free_exception_trace_buffer(&(a_context->last_exception_trace));
 	a_context->exception_manager = EIF_VOID;
 #ifdef GE_USE_THREADS
 	a_context->thread->exception_manager = EIF_VOID;
@@ -584,6 +584,7 @@ static void GE_raise_exception(long code, int new_obj, int signal_code, int erro
 	char* l_trace;
 	GE_exception_trace_buffer* l_trace_buffer;
 	GE_context* l_context;
+	const char* l_tag;
 
 	l_context = GE_current_context();
 	if (!l_context) {
@@ -593,6 +594,12 @@ static void GE_raise_exception(long code, int new_obj, int signal_code, int erro
 		} else {
 			fprintf(stderr, "\nsystem execution failed.\n");
 		}
+		if (tag) {
+			l_tag = tag;
+		} else {
+			l_tag = "";
+		}
+		fprintf(stderr, "%s: %s\n", GE_exception_tag(code), l_tag);
 		fprintf(stderr, "Panic: No execution context found.\n");
 		exit(1);
 	} else if (l_context->raising_exception) {
@@ -602,6 +609,12 @@ static void GE_raise_exception(long code, int new_obj, int signal_code, int erro
 		} else {
 			fprintf(stderr, "\nsystem execution failed.\n");
 		}
+		if (tag) {
+			l_tag = tag;
+		} else {
+			l_tag = "";
+		}
+		fprintf(stderr, "%s: %s\n", GE_exception_tag(code), l_tag);
 		fprintf(stderr, "Panic: A crash occurred while processing exceptions.\n");
 		l_trace = l_context->last_exception_trace.area;
 		if (l_trace) {
@@ -754,18 +767,12 @@ EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
 	if (!obj) {
 		GE_show_console();
 		fprintf(stderr, "Call on Void target!\n");
-#ifdef EIF_DEBUG
-		{
-			volatile char c;
-			fprintf(stderr, "Press Enter...\n");
-			scanf("%c", &c);
-		}
-#endif
 		GE_raise(GE_EX_VOID);
 	}
 	return (obj);
 }
 
+#ifdef GE_DEBUG
 /*
  * Check whether `obj' is Void.
  * If it is, then raise a call-on-void-target exception.
@@ -778,17 +785,11 @@ EIF_REFERENCE GE_check_void2(EIF_REFERENCE obj, EIF_INTEGER i)
 	if (!obj) {
 		GE_show_console();
 		fprintf(stderr, "Call on Void target! (%d)\n", i);
-#ifdef EIF_DEBUG
-		{
-			volatile char c;
-			fprintf(stderr, "Press Enter...\n");
-			scanf("%c", &c);
-		}
-#endif
 		GE_raise(GE_EX_VOID);
 	}
 	return (obj);
 }
+#endif
 
 /*
  * Check whether `ptr' is a null pointer.
@@ -800,13 +801,6 @@ void* GE_check_null(void* ptr)
 	if (!ptr) {
 		GE_show_console();
 		fprintf(stderr, "No more memory!\n");
-#ifdef EIF_DEBUG
-		{
-			volatile char c;
-			fprintf(stderr, "Press Enter...\n");
-			scanf("%c", &c);
-		}
-#endif
 		GE_raise(GE_EX_MEM);
 	}
 	return (ptr);
@@ -827,6 +821,10 @@ static LONG WINAPI GE_windows_exception_filter(LPEXCEPTION_POINTERS a_exception)
 
 		case STATUS_INTEGER_DIVIDE_BY_ZERO:
 			GE_raise_with_message(GE_EX_FLOAT, "Integer division by Zero");
+			break;
+
+		case STATUS_ACCESS_VIOLATION:
+			GE_raise_with_message(GE_EX_EXT, "Segmentation violation");
 			break;
 
 		default:

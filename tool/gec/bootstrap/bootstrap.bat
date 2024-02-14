@@ -90,7 +90,7 @@ goto exit
 	set LFLAGS=-nologo -subsystem:console
 	set LFLAG_OUT=-out:
 	set LLIBS=
-	echo msc > %GOBO%\tool\gec\config\c\default.cfg
+	echo msc > %GOBO%\tool\gec\backend\c\config\default.cfg
 	goto c_compilation
 
 :bcc32
@@ -100,7 +100,7 @@ goto exit
 	set LFLAGS=-5 -q 
 	set LFLAG_OUT=-e
 	set LLIBS=
-	echo bcc > %GOBO%\tool\gec\config\c\default.cfg
+	echo bcc > %GOBO%\tool\gec\backend\c\config\default.cfg
 	goto c_compilation
 
 :lcc-win32
@@ -111,7 +111,7 @@ goto exit
 	set LFLAGS=-s -subsystem Console
 	set LFLAG_OUT=-o 
 	set LLIBS=
-	echo lcc-win32 > %GOBO%\tool\gec\config\c\default.cfg
+	echo lcc-win32 > %GOBO%\tool\gec\backend\c\config\default.cfg
 	goto c_compilation
 
 :lcc-win64
@@ -122,7 +122,7 @@ goto exit
 	set LFLAGS=-s -subsystem Console
 	set LFLAG_OUT=-o 
 	set LLIBS=
-	echo lcc-win64 > %GOBO%\tool\gec\config\c\default.cfg
+	echo lcc-win64 > %GOBO%\tool\gec\backend\c\config\default.cfg
 	goto c_compilation
 
 :gcc
@@ -133,7 +133,7 @@ goto exit
 	set LFLAG_OUT=-o 
 	set LLIBS=-lm -pthread
 	set OBJ=.o
-	echo gcc > %GOBO%\tool\gec\config\c\default.cfg
+	echo gcc > %GOBO%\tool\gec\backend\c\config\default.cfg
 	goto c_compilation
 
 :mingw
@@ -144,7 +144,7 @@ goto exit
 	set LFLAG_OUT=-o 
 	set LLIBS=-lm -pthread
 	set OBJ=.o
-	echo mingw > %GOBO%\tool\gec\config\c\default.cfg
+	echo mingw > %GOBO%\tool\gec\backend\c\config\default.cfg
 	goto c_compilation
 
 :clang
@@ -155,7 +155,7 @@ goto exit
 	set LFLAG_OUT=-o 
 	set LLIBS=-lm -pthread
 	set OBJ=.obj
-	echo clang > %GOBO%\tool\gec\config\c\default.cfg
+	echo clang > %GOBO%\tool\gec\backend\c\config\default.cfg
 	goto c_compilation
 
 :zig
@@ -166,7 +166,7 @@ goto exit
 	set LFLAG_OUT=-o 
 	set LLIBS=-lm -pthread
 	set OBJ=.obj
-	echo zig > %GOBO%\tool\gec\config\c\default.cfg
+	echo zig > %GOBO%\tool\gec\backend\c\config\default.cfg
 	goto c_compilation
 
 :cc
@@ -177,7 +177,7 @@ goto exit
 	set LFLAG_OUT=-o 
 	set LLIBS=
 	set OBJ=.o
-	echo cc > %GOBO%\tool\gec\config\c\default.cfg
+	echo cc > %GOBO%\tool\gec\backend\c\config\default.cfg
 	goto c_compilation
 
 :icc
@@ -188,7 +188,7 @@ goto exit
 	set LFLAG_OUT=-o 
 	set LLIBS=
 	set OBJ=.o
-	echo icc > %GOBO%\tool\gec\config\c\default.cfg
+	echo icc > %GOBO%\tool\gec\backend\c\config\default.cfg
 	goto c_compilation
 
 :tcc
@@ -199,7 +199,7 @@ goto exit
 	set LFLAG_OUT=-o 
 	set LLIBS=
 	set OBJ=.o
-	echo tcc > %GOBO%\tool\gec\config\c\default.cfg
+	echo tcc > %GOBO%\tool\gec\backend\c\config\default.cfg
 	goto c_compilation
 
 :c_compilation

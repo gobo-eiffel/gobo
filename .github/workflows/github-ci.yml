@@ -23,7 +23,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: gobo_c_config_linux
-          path: tool/gec/config/c/default.cfg
+          path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
   macos_build:
@@ -41,7 +41,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: gobo_c_config_macos
-          path: tool/gec/config/c/default.cfg
+          path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
   windows_build:
@@ -58,7 +58,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: gobo_c_config_windows
-          path: tool/gec/config/c/default.cfg
+          path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
 #
@@ -82,7 +82,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: gobo_c_config_linux
-          path: tool/gec/config/c
+          path: tool/gec/backend/c/config
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
         shell: pwsh
@@ -104,7 +104,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: gobo_c_config_macos
-          path: tool/gec/config/c
+          path: tool/gec/backend/c/config
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
         shell: pwsh
@@ -126,6 +126,6 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: gobo_c_config_windows
-          path: tool/gec/config/c
+          path: tool/gec/backend/c/config
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}

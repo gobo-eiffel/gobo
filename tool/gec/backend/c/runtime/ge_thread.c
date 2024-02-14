@@ -1334,41 +1334,29 @@ static unsigned __stdcall GE_thread_routine(void* arg)
 static void* GE_thread_routine(void* arg)
 #endif
 {
-	GE_thread_context* l_thread_context = (GE_thread_context*)arg;
-	GE_context* l_context;
+	GE_context* l_context = (GE_context*)arg;
+	GE_thread_context* l_thread_context = l_context->thread;
 	GE_thread_context* l_parent_thread_context = l_thread_context->parent_context;
 
-	SIGBLOCK;
 	GE_unprotected_mutex_lock((EIF_POINTER)l_parent_thread_context->children_mutex);
 	/* Wait for the parent thread to set the thread id. */
 #ifdef GE_USE_SCOOP
 	if (l_thread_context->is_scoop_processor) {
-		l_thread_context->parent_context = 0;
+		l_thread_context->parent_context = NULL;
 	}
 #endif
 	GE_unprotected_mutex_unlock((EIF_POINTER)l_parent_thread_context->children_mutex);
-	l_context = (GE_context*)GE_malloc_atomic_uncollectable(sizeof(GE_context));
-	*l_context = GE_default_context;
-	l_context->thread = l_thread_context;
-	GE_thread_init_onces(l_context);
-	GE_init_exception(l_context);
+	l_parent_thread_context = NULL;
 	GE_register_thread_context(l_context);
 	GE_thread_set_priority(l_thread_context->thread_id, l_thread_context->initial_priority);
 	SIGRESUME;
-	if (l_thread_context->current) {
 #ifdef GE_USE_SCOOP
-		l_context->scoop_processor = l_thread_context->current->scoop_processor;
-		if (l_thread_context->is_scoop_processor) {
-				/* Do not keep track of the current object so that it can be
-				reclaimed by the GC if it is not referenced anywhere else. */
-			l_context->scoop_processor->context = l_context;
-			l_thread_context->current = EIF_VOID;
+	if (l_thread_context->is_scoop_processor) {
 			GE_scoop_processor_run(l_context);
-		} else
+	} else
 #endif
-		if (l_thread_context->routine) {
-			l_thread_context->routine(l_thread_context->current, 0);
-		}
+	if (l_thread_context->current && l_thread_context->routine) {
+		l_thread_context->routine(l_thread_context->current, 0);
 	}
 	GE_thread_exit();
 #ifdef EIF_WINDOWS
@@ -1409,6 +1397,7 @@ void GE_init_thread(GE_context* a_context)
  */
 void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFERENCE, EIF_INTEGER), void (*set_terminated)(EIF_REFERENCE,EIF_BOOLEAN), EIF_THR_ATTR_TYPE* attr, int is_scoop_processor)
 {
+	GE_context* l_context;
 	EIF_THR_TYPE l_thread_id;
 	GE_thread_context* l_thread_context;
 	GE_thread_context* l_current_thread_context;
@@ -1417,7 +1406,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 	unsigned int l_attr_stack_size = 0;
 	unsigned int l_attr_priority = GE_thread_default_priority();
 	int l_raise_error = 0;
-	l_thread_context = (GE_thread_context*)GE_unprotected_calloc_uncollectable(1, sizeof(GE_thread_context));
+	l_thread_context = (GE_thread_context*)GE_unprotected_calloc(1, sizeof(GE_thread_context));
 	if (!l_thread_context) {
 		GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
 	} else {
@@ -1425,14 +1414,8 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 			l_attr_stack_size = attr->stack_size;
 			l_attr_priority = attr->priority;
 		}
-		l_thread_context->current = current;
-		l_thread_context->routine = routine;
-		l_thread_context->set_terminated = set_terminated;
 		l_thread_context->initial_priority = l_attr_priority;
 		l_thread_context->is_alive = 1;
-#ifdef GE_USE_SCOOP
-		l_thread_context->is_scoop_processor = is_scoop_processor;
-#endif
 		l_current_thread_context = GE_thread_current_context()->thread;
 		l_thread_context->parent_context = l_current_thread_context;
 		if (!l_current_thread_context->children_mutex) {
@@ -1453,6 +1436,39 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 				GE_raise_with_message(GE_EX_EXT, "Cannot create thread children mutex");
 			}
 		}
+		/*
+		 * Execute this code here, from the current thread, instead of at the beginnig
+		 * of the new thread, because the Boehm GC crashes from time to time (more
+		 * frequently when using clang in debug mode) apparently when allocating the
+		 * large arrays to keep track of the once-per-thread data at the beginning of
+		 * the new thread (but not here in the current thread).
+		 * This also has the advantage of letting the current thread handle any
+		 * possible exception, instead of have the entire program crash because an
+		 * handled exception in the new thread (because its exception handler is not
+		 * fully initialized yet). So we have to make sure that all data reachable
+		 * from `l_context' (and `l_context' itself) are collectable to avoid memory
+		 * leak in case of such exception.
+		 */
+		l_context = (GE_context*)GE_malloc(sizeof(GE_context));
+		*l_context = GE_default_context;
+		l_context->thread = l_thread_context;
+#ifdef GE_USE_SCOOP
+		l_thread_context->is_scoop_processor = is_scoop_processor;
+		l_context->scoop_processor = current->scoop_processor;
+		if (is_scoop_processor) {
+			l_context->scoop_processor->context = l_context;
+				/* Do not keep track of the current object so that it can be
+				reclaimed by the GC if it is not referenced anywhere else. */
+		} else {
+#endif
+			l_thread_context->current = current;
+			l_thread_context->routine = routine;
+			l_thread_context->set_terminated = set_terminated;
+#ifdef GE_USE_SCOOP
+		}
+#endif	
+		GE_thread_init_onces(l_context);
+		GE_init_exception(l_context);
 #ifdef GE_USE_POSIX_THREADS
 		{
 			pthread_attr_t l_attr;
@@ -1475,7 +1491,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 				SIGBLOCK;
 				GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
 					/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
-				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, l_thread_context) == 0) {
+				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, l_context) == 0) {
 					l_thread_context->thread_id = l_thread_id;
 #ifdef GE_USE_SCOOP
 					if (!l_thread_context->is_scoop_processor) {
@@ -1499,7 +1515,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 		SIGBLOCK;
 		GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
 			/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
-		l_thread_id = (EIF_THR_TYPE)_beginthreadex(NULL, (unsigned int)l_attr_stack_size, GE_thread_routine, l_thread_context, 0, NULL);
+		l_thread_id = (EIF_THR_TYPE)_beginthreadex(NULL, (unsigned int)l_attr_stack_size, GE_thread_routine, l_context, 0, NULL);
 		if (l_thread_id == 0) {
 			l_raise_error = 1;
 		} else {
@@ -1519,7 +1535,11 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 #if defined GE_USE_POSIX_THREADS || defined EIF_WINDOWS
 		if (l_raise_error) {
 #endif
+			GE_free_onces(l_context->process_onces);
+			GE_free_onces(l_context->thread_onces);
+			GE_free_exception(l_context);
 			GE_free(l_thread_context);
+			GE_free(l_context);
 			GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
 #if defined GE_USE_POSIX_THREADS || defined EIF_WINDOWS
 		}

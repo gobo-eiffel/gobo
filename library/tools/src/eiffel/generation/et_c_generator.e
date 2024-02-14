@@ -855,7 +855,7 @@ feature {NONE} -- Compilation script generation
 		do
 			l_name := Execution_environment.variable_value ("GOBO_CC")
 			if l_name = Void then
-				l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "config", "c", "default.cfg">>)
+				l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "config", "default.cfg">>)
 				l_filename := Execution_environment.interpreted_string (l_filename)
 				create l_file.make (l_filename)
 				l_file.open_read
@@ -896,7 +896,7 @@ feature {NONE} -- Compilation script generation
 				Result.put_new ("", "lflags")
 				Result.put_new (makefile_template, "Makefile")
 			end
-			l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "config", "c", l_name>>)
+			l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "config", l_name>>)
 			l_filename := Execution_environment.interpreted_string (l_filename)
 			if not file_system.has_extension (l_filename, cfg_file_extension) then
 				l_filename := l_filename + cfg_file_extension
@@ -10328,7 +10328,11 @@ feature {NONE} -- Expression generation
 					current_file.put_character ('(')
 					if a_source_type_set.can_be_void  then
 						can_be_void_target_count := can_be_void_target_count + 1
-						current_file.put_string (c_ge_void2)
+						if finalize_mode then
+							current_file.put_string (c_ge_void)
+						else
+							current_file.put_string (c_ge_void2)
+						end
 						current_file.put_character ('(')
 						l_do_check_void := True
 					else
@@ -10336,8 +10340,10 @@ feature {NONE} -- Expression generation
 					end
 					a_print_expression.call ([])
 					if l_do_check_void then
-						print_comma
-						current_file.put_integer (can_be_void_target_count)
+						if not finalize_mode then
+							print_comma
+							current_file.put_integer (can_be_void_target_count)
+						end
 						current_file.put_character (')')
 					end
 					current_file.put_character (')')
@@ -11196,7 +11202,11 @@ feature {NONE} -- Expression generation
 				l_dynamic_type_set := dynamic_type_set (a_expression)
 				if not a_dynamic_type.is_expanded and then l_dynamic_type_set.can_be_void and not a_expression.is_never_void then
 					can_be_void_target_count := can_be_void_target_count + 1
-					current_file.put_string (c_ge_void2)
+					if finalize_mode then
+						current_file.put_string (c_ge_void)
+					else
+						current_file.put_string (c_ge_void2)
+					end
 					current_file.put_character ('(')
 					l_do_check_void := True
 				else
@@ -11205,8 +11215,10 @@ feature {NONE} -- Expression generation
 			end
 			a_expression.process (Current)
 			if l_do_check_void then
-				print_comma
-				current_file.put_integer (can_be_void_target_count)
+				if not finalize_mode then
+					print_comma
+					current_file.put_integer (can_be_void_target_count)
+				end
 				current_file.put_character (')')
 			end
 		end
@@ -32938,8 +32950,6 @@ feature {NONE} -- C function generation
 				debug ("gobo_ids")
 					current_file.put_line ("reset_gobo_ids();")
 				end
-				print_indentation
-				current_file.put_line ("GE_init_gc();")
 					-- Exception handling.
 				print_indentation
 				current_file.put_string (c_ge_new_exception_manager)
@@ -41114,7 +41124,7 @@ feature {NONE} -- Include files
 		local
 			l_full_pathname: STRING
 		do
-			l_full_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "runtime", "c", a_filename>>)
+			l_full_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "runtime", a_filename>>)
 			l_full_pathname := Execution_environment.interpreted_string (l_full_pathname)
 			include_file (l_full_pathname, a_file)
 		end
@@ -41312,6 +41322,9 @@ feature {NONE} -- Include files
 					l_c_filename := "ge_exception.c"
 				elseif a_filename.same_string ("ge_gc.h") then
 					include_runtime_header_file ("ge_exception.h", a_force, a_file)
+					if use_threads then
+						include_runtime_header_file ("ge_thread_types.h", a_force, a_file)
+					end
 					l_c_filename := "ge_gc.c"
 				elseif a_filename.same_string ("ge_identified.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
