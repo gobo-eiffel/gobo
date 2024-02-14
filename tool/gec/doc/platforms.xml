@@ -6,21 +6,21 @@
 		"Supported Platforms"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
 	license: "MIT License"
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/platforms">
 <chapterinfo>
 	<copyright>
-		<year>2006-2020</year>
+		<year>2006-2024</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>6 September 2020</date>
+	<date>14 February 2024</date>
 </chapterinfo>
 
 <title>Supported Platforms</title>
@@ -138,7 +138,7 @@ Please don't forget to send feedbacks to the Gobo
 <ulink url="http://lists.sourceforge.net/lists/listinfo/gobo-eiffel-develop">development
 team</ulink> about your experiments, and whether we should add new entries to the list
 of platforms and C compilers above or add new config files to
-<filename class="directory">$GOBO/tool/gec/config/c/</filename>.
+<filename class="directory">$GOBO/tool/gec/backend/c/config/</filename>.
 </para>
 </section>
 

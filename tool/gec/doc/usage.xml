@@ -6,21 +6,21 @@
 		"Using gec"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
 	license: "MIT License"
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/usage">
 <chapterinfo>
 	<copyright>
-		<year>2006-2023</year>
+		<year>2006-2024</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>20 December 2023</date>
+	<date>14 February 2024</date>
 </chapterinfo>
 
 <title>Using gec</title>
@@ -260,7 +260,7 @@ specify different C compilation options.
 <para>
 For each C compiler that you want to use as back-end C compiler, you should
 provide a config file that should be located in
-<filename class="directory">$GOBO/tool/gec/config/c/</filename>. Here is an
+<filename class="directory">$GOBO/tool/gec/backend/c/config/</filename>. Here is an
 example of such config file, <filename>gcc.cfg</filename> for the
 <projectname>gcc</projectname> compiler:
 <blockquote><programlisting>
@@ -291,12 +291,12 @@ starting with "--", can be included in these config files.
 <para>
 There are several ways to instruct <projectname>gec</projectname> to
 use a different back-end C compiler. You can either write the name
-of the chosen C compiler in the file <filename>$GOBO/tool/gec/config/c/default.cfg</filename>.
+of the chosen C compiler in the file <filename>$GOBO/tool/gec/backend/c/config/default.cfg</filename>.
 You might need to create this file if it does not exist yet. Alternatively
 you can specify the name of the chosen C compiler in the environment
 variable $GOBO_CC. Let's say that the name of your chosen C compiler
 is <projectname>my_cc</projectname>. <projectname>gec</projectname> will
-then look for the config file <filename>$GOBO/tool/gec/config/c/my_cc.cfg</filename>.
+then look for the config file <filename>$GOBO/tool/gec/backend/c/config/my_cc.cfg</filename>.
 </para>
 </section>
 

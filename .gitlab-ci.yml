@@ -35,7 +35,7 @@ linux_build_ge:
     expire_in: 3 hours
     paths:
       - $GOBO/bin/
-      - $GOBO/tool/gec/config/c/default.cfg
+      - $GOBO/tool/gec/backend/c/config/default.cfg
 
 windows_build_ge:
   stage: build_ge
@@ -58,7 +58,7 @@ windows_build_ge:
     expire_in: 3 hours
     paths:
       - $GOBO/bin/
-      - $GOBO/tool/gec/config/c/default.cfg
+      - $GOBO/tool/gec/backend/c/config/default.cfg
 
 #
 # Running tests with Gobo Eiffel.
