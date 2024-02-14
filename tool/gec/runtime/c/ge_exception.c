@@ -779,6 +779,7 @@ EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
 	return (obj);
 }
 
+#ifdef EIF_WORKBENCH
 /*
  * Check whether `obj' is Void.
  * If it is, then raise a call-on-void-target exception.
@@ -802,6 +803,7 @@ EIF_REFERENCE GE_check_void2(EIF_REFERENCE obj, EIF_INTEGER i)
 	}
 	return (obj);
 }
+#endif
 
 /*
  * Check whether `ptr' is a null pointer.

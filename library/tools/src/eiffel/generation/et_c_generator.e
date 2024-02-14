@@ -10328,7 +10328,11 @@ feature {NONE} -- Expression generation
 					current_file.put_character ('(')
 					if a_source_type_set.can_be_void  then
 						can_be_void_target_count := can_be_void_target_count + 1
-						current_file.put_string (c_ge_void2)
+						if finalize_mode then
+							current_file.put_string (c_ge_void)
+						else
+							current_file.put_string (c_ge_void2)
+						end
 						current_file.put_character ('(')
 						l_do_check_void := True
 					else
@@ -10336,8 +10340,10 @@ feature {NONE} -- Expression generation
 					end
 					a_print_expression.call ([])
 					if l_do_check_void then
-						print_comma
-						current_file.put_integer (can_be_void_target_count)
+						if not finalize_mode then
+							print_comma
+							current_file.put_integer (can_be_void_target_count)
+						end
 						current_file.put_character (')')
 					end
 					current_file.put_character (')')
@@ -11196,7 +11202,11 @@ feature {NONE} -- Expression generation
 				l_dynamic_type_set := dynamic_type_set (a_expression)
 				if not a_dynamic_type.is_expanded and then l_dynamic_type_set.can_be_void and not a_expression.is_never_void then
 					can_be_void_target_count := can_be_void_target_count + 1
-					current_file.put_string (c_ge_void2)
+					if finalize_mode then
+						current_file.put_string (c_ge_void)
+					else
+						current_file.put_string (c_ge_void2)
+					end
 					current_file.put_character ('(')
 					l_do_check_void := True
 				else
@@ -11205,8 +11215,10 @@ feature {NONE} -- Expression generation
 			end
 			a_expression.process (Current)
 			if l_do_check_void then
-				print_comma
-				current_file.put_integer (can_be_void_target_count)
+				if not finalize_mode then
+					print_comma
+					current_file.put_integer (can_be_void_target_count)
+				end
 				current_file.put_character (')')
 			end
 		end

@@ -261,15 +261,19 @@ extern EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, EIF_TYPE_INDEX type_ids
  */
 #define GE_void(obj) ((obj)?(obj):GE_check_void(obj))
 extern EIF_REFERENCE GE_check_void(EIF_REFERENCE obj);
+#ifdef EIF_WORKBENCH
 #define GE_void2(obj,i) ((obj)?(obj):GE_check_void2((obj),(i)))
 extern EIF_REFERENCE GE_check_void2(EIF_REFERENCE obj, EIF_INTEGER i);
+#else
+#define GE_void2(obj,i) ((obj)?(obj):GE_check_void(obj))
+#endif
 
 /*
  * Check whether `ptr' is a null pointer.
  * If it is, then raise a no-more-memory exception.
  * Return `ptr'.
  */
-#define GE_null(ptr) GE_check_null(ptr)
+#define GE_null(ptr) ((ptr)?(ptr):GE_check_null(ptr))
 extern void* GE_check_null(void* ptr);
 
 #ifdef EIF_WINDOWS
