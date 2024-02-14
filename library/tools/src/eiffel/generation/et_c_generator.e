@@ -855,7 +855,7 @@ feature {NONE} -- Compilation script generation
 		do
 			l_name := Execution_environment.variable_value ("GOBO_CC")
 			if l_name = Void then
-				l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "config", "c", "default.cfg">>)
+				l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "config", "default.cfg">>)
 				l_filename := Execution_environment.interpreted_string (l_filename)
 				create l_file.make (l_filename)
 				l_file.open_read
@@ -896,7 +896,7 @@ feature {NONE} -- Compilation script generation
 				Result.put_new ("", "lflags")
 				Result.put_new (makefile_template, "Makefile")
 			end
-			l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "config", "c", l_name>>)
+			l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "config", l_name>>)
 			l_filename := Execution_environment.interpreted_string (l_filename)
 			if not file_system.has_extension (l_filename, cfg_file_extension) then
 				l_filename := l_filename + cfg_file_extension
@@ -41124,7 +41124,7 @@ feature {NONE} -- Include files
 		local
 			l_full_pathname: STRING
 		do
-			l_full_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "runtime", "c", a_filename>>)
+			l_full_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "runtime", a_filename>>)
 			l_full_pathname := Execution_environment.interpreted_string (l_full_pathname)
 			include_file (l_full_pathname, a_file)
 		end

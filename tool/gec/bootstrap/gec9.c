@@ -8,14 +8,13 @@ int GE_main(int argc, EIF_NATIVE_CHAR** argv)
 {
 	T0* t1;
 	GE_context tc = GE_default_context;
-	GE_context* ac = &tc;
-	GE_type_info_count = 2263;
+	TC* ac = &tc;
+	GE_type_info_count = 2275;
 	GE_argc = argc;
 	GE_argv = argv;
 	GE_main_context = ac;
 	GE_system_name = "gec";
 	GE_root_class_name = "GEC";
-	GE_init_gc();
 	GE_new_exception_manager = &GE_new21;
 	GE_init_exception_manager = &T21f14;
 	GE_last_exception = &T21f1;
@@ -23,13 +22,13 @@ int GE_main(int argc, EIF_NATIVE_CHAR** argv)
 	GE_set_exception_data = &T21f16;
 	GE_init_onces(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	GE_once_per_object_data_mutex = GE_mutex_create();
-	GE_thread_onces_set_counts(4, 1, 1, 0, 0, 10, 0, 0, 0, 0, 4, 0, 0, 0, 953, 0);
+	GE_thread_onces_set_counts(4, 1, 1, 0, 0, 10, 0, 0, 0, 0, 4, 0, 0, 0, 952, 0);
 	GE_init_thread(ac);
 	GE_init_exception(ac);
 	GE_init_console();
 	GE_init_identified();
 	GE_init_const();
-	t1 = T25c61(ac);
+	t1 = T25c62(ac);
 	return 0;
 }
 
@@ -445,14 +444,15 @@ EIF_REFERENCE GE_ms32_from_utf32le(const char* s, EIF_INTEGER c)
 #else
 	{
 		int i;
-		EIF_CHARACTER_32 l_little, l_big;
+		volatile EIF_CHARACTER_32 l_little;
+		EIF_CHARACTER_32 l_big;
 		for (i = 0; i < c ; i++) {
 			memcpy(&l_little, s + (i * 4), 4);
 				/* Convert our little endian to big endian. */
 			l_big = ((l_little >> 24) & 0xFF) |
 				((l_little >> 8) & 0xFF00) |
-			   	((l_little << 8) & 0xFF0000) |
-			   	((l_little << 24) & 0xFF000000);
+				((l_little << 8) & 0xFF0000) |
+				((l_little << 24) & 0xFF000000);
 			l_area_base_address[i] = l_big;
 		}
 	}
@@ -515,14 +515,15 @@ EIF_REFERENCE GE_ims32_from_utf32le(const char* s, EIF_INTEGER c)
 #else
 	{
 		int i;
-		EIF_CHARACTER_32 l_little, l_big;
+		volatile EIF_CHARACTER_32 l_little;
+		EIF_CHARACTER_32 l_big;
 		for (i = 0; i < c ; i++) {
 			memcpy(&l_little, s + (i * 4), 4);
 				/* Convert our little endian to big endian. */
 			l_big = ((l_little >> 24) & 0xFF) |
 				((l_little >> 8) & 0xFF00) |
-			   	((l_little << 8) & 0xFF0000) |
-			   	((l_little << 24) & 0xFF000000);
+				((l_little << 8) & 0xFF0000) |
+				((l_little << 24) & 0xFF000000);
 			l_area_base_address[i] = l_big;
 		}
 	}
@@ -607,7 +608,7 @@ extern "C" {
 		"C functions used to implement type information"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -1283,7 +1284,7 @@ extern "C" {
 		"C functions used to access garbage collector facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -1298,6 +1299,10 @@ extern "C" {
 #endif
 #ifndef GE_TYPES_H
 #include "ge_types.h"
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /*
@@ -1323,34 +1328,12 @@ void* GE_unprotected_calloc_atomic_uncollectable(size_t nelem, size_t elsize)
  * Allocate more memory for the given pointer.
  * The reallocated pointer keeps the same properties (e.g. atomic or not, collectable or not).
  * The extra allocated memory is zeroed.
- * Raise an exception when no-more-memory.
- */
-void* GE_recalloc(void* p, size_t old_nelem, size_t new_nelem, size_t elsize)
-{
-	void* new_p;
-#ifdef GE_USE_BOEHM_GC
-	new_p = GE_null(GC_REALLOC(p, new_nelem * elsize));
-#else /* No GC */
-	new_p = GE_null(realloc(p, new_nelem * elsize));
-#endif
-	memset(((char*)new_p) + (old_nelem * elsize), 0, (new_nelem - old_nelem) * elsize);
-	return new_p;
-}
-
-/*
- * Allocate more memory for the given pointer.
- * The reallocated pointer keeps the same properties (e.g. atomic or not, collectable or not).
- * The extra allocated memory is zeroed.
  * Do not raise an exception when no-more-memory.
  */
 void* GE_unprotected_recalloc(void* p, size_t old_nelem, size_t new_nelem, size_t elsize)
 {
 	void* new_p;
-#ifdef GE_USE_BOEHM_GC
-	new_p = GC_REALLOC(p, new_nelem * elsize);
-#else /* No GC */
-	new_p = realloc(p, new_nelem * elsize);
-#endif
+	new_p = GE_unprotected_realloc(p, new_nelem * elsize);
 	if (new_p) {
 		memset(((char*)new_p) + (old_nelem * elsize), 0, (new_nelem - old_nelem) * elsize);
 	}
@@ -1370,6 +1353,10 @@ void GE_boehm_dispose(void* C, void* disp) {
  */
 void GE_boehm_dispose_once_per_object_data(void* data, void* disp) {
 	((void (*) (void*)) disp)(data);
+}
+#endif
+
+#ifdef __cplusplus
 }
 #endif
 
@@ -2218,7 +2205,7 @@ static struct timespec GE_timeout_to_timespec(uintptr_t a_timeout)
 	time_t l_seconds = a_timeout / 1000;	/* `a_timeout' is in millisecond */
 	long l_nano_seconds = (a_timeout % 1000) * 1000000;	/* Reminder in nanoseconds */
 	struct timespec tspec;
-	struct timeval now;
+	volatile struct timeval now;
 	GE_ftime(&now);
 	tspec.tv_sec = now.tv_sec + l_seconds;
 	l_nano_seconds += (now.tv_usec * 1000);
@@ -2718,41 +2705,29 @@ static unsigned __stdcall GE_thread_routine(void* arg)
 static void* GE_thread_routine(void* arg)
 #endif
 {
-	GE_thread_context* l_thread_context = (GE_thread_context*)arg;
-	GE_context* l_context;
+	GE_context* l_context = (GE_context*)arg;
+	GE_thread_context* l_thread_context = l_context->thread;
 	GE_thread_context* l_parent_thread_context = l_thread_context->parent_context;
 
-	SIGBLOCK;
 	GE_unprotected_mutex_lock((EIF_POINTER)l_parent_thread_context->children_mutex);
 	/* Wait for the parent thread to set the thread id. */
 #ifdef GE_USE_SCOOP
 	if (l_thread_context->is_scoop_processor) {
-		l_thread_context->parent_context = 0;
+		l_thread_context->parent_context = NULL;
 	}
 #endif
 	GE_unprotected_mutex_unlock((EIF_POINTER)l_parent_thread_context->children_mutex);
-	l_context = (GE_context*)GE_malloc_atomic_uncollectable(sizeof(GE_context));
-	*l_context = GE_default_context;
-	l_context->thread = l_thread_context;
-	GE_thread_init_onces(l_context);
-	GE_init_exception(l_context);
+	l_parent_thread_context = NULL;
 	GE_register_thread_context(l_context);
 	GE_thread_set_priority(l_thread_context->thread_id, l_thread_context->initial_priority);
 	SIGRESUME;
-	if (l_thread_context->current) {
 #ifdef GE_USE_SCOOP
-		l_context->scoop_processor = l_thread_context->current->scoop_processor;
-		if (l_thread_context->is_scoop_processor) {
-				/* Do not keep track of the current object so that it can be
-				reclaimed by the GC if it is not referenced anywhere else. */
-			l_context->scoop_processor->context = l_context;
-			l_thread_context->current = EIF_VOID;
+	if (l_thread_context->is_scoop_processor) {
 			GE_scoop_processor_run(l_context);
-		} else
+	} else
 #endif
-		if (l_thread_context->routine) {
-			l_thread_context->routine(l_thread_context->current, 0);
-		}
+	if (l_thread_context->current && l_thread_context->routine) {
+		l_thread_context->routine(l_thread_context->current, 0);
 	}
 	GE_thread_exit();
 #ifdef EIF_WINDOWS
@@ -2793,6 +2768,7 @@ void GE_init_thread(GE_context* a_context)
  */
 void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFERENCE, EIF_INTEGER), void (*set_terminated)(EIF_REFERENCE,EIF_BOOLEAN), EIF_THR_ATTR_TYPE* attr, int is_scoop_processor)
 {
+	GE_context* l_context;
 	EIF_THR_TYPE l_thread_id;
 	GE_thread_context* l_thread_context;
 	GE_thread_context* l_current_thread_context;
@@ -2801,7 +2777,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 	unsigned int l_attr_stack_size = 0;
 	unsigned int l_attr_priority = GE_thread_default_priority();
 	int l_raise_error = 0;
-	l_thread_context = (GE_thread_context*)GE_unprotected_calloc_uncollectable(1, sizeof(GE_thread_context));
+	l_thread_context = (GE_thread_context*)GE_unprotected_calloc(1, sizeof(GE_thread_context));
 	if (!l_thread_context) {
 		GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
 	} else {
@@ -2809,14 +2785,8 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 			l_attr_stack_size = attr->stack_size;
 			l_attr_priority = attr->priority;
 		}
-		l_thread_context->current = current;
-		l_thread_context->routine = routine;
-		l_thread_context->set_terminated = set_terminated;
 		l_thread_context->initial_priority = l_attr_priority;
 		l_thread_context->is_alive = 1;
-#ifdef GE_USE_SCOOP
-		l_thread_context->is_scoop_processor = is_scoop_processor;
-#endif
 		l_current_thread_context = GE_thread_current_context()->thread;
 		l_thread_context->parent_context = l_current_thread_context;
 		if (!l_current_thread_context->children_mutex) {
@@ -2837,6 +2807,39 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 				GE_raise_with_message(GE_EX_EXT, "Cannot create thread children mutex");
 			}
 		}
+		/*
+		 * Execute this code here, from the current thread, instead of at the beginnig
+		 * of the new thread, because the Boehm GC crashes from time to time (more
+		 * frequently when using clang in debug mode) apparently when allocating the
+		 * large arrays to keep track of the once-per-thread data at the beginning of
+		 * the new thread (but not here in the current thread).
+		 * This also has the advantage of letting the current thread handle any
+		 * possible exception, instead of have the entire program crash because an
+		 * handled exception in the new thread (because its exception handler is not
+		 * fully initialized yet). So we have to make sure that all data reachable
+		 * from `l_context' (and `l_context' itself) are collectable to avoid memory
+		 * leak in case of such exception.
+		 */
+		l_context = (GE_context*)GE_malloc(sizeof(GE_context));
+		*l_context = GE_default_context;
+		l_context->thread = l_thread_context;
+#ifdef GE_USE_SCOOP
+		l_thread_context->is_scoop_processor = is_scoop_processor;
+		l_context->scoop_processor = current->scoop_processor;
+		if (is_scoop_processor) {
+			l_context->scoop_processor->context = l_context;
+				/* Do not keep track of the current object so that it can be
+				reclaimed by the GC if it is not referenced anywhere else. */
+		} else {
+#endif
+			l_thread_context->current = current;
+			l_thread_context->routine = routine;
+			l_thread_context->set_terminated = set_terminated;
+#ifdef GE_USE_SCOOP
+		}
+#endif	
+		GE_thread_init_onces(l_context);
+		GE_init_exception(l_context);
 #ifdef GE_USE_POSIX_THREADS
 		{
 			pthread_attr_t l_attr;
@@ -2859,7 +2862,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 				SIGBLOCK;
 				GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
 					/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
-				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, l_thread_context) == 0) {
+				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, l_context) == 0) {
 					l_thread_context->thread_id = l_thread_id;
 #ifdef GE_USE_SCOOP
 					if (!l_thread_context->is_scoop_processor) {
@@ -2883,7 +2886,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 		SIGBLOCK;
 		GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
 			/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
-		l_thread_id = (EIF_THR_TYPE)_beginthreadex(NULL, (unsigned int)l_attr_stack_size, GE_thread_routine, l_thread_context, 0, NULL);
+		l_thread_id = (EIF_THR_TYPE)_beginthreadex(NULL, (unsigned int)l_attr_stack_size, GE_thread_routine, l_context, 0, NULL);
 		if (l_thread_id == 0) {
 			l_raise_error = 1;
 		} else {
@@ -2903,7 +2906,11 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 #if defined GE_USE_POSIX_THREADS || defined EIF_WINDOWS
 		if (l_raise_error) {
 #endif
+			GE_free_onces(l_context->process_onces);
+			GE_free_onces(l_context->thread_onces);
+			GE_free_exception(l_context);
 			GE_free(l_thread_context);
+			GE_free(l_context);
 			GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
 #if defined GE_USE_POSIX_THREADS || defined EIF_WINDOWS
 		}
@@ -3093,8 +3100,8 @@ void GE_thread_exit(void)
 				GE_unprotected_mutex_destroy((EIF_POINTER)l_parent_thread_context->children_mutex);
 				GE_unprotected_condition_variable_destroy((EIF_POINTER)l_parent_thread_context->children_cond);
 				GE_free(l_parent_thread_context);
-				l_thread_context->parent_context = NULL;
 			}
+			l_thread_context->parent_context = NULL;
 		}
 		l_thread_id = l_thread_context->thread_id;
 		if (l_thread_context->children_mutex) {
@@ -3116,7 +3123,8 @@ void GE_thread_exit(void)
 				GE_unprotected_mutex_destroy((EIF_POINTER)l_thread_context->children_mutex);
 				GE_unprotected_condition_variable_destroy((EIF_POINTER)l_thread_context->children_cond);
 			}
-			GE_free(l_thread_context);
+			l_thread_context->children_mutex = NULL;
+			l_thread_context->children_cond = NULL;
 		}
 #ifdef EIF_WINDOWS
 		if (!CloseHandle(l_thread_id)) {
@@ -3133,6 +3141,9 @@ void GE_thread_exit(void)
 		if (l_context->wel_per_thread_data) {
 			GE_free(l_context->wel_per_thread_data);
 			l_context->wel_per_thread_data = 0;
+		}
+		if (l_free_thread_context) {
+			GE_free(l_thread_context);
 		}
 		GE_free(l_context);
 #ifdef GE_USE_POSIX_THREADS
@@ -3432,7 +3443,7 @@ extern "C" {
 		"C functions used to implement the program initialization"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -3501,7 +3512,7 @@ void GE_get_argcargv(EIF_NATIVE_CHAR* cmd, int* argc, EIF_NATIVE_CHAR*** argvp)
 		; /* empty */
 	if (p <= pe) {
 		*argc = *argc + 1; /* at least one argument */
-		qb = q = GE_unprotected_malloc_atomic_uncollectable((pe - p + 2) * sizeof(EIF_NATIVE_CHAR));
+		qb = q = malloc((pe - p + 2) * sizeof(EIF_NATIVE_CHAR));
 		if (!qb) {
 			return;
 		}
@@ -3547,13 +3558,13 @@ void GE_get_argcargv(EIF_NATIVE_CHAR* cmd, int* argc, EIF_NATIVE_CHAR*** argvp)
 	}
 
 	if (!argvp) {
-		GE_free(qb);
+		free(qb);
 		return;
 	}
 
-	*argvp = (EIF_NATIVE_CHAR**)GE_unprotected_malloc_atomic_uncollectable((*argc+1)*sizeof(EIF_NATIVE_CHAR*));
+	*argvp = (EIF_NATIVE_CHAR**)malloc((*argc+1)*sizeof(EIF_NATIVE_CHAR*));
 	if (!(*argvp)) {
-		GE_free(qb);
+		free(qb);
 		return;
 	}
 
@@ -3571,6 +3582,7 @@ int main(int dummy_arg1, char** dummy_argv)
 	EIF_NATIVE_CHAR** argv;
 	EIF_NATIVE_CHAR* cmd;
 
+	GE_init_gc();
 	GE_set_windows_exception_filter();
 		/* Variables used in WEL. */
 	eif_hInstance = GetModuleHandle(NULL);
@@ -3582,9 +3594,9 @@ int main(int dummy_arg1, char** dummy_argv)
 	code = GE_main(argc, argv);
 	free(cmd);
 	if (argc > 0) {
-		GE_free(argv[0]);
+		free(argv[0]);
 	}
-	GE_free(argv);
+	free(argv);
 	return code;
 }
 
@@ -3603,6 +3615,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 int main(int argc, char** argv)
 {
+	GE_init_gc();
 	return GE_main(argc, argv);
 }
 
@@ -3730,10 +3743,9 @@ static void GE_init_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
 {
 	a_trace->count = 0;
 	a_trace->capacity = 0;
-	a_trace->area = (char*)GE_unprotected_calloc_atomic_uncollectable(4096, 1);
-	if (a_trace->area) {
-		a_trace->capacity = 4096;
-	}
+	a_trace->area = (char*)GE_malloc_atomic(4096);
+	a_trace->area[0] = '\0';
+	a_trace->capacity = 4096;
 }
 
 /*
@@ -3744,7 +3756,7 @@ static void GE_free_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
 	a_trace->count = 0;
 	a_trace->capacity = 0;
 	if (a_trace->area) {
-	 GE_free(a_trace->area);
+		GE_free(a_trace->area);
 	}
 }
 
@@ -3761,18 +3773,19 @@ static void GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_tra
 	if (a_trace->area) {
 		if ((a_trace->capacity - a_trace->count) <= l_length) {
 			l_new_capacity = a_trace->capacity + l_length + 512;
-			l_new_area = (char*)GE_unprotected_recalloc(a_trace->area, a_trace->capacity, l_new_capacity, 1);
+			l_new_area = (char*)GE_realloc(a_trace->area, l_new_capacity);
 			if (l_new_area) {
 				a_trace->area = l_new_area;
 				a_trace->capacity = l_new_capacity;
 			}
 		}
+		if ((a_trace->capacity - a_trace->count) > l_length) {
+			strcpy(a_trace->area + a_trace->count, a_string);
+			a_trace->count += l_length;
+		}
 	} else {
 		GE_init_exception_trace_buffer(a_trace);
-	}
-	if ((a_trace->capacity - a_trace->count) > l_length) {
-		strcpy(a_trace->area + a_trace->count, a_string);
-		a_trace->count += l_length;
+		GE_append_to_exception_trace_buffer(a_trace, a_string);
 	}
 }
 
@@ -4082,8 +4095,8 @@ void GE_init_exception(GE_context* a_context)
  */
 void GE_free_exception(GE_context* a_context)
 {
-	GE_free_exception_trace_buffer(&a_context->exception_trace_buffer);
-	GE_free_exception_trace_buffer(&a_context->last_exception_trace);
+	GE_free_exception_trace_buffer(&(a_context->exception_trace_buffer));
+	GE_free_exception_trace_buffer(&(a_context->last_exception_trace));
 	a_context->exception_manager = EIF_VOID;
 #ifdef GE_USE_THREADS
 	a_context->thread->exception_manager = EIF_VOID;
@@ -4207,6 +4220,7 @@ static void GE_raise_exception(long code, int new_obj, int signal_code, int erro
 	char* l_trace;
 	GE_exception_trace_buffer* l_trace_buffer;
 	GE_context* l_context;
+	const char* l_tag;
 
 	l_context = GE_current_context();
 	if (!l_context) {
@@ -4216,6 +4230,12 @@ static void GE_raise_exception(long code, int new_obj, int signal_code, int erro
 		} else {
 			fprintf(stderr, "\nsystem execution failed.\n");
 		}
+		if (tag) {
+			l_tag = tag;
+		} else {
+			l_tag = "";
+		}
+		fprintf(stderr, "%s: %s\n", GE_exception_tag(code), l_tag);
 		fprintf(stderr, "Panic: No execution context found.\n");
 		exit(1);
 	} else if (l_context->raising_exception) {
@@ -4225,6 +4245,12 @@ static void GE_raise_exception(long code, int new_obj, int signal_code, int erro
 		} else {
 			fprintf(stderr, "\nsystem execution failed.\n");
 		}
+		if (tag) {
+			l_tag = tag;
+		} else {
+			l_tag = "";
+		}
+		fprintf(stderr, "%s: %s\n", GE_exception_tag(code), l_tag);
 		fprintf(stderr, "Panic: A crash occurred while processing exceptions.\n");
 		l_trace = l_context->last_exception_trace.area;
 		if (l_trace) {
@@ -4350,7 +4376,7 @@ EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, EIF_TYPE_INDEX type_ids[], int
 					fprintf(stderr, "CAT-call error!\n");
 #ifdef EIF_DEBUG
 					{
-						char c;
+						volatile char c;
 						fprintf(stderr, "Press Enter...\n");
 						scanf("%c", &c);
 					}
@@ -4379,7 +4405,7 @@ EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
 		fprintf(stderr, "Call on Void target!\n");
 #ifdef EIF_DEBUG
 		{
-			char c;
+			volatile char c;
 			fprintf(stderr, "Press Enter...\n");
 			scanf("%c", &c);
 		}
@@ -4388,6 +4414,32 @@ EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
 	}
 	return (obj);
 }
+
+#ifdef EIF_WORKBENCH
+/*
+ * Check whether `obj' is Void.
+ * If it is, then raise a call-on-void-target exception.
+ * Include the id `i' in the message displayed in the console
+ * to help debugging when `obj' is Void.
+ * Return `obj'.
+ */
+EIF_REFERENCE GE_check_void2(EIF_REFERENCE obj, EIF_INTEGER i)
+{
+	if (!obj) {
+		GE_show_console();
+		fprintf(stderr, "Call on Void target! (%d)\n", i);
+#ifdef EIF_DEBUG
+		{
+			volatile char c;
+			fprintf(stderr, "Press Enter...\n");
+			scanf("%c", &c);
+		}
+#endif
+		GE_raise(GE_EX_VOID);
+	}
+	return (obj);
+}
+#endif
 
 /*
  * Check whether `ptr' is a null pointer.
@@ -4401,7 +4453,7 @@ void* GE_check_null(void* ptr)
 		fprintf(stderr, "No more memory!\n");
 #ifdef EIF_DEBUG
 		{
-			char c;
+			volatile char c;
 			fprintf(stderr, "Press Enter...\n");
 			scanf("%c", &c);
 		}
@@ -4426,6 +4478,10 @@ static LONG WINAPI GE_windows_exception_filter(LPEXCEPTION_POINTERS a_exception)
 
 		case STATUS_INTEGER_DIVIDE_BY_ZERO:
 			GE_raise_with_message(GE_EX_FLOAT, "Integer division by Zero");
+			break;
+
+		case STATUS_ACCESS_VIOLATION:
+			GE_raise_with_message(GE_EX_EXT, "Segmentation violation");
 			break;
 
 		default:
@@ -4473,7 +4529,7 @@ extern "C" {
 		"C functions used to implement once features"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -4588,100 +4644,100 @@ GE_onces* GE_new_onces(
 {
 	GE_onces* l_onces;
 
-	l_onces = (GE_onces*)GE_calloc_atomic_uncollectable(1, sizeof(GE_onces));
+	l_onces = (GE_onces*)GE_calloc(1, sizeof(GE_onces));
 	if (a_boolean_count > 0) {
-		l_onces->boolean_value = (EIF_BOOLEAN*)GE_calloc_atomic_uncollectable(a_boolean_count, sizeof(EIF_BOOLEAN));
-		l_onces->boolean_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_boolean_count, sizeof(EIF_REFERENCE));
-		l_onces->boolean_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_boolean_count, sizeof(unsigned char));
+		l_onces->boolean_value = (EIF_BOOLEAN*)GE_calloc_atomic(a_boolean_count, sizeof(EIF_BOOLEAN));
+		l_onces->boolean_exception = (EIF_REFERENCE*)GE_calloc(a_boolean_count, sizeof(EIF_REFERENCE));
+		l_onces->boolean_status = (unsigned char*)GE_calloc_atomic(a_boolean_count, sizeof(unsigned char));
 		l_onces->boolean_count = a_boolean_count;
 	}
 	if (a_character_8_count > 0) {
-		l_onces->character_8_value = (EIF_CHARACTER_8*)GE_calloc_atomic_uncollectable(a_character_8_count, sizeof(EIF_CHARACTER_8));
-		l_onces->character_8_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_character_8_count, sizeof(EIF_REFERENCE));
-		l_onces->character_8_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_character_8_count, sizeof(unsigned char));
+		l_onces->character_8_value = (EIF_CHARACTER_8*)GE_calloc_atomic(a_character_8_count, sizeof(EIF_CHARACTER_8));
+		l_onces->character_8_exception = (EIF_REFERENCE*)GE_calloc(a_character_8_count, sizeof(EIF_REFERENCE));
+		l_onces->character_8_status = (unsigned char*)GE_calloc_atomic(a_character_8_count, sizeof(unsigned char));
 		l_onces->character_8_count = a_character_8_count;
 	}
 	if (a_character_32_count > 0) {
-		l_onces->character_32_value = (EIF_CHARACTER_32*)GE_calloc_atomic_uncollectable(a_character_32_count, sizeof(EIF_CHARACTER_32));
-		l_onces->character_32_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_character_32_count, sizeof(EIF_REFERENCE));
-		l_onces->character_32_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_character_32_count, sizeof(unsigned char));
+		l_onces->character_32_value = (EIF_CHARACTER_32*)GE_calloc_atomic(a_character_32_count, sizeof(EIF_CHARACTER_32));
+		l_onces->character_32_exception = (EIF_REFERENCE*)GE_calloc(a_character_32_count, sizeof(EIF_REFERENCE));
+		l_onces->character_32_status = (unsigned char*)GE_calloc_atomic(a_character_32_count, sizeof(unsigned char));
 		l_onces->character_32_count = a_character_32_count;
 	}
 	if (a_integer_8_count > 0) {
-		l_onces->integer_8_value = (EIF_INTEGER_8*)GE_calloc_atomic_uncollectable(a_integer_8_count, sizeof(EIF_INTEGER_8));
-		l_onces->integer_8_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_integer_8_count, sizeof(EIF_REFERENCE));
-		l_onces->integer_8_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_integer_8_count, sizeof(unsigned char));
+		l_onces->integer_8_value = (EIF_INTEGER_8*)GE_calloc_atomic(a_integer_8_count, sizeof(EIF_INTEGER_8));
+		l_onces->integer_8_exception = (EIF_REFERENCE*)GE_calloc(a_integer_8_count, sizeof(EIF_REFERENCE));
+		l_onces->integer_8_status = (unsigned char*)GE_calloc_atomic(a_integer_8_count, sizeof(unsigned char));
 		l_onces->integer_8_count = a_integer_8_count;
 	}
 	if (a_integer_16_count > 0) {
-		l_onces->integer_16_value = (EIF_INTEGER_16*)GE_calloc_atomic_uncollectable(a_integer_16_count, sizeof(EIF_INTEGER_16));
-		l_onces->integer_16_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_integer_16_count, sizeof(EIF_REFERENCE));
-		l_onces->integer_16_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_integer_16_count, sizeof(unsigned char));
+		l_onces->integer_16_value = (EIF_INTEGER_16*)GE_calloc_atomic(a_integer_16_count, sizeof(EIF_INTEGER_16));
+		l_onces->integer_16_exception = (EIF_REFERENCE*)GE_calloc(a_integer_16_count, sizeof(EIF_REFERENCE));
+		l_onces->integer_16_status = (unsigned char*)GE_calloc_atomic(a_integer_16_count, sizeof(unsigned char));
 		l_onces->integer_16_count = a_integer_16_count;
 	}
 	if (a_integer_32_count > 0) {
-		l_onces->integer_32_value = (EIF_INTEGER_32*)GE_calloc_atomic_uncollectable(a_integer_32_count, sizeof(EIF_INTEGER_32));
-		l_onces->integer_32_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_integer_32_count, sizeof(EIF_REFERENCE));
-		l_onces->integer_32_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_integer_32_count, sizeof(unsigned char));
+		l_onces->integer_32_value = (EIF_INTEGER_32*)GE_calloc_atomic(a_integer_32_count, sizeof(EIF_INTEGER_32));
+		l_onces->integer_32_exception = (EIF_REFERENCE*)GE_calloc(a_integer_32_count, sizeof(EIF_REFERENCE));
+		l_onces->integer_32_status = (unsigned char*)GE_calloc_atomic(a_integer_32_count, sizeof(unsigned char));
 		l_onces->integer_32_count = a_integer_32_count;
 	}
 	if (a_integer_64_count > 0) {
-		l_onces->integer_64_value = (EIF_INTEGER_64*)GE_calloc_atomic_uncollectable(a_integer_64_count, sizeof(EIF_INTEGER_64));
-		l_onces->integer_64_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_integer_64_count, sizeof(EIF_REFERENCE));
-		l_onces->integer_64_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_integer_64_count, sizeof(unsigned char));
+		l_onces->integer_64_value = (EIF_INTEGER_64*)GE_calloc_atomic(a_integer_64_count, sizeof(EIF_INTEGER_64));
+		l_onces->integer_64_exception = (EIF_REFERENCE*)GE_calloc(a_integer_64_count, sizeof(EIF_REFERENCE));
+		l_onces->integer_64_status = (unsigned char*)GE_calloc_atomic(a_integer_64_count, sizeof(unsigned char));
 		l_onces->integer_64_count = a_integer_64_count;
 	}
 	if (a_natural_8_count > 0) {
-		l_onces->natural_8_value = (EIF_NATURAL_8*)GE_calloc_atomic_uncollectable(a_natural_8_count, sizeof(EIF_NATURAL_8));
-		l_onces->natural_8_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_natural_8_count, sizeof(EIF_REFERENCE));
-		l_onces->natural_8_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_natural_8_count, sizeof(unsigned char));
+		l_onces->natural_8_value = (EIF_NATURAL_8*)GE_calloc_atomic(a_natural_8_count, sizeof(EIF_NATURAL_8));
+		l_onces->natural_8_exception = (EIF_REFERENCE*)GE_calloc(a_natural_8_count, sizeof(EIF_REFERENCE));
+		l_onces->natural_8_status = (unsigned char*)GE_calloc_atomic(a_natural_8_count, sizeof(unsigned char));
 		l_onces->natural_8_count = a_natural_8_count;
 	}
 	if (a_natural_16_count > 0) {
-		l_onces->natural_16_value = (EIF_NATURAL_16*)GE_calloc_atomic_uncollectable(a_natural_16_count, sizeof(EIF_NATURAL_16));
-		l_onces->natural_16_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_natural_16_count, sizeof(EIF_REFERENCE));
-		l_onces->natural_16_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_natural_16_count, sizeof(unsigned char));
+		l_onces->natural_16_value = (EIF_NATURAL_16*)GE_calloc_atomic(a_natural_16_count, sizeof(EIF_NATURAL_16));
+		l_onces->natural_16_exception = (EIF_REFERENCE*)GE_calloc(a_natural_16_count, sizeof(EIF_REFERENCE));
+		l_onces->natural_16_status = (unsigned char*)GE_calloc_atomic(a_natural_16_count, sizeof(unsigned char));
 		l_onces->natural_16_count = a_natural_16_count;
 	}
 	if (a_natural_32_count > 0) {
-		l_onces->natural_32_value = (EIF_NATURAL_32*)GE_calloc_atomic_uncollectable(a_natural_32_count, sizeof(EIF_NATURAL_32));
-		l_onces->natural_32_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_natural_32_count, sizeof(EIF_REFERENCE));
-		l_onces->natural_32_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_natural_32_count, sizeof(unsigned char));
+		l_onces->natural_32_value = (EIF_NATURAL_32*)GE_calloc_atomic(a_natural_32_count, sizeof(EIF_NATURAL_32));
+		l_onces->natural_32_exception = (EIF_REFERENCE*)GE_calloc(a_natural_32_count, sizeof(EIF_REFERENCE));
+		l_onces->natural_32_status = (unsigned char*)GE_calloc_atomic(a_natural_32_count, sizeof(unsigned char));
 		l_onces->natural_32_count = a_natural_32_count;
 	}
 	if (a_natural_64_count > 0) {
-		l_onces->natural_64_value = (EIF_NATURAL_64*)GE_calloc_atomic_uncollectable(a_natural_64_count, sizeof(EIF_NATURAL_64));
-		l_onces->natural_64_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_natural_64_count, sizeof(EIF_REFERENCE));
-		l_onces->natural_64_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_natural_64_count, sizeof(unsigned char));
+		l_onces->natural_64_value = (EIF_NATURAL_64*)GE_calloc_atomic(a_natural_64_count, sizeof(EIF_NATURAL_64));
+		l_onces->natural_64_exception = (EIF_REFERENCE*)GE_calloc(a_natural_64_count, sizeof(EIF_REFERENCE));
+		l_onces->natural_64_status = (unsigned char*)GE_calloc_atomic(a_natural_64_count, sizeof(unsigned char));
 		l_onces->natural_64_count = a_natural_64_count;
 	}
 	if (a_pointer_count > 0) {
-		l_onces->pointer_value = (EIF_POINTER*)GE_calloc_atomic_uncollectable(a_pointer_count, sizeof(EIF_POINTER));
-		l_onces->pointer_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_pointer_count, sizeof(EIF_REFERENCE));
-		l_onces->pointer_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_pointer_count, sizeof(unsigned char));
+		l_onces->pointer_value = (EIF_POINTER*)GE_calloc_atomic(a_pointer_count, sizeof(EIF_POINTER));
+		l_onces->pointer_exception = (EIF_REFERENCE*)GE_calloc(a_pointer_count, sizeof(EIF_REFERENCE));
+		l_onces->pointer_status = (unsigned char*)GE_calloc_atomic(a_pointer_count, sizeof(unsigned char));
 		l_onces->pointer_count = a_pointer_count;
 	}
 	if (a_real_32_count > 0) {
-		l_onces->real_32_value = (EIF_REAL_32*)GE_calloc_atomic_uncollectable(a_real_32_count, sizeof(EIF_REAL_32));
-		l_onces->real_32_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_real_32_count, sizeof(EIF_REFERENCE));
-		l_onces->real_32_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_real_32_count, sizeof(unsigned char));
+		l_onces->real_32_value = (EIF_REAL_32*)GE_calloc_atomic(a_real_32_count, sizeof(EIF_REAL_32));
+		l_onces->real_32_exception = (EIF_REFERENCE*)GE_calloc(a_real_32_count, sizeof(EIF_REFERENCE));
+		l_onces->real_32_status = (unsigned char*)GE_calloc_atomic(a_real_32_count, sizeof(unsigned char));
 		l_onces->real_32_count = a_real_32_count;
 	}
 	if (a_real_64_count > 0) {
-		l_onces->real_64_value = (EIF_REAL_64*)GE_calloc_atomic_uncollectable(a_real_64_count, sizeof(EIF_REAL_64));
-		l_onces->real_64_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_real_64_count, sizeof(EIF_REFERENCE));
-		l_onces->real_64_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_real_64_count, sizeof(unsigned char));
+		l_onces->real_64_value = (EIF_REAL_64*)GE_calloc_atomic(a_real_64_count, sizeof(EIF_REAL_64));
+		l_onces->real_64_exception = (EIF_REFERENCE*)GE_calloc(a_real_64_count, sizeof(EIF_REFERENCE));
+		l_onces->real_64_status = (unsigned char*)GE_calloc_atomic(a_real_64_count, sizeof(unsigned char));
 		l_onces->real_64_count = a_real_64_count;
 	}
 	if (a_reference_count > 0) {
-		l_onces->reference_value = (EIF_REFERENCE*)GE_calloc_uncollectable(a_reference_count, sizeof(EIF_REFERENCE));
-		l_onces->reference_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_reference_count, sizeof(EIF_REFERENCE));
-		l_onces->reference_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_reference_count, sizeof(unsigned char));
+		l_onces->reference_value = (EIF_REFERENCE*)GE_calloc(a_reference_count, sizeof(EIF_REFERENCE));
+		l_onces->reference_exception = (EIF_REFERENCE*)GE_calloc(a_reference_count, sizeof(EIF_REFERENCE));
+		l_onces->reference_status = (unsigned char*)GE_calloc_atomic(a_reference_count, sizeof(unsigned char));
 		l_onces->reference_count = a_reference_count;
 	}
 	if (a_procedure_count > 0) {
-		l_onces->procedure_exception = (EIF_REFERENCE*)GE_calloc_uncollectable(a_procedure_count, sizeof(EIF_REFERENCE));
-		l_onces->procedure_status = (unsigned char*)GE_calloc_atomic_uncollectable(a_procedure_count, sizeof(unsigned char));
+		l_onces->procedure_exception = (EIF_REFERENCE*)GE_calloc(a_procedure_count, sizeof(EIF_REFERENCE));
+		l_onces->procedure_status = (unsigned char*)GE_calloc_atomic(a_procedure_count, sizeof(unsigned char));
 		l_onces->procedure_count = a_procedure_count;
 	}
 	return l_onces;
@@ -5454,7 +5510,7 @@ extern "C" {
 /*
  * Bit representation of `v'.
  */
-EIF_NATURAL_32 GE_real_32_to_bits(EIF_REAL_32 v)
+EIF_NATURAL_32 GE_real_32_to_bits(volatile EIF_REAL_32 v)
 {
 	return *(EIF_NATURAL_32*)&v;
 }
@@ -5462,7 +5518,7 @@ EIF_NATURAL_32 GE_real_32_to_bits(EIF_REAL_32 v)
 /*
  * Bit representation of `v'.
  */
-EIF_NATURAL_64 GE_real_64_to_bits(EIF_REAL_64 v)
+EIF_NATURAL_64 GE_real_64_to_bits(volatile EIF_REAL_64 v)
 {
 	return *(EIF_NATURAL_64*)&v;
 }
@@ -5470,7 +5526,7 @@ EIF_NATURAL_64 GE_real_64_to_bits(EIF_REAL_64 v)
 /*
  * Real value with `v' as bit representation.
  */
-EIF_REAL_32 GE_real_32_from_bits(EIF_NATURAL_32 v)
+EIF_REAL_32 GE_real_32_from_bits(volatile EIF_NATURAL_32 v)
 {
 	return *(EIF_REAL_32*)&v;
 }
@@ -5478,7 +5534,7 @@ EIF_REAL_32 GE_real_32_from_bits(EIF_NATURAL_32 v)
 /*
  * Real value with `v' as bit representation.
  */
-EIF_REAL_64 GE_real_64_from_bits(EIF_NATURAL_64 v)
+EIF_REAL_64 GE_real_64_from_bits(volatile EIF_NATURAL_64 v)
 {
 	return *(EIF_REAL_64*)&v;
 }
@@ -6818,7 +6874,7 @@ EIF_BOOLEAN eif_file_creatable(EIF_FILENAME path, EIF_INTEGER nbytes)
  */
 EIF_INTEGER eif_file_gi(FILE* f)
 {
-	EIF_INTEGER i;
+	volatile EIF_INTEGER i;
 
 	errno = 0;
 	if (fscanf(f, "%d", &i) < 0) {
@@ -6833,7 +6889,7 @@ EIF_INTEGER eif_file_gi(FILE* f)
  */
 EIF_REAL_32 eif_file_gr(FILE* f)
 {
-	EIF_REAL_32 r;
+	volatile EIF_REAL_32 r;
 	errno = 0;
 	if (fscanf(f, "%f", &r) < 0) {
 		eise_io("FILE: unable to read REAL value.");
@@ -6847,7 +6903,7 @@ EIF_REAL_32 eif_file_gr(FILE* f)
  */
 EIF_REAL_64 eif_file_gd(FILE* f)
 {
-	EIF_REAL_64 d;
+	volatile EIF_REAL_64 d;
 	errno = 0;
 	if (fscanf(f, "%lf", &d) < 0) {
 		eise_io("FILE: unable to read DOUBLE value.");
@@ -7322,9 +7378,9 @@ static EIF_INTEGER eif_file_date_for(EIF_FILENAME name, int mode)
 		 * you are in different time zone.
 		 */
 
-		 /* WARNING: This is using the Ansi version of the Win32 API. Remember
-		  * that if you are doing any change below.
-		  */
+		/* WARNING: This is using the Ansi version of the Win32 API. Remember
+		 * that if you are doing any change below.
+		 */
 
 	WIN32_FIND_DATAW l_find_data;
 	HANDLE l_file_handle;
@@ -7357,7 +7413,7 @@ static EIF_INTEGER eif_file_date_for(EIF_FILENAME name, int mode)
 		result = (EIF_INTEGER)(l_date.QuadPart / GE_nat64(10000000) - GE_nat64(11644473600));
 	}
 #else
-	rt_stat_buf	info;
+	rt_stat_buf info;
 	if (-1 != eif_file_stat(name, &info, 1)) {
 		result = (mode ? (EIF_INTEGER)info.st_mtime: (EIF_INTEGER)info.st_atime);
 	}
@@ -7441,183 +7497,6 @@ void ca_store(char *area, long int siz, FILE *fil)
 void write_int(FILE *file, EIF_INTEGER_32 val)
 {
 	fwrite(&val, sizeof(EIF_INTEGER_32), 1, file);
-}
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-#ifdef __cplusplus
-}
-#endif
-/*
-	description:
-
-		"C functions used to implement class CONSOLE"
-
-	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
-	license: "MIT License"
-*/
-
-#ifndef EIF_CONSOLE_C
-#define EIF_CONSOLE_C
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#pragma once
-#endif
-
-#ifndef EIF_CONSOLE_H
-#include "eif_console.h"
-#endif
-#ifndef EIF_FILE_H
-#include "eif_file.h"
-#endif
-#ifndef GE_CONSOLE_H
-#include "ge_console.h"
-#endif
-
-#ifdef EIF_WINDOWS
-#include <windows.h>
-#endif
-#include <stdio.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-EIF_POINTER console_def(EIF_INTEGER file)
-{
-#ifdef EIF_WINDOWS
-		/* The following is needed to avoid the function `WideCharToMultiByte`
-		   in ENCODING_IMP.cwin_wide_char_to_multi_byte to produce an error
-		   ERROR_INVALID_PARAMETER when the code page passed as argument is
-		   the code page of the console. */
-	UINT l_code_page;
-	l_code_page = GetConsoleOutputCP();
-	if (l_code_page != 0) {
-		SetConsoleOutputCP(l_code_page);
-	}
-#endif
-	switch (file) {
-	case 0:
-		return (EIF_POINTER)stdin;
-	case 1:
-		setvbuf(stdout, NULL, _IONBF, 0);
-		return (EIF_POINTER)stdout;
-	case 2:
-		setvbuf (stderr, NULL, _IONBF, 0);
-		return (EIF_POINTER)stderr;
-	default:
-		return NULL;
-	}
-}
-
-EIF_BOOLEAN console_eof(FILE* fp)
-{
-	GE_show_console();
-	return eif_file_feof(fp);
-}
-
-EIF_CHARACTER_8 console_separator(FILE *f)
-{
-	GE_show_console();
-	return eif_file_lh(f);
-}
-
-void console_ps(FILE* f, char* str, EIF_INTEGER len)
-{
-	GE_show_console();
-	eif_file_ps(f, str, len);
-}
-
-void console_pr(FILE* f, EIF_REAL_32 number)
-{
-	GE_show_console();
-	eif_file_pr(f, number);
-}
-
-void console_pc(FILE* f, EIF_CHARACTER_8 c)
-{
-	GE_show_console();
-	eif_file_pc(f, c);
-}
-
-void console_pd(FILE* f, EIF_REAL_64 val)
-{
-	GE_show_console();
-	eif_file_pd(f, val);
-}
-
-void console_pi(FILE* f, EIF_INTEGER number)
-{
-	GE_show_console();
-	eif_file_pi(f, number);
-}
-
-void console_tnwl(FILE* f)
-{
-	GE_show_console();
-	console_pc(f,'\n');
-}
-
-EIF_CHARACTER_8 console_readchar(FILE* f)
-{
-	GE_show_console();
-	return eif_file_gc(f);
-}
-
-EIF_REAL_32 console_readreal(FILE* f)
-{
-	GE_show_console();
-	return eif_file_gr(f);
-}
-
-EIF_INTEGER console_readint(FILE* f)
-{
-	GE_show_console();
-	return eif_file_gi(f);
-}
-
-EIF_REAL_64 console_readdouble(FILE* f)
-{
-	GE_show_console();
-	return eif_file_gd(f);
-}
-
-EIF_INTEGER console_readword(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start)
-{
-	GE_show_console();
-	return eif_file_gw(f, s, bound, start);
-}
-
-EIF_INTEGER console_readline(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start)
-{
-	GE_show_console();
-	return eif_file_gs(f, s, bound, start);
-}
-
-void console_next_line(FILE* f)
-{
-	GE_show_console();
-	eif_file_tnil(f);
-}
-
-EIF_INTEGER console_readstream(FILE* f, char* s, EIF_INTEGER bound)
-{
-	GE_show_console();
-	return eif_file_gss(f, s, bound);
-}
-
-void console_file_close (FILE* f)
-{
-	GE_show_console();
-	eif_file_close(f);
 }
 
 #ifdef __cplusplus
@@ -8174,8 +8053,8 @@ void eif_sleep(EIF_INTEGER_64 nanoseconds)
 	 */
 
 #ifdef HAS_NANOSLEEP
-	struct timespec req;
-	struct timespec rem;
+	volatile struct timespec req;
+	volatile struct timespec rem;
 	req.tv_sec = nanoseconds / 1000000000;
 	req.tv_nsec = nanoseconds % 1000000000;
 	while ((nanosleep (&req, &rem) == -1) && (errno == EINTR)) {
@@ -8217,6 +8096,183 @@ void eif_sleep(EIF_INTEGER_64 nanoseconds)
 #  undef EIF_SLEEP_TYPE
 #  undef EIF_SLEEP_FUNCTION
 #endif
+}
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
+/*
+	description:
+
+		"C functions used to implement class CONSOLE"
+
+	system: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	license: "MIT License"
+*/
+
+#ifndef EIF_CONSOLE_C
+#define EIF_CONSOLE_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef EIF_CONSOLE_H
+#include "eif_console.h"
+#endif
+#ifndef EIF_FILE_H
+#include "eif_file.h"
+#endif
+#ifndef GE_CONSOLE_H
+#include "ge_console.h"
+#endif
+
+#ifdef EIF_WINDOWS
+#include <windows.h>
+#endif
+#include <stdio.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+EIF_POINTER console_def(EIF_INTEGER file)
+{
+#ifdef EIF_WINDOWS
+		/* The following is needed to avoid the function `WideCharToMultiByte`
+		   in ENCODING_IMP.cwin_wide_char_to_multi_byte to produce an error
+		   ERROR_INVALID_PARAMETER when the code page passed as argument is
+		   the code page of the console. */
+	UINT l_code_page;
+	l_code_page = GetConsoleOutputCP();
+	if (l_code_page != 0) {
+		SetConsoleOutputCP(l_code_page);
+	}
+#endif
+	switch (file) {
+	case 0:
+		return (EIF_POINTER)stdin;
+	case 1:
+		setvbuf(stdout, NULL, _IONBF, 0);
+		return (EIF_POINTER)stdout;
+	case 2:
+		setvbuf (stderr, NULL, _IONBF, 0);
+		return (EIF_POINTER)stderr;
+	default:
+		return NULL;
+	}
+}
+
+EIF_BOOLEAN console_eof(FILE* fp)
+{
+	GE_show_console();
+	return eif_file_feof(fp);
+}
+
+EIF_CHARACTER_8 console_separator(FILE *f)
+{
+	GE_show_console();
+	return eif_file_lh(f);
+}
+
+void console_ps(FILE* f, char* str, EIF_INTEGER len)
+{
+	GE_show_console();
+	eif_file_ps(f, str, len);
+}
+
+void console_pr(FILE* f, EIF_REAL_32 number)
+{
+	GE_show_console();
+	eif_file_pr(f, number);
+}
+
+void console_pc(FILE* f, EIF_CHARACTER_8 c)
+{
+	GE_show_console();
+	eif_file_pc(f, c);
+}
+
+void console_pd(FILE* f, EIF_REAL_64 val)
+{
+	GE_show_console();
+	eif_file_pd(f, val);
+}
+
+void console_pi(FILE* f, EIF_INTEGER number)
+{
+	GE_show_console();
+	eif_file_pi(f, number);
+}
+
+void console_tnwl(FILE* f)
+{
+	GE_show_console();
+	console_pc(f,'\n');
+}
+
+EIF_CHARACTER_8 console_readchar(FILE* f)
+{
+	GE_show_console();
+	return eif_file_gc(f);
+}
+
+EIF_REAL_32 console_readreal(FILE* f)
+{
+	GE_show_console();
+	return eif_file_gr(f);
+}
+
+EIF_INTEGER console_readint(FILE* f)
+{
+	GE_show_console();
+	return eif_file_gi(f);
+}
+
+EIF_REAL_64 console_readdouble(FILE* f)
+{
+	GE_show_console();
+	return eif_file_gd(f);
+}
+
+EIF_INTEGER console_readword(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start)
+{
+	GE_show_console();
+	return eif_file_gw(f, s, bound, start);
+}
+
+EIF_INTEGER console_readline(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start)
+{
+	GE_show_console();
+	return eif_file_gs(f, s, bound, start);
+}
+
+void console_next_line(FILE* f)
+{
+	GE_show_console();
+	eif_file_tnil(f);
+}
+
+EIF_INTEGER console_readstream(FILE* f, char* s, EIF_INTEGER bound)
+{
+	GE_show_console();
+	return eif_file_gss(f, s, bound);
+}
+
+void console_file_close (FILE* f)
+{
+	GE_show_console();
+	eif_file_close(f);
 }
 
 #ifdef __cplusplus
@@ -8308,7 +8364,7 @@ EIF_INTEGER GE_ccom_hresult_facility(EIF_INTEGER an_hresult)
 EIF_POINTER GE_ccom_error_text(EIF_INTEGER a_code)
 {
 #ifdef EIF_WINDOWS
-	LPVOID result;
+	volatile LPVOID result;
 	FormatMessage(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 		NULL,

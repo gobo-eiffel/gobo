@@ -104,7 +104,7 @@ elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 	LFLAGS='-nologo -subsystem:console'
 	LFLAG_OUT='-out:'
 	LLIBS=''
-	echo msc > $GOBO/tool/gec/config/c/default.cfg
+	echo msc > $GOBO/tool/gec/backend/c/config/default.cfg
 	c_compilation
 elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	CC=bcc32
@@ -114,7 +114,7 @@ elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	LFLAGS='-5 -q'
 	LFLAGS='-e'
 	LLIBS=''
-	echo bcc > $GOBO/tool/gec/config/c/default.cfg
+	echo bcc > $GOBO/tool/gec/backend/c/config/default.cfg
 	c_compilation
 	$RM *.tds
 elif [ "$CC" = "lcc-win32" ]; then
@@ -126,7 +126,7 @@ elif [ "$CC" = "lcc-win32" ]; then
 	LFLAGS='-s -subsystem Console'
 	LFLAG_OUT='-o '
 	LLIBS=''
-	echo lcc-win32 > $GOBO/tool/gec/config/c/default.cfg
+	echo lcc-win32 > $GOBO/tool/gec/backend/c/config/default.cfg
 	c_compilation
 elif [ "$CC" = "lcc-win64" -o "$CC" = "lcc" ]; then
 	CC='lcc64'
@@ -137,7 +137,7 @@ elif [ "$CC" = "lcc-win64" -o "$CC" = "lcc" ]; then
 	LFLAGS='-s -subsystem Console'
 	LFLAG_OUT='-o '
 	LLIBS=''
-	echo lcc-win64 > $GOBO/tool/gec/config/c/default.cfg
+	echo lcc-win64 > $GOBO/tool/gec/backend/c/config/default.cfg
 	c_compilation
 elif [ "$CC" = "gcc" ]; then
 	CC=gcc
@@ -147,7 +147,7 @@ elif [ "$CC" = "gcc" ]; then
 	LFLAGS=''
 	LFLAG_OUT='-o '
 	LLIBS='-lm -pthread'
-	echo gcc > $GOBO/tool/gec/config/c/default.cfg
+	echo gcc > $GOBO/tool/gec/backend/c/config/default.cfg
 	c_compilation
 elif [ "$CC" = "mingw" ]; then
 	CC=gcc
@@ -158,7 +158,7 @@ elif [ "$CC" = "mingw" ]; then
 	LFLAGS=''
 	LFLAG_OUT='-o '
 	LLIBS='-lm -pthread -liconv'
-	echo mingw > $GOBO/tool/gec/config/c/default.cfg
+	echo mingw > $GOBO/tool/gec/backend/c/config/default.cfg
 	c_compilation
 elif [ "$CC" = "clang" ]; then
 	CC=clang
@@ -167,7 +167,7 @@ elif [ "$CC" = "clang" ]; then
 	LFLAGS=''
 	LFLAG_OUT='-o '
 	LLIBS='-lm -pthread -liconv'
-	echo clang > $GOBO/tool/gec/config/c/default.cfg
+	echo clang > $GOBO/tool/gec/backend/c/config/default.cfg
 	c_compilation
 elif [ "$CC" = "zig" ]; then
 	CC='zig cc'
@@ -176,7 +176,7 @@ elif [ "$CC" = "zig" ]; then
 	LFLAGS=''
 	LFLAG_OUT='-o '
 	LLIBS='-lm -pthread -liconv'
-	echo zig > $GOBO/tool/gec/config/c/default.cfg
+	echo zig > $GOBO/tool/gec/backend/c/config/default.cfg
 	c_compilation
 elif [ "$CC" = "cc" ]; then
 	CC='cc'
@@ -185,7 +185,7 @@ elif [ "$CC" = "cc" ]; then
 	LDFLAGS='-lm -pthread'
 	LFLAG_OUT='-o '
 	LLIBS=''
-	echo cc > $GOBO/tool/gec/config/c/default.cfg
+	echo cc > $GOBO/tool/gec/backend/c/config/default.cfg
 	c_compilation
 elif [ "$CC" = "icc" ]; then
 	CC=icc
@@ -194,7 +194,7 @@ elif [ "$CC" = "icc" ]; then
 	LFLAGS=''
 	LFLAG_OUT='-o '
 	LLIBS=''
-	echo icc > $GOBO/tool/gec/config/c/default.cfg
+	echo icc > $GOBO/tool/gec/backend/c/config/default.cfg
 	c_compilation
 elif [ "$CC" = "tcc" ]; then
 	CC=tcc
@@ -203,7 +203,7 @@ elif [ "$CC" = "tcc" ]; then
 	LDFLAGS='-lm'
 	LFLAG_OUT='-o '
 	LLIBS=''
-	echo tcc > $GOBO/tool/gec/config/c/default.cfg
+	echo tcc > $GOBO/tool/gec/backend/c/config/default.cfg
 	c_compilation
 elif [ "$CC" = "no_c" ]; then
 	echo "No C compilation"
