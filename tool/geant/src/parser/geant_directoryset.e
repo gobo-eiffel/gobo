@@ -286,7 +286,7 @@ feature -- Cursor movement
 		end
 
 	forth
-	   		-- Move cursor to next position.
+			-- Move cursor to next position.
 		require
 			not_after: not after
 		do
