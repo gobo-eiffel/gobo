@@ -767,19 +767,12 @@ EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
 	if (!obj) {
 		GE_show_console();
 		fprintf(stderr, "Call on Void target!\n");
-#ifdef EIF_DEBUG
-		{
-			volatile char c;
-			fprintf(stderr, "Press Enter...\n");
-			scanf("%c", &c);
-		}
-#endif
 		GE_raise(GE_EX_VOID);
 	}
 	return (obj);
 }
 
-#ifdef EIF_WORKBENCH
+#ifdef GE_DEBUG
 /*
  * Check whether `obj' is Void.
  * If it is, then raise a call-on-void-target exception.
@@ -792,13 +785,6 @@ EIF_REFERENCE GE_check_void2(EIF_REFERENCE obj, EIF_INTEGER i)
 	if (!obj) {
 		GE_show_console();
 		fprintf(stderr, "Call on Void target! (%d)\n", i);
-#ifdef EIF_DEBUG
-		{
-			volatile char c;
-			fprintf(stderr, "Press Enter...\n");
-			scanf("%c", &c);
-		}
-#endif
 		GE_raise(GE_EX_VOID);
 	}
 	return (obj);
@@ -815,13 +801,6 @@ void* GE_check_null(void* ptr)
 	if (!ptr) {
 		GE_show_console();
 		fprintf(stderr, "No more memory!\n");
-#ifdef EIF_DEBUG
-		{
-			volatile char c;
-			fprintf(stderr, "Press Enter...\n");
-			scanf("%c", &c);
-		}
-#endif
 		GE_raise(GE_EX_MEM);
 	}
 	return (ptr);
