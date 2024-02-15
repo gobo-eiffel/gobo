@@ -10,6 +10,10 @@
 
 class UT_FILENAME_HANDLER
 
+obsolete
+
+	"Use KL_*_FILE_SYSTEM classes instead. [2024-02-15]"
+
 inherit
 
 	ANY -- Export features of ANY.
