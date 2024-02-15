@@ -11,7 +11,7 @@
 
 class KL_SHARED_OPERATING_SYSTEM
 
-feature -- Acess
+feature -- Access
 
 	operating_system: KL_OPERATING_SYSTEM
 			-- Underlying operating system

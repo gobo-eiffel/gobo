@@ -1,4 +1,4 @@
-﻿note
+note
 
 	description:
 
@@ -9,11 +9,11 @@
 	copyright: "Copyright (c) 2010-2018, Eric Bezault and others"
 	license: "MIT License"
 
-class ET_SHARED_ISE_VARIABLES
+class UT_SHARED_ISE_VARIABLES
 
-feature -- Acess
+feature -- Access
 
-	ise_variables: ET_ISE_VARIABLES
+	ise_variables: UT_ISE_VARIABLES
 			-- Environment variables defined and used in ISE's tools
 		once
 			create Result

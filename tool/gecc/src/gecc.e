@@ -7,7 +7,7 @@
 			Take advantage of multi-CPU machines to compile several C files concurrently.
 		]"
 
-	copyright: "Copyright (c) 2018-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class GECC
@@ -23,7 +23,7 @@ inherit
 
 	KL_SHARED_ARGUMENTS
 
-	ET_SHARED_ISE_VARIABLES
+	UT_SHARED_ISE_VARIABLES
 		export {NONE} all end
 
 create

@@ -4,7 +4,7 @@
 
 		"Gobo Eiffel Doc"
 
-	copyright: "Copyright (c) 2017-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class GEDOC
@@ -25,7 +25,7 @@ inherit
 	UT_SHARED_ISE_VERSIONS
 		export {NONE} all end
 
-	ET_SHARED_ISE_VARIABLES
+	UT_SHARED_ISE_VARIABLES
 		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES

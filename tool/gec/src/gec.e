@@ -4,7 +4,7 @@
 
 		"Gobo Eiffel Compiler"
 
-	copyright: "Copyright (c) 2005-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class GEC
@@ -27,7 +27,7 @@ inherit
 	UT_SHARED_ISE_VERSIONS
 		export {NONE} all end
 
-	ET_SHARED_ISE_VARIABLES
+	UT_SHARED_ISE_VARIABLES
 		export {NONE} all end
 
 	ET_SHARED_TOKEN_CONSTANTS

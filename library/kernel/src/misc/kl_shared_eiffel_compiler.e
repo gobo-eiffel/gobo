@@ -11,7 +11,7 @@
 
 class KL_SHARED_EIFFEL_COMPILER
 
-feature -- Acess
+feature -- Access
 
 	eiffel_compiler: KL_EIFFEL_COMPILER
 			-- Eiffel compiler used to compile this program

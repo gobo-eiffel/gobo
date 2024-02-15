@@ -4,7 +4,7 @@
 
 		"Gobo Eiffel Lint"
 
-	copyright: "Copyright (c) 1999-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class GELINT
@@ -24,7 +24,7 @@ inherit
 	UT_SHARED_ISE_VERSIONS
 		export {NONE} all end
 
-	ET_SHARED_ISE_VARIABLES
+	UT_SHARED_ISE_VARIABLES
 		export {NONE} all end
 
 	UT_SHARED_ECMA_VERSIONS

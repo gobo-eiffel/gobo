@@ -5,7 +5,7 @@
 		"Test features of class ET_AST_TOKENIZER"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_TEST_AST_TOKENIZER
@@ -32,7 +32,7 @@ inherit
 	UT_SHARED_ISE_VERSIONS
 		export {NONE} all end
 
-	ET_SHARED_ISE_VARIABLES
+	UT_SHARED_ISE_VARIABLES
 		export {NONE} all end
 
 create

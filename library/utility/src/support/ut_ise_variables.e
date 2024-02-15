@@ -1,4 +1,4 @@
-﻿note
+note
 
 	description:
 
@@ -8,7 +8,7 @@
 	copyright: "Copyright (c) 2010-2024, Eric Bezault and others"
 	license: "MIT License"
 
-class ET_ISE_VARIABLES
+class UT_ISE_VARIABLES
 
 inherit
 

@@ -5,7 +5,7 @@
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_EIFFEL_SCANNER_SKELETON
@@ -34,7 +34,6 @@ inherit
 	KL_IMPORTED_INTEGER_ROUTINES
 	KL_IMPORTED_STRING_ROUTINES
 	KL_SHARED_PLATFORM
-	KL_SHARED_EIFFEL_COMPILER
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_FILE_SYSTEM
 	ET_SHARED_TOKEN_CONSTANTS
