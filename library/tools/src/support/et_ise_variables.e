@@ -5,7 +5,7 @@
 		"Environment variables defined and used in ISE's tools."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ISE_VARIABLES
@@ -159,7 +159,7 @@ feature -- Setting
 			l_filename: STRING
 		do
 			if not attached ise_c_compiler_value as l_ise_c_compiler_value or else l_ise_c_compiler_value.is_empty then
-				l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "config", "c", "default.cfg">>)
+				l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "config", "default.cfg">>)
 				l_filename := Execution_environment.interpreted_string (l_filename)
 				create l_file.make (l_filename)
 				l_file.open_read
