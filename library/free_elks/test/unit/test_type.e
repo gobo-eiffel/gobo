@@ -180,10 +180,10 @@ feature -- Test
 			assert_same ("basic_expanded_attached", {INTEGER_16}, {attached INTEGER_16})
 			assert_same ("non_basic_expanded_detachable", {UTF_CONVERTER}, {detachable UTF_CONVERTER})
 			assert_same ("non_basic_expanded_attached", {UTF_CONVERTER}, {attached UTF_CONVERTER})
-			assert_same ("non_basic_generic_expanded_detachable", {TYPED_POINTER [ANY]}, {detachable TYPED_POINTER [ANY]})
 			if not eiffel_compiler.is_ise then
-				assert_same ("non_basic_generic_expanded_attached", {TYPED_POINTER [ANY]}, {attached TYPED_POINTER [ANY]})
+				assert_same ("non_basic_generic_expanded_detachable", {TYPED_POINTER [ANY]}, {detachable TYPED_POINTER [ANY]})
 			end
+			assert_same ("non_basic_generic_expanded_attached", {TYPED_POINTER [ANY]}, {attached TYPED_POINTER [ANY]})
 		end
 
 	test_none
