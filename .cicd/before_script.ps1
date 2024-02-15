@@ -15,7 +15,7 @@
 	before_script.ps1 github
 
 .NOTES
-	Copyright: "Copyright (c) 2021, Eric Bezault and others"
+	Copyright: "Copyright (c) 2021-2024, Eric Bezault and others"
 	License: "MIT License"
 #>
 
@@ -162,3 +162,5 @@ Write-Host "`$GOBO_CI_C_COMPILER = $GOBO_CI_C_COMPILER"
 Write-Host "`$GOBO_CI_BUILD_SCRIPT = $GOBO_CI_BUILD_SCRIPT"
 
 $env:PATH = "$env:GOBO/bin$([IO.Path]::PathSeparator)$env:PATH"
+
+. "$PSScriptRoot/set_gobo_version.ps1"

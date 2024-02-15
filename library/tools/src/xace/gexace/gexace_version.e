@@ -4,7 +4,7 @@
 
 		"Version of gexace"
 
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class GEXACE_VERSION
@@ -15,6 +15,6 @@ obsolete
 
 inherit
 
-	KL_GOBO_VERSION
+	UT_GOBO_VERSION
 
 end
