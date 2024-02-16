@@ -137,6 +137,9 @@ inherit
 	UT_SHARED_ISE_VARIABLES
 		export {NONE} all end
 
+	UT_SHARED_GOBO_VARIABLES
+		export {NONE} all end
+
 	KL_IMPORTED_CHARACTER_ROUTINES
 		export {NONE} all end
 
@@ -654,6 +657,10 @@ feature {NONE} -- Compilation script generation
 				end
 				i := i + 1
 			end
+				-- Boehm GC.
+			if use_boehm_gc then
+				add_external_boehm_gc_c_files (l_external_c_filenames)
+			end
 			l_cursor := l_external_c_filenames.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				l_obj_filenames.append_character (' ')
@@ -1068,6 +1075,101 @@ feature {NONE} -- Compilation script generation
 				end
 				if l_cpp_file /= Void and then l_cpp_file.is_open_write then
 					l_cpp_file.close
+				end
+			end
+		end
+
+	add_external_boehm_gc_c_files (a_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
+			-- Add C files of of the Boehm GC to the compilation script.
+		require
+			a_external_c_filenames_not_void: a_external_c_filenames /= Void
+			use_boehm_gc: use_boehm_gc
+		local
+			l_c_file: detachable KL_TEXT_OUTPUT_FILE
+			l_c_filename: STRING
+			l_common_defines: ARRAY [STRING]
+			l_common_c_files: ARRAY [STRING]
+			i, nb: INTEGER
+		do
+			if not attached gobo_variables.boehm_gc_value as l_boehm_gc_folder or else l_boehm_gc_folder.is_empty then
+				set_fatal_error
+				report_undefined_environment_variable_error (gobo_variables.boehm_gc_variable)
+			else
+				l_c_filename := "boehm_gc" + c_file_extension
+				a_external_c_filenames.force_last (c_file_extension, "boehm_gc")
+				create l_c_file.make (l_c_filename)
+				l_c_file.open_write
+				if not l_c_file.is_open_write then
+					set_fatal_error
+					report_cannot_write_error (l_c_filename)
+				else
+					l_common_defines := <<
+						"GC_NOT_DLL",
+						"GC_THREADS",
+						"THREAD_LOCAL_ALLOC",
+						"PARALLEL_MARK",
+						"LARGE_CONFIG",
+						"ALL_INTERIOR_POINTERS",
+						"ENABLE_DISCLAIM",
+						"GC_ATOMIC_UNCOLLECTABLE",
+						"GC_GCJ_SUPPORT",
+						"JAVA_FINALIZATION",
+						"NO_EXECUTE_PERMISSION",
+						"USE_MUNMAP"
+					>>
+					nb := l_common_defines.count
+					from i := 1 until i > nb loop
+						l_c_file.put_string (c_define)
+						l_c_file.put_character (' ')
+						l_c_file.put_line (l_common_defines.item (i))
+						i := i + 1
+					end
+						-- clang (and hence Zig) supports GCC atomic intrinsics.
+					l_c_file.put_string (c_ifdef)
+					l_c_file.put_character (' ')
+					l_c_file.put_line ("__clang__")
+					l_c_file.put_string (c_define)
+					l_c_file.put_character (' ')
+					l_c_file.put_line ("GC_BUILTIN_ATOMIC")
+					l_c_file.put_line (c_endif)
+					l_c_file.put_new_line
+					l_common_c_files := <<
+						"misc.c",
+						"win32_threads.c",
+						"alloc.c",
+						"reclaim.c",
+						"allchblk.c",
+						"mach_dep.c",
+						"os_dep.c",
+						"mark_rts.c",
+						"headers.c",
+						"mark.c",
+						"obj_map.c",
+						"blacklst.c",
+						"finalize.c",
+						"new_hblk.c",
+						"dbg_mlc.c",
+						"fnlz_mlc.c",
+						"malloc.c",
+						"dyn_load.c",
+						"typd_mlc.c",
+						"ptr_chck.c",
+						"gcj_mlc.c",
+						"mallocx.c",
+						"extra\msvc_dbg.c",
+						"thread_local_alloc.c"
+					>>
+					nb := l_common_c_files.count
+					from i := 1 until i > nb loop
+						l_c_file.put_string (c_include)
+						l_c_file.put_character (' ')
+						l_c_file.put_character ('"')
+						l_c_file.put_string (file_system.pathname (l_boehm_gc_folder, l_common_c_files.item (i)))
+						l_c_file.put_character ('"')
+						l_c_file.put_new_line
+						i := i + 1
+					end
+					l_c_file.close
 				end
 			end
 		end
@@ -42385,6 +42487,17 @@ feature {NONE} -- Error handling
 		do
 			create an_error.make (a_filename)
 			error_handler.report_error (an_error)
+		end
+
+	report_undefined_environment_variable_error (a_variable: STRING)
+			-- Report that the environment variable `a_variable' is not defined.
+		require
+			a_variable_not_void: a_variable /= Void
+		local
+			l_error: UT_UNDEFINED_ENVIRONMENT_VARIABLE_ERROR
+		do
+			create l_error.make (a_variable)
+			error_handler.report_error (l_error)
 		end
 
 feature {NONE} -- Access

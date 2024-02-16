@@ -4,6 +4,7 @@
 
 		"Version of Gobo"
 
+	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 
