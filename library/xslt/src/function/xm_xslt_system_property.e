@@ -5,7 +5,7 @@ note
 		"Objects that implement the XSLT system-property() function"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2024, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ inherit
 			pre_evaluate, evaluate_item, check_arguments
 		end
 
-	KL_GOBO_VERSION
+	UT_GOBO_VERSION
 		export {NONE} all end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
