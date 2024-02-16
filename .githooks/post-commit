@@ -1,0 +1,4 @@
+#!/bin/sh
+
+export GOBO=`pwd`
+powershell -ExecutionPolicy Unrestricted -File ./.cicd/set_gobo_version.ps1
