@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel compilation"
-		copyright: "Copyright (c) 2001-2023, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
@@ -192,8 +192,20 @@
 		<delete file="${system}.ilk"/>
 		<delete file="${system}.suo"/>
 		<delete file="${system}.exe.manifest"/>
+		<delete file="${system}.gc.log"/>
+		<delete file="boehm_gc.c"/>
+		<delete file="boehm_gc.obj"/>
+		<delete file="boehm_gc.o"/>
+		<delete file="com.c"/>
+		<delete file="com.obj"/>
+		<delete file="com.o"/>
+		<delete file="com_runtime.c"/>
+		<delete file="com_runtime.obj"/>
+		<delete file="com_runtime.o"/>
+		<delete file="wel.obj"/>
 		<delete file="wel.c"/>
 		<delete file="wel.obj"/>
+		<delete file="wel.o"/>
 		<geant target="other_clean"/>
 	</target>
 

@@ -30,6 +30,9 @@ inherit
 	UT_SHARED_ISE_VARIABLES
 		export {NONE} all end
 
+	UT_SHARED_GOBO_VARIABLES
+		export {NONE} all end
+
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
@@ -78,6 +81,9 @@ feature -- Execution
 			a_file: KL_TEXT_INPUT_FILE
 		do
 			Arguments.set_program_name ("gec")
+				-- Set environment variables "$GOBO", "$GOBO_LIBRARY",
+				-- "$BOEHM_GC" if not set yet.
+			gobo_variables.set_gobo_variables
 				-- For compatibility with ISE's tools, define the environment
 				-- variables "$ISE_LIBRARY", "$EIFFEL_LIBRARY", "$ISE_PLATFORM"
 				-- and "$ISE_C_COMPILER" if not set yet.
@@ -234,7 +240,7 @@ feature {NONE} -- Processing
 					l_system_name := l_root_type.base_class.lower_name
 				end
 				create l_generator.make (l_system, l_system_processor)
-				if gc_option.was_found then
+				if gc_option.was_found or use_boehm_gc then
 						-- Override any option that might have been specified
 						-- in the Eiffel config file.
 					l_generator.set_use_boehm_gc (use_boehm_gc)
@@ -406,7 +412,11 @@ feature -- Arguments
 	use_boehm_gc: BOOLEAN
 			-- Should the application be compiled with the Boehm GC?
 		do
-			Result := gc_option.was_found and then attached gc_option.parameter as l_parameter and then STRING_.same_string (l_parameter, "boehm")
+			if gc_option.was_found and then attached gc_option.parameter as l_parameter then
+				Result := STRING_.same_string (l_parameter, "boehm")
+			else
+				Result := attached gobo_variables.boehm_gc_value as l_boehm_gc and then not l_boehm_gc.is_empty
+			end
 		end
 
 	thread_count: INTEGER
@@ -599,7 +609,7 @@ feature -- Argument parsing
 			a_parser.options.force_last (new_instance_types_option)
 				-- gc
 			create gc_option.make_with_long_form ("gc")
-			gc_option.set_description ("Which garbage collector should the application be compiled with? (default: no)")
+			gc_option.set_description ("Which garbage collector should the application be compiled with? (default: boehm if available, no otherwise)")
 			gc_option.extend ("no")
 			gc_option.extend ("boehm")
 			gc_option.set_parameter_description ("no|boehm")

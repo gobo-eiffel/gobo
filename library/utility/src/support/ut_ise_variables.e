@@ -4,7 +4,7 @@ note
 
 		"Environment variables defined and used in ISE's tools."
 
-	library: "Gobo Eiffel Tools Library"
+	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2010-2024, Eric Bezault and others"
 	license: "MIT License"
 
@@ -90,6 +90,8 @@ feature -- Setting
 			set_eiffel_library_variable
 			set_ise_platform_variable
 			set_ise_c_compiler_variable
+		ensure
+			instance_free: class
 		end
 
 	set_ise_library_variable
@@ -176,6 +178,8 @@ feature -- Setting
 					Execution_environment.set_variable_value (ise_c_compiler_variable, l_value)
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 end

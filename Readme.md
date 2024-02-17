@@ -17,7 +17,9 @@ under the terms and conditions of the MIT License as specified in file
 is hosted at
 [Github](http://github.com/gobo-eiffel/gobo)
 while the official site (for stable releases) is located at
-[gobosoft.com](http://www.gobosoft.com).
+[gobosoft.com](http://www.gobosoft.com). This package also contains files 
+from the [Boehm GC](https://github.com/ivmai/bdwgc) project which is also
+released under a MIT-style [license](tool/gec/backend/c/boehm_gc/LICENSE).
 
 *Gobo Eiffel* already consists of seventeen Eiffel libraries:
 
@@ -152,4 +154,4 @@ are available to help you make the first steps.
 
 ## Authors
 
-Copyright (c) 1997-2022, Eric Bezault and others
+Copyright (c) 1997-2024, Eric Bezault and others

@@ -26,6 +26,9 @@ inherit
 	UT_SHARED_ISE_VARIABLES
 		export {NONE} all end
 
+	UT_SHARED_GOBO_VARIABLES
+		export {NONE} all end
+
 create
 
 	execute,
@@ -73,6 +76,9 @@ feature -- Execution
 			l_thread_count: INTEGER
 		do
 			Arguments.set_program_name ("gecc")
+				-- Set environment variables "$GOBO", "$GOBO_LIBRARY",
+				-- "$BOEHM_GC" if not set yet.
+			gobo_variables.set_gobo_variables
 				-- For compatibility with ISE's tools, define the environment
 				-- variables "$ISE_LIBRARY", "$EIFFEL_LIBRARY", "$ISE_PLATFORM"
 				-- and "$ISE_C_COMPILER" if not set yet.

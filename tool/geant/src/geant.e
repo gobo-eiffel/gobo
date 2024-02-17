@@ -5,7 +5,7 @@
 		"Gobo Eiffel Ant: build tool for Eiffel, based on the concepts of Jakarta Ant"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2023, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2024, Sven Ehrke and others"
 	license: "MIT License"
 
 class GEANT
@@ -18,6 +18,9 @@ inherit
 		export {NONE} all end
 
 	KL_SHARED_ARGUMENTS
+		export {NONE} all end
+
+	UT_SHARED_GOBO_VARIABLES
 		export {NONE} all end
 
 create
@@ -37,6 +40,9 @@ feature {NONE} -- Initialization
 			s1, s: STRING
 		do
 			Arguments.set_program_name ("geant")
+				-- Set environment variables "$GOBO", "$GOBO_LIBRARY",
+				-- "$BOEHM_GC" if not set yet.
+			gobo_variables.set_gobo_variables
 			create error_handler.make_standard
 			build_filename := Default_build_filename
 			read_command_line

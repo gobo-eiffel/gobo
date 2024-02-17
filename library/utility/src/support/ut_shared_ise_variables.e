@@ -5,7 +5,7 @@ note
 		"Shared environment variables defined and used in ISE's tools."
 
 	pattern: "Singleton"
-	library: "Gobo Eiffel Tools Library"
+	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2010-2018, Eric Bezault and others"
 	license: "MIT License"
 
