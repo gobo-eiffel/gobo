@@ -659,7 +659,12 @@ feature {NONE} -- Compilation script generation
 			end
 				-- Boehm GC.
 			if use_boehm_gc then
-				add_external_boehm_gc_c_files (l_external_c_filenames)
+				if not attached gobo_variables.boehm_gc_value as l_boehm_gc_folder or else l_boehm_gc_folder.is_empty then
+					set_fatal_error
+					report_undefined_environment_variable_error (gobo_variables.boehm_gc_variable)
+				else
+					add_external_c_files ("boehm_gc", l_boehm_gc_folder, l_external_c_filenames)
+				end
 			end
 			l_cursor := l_external_c_filenames.new_cursor
 			from l_cursor.start until l_cursor.after loop
@@ -979,26 +984,28 @@ feature {NONE} -- Compilation script generation
 			a_clib_dirname_not_void: a_clib_dirname /= Void
 			a_external_c_filenames_not_void: a_external_c_filenames /= Void
 		local
-			l_c_file: detachable KL_TEXT_OUTPUT_FILE
-			l_cpp_file: detachable KL_TEXT_OUTPUT_FILE
-			l_external_file: detachable KL_TEXT_OUTPUT_FILE
-			l_c_filename: STRING
-			l_cpp_filename: STRING
+			l_external_file: KL_TEXT_OUTPUT_FILE
 			l_external_filename: detachable STRING
 			l_dir: KL_DIRECTORY
 			l_filename: STRING
 			l_extension: STRING
 			l_basename: STRING
 			l_newline_needed_in_header_file: BOOLEAN
+			l_c_filenames: detachable DS_ARRAYED_LIST [STRING]
+			l_cpp_filenames: detachable DS_ARRAYED_LIST [STRING]
+			l_filenames: detachable DS_ARRAYED_LIST [STRING]
+			l_sorter: DS_QUICK_SORTER [STRING]
+			l_comparator: UC_STRING_COMPARATOR
+			i, nb: INTEGER
+			l_common_defines: ARRAY [STRING]
 		do
-			l_c_filename := a_library_name + c_file_extension
-			l_cpp_filename := a_library_name + "_cpp" + cpp_file_extension
 			create l_dir.make (a_clib_dirname)
 			l_dir.open_read
 			if not l_dir.is_open_read then
 				set_fatal_error
 				report_cannot_read_error (a_clib_dirname)
 			else
+				create l_filenames.make (50)
 				from
 					l_dir.read_entry
 				until
@@ -1006,94 +1013,164 @@ feature {NONE} -- Compilation script generation
 				loop
 					l_filename := l_dir.last_entry
 					if l_filename.ends_with (c_file_extension) then
-						l_external_file := l_c_file
-						l_external_filename := l_c_filename
+						if l_c_filenames = Void then
+							create l_c_filenames.make (50)
+						end
+						l_c_filenames.force_last (l_filename)
 					elseif l_filename.ends_with (cpp_file_extension) then
-						l_external_file := l_cpp_file
-						l_external_filename := l_cpp_filename
-					else
-						l_external_file := Void
-						l_external_filename := Void
-					end
-					if l_external_filename /= Void then
-						if l_external_file = Void then
-							create l_external_file.make (l_external_filename)
-							if l_external_filename = l_c_filename then
-								l_c_file := l_external_file
-							else
-								l_cpp_file := l_external_file
-							end
-							l_external_file.open_write
-							if not l_external_file.is_open_write then
-								set_fatal_error
-								report_cannot_write_error (l_external_filename)
-							else
-								l_extension := file_system.extension (l_external_filename)
-								l_basename := l_external_filename.twin
-								l_basename.remove_tail (l_extension.count)
-								a_external_c_filenames.force_last (l_extension, l_basename)
-								if use_threads then
-									l_external_file.put_string (c_define)
-									l_external_file.put_character (' ')
-									l_external_file.put_line (c_ge_use_threads)
-									l_newline_needed_in_header_file := True
-								end
-								if scoop_mode then
-									l_external_file.put_string (c_define)
-									l_external_file.put_character (' ')
-									l_external_file.put_line (c_ge_use_scoop)
-									l_newline_needed_in_header_file := True
-								end
-								if l_newline_needed_in_header_file then
-									l_external_file.put_new_line
-								end
-								l_external_file.put_string (c_include)
-								l_external_file.put_character (' ')
-								l_external_file.put_character ('"')
-								l_external_file.put_string ("ge_eiffel.h")
-								l_external_file.put_character ('"')
-								l_external_file.put_new_line
-								l_external_file.put_string (c_include)
-								l_external_file.put_character (' ')
-								l_external_file.put_character ('"')
-								l_external_file.put_string ("ge_gc.h")
-								l_external_file.put_character ('"')
-								l_external_file.put_new_line
-									-- Two header files needed to compile EiffelCOM.
-								l_external_file.put_string (c_include)
-								l_external_file.put_character (' ')
-								l_external_file.put_character ('"')
-								l_external_file.put_string ("eif_cecil.h")
-								l_external_file.put_character ('"')
-								l_external_file.put_new_line
-								l_external_file.put_string (c_include)
-								l_external_file.put_character (' ')
-								l_external_file.put_character ('"')
-								l_external_file.put_string ("eif_plug.h")
-								l_external_file.put_character ('"')
-								l_external_file.put_new_line
-							end
+						if l_cpp_filenames = Void then
+							create l_cpp_filenames.make (50)
 						end
-						if l_external_file.is_open_write then
-							l_filename := file_system.pathname (a_clib_dirname, l_filename)
-							l_filename := STRING_.replaced_all_substrings (l_filename, "\", "\\")
-							l_external_file.put_string (c_include)
-							l_external_file.put_character (' ')
-							l_external_file.put_character ('"')
-							l_external_file.put_string (l_filename)
-							l_external_file.put_character ('"')
-							l_external_file.put_new_line
-						end
+						l_cpp_filenames.force_last (l_filename)
 					end
 					l_dir.read_entry
 				end
 				l_dir.close
-				if l_c_file /= Void and then l_c_file.is_open_write then
-					l_c_file.close
+			end
+			if l_c_filenames /= Void or l_cpp_filenames /= Void then
+				create l_comparator
+				create l_sorter.make (l_comparator)
+				if l_c_filenames /= Void then
+					l_c_filenames.sort (l_sorter)
 				end
-				if l_cpp_file /= Void and then l_cpp_file.is_open_write then
-					l_cpp_file.close
+				if l_cpp_filenames /= Void then
+					l_cpp_filenames.sort (l_sorter)
 				end
+			end
+			from
+				l_filenames := l_c_filenames
+				if l_filenames = Void then
+					l_filenames := l_cpp_filenames
+				end
+			until
+				l_filenames = Void
+			loop
+				if l_filenames = l_c_filenames then
+					l_extension := c_file_extension
+					l_external_filename := a_library_name + l_extension
+				else
+					l_extension := cpp_file_extension
+					l_external_filename := a_library_name + "_cpp" + l_extension
+				end
+				create l_external_file.make (l_external_filename)
+				l_external_file.open_write
+				if not l_external_file.is_open_write then
+					set_fatal_error
+					report_cannot_write_error (l_external_filename)
+				else
+					l_basename := l_external_filename.twin
+					l_basename.remove_tail (l_extension.count)
+					a_external_c_filenames.force_last (l_extension, l_basename)
+					if a_library_name.same_string ("boehm_gc") then
+						l_common_defines := <<
+							"GC_NOT_DLL",
+							"GC_THREADS",
+							"THREAD_LOCAL_ALLOC",
+							"PARALLEL_MARK",
+							"LARGE_CONFIG",
+							"ALL_INTERIOR_POINTERS",
+							"ENABLE_DISCLAIM",
+							"GC_ATOMIC_UNCOLLECTABLE",
+							"GC_GCJ_SUPPORT",
+							"JAVA_FINALIZATION",
+							"NO_EXECUTE_PERMISSION",
+							"USE_MUNMAP"
+						>>
+						nb := l_common_defines.count
+						from i := 1 until i > nb loop
+							l_external_file.put_string (c_define)
+							l_external_file.put_character (' ')
+							l_external_file.put_line (l_common_defines.item (i))
+							i := i + 1
+						end
+							-- clang (and hence Zig) supports GCC atomic intrinsics.
+						l_external_file.put_string (c_ifdef)
+						l_external_file.put_character (' ')
+						l_external_file.put_line ("__clang__")
+						l_external_file.put_string (c_define)
+						l_external_file.put_character (' ')
+						l_external_file.put_line ("GC_BUILTIN_ATOMIC")
+						l_external_file.put_line (c_endif)
+						l_external_file.put_string (c_ifdef)
+						l_external_file.put_character (' ')
+						l_external_file.put_line ("__GNUC__")
+						l_external_file.put_string (c_define)
+						l_external_file.put_character (' ')
+						l_external_file.put_line ("GC_BUILTIN_ATOMIC")
+						l_external_file.put_line (c_endif)
+						l_external_file.put_string (c_ifdef)
+						l_external_file.put_character (' ')
+						l_external_file.put_line ("__MINGW32__")
+						l_external_file.put_string (c_define)
+						l_external_file.put_character (' ')
+						l_external_file.put_line ("GC_BUILTIN_ATOMIC")
+						l_external_file.put_line (c_endif)
+						l_external_file.put_string (c_ifdef)
+						l_external_file.put_character (' ')
+						l_external_file.put_line ("__MINGW64__")
+						l_external_file.put_string (c_define)
+						l_external_file.put_character (' ')
+						l_external_file.put_line ("GC_BUILTIN_ATOMIC")
+						l_external_file.put_line (c_endif)
+						l_external_file.put_new_line
+					else
+						if use_threads then
+							l_external_file.put_string (c_define)
+							l_external_file.put_character (' ')
+							l_external_file.put_line (c_ge_use_threads)
+							l_newline_needed_in_header_file := True
+						end
+						if scoop_mode then
+							l_external_file.put_string (c_define)
+							l_external_file.put_character (' ')
+							l_external_file.put_line (c_ge_use_scoop)
+							l_newline_needed_in_header_file := True
+						end
+						if l_newline_needed_in_header_file then
+							l_external_file.put_new_line
+						end
+						l_external_file.put_string (c_include)
+						l_external_file.put_character (' ')
+						l_external_file.put_character ('"')
+						l_external_file.put_string ("ge_eiffel.h")
+						l_external_file.put_character ('"')
+						l_external_file.put_new_line
+						l_external_file.put_string (c_include)
+						l_external_file.put_character (' ')
+						l_external_file.put_character ('"')
+						l_external_file.put_string ("ge_gc.h")
+						l_external_file.put_character ('"')
+						l_external_file.put_new_line
+							-- Two header files needed to compile EiffelCOM.
+						l_external_file.put_string (c_include)
+						l_external_file.put_character (' ')
+						l_external_file.put_character ('"')
+						l_external_file.put_string ("eif_cecil.h")
+						l_external_file.put_character ('"')
+						l_external_file.put_new_line
+						l_external_file.put_string (c_include)
+						l_external_file.put_character (' ')
+						l_external_file.put_character ('"')
+						l_external_file.put_string ("eif_plug.h")
+						l_external_file.put_character ('"')
+						l_external_file.put_new_line
+					end
+					nb := l_filenames.count
+					from i := 1 until i > nb loop
+						l_filename := l_filenames.item (i)
+						l_filename := file_system.pathname (a_clib_dirname, l_filename)
+						l_filename := STRING_.replaced_all_substrings (l_filename, "\", "\\")
+						l_external_file.put_string (c_include)
+						l_external_file.put_character (' ')
+						l_external_file.put_character ('"')
+						l_external_file.put_string (l_filename)
+						l_external_file.put_character ('"')
+						l_external_file.put_new_line
+						i := i + 1
+					end
+					l_external_file.close
+				end
+				l_filenames := l_cpp_filenames
 			end
 		end
 
