@@ -4,7 +4,7 @@
 
 		"Eiffel standard test cases"
 
-	copyright: "Copyright (c) 2002-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class EIFFEL_TEST_CASE
@@ -161,7 +161,7 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
 			a_regexp1.optimize
-			a_pattern2 := "aa[0-9]+\.c"
+			a_pattern2 := "(aa[0-9]+|boehm_gc)\.c"
 			create a_regexp2.make
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
