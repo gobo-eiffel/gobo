@@ -859,6 +859,10 @@ feature {NONE} -- Compilation script generation
 			l_default: BOOLEAN
 			l_c_config_parser: UT_CONFIG_PARSER
 			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
+			l_env_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_replacement: STRING
+			l_excluded: DS_HASH_SET [STRING]
+			l_value: STRING
 		do
 			l_name := Execution_environment.variable_value ("GOBO_CC")
 			if l_name = Void then
@@ -935,9 +939,23 @@ feature {NONE} -- Compilation script generation
 				if l_c_config_parser.has_error then
 					set_fatal_error
 				else
+					create l_env_regexp.make
+					l_env_regexp.compile ("%%([^%%]+)%%")
+					create l_excluded.make (10)
+					l_excluded.set_equality_tester (string_equality_tester)
+					l_excluded.force_last ("cc")
+					l_excluded.force_last ("link")
+					l_excluded.force_last ("rc")
 					l_cursor := l_c_config_parser.config_values.new_cursor
 					from l_cursor.start until l_cursor.after loop
-						Result.force (l_cursor.item, l_cursor.key)
+						l_value := l_cursor.item
+						if not l_excluded.has (l_cursor.key) then
+							l_env_regexp.match (l_value)
+							l_replacement := STRING_.new_empty_string (l_value, 6)
+							l_replacement.append_string ("${\1\}")
+							l_value := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+						end
+						Result.force (l_value, l_cursor.key)
 						l_cursor.forth
 					end
 				end
