@@ -1132,6 +1132,27 @@ feature {NONE} -- Compilation script generation
 					l_c_file.put_character (' ')
 					l_c_file.put_line ("GC_BUILTIN_ATOMIC")
 					l_c_file.put_line (c_endif)
+					l_c_file.put_string (c_ifdef)
+					l_c_file.put_character (' ')
+					l_c_file.put_line ("__GNUC__")
+					l_c_file.put_string (c_define)
+					l_c_file.put_character (' ')
+					l_c_file.put_line ("GC_BUILTIN_ATOMIC")
+					l_c_file.put_line (c_endif)
+					l_c_file.put_string (c_ifdef)
+					l_c_file.put_character (' ')
+					l_c_file.put_line ("__MINGW32__")
+					l_c_file.put_string (c_define)
+					l_c_file.put_character (' ')
+					l_c_file.put_line ("GC_BUILTIN_ATOMIC")
+					l_c_file.put_line (c_endif)
+					l_c_file.put_string (c_ifdef)
+					l_c_file.put_character (' ')
+					l_c_file.put_line ("__MINGW64__")
+					l_c_file.put_string (c_define)
+					l_c_file.put_character (' ')
+					l_c_file.put_line ("GC_BUILTIN_ATOMIC")
+					l_c_file.put_line (c_endif)
 					l_c_file.put_new_line
 					l_common_c_files := <<
 						"misc.c",
@@ -1156,11 +1177,11 @@ feature {NONE} -- Compilation script generation
 						"ptr_chck.c",
 						"gcj_mlc.c",
 						"mallocx.c",
-						"extra\msvc_dbg.c",
 						"thread_local_alloc.c",
 						"pthread_start.c",
 						"pthread_stop_world.c",
 						"pthread_support.c",
+						"gc_dlopen.c",
 						"darwin_stop_world.c"
 					>>
 					nb := l_common_c_files.count
