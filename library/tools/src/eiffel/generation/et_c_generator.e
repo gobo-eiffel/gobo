@@ -990,14 +990,16 @@ feature {NONE} -- Compilation script generation
 			l_filename: STRING
 			l_extension: STRING
 			l_basename: STRING
-			l_newline_needed_in_header_file: BOOLEAN
+			l_newline_needed: BOOLEAN
 			l_c_filenames: detachable DS_ARRAYED_LIST [STRING]
 			l_cpp_filenames: detachable DS_ARRAYED_LIST [STRING]
 			l_filenames: detachable DS_ARRAYED_LIST [STRING]
 			l_sorter: DS_QUICK_SORTER [STRING]
 			l_comparator: UC_STRING_COMPARATOR
 			i, nb: INTEGER
-			l_common_defines: ARRAY [STRING]
+			l_common_defines: DS_ARRAYED_LIST [STRING]
+			l_common_includes: DS_ARRAYED_LIST [STRING]
+			l_builtin_atomic: DS_ARRAYED_LIST [STRING]
 		do
 			create l_dir.make (a_clib_dirname)
 			l_dir.open_read
@@ -1036,6 +1038,34 @@ feature {NONE} -- Compilation script generation
 				if l_cpp_filenames /= Void then
 					l_cpp_filenames.sort (l_sorter)
 				end
+				create l_common_defines.make (15)
+				create l_common_includes.make (5)
+				if a_library_name.same_string ("boehm_gc") then
+					l_common_defines.force_last ("GC_NOT_DLL")
+					l_common_defines.force_last ("GC_THREADS")
+					l_common_defines.force_last ("THREAD_LOCAL_ALLOC")
+					l_common_defines.force_last ("PARALLEL_MARK")
+					l_common_defines.force_last ("LARGE_CONFIG")
+					l_common_defines.force_last ("ALL_INTERIOR_POINTERS")
+					l_common_defines.force_last ("ENABLE_DISCLAIM")
+					l_common_defines.force_last ("GC_ATOMIC_UNCOLLECTABLE")
+					l_common_defines.force_last ("GC_GCJ_SUPPORT")
+					l_common_defines.force_last ("JAVA_FINALIZATION")
+					l_common_defines.force_last ("NO_EXECUTE_PERMISSION")
+					l_common_defines.force_last ("USE_MUNMAP")
+				else
+					if use_threads then
+						l_common_defines.force_last (c_ge_use_threads)
+					end
+					if scoop_mode then
+						l_common_defines.force_last (c_ge_use_scoop)
+					end
+					l_common_includes.force_last ("ge_eiffel.h")
+					l_common_includes.force_last ("ge_gc.h")
+							-- Two header files needed to compile EiffelCOM.
+					l_common_includes.force_last ("eif_cecil.h")
+					l_common_includes.force_last ("eif_plug.h")
+				end
 			end
 			from
 				l_filenames := l_c_filenames
@@ -1061,21 +1091,7 @@ feature {NONE} -- Compilation script generation
 					l_basename := l_external_filename.twin
 					l_basename.remove_tail (l_extension.count)
 					a_external_c_filenames.force_last (l_extension, l_basename)
-					if a_library_name.same_string ("boehm_gc") then
-						l_common_defines := <<
-							"GC_NOT_DLL",
-							"GC_THREADS",
-							"THREAD_LOCAL_ALLOC",
-							"PARALLEL_MARK",
-							"LARGE_CONFIG",
-							"ALL_INTERIOR_POINTERS",
-							"ENABLE_DISCLAIM",
-							"GC_ATOMIC_UNCOLLECTABLE",
-							"GC_GCJ_SUPPORT",
-							"JAVA_FINALIZATION",
-							"NO_EXECUTE_PERMISSION",
-							"USE_MUNMAP"
-						>>
+					if l_common_defines /= Void then
 						nb := l_common_defines.count
 						from i := 1 until i > nb loop
 							l_external_file.put_string (c_define)
@@ -1083,77 +1099,56 @@ feature {NONE} -- Compilation script generation
 							l_external_file.put_line (l_common_defines.item (i))
 							i := i + 1
 						end
+						l_newline_needed := nb > 0
+					end
+					if a_library_name.same_string ("boehm_gc") then
+						create l_builtin_atomic.make (5)
 							-- clang (and hence Zig) supports GCC atomic intrinsics.
-						l_external_file.put_string (c_ifdef)
-						l_external_file.put_character (' ')
-						l_external_file.put_line ("__clang__")
-						l_external_file.put_string (c_define)
-						l_external_file.put_character (' ')
-						l_external_file.put_line ("GC_BUILTIN_ATOMIC")
-						l_external_file.put_line (c_endif)
-						l_external_file.put_string (c_ifdef)
-						l_external_file.put_character (' ')
-						l_external_file.put_line ("__GNUC__")
-						l_external_file.put_string (c_define)
-						l_external_file.put_character (' ')
-						l_external_file.put_line ("GC_BUILTIN_ATOMIC")
-						l_external_file.put_line (c_endif)
-						l_external_file.put_string (c_ifdef)
-						l_external_file.put_character (' ')
-						l_external_file.put_line ("__MINGW32__")
-						l_external_file.put_string (c_define)
-						l_external_file.put_character (' ')
-						l_external_file.put_line ("GC_BUILTIN_ATOMIC")
-						l_external_file.put_line (c_endif)
-						l_external_file.put_string (c_ifdef)
-						l_external_file.put_character (' ')
-						l_external_file.put_line ("__MINGW64__")
-						l_external_file.put_string (c_define)
-						l_external_file.put_character (' ')
-						l_external_file.put_line ("GC_BUILTIN_ATOMIC")
-						l_external_file.put_line (c_endif)
+						l_builtin_atomic.force_last ("__clang__")
+						l_builtin_atomic.force_last ("__GNUC__")
+						l_builtin_atomic.force_last ("__MINGW32__")
+						l_builtin_atomic.force_last ("__MINGW64__")
+						nb := l_builtin_atomic.count
+						if nb > 0 then
+							l_external_file.put_character ('#')
+							l_external_file.put_string (c_if)
+							from i := 1 until i > nb loop
+								if i /= 1 then
+									l_external_file.put_character (' ')
+									l_external_file.put_string (c_or_else)
+								end
+								l_external_file.put_character (' ')
+								l_external_file.put_string (c_defined)
+								l_external_file.put_character ('(')
+								l_external_file.put_string (l_builtin_atomic.item (i))
+								l_external_file.put_character (')')
+								i := i + 1
+							end
+							l_external_file.put_new_line
+							l_external_file.put_string (c_define)
+							l_external_file.put_character (' ')
+							l_external_file.put_line ("GC_BUILTIN_ATOMIC")
+							l_external_file.put_line (c_endif)
+							l_newline_needed := True
+						end
+					end
+					if l_newline_needed then
 						l_external_file.put_new_line
-					else
-						if use_threads then
-							l_external_file.put_string (c_define)
+					end
+					if l_common_includes /= Void then
+						nb := l_common_includes.count
+						from i := 1 until i > nb loop
+							l_external_file.put_string (c_include)
 							l_external_file.put_character (' ')
-							l_external_file.put_line (c_ge_use_threads)
-							l_newline_needed_in_header_file := True
+							l_external_file.put_character ('"')
+							l_external_file.put_string (l_common_includes.item (i))
+							l_external_file.put_character ('"')
+							l_external_file.put_new_line
+							i := i + 1
 						end
-						if scoop_mode then
-							l_external_file.put_string (c_define)
-							l_external_file.put_character (' ')
-							l_external_file.put_line (c_ge_use_scoop)
-							l_newline_needed_in_header_file := True
-						end
-						if l_newline_needed_in_header_file then
+						if nb > 0 then
 							l_external_file.put_new_line
 						end
-						l_external_file.put_string (c_include)
-						l_external_file.put_character (' ')
-						l_external_file.put_character ('"')
-						l_external_file.put_string ("ge_eiffel.h")
-						l_external_file.put_character ('"')
-						l_external_file.put_new_line
-						l_external_file.put_string (c_include)
-						l_external_file.put_character (' ')
-						l_external_file.put_character ('"')
-						l_external_file.put_string ("ge_gc.h")
-						l_external_file.put_character ('"')
-						l_external_file.put_new_line
-							-- Two header files needed to compile EiffelCOM.
-						l_external_file.put_string (c_include)
-						l_external_file.put_character (' ')
-						l_external_file.put_character ('"')
-						l_external_file.put_string ("eif_cecil.h")
-						l_external_file.put_character ('"')
-						l_external_file.put_new_line
-						l_external_file.put_string (c_include)
-						l_external_file.put_character (' ')
-						l_external_file.put_character ('"')
-						l_external_file.put_string ("eif_plug.h")
-						l_external_file.put_character ('"')
-						l_external_file.put_new_line
 					end
 					nb := l_filenames.count
 					from i := 1 until i > nb loop
@@ -1171,126 +1166,6 @@ feature {NONE} -- Compilation script generation
 					l_external_file.close
 				end
 				l_filenames := l_cpp_filenames
-			end
-		end
-
-	add_external_boehm_gc_c_files (a_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
-			-- Add C files of of the Boehm GC to the compilation script.
-		require
-			a_external_c_filenames_not_void: a_external_c_filenames /= Void
-			use_boehm_gc: use_boehm_gc
-		local
-			l_c_file: detachable KL_TEXT_OUTPUT_FILE
-			l_c_filename: STRING
-			l_common_defines: ARRAY [STRING]
-			l_common_c_files: ARRAY [STRING]
-			i, nb: INTEGER
-		do
-			if not attached gobo_variables.boehm_gc_value as l_boehm_gc_folder or else l_boehm_gc_folder.is_empty then
-				set_fatal_error
-				report_undefined_environment_variable_error (gobo_variables.boehm_gc_variable)
-			else
-				l_c_filename := "boehm_gc" + c_file_extension
-				a_external_c_filenames.force_last (c_file_extension, "boehm_gc")
-				create l_c_file.make (l_c_filename)
-				l_c_file.open_write
-				if not l_c_file.is_open_write then
-					set_fatal_error
-					report_cannot_write_error (l_c_filename)
-				else
-					l_common_defines := <<
-						"GC_NOT_DLL",
-						"GC_THREADS",
-						"THREAD_LOCAL_ALLOC",
-						"PARALLEL_MARK",
-						"LARGE_CONFIG",
-						"ALL_INTERIOR_POINTERS",
-						"ENABLE_DISCLAIM",
-						"GC_ATOMIC_UNCOLLECTABLE",
-						"GC_GCJ_SUPPORT",
-						"JAVA_FINALIZATION",
-						"NO_EXECUTE_PERMISSION",
-						"USE_MUNMAP"
-					>>
-					nb := l_common_defines.count
-					from i := 1 until i > nb loop
-						l_c_file.put_string (c_define)
-						l_c_file.put_character (' ')
-						l_c_file.put_line (l_common_defines.item (i))
-						i := i + 1
-					end
-						-- clang (and hence Zig) supports GCC atomic intrinsics.
-					l_c_file.put_string (c_ifdef)
-					l_c_file.put_character (' ')
-					l_c_file.put_line ("__clang__")
-					l_c_file.put_string (c_define)
-					l_c_file.put_character (' ')
-					l_c_file.put_line ("GC_BUILTIN_ATOMIC")
-					l_c_file.put_line (c_endif)
-					l_c_file.put_string (c_ifdef)
-					l_c_file.put_character (' ')
-					l_c_file.put_line ("__GNUC__")
-					l_c_file.put_string (c_define)
-					l_c_file.put_character (' ')
-					l_c_file.put_line ("GC_BUILTIN_ATOMIC")
-					l_c_file.put_line (c_endif)
-					l_c_file.put_string (c_ifdef)
-					l_c_file.put_character (' ')
-					l_c_file.put_line ("__MINGW32__")
-					l_c_file.put_string (c_define)
-					l_c_file.put_character (' ')
-					l_c_file.put_line ("GC_BUILTIN_ATOMIC")
-					l_c_file.put_line (c_endif)
-					l_c_file.put_string (c_ifdef)
-					l_c_file.put_character (' ')
-					l_c_file.put_line ("__MINGW64__")
-					l_c_file.put_string (c_define)
-					l_c_file.put_character (' ')
-					l_c_file.put_line ("GC_BUILTIN_ATOMIC")
-					l_c_file.put_line (c_endif)
-					l_c_file.put_new_line
-					l_common_c_files := <<
-						"misc.c",
-						"win32_threads.c",
-						"alloc.c",
-						"reclaim.c",
-						"allchblk.c",
-						"mach_dep.c",
-						"os_dep.c",
-						"mark_rts.c",
-						"headers.c",
-						"mark.c",
-						"obj_map.c",
-						"blacklst.c",
-						"finalize.c",
-						"new_hblk.c",
-						"dbg_mlc.c",
-						"fnlz_mlc.c",
-						"malloc.c",
-						"dyn_load.c",
-						"typd_mlc.c",
-						"ptr_chck.c",
-						"gcj_mlc.c",
-						"mallocx.c",
-						"thread_local_alloc.c",
-						"pthread_start.c",
-						"pthread_stop_world.c",
-						"pthread_support.c",
-						"gc_dlopen.c",
-						"darwin_stop_world.c"
-					>>
-					nb := l_common_c_files.count
-					from i := 1 until i > nb loop
-						l_c_file.put_string (c_include)
-						l_c_file.put_character (' ')
-						l_c_file.put_character ('"')
-						l_c_file.put_string (file_system.pathname (l_boehm_gc_folder, l_common_c_files.item (i)))
-						l_c_file.put_character ('"')
-						l_c_file.put_new_line
-						i := i + 1
-					end
-					l_c_file.close
-				end
 			end
 		end
 
@@ -44461,6 +44336,7 @@ feature {NONE} -- Constants
 	c_cplusplus: STRING = "__cplusplus"
 	c_default: STRING = "default"
 	c_define: STRING = "#define"
+	c_defined: STRING = "defined"
 	c_double: STRING = "double"
 	c_eif_any: STRING = "EIF_ANY"
 	c_eif_boolean: STRING = "EIF_BOOLEAN"
