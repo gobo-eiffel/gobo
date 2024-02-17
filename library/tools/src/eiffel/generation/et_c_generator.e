@@ -1157,7 +1157,11 @@ feature {NONE} -- Compilation script generation
 						"gcj_mlc.c",
 						"mallocx.c",
 						"extra\msvc_dbg.c",
-						"thread_local_alloc.c"
+						"thread_local_alloc.c",
+						"pthread_start.c",
+						"pthread_stop_world.c",
+						"pthread_support.c",
+						"darwin_stop_world.c"
 					>>
 					nb := l_common_c_files.count
 					from i := 1 until i > nb loop
