@@ -187,12 +187,8 @@ feature {NONE} -- Processing
 			l_system: ET_DYNAMIC_SYSTEM
 			l_system_processor: ET_SYSTEM_PROCESSOR
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
-			l_root_type: ET_BASE_TYPE
-			l_generator: ET_C_GENERATOR
-			l_system_name: STRING
 			l_thread_count: INTEGER
 			dt_total: detachable DT_DATE_TIME
-			dt2: detachable DT_DATE_TIME
 		do
 			error_handler.set_ise
 			error_handler.set_verbose (is_verbose)
@@ -203,107 +199,126 @@ feature {NONE} -- Processing
 			l_system_processor.set_benchmark_shown (not is_no_benchmark and not is_silent)
 			l_system_processor.set_nested_benchmark_shown (is_nested_benchmark and not is_no_benchmark and not is_silent)
 			l_system_processor.set_metrics_shown (is_metrics and not is_silent)
+			dt_total := l_system_processor.benchmark_start_time
 			if is_gelint then
 				l_system_processor.set_flat_mode (True)
 				l_system_processor.set_flat_dbc_mode (True)
 			end
-			dt_total := l_system_processor.benchmark_start_time
-			if l_thread_count > 1 then
-				l_system_processor.compile (a_system)
-			end
 			create l_system.make (a_system, l_system_processor)
-			if is_gelint then
+			if is_gelint or l_thread_count > 1 or l_system_processor.benchmark_shown or l_system_processor.nested_benchmark_shown then
 				l_system.set_full_class_checking (True)
 			end
 			l_system.set_catcall_error_mode (catcall_error_mode)
 			l_system.set_catcall_warning_mode (catcall_warning_mode)
 			l_system.set_new_instance_types (new_instance_types)
-			dt2 := l_system_processor.benchmark_start_time
-			l_system_processor.set_benchmark_shown (False)
 			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} l_builder.make (l_system, l_system_processor)
 			l_system.set_dynamic_type_set_builder (l_builder)
 			l_system.compile (l_system_processor)
-			l_system_processor.set_benchmark_shown (not is_no_benchmark and not is_silent)
-			l_system_processor.record_end_time (dt2, "Degree -2")
-			l_root_type := a_system.root_type
-			if l_root_type = Void then
+			if not attached a_system.root_type as l_root_type then
 				-- Do nothing.
 			elseif l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) then
 				-- Do nothing.
 			elseif l_system.has_fatal_error then
 				exit_code := 1
 			else
-					-- C code generation.
-				dt2 := l_system_processor.benchmark_start_time
-				l_system_name := a_system.system_name
-				if l_system_name = Void then
-					l_system_name := l_root_type.base_class.lower_name
-				end
-				create l_generator.make (l_system, l_system_processor)
-				if gc_option.was_found or use_boehm_gc then
-						-- Override any option that might have been specified
-						-- in the Eiffel config file.
-					l_generator.set_use_boehm_gc (use_boehm_gc)
-				end
-				l_generator.set_finalize_mode (is_finalize)
-				l_generator.set_split_mode (not no_split)
-				if split_size > 0 then
-					l_generator.set_split_threshold (split_size)
-				end
-				l_generator.generate (l_system_name)
-				if is_metrics and not is_silent then
-					error_handler.info_file.put_string ("Type count: ")
-					error_handler.info_file.put_integer (l_system.dynamic_types.count)
-					error_handler.info_file.put_new_line
-					error_handler.info_file.put_string ("Alive type count: ")
-					error_handler.info_file.put_integer (l_system.alive_dynamic_type_count)
-					error_handler.info_file.put_new_line
-					error_handler.info_file.put_string ("Feature count: ")
-					error_handler.info_file.put_integer (l_system.dynamic_feature_count)
-					error_handler.info_file.put_new_line
-					error_handler.info_file.put_string ("Dynamic type set count: ")
-					error_handler.info_file.put_integer (l_builder.dynamic_type_set_count)
-					error_handler.info_file.put_new_line
-					error_handler.info_file.put_string ("Never void targets: ")
-					error_handler.info_file.put_integer (l_generator.never_void_target_count)
-					error_handler.info_file.put_new_line
-					error_handler.info_file.put_string ("Can be void targets: ")
-					error_handler.info_file.put_integer (l_generator.can_be_void_target_count)
-					error_handler.info_file.put_new_line
-				end
-				l_system_processor.record_end_time (dt2, "Degree -3")
-				if l_generator.has_fatal_error then
-					exit_code := 1
-				elseif not no_c_compile then
-					dt2 := l_system_processor.benchmark_start_time
-					compile_c_code (l_system_name)
-					l_system_processor.record_end_time (dt2, "Degree -4")
+				compile_degree_minus_3 (l_system, l_system_processor)
+				if exit_code = 0 and not no_c_compile then
+					compile_c_code (a_system, l_system_processor)
 				end
 			end
 			l_system_processor.record_end_time (dt_total, "Total Time")
 		end
 
-	compile_c_code (a_system_name: STRING)
+	compile_degree_minus_3 (a_system: ET_DYNAMIC_SYSTEM; a_system_processor: ET_SYSTEM_PROCESSOR)
+			-- Generate C code.
+		require
+			a_system_not_void: a_system /= Void
+			a_system_processor_not_void: a_system_processor /= Void
+		local
+			l_current_system: ET_SYSTEM
+			l_system_name: STRING
+			l_generator: ET_C_GENERATOR
+			dt1: detachable DT_DATE_TIME
+		do
+			dt1 := a_system_processor.benchmark_start_time
+			create l_generator.make (a_system, a_system_processor)
+			if gc_option.was_found or use_boehm_gc then
+					-- Override any option that might have been specified
+					-- in the Eiffel config file.
+				l_generator.set_use_boehm_gc (use_boehm_gc)
+			end
+			l_generator.set_finalize_mode (is_finalize)
+			l_generator.set_split_mode (not no_split)
+			if split_size > 0 then
+				l_generator.set_split_threshold (split_size)
+			end
+			l_current_system := a_system.current_system
+			if attached l_current_system.system_name as l_name then
+				l_system_name := l_name
+			elseif attached l_current_system.root_type as l_root_type then
+				l_system_name := l_root_type.base_class.lower_name
+			else
+				l_system_name := "unknown"
+			end
+			l_generator.generate (l_system_name)
+			if is_metrics and not is_silent then
+				error_handler.info_file.put_string ("Type count: ")
+				error_handler.info_file.put_integer (a_system.dynamic_types.count)
+				error_handler.info_file.put_new_line
+				error_handler.info_file.put_string ("Alive type count: ")
+				error_handler.info_file.put_integer (a_system.alive_dynamic_type_count)
+				error_handler.info_file.put_new_line
+				error_handler.info_file.put_string ("Feature count: ")
+				error_handler.info_file.put_integer (a_system.dynamic_feature_count)
+				error_handler.info_file.put_new_line
+				error_handler.info_file.put_string ("Dynamic type set count: ")
+				error_handler.info_file.put_integer (a_system.dynamic_type_set_builder.dynamic_type_set_count)
+				error_handler.info_file.put_new_line
+				error_handler.info_file.put_string ("Never void targets: ")
+				error_handler.info_file.put_integer (l_generator.never_void_target_count)
+				error_handler.info_file.put_new_line
+				error_handler.info_file.put_string ("Can be void targets: ")
+				error_handler.info_file.put_integer (l_generator.can_be_void_target_count)
+				error_handler.info_file.put_new_line
+			end
+			if l_generator.has_fatal_error then
+				exit_code := 1
+			end
+			a_system_processor.record_end_time (dt1, "Degree -3")
+		end
+
+	compile_c_code (a_system: ET_SYSTEM; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Compile generated C code.
 		require
-			a_system_name_not_void: a_system_name /= Void
+			a_system_not_void: a_system /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		local
+			l_system_name: STRING
 			l_command: KL_SHELL_COMMAND
 			l_script_filename: STRING
 			l_gecc: GECC
 			l_exit_code: INTEGER
+			dt1: detachable DT_DATE_TIME
 		do
-			if operating_system.is_windows then
-				l_script_filename := a_system_name + ".bat"
+			dt1 := a_system_processor.benchmark_start_time
+			if attached a_system.system_name as l_name then
+				l_system_name := l_name
+			elseif attached a_system.root_type as l_root_type then
+				l_system_name := l_root_type.base_class.lower_name
 			else
-				l_script_filename := a_system_name + ".sh"
+				l_system_name := "unknown"
+			end
+			if operating_system.is_windows then
+				l_script_filename := l_system_name + ".bat"
+			else
+				l_script_filename := l_system_name + ".sh"
 			end
 			if c_compile_using_script then
 				create l_command.make (file_system.absolute_pathname (l_script_filename))
 				l_command.execute
 				l_exit_code := l_command.exit_code
 			elseif c_compile_using_make then
-				create l_command.make ("make -f " + a_system_name + ".make")
+				create l_command.make ("make -f " + l_system_name + ".make")
 				l_command.execute
 				l_exit_code := l_command.exit_code
 			elseif c_compile_using_gecc then
@@ -317,6 +332,8 @@ feature {NONE} -- Processing
 			if l_exit_code /= 0 then
 				exit_code := 1
 			end
+				-- Add a "%R" to erase any message left from Zig.
+			a_system_processor.record_end_time (dt1, "%RDegree -4")
 		end
 
 feature -- Arguments

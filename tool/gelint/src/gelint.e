@@ -178,6 +178,7 @@ feature {NONE} -- Processing
 			dt1 := l_system_processor.benchmark_start_time
 			if is_catcall then
 				create a_dynamic_system.make (a_system, l_system_processor)
+				a_dynamic_system.set_full_class_checking (True)
 				a_dynamic_system.set_catcall_error_mode (True)
 				create {ET_DYNAMIC_PULL_TYPE_SET_BUILDER} a_builder.make (a_dynamic_system, l_system_processor)
 				a_dynamic_system.set_dynamic_type_set_builder (a_builder)
