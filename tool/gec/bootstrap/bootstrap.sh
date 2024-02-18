@@ -157,7 +157,7 @@ elif [ "$CC" = "mingw" ]; then
 	CFLAGS=''
 	LFLAGS=''
 	LFLAG_OUT='-o '
-	LLIBS='-lm -pthread -liconv'
+	LLIBS='-lm -pthread'
 	echo mingw > $GOBO/tool/gec/backend/c/config/default.cfg
 	c_compilation
 elif [ "$CC" = "clang" ]; then
@@ -166,7 +166,7 @@ elif [ "$CC" = "clang" ]; then
 	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations -O2'
 	LFLAGS=''
 	LFLAG_OUT='-o '
-	LLIBS='-lm -pthread -liconv'
+	LLIBS='-lm -pthread'
 	echo clang > $GOBO/tool/gec/backend/c/config/default.cfg
 	c_compilation
 elif [ "$CC" = "zig" ]; then
@@ -175,7 +175,7 @@ elif [ "$CC" = "zig" ]; then
 	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined -O2'
 	LFLAGS=''
 	LFLAG_OUT='-o '
-	LLIBS='-lm -pthread -liconv'
+	LLIBS='-lm -pthread'
 	echo zig > $GOBO/tool/gec/backend/c/config/default.cfg
 	c_compilation
 elif [ "$CC" = "cc" ]; then
