@@ -89,6 +89,11 @@ $BOOTSTRAP_DIR/bootstrap.sh $VERBOSE $THREAD_OPTION $CC
 if [ "$EIF" = "ge" ]; then
 	cd $BIN_DIR
 	if [ "$VERBOSE" != "-s" ]; then
+		echo "Compiling gecc..."
+	fi
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gecc/src/system.ecf
+	$STRIP gecc${EXE}
+	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling geant..."
 	fi
 	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/geant/src/system.ecf
