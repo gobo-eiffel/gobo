@@ -4,5 +4,5 @@ This [test](.) is exercising the condition [1](../Readme.md) of the validity rul
 
 ### Description
 
-In this test, feature `f` is exported to `ANY`. It has an `across` expression in its precondition, but but the associated feature `after` is only available to `AA`. This violates `VAPE-1`.
+In this test, feature `f` is exported to `ANY`. It has an `across` expression in its precondition, but the associated feature `after` is only available to `AA`. This violates `VAPE-1`.
 

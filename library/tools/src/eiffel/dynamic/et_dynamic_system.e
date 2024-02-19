@@ -1274,7 +1274,7 @@ feature -- Compilation
 			has_fatal_error := False
 			activate_dynamic_type_set_builder (a_system_processor)
 			if full_class_checking then
-				a_system_processor.compile_all (current_system)
+				a_system_processor.compile (current_system)
 				dt1 := a_system_processor.benchmark_start_time
 			else
 				a_system_processor.compile_degree_6 (current_system)
@@ -1407,12 +1407,7 @@ feature -- Compilation
 		do
 			has_fatal_error := False
 			activate_dynamic_type_set_builder (a_system_processor)
-			if full_class_checking then
-				a_system_processor.compile_all (current_system)
-				dt1 := a_system_processor.benchmark_start_time
-			else
-				a_system_processor.compile_degree_6 (current_system)
-			end
+			a_system_processor.compile_degree_6 (current_system)
 			compile_kernel (a_system_processor)
 			if not a_system_processor.stop_requested then
 				if not a_class.is_preparsed then
