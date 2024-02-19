@@ -44,7 +44,7 @@ fi
 
 if [ "$GOBO" = "" ]; then
 	echo "Environment variable GOBO must be set"
-	GOBO="$( cd "$( dirname "$0" )" &> /dev/null && cd ../../.. && pwd )"
+	GOBO="$(dirname "$(readlink -f "$0")")"/../../..
 	echo "Set \$GOBO to \"$GOBO\""
 fi
 
@@ -173,7 +173,7 @@ elif [ "$CC" = "clang" ]; then
 elif [ "$CC" = "zig" ]; then
 	if [ "$ZIG" = "" ]; then
 		ZIG="$GOBO/tool/gec/backend/c/zig"
-		if [-d "$ZIG"]; then
+		if [ -d "$ZIG"]; then
 			ZIG="$ZIG/zig"
 		else
 			ZIG=zig
