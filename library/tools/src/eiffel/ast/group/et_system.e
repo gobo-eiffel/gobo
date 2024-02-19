@@ -351,6 +351,10 @@ feature -- Compilation options
 			-- Should the attachment status of the target of qualified calls
 			-- be checked at compile time?
 
+	check_for_void_target_mode: BOOLEAN
+			-- Should the attachment status of the target of qualified calls
+			-- be checked at runtime?
+
 	exception_trace_mode: BOOLEAN
 			-- Should the generated application be able to provide an exception trace?
 			-- An exception trace is the execution path from the root creation procedure
@@ -444,6 +448,14 @@ feature -- Compilation options setting
 			target_type_attachment_mode := b
 		ensure
 			target_type_attachment_mode_set: target_type_attachment_mode = b
+		end
+
+	set_check_for_void_target_mode (b: BOOLEAN)
+			-- Set `check_for_void_target_mode' to `b'.
+		do
+			check_for_void_target_mode := b
+		ensure
+			check_for_void_target_mode_set: check_for_void_target_mode = b
 		end
 
 	set_exception_trace_mode (b: BOOLEAN)

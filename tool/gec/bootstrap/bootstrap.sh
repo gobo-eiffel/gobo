@@ -214,29 +214,20 @@ fi
 
 if [ "$EIF" = "ge" ]; then
 	cd $BIN_DIR
-	if [ "$VERBOSE" != "-s" ]; then
-		echo "Compiling gecc (bootstrap 1)..."
-	fi
-	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $THREAD_OPTION $GOBO/tool/gecc/src/system.ecf
-	$BIN_DIR/gecc.sh
 	# Compile gec twice to get a bootstrap effect.
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gec (bootstrap 1)..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $THREAD_OPTION $GOBO/tool/gec/src/system.ecf
-	$BIN_DIR/gecc$EXE $THREAD_OPTION gec.sh
+	$MV $BIN_DIR/gec$EXE $BIN_DIR/gec1$EXE
+	$BIN_DIR/gec1$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gec/src/system.ecf
+	$RM $BIN_DIR/gec1$EXE
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gec (bootstrap 2)..."
 	fi
-	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $THREAD_OPTION $GOBO/tool/gec/src/system.ecf
-	$BIN_DIR/gecc$EXE $THREAD_OPTION gec.sh
+	$MV $BIN_DIR/gec$EXE $BIN_DIR/gec1$EXE
+	$BIN_DIR/gec1$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gec/src/system.ecf
+	$RM $BIN_DIR/gec1$EXE
 	$STRIP gec$EXE
-	if [ "$VERBOSE" != "-s" ]; then
-		echo "Compiling gecc (bootstrap 2)..."
-	fi
-	$BIN_DIR/gec$EXE --finalize --cc=no --no-benchmark $THREAD_OPTION $GOBO/tool/gecc/src/system.ecf
-	$BIN_DIR/gecc.sh
-	$STRIP gecc$EXE
 	$RM gec*.h
 	$RM gec*.c
 	$RM gec*$OBJ

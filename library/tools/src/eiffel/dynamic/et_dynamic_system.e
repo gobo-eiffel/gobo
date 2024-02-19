@@ -5,7 +5,7 @@
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_DYNAMIC_SYSTEM
@@ -1269,10 +1269,16 @@ feature -- Compilation
 			l_query: detachable ET_QUERY
 			l_root_creation_procedure: like root_creation_procedure
 			l_class: ET_CLASS
+			dt1: detachable DT_DATE_TIME
 		do
 			has_fatal_error := False
 			activate_dynamic_type_set_builder (a_system_processor)
-			a_system_processor.compile_degree_6 (current_system)
+			if full_class_checking then
+				a_system_processor.compile (current_system)
+				dt1 := a_system_processor.benchmark_start_time
+			else
+				a_system_processor.compile_degree_6 (current_system)
+			end
 			compile_kernel (a_system_processor)
 			if not a_system_processor.stop_requested then
 				l_root_type := current_system.root_type
@@ -1356,6 +1362,9 @@ feature -- Compilation
 					end
 				end
 			end
+			if dt1 /= Void then
+				a_system_processor.record_end_time (dt1, "Degree -2")
+			end
 		end
 
 	compile_all (a_system_processor: ET_SYSTEM_PROCESSOR)
@@ -1375,9 +1384,9 @@ feature -- Compilation
 			a_system_processor.compile_all (current_system)
 			dt1 := a_system_processor.benchmark_start_time
 			compile_kernel (a_system_processor)
-			current_system.classes_do_recursive_until (agent compile_all_features, a_system_processor.stop_request)
+			current_system.classes_do_recursive_until (agent mark_all_features, a_system_processor.stop_request)
 			build_dynamic_type_sets
-			a_system_processor.record_end_time (dt1, "Degree Dynamic Type Set")
+			a_system_processor.record_end_time (dt1, "Degree -2")
 		end
 
 	compile_feature (a_feature_name: ET_FEATURE_NAME; a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR)
@@ -1394,6 +1403,7 @@ feature -- Compilation
 		local
 			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			dt1: detachable DT_DATE_TIME
 		do
 			has_fatal_error := False
 			activate_dynamic_type_set_builder (a_system_processor)
@@ -1434,6 +1444,9 @@ feature -- Compilation
 						end
 					end
 				end
+			end
+			if dt1 /= Void then
+				a_system_processor.record_end_time (dt1, "Degree -2")
 			end
 		end
 
@@ -2229,7 +2242,7 @@ feature {NONE} -- Compilation
 			end
 		end
 
-	compile_all_features (a_class: ET_CLASS)
+	mark_all_features (a_class: ET_CLASS)
 			-- Make sure that all features declared in non-deferred non-generic
 			-- classes will be included in the compilation: their dynamic type sets
 			-- will be computed.

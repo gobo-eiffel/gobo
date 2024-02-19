@@ -503,6 +503,24 @@ feature -- Basic operations
 			if l_value /= Void and then l_value.is_boolean then
 				a_system.set_console_application_mode (l_value.to_boolean)
 			end
+				-- "check_for_void_target".
+			l_value := settings.value ({ET_ECF_SETTING_NAMES}.check_for_void_target_setting_name)
+			if l_value = Void then
+					-- The default value for `check_for_void_target` depends on whether we are in void-safety mode or not:
+					--   * void-safety mode (all): False
+					--   * otherwise: True
+				l_value := capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
+				if l_value = Void then
+					l_value := capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
+				end
+				if l_value /= Void and then STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.all_capability_value) then
+					a_system.set_check_for_void_target_mode (False)
+				else
+					a_system.set_check_for_void_target_mode (True)
+				end
+			elseif l_value.is_boolean then
+				a_system.set_check_for_void_target_mode (l_value.to_boolean)
+			end
 				-- "exception_trace".
 			l_value := settings.value ({ET_ECF_SETTING_NAMES}.exception_trace_setting_name)
 			if l_value /= Void and then l_value.is_boolean then
