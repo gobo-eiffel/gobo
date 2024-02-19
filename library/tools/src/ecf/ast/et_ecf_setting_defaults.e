@@ -292,7 +292,10 @@ feature -- Setting
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.address_expression_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.array_optimization_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.automatic_backup_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
-			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.check_for_void_target_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
+				-- The default value for `check_for_void_target` depends on whether we are in void-safety mode or not:
+				--   * void-safety mode (all): False
+				--   * otherwise: True
+			-- a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.check_for_void_target_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.check_generic_creation_constraint_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.check_vape_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.cls_compliant_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)

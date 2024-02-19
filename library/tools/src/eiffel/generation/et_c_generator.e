@@ -366,6 +366,13 @@ feature -- Compilation options
 			Result := multithreaded_mode or scoop_mode
 		end
 
+	check_for_void_target_mode: BOOLEAN
+			-- Should the attachment status of the target of qualified calls
+			-- be checked at runtime?
+		do
+			Result := current_system.check_for_void_target_mode
+		end
+
 	exception_trace_mode: BOOLEAN
 			-- Should the generated application be able to provide an exception trace?
 			-- An exception trace is the execution path from the root creation procedure
@@ -10425,12 +10432,14 @@ feature {NONE} -- Expression generation
 					current_file.put_character ('(')
 					if a_source_type_set.can_be_void  then
 						can_be_void_target_count := can_be_void_target_count + 1
-						if finalize_mode then
-							current_file.put_string (c_ge_void)
-						else
-							current_file.put_string (c_ge_void2)
+						if check_for_void_target_mode then
+							if finalize_mode then
+								current_file.put_string (c_ge_void)
+							else
+								current_file.put_string (c_ge_void2)
+							end
+							current_file.put_character ('(')
 						end
-						current_file.put_character ('(')
 						l_do_check_void := True
 					else
 						never_void_target_count := never_void_target_count + 1
@@ -11299,13 +11308,15 @@ feature {NONE} -- Expression generation
 				l_dynamic_type_set := dynamic_type_set (a_expression)
 				if not a_dynamic_type.is_expanded and then l_dynamic_type_set.can_be_void and not a_expression.is_never_void then
 					can_be_void_target_count := can_be_void_target_count + 1
-					if finalize_mode then
-						current_file.put_string (c_ge_void)
-					else
-						current_file.put_string (c_ge_void2)
+					if check_for_void_target_mode then
+						if finalize_mode then
+							current_file.put_string (c_ge_void)
+						else
+							current_file.put_string (c_ge_void2)
+						end
+						current_file.put_character ('(')
+						l_do_check_void := True
 					end
-					current_file.put_character ('(')
-					l_do_check_void := True
 				else
 					never_void_target_count := never_void_target_count + 1
 				end

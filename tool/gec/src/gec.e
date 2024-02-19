@@ -135,7 +135,6 @@ feature {NONE} -- Eiffel config file parsing
 		local
 			l_ecf_parser: ET_ECF_SYSTEM_PARSER
 			l_ecf_error_handler: ET_ECF_ERROR_HANDLER
-			l_override_settings: detachable ET_ECF_SETTINGS
 			l_ecf_system: ET_ECF_SYSTEM
 			l_target: ET_ECF_TARGET
 			l_value: STRING
@@ -147,14 +146,6 @@ feature {NONE} -- Eiffel config file parsing
 				create l_ecf_error_handler.make_standard
 			end
 			create l_ecf_parser.make (l_ecf_error_handler)
-			if is_finalize then
-				l_override_settings := override_settings
-				if l_override_settings = Void then
-					create l_override_settings.make
-					override_settings := l_override_settings
-				end
-				l_override_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.finalize_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
-			end
 			l_ecf_parser.set_override_settings (override_settings)
 			l_ecf_parser.set_override_capabilities (override_capabilities)
 			l_ecf_parser.set_override_variables (override_variables)
@@ -760,7 +751,7 @@ feature -- Argument parsing
 			l_definition: STRING
 			l_index: INTEGER
 		do
-			if not a_option.parameters.is_empty then
+			if not a_option.parameters.is_empty or is_finalize then
 				create l_override_settings.make
 				across a_option.parameters as i_setting loop
 					if attached i_setting as l_setting then
@@ -776,6 +767,9 @@ feature -- Argument parsing
 							end
 						end
 					end
+				end
+				if is_finalize then
+					l_override_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.finalize_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 				end
 			end
 			override_settings := l_override_settings
