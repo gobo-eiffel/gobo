@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		do
 			Arguments.set_program_name ("geant")
 				-- Set environment variables "$GOBO", "$GOBO_LIBRARY",
-				-- "$BOEHM_GC" if not set yet.
+				-- "$BOEHM_GC" and "$ZIG" if not set yet.
 			gobo_variables.set_gobo_variables
 			create error_handler.make_standard
 			build_filename := Default_build_filename

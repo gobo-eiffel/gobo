@@ -8,8 +8,9 @@
 # usage: bootstrap.sh [-v|-s][--thread=N] <c_compiler>
 
 gobo_usage() {
-	echo "usage: bootstrap.sh [-v|-s][--thread=N] <c_compiler>"
-	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | clang | zig | cc | icc | tcc | no_c"
+	echo "usage: bootstrap.sh [-v|-s][--thread=N] [<c_compiler>]"
+	echo "   c_compiler:  zig | gcc | clang | msc | lcc-win32 | lcc-win64 | bcc | mingw | cc | icc | tcc | no_c"
+	echo "   default c_compiler: zig"
 }
 
 VERBOSE=
@@ -43,7 +44,8 @@ fi
 
 if [ "$GOBO" = "" ]; then
 	echo "Environment variable GOBO must be set"
-	exit 1
+	GOBO="$( cd "$( dirname "$0" )" &> /dev/null && cd ../../.. && pwd )"
+	echo "Set \$GOBO to "$GOBO"
 fi
 
 MV=mv
@@ -60,23 +62,22 @@ c_compilation() {
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gec (bootstrap 0)..."
 	fi
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec9.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec8.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec7.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec6.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec5.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec4.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec3.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec2.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec1.c
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec8.c"
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec7.c"
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec6.c"
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec5.c"
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec4.c"
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec3.c"
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec2.c"
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec1.c"
 	$LD $LFLAGS ${LFLAG_OUT}gec$EXE gec*$OBJ $LLIBS
 	$RM gec*$OBJ
 }
 
 if [ "$CC" = "" ]; then
-	gobo_usage
-	exit 1
-elif [ "$CC" = "-help" ]; then
+	CC=zig
+fi
+if [ "$CC" = "-help" ]; then
 	gobo_usage
 	exit 0
 elif [ "$CC" = "-h" ]; then
@@ -104,7 +105,7 @@ elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 	LFLAGS='-nologo -subsystem:console'
 	LFLAG_OUT='-out:'
 	LLIBS=''
-	echo msc > $GOBO/tool/gec/backend/c/config/default.cfg
+	echo msc > "$GOBO/tool/gec/backend/c/config/default.cfg"
 	c_compilation
 elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	CC=bcc32
@@ -114,7 +115,7 @@ elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	LFLAGS='-5 -q'
 	LFLAGS='-e'
 	LLIBS=''
-	echo bcc > $GOBO/tool/gec/backend/c/config/default.cfg
+	echo bcc > "$GOBO/tool/gec/backend/c/config/default.cfg"
 	c_compilation
 	$RM *.tds
 elif [ "$CC" = "lcc-win32" ]; then
@@ -126,7 +127,7 @@ elif [ "$CC" = "lcc-win32" ]; then
 	LFLAGS='-s -subsystem Console'
 	LFLAG_OUT='-o '
 	LLIBS=''
-	echo lcc-win32 > $GOBO/tool/gec/backend/c/config/default.cfg
+	echo lcc-win32 > "$GOBO/tool/gec/backend/c/config/default.cfg"
 	c_compilation
 elif [ "$CC" = "lcc-win64" -o "$CC" = "lcc" ]; then
 	CC='lcc64'
@@ -137,7 +138,7 @@ elif [ "$CC" = "lcc-win64" -o "$CC" = "lcc" ]; then
 	LFLAGS='-s -subsystem Console'
 	LFLAG_OUT='-o '
 	LLIBS=''
-	echo lcc-win64 > $GOBO/tool/gec/backend/c/config/default.cfg
+	echo lcc-win64 > "$GOBO/tool/gec/backend/c/config/default.cfg"
 	c_compilation
 elif [ "$CC" = "gcc" ]; then
 	CC=gcc
@@ -147,7 +148,7 @@ elif [ "$CC" = "gcc" ]; then
 	LFLAGS=''
 	LFLAG_OUT='-o '
 	LLIBS='-lm -pthread'
-	echo gcc > $GOBO/tool/gec/backend/c/config/default.cfg
+	echo gcc > "$GOBO/tool/gec/backend/c/config/default.cfg"
 	c_compilation
 elif [ "$CC" = "mingw" ]; then
 	CC=gcc
@@ -158,25 +159,33 @@ elif [ "$CC" = "mingw" ]; then
 	LFLAGS=''
 	LFLAG_OUT='-o '
 	LLIBS='-lm -pthread'
-	echo mingw > $GOBO/tool/gec/backend/c/config/default.cfg
+	echo mingw > "$GOBO/tool/gec/backend/c/config/default.cfg"
 	c_compilation
 elif [ "$CC" = "clang" ]; then
 	CC=clang
 	LD=clang
-	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations -O2'
-	LFLAGS=''
+	CFLAGS='-pthread -Wno-unused-value -Wno-deprecated-declarations -O2'
+	LFLAGS='-pthread'
 	LFLAG_OUT='-o '
-	LLIBS='-lm -pthread'
-	echo clang > $GOBO/tool/gec/backend/c/config/default.cfg
+	LLIBS='-lm'
+	echo clang > "$GOBO/tool/gec/backend/c/config/default.cfg"
 	c_compilation
 elif [ "$CC" = "zig" ]; then
-	CC='zig cc'
-	LD='zig cc'
-	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined -O2'
-	LFLAGS=''
+	if [ "$ZIG" = "" ]; then
+		ZIG="$GOBO/tool/gec/backend/c/zig"
+		if [-d "$ZIG"]; then
+			ZIG="$ZIG/zig"
+		else
+			ZIG=zig
+		fi
+	fi
+	CC="$ZIG" cc
+	LD="$ZIG" cc
+	CFLAGS='-pthread -Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined -Os'
+	LFLAGS='-pthread'
 	LFLAG_OUT='-o '
-	LLIBS='-lm -pthread'
-	echo zig > $GOBO/tool/gec/backend/c/config/default.cfg
+	LLIBS='-lm'
+	echo zig > "$GOBO/tool/gec/backend/c/config/default.cfg"
 	c_compilation
 elif [ "$CC" = "cc" ]; then
 	CC='cc'
@@ -185,7 +194,7 @@ elif [ "$CC" = "cc" ]; then
 	LDFLAGS='-lm -pthread'
 	LFLAG_OUT='-o '
 	LLIBS=''
-	echo cc > $GOBO/tool/gec/backend/c/config/default.cfg
+	echo cc > "$GOBO/tool/gec/backend/c/config/default.cfg"
 	c_compilation
 elif [ "$CC" = "icc" ]; then
 	CC=icc
@@ -194,7 +203,7 @@ elif [ "$CC" = "icc" ]; then
 	LFLAGS=''
 	LFLAG_OUT='-o '
 	LLIBS=''
-	echo icc > $GOBO/tool/gec/backend/c/config/default.cfg
+	echo icc > "$GOBO/tool/gec/backend/c/config/default.cfg"
 	c_compilation
 elif [ "$CC" = "tcc" ]; then
 	CC=tcc
@@ -203,7 +212,7 @@ elif [ "$CC" = "tcc" ]; then
 	LDFLAGS='-lm'
 	LFLAG_OUT='-o '
 	LLIBS=''
-	echo tcc > $GOBO/tool/gec/backend/c/config/default.cfg
+	echo tcc > "$GOBO/tool/gec/backend/c/config/default.cfg"
 	c_compilation
 elif [ "$CC" = "no_c" ]; then
 	echo "No C compilation"
@@ -213,20 +222,20 @@ else
 fi
 
 if [ "$EIF" = "ge" ]; then
-	cd $BIN_DIR
+	cd "$BIN_DIR"
 	# Compile gec twice to get a bootstrap effect.
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gec (bootstrap 1)..."
 	fi
-	$MV $BIN_DIR/gec$EXE $BIN_DIR/gec1$EXE
-	$BIN_DIR/gec1$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gec/src/system.ecf
-	$RM $BIN_DIR/gec1$EXE
+	$MV "$BIN_DIR/gec$EXE" "$BIN_DIR/gec1$EXE"
+	"$BIN_DIR/gec1$EXE" --finalize --no-benchmark $THREAD_OPTION "$GOBO/tool/gec/src/system.ecf"
+	$RM "$BIN_DIR/gec1$EXE"
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gec (bootstrap 2)..."
 	fi
-	$MV $BIN_DIR/gec$EXE $BIN_DIR/gec1$EXE
-	$BIN_DIR/gec1$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gec/src/system.ecf
-	$RM $BIN_DIR/gec1$EXE
+	$MV "$BIN_DIR/gec$EXE" "$BIN_DIR/gec1$EXE"
+	"$BIN_DIR/gec1$EXE" --finalize --no-benchmark $THREAD_OPTION "GOBO/tool/gec/src/system.ecf"
+	$RM "$BIN_DIR/gec1$EXE"
 	$STRIP gec$EXE
 	$RM gec*.h
 	$RM gec*.c

@@ -55,15 +55,27 @@ feature -- Access
 			instance_free: class
 		end
 
+	zig_variable: STRING = "ZIG"
+			-- Name of environment variable "$ZIG"
+
+	zig_value: detachable STRING
+			-- Value of environment variable "$ZIG"
+		do
+			Result := Execution_environment.variable_value (zig_variable)
+		ensure
+			instance_free: class
+		end
+
 feature -- Setting
 
 	set_gobo_variables
 			-- Set environment variables "$GOBO", "$GOBO_LIBRARY",
-			-- "$BOEHM_GC" if not set yet.
+			-- "$BOEHM_GC" and "$ZIG" if not set yet.
 		do
 			set_gobo_variable
 			set_gobo_library_variable
 			set_boehm_gc_variable
+			set_zig_variable
 		ensure
 			instance_free: class
 		end
@@ -101,6 +113,26 @@ feature -- Setting
 				l_filename := file_system.nested_pathname (l_pathname, <<"include", "gc.h">>)
 				if file_system.file_exists (l_filename) then
 					Execution_environment.set_variable_value (boehm_gc_variable, l_pathname)
+				end
+			end
+		ensure
+			instance_free: class
+		end
+
+	set_zig_variable
+			-- Set environment variable "$ZIG" if not set yet.
+		local
+			l_pathname: STRING
+			l_filename: STRING
+		do
+			if not attached zig_value as l_zig_value or else l_zig_value.is_empty then
+				l_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "zig">>)
+				l_pathname := Execution_environment.interpreted_string (l_pathname)
+				if file_system.directory_exists (l_pathname) then
+					l_filename := file_system.pathname (l_pathname, "zig")
+					Execution_environment.set_variable_value (zig_variable, l_filename)
+				else
+					Execution_environment.set_variable_value (zig_variable, "zig")
 				end
 			end
 		ensure

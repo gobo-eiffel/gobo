@@ -711,6 +711,7 @@ feature {NONE} -- Compilation script generation
 			l_external_resource_pathnames: DS_ARRAYED_LIST [STRING]
 			l_cc_template: STRING
 			l_filename: STRING
+			l_windows_variables: DS_STRING_HASH_TABLE
 		do
 			l_base_name := a_system_name
 			if operating_system.is_windows then
@@ -723,11 +724,34 @@ feature {NONE} -- Compilation script generation
 			if l_file.is_open_write then
 				if operating_system.is_windows then
 					l_file.put_line ("@echo off")
+						-- Set some environment variables.
+					create l_windows_variables.make (10)
+					if attached gobo_variables.gobo_value as l_gobo_value and then not l_gobo_value.is_empty then
+						l_file.put_line ("set " + gobo_variables.gobo_variable + "=" + l_gobo_value)
+						l_windows_variables.force ("%%GOBO%%", "GOBO")
+					end
+					if attached gobo_variables.zig_value as l_zig_value and then not l_zig_value.is_empty then
+						l_file.put_line ("set " + gobo_variables.zig_variable + "=" + l_zig_value)
+						l_windows_variables.force ("%%ZIG%%", "ZIG")
+					end
+					if use_boehm_gc and then attached gobo_variables.boehm_gc_value as l_boehm_gc_value and then not l_boehm_gc_value.is_empty then
+						l_file.put_line ("set " + gobo_variables.boehm_gc_variable + "=" + l_boehm_gc_value)
+						l_windows_variables.force ("%%BOEHM_GC%%", "BOEHM_GC")
+					end
 				else
 					l_file.put_line ("#!/bin/sh")
+						-- Set some environment variables only if they are not defined yet.
+						-- (See https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_10_03.html#sect_10_03_03)
+					if attached gobo_variables.gobo_value as l_gobo_value and then not l_gobo_value.is_empty then
+						l_file.put_line ("export " + gobo_variables.gobo_variable + "=${" + gobo_variables.gobo_variable + ":-" + l_gobo_value + "}")
+					end
+					if attached gobo_variables.zig_value as l_zig_value and then not l_zig_value.is_empty then
+						l_file.put_line ("export " + gobo_variables.zig_variable + "=${" + gobo_variables.zig_variable + ":-" + l_zig_value + "}")
+					end
+					if use_boehm_gc and then attached gobo_variables.boehm_gc_value as l_boehm_gc_value and then not l_boehm_gc_value.is_empty then
+						l_file.put_line ("export " + gobo_variables.boehm_gc_variable + "=${" + gobo_variables.boehm_gc_variable + ":-" + l_boehm_gc_value + "}")
+					end
 					if attached ise_variables.ise_platform_value as l_ise_platform_value and then not l_ise_platform_value.is_empty then
-							-- Set environment variable $ISE_PLATFORM only if it's not defined yet.
-							-- (See https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_10_03.html#sect_10_03_03)
 						l_file.put_line ("export " + ise_variables.ise_platform_variable + "=${" + ise_variables.ise_platform_variable + ":-" + l_ise_platform_value + "}")
 					end
 				end
@@ -760,6 +784,9 @@ feature {NONE} -- Compilation script generation
 					l_filename := l_cursor.key + l_cursor.item
 					a_variables.force (l_filename, "c")
 					l_command_name := a_variables.expanded_string (l_cc_template, False)
+					if l_windows_variables /= Void then
+						l_command_name := l_windows_variables.expanded_string (l_command_name, False)
+					end
 					l_file.put_line (l_command_name)
 					l_cursor.back
 				end
@@ -768,6 +795,9 @@ feature {NONE} -- Compilation script generation
 					l_filename := l_cursor.key + l_cursor.item
 					a_variables.force (l_filename, "c")
 					l_command_name := a_variables.expanded_string (l_cc_template, False)
+					if l_windows_variables /= Void then
+						l_command_name := l_windows_variables.expanded_string (l_command_name, False)
+					end
 					l_file.put_line (l_command_name)
 					l_cursor.forth
 				end
@@ -801,6 +831,9 @@ feature {NONE} -- Compilation script generation
 							a_variables.force (l_rc_filename, "rc_file")
 							a_variables.force (l_res_filename, "res_file")
 							l_command_name := a_variables.expanded_string (l_rc_template, False)
+							if l_windows_variables /= Void then
+								l_command_name := l_windows_variables.expanded_string (l_command_name, False)
+							end
 							l_file.put_line (l_command_name)
 						end
 						if l_res_filename /= Void then
@@ -821,6 +854,9 @@ feature {NONE} -- Compilation script generation
 						a_variables.force (l_rc_filename, "rc_file")
 						a_variables.force (l_res_filename, "res_file")
 						l_command_name := a_variables.expanded_string (l_rc_template, False)
+						if l_windows_variables /= Void then
+							l_command_name := l_windows_variables.expanded_string (l_command_name, False)
+						end
 						l_file.put_line (l_command_name)
 						an_obj_filenames.append_character (' ')
 						an_obj_filenames.append_string (l_res_filename)
@@ -828,6 +864,9 @@ feature {NONE} -- Compilation script generation
 				end
 				l_link_template := a_variables.item ("link")
 				l_command_name := a_variables.expanded_string (l_link_template, False)
+				if l_windows_variables /= Void then
+					l_command_name := l_windows_variables.expanded_string (l_command_name, False)
+				end
 				l_file.put_line (l_command_name)
 				l_file.close
 					-- Set executable mode.
@@ -871,10 +910,6 @@ feature {NONE} -- Compilation script generation
 			l_default: BOOLEAN
 			l_c_config_parser: UT_CONFIG_PARSER
 			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
-			l_env_regexp: RX_PCRE_REGULAR_EXPRESSION
-			l_replacement: STRING
-			l_excluded: DS_HASH_SET [STRING]
-			l_value: STRING
 		do
 			l_name := Execution_environment.variable_value ("GOBO_CC")
 			if l_name = Void then
@@ -894,29 +929,19 @@ feature {NONE} -- Compilation script generation
 			end
 			if l_name = Void then
 				l_default := True
-				if operating_system.is_windows then
-					l_name := "msc"
-				else
-					l_name := "cc"
-				end
+				l_name := "zig"
 			end
 			create Result.make_map (10)
 			Result.set_key_equality_tester (string_equality_tester)
+			Result.put_new ("$ZIG cc -Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined $cflags $includes -c $c", "cc")
+			Result.put_new ("$ZIG cc $lflags -o $exe $objs $libs -lm", "link")
 				-- Put some platform-dependent default values.
 			if operating_system.is_windows then
-				Result.put_new ("cl -nologo $cflags $includes -c $c", "cc")
-				Result.put_new ("link -nologo $lflags -subsystem:console -out:$exe $objs $libs", "link")
 				Result.put_new (".obj", "obj")
 				Result.put_new (".exe", "exe")
-				Result.put_new ("", "cflags")
-				Result.put_new ("", "lflags")
 			else
-				Result.put_new ("cc $cflags $includes -c $c", "cc")
-				Result.put_new ("cc $lflags -o $exe $objs $libs", "link")
 				Result.put_new (".o", "obj")
 				Result.put_new ("", "exe")
-				Result.put_new ("", "cflags")
-				Result.put_new ("", "lflags")
 				Result.put_new (makefile_template, "Makefile")
 			end
 			l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "config", l_name>>)
@@ -951,23 +976,9 @@ feature {NONE} -- Compilation script generation
 				if l_c_config_parser.has_error then
 					set_fatal_error
 				else
-					create l_env_regexp.make
-					l_env_regexp.compile ("%%([^%%]+)%%")
-					create l_excluded.make (10)
-					l_excluded.set_equality_tester (string_equality_tester)
-					l_excluded.force_last ("cc")
-					l_excluded.force_last ("link")
-					l_excluded.force_last ("rc")
 					l_cursor := l_c_config_parser.config_values.new_cursor
 					from l_cursor.start until l_cursor.after loop
-						l_value := l_cursor.item
-						if not l_excluded.has (l_cursor.key) then
-							l_env_regexp.match (l_value)
-							l_replacement := STRING_.new_empty_string (l_value, 6)
-							l_replacement.append_string ("${\1\}")
-							l_value := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
-						end
-						Result.force (l_value, l_cursor.key)
+						Result.force (l_cursor.item, l_cursor.key)
 						l_cursor.forth
 					end
 				end
