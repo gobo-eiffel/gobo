@@ -44,7 +44,7 @@ fi
 
 if [ "$GOBO" = "" ]; then
 	echo "Environment variable GOBO must be set"
-	GOBO="$(dirname "$(readlink -f "$0")")"/../../..
+	export GOBO="$(dirname "$(readlink -f "$0")")"/../../..
 	echo "Set \$GOBO to \"$GOBO\""
 fi
 
@@ -173,14 +173,14 @@ elif [ "$CC" = "clang" ]; then
 elif [ "$CC" = "zig" ]; then
 	if [ "$ZIG" = "" ]; then
 		ZIG="$GOBO/tool/gec/backend/c/zig"
-		if [ -d "$ZIG"]; then
+		if [ -d "$ZIG" ]; then
 			ZIG="$ZIG/zig"
 		else
 			ZIG=zig
 		fi
 	fi
-	CC="$ZIG" cc
-	LD="$ZIG" cc
+	CC="$ZIG cc"
+	LD="$ZIG cc"
 	CFLAGS='-pthread -Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined -Os'
 	LFLAGS='-pthread'
 	LFLAG_OUT='-o '
@@ -234,7 +234,7 @@ if [ "$EIF" = "ge" ]; then
 		echo "Compiling gec (bootstrap 2)..."
 	fi
 	$MV "$BIN_DIR/gec$EXE" "$BIN_DIR/gec1$EXE"
-	"$BIN_DIR/gec1$EXE" --finalize --no-benchmark $THREAD_OPTION "GOBO/tool/gec/src/system.ecf"
+	"$BIN_DIR/gec1$EXE" --finalize --no-benchmark $THREAD_OPTION "$GOBO/tool/gec/src/system.ecf"
 	$RM "$BIN_DIR/gec1$EXE"
 	$STRIP gec$EXE
 	$RM gec*.h

@@ -45,7 +45,7 @@ fi
 
 if [ "$GOBO" = "" ]; then
 	echo "Environment variable GOBO must be set"
-	GOBO="$(dirname "$(readlink -f "$0")")"/..
+	export GOBO="$(dirname "$(readlink -f "$0")")"/..
 	echo "Set \$GOBO to \"$GOBO\""
 fi
 
