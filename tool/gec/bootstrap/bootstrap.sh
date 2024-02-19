@@ -45,7 +45,7 @@ fi
 if [ "$GOBO" = "" ]; then
 	echo "Environment variable GOBO must be set"
 	GOBO="$( cd "$( dirname "$0" )" &> /dev/null && cd ../../.. && pwd )"
-	echo "Set \$GOBO to "$GOBO"
+	echo "Set \$GOBO to \"$GOBO\""
 fi
 
 MV=mv

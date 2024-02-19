@@ -46,7 +46,7 @@ fi
 if [ "$GOBO" = "" ]; then
 	echo "Environment variable GOBO must be set"
 	GOBO="$( cd "$( dirname "$0" )" &> /dev/null && cd .. && pwd )"
-	echo "Set \$GOBO to "$GOBO"
+	echo "Set \$GOBO to \"$GOBO\""
 fi
 
 STRIP=strip
@@ -117,7 +117,7 @@ if [ "$EIF" = "ge" ]; then
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gecop..."
 	fi
-	"$BIN_DIR/gec$EXE" --finalize --no-benchmark  "$THREAD_OPTION $GOBO/tool/gecop/src/system.ecf"
+	"$BIN_DIR/gec$EXE" --finalize --no-benchmark  $THREAD_OPTION "$GOBO/tool/gecop/src/system.ecf"
 	$STRIP gecop${EXE}
 	if [ "$TEST_ONLY" = "" ]; then
 		if [ "$VERBOSE" != "-s" ]; then
