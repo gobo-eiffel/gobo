@@ -8,12 +8,16 @@ jobs:
 # Build Gobo tools.
 #
 
-  linux_gcc_build:
+  linux_build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        c_compiler: [zig, gcc]
     steps:
       - uses: actions/checkout@v4
       - name: build
-        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github gcc
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github ${{ matrix.c_compiler }}
         shell: pwsh
       - uses: actions/upload-artifact@v3
         with:
@@ -26,12 +30,16 @@ jobs:
           path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
-  macos_clang_build:
+  macos_build:
     runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        c_compiler: [zig, clang]
     steps:
       - uses: actions/checkout@v4
       - name: build
-        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github clang
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github ${{ matrix.c_compiler }}
         shell: pwsh
       - uses: actions/upload-artifact@v3
         with:
@@ -44,12 +52,16 @@ jobs:
           path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
-  windows_msc_build:
+  windows_build:
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        c_compiler: [zig, msc]
     steps:
       - uses: actions/checkout@v4
       - name: build
-        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github msc
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github ${{ matrix.c_compiler }}
       - uses: actions/upload-artifact@v3
         with:
           name: gobo_bin_windows_msc
@@ -65,12 +77,13 @@ jobs:
 # Running tests.
 #
   
-  linux_gcc_test:
+  linux_test:
     runs-on: ubuntu-latest
-    needs: linux_gcc_build
+    needs: linux_build
     strategy:
       fail-fast: false
       matrix:
+        c_compiler: [zig, gcc]
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
     steps:
@@ -84,15 +97,16 @@ jobs:
           name: gobo_c_config_linux_gcc
           path: tool/gec/backend/c/config
       - name: test
-        run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github gcc ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
+        run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
         shell: pwsh
 
-  macos_clang_test:
+  macos_test:
     runs-on: macos-latest
-    needs: macos_clang_build
+    needs: macos_build
     strategy:
       fail-fast: false
       matrix:
+        c_compiler: [zig, clang]
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
     steps:
@@ -106,15 +120,16 @@ jobs:
           name: gobo_c_config_macos_clang
           path: tool/gec/backend/c/config
       - name: test
-        run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github clang ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
+        run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
         shell: pwsh
 
-  windows_msc_test:
+  windows_test:
     runs-on: windows-latest
-    needs: windows_msc_build
+    needs: windows_build
     strategy:
       fail-fast: false
       matrix:
+        c_compiler: [zig, msc]
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
     steps:
@@ -128,4 +143,4 @@ jobs:
           name: gobo_c_config_windows_msc
           path: tool/gec/backend/c/config
       - name: test
-        run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github msc ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
+        run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
