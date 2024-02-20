@@ -22,6 +22,8 @@ param
 	[string] $ZigPath
 )
 
+Remove-Item  "$ZigPath/doc" -Recurse -Force
+
 # Patch, to avoid having -Wincompatible-pointer-types warnings.
 $ZIG_FILE = "$ZigPath/lib/libc/mingw/stdio/mingw_pformat.c"
 if (Test-Path -Path "$ZIG_FILE") {
