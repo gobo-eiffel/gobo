@@ -32,7 +32,7 @@ param
 	[string] $CCompiler
 )
 
-if ($GOBO_CI_C_COMPILER -eq "") {
+if ("$GOBO_CI_C_COMPILER" -ne "") {
 
 	function Invoke-Environment {
 		# See https://stackoverflow.com/questions/4384814/how-to-call-batch-script-from-powershell
