@@ -1,14 +1,12 @@
-note
+﻿note
 
 	description:
 
-	"Objects that represent pending events."
+		"Objects that represent pending events."
 
-library: "Gobo Eiffel XSLT Library"
-copyright: "Copyright (c) 2004, Colin Adams and others"
-license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "MIT License"
 
 class XM_XSLT_PENDING_EVENT
 

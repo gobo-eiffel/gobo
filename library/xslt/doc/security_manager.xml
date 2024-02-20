@@ -1,4 +1,4 @@
-<?xml version="1.0"?> 
+﻿<?xml version="1.0"?> 
 
 <!--
 	description:
@@ -8,8 +8,6 @@
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_security_manager">
