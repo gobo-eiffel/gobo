@@ -10,9 +10,12 @@
 .PARAMETER CiTool
 	CI tool (azure, github, gitlab).
 
+.PARAMETER CCompiler
+	C Compiler (zig, gcc, clang, msc).
+
 .EXAMPLE
 	# To be executed before CI/CD scripts on GitHub Actions pipeline:
-	before_script.ps1 github
+	before_script.ps1 github zig
 
 .NOTES
 	Copyright: "Copyright (c) 2021-2024, Eric Bezault and others"
@@ -23,7 +26,10 @@ param
 (
 	[Parameter(Mandatory=$true)]
 	[ValidateSet("azure", "github", "gitlab")] 
-	[string] $CiTool
+	[string] $CiTool,
+	[Parameter(Mandatory=$true)]
+	[ValidateSet("zig", "gcc", "clang", "msc")] 
+	[string] $CCompiler
 )
 
 function Invoke-Environment {
@@ -66,6 +72,8 @@ function Invoke-Environment {
 	}}
 }
 
+$GOBO_CI_C_COMPILER = $CCompiler
+
 switch ($CiTool) {
 	"azure" {
 		$env:GOBO = $env:BUILD_REPOSITORY_LOCALPATH
@@ -78,8 +86,10 @@ switch ($CiTool) {
 			}
 			"Windows_NT" {
 				$GOBO_CI_OS = "windows"
-				# Setting the environment variables for `cl`.
-				Invoke-Environment('"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
+				if ($GOBO_CI_C_COMPILER -eq "msc") {
+					# Setting the environment variables for `cl`.
+					Invoke-Environment('"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
+				}
 			}
 			default {
 				Write-Error "Platform not supported: $env:AGENT_OS"
@@ -98,9 +108,11 @@ switch ($CiTool) {
 			}
 			"Windows" {
 				$GOBO_CI_OS = "windows"
-				# Setting the environment variables for `cl`.
-				# See https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
-				Invoke-Environment('"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
+				if ($GOBO_CI_C_COMPILER -eq "msc") {
+					# Setting the environment variables for `cl`.
+					# See https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
+					Invoke-Environment('"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
+				}
 			}
 			default {
 				Write-Error "Platform not supported: $env:RUNNER_OS"
@@ -123,9 +135,11 @@ switch ($CiTool) {
 				}
 				"windows" {
 					$GOBO_CI_OS = "windows"
-					# Setting the environment variables for `cl`.
-					# See https://gitlab.com/gitlab-org/ci-cd/shared-runners/images/gcp/windows-containers/blob/main/cookbooks/preinstalled-software/README.md
-					Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
+					if ($GOBO_CI_C_COMPILER -eq "msc") {
+						# Setting the environment variables for `cl`.
+						# See https://gitlab.com/gitlab-org/ci-cd/shared-runners/images/gcp/windows-containers/blob/main/cookbooks/preinstalled-software/README.md
+						Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
+					}
 				}
 				default {
 					Write-Error "Platform not supported: $env:RUNNER_OS"
@@ -142,22 +156,26 @@ switch ($CiTool) {
 
 switch ($GOBO_CI_OS) {
 	"linux" {
-		$GOBO_CI_C_COMPILER = "gcc"
 		$GOBO_CI_BUILD_SCRIPT = "install.sh"
 		Get-Content "/etc/*-release"
 		arch
-		gcc --version
 	}
 	"macos" {
-		$GOBO_CI_C_COMPILER = "clang"
 		$GOBO_CI_BUILD_SCRIPT = "install.sh"
-		clang --version
 	}
 	"windows" {
-		$GOBO_CI_C_COMPILER = "cl"
 		$GOBO_CI_BUILD_SCRIPT = "install.bat"
 	}
 }
+switch ($GOBO_CI_C_COMPILER) {
+	"gcc" {
+		gcc --version
+	}
+	"clang" {
+		clang --version
+	}
+}
+
 Write-Host "`$GOBO_CI_C_COMPILER = $GOBO_CI_C_COMPILER"
 Write-Host "`$GOBO_CI_BUILD_SCRIPT = $GOBO_CI_BUILD_SCRIPT"
 

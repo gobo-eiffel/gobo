@@ -8,56 +8,56 @@ jobs:
 # Build Gobo tools.
 #
 
-  linux_build:
+  linux_gcc_build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: build
-        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github gcc
         shell: pwsh
       - uses: actions/upload-artifact@v3
         with:
-          name: gobo_bin_linux
+          name: gobo_bin_linux_gcc
           path: bin
           retention-days: 1
       - uses: actions/upload-artifact@v3
         with:
-          name: gobo_c_config_linux
+          name: gobo_c_config_linux_gcc
           path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
-  macos_build:
+  macos_clang_build:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - name: build
-        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github clang
         shell: pwsh
       - uses: actions/upload-artifact@v3
         with:
-          name: gobo_bin_macos
+          name: gobo_bin_macos_clang
           path: bin
           retention-days: 1
       - uses: actions/upload-artifact@v3
         with:
-          name: gobo_c_config_macos
+          name: gobo_c_config_macos_clang
           path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
-  windows_build:
+  windows_msc_build:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - name: build
-        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github msc
       - uses: actions/upload-artifact@v3
         with:
-          name: gobo_bin_windows
+          name: gobo_bin_windows_msc
           path: bin
           retention-days: 1
       - uses: actions/upload-artifact@v3
         with:
-          name: gobo_c_config_windows
+          name: gobo_c_config_windows_msc
           path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
@@ -65,9 +65,9 @@ jobs:
 # Running tests.
 #
   
-  linux_test:
+  linux_gcc_test:
     runs-on: ubuntu-latest
-    needs: linux_build
+    needs: linux_gcc_build
     strategy:
       fail-fast: false
       matrix:
@@ -77,19 +77,19 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
         with:
-          name: gobo_bin_linux
+          name: gobo_bin_linux_gcc
           path: bin
       - uses: actions/download-artifact@v3
         with:
-          name: gobo_c_config_linux
+          name: gobo_c_config_linux_gcc
           path: tool/gec/backend/c/config
       - name: test
-        run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
+        run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github gcc ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
         shell: pwsh
 
-  macos_test:
+  macos_clang_test:
     runs-on: macos-latest
-    needs: macos_build
+    needs: macos_clang_build
     strategy:
       fail-fast: false
       matrix:
@@ -99,19 +99,19 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
         with:
-          name: gobo_bin_macos
+          name: gobo_bin_macos_clang
           path: bin
       - uses: actions/download-artifact@v3
         with:
-          name: gobo_c_config_macos
+          name: gobo_c_config_macos_clang
           path: tool/gec/backend/c/config
       - name: test
-        run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
+        run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github clang ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
         shell: pwsh
 
-  windows_test:
+  windows_msc_test:
     runs-on: windows-latest
-    needs: windows_build
+    needs: windows_msc_build
     strategy:
       fail-fast: false
       matrix:
@@ -121,11 +121,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
         with:
-          name: gobo_bin_windows
+          name: gobo_bin_windows_msc
           path: bin
       - uses: actions/download-artifact@v3
         with:
-          name: gobo_c_config_windows
+          name: gobo_c_config_windows_msc
           path: tool/gec/backend/c/config
       - name: test
-        run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
+        run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github msc ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
