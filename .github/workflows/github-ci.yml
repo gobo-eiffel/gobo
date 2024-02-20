@@ -64,7 +64,7 @@ jobs:
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github ${{ matrix.c_compiler }}
       - uses: actions/upload-artifact@v3
         with:
-          name: gobo_bin_windows_msc
+          name: gobo_bin_windows_${{ matrix.c_compiler }}
           path: bin
           retention-days: 1
       - uses: actions/upload-artifact@v3
