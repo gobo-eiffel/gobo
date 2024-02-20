@@ -35,6 +35,8 @@ $ErrorActionPreference = "Stop"
 . "$PSScriptRoot/before_script.ps1" $CiTool $CCompiler
 if ($LastExitCode -ne 0) { exit $LastExitCode }
 
+Write-Host "Gobo 100"
+
 switch ($GOBO_CI_OS) {
 	"linux" {
 		# See limitations (Permission Loss) in https://github.com/actions/download-artifact
@@ -46,11 +48,18 @@ switch ($GOBO_CI_OS) {
 	"macos" {
 		# See limitations (Permission Loss) in https://github.com/actions/download-artifact
 		Get-ChildItem "$env:GOBO/bin/ge*" | ForEach-Object {
+			Write-Host "Gobo 101"
 			bash -c "chmod a+x '$_'"
-			if ($LastExitCode -ne 0) { exit $LastExitCode }
+			if ($LastExitCode -ne 0) {
+				Write-Host "Gobo 102"
+				exit $LastExitCode
+			}
+			Write-Host "Gobo 103"
 		}
 	}
 }
+
+Write-Host "Gobo 104"
 
 gec --version
 if ($LastExitCode -ne 0) { exit $LastExitCode }

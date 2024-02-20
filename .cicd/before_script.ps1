@@ -191,7 +191,13 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 
 	$env:PATH = "$env:GOBO/bin$([IO.Path]::PathSeparator)$env:PATH"
 
+	Write-Host "Gobo 1"
+
 	& "$PSScriptRoot/set_gobo_version.ps1"
-	if ($LastExitCode -ne 0) { exit $LastExitCode }
+	if ($LastExitCode -ne 0) {
+		Write-Host "Gobo 2"
+		exit $LastExitCode
+	}
+	Write-Host "Gobo 3"
 
 }
