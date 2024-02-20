@@ -56,6 +56,10 @@ if ($GOBO_CI_OS -eq "windows") {
 Remove-Item "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME"
 Move-Item -Path "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_BASENAME" -Destination "$env:GOBO/tool/gec/backend/c/zig"
 
+# Patch zig package to avoid having warnings when compiling 
+# the standard C libraries for the first time.
+. "$PSScriptRoot/patch_zig.ps1" "$env:GOBO/tool/gec/backend/c/zig"
+
 Write-Host "Zig version: "
 & "$env:GOBO/tool/gec/backend/c/zig/zig" version
 & "$env:GOBO/tool/gec/backend/c/zig/zig" cc --version
