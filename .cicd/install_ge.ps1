@@ -30,21 +30,27 @@ param
 	[string] $CCompiler
 )
 
+$ErrorActionPreference = "Stop"
+
 . "$PSScriptRoot/before_script.ps1" $CiTool $CCompiler
+if ($LastExitCode -ne 0) { exit $LastExitCode }
 
 switch ($GOBO_CI_OS) {
 	"linux" {
 		# See limitations (Permission Loss) in https://github.com/actions/download-artifact
 		Get-ChildItem "$env:GOBO/bin/ge*" | ForEach-Object {
 			bash -c "chmod a+x '$_'"
+			if ($LastExitCode -ne 0) { exit $LastExitCode }
 		}
 	}
 	"macos" {
 		# See limitations (Permission Loss) in https://github.com/actions/download-artifact
 		Get-ChildItem "$env:GOBO/bin/ge*" | ForEach-Object {
 			bash -c "chmod a+x '$_'"
+			if ($LastExitCode -ne 0) { exit $LastExitCode }
 		}
 	}
 }
 
 gec --version
+if ($LastExitCode -ne 0) { exit $LastExitCode }

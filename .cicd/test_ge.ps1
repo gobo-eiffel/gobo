@@ -42,14 +42,17 @@ param
 	[string] $SystemUnderTest
 )
 
-. "$PSScriptRoot/install_ge.ps1" $CiTool $CCompiler
+$ErrorActionPreference = "Stop"
 
-if ($GOBO_CI_C_COMPILER -eq "zig") {
-	. "$PSScriptRoot/install_zig.ps1" $CiTool
-}
+. "$PSScriptRoot/install_ge.ps1" $CiTool $CCompiler
+if ($LastExitCode -ne 0) { exit $LastExitCode }
 
 if ($EiffelCompiler.EndsWith("ise")) {
-	. "$PSScriptRoot/install_ise.ps1" $CiTool $CCompiler
+	& "$PSScriptRoot/install_ise.ps1" $CiTool $CCompiler
+	if ($LastExitCode -ne 0) { exit $LastExitCode }
+} elseif ($GOBO_CI_C_COMPILER -eq "zig") {
+	& "$PSScriptRoot/install_zig.ps1" $CiTool
+	if ($LastExitCode -ne 0) { exit $LastExitCode }
 }
 
 Set-Location "$env:GOBO/$SystemUnderTest"

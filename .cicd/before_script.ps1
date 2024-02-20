@@ -32,6 +32,8 @@ param
 	[string] $CCompiler
 )
 
+$ErrorActionPreference = "Stop"
+
 if ("$GOBO_CI_C_COMPILER" -eq "") {
 
 	function Invoke-Environment {
@@ -72,6 +74,7 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 				[System.Environment]::SetEnvironmentVariable($matches[1], $matches[2])
 			}
 		}}
+		if ($LastExitCode -ne 0) { exit $LastExitCode }
 	}
 
 	$GOBO_CI_C_COMPILER = $CCompiler
@@ -130,7 +133,9 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 						$GOBO_CI_OS = "linux"
 						# Installing `gcc`.
 						apt update
+						if ($LastExitCode -ne 0) { exit $LastExitCode }
 						apt install -y build-essential
+						if ($LastExitCode -ne 0) { exit $LastExitCode }
 					}
 					"macos" {
 						$GOBO_CI_OS = "macos"
@@ -161,6 +166,7 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 			$GOBO_CI_BUILD_SCRIPT = "install.sh"
 			Get-Content "/etc/*-release"
 			arch
+			if ($LastExitCode -ne 0) { exit $LastExitCode }
 		}
 		"macos" {
 			$GOBO_CI_BUILD_SCRIPT = "install.sh"
@@ -172,9 +178,11 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 	switch ($GOBO_CI_C_COMPILER) {
 		"gcc" {
 			gcc --version
+			if ($LastExitCode -ne 0) { exit $LastExitCode }
 		}
 		"clang" {
 			clang --version
+			if ($LastExitCode -ne 0) { exit $LastExitCode }
 		}
 	}
 
@@ -183,6 +191,7 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 
 	$env:PATH = "$env:GOBO/bin$([IO.Path]::PathSeparator)$env:PATH"
 
-	. "$PSScriptRoot/set_gobo_version.ps1"
+	& "$PSScriptRoot/set_gobo_version.ps1"
+	if ($LastExitCode -ne 0) { exit $LastExitCode }
 
 }

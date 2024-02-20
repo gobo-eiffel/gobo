@@ -22,6 +22,8 @@ param
 	[string] $ZigPath
 )
 
+$ErrorActionPreference = "Stop"
+
 Remove-Item  "$ZigPath/doc" -Recurse -Force
 
 # Patch, to avoid having -Wincompatible-pointer-types warnings.
