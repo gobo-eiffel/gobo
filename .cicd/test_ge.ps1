@@ -19,7 +19,7 @@
 
 .EXAMPLE
 	# Test Gobo Eiffel libraries using the Gobo Eiffel compiler from the GitHub Actions pipeline:
-	test_ge.ps1 github ge library
+	test_ge.ps1 github zig ge library
 
 .NOTES
 	Copyright: "Copyright (c) 2021-2024, Eric Bezault and others"
