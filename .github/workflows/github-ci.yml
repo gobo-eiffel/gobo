@@ -21,12 +21,12 @@ jobs:
         shell: pwsh
       - uses: actions/upload-artifact@v3
         with:
-          name: gobo_bin_linux_gcc
+          name: gobo_bin_linux_${{ matrix.c_compiler }}
           path: bin
           retention-days: 1
       - uses: actions/upload-artifact@v3
         with:
-          name: gobo_c_config_linux_gcc
+          name: gobo_c_config_linux_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
@@ -43,12 +43,12 @@ jobs:
         shell: pwsh
       - uses: actions/upload-artifact@v3
         with:
-          name: gobo_bin_macos_clang
+          name: gobo_bin_macos_${{ matrix.c_compiler }}
           path: bin
           retention-days: 1
       - uses: actions/upload-artifact@v3
         with:
-          name: gobo_c_config_macos_clang
+          name: gobo_c_config_macos_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
@@ -69,7 +69,7 @@ jobs:
           retention-days: 1
       - uses: actions/upload-artifact@v3
         with:
-          name: gobo_c_config_windows_msc
+          name: gobo_c_config_windows_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
@@ -90,11 +90,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
         with:
-          name: gobo_bin_linux_gcc
+          name: gobo_bin_linux_${{ matrix.c_compiler }}
           path: bin
       - uses: actions/download-artifact@v3
         with:
-          name: gobo_c_config_linux_gcc
+          name: gobo_c_config_linux_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
@@ -113,11 +113,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
         with:
-          name: gobo_bin_macos_clang
+          name: gobo_bin_macos_${{ matrix.c_compiler }}
           path: bin
       - uses: actions/download-artifact@v3
         with:
-          name: gobo_c_config_macos_clang
+          name: gobo_c_config_macos_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
@@ -136,11 +136,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
         with:
-          name: gobo_bin_windows_msc
+          name: gobo_bin_windows_${{ matrix.c_compiler }}
           path: bin
       - uses: actions/download-artifact@v3
         with:
-          name: gobo_c_config_windows_msc
+          name: gobo_c_config_windows_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
