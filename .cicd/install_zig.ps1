@@ -30,11 +30,11 @@ $GOBO_CI_ZIG_VERSION = "0.12.0-dev.2811+3cafb9655"
 
 switch ($GOBO_CI_OS) {
 	"linux" {
-		$GOBO_CI_ZIG_PLATFORM = "linux-x86-64"
+		$GOBO_CI_ZIG_PLATFORM = "linux-x86_64"
 		$GOBO_CI_ZIG_ARCHIVE_EXTENSION = ".tar.xz"
 	}
 	"macos" {
-		$GOBO_CI_ZIG_PLATFORM = "macos-x86-64"
+		$GOBO_CI_ZIG_PLATFORM = "macos-x86_64"
 		$GOBO_CI_ZIG_ARCHIVE_EXTENSION = ".tar.xz"
 	}
 	"windows" {
