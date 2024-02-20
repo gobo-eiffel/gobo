@@ -81488,7 +81488,7 @@ void GE_init_const1()
 	ge1660ov11862020 = (GE_ms8("\"$1\", line $2: surrogate or invalid Unicode character \'$3\'", 58));
 	ge1676ov11862020 = (GE_ms8("\"$1\", line $2: unrecognized rule", 32));
 	ge332ov5439510 = (GE_ms8("usage: ", 7));
-	ge747ov12238849 = (GE_ms8("xx.xx.xx+xxxxxxxxx", 18));
+	ge747ov12238849 = (GE_ms8("24.02.20+b00586147", 18));
 	ge334ov5472263 = (GE_ms8("Errors parsing arguments, aborting.", 35));
 	ge337ov5521413 = (GE_ms8("Too many occurrences of option \'$1\'.", 36));
 	ge337ov5521420 = (GE_ms8("APSOPT", 6));
