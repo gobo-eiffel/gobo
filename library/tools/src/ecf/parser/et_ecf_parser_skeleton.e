@@ -5,7 +5,7 @@
 		"ECF parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_ECF_PARSER_SKELETON
@@ -1370,6 +1370,64 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_namespace (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_NAMESPACE
+			-- New namespace built from `a_element'
+		require
+			a_element_not_void: a_element /= Void
+			is_namespace: STRING_.same_case_insensitive (a_element.name, xml_namespace)
+			a_target_not_void: a_target /= Void
+		local
+			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
+			l_renamings: detachable DS_HASH_TABLE [STRING, STRING]
+			l_notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
+		do
+			if not attached a_element.attribute_by_name (xml_name) as l_name then
+				error_handler.report_eatm_error (xml_name, element_name (a_element, a_position_table), a_target.system_config)
+			elseif l_name.value.is_empty then
+				error_handler.report_eate_error (attribute_name (l_name, a_position_table), element_name (a_element, a_position_table), a_target.system_config)
+			else
+				Result := ast_factory.new_namespace (l_name.value)
+				l_cursor := a_element.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					if attached {XM_ELEMENT} l_cursor.item as l_child then
+						if STRING_.same_case_insensitive (l_child.name, xml_renaming) then
+							l_renamings := new_renamings (l_renamings, l_child, a_position_table, a_target)
+						elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
+							l_notes := new_notes (l_notes, l_child, a_position_table, a_target.system_config)
+						elseif STRING_.same_case_insensitive (l_child.name, xml_description) then
+							if attached l_child.text as l_text and then not l_text.is_empty then
+								Result.set_description (l_text)
+							end
+						end
+					elseif attached {XM_ATTRIBUTE} l_cursor.item as l_child then
+						if STRING_.same_case_insensitive (l_child.name, xml_prefix) then
+							Result.set_classname_prefix (l_child.value)
+						end
+					end
+					l_cursor.forth
+				end
+				Result.set_class_renamings (l_renamings)
+				Result.set_notes (l_notes)
+			end
+		end
+
+	new_namespaces (a_namespaces: detachable ET_ECF_NAMESPACES; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable ET_ECF_NAMESPACES
+			-- New namespaces (or `a_namespaces' if not Void) built from `a_element'
+		require
+			a_element_not_void: a_element /= Void
+			is_namespace: STRING_.same_case_insensitive (a_element.name, xml_namespace)
+			a_target_not_void: a_target /= Void
+		do
+			Result := a_namespaces
+			if attached new_namespace (a_element, a_position_table, a_target) as l_namespace then
+				if Result = Void then
+					Result := ast_factory.new_namespaces (l_namespace)
+				else
+					Result.put_last (l_namespace)
+				end
+			end
+		end
+
 	new_note_element (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_system_config: ET_ECF_SYSTEM_CONFIG): detachable ET_ECF_NOTE_ELEMENT
 			-- New note element built from `a_element'
 		require
@@ -1774,6 +1832,7 @@ feature {NONE} -- AST factory
 			l_libraries: detachable ET_ECF_ADAPTED_LIBRARIES
 			l_dotnet_assemblies: detachable ET_ECF_ADAPTED_DOTNET_ASSEMBLIES
 			l_file_rules: detachable ET_ECF_FILE_RULES
+			l_namespaces: detachable ET_ECF_NAMESPACES
 			l_external_cflags: detachable ET_ECF_EXTERNAL_CFLAGS
 			l_external_includes: detachable ET_ECF_EXTERNAL_INCLUDES
 			l_external_libraries: detachable ET_ECF_EXTERNAL_LIBRARIES
@@ -1830,6 +1889,8 @@ feature {NONE} -- AST factory
 							if attached l_child.text as l_text and then not l_text.is_empty then
 								Result.set_description (l_text)
 							end
+						elseif STRING_.same_case_insensitive (l_child.name, xml_namespace) then
+							l_namespaces := new_namespaces (l_namespaces, l_child, a_position_table, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_external_cflag) then
 							l_external_cflags := new_external_cflags (l_external_cflags, l_child, a_position_table, Result)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_external_include) then
@@ -1902,6 +1963,7 @@ feature {NONE} -- AST factory
 				Result.set_dotnet_assemblies (l_dotnet_assemblies)
 				Result.set_file_rules (l_file_rules)
 				Result.set_class_mappings (l_mappings)
+				Result.set_namespaces (l_namespaces)
 				Result.set_external_cflags (l_external_cflags)
 				Result.set_external_includes (l_external_includes)
 				Result.set_external_libraries (l_external_libraries)

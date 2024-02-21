@@ -93,6 +93,10 @@ feature -- Access
 	file_rules: detachable ET_ECF_FILE_RULES
 			-- File rules
 
+	namespaces: detachable ET_ECF_NAMESPACES
+			-- .Net namespaces
+			-- (Introduced in ECF 1.23.0)
+
 	external_includes: detachable ET_ECF_EXTERNAL_INCLUDES
 			-- External includes
 
@@ -264,6 +268,14 @@ feature -- Setting
 			file_rules := a_file_rules
 		ensure
 			file_rules_set: file_rules = a_file_rules
+		end
+
+	set_namespaces (a_namespaces: like namespaces)
+			-- Set `namespaces' to `a_namespaces'.
+		do
+			namespaces := a_namespaces
+		ensure
+			namespaces_set: namespaces = a_namespaces
 		end
 
 	set_external_includes (a_external_includes: like external_includes)

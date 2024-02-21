@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system
-	xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0"
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd"
 	name="tools"
 	uuid="E1FFE100-60B0-0020-0002-000020160829"
 	library_target="tools"
@@ -19,12 +19,21 @@
 			<exclude>/\.svn$</exclude>
 			<exclude>/\.git$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true"/>
+		<option full_class_checking="true" is_attached_by_default="true"/>
 		<setting name="console_application" value="true"/>
 		<capability>
 			<concurrency support="thread" use="thread"/>
 			<void_safety support="all" use="all"/>
 		</capability>
+		<namespace name="Gobo" prefix="GOBO_">
+			<description>
+				Some explanation.
+			</description>
+			<note>
+				<gobo name="eiffel"/>
+			</note>
+			<renaming old_name="FOO" new_name="BAR"/>
+		</namespace>
 		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf" readonly="true">
 			<condition>
 				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
