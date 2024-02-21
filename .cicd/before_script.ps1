@@ -34,6 +34,7 @@ param
 
 $ErrorActionPreference = "Stop"
 
+Write-Host "Gobo 0"
 if ("$GOBO_CI_C_COMPILER" -eq "") {
 
 	function Invoke-Environment {
@@ -201,3 +202,5 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 	Write-Host "Gobo 3"
 
 }
+
+Write-Host "Gobo 104"

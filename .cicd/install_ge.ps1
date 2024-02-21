@@ -62,4 +62,9 @@ switch ($GOBO_CI_OS) {
 Write-Host "Gobo 104"
 
 gec --version
-if ($LastExitCode -ne 0) { exit $LastExitCode }
+Write-Host "Gobo 105"
+if ($LastExitCode -ne 0) {
+	Write-Host "Gobo 106"
+	exit $LastExitCode
+}
+Write-Host "Gobo 107"

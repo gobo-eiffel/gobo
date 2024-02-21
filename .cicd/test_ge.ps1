@@ -45,7 +45,11 @@ param
 $ErrorActionPreference = "Stop"
 
 . "$PSScriptRoot/install_ge.ps1" $CiTool $CCompiler
-if ($LastExitCode -ne 0) { exit $LastExitCode }
+if ($LastExitCode -ne 0) {
+	Write-Host "Gobo 108"
+	exit $LastExitCode
+}
+Write-Host "Gobo 109"
 
 if ($EiffelCompiler.EndsWith("ise")) {
 	& "$PSScriptRoot/install_ise.ps1" $CiTool $CCompiler
