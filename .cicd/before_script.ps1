@@ -171,6 +171,9 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 		}
 		"macos" {
 			$GOBO_CI_BUILD_SCRIPT = "install.sh"
+			arch
+			uname -m
+			if ($LastExitCode -ne 0) { exit $LastExitCode }
 		}
 		"windows" {
 			$GOBO_CI_BUILD_SCRIPT = "install.bat"
