@@ -5,7 +5,7 @@
 		"ECF Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ECF_AST_FACTORY
@@ -403,6 +403,27 @@ feature -- AST factory
 			create Result.make (a_name, a_filename, a_system)
 		ensure
 			library_not_void: Result /= Void
+		end
+
+	new_namespace (a_name: STRING): ET_ECF_NAMESPACE
+			-- New namespace
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		do
+			create Result.make (a_name)
+		ensure
+			namespace_not_void: Result /= Void
+		end
+
+	new_namespaces (a_namespace: ET_ECF_NAMESPACE): ET_ECF_NAMESPACES
+			-- New namespace list
+		require
+			a_namespace_not_void: a_namespace /= Void
+		do
+			create Result.make (a_namespace)
+		ensure
+			namespaces_not_void: Result /= Void
 		end
 
 	new_note (a_name: STRING): ET_ECF_NOTE_ELEMENT

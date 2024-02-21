@@ -5,7 +5,7 @@
 		"Shared ECF version numbers"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 2009-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class UT_SHARED_ECF_VERSIONS
@@ -232,12 +232,22 @@ feature -- Access
 			ecf_1_22_0_not_void: Result /= Void
 		end
 
+	ecf_1_23_0: UT_VERSION
+			-- ECF 1.23.0
+			-- Introduced in ISE 23.05.
+		once
+			create Result.make (1, 23, 0, 0)
+		ensure
+			instance_free: class
+			ecf_1_23_0_not_void: Result /= Void
+		end
+
 	ecf_last_known: UT_VERSION
 			-- Last known ECF version
 			-- (Typically the most recent version of ECF supported
 			-- by the latest offical release of ISE EiffelStudio)
 		once
-			Result := ecf_1_22_0
+			Result := ecf_1_23_0
 		ensure
 			instance_free: class
 			ecf_last_known_not_void: Result /= Void

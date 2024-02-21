@@ -5,7 +5,7 @@
 		"ECF file printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ECF_PRINTER
@@ -787,7 +787,7 @@ feature -- Output
 		end
 
 	print_file_rules (a_file_rules: ET_ECF_FILE_RULES)
-			-- Print `a_file_rules' to _file'.
+			-- Print `a_file_rules' to `file'.
 		require
 			a_file_rules_not_void: a_file_rules /= Void
 		local
@@ -986,10 +986,73 @@ feature -- Output
 			file.put_new_line
 		end
 
+	print_namespaces (a_namespaces: ET_ECF_NAMESPACES)
+			-- Print `a_namespaces' to `file'.
+		require
+			a_namespaces_not_void: a_namespaces /= Void
+		do
+			if ecf_version >= ecf_1_23_0 then
+					-- The <namespace> element was introducted in ECF 1.23.0.
+				across a_namespaces.namespaces as i_namespace loop
+					print_namespace (i_namespace)
+				end
+			end
+		end
+
+	print_namespace (a_namespace: ET_ECF_NAMESPACE)
+			-- Print `a_namespacs' to _file'.
+		require
+			a_namespace_not_void: a_namespace /= Void
+		do
+			print_indentation
+			file.put_character ('<')
+			file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_namespace)
+			file.put_character (' ')
+			file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_name)
+			file.put_character ('=')
+			print_quoted_string (a_namespace.name)
+			if attached a_namespace.classname_prefix as l_prefix then
+				file.put_character (' ')
+				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_prefix)
+				file.put_character ('=')
+				print_quoted_string (l_prefix)
+			end
+			if
+				a_namespace.description /= Void or
+				(attached a_namespace.notes as l_notes and then not l_notes.is_empty) or
+				a_namespace.class_renamings /= Void
+			then
+				file.put_character ('>')
+				file.put_new_line
+				indent
+				if attached a_namespace.description as l_description then
+					print_description (l_description)
+				end
+				if attached a_namespace.notes as l_notes and then not l_notes.is_empty then
+					l_notes.do_all (agent print_note_element)
+				end
+				if attached a_namespace.class_renamings as l_renamings then
+					print_renamings (l_renamings)
+				end
+				dedent
+				print_indentation
+				file.put_character ('<')
+				file.put_character ('/')
+				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_namespace)
+				file.put_character ('>')
+			else
+				file.put_character ('/')
+				file.put_character ('>')
+			end
+			file.put_new_line
+		end
+
 	print_note_element (a_note_element: ET_ECF_NOTE_ELEMENT)
 			-- Print `a_note_element' to `file'.
 		require
 			a_note_element_not_void: a_note_element /= Void
+		local
+			l_stripped_content: detachable STRING
 		do
 			if ecf_version >= ecf_1_4_0 then
 					-- The <note> element was introducted in ECF 1.4.0.
@@ -1002,17 +1065,22 @@ feature -- Output
 					file.put_character ('=')
 					print_quoted_string (i_attribute)
 				end
+				if attached a_note_element.content as l_content and then not l_content.is_empty then
+					l_stripped_content := l_content.twin
+					l_stripped_content.left_adjust
+					l_stripped_content.right_adjust
+				end
 				if
 					not a_note_element.elements.is_empty or
-					(attached a_note_element.content as l_content and then not l_content.is_empty)
+					(l_stripped_content /= Void and then not l_stripped_content.is_empty)
 				then
 					file.put_character ('>')
 					file.put_new_line
 					indent
 					a_note_element.elements.do_all (agent print_note_element)
-					if attached a_note_element.content as l_content and then not l_content.is_empty then
+					if l_stripped_content /= Void and then not l_stripped_content.is_empty then
 						print_indentation
-						print_escaped_string (l_content)
+						print_escaped_string (l_stripped_content)
 						file.put_new_line
 					end
 					dedent
@@ -1646,6 +1714,7 @@ feature -- Output
 				not l_capabilities.primary_use_capabilities.is_empty or
 				not l_capabilities.primary_support_capabilities.is_empty or
 				a_target.class_mappings /= Void or
+				(attached a_target.namespaces as l_namespaces and then not l_namespaces.is_empty) or
 				not a_target.variables.primary_variables.is_empty or
 				(attached a_target.pre_compile_actions as l_pre_compile_actions and then not l_pre_compile_actions.is_empty) or
 				(attached a_target.post_compile_actions as l_post_compile_actions and then not l_post_compile_actions.is_empty) or
@@ -1684,6 +1753,9 @@ feature -- Output
 				print_capabilities (l_capabilities)
 				if attached a_target.class_mappings as l_mappings then
 					print_mappings (l_mappings)
+				end
+				if attached a_target.namespaces as l_namespaces and then not l_namespaces.is_empty then
+					print_namespaces (l_namespaces)
 				end
 				print_variables (a_target.variables)
 				if attached a_target.pre_compile_actions as l_pre_compile_actions and then not l_pre_compile_actions.is_empty then

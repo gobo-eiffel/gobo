@@ -5,7 +5,7 @@
 		"ECF capabilities"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ECF_CAPABILITIES
@@ -196,7 +196,7 @@ feature -- Setting
 feature {NONE} -- Implementation
 
 	capability_order: DS_HASH_TABLE [DS_HASH_TABLE [INTEGER, STRING], STRING]
-			-- Is capability order if any, indexed by capability names
+			-- Capability order if any, indexed by capability names
 		local
 			l_hash_function: KL_AGENT_HASH_FUNCTION [STRING]
 			l_order: DS_HASH_TABLE [INTEGER, STRING]

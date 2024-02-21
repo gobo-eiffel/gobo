@@ -5,7 +5,7 @@
 		"ECF XML element names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ECF_ELEMENT_NAMES
@@ -183,6 +183,9 @@ feature -- Constants
 	xml_name: STRING = "name"
 			-- "name" attribute name
 
+	xml_namespace: STRING = "namespace"
+			-- "namespace" element name
+
 	xml_new_name: STRING = "new_name"
 			-- "new_name" attribute name
 
@@ -290,28 +293,5 @@ feature -- Constants
 
 	xml_working_directory: STRING = "working_directory"
 			-- "working_directory" attribute name
-
-feature -- Namespaces
-
-	namespace_1_0_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-0-0"
-			-- ECF namespace corresponding to ISE 5.7
-
-	namespace_1_2_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-2-0"
-			-- ECF namespace corresponding to ISE 6.0
-
-	namespace_1_3_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-3-0"
-			-- ECF namespace corresponding to ISE 6.1
-
-	namespace_1_4_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-4-0"
-			-- ECF namespace corresponding to ISE 6.2
-
-	namespace_1_5_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-5-0"
-			-- ECF namespace corresponding to ISE 6.4
-
-	namespace_1_15_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-15-0"
-			-- ECF namespace corresponding to ISE 15.12
-
-	namespace_1_16_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-16-0"
-			-- ECF namespace corresponding to ISE 17.05
 
 end
