@@ -82,7 +82,7 @@ feature -- Execution
 		do
 			Arguments.set_program_name ("gec")
 				-- Set environment variables "$GOBO", "$GOBO_LIBRARY",
-				-- "$BOEHM_GC" if not set yet.
+				-- "$BOEHM_GC" and "$ZIG" if not set yet.
 			gobo_variables.set_gobo_variables
 				-- For compatibility with ISE's tools, define the environment
 				-- variables "$ISE_LIBRARY", "$EIFFEL_LIBRARY", "$ISE_PLATFORM"

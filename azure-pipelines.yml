@@ -7,16 +7,37 @@ stages:
   - template: .azure/build.yml
     parameters:
       os: linux
+      c_compiler: gcc
+      vm_image: ubuntu-latest
+
+  - template: .azure/build.yml
+    parameters:
+      os: linux
+      c_compiler: zig
       vm_image: ubuntu-latest
 
   - template: .azure/build.yml
     parameters:
       os: macos
+      c_compiler: clang
+      vm_image: macos-latest
+
+  - template: .azure/build.yml
+    parameters:
+      os: macos
+      c_compiler: zig
       vm_image: macos-latest
 
   - template: .azure/build.yml
     parameters:
       os: windows
+      c_compiler: msc
+      vm_image: windows-latest
+
+  - template: .azure/build.yml
+    parameters:
+      os: windows
+      c_compiler: zig
       vm_image: windows-latest
 
 #
@@ -26,14 +47,35 @@ stages:
   - template: .azure/test.yml
     parameters:
       os: linux
+      c_compiler: gcc
+      vm_image: ubuntu-latest
+
+  - template: .azure/test.yml
+    parameters:
+      os: linux
+      c_compiler: zig
       vm_image: ubuntu-latest
 
   - template: .azure/test.yml
     parameters:
       os: macos
+      c_compiler: clang
+      vm_image: macos-latest
+
+  - template: .azure/test.yml
+    parameters:
+      os: macos
+      c_compiler: zig
       vm_image: macos-latest
 
   - template: .azure/test.yml
     parameters:
       os: windows
+      c_compiler: msc
+      vm_image: windows-latest
+
+  - template: .azure/test.yml
+    parameters:
+      os: windows
+      c_compiler: zig
       vm_image: windows-latest
