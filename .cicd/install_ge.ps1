@@ -56,15 +56,18 @@ switch ($GOBO_CI_OS) {
 			}
 			Write-Host "Gobo 103"
 		}
+		bash -c "ls -alg $env:GOBO/bin"
+		Write-Host "Gobo 104"
+		bash -c "which gec"
+		Write-Host "Gobo 104a"
 	}
 }
 
-Write-Host "Gobo 104"
+Write-Host "Gobo 105"
 
 gec --version
-Write-Host "Gobo 105"
 if ($LastExitCode -ne 0) {
-	Write-Host "Gobo 106"
+	Write-Host "Gobo 106 Exit code: $LastExitCode"
 	exit $LastExitCode
 }
 Write-Host "Gobo 107"
