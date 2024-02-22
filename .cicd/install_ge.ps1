@@ -33,41 +33,36 @@ param
 $ErrorActionPreference = "Stop"
 
 . "$PSScriptRoot/before_script.ps1" $CiTool $CCompiler
-if ($LastExitCode -ne 0) { exit $LastExitCode }
-
-Write-Host "Gobo 100"
+if ($LastExitCode -ne 0) {
+	Write-Error "Command 'before_script.ps1 $CiTool $CCompiler' exited with code $LastExitCode"
+	exit $LastExitCode
+}
 
 switch ($GOBO_CI_OS) {
 	"linux" {
 		# See limitations (Permission Loss) in https://github.com/actions/download-artifact
 		Get-ChildItem "$env:GOBO/bin/ge*" | ForEach-Object {
 			bash -c "chmod a+x '$_'"
-			if ($LastExitCode -ne 0) { exit $LastExitCode }
+			if ($LastExitCode -ne 0) {
+				Write-Error "Command 'bash -c 'chmod a+x $_'' exited with code $LastExitCode"
+				exit $LastExitCode
+			}
 		}
 	}
 	"macos" {
 		# See limitations (Permission Loss) in https://github.com/actions/download-artifact
 		Get-ChildItem "$env:GOBO/bin/ge*" | ForEach-Object {
-			Write-Host "Gobo 101"
 			bash -c "chmod a+x '$_'"
 			if ($LastExitCode -ne 0) {
-				Write-Host "Gobo 102"
+				Write-Error "Command 'bash -c 'chmod a+x $_'' exited with code $LastExitCode"
 				exit $LastExitCode
 			}
-			Write-Host "Gobo 103"
 		}
-		bash -c "ls -alg $env:GOBO/bin"
-		Write-Host "Gobo 104"
-		bash -c "which gec"
-		Write-Host "Gobo 104a"
 	}
 }
 
-Write-Host "Gobo 105"
-
-gec --version
+gec --version --verbose
 if ($LastExitCode -ne 0) {
-	Write-Host "Gobo 106 Exit code: $LastExitCode"
+	Write-Error "Command 'gec --version --verbose' exited with code $LastExitCode"
 	exit $LastExitCode
 }
-Write-Host "Gobo 107"

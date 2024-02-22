@@ -24,7 +24,13 @@ param
 	[string] $CiTool
 )
 
+$ErrorActionPreference = "Stop"
+
 . "$PSScriptRoot/before_script.ps1" $CiTool zig
+if ($LastExitCode -ne 0) {
+	Write-Error "Command 'before_script.ps1 $CiTool zig' exited with code $LastExitCode"
+	exit $LastExitCode
+}
 
 $GOBO_CI_ZIG_VERSION = "0.12.0-dev.2811+3cafb9655"
 
@@ -43,8 +49,6 @@ switch ($GOBO_CI_OS) {
 	}
 }
 
-$ErrorActionPreference = "Stop"
-
 $GOBO_CI_ZIG_ARCHIVE_BASENAME = "zig-${GOBO_CI_ZIG_PLATFORM}-${GOBO_CI_ZIG_VERSION}"
 $GOBO_CI_ZIG_ARCHIVE_FILENAME = "${GOBO_CI_ZIG_ARCHIVE_BASENAME}${GOBO_CI_ZIG_ARCHIVE_EXTENSION}"
 
@@ -54,7 +58,10 @@ if ($GOBO_CI_OS -eq "windows") {
 	Expand-7Zip -ArchiveFileName "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME" -TargetPath "$env:GOBO"
 } else {
 	tar -xJf "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME"
-	if ($LastExitCode -ne 0) { exit $LastExitCode }
+	if ($LastExitCode -ne 0) {
+		Write-Error "Command 'tar -xJf $env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME' exited with code $LastExitCode"
+		exit $LastExitCode
+	}
 }
 Remove-Item "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME"
 Move-Item -Path "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_BASENAME" -Destination "$env:GOBO/tool/gec/backend/c/zig"
@@ -62,10 +69,19 @@ Move-Item -Path "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_BASENAME" -Destination "$env:GOB
 # Patch zig package to avoid having warnings when compiling 
 # the standard C libraries for the first time.
 & "$PSScriptRoot/patch_zig.ps1" "$env:GOBO/tool/gec/backend/c/zig"
-if ($LastExitCode -ne 0) { exit $LastExitCode }
+if ($LastExitCode -ne 0) {
+	Write-Error "Command 'patch_zig.ps1 $env:GOBO/tool/gec/backend/c/zig' exited with code $LastExitCode"
+	exit $LastExitCode
+}
 
 Write-Host "Zig version: "
 & "$env:GOBO/tool/gec/backend/c/zig/zig" version
-if ($LastExitCode -ne 0) { exit $LastExitCode }
+if ($LastExitCode -ne 0) {
+	Write-Error "Command '$env:GOBO/tool/gec/backend/c/zig/zig version' exited with code $LastExitCode"
+	exit $LastExitCode
+}
 & "$env:GOBO/tool/gec/backend/c/zig/zig" cc --version
-if ($LastExitCode -ne 0) { exit $LastExitCode }
+if ($LastExitCode -ne 0) {
+	Write-Error "Command '$env:GOBO/tool/gec/backend/c/zig/zig cc --version' exited with code $LastExitCode"
+	exit $LastExitCode
+}

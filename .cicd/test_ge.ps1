@@ -46,19 +46,27 @@ $ErrorActionPreference = "Stop"
 
 . "$PSScriptRoot/install_ge.ps1" $CiTool $CCompiler
 if ($LastExitCode -ne 0) {
-	Write-Host "Gobo 108"
+	Write-Error "Command 'install_ge.ps1 $CiTool $CCompiler' exited with code $LastExitCode"
 	exit $LastExitCode
 }
-Write-Host "Gobo 109"
 
 if ($EiffelCompiler.EndsWith("ise")) {
 	& "$PSScriptRoot/install_ise.ps1" $CiTool $CCompiler
-	if ($LastExitCode -ne 0) { exit $LastExitCode }
+	if ($LastExitCode -ne 0) {
+		Write-Error "Command 'install_ise.ps1 $CiTool $CCompiler' exited with code $LastExitCode"
+		exit $LastExitCode
+	}
 } elseif ($GOBO_CI_C_COMPILER -eq "zig") {
 	& "$PSScriptRoot/install_zig.ps1" $CiTool
-	if ($LastExitCode -ne 0) { exit $LastExitCode }
+	if ($LastExitCode -ne 0) {
+		Write-Error "Command 'install_zig.ps1 $CiTool' exited with code $LastExitCode"
+		exit $LastExitCode
+	}
 }
 
 Set-Location "$env:GOBO/$SystemUnderTest"
 geant test_$EiffelCompiler
-if ($LastExitCode -ne 0) { exit $LastExitCode }
+if ($LastExitCode -ne 0) {
+	Write-Error "Command 'geant test_$EiffelCompiler' exited with code $LastExitCode"
+	exit $LastExitCode
+}
