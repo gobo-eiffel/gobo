@@ -30,7 +30,13 @@ param
 	[string] $CCompiler
 )
 
+$ErrorActionPreference = "Stop"
+
 . "$PSScriptRoot/before_script.ps1" $CiTool $CCompiler
+if ($LastExitCode -ne 0) {
+	Write-Error "Command 'before_script.ps1 $CiTool $CCompiler' exited with code $LastExitCode"
+	exit $LastExitCode
+}
 
 $GOBO_CI_ISE_VERSION = "23.09"
 $GOBO_CI_ISE_REVISION = "rev_107341"
@@ -61,6 +67,10 @@ if ($GOBO_CI_OS -eq "windows") {
 	Expand-7Zip -ArchiveFileName "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME" -TargetPath "$env:GOBO"
 } else {
 	tar -x -p --bzip2 -f "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME"
+	if ($LastExitCode -ne 0) {
+		Write-Error "Command 'tar -x -p --bzip2 -f $env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME' exited with code $LastExitCode"
+		exit $LastExitCode
+	}
 }
 Remove-Item "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME"
 
@@ -77,3 +87,7 @@ $env:EC_EXECUTABLE="ecb"
 Remove-Item  "$env:ISE_EIFFEL/library/gobo/spec" -Recurse -Force
 
 ecb -version
+if ($LastExitCode -ne 0) {
+	Write-Error "Command 'ecb -version' exited with code $LastExitCode"
+	exit $LastExitCode
+}

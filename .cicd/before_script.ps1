@@ -32,6 +32,8 @@ param
 	[string] $CCompiler
 )
 
+$ErrorActionPreference = "Stop"
+
 if ("$GOBO_CI_C_COMPILER" -eq "") {
 
 	function Invoke-Environment {
@@ -72,6 +74,10 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 				[System.Environment]::SetEnvironmentVariable($matches[1], $matches[2])
 			}
 		}}
+		if ($LastExitCode -ne 0) {
+			Write-Error "Command 'cmd /c $Command > nul 2>&1 && set' exited with code $LastExitCode"
+			exit $LastExitCode
+		}
 	}
 
 	$GOBO_CI_C_COMPILER = $CCompiler
@@ -130,7 +136,15 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 						$GOBO_CI_OS = "linux"
 						# Installing `gcc`.
 						apt update
+						if ($LastExitCode -ne 0) {
+							Write-Error "Command 'apt update' exited with code $LastExitCode"
+							exit $LastExitCode
+						}
 						apt install -y build-essential
+						if ($LastExitCode -ne 0) {
+							Write-Error "Command 'apt install -y build-essential' exited with code $LastExitCode"
+							exit $LastExitCode
+						}
 					}
 					"macos" {
 						$GOBO_CI_OS = "macos"
@@ -161,9 +175,20 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 			$GOBO_CI_BUILD_SCRIPT = "install.sh"
 			Get-Content "/etc/*-release"
 			arch
+			if ($LastExitCode -ne 0) {
+				Write-Error "Command 'arch' exited with code $LastExitCode"
+				exit $LastExitCode
+			}
 		}
 		"macos" {
 			$GOBO_CI_BUILD_SCRIPT = "install.sh"
+			# Use 'uname -m' instead of 'arch' because 'arch' is not acurate under MacOS.
+			# (See https://discussions.apple.com/thread/6072102?sortBy=best)
+			uname -m
+			if ($LastExitCode -ne 0) {
+				Write-Error "Command 'uname -m' exited with code $LastExitCode"
+				exit $LastExitCode
+			}
 		}
 		"windows" {
 			$GOBO_CI_BUILD_SCRIPT = "install.bat"
@@ -172,9 +197,17 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 	switch ($GOBO_CI_C_COMPILER) {
 		"gcc" {
 			gcc --version
+			if ($LastExitCode -ne 0) {
+				Write-Error "Command 'gcc --version' exited with code $LastExitCode"
+				exit $LastExitCode
+			}
 		}
 		"clang" {
 			clang --version
+			if ($LastExitCode -ne 0) {
+				Write-Error "Command 'clang --version' exited with code $LastExitCode"
+				exit $LastExitCode
+			}
 		}
 	}
 
@@ -183,6 +216,10 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 
 	$env:PATH = "$env:GOBO/bin$([IO.Path]::PathSeparator)$env:PATH"
 
-	. "$PSScriptRoot/set_gobo_version.ps1"
+	& "$PSScriptRoot/set_gobo_version.ps1"
+	if ($LastExitCode -ne 0) {
+		Write-Error "Command 'set_gobo_version.ps1' exited with code $LastExitCode"
+		exit $LastExitCode
+	}
 
 }

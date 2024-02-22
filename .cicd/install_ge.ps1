@@ -30,21 +30,39 @@ param
 	[string] $CCompiler
 )
 
+$ErrorActionPreference = "Stop"
+
 . "$PSScriptRoot/before_script.ps1" $CiTool $CCompiler
+if ($LastExitCode -ne 0) {
+	Write-Error "Command 'before_script.ps1 $CiTool $CCompiler' exited with code $LastExitCode"
+	exit $LastExitCode
+}
 
 switch ($GOBO_CI_OS) {
 	"linux" {
 		# See limitations (Permission Loss) in https://github.com/actions/download-artifact
 		Get-ChildItem "$env:GOBO/bin/ge*" | ForEach-Object {
 			bash -c "chmod a+x '$_'"
+			if ($LastExitCode -ne 0) {
+				Write-Error "Command 'bash -c 'chmod a+x $_'' exited with code $LastExitCode"
+				exit $LastExitCode
+			}
 		}
 	}
 	"macos" {
 		# See limitations (Permission Loss) in https://github.com/actions/download-artifact
 		Get-ChildItem "$env:GOBO/bin/ge*" | ForEach-Object {
 			bash -c "chmod a+x '$_'"
+			if ($LastExitCode -ne 0) {
+				Write-Error "Command 'bash -c 'chmod a+x $_'' exited with code $LastExitCode"
+				exit $LastExitCode
+			}
 		}
 	}
 }
 
-gec --version
+gec --version --verbose
+if ($LastExitCode -ne 0) {
+	Write-Error "Command 'gec --version --verbose' exited with code $LastExitCode"
+	exit $LastExitCode
+}
