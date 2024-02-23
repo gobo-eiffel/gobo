@@ -1183,9 +1183,13 @@ feature {NONE} -- Compilation script generation
 							l_external_file.put_character ('#')
 							l_external_file.put_line (c_else)
 						end
+						l_external_file.put_string (c_ifndef)
+						l_external_file.put_character (' ')
+						l_external_file.put_line ("_REENTRANT")
 						l_external_file.put_string (c_define)
 						l_external_file.put_character (' ')
 						l_external_file.put_line ("_REENTRANT")
+						l_external_file.put_line (c_endif)
 						create l_apple.make (5)
 						l_apple.force_last ("macintosh")
 						l_apple.force_last ("Macintosh")
