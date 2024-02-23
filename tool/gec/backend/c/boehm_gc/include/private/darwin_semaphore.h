@@ -9,7 +9,7 @@
  * OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
  *
  * Permission is hereby granted to use or copy this program
- * for any purpose,  provided the above notices are retained on all copies.
+ * for any purpose, provided the above notices are retained on all copies.
  * Permission to modify the code and to distribute modified code is granted,
  * provided the above notices are retained, and a notice that the code was
  * modified is included with the above copyright notice.
@@ -18,9 +18,13 @@
 #ifndef GC_DARWIN_SEMAPHORE_H
 #define GC_DARWIN_SEMAPHORE_H
 
+#include "gc_priv.h"
+
 #if !defined(GC_DARWIN_THREADS) && !defined(GC_WIN32_THREADS)
 # error darwin_semaphore.h included for improper target
 #endif
+
+#include <errno.h>
 
 #ifdef __cplusplus
   extern "C" {

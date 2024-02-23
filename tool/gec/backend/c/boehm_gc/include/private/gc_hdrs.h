@@ -6,7 +6,7 @@
  * OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
  *
  * Permission is hereby granted to use or copy this program
- * for any purpose,  provided the above notices are retained on all copies.
+ * for any purpose, provided the above notices are retained on all copies.
  * Permission to modify the code and to distribute modified code is granted,
  * provided the above notices are retained, and a notice that the code was
  * modified is included with the above copyright notice.
@@ -15,13 +15,15 @@
 #ifndef GC_HEADERS_H
 #define GC_HEADERS_H
 
+#if !defined(GC_PRIVATE_H) && !defined(CPPCHECK)
+# error gc_hdrs.h should be included from gc_priv.h
+#endif
+
 #if CPP_WORDSZ != 32 && CPP_WORDSZ < 36 && !defined(CPPCHECK)
 # error Get a real machine
 #endif
 
 EXTERN_C_BEGIN
-
-typedef struct hblkhdr hdr;
 
 /*
  * The 2 level tree data structure that is used to find block headers.
@@ -52,7 +54,7 @@ typedef struct hblkhdr hdr;
 #define BOTTOM_SZ (1 << LOG_BOTTOM_SZ)
 
 #ifndef HASH_TL
-# define LOG_TOP_SZ (WORDSZ - LOG_BOTTOM_SZ - LOG_HBLKSIZE)
+# define LOG_TOP_SZ (CPP_WORDSZ - LOG_BOTTOM_SZ - LOG_HBLKSIZE)
 #else
 # define LOG_TOP_SZ 11
 #endif
@@ -152,10 +154,10 @@ typedef struct bi {
                                 /* GC_all_nils.                         */
 
 
-#define MAX_JUMP (HBLKSIZE - 1)
+#define MAX_JUMP (HBLKSIZE-1)
 
 #define HDR_FROM_BI(bi, p) \
-                ((bi)->index[((word)(p) >> LOG_HBLKSIZE) & (BOTTOM_SZ - 1)])
+                (bi)->index[((word)(p) >> LOG_HBLKSIZE) & (BOTTOM_SZ - 1)]
 #ifndef HASH_TL
 # define BI(p) (GC_top_index \
               [(word)(p) >> (LOG_BOTTOM_SZ + LOG_HBLKSIZE)])
@@ -195,9 +197,10 @@ typedef struct bi {
         } while (0)
 # define SET_HDR(p, hhdr) \
         do { \
-          REGISTER hdr ** _ha; \
-          GET_HDR_ADDR(p, _ha); \
-          *_ha = (hhdr); \
+          REGISTER bottom_index * bi; \
+          GET_BI(p, bi); \
+          GC_ASSERT(bi != GC_all_nils); \
+          HDR_FROM_BI(bi, p) = (hhdr); \
         } while (0)
 # define HDR(p) GC_find_header((ptr_t)(p))
 #endif
@@ -206,8 +209,9 @@ typedef struct bi {
 /* beginning of the block or NULL?                                      */
 #define IS_FORWARDING_ADDR_OR_NIL(hhdr) ((size_t) (hhdr) <= MAX_JUMP)
 
-/* Get an HBLKSIZE aligned address closer to the beginning of the block */
-/* h.  Assumes hhdr == HDR(h) and IS_FORWARDING_ADDR(hhdr).             */
+/* Get an HBLKSIZE-aligned address closer to the beginning of the block */
+/* h.  Assumes hhdr == HDR(h), IS_FORWARDING_ADDR(hhdr) and hhdr is not */
+/* NULL.  HDR(result) is expected to be non-NULL.                       */
 #define FORWARDED_ADDR(h, hhdr) ((struct hblk *)(h) - (size_t)(hhdr))
 
 EXTERN_C_END
