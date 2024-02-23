@@ -1008,7 +1008,6 @@ feature {NONE} -- Compilation script generation
 			l_filename: STRING
 			l_extension: STRING
 			l_basename: STRING
-			l_newline_needed: BOOLEAN
 			l_c_filenames: detachable DS_ARRAYED_LIST [STRING]
 			l_cpp_filenames: detachable DS_ARRAYED_LIST [STRING]
 			l_filenames: detachable DS_ARRAYED_LIST [STRING]
@@ -1018,6 +1017,8 @@ feature {NONE} -- Compilation script generation
 			l_common_defines: DS_ARRAYED_LIST [STRING]
 			l_common_includes: DS_ARRAYED_LIST [STRING]
 			l_builtin_atomic: DS_ARRAYED_LIST [STRING]
+			l_use_windows_threads: DS_ARRAYED_LIST [STRING]
+			l_apple: DS_ARRAYED_LIST [STRING]
 		do
 			create l_dir.make (a_clib_dirname)
 			l_dir.open_read
@@ -1063,13 +1064,14 @@ feature {NONE} -- Compilation script generation
 					l_common_defines.force_last ("GC_THREADS")
 					l_common_defines.force_last ("THREAD_LOCAL_ALLOC")
 					l_common_defines.force_last ("PARALLEL_MARK")
-					l_common_defines.force_last ("LARGE_CONFIG")
 					l_common_defines.force_last ("ALL_INTERIOR_POINTERS")
 					l_common_defines.force_last ("ENABLE_DISCLAIM")
 					l_common_defines.force_last ("GC_ATOMIC_UNCOLLECTABLE")
 					l_common_defines.force_last ("GC_GCJ_SUPPORT")
+					l_common_defines.force_last ("GC_ENABLE_SUSPEND_THREAD")
 					l_common_defines.force_last ("JAVA_FINALIZATION")
 					l_common_defines.force_last ("NO_EXECUTE_PERMISSION")
+					l_common_defines.force_last ("USE_MMAP")
 					l_common_defines.force_last ("USE_MUNMAP")
 				else
 					if use_threads then
@@ -1117,7 +1119,6 @@ feature {NONE} -- Compilation script generation
 							l_external_file.put_line (l_common_defines.item (i))
 							i := i + 1
 						end
-						l_newline_needed := nb > 0
 					end
 					if a_library_name.same_string ("boehm_gc") then
 						create l_builtin_atomic.make (5)
@@ -1147,12 +1148,77 @@ feature {NONE} -- Compilation script generation
 							l_external_file.put_character (' ')
 							l_external_file.put_line ("GC_BUILTIN_ATOMIC")
 							l_external_file.put_line (c_endif)
-							l_newline_needed := True
+						end
+						create l_use_windows_threads.make (10)
+						l_use_windows_threads.force_last ("WIN32")
+						l_use_windows_threads.force_last ("WINVER")
+						l_use_windows_threads.force_last ("_WIN32_WINNT")
+						l_use_windows_threads.force_last ("_WIN32")
+						l_use_windows_threads.force_last ("__WIN32__")
+						l_use_windows_threads.force_last ("__TOS_WIN__")
+						l_use_windows_threads.force_last ("_WIN_MSC_VER32")
+						nb := l_use_windows_threads.count
+						if nb > 0 then
+							l_external_file.put_character ('#')
+							l_external_file.put_string (c_if)
+							from i := 1 until i > nb loop
+								if i /= 1 then
+									l_external_file.put_character (' ')
+									l_external_file.put_string (c_or_else)
+								end
+								l_external_file.put_character (' ')
+								l_external_file.put_string (c_defined)
+								l_external_file.put_character ('(')
+								l_external_file.put_string (l_use_windows_threads.item (i))
+								l_external_file.put_character (')')
+								i := i + 1
+							end
+							l_external_file.put_new_line
+							l_external_file.put_string (c_define)
+							l_external_file.put_character (' ')
+							l_external_file.put_line ("EMPTY_GETENV_RESULTS")
+							l_external_file.put_string (c_define)
+							l_external_file.put_character (' ')
+							l_external_file.put_line ("DONT_USE_USER32_DLL")
+							l_external_file.put_character ('#')
+							l_external_file.put_line (c_else)
+						end
+						l_external_file.put_string (c_define)
+						l_external_file.put_character (' ')
+						l_external_file.put_line ("_REENTRANT")
+						create l_apple.make (5)
+						l_apple.force_last ("macintosh")
+						l_apple.force_last ("Macintosh")
+						l_apple.force_last ("__APPLE__")
+						l_apple.force_last ("__MACH__")
+						nb := l_apple.count
+						if nb > 0 then
+							l_external_file.put_character ('#')
+							l_external_file.put_string (c_if)
+							from i := 1 until i > nb loop
+								if i /= 1 then
+									l_external_file.put_character (' ')
+									l_external_file.put_string (c_and_then)
+								end
+								l_external_file.put_character (' ')
+								l_external_file.put_character ('!')
+								l_external_file.put_string (c_defined)
+								l_external_file.put_character ('(')
+								l_external_file.put_string (l_apple.item (i))
+								l_external_file.put_character (')')
+								i := i + 1
+							end
+							l_external_file.put_new_line
+							l_external_file.put_string (c_define)
+							l_external_file.put_character (' ')
+							l_external_file.put_line ("HANDLE_FORK")
+							l_external_file.put_line (c_endif)
+						end
+						if l_use_windows_threads.count > 0 then
+							l_external_file.put_line (c_endif)
 						end
 					end
-					if l_newline_needed then
-						l_external_file.put_new_line
-					end
+					l_external_file.put_new_line
 					if l_common_includes /= Void then
 						nb := l_common_includes.count
 						from i := 1 until i > nb loop
