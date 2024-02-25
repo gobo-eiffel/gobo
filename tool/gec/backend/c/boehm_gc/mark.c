@@ -553,18 +553,10 @@ GC_API GC_on_mark_stack_empty_proc GC_CALL GC_get_on_mark_stack_empty(void)
           /* We may find a stack for a thread that is in the process of */
           /* exiting, and disappears while we are marking it.           */
           /* This seems extremely difficult to avoid otherwise.         */
-#         if defined(GC_WIN32_THREADS)
-            if (GC_need_to_lock)
-              ret_val = GC_mark_some_inner(cold_gc_frame);
-            else {
-#         endif
-              GC_setup_temporary_fault_handler();
-              if (SETJMP(GC_jmp_buf) != 0) goto handle_ex;
-              ret_val = GC_mark_some_inner(cold_gc_frame);
-              GC_reset_fault_handler();
-#         if defined(GC_WIN32_THREADS)
-           }
-#         endif
+          GC_setup_temporary_fault_handler();
+          if (SETJMP(GC_jmp_buf) != 0) goto handle_ex;
+          ret_val = GC_mark_some_inner(cold_gc_frame);
+          GC_reset_fault_handler();
 #       endif
       }
 

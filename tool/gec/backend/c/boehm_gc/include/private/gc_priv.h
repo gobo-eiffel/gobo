@@ -3173,7 +3173,11 @@ GC_INNER void *GC_store_debug_info_inner(void *p, word sz, const char *str,
      || (defined(UNIX_LIKE) && !defined(NO_DEBUGGING)) \
      || (defined(USE_PROC_FOR_LIBRARIES) && defined(THREADS)) \
      || (defined(WRAP_MARK_SOME) && defined(NO_SEH_AVAILABLE))
+# ifdef GC_WIN32_THREADS
+  typedef LONG WINAPI (*GC_fault_handler_t)(LPEXCEPTION_POINTERS);
+# else
   typedef void (*GC_fault_handler_t)(int);
+# endif
   GC_INNER void GC_set_and_save_fault_handler(GC_fault_handler_t);
 #endif
 
