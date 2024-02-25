@@ -812,6 +812,7 @@ static LONG WINAPI GE_windows_exception_filter(LPEXCEPTION_POINTERS a_exception)
 		/* In order to be able to catch exceptions that cannot be caught by
 		 * just using signals on Windows, we need to set `windows_exception_filter'
 		 * as an unhandled exception filter.
+		 * See https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-exception_record.
 		 */
 
 	switch (a_exception->ExceptionRecord->ExceptionCode) {
