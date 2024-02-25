@@ -237,11 +237,11 @@ goto exit
 	rem Compile gec twice to get a bootstrap effect.
 	if not .%VERBOSE%. == .-s. echo Compiling gec (bootstrap 1)...
 	%MV% "%BIN_DIR%\gec%EXE%" gec1%EXE%
-	"%BIN_DIR%\gec1%EXE%" --finalize --no-benchmark "%GOBO%\tool\gec\src\system.ecf"
+	"%BIN_DIR%\gec1%EXE%" --finalize "%GOBO%\tool\gec\src\system.ecf"
 	%RM% "%BIN_DIR%\gec1%EXE%"
 	if not .%VERBOSE%. == .-s. echo Compiling gec (bootstrap 2)...
 	%MV% "%BIN_DIR%\gec%EXE%" gec1%EXE%
-	"%BIN_DIR%\gec1%EXE%" --finalize --no-benchmark "%GOBO%\tool\gec\src\system.ecf"
+	"%BIN_DIR%\gec1%EXE%" --finalize "%GOBO%\tool\gec\src\system.ecf"
 	%RM% "%BIN_DIR%\gec1%EXE%"
 	%RM% gec*.h
 	%RM% gec*.c

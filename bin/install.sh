@@ -92,58 +92,58 @@ if [ "$EIF" = "ge" ]; then
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gecc..."
 	fi
-	"$BIN_DIR/gec$EXE" --finalize --no-benchmark $THREAD_OPTION "$GOBO/tool/gecc/src/system.ecf"
+	"$BIN_DIR/gec$EXE" --finalize $THREAD_OPTION "$GOBO/tool/gecc/src/system.ecf"
 	$STRIP gecc${EXE}
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling geant..."
 	fi
-	"$BIN_DIR/gec$EXE" --finalize --no-benchmark $THREAD_OPTION "$GOBO/tool/geant/src/system.ecf"
+	"$BIN_DIR/gec$EXE" --finalize $THREAD_OPTION "$GOBO/tool/geant/src/system.ecf"
 	$STRIP geant${EXE}
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gedoc..."
 	fi
-	"$BIN_DIR/gec$EXE" --finalize --no-benchmark $THREAD_OPTION "$GOBO/tool/gedoc/src/system.ecf"
+	"$BIN_DIR/gec$EXE" --finalize $THREAD_OPTION "$GOBO/tool/gedoc/src/system.ecf"
 	$STRIP gedoc${EXE}
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling getest..."
 	fi
-	"$BIN_DIR/gec$EXE" --finalize --no-benchmark $THREAD_OPTION "$GOBO/tool/getest/src/system.ecf"
+	"$BIN_DIR/gec$EXE" --finalize $THREAD_OPTION "$GOBO/tool/getest/src/system.ecf"
 	$STRIP getest${EXE}
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gelint..."
 	fi
-	"$BIN_DIR/gec$EXE" --finalize --no-benchmark $THREAD_OPTION "$GOBO/tool/gelint/src/system.ecf"
+	"$BIN_DIR/gec$EXE" --finalize $THREAD_OPTION "$GOBO/tool/gelint/src/system.ecf"
 	$STRIP gelint${EXE}
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gecop..."
 	fi
-	"$BIN_DIR/gec$EXE" --finalize --no-benchmark  $THREAD_OPTION "$GOBO/tool/gecop/src/system.ecf"
+	"$BIN_DIR/gec$EXE" --finalize $THREAD_OPTION "$GOBO/tool/gecop/src/system.ecf"
 	$STRIP gecop${EXE}
 	if [ "$TEST_ONLY" = "" ]; then
 		if [ "$VERBOSE" != "-s" ]; then
 			echo "Compiling geimage..."
 		fi
-		"$BIN_DIR/gec$EXE" --finalize --no-benchmark $THREAD_OPTION "$GOBO/tool/geimage/src/system.ecf"
+		"$BIN_DIR/gec$EXE" --finalize $THREAD_OPTION "$GOBO/tool/geimage/src/system.ecf"
 		$STRIP geimage${EXE}
 		if [ "$VERBOSE" != "-s" ]; then
 			echo "Compiling gelex..."
 		fi
-		"$BIN_DIR/gec$EXE" --finalize --no-benchmark $THREAD_OPTION "$GOBO/tool/gelex/src/system.ecf"
+		"$BIN_DIR/gec$EXE" --finalize $THREAD_OPTION "$GOBO/tool/gelex/src/system.ecf"
 		$STRIP gelex${EXE}
 		if [ "$VERBOSE" != "-s" ]; then
 			echo "Compiling geyacc..."
 		fi
-		"$BIN_DIR/gec$EXE" --finalize --no-benchmark $THREAD_OPTION "$GOBO/tool/geyacc/src/system.ecf"
+		"$BIN_DIR/gec$EXE" --finalize $THREAD_OPTION "$GOBO/tool/geyacc/src/system.ecf"
 		$STRIP geyacc${EXE}
 		if [ "$VERBOSE" != "-s" ]; then
 			echo "Compiling gepp..."
 		fi
-		"$BIN_DIR/gec$EXE" --finalize --no-benchmark $THREAD_OPTION "$GOBO/tool/gepp/src/system.ecf"
+		"$BIN_DIR/gec$EXE" --finalize $THREAD_OPTION "$GOBO/tool/gepp/src/system.ecf"
 		$STRIP gepp${EXE}
 		if [ "$VERBOSE" != "-s" ]; then
 			echo "Compiling gexslt..."
 		fi
-		"$BIN_DIR/gec$EXE" --finalize --no-benchmark  $THREAD_OPTION "$GOBO/tool/gexslt/src/system.ecf"
+		"$BIN_DIR/gec$EXE" --finalize $THREAD_OPTION "$GOBO/tool/gexslt/src/system.ecf"
 		$STRIP gexslt${EXE}
 	fi
 else

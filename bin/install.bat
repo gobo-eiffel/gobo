@@ -104,28 +104,28 @@ goto no_verbose_no_testonly
 :ge
 	cd "%BIN_DIR%"
 	if not .%VERBOSE%. == .-s. echo Compiling gecc...
-	"%BIN_DIR%\gec%EXE%" --finalize --no-benchmark "%GOBO%\tool\gecc\src\system.ecf"
+	"%BIN_DIR%\gec%EXE%" --finalize "%GOBO%\tool\gecc\src\system.ecf"
 	if not .%VERBOSE%. == .-s. echo Compiling geant...
-	"%BIN_DIR%\gec%EXE%" --finalize --no-benchmark "%GOBO%\tool\geant\src\system.ecf"
+	"%BIN_DIR%\gec%EXE%" --finalize "%GOBO%\tool\geant\src\system.ecf"
 	if not .%VERBOSE%. == .-s. echo Compiling getest...
-	"%BIN_DIR%\gec%EXE%" --finalize --no-benchmark "%GOBO%\tool\getest\src\system.ecf"
+	"%BIN_DIR%\gec%EXE%" --finalize "%GOBO%\tool\getest\src\system.ecf"
 	if not .%VERBOSE%. == .-s. echo Compiling gelint...
-	"%BIN_DIR%\gec%EXE%" --finalize --no-benchmark "%GOBO%\tool\gelint\src\system.ecf"
+	"%BIN_DIR%\gec%EXE%" --finalize "%GOBO%\tool\gelint\src\system.ecf"
 	if not .%VERBOSE%. == .-s. echo Compiling gedoc...
-	"%BIN_DIR%\gec%EXE%" --finalize --no-benchmark "%GOBO%\tool\gedoc\src\system.ecf"
+	"%BIN_DIR%\gec%EXE%" --finalize "%GOBO%\tool\gedoc\src\system.ecf"
 	if not .%VERBOSE%. == .-s. echo Compiling gecop...
-	"%BIN_DIR%\gec%EXE%" --finalize --no-benchmark "%GOBO%\tool\gecop\src\system.ecf"
+	"%BIN_DIR%\gec%EXE%" --finalize "%GOBO%\tool\gecop\src\system.ecf"
 	if .%TEST_ONLY%. == .-t. goto clean
 	if not .%VERBOSE%. == .-s. echo Compiling geimage...
-	"%BIN_DIR%\gec%EXE%" --finalize --no-benchmark "%GOBO%\tool\geimage\src\system.ecf"
+	"%BIN_DIR%\gec%EXE%" --finalize "%GOBO%\tool\geimage\src\system.ecf"
 	if not .%VERBOSE%. == .-s. echo Compiling gelex...
-	"%BIN_DIR%\gec%EXE%" --finalize --no-benchmark "%GOBO%\tool\gelex\src\system.ecf"
+	"%BIN_DIR%\gec%EXE%" --finalize "%GOBO%\tool\gelex\src\system.ecf"
 	if not .%VERBOSE%. == .-s. echo Compiling geyacc...
-	"%BIN_DIR%\gec%EXE%" --finalize --no-benchmark "%GOBO%\tool\geyacc\src\system.ecf"
+	"%BIN_DIR%\gec%EXE%" --finalize "%GOBO%\tool\geyacc\src\system.ecf"
 	if not .%VERBOSE%. == .-s. echo Compiling gepp...
-	"%BIN_DIR%\gec%EXE%" --finalize --no-benchmark "%GOBO%\tool\gepp\src\system.ecf"
+	"%BIN_DIR%\gec%EXE%" --finalize "%GOBO%\tool\gepp\src\system.ecf"
 	if not .%VERBOSE%. == .-s. echo Compiling gexslt...
-	"%BIN_DIR%\gec%EXE%" --finalize --no-benchmark "%GOBO%\tool\gexslt\src\system.ecf"
+	"%BIN_DIR%\gec%EXE%" --finalize "%GOBO%\tool\gexslt\src\system.ecf"
 	goto clean
 
 :clean
