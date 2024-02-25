@@ -499,6 +499,7 @@ feature {NONE} -- Compilation script generation
 			l_external_object_pathnames: DS_ARRAYED_LIST [STRING]
 			l_external_cflags: DS_ARRAYED_LIST [STRING]
 			l_external_linker_flags: DS_ARRAYED_LIST [STRING]
+			l_external_obj_filenames: STRING
 			l_includes: STRING
 			l_libs: STRING
 			l_cflags: STRING
@@ -508,7 +509,10 @@ feature {NONE} -- Compilation script generation
 			l_pathname: STRING
 			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 			l_external_c_filenames: DS_HASH_TABLE [STRING, STRING]
+			old_system_name: STRING
 		do
+			old_system_name := system_name
+			system_name := a_system_name
 			l_base_name := a_system_name
 			l_variables := c_config
 			create l_env_regexp.make
@@ -601,11 +605,11 @@ feature {NONE} -- Compilation script generation
 				l_replacement.append_string ("${\1\}")
 				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
 				if l_wel_regexp.recognizes (l_pathname) then
-					add_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "clib", l_external_c_filenames)
+					add_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "clib", c_filenames)
 				elseif l_com_regexp.recognizes (l_pathname) then
-					add_external_c_files ("com", l_com_regexp.captured_substring (1) + "clib", l_external_c_filenames)
+					add_external_c_files ("com", l_com_regexp.captured_substring (1) + "clib", c_filenames)
 				elseif l_com_runtime_regexp.recognizes (l_pathname) then
-					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "clib_runtime", l_external_c_filenames)
+					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "clib_runtime", c_filenames)
 				else
 					if i /= 1 then
 						l_libs.append_character (' ')
@@ -625,7 +629,45 @@ feature {NONE} -- Compilation script generation
 			l_variables.force (l_base_name + l_variables.item ("exe"), "exe")
 				-- Object files.
 			create l_obj_filenames.make (100)
+			create l_external_obj_filenames.make (100)
 			l_obj := l_variables.item ("obj")
+			l_external_object_pathnames := current_system.external_object_pathnames
+			nb := l_external_object_pathnames.count
+			from i := 1 until i > nb loop
+				l_pathname := l_external_object_pathnames.item (i)
+				l_env_regexp.match (l_pathname)
+				l_replacement := STRING_.new_empty_string (l_pathname, 6)
+				l_replacement.append_string ("${\1\}")
+				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+				if l_wel_regexp.recognizes (l_pathname) then
+					add_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "clib", c_filenames)
+				elseif l_com_regexp.recognizes (l_pathname) then
+					add_external_c_files ("com", l_com_regexp.captured_substring (1) + "clib", c_filenames)
+				elseif l_com_runtime_regexp.recognizes (l_pathname) then
+					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "clib_runtime", c_filenames)
+				else
+					if not l_external_obj_filenames.is_empty then
+						l_external_obj_filenames.append_character (' ')
+					end
+					if l_pathname.starts_with ("%"") then
+						l_external_obj_filenames.append_string (l_pathname)
+					else
+						l_external_obj_filenames.append_character ('%"')
+						l_external_obj_filenames.append_string (l_pathname)
+						l_external_obj_filenames.append_character ('%"')
+					end
+				end
+				i := i + 1
+			end
+				-- Boehm GC.
+			if use_boehm_gc then
+				if not attached gobo_variables.boehm_gc_value as l_boehm_gc_folder or else l_boehm_gc_folder.is_empty then
+					set_fatal_error
+					report_undefined_environment_variable_error (gobo_variables.boehm_gc_variable)
+				else
+					add_external_c_files ("boehm_gc", l_boehm_gc_folder, c_filenames)
+				end
+			end
 				-- List objects in reverse order so that it looks like
 				-- a countdown when compiling since the filenames are numbered.
 			l_cursor := c_filenames.new_cursor
@@ -638,40 +680,9 @@ feature {NONE} -- Compilation script generation
 				l_obj_filenames.append_string (l_obj)
 				l_cursor.back
 			end
-			l_external_object_pathnames := current_system.external_object_pathnames
-			nb := l_external_object_pathnames.count
-			from i := 1 until i > nb loop
-				l_pathname := l_external_object_pathnames.item (i)
-				l_env_regexp.match (l_pathname)
-				l_replacement := STRING_.new_empty_string (l_pathname, 6)
-				l_replacement.append_string ("${\1\}")
-				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
-				if l_wel_regexp.recognizes (l_pathname) then
-					add_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "clib", l_external_c_filenames)
-				elseif l_com_regexp.recognizes (l_pathname) then
-					add_external_c_files ("com", l_com_regexp.captured_substring (1) + "clib", l_external_c_filenames)
-				elseif l_com_runtime_regexp.recognizes (l_pathname) then
-					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "clib_runtime", l_external_c_filenames)
-				else
-					l_obj_filenames.append_character (' ')
-					if l_pathname.starts_with ("%"") then
-						l_obj_filenames.append_string (l_pathname)
-					else
-						l_obj_filenames.append_character ('%"')
-						l_obj_filenames.append_string (l_pathname)
-						l_obj_filenames.append_character ('%"')
-					end
-				end
-				i := i + 1
-			end
-				-- Boehm GC.
-			if use_boehm_gc then
-				if not attached gobo_variables.boehm_gc_value as l_boehm_gc_folder or else l_boehm_gc_folder.is_empty then
-					set_fatal_error
-					report_undefined_environment_variable_error (gobo_variables.boehm_gc_variable)
-				else
-					add_external_c_files ("boehm_gc", l_boehm_gc_folder, l_external_c_filenames)
-				end
+			if not l_external_obj_filenames.is_empty then
+				l_obj_filenames.append_character (' ')
+				l_obj_filenames.append_string (l_external_obj_filenames)
 			end
 			l_cursor := l_external_c_filenames.new_cursor
 			from l_cursor.start until l_cursor.after loop
@@ -689,6 +700,7 @@ feature {NONE} -- Compilation script generation
 			if not operating_system.is_windows then
 				generate_compilation_makefile (l_base_name, l_variables)
 			end
+			system_name := old_system_name
 		end
 
 	generate_compilation_shell_script (a_system_name: STRING; a_variables: like c_config; an_obj_filenames: STRING; an_env_regexp: RX_PCRE_REGULAR_EXPRESSION; an_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
@@ -1010,23 +1022,26 @@ feature {NONE} -- Compilation script generation
 			l_basename: STRING
 			l_c_filenames: detachable DS_ARRAYED_LIST [STRING]
 			l_cpp_filenames: detachable DS_ARRAYED_LIST [STRING]
+			l_all_filenames: DS_ARRAYED_LIST [DS_ARRAYED_LIST [STRING]]
 			l_filenames: detachable DS_ARRAYED_LIST [STRING]
 			l_sorter: DS_QUICK_SORTER [STRING]
 			l_comparator: UC_STRING_COMPARATOR
 			i, nb: INTEGER
+			j, nb2: INTEGER
 			l_common_defines: DS_ARRAYED_LIST [STRING]
 			l_common_includes: DS_ARRAYED_LIST [STRING]
 			l_builtin_atomic: DS_ARRAYED_LIST [STRING]
 			l_use_windows_threads: DS_ARRAYED_LIST [STRING]
 			l_apple: DS_ARRAYED_LIST [STRING]
+			l_is_boehm_gc: BOOLEAN
 		do
+			create l_all_filenames.make (2)
 			create l_dir.make (a_clib_dirname)
 			l_dir.open_read
 			if not l_dir.is_open_read then
 				set_fatal_error
 				report_cannot_read_error (a_clib_dirname)
 			else
-				create l_filenames.make (50)
 				from
 					l_dir.read_entry
 				until
@@ -1036,11 +1051,13 @@ feature {NONE} -- Compilation script generation
 					if l_filename.ends_with (c_file_extension) then
 						if l_c_filenames = Void then
 							create l_c_filenames.make (50)
+							l_all_filenames.force_last (l_c_filenames)
 						end
 						l_c_filenames.force_last (l_filename)
 					elseif l_filename.ends_with (cpp_file_extension) then
 						if l_cpp_filenames = Void then
 							create l_cpp_filenames.make (50)
+							l_all_filenames.force_last (l_cpp_filenames)
 						end
 						l_cpp_filenames.force_last (l_filename)
 					end
@@ -1048,69 +1065,65 @@ feature {NONE} -- Compilation script generation
 				end
 				l_dir.close
 			end
-			if l_c_filenames /= Void or l_cpp_filenames /= Void then
-				create l_comparator
-				create l_sorter.make (l_comparator)
-				if l_c_filenames /= Void then
-					l_c_filenames.sort (l_sorter)
+			create l_comparator
+			create l_sorter.make (l_comparator)
+			create l_common_defines.make (15)
+			create l_common_includes.make (5)
+			l_is_boehm_gc := a_library_name.same_string ("boehm_gc")
+			if l_is_boehm_gc then
+				l_common_defines.force_last ("GC_NOT_DLL")
+				l_common_defines.force_last ("GC_THREADS")
+				l_common_defines.force_last ("THREAD_LOCAL_ALLOC")
+				l_common_defines.force_last ("PARALLEL_MARK")
+				l_common_defines.force_last ("ALL_INTERIOR_POINTERS")
+				l_common_defines.force_last ("ENABLE_DISCLAIM")
+				l_common_defines.force_last ("GC_ATOMIC_UNCOLLECTABLE")
+				l_common_defines.force_last ("GC_GCJ_SUPPORT")
+				l_common_defines.force_last ("GC_ENABLE_SUSPEND_THREAD")
+				l_common_defines.force_last ("JAVA_FINALIZATION")
+				l_common_defines.force_last ("NO_EXECUTE_PERMISSION")
+				l_common_defines.force_last ("USE_MMAP")
+				l_common_defines.force_last ("USE_MUNMAP")
+			else
+				if use_threads then
+					l_common_defines.force_last (c_ge_use_threads)
 				end
-				if l_cpp_filenames /= Void then
-					l_cpp_filenames.sort (l_sorter)
+				if scoop_mode then
+					l_common_defines.force_last (c_ge_use_scoop)
 				end
-				create l_common_defines.make (15)
-				create l_common_includes.make (5)
-				if a_library_name.same_string ("boehm_gc") then
-					l_common_defines.force_last ("GC_NOT_DLL")
-					l_common_defines.force_last ("GC_THREADS")
-					l_common_defines.force_last ("THREAD_LOCAL_ALLOC")
-					l_common_defines.force_last ("PARALLEL_MARK")
-					l_common_defines.force_last ("ALL_INTERIOR_POINTERS")
-					l_common_defines.force_last ("ENABLE_DISCLAIM")
-					l_common_defines.force_last ("GC_ATOMIC_UNCOLLECTABLE")
-					l_common_defines.force_last ("GC_GCJ_SUPPORT")
-					l_common_defines.force_last ("GC_ENABLE_SUSPEND_THREAD")
-					l_common_defines.force_last ("JAVA_FINALIZATION")
-					l_common_defines.force_last ("NO_EXECUTE_PERMISSION")
-					l_common_defines.force_last ("USE_MMAP")
-					l_common_defines.force_last ("USE_MUNMAP")
-				else
-					if use_threads then
-						l_common_defines.force_last (c_ge_use_threads)
-					end
-					if scoop_mode then
-						l_common_defines.force_last (c_ge_use_scoop)
-					end
-					l_common_includes.force_last ("ge_eiffel.h")
-					l_common_includes.force_last ("ge_gc.h")
-							-- Two header files needed to compile EiffelCOM.
-					l_common_includes.force_last ("eif_cecil.h")
-					l_common_includes.force_last ("eif_plug.h")
-				end
+				l_common_includes.force_last ("ge_eiffel.h")
+				l_common_includes.force_last ("ge_gc.h")
+						-- Two header files needed to compile EiffelCOM.
+				l_common_includes.force_last ("eif_cecil.h")
+				l_common_includes.force_last ("eif_plug.h")
 			end
-			from
-				l_filenames := l_c_filenames
-				if l_filenames = Void then
-					l_filenames := l_cpp_filenames
-				end
-			until
-				l_filenames = Void
-			loop
-				if l_filenames = l_c_filenames then
+			nb2 := l_all_filenames.count
+			from j := 1 until j > nb2 loop
+				l_filenames := l_all_filenames.item (j)
+				l_filenames.sort (l_sorter)
+				if l_filenames.first.ends_with (c_file_extension) then
 					l_extension := c_file_extension
-					l_external_filename := a_library_name + l_extension
 				else
 					l_extension := cpp_file_extension
-					l_external_filename := a_library_name + "_cpp" + l_extension
 				end
+				if a_external_c_filenames = c_filenames then
+					l_basename := system_name + (c_filenames.count + 1).out
+				else
+					l_basename := a_library_name + j.out
+				end
+				l_external_filename := l_basename + l_extension
 				create l_external_file.make (l_external_filename)
 				l_external_file.open_write
 				if not l_external_file.is_open_write then
 					set_fatal_error
 					report_cannot_write_error (l_external_filename)
 				else
-					l_basename := l_external_filename.twin
-					l_basename.remove_tail (l_extension.count)
 					a_external_c_filenames.force_last (l_extension, l_basename)
+					l_external_file.put_string ("/* C files for ")
+					l_external_file.put_string (a_library_name)
+					l_external_file.put_string (" */")
+					l_external_file.put_new_line
+					l_external_file.put_new_line
 					if l_common_defines /= Void then
 						nb := l_common_defines.count
 						from i := 1 until i > nb loop
@@ -1253,7 +1266,7 @@ feature {NONE} -- Compilation script generation
 					end
 					l_external_file.close
 				end
-				l_filenames := l_cpp_filenames
+				j := j + 1
 			end
 		end
 
