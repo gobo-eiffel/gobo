@@ -1,12 +1,10 @@
-note
+﻿note
 
 	description: "Objects that format a list of integers as a character string under the control of a format string"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XSLT_NUMBER_FORMATTER
 

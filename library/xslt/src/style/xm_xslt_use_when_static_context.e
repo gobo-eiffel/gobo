@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XSLT_USE_WHEN_STATIC_CONTEXT
 
@@ -29,7 +27,7 @@ feature {NONE} -- Initialization
 
 	make (a_configuration: XM_XSLT_CONFIGURATION; a_namespace_context: XM_XPATH_NAMESPACE_RESOLVER;
 		a_base_uri: like base_uri; a_system_id: like system_id; a_line_number: like line_number;
-		  a_default_namespace: like default_element_namespace; a_backwards: BOOLEAN; a_factory: like node_factory)
+		a_default_namespace: like default_element_namespace; a_backwards: BOOLEAN; a_factory: like node_factory)
 			-- Initialize `Current'.
 		require
 			a_configuration_not_void: a_configuration /= Void

@@ -1,12 +1,10 @@
-note
+﻿note
 
 	description: "Routines that support passing of xsl:with-param"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XSLT_WITH_PARAM_ROUTINES
 

@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 
 	"Emitters that write xsl:messages."
@@ -6,8 +6,6 @@ note
 library: "Gobo Eiffel XSLT Library"
 copyright: "Copyright (c) 2004, Colin Adams and others"
 license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
 
 class XM_XSLT_MESSAGE_EMITTER
 

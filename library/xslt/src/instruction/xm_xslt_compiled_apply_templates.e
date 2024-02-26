@@ -1,12 +1,10 @@
-note
+﻿note
 
 	description: "Objects that represent an xsl:apply-templates,"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XSLT_COMPILED_APPLY_TEMPLATES
 

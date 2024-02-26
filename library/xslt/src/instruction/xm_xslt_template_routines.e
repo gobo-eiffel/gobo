@@ -1,12 +1,10 @@
-note
+﻿note
 
 	description: "Routines to support template execution,"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XSLT_TEMPLATE_ROUTINES
 
@@ -19,7 +17,7 @@ inherit
 feature -- Evaluation
 
 	apply_templates (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_mode: detachable XM_XSLT_MODE;
-	                 a_parameters, a_tunnel_parameters: XM_XSLT_PARAMETER_SET; a_context: XM_XSLT_EVALUATION_CONTEXT)
+		a_parameters, a_tunnel_parameters: XM_XSLT_PARAMETER_SET; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Apply templates to `a_iterator'.
 		require
 			a_tail_not_void: a_tail /= Void

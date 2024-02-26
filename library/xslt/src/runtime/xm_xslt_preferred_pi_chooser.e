@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,10 +7,8 @@ note
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
-class	XM_XSLT_PREFERRED_PI_CHOOSER
+class XM_XSLT_PREFERRED_PI_CHOOSER
 
 inherit
 
