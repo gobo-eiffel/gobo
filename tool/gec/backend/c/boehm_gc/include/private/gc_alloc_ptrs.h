@@ -6,7 +6,7 @@
  * OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
  *
  * Permission is hereby granted to use or copy this program
- * for any purpose, provided the above notices are retained on all copies.
+ * for any purpose,  provided the above notices are retained on all copies.
  * Permission to modify the code and to distribute modified code is granted,
  * provided the above notices are retained, and a notice that the code was
  * modified is included with the above copyright notice.
@@ -17,7 +17,7 @@
 #ifndef GC_ALLOC_PTRS_H
 #define GC_ALLOC_PTRS_H
 
-#include "gc/gc.h"
+#include "gc.h"
 
 #ifdef __cplusplus
   extern "C" {
@@ -49,7 +49,7 @@ GC_API_PRIV void ** GC_APIVAR_CONST GC_uobjfreelist_ptr;
 /* collection cycle and the number of explicitly deallocated bytes of   */
 /* memory since the last collection, respectively.  Both functions are  */
 /* unsynchronized, GC_call_with_alloc_lock() should be used to avoid    */
-/* data race.                                                           */
+/* data races.                                                          */
 GC_API_PRIV void GC_CALL GC_incr_bytes_allocd(size_t /* bytes */);
 GC_API_PRIV void GC_CALL GC_incr_bytes_freed(size_t /* bytes */);
 

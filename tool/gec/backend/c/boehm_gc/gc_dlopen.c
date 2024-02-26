@@ -7,7 +7,7 @@
  * OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
  *
  * Permission is hereby granted to use or copy this program
- * for any purpose, provided the above notices are retained on all copies.
+ * for any purpose,  provided the above notices are retained on all copies.
  * Permission to modify the code and to distribute modified code is granted,
  * provided the above notices are retained, and a notice that the code was
  * modified is included with the above copyright notice.
@@ -34,7 +34,7 @@
 
 /* Make sure we're not in the middle of a collection, and make sure we  */
 /* don't start any.  This is invoked prior to a dlopen call to avoid    */
-/* synchronization issues.  We cannot just acquire the allocator lock,  */
+/* synchronization issues.  We can't just acquire the allocation lock,  */
 /* since startup code in dlopen may try to allocate.  This solution     */
 /* risks heap growth (or, even, heap overflow) in the presence of many  */
 /* dlopen calls in either a multi-threaded environment, or if the       */
@@ -43,6 +43,7 @@
 #ifndef USE_PROC_FOR_LIBRARIES
   static void disable_gc_for_dlopen(void)
   {
+    DCL_LOCK_STATE;
     LOCK();
     while (GC_incremental && GC_collection_in_progress()) {
       ENTER_GC();
@@ -81,7 +82,7 @@ GC_API void * WRAP_DLFUNC(dlopen)(const char *path, int mode)
 # ifndef USE_PROC_FOR_LIBRARIES
     GC_enable(); /* undoes disable_gc_for_dlopen */
 # endif
-  return result;
+  return(result);
 }
 
 #ifdef GC_USE_LD_WRAP

@@ -2,108 +2,100 @@
  * Copyright 1988, 1989 Hans-J. Boehm, Alan J. Demers
  * Copyright (c) 1991-1994 by Xerox Corporation.  All rights reserved.
  * Copyright (c) 1999-2004 Hewlett-Packard Development Company, L.P.
- * Copyright (c) 2008-2022 Ivan Maidanski
  *
  * THIS MATERIAL IS PROVIDED AS IS, WITH ABSOLUTELY NO WARRANTY EXPRESSED
  * OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
  *
  * Permission is hereby granted to use or copy this program
- * for any purpose, provided the above notices are retained on all copies.
+ * for any purpose,  provided the above notices are retained on all copies.
  * Permission to modify the code and to distribute modified code is granted,
  * provided the above notices are retained, and a notice that the code was
  * modified is included with the above copyright notice.
  */
 
 #include "private/gc_priv.h"
+#include "gc_inline.h" /* for GC_malloc_kind */
 
+#include <stdio.h>
 #include <string.h>
 
-/* Allocate reclaim list for the kind.  Returns TRUE on success.        */
-STATIC GC_bool GC_alloc_reclaim_list(struct obj_kind *ok)
+/* Allocate reclaim list for kind:      */
+/* Return TRUE on success               */
+STATIC GC_bool GC_alloc_reclaim_list(struct obj_kind *kind)
 {
-    struct hblk ** result;
-
-    GC_ASSERT(I_HOLD_LOCK());
-    result = (struct hblk **)GC_scratch_alloc(
-                                (MAXOBJGRANULES+1) * sizeof(struct hblk *));
-    if (EXPECT(NULL == result, FALSE)) return FALSE;
-
+    struct hblk ** result = (struct hblk **)
+                GC_scratch_alloc((MAXOBJGRANULES+1) * sizeof(struct hblk *));
+    if (result == 0) return(FALSE);
     BZERO(result, (MAXOBJGRANULES+1)*sizeof(struct hblk *));
-    ok -> ok_reclaim_list = result;
-    return TRUE;
+    kind -> ok_reclaim_list = result;
+    return(TRUE);
 }
 
-/* Allocate a large block of size lb_adjusted bytes with the requested  */
-/* alignment (align_m1 plus one).  The block is not cleared.  We assume */
-/* that the size is non-zero and a multiple of GC_GRANULE_BYTES, and    */
-/* that it already includes EXTRA_BYTES value.  The flags argument      */
-/* should be IGNORE_OFF_PAGE or 0.  Calls GC_allochblk() to do the      */
-/* actual allocation, but also triggers collection and/or heap          */
-/* expansion as appropriate.  Updates value of GC_bytes_allocd; does    */
-/* also other accounting.                                               */
-STATIC ptr_t GC_alloc_large(size_t lb_adjusted, int k, unsigned flags,
-                            size_t align_m1)
+/* Allocate a large block of size lb bytes.  The block is not cleared.  */
+/* flags argument should be 0 or IGNORE_OFF_PAGE.  EXTRA_BYTES value    */
+/* was already added to lb.                                             */
+GC_INNER ptr_t GC_alloc_large(size_t lb, int k, unsigned flags)
 {
-    struct hblk *h;
-    size_t n_blocks; /* includes alignment */
-    ptr_t result = NULL;
+    struct hblk * h;
+    word n_blocks;
+    ptr_t result;
     GC_bool retry = FALSE;
 
     GC_ASSERT(I_HOLD_LOCK());
-    GC_ASSERT(lb_adjusted != 0 && (lb_adjusted & (GC_GRANULE_BYTES-1)) == 0);
-    n_blocks = OBJ_SZ_TO_BLOCKS_CHECKED(SIZET_SAT_ADD(lb_adjusted, align_m1));
+    lb = ROUNDUP_GRANULE_SIZE(lb);
+    n_blocks = OBJ_SZ_TO_BLOCKS_CHECKED(lb);
     if (!EXPECT(GC_is_initialized, TRUE)) {
+      DCL_LOCK_STATE;
       UNLOCK(); /* just to unset GC_lock_holder */
       GC_init();
       LOCK();
     }
-    /* Do our share of marking work.    */
-    if (GC_incremental && !GC_dont_gc) {
+    /* Do our share of marking work */
+        if (GC_incremental && !GC_dont_gc) {
             ENTER_GC();
             GC_collect_a_little_inner((int)n_blocks);
             EXIT_GC();
-    }
-
-    h = GC_allochblk(lb_adjusted, k, flags, align_m1);
+        }
+    h = GC_allochblk(lb, k, flags);
 #   ifdef USE_MUNMAP
-        if (NULL == h) {
+        if (0 == h) {
             GC_merge_unmapped();
-            h = GC_allochblk(lb_adjusted, k, flags, align_m1);
+            h = GC_allochblk(lb, k, flags);
         }
 #   endif
-    while (NULL == h && GC_collect_or_expand(n_blocks, flags, retry)) {
-        h = GC_allochblk(lb_adjusted, k, flags, align_m1);
+    while (0 == h && GC_collect_or_expand(n_blocks, flags != 0, retry)) {
+        h = GC_allochblk(lb, k, flags);
         retry = TRUE;
     }
-    if (EXPECT(h != NULL, TRUE)) {
-        GC_bytes_allocd += lb_adjusted;
-        if (lb_adjusted > HBLKSIZE) {
-            GC_large_allocd_bytes += HBLKSIZE * OBJ_SZ_TO_BLOCKS(lb_adjusted);
+    if (h == 0) {
+        result = 0;
+    } else {
+        size_t total_bytes = n_blocks * HBLKSIZE;
+        if (n_blocks > 1) {
+            GC_large_allocd_bytes += total_bytes;
             if (GC_large_allocd_bytes > GC_max_large_allocd_bytes)
                 GC_max_large_allocd_bytes = GC_large_allocd_bytes;
         }
         /* FIXME: Do we need some way to reset GC_max_large_allocd_bytes? */
         result = h -> hb_body;
-        GC_ASSERT(((word)result & align_m1) == 0);
     }
     return result;
 }
 
-/* Allocate a large block of given size in bytes, clear it if   */
-/* appropriate.  We assume that the size is non-zero and        */
-/* a multiple of GC_GRANULE_BYTES, and that it already includes */
-/* EXTRA_BYTES value.  Update value of GC_bytes_allocd.         */
-STATIC ptr_t GC_alloc_large_and_clear(size_t lb_adjusted, int k,
-                                      unsigned flags)
+/* Allocate a large block of size lb bytes.  Clear if appropriate.      */
+/* EXTRA_BYTES were already added to lb.                                */
+STATIC ptr_t GC_alloc_large_and_clear(size_t lb, int k, unsigned flags)
 {
     ptr_t result;
 
     GC_ASSERT(I_HOLD_LOCK());
-    result = GC_alloc_large(lb_adjusted, k, flags, 0 /* align_m1 */);
-    if (EXPECT(result != NULL, TRUE)
+    result = GC_alloc_large(lb, k, flags);
+    if (result != NULL
           && (GC_debugging_started || GC_obj_kinds[k].ok_init)) {
+        word n_blocks = OBJ_SZ_TO_BLOCKS(lb);
+
         /* Clear the whole block, in case of GC_realloc call. */
-        BZERO(result, HBLKSIZE * OBJ_SZ_TO_BLOCKS(lb_adjusted));
+        BZERO(result, n_blocks * HBLKSIZE);
     }
     return result;
 }
@@ -113,9 +105,9 @@ STATIC ptr_t GC_alloc_large_and_clear(size_t lb_adjusted, int k,
 /* has the length of at least n/4.                                      */
 STATIC void GC_extend_size_map(size_t i)
 {
-  size_t original_lg = ALLOC_REQUEST_GRANS(i);
-  size_t lg;
-  size_t byte_sz = GRANULES_TO_BYTES(original_lg);
+  size_t orig_granule_sz = ROUNDED_UP_GRANULES(i);
+  size_t granule_sz;
+  size_t byte_sz = GRANULES_TO_BYTES(orig_granule_sz);
                         /* The size we try to preserve.         */
                         /* Close to i, unless this would        */
                         /* introduce too many distinct sizes.   */
@@ -127,7 +119,7 @@ STATIC void GC_extend_size_map(size_t i)
   GC_ASSERT(0 == GC_size_map[i]);
   if (0 == GC_size_map[smaller_than_i]) {
     low_limit = byte_sz - (byte_sz >> 2); /* much smaller than i */
-    lg = original_lg;
+    granule_sz = orig_granule_sz;
     while (GC_size_map[low_limit] != 0)
       low_limit++;
   } else {
@@ -135,92 +127,108 @@ STATIC void GC_extend_size_map(size_t i)
     while (GC_size_map[low_limit] != 0)
       low_limit++;
 
-    lg = ALLOC_REQUEST_GRANS(low_limit);
-    lg += lg >> 3;
-    if (lg < original_lg) lg = original_lg;
+    granule_sz = ROUNDED_UP_GRANULES(low_limit);
+    granule_sz += granule_sz >> 3;
+    if (granule_sz < orig_granule_sz)
+      granule_sz = orig_granule_sz;
   }
 
   /* For these larger sizes, we use an even number of granules.         */
   /* This makes it easier to, e.g., construct a 16-byte-aligned         */
-  /* allocator even if GC_GRANULE_BYTES is 8.                           */
-  lg = (lg + 1) & ~(size_t)1;
-  if (lg > MAXOBJGRANULES) lg = MAXOBJGRANULES;
+  /* allocator even if GRANULE_BYTES is 8.                              */
+  granule_sz = (granule_sz + 1) & ~(size_t)1;
+  if (granule_sz > MAXOBJGRANULES)
+    granule_sz = MAXOBJGRANULES;
 
   /* If we can fit the same number of larger objects in a block, do so. */
-  GC_ASSERT(lg != 0);
-  number_of_objs = HBLK_GRANULES / lg;
+  number_of_objs = HBLK_GRANULES / granule_sz;
   GC_ASSERT(number_of_objs != 0);
-  lg = (HBLK_GRANULES / number_of_objs) & ~(size_t)1;
+  granule_sz = (HBLK_GRANULES / number_of_objs) & ~(size_t)1;
 
-  byte_sz = GRANULES_TO_BYTES(lg) - EXTRA_BYTES;
+  byte_sz = GRANULES_TO_BYTES(granule_sz) - EXTRA_BYTES;
                         /* We may need one extra byte; do not always    */
                         /* fill in GC_size_map[byte_sz].                */
 
   for (; low_limit <= byte_sz; low_limit++)
-    GC_size_map[low_limit] = lg;
+    GC_size_map[low_limit] = granule_sz;
 }
 
-STATIC void * GC_generic_malloc_inner_small(size_t lb, int k)
+/* Allocate lb bytes for an object of kind k.           */
+/* Should not be used to directly allocate objects      */
+/* that require special handling on allocation.         */
+GC_INNER void * GC_generic_malloc_inner(size_t lb, int k)
 {
-  struct obj_kind *ok = &GC_obj_kinds[k];
-  size_t lg = GC_size_map[lb];
-  void ** opp = &(ok -> ok_freelist[lg]);
-  void *op = *opp;
-
-  GC_ASSERT(I_HOLD_LOCK());
-  if (EXPECT(NULL == op, FALSE)) {
-    if (0 == lg) {
-      if (!EXPECT(GC_is_initialized, TRUE)) {
-        UNLOCK(); /* just to unset GC_lock_holder */
-        GC_init();
-        LOCK();
-        lg = GC_size_map[lb];
-      }
-      if (0 == lg) {
-        GC_extend_size_map(lb);
-        lg = GC_size_map[lb];
-        GC_ASSERT(lg != 0);
-      }
-      /* Retry */
-      opp = &(ok -> ok_freelist[lg]);
-      op = *opp;
-    }
-    if (NULL == op) {
-      if (NULL == ok -> ok_reclaim_list
-          && !GC_alloc_reclaim_list(ok))
-        return NULL;
-      op = GC_allocobj(lg, k);
-      if (NULL == op) return NULL;
-    }
-  }
-  *opp = obj_link(op);
-  obj_link(op) = NULL;
-  GC_bytes_allocd += GRANULES_TO_BYTES((word)lg);
-  return op;
-}
-
-GC_INNER void * GC_generic_malloc_inner(size_t lb, int k, unsigned flags)
-{
-    size_t lb_adjusted;
+    void *op;
 
     GC_ASSERT(I_HOLD_LOCK());
     GC_ASSERT(k < MAXOBJKINDS);
     if (SMALL_OBJ(lb)) {
-        return GC_generic_malloc_inner_small(lb, k);
+        struct obj_kind * kind = GC_obj_kinds + k;
+        size_t lg = GC_size_map[lb];
+        void ** opp = &(kind -> ok_freelist[lg]);
+
+        op = *opp;
+        if (EXPECT(0 == op, FALSE)) {
+          if (lg == 0) {
+            if (!EXPECT(GC_is_initialized, TRUE)) {
+              DCL_LOCK_STATE;
+              UNLOCK(); /* just to unset GC_lock_holder */
+              GC_init();
+              LOCK();
+              lg = GC_size_map[lb];
+            }
+            if (0 == lg) {
+              GC_extend_size_map(lb);
+              lg = GC_size_map[lb];
+              GC_ASSERT(lg != 0);
+            }
+            /* Retry */
+            opp = &(kind -> ok_freelist[lg]);
+            op = *opp;
+          }
+          if (0 == op) {
+            if (0 == kind -> ok_reclaim_list &&
+                !GC_alloc_reclaim_list(kind))
+              return NULL;
+            op = GC_allocobj(lg, k);
+            if (0 == op)
+              return NULL;
+          }
+        }
+        *opp = obj_link(op);
+        obj_link(op) = 0;
+        GC_bytes_allocd += GRANULES_TO_BYTES((word)lg);
+    } else {
+        size_t lb_adjusted = ADD_SLOP(lb);
+
+        op = (ptr_t)GC_alloc_large_and_clear(lb_adjusted, k, 0 /* flags */);
+        if (op != NULL)
+            GC_bytes_allocd += lb_adjusted;
     }
 
-#   if MAX_EXTRA_BYTES > 0
-      if ((flags & IGNORE_OFF_PAGE) != 0 && lb >= HBLKSIZE) {
-        /* No need to add EXTRA_BYTES.  */
-        lb_adjusted = lb;
-      } else
-#   endif
-    /* else */ {
-      lb_adjusted = ADD_EXTRA_BYTES(lb);
-    }
-    return GC_alloc_large_and_clear(ROUNDUP_GRANULE_SIZE(lb_adjusted),
-                                    k, flags);
+    return op;
 }
+
+#if defined(DBG_HDRS_ALL) || defined(GC_GCJ_SUPPORT) \
+    || !defined(GC_NO_FINALIZATION)
+  /* Allocate a composite object of size n bytes.  The caller           */
+  /* guarantees that pointers past the first hblk are not relevant.     */
+  GC_INNER void * GC_generic_malloc_inner_ignore_off_page(size_t lb, int k)
+  {
+    size_t lb_adjusted;
+    void * op;
+
+    GC_ASSERT(I_HOLD_LOCK());
+    if (lb <= HBLKSIZE)
+        return GC_generic_malloc_inner(lb, k);
+    GC_ASSERT(k < MAXOBJKINDS);
+    lb_adjusted = ADD_SLOP(lb);
+    op = GC_alloc_large_and_clear(lb_adjusted, k, IGNORE_OFF_PAGE);
+    if (op != NULL)
+        GC_bytes_allocd += lb_adjusted;
+    return op;
+  }
+#endif
 
 #ifdef GC_COLLECT_AT_MALLOC
   /* Parameter to force GC at every malloc of size greater or equal to  */
@@ -232,127 +240,95 @@ GC_INNER void * GC_generic_malloc_inner(size_t lb, int k, unsigned flags)
 # endif
 #endif
 
-GC_INNER void * GC_generic_malloc_aligned(size_t lb, int k, unsigned flags,
-                                          size_t align_m1)
+GC_API GC_ATTR_MALLOC void * GC_CALL GC_generic_malloc(size_t lb, int k)
 {
     void * result;
+    DCL_LOCK_STATE;
 
     GC_ASSERT(k < MAXOBJKINDS);
     if (EXPECT(get_have_errors(), FALSE))
       GC_print_all_errors();
     GC_INVOKE_FINALIZERS();
     GC_DBG_COLLECT_AT_MALLOC(lb);
-    if (SMALL_OBJ(lb) && EXPECT(align_m1 < GC_GRANULE_BYTES, TRUE)) {
+    if (SMALL_OBJ(lb)) {
         LOCK();
-        result = GC_generic_malloc_inner_small(lb, k);
+        result = GC_generic_malloc_inner(lb, k);
         UNLOCK();
     } else {
-#       ifdef THREADS
-          size_t lg;
-#       endif
-        size_t lb_adjusted;
+        size_t lg;
+        size_t lb_rounded;
+        word n_blocks;
         GC_bool init;
 
-#       if MAX_EXTRA_BYTES > 0
-          if ((flags & IGNORE_OFF_PAGE) != 0 && lb >= HBLKSIZE) {
-            /* No need to add EXTRA_BYTES.      */
-            lb_adjusted = ROUNDUP_GRANULE_SIZE(lb);
-#           ifdef THREADS
-              lg = BYTES_TO_GRANULES(lb_adjusted);
-#           endif
-          } else
-#       endif
-        /* else */ {
-#         ifndef THREADS
-            size_t lg; /* CPPCHECK */
-#         endif
-
-          if (EXPECT(0 == lb, FALSE)) lb = 1;
-          lg = ALLOC_REQUEST_GRANS(lb);
-          lb_adjusted = GRANULES_TO_BYTES(lg);
-        }
-
+        lg = ROUNDED_UP_GRANULES(lb);
+        lb_rounded = GRANULES_TO_BYTES(lg);
+        n_blocks = OBJ_SZ_TO_BLOCKS(lb_rounded);
         init = GC_obj_kinds[k].ok_init;
-        if (EXPECT(align_m1 < GC_GRANULE_BYTES, TRUE)) {
-          align_m1 = 0;
-        } else if (align_m1 < HBLKSIZE) {
-          align_m1 = HBLKSIZE - 1;
-        }
         LOCK();
-        result = GC_alloc_large(lb_adjusted, k, flags, align_m1);
-        if (EXPECT(result != NULL, TRUE)) {
+        result = (ptr_t)GC_alloc_large(lb_rounded, k, 0);
+        if (0 != result) {
           if (GC_debugging_started
 #             ifndef THREADS
                 || init
 #             endif
              ) {
-            BZERO(result, HBLKSIZE * OBJ_SZ_TO_BLOCKS(lb_adjusted));
+            BZERO(result, n_blocks * HBLKSIZE);
           } else {
 #           ifdef THREADS
-              GC_ASSERT(GRANULES_TO_WORDS(lg) >= 2);
               /* Clear any memory that might be used for GC descriptors */
-              /* before we release the allocator lock.                  */
+              /* before we release the lock.                            */
                 ((word *)result)[0] = 0;
                 ((word *)result)[1] = 0;
                 ((word *)result)[GRANULES_TO_WORDS(lg)-1] = 0;
                 ((word *)result)[GRANULES_TO_WORDS(lg)-2] = 0;
 #           endif
           }
+          GC_bytes_allocd += lb_rounded;
         }
         UNLOCK();
 #       ifdef THREADS
           if (init && !GC_debugging_started && result != NULL) {
             /* Clear the rest (i.e. excluding the initial 2 words). */
             BZERO((word *)result + 2,
-                  HBLKSIZE * OBJ_SZ_TO_BLOCKS(lb_adjusted) - 2 * sizeof(word));
+                  n_blocks * HBLKSIZE - 2 * sizeof(word));
           }
 #       endif
     }
-    if (EXPECT(NULL == result, FALSE))
-      result = (*GC_get_oom_fn())(lb); /* might be misaligned */
-    return result;
-}
-
-GC_API GC_ATTR_MALLOC void * GC_CALL GC_generic_malloc(size_t lb, int k)
-{
-    return GC_generic_malloc_aligned(lb, k, 0 /* flags */, 0 /* align_m1 */);
+    if (0 == result) {
+        return((*GC_get_oom_fn())(lb));
+    } else {
+        return(result);
+    }
 }
 
 GC_API GC_ATTR_MALLOC void * GC_CALL GC_malloc_kind_global(size_t lb, int k)
 {
-    return GC_malloc_kind_aligned_global(lb, k, 0 /* align_m1 */);
-}
-
-GC_INNER void * GC_malloc_kind_aligned_global(size_t lb, int k,
-                                              size_t align_m1)
-{
     GC_ASSERT(k < MAXOBJKINDS);
-    if (SMALL_OBJ(lb) && EXPECT(align_m1 < HBLKSIZE / 2, TRUE)) {
+    if (SMALL_OBJ(lb)) {
         void *op;
         void **opp;
         size_t lg;
+        DCL_LOCK_STATE;
 
         GC_DBG_COLLECT_AT_MALLOC(lb);
         LOCK();
         lg = GC_size_map[lb];
         opp = &GC_obj_kinds[k].ok_freelist[lg];
         op = *opp;
-        if (EXPECT(align_m1 >= GC_GRANULE_BYTES, FALSE)) {
-            /* TODO: Avoid linear search. */
-            for (; ((word)op & align_m1) != 0; op = *opp) {
-                opp = &obj_link(op);
-            }
-        }
         if (EXPECT(op != NULL, TRUE)) {
-            GC_ASSERT(PTRFREE == k || NULL == obj_link(op)
-                      || ((word)obj_link(op) < GC_greatest_real_heap_addr
-                          && (word)obj_link(op) > GC_least_real_heap_addr));
-            *opp = obj_link(op);
-            if (k != PTRFREE)
-                obj_link(op) = NULL;
+            if (k == PTRFREE) {
+                *opp = obj_link(op);
+            } else {
+                GC_ASSERT(0 == obj_link(op)
+                          || ((word)obj_link(op)
+                                <= (word)GC_greatest_plausible_heap_addr
+                              && (word)obj_link(op)
+                                >= (word)GC_least_plausible_heap_addr));
+                *opp = obj_link(op);
+                obj_link(op) = 0;
+            }
             GC_bytes_allocd += GRANULES_TO_BYTES((word)lg);
             UNLOCK();
-            GC_ASSERT(((word)op & align_m1) == 0);
             return op;
         }
         UNLOCK();
@@ -360,8 +336,7 @@ GC_INNER void * GC_malloc_kind_aligned_global(size_t lb, int k,
 
     /* We make the GC_clear_stack() call a tail one, hoping to get more */
     /* of the stack.                                                    */
-    return GC_clear_stack(GC_generic_malloc_aligned(lb, k, 0 /* flags */,
-                                                    align_m1));
+    return GC_clear_stack(GC_generic_malloc(lb, k));
 }
 
 #if defined(THREADS) && !defined(THREAD_LOCAL_ALLOC)
@@ -387,21 +362,17 @@ GC_API GC_ATTR_MALLOC void * GC_CALL GC_generic_malloc_uncollectable(
                                                         size_t lb, int k)
 {
     void *op;
-    size_t lb_orig = lb;
+    DCL_LOCK_STATE;
 
     GC_ASSERT(k < MAXOBJKINDS);
-    if (EXTRA_BYTES != 0 && EXPECT(lb != 0, TRUE)) lb--;
-                /* We do not need the extra byte, since this will   */
-                /* not be collected anyway.                         */
-
     if (SMALL_OBJ(lb)) {
         void **opp;
         size_t lg;
 
-        if (EXPECT(get_have_errors(), FALSE))
-          GC_print_all_errors();
-        GC_INVOKE_FINALIZERS();
-        GC_DBG_COLLECT_AT_MALLOC(lb_orig);
+        GC_DBG_COLLECT_AT_MALLOC(lb);
+        if (EXTRA_BYTES != 0 && lb != 0) lb--;
+                  /* We don't need the extra byte, since this won't be  */
+                  /* collected anyway.                                  */
         LOCK();
         lg = GC_size_map[lb];
         opp = &GC_obj_kinds[k].ok_freelist[lg];
@@ -414,26 +385,22 @@ GC_API GC_ATTR_MALLOC void * GC_CALL GC_generic_malloc_uncollectable(
             /* cleared only temporarily during a collection, as a       */
             /* result of the normal free list mark bit clearing.        */
             GC_non_gc_bytes += GRANULES_TO_BYTES((word)lg);
+            UNLOCK();
         } else {
-            op = GC_generic_malloc_inner_small(lb, k);
-            if (NULL == op) {
-              GC_oom_func oom_fn = GC_oom_fn;
-              UNLOCK();
-              return (*oom_fn)(lb_orig);
-            }
+            UNLOCK();
+            op = GC_generic_malloc(lb, k);
             /* For small objects, the free lists are completely marked. */
         }
-        GC_ASSERT(GC_is_marked(op));
-        UNLOCK();
+        GC_ASSERT(0 == op || GC_is_marked(op));
     } else {
-      op = GC_generic_malloc_aligned(lb, k, 0 /* flags */, 0 /* align_m1 */);
+      op = GC_generic_malloc(lb, k);
       if (op /* != NULL */) { /* CPPCHECK */
         hdr * hhdr = HDR(op);
 
-        GC_ASSERT(HBLKDISPL(op) == 0); /* large block */
-        /* We do not need to acquire the allocator lock before HDR(op), */
-        /* since we have an undisguised pointer, but we need it while   */
-        /* we adjust the mark bits.                                     */
+        GC_ASSERT(((word)op & (HBLKSIZE - 1)) == 0); /* large block */
+        /* We don't need the lock here, since we have an undisguised    */
+        /* pointer.  We do need to hold the lock while we adjust        */
+        /* mark bits.                                                   */
         LOCK();
         set_mark_bit_from_hdr(hhdr, 0); /* Only object. */
 #       ifndef THREADS
@@ -468,7 +435,7 @@ GC_API GC_ATTR_MALLOC void * GC_CALL GC_malloc_uncollectable(size_t lb)
 #if defined(REDIRECT_MALLOC) && !defined(REDIRECT_MALLOC_IN_HEADER)
 
 # ifndef MSWINCE
-#   include <errno.h>
+#  include <errno.h>
 # endif
 
   /* Avoid unnecessary nested procedure calls here, by #defining some   */
@@ -499,17 +466,16 @@ GC_API GC_ATTR_MALLOC void * GC_CALL GC_malloc_uncollectable(size_t lb)
   }
 
 # if defined(GC_LINUX_THREADS)
-#   ifdef HAVE_LIBPTHREAD_SO
-      STATIC ptr_t GC_libpthread_start = NULL;
-      STATIC ptr_t GC_libpthread_end = NULL;
-#   endif
-    STATIC ptr_t GC_libld_start = NULL;
-    STATIC ptr_t GC_libld_end = NULL;
+    STATIC ptr_t GC_libpthread_start = 0;
+    STATIC ptr_t GC_libpthread_end = 0;
+    STATIC ptr_t GC_libld_start = 0;
+    STATIC ptr_t GC_libld_end = 0;
     static GC_bool lib_bounds_set = FALSE;
 
     GC_INNER void GC_init_lib_bounds(void)
     {
       IF_CANCEL(int cancel_state;)
+      DCL_LOCK_STATE;
 
       /* This test does not need to ensure memory visibility, since     */
       /* the bounds will be set when/if we create another thread.       */
@@ -520,14 +486,22 @@ GC_API GC_ATTR_MALLOC void * GC_CALL GC_malloc_uncollectable(size_t lb)
 #     if defined(GC_ASSERTIONS) && defined(GC_ALWAYS_MULTITHREADED)
         LOCK(); /* just to set GC_lock_holder */
 #     endif
-#     ifdef HAVE_LIBPTHREAD_SO
-        if (!GC_text_mapping("libpthread-",
-                             &GC_libpthread_start, &GC_libpthread_end)) {
+      if (!GC_text_mapping("libpthread-",
+                           &GC_libpthread_start, &GC_libpthread_end)) {
+        /* Some libc implementations like bionic, musl and glibc 2.34   */
+        /* do not have libpthread.so because the pthreads-related code  */
+        /* is located in libc.so, thus potential calloc calls from such */
+        /* code are forwarded to real (libc) calloc without any special */
+        /* handling on the libgc side.  Checking glibc version at       */
+        /* compile time to turn off the warning seems to be fine.       */
+        /* TODO: Remove GC_text_mapping() call for this case.           */
+#       if defined(__GLIBC__) \
+           && (__GLIBC__ < 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ < 34))
           WARN("Failed to find libpthread.so text mapping: Expect crash\n", 0);
-          /* This might still work with some versions of libpthread,    */
-          /* so we do not abort.                                        */
-        }
-#     endif
+          /* This might still work with some versions of libpthread,      */
+          /* so we do not abort.                                          */
+#       endif
+      }
       if (!GC_text_mapping("ld-", &GC_libld_start, &GC_libld_end)) {
           WARN("Failed to find ld.so text mapping: Expect crash\n", 0);
       }
@@ -541,27 +515,23 @@ GC_API GC_ATTR_MALLOC void * GC_CALL GC_malloc_uncollectable(size_t lb)
 
   void * calloc(size_t n, size_t lb)
   {
-    if (EXPECT((lb | n) > GC_SQRT_SIZE_MAX, FALSE) /* fast initial test */
+    if ((lb | n) > GC_SQRT_SIZE_MAX /* fast initial test */
         && lb && n > GC_SIZE_MAX / lb)
       return (*GC_get_oom_fn())(GC_SIZE_MAX); /* n*lb overflow */
 #   if defined(GC_LINUX_THREADS)
-      /* The linker may allocate some memory that is only pointed to by */
+      /* libpthread allocated some memory that is only pointed to by    */
       /* mmapped thread stacks.  Make sure it is not collectible.       */
       {
         ptr_t caller = (ptr_t)__builtin_return_address(0);
 
         GC_init_lib_bounds();
-        if (((word)caller >= (word)GC_libld_start
-             && (word)caller < (word)GC_libld_end)
-#           ifdef HAVE_LIBPTHREAD_SO
-              || ((word)caller >= (word)GC_libpthread_start
-                  && (word)caller < (word)GC_libpthread_end)
-                    /* The two ranges are actually usually adjacent,    */
-                    /* so there may be a way to speed this up.          */
-#           endif
-           ) {
+        if (((word)caller >= (word)GC_libpthread_start
+             && (word)caller < (word)GC_libpthread_end)
+            || ((word)caller >= (word)GC_libld_start
+                && (word)caller < (word)GC_libld_end))
           return GC_generic_malloc_uncollectable(n * lb, UNCOLLECTABLE);
-        }
+        /* The two ranges are actually usually adjacent, so there may   */
+        /* be a way to speed this up.                                   */
       }
 #   endif
     return (void *)REDIRECT_MALLOC_F(n * lb);
@@ -572,10 +542,9 @@ GC_API GC_ATTR_MALLOC void * GC_CALL GC_malloc_uncollectable(size_t lb)
     {
       size_t lb = strlen(s) + 1;
       char *result = (char *)REDIRECT_MALLOC_F(lb);
-
-      if (EXPECT(NULL == result, FALSE)) {
+      if (result == 0) {
         errno = ENOMEM;
-        return NULL;
+        return 0;
       }
       BCOPY(s, result, lb);
       return result;
@@ -591,10 +560,10 @@ GC_API GC_ATTR_MALLOC void * GC_CALL GC_malloc_uncollectable(size_t lb)
     {
       char *copy;
       size_t len = strlen(str);
-      if (EXPECT(len > size, FALSE))
+      if (len > size)
         len = size;
       copy = (char *)REDIRECT_MALLOC_F(len + 1);
-      if (EXPECT(NULL == copy, FALSE)) {
+      if (copy == NULL) {
         errno = ENOMEM;
         return NULL;
       }
@@ -609,40 +578,16 @@ GC_API GC_ATTR_MALLOC void * GC_CALL GC_malloc_uncollectable(size_t lb)
 
 #endif /* REDIRECT_MALLOC */
 
-/* Explicitly deallocate the object.  hhdr should correspond to p.      */
-static void free_internal(void *p, hdr *hhdr)
-{
-  size_t lb = (size_t)(hhdr -> hb_sz);  /* size in bytes */
-  size_t lg = BYTES_TO_GRANULES(lb);    /* size in granules */
-  int k = hhdr -> hb_obj_kind;
-
-  GC_bytes_freed += lb;
-  if (IS_UNCOLLECTABLE(k)) GC_non_gc_bytes -= lb;
-  if (EXPECT(lg <= MAXOBJGRANULES, TRUE)) {
-    struct obj_kind *ok = &GC_obj_kinds[k];
-    void **flh;
-
-    /* It is unnecessary to clear the mark bit.  If the object is       */
-    /* reallocated, it does not matter.  Otherwise, the collector will  */
-    /* do it, since it is on a free list.                               */
-    if (ok -> ok_init && EXPECT(lb > sizeof(word), TRUE)) {
-      BZERO((word *)p + 1, lb - sizeof(word));
-    }
-
-    flh = &(ok -> ok_freelist[lg]);
-    obj_link(p) = *flh;
-    *flh = (ptr_t)p;
-  } else {
-    if (lb > HBLKSIZE) {
-      GC_large_allocd_bytes -= HBLKSIZE * OBJ_SZ_TO_BLOCKS(lb);
-    }
-    GC_freehblk(HBLKPTR(p));
-  }
-}
-
+/* Explicitly deallocate an object p.                           */
 GC_API void GC_CALL GC_free(void * p)
 {
+    struct hblk *h;
     hdr *hhdr;
+    size_t sz; /* In bytes */
+    size_t ngranules;   /* sz in granules */
+    int knd;
+    struct obj_kind * ok;
+    DCL_LOCK_STATE;
 
     if (p /* != NULL */) {
         /* CPPCHECK */
@@ -655,7 +600,8 @@ GC_API void GC_CALL GC_free(void * p)
       GC_log_printf("GC_free(%p) after GC #%lu\n",
                     p, (unsigned long)GC_gc_no);
 #   endif
-    hhdr = HDR(p);
+    h = HBLKPTR(p);
+    hhdr = HDR(h);
 #   if defined(REDIRECT_MALLOC) && \
         ((defined(NEED_CALLINFO) && defined(GC_HAVE_BUILTIN_BACKTRACE)) \
          || defined(GC_SOLARIS_THREADS) || defined(GC_LINUX_THREADS) \
@@ -666,19 +612,82 @@ GC_API void GC_CALL GC_free(void * p)
         /* initialization.  For the others, this seems to happen        */
         /* implicitly.                                                  */
         /* Don't try to deallocate that memory.                         */
-        if (EXPECT(NULL == hhdr, FALSE)) return;
+        if (0 == hhdr) return;
 #   endif
     GC_ASSERT(GC_base(p) == p);
-    LOCK();
-    free_internal(p, hhdr);
-    UNLOCK();
+    sz = (size_t)hhdr->hb_sz;
+    ngranules = BYTES_TO_GRANULES(sz);
+    knd = hhdr -> hb_obj_kind;
+    ok = &GC_obj_kinds[knd];
+    if (EXPECT(ngranules <= MAXOBJGRANULES, TRUE)) {
+        void **flh;
+
+        LOCK();
+        GC_bytes_freed += sz;
+        if (IS_UNCOLLECTABLE(knd)) GC_non_gc_bytes -= sz;
+                /* It's unnecessary to clear the mark bit.  If the      */
+                /* object is reallocated, it doesn't matter.  O.w. the  */
+                /* collector will do it, since it's on a free list.     */
+        if (ok -> ok_init && EXPECT(sz > sizeof(word), TRUE)) {
+            BZERO((word *)p + 1, sz-sizeof(word));
+        }
+        flh = &(ok -> ok_freelist[ngranules]);
+        obj_link(p) = *flh;
+        *flh = (ptr_t)p;
+        UNLOCK();
+    } else {
+        size_t nblocks = OBJ_SZ_TO_BLOCKS(sz);
+
+        LOCK();
+        GC_bytes_freed += sz;
+        if (IS_UNCOLLECTABLE(knd)) GC_non_gc_bytes -= sz;
+        if (nblocks > 1) {
+          GC_large_allocd_bytes -= nblocks * HBLKSIZE;
+        }
+        GC_freehblk(h);
+        UNLOCK();
+    }
 }
 
+/* Explicitly deallocate an object p when we already hold lock.         */
+/* Only used for internally allocated objects, so we can take some      */
+/* shortcuts.                                                           */
 #ifdef THREADS
   GC_INNER void GC_free_inner(void * p)
   {
-    GC_ASSERT(I_HOLD_LOCK());
-    free_internal(p, HDR(p));
+    struct hblk *h;
+    hdr *hhdr;
+    size_t sz; /* bytes */
+    size_t ngranules;  /* sz in granules */
+    int knd;
+    struct obj_kind * ok;
+
+    h = HBLKPTR(p);
+    hhdr = HDR(h);
+    knd = hhdr -> hb_obj_kind;
+    sz = (size_t)hhdr->hb_sz;
+    ngranules = BYTES_TO_GRANULES(sz);
+    ok = &GC_obj_kinds[knd];
+    if (ngranules <= MAXOBJGRANULES) {
+        void ** flh;
+
+        GC_bytes_freed += sz;
+        if (IS_UNCOLLECTABLE(knd)) GC_non_gc_bytes -= sz;
+        if (ok -> ok_init && EXPECT(sz > sizeof(word), TRUE)) {
+            BZERO((word *)p + 1, sz-sizeof(word));
+        }
+        flh = &(ok -> ok_freelist[ngranules]);
+        obj_link(p) = *flh;
+        *flh = (ptr_t)p;
+    } else {
+        size_t nblocks = OBJ_SZ_TO_BLOCKS(sz);
+        GC_bytes_freed += sz;
+        if (IS_UNCOLLECTABLE(knd)) GC_non_gc_bytes -= sz;
+        if (nblocks > 1) {
+          GC_large_allocd_bytes -= nblocks * HBLKSIZE;
+        }
+        GC_freehblk(h);
+    }
   }
 #endif /* THREADS */
 
@@ -694,11 +703,9 @@ GC_API void GC_CALL GC_free(void * p)
 #   define REDIRECT_FREE_F REDIRECT_FREE
 # endif
 
-  void free(void * p)
+  void free(void * p GC_ATTR_UNUSED)
   {
-#   ifdef IGNORE_FREE
-#     UNUSED_ARG(p);
-#   else
+#   ifndef IGNORE_FREE
 #     if defined(GC_LINUX_THREADS) && !defined(USE_PROC_FOR_LIBRARIES)
         /* Don't bother with initialization checks.  If nothing         */
         /* has been initialized, the check fails, and that's safe,      */
@@ -706,13 +713,10 @@ GC_API void GC_CALL GC_free(void * p)
         ptr_t caller = (ptr_t)__builtin_return_address(0);
         /* This test does not need to ensure memory visibility, since   */
         /* the bounds will be set when/if we create another thread.     */
-        if (((word)caller >= (word)GC_libld_start
-             && (word)caller < (word)GC_libld_end)
-#           ifdef HAVE_LIBPTHREAD_SO
-              || ((word)caller >= (word)GC_libpthread_start
-                  && (word)caller < (word)GC_libpthread_end)
-#           endif
-           ) {
+        if (((word)caller >= (word)GC_libpthread_start
+             && (word)caller < (word)GC_libpthread_end)
+            || ((word)caller >= (word)GC_libld_start
+                && (word)caller < (word)GC_libld_end)) {
           GC_free(p);
           return;
         }

@@ -5,7 +5,7 @@
  * OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
  *
  * Permission is hereby granted to use or copy this program
- * for any purpose, provided the above notices are retained on all copies.
+ * for any purpose,  provided the above notices are retained on all copies.
  * Permission to modify the code and to distribute modified code is granted,
  * provided the above notices are retained, and a notice that the code was
  * modified is included with the above copyright notice.
@@ -22,7 +22,7 @@
 
 #ifdef GC_BUILTIN_ATOMIC
 
-# include "gc/gc.h" /* for GC_[signed_]word */
+# include "gc.h" /* for GC_word */
 
 # ifdef __cplusplus
     extern "C" {
@@ -35,17 +35,6 @@
 # else
 #   define AO_INLINE static __inline
 # endif
-
-# if !defined(THREAD_SANITIZER) && !defined(GC_PRIVATE_H)
-    /* Similar to that in gcconfig.h.   */
-#   if defined(__has_feature)
-#     if __has_feature(thread_sanitizer)
-#       define THREAD_SANITIZER
-#     endif
-#   elif defined(__SANITIZE_THREAD__)
-#     define THREAD_SANITIZER
-#   endif
-# endif /* !THREAD_SANITIZER && !GC_PRIVATE_H */
 
   typedef unsigned char AO_TS_t;
 # define AO_TS_CLEAR 0
@@ -61,27 +50,13 @@
 # define AO_HAVE_test_and_set_acquire
 
 # define AO_compiler_barrier() __atomic_signal_fence(__ATOMIC_SEQ_CST)
-
-# if defined(THREAD_SANITIZER) && !defined(AO_USE_ATOMIC_THREAD_FENCE)
-    /* Workaround a compiler warning (reported by gcc-11, at least)     */
-    /* that atomic_thread_fence is unsupported with thread sanitizer.   */
-    AO_INLINE void
-    AO_nop_full(void)
-    {
-      volatile AO_TS_t dummy = AO_TS_INITIALIZER;
-      (void)__atomic_test_and_set(&dummy, __ATOMIC_SEQ_CST);
-    }
-# else
-#   define AO_nop_full() __atomic_thread_fence(__ATOMIC_SEQ_CST)
-# endif
+# define AO_nop_full() __atomic_thread_fence(__ATOMIC_SEQ_CST)
 # define AO_HAVE_nop_full
 
 # define AO_fetch_and_add(p, v) __atomic_fetch_add(p, v, __ATOMIC_RELAXED)
 # define AO_HAVE_fetch_and_add
 # define AO_fetch_and_add1(p) AO_fetch_and_add(p, 1)
 # define AO_HAVE_fetch_and_add1
-# define AO_fetch_and_sub1(p) AO_fetch_and_add(p, (AO_t)(GC_signed_word)-1)
-# define AO_HAVE_fetch_and_sub1
 
 # define AO_or(p, v) (void)__atomic_or_fetch(p, v, __ATOMIC_RELAXED)
 # define AO_HAVE_or

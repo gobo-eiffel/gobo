@@ -5,14 +5,14 @@
  * OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
  *
  * Permission is hereby granted to use or copy this program
- * for any purpose, provided the above notices are retained on all copies.
+ * for any purpose,  provided the above notices are retained on all copies.
  * Permission to modify the code and to distribute modified code is granted,
  * provided the above notices are retained, and a notice that the code was
  * modified is included with the above copyright notice.
  */
 
 /*
- * This is a reimplementation of a subset of the pthread_get/setspecific
+ * This is a reimplementation of a subset of the pthread_getspecific/setspecific
  * interface. This appears to outperform the standard linuxthreads one
  * by a significant margin.
  * The major restriction is that each thread may only make a single
@@ -28,16 +28,12 @@
 #ifndef GC_SPECIFIC_H
 #define GC_SPECIFIC_H
 
-#if !defined(GC_THREAD_LOCAL_ALLOC_H)
-# error specific.h should be included from thread_local_alloc.h
-#endif
-
 #include <errno.h>
 
 EXTERN_C_BEGIN
 
 /* Called during key creation or setspecific.           */
-/* For the GC we already hold the allocator lock.       */
+/* For the GC we already hold lock.                     */
 /* Currently allocated objects leak on thread exit.     */
 /* That's hard to fix, but OK if we allocate garbage    */
 /* collected memory.                                    */
@@ -54,8 +50,8 @@ EXTERN_C_BEGIN
   /* Thread-local storage is not guaranteed to be scanned by GC.        */
   /* We hide values stored in "specific" entries for a test purpose.    */
   typedef GC_hidden_pointer ts_entry_value_t;
-# define TS_HIDE_VALUE(p) GC_HIDE_NZ_POINTER(p)
-# define TS_REVEAL_PTR(p) GC_REVEAL_NZ_POINTER(p)
+# define TS_HIDE_VALUE(p) GC_HIDE_POINTER(p)
+# define TS_REVEAL_PTR(p) GC_REVEAL_POINTER(p)
 #else
   typedef void * ts_entry_value_t;
 # define TS_HIDE_VALUE(p) (p)
@@ -117,10 +113,11 @@ GC_INNER void GC_remove_specific_after_fork(tsd * key, pthread_t t);
 GC_INNER void * GC_slow_getspecific(tsd * key, word qtid,
                                     tse * volatile * cache_entry);
 
+/* GC_INLINE is defined in gc_priv.h. */
 GC_INLINE void * GC_getspecific(tsd * key)
 {
     word qtid = quick_thread_id();
-    tse * volatile * entry_ptr = &(key -> cache[CACHE_HASH(qtid)]);
+    tse * volatile * entry_ptr = &key->cache[CACHE_HASH(qtid)];
     tse * entry = *entry_ptr;   /* Must be loaded only once.    */
 
     GC_ASSERT(qtid != INVALID_QTID);

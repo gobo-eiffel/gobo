@@ -5,7 +5,7 @@
  * OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
  *
  * Permission is hereby granted to use or copy this program
- * for any purpose, provided the above notices are retained on all copies.
+ * for any purpose,  provided the above notices are retained on all copies.
  * Permission to modify the code and to distribute modified code is granted,
  * provided the above notices are retained, and a notice that the code was
  * modified is included with the above copyright notice.
@@ -15,16 +15,18 @@
 /* This is the interface for thread-local allocation, whose     */
 /* implementation is mostly thread-library-independent.         */
 /* Here we describe only the interface that needs to be known   */
-/* and invoked from the thread support layer; the actual        */
+/* and invoked from the thread support layer;  the actual       */
 /* implementation also exports GC_malloc and friends, which     */
 /* are declared in gc.h.                                        */
 
 #ifndef GC_THREAD_LOCAL_ALLOC_H
 #define GC_THREAD_LOCAL_ALLOC_H
 
-#include "gc_priv.h"
+#include "private/gc_priv.h"
 
 #ifdef THREAD_LOCAL_ALLOC
+
+#include "gc_inline.h"
 
 #if defined(USE_HPUX_TLS)
 # error USE_HPUX_TLS macro was replaced by USE_COMPILER_TLS
@@ -37,7 +39,7 @@ EXTERN_C_BEGIN
 #if !defined(USE_PTHREAD_SPECIFIC) && !defined(USE_WIN32_SPECIFIC) \
     && !defined(USE_WIN32_COMPILER_TLS) && !defined(USE_COMPILER_TLS) \
     && !defined(USE_CUSTOM_SPECIFIC)
-# if defined(GC_WIN32_THREADS)
+# if defined(MSWIN32) || defined(MSWINCE) || defined(CYGWIN32)
 #   if defined(CYGWIN32) && GC_GNUC_PREREQ(4, 0)
 #     if defined(__clang__)
         /* As of Cygwin clang3.5.2, thread-local storage is unsupported.    */
@@ -50,34 +52,22 @@ EXTERN_C_BEGIN
 #   else
 #     define USE_WIN32_COMPILER_TLS
 #   endif /* !GNU */
-
-# elif defined(HOST_ANDROID)
-#   if defined(ARM32) && (GC_GNUC_PREREQ(4, 6) \
-                          || GC_CLANG_PREREQ_FULL(3, 8, 256229))
-#     define USE_COMPILER_TLS
-#   elif !defined(__clang__) && !defined(ARM32)
-      /* TODO: Support clang/arm64 */
-#     define USE_COMPILER_TLS
-#   else
-#     define USE_PTHREAD_SPECIFIC
-#   endif
-
-# elif defined(LINUX) && GC_GNUC_PREREQ(3, 3) /* && !HOST_ANDROID */
-#   if defined(ARM32) || defined(AVR32)
-      /* TODO: support Linux/arm */
-#     define USE_PTHREAD_SPECIFIC
-#   elif defined(AARCH64) && defined(__clang__) && !GC_CLANG_PREREQ(8, 0)
-      /* To avoid "R_AARCH64_ABS64 used with TLS symbol" linker warnings. */
-#     define USE_PTHREAD_SPECIFIC
-#   else
-#     define USE_COMPILER_TLS
-#   endif
-
-# elif (defined(FREEBSD) \
-        || (defined(NETBSD) && __NetBSD_Version__ >= 600000000 /* 6.0 */)) \
-       && (GC_GNUC_PREREQ(4, 4) || GC_CLANG_PREREQ(3, 9))
+# elif (defined(LINUX) && !defined(ARM32) && !defined(AVR32) \
+         && GC_GNUC_PREREQ(3, 3) \
+         && !(defined(__clang__) && (defined(HOST_ANDROID) \
+                        || (defined(AARCH64) && !GC_CLANG_PREREQ(8, 0))))) \
+       || ((defined(NETBSD) && __NetBSD_Version__ >= 600000000 /* 6.0 */ \
+                || defined(FREEBSD)) \
+            && (GC_GNUC_PREREQ(4, 4) || GC_CLANG_PREREQ(3, 9))) \
+       || (defined(HOST_ANDROID) && defined(ARM32) \
+            && (GC_GNUC_PREREQ(4, 6) || GC_CLANG_PREREQ_FULL(3, 8, 256229)))
 #   define USE_COMPILER_TLS
-
+# elif defined(GC_DGUX386_THREADS) || defined(GC_OSF1_THREADS) \
+       || defined(GC_AIX_THREADS) || defined(GC_DARWIN_THREADS) \
+       || defined(GC_FREEBSD_THREADS) || defined(GC_NETBSD_THREADS) \
+       || defined(GC_LINUX_THREADS) || defined(GC_HAIKU_THREADS) \
+       || defined(GC_RTEMS_PTHREADS)
+#   define USE_PTHREAD_SPECIFIC
 # elif defined(GC_HPUX_THREADS)
 #   ifdef __GNUC__
 #     define USE_PTHREAD_SPECIFIC
@@ -85,16 +75,10 @@ EXTERN_C_BEGIN
 #   else
 #     define USE_COMPILER_TLS
 #   endif
-
-# elif defined(GC_IRIX_THREADS) || defined(GC_OPENBSD_THREADS) \
-       || defined(GC_SOLARIS_THREADS) \
-       || defined(NN_PLATFORM_CTR) || defined(NN_BUILD_TARGET_PLATFORM_NX)
-#   define USE_CUSTOM_SPECIFIC  /* Use our own. */
-
 # else
-#   define USE_PTHREAD_SPECIFIC
+#    define USE_CUSTOM_SPECIFIC  /* Use our own. */
 # endif
-#endif /* !USE_x_SPECIFIC */
+#endif
 
 #ifndef THREAD_FREELISTS_KINDS
 # ifdef ENABLE_DISCLAIM
@@ -104,21 +88,15 @@ EXTERN_C_BEGIN
 # endif
 #endif /* !THREAD_FREELISTS_KINDS */
 
-/* The first GC_TINY_FREELISTS free lists correspond to the first   */
-/* GC_TINY_FREELISTS multiples of GC_GRANULE_BYTES, i.e. we keep    */
-/* separate free lists for each multiple of GC_GRANULE_BYTES up to  */
-/* (GC_TINY_FREELISTS-1) * GC_GRANULE_BYTES.  After that they may   */
-/* be spread out further.                                           */
-
 /* One of these should be declared as the tlfs field in the     */
 /* structure pointed to by a GC_thread.                         */
 typedef struct thread_local_freelists {
-  void * _freelists[THREAD_FREELISTS_KINDS][GC_TINY_FREELISTS];
+  void * _freelists[THREAD_FREELISTS_KINDS][TINY_FREELISTS];
 # define ptrfree_freelists _freelists[PTRFREE]
 # define normal_freelists _freelists[NORMAL]
         /* Note: Preserve *_freelists names for some clients.   */
 # ifdef GC_GCJ_SUPPORT
-    void * gcj_freelists[GC_TINY_FREELISTS];
+    void * gcj_freelists[TINY_FREELISTS];
 #   define ERROR_FL ((void *)GC_WORD_MAX)
         /* Value used for gcj_freelists[-1]; allocation is      */
         /* erroneous.                                           */
@@ -134,7 +112,7 @@ typedef struct thread_local_freelists {
   /* >= HBLKSIZE  => pointer to nonempty free list.             */
   /* > DIRECT_GRANULES, < HBLKSIZE ==> transition to            */
   /*    local alloc, equivalent to 0.                           */
-# define DIRECT_GRANULES (HBLKSIZE/GC_GRANULE_BYTES)
+# define DIRECT_GRANULES (HBLKSIZE/GRANULE_BYTES)
         /* Don't use local free lists for up to this much       */
         /* allocation.                                          */
 } *GC_tlfs;
@@ -143,7 +121,7 @@ typedef struct thread_local_freelists {
 # define GC_getspecific pthread_getspecific
 # define GC_setspecific pthread_setspecific
 # define GC_key_create pthread_key_create
-# define GC_remove_specific(key) (void)pthread_setspecific(key, NULL)
+# define GC_remove_specific(key) pthread_setspecific(key, NULL)
                         /* Explicitly delete the value to stop the TLS  */
                         /* destructor from being called repeatedly.     */
 # define GC_remove_specific_after_fork(key, t) (void)0
@@ -153,8 +131,7 @@ typedef struct thread_local_freelists {
 # define GC_getspecific(x) (x)
 # define GC_setspecific(key, v) ((key) = (v), 0)
 # define GC_key_create(key, d) 0
-# define GC_remove_specific(key) (void)GC_setspecific(key, NULL)
-                        /* Just to clear the pointer to tlfs. */
+# define GC_remove_specific(key)  /* No need for cleanup on exit. */
 # define GC_remove_specific_after_fork(key, t) (void)0
   typedef void * GC_key_t;
 #elif defined(USE_WIN32_SPECIFIC)
@@ -167,13 +144,13 @@ typedef struct thread_local_freelists {
 # endif
 # define GC_key_create(key, d) \
         ((d) != 0 || (*(key) = TlsAlloc()) == TLS_OUT_OF_INDEXES ? -1 : 0)
-# define GC_remove_specific(key) (void)GC_setspecific(key, NULL)
+# define GC_remove_specific(key)  /* No need for cleanup on exit. */
         /* Need TlsFree on process exit/detach?   */
 # define GC_remove_specific_after_fork(key, t) (void)0
   typedef DWORD GC_key_t;
 #elif defined(USE_CUSTOM_SPECIFIC)
   EXTERN_C_END
-# include "specific.h"
+# include "private/specific.h"
   EXTERN_C_BEGIN
 #else
 # error implement me
@@ -181,11 +158,11 @@ typedef struct thread_local_freelists {
 
 /* Each thread structure must be initialized.   */
 /* This call must be made from the new thread.  */
-/* Caller should hold the allocator lock.       */
+/* Caller holds allocation lock.                */
 GC_INNER void GC_init_thread_local(GC_tlfs p);
 
 /* Called when a thread is unregistered, or exits.      */
-/* Caller should hold the allocator lock.               */
+/* We hold the allocator lock.                          */
 GC_INNER void GC_destroy_thread_local(GC_tlfs p);
 
 /* The thread support layer must arrange to mark thread-local   */
