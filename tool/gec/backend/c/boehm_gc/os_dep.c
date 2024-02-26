@@ -929,14 +929,28 @@ GC_INNER void GC_setpagesize(void)
               (void)sigaction(SIGBUS, &act, &old_bus_act);
 #           endif
 #         endif /* !GC_IRIX_THREADS */
-#       elif defined(GC_WIN32_THREADS)
-          old_segv_hand = SetUnhandledExceptionFilter(h);
 #       else
-          old_segv_hand = signal(SIGSEGV, h);
-#         ifdef HAVE_SIGBUS
-            old_bus_hand = signal(SIGBUS, h);
+          /* Under Windows when compiling with zig/clang, 'signal'    */
+          /* indirectly calls 'RtlAllocateHeap' which uses mutual     */
+          /* exclusion when accessing the heap. If some other thread  */
+          /* was in the middle of calling 'RtlAllocateHeap' when it   */
+          /* was suspended (stop the world), this ends up in a        */
+          /* deadlock. Using 'SetUnhandledExceptionFilter' instead of */
+          /* 'signal' solves the deadlock issue, but this function is */
+          /* extremely slow when compiled with zig/clang. So do not   */
+          /* set fault handler in that case when threads have already */
+          /* been created. */
+#         if defined(GC_WIN32_THREADS) && defined(__clang__)
+            if (!GC_need_to_lock) {
 #         endif
-#       endif /* !USE_SEGV_SIGACT || GC_WIN32_THREADS */
+              old_segv_hand = signal(SIGSEGV, h);
+#             ifdef HAVE_SIGBUS
+                old_bus_hand = signal(SIGBUS, h);
+#             endif
+#         if defined(GC_WIN32_THREADS) && defined(__clang__)
+            }
+#         endif
+#       endif /* !USE_SEGV_SIGACT */
 #       if defined(CPPCHECK) && defined(ADDRESS_SANITIZER)
           GC_noop1((word)&__asan_default_options);
 #       endif
@@ -948,24 +962,11 @@ GC_INNER void GC_setpagesize(void)
     || (defined(WRAP_MARK_SOME) && defined(NO_SEH_AVAILABLE))
     GC_INNER JMP_BUF GC_jmp_buf;
 
-#   ifdef GC_WIN32_THREADS
-    STATIC LONG WINAPI GC_fault_handler(LPEXCEPTION_POINTERS exc)
-    {
-      switch (exc->ExceptionRecord->ExceptionCode) {
-        case STATUS_ACCESS_VIOLATION:
-        case EXCEPTION_DATATYPE_MISALIGNMENT:
-          LONGJMP(GC_jmp_buf, 1);
-          break;
-      }
-      return EXCEPTION_EXECUTE_HANDLER;
-    }
-#   else
     STATIC void GC_fault_handler(int sig)
     {
         UNUSED_ARG(sig);
         LONGJMP(GC_jmp_buf, 1);
     }
-#   endif /* GC_WIN32_THREADS */
 
     GC_INNER void GC_setup_temporary_fault_handler(void)
     {
@@ -982,12 +983,16 @@ GC_INNER void GC_setpagesize(void)
 #         ifdef USE_BUS_SIGACT
             (void)sigaction(SIGBUS, &old_bus_act, 0);
 #         endif
-#       elif defined(GC_WIN32_THREADS)
-          SetUnhandledExceptionFilter(old_segv_hand);
 #       else
-          (void)signal(SIGSEGV, old_segv_hand);
-#         ifdef HAVE_SIGBUS
-            (void)signal(SIGBUS, old_bus_hand);
+#         if defined(GC_WIN32_THREADS) && defined(__clang__)
+            if (!GC_need_to_lock) {
+#         endif
+              (void)signal(SIGSEGV, old_segv_hand);
+#             ifdef HAVE_SIGBUS
+                (void)signal(SIGBUS, old_bus_hand);
+#             endif
+#         if defined(GC_WIN32_THREADS) && defined(__clang__)
+            }
 #         endif
 #       endif
     }

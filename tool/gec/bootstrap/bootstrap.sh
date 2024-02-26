@@ -228,13 +228,13 @@ if [ "$EIF" = "ge" ]; then
 		echo "Compiling gec (bootstrap 1)..."
 	fi
 	$MV "$BIN_DIR/gec$EXE" "$BIN_DIR/gec1$EXE"
-	"$BIN_DIR/gec1$EXE" --finalize --no-benchmark $THREAD_OPTION "$GOBO/tool/gec/src/system.ecf"
+	"$BIN_DIR/gec1$EXE" --finalize $THREAD_OPTION "$GOBO/tool/gec/src/system.ecf"
 	$RM "$BIN_DIR/gec1$EXE"
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gec (bootstrap 2)..."
 	fi
 	$MV "$BIN_DIR/gec$EXE" "$BIN_DIR/gec1$EXE"
-	"$BIN_DIR/gec1$EXE" --finalize --no-benchmark $THREAD_OPTION "$GOBO/tool/gec/src/system.ecf"
+	"$BIN_DIR/gec1$EXE" --finalize $THREAD_OPTION "$GOBO/tool/gec/src/system.ecf"
 	$RM "$BIN_DIR/gec1$EXE"
 	$STRIP gec$EXE
 	$RM gec*.h

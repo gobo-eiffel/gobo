@@ -804,22 +804,6 @@ GC_API int GC_CALL GC_is_init_called(void)
 #endif
 
 #if defined(UNIX_LIKE) && !defined(NO_DEBUGGING)
-#   ifdef GC_WIN32_THREADS
-    STATIC LONG WINAPI GC_fault_handler(LPEXCEPTION_POINTERS exc)
-    {
-      DWORD exc_code = exc->ExceptionRecord->ExceptionCode;
-      switch (exc_code) {
-        case STATUS_ACCESS_VIOLATION:
-        case EXCEPTION_DATATYPE_MISALIGNMENT:
-          GC_err_printf("Caught signal %d: looping in handler\n", exc_code);
-          for (;;) {
-            /* empty */
-          }
-          break;
-      }
-      return EXCEPTION_EXECUTE_HANDLER;
-    }
-#   else
   static void looping_handler(int sig)
   {
     GC_err_printf("Caught signal %d: looping in handler\n", sig);
@@ -827,7 +811,6 @@ GC_API int GC_CALL GC_is_init_called(void)
        /* empty */
     }
   }
-  #   endif /* GC_WIN32_THREADS */
 
   static GC_bool installed_looping_handler = FALSE;
 
