@@ -8,7 +8,7 @@
  * OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
  *
  * Permission is hereby granted to use or copy this program
- * for any purpose,  provided the above notices are retained on all copies.
+ * for any purpose, provided the above notices are retained on all copies.
  * Permission to modify the code and to distribute modified code is granted,
  * provided the above notices are retained, and a notice that the code was
  * modified is included with the above copyright notice.
@@ -27,7 +27,7 @@
 
 #include "gc_priv.h"
 #ifdef KEEP_BACK_PTRS
-# include "gc_backptr.h"
+# include "gc/gc_backptr.h"
 #endif
 
 EXTERN_C_BEGIN
@@ -42,17 +42,16 @@ EXTERN_C_BEGIN
         /* Stored both one past the end of user object, and one before  */
         /* the end of the object as seen by the allocator.              */
 
-#if defined(KEEP_BACK_PTRS) || defined(PRINT_BLACK_LIST) \
-    || defined(MAKE_BACK_GRAPH)
+#if defined(KEEP_BACK_PTRS) || defined(PRINT_BLACK_LIST)
   /* Pointer "source"s that aren't real locations.      */
   /* Used in oh_back_ptr fields and as "source"         */
   /* argument to some marking functions.                */
-# define NOT_MARKED (ptr_t)0
 # define MARKED_FOR_FINALIZATION ((ptr_t)(word)2)
                 /* Object was marked because it is finalizable. */
 # define MARKED_FROM_REGISTER ((ptr_t)(word)4)
                 /* Object was marked from a register.  Hence the        */
                 /* source of the reference doesn't have an address.     */
+# define NOT_MARKED ((ptr_t)(word)8)
 #endif /* KEEP_BACK_PTRS || PRINT_BLACK_LIST */
 
 /* Object header */
@@ -70,14 +69,13 @@ typedef struct {
     /* both, but for now we keep them separate.  Both           */
     /* kinds of back pointers are hidden using the              */
     /* following macros.  In both cases, the plain version      */
-    /* is constrained to have an least significant bit of 1,    */
+    /* is constrained to have the least significant bit of 1,   */
     /* to allow it to be distinguished from a free list         */
-    /* link.  This means the plain version must have an         */
-    /* lsb of 0.                                                */
-    /* Note that blocks dropped by black-listing will           */
-    /* also have the lsb clear once debugging has               */
-    /* started.                                                 */
-    /* We're careful never to overwrite a value with lsb 0.     */
+    /* link.  This means the plain version must have the least  */
+    /* significant bit of zero.  Note that blocks dropped by    */
+    /* black-listing will also have the the least significant   */
+    /* bit clear once debugging has started; we are careful     */
+    /* never to overwrite such a value.                         */
 #   if ALIGNMENT == 1
       /* Fudge back pointer to be even. */
 #     define HIDE_BACK_PTR(p) GC_HIDE_POINTER(~(word)1 & (word)(p))
@@ -109,13 +107,13 @@ typedef struct {
 /* and to be a multiple of the word length.                             */
 
 #ifdef SHORT_DBG_HDRS
-# define DEBUG_BYTES (sizeof (oh))
+# define DEBUG_BYTES sizeof(oh)
 # define UNCOLLECTABLE_DEBUG_BYTES DEBUG_BYTES
 #else
   /* Add space for END_FLAG, but use any extra space that was already   */
   /* added to catch off-the-end pointers.                               */
   /* For uncollectible objects, the extra byte is not added.            */
-# define UNCOLLECTABLE_DEBUG_BYTES (sizeof (oh) + sizeof (word))
+# define UNCOLLECTABLE_DEBUG_BYTES (sizeof(oh) + sizeof(word))
 # define DEBUG_BYTES (UNCOLLECTABLE_DEBUG_BYTES - EXTRA_BYTES)
 #endif
 
@@ -123,18 +121,13 @@ typedef struct {
 #define SIMPLE_ROUNDED_UP_WORDS(n) BYTES_TO_WORDS((n) + WORDS_TO_BYTES(1) - 1)
 
 /* ADD_CALL_CHAIN stores a (partial) call chain into an object  */
-/* header; it should be called with the allocation lock held.   */
+/* header; it should be called with the allocator lock held.    */
 /* PRINT_CALL_CHAIN prints the call chain stored in an object   */
-/* to stderr.  It requires that we do not hold the lock.        */
+/* to stderr.  It requires we do not hold the allocator lock.   */
 #if defined(SAVE_CALL_CHAIN)
-  struct callinfo;
-  GC_INNER void GC_save_callers(struct callinfo info[NFRAMES]);
-  GC_INNER void GC_print_callers(struct callinfo info[NFRAMES]);
 # define ADD_CALL_CHAIN(base, ra) GC_save_callers(((oh *)(base)) -> oh_ci)
 # define PRINT_CALL_CHAIN(base) GC_print_callers(((oh *)(base)) -> oh_ci)
 #elif defined(GC_ADD_CALLER)
-  struct callinfo;
-  GC_INNER void GC_print_callers(struct callinfo info[NFRAMES]);
 # define ADD_CALL_CHAIN(base, ra) ((oh *)(base)) -> oh_ci[0].ci_pc = (ra)
 # define PRINT_CALL_CHAIN(base) GC_print_callers(((oh *)(base)) -> oh_ci)
 #else

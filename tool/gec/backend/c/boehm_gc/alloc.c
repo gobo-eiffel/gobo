@@ -1,15 +1,15 @@
 /*
- * Copyright 1988, 1989 Hans-J. Boehm, Alan J. Demers
+ * Copyright (c) 1988-1989 Hans-J. Boehm, Alan J. Demers
  * Copyright (c) 1991-1996 by Xerox Corporation.  All rights reserved.
- * Copyright (c) 1998 by Silicon Graphics.  All rights reserved.
- * Copyright (c) 1999-2004 Hewlett-Packard Development Company, L.P.
- * Copyright (c) 2008-2021 Ivan Maidanski
+ * Copyright (c) 1996-1999 by Silicon Graphics.  All rights reserved.
+ * Copyright (c) 1999-2011 Hewlett-Packard Development Company, L.P.
+ * Copyright (c) 2008-2022 Ivan Maidanski
  *
  * THIS MATERIAL IS PROVIDED AS IS, WITH ABSOLUTELY NO WARRANTY EXPRESSED
  * OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
  *
  * Permission is hereby granted to use or copy this program
- * for any purpose,  provided the above notices are retained on all copies.
+ * for any purpose, provided the above notices are retained on all copies.
  * Permission to modify the code and to distribute modified code is granted,
  * provided the above notices are retained, and a notice that the code was
  * modified is included with the above copyright notice.
@@ -18,20 +18,11 @@
 
 #include "private/gc_priv.h"
 
-#include <stdio.h>
-#if !defined(MACOS) && !defined(MSWINCE)
-# include <signal.h>
-# if !defined(GC_NO_TYPES) && !defined(SN_TARGET_PSP2) \
-     && !defined(__CC_ARM)
-#   include <sys/types.h>
-# endif
-#endif
-
 /*
  * Separate free lists are maintained for different sized objects
  * up to MAXOBJBYTES.
- * The call GC_allocobj(i,k) ensures that the freelist for
- * kind k objects of size i points to a non-empty
+ * The call GC_allocobj(lg, k) ensures that the freelist for
+ * kind k objects of size lg granules to a non-empty
  * free list. It returns a pointer to the first entry on the free list.
  * In a single-threaded world, GC_allocobj may be called to allocate
  * an object of small size lb (and NORMAL kind) as follows
@@ -41,7 +32,7 @@
  *   lg = GC_size_map[lb];
  *   op = GC_objfreelist[lg];
  *   if (NULL == op) {
- *     op = GC_generic_malloc_inner(lb, NORMAL);
+ *     op = GC_generic_malloc_inner(lb, NORMAL, 0);
  *   } else {
  *     GC_objfreelist[lg] = obj_link(op);
  *     GC_bytes_allocd += GRANULES_TO_BYTES((word)lg);
@@ -70,7 +61,9 @@ word GC_gc_no = 0;
 
 #ifndef NO_CLOCK
   static unsigned long full_gc_total_time = 0; /* in ms, may wrap */
-  static unsigned full_gc_total_ns_frac = 0; /* fraction of 1 ms */
+  static unsigned long stopped_mark_total_time = 0;
+  static unsigned32 full_gc_total_ns_frac = 0; /* fraction of 1 ms */
+  static unsigned32 stopped_mark_total_ns_frac = 0;
   static GC_bool measure_performance = FALSE;
                 /* Do performance measurements if set to true (e.g.,    */
                 /* accumulation of the total time of full collections). */
@@ -83,6 +76,11 @@ word GC_gc_no = 0;
   GC_API unsigned long GC_CALL GC_get_full_gc_total_time(void)
   {
     return full_gc_total_time;
+  }
+
+  GC_API unsigned long GC_CALL GC_get_stopped_mark_total_time(void)
+  {
+    return stopped_mark_total_time;
   }
 #endif /* !NO_CLOCK */
 
@@ -119,8 +117,6 @@ STATIC GC_bool GC_disable_automatic_collection = FALSE;
 
 GC_API void GC_CALL GC_set_disable_automatic_collection(int value)
 {
-  DCL_LOCK_STATE;
-
   LOCK();
   GC_disable_automatic_collection = (GC_bool)value;
   UNLOCK();
@@ -129,44 +125,31 @@ GC_API void GC_CALL GC_set_disable_automatic_collection(int value)
 GC_API int GC_CALL GC_get_disable_automatic_collection(void)
 {
   int value;
-  DCL_LOCK_STATE;
 
-  LOCK();
+  READER_LOCK();
   value = (int)GC_disable_automatic_collection;
-  UNLOCK();
+  READER_UNLOCK();
   return value;
 }
 
 STATIC word GC_used_heap_size_after_full = 0;
 
-/* GC_copyright symbol is externally visible. */
-EXTERN_C_BEGIN
-extern const char * const GC_copyright[];
-EXTERN_C_END
-const char * const GC_copyright[] =
-{"Copyright 1988, 1989 Hans-J. Boehm and Alan J. Demers ",
-"Copyright (c) 1991-1995 by Xerox Corporation.  All rights reserved. ",
-"Copyright (c) 1996-1998 by Silicon Graphics.  All rights reserved. ",
-"Copyright (c) 1999-2009 by Hewlett-Packard Company.  All rights reserved. ",
-"Copyright (c) 2008-2021 Ivan Maidanski ",
-"THIS MATERIAL IS PROVIDED AS IS, WITH ABSOLUTELY NO WARRANTY",
-" EXPRESSED OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.",
-"See source code for details." };
-
 /* Version macros are now defined in gc_version.h, which is included by */
 /* gc.h, which is included by gc_priv.h.                                */
 #ifndef GC_NO_VERSION_VAR
   EXTERN_C_BEGIN
-  extern const unsigned GC_version;
+  extern const GC_VERSION_VAL_T GC_version;
   EXTERN_C_END
-  const unsigned GC_version = ((GC_VERSION_MAJOR << 16) |
-                        (GC_VERSION_MINOR << 8) | GC_VERSION_MICRO);
+
+  const GC_VERSION_VAL_T GC_version =
+                ((GC_VERSION_VAL_T)GC_VERSION_MAJOR << 16)
+                | (GC_VERSION_MINOR << 8) | GC_VERSION_MICRO;
 #endif
 
-GC_API unsigned GC_CALL GC_get_version(void)
+GC_API GC_VERSION_VAL_T GC_CALL GC_get_version(void)
 {
-  return (GC_VERSION_MAJOR << 16) | (GC_VERSION_MINOR << 8) |
-          GC_VERSION_MICRO;
+  return ((GC_VERSION_VAL_T)GC_VERSION_MAJOR << 16)
+         | (GC_VERSION_MINOR << 8) | GC_VERSION_MICRO;
 }
 
 /* some more variables */
@@ -185,7 +168,7 @@ GC_API unsigned GC_CALL GC_get_version(void)
 
 GC_INNER int GC_CALLBACK GC_never_stop_func(void)
 {
-  return(0);
+  return FALSE;
 }
 
 #if defined(GC_TIME_LIMIT) && !defined(CPPCHECK)
@@ -197,7 +180,7 @@ GC_INNER int GC_CALLBACK GC_never_stop_func(void)
                         /* The parallel marker cannot be interrupted for */
                         /* now, so the time limit is absent by default.  */
 #else
-  unsigned long GC_time_limit = 50;
+  unsigned long GC_time_limit = 15;
 #endif
 
 #ifndef NO_CLOCK
@@ -235,11 +218,10 @@ STATIC int GC_n_attempts = 0;   /* Number of attempts at finishing      */
                                 /* collection within GC_time_limit.     */
 
 STATIC GC_stop_func GC_default_stop_func = GC_never_stop_func;
-                                /* accessed holding the lock.           */
+                                /* Accessed holding the allocator lock. */
 
 GC_API void GC_CALL GC_set_stop_func(GC_stop_func stop_func)
 {
-  DCL_LOCK_STATE;
   GC_ASSERT(NONNULL_ARG_NOT_NULL(stop_func));
   LOCK();
   GC_default_stop_func = stop_func;
@@ -249,28 +231,31 @@ GC_API void GC_CALL GC_set_stop_func(GC_stop_func stop_func)
 GC_API GC_stop_func GC_CALL GC_get_stop_func(void)
 {
   GC_stop_func stop_func;
-  DCL_LOCK_STATE;
-  LOCK();
+
+  READER_LOCK();
   stop_func = GC_default_stop_func;
-  UNLOCK();
+  READER_UNLOCK();
   return stop_func;
 }
 
 #if defined(GC_DISABLE_INCREMENTAL) || defined(NO_CLOCK)
 # define GC_timeout_stop_func GC_default_stop_func
 #else
-  STATIC int GC_CALLBACK GC_timeout_stop_func (void)
+  STATIC int GC_CALLBACK GC_timeout_stop_func(void)
   {
     CLOCK_TYPE current_time;
     static unsigned count = 0;
     unsigned long time_diff, nsec_diff;
 
-    if ((*GC_default_stop_func)())
-      return(1);
+    GC_ASSERT(I_HOLD_LOCK());
+    if (GC_default_stop_func())
+      return TRUE;
 
-    if ((count++ & 3) != 0) return(0);
+    if (GC_time_limit == GC_TIME_UNLIMITED || (count++ & 3) != 0)
+      return FALSE;
+
     GET_TIME(current_time);
-    time_diff = MS_TIME_DIFF(current_time,GC_start_time);
+    time_diff = MS_TIME_DIFF(current_time, GC_start_time);
     nsec_diff = NS_FRAC_TIME_DIFF(current_time, GC_start_time);
 #   if defined(CPPCHECK)
       GC_noop1((word)&nsec_diff);
@@ -280,9 +265,10 @@ GC_API GC_stop_func GC_CALL GC_get_stop_func(void)
       GC_COND_LOG_PRINTF("Abandoning stopped marking after %lu ms %lu ns"
                          " (attempt %d)\n",
                          time_diff, nsec_diff, GC_n_attempts);
-      return 1;
+      return TRUE;
     }
-    return(0);
+
+    return FALSE;
   }
 #endif /* !GC_DISABLE_INCREMENTAL */
 
@@ -316,6 +302,7 @@ static word min_bytes_allocd(void)
     word scan_size;             /* Estimate of memory to be scanned     */
                                 /* during normal GC.                    */
 
+    GC_ASSERT(I_HOLD_LOCK());
 #   ifdef THREADS
       if (GC_need_to_lock) {
         /* We are multi-threaded... */
@@ -331,9 +318,9 @@ static word min_bytes_allocd(void)
 #     ifdef STACK_NOT_SCANNED
         stack_size = 0;
 #     elif defined(STACK_GROWS_UP)
-        stack_size = GC_approx_sp() - GC_stackbottom;
+        stack_size = (word)(GC_approx_sp() - GC_stackbottom);
 #     else
-        stack_size = GC_stackbottom - GC_approx_sp();
+        stack_size = (word)(GC_stackbottom - GC_approx_sp());
 #     endif
     }
 
@@ -353,7 +340,7 @@ STATIC word GC_non_gc_bytes_at_gc = 0;
                 /* at last collection.                                  */
 
 /* Return the number of bytes allocated, adjusted for explicit storage  */
-/* management, etc..  This number is used in deciding when to trigger   */
+/* management, etc.  This number is used in deciding when to trigger    */
 /* collections.                                                         */
 STATIC word GC_adj_bytes_allocd(void)
 {
@@ -371,10 +358,10 @@ STATIC word GC_adj_bytes_allocd(void)
              + (signed_word)GC_finalizer_bytes_freed
              - expl_managed;
     if (result > (signed_word)GC_bytes_allocd) {
-        result = GC_bytes_allocd;
+        result = (signed_word)GC_bytes_allocd;
         /* probably client bug or unfortunate scheduling */
     }
-    result += GC_bytes_finalized;
+    result += (signed_word)GC_bytes_finalized;
         /* We count objects enqueued for finalization as though they    */
         /* had been reallocated this round. Finalization is user        */
         /* visible progress.  And if we don't count this, we have       */
@@ -384,10 +371,9 @@ STATIC word GC_adj_bytes_allocd(void)
         /* to collect too infrequently, since that would inhibit        */
         /* coalescing of free storage blocks.                           */
         /* This also makes us partially robust against client bugs.     */
-        return(GC_bytes_allocd >> 3);
-    } else {
-        return(result);
+        result = (signed_word)(GC_bytes_allocd >> 3);
     }
+    return (word)result;
 }
 
 
@@ -402,25 +388,21 @@ STATIC void GC_clear_a_few_frames(void)
 #     define CLEAR_NWORDS 64
 #   endif
     volatile word frames[CLEAR_NWORDS];
-    BZERO((word *)frames, CLEAR_NWORDS * sizeof(word));
+    BZERO((/* no volatile */ word *)((word)frames),
+          CLEAR_NWORDS * sizeof(word));
 }
-
-/* Heap size at which we need a collection to avoid expanding past      */
-/* limits used by blacklisting.                                         */
-STATIC word GC_collect_at_heapsize = GC_WORD_MAX;
 
 GC_API void GC_CALL GC_start_incremental_collection(void)
 {
 # ifndef GC_DISABLE_INCREMENTAL
-    DCL_LOCK_STATE;
-
-    if (!GC_incremental) return;
     LOCK();
-    GC_should_start_incremental_collection = TRUE;
-    if (!GC_dont_gc) {
-      ENTER_GC();
-      GC_collect_a_little_inner(1);
-      EXIT_GC();
+    if (GC_incremental) {
+      GC_should_start_incremental_collection = TRUE;
+      if (!GC_dont_gc) {
+        ENTER_GC();
+        GC_collect_a_little_inner(1);
+        EXIT_GC();
+      }
     }
     UNLOCK();
 # endif
@@ -445,18 +427,19 @@ GC_INNER GC_bool GC_should_collect(void)
 # endif
     if (GC_disable_automatic_collection) return FALSE;
 
-    return(GC_adj_bytes_allocd() >= last_min_bytes_allocd
-           || GC_heapsize >= GC_collect_at_heapsize);
+    if (GC_last_heap_growth_gc_no == GC_gc_no)
+      return TRUE; /* avoid expanding past limits used by blacklisting  */
+
+    return GC_adj_bytes_allocd() >= last_min_bytes_allocd;
 }
 
 /* STATIC */ GC_start_callback_proc GC_start_call_back = 0;
                         /* Called at start of full collections.         */
-                        /* Not called if 0.  Called with the allocation */
+                        /* Not called if 0.  Called with the allocator  */
                         /* lock held.  Not used by GC itself.           */
 
 GC_API void GC_CALL GC_set_start_callback(GC_start_callback_proc fn)
 {
-    DCL_LOCK_STATE;
     LOCK();
     GC_start_call_back = fn;
     UNLOCK();
@@ -465,10 +448,10 @@ GC_API void GC_CALL GC_set_start_callback(GC_start_callback_proc fn)
 GC_API GC_start_callback_proc GC_CALL GC_get_start_callback(void)
 {
     GC_start_callback_proc fn;
-    DCL_LOCK_STATE;
-    LOCK();
+
+    READER_LOCK();
     fn = GC_start_call_back;
-    UNLOCK();
+    READER_UNLOCK();
     return fn;
 }
 
@@ -484,63 +467,54 @@ STATIC GC_bool GC_is_full_gc = FALSE;
 STATIC GC_bool GC_stopped_mark(GC_stop_func stop_func);
 STATIC void GC_finish_collection(void);
 
-/*
- * Initiate a garbage collection if appropriate.
- * Choose judiciously
- * between partial, full, and stop-world collections.
- */
+/* Initiate a garbage collection if appropriate.  Choose judiciously    */
+/* between partial, full, and stop-world collections.                   */
 STATIC void GC_maybe_gc(void)
 {
-    GC_ASSERT(I_HOLD_LOCK());
-    ASSERT_CANCEL_DISABLED();
-    if (GC_should_collect()) {
-        static int n_partial_gcs = 0;
+  static int n_partial_gcs = 0;
 
-        if (!GC_incremental) {
-            /* TODO: If possible, GC_default_stop_func should be used here */
-            GC_try_to_collect_inner(GC_never_stop_func);
-            n_partial_gcs = 0;
-            return;
-        } else {
-#         ifdef PARALLEL_MARK
-            if (GC_parallel)
-              GC_wait_for_reclaim();
-#         endif
-          if (GC_need_full_gc || n_partial_gcs >= GC_full_freq) {
-            GC_COND_LOG_PRINTF(
+  GC_ASSERT(I_HOLD_LOCK());
+  ASSERT_CANCEL_DISABLED();
+  if (!GC_should_collect()) return;
+
+  if (!GC_incremental) {
+    GC_gcollect_inner();
+    return;
+  }
+
+  GC_ASSERT(!GC_collection_in_progress());
+# ifdef PARALLEL_MARK
+    if (GC_parallel)
+      GC_wait_for_reclaim();
+# endif
+  if (GC_need_full_gc || n_partial_gcs >= GC_full_freq) {
+    GC_COND_LOG_PRINTF(
                 "***>Full mark for collection #%lu after %lu allocd bytes\n",
                 (unsigned long)GC_gc_no + 1, (unsigned long)GC_bytes_allocd);
-            GC_promote_black_lists();
-            (void)GC_reclaim_all((GC_stop_func)0, TRUE);
-            GC_notify_full_gc();
-            GC_clear_marks();
-            n_partial_gcs = 0;
-            GC_is_full_gc = TRUE;
-          } else {
-            n_partial_gcs++;
-          }
-        }
-        /* We try to mark with the world stopped.       */
-        /* If we run out of time, this turns into       */
-        /* incremental marking.                         */
-#       ifndef NO_CLOCK
-          if (GC_time_limit != GC_TIME_UNLIMITED) { GET_TIME(GC_start_time); }
-#       endif
-        /* TODO: If possible, GC_default_stop_func should be    */
-        /* used instead of GC_never_stop_func here.             */
-        if (GC_stopped_mark(GC_time_limit == GC_TIME_UNLIMITED?
-                            GC_never_stop_func : GC_timeout_stop_func)) {
-#           ifdef SAVE_CALL_CHAIN
-                GC_save_callers(GC_last_stack);
-#           endif
-            GC_finish_collection();
-        } else {
-            if (!GC_is_full_gc) {
-                /* Count this as the first attempt */
-                GC_n_attempts++;
-            }
-        }
-    }
+    GC_promote_black_lists();
+    (void)GC_reclaim_all((GC_stop_func)0, TRUE);
+    GC_notify_full_gc();
+    GC_clear_marks();
+    n_partial_gcs = 0;
+    GC_is_full_gc = TRUE;
+  } else {
+    n_partial_gcs++;
+  }
+
+  /* Try to mark with the world stopped.  If we run out of      */
+  /* time, this turns into an incremental marking.              */
+# ifndef NO_CLOCK
+    if (GC_time_limit != GC_TIME_UNLIMITED) GET_TIME(GC_start_time);
+# endif
+  if (GC_stopped_mark(GC_timeout_stop_func)) {
+#   ifdef SAVE_CALL_CHAIN
+      GC_save_callers(GC_last_stack);
+#   endif
+    GC_finish_collection();
+  } else if (!GC_is_full_gc) {
+    /* Count this as the first attempt. */
+    GC_n_attempts++;
+  }
 }
 
 STATIC GC_on_collection_event_proc GC_on_collection_event = 0;
@@ -548,7 +522,6 @@ STATIC GC_on_collection_event_proc GC_on_collection_event = 0;
 GC_API void GC_CALL GC_set_on_collection_event(GC_on_collection_event_proc fn)
 {
     /* fn may be 0 (means no event notifier). */
-    DCL_LOCK_STATE;
     LOCK();
     GC_on_collection_event = fn;
     UNLOCK();
@@ -557,10 +530,10 @@ GC_API void GC_CALL GC_set_on_collection_event(GC_on_collection_event_proc fn)
 GC_API GC_on_collection_event_proc GC_CALL GC_get_on_collection_event(void)
 {
     GC_on_collection_event_proc fn;
-    DCL_LOCK_STATE;
-    LOCK();
+
+    READER_LOCK();
     fn = GC_on_collection_event;
-    UNLOCK();
+    READER_UNLOCK();
     return fn;
 }
 
@@ -576,6 +549,7 @@ GC_INNER GC_bool GC_try_to_collect_inner(GC_stop_func stop_func)
 
     ASSERT_CANCEL_DISABLED();
     GC_ASSERT(I_HOLD_LOCK());
+    GC_ASSERT(GC_is_initialized);
     if (GC_dont_gc || (*stop_func)()) return FALSE;
     if (GC_on_collection_event)
       GC_on_collection_event(GC_EVENT_START);
@@ -583,15 +557,15 @@ GC_INNER GC_bool GC_try_to_collect_inner(GC_stop_func stop_func)
       GC_COND_LOG_PRINTF(
             "GC_try_to_collect_inner: finishing collection in progress\n");
       /* Just finish collection already in progress.    */
-        while(GC_collection_in_progress()) {
+        do {
             if ((*stop_func)()) {
               /* TODO: Notify GC_EVENT_ABANDON */
-              return(FALSE);
+              return FALSE;
             }
             ENTER_GC();
             GC_collect_a_little_inner(1);
             EXIT_GC();
-        }
+        } while (GC_collection_in_progress());
     }
     GC_notify_full_gc();
 #   ifndef NO_CLOCK
@@ -617,7 +591,7 @@ GC_INNER GC_bool GC_try_to_collect_inner(GC_stop_func stop_func)
             && !GC_reclaim_all(stop_func, FALSE)) {
             /* Aborted.  So far everything is still consistent. */
             /* TODO: Notify GC_EVENT_ABANDON */
-            return(FALSE);
+            return FALSE;
         }
     GC_invalidate_mark_state();  /* Flush mark stack.   */
     GC_clear_marks();
@@ -635,7 +609,7 @@ GC_INNER GC_bool GC_try_to_collect_inner(GC_stop_func stop_func)
       } /* else we claim the world is already still consistent.  We'll  */
         /* finish incrementally.                                        */
       /* TODO: Notify GC_EVENT_ABANDON */
-      return(FALSE);
+      return FALSE;
     }
     GC_finish_collection();
 #   ifndef NO_CLOCK
@@ -648,10 +622,10 @@ GC_INNER GC_bool GC_try_to_collect_inner(GC_stop_func stop_func)
         ns_frac_diff = NS_FRAC_TIME_DIFF(current_time, start_time);
         if (measure_performance) {
           full_gc_total_time += time_diff; /* may wrap */
-          full_gc_total_ns_frac += (unsigned)ns_frac_diff;
-          if (full_gc_total_ns_frac >= 1000000U) {
+          full_gc_total_ns_frac += (unsigned32)ns_frac_diff;
+          if (full_gc_total_ns_frac >= (unsigned32)1000000UL) {
             /* Overflow of the nanoseconds part. */
-            full_gc_total_ns_frac -= 1000000U;
+            full_gc_total_ns_frac -= (unsigned32)1000000UL;
             full_gc_total_time++;
           }
         }
@@ -662,7 +636,7 @@ GC_INNER GC_bool GC_try_to_collect_inner(GC_stop_func stop_func)
 #   endif
     if (GC_on_collection_event)
       GC_on_collection_event(GC_EVENT_END);
-    return(TRUE);
+    return TRUE;
 }
 
 /* The number of extra calls to GC_mark_some that we have made. */
@@ -693,7 +667,7 @@ GC_API int GC_CALL GC_get_rate(void)
 
 /* The default maximum number of prior attempts at world stop marking.  */
 #ifndef MAX_PRIOR_ATTEMPTS
-# define MAX_PRIOR_ATTEMPTS 1
+# define MAX_PRIOR_ATTEMPTS 3
 #endif
 
 /* The maximum number of prior attempts at world stop marking.          */
@@ -717,6 +691,7 @@ GC_INNER void GC_collect_a_little_inner(int n)
     IF_CANCEL(int cancel_state;)
 
     GC_ASSERT(I_HOLD_LOCK());
+    GC_ASSERT(GC_is_initialized);
     DISABLE_CANCEL(cancel_state);
     if (GC_incremental && GC_collection_in_progress()) {
         int i;
@@ -735,7 +710,8 @@ GC_INNER void GC_collect_a_little_inner(int n)
 #       endif
 
         if (i < max_deficit && !GC_dont_gc) {
-            /* Need to finish a collection.     */
+            GC_ASSERT(!GC_collection_in_progress());
+            /* Need to follow up with a full collection.        */
 #           ifdef SAVE_CALL_CHAIN
                 GC_save_callers(GC_last_stack);
 #           endif
@@ -743,21 +719,16 @@ GC_INNER void GC_collect_a_little_inner(int n)
                 if (GC_parallel)
                     GC_wait_for_reclaim();
 #           endif
-            if (GC_n_attempts < max_prior_attempts
-                && GC_time_limit != GC_TIME_UNLIMITED) {
-#               ifndef NO_CLOCK
+#           ifndef NO_CLOCK
+                if (GC_time_limit != GC_TIME_UNLIMITED
+                        && GC_n_attempts < max_prior_attempts)
                     GET_TIME(GC_start_time);
-#               endif
-                if (GC_stopped_mark(GC_timeout_stop_func)) {
-                    GC_finish_collection();
-                } else {
-                    GC_n_attempts++;
-                }
-            } else {
-                /* TODO: If possible, GC_default_stop_func should be    */
-                /* used here.                                           */
-                (void)GC_stopped_mark(GC_never_stop_func);
+#           endif
+            if (GC_stopped_mark(GC_n_attempts < max_prior_attempts ?
+                                GC_timeout_stop_func : GC_never_stop_func)) {
                 GC_finish_collection();
+            } else {
+                GC_n_attempts++;
             }
         }
         if (GC_deficit > 0) {
@@ -777,19 +748,46 @@ GC_INNER void (*GC_print_all_smashed)(void) = 0;
 GC_API int GC_CALL GC_collect_a_little(void)
 {
     int result;
-    DCL_LOCK_STATE;
 
+    if (!EXPECT(GC_is_initialized, TRUE)) GC_init();
     LOCK();
-    if (!GC_dont_gc) {
-      ENTER_GC();
-      GC_collect_a_little_inner(1);
-      EXIT_GC();
-    }
+    ENTER_GC();
+    /* Note: if the collection is in progress, this may do marking (not */
+    /* stopping the world) even in case of disabled GC.                 */
+    GC_collect_a_little_inner(1);
+    EXIT_GC();
     result = (int)GC_collection_in_progress();
     UNLOCK();
     if (!result && GC_debugging_started) GC_print_all_smashed();
-    return(result);
+    return result;
 }
+
+#ifdef THREADS
+  GC_API void GC_CALL GC_stop_world_external(void)
+  {
+    GC_ASSERT(GC_is_initialized);
+    LOCK();
+#   ifdef THREAD_LOCAL_ALLOC
+      GC_ASSERT(!GC_world_stopped);
+#   endif
+    STOP_WORLD();
+#   ifdef THREAD_LOCAL_ALLOC
+      GC_world_stopped = TRUE;
+#   endif
+  }
+
+  GC_API void GC_CALL GC_start_world_external(void)
+  {
+#   ifdef THREAD_LOCAL_ALLOC
+      GC_ASSERT(GC_world_stopped);
+      GC_world_stopped = FALSE;
+#   else
+      GC_ASSERT(GC_is_initialized);
+#   endif
+    START_WORLD();
+    UNLOCK();
+  }
+#endif /* THREADS */
 
 #ifndef NO_CLOCK
   /* Variables for world-stop average delay time statistic computation. */
@@ -806,6 +804,11 @@ GC_API int GC_CALL GC_collect_a_little(void)
 #endif /* !NO_CLOCK */
 
 #ifdef USE_MUNMAP
+# ifndef MUNMAP_THRESHOLD
+#   define MUNMAP_THRESHOLD 7
+# endif
+  GC_INNER unsigned GC_unmap_threshold = MUNMAP_THRESHOLD;
+
 # define IF_USE_MUNMAP(x) x
 # define COMMA_IF_USE_MUNMAP(x) /* comma */, x
 #else
@@ -813,19 +816,20 @@ GC_API int GC_CALL GC_collect_a_little(void)
 # define COMMA_IF_USE_MUNMAP(x) /* empty */
 #endif
 
-/*
- * We stop the world and mark from all roots.
- * If stop_func() ever returns TRUE, we may fail and return FALSE.
- * Increment GC_gc_no if we succeed.
- */
+/* We stop the world and mark from all roots.  If stop_func() ever      */
+/* returns TRUE, we may fail and return FALSE.  Increment GC_gc_no if   */
+/* we succeed.                                                          */
 STATIC GC_bool GC_stopped_mark(GC_stop_func stop_func)
 {
-    int i;
+    int abandoned_at;
+    ptr_t cold_gc_frame = GC_approx_sp();
 #   ifndef NO_CLOCK
       CLOCK_TYPE start_time = CLOCK_TYPE_INITIALIZER;
+      GC_bool start_time_valid = FALSE;
 #   endif
 
     GC_ASSERT(I_HOLD_LOCK());
+    GC_ASSERT(GC_is_initialized);
 #   if !defined(REDIRECT_MALLOC) && defined(USE_WINALLOC)
         GC_add_current_malloc_heap();
 #   endif
@@ -833,13 +837,19 @@ STATIC GC_bool GC_stopped_mark(GC_stop_func stop_func)
         GC_cond_register_dynamic_libraries();
 #   endif
 
-#   ifndef NO_CLOCK
-      if (GC_PRINT_STATS_FLAG)
-        GET_TIME(start_time);
-#   endif
-
 #   if !defined(GC_NO_FINALIZATION) && !defined(GC_TOGGLE_REFS_NOT_NEEDED)
       GC_process_togglerefs();
+#   endif
+
+        /* Output blank line for convenience here.      */
+    GC_COND_LOG_PRINTF(
+              "\n--> Marking for collection #%lu after %lu allocated bytes\n",
+              (unsigned long)GC_gc_no + 1, (unsigned long)GC_bytes_allocd);
+#   ifndef NO_CLOCK
+      if (GC_PRINT_STATS_FLAG || measure_performance) {
+        GET_TIME(start_time);
+        start_time_valid = TRUE;
+      }
 #   endif
 #   ifdef THREADS
       if (GC_on_collection_event)
@@ -850,25 +860,21 @@ STATIC GC_bool GC_stopped_mark(GC_stop_func stop_func)
       if (GC_on_collection_event)
         GC_on_collection_event(GC_EVENT_POST_STOP_WORLD);
 #   endif
-
 #   ifdef THREAD_LOCAL_ALLOC
       GC_world_stopped = TRUE;
 #   endif
-        /* Output blank line for convenience here */
-    GC_COND_LOG_PRINTF(
-              "\n--> Marking for collection #%lu after %lu allocated bytes\n",
-              (unsigned long)GC_gc_no + 1, (unsigned long) GC_bytes_allocd);
+
 #   ifdef MAKE_BACK_GRAPH
       if (GC_print_back_height) {
         GC_build_back_graph();
       }
 #   endif
 
-    /* Mark from all roots.  */
+    /* Notify about marking from all roots.     */
         if (GC_on_collection_event)
           GC_on_collection_event(GC_EVENT_MARK_START);
 
-        /* Minimize junk left in my registers and on the stack */
+    /* Minimize junk left in my registers and on the stack.     */
             GC_clear_a_few_frames();
             GC_noop6(0,0,0,0,0,0);
 
@@ -877,15 +883,16 @@ STATIC GC_bool GC_stopped_mark(GC_stop_func stop_func)
           if (stop_func != GC_never_stop_func)
             GC_parallel_mark_disabled = TRUE;
 #       endif
-        for (i = 0; !(*stop_func)(); i++) {
-          if (GC_mark_some(GC_approx_sp())) {
+        for (abandoned_at = 0; !(*stop_func)(); abandoned_at++) {
+          if (GC_mark_some(cold_gc_frame)) {
 #           ifdef PARALLEL_MARK
               if (GC_parallel && GC_parallel_mark_disabled) {
                 GC_COND_LOG_PRINTF("Stopped marking done after %d iterations"
-                                   " with disabled parallel marker\n", i);
+                                   " with disabled parallel marker\n",
+                                   abandoned_at);
               }
 #           endif
-            i = -1;
+            abandoned_at = -1;
             break;
           }
         }
@@ -893,95 +900,82 @@ STATIC GC_bool GC_stopped_mark(GC_stop_func stop_func)
           GC_parallel_mark_disabled = FALSE;
 #       endif
 
-        if (i >= 0) {
-          GC_COND_LOG_PRINTF("Abandoned stopped marking after"
-                             " %d iterations\n", i);
-          GC_deficit = i;       /* Give the mutator a chance.   */
-#         ifdef THREAD_LOCAL_ALLOC
-            GC_world_stopped = FALSE;
-#         endif
-
-#         ifdef THREADS
-            if (GC_on_collection_event)
-              GC_on_collection_event(GC_EVENT_PRE_START_WORLD);
-#         endif
-
-          START_WORLD();
-
-#         ifdef THREADS
-            if (GC_on_collection_event)
-              GC_on_collection_event(GC_EVENT_POST_START_WORLD);
-#         endif
-
-          /* TODO: Notify GC_EVENT_MARK_ABANDON */
-          return FALSE;
-        }
-
-    GC_gc_no++;
-#   ifdef USE_MUNMAP
-      GC_ASSERT(GC_heapsize >= GC_unmapped_bytes);
-#   endif
-    GC_ASSERT(GC_our_mem_bytes >= GC_heapsize);
-    GC_DBGLOG_PRINTF("GC #%lu freed %ld bytes, heap %lu KiB ("
-                     IF_USE_MUNMAP("+ %lu KiB unmapped ")
-                     "+ %lu KiB internal)\n",
-                     (unsigned long)GC_gc_no, (long)GC_bytes_found,
-                     TO_KiB_UL(GC_heapsize - GC_unmapped_bytes) /*, */
-                     COMMA_IF_USE_MUNMAP(TO_KiB_UL(GC_unmapped_bytes)),
-                     TO_KiB_UL(GC_our_mem_bytes - GC_heapsize));
-
-    /* Check all debugged objects for consistency */
-    if (GC_debugging_started) {
-      (*GC_check_heap)();
+    if (abandoned_at >= 0) {
+      GC_deficit = abandoned_at; /* Give the mutator a chance. */
+      /* TODO: Notify GC_EVENT_MARK_ABANDON */
+    } else {
+      GC_gc_no++;
+      /* Check all debugged objects for consistency.    */
+      if (GC_debugging_started) {
+        (*GC_check_heap)();
+      }
+      if (GC_on_collection_event)
+        GC_on_collection_event(GC_EVENT_MARK_END);
     }
-    if (GC_on_collection_event) {
-      GC_on_collection_event(GC_EVENT_MARK_END);
-#     ifdef THREADS
+
+#   ifdef THREADS
+      if (GC_on_collection_event)
         GC_on_collection_event(GC_EVENT_PRE_START_WORLD);
-#     endif
-    }
+#   endif
 #   ifdef THREAD_LOCAL_ALLOC
       GC_world_stopped = FALSE;
 #   endif
-
     START_WORLD();
-
 #   ifdef THREADS
       if (GC_on_collection_event)
         GC_on_collection_event(GC_EVENT_POST_START_WORLD);
 #   endif
 
 #   ifndef NO_CLOCK
-      if (GC_PRINT_STATS_FLAG) {
-        unsigned long time_diff;
-        unsigned total_time, divisor;
+      if (start_time_valid) {
         CLOCK_TYPE current_time;
+        unsigned long time_diff, ns_frac_diff;
 
+        /* TODO: Avoid code duplication from GC_try_to_collect_inner */
         GET_TIME(current_time);
-        time_diff = MS_TIME_DIFF(current_time,start_time);
-
-        /* Compute new world-stop delay total time */
-        total_time = world_stopped_total_time;
-        divisor = world_stopped_total_divisor;
-        if ((int)total_time < 0 || divisor >= MAX_TOTAL_TIME_DIVISOR) {
-          /* Halve values if overflow occurs */
-          total_time >>= 1;
-          divisor >>= 1;
+        time_diff = MS_TIME_DIFF(current_time, start_time);
+        ns_frac_diff = NS_FRAC_TIME_DIFF(current_time, start_time);
+        if (measure_performance) {
+          stopped_mark_total_time += time_diff; /* may wrap */
+          stopped_mark_total_ns_frac += (unsigned32)ns_frac_diff;
+          if (stopped_mark_total_ns_frac >= (unsigned32)1000000UL) {
+            stopped_mark_total_ns_frac -= (unsigned32)1000000UL;
+            stopped_mark_total_time++;
+          }
         }
-        total_time += time_diff < (((unsigned)-1) >> 1) ?
-                        (unsigned)time_diff : ((unsigned)-1) >> 1;
-        /* Update old world_stopped_total_time and its divisor */
-        world_stopped_total_time = total_time;
-        world_stopped_total_divisor = ++divisor;
 
-        GC_ASSERT(divisor != 0);
-        GC_log_printf("World-stopped marking took %lu ms %lu ns"
-                      " (%u ms in average)\n",
-                      time_diff, NS_FRAC_TIME_DIFF(current_time, start_time),
-                      total_time / divisor);
+        if (GC_PRINT_STATS_FLAG) {
+          unsigned total_time = world_stopped_total_time;
+          unsigned divisor = world_stopped_total_divisor;
+
+          /* Compute new world-stop delay total time.   */
+          if (total_time > (((unsigned)-1) >> 1)
+              || divisor >= MAX_TOTAL_TIME_DIVISOR) {
+            /* Halve values if overflow occurs. */
+            total_time >>= 1;
+            divisor >>= 1;
+          }
+          total_time += time_diff < (((unsigned)-1) >> 1) ?
+                        (unsigned)time_diff : ((unsigned)-1) >> 1;
+          /* Update old world_stopped_total_time and its divisor.   */
+          world_stopped_total_time = total_time;
+          world_stopped_total_divisor = ++divisor;
+          if (abandoned_at < 0) {
+            GC_ASSERT(divisor != 0);
+            GC_log_printf("World-stopped marking took %lu ms %lu ns"
+                          " (%u ms in average)\n", time_diff, ns_frac_diff,
+                          total_time / divisor);
+          }
+        }
       }
 #   endif
-    return(TRUE);
+
+    if (abandoned_at >= 0) {
+      GC_COND_LOG_PRINTF("Abandoned stopped marking after %d iterations\n",
+                         abandoned_at);
+      return FALSE;
+    }
+    return TRUE;
 }
 
 /* Set all mark bits for the free list whose first entry is q   */
@@ -998,7 +992,7 @@ GC_INNER void GC_set_fl_marks(ptr_t q)
 
         if (!mark_bit_from_hdr(hhdr, bit_no)) {
           set_mark_bit_from_hdr(hhdr, bit_no);
-          ++hhdr -> hb_n_marks;
+          INCR_MARKS(hhdr);
         }
 
         q = (ptr_t)obj_link(q);
@@ -1087,7 +1081,7 @@ STATIC void GC_clear_fl_marks(ptr_t q)
             hhdr -> hb_n_marks = n_marks;
 #         endif
         }
-        GC_bytes_found -= sz;
+        GC_bytes_found -= (signed_word)sz;
 
         q = (ptr_t)obj_link(q);
         if (q == NULL)
@@ -1111,7 +1105,7 @@ GC_on_heap_resize_proc GC_on_heap_resize = 0;
 /* Used for logging only. */
 GC_INLINE int GC_compute_heap_usage_percent(void)
 {
-  word used = GC_composite_in_use + GC_atomic_in_use;
+  word used = GC_composite_in_use + GC_atomic_in_use + GC_bytes_allocd;
   word heap_sz = GC_heapsize - GC_unmapped_bytes;
 # if defined(CPPCHECK)
     word limit = (GC_WORD_MAX >> 1) / 50; /* to avoid a false positive */
@@ -1123,8 +1117,14 @@ GC_INLINE int GC_compute_heap_usage_percent(void)
                 (int)((used * 100) / heap_sz) : (int)(used / (heap_sz / 100));
 }
 
-/* Finish up a collection.  Assumes mark bits are consistent, lock is   */
-/* held, but the world is otherwise running.                            */
+#define GC_DBGLOG_PRINT_HEAP_IN_USE() \
+  GC_DBGLOG_PRINTF("In-use heap: %d%% (%lu KiB pointers + %lu KiB other)\n", \
+                   GC_compute_heap_usage_percent(), \
+                   TO_KiB_UL(GC_composite_in_use), \
+                   TO_KiB_UL(GC_atomic_in_use + GC_bytes_allocd))
+
+/* Finish up a collection.  Assumes mark bits are consistent, but the   */
+/* world is otherwise running.                                          */
 STATIC void GC_finish_collection(void)
 {
 #   ifndef NO_CLOCK
@@ -1218,24 +1218,31 @@ STATIC void GC_finish_collection(void)
 
     /* Reconstruct free lists to contain everything not marked */
     GC_start_reclaim(FALSE);
-    GC_DBGLOG_PRINTF("In-use heap: %d%% (%lu KiB pointers + %lu KiB other)\n",
-                     GC_compute_heap_usage_percent(),
-                     TO_KiB_UL(GC_composite_in_use),
-                     TO_KiB_UL(GC_atomic_in_use));
+
+#   ifdef USE_MUNMAP
+      if (GC_unmap_threshold > 0 /* unmapping enabled? */
+          && EXPECT(GC_gc_no != 1, TRUE)) /* do not unmap during GC init */
+        GC_unmap_old(GC_unmap_threshold);
+
+      GC_ASSERT(GC_heapsize >= GC_unmapped_bytes);
+#   endif
+    GC_ASSERT(GC_our_mem_bytes >= GC_heapsize);
+    GC_DBGLOG_PRINTF("GC #%lu freed %ld bytes, heap %lu KiB ("
+                     IF_USE_MUNMAP("+ %lu KiB unmapped ")
+                     "+ %lu KiB internal)\n",
+                     (unsigned long)GC_gc_no, (long)GC_bytes_found,
+                     TO_KiB_UL(GC_heapsize - GC_unmapped_bytes) /*, */
+                     COMMA_IF_USE_MUNMAP(TO_KiB_UL(GC_unmapped_bytes)),
+                     TO_KiB_UL(GC_our_mem_bytes - GC_heapsize
+                               + sizeof(GC_arrays)));
+    GC_DBGLOG_PRINT_HEAP_IN_USE();
     if (GC_is_full_gc) {
-        GC_used_heap_size_after_full = USED_HEAP_SIZE;
+        GC_used_heap_size_after_full = GC_heapsize - GC_large_free_bytes;
         GC_need_full_gc = FALSE;
     } else {
-        GC_need_full_gc = USED_HEAP_SIZE - GC_used_heap_size_after_full
-                            > min_bytes_allocd();
+        GC_need_full_gc = GC_heapsize - GC_used_heap_size_after_full
+                          > min_bytes_allocd() + GC_large_free_bytes;
     }
-
-    GC_VERBOSE_LOG_PRINTF("Immediately reclaimed %ld bytes, heapsize:"
-                          " %lu bytes" IF_USE_MUNMAP(" (%lu unmapped)") "\n",
-                          (long)GC_bytes_found,
-                          (unsigned long)GC_heapsize /*, */
-                          COMMA_IF_USE_MUNMAP((unsigned long)
-                                              GC_unmapped_bytes));
 
     /* Reset or increment counters for next cycle */
     GC_n_attempts = 0;
@@ -1246,8 +1253,6 @@ STATIC void GC_finish_collection(void)
     GC_bytes_dropped = 0;
     GC_bytes_freed = 0;
     GC_finalizer_bytes_freed = 0;
-
-    IF_USE_MUNMAP(GC_unmap_old());
 
     if (GC_on_collection_event)
       GC_on_collection_event(GC_EVENT_RECLAIM_END);
@@ -1274,16 +1279,15 @@ STATIC void GC_finish_collection(void)
 }
 
 STATIC word GC_heapsize_at_forced_unmap = 0;
-                                /* accessed with the allocation lock held */
+                                /* accessed with the allocator lock held */
 
 /* If stop_func == 0 then GC_default_stop_func is used instead.         */
 STATIC GC_bool GC_try_to_collect_general(GC_stop_func stop_func,
                                          GC_bool force_unmap)
 {
     GC_bool result;
-    IF_USE_MUNMAP(int old_unmap_threshold;)
+    IF_USE_MUNMAP(unsigned old_unmap_threshold;)
     IF_CANCEL(int cancel_state;)
-    DCL_LOCK_STATE;
 
     if (!EXPECT(GC_is_initialized, TRUE)) GC_init();
     if (GC_debugging_started) GC_print_all_smashed();
@@ -1314,7 +1318,7 @@ STATIC GC_bool GC_try_to_collect_general(GC_stop_func stop_func,
         if (GC_debugging_started) GC_print_all_smashed();
         GC_INVOKE_FINALIZERS();
     }
-    return(result);
+    return result;
 }
 
 /* Externally callable routines to invoke full, stop-the-world collection. */
@@ -1327,8 +1331,8 @@ GC_API int GC_CALL GC_try_to_collect(GC_stop_func stop_func)
 
 GC_API void GC_CALL GC_gcollect(void)
 {
-    /* 0 is passed as stop_func to get GC_default_stop_func value       */
-    /* while holding the allocation lock (to prevent data races).       */
+    /* Zero is passed as stop_func to get GC_default_stop_func value    */
+    /* while holding the allocator lock (to prevent data race).         */
     (void)GC_try_to_collect_general(0, FALSE);
     if (get_have_errors())
       GC_print_all_errors();
@@ -1340,25 +1344,30 @@ GC_API void GC_CALL GC_gcollect_and_unmap(void)
     (void)GC_try_to_collect_general(GC_never_stop_func, TRUE);
 }
 
-#ifdef USE_PROC_FOR_LIBRARIES
-  /* Add HBLKSIZE aligned, GET_MEM-generated block to GC_our_memory. */
-  GC_INNER void GC_add_to_our_memory(ptr_t p, size_t bytes)
-  {
-    GC_ASSERT(p != NULL);
+GC_INNER ptr_t GC_os_get_mem(size_t bytes)
+{
+  struct hblk *space = GET_MEM(bytes); /* HBLKSIZE-aligned */
+
+  GC_ASSERT(I_HOLD_LOCK());
+  if (EXPECT(NULL == space, FALSE)) return NULL;
+# ifdef USE_PROC_FOR_LIBRARIES
+    /* Add HBLKSIZE aligned, GET_MEM-generated block to GC_our_memory. */
     if (GC_n_memory >= MAX_HEAP_SECTS)
       ABORT("Too many GC-allocated memory sections: Increase MAX_HEAP_SECTS");
-    GC_our_memory[GC_n_memory].hs_start = p;
+    GC_our_memory[GC_n_memory].hs_start = (ptr_t)space;
     GC_our_memory[GC_n_memory].hs_bytes = bytes;
     GC_n_memory++;
-    GC_our_mem_bytes += bytes;
-  }
-#endif
+# endif
+  GC_our_mem_bytes += bytes;
+  GC_VERBOSE_LOG_PRINTF("Got %lu bytes from OS\n", (unsigned long)bytes);
+  return (ptr_t)space;
+}
 
 /* Use the chunk of memory starting at p of size bytes as part of the heap. */
 /* Assumes p is HBLKSIZE aligned, bytes argument is a multiple of HBLKSIZE. */
 STATIC void GC_add_to_heap(struct hblk *p, size_t bytes)
 {
-    hdr * phdr;
+    hdr *hhdr;
     word endp;
     size_t old_capacity = 0;
     void *old_heap_sects = NULL;
@@ -1366,12 +1375,13 @@ STATIC void GC_add_to_heap(struct hblk *p, size_t bytes)
       unsigned i;
 #   endif
 
+    GC_ASSERT(I_HOLD_LOCK());
     GC_ASSERT((word)p % HBLKSIZE == 0);
     GC_ASSERT(bytes % HBLKSIZE == 0);
     GC_ASSERT(bytes > 0);
     GC_ASSERT(GC_all_nils != NULL);
 
-    if (GC_n_heap_sects == GC_capacity_heap_sects) {
+    if (EXPECT(GC_n_heap_sects == GC_capacity_heap_sects, FALSE)) {
       /* Allocate new GC_heap_sects with sufficient capacity.   */
 #     ifndef INITIAL_HEAP_SECTS
 #       define INITIAL_HEAP_SECTS 32
@@ -1381,7 +1391,7 @@ STATIC void GC_add_to_heap(struct hblk *p, size_t bytes)
       void *new_heap_sects =
                 GC_scratch_alloc(new_capacity * sizeof(struct HeapSect));
 
-      if (EXPECT(NULL == new_heap_sects, FALSE)) {
+      if (NULL == new_heap_sects) {
         /* Retry with smaller yet sufficient capacity.  */
         new_capacity = (size_t)GC_n_heap_sects + INITIAL_HEAP_SECTS;
         new_heap_sects =
@@ -1401,21 +1411,21 @@ STATIC void GC_add_to_heap(struct hblk *p, size_t bytes)
                          (unsigned long)new_capacity);
     }
 
-    while ((word)p <= HBLKSIZE) {
+    while (EXPECT((word)p <= HBLKSIZE, FALSE)) {
         /* Can't handle memory near address zero. */
         ++p;
         bytes -= HBLKSIZE;
         if (0 == bytes) return;
     }
     endp = (word)p + bytes;
-    if (endp <= (word)p) {
+    if (EXPECT(endp <= (word)p, FALSE)) {
         /* Address wrapped. */
         bytes -= HBLKSIZE;
         if (0 == bytes) return;
         endp -= HBLKSIZE;
     }
-    phdr = GC_install_header(p);
-    if (0 == phdr) {
+    hhdr = GC_install_header(p);
+    if (EXPECT(NULL == hhdr, FALSE)) {
         /* This is extremely unlikely. Can't add it.  This will         */
         /* almost certainly result in a 0 return from the allocator,    */
         /* which is entirely appropriate.                               */
@@ -1427,39 +1437,29 @@ STATIC void GC_add_to_heap(struct hblk *p, size_t bytes)
       for (i = 0; i < GC_n_heap_sects; i++) {
         word hs_start = (word)GC_heap_sects[i].hs_start;
         word hs_end = hs_start + GC_heap_sects[i].hs_bytes;
-        word p_e = (word)p + bytes;
 
         GC_ASSERT(!((hs_start <= (word)p && (word)p < hs_end)
-                    || (hs_start < p_e && p_e <= hs_end)
-                    || ((word)p < hs_start && hs_end < p_e)));
+                    || (hs_start < endp && endp <= hs_end)
+                    || ((word)p < hs_start && hs_end < endp)));
       }
 #   endif
     GC_heap_sects[GC_n_heap_sects].hs_start = (ptr_t)p;
     GC_heap_sects[GC_n_heap_sects].hs_bytes = bytes;
     GC_n_heap_sects++;
-    phdr -> hb_sz = bytes;
-    phdr -> hb_flags = 0;
+    hhdr -> hb_sz = bytes;
+    hhdr -> hb_flags = 0;
     GC_freehblk(p);
     GC_heapsize += bytes;
 
-    /* Normally the caller calculates a new GC_collect_at_heapsize,
-     * but this is also called directly from GC_scratch_recycle_inner, so
-     * adjust here. It will be recalculated when called from
-     * GC_expand_hp_inner.
-     */
-    GC_collect_at_heapsize += bytes;
-    if (GC_collect_at_heapsize < GC_heapsize /* wrapped */)
-       GC_collect_at_heapsize = GC_WORD_MAX;
-
     if ((word)p <= (word)GC_least_plausible_heap_addr
-        || GC_least_plausible_heap_addr == 0) {
+        || EXPECT(NULL == GC_least_plausible_heap_addr, FALSE)) {
         GC_least_plausible_heap_addr = (void *)((ptr_t)p - sizeof(word));
                 /* Making it a little smaller than necessary prevents   */
                 /* us from getting a false hit from the variable        */
                 /* itself.  There's some unintentional reflection       */
                 /* here.                                                */
     }
-    if ((word)p + bytes >= (word)GC_greatest_plausible_heap_addr) {
+    if (endp > (word)GC_greatest_plausible_heap_addr) {
         GC_greatest_plausible_heap_addr = (void *)endp;
     }
 #   ifdef SET_REAL_HEAP_BOUNDS
@@ -1474,7 +1474,8 @@ STATIC void GC_add_to_heap(struct hblk *p, size_t bytes)
         GC_greatest_real_heap_addr = endp;
       }
 #   endif
-    if (old_capacity > 0) {
+    GC_handle_protected_regions_limit();
+    if (EXPECT(old_capacity > 0, FALSE)) {
 #     ifndef GWW_VDB
         /* Recycling may call GC_add_to_heap() again but should not     */
         /* cause resizing of GC_heap_sects.                             */
@@ -1515,16 +1516,6 @@ STATIC void GC_add_to_heap(struct hblk *p, size_t bytes)
 void * GC_least_plausible_heap_addr = (void *)GC_WORD_MAX;
 void * GC_greatest_plausible_heap_addr = 0;
 
-GC_INLINE word GC_max(word x, word y)
-{
-    return(x > y? x : y);
-}
-
-GC_INLINE word GC_min(word x, word y)
-{
-    return(x < y? x : y);
-}
-
 STATIC word GC_max_heapsize = 0;
 
 GC_API void GC_CALL GC_set_max_heap_size(GC_word n)
@@ -1532,7 +1523,7 @@ GC_API void GC_CALL GC_set_max_heap_size(GC_word n)
     GC_max_heapsize = n;
 }
 
-GC_word GC_max_retries = 0;
+word GC_max_retries = 0;
 
 GC_INNER void GC_scratch_recycle_inner(void *ptr, size_t bytes)
 {
@@ -1540,6 +1531,7 @@ GC_INNER void GC_scratch_recycle_inner(void *ptr, size_t bytes)
   size_t displ = 0;
   size_t recycled_bytes;
 
+  GC_ASSERT(I_HOLD_LOCK());
   if (NULL == ptr) return;
 
   GC_ASSERT(bytes != 0);
@@ -1557,7 +1549,7 @@ GC_INNER void GC_scratch_recycle_inner(void *ptr, size_t bytes)
 
 /* This explicitly increases the size of the heap.  It is used          */
 /* internally, but may also be invoked from GC_expand_hp by the user.   */
-/* The argument is in units of HBLKSIZE (tiny values are rounded up).   */
+/* The argument is in units of HBLKSIZE (zero is treated as 1).         */
 /* Returns FALSE on failure.                                            */
 GC_INNER GC_bool GC_expand_hp_inner(word n)
 {
@@ -1568,20 +1560,21 @@ GC_INNER GC_bool GC_expand_hp_inner(word n)
 
     GC_ASSERT(I_HOLD_LOCK());
     GC_ASSERT(GC_page_size != 0);
-    if (n < MINHINCR) n = MINHINCR;
+    if (0 == n) n = 1;
     bytes = ROUNDUP_PAGESIZE((size_t)n * HBLKSIZE);
+    GC_DBGLOG_PRINT_HEAP_IN_USE();
     if (GC_max_heapsize != 0
         && (GC_max_heapsize < (word)bytes
             || GC_heapsize > GC_max_heapsize - (word)bytes)) {
         /* Exceeded self-imposed limit */
-        return(FALSE);
+        return FALSE;
     }
-    space = GET_MEM(bytes);
+    space = (struct hblk *)GC_os_get_mem(bytes);
     if (EXPECT(NULL == space, FALSE)) {
         WARN("Failed to expand heap by %" WARN_PRIuPTR " KiB\n", bytes >> 10);
-        return(FALSE);
+        return FALSE;
     }
-    GC_add_to_our_memory((ptr_t)space, bytes);
+    GC_last_heap_growth_gc_no = GC_gc_no;
     GC_INFOLOG_PRINTF("Grow heap to %lu KiB after %lu bytes allocated\n",
                       TO_KiB_UL(GC_heapsize + bytes),
                       (unsigned long)GC_bytes_allocd);
@@ -1595,48 +1588,46 @@ GC_INNER GC_bool GC_expand_hp_inner(word n)
             && (word)GC_last_heap_addr < (word)space)) {
         /* Assume the heap is growing up. */
         word new_limit = (word)space + (word)bytes + expansion_slop;
-        if (new_limit > (word)space) {
-          GC_greatest_plausible_heap_addr =
-            (void *)GC_max((word)GC_greatest_plausible_heap_addr,
-                           (word)new_limit);
-        }
+        if (new_limit > (word)space
+            && (word)GC_greatest_plausible_heap_addr < new_limit)
+          GC_greatest_plausible_heap_addr = (void *)new_limit;
     } else {
         /* Heap is growing down. */
-        word new_limit = (word)space - expansion_slop;
-        if (new_limit < (word)space) {
-          GC_least_plausible_heap_addr =
-            (void *)GC_min((word)GC_least_plausible_heap_addr,
-                           (word)space - expansion_slop);
-        }
+        word new_limit = (word)space - expansion_slop - sizeof(word);
+        if (new_limit < (word)space
+            && (word)GC_least_plausible_heap_addr > new_limit)
+          GC_least_plausible_heap_addr = (void *)new_limit;
     }
     GC_last_heap_addr = (ptr_t)space;
 
     GC_add_to_heap(space, bytes);
-
-    /* Force GC before we are likely to allocate past expansion_slop.   */
-    GC_collect_at_heapsize =
-        GC_heapsize + expansion_slop - 2 * MAXHINCR * HBLKSIZE;
-    if (GC_collect_at_heapsize < GC_heapsize /* wrapped */)
-        GC_collect_at_heapsize = GC_WORD_MAX;
     if (GC_on_heap_resize)
         (*GC_on_heap_resize)(GC_heapsize);
 
-    return(TRUE);
+    return TRUE;
 }
 
 /* Really returns a bool, but it's externally visible, so that's clumsy. */
-/* The argument is in bytes.  Includes GC_init() call.                   */
 GC_API int GC_CALL GC_expand_hp(size_t bytes)
 {
-    int result;
-    DCL_LOCK_STATE;
+    word n_blocks = OBJ_SZ_TO_BLOCKS_CHECKED(bytes);
+    word old_heapsize;
+    GC_bool result;
 
     if (!EXPECT(GC_is_initialized, TRUE)) GC_init();
     LOCK();
-    result = (int)GC_expand_hp_inner(divHBLKSZ((word)bytes));
-    if (result) GC_requested_heapsize += bytes;
+    old_heapsize = GC_heapsize;
+    result = GC_expand_hp_inner(n_blocks);
+    if (result) {
+      GC_requested_heapsize += bytes;
+      if (GC_dont_gc) {
+        /* Do not call WARN if the heap growth is intentional.  */
+        GC_ASSERT(GC_heapsize >= old_heapsize);
+        GC_heapsize_on_gc_disable += GC_heapsize - old_heapsize;
+      }
+    }
     UNLOCK();
-    return(result);
+    return (int)result;
 }
 
 GC_INNER unsigned GC_fail_count = 0;
@@ -1669,9 +1660,10 @@ static word last_bytes_finalized = 0;
 /* Collect or expand heap in an attempt make the indicated number of    */
 /* free blocks available.  Should be called until the blocks are        */
 /* available (setting retry value to TRUE unless this is the first call */
-/* in a loop) or until it fails by returning FALSE.                     */
+/* in a loop) or until it fails by returning FALSE.  The flags argument */
+/* should be IGNORE_OFF_PAGE or 0.                                      */
 GC_INNER GC_bool GC_collect_or_expand(word needed_blocks,
-                                      GC_bool ignore_off_page,
+                                      unsigned flags,
                                       GC_bool retry)
 {
     GC_bool gc_not_stopped = TRUE;
@@ -1679,6 +1671,7 @@ GC_INNER GC_bool GC_collect_or_expand(word needed_blocks,
     IF_CANCEL(int cancel_state;)
 
     GC_ASSERT(I_HOLD_LOCK());
+    GC_ASSERT(GC_is_initialized);
     DISABLE_CANCEL(cancel_state);
     if (!GC_incremental && !GC_dont_gc &&
         ((GC_dont_expand && GC_bytes_allocd > 0)
@@ -1699,7 +1692,7 @@ GC_INNER GC_bool GC_collect_or_expand(word needed_blocks,
         last_fo_entries = GC_fo_entries;
         last_bytes_finalized = GC_bytes_finalized;
         RESTORE_CANCEL(cancel_state);
-        return(TRUE);
+        return TRUE;
       }
     }
 
@@ -1712,7 +1705,7 @@ GC_INNER GC_bool GC_collect_or_expand(word needed_blocks,
       /* Get the minimum required to make it likely that we can satisfy */
       /* the current request in the presence of black-listing.          */
       /* This will probably be more than MAXHINCR.                      */
-      if (ignore_off_page) {
+      if ((flags & IGNORE_OFF_PAGE) != 0) {
         slop = 4;
       } else {
         slop = 2 * divHBLKSZ(BL_LIMIT);
@@ -1725,8 +1718,24 @@ GC_INNER GC_bool GC_collect_or_expand(word needed_blocks,
       }
       if (blocks_to_get > divHBLKSZ(GC_WORD_MAX))
         blocks_to_get = divHBLKSZ(GC_WORD_MAX);
+    } else if (blocks_to_get < MINHINCR) {
+      blocks_to_get = MINHINCR;
     }
 
+    if (GC_max_heapsize > GC_heapsize) {
+      word max_get_blocks = divHBLKSZ(GC_max_heapsize - GC_heapsize);
+      if (blocks_to_get > max_get_blocks)
+        blocks_to_get = max_get_blocks > needed_blocks
+                        ? max_get_blocks : needed_blocks;
+    }
+
+#   ifdef USE_MUNMAP
+      if (GC_unmap_threshold > 1) {
+        /* Return as much memory to the OS as possible before   */
+        /* trying to get memory from it.                        */
+        GC_unmap_old(0);
+      }
+#   endif
     if (!GC_expand_hp_inner(blocks_to_get)
         && (blocks_to_get == needed_blocks
             || !GC_expand_hp_inner(needed_blocks))) {
@@ -1742,34 +1751,40 @@ GC_INNER GC_bool GC_collect_or_expand(word needed_blocks,
 #         ifdef USE_MUNMAP
             GC_ASSERT(GC_heapsize >= GC_unmapped_bytes);
 #         endif
-          WARN("Out of Memory! Heap size: %" WARN_PRIuPTR " MiB."
-               " Returning NULL!\n", (GC_heapsize - GC_unmapped_bytes) >> 20);
+#         if !defined(SMALL_CONFIG) && (CPP_WORDSZ >= 32)
+#           define MAX_HEAPSIZE_WARNED_IN_BYTES (5 << 20) /* 5 MB */
+            if (GC_heapsize > (word)MAX_HEAPSIZE_WARNED_IN_BYTES) {
+              WARN("Out of Memory! Heap size: %" WARN_PRIuPTR " MiB."
+                   " Returning NULL!\n",
+                   (GC_heapsize - GC_unmapped_bytes) >> 20);
+            } else
+#         endif
+          /* else */ {
+              WARN("Out of Memory! Heap size: %" WARN_PRIuPTR " bytes."
+                   " Returning NULL!\n", GC_heapsize - GC_unmapped_bytes);
+          }
 #       endif
         RESTORE_CANCEL(cancel_state);
-        return(FALSE);
+        return FALSE;
       }
     } else if (GC_fail_count) {
       GC_COND_LOG_PRINTF("Memory available again...\n");
     }
     RESTORE_CANCEL(cancel_state);
-    return(TRUE);
+    return TRUE;
 }
 
-/*
- * Make sure the object free list for size gran (in granules) is not empty.
- * Return a pointer to the first object on the free list.
- * The object MUST BE REMOVED FROM THE FREE LIST BY THE CALLER.
- */
-GC_INNER ptr_t GC_allocobj(size_t gran, int kind)
+GC_INNER ptr_t GC_allocobj(size_t lg, int k)
 {
-    void ** flh = &(GC_obj_kinds[kind].ok_freelist[gran]);
+    void **flh = &GC_obj_kinds[k].ok_freelist[lg];
     GC_bool tried_minor = FALSE;
     GC_bool retry = FALSE;
 
     GC_ASSERT(I_HOLD_LOCK());
-    if (gran == 0) return(0);
+    GC_ASSERT(GC_is_initialized);
+    if (EXPECT(0 == lg, FALSE)) return NULL;
 
-    while (*flh == 0) {
+    while (NULL == *flh) {
       ENTER_GC();
 #     ifndef GC_DISABLE_INCREMENTAL
         if (GC_incremental && GC_time_limit != GC_TIME_UNLIMITED
@@ -1781,15 +1796,15 @@ GC_INNER ptr_t GC_allocobj(size_t gran, int kind)
 #     endif
       /* Sweep blocks for objects of this size */
         GC_ASSERT(!GC_is_full_gc
-                  || NULL == GC_obj_kinds[kind].ok_reclaim_list
-                  || NULL == GC_obj_kinds[kind].ok_reclaim_list[gran]);
-        GC_continue_reclaim(gran, kind);
+                  || NULL == GC_obj_kinds[k].ok_reclaim_list
+                  || NULL == GC_obj_kinds[k].ok_reclaim_list[lg]);
+        GC_continue_reclaim(lg, k);
       EXIT_GC();
 #     if defined(CPPCHECK)
         GC_noop1((word)&flh);
 #     endif
       if (NULL == *flh) {
-        GC_new_hblk(gran, kind);
+        GC_new_hblk(lg, k);
 #       if defined(CPPCHECK)
           GC_noop1((word)&flh);
 #       endif
@@ -1800,9 +1815,9 @@ GC_INNER ptr_t GC_allocobj(size_t gran, int kind)
             GC_collect_a_little_inner(1);
             tried_minor = TRUE;
           } else {
-            if (!GC_collect_or_expand(1, FALSE, retry)) {
+            if (!GC_collect_or_expand(1, 0 /* flags */, retry)) {
               EXIT_GC();
-              return(0);
+              return NULL;
             }
             retry = TRUE;
           }
@@ -1812,6 +1827,5 @@ GC_INNER ptr_t GC_allocobj(size_t gran, int kind)
     }
     /* Successful allocation; reset failure count.      */
     GC_fail_count = 0;
-
     return (ptr_t)(*flh);
 }

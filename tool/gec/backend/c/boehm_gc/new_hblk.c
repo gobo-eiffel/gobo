@@ -7,7 +7,7 @@
  * OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.
  *
  * Permission is hereby granted to use or copy this program
- * for any purpose,  provided the above notices are retained on all copies.
+ * for any purpose, provided the above notices are retained on all copies.
  * Permission to modify the code and to distribute modified code is granted,
  * provided the above notices are retained, and a notice that the code was
  * modified is included with the above copyright notice.
@@ -20,8 +20,6 @@
  *      ptr_t GC_build_flXXX(h, old_fl)
  *      void GC_new_hblk(size, kind)
  */
-
-#include <stdio.h>
 
 #ifndef SMALL_CONFIG
   /* Build a free list for size 2 (words) cleared objects inside        */
@@ -43,7 +41,7 @@
         p[2] = (word)p;
         p[3] = 0;
     }
-    return((ptr_t)(p-2));
+    return (ptr_t)(p-2);
   }
 
   /* The same for size 4 cleared objects.       */
@@ -63,7 +61,7 @@
         p[1] = 0;
         CLEAR_DOUBLE(p+2);
     }
-    return((ptr_t)(p-4));
+    return (ptr_t)(p-4);
   }
 
   /* The same for size 2 uncleared objects.     */
@@ -79,7 +77,7 @@
         p[0] = (word)(p-2);
         p[2] = (word)p;
     }
-    return((ptr_t)(p-2));
+    return (ptr_t)(p-2);
   }
 
   /* The same for size 4 uncleared objects.     */
@@ -96,14 +94,14 @@
         p[0] = (word)(p-4);
         p[4] = (word)p;
     }
-    return((ptr_t)(p-4));
+    return (ptr_t)(p-4);
   }
 #endif /* !SMALL_CONFIG */
 
 /* Build a free list for objects of size sz inside heap block h.        */
 /* Clear objects inside h if clear is set.  Add list to the end of      */
 /* the free list we build.  Return the new free list.                   */
-/* This could be called without the main GC lock, if we ensure that     */
+/* This could be called without the allocator lock, if we ensure that   */
 /* there is no concurrent collection which might reclaim objects that   */
 /* we have not yet allocated.                                           */
 GC_INNER ptr_t GC_build_fl(struct hblk *h, size_t sz, GC_bool clear,
@@ -161,32 +159,26 @@ GC_INNER ptr_t GC_build_fl(struct hblk *h, size_t sz, GC_bool clear,
   /* Put p (which is now head of list of objects in *h) as first    */
   /* pointer in the appropriate free list for this size.            */
     *(ptr_t *)h = list;
-    return ((ptr_t)p);
+    return (ptr_t)p;
 }
 
-/* Allocate a new heapblock for small objects of size gran granules.    */
-/* Add all of the heapblock's objects to the free list for objects      */
-/* of that size.  Set all mark bits if objects are uncollectible.       */
-/* Will fail to do anything if we are out of memory.                    */
-GC_INNER void GC_new_hblk(size_t gran, int kind)
+GC_INNER void GC_new_hblk(size_t lg, int k)
 {
   struct hblk *h;       /* the new heap block */
-  GC_bool clear = GC_obj_kinds[kind].ok_init;
+  size_t lb_adjusted = GRANULES_TO_BYTES(lg);
 
-  GC_STATIC_ASSERT((sizeof (struct hblk)) == HBLKSIZE);
+  GC_STATIC_ASSERT(sizeof(struct hblk) == HBLKSIZE);
   GC_ASSERT(I_HOLD_LOCK());
-
-  if (GC_debugging_started) clear = TRUE;
-
-  /* Allocate a new heap block */
-    h = GC_allochblk(GRANULES_TO_BYTES(gran), kind, 0);
-    if (h == 0) return;
+  /* Allocate a new heap block. */
+  h = GC_allochblk(lb_adjusted, k, 0 /* flags */, 0 /* align_m1 */);
+  if (EXPECT(NULL == h, FALSE)) return; /* out of memory */
 
   /* Mark all objects if appropriate. */
-      if (IS_UNCOLLECTABLE(kind)) GC_set_hdr_marks(HDR(h));
+  if (IS_UNCOLLECTABLE(k)) GC_set_hdr_marks(HDR(h));
 
-  /* Build the free list */
-      GC_obj_kinds[kind].ok_freelist[gran] =
-        GC_build_fl(h, GRANULES_TO_WORDS(gran), clear,
-                    (ptr_t)GC_obj_kinds[kind].ok_freelist[gran]);
+  /* Build the free list.       */
+  GC_obj_kinds[k].ok_freelist[lg] =
+        GC_build_fl(h, GRANULES_TO_WORDS(lg),
+                    GC_debugging_started || GC_obj_kinds[k].ok_init,
+                    (ptr_t)GC_obj_kinds[k].ok_freelist[lg]);
 }
