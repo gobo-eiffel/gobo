@@ -1110,12 +1110,10 @@ feature {NONE} -- Compilation script generation
 #define HAVE_DLADDR
 #define HAVE_SYS_TYPES_H
 #define HAVE_UNISTD_H
-#if !defined(GE_WINDOWS) && !defined(GE_MACOS)
-#define HAVE_PTHREAD_SIGMASK
-#endif
 #if defined(GE_MACOS)
 #define HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID
 #elif !defined(GE_WINDOWS)
+#define HAVE_PTHREAD_SIGMASK
 #define HAVE_PTHREAD_SETNAME_NP_WITH_TID
 #define NO_GETCONTEXT
 #endif
