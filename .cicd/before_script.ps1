@@ -182,11 +182,16 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 		}
 		"macos" {
 			$GOBO_CI_BUILD_SCRIPT = "install.sh"
-			# Use 'uname -m' instead of 'arch' because 'arch' is not acurate under MacOS.
-			# (See https://discussions.apple.com/thread/6072102?sortBy=best)
-			uname -m
+			system_profiler SPSoftwareDataType 
 			if ($LastExitCode -ne 0) {
-				Write-Error "Command 'uname -m' exited with code $LastExitCode"
+				Write-Error "Command 'system_profiler SPSoftwareDataType' exited with code $LastExitCode"
+				exit $LastExitCode
+			}
+			# Use 'uname -a' instead of 'arch' because 'arch' is not acurate under MacOS.
+			# (See https://discussions.apple.com/thread/6072102?sortBy=best)
+			uname -a
+			if ($LastExitCode -ne 0) {
+				Write-Error "Command 'uname -a' exited with code $LastExitCode"
 				exit $LastExitCode
 			}
 		}
