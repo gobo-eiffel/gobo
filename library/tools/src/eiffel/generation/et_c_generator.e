@@ -1108,13 +1108,16 @@ feature {NONE} -- Compilation script generation
 #define HAVE_DL_ITERATE_PHDR
 #define GC_REQUIRE_WCSDUP
 #define HAVE_DLADDR
-#if !defined(GE_WINDOWS) && !defined(GE_WINDOWS)
+#define HAVE_SYS_TYPES_H
+#define HAVE_UNISTD_H
+#if !defined(GE_WINDOWS) && !defined(GE_MACOS)
 #define HAVE_PTHREAD_SIGMASK
 #endif
 #if defined(GE_MACOS)
 #define HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID
 #elif !defined(GE_WINDOWS)
 #define HAVE_PTHREAD_SETNAME_NP_WITH_TID
+#define NO_GETCONTEXT
 #endif
 #endif
 ]"
