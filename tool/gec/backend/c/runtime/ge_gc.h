@@ -40,21 +40,54 @@
 #endif
 #define GC_THREADS
 #define THREAD_LOCAL_ALLOC
+#if defined(GE_WINDOWS)
 #undef GC_NO_THREAD_DECLS
 #undef GC_NO_THREAD_REDIRECTS
 #endif
+#endif
 
-#define GC_IGNORE_WARN
 #define GC_NOT_DLL
+#define GC_THREADS
+#define THREAD_LOCAL_ALLOC
 #define PARALLEL_MARK
-#define LARGE_CONFIG
 #define ALL_INTERIOR_POINTERS
 #define ENABLE_DISCLAIM
 #define GC_ATOMIC_UNCOLLECTABLE
 #define GC_GCJ_SUPPORT
+#define GC_ENABLE_SUSPEND_THREAD
 #define JAVA_FINALIZATION
 #define NO_EXECUTE_PERMISSION
+#define USE_MMAP
 #define USE_MUNMAP
+
+#if defined(__clang__) || defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__)
+#define GC_BUILTIN_ATOMIC
+#endif
+
+#if defined(GE_WINDOWS)
+#define EMPTY_GETENV_RESULTS
+#define DONT_USE_USER32_DLL
+#else
+#ifndef _REENTRANT
+#define _REENTRANT
+#endif
+#define HANDLE_FORK
+#endif
+
+#if defined(__clang__)
+#define HAVE_DL_ITERATE_PHDR
+#define GC_REQUIRE_WCSDUP
+#define HAVE_DLADDR
+#define HAVE_SYS_TYPES_H
+#define HAVE_UNISTD_H
+#if defined(GE_MACOS)
+#define HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID
+#elif !defined(GE_WINDOWS)
+#define HAVE_PTHREAD_SIGMASK
+#define HAVE_PTHREAD_SETNAME_NP_WITH_TID
+#define NO_GETCONTEXT
+#endif
+#endif
 
 #include "gc.h"
 #endif
