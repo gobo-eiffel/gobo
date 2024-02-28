@@ -105,8 +105,7 @@ extern "C" {
 #ifdef GE_USE_BOEHM_GC
 #define GE_init_gc() \
 	GC_INIT(); \
-	GC_allow_register_threads(); \
-	GC_enable_incremental()
+	GC_allow_register_threads()
 #else /* No GC */
 #define GE_init_gc() /* do nothing */
 #endif
