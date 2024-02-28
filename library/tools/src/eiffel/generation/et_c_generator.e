@@ -1081,6 +1081,7 @@ feature {NONE} -- Compilation script generation
 #define PARALLEL_MARK
 #define THREAD_LOCAL_ALLOC
 #define GC_ENABLE_SUSPEND_THREAD
+#define LARGE_CONFIG
 #define ALL_INTERIOR_POINTERS
 #define ENABLE_DISCLAIM
 #define GC_ATOMIC_UNCOLLECTABLE
