@@ -1067,12 +1067,6 @@ feature {NONE} -- Compilation script generation
 			create l_sorter.make (l_comparator)
 			create l_common_defines.make (15)
 			create l_common_includes.make (5)
-			if use_threads then
-				l_common_defines.force_last (c_ge_use_threads)
-			end
-			if scoop_mode then
-				l_common_defines.force_last (c_ge_use_scoop)
-			end
 			l_is_boehm_gc := a_library_name.same_string ("boehm_gc")
 			if l_is_boehm_gc then
 				l_boehm_defines := "[
@@ -1082,23 +1076,11 @@ feature {NONE} -- Compilation script generation
 #	define GE_MACOS
 #endif
 
-#ifdef GE_USE_THREADS
-#	define GC_THREADS
-#	define PARALLEL_MARK
-#	define THREAD_LOCAL_ALLOC
-#	define GC_ENABLE_SUSPEND_THREAD
-#	if defined(GE_WINDOWS)
-#		undef GC_NO_THREAD_DECLS
-#		undef GC_NO_THREAD_REDIRECTS
-#	elif !defined(GE_MACOS)
-#		define GC_PTHREAD_START_STANDALONE
-#		if defined(__clang__)
-#			define HAVE_PTHREAD_SIGMASK
-#		endif
-#	endif /* GE_WINDOWS || !GE_MACOS */
-#endif /* GE_USE_THREADS */
-
 #define GC_NOT_DLL
+#define GC_THREADS
+#define PARALLEL_MARK
+#define THREAD_LOCAL_ALLOC
+#define GC_ENABLE_SUSPEND_THREAD
 #define ALL_INTERIOR_POINTERS
 #define ENABLE_DISCLAIM
 #define GC_ATOMIC_UNCOLLECTABLE
@@ -1108,18 +1090,23 @@ feature {NONE} -- Compilation script generation
 #define USE_MMAP
 #define USE_MUNMAP
 
-#if defined(__clang__) || defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__)
-#	define GC_BUILTIN_ATOMIC
-#endif
-
 #if defined(GE_WINDOWS)
+#	undef GC_NO_THREAD_DECLS
+#	undef GC_NO_THREAD_REDIRECTS
 #	define EMPTY_GETENV_RESULTS
 #	define DONT_USE_USER32_DLL
 #else
+#	if !defined(GE_MACOS)
+#		define GC_PTHREAD_START_STANDALONE
+#	endif
 #	ifndef _REENTRANT
 #		define _REENTRANT
 #	endif
 #	define HANDLE_FORK
+#endif
+
+#if defined(__clang__) || defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__)
+#	define GC_BUILTIN_ATOMIC
 #endif
 
 #if defined(__clang__)
@@ -1132,11 +1119,18 @@ feature {NONE} -- Compilation script generation
 #		define HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID
 #	elif !defined(GE_WINDOWS)
 #		define HAVE_PTHREAD_SETNAME_NP_WITH_TID
+#		define HAVE_PTHREAD_SIGMASK
 #		define NO_GETCONTEXT
 #	endif
 #endif
 ]"
 			else
+				if use_threads then
+					l_common_defines.force_last (c_ge_use_threads)
+				end
+				if scoop_mode then
+					l_common_defines.force_last (c_ge_use_scoop)
+				end
 				l_common_includes.force_last ("ge_eiffel.h")
 				l_common_includes.force_last ("ge_gc.h")
 						-- Two header files needed to compile EiffelCOM.

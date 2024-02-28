@@ -34,29 +34,19 @@
  * cooperate with the GC on many platforms. 
  * See: https://hboehm.info/gc/gcinterface.html
 */
-#ifdef GE_USE_THREADS
-
-#	ifndef GE_THREAD_TYPES_H
-#		include "ge_thread_types.h"
-#	endif
-
-#	define GC_THREADS
-#	define PARALLEL_MARK
-#	define THREAD_LOCAL_ALLOC
-#	define GC_ENABLE_SUSPEND_THREAD
-
-#	if defined(GE_WINDOWS)
-#		undef GC_NO_THREAD_DECLS
-#		undef GC_NO_THREAD_REDIRECTS
-#	elif !defined(GE_MACOS)
-#		define GC_PTHREAD_START_STANDALONE
-#		if defined(__clang__)
-#			define HAVE_PTHREAD_SIGMASK
-#		endif
-#	endif /* GE_WINDOWS || !GE_MACOS */
-#endif /* GE_USE_THREADS */
+#ifdef GE_USE_POSIX_THREADS
+#include <pthread.h>
+#include <semaphore.h>
+#elif defined EIF_WINDOWS
+#include <windows.h>
+#include <process.h>
+#endif
 
 #define GC_NOT_DLL
+#define GC_THREADS
+#define PARALLEL_MARK
+#define THREAD_LOCAL_ALLOC
+#define GC_ENABLE_SUSPEND_THREAD
 #define ALL_INTERIOR_POINTERS
 #define ENABLE_DISCLAIM
 #define GC_ATOMIC_UNCOLLECTABLE
@@ -66,18 +56,23 @@
 #define USE_MMAP
 #define USE_MUNMAP
 
-#if defined(__clang__) || defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__)
-#	define GC_BUILTIN_ATOMIC
-#endif
-
 #if defined(GE_WINDOWS)
+#	undef GC_NO_THREAD_DECLS
+#	undef GC_NO_THREAD_REDIRECTS
 #	define EMPTY_GETENV_RESULTS
 #	define DONT_USE_USER32_DLL
 #else
+#	if !defined(GE_MACOS)
+#		define GC_PTHREAD_START_STANDALONE
+#	endif
 #	ifndef _REENTRANT
 #		define _REENTRANT
 #	endif
 #	define HANDLE_FORK
+#endif
+
+#if defined(__clang__) || defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__)
+#	define GC_BUILTIN_ATOMIC
 #endif
 
 #if defined(__clang__)
@@ -90,6 +85,7 @@
 #		define HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID
 #	elif !defined(GE_WINDOWS)
 #		define HAVE_PTHREAD_SETNAME_NP_WITH_TID
+#		define HAVE_PTHREAD_SIGMASK
 #		define NO_GETCONTEXT
 #	endif
 #endif
@@ -106,15 +102,10 @@ extern "C" {
  */
 
 #ifdef GE_USE_BOEHM_GC
-#ifdef GE_USE_THREADS
 #define GE_init_gc() \
 	GC_INIT(); \
 	GC_allow_register_threads(); \
 	GC_enable_incremental()
-#else
-#define GE_init_gc() \
-	GC_INIT();
-#endif
 #else /* No GC */
 #define GE_init_gc() /* do nothing */
 #endif
