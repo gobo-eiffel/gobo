@@ -470,6 +470,9 @@ feature -- Generation
 			a_system_name_not_void: a_system_name /= Void
 		do
 			has_fatal_error := False
+			if use_boehm_gc then
+				add_boehm_gc_c_files (a_system_name)
+			end
 			generate_c_code (a_system_name)
 			generate_compilation_script (a_system_name)
 			c_filenames.wipe_out
@@ -659,15 +662,6 @@ feature {NONE} -- Compilation script generation
 				end
 				i := i + 1
 			end
-				-- Boehm GC.
-			if use_boehm_gc then
-				if not attached gobo_variables.boehm_gc_value as l_boehm_gc_folder or else l_boehm_gc_folder.is_empty then
-					set_fatal_error
-					report_undefined_environment_variable_error (gobo_variables.boehm_gc_variable)
-				else
-					add_external_c_files ("boehm_gc", l_boehm_gc_folder, c_filenames)
-				end
-			end
 				-- List objects in reverse order so that it looks like
 				-- a countdown when compiling since the filenames are numbered.
 			l_cursor := c_filenames.new_cursor
@@ -705,6 +699,12 @@ feature {NONE} -- Compilation script generation
 
 	generate_compilation_shell_script (a_system_name: STRING; a_variables: like c_config; an_obj_filenames: STRING; an_env_regexp: RX_PCRE_REGULAR_EXPRESSION; an_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
 			-- Generate script to compile the C code.
+		require
+			a_system_name_not_void: a_system_name /= Void
+			a_variables_not_void: a_variables /= Void
+			an_obj_filenames_not_void: an_obj_filenames /= Void
+			an_env_regexp_not_void: an_env_regexp /= Void
+			an_external_c_filenames_not_void: an_external_c_filenames /= Void
 		local
 			l_base_name: STRING
 			l_script_filename: STRING
@@ -891,6 +891,9 @@ feature {NONE} -- Compilation script generation
 
 	generate_compilation_makefile (a_system_name: STRING; a_variables: like c_config)
 			-- Generate Makefile to compile the C code.
+		require
+			a_system_name_not_void: a_system_name /= Void
+			a_variables_not_void: a_variables /= Void
 		local
 			l_base_name: STRING
 			l_makefile_filename: STRING
@@ -1007,69 +1010,33 @@ feature {NONE} -- Compilation script generation
 			obj_defined: Result.has ("obj")
 		end
 
-	add_external_c_files (a_library_name, a_clib_dirname: STRING; a_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
-			-- Add C files of `a_library_name' found in `a_clib_dirname' to the compilation script.
+	add_boehm_gc_c_files (a_system_name: STRING)
+			-- Add C files of Boehm GC to the compilation script.
 		require
-			a_library_name_not_void: a_library_name /= Void
-			a_clib_dirname_not_void: a_clib_dirname /= Void
-			a_external_c_filenames_not_void: a_external_c_filenames /= Void
+			a_system_name_not_void: a_system_name /= Void
+			use_boehm_gc: use_boehm_gc
 		local
-			l_external_file: KL_TEXT_OUTPUT_FILE
-			l_external_filename: detachable STRING
-			l_dir: KL_DIRECTORY
-			l_filename: STRING
-			l_extension: STRING
+			l_c_file: KL_TEXT_OUTPUT_FILE
+			l_c_filename: STRING
 			l_basename: STRING
-			l_c_filenames: detachable DS_ARRAYED_LIST [STRING]
-			l_cpp_filenames: detachable DS_ARRAYED_LIST [STRING]
-			l_all_filenames: DS_ARRAYED_LIST [DS_ARRAYED_LIST [STRING]]
-			l_filenames: detachable DS_ARRAYED_LIST [STRING]
-			l_sorter: DS_QUICK_SORTER [STRING]
-			l_comparator: UC_STRING_COMPARATOR
-			i, nb: INTEGER
-			j, nb2: INTEGER
-			l_common_defines: DS_ARRAYED_LIST [STRING]
-			l_common_includes: DS_ARRAYED_LIST [STRING]
-			l_boehm_defines: detachable STRING
-			l_is_boehm_gc: BOOLEAN
+			l_filename: STRING
 		do
-			create l_all_filenames.make (2)
-			create l_dir.make (a_clib_dirname)
-			l_dir.open_read
-			if not l_dir.is_open_read then
+			if not attached gobo_variables.boehm_gc_value as l_boehm_gc_folder or else l_boehm_gc_folder.is_empty then
 				set_fatal_error
-				report_cannot_read_error (a_clib_dirname)
+				report_undefined_environment_variable_error (gobo_variables.boehm_gc_variable)
 			else
-				from
-					l_dir.read_entry
-				until
-					l_dir.end_of_input
-				loop
-					l_filename := l_dir.last_entry
-					if l_filename.ends_with (c_file_extension) then
-						if l_c_filenames = Void then
-							create l_c_filenames.make (50)
-							l_all_filenames.force_last (l_c_filenames)
-						end
-						l_c_filenames.force_last (l_filename)
-					elseif l_filename.ends_with (cpp_file_extension) then
-						if l_cpp_filenames = Void then
-							create l_cpp_filenames.make (50)
-							l_all_filenames.force_last (l_cpp_filenames)
-						end
-						l_cpp_filenames.force_last (l_filename)
-					end
-					l_dir.read_entry
-				end
-				l_dir.close
-			end
-			create l_comparator
-			create l_sorter.make (l_comparator)
-			create l_common_defines.make (15)
-			create l_common_includes.make (5)
-			l_is_boehm_gc := a_library_name.same_string ("boehm_gc")
-			if l_is_boehm_gc then
-				l_boehm_defines := "[
+				l_basename := a_system_name + (c_filenames.count + 1).out
+				l_c_filename := l_basename + c_file_extension
+				create l_c_file.make (l_c_filename)
+				l_c_file.open_write
+				if not l_c_file.is_open_write then
+					set_fatal_error
+					report_cannot_write_error (l_c_filename)
+				else
+					c_filenames.force_last (c_file_extension, l_basename)
+					l_c_file.put_line ("[
+/* C files for Boehm GC. */
+
 #if defined(WIN32) || defined(WINVER) || defined(_WIN32_WINNT) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__) || defined(_WIN_MSC_VER32)
 #	define GE_WINDOWS
 #elif defined(macintosh) || defined(Macintosh) || defined(__APPLE__) || defined(__MACH__)
@@ -1124,20 +1091,103 @@ feature {NONE} -- Compilation script generation
 #		define NO_GETCONTEXT
 #	endif
 #endif
-]"
-			else
-				if use_threads then
-					l_common_defines.force_last (c_ge_use_threads)
+]")
+					l_c_file.put_new_line
+					l_filename := file_system.nested_pathname (l_boehm_gc_folder, <<"extra", "gc.c">>)
+					l_filename := STRING_.replaced_all_substrings (l_filename, "\", "\\")
+					l_c_file.put_string (c_include)
+					l_c_file.put_character (' ')
+					l_c_file.put_character ('"')
+					l_c_file.put_string (l_filename)
+					l_c_file.put_character ('"')
+					l_c_file.put_new_line
+					l_c_file.put_string (c_ifdef)
+					l_c_file.put_character (' ')
+					l_c_file.put_line ("GC_PTHREAD_START_STANDALONE")
+					l_filename := file_system.pathname (l_boehm_gc_folder, "pthread_start.c")
+					l_filename := STRING_.replaced_all_substrings (l_filename, "\", "\\")
+					l_c_file.put_string (c_include)
+					l_c_file.put_character (' ')
+					l_c_file.put_character ('"')
+					l_c_file.put_string (l_filename)
+					l_c_file.put_character ('"')
+					l_c_file.put_new_line
+					l_c_file.put_line (c_endif)
+					l_c_file.put_new_line
+					l_c_file.close
 				end
-				if scoop_mode then
-					l_common_defines.force_last (c_ge_use_scoop)
-				end
-				l_common_includes.force_last ("ge_eiffel.h")
-				l_common_includes.force_last ("ge_gc.h")
-						-- Two header files needed to compile EiffelCOM.
-				l_common_includes.force_last ("eif_cecil.h")
-				l_common_includes.force_last ("eif_plug.h")
 			end
+		end
+
+	add_external_c_files (a_library_name, a_clib_dirname: STRING; a_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
+			-- Add C files of `a_library_name' found in `a_clib_dirname' to the compilation script.
+		require
+			a_library_name_not_void: a_library_name /= Void
+			a_clib_dirname_not_void: a_clib_dirname /= Void
+			a_external_c_filenames_not_void: a_external_c_filenames /= Void
+		local
+			l_external_file: KL_TEXT_OUTPUT_FILE
+			l_external_filename: detachable STRING
+			l_dir: KL_DIRECTORY
+			l_filename: STRING
+			l_extension: STRING
+			l_basename: STRING
+			l_c_filenames: detachable DS_ARRAYED_LIST [STRING]
+			l_cpp_filenames: detachable DS_ARRAYED_LIST [STRING]
+			l_all_filenames: DS_ARRAYED_LIST [DS_ARRAYED_LIST [STRING]]
+			l_filenames: detachable DS_ARRAYED_LIST [STRING]
+			l_sorter: DS_QUICK_SORTER [STRING]
+			l_comparator: UC_STRING_COMPARATOR
+			i, nb: INTEGER
+			j, nb2: INTEGER
+			l_common_defines: DS_ARRAYED_LIST [STRING]
+			l_common_includes: DS_ARRAYED_LIST [STRING]
+		do
+			create l_all_filenames.make (2)
+			create l_dir.make (a_clib_dirname)
+			l_dir.open_read
+			if not l_dir.is_open_read then
+				set_fatal_error
+				report_cannot_read_error (a_clib_dirname)
+			else
+				from
+					l_dir.read_entry
+				until
+					l_dir.end_of_input
+				loop
+					l_filename := l_dir.last_entry
+					if l_filename.ends_with (c_file_extension) then
+						if l_c_filenames = Void then
+							create l_c_filenames.make (50)
+							l_all_filenames.force_last (l_c_filenames)
+						end
+						l_c_filenames.force_last (l_filename)
+					elseif l_filename.ends_with (cpp_file_extension) then
+						if l_cpp_filenames = Void then
+							create l_cpp_filenames.make (50)
+							l_all_filenames.force_last (l_cpp_filenames)
+						end
+						l_cpp_filenames.force_last (l_filename)
+					end
+					l_dir.read_entry
+				end
+				l_dir.close
+			end
+			create l_comparator
+			create l_sorter.make (l_comparator)
+			create l_common_defines.make (15)
+			create l_common_includes.make (5)
+			if use_threads then
+				l_common_defines.force_last (c_ge_use_threads)
+			end
+			if scoop_mode then
+				l_common_defines.force_last (c_ge_use_scoop)
+			end
+			l_common_includes.force_last ("ge_eiffel.h")
+			l_common_includes.force_last ("ge_gc.h")
+				-- Two header files needed to compile EiffelCOM.
+			l_common_includes.force_last ("eif_cecil.h")
+			l_common_includes.force_last ("eif_plug.h")
 			nb2 := l_all_filenames.count
 			from j := 1 until j > nb2 loop
 				l_filenames := l_all_filenames.item (j)
@@ -1165,36 +1215,28 @@ feature {NONE} -- Compilation script generation
 					l_external_file.put_string (" */")
 					l_external_file.put_new_line
 					l_external_file.put_new_line
-					if l_common_defines /= Void then
-						nb := l_common_defines.count
-						from i := 1 until i > nb loop
-							l_external_file.put_string (c_define)
-							l_external_file.put_character (' ')
-							l_external_file.put_line (l_common_defines.item (i))
-							i := i + 1
-						end
+					nb := l_common_defines.count
+					from i := 1 until i > nb loop
+						l_external_file.put_string (c_define)
+						l_external_file.put_character (' ')
+						l_external_file.put_line (l_common_defines.item (i))
+						i := i + 1
 					end
-					if l_boehm_defines /= Void then
-						l_external_file.put_string (l_boehm_defines)
+					if nb > 0 then
 						l_external_file.put_new_line
-						l_filenames.wipe_out
-						l_filenames.force_last ("extra/gc.c")
 					end
-					l_external_file.put_new_line
-					if l_common_includes /= Void then
-						nb := l_common_includes.count
-						from i := 1 until i > nb loop
-							l_external_file.put_string (c_include)
-							l_external_file.put_character (' ')
-							l_external_file.put_character ('"')
-							l_external_file.put_string (l_common_includes.item (i))
-							l_external_file.put_character ('"')
-							l_external_file.put_new_line
-							i := i + 1
-						end
-						if nb > 0 then
-							l_external_file.put_new_line
-						end
+					nb := l_common_includes.count
+					from i := 1 until i > nb loop
+						l_external_file.put_string (c_include)
+						l_external_file.put_character (' ')
+						l_external_file.put_character ('"')
+						l_external_file.put_string (l_common_includes.item (i))
+						l_external_file.put_character ('"')
+						l_external_file.put_new_line
+						i := i + 1
+					end
+					if nb > 0 then
+						l_external_file.put_new_line
 					end
 					nb := l_filenames.count
 					from i := 1 until i > nb loop
@@ -1208,20 +1250,6 @@ feature {NONE} -- Compilation script generation
 						l_external_file.put_character ('"')
 						l_external_file.put_new_line
 						i := i + 1
-					end
-					if l_boehm_defines /= Void then
-						l_external_file.put_line ("#ifdef GC_PTHREAD_START_STANDALONE")
-						l_filename := "pthread_start.c"
-						l_filename := file_system.pathname (a_clib_dirname, l_filename)
-						l_filename := STRING_.replaced_all_substrings (l_filename, "\", "\\")
-						l_external_file.put_string (c_include)
-						l_external_file.put_character (' ')
-						l_external_file.put_character ('"')
-						l_external_file.put_string (l_filename)
-						l_external_file.put_character ('"')
-						l_external_file.put_new_line
-						l_external_file.put_line ("#endif")
-						l_external_file.put_new_line
 					end
 					l_external_file.close
 				end
