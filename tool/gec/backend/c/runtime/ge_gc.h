@@ -113,8 +113,7 @@ extern "C" {
 	GC_enable_incremental()
 #else
 #define GE_init_gc() \
-	GC_INIT(); \
-	GC_enable_incremental()
+	GC_INIT();
 #endif
 #else /* No GC */
 #define GE_init_gc() /* do nothing */

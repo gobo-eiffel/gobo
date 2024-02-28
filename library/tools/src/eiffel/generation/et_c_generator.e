@@ -1214,6 +1214,20 @@ feature {NONE} -- Compilation script generation
 						l_external_file.put_new_line
 						i := i + 1
 					end
+					if l_boehm_defines /= Void then
+						l_external_file.put_line ("#ifdef GC_PTHREAD_START_STANDALONE")
+						l_filename := "pthread_start.c"
+						l_filename := file_system.pathname (a_clib_dirname, l_filename)
+						l_filename := STRING_.replaced_all_substrings (l_filename, "\", "\\")
+						l_external_file.put_string (c_include)
+						l_external_file.put_character (' ')
+						l_external_file.put_character ('"')
+						l_external_file.put_string (l_filename)
+						l_external_file.put_character ('"')
+						l_external_file.put_new_line
+						l_external_file.put_line ("#endif")
+						l_external_file.put_new_line
+					end
 					l_external_file.close
 				end
 				j := j + 1
