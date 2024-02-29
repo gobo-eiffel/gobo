@@ -59,27 +59,27 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
---|#line 55 "lx_regexp_scanner.l"
+--|#line 53 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 55")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 53")
 end
 
 					last_token := Caret_code
 					set_start_condition (REGEXP)
 				
 when 2 then
---|#line 59 "lx_regexp_scanner.l"
+--|#line 57 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 59")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 57")
 end
 
 					less (0)
 					set_start_condition (REGEXP)
 				
 when 3 then
---|#line 66 "lx_regexp_scanner.l"
+--|#line 64 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 66")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 64")
 end
 
 					if description.utf8_mode then
@@ -90,9 +90,9 @@ end
 					end
 				
 when 4 then
---|#line 74 "lx_regexp_scanner.l"
+--|#line 72 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 74")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 72")
 end
 
 					if description.utf8_mode then
@@ -103,9 +103,9 @@ end
 					end
 				
 when 5 then
---|#line 82 "lx_regexp_scanner.l"
+--|#line 80 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 82")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 80")
 end
 
 					last_token := Double_quote_code
@@ -113,40 +113,40 @@ end
 				
 when 6 then
 	yy_end := yy_end - 1
---|#line 86 "lx_regexp_scanner.l"
+--|#line 84 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 86")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 84")
 end
 last_token := Dollar_code
 when 7 then
---|#line 87 "lx_regexp_scanner.l"
+--|#line 85 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 87")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 85")
 end
 
 					last_token := Left_brace_code
 					set_start_condition (NUM)
 				
 when 8 then
---|#line 91 "lx_regexp_scanner.l"
+--|#line 89 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 91")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 89")
 end
 
 					last_token := CCL_PLUS
 				
 when 9 then
---|#line 94 "lx_regexp_scanner.l"
+--|#line 92 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 94")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 92")
 end
 
 					last_token := CCL_MINUS
 				
 when 10 then
---|#line 97 "lx_regexp_scanner.l"
+--|#line 95 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 97")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 95")
 end
 
 					last_string_32_value := unicode_text
@@ -160,30 +160,30 @@ end
 					end
 				
 when 11 then
---|#line 108 "lx_regexp_scanner.l"
+--|#line 106 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 108")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 106")
 end
 last_token := text_item (1).code
 when 12 then
---|#line 109 "lx_regexp_scanner.l"
+--|#line 107 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 109")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 107")
 end
 
 					last_token := CHAR
 					process_single_character
 				
 when 13 then
---|#line 116 "lx_regexp_scanner.l"
+--|#line 114 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 116")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 114")
 end
 -- Separator.
 when 14 then
---|#line 117 "lx_regexp_scanner.l"
+--|#line 115 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 117")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 115")
 end
 
 					if attached text as l_text and then l_text.is_integer then
@@ -194,24 +194,24 @@ end
 					end
 				
 when 15 then
---|#line 125 "lx_regexp_scanner.l"
+--|#line 123 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 125")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 123")
 end
 last_token := Comma_code
 when 16 then
---|#line 126 "lx_regexp_scanner.l"
+--|#line 124 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 126")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 124")
 end
 
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
 				
 when 17 then
---|#line 130 "lx_regexp_scanner.l"
+--|#line 128 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 130")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 128")
 end
 
 					report_bad_character_in_brackets_error
@@ -219,9 +219,9 @@ end
 					set_start_condition (REGEXP)
 				
 when 18 then
---|#line 135 "lx_regexp_scanner.l"
+--|#line 133 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 135")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 133")
 end
 
 					report_missing_bracket_error
@@ -230,27 +230,27 @@ end
 					set_start_condition (REGEXP)
 				
 when 19 then
---|#line 144 "lx_regexp_scanner.l"
+--|#line 142 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 144")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 142")
 end
 
 					last_token := CHAR
 					process_single_character
 				
 when 20 then
---|#line 148 "lx_regexp_scanner.l"
+--|#line 146 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 148")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 146")
 end
 
 					last_token := Double_quote_code
 					set_start_condition (REGEXP)
 				
 when 21 then
---|#line 152 "lx_regexp_scanner.l"
+--|#line 150 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 152")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 150")
 end
 
 					report_missing_quote_error
@@ -259,45 +259,45 @@ end
 					set_start_condition (REGEXP)
 				
 when 22 then
---|#line 161 "lx_regexp_scanner.l"
+--|#line 159 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 161")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 159")
 end
 
 					last_token := CHAR
 					process_escaped_character
 				
 when 23 then
---|#line 165 "lx_regexp_scanner.l"
+--|#line 163 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 165")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 163")
 end
 
 					last_token := CHAR
 					process_octal_character
 				
 when 24 then
---|#line 169 "lx_regexp_scanner.l"
+--|#line 167 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 169")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 167")
 end
 
 					last_token := CHAR
 					process_hexadecimal_character
 				
 when 25 then
---|#line 173 "lx_regexp_scanner.l"
+--|#line 171 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 173")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 171")
 end
 
 					last_token := CHAR
 					process_unicode_character
 				
 when 26 then
---|#line 180 "lx_regexp_scanner.l"
+--|#line 178 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 180")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 178")
 end
 
 					last_token := CHAR
@@ -305,9 +305,9 @@ end
 					set_start_condition (CCL)
 				
 when 27 then
---|#line 185 "lx_regexp_scanner.l"
+--|#line 183 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 185")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 183")
 end
 
 					last_token := CHAR
@@ -315,9 +315,9 @@ end
 					set_start_condition (CCL)
 				
 when 28 then
---|#line 190 "lx_regexp_scanner.l"
+--|#line 188 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 190")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 188")
 end
 
 					last_token := CHAR
@@ -325,9 +325,9 @@ end
 					set_start_condition (CCL)
 				
 when 29 then
---|#line 195 "lx_regexp_scanner.l"
+--|#line 193 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 195")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 193")
 end
 
 					last_token := CHAR
@@ -336,9 +336,9 @@ end
 				
 when 30 then
 	yy_end := yy_end - 1
---|#line 200 "lx_regexp_scanner.l"
+--|#line 198 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 200")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 198")
 end
 
 					set_start_condition (CCL)
@@ -346,15 +346,15 @@ end
 				
 when 31 then
 	yy_end := yy_end - 1
---|#line 204 "lx_regexp_scanner.l"
+--|#line 202 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 204")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 202")
 end
 last_token := Caret_code
 when 32 then
---|#line 205 "lx_regexp_scanner.l"
+--|#line 203 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 205")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 203")
 end
 
 					last_token := CHAR
@@ -362,9 +362,9 @@ end
 					set_start_condition (CCL)
 				
 when 33 then
---|#line 210 "lx_regexp_scanner.l"
+--|#line 208 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 210")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 208")
 end
 
 					report_bad_character_class_error
@@ -374,33 +374,33 @@ end
 				
 when 34 then
 	yy_end := yy_end - 1
---|#line 219 "lx_regexp_scanner.l"
+--|#line 217 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 219")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 217")
 end
 last_token := Minus_code
 when 35 then
---|#line 220 "lx_regexp_scanner.l"
+--|#line 218 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 220")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 218")
 end
 
 					last_token := CHAR
 					process_single_character
 				
 when 36 then
---|#line 224 "lx_regexp_scanner.l"
+--|#line 222 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 224")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 222")
 end
 
 					last_token := Right_bracket_code
 					set_start_condition (REGEXP)
 				
 when 37 then
---|#line 228 "lx_regexp_scanner.l"
+--|#line 226 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 228")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 226")
 end
 
 					report_bad_character_class_error
@@ -409,9 +409,9 @@ end
 					set_start_condition (REGEXP)
 				
 when 38 then
---|#line 237 "lx_regexp_scanner.l"
+--|#line 235 "lx_regexp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 237")
+	std.error.put_line ("Executing scanner user-code from file 'lx_regexp_scanner.l' at line 235")
 end
 
 					if text_item (1) = '%N' then

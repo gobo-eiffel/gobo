@@ -175,9 +175,9 @@ feature {NONE} -- Semantic actions
 		do
 				inspect yy_act
 when 1 then
---|#line 49 "ts_config_parser.y"
+--|#line 47 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 49")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 47")
 end
 
 				check
@@ -196,9 +196,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 2 then
---|#line 49 "ts_config_parser.y"
+--|#line 47 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 49")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 47")
 end
 
 set_defaults (yyvs2.item (yyvsp2).name) 
@@ -215,9 +215,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 3 then
---|#line 63 "ts_config_parser.y"
+--|#line 61 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 63")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 61")
 end
 
 
@@ -234,9 +234,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 4 then
---|#line 64 "ts_config_parser.y"
+--|#line 62 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 64")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 62")
 end
 
 
@@ -245,9 +245,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 5 then
---|#line 65 "ts_config_parser.y"
+--|#line 63 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 65")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 63")
 end
 
 
@@ -257,9 +257,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 6 then
---|#line 68 "ts_config_parser.y"
+--|#line 66 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 68")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 66")
 end
 
 
@@ -268,9 +268,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 7 then
---|#line 69 "ts_config_parser.y"
+--|#line 67 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 69")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 67")
 end
 
 
@@ -280,9 +280,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 8 then
---|#line 72 "ts_config_parser.y"
+--|#line 70 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 72")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 70")
 end
 
 			class_regexp := new_regexp (yyvs2.item (yyvsp2))
@@ -297,9 +297,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 9 then
---|#line 79 "ts_config_parser.y"
+--|#line 77 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 79")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 77")
 end
 
 			feature_regexp := new_regexp (yyvs2.item (yyvsp2))
@@ -314,9 +314,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 10 then
---|#line 86 "ts_config_parser.y"
+--|#line 84 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 86")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 84")
 end
 
 class_prefix := yyvs2.item (yyvsp2).name 
@@ -327,9 +327,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 11 then
---|#line 88 "ts_config_parser.y"
+--|#line 86 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 88")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 86")
 end
 
 compile := yyvs2.item (yyvsp2).name 
@@ -340,9 +340,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 12 then
---|#line 90 "ts_config_parser.y"
+--|#line 88 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 90")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 88")
 end
 
 execute := yyvs2.item (yyvsp2).name 
@@ -353,9 +353,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 13 then
---|#line 92 "ts_config_parser.y"
+--|#line 90 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 92")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 90")
 end
 
 testgen := yyvs2.item (yyvsp2).name 
@@ -366,9 +366,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 14 then
---|#line 96 "ts_config_parser.y"
+--|#line 94 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 96")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 94")
 end
 
 			create {DS_ARRAYED_LIST [TS_CLUSTER]} yyval4.make (1)
@@ -387,9 +387,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 15 then
---|#line 101 "ts_config_parser.y"
+--|#line 99 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 101")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 99")
 end
 
 			create {DS_ARRAYED_LIST [TS_CLUSTER]} yyval4.make (1)
@@ -409,9 +409,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 16 then
---|#line 106 "ts_config_parser.y"
+--|#line 104 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 106")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 104")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
@@ -421,9 +421,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 17 then
---|#line 110 "ts_config_parser.y"
+--|#line 108 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 110")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 108")
 end
 
 			create {DS_ARRAYED_LIST [TS_CLUSTER]} yyval4.make (5)
@@ -443,9 +443,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 18 then
---|#line 115 "ts_config_parser.y"
+--|#line 113 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 115")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 113")
 end
 
 yyval4 := yyvs4.item (yyvsp4); yyval4.force_last (yyvs3.item (yyvsp3)) 
@@ -455,9 +455,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 when 19 then
---|#line 119 "ts_config_parser.y"
+--|#line 117 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 119")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 117")
 end
 
 yyval3 := new_cluster (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)) 
@@ -476,9 +476,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 20 then
---|#line 123 "ts_config_parser.y"
+--|#line 121 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 123")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 121")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
@@ -487,9 +487,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 21 then
---|#line 125 "ts_config_parser.y"
+--|#line 123 "ts_config_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 125")
+	std.error.put_line ("Executing parser user-code from file 'ts_config_parser.y' at line 123")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 

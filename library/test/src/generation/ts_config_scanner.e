@@ -49,128 +49,128 @@ feature {NONE} -- Implementation
 			inspect yy_act
 when 1 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 35 "ts_config_scanner.l"
+--|#line 33 "ts_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 35")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 33")
 end
 -- Ignore separators
 when 2 then
 yy_set_line (0)
---|#line 36 "ts_config_scanner.l"
+--|#line 34 "ts_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 36")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 34")
 end
 -- Ignore new-lines
 when 3 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 41 "ts_config_scanner.l"
+--|#line 39 "ts_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 41")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 39")
 end
 -- Ignore comments
 when 4 then
 yy_set_column (1)
---|#line 42 "ts_config_scanner.l"
+--|#line 40 "ts_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 42")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 40")
 end
 -- Ignire comments
 when 5 then
+	yy_column := yy_column + 1
+--|#line 45 "ts_config_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 45")
+end
+last_token := Colon_code
+when 6 then
+	yy_column := yy_column + 1
+--|#line 46 "ts_config_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 46")
+end
+last_token := Left_parenthesis_code
+when 7 then
 	yy_column := yy_column + 1
 --|#line 47 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 47")
 end
-last_token := Colon_code
-when 6 then
-	yy_column := yy_column + 1
---|#line 48 "ts_config_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 48")
-end
-last_token := Left_parenthesis_code
-when 7 then
-	yy_column := yy_column + 1
---|#line 49 "ts_config_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 49")
-end
 last_token := Right_parenthesis_code
 when 8 then
 	yy_column := yy_column + 5
+--|#line 52 "ts_config_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 52")
+end
+last_token := T_CLASS
+when 9 then
+	yy_column := yy_column + 7
+--|#line 53 "ts_config_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 53")
+end
+last_token := T_CLUSTER
+when 10 then
+	yy_column := yy_column + 7
 --|#line 54 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 54")
 end
-last_token := T_CLASS
-when 9 then
+last_token := T_COMPILE
+when 11 then
 	yy_column := yy_column + 7
 --|#line 55 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 55")
 end
-last_token := T_CLUSTER
-when 10 then
-	yy_column := yy_column + 7
+last_token := T_DEFAULT
+when 12 then
+	yy_column := yy_column + 3
 --|#line 56 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 56")
 end
-last_token := T_COMPILE
-when 11 then
+last_token := T_END
+when 13 then
 	yy_column := yy_column + 7
 --|#line 57 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 57")
 end
-last_token := T_DEFAULT
-when 12 then
-	yy_column := yy_column + 3
+last_token := T_EXECUTE
+when 14 then
+	yy_column := yy_column + 7
 --|#line 58 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 58")
 end
-last_token := T_END
-when 13 then
-	yy_column := yy_column + 7
+last_token := T_FEATURE
+when 15 then
+	yy_column := yy_column + 6
 --|#line 59 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 59")
 end
-last_token := T_EXECUTE
-when 14 then
-	yy_column := yy_column + 7
+last_token := T_PREFIX
+when 16 then
+	yy_column := yy_column + 4
 --|#line 60 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 60")
 end
-last_token := T_FEATURE
-when 15 then
-	yy_column := yy_column + 6
+last_token := T_TEST
+when 17 then
+	yy_column := yy_column + 7
 --|#line 61 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 61")
 end
-last_token := T_PREFIX
-when 16 then
-	yy_column := yy_column + 4
---|#line 62 "ts_config_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 62")
-end
-last_token := T_TEST
-when 17 then
-	yy_column := yy_column + 7
---|#line 63 "ts_config_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 63")
-end
 last_token := T_TESTGEN
 when 18 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 68 "ts_config_scanner.l"
+--|#line 66 "ts_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 68")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 66")
 end
 
 				last_token := T_IDENTIFIER
@@ -178,9 +178,9 @@ end
 			
 when 19 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 76 "ts_config_scanner.l"
+--|#line 74 "ts_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 76")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 74")
 end
 
 				last_token := T_STRING
@@ -188,9 +188,9 @@ end
 			
 when 20 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 80 "ts_config_scanner.l"
+--|#line 78 "ts_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 80")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 78")
 end
 
 				if text_count > 1 then
@@ -200,163 +200,163 @@ end
 			
 when 21 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
+--|#line 84 "ts_config_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 84")
+end
+buffer.append_string (text)
+when 22 then
+	yy_column := yy_column + 2
+--|#line 85 "ts_config_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 85")
+end
+buffer.append_character ('%A')
+when 23 then
+	yy_column := yy_column + 2
 --|#line 86 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 86")
 end
-buffer.append_string (text)
-when 22 then
+buffer.append_character ('%B')
+when 24 then
 	yy_column := yy_column + 2
 --|#line 87 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 87")
 end
-buffer.append_character ('%A')
-when 23 then
+buffer.append_character ('%C')
+when 25 then
 	yy_column := yy_column + 2
 --|#line 88 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 88")
 end
-buffer.append_character ('%B')
-when 24 then
+buffer.append_character ('%D')
+when 26 then
 	yy_column := yy_column + 2
 --|#line 89 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 89")
 end
-buffer.append_character ('%C')
-when 25 then
+buffer.append_character ('%F')
+when 27 then
 	yy_column := yy_column + 2
 --|#line 90 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 90")
 end
-buffer.append_character ('%D')
-when 26 then
+buffer.append_character ('%H')
+when 28 then
 	yy_column := yy_column + 2
 --|#line 91 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 91")
 end
-buffer.append_character ('%F')
-when 27 then
+buffer.append_character ('%L')
+when 29 then
 	yy_column := yy_column + 2
 --|#line 92 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 92")
 end
-buffer.append_character ('%H')
-when 28 then
+buffer.append_character ('%N')
+when 30 then
 	yy_column := yy_column + 2
 --|#line 93 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 93")
 end
-buffer.append_character ('%L')
-when 29 then
+buffer.append_character ('%Q')
+when 31 then
 	yy_column := yy_column + 2
 --|#line 94 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 94")
 end
-buffer.append_character ('%N')
-when 30 then
+buffer.append_character ('%R')
+when 32 then
 	yy_column := yy_column + 2
 --|#line 95 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 95")
 end
-buffer.append_character ('%Q')
-when 31 then
+buffer.append_character ('%S')
+when 33 then
 	yy_column := yy_column + 2
 --|#line 96 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 96")
 end
-buffer.append_character ('%R')
-when 32 then
+buffer.append_character ('%T')
+when 34 then
 	yy_column := yy_column + 2
 --|#line 97 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 97")
 end
-buffer.append_character ('%S')
-when 33 then
+buffer.append_character ('%U')
+when 35 then
 	yy_column := yy_column + 2
 --|#line 98 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 98")
 end
-buffer.append_character ('%T')
-when 34 then
+buffer.append_character ('%V')
+when 36 then
 	yy_column := yy_column + 2
 --|#line 99 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 99")
 end
-buffer.append_character ('%U')
-when 35 then
+buffer.append_character ('%%')
+when 37 then
 	yy_column := yy_column + 2
 --|#line 100 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 100")
 end
-buffer.append_character ('%V')
-when 36 then
+buffer.append_character ('%'')
+when 38 then
 	yy_column := yy_column + 2
 --|#line 101 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 101")
 end
-buffer.append_character ('%%')
-when 37 then
+buffer.append_character ('%"')
+when 39 then
 	yy_column := yy_column + 2
 --|#line 102 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 102")
 end
-buffer.append_character ('%'')
-when 38 then
+buffer.append_character ('%(')
+when 40 then
 	yy_column := yy_column + 2
 --|#line 103 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 103")
 end
-buffer.append_character ('%"')
-when 39 then
+buffer.append_character ('%)')
+when 41 then
 	yy_column := yy_column + 2
 --|#line 104 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 104")
 end
-buffer.append_character ('%(')
-when 40 then
+buffer.append_character ('%<')
+when 42 then
 	yy_column := yy_column + 2
 --|#line 105 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 105")
 end
-buffer.append_character ('%)')
-when 41 then
-	yy_column := yy_column + 2
---|#line 106 "ts_config_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 106")
-end
-buffer.append_character ('%<')
-when 42 then
-	yy_column := yy_column + 2
---|#line 107 "ts_config_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 107")
-end
 buffer.append_character ('%>')
 when 43 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 108 "ts_config_scanner.l"
+--|#line 106 "ts_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 108")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 106")
 end
 
 			code_ := text_substring (3, text_count - 1).to_integer
@@ -369,16 +369,16 @@ end
 		
 when 44 then
 yy_set_column (1)
---|#line 121 "ts_config_scanner.l"
+--|#line 119 "ts_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 121")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 119")
 end
 -- Ignore new-line
 when 45 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 122 "ts_config_scanner.l"
+--|#line 120 "ts_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 122")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 120")
 end
 
 			last_token := T_STRING
@@ -393,13 +393,33 @@ end
 		
 when 46 then
 	yy_column := yy_column + 2
---|#line 135 "ts_config_scanner.l"
+--|#line 133 "ts_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 135")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 133")
 end
 buffer.append_character (text_item (2))
 when 47 then
 yy_set_line_column
+--|#line 135 "ts_config_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 135")
+end
+	-- Catch-all rules (no backing up)
+							last_token := T_STRERR
+							set_start_condition (INITIAL)
+						
+when 48 then
+yy_set_column (1)
+--|#line 136 "ts_config_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 136")
+end
+	-- Catch-all rules (no backing up)
+							last_token := T_STRERR
+							set_start_condition (INITIAL)
+						
+when 49 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
 --|#line 137 "ts_config_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 137")
@@ -408,31 +428,11 @@ end
 							last_token := T_STRERR
 							set_start_condition (INITIAL)
 						
-when 48 then
-yy_set_column (1)
---|#line 138 "ts_config_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 138")
-end
-	-- Catch-all rules (no backing up)
-							last_token := T_STRERR
-							set_start_condition (INITIAL)
-						
-when 49 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
---|#line 139 "ts_config_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 139")
-end
-	-- Catch-all rules (no backing up)
-							last_token := T_STRERR
-							set_start_condition (INITIAL)
-						
 when 50 then
 	yy_column := yy_column + 1
---|#line 149 "ts_config_scanner.l"
+--|#line 147 "ts_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 149")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 147")
 end
 last_token := text_item (1).code
 when 51 then
@@ -454,15 +454,15 @@ fatal_error ("scanner jammed")
 		do
 			inspect yy_sc
 when 0 then
---|#line 148 "ts_config_scanner.l"
+--|#line 146 "ts_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 148")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 146")
 end
 terminate
 when 1 then
---|#line 140 "ts_config_scanner.l"
+--|#line 138 "ts_config_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 140")
+	std.error.put_line ("Executing scanner user-code from file 'ts_config_scanner.l' at line 138")
 end
 	-- Catch-all rules (no backing up)
 							last_token := T_STRERR

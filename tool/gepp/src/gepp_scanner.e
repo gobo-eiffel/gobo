@@ -52,9 +52,9 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
---|#line 41 "gepp_scanner.l"
+--|#line 39 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 41")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 39")
 end
 
 						-- Comment.
@@ -64,9 +64,9 @@ end
 						end
 					
 when 2 then
---|#line 48 "gepp_scanner.l"
+--|#line 46 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 48")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 46")
 end
 
 						last_token := P_IFDEF
@@ -76,9 +76,9 @@ end
 						end
 					
 when 3 then
---|#line 55 "gepp_scanner.l"
+--|#line 53 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 55")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 53")
 end
 
 						last_token := P_IFNDEF
@@ -88,9 +88,9 @@ end
 						end
 					
 when 4 then
---|#line 62 "gepp_scanner.l"
+--|#line 60 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 62")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 60")
 end
 
 						last_token := P_ELSE
@@ -100,9 +100,9 @@ end
 						end
 					
 when 5 then
---|#line 69 "gepp_scanner.l"
+--|#line 67 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 69")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 67")
 end
 
 						last_token := P_ENDIF
@@ -112,9 +112,9 @@ end
 						end
 					
 when 6 then
---|#line 76 "gepp_scanner.l"
+--|#line 74 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 76")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 74")
 end
 
 						last_token := P_INCLUDE
@@ -124,9 +124,9 @@ end
 						end
 					
 when 7 then
---|#line 83 "gepp_scanner.l"
+--|#line 81 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 83")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 81")
 end
 
 						last_token := P_DEFINE
@@ -136,9 +136,9 @@ end
 						end
 					
 when 8 then
---|#line 90 "gepp_scanner.l"
+--|#line 88 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 90")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 88")
 end
 
 						last_token := P_UNDEF
@@ -148,35 +148,35 @@ end
 						end
 					
 when 9 then
---|#line 97 "gepp_scanner.l"
+--|#line 95 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 97")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 95")
 end
 
 						echo
 						set_start_condition (S_READLINE)
 					
 when 10, 11 then
---|#line 101 "gepp_scanner.l"
+--|#line 99 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 101")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 99")
 end
 
 						echo
 						line_nb := line_nb + 1
 					
 when 12 then
---|#line 106 "gepp_scanner.l"
+--|#line 104 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 106")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 104")
 end
 
 						echo
 					
 when 13 then
---|#line 112 "gepp_scanner.l"
+--|#line 110 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 112")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 110")
 end
 
 						echo
@@ -184,71 +184,71 @@ end
 						set_start_condition (INITIAL)
 					
 when 14 then
---|#line 117 "gepp_scanner.l"
+--|#line 115 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 117")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 115")
 end
 
 						echo
 						set_start_condition (INITIAL)
 					
 when 15 then
---|#line 124 "gepp_scanner.l"
+--|#line 122 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 124")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 122")
 end
 
 						line_nb := line_nb + 1
 						set_start_condition (INITIAL)
 					
 when 16 then
---|#line 128 "gepp_scanner.l"
+--|#line 126 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 128")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 126")
 end
 
 						set_start_condition (INITIAL)
 					
 when 17 then
---|#line 134 "gepp_scanner.l"
+--|#line 132 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 134")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 132")
 end
 -- Separator.
 when 18 then
---|#line 135 "gepp_scanner.l"
+--|#line 133 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 135")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 133")
 end
 
 						last_token := P_STRING
 						last_string_value := text_substring (2, text_count - 1)
 					
 when 19 then
---|#line 139 "gepp_scanner.l"
+--|#line 137 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 139")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 137")
 end
 
 						last_token := P_NAME
 						last_string_value := text
 					
 when 20 then
---|#line 143 "gepp_scanner.l"
+--|#line 141 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 143")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 141")
 end
 last_token := P_AND
 when 21 then
---|#line 144 "gepp_scanner.l"
+--|#line 142 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 144")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 142")
 end
 last_token := P_OR
 when 22 then
---|#line 145 "gepp_scanner.l"
+--|#line 143 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 145")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 143")
 end
 
 						last_token := P_EOL
@@ -256,15 +256,15 @@ end
 						set_start_condition (INITIAL)
 					
 when 23 then
---|#line 154 "gepp_scanner.l"
+--|#line 152 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 154")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 152")
 end
 last_token := text_item (1).code
 when 24 then
---|#line 157 "gepp_scanner.l"
+--|#line 155 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 157")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 155")
 end
 last_token := text_item (1).code
 when 25 then
@@ -286,9 +286,9 @@ fatal_error ("scanner jammed")
 		do
 			inspect yy_sc
 when 1 then
---|#line 150 "gepp_scanner.l"
+--|#line 148 "gepp_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 150")
+	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 148")
 end
 
 						last_token := P_EOL

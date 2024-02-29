@@ -46,81 +46,81 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
+--|#line 40 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 40")
+end
+last_token := T_TOKEN
+when 2 then
+--|#line 41 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 41")
+end
+last_token := T_LEFT
+when 3 then
 --|#line 42 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 42")
 end
-last_token := T_TOKEN
-when 2 then
+last_token := T_RIGHT
+when 4 then
 --|#line 43 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 43")
 end
-last_token := T_LEFT
-when 3 then
+last_token := T_NONASSOC
+when 5 then
 --|#line 44 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 44")
 end
-last_token := T_RIGHT
-when 4 then
+last_token := T_TYPE
+when 6 then
 --|#line 45 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 45")
 end
-last_token := T_NONASSOC
-when 5 then
+last_token := T_START
+when 7 then
 --|#line 46 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 46")
 end
-last_token := T_TYPE
-when 6 then
+last_token := T_EXPECT
+when 8 then
 --|#line 47 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 47")
 end
-last_token := T_START
-when 7 then
+last_token := Comma_code
+when 9 then
 --|#line 48 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 48")
 end
-last_token := T_EXPECT
-when 8 then
+last_token := Less_than_code
+when 10 then
 --|#line 49 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 49")
 end
-last_token := Comma_code
-when 9 then
+last_token := Greater_than_code
+when 11 then
 --|#line 50 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 50")
 end
-last_token := Less_than_code
-when 10 then
+last_token := Left_bracket_code
+when 12 then
 --|#line 51 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 51")
 end
-last_token := Greater_than_code
-when 11 then
+last_token := Right_bracket_code
+when 13 then
 --|#line 52 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 52")
-end
-last_token := Left_bracket_code
-when 12 then
---|#line 53 "pr_yacc_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 53")
-end
-last_token := Right_bracket_code
-when 13 then
---|#line 54 "pr_yacc_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 54")
 end
 
 						line_nb := line_nb + 1
@@ -128,306 +128,306 @@ end
 						set_start_condition (EIFFEL_CODE)
 					
 when 14 then
---|#line 59 "pr_yacc_scanner.l"
+--|#line 57 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 59")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 57")
 end
 
 						eiffel_text_count := 0
 						set_start_condition (EIFFEL_CODE)
 					
 when 15 then
---|#line 63 "pr_yacc_scanner.l"
+--|#line 61 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 63")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 61")
 end
 
 						last_token := T_2PERCENTS
 						set_start_condition (SECTION2)
 					
 when 16 then
---|#line 67 "pr_yacc_scanner.l"
+--|#line 65 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 67")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 65")
 end
 last_token := T_UNKNOWN
 when 17 then
---|#line 71 "pr_yacc_scanner.l"
+--|#line 69 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 71")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 69")
 end
 -- Separator or comment.
 when 18 then
---|#line 72 "pr_yacc_scanner.l"
+--|#line 70 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 72")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 70")
 end
 line_nb := line_nb + 1
 when 19 then
---|#line 74 "pr_yacc_scanner.l"
+--|#line 72 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 74")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 72")
 end
 
 						last_token := T_INTEGER
 						last_string_value := text
 					
 when 20 then
---|#line 78 "pr_yacc_scanner.l"
+--|#line 76 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 78")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 76")
 end
 
 						last_token := T_INTEGER_8
 						last_string_value := text
 					
 when 21 then
---|#line 82 "pr_yacc_scanner.l"
+--|#line 80 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 82")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 80")
 end
 
 						last_token := T_INTEGER_16
 						last_string_value := text
 					
 when 22 then
---|#line 86 "pr_yacc_scanner.l"
+--|#line 84 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 86")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 84")
 end
 
 						last_token := T_INTEGER_32
 						last_string_value := text
 					
 when 23 then
---|#line 90 "pr_yacc_scanner.l"
+--|#line 88 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 90")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 88")
 end
 
 						last_token := T_INTEGER_64
 						last_string_value := text
 					
 when 24 then
---|#line 94 "pr_yacc_scanner.l"
+--|#line 92 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 94")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 92")
 end
 
 						last_token := T_NATURAL
 						last_string_value := text
 					
 when 25 then
---|#line 98 "pr_yacc_scanner.l"
+--|#line 96 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 98")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 96")
 end
 
 						last_token := T_NATURAL_8
 						last_string_value := text
 					
 when 26 then
---|#line 102 "pr_yacc_scanner.l"
+--|#line 100 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 102")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 100")
 end
 
 						last_token := T_NATURAL_16
 						last_string_value := text
 					
 when 27 then
---|#line 106 "pr_yacc_scanner.l"
+--|#line 104 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 106")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 104")
 end
 
 						last_token := T_NATURAL_32
 						last_string_value := text
 					
 when 28 then
---|#line 110 "pr_yacc_scanner.l"
+--|#line 108 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 110")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 108")
 end
 
 						last_token := T_NATURAL_64
 						last_string_value := text
 					
 when 29 then
---|#line 114 "pr_yacc_scanner.l"
+--|#line 112 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 114")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 112")
 end
 
 						last_token := T_BOOLEAN
 						last_string_value := text
 					
 when 30 then
---|#line 118 "pr_yacc_scanner.l"
+--|#line 116 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 118")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 116")
 end
 
 						last_token := T_REAL
 						last_string_value := text
 					
 when 31 then
---|#line 122 "pr_yacc_scanner.l"
+--|#line 120 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 122")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 120")
 end
 
 						last_token := T_REAL_32
 						last_string_value := text
 					
 when 32 then
---|#line 126 "pr_yacc_scanner.l"
+--|#line 124 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 126")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 124")
 end
 
 						last_token := T_REAL_64
 						last_string_value := text
 					
 when 33 then
---|#line 130 "pr_yacc_scanner.l"
+--|#line 128 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 130")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 128")
 end
 
 						last_token := T_DOUBLE
 						last_string_value := text
 					
 when 34 then
---|#line 134 "pr_yacc_scanner.l"
+--|#line 132 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 134")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 132")
 end
 
 						last_token := T_CHARACTER
 						last_string_value := text
 					
 when 35 then
---|#line 138 "pr_yacc_scanner.l"
+--|#line 136 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 138")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 136")
 end
 
 						last_token := T_CHARACTER_8
 						last_string_value := text
 					
 when 36 then
---|#line 142 "pr_yacc_scanner.l"
+--|#line 140 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 142")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 140")
 end
 
 						last_token := T_CHARACTER_32
 						last_string_value := text
 					
 when 37 then
---|#line 146 "pr_yacc_scanner.l"
+--|#line 144 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 146")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 144")
 end
 
 						last_token := T_POINTER
 						last_string_value := text
 					
 when 38 then
---|#line 150 "pr_yacc_scanner.l"
+--|#line 148 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 150")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 148")
 end
 
 						last_token := T_TUPLE
 						last_string_value := text
 					
 when 39 then
---|#line 154 "pr_yacc_scanner.l"
+--|#line 152 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 154")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 152")
 end
 
 						last_token := T_LIKE
 						last_string_value := text
 					
 when 40 then
---|#line 158 "pr_yacc_scanner.l"
+--|#line 156 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 158")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 156")
 end
 
 						last_token := T_CURRENT
 						last_string_value := text
 					
 when 41 then
---|#line 162 "pr_yacc_scanner.l"
+--|#line 160 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 162")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 160")
 end
 
 						last_token := T_EXPANDED
 						last_string_value := text
 					
 when 42 then
---|#line 166 "pr_yacc_scanner.l"
+--|#line 164 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 166")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 164")
 end
 
 						last_token := T_REFERENCE
 						last_string_value := text
 					
 when 43 then
---|#line 170 "pr_yacc_scanner.l"
+--|#line 168 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 170")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 168")
 end
 
 						last_token := T_SEPARATE
 						last_string_value := text
 					
 when 44 then
---|#line 174 "pr_yacc_scanner.l"
+--|#line 172 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 174")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 172")
 end
 
 						last_token := T_ATTACHED
 						last_string_value := text
 					
 when 45 then
---|#line 178 "pr_yacc_scanner.l"
+--|#line 176 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 178")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 176")
 end
 
 						last_token := T_DETACHABLE
 						last_string_value := text
 					
 when 46 then
---|#line 182 "pr_yacc_scanner.l"
+--|#line 180 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 182")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 180")
 end
 
 						last_token := T_AS
 						last_string_value := text
 					
 when 47 then
---|#line 186 "pr_yacc_scanner.l"
+--|#line 184 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 186")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 184")
 end
 
 						last_token := T_IDENTIFIER
 						last_string_value := text
 					
 when 48 then
---|#line 190 "pr_yacc_scanner.l"
+--|#line 188 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 190")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 188")
 end
 
 						last_token := T_NUMBER
@@ -437,18 +437,18 @@ end
 						end
 					
 when 49 then
---|#line 197 "pr_yacc_scanner.l"
+--|#line 195 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 197")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 195")
 end
 
 						last_token := T_CHAR
 						last_string_32_value := unicode_text
 					
 when 50 then
---|#line 201 "pr_yacc_scanner.l"
+--|#line 199 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 201")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 199")
 end
 
 						last_token := T_STR
@@ -458,15 +458,15 @@ end
 						end
 					
 when 51 then
---|#line 211 "pr_yacc_scanner.l"
+--|#line 209 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 211")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 209")
 end
 last_token := T_PREC
 when 52 then
---|#line 212 "pr_yacc_scanner.l"
+--|#line 210 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 212")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 210")
 end
 
 						last_token := T_ERROR
@@ -474,33 +474,33 @@ end
 						set_start_condition (ERROR_SECTION)
 					
 when 53 then
---|#line 217 "pr_yacc_scanner.l"
+--|#line 215 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 217")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 215")
 end
 
 						last_token := Colon_code
 						last_integer_value := line_nb
 					
 when 54 then
---|#line 221 "pr_yacc_scanner.l"
+--|#line 219 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 221")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 219")
 end
 
 						last_token := Bar_code
 						last_integer_value := line_nb
 					
 when 55 then
---|#line 225 "pr_yacc_scanner.l"
+--|#line 223 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 225")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 223")
 end
 last_token := Semicolon_code
 when 56 then
---|#line 226 "pr_yacc_scanner.l"
+--|#line 224 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 226")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 224")
 end
 
 						line_nb := line_nb + 1
@@ -508,60 +508,60 @@ end
 						set_start_condition (EIFFEL_ACTION)
 					
 when 57 then
---|#line 231 "pr_yacc_scanner.l"
+--|#line 229 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 231")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 229")
 end
 
 						eiffel_text_count := 0
 						set_start_condition (EIFFEL_ACTION)
 					
 when 58 then
---|#line 235 "pr_yacc_scanner.l"
+--|#line 233 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 235")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 233")
 end
 
 						last_token := T_2PERCENTS
 						set_start_condition (SECTION3)
 					
 when 59 then
---|#line 242 "pr_yacc_scanner.l"
+--|#line 240 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 242")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 240")
 end
 
 						last_token := T_USER_CODE
 						last_string_value := utf8_text
 					
 when 60 then
---|#line 249 "pr_yacc_scanner.l"
+--|#line 247 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 249")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 247")
 end
 -- Separator or comment.
 when 61 then
+--|#line 248 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 248")
+end
+line_nb := line_nb + 1
+when 62 then
 --|#line 250 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 250")
 end
-line_nb := line_nb + 1
-when 62 then
---|#line 252 "pr_yacc_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 252")
-end
 last_token := Left_parenthesis_code
 when 63 then
---|#line 253 "pr_yacc_scanner.l"
+--|#line 251 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 253")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 251")
 end
 last_token := Right_parenthesis_code
 when 64 then
---|#line 254 "pr_yacc_scanner.l"
+--|#line 252 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 254")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 252")
 end
 
 						last_token := T_NUMBER
@@ -569,9 +569,9 @@ end
 						last_integer_value := last_error
 					
 when 65 then
---|#line 259 "pr_yacc_scanner.l"
+--|#line 257 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 259")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 257")
 end
 
 						line_nb := line_nb + 1
@@ -579,39 +579,39 @@ end
 						set_start_condition (ERROR_ACTION)
 					
 when 66 then
---|#line 264 "pr_yacc_scanner.l"
+--|#line 262 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 264")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 262")
 end
 
 						eiffel_text_count := 0
 						set_start_condition (ERROR_ACTION)
 					
 when 67 then
---|#line 271 "pr_yacc_scanner.l"
+--|#line 269 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 271")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 269")
 end
 eiffel_more
 when 68 then
---|#line 272 "pr_yacc_scanner.l"
+--|#line 270 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 272")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 270")
 end
 
 					line_nb := line_nb + 1
 					eiffel_more
 				
 when 69 then
---|#line 276 "pr_yacc_scanner.l"
+--|#line 274 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 276")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 274")
 end
 eiffel_more
 when 70 then
---|#line 277 "pr_yacc_scanner.l"
+--|#line 275 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 277")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 275")
 end
 
 					last_token := T_EIFFEL
@@ -619,30 +619,30 @@ end
 					set_start_condition (INITIAL)
 				
 when 71 then
---|#line 291 "pr_yacc_scanner.l"
+--|#line 289 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 291")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 289")
 end
 eiffel_more
 when 72 then
---|#line 292 "pr_yacc_scanner.l"
+--|#line 290 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 292")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 290")
 end
 
 					line_nb := line_nb + 1
 					eiffel_more
 				
 when 73 then
---|#line 296 "pr_yacc_scanner.l"
+--|#line 294 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 296")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 294")
 end
 eiffel_more
 when 74 then
---|#line 298 "pr_yacc_scanner.l"
+--|#line 296 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 298")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 296")
 end
 
 					append_utf8_text_substring_to_string (1, eiffel_text_count, action_buffer)
@@ -657,9 +657,9 @@ end
 					end
 				
 when 75 then
---|#line 310 "pr_yacc_scanner.l"
+--|#line 308 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 310")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 308")
 end
 
 					if attached text_substring (eiffel_text_count + 2, text_count) as l_text_substring then
@@ -684,9 +684,9 @@ end
 					end
 				
 when 76 then
---|#line 332 "pr_yacc_scanner.l"
+--|#line 330 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 332")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 330")
 end
 
 					if attached text_substring (eiffel_text_count + 3, text_count) as l_text_substring then
@@ -711,18 +711,18 @@ end
 					end
 				
 when 77 then
---|#line 354 "pr_yacc_scanner.l"
+--|#line 352 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 354")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 352")
 end
 
 					nb_open_brackets := nb_open_brackets + 1
 					eiffel_more
 				
 when 78 then
---|#line 358 "pr_yacc_scanner.l"
+--|#line 356 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 358")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 356")
 end
 
 					if nb_open_brackets = 0 then
@@ -738,33 +738,33 @@ end
 					end
 				
 when 79 then
+--|#line 381 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 381")
+end
+eiffel_more
+when 80 then
+--|#line 382 "pr_yacc_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 382")
+end
+eiffel_more
+when 81 then
 --|#line 383 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 383")
 end
 eiffel_more
-when 80 then
+when 82 then
 --|#line 384 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 384")
 end
 eiffel_more
-when 81 then
+when 83 then
 --|#line 385 "pr_yacc_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 385")
-end
-eiffel_more
-when 82 then
---|#line 386 "pr_yacc_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 386")
-end
-eiffel_more
-when 83 then
---|#line 387 "pr_yacc_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 387")
 end
 
 						-- Multi-line manifest string.
@@ -773,9 +773,9 @@ end
 					eiffel_more
 				
 when 84 then
---|#line 393 "pr_yacc_scanner.l"
+--|#line 391 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 393")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 391")
 end
 
 						-- Verbatim string.
@@ -785,27 +785,27 @@ end
 					eiffel_more
 			
 when 85 then
---|#line 403 "pr_yacc_scanner.l"
+--|#line 401 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 403")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 401")
 end
 
 					pop_start_condition
 					eiffel_more
 				
 when 86 then
---|#line 407 "pr_yacc_scanner.l"
+--|#line 405 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 407")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 405")
 end
 
 					line_nb := line_nb + 1
 					eiffel_more
 				
 when 87 then
---|#line 411 "pr_yacc_scanner.l"
+--|#line 409 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 411")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 409")
 end
 
 						-- Syntax error: empty line in middle of
@@ -814,9 +814,9 @@ end
 					eiffel_more
 				
 when 88 then
---|#line 417 "pr_yacc_scanner.l"
+--|#line 415 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 417")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 415")
 end
 
 						-- Syntax error: missing character % at beginning
@@ -825,9 +825,9 @@ end
 					eiffel_more
 				
 when 89 then
---|#line 433 "pr_yacc_scanner.l"
+--|#line 431 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 433")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 431")
 end
 
 					line_nb := line_nb + 1
@@ -835,9 +835,9 @@ end
 					eiffel_more
 				
 when 90 then
---|#line 438 "pr_yacc_scanner.l"
+--|#line 436 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 438")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 436")
 end
 
 						-- Syntax error.
@@ -845,9 +845,9 @@ end
 					eiffel_more
 				
 when 91 then
---|#line 450 "pr_yacc_scanner.l"
+--|#line 448 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 450")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 448")
 end
 
 					if is_eiffel_verbatim_string_closer (eiffel_text_count + 1, text_count - 1) then
@@ -859,27 +859,27 @@ end
 					eiffel_more
 				
 when 92 then
---|#line 459 "pr_yacc_scanner.l"
+--|#line 457 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 459")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 457")
 end
 
 					line_nb := line_nb + 1
 					eiffel_more
 				
 when 93 then
---|#line 463 "pr_yacc_scanner.l"
+--|#line 461 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 463")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 461")
 end
 
 					set_start_condition (EIFFEL_VS3)
 					eiffel_more
 				
 when 94 then
---|#line 474 "pr_yacc_scanner.l"
+--|#line 472 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 474")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 472")
 end
 
 					line_nb := line_nb + 1
@@ -887,9 +887,9 @@ end
 					eiffel_more
 				
 when 95 then
---|#line 479 "pr_yacc_scanner.l"
+--|#line 477 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 479")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 477")
 end
 
 						-- Syntax error.
@@ -897,9 +897,9 @@ end
 					eiffel_more
 				
 when 96 then
---|#line 490 "pr_yacc_scanner.l"
+--|#line 488 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 490")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 488")
 end
 
 					last_token := unicode_text_item (1).code.to_integer_32
@@ -922,9 +922,9 @@ fatal_error ("scanner jammed")
 		do
 			inspect yy_sc
 when 3 then
---|#line 282 "pr_yacc_scanner.l"
+--|#line 280 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 282")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 280")
 end
 
 					report_missing_characters_error ("%%}")
@@ -933,9 +933,9 @@ end
 					set_start_condition (INITIAL)
 				
 when 4, 6 then
---|#line 371 "pr_yacc_scanner.l"
+--|#line 369 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 371")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 369")
 end
 
 					report_missing_characters_error ("}")
@@ -947,9 +947,9 @@ end
 					set_start_condition (SECTION2)
 				
 when 7 then
---|#line 423 "pr_yacc_scanner.l"
+--|#line 421 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 423")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 421")
 end
 
 						-- Syntax error: missing character % at beginning
@@ -957,27 +957,27 @@ end
 					pop_start_condition
 				
 when 8 then
---|#line 443 "pr_yacc_scanner.l"
+--|#line 441 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 443")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 441")
 end
 
 						-- Syntax error.
 					pop_start_condition
 				
 when 9 then
---|#line 467 "pr_yacc_scanner.l"
+--|#line 465 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 467")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 465")
 end
 
 						-- Syntax error.
 					pop_start_condition
 				
 when 10 then
---|#line 484 "pr_yacc_scanner.l"
+--|#line 482 "pr_yacc_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 484")
+	std.error.put_line ("Executing scanner user-code from file 'pr_yacc_scanner.l' at line 482")
 end
 
 						-- Syntax error.
