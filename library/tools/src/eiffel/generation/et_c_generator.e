@@ -1043,6 +1043,7 @@ feature {NONE} -- Compilation script generation
 #	define GE_MACOS
 #endif
 
+#define GC_IGNORE_WARN
 #define GC_NOT_DLL
 #define GC_THREADS
 #define PARALLEL_MARK

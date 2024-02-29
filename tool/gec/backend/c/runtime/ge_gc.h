@@ -42,6 +42,7 @@
 #include <process.h>
 #endif
 
+#define GC_IGNORE_WARN
 #define GC_NOT_DLL
 #define GC_THREADS
 #define PARALLEL_MARK
