@@ -209,9 +209,9 @@ feature {NONE} -- Semantic actions
 		do
 				inspect yy_act
 when 1 then
---|#line 43 "scalc.y"
+--|#line 41 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 43")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 41")
 end
 
 
@@ -228,9 +228,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 2 then
---|#line 44 "scalc.y"
+--|#line 42 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 44")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 42")
 end
 
 
@@ -240,9 +240,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 3 then
---|#line 47 "scalc.y"
+--|#line 45 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 47")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 45")
 end
 
 
@@ -251,9 +251,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 4 then
---|#line 48 "scalc.y"
+--|#line 46 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 48")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 46")
 end
 
 print (yyvs2.item (yyvsp2)); print ("%N") 
@@ -263,9 +263,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 5 then
---|#line 49 "scalc.y"
+--|#line 47 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 49")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 47")
 end
 
 recover 
@@ -275,9 +275,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 6 then
---|#line 52 "scalc.y"
+--|#line 50 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 52")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 50")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
@@ -286,9 +286,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 7 then
---|#line 53 "scalc.y"
+--|#line 51 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 53")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 51")
 end
 
 yyval2 := {DOUBLE} 3.141592 
@@ -297,9 +297,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 8 then
---|#line 54 "scalc.y"
+--|#line 52 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 54")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 52")
 end
 
 yyval2 := memory_value (yyvs3.item (yyvsp3)) 
@@ -317,9 +317,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 9 then
---|#line 55 "scalc.y"
+--|#line 53 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 55")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 53")
 end
 
 yyval2 := yyvs2.item (yyvsp2); set_memory_value (yyval2, yyvs3.item (yyvsp3)) 
@@ -330,9 +330,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 10 then
---|#line 56 "scalc.y"
+--|#line 54 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 56")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 54")
 end
 
 yyval2 := yyvs2.item (yyvsp2 - 1) + yyvs2.item (yyvsp2) 
@@ -343,9 +343,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 11 then
---|#line 57 "scalc.y"
+--|#line 55 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 57")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 55")
 end
 
 yyval2 := yyvs2.item (yyvsp2 - 1) - yyvs2.item (yyvsp2) 
@@ -356,9 +356,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 12 then
---|#line 58 "scalc.y"
+--|#line 56 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 58")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 56")
 end
 
 yyval2 := yyvs2.item (yyvsp2 - 1) * yyvs2.item (yyvsp2) 
@@ -369,9 +369,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 13 then
---|#line 59 "scalc.y"
+--|#line 57 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 59")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 57")
 end
 
 yyval2 := yyvs2.item (yyvsp2 - 1) / yyvs2.item (yyvsp2) 
@@ -382,9 +382,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 14 then
---|#line 60 "scalc.y"
+--|#line 58 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 60")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 58")
 end
 
 yyval2 := -yyvs2.item (yyvsp2) 
@@ -394,9 +394,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 15 then
---|#line 61 "scalc.y"
+--|#line 59 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 61")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 59")
 end
 
 yyval2 := Current √ yyvs2.item (yyvsp2) 
@@ -406,9 +406,9 @@ if yy_parsing_status >= yyContinue then
 	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 when 16 then
---|#line 62 "scalc.y"
+--|#line 60 "scalc.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 62")
+	std.error.put_line ("Executing parser user-code from file 'scalc.y' at line 60")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 

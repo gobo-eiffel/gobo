@@ -53,39 +53,39 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
+--|#line 35 "ascii2ps.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'ascii2ps.l' at line 35")
+end
+output ("%Tnewline%N")
+when 2 then
+--|#line 36 "ascii2ps.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'ascii2ps.l' at line 36")
+end
+output ("%Tnewline%N")
+when 3 then
 --|#line 37 "ascii2ps.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ascii2ps.l' at line 37")
 end
-output ("%Tnewline%N")
-when 2 then
+output ("%T( ) show%N")
+when 4 then
 --|#line 38 "ascii2ps.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ascii2ps.l' at line 38")
 end
-output ("%Tnewline%N")
-when 3 then
+output ("%Tprinttab%N")
+when 5 then
 --|#line 39 "ascii2ps.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ascii2ps.l' at line 39")
 end
-output ("%T( ) show%N")
-when 4 then
+output ("%Tnewpage%N")
+when 6 then
 --|#line 40 "ascii2ps.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'ascii2ps.l' at line 40")
-end
-output ("%Tprinttab%N")
-when 5 then
---|#line 41 "ascii2ps.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ascii2ps.l' at line 41")
-end
-output ("%Tnewpage%N")
-when 6 then
---|#line 42 "ascii2ps.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ascii2ps.l' at line 42")
 end
 
 					output ("%T(")
@@ -93,9 +93,9 @@ end
 					output (") printword%N")
 				
 when 7 then
---|#line 47 "ascii2ps.l"
+--|#line 45 "ascii2ps.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'ascii2ps.l' at line 47")
+	std.error.put_line ("Executing scanner user-code from file 'ascii2ps.l' at line 45")
 end
 
 					output ("%T(\")

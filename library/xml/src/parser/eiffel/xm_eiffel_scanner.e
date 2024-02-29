@@ -55,9 +55,9 @@ feature {NONE} -- Implementation
 when 1 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 125 "xm_eiffel_scanner.l"
+--|#line 123 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 125")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 123")
 end
  
 			set_last_token (COMMENT_START)
@@ -66,9 +66,9 @@ end
 when 2 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 133 "xm_eiffel_scanner.l"
+--|#line 131 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 133")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 131")
 end
 
 			set_last_token (COMMENT_END)
@@ -81,9 +81,9 @@ end
 when 3 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 142 "xm_eiffel_scanner.l"
+--|#line 140 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 142")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 140")
 end
  
 			set_last_token (COMMENT_DASHDASH) -- conformance error XML1.0:2.5
@@ -92,9 +92,9 @@ end
 when 4 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 147 "xm_eiffel_scanner.l"
+--|#line 145 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 147")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 145")
 end
 
 			set_last_token (CHARDATA)
@@ -103,9 +103,9 @@ end
 when 5 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 152 "xm_eiffel_scanner.l"
+--|#line 150 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 152")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 150")
 end
 
 			set_last_token (CHARDATA)
@@ -114,9 +114,9 @@ end
 when 6 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 157 "xm_eiffel_scanner.l"
+--|#line 155 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 157")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 155")
 end
 
 			set_last_token (CHARDATA_UTF8)
@@ -125,9 +125,9 @@ end
 when 7 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 162 "xm_eiffel_scanner.l"
+--|#line 160 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 162")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 160")
 end
 
 			set_last_token (CHARDATA)
@@ -136,9 +136,9 @@ end
 when 8 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 173 "xm_eiffel_scanner.l"
+--|#line 171 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 173")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 171")
 end
 
 			set_last_token (XMLDECLARATION_START)
@@ -147,9 +147,9 @@ end
 when 9 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 178 "xm_eiffel_scanner.l"
+--|#line 176 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 178")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 176")
 end
 
 				-- "<?xml" matched by previous rule when allowed.
@@ -158,9 +158,9 @@ end
 when 10 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 182 "xm_eiffel_scanner.l"
+--|#line 180 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 182")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 180")
 end
 
 				-- <?xml caught by previous rules.
@@ -170,9 +170,9 @@ end
 when 11 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 191 "xm_eiffel_scanner.l"
+--|#line 189 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 191")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 189")
 end
 
 			set_last_token (XMLDECLARATION_END)
@@ -185,9 +185,9 @@ end
 when 12 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 201 "xm_eiffel_scanner.l"
+--|#line 199 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 201")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 199")
 end
 
 			set_last_token (XMLDECLARATION_VERSION)
@@ -195,9 +195,9 @@ end
 when 13 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 205 "xm_eiffel_scanner.l"
+--|#line 203 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 205")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 203")
 end
 
 			set_last_token (XMLDECLARATION_VERSION_10)
@@ -206,9 +206,9 @@ end
 when 14 then
 	yy_column := yy_column + 10
 	yy_position := yy_position + 10
---|#line 211 "xm_eiffel_scanner.l"
+--|#line 209 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 211")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 209")
 end
 
 			set_last_token (XMLDECLARATION_STANDALONE) 
@@ -216,9 +216,9 @@ end
 when 15 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 215 "xm_eiffel_scanner.l"
+--|#line 213 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 215")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 213")
 end
 
 			set_last_token (XMLDECLARATION_STANDALONE_YES)
@@ -227,9 +227,9 @@ end
 when 16 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 220 "xm_eiffel_scanner.l"
+--|#line 218 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 220")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 218")
 end
 
 			set_last_token (XMLDECLARATION_STANDALONE_NO)
@@ -238,9 +238,9 @@ end
 when 17 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 226 "xm_eiffel_scanner.l"
+--|#line 224 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 226")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 224")
 end
 
 			set_last_token (XMLDECLARATION_ENCODING)
@@ -248,9 +248,9 @@ end
 when 18 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 230 "xm_eiffel_scanner.l"
+--|#line 228 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 230")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 228")
 end
 
 			-- 'yes' 'no' '1.0' caught by previous rules
@@ -260,9 +260,9 @@ end
 when 19 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 236 "xm_eiffel_scanner.l"
+--|#line 234 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 236")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 234")
 end
 
 			set_last_token (EQ)
@@ -270,9 +270,9 @@ end
 when 20 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 240 "xm_eiffel_scanner.l"
+--|#line 238 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 240")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 238")
 end
 
 			set_last_token (APOS)
@@ -280,9 +280,9 @@ end
 when 21 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 244 "xm_eiffel_scanner.l"
+--|#line 242 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 244")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 242")
 end
 
 			set_last_token (QUOT)
@@ -290,9 +290,9 @@ end
 when 22 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 248 "xm_eiffel_scanner.l"
+--|#line 246 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 248")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 246")
 end
  
 			set_last_token (SPACE) 
@@ -300,9 +300,9 @@ end
 when 23 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 255 "xm_eiffel_scanner.l"
+--|#line 253 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 255")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 253")
 end
 
 			set_last_token (PI_END)
@@ -315,9 +315,9 @@ end
 when 24 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 263 "xm_eiffel_scanner.l"
+--|#line 261 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 263")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 261")
 end
 
 			set_last_token (PI_TARGET)
@@ -326,9 +326,9 @@ end
 when 25 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 268 "xm_eiffel_scanner.l"
+--|#line 266 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 268")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 266")
 end
 
 			set_last_token (PI_TARGET_UTF8)
@@ -337,9 +337,9 @@ end
 when 26 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 273 "xm_eiffel_scanner.l"
+--|#line 271 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 273")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 271")
 end
 
 			set_last_token (SPACE)
@@ -348,9 +348,9 @@ end
 when 27 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 277 "xm_eiffel_scanner.l"
+--|#line 275 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 277")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 275")
 end
 
 			set_last_token (CHARDATA)
@@ -359,9 +359,9 @@ end
 when 28 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 281 "xm_eiffel_scanner.l"
+--|#line 279 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 281")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 279")
 end
 
 			set_last_token (CHARDATA_UTF8)
@@ -370,9 +370,9 @@ end
 when 29 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 286 "xm_eiffel_scanner.l"
+--|#line 284 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 286")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 284")
 end
  
 			set_last_token (CHARDATA) 
@@ -381,9 +381,9 @@ end
 when 30 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
---|#line 294 "xm_eiffel_scanner.l"
+--|#line 292 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 294")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 292")
 end
 
 	set_last_token (CDATA_START)
@@ -392,9 +392,9 @@ end
 when 31 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 301 "xm_eiffel_scanner.l"
+--|#line 299 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 301")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 299")
 end
  
 			set_last_token (CDATA_END) 
@@ -407,9 +407,9 @@ end
 when 32 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 309 "xm_eiffel_scanner.l"
+--|#line 307 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 309")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 307")
 end
 
 				-- End of line handling XML1.0:2.11.
@@ -419,9 +419,9 @@ end
 when 33 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 315 "xm_eiffel_scanner.l"
+--|#line 313 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 315")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 313")
 end
 
 			set_last_token (CHARDATA)
@@ -430,9 +430,9 @@ end
 when 34 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 319 "xm_eiffel_scanner.l"
+--|#line 317 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 319")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 317")
 end
 
 				-- Big chunks in `last_value'.
@@ -442,9 +442,9 @@ end
 when 35 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 325 "xm_eiffel_scanner.l"
+--|#line 323 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 325")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 323")
 end
  
 			set_last_token (CHARDATA) 
@@ -453,9 +453,9 @@ end
 when 36 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
---|#line 331 "xm_eiffel_scanner.l"
+--|#line 329 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 331")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 329")
 end
 
 		set_last_token (DOCTYPE_START)
@@ -464,33 +464,33 @@ end
 when 37 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
---|#line 338 "xm_eiffel_scanner.l"
+--|#line 336 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 338")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 336")
 end
  set_last_token (DOCTYPE_REQUIRED) 
 when 38 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 339 "xm_eiffel_scanner.l"
+--|#line 337 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 339")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 337")
 end
  set_last_token (DOCTYPE_IMPLIED) 
 when 39 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 340 "xm_eiffel_scanner.l"
+--|#line 338 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 340")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 338")
 end
  set_last_token (DOCTYPE_FIXED) 
 when 40 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 341 "xm_eiffel_scanner.l"
+--|#line 339 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 341")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 339")
 end
 
 			set_last_token (DOCTYPE_ATT_CDATA) 
@@ -499,9 +499,9 @@ end
 when 41 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 345 "xm_eiffel_scanner.l"
+--|#line 343 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 345")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 343")
 end
 
 			set_last_token (DOCTYPE_ATT_ID) 
@@ -510,9 +510,9 @@ end
 when 42 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 349 "xm_eiffel_scanner.l"
+--|#line 347 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 349")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 347")
 end
 
 			set_last_token (DOCTYPE_ATT_IDREF)
@@ -521,9 +521,9 @@ end
 when 43 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 353 "xm_eiffel_scanner.l"
+--|#line 351 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 353")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 351")
 end
 
 			set_last_token (DOCTYPE_ATT_IDREFS)
@@ -532,9 +532,9 @@ end
 when 44 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 357 "xm_eiffel_scanner.l"
+--|#line 355 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 357")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 355")
 end
 
 			set_last_token (DOCTYPE_ATT_ENTITY)
@@ -543,9 +543,9 @@ end
 when 45 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 361 "xm_eiffel_scanner.l"
+--|#line 359 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 361")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 359")
 end
 
 			set_last_token (DOCTYPE_ATT_ENTITIES) 
@@ -554,9 +554,9 @@ end
 when 46 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 365 "xm_eiffel_scanner.l"
+--|#line 363 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 365")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 363")
 end
 
 			set_last_token (DOCTYPE_ATT_NMTOKEN) 
@@ -565,9 +565,9 @@ end
 when 47 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 369 "xm_eiffel_scanner.l"
+--|#line 367 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 369")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 367")
 end
 
 			set_last_token (DOCTYPE_ATT_NMTOKENS)
@@ -576,9 +576,9 @@ end
 when 48 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 373 "xm_eiffel_scanner.l"
+--|#line 371 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 373")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 371")
 end
 
 			set_last_token (DOCTYPE_ATT_NOTATION)
@@ -587,9 +587,9 @@ end
 when 49 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 377 "xm_eiffel_scanner.l"
+--|#line 375 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 377")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 375")
 end
 
 			set_last_token (VALUE_START)
@@ -598,9 +598,9 @@ end
 when 50 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 381 "xm_eiffel_scanner.l"
+--|#line 379 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 381")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 379")
 end
 
 			set_last_token (VALUE_START)
@@ -609,9 +609,9 @@ end
 when 51 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 389 "xm_eiffel_scanner.l"
+--|#line 387 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 389")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 387")
 end
 
 			set_last_token (DOCTYPE_DECLARATION_START)
@@ -620,9 +620,9 @@ end
 when 52 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 399 "xm_eiffel_scanner.l"
+--|#line 397 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 399")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 397")
 end
 
 			set_last_token (DOCTYPE_DECLARATION_START)
@@ -631,9 +631,9 @@ end
 when 53 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 404 "xm_eiffel_scanner.l"
+--|#line 402 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 404")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 402")
 end
 
 			set_last_token (DOCTYPE_DECLARATION_END)
@@ -646,9 +646,9 @@ end
 when 54 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
---|#line 413 "xm_eiffel_scanner.l"
+--|#line 411 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 413")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 411")
 end
 
 			set_last_token (DOCTYPE_ELEMENT)
@@ -657,9 +657,9 @@ end
 when 55 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
---|#line 417 "xm_eiffel_scanner.l"
+--|#line 415 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 417")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 415")
 end
 
 			set_last_token (DOCTYPE_ATTLIST)
@@ -668,9 +668,9 @@ end
 when 56 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 421 "xm_eiffel_scanner.l"
+--|#line 419 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 421")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 419")
 end
 
 			set_last_token (DOCTYPE_ENTITY)
@@ -679,9 +679,9 @@ end
 when 57 then
 	yy_column := yy_column + 10
 	yy_position := yy_position + 10
---|#line 425 "xm_eiffel_scanner.l"
+--|#line 423 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 425")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 423")
 end
 
 			set_last_token (DOCTYPE_NOTATION)
@@ -690,9 +690,9 @@ end
 when 58 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 430 "xm_eiffel_scanner.l"
+--|#line 428 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 430")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 428")
 end
 
 			set_last_token (DOCTYPE_IGNORE)
@@ -701,9 +701,9 @@ end
 when 59 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 435 "xm_eiffel_scanner.l"
+--|#line 433 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 435")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 433")
 end
 
 			set_last_token (DOCTYPE_INCLUDE)
@@ -712,9 +712,9 @@ end
 when 60 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 440 "xm_eiffel_scanner.l"
+--|#line 438 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 440")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 438")
 end
 
 			set_last_token (DOCTYPE_CONDITIONAL_START)
@@ -722,9 +722,9 @@ end
 when 61 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 444 "xm_eiffel_scanner.l"
+--|#line 442 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 444")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 442")
 end
 
 			set_last_token (DOCTYPE_CONDITIONAL_END)
@@ -732,9 +732,9 @@ end
 when 62 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 451 "xm_eiffel_scanner.l"
+--|#line 449 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 451")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 449")
 end
 
 			set_last_token (DOCTYPE_CONDITIONAL_START)
@@ -743,9 +743,9 @@ end
 when 63 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 456 "xm_eiffel_scanner.l"
+--|#line 454 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 456")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 454")
 end
 
 			set_last_token (DOCTYPE_CONDITIONAL_END)
@@ -758,9 +758,9 @@ end
 when 64 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 465 "xm_eiffel_scanner.l"
+--|#line 463 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 465")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 463")
 end
 
 			set_last_token (CHARDATA)
@@ -768,9 +768,9 @@ end
 when 65 then
 yy_set_line_column
 	yy_position := yy_position + 1
---|#line 469 "xm_eiffel_scanner.l"
+--|#line 467 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 469")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 467")
 end
 
 			set_last_token (CHARDATA) 
@@ -778,17 +778,17 @@ end
 when 66 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 476 "xm_eiffel_scanner.l"
+--|#line 474 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 476")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 474")
 end
  set_last_token (DOCTYPE_PCDATA) 
 when 67 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 478 "xm_eiffel_scanner.l"
+--|#line 476 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 478")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 476")
 end
 
 			set_last_token (DOCTYPE_ELEMENT_EMPTY)
@@ -797,9 +797,9 @@ end
 when 68 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 483 "xm_eiffel_scanner.l"
+--|#line 481 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 483")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 481")
 end
 
 			set_last_token (DOCTYPE_ELEMENT_ANY)
@@ -808,9 +808,9 @@ end
 when 69 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 491 "xm_eiffel_scanner.l"
+--|#line 489 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 491")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 489")
 end
 
 			set_last_token (DOCTYPE_NDATA)
@@ -819,9 +819,9 @@ end
 when 70 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 499 "xm_eiffel_scanner.l"
+--|#line 497 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 499")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 497")
 end
  
 			set_last_token (DOCTYPE_END)
@@ -834,9 +834,9 @@ end
 when 71 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 508 "xm_eiffel_scanner.l"
+--|#line 506 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 508")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 506")
 end
  
 			set_last_token (NAME) 
@@ -845,9 +845,9 @@ end
 when 72 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 512 "xm_eiffel_scanner.l"
+--|#line 510 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 512")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 510")
 end
  
 			set_last_token (NAME_UTF8) 
@@ -856,9 +856,9 @@ end
 when 73 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 516 "xm_eiffel_scanner.l"
+--|#line 514 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 516")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 514")
 end
 
 			set_last_token (SPACE)
@@ -866,9 +866,9 @@ end
 when 74 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 533 "xm_eiffel_scanner.l"
+--|#line 531 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 533")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 531")
 end
 
 			set_last_token (DOCTYPE_SYSTEM)
@@ -877,9 +877,9 @@ end
 when 75 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 538 "xm_eiffel_scanner.l"
+--|#line 536 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 538")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 536")
 end
 
 			set_last_token (DOCTYPE_SYSTEM_UTF8)
@@ -888,9 +888,9 @@ end
 when 76 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 543 "xm_eiffel_scanner.l"
+--|#line 541 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 543")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 541")
 end
 
 			set_last_token (DOCTYPE_PUBLIC)
@@ -900,9 +900,9 @@ end
 when 77 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 552 "xm_eiffel_scanner.l"
+--|#line 550 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 552")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 550")
 end
 
 				set_last_token (DOCTYPE_SYSTEM)
@@ -916,9 +916,9 @@ end
 when 78 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 562 "xm_eiffel_scanner.l"
+--|#line 560 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 562")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 560")
 end
 
 				set_last_token (DOCTYPE_SYSTEM_UTF8)
@@ -932,9 +932,9 @@ end
 when 79 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 576 "xm_eiffel_scanner.l"
+--|#line 574 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 576")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 574")
 end
 
 				set_last_token (DOCTYPE_END)
@@ -953,9 +953,9 @@ when 80 then
 	yy_line := yy_line + 1
 	yy_column := 1
 	yy_position := yy_position + 1
---|#line 590 "xm_eiffel_scanner.l"
+--|#line 588 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 590")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 588")
 end
 
 				-- the global INPUT_INVALID does not catch \n, which is caught
@@ -970,65 +970,65 @@ end
 when 81 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
+--|#line 602 "xm_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 602")
+end
+ set_last_token (DOCTYPE_GROUP_OR) 
+when 82 then
+	yy_column := yy_column + 1
+	yy_position := yy_position + 1
+--|#line 603 "xm_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 603")
+end
+ set_last_token (DOCTYPE_GROUP_SEQ) 
+when 83 then
+	yy_column := yy_column + 1
+	yy_position := yy_position + 1
 --|#line 604 "xm_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 604")
 end
- set_last_token (DOCTYPE_GROUP_OR) 
-when 82 then
+ set_last_token (DOCTYPE_GROUP_START) 
+when 84 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line 605 "xm_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 605")
 end
- set_last_token (DOCTYPE_GROUP_SEQ) 
-when 83 then
+ set_last_token (DOCTYPE_GROUP_END) 
+when 85 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line 606 "xm_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 606")
 end
- set_last_token (DOCTYPE_GROUP_START) 
-when 84 then
+ set_last_token (DOCTYPE_GROUP_ZEROONE) 
+when 86 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line 607 "xm_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 607")
 end
- set_last_token (DOCTYPE_GROUP_END) 
-when 85 then
+ set_last_token (DOCTYPE_GROUP_ANY) 
+when 87 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line 608 "xm_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 608")
 end
- set_last_token (DOCTYPE_GROUP_ZEROONE) 
-when 86 then
-	yy_column := yy_column + 1
-	yy_position := yy_position + 1
---|#line 609 "xm_eiffel_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 609")
-end
- set_last_token (DOCTYPE_GROUP_ANY) 
-when 87 then
-	yy_column := yy_column + 1
-	yy_position := yy_position + 1
---|#line 610 "xm_eiffel_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 610")
-end
  set_last_token (DOCTYPE_GROUP_ONEMORE) 
 when 88 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 612 "xm_eiffel_scanner.l"
+--|#line 610 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 612")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 610")
 end
 
 			set_last_token (NMTOKEN) 
@@ -1037,9 +1037,9 @@ end
 when 89 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 616 "xm_eiffel_scanner.l"
+--|#line 614 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 616")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 614")
 end
 
 			set_last_token (NMTOKEN_UTF8) 
@@ -1048,9 +1048,9 @@ end
 when 90 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 624 "xm_eiffel_scanner.l"
+--|#line 622 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 624")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 622")
 end
  
 			set_last_token (DOCTYPE_PERCENT) 
@@ -1058,9 +1058,9 @@ end
 when 91 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 627 "xm_eiffel_scanner.l"
+--|#line 625 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 627")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 625")
 end
 
 			set_last_token (VALUE_START)
@@ -1069,9 +1069,9 @@ end
 when 92 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 631 "xm_eiffel_scanner.l"
+--|#line 629 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 631")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 629")
 end
 
 			set_last_token (VALUE_START)
@@ -1080,9 +1080,9 @@ end
 when 93 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 639 "xm_eiffel_scanner.l"
+--|#line 637 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 639")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 637")
 end
 
 			set_last_token (DOCTYPE_PEREFERENCE)
@@ -1091,9 +1091,9 @@ end
 when 94 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 644 "xm_eiffel_scanner.l"
+--|#line 642 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 644")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 642")
 end
 
 			set_last_token (DOCTYPE_PEREFERENCE_UTF8)
@@ -1102,9 +1102,9 @@ end
 when 95 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 648 "xm_eiffel_scanner.l"
+--|#line 646 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 648")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 646")
 end
 
 			set_last_token (ENTITY_INVALID)
@@ -1112,9 +1112,9 @@ end
 when 96 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 655 "xm_eiffel_scanner.l"
+--|#line 653 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 655")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 653")
 end
 
 			set_last_token (ENTITYVALUE_PEREFERENCE)
@@ -1123,9 +1123,9 @@ end
 when 97 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 659 "xm_eiffel_scanner.l"
+--|#line 657 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 659")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 657")
 end
 
 			set_last_token (ENTITYVALUE_PEREFERENCE_UTF8)
@@ -1134,9 +1134,9 @@ end
 when 98 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 667 "xm_eiffel_scanner.l"
+--|#line 665 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 667")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 665")
 end
 
 			set_last_token (ENTITY_INVALID)
@@ -1144,9 +1144,9 @@ end
 when 99 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 674 "xm_eiffel_scanner.l"
+--|#line 672 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 674")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 672")
 end
 
 	set_last_token (TAG_START_END)
@@ -1155,9 +1155,9 @@ end
 when 100 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 679 "xm_eiffel_scanner.l"
+--|#line 677 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 679")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 677")
 end
 
 	set_last_token (TAG_START)
@@ -1166,9 +1166,9 @@ end
 when 101 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 686 "xm_eiffel_scanner.l"
+--|#line 684 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 686")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 684")
 end
 
 			set_last_token (TAG_END_EMPTY)
@@ -1181,9 +1181,9 @@ end
 when 102 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 695 "xm_eiffel_scanner.l"
+--|#line 693 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 695")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 693")
 end
  
 			set_last_token (TAG_END) 
@@ -1196,9 +1196,9 @@ end
 when 103 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 705 "xm_eiffel_scanner.l"
+--|#line 703 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 705")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 703")
 end
 
 			 set_last_token (TAG_NAME_COLON) 
@@ -1206,9 +1206,9 @@ end
 when 104 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 708 "xm_eiffel_scanner.l"
+--|#line 706 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 708")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 706")
 end
  
 			set_last_token (TAG_NAME_FIRST)
@@ -1217,9 +1217,9 @@ end
 when 105 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 712 "xm_eiffel_scanner.l"
+--|#line 710 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 712")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 710")
 end
  
 			set_last_token (TAG_NAME_FIRST_UTF8)
@@ -1228,9 +1228,9 @@ end
 when 106 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 716 "xm_eiffel_scanner.l"
+--|#line 714 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 716")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 714")
 end
  
 			set_last_token (TAG_NAME_ATOM) 
@@ -1239,9 +1239,9 @@ end
 when 107 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 720 "xm_eiffel_scanner.l"
+--|#line 718 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 720")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 718")
 end
  
 			set_last_token (TAG_NAME_ATOM_UTF8) 
@@ -1250,9 +1250,9 @@ end
 when 108 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 724 "xm_eiffel_scanner.l"
+--|#line 722 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 724")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 722")
 end
 
 			set_last_token (SPACE) 
@@ -1260,9 +1260,9 @@ end
 when 109 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 727 "xm_eiffel_scanner.l"
+--|#line 725 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 727")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 725")
 end
 
 			set_last_token (EQ) 
@@ -1270,9 +1270,9 @@ end
 when 110 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 731 "xm_eiffel_scanner.l"
+--|#line 729 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 731")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 729")
 end
  
 			set_last_token (VALUE_START) 
@@ -1281,9 +1281,9 @@ end
 when 111 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 735 "xm_eiffel_scanner.l"
+--|#line 733 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 735")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 733")
 end
 
 			set_last_token (VALUE_START)
@@ -1292,9 +1292,9 @@ end
 when 112 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 748 "xm_eiffel_scanner.l"
+--|#line 746 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 748")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 746")
 end
 
 				set_last_token (CHARDATA)
@@ -1303,9 +1303,9 @@ end
 when 113 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 752 "xm_eiffel_scanner.l"
+--|#line 750 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 752")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 750")
 end
 
 				set_last_token (CHARDATA)
@@ -1314,9 +1314,9 @@ end
 when 114 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 756 "xm_eiffel_scanner.l"
+--|#line 754 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 756")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 754")
 end
 
 				set_last_token (CHARDATA)
@@ -1325,9 +1325,9 @@ end
 when 115 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 760 "xm_eiffel_scanner.l"
+--|#line 758 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 760")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 758")
 end
 
 				set_last_token (CHARDATA)
@@ -1336,9 +1336,9 @@ end
 when 116 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 764 "xm_eiffel_scanner.l"
+--|#line 762 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 764")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 762")
 end
 
 				set_last_token (CHARDATA)
@@ -1347,9 +1347,9 @@ end
 when 117 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 772 "xm_eiffel_scanner.l"
+--|#line 770 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 772")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 770")
 end
  
 				set_last_token (CONTENT_ENTITY) 
@@ -1358,9 +1358,9 @@ end
 when 118 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 776 "xm_eiffel_scanner.l"
+--|#line 774 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 776")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 774")
 end
  
 				set_last_token (CONTENT_ENTITY_UTF8) 
@@ -1369,9 +1369,9 @@ end
 when 119 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 784 "xm_eiffel_scanner.l"
+--|#line 782 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 784")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 782")
 end
  
 				set_last_token (CHARDATA) -- Bypassed
@@ -1380,9 +1380,9 @@ end
 when 120 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 788 "xm_eiffel_scanner.l"
+--|#line 786 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 788")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 786")
 end
  
 				set_last_token (CHARDATA_UTF8) -- Bypassed
@@ -1391,9 +1391,9 @@ end
 when 121 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 795 "xm_eiffel_scanner.l"
+--|#line 793 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 795")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 793")
 end
 
 			set_last_token (CHARDATA)
@@ -1402,9 +1402,9 @@ end
 when 122 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 803 "xm_eiffel_scanner.l"
+--|#line 801 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 803")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 801")
 end
  
 				set_last_token (ATTRIBUTE_ENTITY)
@@ -1413,9 +1413,9 @@ end
 when 123 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 807 "xm_eiffel_scanner.l"
+--|#line 805 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 807")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 805")
 end
  
 				set_last_token (ATTRIBUTE_ENTITY_UTF8)
@@ -1424,9 +1424,9 @@ end
 when 124 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 812 "xm_eiffel_scanner.l"
+--|#line 810 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 812")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 810")
 end
 
 			set_last_token (ATTRIBUTE_LT) -- Conformance error.
@@ -1436,9 +1436,9 @@ when 125 then
 	yy_line := yy_line + 1
 	yy_column := 1
 	yy_position := yy_position + 2
---|#line 816 "xm_eiffel_scanner.l"
+--|#line 814 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 816")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 814")
 end
 
 				-- XML1.0:3.3.3 Attribute value normalization.
@@ -1452,9 +1452,9 @@ end
 when 126 then
 yy_set_line_column
 	yy_position := yy_position + 1
---|#line 825 "xm_eiffel_scanner.l"
+--|#line 823 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 825")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 823")
 end
 
 				-- XML1.0:3.3.3 Attribute value normalization.
@@ -1464,9 +1464,9 @@ end
 when 127 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 830 "xm_eiffel_scanner.l"
+--|#line 828 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 830")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 828")
 end
 
 			set_last_token (CHARDATA)
@@ -1475,9 +1475,9 @@ end
 when 128 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 834 "xm_eiffel_scanner.l"
+--|#line 832 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 834")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 832")
 end
 
 			set_last_token (CHARDATA_UTF8)
@@ -1486,9 +1486,9 @@ end
 when 129 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 842 "xm_eiffel_scanner.l"
+--|#line 840 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 842")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 840")
 end
  
 			character_entity.from_decimal (text_substring (3, text_count - 1))
@@ -1506,9 +1506,9 @@ end
 when 130 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 856 "xm_eiffel_scanner.l"
+--|#line 854 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 856")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 854")
 end
 
 			character_entity.from_hexadecimal (text_substring (4, text_count - 1))
@@ -1526,9 +1526,9 @@ end
 when 131 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 871 "xm_eiffel_scanner.l"
+--|#line 869 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 871")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 869")
 end
 
 			set_last_token (ENTITY_INVALID)
@@ -1537,9 +1537,9 @@ end
 when 132 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 879 "xm_eiffel_scanner.l"
+--|#line 877 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 879")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 877")
 end
 
 				-- End of line handling XML1.0:2.11.
@@ -1549,9 +1549,9 @@ end
 when 133 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 884 "xm_eiffel_scanner.l"
+--|#line 882 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 884")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 882")
 end
 
 			set_last_token (CHARDATA)
@@ -1560,9 +1560,9 @@ end
 when 134 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 888 "xm_eiffel_scanner.l"
+--|#line 886 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 888")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 886")
 end
 
 			set_last_token (CHARDATA)
@@ -1571,9 +1571,9 @@ end
 when 135 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 892 "xm_eiffel_scanner.l"
+--|#line 890 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 892")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 890")
 end
 
 			set_last_token (CHARDATA_UTF8)
@@ -1582,9 +1582,9 @@ end
 when 136 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 900 "xm_eiffel_scanner.l"
+--|#line 898 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 900")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 898")
 end
  
 			set_last_token (VALUE_END) 
@@ -1597,9 +1597,9 @@ end
 when 137 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 908 "xm_eiffel_scanner.l"
+--|#line 906 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 908")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 906")
 end
 
 			set_last_token (CHARDATA) 
@@ -1608,9 +1608,9 @@ end
 when 138 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 916 "xm_eiffel_scanner.l"
+--|#line 914 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 916")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 914")
 end
 
 			set_last_token (VALUE_END)
@@ -1623,9 +1623,9 @@ end
 when 139 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 924 "xm_eiffel_scanner.l"
+--|#line 922 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 924")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 922")
 end
 
 			set_last_token (CHARDATA) 
@@ -1634,9 +1634,9 @@ end
 when 140 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 932 "xm_eiffel_scanner.l"
+--|#line 930 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 932")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 930")
 end
 
 		-- XML1.0:14 ]]> not allowed in markup.
@@ -1647,9 +1647,9 @@ when 141 then
 	yy_line := yy_line + 1
 	yy_column := 1
 	yy_position := yy_position + 2
---|#line 938 "xm_eiffel_scanner.l"
+--|#line 936 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 938")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 936")
 end
 
 		-- End of line handling XML1.0:2.11.
@@ -1659,9 +1659,9 @@ end
 when 142 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 944 "xm_eiffel_scanner.l"
+--|#line 942 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 944")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 942")
 end
  
 	set_last_token (SPACE) 
@@ -1671,9 +1671,9 @@ when 143 then
 	yy_line := yy_line + 1
 	yy_column := 1
 	yy_position := yy_position + 1
---|#line 949 "xm_eiffel_scanner.l"
+--|#line 947 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 949")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 947")
 end
 
 	set_last_token (SPACE) 
@@ -1682,9 +1682,9 @@ end
 when 144 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 954 "xm_eiffel_scanner.l"
+--|#line 952 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 954")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 952")
 end
 
 		-- Space not matched by newline normalization.
@@ -1694,9 +1694,9 @@ end
 when 145 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 960 "xm_eiffel_scanner.l"
+--|#line 958 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 960")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 958")
 end
  
 	set_last_token (CHARDATA)
@@ -1705,9 +1705,9 @@ end
 when 146 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 965 "xm_eiffel_scanner.l"
+--|#line 963 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 965")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 963")
 end
  
 	set_last_token (CHARDATA_UTF8)
@@ -1716,9 +1716,9 @@ end
 when 147 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 970 "xm_eiffel_scanner.l"
+--|#line 968 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 970")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 968")
 end
 
 	set_last_token (CHARDATA)
@@ -1727,9 +1727,9 @@ end
 when 148 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 975 "xm_eiffel_scanner.l"
+--|#line 973 "xm_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 975")
+	std.error.put_line ("Executing scanner user-code from file 'xm_eiffel_scanner.l' at line 973")
 end
 
 		-- Default rule.
