@@ -34,19 +34,20 @@
  * cooperate with the GC on many platforms. 
  * See: https://hboehm.info/gc/gcinterface.html
 */
-#ifdef GE_USE_THREADS
-#ifndef GE_THREAD_TYPES_H
-#include "ge_thread_types.h"
-#endif
-#define GC_THREADS
-#define THREAD_LOCAL_ALLOC
-#undef GC_NO_THREAD_DECLS
-#undef GC_NO_THREAD_REDIRECTS
+#ifdef GE_USE_POSIX_THREADS
+#include <pthread.h>
+#include <semaphore.h>
+#elif defined EIF_WINDOWS
+#include <windows.h>
+#include <process.h>
 #endif
 
 #define GC_IGNORE_WARN
 #define GC_NOT_DLL
+#define GC_THREADS
 #define PARALLEL_MARK
+#define THREAD_LOCAL_ALLOC
+#define GC_ENABLE_SUSPEND_THREAD
 #define LARGE_CONFIG
 #define ALL_INTERIOR_POINTERS
 #define ENABLE_DISCLAIM
@@ -54,7 +55,42 @@
 #define GC_GCJ_SUPPORT
 #define JAVA_FINALIZATION
 #define NO_EXECUTE_PERMISSION
+#define USE_MMAP
 #define USE_MUNMAP
+
+#if defined(GE_WINDOWS)
+#	undef GC_NO_THREAD_DECLS
+#	undef GC_NO_THREAD_REDIRECTS
+#	define EMPTY_GETENV_RESULTS
+#	define DONT_USE_USER32_DLL
+#else
+#	if !defined(GE_MACOS)
+#		define GC_PTHREAD_START_STANDALONE
+#	endif
+#	ifndef _REENTRANT
+#		define _REENTRANT
+#	endif
+#	define HANDLE_FORK
+#endif
+
+#if defined(__clang__) || defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__)
+#	define GC_BUILTIN_ATOMIC
+#endif
+
+#if defined(__clang__)
+#	define HAVE_DL_ITERATE_PHDR
+#	define GC_REQUIRE_WCSDUP
+#	define HAVE_DLADDR
+#	define HAVE_SYS_TYPES_H
+#	define HAVE_UNISTD_H
+#	if defined(GE_MACOS)
+#		define HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID
+#	elif !defined(GE_WINDOWS)
+#		define HAVE_PTHREAD_SETNAME_NP_WITH_TID
+#		define HAVE_PTHREAD_SIGMASK
+#		define NO_GETCONTEXT
+#	endif
+#endif
 
 #include "gc.h"
 #endif
@@ -67,19 +103,21 @@ extern "C" {
  * GC initialization.
  */
 
-#ifdef GE_USE_BOEHM_GC
-#ifdef GE_USE_THREADS
+#if !defined(GE_USE_BOEHM_GC)
+#define GE_init_gc() /* do nothing */
+#elif defined(GE_WINDOWS) || defined(GE_MACOS) || !defined(__clang__)
 #define GE_init_gc() \
 	GC_INIT(); \
 	GC_allow_register_threads(); \
 	GC_enable_incremental()
 #else
+/*
+* No incremenatal GC under Linux when compiled wtih zig/clang,
+* because otherwise the programdoes not behave as expected.
+*/
 #define GE_init_gc() \
 	GC_INIT(); \
-	GC_enable_incremental()
-#endif
-#else /* No GC */
-#define GE_init_gc() /* do nothing */
+	GC_allow_register_threads()
 #endif
 
 /*

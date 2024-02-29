@@ -46,6 +46,7 @@
 #endif
 #ifdef WIN32
 #define EIF_WINDOWS 1
+#define GE_WINDOWS
 #include <windows.h>
 #endif
 
@@ -53,10 +54,12 @@
 #if (defined(macintosh) || defined(Macintosh))
 #define EIF_MAC 1
 #define EIF_MACOSX 1
+#define GE_MACOS
 #endif
 #if (defined(__APPLE__) && defined(__MACH__))
 /* Apparently ISE does not define EIF_MASOSX for Mac OS X >=10.4 (see EXECUTION_ENVIRONMENT.available_cpu_count) */
 #define EIF_MAC 1
+#define GE_MACOS
 #endif
 
 #if (defined(VMS) || defined(__VMS))

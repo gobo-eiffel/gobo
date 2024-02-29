@@ -470,6 +470,9 @@ feature -- Generation
 			a_system_name_not_void: a_system_name /= Void
 		do
 			has_fatal_error := False
+			if use_boehm_gc then
+				add_boehm_gc_c_files (a_system_name)
+			end
 			generate_c_code (a_system_name)
 			generate_compilation_script (a_system_name)
 			c_filenames.wipe_out
@@ -659,15 +662,6 @@ feature {NONE} -- Compilation script generation
 				end
 				i := i + 1
 			end
-				-- Boehm GC.
-			if use_boehm_gc then
-				if not attached gobo_variables.boehm_gc_value as l_boehm_gc_folder or else l_boehm_gc_folder.is_empty then
-					set_fatal_error
-					report_undefined_environment_variable_error (gobo_variables.boehm_gc_variable)
-				else
-					add_external_c_files ("boehm_gc", l_boehm_gc_folder, c_filenames)
-				end
-			end
 				-- List objects in reverse order so that it looks like
 				-- a countdown when compiling since the filenames are numbered.
 			l_cursor := c_filenames.new_cursor
@@ -705,6 +699,12 @@ feature {NONE} -- Compilation script generation
 
 	generate_compilation_shell_script (a_system_name: STRING; a_variables: like c_config; an_obj_filenames: STRING; an_env_regexp: RX_PCRE_REGULAR_EXPRESSION; an_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
 			-- Generate script to compile the C code.
+		require
+			a_system_name_not_void: a_system_name /= Void
+			a_variables_not_void: a_variables /= Void
+			an_obj_filenames_not_void: an_obj_filenames /= Void
+			an_env_regexp_not_void: an_env_regexp /= Void
+			an_external_c_filenames_not_void: an_external_c_filenames /= Void
 		local
 			l_base_name: STRING
 			l_script_filename: STRING
@@ -891,6 +891,9 @@ feature {NONE} -- Compilation script generation
 
 	generate_compilation_makefile (a_system_name: STRING; a_variables: like c_config)
 			-- Generate Makefile to compile the C code.
+		require
+			a_system_name_not_void: a_system_name /= Void
+			a_variables_not_void: a_variables /= Void
 		local
 			l_base_name: STRING
 			l_makefile_filename: STRING
@@ -1007,6 +1010,116 @@ feature {NONE} -- Compilation script generation
 			obj_defined: Result.has ("obj")
 		end
 
+	add_boehm_gc_c_files (a_system_name: STRING)
+			-- Add C files of Boehm GC to the compilation script.
+		require
+			a_system_name_not_void: a_system_name /= Void
+			use_boehm_gc: use_boehm_gc
+		local
+			l_c_file: KL_TEXT_OUTPUT_FILE
+			l_c_filename: STRING
+			l_basename: STRING
+			l_filename: STRING
+		do
+			if not attached gobo_variables.boehm_gc_value as l_boehm_gc_folder or else l_boehm_gc_folder.is_empty then
+				set_fatal_error
+				report_undefined_environment_variable_error (gobo_variables.boehm_gc_variable)
+			else
+				l_basename := a_system_name + (c_filenames.count + 1).out
+				l_c_filename := l_basename + c_file_extension
+				create l_c_file.make (l_c_filename)
+				l_c_file.open_write
+				if not l_c_file.is_open_write then
+					set_fatal_error
+					report_cannot_write_error (l_c_filename)
+				else
+					c_filenames.force_last (c_file_extension, l_basename)
+					l_c_file.put_line ("[
+/* C files for Boehm GC. */
+
+#if defined(WIN32) || defined(WINVER) || defined(_WIN32_WINNT) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__) || defined(_WIN_MSC_VER32)
+#	define GE_WINDOWS
+#elif defined(macintosh) || defined(Macintosh) || defined(__APPLE__) || defined(__MACH__)
+#	define GE_MACOS
+#endif
+
+#define GC_IGNORE_WARN
+#define GC_NOT_DLL
+#define GC_THREADS
+#define PARALLEL_MARK
+#define THREAD_LOCAL_ALLOC
+#define GC_ENABLE_SUSPEND_THREAD
+#define LARGE_CONFIG
+#define ALL_INTERIOR_POINTERS
+#define ENABLE_DISCLAIM
+#define GC_ATOMIC_UNCOLLECTABLE
+#define GC_GCJ_SUPPORT
+#define JAVA_FINALIZATION
+#define NO_EXECUTE_PERMISSION
+#define USE_MMAP
+#define USE_MUNMAP
+
+#if defined(GE_WINDOWS)
+#	undef GC_NO_THREAD_DECLS
+#	undef GC_NO_THREAD_REDIRECTS
+#	define EMPTY_GETENV_RESULTS
+#	define DONT_USE_USER32_DLL
+#else
+#	if !defined(GE_MACOS)
+#		define GC_PTHREAD_START_STANDALONE
+#	endif
+#	ifndef _REENTRANT
+#		define _REENTRANT
+#	endif
+#	define HANDLE_FORK
+#endif
+
+#if defined(__clang__) || defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__)
+#	define GC_BUILTIN_ATOMIC
+#endif
+
+#if defined(__clang__)
+#	define HAVE_DL_ITERATE_PHDR
+#	define GC_REQUIRE_WCSDUP
+#	define HAVE_DLADDR
+#	define HAVE_SYS_TYPES_H
+#	define HAVE_UNISTD_H
+#	if defined(GE_MACOS)
+#		define HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID
+#	elif !defined(GE_WINDOWS)
+#		define HAVE_PTHREAD_SETNAME_NP_WITH_TID
+#		define HAVE_PTHREAD_SIGMASK
+#		define NO_GETCONTEXT
+#	endif
+#endif
+]")
+					l_c_file.put_new_line
+					l_filename := file_system.nested_pathname (l_boehm_gc_folder, <<"extra", "gc.c">>)
+					l_filename := STRING_.replaced_all_substrings (l_filename, "\", "\\")
+					l_c_file.put_string (c_include)
+					l_c_file.put_character (' ')
+					l_c_file.put_character ('"')
+					l_c_file.put_string (l_filename)
+					l_c_file.put_character ('"')
+					l_c_file.put_new_line
+					l_c_file.put_string (c_ifdef)
+					l_c_file.put_character (' ')
+					l_c_file.put_line ("GC_PTHREAD_START_STANDALONE")
+					l_filename := file_system.pathname (l_boehm_gc_folder, "pthread_start.c")
+					l_filename := STRING_.replaced_all_substrings (l_filename, "\", "\\")
+					l_c_file.put_string (c_include)
+					l_c_file.put_character (' ')
+					l_c_file.put_character ('"')
+					l_c_file.put_string (l_filename)
+					l_c_file.put_character ('"')
+					l_c_file.put_new_line
+					l_c_file.put_line (c_endif)
+					l_c_file.put_new_line
+					l_c_file.close
+				end
+			end
+		end
+
 	add_external_c_files (a_library_name, a_clib_dirname: STRING; a_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
 			-- Add C files of `a_library_name' found in `a_clib_dirname' to the compilation script.
 		require
@@ -1030,10 +1143,6 @@ feature {NONE} -- Compilation script generation
 			j, nb2: INTEGER
 			l_common_defines: DS_ARRAYED_LIST [STRING]
 			l_common_includes: DS_ARRAYED_LIST [STRING]
-			l_builtin_atomic: DS_ARRAYED_LIST [STRING]
-			l_use_windows_threads: DS_ARRAYED_LIST [STRING]
-			l_apple: DS_ARRAYED_LIST [STRING]
-			l_is_boehm_gc: BOOLEAN
 		do
 			create l_all_filenames.make (2)
 			create l_dir.make (a_clib_dirname)
@@ -1069,34 +1178,17 @@ feature {NONE} -- Compilation script generation
 			create l_sorter.make (l_comparator)
 			create l_common_defines.make (15)
 			create l_common_includes.make (5)
-			l_is_boehm_gc := a_library_name.same_string ("boehm_gc")
-			if l_is_boehm_gc then
-				l_common_defines.force_last ("GC_NOT_DLL")
-				l_common_defines.force_last ("GC_THREADS")
-				l_common_defines.force_last ("THREAD_LOCAL_ALLOC")
-				l_common_defines.force_last ("PARALLEL_MARK")
-				l_common_defines.force_last ("ALL_INTERIOR_POINTERS")
-				l_common_defines.force_last ("ENABLE_DISCLAIM")
-				l_common_defines.force_last ("GC_ATOMIC_UNCOLLECTABLE")
-				l_common_defines.force_last ("GC_GCJ_SUPPORT")
-				l_common_defines.force_last ("GC_ENABLE_SUSPEND_THREAD")
-				l_common_defines.force_last ("JAVA_FINALIZATION")
-				l_common_defines.force_last ("NO_EXECUTE_PERMISSION")
-				l_common_defines.force_last ("USE_MMAP")
-				l_common_defines.force_last ("USE_MUNMAP")
-			else
-				if use_threads then
-					l_common_defines.force_last (c_ge_use_threads)
-				end
-				if scoop_mode then
-					l_common_defines.force_last (c_ge_use_scoop)
-				end
-				l_common_includes.force_last ("ge_eiffel.h")
-				l_common_includes.force_last ("ge_gc.h")
-						-- Two header files needed to compile EiffelCOM.
-				l_common_includes.force_last ("eif_cecil.h")
-				l_common_includes.force_last ("eif_plug.h")
+			if use_threads then
+				l_common_defines.force_last (c_ge_use_threads)
 			end
+			if scoop_mode then
+				l_common_defines.force_last (c_ge_use_scoop)
+			end
+			l_common_includes.force_last ("ge_eiffel.h")
+			l_common_includes.force_last ("ge_gc.h")
+				-- Two header files needed to compile EiffelCOM.
+			l_common_includes.force_last ("eif_cecil.h")
+			l_common_includes.force_last ("eif_plug.h")
 			nb2 := l_all_filenames.count
 			from j := 1 until j > nb2 loop
 				l_filenames := l_all_filenames.item (j)
@@ -1124,132 +1216,28 @@ feature {NONE} -- Compilation script generation
 					l_external_file.put_string (" */")
 					l_external_file.put_new_line
 					l_external_file.put_new_line
-					if l_common_defines /= Void then
-						nb := l_common_defines.count
-						from i := 1 until i > nb loop
-							l_external_file.put_string (c_define)
-							l_external_file.put_character (' ')
-							l_external_file.put_line (l_common_defines.item (i))
-							i := i + 1
-						end
-					end
-					if a_library_name.same_string ("boehm_gc") then
-						create l_builtin_atomic.make (5)
-							-- clang (and hence Zig) supports GCC atomic intrinsics.
-						l_builtin_atomic.force_last ("__clang__")
-						l_builtin_atomic.force_last ("__GNUC__")
-						l_builtin_atomic.force_last ("__MINGW32__")
-						l_builtin_atomic.force_last ("__MINGW64__")
-						nb := l_builtin_atomic.count
-						if nb > 0 then
-							l_external_file.put_character ('#')
-							l_external_file.put_string (c_if)
-							from i := 1 until i > nb loop
-								if i /= 1 then
-									l_external_file.put_character (' ')
-									l_external_file.put_string (c_or_else)
-								end
-								l_external_file.put_character (' ')
-								l_external_file.put_string (c_defined)
-								l_external_file.put_character ('(')
-								l_external_file.put_string (l_builtin_atomic.item (i))
-								l_external_file.put_character (')')
-								i := i + 1
-							end
-							l_external_file.put_new_line
-							l_external_file.put_string (c_define)
-							l_external_file.put_character (' ')
-							l_external_file.put_line ("GC_BUILTIN_ATOMIC")
-							l_external_file.put_line (c_endif)
-						end
-						create l_use_windows_threads.make (10)
-						l_use_windows_threads.force_last ("WIN32")
-						l_use_windows_threads.force_last ("WINVER")
-						l_use_windows_threads.force_last ("_WIN32_WINNT")
-						l_use_windows_threads.force_last ("_WIN32")
-						l_use_windows_threads.force_last ("__WIN32__")
-						l_use_windows_threads.force_last ("__TOS_WIN__")
-						l_use_windows_threads.force_last ("_WIN_MSC_VER32")
-						nb := l_use_windows_threads.count
-						if nb > 0 then
-							l_external_file.put_character ('#')
-							l_external_file.put_string (c_if)
-							from i := 1 until i > nb loop
-								if i /= 1 then
-									l_external_file.put_character (' ')
-									l_external_file.put_string (c_or_else)
-								end
-								l_external_file.put_character (' ')
-								l_external_file.put_string (c_defined)
-								l_external_file.put_character ('(')
-								l_external_file.put_string (l_use_windows_threads.item (i))
-								l_external_file.put_character (')')
-								i := i + 1
-							end
-							l_external_file.put_new_line
-							l_external_file.put_string (c_define)
-							l_external_file.put_character (' ')
-							l_external_file.put_line ("EMPTY_GETENV_RESULTS")
-							l_external_file.put_string (c_define)
-							l_external_file.put_character (' ')
-							l_external_file.put_line ("DONT_USE_USER32_DLL")
-							l_external_file.put_character ('#')
-							l_external_file.put_line (c_else)
-						end
-						l_external_file.put_string (c_ifndef)
-						l_external_file.put_character (' ')
-						l_external_file.put_line ("_REENTRANT")
+					nb := l_common_defines.count
+					from i := 1 until i > nb loop
 						l_external_file.put_string (c_define)
 						l_external_file.put_character (' ')
-						l_external_file.put_line ("_REENTRANT")
-						l_external_file.put_line (c_endif)
-						create l_apple.make (5)
-						l_apple.force_last ("macintosh")
-						l_apple.force_last ("Macintosh")
-						l_apple.force_last ("__APPLE__")
-						l_apple.force_last ("__MACH__")
-						nb := l_apple.count
-						if nb > 0 then
-							l_external_file.put_character ('#')
-							l_external_file.put_string (c_if)
-							from i := 1 until i > nb loop
-								if i /= 1 then
-									l_external_file.put_character (' ')
-									l_external_file.put_string (c_and_then)
-								end
-								l_external_file.put_character (' ')
-								l_external_file.put_character ('!')
-								l_external_file.put_string (c_defined)
-								l_external_file.put_character ('(')
-								l_external_file.put_string (l_apple.item (i))
-								l_external_file.put_character (')')
-								i := i + 1
-							end
-							l_external_file.put_new_line
-							l_external_file.put_string (c_define)
-							l_external_file.put_character (' ')
-							l_external_file.put_line ("HANDLE_FORK")
-							l_external_file.put_line (c_endif)
-						end
-						if l_use_windows_threads.count > 0 then
-							l_external_file.put_line (c_endif)
-						end
+						l_external_file.put_line (l_common_defines.item (i))
+						i := i + 1
 					end
-					l_external_file.put_new_line
-					if l_common_includes /= Void then
-						nb := l_common_includes.count
-						from i := 1 until i > nb loop
-							l_external_file.put_string (c_include)
-							l_external_file.put_character (' ')
-							l_external_file.put_character ('"')
-							l_external_file.put_string (l_common_includes.item (i))
-							l_external_file.put_character ('"')
-							l_external_file.put_new_line
-							i := i + 1
-						end
-						if nb > 0 then
-							l_external_file.put_new_line
-						end
+					if nb > 0 then
+						l_external_file.put_new_line
+					end
+					nb := l_common_includes.count
+					from i := 1 until i > nb loop
+						l_external_file.put_string (c_include)
+						l_external_file.put_character (' ')
+						l_external_file.put_character ('"')
+						l_external_file.put_string (l_common_includes.item (i))
+						l_external_file.put_character ('"')
+						l_external_file.put_new_line
+						i := i + 1
+					end
+					if nb > 0 then
+						l_external_file.put_new_line
 					end
 					nb := l_filenames.count
 					from i := 1 until i > nb loop
