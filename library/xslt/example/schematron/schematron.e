@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -26,8 +26,6 @@ note
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2005-2018, Colim Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class SCHEMATRON
 

@@ -1,15 +1,13 @@
-note
+﻿note
 
 	description:
 
 	"XSLT patterns that matches any child node%
-   % i.e. node() but not root, attribute or namespace nodes"
+	% i.e. node() but not root, attribute or namespace nodes"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XSLT_ANY_CHILD_NODE_PATTERN
 

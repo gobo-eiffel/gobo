@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XSLT_APPLY_TEMPLATES_PACKAGE
 
@@ -26,7 +24,7 @@ feature {NONE} -- Initialization
 
 	make (a_value: XM_XPATH_VALUE; a_mode: detachable XM_XSLT_MODE; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Establish invariant.
- 		require
+		require
 			selected_nodes_not_void: a_value /= Void
 			major_context_not_void: a_context /= Void and then not a_context.is_minor
 			some_parameters_not_void: some_parameters /= Void

@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel XSLT test suite"
 	copyright: "Copyright (c) 2005-2022, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XSLT_TEST_UNPARSED_TEXT
 

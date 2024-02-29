@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <project name="schematron" default="help" >
 
@@ -6,8 +6,6 @@
 		system: "Schematron validator - XSLT example program"
 		copyright: "Copyright (c) 2005-2016, Colin Adams and others"
 		license: "MIT License"
-		date: "$Date$"
-		revision: "$Revision$"
 	</description>
 
 	<inherit>

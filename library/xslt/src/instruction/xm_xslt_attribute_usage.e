@@ -1,12 +1,10 @@
-note
+﻿note
 
 	description: "Objects that represent xsl:use-attribute-sets,"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2006-2018, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XSLT_ATTRIBUTE_USAGE
 

@@ -1,14 +1,12 @@
-note
+﻿note
 
 	description:
 
-	"Receivers that indent XML by adding ignorable whitespace."
+		"Receivers that indent XML by adding ignorable whitespace."
 
-library: "Gobo Eiffel XSLT Library"
-copyright: "Copyright (c) 2004-2022, Colin Adams and others"
-license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
+	license: "MIT License"
 
 class XM_XSLT_XML_INDENTER
 

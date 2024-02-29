@@ -1,14 +1,12 @@
-note
+﻿note
 
 	description:
 
-	"Receivers that indent XHTML by adding whitespace to character data"
+		"Receivers that indent XHTML by adding whitespace to character data"
 
-library: "Gobo Eiffel XSLT Library"
-copyright: "Copyright (c) 2005, Colin Adams and others"
-license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
+	license: "MIT License"
 
 class XM_XSLT_XHTML_INDENTER
 

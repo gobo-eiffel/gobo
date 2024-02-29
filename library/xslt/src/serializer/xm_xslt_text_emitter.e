@@ -1,14 +1,12 @@
-note
+﻿note
 
 	description:
 
-	"Emitters that write plain text."
+		"Emitters that write plain text."
 
-library: "Gobo Eiffel XSLT Library"
-copyright: "Copyright (c) 2004-2022, Colin Adams and others"
-license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004-2022, Colin Adams and others"
+	license: "MIT License"
 
 class XM_XSLT_TEXT_EMITTER
 

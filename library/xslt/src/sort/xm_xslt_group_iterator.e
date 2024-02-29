@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,10 +7,8 @@ note
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
-deferred class	XM_XSLT_GROUP_ITERATOR [G -> XM_XPATH_ITEM]
+deferred class XM_XSLT_GROUP_ITERATOR [G -> XM_XPATH_ITEM]
 
 inherit
 

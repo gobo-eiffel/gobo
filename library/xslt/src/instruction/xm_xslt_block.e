@@ -1,16 +1,14 @@
-note
+﻿note
 
 	description:
 
 		"Objects that represent a hypothetical xsl:block instruction%
-	    %which simply evaluates it's contents.%
-	    %Used for top-level templates, xsl:otherwise, etc."
+		%which simply evaluates it's contents.%
+		%Used for top-level templates, xsl:otherwise, etc."
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XSLT_BLOCK
 

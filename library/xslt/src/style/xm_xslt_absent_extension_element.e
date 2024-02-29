@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -8,8 +8,6 @@ note
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004-2018, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XSLT_ABSENT_EXTENSION_ELEMENT
 

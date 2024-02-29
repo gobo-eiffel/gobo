@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -7,8 +7,6 @@ note
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XSLT_COMPILED_PROCEDURE
 
@@ -19,7 +17,7 @@ create
 feature {NONE} -- Initialization
 
 	make_procedure (an_executable: like executable; a_body: like body;
-						 a_line_number: like line_number; a_system_id: like system_id; a_slot_manager: like slot_manager)
+		a_line_number: like line_number; a_system_id: like system_id; a_slot_manager: like slot_manager)
 			-- Establish invariant
 		require
 			executable_not_void: an_executable /= Void

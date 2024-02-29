@@ -1,14 +1,12 @@
-note
+﻿note
 
 	description:
 
-	"Emitters that write XHTML."
+		"Emitters that write XHTML."
 
-library: "Gobo Eiffel XSLT Library"
-copyright: "Copyright (c) 2004, Colin Adams and others"
-license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "MIT License"
 
 class XM_XSLT_XHTML_EMITTER
 

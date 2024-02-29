@@ -1,12 +1,10 @@
-note
+﻿note
 
 	description: "Objects that map sequences of matching and non-matching strings to the results of xsl:matching-substring and xsl:non-matching-substring children of xsl:analyze-string"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2008-2015, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class XM_XSLT_ANALYZE_NODE_MAPPING_FUNCTION
 
