@@ -1,4 +1,4 @@
-name: "Nightly builds"
+name: "Nightly Builds"
 
 on: [push, pull_request]
 
