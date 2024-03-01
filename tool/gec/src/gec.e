@@ -308,10 +308,6 @@ feature {NONE} -- Processing
 				create l_command.make (file_system.absolute_pathname (l_script_filename))
 				l_command.execute
 				l_exit_code := l_command.exit_code
-			elseif c_compile_using_make then
-				create l_command.make ("make -f " + l_system_name + ".make")
-				l_command.execute
-				l_exit_code := l_command.exit_code
 			elseif c_compile_using_gecc then
 				create l_command.make ("gecc --thread=" + thread_count.out + " " + l_script_filename)
 				l_command.execute
@@ -400,12 +396,6 @@ feature -- Arguments
 			-- Should the back-end C compiler be invoked on the generated C code using a script?
 		do
 			Result := c_compile_option.was_found and then attached c_compile_option.parameter as l_parameter and then STRING_.same_string (l_parameter, "script")
-		end
-
-	c_compile_using_make: BOOLEAN
-			-- Should the back-end C compiler be invoked on the generated C code using a makefile?
-		do
-			Result := c_compile_option.was_found and then attached c_compile_option.parameter as l_parameter and then STRING_.same_string (l_parameter, "make")
 		end
 
 	no_split: BOOLEAN
@@ -502,7 +492,7 @@ feature -- Argument parsing
 			-- Option for '--ise=major[.minor[.revision[.build]]]'
 
 	c_compile_option: AP_ENUMERATION_OPTION
-			-- Option for '--cc=<no|script|make|gecc>'
+			-- Option for '--cc=<no|script|gecc>'
 
 	split_option: AP_BOOLEAN_OPTION
 			-- Option for '--split=<no|yes>'
@@ -596,9 +586,8 @@ feature -- Argument parsing
 			c_compile_option.set_description ("Should the back-end C compiler be invoked on the generated C code, and if yes with what method? (default: gecc, built-in)")
 			c_compile_option.extend ("no")
 			c_compile_option.extend ("script")
-			c_compile_option.extend ("make")
 			c_compile_option.extend ("gecc")
-			c_compile_option.set_parameter_description ("no|script|make|gecc")
+			c_compile_option.set_parameter_description ("no|script|gecc")
 			a_parser.options.force_last (c_compile_option)
 				-- split
 			create split_option.make_with_long_form ("split")
