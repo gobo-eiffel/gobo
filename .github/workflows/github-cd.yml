@@ -1,0 +1,48 @@
+name: "Nightly builds"
+
+on: [push, pull_request]
+
+jobs:
+
+#
+# Build Gobo delivery.
+#
+
+  linux_build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: build
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github zig
+        shell: pwsh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gobo_delivery_linux
+          path: gobo-*.xz
+          retention-days: 1
+
+  macos_build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: build
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github zig
+        shell: pwsh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gobo_delivery_macos
+          path: gobo-*.xz
+          retention-days: 1
+
+  windows_build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: build
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github zig
+        shell: pwsh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gobo_delivery_windows
+          path: gobo-*.7z
+          retention-days: 1
