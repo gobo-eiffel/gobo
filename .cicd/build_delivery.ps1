@@ -71,11 +71,14 @@ switch ($GOBO_CI_OS) {
 
 $GOBO_CI_GE_ARCHIVE_FILENAME = "gobo-${GOBO_CI_GE_PLATFORM}-${GOBO_CI_GE_VERSION}${GOBO_CI_GE_ARCHIVE_EXTENSION}"
 
+Write-Host "Archive = $GOBO_CI_GE_ARCHIVE_FILENAME"
+Write-Host "Gobo = $env:GOBO"
+
 Set-Location "$env:GOBO/.."
 
 if ($GOBO_CI_OS -eq "windows") {
 	Install-Module -Name 7Zip4PowerShell -Force
-	Compress-7Zip -ArchiveFileName "$GOBO_CI_ZIG_ARCHIVE_FILENAME" -Path "gobo" -Format SevenZip
+	Compress-7Zip -ArchiveFileName "$GOBO_CI_GE_ARCHIVE_FILENAME" -Path "gobo" -Format SevenZip
 } else {
 	tar -cJf "$GOBO_CI_GE_ARCHIVE_FILENAME" gobo
 	if ($LastExitCode -ne 0) {
@@ -85,4 +88,4 @@ if ($GOBO_CI_OS -eq "windows") {
 }
 
 Set-Location "$env:GOBO"
-Move-Item -Path "../$GOBO_CI_ZIG_ARCHIVE_FILENAME" -Destination "."
+Move-Item -Path "../$GOBO_CI_GE_ARCHIVE_FILENAME" -Destination "."
