@@ -53,6 +53,8 @@ if ($LastExitCode -ne 0) {
 	Write-Error "Command 'gec --version' exited with code $LastExitCode"
 	exit $LastExitCode
 }
+# Remove the leading characters "gec version ".
+$GOBO_CI_GE_VERSION = $GOBO_CI_GE_VERSION.Substring(12)
 
 switch ($GOBO_CI_OS) {
 	"linux" {
