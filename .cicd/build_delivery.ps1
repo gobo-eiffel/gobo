@@ -81,6 +81,7 @@ Set-Location "$env:GOBO/.."
 if ($GOBO_CI_OS -eq "windows") {
 	Install-Module -Name 7Zip4PowerShell
 	Compress-7Zip -ArchiveFileName "$GOBO_CI_GE_ARCHIVE_FILENAME" -Path "gobo" -Format SevenZip -Filter ".git"
+	dir
 } else {
 	tar -cJf "$GOBO_CI_GE_ARCHIVE_FILENAME" --exclude "gobo/.git" gobo
 	if ($LastExitCode -ne 0) {
@@ -89,5 +90,5 @@ if ($GOBO_CI_OS -eq "windows") {
 	}
 }
 
+Move-Item -Path "$GOBO_CI_GE_ARCHIVE_FILENAME" -Destination "$env:GOBO"
 Set-Location "$env:GOBO"
-Move-Item -Path "../$GOBO_CI_GE_ARCHIVE_FILENAME" -Destination "."
