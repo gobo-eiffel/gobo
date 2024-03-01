@@ -35,7 +35,6 @@
 		<geant target="develop"/>
 		<delete directory=".azure"/>
 		<delete directory=".cicd"/>
-		<delete directory=".git"/>
 		<delete directory=".githooks"/>
 		<delete directory=".github"/>
 		<delete directory=".sourceforge"/>

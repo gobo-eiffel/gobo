@@ -79,12 +79,12 @@ Write-Host "Gobo = $env:GOBO"
 Set-Location "$env:GOBO/.."
 
 if ($GOBO_CI_OS -eq "windows") {
-	Install-Module -Name 7Zip4PowerShell -Force
-	Compress-7Zip -ArchiveFileName "$GOBO_CI_GE_ARCHIVE_FILENAME" -Path "gobo" -Format SevenZip
+	Install-Module -Name 7Zip4PowerShell
+	Compress-7Zip -ArchiveFileName "$GOBO_CI_GE_ARCHIVE_FILENAME" -Path "gobo" -Format SevenZip -Filter ".git"
 } else {
-	tar -cJf "$GOBO_CI_GE_ARCHIVE_FILENAME" gobo
+	tar -cJf "$GOBO_CI_GE_ARCHIVE_FILENAME" --exclude "gobo/.git" gobo
 	if ($LastExitCode -ne 0) {
-		Write-Error "Command 'tar -cJf $GOBO_CI_GE_ARCHIVE_FILENAME gobo' exited with code $LastExitCode"
+		Write-Error "Command 'tar -cJf $GOBO_CI_GE_ARCHIVE_FILENAME --exclude gobo/.git gobo' exited with code $LastExitCode"
 		exit $LastExitCode
 	}
 }
