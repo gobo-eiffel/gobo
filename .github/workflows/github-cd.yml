@@ -121,13 +121,11 @@ jobs:
           name: gobo_delivery_linux
           path: .
       - name: publish
-        uses: svenstaro/upload-release-action@v2
+        uses: pyTooling/Actions/releaser/composite@main
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: gobo-*
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: gobo-*
           tag: nightly
-          overwrite: true
-          file_glob: true
 
   macos_publish:
     runs-on: macos-latest
@@ -139,13 +137,11 @@ jobs:
           name: gobo_delivery_macos
           path: .
       - name: publish
-        uses: svenstaro/upload-release-action@v2
+        uses: pyTooling/Actions/releaser/composite@main
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: gobo-*
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: gobo-*
           tag: nightly
-          overwrite: true
-          file_glob: true
 
   windows_publish:
     runs-on: windows-latest
@@ -157,10 +153,8 @@ jobs:
           name: gobo_delivery_windows
           path: .
       - name: publish
-        uses: svenstaro/upload-release-action@v2
+        uses: pyTooling/Actions/releaser/composite@main
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: gobo-*
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: gobo-*
           tag: nightly
-          overwrite: true
-          file_glob: true
