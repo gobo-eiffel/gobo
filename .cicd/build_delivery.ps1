@@ -45,8 +45,7 @@ if ($LastExitCode -ne 0) {
 	Write-Error "Command 'geant delivery' exited with code $LastExitCode"
 	exit $LastExitCode
 }
-
-Set-Location "$env:GOBO/.."
+Remove-Item "$env:GOBO/.git" -Recurse -Force
 
 $GOBO_CI_GE_VERSION = gec --version
 if ($LastExitCode -ne 0) {
@@ -70,26 +69,18 @@ switch ($GOBO_CI_OS) {
 		$GOBO_CI_GE_ARCHIVE_EXTENSION = ".7z"
 	}
 }
-
 $GOBO_CI_GE_ARCHIVE_FILENAME = "gobo-${GOBO_CI_GE_PLATFORM}-${GOBO_CI_GE_VERSION}${GOBO_CI_GE_ARCHIVE_EXTENSION}"
 
-Write-Host "Archive = $GOBO_CI_GE_ARCHIVE_FILENAME"
-Write-Host "Gobo = $env:GOBO"
-
 Set-Location "$env:GOBO/.."
-
 if ($GOBO_CI_OS -eq "windows") {
-	Remove-Item "$env:GOBO/.git" -Recurse -Force
 	Install-Module -Name 7Zip4PowerShell
 	Compress-7Zip -Path "$env:GOBO" -ArchiveFileName "$GOBO_CI_GE_ARCHIVE_FILENAME" -PreserveDirectoryRoot
-	dir
 } else {
-	tar -cJf "$GOBO_CI_GE_ARCHIVE_FILENAME" --exclude "gobo/.git" gobo
+	tar -cJf "$GOBO_CI_GE_ARCHIVE_FILENAME" gobo
 	if ($LastExitCode -ne 0) {
-		Write-Error "Command 'tar -cJf $GOBO_CI_GE_ARCHIVE_FILENAME --exclude gobo/.git gobo' exited with code $LastExitCode"
+		Write-Error "Command 'tar -cJf $GOBO_CI_GE_ARCHIVE_FILENAME gobo' exited with code $LastExitCode"
 		exit $LastExitCode
 	}
 }
-
 Move-Item -Path "$GOBO_CI_GE_ARCHIVE_FILENAME" -Destination "$env:GOBO"
 Set-Location "$env:GOBO"
