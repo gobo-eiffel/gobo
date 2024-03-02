@@ -44,9 +44,9 @@ param
 
 $ErrorActionPreference = "Stop"
 
-. "$PSScriptRoot/install_delivery.ps1" $CiTool $CCompiler
+. "$PSScriptRoot/install_delivery.ps1" $CiTool
 if ($LastExitCode -ne 0) {
-	Write-Error "Command 'install_delivery.ps1 $CiTool $CCompiler' exited with code $LastExitCode"
+	Write-Error "Command 'install_delivery.ps1 $CiTool' exited with code $LastExitCode"
 	exit $LastExitCode
 }
 
