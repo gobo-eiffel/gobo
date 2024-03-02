@@ -1,6 +1,9 @@
-name: "Nightly Builds"
+name: "Nightly Build"
 
-on: [push, pull_request]
+on:
+  push:
+  schedule:
+    - cron: '22 5 * * *'
 
 jobs:
 
@@ -9,6 +12,7 @@ jobs:
 #
 
   linux_build:
+    if: ${{ github.repository == 'ebezault/gobo' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,6 +26,7 @@ jobs:
           retention-days: 1
 
   macos_build:
+    if: ${{ github.repository == 'ebezault/gobo' }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,6 +40,7 @@ jobs:
           retention-days: 1
 
   windows_build:
+    if: ${{ github.repository == 'ebezault/gobo' }}
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -111,43 +117,18 @@ jobs:
 # Publish delivery.
 #
 
-  linux_publish:
+  all_publish:
     runs-on: ubuntu-latest
-    needs: linux_test
+    needs: [linux_test, macos_build, windows_test]
     steps:
-      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: gobo_delivery_linux
           path: .
-      - name: publish
-        uses: pyTooling/Actions/releaser/composite@main
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          files: gobo-*
-          tag: nightly
-
-  macos_publish:
-    runs-on: macos-latest
-    needs: macos_test
-    steps:
-      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: gobo_delivery_macos
           path: .
-      - name: publish
-        uses: pyTooling/Actions/releaser/composite@main
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          files: gobo-*
-          tag: nightly
-
-  windows_publish:
-    runs-on: windows-latest
-    needs: windows_test
-    steps:
-      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: gobo_delivery_windows
@@ -158,3 +139,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: gobo-*
           tag: nightly
+          rm: true
