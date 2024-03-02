@@ -46,3 +46,63 @@ jobs:
           name: gobo_delivery_windows
           path: gobo-*.7z
           retention-days: 1
+
+#
+# Running tests.
+#
+  
+  linux_test:
+    runs-on: ubuntu-latest
+    needs: linux_build
+    strategy:
+      fail-fast: false
+      matrix:
+        c_compiler: [zig, gcc]
+        eiffel_compiler: [ge, debug_ge, ise, debug_ise]
+        system_under_test: [library, tool]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: gobo_delivery_linux
+          path: .
+      - name: test
+        run: . "$env:GITHUB_WORKSPACE/.cicd/test_delivery.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
+        shell: pwsh
+
+  macos_test:
+    runs-on: macos-latest
+    needs: macos_build
+    strategy:
+      fail-fast: false
+      matrix:
+        c_compiler: [zig, clang]
+        eiffel_compiler: [ge, debug_ge, ise, debug_ise]
+        system_under_test: [library, tool]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: gobo_delivery_macos
+          path: .
+      - name: test
+        run: . "$env:GITHUB_WORKSPACE/.cicd/test_delivery.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
+        shell: pwsh
+
+  windows_test:
+    runs-on: windows-latest
+    needs: windows_build
+    strategy:
+      fail-fast: false
+      matrix:
+        c_compiler: [zig, msc]
+        eiffel_compiler: [ge, debug_ge, ise, debug_ise]
+        system_under_test: [library, tool]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: gobo_delivery_windows
+          path: .
+      - name: test
+        run: . "$env:GITHUB_WORKSPACE/.cicd/test_delivery.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
