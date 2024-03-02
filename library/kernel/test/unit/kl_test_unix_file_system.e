@@ -1323,20 +1323,20 @@ feature -- Working directory
 				assert ("readable1", a_file_system.is_directory_readable (cwd))
 					-- Try to change to non-existing directory.
 				a_name := new_dirname ("gobo")
-				assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
+				assert ("not_readable2", not a_file_system.is_directory_readable (a_name))
 				a_file_system.set_current_working_directory (a_name)
 					-- Change of directory failed.
-				assert ("not_readable2", not a_file_system.is_directory_readable (a_name))
-				assert ("readable1", a_file_system.is_directory_readable (a_file_system.current_working_directory))
-				assert ("not_changed1", a_file_system.same_pathnames (cwd, a_file_system.current_working_directory))
+				assert ("not_readable3", not a_file_system.is_directory_readable (a_name))
+				assert ("readable3", a_file_system.is_directory_readable (a_file_system.current_working_directory))
+				assert ("not_changed3", a_file_system.same_pathnames (cwd, a_file_system.current_working_directory))
 					-- Try to change to non-existing directory with empty pathname.
 				a_name := ""
-				assert ("not_readable3", not a_file_system.is_directory_readable (a_name))
+				assert ("not_readable4", not a_file_system.is_directory_readable (a_name))
 				a_file_system.set_current_working_directory (a_name)
 					-- Change of directory failed.
-				assert ("not_readable4", not a_file_system.is_directory_readable (a_name))
-				assert ("readable2", a_file_system.is_directory_readable (a_file_system.current_working_directory))
-				assert ("not_changed2", a_file_system.same_pathnames (cwd, a_file_system.current_working_directory))
+				assert ("not_readable5", not a_file_system.is_directory_readable (a_name))
+				assert ("readable5", a_file_system.is_directory_readable (a_file_system.current_working_directory))
+				assert ("not_changed5", a_file_system.same_pathnames (cwd, a_file_system.current_working_directory))
 			end
 		end
 
