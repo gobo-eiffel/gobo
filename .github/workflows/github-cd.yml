@@ -48,7 +48,7 @@ jobs:
           retention-days: 1
 
 #
-# Running tests.
+# Run tests.
 #
   
   linux_test:
@@ -106,3 +106,61 @@ jobs:
           path: .
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_delivery.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
+
+#
+# Publish delivery.
+#
+
+  linux_publish:
+    runs-on: ubuntu-latest
+    needs: linux_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: gobo_delivery_linux
+          path: .
+      - name: publish
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: gobo-*
+          tag: nightly
+          overwrite: true
+          file_glob: true
+
+  macos_publish:
+    runs-on: macos-latest
+    needs: macos_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: gobo_delivery_macos
+          path: .
+      - name: publish
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: gobo-*
+          tag: nightly
+          overwrite: true
+          file_glob: true
+
+  windows_publish:
+    runs-on: windows-latest
+    needs: windows_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: gobo_delivery_windows
+          path: .
+      - name: publish
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: gobo-*
+          tag: nightly
+          overwrite: true
+          file_glob: true

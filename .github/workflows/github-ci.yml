@@ -74,7 +74,7 @@ jobs:
           retention-days: 1
 
 #
-# Running tests.
+# Run tests.
 #
   
   linux_test:
