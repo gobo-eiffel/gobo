@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel Ant file for Gobo Eiffel"
-		copyright: "Copyright (c) 2001-2022, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
@@ -35,6 +35,7 @@
 		<geant target="develop"/>
 		<delete directory=".azure"/>
 		<delete directory=".cicd"/>
+		<delete directory=".githooks"/>
 		<delete directory=".github"/>
 		<delete directory=".sourceforge"/>
 		<delete directory="library/structure/doc/visio"/>

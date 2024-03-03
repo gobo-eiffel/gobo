@@ -1,6 +1,13 @@
-name: "GitHub Actions"
+name: "Continuous Integration"
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - '*'
+      - '*/**'
+    tags-ignore:
+      - '*'
+  pull_request:
 
 jobs:
 
@@ -9,6 +16,7 @@ jobs:
 #
 
   linux_build:
+    if: ${{ github.repository == 'ebezault/gobo' || github.repository == 'gobo-eiffel/gobo' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -31,6 +39,7 @@ jobs:
           retention-days: 1
 
   macos_build:
+    if: ${{ github.repository == 'ebezault/gobo' || github.repository == 'gobo-eiffel/gobo' }}
     runs-on: macos-latest
     strategy:
       fail-fast: false
@@ -53,6 +62,7 @@ jobs:
           retention-days: 1
 
   windows_build:
+    if: ${{ github.repository == 'ebezault/gobo' || github.repository == 'gobo-eiffel/gobo' }}
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -74,7 +84,7 @@ jobs:
           retention-days: 1
 
 #
-# Running tests.
+# Run tests.
 #
   
   linux_test:
