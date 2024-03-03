@@ -152,10 +152,10 @@ goto exit
 :clang
 	set CC=clang
 	set LD=clang
-	set CFLAGS=-pthread -Wno-unused-value -Wno-deprecated-declarations -O2
-	set LFLAGS=-pthread
+	set CFLAGS=-pthread -Wno-unused-value -Wno-deprecated-declarations -fno-strict-aliasing -Os -DNDEBUG
+	set LFLAGS=-pthread -fno-strict-aliasing -Os -DNDEBUG
 	set LFLAG_OUT=-o 
-	set LLIBS=-lm
+	set LLIBS=
 	set OBJ=.obj
 	echo clang > "%GOBO%\tool\gec\backend\c\config\default.cfg"
 	goto c_compilation
@@ -171,10 +171,10 @@ goto exit
 :zig_defined
 	set CC="%ZIG%" cc
 	set LD="%ZIG%" cc
-	set CFLAGS=-pthread -Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined -Os
-	set LFLAGS=-pthread
+	set CFLAGS=-pthread -Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined -fno-strict-aliasing -fno-sanitize=cfi -Os -DNDEBUG
+	set LFLAGS=-pthread -Os -DNDEBUG
 	set LFLAG_OUT=-o 
-	set LLIBS=-lm
+	set LLIBS=
 	set OBJ=.obj
 	echo zig > "%GOBO%\tool\gec\backend\c\config\default.cfg"
 	goto c_compilation
