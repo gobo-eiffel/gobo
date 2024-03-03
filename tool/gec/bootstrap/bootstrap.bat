@@ -153,7 +153,7 @@ goto exit
 	set CC=clang
 	set LD=clang
 	set CFLAGS=-pthread -Wno-unused-value -Wno-deprecated-declarations -fno-strict-aliasing -Os -DNDEBUG
-	set LFLAGS=-pthread -Os -DNDEBUG
+	set LFLAGS=-pthread -fno-strict-aliasing -Os -DNDEBUG
 	set LFLAG_OUT=-o 
 	set LLIBS=
 	set OBJ=.obj
