@@ -145,6 +145,12 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 							Write-Error "Command 'apt install -y build-essential' exited with code $LastExitCode"
 							exit $LastExitCode
 						}
+						# Installing `git`.
+						apt install -y git
+						if ($LastExitCode -ne 0) {
+							Write-Error "Command 'apt install -y git' exited with code $LastExitCode"
+							exit $LastExitCode
+						}
 					}
 					"macos" {
 						$GOBO_CI_OS = "macos"
