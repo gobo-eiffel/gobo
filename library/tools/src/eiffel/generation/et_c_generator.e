@@ -41429,6 +41429,7 @@ feature {NONE} -- Include files
 					l_c_filename := "eif_dir.c"
 				elseif a_filename.same_string ("eif_eiffel.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					include_runtime_header_file ("ge_gc.h", a_force, a_file)
 					include_runtime_header_file ("ge_string.h", a_force, a_file)
 					include_runtime_header_file ("eif_globals.h", a_force, a_file)
 					include_runtime_header_file ("eif_except.h", a_force, a_file)
@@ -41454,6 +41455,8 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					include_runtime_header_file ("ge_dll.h", a_force, a_file)
 					l_c_filename := "eif_misc.c"
+				elseif a_filename.same_string ("eif_object_id.h") then
+					include_runtime_header_file ("ge_identified.h", a_force, a_file)
 				elseif a_filename.same_string ("eif_path_name.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					l_c_filename := "eif_path_name.c"
