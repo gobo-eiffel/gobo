@@ -76,11 +76,9 @@
 		<set name="split_size_option" value=""/>
 		<set name="split_size_option" value="${split_size}" if="${split_size}"/>
 		<set name="gelint_option" value="false" unless="${gelint_option}"/>
-		<set name="gc_option" value="no"/>
-		<set name="gc_option" value="boehm" if="${BOEHM_GC}"/>
 		<set name="thread_count_option" value=""/>
 		<set name="thread_count_option" value="${thread_count}" if="${thread_count}"/>
-		<gec ecf="${ecf_filename}" executable="${gec_executable}" target="${system}" finalize="${finalize}" gelint="${gelint_option}" gc="${gc_option}" c_compile="no" catcall="error" split="${split}" split_size="${split_size_option}" thread="${thread_count_option}"/>
+		<gec ecf="${ecf_filename}" executable="${gec_executable}" target="${system}" finalize="${finalize}" gelint="${gelint_option}" c_compile="no" catcall="error" split="${split}" split_size="${split_size_option}" thread="${thread_count_option}"/>
 		<set name="c_script" value="${system}.bat" if="${GOBO_OS}=windows"/>
 		<set name="c_script" value="${system}.sh" unless="${GOBO_OS}=windows"/>
 		<gecc script="${c_script}" thread="${thread_count_option}"/>

@@ -412,6 +412,8 @@ feature -- Arguments
 		do
 			if gc_option.was_found and then attached gc_option.parameter as l_parameter then
 				Result := STRING_.same_string (l_parameter, "boehm")
+			elseif attached Execution_environment.variable_value ("GE_NO_DEFAULT_BOEHM_GC") as l_no_default_boehm_gc and then not l_no_default_boehm_gc.is_empty then
+				Result := False
 			else
 				Result := attached gobo_variables.boehm_gc_value as l_boehm_gc and then not l_boehm_gc.is_empty
 			end

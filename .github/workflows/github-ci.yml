@@ -27,6 +27,8 @@ jobs:
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github ${{ matrix.c_compiler }}
         shell: pwsh
+        env:
+          GE_NO_DEFAULT_BOEHM_GC: true
       - uses: actions/upload-artifact@v4
         with:
           name: gobo_bin_linux_${{ matrix.c_compiler }}
@@ -50,6 +52,8 @@ jobs:
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github ${{ matrix.c_compiler }}
         shell: pwsh
+        env:
+          GE_NO_DEFAULT_BOEHM_GC: true
       - uses: actions/upload-artifact@v4
         with:
           name: gobo_bin_macos_${{ matrix.c_compiler }}
@@ -72,6 +76,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github ${{ matrix.c_compiler }}
+        env:
+          GE_NO_DEFAULT_BOEHM_GC: true
       - uses: actions/upload-artifact@v4
         with:
           name: gobo_bin_windows_${{ matrix.c_compiler }}
@@ -109,6 +115,8 @@ jobs:
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
         shell: pwsh
+        env:
+          GE_NO_DEFAULT_BOEHM_GC: true
 
   macos_test:
     runs-on: macos-latest
@@ -132,6 +140,8 @@ jobs:
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
         shell: pwsh
+        env:
+          GE_NO_DEFAULT_BOEHM_GC: true
 
   windows_test:
     runs-on: windows-latest
@@ -154,3 +164,5 @@ jobs:
           path: tool/gec/backend/c/config
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
+        env:
+          GE_NO_DEFAULT_BOEHM_GC: true
