@@ -2392,12 +2392,16 @@ feature {NONE} -- Feature generation
 				end
 				print_external_c_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_signature_arguments, l_signature_result, a_feature.alias_clause, False)
 			elseif old_external_c_macro_regexp.recognizes (l_language_string) then
-					-- Regexp: C "[" macro <include> "]" ["(" {<type> "," ...}* ")"] [":" <type>]
+					-- Regexp: C "[" macro <include> "]" ["(" {<type> "," ...}* ")"] [":" <type>] ["|" {<include> "," ...}+]
 					-- \1: include file
 					-- \2: has signature arguments
 					-- \3: signature arguments
 					-- \5: signature result
+					-- \7: include files
 				print_external_c_includes (old_external_c_macro_regexp.captured_substring (1))
+				if old_external_c_regexp.match_count > 7 and then old_external_c_regexp.captured_substring_count (7) > 0 then
+					print_external_c_includes (old_external_c_macro_regexp.captured_substring (7))
+				end
 				if old_external_c_macro_regexp.match_count > 2 and then old_external_c_macro_regexp.captured_substring_count (2) > 0 then
 					l_signature_arguments := old_external_c_macro_regexp.captured_substring (3)
 					if old_external_c_macro_regexp.match_count > 5 and then old_external_c_macro_regexp.captured_substring_count (5) > 0 then
@@ -2442,7 +2446,7 @@ feature {NONE} -- Feature generation
 					-- \10: signature result
 					-- \17: include files
 				l_is_cpp := True
-				print_external_cpp_includes (external_c_macro_regexp.captured_substring (17))
+				print_external_cpp_includes (external_cpp_macro_regexp.captured_substring (17))
 				if external_cpp_macro_regexp.match_count > 4 and then external_cpp_macro_regexp.captured_substring_count (4) > 0 then
 					l_signature_arguments := external_cpp_macro_regexp.captured_substring (5)
 				end
@@ -44262,11 +44266,12 @@ feature {NONE} -- External regexp
 			-- \7: include files
 
 	old_external_c_macro_regexp: RX_PCRE_REGULAR_EXPRESSION
-			-- Regexp: C "[" macro <include> "]" ["(" {<type> "," ...}* ")"] [":" <type>]
+			-- Regexp: C "[" macro <include> "]" ["(" {<type> "," ...}* ")"] [":" <type>] ["|" {<include> "," ...}+]
 			-- \1: include file
 			-- \2: has signature arguments
 			-- \3: signature arguments
 			-- \5: signature result
+			-- \7: include files
 
 	old_external_c_struct_regexp: RX_PCRE_REGULAR_EXPRESSION
 			-- Regexp: C "[" struct <include> "]" "(" {<type> "," ...}+ ")" [":" <type>]
@@ -44323,7 +44328,7 @@ feature {NONE} -- External regexp
 			external_c_regexp.compile ("[ \t\r\n]*[Cc]([ \t\r\n]+|$)(blocking([ \t\r\n]+|$))?(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))?[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))?")
 				-- Regexp: C [blocking] macro [signature ["(" {<type> "," ...}* ")"] [":" <type>]] use {<include> "," ...}+
 			create external_c_macro_regexp.make
-			external_c_macro_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]+(blocking[ \t\r\n]+)?macro([ \t\r\n]+|$)(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))?[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))")
+			external_c_macro_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]+(blocking[ \t\r\n]+)?[Mm]acro([ \t\r\n]+|$)(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))?[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))")
 				-- Regexp: C struct <struct-type> (access|get) <field-name> [type <field-type>] use {<include> "," ...}+
 			create external_c_struct_regexp.make
 			external_c_struct_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]+struct[ \t\r\n]+((a|ac|acc|acce|acces|g|ge|[^ag \t\r\n][^ \t\r\n]*|g[^e \t\r\n][^ \t\r\n]*|ge[^t \t\r\n][^ \t\r\n]*|get[^ \t\r\n]+|a[^c \t\r\n][^ \t\r\n]*|ac[^c \t\r\n][^ \t\r\n]*|acc[^e \t\r\n][^ \t\r\n]*|acce[^s \t\r\n][^ \t\r\n]*|acces[^s \t\r\n][^ \t\r\n]*|access[^ \t\r\n]+)[ \t\r\n]+((a|ac|acc|acce|acces|g|ge|[^ag \t\r\n][^ \t\r\n]*|g[^e \t\r\n][^ \t\r\n]*|ge[^t \t\r\n][^ \t\r\n]*|get[^ \t\r\n]+|a[^c \t\r\n][^ \t\r\n]*|ac[^c \t\r\n][^ \t\r\n]*|acc[^e \t\r\n][^ \t\r\n]*|acce[^s \t\r\n][^ \t\r\n]*|acces[^s \t\r\n][^ \t\r\n]*|access[^ \t\r\n]+)[ \t\r\n]+)*)(access|get)[ \t\r\n]+([^ \t\r\n]+)([ \t\r\n]+|$)(type[ \t\r\n]+((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?(use[ \t\r\n]*((.|\n)+))")
@@ -44333,9 +44338,9 @@ feature {NONE} -- External regexp
 				-- Regexp: C [["(" {<type> "," ...}* ")"] [":" <type>]] ["|" {<include> "," ...}+]
 			create old_external_c_regexp.make
 			old_external_c_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]*((\(([^)]*)\))?[ \t\r\n]*(:[ \t\r\n]*([^|]+))?)?[ \t\r\n]*(\|[ \t\r\n]*((.|\n)+))?")
-				-- Regexp: C "[" macro <include> "]" ["(" {<type> "," ...}* ")"] [":" <type>]
+				-- Regexp: C "[" macro <include> "]" ["(" {<type> "," ...}* ")"] [":" <type>] ["|" {<include> "," ...}+]
 			create old_external_c_macro_regexp.make
-			old_external_c_macro_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]*\[[ \t\r\n]*macro[ \t\r\n]*([^]]+)\][ \t\r\n]*(\(([^)]*)\))?[ \t\r\n]*(:[ \t\r\n]*((.|\n)+))?")
+			old_external_c_macro_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]*\[[ \t\r\n]*macro[ \t\r\n]*([^]]+)\][ \t\r\n]*(\(([^)]*)\))?[ \t\r\n]*(:[ \t\r\n]*([^|]+))?[ \t\r\n]*(\|[ \t\r\n]*((.|\n)+))?")
 				-- Regexp: C "[" struct <include> "]" "(" {<type> "," ...}+ ")" [":" <type>]
 			create old_external_c_struct_regexp.make
 			old_external_c_struct_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]*\[[ \t\r\n]*struct[ \t\r\n]*([^]]+)\][ \t\r\n]*\(([^)]+)\)[ \t\r\n]*(:[ \t\r\n]*((.|\n)+))?")
