@@ -533,15 +533,25 @@ feature {NONE} -- Compilation script generation
 			create l_includes.make (256)
 			l_external_include_pathnames := current_system.external_include_pathnames
 			nb := l_external_include_pathnames.count
+			if nb > 1 then
+					-- Add '$GOBO/backend/c/runtime' to the list of include paths if at least
+					-- one include path has been specified in the ECF file. That way if one such
+					-- include file tries to include one of the runtime 'eif_*.h' file, it can
+					-- be found by the C compiler.
+				l_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "runtime">>)
+				l_pathname := Execution_environment.interpreted_string (l_pathname)
+				l_includes.append_string ("-I")
+				l_includes.append_character ('%"')
+				l_includes.append_string (l_pathname)
+				l_includes.append_character ('%"')
+			end
 			from i := 1 until i > nb loop
 				l_pathname := l_external_include_pathnames.item (i)
 				l_env_regexp.match (l_pathname)
 				l_replacement := STRING_.new_empty_string (l_pathname, 6)
 				l_replacement.append_string ("${\1\}")
 				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
-				if i /= 1 then
-					l_includes.append_character (' ')
-				end
+				l_includes.append_character (' ')
 				l_includes.append_string ("-I")
 				if l_pathname.starts_with ("%"") then
 					l_includes.append_string (l_pathname)
