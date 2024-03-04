@@ -622,13 +622,13 @@ feature {NONE} -- Compilation script generation
 				l_replacement.append_string ("${\1\}")
 				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
 				if l_wel_regexp.recognizes (l_pathname) then
-					add_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "clib", c_filenames)
+					add_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib", c_filenames)
 				elseif l_com_regexp.recognizes (l_pathname) then
-					add_external_c_files ("com", l_com_regexp.captured_substring (1) + "clib", c_filenames)
+					add_external_c_files ("com", l_com_regexp.captured_substring (1) + "Clib", c_filenames)
 				elseif l_com_runtime_regexp.recognizes (l_pathname) then
-					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "clib_runtime", c_filenames)
+					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime", c_filenames)
 				elseif l_curl_regexp.recognizes (l_pathname) then
-					add_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "clib", c_filenames)
+					add_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib", c_filenames)
 				else
 					if i /= 1 then
 						l_libs.append_character (' ')
@@ -659,13 +659,13 @@ feature {NONE} -- Compilation script generation
 				l_replacement.append_string ("${\1\}")
 				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
 				if l_wel_regexp.recognizes (l_pathname) then
-					add_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "clib", c_filenames)
+					add_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib", c_filenames)
 				elseif l_com_regexp.recognizes (l_pathname) then
-					add_external_c_files ("com", l_com_regexp.captured_substring (1) + "clib", c_filenames)
+					add_external_c_files ("com", l_com_regexp.captured_substring (1) + "Clib", c_filenames)
 				elseif l_com_runtime_regexp.recognizes (l_pathname) then
-					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "clib_runtime", c_filenames)
+					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime", c_filenames)
 				elseif l_curl_regexp.recognizes (l_pathname) then
-					add_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "clib", c_filenames)
+					add_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib", c_filenames)
 				else
 					if not l_external_obj_filenames.is_empty then
 						l_external_obj_filenames.append_character (' ')
