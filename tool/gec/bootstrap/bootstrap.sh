@@ -181,8 +181,8 @@ elif [ "$CC" = "zig" ]; then
 	fi
 	CC="$ZIG cc"
 	LD="$ZIG cc"
-	CFLAGS='-pthread -Wno-unused-value -Wno-deprecated-declarations -fno-strict-aliasing -fno-sanitize=undefined -fno-sanitize=cfi -fno-sanitize=kcfi -Os -DNDEBUG'
-	LFLAGS='-pthread -fno-strict-aliasing -fno-sanitize=undefined -fno-sanitize=cfi -fno-sanitize=kcfi -Os -DNDEBUG'
+	CFLAGS='-pthread -Wno-unused-value -Wno-deprecated-declarations -fno-strict-aliasing -fno-sanitize=undefined -Os -DNDEBUG'
+	LFLAGS='-pthread -fno-strict-aliasing -fno-sanitize=undefined -Os -DNDEBUG'
 	LFLAG_OUT='-o '
 	LLIBS=''
 	echo zig > "$GOBO/tool/gec/backend/c/config/default.cfg"
