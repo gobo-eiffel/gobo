@@ -7,6 +7,7 @@ on:
       - '*/**'
     tags-ignore:
       - '*'
+      - '*/**'
   pull_request:
 
 jobs:
@@ -42,7 +43,7 @@ jobs:
 
   macos_build:
     if: ${{ github.repository == 'ebezault/gobo' || github.repository == 'gobo-eiffel/gobo' }}
-    runs-on: macos-latest
+    runs-on: macos-11
     strategy:
       fail-fast: false
       matrix:
