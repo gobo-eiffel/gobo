@@ -1,3 +1,6 @@
+variables:
+  GE_NO_DEFAULT_BOEHM_GC: true
+
 stages:
 
 #

@@ -44,7 +44,7 @@
   (second traversal in step `5`). So the two traversals in steps `4` and
   `5` need to be merged into a single traversal.
 * Fixed C code generation when an external routine is of the form
-  `external "C : int | <file.h>` with no argument types in the signature.
+  `external "C : int | <file.h>"` with no argument types in the signature.
 * Implemented copy semantics (reference entities attached to objects of
   expanded types) in attachments (e.g. assignment and argument passing)
   and comparisons (`=`, `/=`, `~` and `/~`) as well as in Kernel built-in

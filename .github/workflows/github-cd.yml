@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: '22 5 * * *'
 
+env:
+  GE_NO_DEFAULT_BOEHM_GC: true
+
 jobs:
 
 #
@@ -18,8 +21,6 @@ jobs:
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github zig
         shell: pwsh
-        env:
-          GE_NO_DEFAULT_BOEHM_GC: true
       - uses: actions/upload-artifact@v4
         with:
           name: gobo_delivery_linux
@@ -34,8 +35,6 @@ jobs:
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github zig
         shell: pwsh
-        env:
-          GE_NO_DEFAULT_BOEHM_GC: true
       - uses: actions/upload-artifact@v4
         with:
           name: gobo_delivery_macos
@@ -50,8 +49,6 @@ jobs:
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github zig
         shell: pwsh
-        env:
-          GE_NO_DEFAULT_BOEHM_GC: true
       - uses: actions/upload-artifact@v4
         with:
           name: gobo_delivery_windows
@@ -80,8 +77,6 @@ jobs:
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_delivery.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
         shell: pwsh
-        env:
-          GE_NO_DEFAULT_BOEHM_GC: true
 
   macos_test:
     runs-on: macos-latest
@@ -101,8 +96,6 @@ jobs:
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_delivery.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
         shell: pwsh
-        env:
-          GE_NO_DEFAULT_BOEHM_GC: true
 
   windows_test:
     runs-on: windows-latest
@@ -121,8 +114,6 @@ jobs:
           path: .
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_delivery.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
-        env:
-          GE_NO_DEFAULT_BOEHM_GC: true
 
 #
 # Publish delivery.
