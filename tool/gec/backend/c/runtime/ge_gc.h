@@ -379,7 +379,7 @@ extern void GE_boehm_dispose_once_per_object_data(void* data, void* disp); /* Ca
 /* The C side protects an object. */
 #define eif_protect(obj) (obj)
 /* The C side weans adopted object. */
-#define eif_wean(obj) (obj)
+extern EIF_REFERENCE eif_wean(EIF_OBJECT object);
 /* Forget a frozen memory address. */
 #define eif_unfreeze(obj)
 /* Always frozen since they do not move. */
