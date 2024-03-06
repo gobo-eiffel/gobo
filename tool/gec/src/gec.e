@@ -371,7 +371,7 @@ feature -- Arguments
 	catcall_warning_mode: BOOLEAN
 			-- Are CAT-call errors considered just as warnings?
 		do
-			Result := not catcall_option.was_found or else attached catcall_option.parameter as l_parameter and then STRING_.same_string (l_parameter, "warning")
+			Result := catcall_option.was_found and then attached catcall_option.parameter as l_parameter and then STRING_.same_string (l_parameter, "warning")
 		end
 
 	new_instance_types: detachable DS_HASH_SET [STRING]
@@ -577,7 +577,7 @@ feature -- Argument parsing
 			a_parser.options.force_last (ise_option)
 				-- catcall
 			create catcall_option.make_with_long_form ("catcall")
-			catcall_option.set_description ("Should CAT-call errors be considered as fatal errors, as warnings, or just ignored? (default: warning)")
+			catcall_option.set_description ("Should CAT-call errors be considered as fatal errors, as warnings, or just ignored? (default: ignored)")
 			catcall_option.extend ("no")
 			catcall_option.extend ("error")
 			catcall_option.extend ("warning")
