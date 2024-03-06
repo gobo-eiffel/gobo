@@ -20858,6 +20858,7 @@ feature {NONE} -- Separate calls
 			l_is_creation_call: BOOLEAN
 			l_and_then_needed: BOOLEAN
 			l_old_current_type: like current_type
+			l_old_max_nested_inlining_count: INTEGER
 			old_file: KI_TEXT_OUTPUT_STREAM
 			old_function_header_buffer: like current_function_header_buffer
 			old_function_body_buffer: like current_function_body_buffer
@@ -21538,6 +21539,9 @@ feature {NONE} -- Separate calls
 							j := j - 1
 						end
 					end
+						-- No inlining here.
+					l_old_max_nested_inlining_count := max_nested_inlining_count
+					max_nested_inlining_count := 0
 					if l_result_type /= Void then
 						print_indentation
 						print_result_name (current_file)
@@ -21554,6 +21558,7 @@ feature {NONE} -- Separate calls
 						separate_call_instruction.set_arguments (l_separate_call_arguments)
 						print_qualified_call_instruction (separate_call_instruction)
 					end
+					max_nested_inlining_count := l_old_max_nested_inlining_count
 					print_indentation
 					current_file.put_string (c_ac)
 					current_file.put_string (c_arrow)
@@ -21682,6 +21687,7 @@ feature {NONE} -- Separate calls
 			l_operand: ET_IDENTIFIER
 			nb_operands: INTEGER
 			l_separate_call_arguments: like separate_call_arguments
+			l_old_max_nested_inlining_count: INTEGER
 			old_file: KI_TEXT_OUTPUT_STREAM
 		do
 			old_file := current_file
@@ -21856,6 +21862,9 @@ feature {NONE} -- Separate calls
 					j := j - 1
 				end
 			end
+				-- No inlining here.
+			l_old_max_nested_inlining_count := max_nested_inlining_count
+			max_nested_inlining_count := 0
 			if l_result_type /= Void then
 				print_indentation
 				current_file.put_character ('*')
@@ -21873,6 +21882,7 @@ feature {NONE} -- Separate calls
 				separate_call_instruction.set_arguments (l_separate_call_arguments)
 				print_qualified_call_instruction (separate_call_instruction)
 			end
+			max_nested_inlining_count := l_old_max_nested_inlining_count
 			dedent
 			current_file.put_character ('}')
 			current_file.put_new_line
