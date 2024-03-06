@@ -2417,7 +2417,7 @@ feature {NONE} -- Feature generation
 					-- \5: signature result
 					-- \7: include files
 				print_external_c_includes (old_external_c_macro_regexp.captured_substring (1))
-				if old_external_c_regexp.match_count > 7 and then old_external_c_regexp.captured_substring_count (7) > 0 then
+				if old_external_c_macro_regexp.match_count > 7 and then old_external_c_macro_regexp.captured_substring_count (7) > 0 then
 					print_external_c_includes (old_external_c_macro_regexp.captured_substring (7))
 				end
 				if old_external_c_macro_regexp.match_count > 2 and then old_external_c_macro_regexp.captured_substring_count (2) > 0 then
@@ -41330,6 +41330,8 @@ feature {NONE} -- Include files
 				if included_cpp_header_filenames.has (a_filename) then
 					included_cpp_header_filenames.remove (a_filename)
 					included_header_filenames.force_last (a_filename)
+				elseif a_filename.same_string ("%"eif_argv.h%"") then
+					include_runtime_header_file ("eif_argv.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_cecil.h%"") then
 					include_runtime_header_file ("eif_cecil.h", False, a_file)
 				elseif a_filename.same_string ("%"eif_console.h%"") then
@@ -41427,7 +41429,9 @@ feature {NONE} -- Include files
 		do
 			l_has_file := included_runtime_header_files.has (a_filename)
 			if not l_has_file or else (a_force and then not included_runtime_header_files.item (a_filename)) then
-				if a_filename.same_string ("eif_cecil.h") then
+				if a_filename.same_string ("eif_argv.h") then
+					include_runtime_header_file ("ge_arguments.h", a_force, a_file)
+				elseif a_filename.same_string ("eif_cecil.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					l_c_filename := "eif_cecil.c"
 				elseif a_filename.same_string ("eif_console.h") then
