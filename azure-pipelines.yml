@@ -78,4 +78,4 @@ stages:
     parameters:
       os: windows
       c_compiler: zig
-      vm_image: windows-latest
+      vm_image: windows-2019
