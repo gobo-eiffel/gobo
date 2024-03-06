@@ -497,6 +497,7 @@ feature {NONE} -- Compilation script generation
 			l_com_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_com_runtime_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_curl_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_gtk3_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_replacement: STRING
 			l_external_include_pathnames: DS_ARRAYED_LIST [STRING]
 			l_external_library_pathnames: DS_ARRAYED_LIST [STRING]
@@ -533,6 +534,9 @@ feature {NONE} -- Compilation script generation
 			create l_curl_regexp.make
 			l_curl_regexp.set_case_insensitive (True)
 			l_curl_regexp.compile ("(.*[\\/]library[\\/]curl[\\/]).*[\\/](mt)?eiffel_curl(_static)?\.(lib|o)")
+			create l_gtk3_regexp.make
+			l_gtk3_regexp.set_case_insensitive (True)
+			l_gtk3_regexp.compile ("`(.*[\\/]library[\\/]vision2[\\/]implementation[\\/]gtk3[\\/]clib)[\\/]vision2-gtk-config +(--threads +)?--object`")
 				-- Include files.
 			create l_includes.make (256)
 			l_external_include_pathnames := current_system.external_include_pathnames
@@ -629,6 +633,8 @@ feature {NONE} -- Compilation script generation
 					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime", c_filenames)
 				elseif l_curl_regexp.recognizes (l_pathname) then
 					add_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib", c_filenames)
+				elseif l_gtk3_regexp.recognizes (l_pathname) then
+					add_external_c_files ("vision2_gtk3", l_gtk3_regexp.captured_substring (1), c_filenames)
 				else
 					if i /= 1 then
 						l_libs.append_character (' ')
@@ -666,6 +672,8 @@ feature {NONE} -- Compilation script generation
 					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime", c_filenames)
 				elseif l_curl_regexp.recognizes (l_pathname) then
 					add_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib", c_filenames)
+				elseif l_gtk3_regexp.recognizes (l_pathname) then
+					add_external_c_files ("vision2_gtk3", l_gtk3_regexp.captured_substring (1), c_filenames)
 				else
 					if not l_external_obj_filenames.is_empty then
 						l_external_obj_filenames.append_character (' ')
