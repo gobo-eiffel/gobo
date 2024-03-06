@@ -2417,7 +2417,7 @@ feature {NONE} -- Feature generation
 					-- \5: signature result
 					-- \7: include files
 				print_external_c_includes (old_external_c_macro_regexp.captured_substring (1))
-				if old_external_c_regexp.match_count > 7 and then old_external_c_regexp.captured_substring_count (7) > 0 then
+				if old_external_c_macro_regexp.match_count > 7 and then old_external_c_macro_regexp.captured_substring_count (7) > 0 then
 					print_external_c_includes (old_external_c_macro_regexp.captured_substring (7))
 				end
 				if old_external_c_macro_regexp.match_count > 2 and then old_external_c_macro_regexp.captured_substring_count (2) > 0 then
