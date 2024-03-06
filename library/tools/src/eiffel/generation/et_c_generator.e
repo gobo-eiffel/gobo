@@ -5651,6 +5651,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			l_max: INTEGER
 			l_max_index: INTEGER
 			l_semicolon_needed: BOOLEAN
+			l_newline_needed_before_semicolon: BOOLEAN
 			l_has_result_type_cast: BOOLEAN
 			c, c3: CHARACTER
 		do
@@ -5685,17 +5686,22 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					when 'f' then
 						if i > 5 and then c_endif.same_characters (l_c_code, i - 5, i, 1) then
 								-- This is a terminating #endif.
+							l_newline_needed_before_semicolon := True
+							i := i - 6
 						else
 								-- There is no terminating semicolon.
 							l_semicolon_needed := True
+							i := 0
 
 						end
-						i := 0
 					else
 							-- There is no terminating semicolon.
 						l_semicolon_needed := True
 						i := 0
 					end
+				end
+				if not l_semicolon_needed then
+					l_newline_needed_before_semicolon := False
 				end
 				if a_feature.is_function and then not l_c_code.has_substring (c_return) then
 						-- This looks like legacy code.
@@ -5810,6 +5816,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_character (')')
 				end
 				if l_semicolon_needed then
+					if l_newline_needed_before_semicolon then
+						current_file.put_new_line
+					end
 					current_file.put_character (';')
 				end
 				current_file.put_new_line
