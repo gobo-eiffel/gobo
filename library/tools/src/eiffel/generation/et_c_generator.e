@@ -606,10 +606,22 @@ feature {NONE} -- Compilation script generation
 				l_replacement := STRING_.new_empty_string (l_lflag, 6)
 				l_replacement.append_string ("${\1\}")
 				l_lflag := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
-				if not l_lflags.is_empty then
-					l_lflags.append_character (' ')
+				if l_wel_regexp.recognizes (l_lflag) then
+					add_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib", c_filenames)
+				elseif l_com_regexp.recognizes (l_lflag) then
+					add_external_c_files ("com", l_com_regexp.captured_substring (1) + "Clib", c_filenames)
+				elseif l_com_runtime_regexp.recognizes (l_lflag) then
+					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime", c_filenames)
+				elseif l_curl_regexp.recognizes (l_lflag) then
+					add_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib", c_filenames)
+				elseif l_gtk3_regexp.recognizes (l_lflag) then
+					add_external_c_files ("vision2_gtk3", l_gtk3_regexp.captured_substring (1), c_filenames)
+				else
+					if not l_lflags.is_empty then
+						l_lflags.append_character (' ')
+					end
+					l_lflags.append_string (l_lflag)
 				end
-				l_lflags.append_string (l_lflag)
 				i := i + 1
 			end
 			l_variables.force (l_lflags, "lflags")
