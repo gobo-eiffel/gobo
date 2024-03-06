@@ -298,7 +298,7 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #ifdef _WIN64
 #define GE_IS_64_BITS EIF_TRUE
 #else
-#define GE_IS_64_BITS EIF_TEST(sizeof(void*)==64)
+#define GE_IS_64_BITS EIF_TEST(sizeof(void*)==8)
 #endif
 
 /* Posix threads */
