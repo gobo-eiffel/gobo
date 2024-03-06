@@ -937,20 +937,37 @@ feature {NONE} -- Feature validity
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_base_type: ET_BASE_TYPE
 		do
 			Precursor (a_feature)
 			if not has_fatal_error then
 				if a_feature.is_builtin and then not a_feature.is_builtin_unknown then
 					check_external_builtin_function_validity (a_feature)
-				elseif a_feature.type.same_base_type_with_type_marks (current_universe_impl.string_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_type) then
-					if current_type = current_dynamic_type.base_type then
-						l_dynamic_type := result_type_set.static_type.primary_type
+				elseif a_feature.type.is_type_expanded (current_type) then
+					-- Nothing to be done.
+				elseif current_type /= current_dynamic_type.base_type then
+					-- Nothing to be done.
+				else
+					l_dynamic_type := result_type_set.static_type.primary_type
+					l_base_type := l_dynamic_type.base_type
+					if current_universe_impl.string_8_type.same_named_type_with_type_marks (l_base_type, tokens.implicit_detachable_type_mark, current_type, tokens.implicit_detachable_type_mark, current_type) then
 						mark_string_type_alive (l_dynamic_type)
-						propagate_builtin_result_dynamic_types (l_dynamic_type, current_dynamic_feature)
+					elseif current_universe_impl.immutable_string_8_type.same_named_type_with_type_marks (l_base_type, tokens.implicit_detachable_type_mark, current_type, tokens.implicit_detachable_type_mark, current_type) then
+						mark_string_type_alive (l_dynamic_type)
+					elseif current_universe_impl.string_32_type.same_named_type_with_type_marks (l_base_type, tokens.implicit_detachable_type_mark, current_type, tokens.implicit_detachable_type_mark, current_type) then
+						mark_string_type_alive (l_dynamic_type)
+					elseif current_universe_impl.immutable_string_32_type.same_named_type_with_type_marks (l_base_type, tokens.implicit_detachable_type_mark, current_type, tokens.implicit_detachable_type_mark, current_type) then
+						mark_string_type_alive (l_dynamic_type)
+					else
+						-- It is expected that the dynamic type sets of the attributes
+						-- (recursively) of the resulting object are not changed in the
+						-- C code. In other words, the C code does not set an attribute
+						-- with a object whose dynamic type is not already part of the
+						-- dynamic type set of this attribute as inferred from the Eiffel code.
 					end
-				elseif not a_feature.type.is_type_expanded (current_type) then
--- TODO: build full dynamic type sets, recursively.
-					error_handler.report_warning_message ("Dynamic type set not built for external feature " + current_type.to_text + "." + a_feature.lower_name)
+					l_dynamic_type_set := alive_conforming_descendants (l_dynamic_type)
+					propagate_builtin_result_dynamic_types (l_dynamic_type_set, current_dynamic_feature)
 				end
 			end
 		end
