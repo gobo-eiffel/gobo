@@ -14,7 +14,7 @@ stages:
     parameters:
       os: linux
       c_compiler: zig
-      vm_image: ubuntu-latest
+      vm_image: ubuntu-20.04
 
   - template: .azure/build.yml
     parameters:
@@ -26,7 +26,7 @@ stages:
     parameters:
       os: macos
       c_compiler: zig
-      vm_image: macos-latest
+      vm_image: macos-11
 
   - template: .azure/build.yml
     parameters:
@@ -38,7 +38,7 @@ stages:
     parameters:
       os: windows
       c_compiler: zig
-      vm_image: windows-latest
+      vm_image: windows-2019
 
 #
 # Running tests.
@@ -54,7 +54,7 @@ stages:
     parameters:
       os: linux
       c_compiler: zig
-      vm_image: ubuntu-latest
+      vm_image: ubuntu-20.04
 
   - template: .azure/test.yml
     parameters:

@@ -51,6 +51,15 @@ if ($LastExitCode -ne 0) {
 	Write-Error "Command '$env:GOBO/bin/$GOBO_CI_BUILD_SCRIPT $GOBO_CI_C_COMPILER' exited with code $LastExitCode"
 	exit $LastExitCode
 }
+
+if ($GOBO_CI_OS -eq "linux" -or $GOBO_CI_OS -eq "macos") {
+	file "$env:GOBO/bin/gec"
+	if ($LastExitCode -ne 0) {
+		Write-Error "Command 'file $env:GOBO/bin/gec' exited with code $LastExitCode"
+		exit $LastExitCode
+	}
+}
+
 gec --version --verbose
 if ($LastExitCode -ne 0) {
 	Write-Error "Command 'gec --version --verbose' exited with code $LastExitCode"
