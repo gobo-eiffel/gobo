@@ -76,6 +76,12 @@ void GE_boehm_dispose_once_per_object_data(void* data, void* disp) {
 }
 #endif
 
+/* The C side weans adopted object. */
+EIF_REFERENCE eif_wean(EIF_OBJECT object)
+{
+	return (EIF_REFERENCE)object;
+}
+
 #ifdef __cplusplus
 }
 #endif
