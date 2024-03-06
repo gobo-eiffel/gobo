@@ -2288,10 +2288,6 @@ feature {NONE} -- Feature generation
 				end
 				print_feature_trace_message_call (True)
 			end
-			if l_result_type_set /= Void and then l_result_type_set.is_empty then
--- TODO: build full dynamic type sets, recursively.
-				print_feature_info_message_call ("Dynamic type set not built for external feature ")
-			end
 			if a_creation then
 				print_malloc_current (a_feature)
 				if exception_trace_mode and then current_in_exception_trace then
