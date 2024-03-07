@@ -22,6 +22,7 @@
 #include "sysctl.conf"
 
 #elif EIF_OS == EIF_OS_DARWIN
+#include <unistd.h>
 #include <mach-o/dyld.h>
 #include <limits.h>
 
