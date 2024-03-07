@@ -108,7 +108,7 @@ feature -- Access
 			l_count, l_nbytes: INTEGER
 			l_managed: MANAGED_POINTER
 		once
-			l_count := 4096
+			l_count := 250
 			create l_managed.make (l_count)
 			l_nbytes := eif_current_executable_pathname_ptr (l_managed.item, l_count)
 			if l_nbytes > l_count then
