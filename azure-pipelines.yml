@@ -1,3 +1,6 @@
+variables:
+  GE_NO_DEFAULT_BOEHM_GC: true
+
 stages:
 
 #
@@ -78,4 +81,4 @@ stages:
     parameters:
       os: windows
       c_compiler: zig
-      vm_image: windows-latest
+      vm_image: windows-2019

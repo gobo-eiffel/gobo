@@ -222,10 +222,11 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 		}
 	}
 
+	$env:PATH = "$env:GOBO/bin$([IO.Path]::PathSeparator)$env:PATH"
+	
 	Write-Host "`$GOBO_CI_C_COMPILER = $GOBO_CI_C_COMPILER"
 	Write-Host "`$GOBO_CI_BUILD_SCRIPT = $GOBO_CI_BUILD_SCRIPT"
-
-	$env:PATH = "$env:GOBO/bin$([IO.Path]::PathSeparator)$env:PATH"
+	Get-ChildItem env:*
 
 	& "$PSScriptRoot/set_gobo_version.ps1"
 	if ($LastExitCode -ne 0) {
