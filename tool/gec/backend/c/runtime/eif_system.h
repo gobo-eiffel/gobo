@@ -18,14 +18,13 @@
 #include "Winbase.h"
 # include <stdlib.h>
 
-#elif defined(EIF_VMS)
+#elif defined(EIF_VMS) || defined(EIF_MACOSX)
 #include "sysctl.conf"
 
-#elif defined(EIF_MACOSX)
-#include "sysctl.conf"
+#elif EIF_OS == EIF_OS_DARWIN
 #include <mach-o/dyld.h>
 
-#elif defined(__FreeBSD__)
+#elif EIF_OS == EIF_OS_FREEBSD
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/sysctl.h>

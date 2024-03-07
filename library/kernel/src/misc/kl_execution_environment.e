@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 					char *exePath;
 					if (_get_pgmptr(&exePath) != 0)
 						exePath = "";
-				#elif defined(EIF_MACOSX)
+				#elif EIF_OS == EIF_OS_DARWIN
 						/* MacOS X < 10.4 */
 					char exePath[PATH_MAX];
 					uint32_t len = sizeof(exePath);
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 							free(canonicalPath);
 						}
 					}
-				#elif defined(__FreeBSD__)
+				#elif EIF_OS == EIF_OS_FREEBSD
 					char exePath[2048];
 					int mib[4];  mib[0] = CTL_KERN;  mib[1] = KERN_PROC;  mib[2] = KERN_PROC_PATHNAME;  mib[3] = -1;
 					size_t len = sizeof(exePath);
@@ -194,5 +194,5 @@ feature {NONE} -- Implementation
 		ensure
 			instance_free: class
 		end
-		
+
 end
