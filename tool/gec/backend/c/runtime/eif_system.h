@@ -16,10 +16,27 @@
 
 #ifdef EIF_WINDOWS
 #include "Winbase.h"
-#elif defined(EIF_VMS) || defined(EIF_MACOSX)
+# include <stdlib.h>
+
+#elif defined(EIF_VMS)
 #include "sysctl.conf"
+
+#elif defined(EIF_MACOSX)
+#include "sysctl.conf"
+#include <mach-o/dyld.h>
+
+#elif defined(__FreeBSD__)
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
+#elif defined(EIF_SOLARIS)
+#include <unistd.h>
+#include <stdlib.h>
+
 #else
 #include <unistd.h>
+
 #endif
 
 #endif
