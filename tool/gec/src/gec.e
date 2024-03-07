@@ -913,7 +913,7 @@ feature -- Error handling
 			l_text: STRING
 		do
 			if is_verbose then
-				create l_text.make (50)
+				create l_text.make (100)
 				l_text.append_string (Version_number)
 				l_text.append_string (" (")
 				l_text.append_integer (thread_count)
@@ -922,6 +922,8 @@ feature -- Error handling
 					l_text.append_character ('s')
 				end
 				l_text.append_character (')')
+				l_text.append_character ('%N')
+				l_text.append_string ({KL_EXECUTION_ENVIRONMENT}.current_executable_pathname)
 			else
 				l_text := Version_number
 			end
