@@ -23,6 +23,7 @@
 
 #elif EIF_OS == EIF_OS_DARWIN
 #include <mach-o/dyld.h>
+#include <limits.h>
 
 #elif EIF_OS == EIF_OS_FREEBSD
 #include <unistd.h>
