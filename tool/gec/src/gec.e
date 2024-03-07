@@ -923,7 +923,7 @@ feature -- Error handling
 				end
 				l_text.append_character (')')
 				l_text.append_character ('%N')
-				l_text.append_string ({EXECUTION_ENVIRONMENT}.current_executable_pathname)
+				l_text.append_string ({KL_EXECUTION_ENVIRONMENT}.current_executable_pathname)
 			else
 				l_text := Version_number
 			end

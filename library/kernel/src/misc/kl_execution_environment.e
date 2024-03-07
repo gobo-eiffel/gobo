@@ -71,6 +71,30 @@ feature -- Access
 			instance_free: class
 		end
 
+	current_executable_pathname: STRING
+			-- Pathname of current executable
+		local
+			l_count, l_nbytes: INTEGER
+			l_managed: MANAGED_POINTER
+		once
+			l_count := 250
+			create l_managed.make (l_count)
+			l_nbytes := eif_current_executable_pathname_ptr (l_managed.item, l_count)
+			if l_nbytes > l_count then
+				l_count := l_nbytes
+				l_managed.resize (l_count)
+				l_nbytes := eif_current_executable_pathname_ptr (l_managed.item, l_count)
+			end
+			if l_nbytes > 0 and l_nbytes <= l_count then
+				create Result.make_from_c (l_managed.item)
+			else
+				Result := ""
+			end
+		ensure
+			instance_free: class
+			result_not_void: Result /= Void
+		end
+
 feature -- Setting
 
 	set_variable_value (a_variable, a_value: READABLE_STRING_GENERAL)
@@ -116,4 +140,59 @@ feature {NONE} -- Implementation
 			environment_impl_not_void: Result /= Void
 		end
 
+	eif_current_executable_pathname_ptr (a_ptr: POINTER; a_count: INTEGER): INTEGER
+			-- Store directory name corresponding to the pathname of current executable in `a_ptr' with `a_count' bytes.
+			-- If there is a need for more bytes than `a_count', or if `a_ptr' is the default_pointer,
+			-- nothing is done with `a_ptr'.
+			-- We always return the number of bytes required including the null-terminating character.
+			-- (See https://stackoverflow.com/questions/1023306/finding-current-executables-path-without-proc-self-exe)
+		external
+			"C inline use <eif_system.h>, <string.h>"
+		alias
+			"[
+				#ifdef EIF_WINDOWS
+					char *exePath;
+					if (_get_pgmptr(&exePath) != 0)
+						exePath = "";
+				#elif defined(EIF_MACOSX)
+						/* MacOS X < 10.4 */
+					char exePath[PATH_MAX];
+					uint32_t len = sizeof(exePath);
+					if (_NSGetExecutablePath(exePath, &len) != 0) {
+						exePath[0] = '\0'; // buffer too small (!)
+					} else {
+						// resolve symlinks, ., .. if possible
+						char *canonicalPath = realpath(exePath, NULL);
+						if (canonicalPath != NULL) {
+							strncpy(exePath,canonicalPath,len);
+							free(canonicalPath);
+						}
+					}
+				#elif defined(__FreeBSD__)
+					char exePath[2048];
+					int mib[4];  mib[0] = CTL_KERN;  mib[1] = KERN_PROC;  mib[2] = KERN_PROC_PATHNAME;  mib[3] = -1;
+					size_t len = sizeof(exePath);
+					if (sysctl(mib, 4, exePath, &len, NULL, 0) != 0)
+						exePath[0] = '\0';
+				#elif defined(EIF_SOLARIS)
+					char exePath[PATH_MAX];
+					if (realpath(getexecname(), exePath) == NULL)
+						exePath[0] = '\0';
+				#else
+						/* Linux */
+					char exePath[PATH_MAX];
+					size_t len = readlink("/proc/self/exe", exePath, sizeof(exePath));
+					if (len == -1 || len == sizeof(exePath))
+						len = 0;
+					exePath[len] = '\0';
+				#endif
+				EIF_INTEGER l_result = strlen(exePath) + 1;
+				if (l_result <= $a_count)
+					strcpy($a_ptr, exePath);
+				return l_result;
+			]"
+		ensure
+			instance_free: class
+		end
+		
 end
