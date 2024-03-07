@@ -33,9 +33,11 @@
 #elif defined(EIF_SOLARIS)
 #include <unistd.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #else
 #include <unistd.h>
+#include <limits.h>
 
 #endif
 
