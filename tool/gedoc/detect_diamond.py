@@ -41,6 +41,19 @@ def mark_descendants(path):
     mark_descendants(curr_path)  # recursive call
 
 
+def find_longest_common_ancestors_len(paths):
+  n = len(paths)
+  if n == 0:
+    return 0
+
+  l = min([len(path) for path in paths])
+  for i in range(l):
+    if n != sum([path[i] == paths[0][i] for path in paths]):
+      return i
+
+  return l
+
+
 INHERITED_FIELDS_FN = "inherited_fields.path"
 def detect_diamond(ecf_fn):
   edges = pd.read_csv(INHERITED_FIELDS_FN, sep="[,\.]", skiprows=3, skipfooter=1, engine='python',
@@ -66,10 +79,17 @@ def detect_diamond(ecf_fn):
       if len(field_paths.keys()) >= 2:  # i.e ends up with >=2 different names
         print('=' * 40, ecf_fn, "total fields: ", len(parent_fields))
         new_fields = "%s.{%s}" % (class_name, ", ".join(field_paths.keys()))
-        print("diamond found: ", field, " => ", new_fields)
+        print("diamond found, full paths: ", field, " => ", new_fields)
+        paths = []
         for new_field, path in field_paths.items():
+          assert(isinstance(path, set))
+          paths.extend(path)
           print("  ", new_field, path)
+        l = find_longest_common_ancestors_len(paths)
         print("new_fields:", new_fields)
+        print("diamond core: ", paths[0][l-1], " => ", new_fields)
+        for new_field, path in field_paths.items():
+          print("  ", new_field, [p[l-1:] for p in path])
 
 
 def process_all_ecf():
@@ -80,7 +100,7 @@ def process_all_ecf():
       # "%s/project/contrib/gobo/tool/gedoc" home_dir
       pathlib.Path(INHERITED_FIELDS_FN).unlink(missing_ok=True)
       cmd = "%s/gedoc --format=field_rename %s > %s" % (script_dir, ecf_fn, INHERITED_FIELDS_FN)
-      print(cmd)
+      # print(cmd)
       os.system(cmd)
       detect_diamond(ecf_fn)
     except:
