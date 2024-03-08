@@ -4,7 +4,7 @@
 
 		"Program test cases"
 
-	copyright: "Copyright (c) 2002-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class PROGRAM_TEST_CASE
@@ -56,9 +56,9 @@ feature -- Test
 				l_thread_option := ""
 			end
 			a_geant_filename := geant_filename
-			assert_execute_with_command_output ("geant -b " + a_geant_filename + l_thread_option + " compile_" + a_debug + eiffel_compiler.vendor + output_log, output_log)
+			assert_execute_with_command_output ("geant -b " + a_geant_filename + l_thread_option + " compile_" + a_debug + eiffel_compiler.vendor + output_log, output_log_filename, error_log_filename)
 				-- Clean.
-			assert_execute_with_command_output ("geant -b " + a_geant_filename + " clean" + output_log, output_log)
+			assert_execute_with_command_output ("geant -b " + a_geant_filename + " clean" + output_log, output_log_filename, error_log_filename)
 				-- Check compilation.
 			assert ("program_exists", file_system.file_exists (program_exe))
 		end
