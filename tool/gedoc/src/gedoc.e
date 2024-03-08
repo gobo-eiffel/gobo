@@ -177,11 +177,12 @@ feature -- Argument parsing
 			format_option.extend ("pretty_print")
 			format_option.extend ("html_ise_stylesheet")
 			format_option.extend ("descendants")
+			format_option.extend ("field_rename")
 			format_option.extend ("implicit_converts")
 			format_option.extend ("explicit_converts")
 			format_option.extend ("ecf_pretty_print")
 			format_option.extend ("available_targets")
-			format_option.set_parameter_description ("pretty_print|html_ise_stylesheet|descendants|implicit_converts|explicit_converts|ecf_pretty_print|available_targets")
+			format_option.set_parameter_description ("pretty_print|html_ise_stylesheet|descendants|field_rename:implicit_converts|explicit_converts|ecf_pretty_print|available_targets")
 			l_parser.options.force_last (format_option)
 				-- class.
 			create class_option.make ('c', "class")
@@ -280,6 +281,8 @@ feature -- Argument parsing
 				create {GEDOC_HTML_ISE_STYLESHEET_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif format_option.parameter ~ "descendants" then
 				create {GEDOC_DESCENDANTS_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
+			elseif format_option.parameter ~ "field_rename" then
+				create {GEDOC_FIELD_RENAME_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif format_option.parameter ~ "implicit_converts" then
 				create {GEDOC_IMPLICIT_CONVERTS_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif format_option.parameter ~ "explicit_converts" then
