@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd" name="app" uuid="60A9E2B0-8272-4100-83DB-CF7B962C138B">
+	<target name="app">
+		<root class="APP" feature="make"/>
+		<setting name="console_application" value="true"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base-scoop-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<cluster name="app" location=".\">
+			<option>
+				<assertions postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			</option>
+		</cluster>
+	</target>
+</system>
