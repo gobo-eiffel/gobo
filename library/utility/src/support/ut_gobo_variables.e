@@ -82,8 +82,33 @@ feature -- Setting
 
 	set_gobo_variable
 			-- Set environment variable "$GOBO" if not set yet.
+		local
+			l_executable_pathname: STRING
+			l_dirname: STRING
+			l_done: BOOLEAN
 		do
 			if not attached gobo_value as l_gobo or else l_gobo.is_empty then
+				from
+					l_executable_pathname := {KL_EXECUTION_ENVIRONMENT}.current_executable_pathname
+					l_dirname := file_system.dirname (l_executable_pathname)
+				until
+					l_done
+				loop
+					if file_system.is_root_directory (l_dirname) then
+						l_done := True
+					elseif l_dirname.same_string (file_system.relative_current_directory) then
+						l_done := True
+					elseif
+						file_system.directory_exists (file_system.nested_pathname (l_dirname, <<"tool", "gec">>)) and
+						file_system.directory_exists (file_system.nested_pathname (l_dirname, <<"library", "tools", "src", "eiffel">>)) and
+						file_system.directory_exists (file_system.pathname (l_dirname, "bin"))
+					then
+						Execution_environment.set_variable_value (gobo_variable, l_dirname)
+						l_done := True
+					else
+						l_dirname := file_system.dirname (l_dirname)
+					end
+				end
 			end
 		ensure
 			instance_free: class

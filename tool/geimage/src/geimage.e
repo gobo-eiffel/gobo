@@ -7,7 +7,7 @@
 			Generate Eiffel class embedding an image.
 		]"
 
-	copyright: "Copyright (c) 2020-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2020-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class GEIMAGE
@@ -19,6 +19,12 @@ inherit
 	KL_SHARED_FILE_SYSTEM
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
+
+	UT_SHARED_ISE_VARIABLES
+		export {NONE} all end
+
+	UT_SHARED_GOBO_VARIABLES
+		export {NONE} all end
 
 create
 
@@ -68,6 +74,13 @@ feature -- Execution
 			i, nb: INTEGER
 		do
 			Arguments.set_program_name ("geimage")
+				-- Set environment variables "$GOBO", "$GOBO_LIBRARY",
+				-- "$BOEHM_GC" and "$ZIG" if not set yet.
+			gobo_variables.set_gobo_variables
+				-- For compatibility with ISE's tools, define the environment
+				-- variables "$ISE_LIBRARY", "$EIFFEL_LIBRARY", "$ISE_PLATFORM"
+				-- and "$ISE_C_COMPILER" if not set yet.
+			ise_variables.set_ise_variables
 			error_handler := a_error_handler
 			parse_arguments (a_args)
 			if exit_code = 0 and then not version_flag.was_found then

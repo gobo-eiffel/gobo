@@ -4,7 +4,7 @@
 
 		"C-like preprocessors"
 
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class GEPP
@@ -16,6 +16,12 @@ inherit
 	KL_SHARED_STANDARD_FILES
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
+
+	UT_SHARED_ISE_VARIABLES
+		export {NONE} all end
+
+	UT_SHARED_GOBO_VARIABLES
+		export {NONE} all end
 
 create
 
@@ -29,6 +35,13 @@ feature -- Processing
 			if False then resurrect_code end
 
 			Arguments.set_program_name ("gepp")
+				-- Set environment variables "$GOBO", "$GOBO_LIBRARY",
+				-- "$BOEHM_GC" and "$ZIG" if not set yet.
+			gobo_variables.set_gobo_variables
+				-- For compatibility with ISE's tools, define the environment
+				-- variables "$ISE_LIBRARY", "$EIFFEL_LIBRARY", "$ISE_PLATFORM"
+				-- and "$ISE_C_COMPILER" if not set yet.
+			ise_variables.set_ise_variables
 			create error_handler.make_standard
 			create parser.make (error_handler)
 			in_filename := "-"
