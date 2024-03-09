@@ -5,7 +5,7 @@
 		"Test task 'exec'"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2008, Sven Ehrke and others"
+	copyright: "Copyright (c) 2008-2024, Sven Ehrke and others"
 	license: "MIT License"
 
 class GEANT_FUNCTIONAL_EXEC_TEST
@@ -22,25 +22,33 @@ feature -- Test
 
 	test_exec
 			-- Test task 'exec' in it's simplest form.
+		local
+			l_geant_pathname: STRING
+			l_tasks: STRING
 		do
 				-- Write a build file named 'exec.eant' which does nothing
 				-- (but can be invoked to test the exit code):
 			tasks := ""
 			write_build_file ("test_exec", "exec.eant")
 
-			tasks := "{
-				<exec executable="geant -b exec.eant" exit_code_variable="return_code"/>
+			l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
+			l_tasks := "{
+				<exec executable="${geant} -b exec.eant" exit_code_variable="return_code"/>
 				<echo message="return_code: ${return_code}" to_file="out.txt"/>
 				}"
+			l_tasks.replace_substring_all ("${geant}", l_geant_pathname)
+			tasks := l_tasks
 			expected_out_txt := "{
 				|return_code: 0
 			}"
 			basic_test ("test_exec1")
 
-			tasks := "{
-				<exec executable="geant -b nonexisting.eant" exit_code_variable="return_code"/>
+			l_tasks := "{
+				<exec executable="${geant} -b nonexisting.eant" exit_code_variable="return_code"/>
 				<echo message="return_code: ${return_code}" to_file="out.txt"/>
 				}"
+			l_tasks.replace_substring_all ("${geant}", l_geant_pathname)
+			tasks := l_tasks
 			expected_out_txt := "{
 				|return_code: 1
 			}"

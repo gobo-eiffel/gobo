@@ -133,6 +133,9 @@
 		</delete>
 		<delete file="${system}.pdb"/>
 		<delete file="${system}.ilk"/>
+		<delete file="${system}.suo"/>
+		<delete file="${system}.exe.manifest"/>
+		<delete file="${system}.gc.log"/>
 		<delete file="${system}${exe}" fail_on_error="false"/>
 		<delete file="${system}.melted"/>
 		<delete file="lib${system}.dll"/>

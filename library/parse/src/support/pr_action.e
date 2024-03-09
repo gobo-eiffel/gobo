@@ -5,7 +5,7 @@
 		"Semantic actions"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class PR_ACTION
@@ -70,7 +70,7 @@ feature -- Comparison
 			-- Are `Current' and `other' considered equal?
 		do
 			if ANY_.same_types (Current, other) then
-				Result := text.is_equal (other.text)
+				Result := text.same_string (other.text)
 			end
 		end
 

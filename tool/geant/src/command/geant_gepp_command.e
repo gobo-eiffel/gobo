@@ -5,7 +5,7 @@
 		"Gepp commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2024, Sven Ehrke and others"
 	license: "MIT License"
 
 class GEANT_GEPP_COMMAND
@@ -159,9 +159,11 @@ feature -- Execution
 			cmd_template: STRING
 			cmd: STRING
 			i, nb: INTEGER
+			l_gepp_pathname: STRING
 		do
 			create cmd_template.make (128)
-			cmd_template.append_string ("gepp")
+			l_gepp_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("gepp")
+			cmd_template.append_string (l_gepp_pathname)
 				-- Add defines:
 			nb := defines.count
 			from i := 1 until i > nb loop

@@ -4,7 +4,7 @@
 
 		"Eiffel tools test cases"
 
-	copyright: "Copyright (c) 2019-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class EIFFEL_TOOL_TEST_CASE
@@ -20,6 +20,7 @@ feature -- Test
 		local
 			l_program_full_filename: STRING
 			l_thread_option: STRING
+			l_gecop_pathname: STRING
 		do
 			l_program_full_filename := file_system.pathname (file_system.current_working_directory, program_name + file_system.exe_extension)
 			if use_thread_count then
@@ -27,7 +28,8 @@ feature -- Test
 			else
 				l_thread_option := ""
 			end
-			assert_execute ("gecop --tool=" + program_name + " --tool-executable=" + l_program_full_filename + l_thread_option + output_log)
+			l_gecop_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("gecop")
+			assert_execute (l_gecop_pathname + " --tool=" + program_name + " --tool-executable=" + l_program_full_filename + l_thread_option + output_log)
 			assert_expected_validation_results
 		end
 

@@ -5,7 +5,7 @@
 		"Base class for functional geant tests"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2008-2018, Sven Ehrke and others"
+	copyright: "Copyright (c) 2008-2024, Sven Ehrke and others"
 	license: "MIT License"
 
 deferred class GEANT_FUNCTIONAL_TEST_CASE
@@ -147,16 +147,18 @@ feature {NONE} -- Implementation
 			a_stderr: STRING
 			s: STRING
 			a_expected: STRING
+			l_geant_pathname: STRING
 		do
 			a_build_filename := "build.eant"
 			write_build_file (a_tag, a_build_filename)
 			a_stdout := "stdout.txt"
 			a_stderr := "stderr.txt"
 			a_cmd  := "-b " + a_build_filename + " > " + a_stdout + " 2> " + a_stderr
+			l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
 			if verbose then
-				a_cmd  := "geant -v " + a_cmd
+				a_cmd  := l_geant_pathname + " -v " + a_cmd
 			else
-				a_cmd  := "geant " + a_cmd
+				a_cmd  := l_geant_pathname + " " + a_cmd
 			end
 			assert_exit_code_execute (a_cmd, expected_exit_code)
 

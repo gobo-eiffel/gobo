@@ -28,6 +28,9 @@ inherit
 	UT_SHARED_ISE_VARIABLES
 		export {NONE} all end
 
+	UT_SHARED_GOBO_VARIABLES
+		export {NONE} all end
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -70,6 +73,9 @@ feature -- Execution
 			a_error_handler_not_void: a_error_handler /= Void
 		do
 			Arguments.set_program_name ("gedoc")
+				-- Set environment variables "$GOBO", "$GOBO_LIBRARY",
+				-- "$BOEHM_GC" and "$ZIG" if not set yet.
+			gobo_variables.set_gobo_variables
 				-- For compatibility with ISE's tools, define the environment
 				-- variables "$ISE_LIBRARY", "$EIFFEL_LIBRARY", "$ISE_PLATFORM"
 				-- and "$ISE_C_COMPILER" if not set yet.

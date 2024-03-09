@@ -290,6 +290,7 @@ feature {NONE} -- Processing
 			l_gecc: GECC
 			l_exit_code: INTEGER
 			dt1: detachable DT_DATE_TIME
+			l_gecc_pathname: STRING
 		do
 			dt1 := a_system_processor.benchmark_start_time
 			if attached a_system.system_name as l_name then
@@ -309,7 +310,8 @@ feature {NONE} -- Processing
 				l_command.execute
 				l_exit_code := l_command.exit_code
 			elseif c_compile_using_gecc then
-				create l_command.make ("gecc --thread=" + thread_count.out + " " + l_script_filename)
+				l_gecc_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("gecc")
+				create l_command.make (l_gecc_pathname + " --thread=" + thread_count.out + " " + l_script_filename)
 				l_command.execute
 				l_exit_code := l_command.exit_code
 			else
@@ -911,19 +913,31 @@ feature -- Error handling
 		local
 			a_message: UT_VERSION_NUMBER
 			l_text: STRING
+			l_count: INTEGER
 		do
 			if is_verbose then
 				create l_text.make (100)
 				l_text.append_string (Version_number)
-				l_text.append_string (" (")
-				l_text.append_integer (thread_count)
+				l_text.append_string ("%Nexecutable: ")
+				l_text.append_string ({KL_EXECUTION_ENVIRONMENT}.current_executable_pathname)
+				l_text.append_string ("%N$GOBO: ")
+				if attached {UT_GOBO_VARIABLES}.gobo_value as l_gobo then
+					l_text.append_string (l_gobo)
+				end
+				l_text.append_string ("%Nthreads: ")
+				l_count := thread_count
+				l_text.append_integer (l_count)
 				l_text.append_string (" thread")
-				if thread_count > 1 then
+				if l_count > 1 then
 					l_text.append_character ('s')
 				end
-				l_text.append_character (')')
-				l_text.append_character ('%N')
-				l_text.append_string ({KL_EXECUTION_ENVIRONMENT}.current_executable_pathname)
+				l_text.append_string (" used on ")
+				l_count := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32
+				l_text.append_integer (l_count)
+				l_text.append_string (" available CPU")
+				if l_count > 1 then
+					l_text.append_character ('s')
+				end
 			else
 				l_text := Version_number
 			end

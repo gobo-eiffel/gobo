@@ -9,7 +9,7 @@
 >
 	<description>
 		system: "Gobo Eiffel Ant Unit Tester"
-		copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+		copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 	<target name="all_classes">
@@ -24,6 +24,7 @@
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
 		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
 		<library name="test_skl" location="${GOBO_LIBRARY}/library/test/library_skl.ecf" readonly="true"/>
+		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
 		<library name="geant" location="${GOBO_LIBRARY}/tool/geant/src/system.ecf" readonly="true"/>
 		<cluster name="geant_tester" location="./"/>
 	</target>
