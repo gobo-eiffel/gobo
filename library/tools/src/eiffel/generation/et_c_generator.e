@@ -471,12 +471,22 @@ feature -- Generation
 			a_system_name_not_void: a_system_name /= Void
 		do
 			has_fatal_error := False
+			if c_compiler_used.same_string ("zig") then
+					-- When compiling with 'zig', we make sure that different systems
+					-- with the same system name don't get the same generated C filenames,
+					-- otherwise it slows down zig cache mechanism (as of zig < 0.12).
+				if attached {ET_ECF_SYSTEM} current_system as l_ecf_system then
+					c_filenames_counter_offset := l_ecf_system.filename.hash_code
+					c_filenames_counter_offset := c_filenames_counter_offset * 100
+				end
+			end
 			if use_boehm_gc then
 				add_boehm_gc_c_files (a_system_name)
 			end
 			generate_c_code (a_system_name)
 			generate_compilation_script (a_system_name)
 			c_filenames.wipe_out
+			c_filenames_counter_offset := 0
 		end
 
 feature {NONE} -- Compilation script generation
@@ -925,18 +935,49 @@ feature {NONE} -- Compilation script generation
 			end
 		end
 
+	c_compiler_used: STRING
+			-- C compiler used
+		local
+			l_filename: STRING
+			l_file: KL_TEXT_INPUT_FILE
+		do
+			if attached Execution_environment.variable_value ("GOBO_CC") as l_gobo_cc and then not l_gobo_cc.is_empty then
+				Result := l_gobo_cc
+			else
+				Result := "zig"
+				l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "config", "default.cfg">>)
+				l_filename := Execution_environment.interpreted_string (l_filename)
+				create l_file.make (l_filename)
+				l_file.open_read
+				if l_file.is_open_read then
+					l_file.read_line
+					if not l_file.end_of_file then
+						Result := STRING_.cloned_string (l_file.last_string)
+						STRING_.left_adjust (Result)
+						STRING_.right_adjust (Result)
+					end
+					l_file.close
+				end
+			end
+		ensure
+			c_compiler_used_not_void: Result /= Void
+		end
+
 	c_config: DS_STRING_HASH_TABLE
 			-- C compiler configuration
 		local
-			l_name: detachable STRING
+			l_name: STRING
 			l_filename: STRING
 			l_file: KL_TEXT_INPUT_FILE
 			l_default: BOOLEAN
 			l_c_config_parser: UT_CONFIG_PARSER
 			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
-			l_name := Execution_environment.variable_value ("GOBO_CC")
-			if l_name = Void then
+			if attached Execution_environment.variable_value ("GOBO_CC") as l_gobo_cc and then not l_gobo_cc.is_empty then
+				l_name := l_gobo_cc
+			else
+				l_default := True
+				l_name := "zig"
 				l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "config", "default.cfg">>)
 				l_filename := Execution_environment.interpreted_string (l_filename)
 				create l_file.make (l_filename)
@@ -947,13 +988,10 @@ feature {NONE} -- Compilation script generation
 						l_name := STRING_.cloned_string (l_file.last_string)
 						STRING_.left_adjust (l_name)
 						STRING_.right_adjust (l_name)
+						l_default := False
 					end
 					l_file.close
 				end
-			end
-			if l_name = Void then
-				l_default := True
-				l_name := "zig"
 			end
 			create Result.make_map (10)
 			Result.set_key_equality_tester (string_equality_tester)
@@ -1033,7 +1071,7 @@ feature {NONE} -- Compilation script generation
 				set_fatal_error
 				report_undefined_environment_variable_error (gobo_variables.boehm_gc_variable)
 			else
-				l_basename := a_system_name + (c_filenames.count + 1).out
+				l_basename := a_system_name + (c_filenames.count + c_filenames_counter_offset + 1).out
 				l_c_filename := l_basename + c_file_extension
 				create l_c_file.make (l_c_filename)
 				l_c_file.open_write
@@ -1207,7 +1245,7 @@ feature {NONE} -- Compilation script generation
 					l_extension := cpp_file_extension
 				end
 				if a_external_c_filenames = c_filenames then
-					l_basename := system_name + (c_filenames.count + 1).out
+					l_basename := system_name + (c_filenames.count + c_filenames_counter_offset + 1).out
 				else
 					l_basename := a_library_name + j.out
 				end
@@ -41753,6 +41791,12 @@ feature {NONE} -- Output files/buffers
 			-- The key is the filename without the extension,
 			-- the item is the file extension
 
+	c_filenames_counter_offset: INTEGER_64
+			-- Offset (if any) to be added to the postfix number of the generated C files
+			-- (Useful when compiling with 'zig' so that different systems with the same
+			-- system name don't get the same generated C filenames, which otherwise slows
+			-- down zig cache mechanism, as of zig < 0.12.)
+
 	open_c_file
 			-- Open C file if necessary.
 		do
@@ -41772,7 +41816,7 @@ feature {NONE} -- Output files/buffers
 			if l_c_file = Void then
 				c_file_size := 0
 				l_header_filename := system_name + h_file_extension
-				l_filename := system_name + (c_filenames.count + 1).out
+				l_filename := system_name + (c_filenames.count + c_filenames_counter_offset + 1).out
 				c_filenames.force_last (c_file_extension, l_filename)
 				create l_c_file.make (l_filename + c_file_extension)
 				l_c_file.open_write
@@ -41852,7 +41896,7 @@ feature {NONE} -- Output files/buffers
 			if l_cpp_file = Void then
 				cpp_file_size := 0
 				l_header_filename := system_name + h_file_extension
-				l_filename := system_name + (c_filenames.count + 1).out
+				l_filename := system_name + (c_filenames.count + c_filenames_counter_offset + 1).out
 				c_filenames.force_last (cpp_file_extension, l_filename)
 				create l_cpp_file.make (l_filename + cpp_file_extension)
 				l_cpp_file.open_write
