@@ -5,7 +5,7 @@
 		"Gecc commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2023-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class GEANT_GECC_COMMAND
@@ -135,9 +135,15 @@ feature -- Command-line
 			is_executable: is_executable
 		local
 			l_filename: STRING
+			l_gecc_pathname: STRING
 		do
 			create Result.make (50)
-			Result.append_string (executable_filename)
+			if executable_filename.same_string ("gecc") then
+				l_gecc_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("gecc")
+				Result.append_string (l_gecc_pathname)
+			else
+				Result.append_string (executable_filename)
+			end
 			Result.append_character (' ')
 			if project.options.use_thread_count then
 				Result.append_string ("--thread=")

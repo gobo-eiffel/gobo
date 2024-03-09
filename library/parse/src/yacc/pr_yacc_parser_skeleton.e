@@ -5,7 +5,7 @@
 		"Parser skeletons for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class PR_YACC_PARSER_SKELETON
@@ -1027,7 +1027,7 @@ feature {NONE} -- Implementation
 			a_string_not_void: a_string /= Void
 			valid_string: {RX_PCRE_ROUTINES}.regexp ("\%"[^%"\n]*\%"").recognizes (a_string)
 		do
-			if attached a_token.literal_string as l_literal_string and then not l_literal_string.is_equal (a_string) then
+			if attached a_token.literal_string as l_literal_string and then not l_literal_string.same_string (a_string) then
 				report_two_strings_token_error (a_token.name, l_literal_string, a_string)
 			elseif terminal_symbols.has (a_string) and then terminal_symbols.item (a_string) /= a_token then
 				report_string_token_defined_twice_error (a_string, terminal_symbols.item (a_string).name, a_token.name)

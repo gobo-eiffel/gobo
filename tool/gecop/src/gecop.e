@@ -7,7 +7,7 @@
 			An Eiffel language conformance validation suite.
 		]"
 
-	copyright: "Copyright (c) 2018-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class GECOP
@@ -24,6 +24,12 @@ inherit
 	KL_SHARED_STANDARD_FILES
 	KL_SHARED_STREAMS
 	KL_IMPORTED_STRING_ROUTINES
+
+	UT_SHARED_ISE_VARIABLES
+		export {NONE} all end
+
+	UT_SHARED_GOBO_VARIABLES
+		export {NONE} all end
 
 create
 
@@ -75,6 +81,13 @@ feature -- Execution
 			l_set_up_mutex: MUTEX
 		do
 			Arguments.set_program_name ("gecop")
+				-- Set environment variables "$GOBO", "$GOBO_LIBRARY",
+				-- "$BOEHM_GC" and "$ZIG" if not set yet.
+			gobo_variables.set_gobo_variables
+				-- For compatibility with ISE's tools, define the environment
+				-- variables "$ISE_LIBRARY", "$EIFFEL_LIBRARY", "$ISE_PLATFORM"
+				-- and "$ISE_C_COMPILER" if not set yet.
+			ise_variables.set_ise_variables
 			create error_handler.make_standard
 			parse_arguments (a_args)
 			if exit_code = 0 and then not version_flag.was_found then

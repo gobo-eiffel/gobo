@@ -5,7 +5,7 @@
 		"Getest commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2021, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2024, Sven Ehrke and others"
 	license: "MIT License"
 
 class GEANT_GETEST_COMMAND
@@ -198,13 +198,16 @@ feature -- Execution
 			cmd: STRING
 			a_filename: STRING
 			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
+			l_getest_pathname: STRING
 		do
 			if not generation and not compilation and not execution then
 					-- Nothing to be done.
 				project.trace (<<"  [getest] ", "no generation, no compilation, no execution">>)
 			else
 				create cmd.make (128)
-				cmd.append_string ("getest ")
+				l_getest_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("getest")
+				cmd.append_string (l_getest_pathname)
+				cmd.append_character (' ')
 				if verbose then
 					cmd.append_string ("--verbose ")
 				end

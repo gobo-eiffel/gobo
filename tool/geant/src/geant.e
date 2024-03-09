@@ -20,6 +20,9 @@ inherit
 	KL_SHARED_ARGUMENTS
 		export {NONE} all end
 
+	UT_SHARED_ISE_VARIABLES
+		export {NONE} all end
+
 	UT_SHARED_GOBO_VARIABLES
 		export {NONE} all end
 
@@ -43,6 +46,10 @@ feature {NONE} -- Initialization
 				-- Set environment variables "$GOBO", "$GOBO_LIBRARY",
 				-- "$BOEHM_GC" and "$ZIG" if not set yet.
 			gobo_variables.set_gobo_variables
+				-- For compatibility with ISE's tools, define the environment
+				-- variables "$ISE_LIBRARY", "$EIFFEL_LIBRARY", "$ISE_PLATFORM"
+				-- and "$ISE_C_COMPILER" if not set yet.
+			ise_variables.set_ise_variables
 			create error_handler.make_standard
 			build_filename := Default_build_filename
 			read_command_line

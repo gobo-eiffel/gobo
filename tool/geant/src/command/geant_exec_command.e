@@ -5,7 +5,7 @@
 		"Exec commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2024, Sven Ehrke and others"
 	license: "MIT License"
 
 class GEANT_EXEC_COMMAND
@@ -102,10 +102,16 @@ feature -- Execution
 			s: STRING
 			a_string_interpreter: GEANT_STRING_INTERPRETER
 			a_accept_errors: BOOLEAN
+			l_gedoc_pathname: STRING
 		do
 			if single_execution_mode then
-				project.trace (<<"  [exec] ", command_line.value>>)
-				execute_shell (command_line.value)
+				s := command_line.value
+				if s.starts_with ("gedoc ") then
+					l_gedoc_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("gedoc")
+					s := l_gedoc_pathname + s.substring (6, s.count)
+				end
+				project.trace (<<"  [exec] ", s>>)
+				execute_shell (s)
 
 				if exit_code_variable_name /= Void and then exit_code_variable_name.is_defined then
 						-- Store return_code of process:
@@ -137,6 +143,10 @@ feature -- Execution
 							l_fileset.after or else exit_code /= 0
 						loop
 							s := a_string_interpreter.interpreted_string (command_line.value)
+							if s.starts_with ("gedoc ") then
+								l_gedoc_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("gedoc")
+								s := l_gedoc_pathname + s.substring (6, s.count)
+							end
 							project.trace (<<"  [exec] ", s>>)
 							execute_shell (s)
 							a_accept_errors := accept_errors.non_empty_value_or_else (False)

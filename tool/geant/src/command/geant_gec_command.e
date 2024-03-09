@@ -5,7 +5,7 @@
 		"Gec commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2005-2023, Sven Ehrke and others"
+	copyright: "Copyright (c) 2005-2024, Sven Ehrke and others"
 	license: "MIT License"
 
 class GEANT_GEC_COMMAND
@@ -455,9 +455,15 @@ feature -- Command-line
 			is_ecf_configuration: is_ecf_configuration
 		local
 			a_filename: STRING
+			l_gec_pathname: STRING
 		do
 			create Result.make (50)
-			Result.append_string (executable_filename)
+			if executable_filename.same_string ("gec") then
+				l_gec_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("gec")
+				Result.append_string (l_gec_pathname)
+			else
+				Result.append_string (executable_filename)
+			end
 			Result.append_character (' ')
 			if attached target_name as l_target_name and then not l_target_name.is_empty then
 				Result.append_string ("--target=")
