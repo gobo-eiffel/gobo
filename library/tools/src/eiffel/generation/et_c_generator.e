@@ -182,6 +182,7 @@ feature {NONE} -- Initialization
 			header_file := null_output_stream
 			current_type := a_system.unknown_type
 			current_feature := dummy_feature
+			current_non_inlined_feature := current_feature
 			create extra_dynamic_type_sets.make_with_capacity (50)
 			extra_dynamic_type_sets.put_last (a_system.any_type)
 			current_dynamic_type_sets := extra_dynamic_type_sets
@@ -1628,6 +1629,7 @@ feature {NONE} -- C code Generation
 				current_file := old_file
 				current_type := current_dynamic_system.unknown_type
 				current_feature := dummy_feature
+				current_non_inlined_feature := current_feature
 				current_dynamic_type_sets := extra_dynamic_type_sets
 			end
 			system_name := old_system_name
@@ -1744,6 +1746,7 @@ feature {NONE} -- Feature generation
 				current_type := a_feature.target_type
 				old_feature := current_feature
 				current_feature := a_feature
+				current_non_inlined_feature := a_feature
 				old_dynamic_type_sets := current_dynamic_type_sets
 				current_dynamic_type_sets := current_feature.dynamic_type_sets
 				a_feature.static_feature.process (Current)
@@ -1784,6 +1787,7 @@ feature {NONE} -- Feature generation
 				end
 				current_dynamic_type_sets := old_dynamic_type_sets
 				current_feature := old_feature
+				current_non_inlined_feature := old_feature
 				current_type := old_type
 			end
 		end
@@ -15493,7 +15497,7 @@ feature {NONE} -- Equality generation
 					current_file.put_character ('(')
 					current_file.put_string (c_not)
 				end
-				print_equality_function_name (current_equalities.count, current_feature, current_type, current_file)
+				print_equality_function_name (current_equalities.count, current_non_inlined_feature, current_non_inlined_feature.target_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
 				print_comma
@@ -42629,6 +42633,9 @@ feature {NONE} -- Access
 	current_feature: ET_DYNAMIC_FEATURE
 			-- Feature being processed
 
+	current_non_inlined_feature: ET_DYNAMIC_FEATURE
+			-- Non-inline feature being processed
+
 	current_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type where `current_feature' belongs
 
@@ -44894,6 +44901,7 @@ invariant
 	current_separate_function_header_buffer_not_void: current_separate_function_header_buffer /= Void
 	current_separate_function_body_buffer_not_void: current_separate_function_body_buffer /= Void
 	current_feature_not_void: current_feature /= Void
+	current_non_inlined_feature_not_void: current_non_inlined_feature /= Void
 	current_type_not_void: current_type /= Void
 	operand_stack_not_void: operand_stack /= Void
 	no_void_operand: not operand_stack.has_void
