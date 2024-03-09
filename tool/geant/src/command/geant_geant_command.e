@@ -5,7 +5,7 @@
 		"Geant commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2023, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2024, Sven Ehrke and others"
 	license: "MIT License"
 
 class GEANT_GEANT_COMMAND
@@ -213,6 +213,7 @@ feature {NONE} -- Implementation
 		local
 			cmd: STRING
 			a_level: STRING
+			l_geant_pathname: STRING
 		do
 			a_level := ""
 			if a_target_name /= Void and then a_target_name.count > 0 then
@@ -234,7 +235,8 @@ feature {NONE} -- Implementation
 				end
 			end
 			create cmd.make (256)
-			cmd.append_string ("geant")
+			l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
+			cmd.append_string (l_geant_pathname)
 			cmd := STRING_.appended_string (cmd, options_and_arguments_for_cmdline)
 			if project.options.debug_mode then
 				cmd.append_string (" -Dgeant.geant.level=")

@@ -100,6 +100,7 @@ feature -- Test Gobo Eiffel Compiler
 			l_directory: KL_DIRECTORY
 			l_executable: STRING
 			l_thread_option: STRING
+			l_geant_pathname: STRING
 		do
 			if variables.has ("debug") then
 				a_debug := "debug_"
@@ -117,8 +118,9 @@ feature -- Test Gobo Eiffel Compiler
 				l_thread_option := ""
 			end
 			a_geant_filename := geant_filename
+			l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
 				-- Compile program.
-			execute_shell ("geant -b %"" + a_geant_filename + "%"" + l_executable + l_thread_option + " -Dgelint_option=true compile_" + a_debug + "ge" + output1_log)
+			execute_shell (l_geant_pathname + " -b %"" + a_geant_filename + "%"" + l_executable + l_thread_option + " -Dgelint_option=true compile_" + a_debug + "ge" + output1_log)
 			concat_output1 (agent filter_output_gec)
 				-- Execute program.
 			if file_system.file_exists (file_system.pathname (testrun_dirname, program_exe)) then
@@ -126,7 +128,7 @@ feature -- Test Gobo Eiffel Compiler
 				concat_output2
 			end
 				-- Clean.
-			execute_shell ("geant -b %"" + a_geant_filename + "%" clobber" + output3_log)
+			execute_shell (l_geant_pathname + " -b %"" + a_geant_filename + "%" clobber" + output3_log)
 			concat_output3
 				-- Test.
 			create l_directory.make (program_dirname)
@@ -372,6 +374,7 @@ feature -- Test ISE Eiffel
 			a_geant_filename: STRING
 			l_directory: KL_DIRECTORY
 			l_executable: STRING
+			l_geant_pathname: STRING
 		do
 			if variables.has ("debug") then
 				a_debug := "debug_"
@@ -393,8 +396,9 @@ feature -- Test ISE Eiffel
 				l_dotnet := ""
 			end
 			a_geant_filename := geant_filename
+			l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
 				-- Compile program.
-			execute_shell ("geant -b %"" + a_geant_filename + "%"" + l_executable + l_dotnet + " compile_" + a_debug + "ise" + output1_log)
+			execute_shell (l_geant_pathname + " -b %"" + a_geant_filename + "%"" + l_executable + l_dotnet + " compile_" + a_debug + "ise" + output1_log)
 			concat_output1 (agent filter_output_ise)
 				-- Execute program.
 			if file_system.file_exists (file_system.pathname (testrun_dirname, program_exe)) then
@@ -402,7 +406,7 @@ feature -- Test ISE Eiffel
 				concat_output2
 			end
 				-- Clean.
-			execute_shell ("geant -b %"" + a_geant_filename + "%" clobber" + output3_log)
+			execute_shell (l_geant_pathname + " -b %"" + a_geant_filename + "%" clobber" + output3_log)
 			concat_output3
 				-- Test.
 			create l_directory.make (program_dirname)
@@ -1151,11 +1155,13 @@ feature {NONE} -- Execution
 		local
 			l_command: DP_SHELL_COMMAND
 			l_command_name: STRING
+			l_geant_pathname: STRING
 		do
 			l_command_name := a_shell_command.twin
 			l_command_name.replace_substring_all ("\", "\\")
 			l_command_name.replace_substring_all ("%"", "\%"")
-			l_command_name := "geant -b %"" + execution_buildname + "%" -Dexecutable=%"" + l_command_name + "%" -Ddirectory=%"" + testrun_dirname + "%" execute"
+			l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
+			l_command_name := l_geant_pathname + " -b %"" + execution_buildname + "%" -Dexecutable=%"" + l_command_name + "%" -Ddirectory=%"" + testrun_dirname + "%" execute"
 
 			create l_command.make (l_command_name)
 			l_command.execute

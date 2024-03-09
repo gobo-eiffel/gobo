@@ -290,6 +290,7 @@ feature {NONE} -- Processing
 			l_gecc: GECC
 			l_exit_code: INTEGER
 			dt1: detachable DT_DATE_TIME
+			l_gecc_pathname: STRING
 		do
 			dt1 := a_system_processor.benchmark_start_time
 			if attached a_system.system_name as l_name then
@@ -309,7 +310,8 @@ feature {NONE} -- Processing
 				l_command.execute
 				l_exit_code := l_command.exit_code
 			elseif c_compile_using_gecc then
-				create l_command.make ("gecc --thread=" + thread_count.out + " " + l_script_filename)
+				l_gecc_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("gecc")
+				create l_command.make (l_gecc_pathname + " --thread=" + thread_count.out + " " + l_script_filename)
 				l_command.execute
 				l_exit_code := l_command.exit_code
 			else

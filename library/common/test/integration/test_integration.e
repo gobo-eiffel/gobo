@@ -5,7 +5,7 @@
 		"Test integration of all Gobo Eiffel classes"
 
 	library: "Gobo Eiffel Library"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class TEST_INTEGRATION
@@ -54,13 +54,15 @@ feature {NONE} -- Integration
 			-- Test integration of all classes with Gobo Eiffel.
 		local
 			old_cwd: STRING
+			l_gelint_pathname: STRING
 		do
 			old_cwd := file_system.cwd
 			file_system.create_directory (testdir)
 			assert (testdir + "_exists", file_system.directory_exists (testdir))
 			file_system.cd (testdir)
 				-- Gobo Eiffel Lint.
-			assert_execute ("gelint --flat " + ecf_filename + output_log)
+			l_gelint_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("gelint")
+			assert_execute (l_gelint_pathname + " --flat " + ecf_filename + output_log)
 				-- Done.
 			file_system.cd (old_cwd)
 			file_system.recursive_delete_directory (testdir)

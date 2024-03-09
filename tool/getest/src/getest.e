@@ -147,6 +147,7 @@ feature -- Processing
 		local
 			a_command: DP_SHELL_COMMAND
 			a_command_name: STRING
+			l_geant_pathname: STRING
 		do
 			if not error_handler.error_reported then
 				if need_header then
@@ -155,6 +156,10 @@ feature -- Processing
 				a_command_name := a_config.compile
 				if a_command_name.count > 0 then
 					std.output.flush
+					if a_command_name.starts_with ("geant ") then
+						l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
+						a_command_name := l_geant_pathname + a_command_name.substring (6, a_command_name.count)
+					end
 					create a_command.make (a_command_name)
 					a_command.execute
 					if a_command.exit_code /= 0 then

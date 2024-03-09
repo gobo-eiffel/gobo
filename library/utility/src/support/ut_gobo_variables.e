@@ -66,6 +66,48 @@ feature -- Access
 			instance_free: class
 		end
 
+	executable_pathname (a_executable_name: STRING): STRING
+			-- Executable pathname of `a_executable_name'.
+			-- `a_executable_name' can be `gec`, `geant`, etc.
+			-- Use the same file extension as the current executable.
+			-- If the executable exists in the same folder as the current executable, then use this one.
+			-- Otherwise if it exists in "$GOBO/bin" then use this one.
+			-- Otherwise return `a_executable_name' and rely on the PATH of the underlying operating system to find it.
+		require
+			a_executable_name_not_void: a_executable_name /= Void
+		local
+			l_executable_with_extension: STRING
+			l_current_executable_pathname: STRING
+			l_executable_pathname: STRING
+		do
+			l_current_executable_pathname := {KL_EXECUTION_ENVIRONMENT}.current_executable_pathname
+			if not file_system.extension (a_executable_name).is_empty then
+				l_executable_with_extension := a_executable_name
+			elseif not l_current_executable_pathname.is_empty then
+				l_executable_with_extension := a_executable_name + file_system.extension (l_current_executable_pathname)
+			else
+				l_executable_with_extension := a_executable_name + file_system.exe_extension
+			end
+			if not l_current_executable_pathname.is_empty then
+				l_executable_pathname := file_system.pathname (file_system.dirname (l_current_executable_pathname), l_executable_with_extension)
+				if file_system.file_exists (l_executable_pathname) then
+					Result := l_executable_pathname
+				end
+			end
+			if Result = Void and attached gobo_value as l_gobo_value and then not l_gobo_value.is_empty then
+				l_executable_pathname := file_system.nested_pathname (l_gobo_value, <<"bin", l_executable_with_extension>>)
+				if file_system.file_exists (l_executable_pathname) then
+					Result := l_executable_pathname
+				end
+			end
+			if Result = Void then
+				Result := a_executable_name
+			end
+		ensure
+			executable_pathname_not_void: Result /= Void
+			instance_free: class
+		end
+
 feature -- Setting
 
 	set_gobo_variables
