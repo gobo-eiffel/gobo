@@ -2,6 +2,7 @@
 
 import glob
 import os
+import sys
 import pandas as pd
 import pathlib
 
@@ -92,10 +93,13 @@ def detect_diamond(ecf_fn):
           print("  ", new_field, [p[l-1:] for p in path])
 
 
-def process_all_ecf():
-
-  ecf_fns = glob.glob('**/*.ecf', recursive=True)
+def process_all_ecf(dir):
+  ecf_fns = glob.glob(dir + '/**/*.ecf', recursive=True)
   for ecf_fn in ecf_fns:
+    process_ecf(ecf_fn)
+
+
+def process_ecf(ecf_fn):
     try:
       # "%s/project/contrib/gobo/tool/gedoc" home_dir
       pathlib.Path(INHERITED_FIELDS_FN).unlink(missing_ok=True)
@@ -107,5 +111,14 @@ def process_all_ecf():
       print("skip ", ecf_fn)
 
 if __name__ == "__main__":
-  process_all_ecf()
+  if len(sys.argv) >= 2:
+    f = sys.argv[1]
+  else:
+    f = "./"
+
+  print("check: ", f)
+  if os.path.isdir(f):
+    process_all_ecf(f)
+  else:
+    process_ecf(f)
 
