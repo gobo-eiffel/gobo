@@ -939,24 +939,15 @@ feature {NONE} -- Compilation script generation
 			-- C compiler used
 		local
 			l_filename: STRING
-			l_file: KL_TEXT_INPUT_FILE
 		do
 			if attached Execution_environment.variable_value ("GOBO_CC") as l_gobo_cc and then not l_gobo_cc.is_empty then
 				Result := l_gobo_cc
 			else
-				Result := "zig"
 				l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "config", "default.cfg">>)
 				l_filename := Execution_environment.interpreted_string (l_filename)
-				create l_file.make (l_filename)
-				l_file.open_read
-				if l_file.is_open_read then
-					l_file.read_line
-					if not l_file.end_of_file then
-						Result := STRING_.cloned_string (l_file.last_string)
-						STRING_.left_adjust (Result)
-						STRING_.right_adjust (Result)
-					end
-					l_file.close
+				Result := file_system.file_first_line (l_filename)
+				if Result.is_empty then
+					Result := "zig"
 				end
 			end
 		ensure
@@ -966,37 +957,15 @@ feature {NONE} -- Compilation script generation
 	c_config: DS_STRING_HASH_TABLE
 			-- C compiler configuration
 		local
-			l_name: STRING
 			l_filename: STRING
 			l_file: KL_TEXT_INPUT_FILE
-			l_default: BOOLEAN
 			l_c_config_parser: UT_CONFIG_PARSER
 			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
-			if attached Execution_environment.variable_value ("GOBO_CC") as l_gobo_cc and then not l_gobo_cc.is_empty then
-				l_name := l_gobo_cc
-			else
-				l_default := True
-				l_name := "zig"
-				l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "config", "default.cfg">>)
-				l_filename := Execution_environment.interpreted_string (l_filename)
-				create l_file.make (l_filename)
-				l_file.open_read
-				if l_file.is_open_read then
-					l_file.read_line
-					if not l_file.end_of_file then
-						l_name := STRING_.cloned_string (l_file.last_string)
-						STRING_.left_adjust (l_name)
-						STRING_.right_adjust (l_name)
-						l_default := False
-					end
-					l_file.close
-				end
-			end
 			create Result.make_map (10)
 			Result.set_key_equality_tester (string_equality_tester)
-			Result.put_new ("$ZIG cc -Wno-unused-value -Wno-deprecated-declarations -fno-sanitize=undefined $cflags $includes -c $c", "cc")
-			Result.put_new ("$ZIG cc $lflags -o $exe $objs $libs -lm", "link")
+			Result.put_new ("$ZIG cc -c $c", "cc")
+			Result.put_new ("$ZIG cc -o $exe $objs $libs", "link")
 				-- Put some platform-dependent default values.
 			if operating_system.is_windows then
 				Result.put_new (".obj", "obj")
@@ -1005,11 +974,8 @@ feature {NONE} -- Compilation script generation
 				Result.put_new (".o", "obj")
 				Result.put_new ("", "exe")
 			end
-			l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "config", l_name>>)
+			l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "config", c_compiler_used + cfg_file_extension>>)
 			l_filename := Execution_environment.interpreted_string (l_filename)
-			if not file_system.has_extension (l_filename, cfg_file_extension) then
-				l_filename := l_filename + cfg_file_extension
-			end
 			create l_file.make (l_filename)
 			l_file.open_read
 			if l_file.is_open_read then
@@ -1043,7 +1009,7 @@ feature {NONE} -- Compilation script generation
 						l_cursor.forth
 					end
 				end
-			elseif not l_default then
+			else
 				set_fatal_error
 				report_cannot_read_error (l_filename)
 			end
@@ -15094,6 +15060,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			l_constant: ET_CONSTANT
 			l_force_result_boxing: BOOLEAN
 			l_inlined_call: BOOLEAN
+			l_git_filename: STRING
+			l_first_line: STRING
+			l_git_sha1: STRING
+			l_gobo_version: STRING
 		do
 			if in_static_feature then
 				print_expression_static_call (a_call, current_type, a_call.name, a_call.arguments)
@@ -15199,6 +15169,30 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 							end
 						elseif attached {ET_CONSTANT_ATTRIBUTE} l_dynamic_feature.static_feature as l_constant_attribute then
 							if attached {ET_MANIFEST_STRING} l_constant_attribute.constant as l_string_constant then
+									-- Try to inject the commit SHA-1 to the Gobo version if not already done yet.
+									-- Useful when compiling Gobo tools from a local Git clone.
+								if
+									l_string_constant.value.same_string ("xx.xx.xx+xxxxxxxxx") and
+									l_constant_attribute.implementation_class.upper_name.same_string ("UT_GOBO_VERSION")
+								then
+									l_git_filename := file_system.nested_pathname ("${GOBO}", <<".git", "HEAD">>)
+									l_git_filename := Execution_environment.interpreted_string (l_git_filename)
+									l_first_line := file_system.file_first_line (l_git_filename)
+									if l_first_line.starts_with ("ref: ") then
+										l_first_line.remove_head (5)
+										l_git_filename := file_system.nested_pathname ("${GOBO}", <<".git", l_first_line>>)
+										l_git_filename := Execution_environment.interpreted_string (l_git_filename)
+										l_first_line := file_system.file_first_line (l_git_filename)
+									end
+									if l_first_line.count = 40 then
+										l_git_sha1 := l_first_line
+										l_git_sha1.keep_head (9)
+										l_gobo_version := "00.00.00+" + l_git_sha1
+										if attached {ET_REGULAR_MANIFEST_STRING} l_string_constant as l_regular_manifest_string then
+											l_regular_manifest_string.set_literal (l_gobo_version)
+										end
+									end
+								end
 								l_once_feature := l_constant_attribute.implementation_feature
 								constant_features.force_last (l_string_constant, l_once_feature)
 								print_once_value_name (l_once_feature, current_file)

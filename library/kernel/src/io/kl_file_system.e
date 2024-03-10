@@ -5,7 +5,7 @@
 		"File systems"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class KL_FILE_SYSTEM
@@ -63,6 +63,29 @@ feature -- File handling
 		do
 			tmp_file.reset (a_filename)
 			Result := tmp_file.count
+		end
+
+	file_first_line (a_filename: STRING): STRING
+			-- First line in file named `a_filename';
+			-- Return an empty string if the file does not exist.
+			-- Remove leading and trailing white spaces (tabs, etc.).
+			-- (`a_filename' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		local
+			l_file: like new_input_file
+		do
+			l_file := new_input_file (a_filename)
+			l_file.open_read
+			if l_file.is_open_read then
+				l_file.read_line
+				Result := l_file.last_string.twin
+				Result.left_adjust
+				Result.right_adjust
+				l_file.close
+			else
+				Result := ""
+			end
 		end
 
 	file_time_stamp (a_filename: STRING): INTEGER

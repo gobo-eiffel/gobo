@@ -5,7 +5,7 @@
 		"Interface for file systems"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class KI_FILE_SYSTEM
@@ -71,6 +71,21 @@ feature -- File handling
 		ensure
 			instance_free: class
 			valid_values: Result = -1 or Result >= 0
+		end
+
+	file_first_line (a_filename: STRING): STRING
+			-- First line in file named `a_filename';
+			-- Return an empty string if the file does not exist.
+			-- Remove leading and trailing white spaces (tabs, etc.).
+			-- (`a_filename' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		require
+			a_filename_not_void: a_filename /= Void
+		deferred
+		ensure
+			instance_free: class
+			file_first_line_not_void: Result /= Void
 		end
 
 	file_time_stamp (a_filename: STRING): INTEGER
