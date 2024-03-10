@@ -14,12 +14,19 @@ se:
 
 ise:
 	@echo ""
-	@echo "***NOTE***: ISE compiler implements the troublesome reference identity semantics which we cannot fix (we cannot change their compiler)"
+	@echo "***NOTE***: ISE compiler implements the troublesome reference identity semantics in workbench mode which we cannot fix (we cannot change their compiler)"
 	@echo ""
 	$(EC) $(OPT) $(ISE_OPT) app.e
 	chmod +x ./app
-	./app > ise.out
-	cat     ise.out
+	mv app app_w
+	./app_w > ise_w.out
+	cat       ise_w.out
+	@echo "***NOTE***: ISE compiler implements the replica semantics in finalize mode which we cannot fix (we cannot change their compiler)"
+	$(EC) $(OPT) -finalize $(ISE_OPT) app.e
+	chmod +x ./app
+	mv app app_f
+	./app_f > ise_f.out
+	cat       ise_f.out
 
 gobo:
 	$(PROJECT)/gobo/bin/gec app.ecf
