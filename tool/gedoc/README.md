@@ -227,7 +227,7 @@ VISION2_APPLICATION root's creation
 ## TODO & Feedbacks:
 
 Right now this tool is still a prototype, but good enough to detect problems in the real code.
-Eric Bezault had kindly agreed to properly integrate into `gedoc` in the near future
+Eric Bezault has kindly agreed to properly integrate into `gedoc` in the near future
 [https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986971690](https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986971690).
 Many thanks to Eric for his help in developing this prototype!
 
