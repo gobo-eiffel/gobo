@@ -13,7 +13,7 @@ gobo:  # does not work: https://github.com/gobo-eiffel/gobo/issues/71
 	gec $(OPT) src/system.ecf
 
 fmt=implicit_converts
-fmt=field_rename
+fmt=attr_rename
 
 demo_ecf = ./test/tool/system.ecf
 demo_ecf = src/system.ecf
