@@ -8,7 +8,31 @@ Please check the detail here: [https://github.com/joortcom/eiffel\_rename](https
 
 and doc here: [https://github.com/joortcom/eiffel\_rename/blob/main/eiffel\_rename.pdf](https://github.com/joortcom/eiffel_rename/blob/main/eiffel_rename.pdf)
 
-### Executive summary: for the time being (before the attribute renaming semantics is settled & fixed -- which most likely will be a breaking change of existing code), please avoid attribute renaming in any diamond inheritance.
+### Executive summary:
+For the time being (before the attribute renaming semantics is settled & fixed
+-- which most likely will be a *breaking* change of existing code),
+please avoid attribute renaming in any diamond inheritance.
+
+### A bit more detail:
+
+In [ECMA-367 (specification for the Eiffel programming language](https://www.ecma-international.org/wp-content/uploads/ECMA-367_2nd_edition_june_2006.pdf)
+
+1) by 8.16.2 “Any two of these features inherited under a different name yield two features of D”:
+which means replicated (i.e. separated copies) features (attributes in particular) in the diamond bottom class D;
+
+2) while by 8.6.16 “Semantics: Renaming principle”: “Renaming does not affect the semantics of an inherited feature”:
+which is not a very precise description.
+
+So in the actual compiler implementations:
+
+* ISE compiler (test the lastest version 23.09):
+  * In workbench mode: implemented 2) 8.6.16 as reference identity semantics: i.e renamed attributes are all reference equal!
+  * In finalized mode: skipped 2) 8.6.16, only implemented 1) 8.16.2: i.e renamed attributes are replicated.
+* GOBO compiler (test the lastest version 22.01):
+  * skipped 2) 8.6.16, only implemented 1) 8.16.2: i.e renamed attributes are replicated.
+* SmartEiffel compiler (tested the last known ECMA compilant version 1.1):
+  * skipped 2) 8.6.16, only implemented 1) 8.16.2: i.e renamed attributes are replicated.
+
 
 ## Goal:
 
