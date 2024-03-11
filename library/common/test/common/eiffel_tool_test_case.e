@@ -29,7 +29,7 @@ feature -- Test
 				l_thread_option := ""
 			end
 			l_gecop_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("gecop")
-			assert_execute (l_gecop_pathname + " --tool=" + program_name + " --tool-executable=" + l_program_full_filename + l_thread_option + output_log)
+			assert_execute (l_gecop_pathname + " --tool=" + program_name + " --tool-executable=" + l_program_full_filename + l_thread_option + " --keep-testdir" + output_log)
 			assert_expected_validation_results
 		end
 

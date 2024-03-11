@@ -127,9 +127,6 @@ feature -- Test Gobo Eiffel Compiler
 				execute_shell (program_exe + output2_log)
 				concat_output2
 			end
-				-- Clean.
-			execute_shell (l_geant_pathname + " -b %"" + a_geant_filename + "%" clobber" + output3_log)
-			concat_output3
 				-- Test.
 			create l_directory.make (program_dirname)
 			if l_directory.there_exists (agent output_recognized (?, l_directory, passed_filename_regexp ("gec?"), output_log_filename)) then
