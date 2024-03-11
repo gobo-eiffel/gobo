@@ -39,7 +39,7 @@ So in the actual compiler implementations:
 
 ## Goal:
 
-Help programmer detect and avoid attribute renaming in a diamond inheritance.
+Help Eiffel programmers to detect and avoid attribute renaming in a diamond inheritance.
 
 ## Usage:
 
@@ -231,7 +231,7 @@ Eric Bezault has kindly agreed to properly integrate into `gedoc` in the near fu
 [https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986971690](https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986971690).
 Many thanks to Eric for his help in developing this prototype!
 
-But everybody is busy, if you are good at (GOBO) Eiffel and can help please
+But everybody is busy, if you are good at (GOBO) Eiffel and can help, please
 [follow the suggestions by Eric](https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986805714)
 and create a new PR for Eric to review.
 
