@@ -103,7 +103,7 @@ def process_ecf(ecf_fn):
     try:
       # "%s/project/contrib/gobo/tool/gedoc" home_dir
       pathlib.Path(INHERITED_FIELDS_FN).unlink(missing_ok=True)
-      cmd = "%s/gedoc --format=field_rename %s > %s" % (script_dir, ecf_fn, INHERITED_FIELDS_FN)
+      cmd = "%s/gedoc --format=attr_rename %s > %s" % (script_dir, ecf_fn, INHERITED_FIELDS_FN)
       # print(cmd)
       os.system(cmd)
       detect_diamond(ecf_fn)
