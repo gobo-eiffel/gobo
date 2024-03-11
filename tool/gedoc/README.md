@@ -175,3 +175,24 @@ ResAssis has 3 addresses: <lab2, dorm, lab>
 ResAssis has 3 addresses: <dorm2, dorm, lab>
 
 ```
+
+## Diamonds found in real code:
+
+In ISE 23.09:
+
+```
+$ cd $ISE_EIFFEL/examples/docking/simple/
+$ $GOBO/tool/gedoc/detect_diamond.py .
+check:  .
+
+...
+
+======================================== ./docking_simple.ecf total fields:  15892
+diamond found, full paths:  EV_PIXMAPABLE.implementation  =>  SD_PLACE_HOLDER_ZONE.{implementation, implementation_upper_zone}
+   implementation {('EV_PIXMAPABLE.implementation', 'EV_CONTAINER.implementation', 'EV_CELL.implementation', 'SD_DOCKING_ZONE.implementation', 'SD_PLACE_HOLDER_ZONE.implementation')}
+   implementation_upper_zone {('EV_PIXMAPABLE.implementation', 'EV_CONTAINER.implementation', 'SD_UPPER_ZONE.implementation_upper_zone', 'SD_PLACE_HOLDER_ZONE.implementation_upper_zone')}
+new_fields: SD_PLACE_HOLDER_ZONE.{implementation, implementation_upper_zone}
+diamond core:  EV_CONTAINER.implementation  =>  SD_PLACE_HOLDER_ZONE.{implementation, implementation_upper_zone}
+   implementation [('EV_CONTAINER.implementation', 'EV_CELL.implementation', 'SD_DOCKING_ZONE.implementation', 'SD_PLACE_HOLDER_ZONE.implementation')]
+   implementation_upper_zone [('EV_CONTAINER.implementation', 'SD_UPPER_ZONE.implementation_upper_zone', 'SD_PLACE_HOLDER_ZONE.implementation_upper_zone')]
+```
