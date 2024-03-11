@@ -26,7 +26,9 @@
 		<library name="argument_example" location="${GOBO_LIBRARY}/library/argument/example/system.ecf" readonly="false"/>
 		<library name="argument_test_example" location="${GOBO_LIBRARY}/library/argument/test/example/system.ecf" readonly="false"/>
 		<library name="argument_test_unit" location="${GOBO_LIBRARY}/library/argument/test/unit/system.ecf" readonly="false"/>
+		<library name="common_example_hello_world" location="${GOBO_LIBRARY}/library/common/example/hello_world/system.ecf" readonly="false"/>
 		<library name="common_test_common" location="${GOBO_LIBRARY}/library/common/test/common/library.ecf" readonly="false"/>
+		<library name="common_test_example" location="${GOBO_LIBRARY}/library/common/test/example/system.ecf" readonly="false"/>
 		<library name="common_test_integration" location="${GOBO_LIBRARY}/library/common/test/integration/system.ecf" readonly="false"/>
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="false"/>
 		<library name="kernel_test_unit" location="${GOBO_LIBRARY}/library/kernel/test/unit/system.ecf" readonly="false"/>

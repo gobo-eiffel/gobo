@@ -1,0 +1,35 @@
+﻿<?xml version="1.0"?>
+
+<project name="common_example_test" default="help">
+
+	<description>
+		system: "Gobo Eiffel Common Example Tester"
+		copyright: "Copyright (c) 2024, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/test.eant">
+			<redefine target="other_clean"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="other_clean" depend="init" export="NONE">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<delete directory="Thello_world" fail_on_error="false"/>
+	</target>
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="xcommon_example"/>
+		<set name="library" value="common"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/test/example"/>
+	</target>
+
+</project>

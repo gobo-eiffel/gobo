@@ -1,0 +1,15 @@
+﻿<?xml version="1.0"?>
+
+<project name="common_example" default="help">
+
+	<description>
+		description: "Eiffel Ant file for Gobo Eiffel Common Library examples"
+		copyright: "Copyright (c) 2024, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/basic_all.eant"/>
+	</inherit>
+
+</project>

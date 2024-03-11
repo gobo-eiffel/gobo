@@ -1,0 +1,26 @@
+﻿<?xml version="1.0"?>
+
+<project name="hello_world" default="help">
+
+	<description>
+		system: "My first Eiffel program: hello world!"
+		copyright: "Copyright (c) 2024, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/eiffel.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="hello_world"/>
+		<set name="library" value="common"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/example/${system}"/>
+	</target>
+
+</project>

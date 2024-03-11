@@ -1,6 +1,5 @@
-xtools_example
-Tbang2create
-Tpretty_printer
+xcommon_example
+Thello_world
 compile_*.*
 *.exe
 *.dll
