@@ -2,13 +2,13 @@
 
 ## Detect attribute renaming in a diamond inheritance
 
-
 We discovered a loophole in Eiffel's field renaming mechanism when applied to the diamond problem of multiple inheritance.
+
 Please check it here: [https://github.com/joortcom/eiffel\_rename](https://github.com/joortcom/eiffel_rename)
 
 ## Goal:
 
-Help programmer avoid attribute renaming in a diamond inheritance.
+Help programmer detect and avoid attribute renaming in a diamond inheritance.
 
 ## Usage:
 
