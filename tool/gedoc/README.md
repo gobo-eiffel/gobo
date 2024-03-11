@@ -51,7 +51,7 @@ $GOBO/tool/gedoc/detect_diamond.py <single_file.ecf> or <dir (which will be recu
 
 ## Demo:
 
-First, build all the GOBO tools, esp `gec` and `gedoc` as you usually do.
+First, from *THIS branch* build all the GOBO tools, esp `gec` and `gedoc` as you usually do.
 
 Then, run the `detect_diamond.py` tool
 
