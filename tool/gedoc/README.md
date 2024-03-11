@@ -6,6 +6,8 @@ We discovered a loophole in Eiffel's attribute renaming mechanism when applied t
 
 Please check the detail here: [https://github.com/joortcom/eiffel\_rename](https://github.com/joortcom/eiffel_rename)
 
+and doc here: [https://github.com/joortcom/eiffel\_rename/blob/main/eiffel\_rename.pdf](https://github.com/joortcom/eiffel_rename/blob/main/eiffel_rename.pdf)
+
 ### Executive summary: for the time being (before the attribute renaming semantics is fixed), please avoid attribute renaming in a diamond inheritance.
 
 ## Goal:
