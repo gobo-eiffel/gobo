@@ -3,6 +3,9 @@
 ## Detect attribute renaming in a diamond inheritance
 
 
+We discovered a loophole in Eiffel's field renaming mechanism when applied to the diamond problem of multiple inheritance.
+Please check it here: [https://github.com/joortcom/eiffel\_rename](https://github.com/joortcom/eiffel_rename)
+
 ## Goal:
 
 Help programmer avoid attribute renaming in a diamond inheritance.
@@ -15,7 +18,7 @@ $GOBO/tool/gedoc/detect_diamond.py <single_file.ecf> or <dir (which will be recu
 
 ## Demo:
 
-First, build all the GOBO toosl, esp `gec` and `gedoc` as you usually do.
+First, build all the GOBO tools, esp `gec` and `gedoc` as you usually do.
 
 Then, run the `detect_diamond.py` tool
 
