@@ -224,14 +224,14 @@ VISION2_APPLICATION root's creation
 -------------------------------------------------------------------------------
 ```
 
-## TODO:
+## TODO & Feedbacks:
 
 Right now this tool is still a prototype, but good enough to detect problems in the real code.
 Eric Bezault had kindly agreed to properly integrate into `gedoc` in the near future
 [https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986971690](https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986971690)
 
-But everybody is busy, if you can help please follow the suggestions by
-[Eric](https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986805714)
+But everybody is busy, if you can help please
+[follow the suggestions by Eric](https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986805714)
 and create a new PR for Eric to review.
 
 If you have questions, comments or just want to inform us the problems found in your own code
