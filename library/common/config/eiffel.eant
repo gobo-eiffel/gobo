@@ -186,11 +186,6 @@
 		<delete>
 			<fileset include="vc*.pdb"/>
 		</delete>
-		<delete file="${system}.pdb"/>
-		<delete file="${system}.ilk"/>
-		<delete file="${system}.suo"/>
-		<delete file="${system}.exe.manifest"/>
-		<delete file="${system}.gc.log"/>
 		<geant target="other_clean"/>
 	</target>
 

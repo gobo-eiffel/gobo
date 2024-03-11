@@ -91,28 +91,46 @@ feature -- Execution
 			error_handler := a_error_handler
 			parse_arguments (a_args)
 			if exit_code = 0 and then not version_flag.was_found then
-				a_filename := ecf_filename
-				create a_file.make (a_filename)
-				a_file.open_read
-				if a_file.is_open_read then
-					last_system := Void
-					parse_ecf_file (a_file)
-					a_file.close
-					if attached last_system as l_last_system then
-						process_system (l_last_system)
-						debug ("stop")
-							std.output.put_line ("Press Enter...")
-							std.input.read_character
-						end
-						if exit_code = 0 and error_handler.has_error then
-							exit_code := 2
+				a_filename := input_filename
+				if file_system.has_extension (a_filename, file_system.eiffel_extension) then
+					create a_file.make (a_filename)
+					a_file.open_read
+					if a_file.is_open_read then
+						parse_eiffel_file (a_file)
+						a_file.close
+						if override_root_type = Void then
+							exit_code := 1
 						end
 					else
-						exit_code := 3
+						report_cannot_read_error (a_filename)
+						exit_code := 1
 					end
-				else
-					report_cannot_read_error (a_filename)
-					exit_code := 1
+					a_filename := file_system.nested_pathname ("${GOBO}", <<"library", "common", "config", "ecf", "default.ecf">>)
+					a_filename := Execution_environment.interpreted_string (a_filename)
+				end
+				if exit_code = 0 then
+					create a_file.make (a_filename)
+					a_file.open_read
+					if a_file.is_open_read then
+						last_system := Void
+						parse_ecf_file (a_file)
+						a_file.close
+						if attached last_system as l_last_system then
+							process_system (l_last_system)
+							debug ("stop")
+								std.output.put_line ("Press Enter...")
+								std.input.read_character
+							end
+							if exit_code = 0 and error_handler.has_error then
+								exit_code := 2
+							end
+						else
+							exit_code := 3
+						end
+					else
+						report_cannot_read_error (a_filename)
+						exit_code := 1
+					end
 				end
 			end
 		rescue
@@ -126,6 +144,62 @@ feature -- Access
 
 feature {NONE} -- Eiffel config file parsing
 
+	parse_eiffel_file (a_file: KL_TEXT_INPUT_FILE)
+			-- Read Eiffel file `a_file' containing the root class.
+			-- Put result in `override_root_cluster_pathname',
+			-- `override_root_type' and `override_root_creation'
+			-- if no error occurred.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+		local
+			l_system: ET_SYSTEM
+			l_ast_factory: ET_AST_FACTORY
+			l_system_processor: ET_SYSTEM_PROCESSOR
+			l_cluster: ET_CLUSTER
+			l_time_stamp: INTEGER
+			l_parser: ET_EIFFEL_PARSER
+			l_classes: DS_ARRAYED_LIST [ET_CLASS]
+			l_class: ET_CLASS
+			l_root_cluster_pathname: STRING
+		do
+			override_root_cluster_pathname := Void
+			override_root_type := Void
+			override_root_creation := Void
+			create l_system.make ("system_name")
+			create l_system_processor.make
+			l_system_processor.set_ise_version (ise_version)
+			create l_ast_factory.make
+			l_system_processor.set_ast_factory (l_ast_factory)
+			l_system_processor.set_error_handler (error_handler)
+			l_root_cluster_pathname := file_system.absolute_pathname (file_system.dirname (a_file.name))
+			create l_cluster.make ("root_cluster", l_root_cluster_pathname, l_system)
+			create l_parser.make (l_system_processor)
+			l_time_stamp := a_file.time_stamp
+			l_parser.parse_file (a_file, a_file.name, l_time_stamp, l_cluster)
+			if not l_parser.syntax_error then
+				create l_classes.make (1)
+				l_system.classes_do_if_recursive (agent l_classes.force_last, agent {ET_CLASS}.is_parsed)
+				if l_classes.is_empty then
+						-- Internal error: No class found.
+						-- At syntax error should already have been reported.
+				else
+						-- Use the first class in the file.
+					l_class := l_classes.first
+					override_root_cluster_pathname := l_root_cluster_pathname
+					override_root_type := l_class.name
+					if not attached l_class.creators as l_creators or else l_creators.is_empty then
+						override_root_creation := tokens.default_create_feature_name
+					elseif l_creators.first.is_empty then
+						override_root_creation := tokens.default_create_feature_name
+					else
+							-- Use the first creation procedure.
+						override_root_creation := l_creators.first.feature_name (1)
+					end
+				end
+			end
+		end
+
 	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read ECF file `a_file'.
 			-- Put result in `last_system' if no error occurred.
@@ -138,6 +212,7 @@ feature {NONE} -- Eiffel config file parsing
 			l_ecf_system: ET_ECF_SYSTEM
 			l_target: ET_ECF_TARGET
 			l_value: STRING
+			l_root_cluster: ET_ECF_CLUSTER
 		do
 			last_system := Void
 			if is_silent then
@@ -155,6 +230,17 @@ feature {NONE} -- Eiffel config file parsing
 				if l_ecf_system /= Void then
 					l_target := l_ecf_system.selected_target
 					if l_target /= Void then
+						if attached override_root_cluster_pathname as l_override_root_cluster_pathname then
+							create l_root_cluster.make ("root_cluster", l_override_root_cluster_pathname, l_ecf_system, l_target)
+							l_ecf_system.clusters.put_last (l_root_cluster)
+						end
+						if attached override_root_type as l_override_root_type then
+							l_ecf_system.set_root_type (l_override_root_type)
+							l_ecf_system.set_system_name (l_override_root_type.lower_name)
+						end
+						if attached override_root_creation as l_override_root_creation then
+							l_ecf_system.set_root_creation (l_override_root_creation)
+						end
 						l_value := l_target.variables.value ("gelint")
 						if l_value /= Void and then l_value.is_boolean then
 							ecf_gelint_option := l_value.to_boolean
@@ -327,8 +413,8 @@ feature {NONE} -- Processing
 
 feature -- Arguments
 
-	ecf_filename: STRING
-			-- Name of the ECF file
+	input_filename: STRING
+			-- Name of the ECF or Eiffel file
 
 	target_name: detachable STRING
 			-- Name of target to be used in ECF file.
@@ -347,6 +433,15 @@ feature -- Arguments
 
 	override_variables: detachable ET_ECF_VARIABLES
 			-- Variables overriding those specified for the selected ECF target
+
+	override_root_type: detachable ET_CLASS_NAME
+			-- Root type to be used instead of the one specified in the selected ECF target
+
+	override_root_creation: detachable ET_FEATURE_NAME
+			-- Root creation to be used instead of the one specified in the selected ECF target
+
+	override_root_cluster_pathname: detachable STRING
+			-- Pathname of cluster containing `override_root_type'
 
 	is_finalize: BOOLEAN
 			-- Compilation with optimizations turned on?
@@ -541,8 +636,8 @@ feature -- Argument parsing
 			a_list: AP_ALTERNATIVE_OPTIONS_LIST
 		do
 			create a_parser.make
-			a_parser.set_application_description ("Gobo Eiffel Compiler, translate Eiffel programs into C code.")
-			a_parser.set_parameters_description ("ecf_filename")
+			a_parser.set_application_description ("Gobo Eiffel Compiler, translate Eiffel programs into executables.")
+			a_parser.set_parameters_description ("eiffel_filename|ecf_filename")
 				-- target.
 			create target_option.make_with_long_form ("target")
 			target_option.set_description ("Name of target to be used in ECF file. (default: last target in ECF file)")
@@ -655,16 +750,16 @@ feature -- Argument parsing
 			end
 			if version_flag.was_found then
 				report_version_number
-				ecf_filename := ""
+				input_filename := ""
 				ise_version := ise_latest
 				exit_code := 0
 			elseif a_parser.parameters.count /= 1 then
 				report_usage_message (a_parser)
-				ecf_filename := ""
+				input_filename := ""
 				ise_version := ise_latest
 				exit_code := 1
 			else
-				ecf_filename := a_parser.parameters.first
+				input_filename := a_parser.parameters.first
 				set_ise_version (ise_option, a_parser)
 				set_override_settings (setting_option, a_parser)
 				set_override_capabilities (capability_option, a_parser)
@@ -673,7 +768,7 @@ feature -- Argument parsing
 				set_new_instance_types (new_instance_types_option, a_parser)
 			end
 		ensure
-			ecf_filename_not_void: ecf_filename /= Void
+			input_filename_not_void: input_filename /= Void
 			target_option_not_void: target_option /= Void
 			setting_option_not_void: setting_option /= Void
 			capability_option_not_void: capability_option /= Void
@@ -962,7 +1057,7 @@ feature -- Error handling
 invariant
 
 	error_handler_not_void: error_handler /= Void
-	ecf_filename_not_void: ecf_filename /= Void
+	input_filename_not_void: input_filename /= Void
 	ise_version_not_void: ise_version /= Void
 	target_option_not_void: target_option /= Void
 	setting_option_not_void: setting_option /= Void
