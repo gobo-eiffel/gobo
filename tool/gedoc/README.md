@@ -6,7 +6,8 @@ We discovered a semantic problem in Eiffel's attribute renaming mechanism when a
 and confirmed it by showing divergent and problematic outputs for the same example code in three major different
 Eiffel compilers.
 
-Please check the detail here: [https://github.com/joortcom/eiffel\_rename](https://github.com/joortcom/eiffel_rename)
+Please check the detail here:
+[https://github.com/joortcom/eiffel\_rename](https://github.com/joortcom/eiffel_rename)
 
 and doc here: [https://github.com/joortcom/eiffel\_rename/blob/main/eiffel\_rename.pdf](https://github.com/joortcom/eiffel_rename/blob/main/eiffel_rename.pdf)
 
@@ -196,3 +197,48 @@ diamond core:  EV_CONTAINER.implementation  =>  SD_PLACE_HOLDER_ZONE.{implementa
    implementation [('EV_CONTAINER.implementation', 'EV_CELL.implementation', 'SD_DOCKING_ZONE.implementation', 'SD_PLACE_HOLDER_ZONE.implementation')]
    implementation_upper_zone [('EV_CONTAINER.implementation', 'SD_UPPER_ZONE.implementation_upper_zone', 'SD_PLACE_HOLDER_ZONE.implementation_upper_zone')]
 ```
+
+And if you run the workbench build, it will run:
+```
+/Eiffel_23.09/examples/docking/simple$ ./EIFGENs/docking_simple/W_code/docking_simple
+```
+
+if you run the finalized build, it will fail (Ubuntu 22.04.3 LTS, x86_64):
+```
+/Eiffel_23.09/examples/docking/simple$ ./EIFGENs/docking_simple/F_code/docking_simple
+
+docking_simple: system execution failed.
+Following is the set of recorded exceptions:
+
+******************************** Thread exception *****************************
+In thread           Root thread            0x0 (thread id)
+*******************************************************************************
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+VISION2_APPLICATION root's creation        Segmentation fault:
+<00007FC1A8207558>                         Operating system signal.      Exit
+-------------------------------------------------------------------------------
+VISION2_APPLICATION root's creation
+<00007FC1A8207558>                         Routine failure.              Exit
+-------------------------------------------------------------------------------
+```
+
+## TODO:
+
+Right now this tool is still a prototype, but good enough to detect problems in the real code.
+Eric Bezault had kindly agreed to properly integrate into `gedoc` in the near future
+[https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986971690](https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986971690)
+
+But everybody is busy, if you can help please follow the suggestions by
+[Eric](https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986805714)
+and create a new PR for Eric to review.
+
+If you have questions, comments or just want to inform us the problems found in your own code
+by using this tool, please log an issue here
+[https://github.com/joortcom/eiffel\_rename](https://github.com/joortcom/eiffel_rename),
+So it can be easily tracked.
+
+Thanks.
+
+
