@@ -12,7 +12,7 @@ Please check the detail here:
 and doc here: [https://github.com/joortcom/eiffel\_rename/blob/main/eiffel\_rename.pdf](https://github.com/joortcom/eiffel_rename/blob/main/eiffel_rename.pdf)
 
 ### Executive summary:
-For the time being (before the attribute renaming semantics is settled & fixed
+For the time being (before Eiffel's attribute renaming semantics is settled & fixed
 -- which most likely will be a *breaking* change of existing code),
 please avoid attribute renaming in any diamond inheritance.
 
@@ -198,12 +198,12 @@ diamond core:  EV_CONTAINER.implementation  =>  SD_PLACE_HOLDER_ZONE.{implementa
    implementation_upper_zone [('EV_CONTAINER.implementation', 'SD_UPPER_ZONE.implementation_upper_zone', 'SD_PLACE_HOLDER_ZONE.implementation_upper_zone')]
 ```
 
-And if you run the workbench build, it will run:
+And if you run the workbench build, it will run normally:
 ```
 /Eiffel_23.09/examples/docking/simple$ ./EIFGENs/docking_simple/W_code/docking_simple
 ```
 
-if you run the finalized build, it will fail (Ubuntu 22.04.3 LTS, x86_64):
+but if you run the finalized build, it will fail (Ubuntu 22.04.3 LTS, x86_64), it will fail:
 ```
 /Eiffel_23.09/examples/docking/simple$ ./EIFGENs/docking_simple/F_code/docking_simple
 
@@ -229,16 +229,16 @@ VISION2_APPLICATION root's creation
 Right now this tool is still a prototype, but good enough to detect problems in the real code.
 Eric Bezault had kindly agreed to properly integrate into `gedoc` in the near future
 [https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986971690](https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986971690)
+Many thanks to Eric for helping in developing this prototype!
 
 But everybody is busy, if you can help please
 [follow the suggestions by Eric](https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986805714)
 and create a new PR for Eric to review.
 
 If you have questions, comments or just want to inform us the problems found in your own code
-by using this tool, please log an issue here
+by using this tool, please log an issue in the other repo (*not* here in this GOBO repo)
 [https://github.com/joortcom/eiffel\_rename](https://github.com/joortcom/eiffel_rename),
-So it can be easily tracked.
+So everything regarding Eiffel `rename` can be easily tracked there.
 
-Thanks.
-
+Thanks!
 
