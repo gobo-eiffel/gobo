@@ -1,6 +1,6 @@
+# Detect attribute (i.e field) renaming in diamond inheritance
 
-
-## Detect attribute (i.e field) renaming in diamond inheritance
+## Background:
 
 We discovered a semantic problem in Eiffel's attribute renaming mechanism when applied to the diamond problem of multiple inheritance.
 
@@ -39,6 +39,8 @@ So in the actual compiler implementations:
 Help programmer detect and avoid attribute renaming in a diamond inheritance.
 
 ## Usage:
+
+Tool is here: [detect\_diamond.py](https://github.com/joortcom/gobo/blob/detect_diamond/tool/gedoc/detect_diamond.py)
 
 ```
 $GOBO/tool/gedoc/detect_diamond.py <single_file.ecf> or <dir (which will be recursively scanned for all the .ecf files)>
