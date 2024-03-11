@@ -1,4 +1,4 @@
-# New Tool: Detect attribute (i.e field) renaming in diamond inheritance
+# New tool: Detect attribute (i.e field) renaming in diamond inheritance
 
 ## Background:
 
