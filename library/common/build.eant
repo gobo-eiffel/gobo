@@ -4,12 +4,23 @@
 
 	<description>
 		description: "Gobo Eiffel Common Library"
-		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/common/config/library.eant"/>
+		<parent location="${GOBO}/library/common/config/library.eant">
+			<redefine target="install"/>
+		</parent>
 	</inherit>
+
+	<target name="install" depend="init">
+		<description>
+			Create/update files.
+		</description>
+
+		<geant file="build.eant" target="install" dir="${GOBO}/library/common/config/ecf"/>
+		<precursor/>
+	</target>
 
 </project>

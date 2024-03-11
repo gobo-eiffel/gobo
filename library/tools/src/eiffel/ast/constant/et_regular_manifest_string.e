@@ -5,7 +5,7 @@
 		"Eiffel manifest strings with no special character"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_REGULAR_MANIFEST_STRING
@@ -66,6 +66,21 @@ feature -- Status report
 		ensure
 			instance_free: class
 			definition: Result = {RX_PCRE_ROUTINES}.regexp (literal_regexp).recognizes (a_literal)
+		end
+
+feature -- Setting
+
+	set_literal (a_literal: like literal)
+			-- Set `literal' to `a_literal'.
+		require
+			a_literal_not_void: a_literal /= Void
+			a_literal_is_string_8: a_literal.same_type ({STRING_8} "")
+			valid_utf8_literal: {UC_UTF8_ROUTINES}.valid_utf8 (a_literal)
+			valid_literal: {ET_REGULAR_MANIFEST_STRING}.valid_literal ({STRING_32} "%"" + {UTF_CONVERTER}.utf_8_string_8_to_string_32 (a_literal) + {STRING_32} "%"")
+		do
+			value := a_literal
+		ensure
+			literal_set: literal = a_literal
 		end
 
 feature -- Processing

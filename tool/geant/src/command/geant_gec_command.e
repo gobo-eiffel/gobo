@@ -308,125 +308,29 @@ feature -- Execution
 		local
 			cmd: STRING
 			a_name: STRING
-			i: INTEGER
-			stop: BOOLEAN
+			l_dir: KL_DIRECTORY
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
 			exit_code := 0
 			if is_cleanable and then attached clean as l_clean then
-				a_name := l_clean + ".c"
-				if file_system.file_exists (a_name) then
-					project.trace (<<"  [gec] delete ", a_name>>)
-					if not project.options.no_exec then
-						file_system.delete_file (a_name)
-					end
-				end
-				a_name := l_clean + ".cpp"
-				if file_system.file_exists (a_name) then
-					project.trace (<<"  [gec] delete ", a_name>>)
-					if not project.options.no_exec then
-						file_system.delete_file (a_name)
-					end
-				end
-				from i := 1 until stop loop
-					stop := True
-					a_name := l_clean + i.out + ".c"
-					if file_system.file_exists (a_name) then
-						project.trace (<<"  [gec] delete ", a_name>>)
-						if not project.options.no_exec then
-							file_system.delete_file (a_name)
+				create l_dir.make (".")
+				l_dir.open_read
+				if l_dir.is_open_read then
+					create l_regexp.make
+					l_regexp.compile (l_clean + "[0-9]*\.(c(pp)?|h|o(bj)?|tds|pdb|ilk|suo|exe\.manifest|gc\.log|res|bat|sh|make)")
+					from
+						l_dir.read_entry
+					until
+						l_dir.end_of_input
+					loop
+						a_name := l_dir.last_entry
+						if l_regexp.recognizes (a_name) then
+							project.trace (<<"  [gec] delete ", a_name>>)
+							if not project.options.no_exec then
+								file_system.delete_file (a_name)
+							end
 						end
-						stop := False
-					end
-					a_name := l_clean + i.out + ".cpp"
-					if file_system.file_exists (a_name) then
-						project.trace (<<"  [gec] delete ", a_name>>)
-						if not project.options.no_exec then
-							file_system.delete_file (a_name)
-						end
-						stop := False
-					end
-					i := i + 1
-				end
-				a_name := l_clean + ".h"
-				if file_system.file_exists (a_name) then
-					project.trace (<<"  [gec] delete ", a_name>>)
-					if not project.options.no_exec then
-						file_system.delete_file (a_name)
-					end
-				end
-				a_name := l_clean + ".obj"
-				if file_system.file_exists (a_name) then
-					project.trace (<<"  [gec] delete ", a_name>>)
-					if not project.options.no_exec then
-						file_system.delete_file (a_name)
-					end
-				end
-				stop := False
-				from i := 1 until stop loop
-					a_name := l_clean + i.out + ".obj"
-					if file_system.file_exists (a_name) then
-						project.trace (<<"  [gec] delete ", a_name>>)
-						if not project.options.no_exec then
-							file_system.delete_file (a_name)
-						end
-					else
-						stop := True
-					end
-					i := i + 1
-				end
-				a_name := l_clean + ".o"
-				if file_system.file_exists (a_name) then
-					project.trace (<<"  [gec] delete ", a_name>>)
-					if not project.options.no_exec then
-						file_system.delete_file (a_name)
-					end
-				end
-				stop := False
-				from i := 1 until stop loop
-					a_name := l_clean + i.out + ".o"
-					if file_system.file_exists (a_name) then
-						project.trace (<<"  [gec] delete ", a_name>>)
-						if not project.options.no_exec then
-							file_system.delete_file (a_name)
-						end
-					else
-						stop := True
-					end
-					i := i + 1
-				end
-				a_name := l_clean + ".tds"
-				if file_system.file_exists (a_name) then
-					project.trace (<<"  [gec] delete ", a_name>>)
-					if not project.options.no_exec then
-						file_system.delete_file (a_name)
-					end
-				end
-				a_name := l_clean + ".res"
-				if file_system.file_exists (a_name) then
-					project.trace (<<"  [gec] delete ", a_name>>)
-					if not project.options.no_exec then
-						file_system.delete_file (a_name)
-					end
-				end
-				a_name := l_clean + ".bat"
-				if file_system.file_exists (a_name) then
-					project.trace (<<"  [gec] delete ", a_name>>)
-					if not project.options.no_exec then
-						file_system.delete_file (a_name)
-					end
-				end
-				a_name := l_clean + ".sh"
-				if file_system.file_exists (a_name) then
-					project.trace (<<"  [gec] delete ", a_name>>)
-					if not project.options.no_exec then
-						file_system.delete_file (a_name)
-					end
-				end
-				a_name := l_clean + ".make"
-				if file_system.file_exists (a_name) then
-					project.trace (<<"  [gec] delete ", a_name>>)
-					if not project.options.no_exec then
-						file_system.delete_file (a_name)
+						l_dir.read_entry
 					end
 				end
 			elseif is_ecf_configuration then

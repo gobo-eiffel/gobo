@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 	ecf_filename: STRING
 			-- Name of ECF file used for integration of all classes
 		once
-			Result := file_system.nested_pathname ("${GOBO}", <<"library", "common", "test", "integration", "integration.ecf">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"library", "common", "config", "ecf", "integration.ecf">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
 			ecf_filename_not_void: Result /= Void
