@@ -29,12 +29,12 @@ which is not a very precise description.
 So in the actual compiler implementations:
 
 * ISE compiler (tested the lastest version 23.09):
-  * In workbench mode: implemented 2) 8.6.16 as reference identity semantics: i.e renamed attributes are all reference equal!
-  * In finalized mode: skipped 2) 8.6.16, only implemented 1) 8.16.2: i.e renamed attributes are replicated.
+  * In workbench mode: implemented (2) 8.6.16 as reference identity semantics: i.e renamed attributes are all reference equal!
+  * In finalized mode: skipped (2) 8.6.16, only implemented (1) 8.16.2: i.e renamed attributes are replicated.
 * GOBO compiler (tested the lastest version 22.01):
-  * skipped 2) 8.6.16, only implemented 1) 8.16.2: i.e renamed attributes are replicated.
+  * skipped (2) 8.6.16, only implemented (1) 8.16.2: i.e renamed attributes are replicated.
 * SmartEiffel compiler (tested the last known ECMA compilant version 1.1):
-  * skipped 2) 8.6.16, only implemented 1) 8.16.2: i.e renamed attributes are replicated.
+  * skipped (2) 8.6.16, only implemented (1) 8.16.2: i.e renamed attributes are replicated.
 
 
 ## Goal:
