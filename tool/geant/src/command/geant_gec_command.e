@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 			-- Create a new 'gec' command.
 		do
 			precursor (a_project)
-			c_compile := "gecc"
 			executable_filename := "gec"
 			split_mode := True
 		end
