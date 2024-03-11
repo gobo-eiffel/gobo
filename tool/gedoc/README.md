@@ -238,7 +238,7 @@ and create a new PR for Eric to review.
 If you have questions, comments, or just want to inform us the problems found in your own code
 by using this tool, please log an issue *in the other repo* (*NOT* here in this GOBO repo)
 [https://github.com/joortcom/eiffel\_rename](https://github.com/joortcom/eiffel_rename),
-So everything regarding Eiffel `rename` can be easily tracked *there*.
+So everything regarding Eiffel `rename` (not *GOBO*) can be easily tracked *there*.
 
 Thanks!
 
