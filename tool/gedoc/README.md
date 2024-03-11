@@ -1,4 +1,4 @@
-# Detect attribute (i.e field) renaming in diamond inheritance
+# New Tool: Detect attribute (i.e field) renaming in diamond inheritance
 
 ## Background:
 
@@ -228,17 +228,17 @@ VISION2_APPLICATION root's creation
 
 Right now this tool is still a prototype, but good enough to detect problems in the real code.
 Eric Bezault had kindly agreed to properly integrate into `gedoc` in the near future
-[https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986971690](https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986971690)
-Many thanks to Eric for helping in developing this prototype!
+[https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986971690](https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986971690).
+Many thanks to Eric for his help in developing this prototype!
 
-But everybody is busy, if you can help please
+But everybody is busy, if you are good at (GOBO) Eiffel and can help please
 [follow the suggestions by Eric](https://github.com/gobo-eiffel/gobo/pull/77#issuecomment-1986805714)
 and create a new PR for Eric to review.
 
-If you have questions, comments or just want to inform us the problems found in your own code
-by using this tool, please log an issue in the other repo (*not* here in this GOBO repo)
+If you have questions, comments, or just want to inform us the problems found in your own code
+by using this tool, please log an issue *in the other repo* (*NOT* here in this GOBO repo)
 [https://github.com/joortcom/eiffel\_rename](https://github.com/joortcom/eiffel_rename),
-So everything regarding Eiffel `rename` can be easily tracked there.
+So everything regarding Eiffel `rename` can be easily tracked *there*.
 
 Thanks!
 
