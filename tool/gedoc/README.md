@@ -2,7 +2,9 @@
 
 ## Background:
 
-We discovered a semantic problem in Eiffel's attribute renaming mechanism when applied to the diamond problem of multiple inheritance.
+We discovered a semantic problem in Eiffel's attribute renaming mechanism when applied to the diamond problem of multiple inheritance,
+and confirmed it by showing divergent and problematic outputs for the same example code in three major different
+Eiffel compilers.
 
 Please check the detail here: [https://github.com/joortcom/eiffel\_rename](https://github.com/joortcom/eiffel_rename)
 
@@ -15,7 +17,7 @@ please avoid attribute renaming in any diamond inheritance.
 
 ### A bit more detail:
 
-In [ECMA-367 (specification for the Eiffel programming language](https://www.ecma-international.org/wp-content/uploads/ECMA-367_2nd_edition_june_2006.pdf)
+In [ECMA-367 (specification for the Eiffel programming language)](https://www.ecma-international.org/wp-content/uploads/ECMA-367_2nd_edition_june_2006.pdf)
 
 1) by 8.16.2 “Any two of these features inherited under a different name yield two features of D”:
 which means replicated (i.e. separated copies) features (attributes in particular) in the diamond bottom class D;
