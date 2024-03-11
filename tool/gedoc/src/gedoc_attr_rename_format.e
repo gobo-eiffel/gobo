@@ -2,12 +2,12 @@
 
 	description:
 
-		"Gobo Eiffel Documentation Format: list of implicit conversions"
+		"Gobo Eiffel Documentation Format: detect attribute renaming in a diamond"
 
 	copyright: "Copyright (c) 2020, Eric Bezault and others"
 	license: "MIT License"
 
-class GEDOC_FIELD_RENAME_FORMAT
+class GEDOC_ATTR_RENAME_FORMAT
 
 inherit
 
@@ -22,7 +22,7 @@ create
 
 	make
 
-create {GEDOC_FIELD_RENAME_FORMAT}
+create {GEDOC_ATTR_RENAME_FORMAT}
 
 	make_from_format
 
@@ -114,7 +114,7 @@ feature {NONE} -- Processing
 			has_error := l_formats.there_exists (agent {like Current}.has_error)
 		end
 
-feature {GEDOC_FIELD_RENAME_FORMAT} -- Processing
+feature {GEDOC_ATTR_RENAME_FORMAT} -- Processing
 
 	is_direct_parent(sub_class: ET_CLASS; super_class: ET_CLASS): BOOLEAN
 		local
