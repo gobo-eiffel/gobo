@@ -2,7 +2,7 @@
 
 ## Detect attribute (i.e field) renaming in a diamond inheritance
 
-We discovered a loophole in Eiffel's attribute renaming mechanism when applied to the diamond problem of multiple inheritance.
+We discovered a semantic problem in Eiffel's attribute renaming mechanism when applied to the diamond problem of multiple inheritance.
 
 Please check the detail here: [https://github.com/joortcom/eiffel\_rename](https://github.com/joortcom/eiffel_rename)
 
