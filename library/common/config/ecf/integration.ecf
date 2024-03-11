@@ -4,12 +4,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd"
 	name="integration"
-	uuid="E1FFE100-60B0-0003-3003-000000000001"
+	uuid="E1FFE100-60B0-0003-0002-000000000001"
 	library_target="integration"
 >
 	<description>
 		system: "Gobo Eiffel all classes integration"
-		copyright: "Copyright (c) 1999-2021, Eric Bezault and others"
+		copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 	<target name="integration">

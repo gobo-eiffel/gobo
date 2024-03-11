@@ -869,4 +869,7 @@ feature -- Pathname handling
 			exe_extension_not_void: Result /= Void
 		end
 
+	eiffel_extension: STRING = ".e"
+			-- Eiffel file extension (with the leading '.')
+
 end
