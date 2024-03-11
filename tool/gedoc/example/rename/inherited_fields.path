@@ -1,5 +1,5 @@
 Degree 6: 0/0/0 0:0:0.013
-Degree 5: 0/0/0 0:0:0.704
+Degree 5: 0/0/0 0:0:0.688
 Degree 4: 0/0/0 0:0:0.091
 inherited,PERSON.name,FACULTY.name
 
@@ -2069,4 +2069,4 @@ inherited,OBSOLETE_EXCEPTION.type_name,RESUMPTION_FAILURE.type_name
 
 inherited,OBSOLETE_EXCEPTION.recipient_name,RESUMPTION_FAILURE.recipient_name
 
-Total Time: 0/0/0 0:0:1.040
+Total Time: 0/0/0 0:0:1.103
