@@ -59,8 +59,6 @@ feature -- Test
 			a_geant_filename := geant_filename
 			l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
 			assert_execute_with_command_output (l_geant_pathname + " -b " + a_geant_filename + l_thread_option + " compile_" + a_debug + eiffel_compiler.vendor + output_log, output_log_filename, error_log_filename)
-				-- Clean.
-			assert_execute_with_command_output (l_geant_pathname + " -b " + a_geant_filename + " clean" + output_log, output_log_filename, error_log_filename)
 				-- Check compilation.
 			assert ("program_exists", file_system.file_exists (program_exe))
 		end
