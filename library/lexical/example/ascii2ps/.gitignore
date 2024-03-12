@@ -15,4 +15,5 @@ compile_*.*
 *.wb
 *.log
 EIFGEN*
+.gobo
 !pp.bat
