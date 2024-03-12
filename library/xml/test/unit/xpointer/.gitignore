@@ -16,3 +16,4 @@ compile_*.*
 *.log
 EIFGEN*
 TESTGEN
+.gobo
