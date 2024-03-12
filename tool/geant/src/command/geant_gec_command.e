@@ -312,6 +312,12 @@ feature -- Execution
 		do
 			exit_code := 0
 			if is_cleanable and then attached clean as l_clean then
+				if file_system.directory_exists (".gobo") then
+					project.trace (<<"  [gec] delete .gobo">>)
+					if not project.options.no_exec then
+						file_system.recursive_delete_directory (".gobo")
+					end
+				end
 				create l_dir.make (".")
 				l_dir.open_read
 				if l_dir.is_open_read then

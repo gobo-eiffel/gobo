@@ -777,8 +777,9 @@ feature {NONE} -- Compilation script generation
 			else
 				l_script_filename := l_base_name + sh_file_extension
 			end
+			l_script_filename := file_system.pathname (c_folder, l_script_filename)
 			create l_file.make (l_script_filename)
-			l_file.open_write
+			l_file.recursive_open_write
 			if l_file.is_open_write then
 				if operating_system.is_windows then
 					l_file.put_line ("@echo off")
@@ -1039,8 +1040,8 @@ feature {NONE} -- Compilation script generation
 			else
 				l_basename := a_system_name + (c_filenames.count + c_filenames_counter_offset + 1).out
 				l_c_filename := l_basename + c_file_extension
-				create l_c_file.make (l_c_filename)
-				l_c_file.open_write
+				create l_c_file.make (file_system.pathname (c_folder, l_c_filename))
+				l_c_file.recursive_open_write
 				if not l_c_file.is_open_write then
 					set_fatal_error
 					report_cannot_write_error (l_c_filename)
@@ -1215,9 +1216,9 @@ feature {NONE} -- Compilation script generation
 				else
 					l_basename := a_library_name + j.out
 				end
-				l_external_filename := l_basename + l_extension
+				l_external_filename := file_system.pathname (c_folder, l_basename + l_extension)
 				create l_external_file.make (l_external_filename)
-				l_external_file.open_write
+				l_external_file.recursive_open_write
 				if not l_external_file.is_open_write then
 					set_fatal_error
 					report_cannot_write_error (l_external_filename)
@@ -1289,9 +1290,9 @@ feature {NONE} -- C code Generation
 		do
 			old_system_name := system_name
 			system_name := a_system_name
-			l_header_filename := a_system_name + h_file_extension
+			l_header_filename := file_system.pathname (c_folder, a_system_name + h_file_extension)
 			create l_header_file.make (l_header_filename)
-			l_header_file.open_write
+			l_header_file.recursive_open_write
 			if not l_header_file.is_open_write then
 				set_fatal_error
 				report_cannot_write_error (l_header_filename)
@@ -41791,6 +41792,9 @@ feature {NONE} -- Output files/buffers
 			-- system name don't get the same generated C filenames, which otherwise slows
 			-- down zig cache mechanism, as of zig < 0.12.)
 
+	c_folder: STRING = ".gobo"
+			-- Folder where to generate the C files
+
 	open_c_file
 			-- Open C file if necessary.
 		do
@@ -41812,8 +41816,8 @@ feature {NONE} -- Output files/buffers
 				l_header_filename := system_name + h_file_extension
 				l_filename := system_name + (c_filenames.count + c_filenames_counter_offset + 1).out
 				c_filenames.force_last (c_file_extension, l_filename)
-				create l_c_file.make (l_filename + c_file_extension)
-				l_c_file.open_write
+				create l_c_file.make (file_system.pathname (c_folder, l_filename + c_file_extension))
+				l_c_file.recursive_open_write
 				c_file := l_c_file
 			elseif not l_c_file.is_open_write then
 				l_c_file.open_append
@@ -41892,8 +41896,8 @@ feature {NONE} -- Output files/buffers
 				l_header_filename := system_name + h_file_extension
 				l_filename := system_name + (c_filenames.count + c_filenames_counter_offset + 1).out
 				c_filenames.force_last (cpp_file_extension, l_filename)
-				create l_cpp_file.make (l_filename + cpp_file_extension)
-				l_cpp_file.open_write
+				create l_cpp_file.make (file_system.pathname (c_folder, l_filename + cpp_file_extension))
+				l_cpp_file.recursive_open_write
 				cpp_file := l_cpp_file
 			elseif not l_cpp_file.is_open_write then
 				l_cpp_file.open_append

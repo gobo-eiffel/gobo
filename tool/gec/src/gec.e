@@ -373,6 +373,7 @@ feature {NONE} -- Processing
 			l_system_name: STRING
 			l_command: KL_SHELL_COMMAND
 			l_script_filename: STRING
+			l_executable_filename: STRING
 			l_gecc: GECC
 			l_exit_code: INTEGER
 			dt1: detachable DT_DATE_TIME
@@ -391,6 +392,7 @@ feature {NONE} -- Processing
 			else
 				l_script_filename := l_system_name + ".sh"
 			end
+			file_system.cd (c_folder)
 			if c_compile_using_script then
 				create l_command.make (file_system.absolute_pathname (l_script_filename))
 				l_command.execute
@@ -404,6 +406,9 @@ feature {NONE} -- Processing
 				create l_gecc.execute_with_arguments (<<"--thread=" + thread_count.out, l_script_filename>>)
 				l_exit_code := l_gecc.exit_code
 			end
+			file_system.cd (file_system.relative_parent_directory)
+			l_executable_filename := l_system_name + file_system.exe_extension
+			file_system.rename_file (file_system.pathname (c_folder, l_executable_filename), l_executable_filename)
 			if l_exit_code /= 0 then
 				exit_code := 1
 			end
@@ -1053,6 +1058,11 @@ feature -- Error handling
 
 	exit_code: INTEGER
 			-- Exit code
+
+feature -- C generation
+
+	c_folder: STRING = ".gobo"
+			-- Folder containing then generated C files
 
 invariant
 
