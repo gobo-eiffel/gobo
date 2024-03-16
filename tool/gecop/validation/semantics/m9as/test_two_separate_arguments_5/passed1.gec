@@ -1,0 +1,10 @@
+DD start f
+EE start f
+DD calling BB.f
+DD middle f
+DD calling BB.f
+DD end f
+EE calling BB.f
+EE middle f
+EE calling BB.f
+EE end f
