@@ -1,5 +1,3 @@
-EE start f
-DD start f
 EE calling CC.f
 EE end f
 DD calling BB.f
