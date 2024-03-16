@@ -24,7 +24,6 @@ feature
 
 	f (a_b: separate BB; a_c: separate CC)
 		do
-			print ("DD start f%N")
 			a_b.f ("DD")
 			print ("DD middle f%N")
 			a_c.f ("DD")

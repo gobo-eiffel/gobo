@@ -1,10 +1,4 @@
-DD start f
-DD middle f
-EE start f
-DD calling CC.g
-EE middle f
 DD calling BB.f
-DD end f
-EE calling BB.g
+DD calling CC.g
 EE calling CC.f
-EE end f
+EE calling BB.g

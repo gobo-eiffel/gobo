@@ -1,4 +1,4 @@
-DD calling CC.g
 DD calling BB.f
-EE calling BB.g
+DD calling CC.f
+EE calling BB.f
 EE calling CC.f

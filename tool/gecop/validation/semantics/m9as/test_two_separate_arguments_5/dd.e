@@ -20,8 +20,6 @@ feature
 
 	f (a_b1: separate BB; a_b2: separate BB)
 		do
-			print ("DD start f%N")
-			{EXECUTION_ENVIRONMENT}.sleep (100_000_000)
 			a_b1.f ("DD")
 			print ("DD middle f%N")
 			a_b2.f ("DD")

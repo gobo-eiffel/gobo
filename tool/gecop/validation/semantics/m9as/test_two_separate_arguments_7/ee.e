@@ -20,7 +20,6 @@ feature
 
 	f (a_c: separate CC)
 		do
-			print ("EE start f%N")
 			a_c.f ("EE")
 			print ("EE end f%N")
 		end
