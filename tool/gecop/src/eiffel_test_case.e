@@ -120,11 +120,11 @@ feature -- Test Gobo Eiffel Compiler
 			a_geant_filename := geant_filename
 			l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
 				-- Compile program.
-			execute_shell (l_geant_pathname + " -b %"" + a_geant_filename + "%"" + l_executable + l_thread_option + " -Dgelint_option=true compile_" + a_debug + "ge" + output1_log)
+			execute_shell_with_timeout (l_geant_pathname + " -b %"" + a_geant_filename + "%"" + l_executable + l_thread_option + " -Dgelint_option=true compile_" + a_debug + "ge" + output1_log, three_minutes_in_milliseconds)
 			concat_output1 (agent filter_output_gec)
 				-- Execute program.
 			if file_system.file_exists (file_system.pathname (testrun_dirname, program_exe)) then
-				execute_shell (program_exe + output2_log)
+				execute_shell_with_timeout (program_exe + output2_log, three_minutes_in_milliseconds)
 				concat_output2
 			end
 				-- Test.
@@ -1164,6 +1164,27 @@ feature {NONE} -- Execution
 			l_command.execute
 		end
 
+	execute_shell_with_timeout (a_shell_command: STRING; a_timeout_ms: NATURAL_64)
+			-- Execute `a_shell_command'.
+			-- Wait for the command to terminate for at most `a_timeout_ms' milliseconds.
+		require
+			a_shell_command_not_void: a_shell_command /= Void
+			a_shell_command_not_empty: a_shell_command.count > 0
+		local
+			l_command: DP_SHELL_COMMAND
+			l_command_name: STRING
+			l_geant_pathname: STRING
+		do
+			l_command_name := a_shell_command.twin
+			l_command_name.replace_substring_all ("\", "\\")
+			l_command_name.replace_substring_all ("%"", "\%"")
+			l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
+			l_command_name := l_geant_pathname + " -b %"" + execution_buildname + "%" -Dexecutable=%"" + l_command_name + "%" -Dtimeout=%"" + a_timeout_ms.out + "%" -Ddirectory=%"" + testrun_dirname + "%" execute_with_timeout"
+
+			create l_command.make (l_command_name)
+			l_command.execute
+		end
+
 	execution_buildname: STRING
 			-- Name of geant build file used for execution
 		do
@@ -1207,6 +1228,9 @@ feature {NONE} -- Constants
 
 	default_testrun_dirname: STRING = "test1"
 			-- Default value for `testrun_dirname'
+
+	three_minutes_in_milliseconds: NATURAL_64 = 180_000
+			-- 3 minute sin milliseconds
 
 invariant
 
