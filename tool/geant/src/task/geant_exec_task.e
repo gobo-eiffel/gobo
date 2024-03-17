@@ -5,7 +5,7 @@
 		"Exec tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2024, Sven Ehrke and others"
 	license: "MIT License"
 
 class GEANT_EXEC_TASK
@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			command.command_line.set_string_value_agent (agent a_ie.attribute_value ("executable"))
 			command.exit_code_variable_name.set_string_value_agent (agent a_ie.attribute_value_if_existing ("exit_code_variable"))
 			command.accept_errors.set_string_value_agent (agent a_ie.attribute_value_if_existing ("accept_errors"))
+			command.timeout.set_string_value_agent (agent a_ie.attribute_value_if_existing ("timeout"))
 
 			a_xml_subelement := xml_element.element_by_name (Fileset_element_name)
 			if a_xml_subelement /= Void then

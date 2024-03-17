@@ -6,21 +6,21 @@
 		"Exec Tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2024, Sven Ehrke and others"
 	license: "MIT License"
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="exec_task">
 <chapterinfo>
 	<copyright>
-		<year>2002-2005</year>
+		<year>2002-2024</year>
 		<holder>Sven Ehrke</holder>
 	</copyright>
 	<author>
 		<firstname>Sven</firstname><surname>Ehrke</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 July 2005</date>
+	<date>18 March 2024</date>
 </chapterinfo>
 
 	<title>exec</title>
@@ -78,6 +78,19 @@
 					<para><emphasis>Default: </emphasis>false</para>
 				</listitem>
 			</varlistentry>
+			<varlistentry>
+				<term>timeout</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Maximum number of milliseconds to wait for the command to terminate.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>positive number</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>no timeout</para>
+				</listitem>
+			</varlistentry>
 		</variablelist>
 	</section>
 
@@ -98,6 +111,9 @@
           </choice>
           -->
         </attribute>
+      </optional>
+      <optional>
+        <attribute name="timeout"/>
       </optional>
       <optional>
         <ref name="fileset"/>
@@ -216,6 +232,21 @@
   <echo message="run not OK" unless="${return_code}=0"/>
   <exit code="1" unless="${return_code}=0"/>
 
+]]>
+		</programlisting>
+
+	<para>
+	</para>
+
+	</section>
+
+	<section id="exec_with_timeout">
+		<title>Using exec with timeout</title>
+		<para>
+			Wait for the command to terminate for at most 3 minutes:
+		</para>
+		<programlisting><![CDATA[
+  <exec executable="..." timeout="180000"/>
 ]]>
 		</programlisting>
 

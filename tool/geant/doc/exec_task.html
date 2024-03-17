@@ -57,6 +57,15 @@
      <p><i>Default: </i>false
      </p>
     </dd>
+    			
+    <dt>timeout</dt>
+    <dd><i>Description: </i>Maximum number of milliseconds to wait for the command to terminate.
+     					
+     <p><i>Domain: </i>positive number
+     </p>
+     <p><i>Default: </i>no timeout
+     </p>
+    </dd>
     		
    </dl>
    	
@@ -79,6 +88,9 @@
           &lt;/choice&gt;
           --&gt;
         &lt;/attribute&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="timeout"/&gt;
       &lt;/optional&gt;
       &lt;optional&gt;
         &lt;ref name="fileset"/&gt;
@@ -214,11 +226,30 @@
    
    	
   </div>
+  <div><a name="exec_with_timeout"></a>
+   		
+   <h2>Using exec with timeout</h2>
+   		
+   <p>
+    			Wait for the command to terminate for at most 3 minutes:
+    		
+   </p>
+   		<pre>
+  &lt;exec executable="..." timeout="180000"/&gt;
+
+		</pre>
+   
+   	<p>
+    	
+   </p>
+   
+   	
+  </div>
   <hr size="1" />
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+     <address><font size="2"><b>Copyright © 2002-2024, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>18 March 2024</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="echo_task.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="exit_task.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>
