@@ -1,0 +1,6 @@
+EE calling CC.f
+EE end f
+DD calling BB.f
+DD middle f
+DD calling CC.f
+DD end f

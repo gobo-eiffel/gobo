@@ -33,6 +33,7 @@ typedef struct GE_scoop_session_struct GE_scoop_session;
 struct GE_scoop_call_struct {
 	GE_scoop_processor* caller; /* Processor of the caller of the call. */
 	char is_synchronous; /* Should the caller wait for the call to be executed? */
+	char is_condition; /* Is the current call as condition call? */
 	void (*execute)(GE_context*, GE_scoop_session*, GE_scoop_call*);
 	GE_scoop_call* next; /* Protected by `mutex' of enclosing session. */
 };
@@ -65,6 +66,26 @@ struct GE_scoop_processor_struct {
 	EIF_COND_TYPE* sync_condition_variable; /* For synchronization in case of synchronous calls. */
 };
 
+/* Struct for SCOOP processor availability condition. */
+typedef struct GE_scoop_condition_struct GE_scoop_condition;
+struct GE_scoop_condition_struct {
+	uint32_t wait_counter; /* Number of SCOOP processors which are not available yet. */
+	uint32_t trigger_counter; /* Number of condition calls currently using current condition. (Useful to free the condition when not used anymore). */
+	EIF_MUTEX_TYPE* mutex; /* To access `counter'. */
+	EIF_COND_TYPE* condition_variable; /* To access `counter'. */
+};
+
+/* Struct for SCOOP call containing a condition. */
+typedef struct GE_scoop_condition_call_struct GE_scoop_condition_call;
+struct GE_scoop_condition_call_struct {
+	GE_scoop_processor* caller; /* Processor of the caller of the call. */
+	char is_synchronous; /* Should the caller wait for the call to be executed? */
+	char is_condition; /* Is the current call as condition call? */
+	void (*execute)(GE_context*, GE_scoop_session*, GE_scoop_call*);
+	GE_scoop_call* next; /* Protected by `mutex' of enclosing session. */
+	GE_scoop_condition* condition;
+};
+
 /*
  * Increment number SCOOP sessions.
  */
@@ -80,6 +101,18 @@ extern uint32_t GE_decrement_scoop_sessions_count(void);
  */
 extern GE_scoop_processor* GE_new_scoop_processor(GE_context* a_context);
 
+/*
+ * Start opening multiple SCOOP sessions (for example in
+ * a feature with several separate arguments.)
+ */
+extern void GE_scoop_multisessions_open_start(void);
+
+/*
+ * Stop opening multiple SCOOP sessions (for example in
+ * a feature with several separate arguments.)
+ */
+extern void GE_scoop_multisessions_open_stop(void);
+
 /* 
  * Create (or reuse an existing) SCOOP session to register calls from
  * `a_caller' to be executed by `a_callee'.
@@ -87,7 +120,7 @@ extern GE_scoop_processor* GE_new_scoop_processor(GE_context* a_context);
  * To be executed by the processor of `a_caller' (or by other processors
  * which are synchronized with `a_caller').
  */
-extern GE_scoop_session* GE_scoop_session_open(GE_scoop_processor* a_caller, GE_scoop_processor* a_callee);
+extern GE_scoop_session* GE_scoop_session_open(GE_scoop_processor* a_caller, GE_scoop_processor* a_callee, GE_scoop_condition* a_condition);
 
 /* 
  * Exit from SCOOP session `a_session' at the end of a feature with arguments of separate type
@@ -97,6 +130,18 @@ extern GE_scoop_session* GE_scoop_session_open(GE_scoop_processor* a_caller, GE_
  * which are synchronized with `a_caller').
  */
 extern void GE_scoop_session_close(GE_scoop_processor* a_caller, GE_scoop_session* a_session);
+
+/*
+ * New SCOOP condition.
+ * `a_counter' is the initial wait counter of the condition.
+ */
+extern GE_scoop_condition* GE_new_scoop_condition(uint32_t a_counter);
+
+/*
+ * Decrement the wait counter of `a_condition' and broadcast information
+ * when all required processors are available.
+ */
+extern void GE_scoop_condition_decrement(GE_scoop_condition* a_condition);
 
 /* 
  * New SCOOP call.
@@ -161,6 +206,11 @@ extern void GE_scoop_processor_run(GE_context* a_context);
  * Initialization of SCOOP.
  */
 extern void GE_init_scoop(void);
+
+/*
+ * Free memory allocated by `a_condition'.
+ */
+extern void GE_free_scoop_condition(GE_scoop_condition* a_condition);
 
 /*
  * Free memory allocated by `a_call'.
