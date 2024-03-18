@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Execute a command in a directory"
-		copyright: "Copyright (c) 2020, Eric Bezault and others"
+		copyright: "Copyright (c) 2020-2024, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
@@ -14,5 +14,12 @@
 		</description>
 		<exec executable="${executable}" exit_code_variable="return_code" dir="${directory}"/>
 	</target>
-	
+
+	<target name="execute_with_timeout">
+		<description>
+			Execute ${executable} in ${directory} with ${timeout} in milliseconds.
+		</description>
+		<exec executable="${executable}" timeout="${timeout}" exit_code_variable="return_code" dir="${directory}"/>
+	</target>
+
 </project>

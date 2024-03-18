@@ -9,7 +9,7 @@
 >
 	<description>
 		system: "Gobo Eiffel Ant"
-		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 	<target name="all_classes">
@@ -36,7 +36,7 @@
 		<root class="GEANT" feature="make"/>
 		<setting name="console_application" value="true"/>
 		<capability>
-			<concurrency use="none"/>
+			<concurrency use="thread"/>
 		</capability>
 	</target>
 </system>
