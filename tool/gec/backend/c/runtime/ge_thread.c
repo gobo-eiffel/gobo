@@ -235,7 +235,7 @@ void GE_thread_onces_set_counts(
 /*
  * Initialize `process_onces' and `thread_onces' in `a_context'.
  */
-static void GE_thread_init_onces(GE_context* a_context)
+void GE_thread_init_onces(GE_context* a_context)
 {
 	a_context->process_onces = GE_new_onces(
 		GE_process_onces->boolean_count,
@@ -1383,8 +1383,9 @@ void GE_init_thread(GE_context* a_context)
 		l_thread_context->is_alive = 1;
 #ifdef GE_USE_SCOOP
 		l_thread_context->is_scoop_processor = 1;
-#endif
+#else
 		GE_thread_init_onces(a_context);
+#endif
 		GE_register_thread_context(a_context);
 	} else {
 		GE_raise_with_message(GE_EX_EXT, "Cannot create thread context");
@@ -1454,21 +1455,21 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 		l_context->thread = l_thread_context;
 #ifdef GE_USE_SCOOP
 		l_thread_context->is_scoop_processor = is_scoop_processor;
-		l_context->scoop_processor = current->scoop_processor;
 		if (is_scoop_processor) {
-			l_context->scoop_processor->context = l_context;
+			GE_scoop_region_set_context(current->region, l_context);
 				/* Do not keep track of the current object so that it can be
 				reclaimed by the GC if it is not referenced anywhere else. */
 		} else {
+			l_context->region = current->region;
 #endif
 			l_thread_context->current = current;
 			l_thread_context->routine = routine;
 			l_thread_context->set_terminated = set_terminated;
+			GE_thread_init_onces(l_context);
+			GE_init_exception(l_context);
 #ifdef GE_USE_SCOOP
 		}
 #endif	
-		GE_thread_init_onces(l_context);
-		GE_init_exception(l_context);
 #ifdef GE_USE_POSIX_THREADS
 		{
 			pthread_attr_t l_attr;
@@ -1593,7 +1594,7 @@ void* GE_thread_create_wel_per_thread_data(size_t a_size)
 
 	EIF_TSD_GET(GE_context*, GE_thread_context_key, l_context, "Cannot get execution context for current thread");
 	l_result = (void*)GE_calloc_uncollectable(1, a_size);
-	l_context->wel_per_thread_data = l_result;
+	l_context->thread->wel_per_thread_data = l_result;
 	return l_result;
 }
 #endif
@@ -1764,12 +1765,12 @@ void GE_thread_exit(void)
 		GE_free_onces(l_context->process_onces);
 		GE_free_onces(l_context->thread_onces);
 #ifdef GE_USE_SCOOP
-		GE_free_scoop_processor(l_context->scoop_processor);
+		GE_free_scoop_region(l_context->region);
 #endif
 		GE_free_exception(l_context);
-		if (l_context->wel_per_thread_data) {
-			GE_free(l_context->wel_per_thread_data);
-			l_context->wel_per_thread_data = 0;
+		if (l_thread_context->wel_per_thread_data) {
+			GE_free(l_thread_context->wel_per_thread_data);
+			l_thread_context->wel_per_thread_data = 0;
 		}
 		if (l_free_thread_context) {
 			GE_free(l_thread_context);

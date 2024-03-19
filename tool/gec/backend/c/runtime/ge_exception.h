@@ -140,10 +140,9 @@ struct GE_context_struct {
 	GE_thread_context* thread; /* Thread context */
 	GE_onces* process_onces; /* Cache for status and results of onces-per-process */
 	GE_onces* thread_onces; /* Status and results of onces-per-thread */
-	void* wel_per_thread_data; /* WEL private data */
 #endif
 #ifdef GE_USE_SCOOP
-	GE_scoop_processor* scoop_processor; /* SCOOP processor executing the current code */
+	GE_scoop_region* region; /* SCOOP region whose processor is executing the current code */
 #endif
 };
 #define TC GE_context
