@@ -21260,7 +21260,7 @@ feature {NONE} -- Separate calls
 			print_semicolon_newline
 			l_is_synchronous_call := l_result_type /= Void or l_has_non_separate_reference_actual_argument or l_is_passive_region
 			l_is_asynchronous_call := l_is_creation_call and not l_has_reference_actual_argument and not l_is_passive_region
-			if not l_is_creation_call then
+			if not l_is_creation_call or else l_is_passive_region then
 				print_indentation
 				current_file.put_string (c_ge_rescue)
 				current_file.put_character (' ')
@@ -21812,7 +21812,7 @@ feature {NONE} -- Separate calls
 						current_file.put_character ('}')
 						current_file.put_new_line
 					end
-					if not l_is_creation_call then
+					if not l_is_creation_call or else l_is_passive_region then
 						dedent
 						print_indentation
 						current_file.put_character ('}')

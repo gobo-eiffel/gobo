@@ -420,7 +420,7 @@ void GE_scoop_session_add_sync_call(GE_scoop_region* a_caller, GE_scoop_session*
 {
 	GE_scoop_call* l_call;
 
-	if (!GE_scoop_session_is_synchronized(a_session)) {
+	if (!GE_scoop_session_is_synchronized(a_session) && !a_session->callee->is_passive) {
 		l_call = GE_new_scoop_call(a_caller, '\1', 0, sizeof(GE_scoop_call));
 		GE_scoop_session_add_call(a_session, l_call);
 	}
@@ -474,12 +474,12 @@ char GE_scoop_session_is_impersonation_allowed(GE_scoop_session* a_session)
 	char l_result;
 	GE_scoop_region* l_region;
 
-	if (GE_scoop_session_is_synchronized(a_session)) {
+	l_region = a_session->callee;
+	if (GE_scoop_session_is_synchronized(a_session) || l_region->is_passive) {
 		return '\1';
 	}
-	l_region = a_session->callee;
 	GE_mutex_lock((EIF_POINTER)l_region->mutex);
-	l_result = l_region->is_impersonation_allowed || l_region->is_passive;
+	l_result = l_region->is_impersonation_allowed;
 	GE_mutex_unlock((EIF_POINTER)l_region->mutex);
 	return l_result;
 }
