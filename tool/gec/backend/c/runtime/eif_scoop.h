@@ -29,7 +29,7 @@ extern "C" {
 
 #define EIF_NULL_PROCESSOR (EIF_SCP_PID)-1
 #ifdef GE_USE_SCOOP
-#define eif_scoop_set_is_impersonation_allowed(x,y) GE_scoop_processor_set_impersonation_allowed(GE_current_context()->scoop_processor,(y));
+#define eif_scoop_set_is_impersonation_allowed(x,y) GE_scoop_region_set_impersonation_allowed(GE_current_context()->region,(y));
 #else
 #define eif_scoop_set_is_impersonation_allowed(x,y) /* */
 #endif

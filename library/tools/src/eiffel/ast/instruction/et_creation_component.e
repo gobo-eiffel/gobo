@@ -69,6 +69,14 @@ feature -- Access
 			end
 		end
 
+feature -- Status
+
+	is_scoop_region_passive: BOOLEAN
+			-- Is the SCOOP region created by the current creation (if any) a passive region?
+		do
+			-- Result := False
+		end
+
 feature {NONE} -- Implementation
 
 	default_create_name: detachable like name

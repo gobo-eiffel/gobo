@@ -2218,9 +2218,9 @@ feature -- AST nodes
 				create Result.make (a_type, a_call)
 				if a_create /= Void and then not a_create.position.is_null then
 					Result.set_create_keyword (a_create)
-					if a_region /= Void then
-						Result.set_creation_region (a_region)
-					end
+				end
+				if a_region /= Void then
+					Result.set_creation_region (a_region)
 				end
 			end
 		end
@@ -2233,9 +2233,9 @@ feature -- AST nodes
 				create Result.make (a_type, a_target, a_call)
 				if a_create /= Void and then not a_create.position.is_null then
 					Result.set_create_keyword (a_create)
-					if a_region /= Void then
-						Result.set_creation_region (a_region)
-					end
+				end
+				if a_region /= Void then
+					Result.set_creation_region (a_region)
 				end
 			end
 		end

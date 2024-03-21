@@ -97,6 +97,7 @@ struct GE_thread_context_struct {
 	GE_thread_context* parent_context;	/* Context of parent thread, NULL if main thread. */
 	int thread_exiting; /* Has current thread already called GE_thread_exit? */
 	volatile int is_alive; /* Is current thread still alive? */
+	void* wel_per_thread_data; /* WEL private data */
 #ifdef GE_USE_SCOOP
 	int is_scoop_processor; /* Is current thread a SCOOP processor? */
 #endif

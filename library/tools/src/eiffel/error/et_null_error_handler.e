@@ -5,7 +5,7 @@
 		"Eiffel null error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_NULL_ERROR_HANDLER
@@ -100,6 +100,8 @@ inherit
 			reportable_vjrv_error,
 			reportable_vkcn1_error,
 			reportable_vkcn2_error,
+			reportable_vkex4g_error,
+			reportable_vkin5g_error,
 			reportable_vlel1_error,
 			reportable_vlel2_error,
 			reportable_vlel3_error,
@@ -814,6 +816,20 @@ feature -- Validity error status
 
 	reportable_vkcn2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VKCN-2 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vkex4g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VKEX-4G error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vkin5g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VKIN-5G error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

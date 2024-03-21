@@ -140,6 +140,11 @@ extern void GE_thread_onces_set_counts(
 	unsigned int a_reference_count,
 	unsigned int a_procedure_count);
 
+/*
+ * Initialize `process_onces' and `thread_onces' in `a_context'.
+ */
+extern void GE_thread_init_onces(GE_context* a_context);
+
 /* Global mutex to protect creation of once-per-object data. */
 extern EIF_POINTER GE_once_per_object_data_mutex;
 
