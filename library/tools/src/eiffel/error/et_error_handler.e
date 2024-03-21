@@ -4961,6 +4961,40 @@ feature -- Validity errors
 			end
 		end
 
+	report_vkex4ga_error (a_class, a_class_imp: ET_CLASS; a_region: ET_CREATION_REGION)
+			-- Report VKEX-4G error: creation region `a_region' appearing in
+			-- a creation expression in `a_class' is not '<NONE>'.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_imp_not_void: a_class_imp /= Void
+			a_class_imp_preparsed: a_class_imp.is_preparsed
+			a_region_not_void: a_region /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vkex4g_error (a_class) then
+				create l_error.make_vkex4ga (a_class, a_class_imp, a_region)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vkin5ga_error (a_class, a_class_imp: ET_CLASS; a_region: ET_CREATION_REGION)
+			-- Report VKIN-5G error: creation region `a_region' appearing in
+			-- a creation instruction in `a_class' is not '<NONE>'.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_imp_not_void: a_class_imp /= Void
+			a_class_imp_preparsed: a_class_imp.is_preparsed
+			a_region_not_void: a_region /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vkin5g_error (a_class) then
+				create l_error.make_vkin5ga (a_class, a_class_imp, a_region)
+				report_validity_error (l_error)
+			end
+		end
+
 	report_vlel1a_error (a_class: ET_CLASS; a_parent: ET_PARENT; all1, all2: ET_ALL_EXPORT)
 			-- Report VLEL-1 error: the 'all' keyword appears twice in the
 			-- Export subclause of parent `a_parent' in `a_class'.
@@ -9562,6 +9596,26 @@ feature -- Validity error status
 
 	reportable_vkcn2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VKCN-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vkex4g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VKEX-4G error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vkin5g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VKIN-5G error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

@@ -208,6 +208,8 @@ create
 	make_vkcn1c,
 	make_vkcn2a,
 	make_vkcn2c,
+	make_vkex4ga,
+	make_vkin5ga,
 	make_vlel1a,
 	make_vlel2a,
 	make_vlel3a,
@@ -9088,6 +9090,84 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = name of corresponding feature in class $5
 		end
 
+	make_vkex4ga (a_class, a_class_imp: ET_CLASS; a_region: ET_CREATION_REGION)
+			-- Create a new VKEX-4G error: creation region `a_region' appearing in
+			-- a creation expression in `a_class' is not '<NONE>'.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_imp_not_void: a_class_imp /= Void
+			a_class_imp_preparsed: a_class_imp.is_preparsed
+			a_region_not_void: a_region /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_region.class_name.position
+			code := template_code (vkex4ga_template_code)
+			etl_code := vkex4g_etl_code
+			default_template := default_message_template (vkex4ga_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_region.class_name.upper_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation region name
+		end
+
+	make_vkin5ga (a_class, a_class_imp: ET_CLASS; a_region: ET_CREATION_REGION)
+			-- Create a new VKIN-5G error: creation region `a_region' appearing in
+			-- a creation instruction in `a_class' is not '<NONE>'.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_imp_not_void: a_class_imp /= Void
+			a_class_imp_preparsed: a_class_imp.is_preparsed
+			a_region_not_void: a_region /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_region.class_name.position
+			code := template_code (vkin5ga_template_code)
+			etl_code := vkin5g_etl_code
+			default_template := default_message_template (vkin5ga_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_region.class_name.upper_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation region name
+		end
+
 	make_vlel1a (a_class: ET_CLASS; a_parent: ET_PARENT; all1, all2: ET_ALL_EXPORT)
 			-- Create a new VLEL-1 error: the 'all' keyword appears twice in the
 			-- Export subclause of parent `a_parent' in `a_class'.
@@ -17778,6 +17858,8 @@ feature {NONE} -- Implementation
 	vkcn1c_default_template: STRING = "query `$8' appears in a call instruction."
 	vkcn2a_default_template: STRING = "procedure `$8' of class $9 appears in a call expression."
 	vkcn2c_default_template: STRING = "procedure `$8' appears in a call expression."
+	vkex4ga_default_template: STRING = "the creation region '<$7>' does not have the expected name '<NONE>'."
+	vkin5ga_default_template: STRING = "the creation region '<$7>' does not have the expected name '<NONE>'."
 	vlel1a_default_template: STRING = "'all' keyword appears twice in the Export subclause of parent $7."
 	vlel2a_default_template: STRING = "`$7' is not the final name of a feature inherited from $8."
 	vlel3a_default_template: STRING = "feature name `$7' appears twice in the Export subclause of parent $8."
@@ -18040,6 +18122,8 @@ feature {NONE} -- Implementation
 	vjrv_etl_code: STRING = "VJRV"
 	vkcn1_etl_code: STRING = "VKCN-1"
 	vkcn2_etl_code: STRING = "VKCN-2"
+	vkex4g_etl_code: STRING = "VKEX-4G"
+	vkin5g_etl_code: STRING = "VKIN-5G"
 	vlel1_etl_code: STRING = "VLEL-1"
 	vlel2_etl_code: STRING = "VLEL-2"
 	vlel3_etl_code: STRING = "VLEL-3"
@@ -18342,6 +18426,8 @@ feature {NONE} -- Implementation
 	vkcn1c_template_code: STRING = "vkcn1c"
 	vkcn2a_template_code: STRING = "vkcn2a"
 	vkcn2c_template_code: STRING = "vkcn2c"
+	vkex4ga_template_code: STRING = "vkex4ga"
+	vkin5ga_template_code: STRING = "vkin5ga"
 	vlel1a_template_code: STRING = "vlel1a"
 	vlel2a_template_code: STRING = "vlel2a"
 	vlel3a_template_code: STRING = "vlel3a"

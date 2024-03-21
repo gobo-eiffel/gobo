@@ -3190,6 +3190,12 @@ feature {NONE} -- Instruction validity
 			an_instruction_not_void: an_instruction /= Void
 		do
 			check_creation_instruction_validity (an_instruction)
+			if attached an_instruction.creation_region as l_creation_region then
+				if not l_creation_region.class_name.same_class_name (tokens.none_class_name) then
+					set_fatal_error
+					error_handler.report_vkin5ga_error (current_class, current_class_impl, l_creation_region)
+				end
+			end
 		end
 
 	check_creation_instruction_validity (an_instruction: ET_CREATION_INSTRUCTION)
@@ -5927,6 +5933,12 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			check_creation_expression_validity (an_expression, a_context)
+			if attached an_expression.creation_region as l_creation_region then
+				if not l_creation_region.class_name.same_class_name (tokens.none_class_name) then
+					set_fatal_error
+					error_handler.report_vkex4ga_error (current_class, current_class_impl, l_creation_region)
+				end
+			end
 		end
 
 	check_creation_expression_validity (an_expression: ET_CREATION_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
