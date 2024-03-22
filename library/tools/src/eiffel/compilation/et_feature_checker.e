@@ -2786,7 +2786,7 @@ feature {NONE} -- Instruction validity
 					-- The type of the manifest array will be 'ARRAY [COMPARABLE]'. Without the
 					-- this hint it could have been 'ARRAY [HASHABLE]' or even 'ARRAY [ANY]'.
 				if current_system.scoop_mode then
-					l_is_target_type_separate := l_target_context.is_type_separate
+					l_is_target_type_separate := not l_target_context.is_type_non_separate
 				end
 				l_target_context.force_last (l_expected_type)
 				l_expected_type_context := l_target_context
@@ -6987,7 +6987,7 @@ feature {NONE} -- Expression validity
 						end
 					end
 					if current_system.scoop_mode then
-						if a_context.is_type_separate then
+						if not a_context.is_type_non_separate then
 							a_context.force_last (tokens.controlled_type_modifier)
 						end
 					end
@@ -7075,7 +7075,7 @@ feature {NONE} -- Expression validity
 			else
 				if current_system.scoop_mode then
 					l_is_controlled := True
-					if l_expression_context.is_type_separate then
+					if not l_expression_context.is_type_non_separate then
 						l_is_separate := True
 						if not l_expression_context.is_controlled then
 							l_is_controlled := False
@@ -7123,7 +7123,7 @@ feature {NONE} -- Expression validity
 						free_context (l_expression_context)
 					else
 						if current_system.scoop_mode then
-							if l_expression_context.is_type_separate then
+							if not l_expression_context.is_type_non_separate then
 								l_is_separate := True
 								if not l_expression_context.is_controlled then
 									l_is_controlled := False
@@ -7151,7 +7151,7 @@ feature {NONE} -- Expression validity
 				free_context (l_expression_context)
 			else
 				if current_system.scoop_mode then
-					if l_expression_context.is_type_separate then
+					if not l_expression_context.is_type_non_separate then
 						l_is_separate := True
 						if not l_expression_context.is_controlled then
 							l_is_controlled := False
@@ -7282,7 +7282,7 @@ feature {NONE} -- Expression validity
 						else
 							a_context.copy_type_context (current_inline_separate_argument_types.found_item)
 							if current_system.scoop_mode then
-								if a_context.is_type_separate then
+								if not a_context.is_type_non_separate then
 									a_context.force_last (tokens.controlled_type_modifier)
 								end
 							end
@@ -7313,7 +7313,7 @@ feature {NONE} -- Expression validity
 					else
 						a_context.copy_type_context (current_inline_separate_argument_types.found_item)
 						if current_system.scoop_mode then
-							if a_context.is_type_separate then
+							if not a_context.is_type_non_separate then
 								a_context.force_last (tokens.controlled_type_modifier)
 							end
 						end
@@ -7345,7 +7345,7 @@ feature {NONE} -- Expression validity
 				check_expression_validity (l_argument.expression, l_expression_context, current_system.detachable_separate_any_type)
 				if not has_fatal_error then
 						-- Check inline separate argument type (see V1SE-G3).
-					if not l_expression_context.is_type_separate then
+					if l_expression_context.is_type_non_separate and current_class = current_type then
 							-- The type of the inline separate argument needs to be separate.
 						set_fatal_error
 						error_handler.report_v1se3ga_error (current_class, current_class_impl, l_argument, l_expression_context.named_type)
@@ -7875,7 +7875,7 @@ feature {NONE} -- Expression validity
 						free_context (l_expression_context)
 					else
 						if current_system.scoop_mode then
-							if l_expression_context.is_type_separate then
+							if not l_expression_context.is_type_non_separate then
 								l_is_separate := True
 								if not l_expression_context.is_controlled then
 									l_is_controlled := False
@@ -7900,7 +7900,7 @@ feature {NONE} -- Expression validity
 					free_context (l_expression_context)
 				else
 					if current_system.scoop_mode then
-						if l_expression_context.is_type_separate then
+						if not l_expression_context.is_type_non_separate then
 							l_is_separate := True
 							if not l_expression_context.is_controlled then
 								l_is_controlled := False
@@ -8743,7 +8743,7 @@ feature {NONE} -- Expression validity
 							end
 						end
 						if current_system.scoop_mode then
-							if l_item_context.is_type_separate and l_item_context.is_controlled then
+							if not l_item_context.is_type_non_separate and l_item_context.is_controlled then
 									-- Remove 'controlled' type modifier.
 								l_item_context.remove_last
 							end
@@ -8990,7 +8990,7 @@ feature {NONE} -- Expression validity
 				end
 				if not has_fatal_error then
 					if current_system.scoop_mode then
-						if a_context.is_type_separate and a_context.is_controlled then
+						if not a_context.is_type_non_separate and a_context.is_controlled then
 								-- Remove 'controlled' type modifier.
 							a_context.remove_last
 						end
@@ -9117,7 +9117,7 @@ feature {NONE} -- Expression validity
 				end
 			end
 			if current_system.scoop_mode then
-				if l_is_controlled and l_expression_context.is_type_separate and not l_expression_context.is_controlled then
+				if l_is_controlled and not l_expression_context.is_type_non_separate and not l_expression_context.is_controlled then
 						-- If expression is controlled and the type is separate
 						-- then the object-test local is controlled as well.
 					l_expression_context.force_last (tokens.controlled_type_modifier)
@@ -9971,7 +9971,7 @@ feature {NONE} -- Expression validity
 			end
 				-- Check that the target of the call is controlled.
 			if current_system.scoop_mode then
-				if a_context.is_type_separate and then not a_context.is_controlled then
+				if not a_context.is_type_non_separate and then not a_context.is_controlled then
 						-- Error: the target of the call is not controlled.
 					set_fatal_error
 					error_handler.report_vuta4ga_error (current_class, current_class_impl, l_name, a_feature, a_context.named_type)
@@ -10110,7 +10110,7 @@ feature {NONE} -- Expression validity
 			end
 				-- Check that the target of the call is controlled.
 			if current_system.scoop_mode then
-				if a_context.is_type_separate and then not a_context.is_controlled then
+				if not a_context.is_type_non_separate and then not a_context.is_controlled then
 						-- Error: the target of the call is not controlled.
 					set_fatal_error
 					error_handler.report_vuta4gb_error (current_class, current_class_impl, l_name, a_context.named_type)
@@ -10173,7 +10173,7 @@ feature {NONE} -- Expression validity
 			has_fatal_error := False
 			if current_system.scoop_mode then
 				if a_call.target /= Void then
-					l_is_target_separate := a_context.is_type_separate
+					l_is_target_separate := not a_context.is_type_non_separate
 				end
 			end
 			l_type := a_query.type
@@ -11784,7 +11784,7 @@ feature {NONE} -- Expression validity
 				if current_system.scoop_mode then
 					if a_class /= Void and not l_name.is_precursor then
 							-- Qualified call.
-						l_is_target_type_separate := a_context.is_type_separate
+						l_is_target_type_separate := not a_context.is_type_non_separate
 					end
 				end
 				l_tuple_argument_position := -1
@@ -13193,7 +13193,7 @@ feature {NONE} -- Agent validity
 				end
 			end
 			if current_system.scoop_mode then
-				if a_context.is_type_separate and then not a_context.is_controlled then
+				if not a_context.is_type_non_separate and then not a_context.is_controlled then
 						-- Error: the target of the call is not controlled.
 					set_fatal_error
 					error_handler.report_vuta4ga_error (current_class, current_class_impl, a_name, a_query, a_context.named_type)
@@ -13267,7 +13267,7 @@ feature {NONE} -- Agent validity
 				end
 			end
 			if current_system.scoop_mode then
-				if a_context.is_type_separate and then not a_context.is_controlled then
+				if not a_context.is_type_non_separate and then not a_context.is_controlled then
 						-- Error: the target of the call is not controlled.
 					set_fatal_error
 					error_handler.report_vuta4ga_error (current_class, current_class_impl, a_name, a_procedure, a_context.named_type)
@@ -13334,7 +13334,7 @@ feature {NONE} -- Agent validity
 				end
 			end
 			if current_system.scoop_mode then
-				if a_context.is_type_separate and then not a_context.is_controlled then
+				if not a_context.is_type_non_separate and then not a_context.is_controlled then
 						-- Error: the target of the call is not controlled.
 					set_fatal_error
 					error_handler.report_vuta4gb_error (current_class, current_class_impl, l_name, a_context.named_type)

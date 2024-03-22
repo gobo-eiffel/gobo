@@ -5,7 +5,7 @@
 		"Eiffel types appearing in nested type contexts and representing n-th type in these contexts"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2015-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2015-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_LIKE_N
@@ -30,6 +30,7 @@ inherit
 			conforms_from_formal_parameter_type_with_type_marks,
 			conforms_from_tuple_type_with_type_marks,
 			type_with_type_mark,
+			is_type_non_separate_with_type_mark,
 			is_type_reference_with_type_mark,
 			is_type_detachable_with_type_mark
 		end
@@ -360,6 +361,25 @@ feature -- Status report
 					-- We reached the root context.
 				l_previous_context.force_last (tokens.like_0)
 				Result := l_previous_context.root_context.is_type_separate_with_type_mark (overridden_type_mark (a_type_mark), l_previous_context)
+				l_previous_context.remove_last
+			end
+		end
+
+	is_type_non_separate_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `is_type_non_separate' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		local
+			l_previous_context: ET_NESTED_TYPE_CONTEXT
+		do
+			l_previous_context := a_context.as_nested_type_context
+			if l_previous_context.valid_index (index) then
+				l_previous_context.force_last (previous)
+				Result := l_previous_context.item (index).is_type_non_separate_with_type_mark (overridden_type_mark (a_type_mark), l_previous_context)
+				l_previous_context.remove_last
+			else
+					-- We reached the root context.
+				l_previous_context.force_last (tokens.like_0)
+				Result := l_previous_context.root_context.is_type_non_separate_with_type_mark (overridden_type_mark (a_type_mark), l_previous_context)
 				l_previous_context.remove_last
 			end
 		end
@@ -1029,7 +1049,7 @@ feature -- Output
 			a_string.append_string (like_space)
 			a_string.append_integer (index)
 		end
-		
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR)

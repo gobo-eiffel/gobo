@@ -70,6 +70,15 @@ feature -- Status report
 		deferred
 		end
 
+	has_non_separate_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Is one of the constraint types non-separate when viewed from `a_context'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
 	has_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does one of the constraint types contain attributes whose types are declared
 			-- of non-separate reference types when viewed from `a_context'?

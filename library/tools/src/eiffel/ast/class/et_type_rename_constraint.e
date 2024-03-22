@@ -112,6 +112,12 @@ feature -- Status report
 			Result := type.is_type_attached (a_context)
 		end
 
+	is_type_non_separate (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Is one of the constraint types non-separate when viewed from `a_context'?
+		do
+			Result := type.is_type_non_separate (a_context)
+		end
+
 	has_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does the type of the current constraint contain attributes whose types are declared
 			-- of non-separate reference types when viewed from `a_context'?

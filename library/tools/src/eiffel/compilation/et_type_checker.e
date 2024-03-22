@@ -362,7 +362,7 @@ feature -- Type conversion
 			Result := a_source_base_class.convert_to_feature (a_target_type, a_source_type)
 			if Result /= Void then
 				if a_source_type.scoop_mode then
-					if a_source_type.is_type_separate then
+					if not a_source_type.is_type_non_separate then
 						if not a_source_type.is_controlled then
 								-- This is a separate call. So the target of the call needs
 								-- to be controlled.

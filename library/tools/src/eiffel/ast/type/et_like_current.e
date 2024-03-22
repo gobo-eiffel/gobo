@@ -5,7 +5,7 @@
 		"Eiffel 'like Current' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_LIKE_CURRENT
@@ -32,6 +32,7 @@ inherit
 			conforms_from_formal_parameter_type_with_type_marks,
 			conforms_from_tuple_type_with_type_marks,
 			type_with_type_mark,
+			is_type_non_separate_with_type_mark,
 			is_type_reference_with_type_mark,
 			is_type_detachable_with_type_mark,
 			is_controlled,
@@ -222,6 +223,13 @@ feature -- Status report
 			-- overridden by `a_type_mark', if not Void
 		do
 			Result := a_context.is_type_separate_with_type_mark (overridden_type_mark (a_type_mark))
+		end
+
+	is_type_non_separate_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `is_type_non_separate' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		do
+			Result := a_context.is_type_non_separate_with_type_mark (overridden_type_mark (a_type_mark))
 		end
 
 	is_type_expanded_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
@@ -499,7 +507,7 @@ feature -- Output
 			end
 			a_string.append_string (like_space_current)
 		end
-		
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR)

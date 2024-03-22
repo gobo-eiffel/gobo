@@ -417,6 +417,37 @@ feature -- Status report
 			end
 		end
 
+	is_type_non_separate_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
+			-- Same as `is_type_non_separate' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		local
+			l_type: ET_TYPE
+			l_index: INTEGER
+		do
+			if count = 0 then
+				Result := root_context.is_type_non_separate_with_type_mark (a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.is_type_non_separate_with_type_mark (a_type_mark, Current)
+				elseif l_index >= count then
+					force_last (tokens.like_0)
+					Result := root_context.is_type_non_separate_with_type_mark (a_type_mark, Current)
+					remove_last
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.is_type_non_separate_with_type_mark (a_type_mark, Current)
+					put (l_like_n, count)
+				end
+			else
+				l_type := last
+				remove_last
+				Result := l_type.is_type_non_separate_with_type_mark (a_type_mark, Current)
+				put_last (l_type)
+			end
+		end
+
 	is_type_expanded_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Same as `is_type_expanded' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void

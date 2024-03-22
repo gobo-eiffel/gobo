@@ -193,6 +193,24 @@ feature -- Status report
 			end
 		end
 
+	has_non_separate_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Is one of the constraint types non-separate when viewed from `a_context'?
+		local
+			j: INTEGER
+		do
+			from
+				j := count - 1
+			until
+				j < 0
+			loop
+				if storage.item (j).type_constraint.is_type_non_separate (a_context) then
+					Result := True
+					j := 0 -- Jump out of the loop.
+				end
+				j := j - 1
+			end
+		end
+
 	has_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does one of the constraint types contain attributes whose types are declared
 			-- of non-separate reference types when viewed from `a_context'?

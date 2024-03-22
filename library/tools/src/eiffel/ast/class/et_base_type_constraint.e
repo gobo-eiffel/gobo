@@ -21,6 +21,7 @@ inherit
 			has_formal_parameter as is_formal_parameter,
 			has_expanded_type as is_type_expanded,
 			has_attached_type as is_type_attached,
+			has_non_separate_type as is_type_non_separate,
 			are_named_types as is_named_type
 		end
 

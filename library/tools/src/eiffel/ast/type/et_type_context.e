@@ -5,7 +5,7 @@
 		"Contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_TYPE_CONTEXT
@@ -239,6 +239,22 @@ feature -- Status report
 
 	is_type_separate_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Same as `is_type_separate' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		require
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
+	is_type_non_separate: BOOLEAN
+			-- Is `base_type' not separate?
+		require
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := is_type_non_separate_with_type_mark (Void)
+		end
+
+	is_type_non_separate_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
+			-- Same as `is_type_non_separate' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		require
 			-- no_cycle: no cycle in anchored types involved.
