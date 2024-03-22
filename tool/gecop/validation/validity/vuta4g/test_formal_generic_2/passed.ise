@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+
+Error code: VUTA(3)
+
+Error: separate target of the Object_call is not controlled.
+What to do: ensure the target of the call is controlled or is not separate.
+
+Class: BB [G -> separate CC]
+Feature: f
+Type: Generic #1
+Called feature: g
+Line: 18
+      do
+->      c.g
+      end
+
+-------------------------------------------------------------------------------

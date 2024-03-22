@@ -23,8 +23,7 @@ feature
 	g (s: separate STRING)
 		do
 			{EXECUTION_ENVIRONMENT}.sleep (50_000_000)
-			print ((create {STRING}.make_from_separate (s)))
-			print (" calling BB.g%N")
+			print (create {STRING}.make_from_separate (s) + " calling BB.g%N")
 			{EXECUTION_ENVIRONMENT}.sleep (50_000_000)
 		end
 
