@@ -53,5 +53,7 @@ An export-valid *Call* of target type `ST` and feature `sf` is argument-valid if
   * Error code: VUAR(4)
   * Type error: base type of an actual argument of a separate call or of a source expression of a tuple field assignment is expanded and includes, directly or indirectly, a non-separate reference attribute.
   * What to do: make sure the type of the actual argument or the source expression is reference or does not include, directly or indirectly, any non-separate reference attribute.
-   
+
+  Note that the condition `4` still fails to catch cases where an object of expanded type with non-separate reference attributes is first assigned to an entity of a reference type and then this entity is used as actual argument of the separate call. Gobo Eiffel and ISE Eiffel (as of 23.09.10.7341 and after) both fail to report this issue.
+
   SCOOP is not described in the ECMA Eiffel standard, therefore these conditions are not part of the standard.

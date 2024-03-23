@@ -1,0 +1,18 @@
+-------------------------------------------------------------------------------
+
+Error code: VUER
+
+Error: expanded result type of a separate call includes non-separate
+  reference attributes.
+What to do: Ensure that expanded result type has no non-separate reference
+  attributes.
+
+Class: AA
+Feature: g
+Type: CC
+Line: 21
+      do
+->      c := b.f
+      end
+
+-------------------------------------------------------------------------------

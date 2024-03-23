@@ -1,0 +1,2 @@
+[VUER] class BB (22,11): the result of the separate call `f' has an expanded type 'G', but it contains directly or indirectly attributes of reference types which are not separate.
+----

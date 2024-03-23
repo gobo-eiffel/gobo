@@ -1,0 +1,2 @@
+[VUER] class AA (21,11): the result of the separate call `f' has an expanded type '[attached] CC', but it contains directly or indirectly attributes of reference types which are not separate.
+----
