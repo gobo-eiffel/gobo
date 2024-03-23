@@ -6141,7 +6141,7 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vreg_error (a_class) then
+			if reportable_vred_error (a_class) then
 				create an_error.make_vred0a (a_class, arg1, arg2, f)
 				report_validity_error (an_error)
 			end
@@ -6161,7 +6161,7 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vreg_error (a_class) then
+			if reportable_vred_error (a_class) then
 				create an_error.make_vred0b (a_class, local1, local2, f)
 				report_validity_error (an_error)
 			end
@@ -6182,7 +6182,7 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vreg_error (a_class) then
+			if reportable_vred_error (a_class) then
 				create an_error.make_vred0c (a_class, arg1, arg2, an_agent, f)
 				report_validity_error (an_error)
 			end
@@ -6203,7 +6203,7 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vreg_error (a_class) then
+			if reportable_vred_error (a_class) then
 				create an_error.make_vred0d (a_class, local1, local2, an_agent, f)
 				report_validity_error (an_error)
 			end
@@ -7091,6 +7091,57 @@ feature -- Validity errors
 			if reportable_vucr_error (a_class) then
 				create an_error.make_vucr0j (a_class, a_class_impl, a_agent)
 				report_validity_error (an_error)
+			end
+		end
+
+	report_vuer0a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_query: ET_QUERY; a_target_class: ET_CLASS; a_result_type: ET_NAMED_TYPE)
+			-- Report VUER error: the result of the separate call `a_name', appearing in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself), has an expanded type,
+			-- but it contains (directly or indirectly) an attribute of reference type which is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_query_not_void: a_query /= Void
+			a_target_class_not_void: a_target_class /= Void
+			a_result_type_not_void: a_result_type /= Void
+			a_result_type_named_type: a_result_type.is_named_type
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuer_error (a_class) then
+				create l_error.make_vuer0a (a_class, a_class_impl, a_name, a_query, a_target_class, a_result_type)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vuer0b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target_type, a_label_type: ET_NAMED_TYPE)
+			-- Report VUER error: the result of the separate call `a_name', appearing in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself), has an expanded type,
+			-- but it contains (directly or indirectly) an attribute of reference type which is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_tuple_label: a_name.is_tuple_label
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_named_type: a_target_type.is_named_type
+			a_label_type_not_void: a_label_type /= Void
+			a_label_type_named_type: a_label_type.is_named_type
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuer_error (a_class) then
+				create l_error.make_vuer0b (a_class, a_class_impl, a_name, a_target_type, a_label_type)
+				report_validity_error (l_error)
 			end
 		end
 
@@ -10076,6 +10127,16 @@ feature -- Validity error status
 
 	reportable_vucr_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUCR error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vuer_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUER error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

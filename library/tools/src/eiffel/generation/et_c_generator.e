@@ -199,6 +199,10 @@ feature {NONE} -- Initialization
 			create free_temp_variables.make (40)
 			create frozen_temp_variables.make (40)
 			create volatile_temp_variables.make (40)
+			create used_separate_temp_variables.make (40)
+			create free_separate_temp_variables.make (40)
+			create frozen_separate_temp_variables.make (40)
+			create volatile_separate_temp_variables.make (40)
 			create unused_equality_expressions.make (10)
 			create unused_equality_types.make (100)
 			create unused_object_equality_types.make (100)
@@ -21035,6 +21039,10 @@ feature {NONE} -- Separate calls
 			old_file: KI_TEXT_OUTPUT_STREAM
 			old_function_header_buffer: like current_function_header_buffer
 			old_function_body_buffer: like current_function_body_buffer
+			old_used_temp_variables: like used_temp_variables
+			old_free_temp_variables: like free_temp_variables
+			old_frozen_temp_variables: like frozen_temp_variables
+			old_volatile_temp_variables: like volatile_temp_variables
 			old_indentation: INTEGER
 			old_assignment_target: like assignment_target
 			old_in_operand: BOOLEAN
@@ -21057,6 +21065,14 @@ feature {NONE} -- Separate calls
 			current_function_header_buffer := current_separate_function_header_buffer
 			current_function_body_buffer := current_separate_function_body_buffer
 			current_file := current_function_header_buffer
+			old_used_temp_variables := used_temp_variables
+			old_free_temp_variables := free_temp_variables
+			old_frozen_temp_variables := frozen_temp_variables
+			old_volatile_temp_variables := volatile_temp_variables
+			used_temp_variables := used_separate_temp_variables
+			free_temp_variables := free_separate_temp_variables
+			frozen_temp_variables := frozen_separate_temp_variables
+			volatile_temp_variables := volatile_separate_temp_variables
 			if attached {ET_QUALIFIED_FEATURE_CALL_EXPRESSION} a_separate_call as l_call_expression then
 				l_index := l_call_expression.index
 				l_result_type := dynamic_type_set (l_call_expression).static_type.primary_type
@@ -21845,6 +21861,9 @@ feature {NONE} -- Separate calls
 			current_file.put_character ('}')
 			current_file.put_new_line
 			current_file.put_new_line
+				-- Declarations of temporary variables.
+			current_file := current_function_header_buffer
+			print_temporary_variable_declarations
 				-- Flush to file.
 			flush_to_c_file
 				--
@@ -21863,6 +21882,10 @@ feature {NONE} -- Separate calls
 			current_function_header_buffer := old_function_header_buffer
 			current_function_body_buffer := old_function_body_buffer
 			current_file := old_file
+			used_temp_variables := old_used_temp_variables
+			free_temp_variables := old_free_temp_variables
+			frozen_temp_variables := old_frozen_temp_variables
+			volatile_temp_variables := old_volatile_temp_variables
 			indentation := old_indentation
 			in_operand := old_in_operand
 			assignment_target := old_assignment_target
@@ -22087,6 +22110,9 @@ feature {NONE} -- Separate calls
 			current_file.put_character ('}')
 			current_file.put_new_line
 			current_file.put_new_line
+				-- Declarations of temporary variables.
+			current_file := current_function_header_buffer
+			print_temporary_variable_declarations
 				-- Flush to file.
 			flush_to_c_file
 				--
@@ -22339,6 +22365,9 @@ feature {NONE} -- Separate calls
 			current_file.put_character ('}')
 			current_file.put_new_line
 			current_file.put_new_line
+				-- Declarations of temporary variables.
+			current_file := current_function_header_buffer
+			print_temporary_variable_declarations
 				-- Flush to file.
 			flush_to_c_file
 				--
@@ -42134,14 +42163,14 @@ feature {NONE} -- Output files/buffers
 
 	current_separate_function_header_buffer: KL_STRING_OUTPUT_STREAM
 			-- Buffer to write the C header of the current separate function
-			-- (for SCOOP separate calls);
+			-- (for SCOOP separate calls).
 			-- This is useful when we need to declare local variables
 			-- on the fly while generating the code for the body of
 			-- the C function.
 
 	current_separate_function_body_buffer: KL_STRING_OUTPUT_STREAM
 			-- Buffer to write the C body of the current separate function
-			-- (for SCOOP separate calls
+			-- (for SCOOP separate calls)
 
 feature {ET_AST_NODE} -- Processing
 
@@ -43623,6 +43652,26 @@ feature {NONE} -- Temporary variables (Implementation)
 	volatile_temp_variables: DS_ARRAYED_LIST [BOOLEAN]
 			-- Temporary variables which need to be declared as 'volatile'
 			-- (e.g. because their address is used).
+
+	used_separate_temp_variables: DS_ARRAYED_LIST [detachable ET_DYNAMIC_PRIMARY_TYPE]
+			-- Temporary variables currently in used by the current feature
+			-- (for SCOOP separate calls, when generating separate C functions)
+
+	free_separate_temp_variables: DS_ARRAYED_LIST [detachable ET_DYNAMIC_PRIMARY_TYPE]
+			-- Temporary variables declared for the current feature but
+			-- not currently used
+			-- (for SCOOP separate calls, when generating separate C functions)
+
+	frozen_separate_temp_variables: DS_ARRAYED_LIST [INTEGER]
+			-- Temporary variables currently marked as frozen (which means
+			-- that we need to keep them in their current used/free state);
+			-- 0 means not frozen, N means that it was been frozen N times.
+			-- (for SCOOP separate calls, when generating separate C functions)
+
+	volatile_separate_temp_variables: DS_ARRAYED_LIST [BOOLEAN]
+			-- Temporary variables which need to be declared as 'volatile'
+			-- (e.g. because their address is used).
+			-- (for SCOOP separate calls, when generating separate C functions)
 
 	temp_variable: ET_IDENTIFIER
 			-- Shared temporary variable, to be used in non-Eiffel features
@@ -45210,6 +45259,14 @@ invariant
 	frozen_temp_variables_count: frozen_temp_variables.count = used_temp_variables.count
 	volatile_temp_variables_not_void: volatile_temp_variables /= Void
 	volatile_temp_variables_count: volatile_temp_variables.count = used_temp_variables.count
+	used_separate_temp_variables_not_void: used_separate_temp_variables /= Void
+	used_separate_temp_variables_count: used_separate_temp_variables.count <= temp_variables.count
+	free_separate_temp_variables_not_void: free_separate_temp_variables /= Void
+	free_separate_temp_variables_count: free_separate_temp_variables.count = used_separate_temp_variables.count
+	frozen_separate_temp_variables_not_void: frozen_separate_temp_variables /= Void
+	frozen_separate_temp_variables_count: frozen_separate_temp_variables.count = used_separate_temp_variables.count
+	volatile_separate_temp_variables_not_void: volatile_separate_temp_variables /= Void
+	volatile_separate_temp_variables_count: volatile_separate_temp_variables.count = used_separate_temp_variables.count
 		-- Equality expressions.
 	unused_equality_expressions_not_void: unused_equality_expressions /= Void
 	no_void_unused_equality_expression: not unused_equality_expressions.has_void

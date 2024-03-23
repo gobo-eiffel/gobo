@@ -2641,9 +2641,12 @@ feature {NONE} -- Instruction validity
 			l_is_target_type_separate: BOOLEAN
 			l_formal_argument_index: INTEGER
 			l_target_named_type: ET_NAMED_TYPE
+			l_old_assigner_instruction: like current_assigner_instruction
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
+			l_old_assigner_instruction := current_assigner_instruction
+			current_assigner_instruction := an_instruction
 			l_formal_argument_index := 1
 			l_call := an_instruction.call
 			l_target_context := new_context (current_type)
@@ -2838,7 +2841,7 @@ feature {NONE} -- Instruction validity
 								-- Error: It's a separate call (qualified call with a target of separate type),
 								-- the actual argument has an expanded type (potentially, if it a formal generic
 								-- parameter, hence the test 'not is_type_reference' instead of just
-								-- 'is_is_type_expanded'), but it contains attributes of reference types which
+								-- 'is_type_expanded'), but it contains attributes of reference types which
 								-- are not separate.
 							set_fatal_error
 							if l_assigner_procedure /= Void then
@@ -2866,6 +2869,7 @@ feature {NONE} -- Instruction validity
 			end
 			free_context (l_source_context)
 			free_context (l_target_context)
+			current_assigner_instruction := l_old_assigner_instruction
 		end
 
 	check_assignment_validity (an_instruction: ET_ASSIGNMENT)
@@ -10091,6 +10095,8 @@ feature {NONE} -- Expression validity
 			l_name: ET_CALL_NAME
 			l_type: ET_TYPE
 			l_seed: INTEGER
+			l_is_target_separate: BOOLEAN
+			l_target_type: ET_NAMED_TYPE
 		do
 			has_fatal_error := False
 			l_name := a_call.name
@@ -10138,7 +10144,40 @@ feature {NONE} -- Expression validity
 			elseif not has_fatal_error then
 				l_type := a_class.formal_parameter_type (l_seed)
 				report_tuple_label_expression (a_call, a_context)
-				a_context.force_last (l_type)
+				if current_system.scoop_mode then
+					if a_call.target /= Void then
+						l_is_target_separate := not a_context.is_type_non_separate
+					end
+					a_context.force_last (l_type)
+					if l_is_target_separate then
+						if attached current_assigner_instruction as l_assigner_instruction and then l_assigner_instruction.call = a_call then
+							-- Do not report VUER validity errors for call part of assigner instructions
+							-- because this call will not be evaluated at runtime, and therefore there
+							-- is not risk of objects crossing SCOOP region boundaries.
+						elseif not a_context.is_type_reference and a_context.named_type.has_nested_non_separate_reference_attributes (a_context.root_context) then
+								-- Error: It's a separate call (qualified call with a target of separate type),
+								-- the result has an expanded type (potentially, if it a formal generic
+								-- parameter, hence the test 'not is_type_reference' instead of just
+								-- 'is_type_expanded'), but it contains attributes of reference types which
+								-- are not separate.
+							a_context.remove_last
+							l_target_type := a_context.named_type
+							a_context.force_last (l_type)
+							set_fatal_error
+							error_handler.report_vuer0b_error (current_class, current_class_impl, a_call.name, l_target_type, a_context.named_type)
+						end
+						if not l_type.is_type_separate (a_context.base_class) then
+								-- If the target of the call is separate, then the type of the call
+								-- is separate as well, even if the declared type of the query is not.
+								-- It is controlled as well because the target itself is supposed to
+								-- be controlled.
+							a_context.force_last (tokens.separate_type_modifier)
+							a_context.force_last (tokens.controlled_type_modifier)
+						end
+					end
+				else
+					a_context.force_last (l_type)
+				end
 			end
 		end
 
@@ -10177,12 +10216,12 @@ feature {NONE} -- Expression validity
 				end
 			end
 			l_type := a_query.type
+			l_class := a_context.base_class
 -- TODO: like argument (the following is just a workaround
 -- which works only in a limited number of cases, in particular
 -- for ANY.clone).
 			if attached {ET_LIKE_FEATURE} l_type as l_like and then l_like.is_like_argument then
 				if attached a_call.arguments as l_actuals and then l_actuals.count = 1 and then attached a_query.arguments as l_query_arguments then
-					l_class := a_context.base_class
 					l_formal_context := new_context (current_type)
 					l_formal_context.copy_type_context (a_context)
 					l_formal_context.force_last (l_query_arguments.formal_argument (1).type)
@@ -10206,13 +10245,28 @@ feature {NONE} -- Expression validity
 			end
 			a_context.force_last (l_type)
 			if current_system.scoop_mode then
-				if l_is_target_separate and not l_type.is_type_separate (a_context.base_class) then
-						-- If the target of the call is separate, then the type of the call
-						-- is separate as well, even if the declared type of the query is not.
-						-- It is controlled as well because the target itself is supposed to
-						-- be controlled.
-					a_context.force_last (tokens.separate_type_modifier)
-					a_context.force_last (tokens.controlled_type_modifier)
+				if l_is_target_separate then
+					if attached current_assigner_instruction as l_assigner_instruction and then l_assigner_instruction.call = a_call then
+						-- Do not report VUER validity errors for call part of assigner instructions
+						-- because this call will not be evaluated at runtime, and therefore there
+						-- is not risk of objects crossing SCOOP region boundaries.
+					elseif not a_context.is_type_reference and a_context.named_type.has_nested_non_separate_reference_attributes (a_context.root_context) then
+							-- Error: It's a separate call (qualified call with a target of separate type),
+							-- the result has an expanded type (potentially, if it a formal generic
+							-- parameter, hence the test 'not is_type_reference' instead of just
+							-- 'is_type_expanded'), but it contains attributes of reference types which
+							-- are not separate.
+						set_fatal_error
+						error_handler.report_vuer0a_error (current_class, current_class_impl, a_call.name, a_query, l_class, a_context.named_type)
+					end
+					if not l_type.is_type_separate (a_context.base_class) then
+							-- If the target of the call is separate, then the type of the call
+							-- is separate as well, even if the declared type of the query is not.
+							-- It is controlled as well because the target itself is supposed to
+							-- be controlled.
+						a_context.force_last (tokens.separate_type_modifier)
+						a_context.force_last (tokens.controlled_type_modifier)
+					end
 				end
 			end
 		end
@@ -11898,7 +11952,7 @@ feature {NONE} -- Expression validity
 									-- Error: It's a separate call (qualified call with a target of separate type),
 									-- the actual argument has an expanded type (potentially, if it a formal generic
 									-- parameter, hence the test 'not is_type_reference' instead of just
-									-- 'is_is_type_expanded'), but it contains attributes of reference types which
+									-- 'is_type_expanded'), but it contains attributes of reference types which
 									-- are not separate.
 								had_error := True
 								set_fatal_error
@@ -16787,6 +16841,9 @@ feature {NONE} -- Access
 
 	current_target_type: ET_TYPE_CONTEXT
 			-- Type of the target of expression being processed
+
+	current_assigner_instruction: detachable ET_ASSIGNER_INSTRUCTION
+			-- Assigner instruction currently being processed, if any
 
 feature {NONE} -- Object-tests
 

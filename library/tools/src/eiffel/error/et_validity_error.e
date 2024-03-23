@@ -308,6 +308,8 @@ create
 	make_vucr0h,
 	make_vucr0i,
 	make_vucr0j,
+	make_vuer0a,
+	make_vuer0b,
 	make_vuex1a,
 	make_vuex2a,
 	make_vuex2b,
@@ -13806,6 +13808,111 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = agent feature name
 		end
 
+	make_vuer0a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_query: ET_QUERY; a_target_class: ET_CLASS; a_result_type: ET_NAMED_TYPE)
+			-- Create a new VUER error: the result of the separate call `a_name', appearing in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself), has an expanded type,
+			-- but it contains (directly or indirectly) an attribute of reference type which is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_query_not_void: a_query /= Void
+			a_target_class_not_void: a_target_class /= Void
+			a_result_type_not_void: a_result_type /= Void
+			a_result_type_named_type: a_result_type.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vuer0a_template_code)
+			etl_code := vuer_etl_code
+			default_template := default_message_template (vuer0a_default_template)
+			create parameters.make_filled (empty_string, 1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_query.lower_name, 8)
+			parameters.put (a_target_class.upper_name, 9)
+			parameters.put (a_result_type.to_text, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call
+			-- dollar8: $8 = name of corresponding feature in class $9
+			-- dollar9: $9 = base class of target of the call
+			-- dollar10: $10 = type of result
+		end
+
+	make_vuer0b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target_type, a_label_type: ET_NAMED_TYPE)
+			-- Create a new VUER error: the result of the separate call `a_name', appearing in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself), has an expanded type,
+			-- but it contains (directly or indirectly) an attribute of reference type which is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_tuple_label: a_name.is_tuple_label
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_named_type: a_target_type.is_named_type
+			a_label_type_not_void: a_label_type /= Void
+			a_label_type_named_type: a_label_type.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vuer0b_template_code)
+			etl_code := vuer_etl_code
+			default_template := default_message_template (vuer0b_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_target_type.to_text, 8)
+			parameters.put (a_label_type.to_text, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = name of tuple label in type $9
+			-- dollar8: $8 = tuple type
+			-- dollar9: $9 = label type
+		end
+
 	make_vuex1a (a_class: ET_CLASS; a_name: ET_CALL_NAME)
 			-- Create a new VUEX-1 error: `a_name', appearing in an unqualified
 			-- call in `a_class', is not the final name of a feature
@@ -17958,6 +18065,8 @@ feature {NONE} -- Implementation
 	vucr0h_default_template: STRING = "static feature contains a call to non-static '$7'."
 	vucr0i_default_template: STRING = "static feature contains an inline agent."
 	vucr0j_default_template: STRING = "static feature contains an agent with an unqualified call to '$7'."
+	vuer0a_default_template: STRING = "the result of the separate call `$7' has an expanded type '$10', but it contains directly or indirectly attributes of reference types which are not separate."
+	vuer0b_default_template: STRING = "the type '$9' of the tuple label in the separate call `$7' is expanded, but it contains directly or indirectly attributes of reference types which are not separate."
 	vuex1a_default_template: STRING = "`$7' is not the final name of a feature in class $5."
 	vuex2a_default_template: STRING = "`$7' is not the final name of a feature in class $8."
 	vuex2b_default_template: STRING = "feature `$8' of class $9 is not exported to class $5."
@@ -18171,6 +18280,7 @@ feature {NONE} -- Implementation
 	vuar3g_etl_code: STRING = "VUAR-3G"
 	vuar4g_etl_code: STRING = "VUAR-4G"
 	vucr_etl_code: STRING = "VUCR"
+	vuer_etl_code: STRING = "VUER"
 	vuex1_etl_code: STRING = "VUEX-1"
 	vuex2_etl_code: STRING = "VUEX-2"
 	vuno3_etl_code: STRING = "VUNO-3"
@@ -18528,6 +18638,8 @@ feature {NONE} -- Implementation
 	vucr0h_template_code: STRING = "vucr0h"
 	vucr0i_template_code: STRING = "vucr0i"
 	vucr0j_template_code: STRING = "vucr0j"
+	vuer0a_template_code: STRING = "vuer0a"
+	vuer0b_template_code: STRING = "vuer0b"
 	vuex1a_template_code: STRING = "vuex1a"
 	vuex2a_template_code: STRING = "vuex2a"
 	vuex2b_template_code: STRING = "vuex2b"

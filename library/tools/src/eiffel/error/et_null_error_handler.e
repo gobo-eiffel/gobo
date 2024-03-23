@@ -150,6 +150,7 @@ inherit
 			reportable_vuar3g_error,
 			reportable_vuar4g_error,
 			reportable_vucr_error,
+			reportable_vuer_error,
 			reportable_vuex1_error,
 			reportable_vuex2_error,
 			reportable_vuno3_error,
@@ -1152,6 +1153,13 @@ feature -- Validity error status
 
 	reportable_vucr_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUCR error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vuer_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUER error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
