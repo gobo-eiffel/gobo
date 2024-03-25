@@ -1655,6 +1655,26 @@ feature {NONE} -- Feature validity
 				error_handler.report_vucr0b_error (current_class, a_feature)
 				had_error := True
 			end
+			if current_system.scoop_mode and then a_feature.is_once_per_process then
+				if l_type.is_type_reference (current_type) then
+					if not l_type.is_type_separate (current_type) then
+							-- Error: the reference type of a once-per-process function
+							-- should be separate.
+						set_fatal_error
+						error_handler.report_vffd11ga_error (current_class, current_class_impl, a_feature, l_type.named_type (current_type))
+						had_error := True
+					end
+				else
+						-- Error: the expanded type of a once-per-process function
+						-- should not contain (directly or indirectly) attributes of
+						-- reference types which are not separate.
+					if l_type.has_nested_non_separate_reference_attributes (current_type) then
+						set_fatal_error
+						error_handler.report_vffd11gb_error (current_class, current_class_impl, a_feature, l_type.named_type (current_type))
+						had_error := True
+					end
+				end
+			end
 			has_fatal_error := had_error or had_key_error
 		end
 

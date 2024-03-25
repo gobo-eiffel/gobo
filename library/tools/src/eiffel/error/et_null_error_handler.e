@@ -77,6 +77,7 @@ inherit
 			reportable_vfav5_error,
 			reportable_vffd4_error,
 			reportable_vffd7_error,
+			reportable_vffd11g_error,
 			reportable_vgcc1_error,
 			reportable_vgcc3_error,
 			reportable_vgcc5_error,
@@ -656,6 +657,13 @@ feature -- Validity error status
 
 	reportable_vffd7_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFFD-7 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vffd11g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VFFD-11G error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

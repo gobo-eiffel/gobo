@@ -1,0 +1,2 @@
+[VFFD-11G] class AA (27,2): the result type '[attached] STRING' of the once-per-process function `f' is a reference type, but it is not separate.
+----

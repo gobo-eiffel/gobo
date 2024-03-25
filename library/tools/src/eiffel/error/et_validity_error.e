@@ -158,6 +158,8 @@ create
 	make_vffd4a,
 	make_vffd7a,
 	make_vffd7b,
+	make_vffd11ga,
+	make_vffd11gb,
 	make_vgcc1a,
 	make_vgcc3a,
 	make_vgcc5a,
@@ -6751,6 +6753,103 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name
+		end
+
+	make_vffd11ga (a_class, a_class_impl: ET_CLASS; a_once_function: ET_ONCE_FUNCTION; a_result_type: ET_NAMED_TYPE)
+			-- Create a new VFFD-11G error: the result type of the once-per-process function declared in
+			-- `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself),
+			-- is a reference type but is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_once_function_not_void: a_once_function /= Void
+			once_per_process: a_once_function.is_once_per_process
+			a_result_type_not_void: a_result_type /= Void
+			a_result_type_named_type: a_result_type.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_once_function.name.position
+			code := template_code (vffd11ga_template_code)
+			etl_code := vffd11g_etl_code
+			default_template := default_message_template (vffd11ga_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_once_function.lower_name, 7)
+			parameters.put (a_result_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = name of once function
+			-- dollar8: $8 = type of result
+		end
+
+	make_vffd11gb (a_class, a_class_impl: ET_CLASS; a_once_function: ET_ONCE_FUNCTION; a_result_type: ET_NAMED_TYPE)
+			-- Create a new VFFD-11G error: the result type of the once-per-process function declared in
+			-- `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself),
+			-- is an expanded type but it contains (directly or indirectly) an attribute of reference
+			-- type which is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_once_function_not_void: a_once_function /= Void
+			once_per_process: a_once_function.is_once_per_process
+			a_result_type_not_void: a_result_type /= Void
+			a_result_type_named_type: a_result_type.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_once_function.name.position
+			code := template_code (vffd11gb_template_code)
+			etl_code := vffd11g_etl_code
+			default_template := default_message_template (vffd11gb_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_once_function.lower_name, 7)
+			parameters.put (a_result_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = name of once function
+			-- dollar8: $8 = type of result
 		end
 
 	make_vgcc1a (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_COMPONENT; a_target: ET_CLASS)
@@ -17915,6 +18014,8 @@ feature {NONE} -- Implementation
 	vffd4a_default_template: STRING = "deferred feature `$7' is marked as frozen."
 	vffd7a_default_template: STRING = "feature `$7' is a once funtion but its type contains an anchored type."
 	vffd7b_default_template: STRING = "feature `$7' is a once funtion but its type contains a formal generic parameter."
+	vffd11ga_default_template: STRING = "the result type '$8' of the once-per-process function `$7' is a reference type, but it is not separate."
+	vffd11gb_default_template: STRING = "the result type '$8' of the once-per-process function `$7' is an expanded type, but it contains directly or indirectly attributes of reference types which are not separate."
 	vgcc1a_default_template: STRING = "creation with no Creation_call part, but $7 is deferred."
 	vgcc3a_default_template: STRING = "explicit creation type '$7' does not conform to target entity type '$8'."
 	vgcc5a_default_template: STRING = "creation with no Creation_call part, but $7 has a Creators part."
@@ -18065,8 +18166,8 @@ feature {NONE} -- Implementation
 	vucr0h_default_template: STRING = "static feature contains a call to non-static '$7'."
 	vucr0i_default_template: STRING = "static feature contains an inline agent."
 	vucr0j_default_template: STRING = "static feature contains an agent with an unqualified call to '$7'."
-	vuer0a_default_template: STRING = "the result of the separate call `$7' has an expanded type '$10', but it contains directly or indirectly attributes of reference types which are not separate."
-	vuer0b_default_template: STRING = "the type '$9' of the tuple label in the separate call `$7' is expanded, but it contains directly or indirectly attributes of reference types which are not separate."
+	vuer0a_default_template: STRING = "the result type '$10' of the separate call `$7' is an expanded type, but it contains directly or indirectly attributes of reference types which are not separate."
+	vuer0b_default_template: STRING = "the type '$9' of the tuple label of the separate call `$7' is expanded, but it contains directly or indirectly attributes of reference types which are not separate."
 	vuex1a_default_template: STRING = "`$7' is not the final name of a feature in class $5."
 	vuex2a_default_template: STRING = "`$7' is not the final name of a feature in class $8."
 	vuex2b_default_template: STRING = "feature `$8' of class $9 is not exported to class $5."
@@ -18208,6 +18309,7 @@ feature {NONE} -- Implementation
 	vfav5_etl_code: STRING = "VFAV-5"
 	vffd4_etl_code: STRING = "VFFD-4"
 	vffd7_etl_code: STRING = "VFFD-7"
+	vffd11g_etl_code: STRING = "VFFD-11G"
 	vhpr1_etl_code: STRING = "VHPR-1"
 	vhpr2_etl_code: STRING = "VHPR-2"
 	vgcc1_etl_code: STRING = "VGCC-1"
@@ -18485,6 +18587,8 @@ feature {NONE} -- Implementation
 	vffd6a_template_code: STRING = "vffd6a"
 	vffd7a_template_code: STRING = "vffd7a"
 	vffd7b_template_code: STRING = "vffd7b"
+	vffd11ga_template_code: STRING = "vffd11ga"
+	vffd11gb_template_code: STRING = "vffd11gb"
 	vgcc1a_template_code: STRING = "vgcc1a"
 	vgcc3a_template_code: STRING = "vgcc3a"
 	vgcc5a_template_code: STRING = "vgcc5a"
