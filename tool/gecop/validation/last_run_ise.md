@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     446 tests
-    # FAILED:     137 tests
+    # Passed:     462 tests
+    # FAILED:     144 tests
     # Aborted:    0 test
-    # Total:      583 tests
+    # Total:      606 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo1/test\_bar\_2](definition/difo1/test\_bar\_2)\] test\_failed</br>
@@ -108,6 +108,9 @@ FAIL:  \[[validity/vfav1/test8](validity/vfav1/test8)\] test\_failed</br>
 FAIL:  \[[validity/vfav1/test9](validity/vfav1/test9)\] test\_failed</br>
 FAIL:  \[[validity/vfav2/test11](validity/vfav2/test11)\] test\_failed</br>
 FAIL:  \[[validity/vfav3/test11](validity/vfav3/test11)\] test\_failed</br>
+FAIL:  \[[validity/vffd11g/test\_once\_per\_process\_expanded\_1](validity/vffd11g/test\_once\_per\_process\_expanded\_1)\] test\_failed</br>
+FAIL:  \[[validity/vffd11g/test\_once\_per\_process\_expanded\_2](validity/vffd11g/test\_once\_per\_process\_expanded\_2)\] test\_failed</br>
+FAIL:  \[[validity/vffd11g/test\_once\_per\_process\_expanded\_4](validity/vffd11g/test\_once\_per\_process\_expanded\_4)\] test\_failed</br>
 FAIL:  \[[validity/vggc3/test2](validity/vggc3/test2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_agent\_1](validity/vgmc/test\_agent\_1)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_agent\_2](validity/vgmc/test\_agent\_2)\] test\_failed</br>
@@ -143,6 +146,10 @@ FAIL:  \[[validity/vuar3g/test\_generic\_parameter\_1](validity/vuar3g/test\_gen
 FAIL:  \[[validity/vuar3g/test\_generic\_parameter\_2](validity/vuar3g/test\_generic\_parameter\_2)\] test\_failed</br>
 FAIL:  \[[validity/vuar4g/test\_generic\_parameter\_1](validity/vuar4g/test\_generic\_parameter\_1)\] test\_failed</br>
 FAIL:  \[[validity/vuar4g/test\_generic\_parameter\_2](validity/vuar4g/test\_generic\_parameter\_2)\] test\_failed</br>
+FAIL:  \[[validity/vuar4g/test\_procedure\_6](validity/vuar4g/test\_procedure\_6)\] test\_failed</br>
+FAIL:  \[[validity/vuer/test\_function\_4](validity/vuer/test\_function\_4)\] test\_failed</br>
+FAIL:  \[[validity/vuer/test\_generic\_parameter\_1](validity/vuer/test\_generic\_parameter\_1)\] test\_failed</br>
+FAIL:  \[[validity/vuer/test\_generic\_parameter\_2](validity/vuer/test\_generic\_parameter\_2)\] test\_failed</br>
 FAIL:  \[[validity/vuta4g/test\_call\_chain\_5](validity/vuta4g/test\_call\_chain\_5)\] test\_failed</br>
 FAIL:  \[[validity/vuta4g/test\_call\_chain\_6](validity/vuta4g/test\_call\_chain\_6)\] test\_failed</br>
 FAIL:  \[[validity/vuta4g/test\_if\_expression\_4](validity/vuta4g/test\_if\_expression\_4)\] test\_failed</br>

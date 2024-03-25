@@ -77,6 +77,7 @@ inherit
 			reportable_vfav5_error,
 			reportable_vffd4_error,
 			reportable_vffd7_error,
+			reportable_vffd11g_error,
 			reportable_vgcc1_error,
 			reportable_vgcc3_error,
 			reportable_vgcc5_error,
@@ -150,6 +151,7 @@ inherit
 			reportable_vuar3g_error,
 			reportable_vuar4g_error,
 			reportable_vucr_error,
+			reportable_vuer_error,
 			reportable_vuex1_error,
 			reportable_vuex2_error,
 			reportable_vuno3_error,
@@ -660,6 +662,13 @@ feature -- Validity error status
 			Result := False
 		end
 
+	reportable_vffd11g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VFFD-11G error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
 	reportable_vgcc1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VGCC-1 error be reported when it
 			-- appears in `a_class'?
@@ -1152,6 +1161,13 @@ feature -- Validity error status
 
 	reportable_vucr_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUCR error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vuer_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUER error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
