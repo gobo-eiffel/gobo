@@ -1,2 +1,2 @@
-[VUER] class AA (23,11): the type '[attached] BB' of the tuple label in the separate call `b' is expanded, but it contains directly or indirectly attributes of reference types which are not separate.
+[VUER] class AA (23,11): the type '[attached] BB' of the tuple label of the separate call `b' is expanded, but it contains directly or indirectly attributes of reference types which are not separate.
 ----

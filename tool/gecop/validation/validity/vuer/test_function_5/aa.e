@@ -24,10 +24,10 @@ feature
 		do
 			a := b.f
 			if not attached {ANY} a as aa then
-				print ("Argument not in same region as Current%N")
+				print ("Result not in same region as Current%N")
 				print ("Failed")
 			elseif region_id (Current) /= region_id (aa) then
-				print ("Region id of Current /= region id of argument%N")
+				print ("Region id of Current /= region id of result%N")
 				print ("Failed")
 			else
 				print ("Passed")
