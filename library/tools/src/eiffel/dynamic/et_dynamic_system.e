@@ -135,6 +135,9 @@ feature -- Status report
 			-- Should the whole content of classes to be checked (even
 			-- features not reachable from the root creation procedure)?
 
+	has_separate_creation: BOOLEAN
+			-- Is there some separate creations in the current system?
+
 	all_attributes_used: BOOLEAN
 			-- Should all attributes of all types are marked as used
 			-- and hence included in the generated run-time instances?
@@ -163,6 +166,14 @@ feature -- Status setting
 			full_class_checking := b
 		ensure
 			full_class_checking_set: full_class_checking = b
+		end
+
+	set_has_separate_creation (b: BOOLEAN)
+			-- Set `has_separate_creation' to `b'.
+		do
+			has_separate_creation := b
+		ensure
+			has_separate_creation_set: has_separate_creation = b
 		end
 
 	use_all_attributes

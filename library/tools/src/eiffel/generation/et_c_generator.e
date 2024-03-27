@@ -368,7 +368,14 @@ feature -- Compilation options
 			-- Does the generated application use threads?
 			-- True in multithreaded or SCOOP modes.
 		do
-			Result := multithreaded_mode or scoop_mode
+			Result := multithreaded_mode or use_scoop
+		end
+
+	use_scoop: BOOLEAN
+			-- Should the generated application use SCOOP?
+			-- It needs to be SCOOP-capable and to have some separate creations.
+		do
+			Result := scoop_mode and current_dynamic_system.has_separate_creation
 		end
 
 	check_for_void_target_mode: BOOLEAN
@@ -1000,7 +1007,7 @@ feature {NONE} -- Compilation script generation
 				if use_threads then
 					l_c_config_parser.define_value ("True", c_ge_use_threads)
 				end
-				if scoop_mode then
+				if use_scoop then
 					l_c_config_parser.define_value ("True", c_ge_use_scoop)
 				end
 				l_c_config_parser.parse_file (l_file)
@@ -1198,7 +1205,7 @@ feature {NONE} -- Compilation script generation
 			if use_threads then
 				l_common_defines.force_last (c_ge_use_threads)
 			end
-			if scoop_mode then
+			if use_scoop then
 				l_common_defines.force_last (c_ge_use_scoop)
 			end
 			l_common_includes.force_last ("ge_eiffel.h")
@@ -1332,7 +1339,7 @@ feature {NONE} -- C code Generation
 					header_file.put_line (c_ge_use_threads)
 					l_newline_needed_in_header_file := True
 				end
-				if scoop_mode then
+				if use_scoop then
 					header_file.put_string (c_define)
 					header_file.put_character (' ')
 					header_file.put_line (c_ge_use_scoop)
@@ -1363,7 +1370,7 @@ feature {NONE} -- C code Generation
 					include_runtime_header_file ("ge_thread.h", True, header_file)
 					header_file.put_new_line
 				end
-				if scoop_mode then
+				if use_scoop then
 					include_runtime_header_file ("ge_scoop.h", True, header_file)
 					header_file.put_new_line
 				end
@@ -1790,7 +1797,7 @@ feature {NONE} -- Feature generation
 				current_equalities.wipe_out
 				free_inlined_operands
 				free_call_contexts
-				if scoop_mode then
+				if use_scoop then
 						-- Reset the number of separate calls appearing in `a_feature'.
 					current_separate_call_count := 0
 				end
@@ -2654,7 +2661,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				--
 				-- Declaration of variables.
 				--
-			if scoop_mode then
+			if use_scoop then
 					-- Declaration of SCOOP sessions to register separate calls.
 				l_arguments := a_feature.arguments
 				if l_arguments /= Void then
@@ -7008,7 +7015,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					end
 				end
 			end
-			if scoop_mode then
+			if use_scoop then
 					-- Declaration of SCOOP sessions to register separate calls,
 					-- even for those of inline separate instructions contained
 					-- in `a_feature'.
@@ -8159,7 +8166,7 @@ feature {NONE} -- Instruction generation
 					current_file.put_string (c_else)
 					current_file.put_character (' ')
 				end
-				l_same_scoop_region := scoop_mode and then (not l_target_type.is_separate and l_source_type.is_separate)
+				l_same_scoop_region := use_scoop and then (not l_target_type.is_separate and l_source_type.is_separate)
 				if l_same_scoop_region then
 					print_indentation
 					current_file.put_string (c_if)
@@ -8513,7 +8520,7 @@ feature {NONE} -- Instruction generation
 				print_indentation
 				print_writable (l_target)
 				print_assign_to
-				if scoop_mode and l_dynamic_type.is_separate then
+				if use_scoop and l_dynamic_type.is_separate then
 					print_adapted_separate_creation_procedure_call (an_instruction, l_dynamic_procedure, l_dynamic_primary_type, l_static_primary_type)
 					l_is_separate_call := True
 				else
@@ -8684,7 +8691,7 @@ feature {NONE} -- Instruction generation
 				i := i + 1
 			end
 			if attached a_instruction.compound as l_compound then
-				if scoop_mode then
+				if use_scoop then
 						-- Start the current SCOOP sessions.
 					if nb > 1 then
 						print_indentation
@@ -8768,7 +8775,7 @@ feature {NONE} -- Instruction generation
 					end
 				end
 				print_compound (l_compound)
-				if scoop_mode then
+				if use_scoop then
 						-- Exit from the current SCOOP sessions.
 					from i := 1 until i > nb loop
 						l_argument := l_arguments.argument (i)
@@ -9368,7 +9375,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 				-- tuple as argument. We have a special treatment in that case
 				-- to avoid having to create the manifest tuple when possible.
 			if
-				not (scoop_mode and l_target_type.is_separate) and then
+				not (use_scoop and l_target_type.is_separate) and then
 				not a_call.is_tuple_label and then
 				l_seed = current_system.routine_call_seed and then
 				not a_call.is_call_agent
@@ -9415,7 +9422,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 				nb := nb + 1
 				fill_call_operands (nb)
 			end
-			if scoop_mode and a_call /= separate_call_instruction and l_target_type.is_separate then
+			if use_scoop and a_call /= separate_call_instruction and l_target_type.is_separate then
 				print_separate_qualified_call_instruction (a_call)
 				l_is_separate_call := True
 			else
@@ -9584,7 +9591,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 		require
 			a_call_not_void: a_call /= Void
 			call_operands_not_empty: not call_operands.is_empty
-			scoop_mode: scoop_mode
+			use_scoop: use_scoop
 		local
 			i, nb: INTEGER
 			l_separate_arguments: like separate_arguments
@@ -9876,7 +9883,7 @@ feature {NONE} -- Procedure call generation
 			a_target_type_not_void: a_target_type /= Void
 			a_static_type_not_void: a_static_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
-			scoop_mode: scoop_mode
+			use_scoop: use_scoop
 		do
 			print_adapted_expression_with_agent (agent print_separate_creation_procedure_call (a_separate_call, a_feature, a_target_type), a_target_type, a_static_type, False)
 		end
@@ -9920,7 +9927,7 @@ feature {NONE} -- Procedure call generation
 			a_feature_is_separate_creation: a_feature.is_separate_creation
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
-			scoop_mode: scoop_mode
+			use_scoop: use_scoop
 		local
 			i, nb: INTEGER
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
@@ -11269,7 +11276,7 @@ feature {NONE} -- Expression generation
 		require
 			a_target_not_void: a_target /= Void
 			a_target_type_not_void: a_target_type /= Void
-			scoop_mode: scoop_mode
+			use_scoop: use_scoop
 		do
 			if a_target_type.is_expanded then
 				current_file.put_character ('(')
@@ -11387,7 +11394,7 @@ feature {NONE} -- Expression generation
 		require
 			a_target_not_void: a_target /= Void
 			a_target_type_not_void: a_target_type /= Void
-			scoop_mode: scoop_mode
+			use_scoop: use_scoop
 		do
 			current_file.put_character ('(')
 			current_file.put_character ('(')
@@ -11728,7 +11735,7 @@ feature {NONE} -- Expression generation
 					-- error should have already been reported.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif scoop_mode and l_target_type.is_separate then
+			elseif use_scoop and l_target_type.is_separate then
 				print_separate_creation_procedure_call (an_expression, l_procedure, l_target_primary_type)
 				l_is_separate_call := True
 			else
@@ -13670,7 +13677,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					current_file.put_character ('?')
 					current_file.put_character ('(')
 				end
-				l_same_scoop_region := scoop_mode and then l_type /= Void and then (not l_target_type.is_separate and l_source_type.is_separate)
+				l_same_scoop_region := use_scoop and then l_type /= Void and then (not l_target_type.is_separate and l_source_type.is_separate)
 				if l_same_scoop_region then
 					current_file.put_character ('(')
 					print_attribute_region_access (call_operands.first, l_target_primary_type, False)
@@ -14223,7 +14230,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					-- tuple as argument. We have a special treatment in that case
 					-- to avoid having to create the manifest tuple when possible.
 				if
-					not (scoop_mode and l_target_type.is_separate) and then
+					not (use_scoop and l_target_type.is_separate) and then
 					not a_call.is_tuple_label and then
 					l_seed = current_system.function_item_seed and then
 					not a_call.is_call_agent
@@ -14270,7 +14277,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					nb := nb + 1
 					fill_call_operands (nb)
 				end
-				l_is_separate_call := scoop_mode and a_call /= separate_call_expression and l_target_type.is_separate
+				l_is_separate_call := use_scoop and a_call /= separate_call_expression and l_target_type.is_separate
 				nb2 := l_target_type_set.count
 				if nb2 = 1 and not l_is_separate_call and not l_name.is_tuple_label then
 						-- We can inline the call only if it's not a separate call,
@@ -14445,7 +14452,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 		require
 			a_call_not_void: a_call /= Void
 			call_operands_not_empty: not call_operands.is_empty
-			scoop_mode: scoop_mode
+			use_scoop: use_scoop
 		local
 			i, nb: INTEGER
 			l_separate_arguments: like separate_arguments
@@ -18729,7 +18736,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			l_arguments := an_agent.arguments
 			l_result := an_agent.implicit_result
 			l_target_type := dynamic_type_set (agent_target).static_type
-			if scoop_mode and l_target_type.is_separate then
+			if use_scoop and l_target_type.is_separate then
 				l_target_type_is_separate := True
 				print_indentation
 				current_file.put_string (c_ge_scoop_session)
@@ -21011,7 +21018,7 @@ feature {NONE} -- Separate calls
 		require
 			a_separate_call_not_void: a_separate_call /= Void
 			a_closure_not_void: a_closure /= Void
-			scoop_mode: scoop_mode
+			use_scoop: use_scoop
 		local
 			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_actual_argument: ET_EXPRESSION
@@ -21899,7 +21906,7 @@ feature {NONE} -- Separate calls
 			-- `header_file'.
 		require
 			a_separate_call_not_void: a_separate_call /= Void
-			scoop_mode: scoop_mode
+			use_scoop: use_scoop
 		local
 			l_index: INTEGER
 			l_result_type: detachable ET_DYNAMIC_PRIMARY_TYPE
@@ -22132,7 +22139,7 @@ feature {NONE} -- Separate calls
 			-- `header_file'.
 		require
 			a_separate_call_not_void: a_separate_call /= Void
-			scoop_mode: scoop_mode
+			use_scoop: use_scoop
 		local
 			l_result_type: detachable ET_DYNAMIC_PRIMARY_TYPE
 			l_argument: ET_EXPRESSION
@@ -22386,7 +22393,7 @@ feature {NONE} -- Separate calls
 			-- in `current_feature`, to `current_file'.
 		require
 			a_separate_call_not_void: a_separate_call /= Void
-			scoop_mode: scoop_mode
+			use_scoop: use_scoop
 		local
 			l_argument: ET_EXPRESSION
 			j, nb: INTEGER
@@ -26115,7 +26122,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			if scoop_mode then
+			if use_scoop then
 				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_builtin_routine_call_call (a_feature, a_target_type, a_check_void_target)
@@ -30013,7 +30020,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			if scoop_mode then
+			if use_scoop then
 				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_builtin_routine_call_call (a_feature, a_target_type, a_check_void_target)
@@ -33497,7 +33504,7 @@ feature {NONE} -- C function generation
 					print_indentation
 					current_file.put_line ("GE_init_thread(ac);")
 				end
-				if scoop_mode then
+				if use_scoop then
 					print_indentation
 					current_file.put_string (c_ge_init_scoop)
 					current_file.put_character ('(')
@@ -33536,7 +33543,7 @@ feature {NONE} -- C function generation
 					print_show_console_call
 					current_file.put_line (c_endif)
 				end
-				if scoop_mode then
+				if use_scoop then
 					print_indentation
 					current_file.put_string (c_ge_increment_scoop_sessions_count)
 					current_file.put_character ('(')
@@ -33560,7 +33567,7 @@ feature {NONE} -- C function generation
 				extra_dynamic_type_sets.remove_last
 				current_file.put_character (';')
 				current_file.put_new_line
-				if scoop_mode then
+				if use_scoop then
 					print_indentation
 					current_file.put_string (c_ge_decrement_scoop_sessions_count)
 					current_file.put_character ('(')
@@ -33700,7 +33707,7 @@ feature {NONE} -- C function generation
 					print_default_name (l_area_type, current_file)
 					current_file.put_character (';')
 					current_file.put_new_line
-					if scoop_mode then
+					if use_scoop then
 							-- Set 'region' of 'area'.
 						print_indentation
 						print_attribute_region_access (l_temp, l_area_type, False)
@@ -33906,7 +33913,7 @@ feature {NONE} -- C function generation
 					print_default_name (l_area_type, current_file)
 					current_file.put_character (';')
 					current_file.put_new_line
-					if scoop_mode then
+					if use_scoop then
 							-- Set 'region' of 'area'.
 						print_indentation
 						print_attribute_region_access (l_temp, l_area_type, False)
@@ -34112,7 +34119,7 @@ feature {NONE} -- C function generation
 					print_default_name (l_area_type, current_file)
 					current_file.put_character (';')
 					current_file.put_new_line
-					if scoop_mode then
+					if use_scoop then
 							-- Set 'region' of 'area'.
 						print_indentation
 						print_attribute_region_access (l_temp, l_area_type, False)
@@ -34318,7 +34325,7 @@ feature {NONE} -- C function generation
 					print_default_name (l_area_type, current_file)
 					current_file.put_character (';')
 					current_file.put_new_line
-					if scoop_mode then
+					if use_scoop then
 							-- Set 'region' of 'area'.
 						print_indentation
 						print_attribute_region_access (l_temp, l_area_type, False)
@@ -34536,7 +34543,7 @@ feature {NONE} -- C function generation
 				print_default_name (l_special_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
-				if scoop_mode then
+				if use_scoop then
 						-- Set 'region' of 'area'.
 					print_indentation
 					print_attribute_region_access (l_temp, l_special_type, False)
@@ -35028,7 +35035,7 @@ feature {NONE} -- C function generation
 			print_assign_to
 			current_file.put_character ('0')
 			print_semicolon_newline
-			if scoop_mode then
+			if use_scoop then
 					-- Set 'region'.
 				print_indentation
 				print_boxed_attribute_region_access (tokens.result_keyword, a_type, False)
@@ -35148,7 +35155,7 @@ feature {NONE} -- C function generation
 			print_assign_to
 			current_file.put_character ('0')
 			print_semicolon_newline
-			if scoop_mode then
+			if use_scoop then
 					-- Set 'region'.
 				print_indentation
 				print_boxed_attribute_region_access (tokens.result_keyword, a_type, False)
@@ -35747,7 +35754,7 @@ feature {NONE} -- Memory allocation
 			print_default_name (a_type, current_file)
 			current_file.put_character (';')
 			current_file.put_new_line
-			if scoop_mode then
+			if use_scoop then
 					-- Set SCOOP region.
 				print_indentation
 				print_attribute_region_access (tokens.result_keyword, a_type, False)
@@ -37332,7 +37339,7 @@ feature {NONE} -- Inlining
 				Result := False
 			elseif not are_inlinable_call_operands (a_feature, a_target_type) then
 				Result := False
-			elseif scoop_mode and then a_feature.has_separate_argument then
+			elseif use_scoop and then a_feature.has_separate_argument then
 				Result := False
 			elseif not attached {ET_DO_PROCEDURE} a_feature.static_feature as l_do_procedure then
 				Result := False
@@ -37376,7 +37383,7 @@ feature {NONE} -- Inlining
 				Result := False
 			elseif not are_inlinable_call_operands (a_feature, a_target_type) then
 				Result := False
-			elseif scoop_mode and then a_feature.has_separate_argument then
+			elseif use_scoop and then a_feature.has_separate_argument then
 				Result := False
 			elseif not attached {ET_DO_FUNCTION} a_feature.static_feature as l_do_function then
 				Result := False
@@ -38320,7 +38327,7 @@ feature {NONE} -- Type generation
 					print_attribute_flags_name (a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_new_line
-					if scoop_mode then
+					if use_scoop then
 						a_file.put_character ('%T')
 						a_file.put_string (c_ge_scoop_region)
 						a_file.put_character ('*')
@@ -38476,7 +38483,7 @@ feature {NONE} -- Type generation
 				print_attribute_flags_name (a_type, a_file)
 				a_file.put_character (';')
 				a_file.put_new_line
-				if scoop_mode then
+				if use_scoop then
 					a_file.put_character ('%T')
 					a_file.put_string (c_ge_scoop_region)
 					a_file.put_character ('*')
@@ -39669,7 +39676,7 @@ feature {NONE} -- Default initialization values generation
 						-- Flags.
 					a_file.put_character (',')
 					a_file.put_character ('0')
-					if scoop_mode then
+					if use_scoop then
 							-- SCOOP region.
 						a_file.put_character (',')
 						a_file.put_character ('0')
@@ -40004,7 +40011,7 @@ feature {NONE} -- Feature name generation
 			a_type_not_void: a_type /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
-			scoop_mode: scoop_mode
+			use_scoop: use_scoop
 		do
 			if short_names then
 				a_file.put_string (c_region)
@@ -40619,7 +40626,7 @@ feature {NONE} -- Feature name generation
 			a_type_not_void: a_type /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
-			scoop_mode: scoop_mode
+			use_scoop: use_scoop
 		do
 			if in_static_feature then
 				print_static_routine_name (a_routine, a_type, a_file)
@@ -40638,7 +40645,7 @@ feature {NONE} -- Feature name generation
 			a_type_not_void: a_type /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
-			scoop_mode: scoop_mode
+			use_scoop: use_scoop
 		do
 			if in_static_feature then
 				print_static_routine_name (a_routine, a_type, a_file)
@@ -40657,7 +40664,7 @@ feature {NONE} -- Feature name generation
 			a_type_not_void: a_type /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
-			scoop_mode: scoop_mode
+			use_scoop: use_scoop
 		do
 			if in_static_feature then
 				print_static_routine_name (a_routine, a_type, a_file)
@@ -40676,7 +40683,7 @@ feature {NONE} -- Feature name generation
 			a_type_not_void: a_type /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
-			scoop_mode: scoop_mode
+			use_scoop: use_scoop
 		do
 			if in_static_feature then
 				print_static_routine_name (a_routine, a_type, a_file)
@@ -41743,7 +41750,7 @@ feature {NONE} -- Include files
 					l_c_filename := "eif_retrieve.c"
 				elseif a_filename.same_string ("eif_scoop.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
-					if scoop_mode then
+					if use_scoop then
 						include_runtime_header_file ("ge_scoop.h", a_force, a_file)
 					end
 				elseif a_filename.same_string ("eif_sig.h") then
@@ -41941,7 +41948,7 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_gc.h", False, a_header_file)
 					include_runtime_header_file ("ge_once.h", False, a_header_file)
 					include_runtime_header_file ("ge_time.h", False, a_header_file)
-					if scoop_mode then
+					if use_scoop then
 						include_runtime_header_file ("ge_scoop.h", False, a_header_file)
 					end
 				elseif a_filename.same_string ("ge_types.c") then
