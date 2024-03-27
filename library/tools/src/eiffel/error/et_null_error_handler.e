@@ -26,6 +26,7 @@ inherit
 			reportable_gvsrc4_error,
 			reportable_gvsrc5_error,
 			reportable_gvsrc6_error,
+			reportable_v1ea1g_error,
 			reportable_v1se1g_error,
 			reportable_v1se2g_error,
 			reportable_v1se3g_error,
@@ -149,9 +150,7 @@ inherit
 			reportable_vuar1_error,
 			reportable_vuar2_error,
 			reportable_vuar3g_error,
-			reportable_vuar4g_error,
 			reportable_vucr_error,
-			reportable_vuer_error,
 			reportable_vuex1_error,
 			reportable_vuex2_error,
 			reportable_vuno3_error,
@@ -304,6 +303,13 @@ feature -- System error status
 		end
 
 feature -- Validity error status
+
+	reportable_v1ea1g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a V1EA-1G error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
 
 	reportable_v1se1g_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a V1SE-1G error be reported when it
@@ -1152,22 +1158,8 @@ feature -- Validity error status
 			Result := False
 		end
 
-	reportable_vuar4g_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VUAR-4G error be reported when it
-			-- appears in `a_class'?
-		do
-			Result := False
-		end
-
 	reportable_vucr_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUCR error be reported when it
-			-- appears in `a_class'?
-		do
-			Result := False
-		end
-
-	reportable_vuer_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VUER error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

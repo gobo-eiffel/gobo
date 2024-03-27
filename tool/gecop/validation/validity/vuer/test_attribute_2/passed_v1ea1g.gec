@@ -1,0 +1,2 @@
+[V1EA-1G] class DD (9,2): the type 'detachable STRING' of the attribute `name' of the expanded class `DD' is a reference type, but it is not separate.
+----

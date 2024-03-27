@@ -24,6 +24,10 @@ inherit
 create
 
 	make,
+	make_v1ea1ga,
+	make_v1ea1gb,
+	make_v1ea1gc,
+	make_v1ea1gd,
 	make_v1se1ga,
 	make_v1se2ga,
 	make_v1se2gb,
@@ -159,7 +163,6 @@ create
 	make_vffd7a,
 	make_vffd7b,
 	make_vffd11ga,
-	make_vffd11gb,
 	make_vgcc1a,
 	make_vgcc3a,
 	make_vgcc5a,
@@ -298,8 +301,6 @@ create
 	make_vuar2b,
 	make_vuar3ga,
 	make_vuar3gb,
-	make_vuar4ga,
-	make_vuar4gb,
 	make_vucr0a,
 	make_vucr0b,
 	make_vucr0c,
@@ -310,8 +311,6 @@ create
 	make_vucr0h,
 	make_vucr0i,
 	make_vucr0j,
-	make_vuer0a,
-	make_vuer0b,
 	make_vuex1a,
 	make_vuex2a,
 	make_vuex2b,
@@ -435,6 +434,198 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
+		end
+
+	make_v1ea1ga (a_class, a_class_impl: ET_CLASS; a_attribute: ET_ATTRIBUTE; a_type: ET_NAMED_TYPE)
+			-- Create a new V1EA-1G error: the type `a_type' of the attribute `a_attribute' declared in
+			-- `a_class_impl' and viewed from one of its expanded descendants `a_class' (possibly itself),
+			-- is a reference type, but is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_is_expanded: a_class.is_expanded
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			a_type_not_void: a_type /= Void
+			a_type_named_type: a_type.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_attribute.name.position
+			code := template_code (v1ea1ga_template_code)
+			etl_code := v1ea1g_etl_code
+			default_template := default_message_template (v1ea1ga_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_attribute.lower_name, 7)
+			parameters.put (a_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = name of attribute
+			-- dollar8: $8 = type of attribute
+		end
+
+	make_v1ea1gb (a_class, a_class_impl: ET_CLASS; a_attribute: ET_ATTRIBUTE; a_type: ET_NAMED_TYPE)
+			-- Create a new V1EA-1G error: the type `a_type' of the attribute `a_attribute' declared in
+			-- `a_class_impl' and viewed from one of its expanded descendants `a_class' (possibly itself),
+			-- may be a reference type, but is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_is_expanded: a_class.is_expanded
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			a_type_not_void: a_type /= Void
+			a_type_named_type: a_type.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_attribute.name.position
+			code := template_code (v1ea1gb_template_code)
+			etl_code := v1ea1g_etl_code
+			default_template := default_message_template (v1ea1gb_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_attribute.lower_name, 7)
+			parameters.put (a_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = name of attribute
+			-- dollar8: $8 = type of attribute
+		end
+
+	make_v1ea1gc (a_class, a_class_impl: ET_CLASS; a_attribute: ET_ATTRIBUTE; a_type: ET_NAMED_TYPE)
+			-- Create a new V1EA-1G error: the type `a_type' of the attribute `a_attribute' declared in
+			-- `a_class_impl' and viewed from one of its expanded descendants `a_class' (possibly itself),
+			-- is a reference type, but may not be separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_is_expanded: a_class.is_expanded
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			a_type_not_void: a_type /= Void
+			a_type_named_type: a_type.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_attribute.name.position
+			code := template_code (v1ea1gc_template_code)
+			etl_code := v1ea1g_etl_code
+			default_template := default_message_template (v1ea1gc_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_attribute.lower_name, 7)
+			parameters.put (a_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = name of attribute
+			-- dollar8: $8 = type of attribute
+		end
+
+	make_v1ea1gd (a_class, a_class_impl: ET_CLASS; a_attribute: ET_ATTRIBUTE; a_type: ET_NAMED_TYPE)
+			-- Create a new V1EA-1G error: the type `a_type' of the attribute `a_attribute' declared in
+			-- `a_class_impl' and viewed from one of its expanded descendants `a_class' (possibly itself),
+			-- may be a reference type, but may not be separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_is_expanded: a_class.is_expanded
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			a_type_not_void: a_type /= Void
+			a_type_named_type: a_type.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_attribute.name.position
+			code := template_code (v1ea1gd_template_code)
+			etl_code := v1ea1g_etl_code
+			default_template := default_message_template (v1ea1gd_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_attribute.lower_name, 7)
+			parameters.put (a_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = name of attribute
+			-- dollar8: $8 = type of attribute
 		end
 
 	make_v1se1ga (a_class: ET_CLASS; arg1, arg2: ET_INLINE_SEPARATE_ARGUMENT)
@@ -6777,55 +6968,6 @@ feature {NONE} -- Initialization
 			code := template_code (vffd11ga_template_code)
 			etl_code := vffd11g_etl_code
 			default_template := default_message_template (vffd11ga_default_template)
-			create parameters.make_filled (empty_string, 1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_once_function.lower_name, 7)
-			parameters.put (a_result_type.to_text, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = name of once function
-			-- dollar8: $8 = type of result
-		end
-
-	make_vffd11gb (a_class, a_class_impl: ET_CLASS; a_once_function: ET_ONCE_FUNCTION; a_result_type: ET_NAMED_TYPE)
-			-- Create a new VFFD-11G error: the result type of the once-per-process function declared in
-			-- `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself),
-			-- is an expanded type but it contains (directly or indirectly) an attribute of reference
-			-- type which is not separate.
-			--
-			-- Not in ECMA-367-2.
-			-- SCOOP.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_once_function_not_void: a_once_function /= Void
-			once_per_process: a_once_function.is_once_per_process
-			a_result_type_not_void: a_result_type /= Void
-			a_result_type_named_type: a_result_type.is_named_type
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_once_function.name.position
-			code := template_code (vffd11gb_template_code)
-			etl_code := vffd11g_etl_code
-			default_template := default_message_template (vffd11gb_default_template)
 			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -13373,123 +13515,6 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = label type
 		end
 
-	make_vuar4ga (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; arg: INTEGER; an_actual_type, a_formal_type: ET_NAMED_TYPE)
-			-- Create a new VUAR-4G error: the `arg'-th actual argument of the separate call `a_name', appearing
-			-- in `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself), has an
-			-- expanded type, but it contains (directly or indirectly) an attribute of reference type which
-			-- is not separate.
-			--
-			-- Not in ECMA-367-2.
-			-- SCOOP.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_class_not_void: a_target_class /= Void
-			an_actual_type_not_void: an_actual_type /= Void
-			an_actual_type_named_type: an_actual_type.is_named_type
-			a_formal_type_not_void: a_formal_type /= Void
-			a_formal_type_named_type: a_formal_type.is_named_type
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			code := template_code (vuar4ga_template_code)
-			etl_code := vuar4g_etl_code
-			default_template := default_message_template (vuar4ga_default_template)
-			create parameters.make_filled (empty_string, 1, 12)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_name.lower_name, 7)
-			parameters.put (a_feature.lower_name, 8)
-			parameters.put (a_target_class.upper_name, 9)
-			parameters.put (arg.out, 10)
-			parameters.put (an_actual_type.to_text, 11)
-			parameters.put (a_formal_type.to_text, 12)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the call
-			-- dollar8: $8 = name of corresponding feature in class $9
-			-- dollar9: $9 = base class of target of the call
-			-- dollar10: $10 = argument index
-			-- dollar11: $11 = type of actual argument
-			-- dollar12: $12 = type of formal argument
-		end
-
-	make_vuar4gb (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target_type, a_source_type, a_label_type: ET_NAMED_TYPE)
-			-- Create a new VUAR-4G error: the source of the separate assigner call `a_name', appearing in
-			-- `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself),
-			-- has an expanded type, but it contains (directly or indirectly) an attribute of reference
-			-- type which is not separate.
-			--
-			-- Not in ECMA-367-2.
-			-- SCOOP.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_name_is_tuple_label: a_name.is_tuple_label
-			a_target_type_not_void: a_target_type /= Void
-			a_target_type_named_type: a_target_type.is_named_type
-			a_source_type_not_void: a_source_type /= Void
-			a_source_type_named_type: a_source_type.is_named_type
-			a_label_type_not_void: a_label_type /= Void
-			a_label_type_named_type: a_label_type.is_named_type
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			code := template_code (vuar4gb_template_code)
-			etl_code := vuar4g_etl_code
-			default_template := default_message_template (vuar4gb_default_template)
-			create parameters.make_filled (empty_string, 1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_name.lower_name, 7)
-			parameters.put (a_target_type.to_text, 8)
-			parameters.put (a_source_type.to_text, 9)
-			parameters.put (a_label_type.to_text, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = name of tuple label in type $8
-			-- dollar8: $8 = tuple type of target
-			-- dollar9: $9 = source type
-			-- dollar10: $10 = label type
-		end
-
 	make_vucr0a (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Create a new VUCR error: attributes cannot be used in static calls.
 			--
@@ -13905,111 +13930,6 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = agent feature name
-		end
-
-	make_vuer0a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_query: ET_QUERY; a_target_class: ET_CLASS; a_result_type: ET_NAMED_TYPE)
-			-- Create a new VUER error: the result of the separate call `a_name', appearing in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself), has an expanded type,
-			-- but it contains (directly or indirectly) an attribute of reference type which is not separate.
-			--
-			-- Not in ECMA-367-2.
-			-- SCOOP.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_query_not_void: a_query /= Void
-			a_target_class_not_void: a_target_class /= Void
-			a_result_type_not_void: a_result_type /= Void
-			a_result_type_named_type: a_result_type.is_named_type
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			code := template_code (vuer0a_template_code)
-			etl_code := vuer_etl_code
-			default_template := default_message_template (vuer0a_default_template)
-			create parameters.make_filled (empty_string, 1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_name.lower_name, 7)
-			parameters.put (a_query.lower_name, 8)
-			parameters.put (a_target_class.upper_name, 9)
-			parameters.put (a_result_type.to_text, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the call
-			-- dollar8: $8 = name of corresponding feature in class $9
-			-- dollar9: $9 = base class of target of the call
-			-- dollar10: $10 = type of result
-		end
-
-	make_vuer0b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target_type, a_label_type: ET_NAMED_TYPE)
-			-- Create a new VUER error: the result of the separate call `a_name', appearing in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself), has an expanded type,
-			-- but it contains (directly or indirectly) an attribute of reference type which is not separate.
-			--
-			-- Not in ECMA-367-2.
-			-- SCOOP.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_name_is_tuple_label: a_name.is_tuple_label
-			a_target_type_not_void: a_target_type /= Void
-			a_target_type_named_type: a_target_type.is_named_type
-			a_label_type_not_void: a_label_type /= Void
-			a_label_type_named_type: a_label_type.is_named_type
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			code := template_code (vuer0b_template_code)
-			etl_code := vuer_etl_code
-			default_template := default_message_template (vuer0b_default_template)
-			create parameters.make_filled (empty_string, 1, 9)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_name.lower_name, 7)
-			parameters.put (a_target_type.to_text, 8)
-			parameters.put (a_label_type.to_text, 9)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = name of tuple label in type $9
-			-- dollar8: $8 = tuple type
-			-- dollar9: $9 = label type
 		end
 
 	make_vuex1a (a_class: ET_CLASS; a_name: ET_CALL_NAME)
@@ -17880,6 +17800,10 @@ feature {NONE} -- Implementation
 			template_not_void: Result /= Void
 		end
 
+	v1ea1ga_default_template: STRING = "the type '$8' of the attribute `$7' of the expanded class `$5' is a reference type, but it is not separate."
+	v1ea1gb_default_template: STRING = "the type '$8' of the attribute `$7' of the expanded class `$5' may be a reference type, but it is not separate."
+	v1ea1gc_default_template: STRING = "the type '$8' of the attribute `$7' of the expanded class `$5' is a reference type, but it may not be separate."
+	v1ea1gd_default_template: STRING = "the type '$8' of the attribute `$7' of the expanded class `$5' may be a reference type, but may not be separate."
 	v1se1ga_default_template: STRING = "two arguments of an inline separate instruction have the same name '$7'."
 	v1se2ga_default_template: STRING = "argument name '$6' of an inline separate instruction is also the final name of a feature."
 	v1se2gb_default_template: STRING = "argument '$6' of an inline separate instruction has the same name as a formal argument of an enclosing feature or inline agent."
@@ -18015,7 +17939,6 @@ feature {NONE} -- Implementation
 	vffd7a_default_template: STRING = "feature `$7' is a once funtion but its type contains an anchored type."
 	vffd7b_default_template: STRING = "feature `$7' is a once funtion but its type contains a formal generic parameter."
 	vffd11ga_default_template: STRING = "the result type '$8' of the once-per-process function `$7' is a reference type, but it is not separate."
-	vffd11gb_default_template: STRING = "the result type '$8' of the once-per-process function `$7' is an expanded type, but it contains directly or indirectly attributes of reference types which are not separate."
 	vgcc1a_default_template: STRING = "creation with no Creation_call part, but $7 is deferred."
 	vgcc3a_default_template: STRING = "explicit creation type '$7' does not conform to target entity type '$8'."
 	vgcc5a_default_template: STRING = "creation with no Creation_call part, but $7 has a Creators part."
@@ -18154,8 +18077,6 @@ feature {NONE} -- Implementation
 	vuar2b_default_template: STRING = "the $9-th actual argument (of type '$10') does not conform to the corresponding formal argument (of type '$11') of feature `$8'."
 	vuar3ga_default_template: STRING = "the $10-th actual argument of the separate call `$7' has a reference type '$11', but the type '$12' of the formal argument of feature `$8' in class $9 is not separate."
 	vuar3gb_default_template: STRING = "the source of separate assigner call has a reference type '$9', but the type '$10' of the tuple label `$7' in type '$8' is not separate."
-	vuar4ga_default_template: STRING = "the $10-th actual argument of the separate call `$7' has an expanded type '$11', but it contains directly or indirectly attributes of reference types which are not separate."
-	vuar4gb_default_template: STRING = "the source of separate assigner call has an expanded type '$9', but it contains directly or indirectly attributes of reference types which are not separate."
 	vucr0a_default_template: STRING = "feature `$7' is an attribute, so it cannot be used in static calls."
 	vucr0b_default_template: STRING = "feature `$7' is a once-per-object feature, so it cannot be used in static calls."
 	vucr0c_default_template: STRING = "attribute '$7' cannot be used as target of an assignment or creation instruction in a static feature."
@@ -18166,8 +18087,6 @@ feature {NONE} -- Implementation
 	vucr0h_default_template: STRING = "static feature contains a call to non-static '$7'."
 	vucr0i_default_template: STRING = "static feature contains an inline agent."
 	vucr0j_default_template: STRING = "static feature contains an agent with an unqualified call to '$7'."
-	vuer0a_default_template: STRING = "the result type '$10' of the separate call `$7' is an expanded type, but it contains directly or indirectly attributes of reference types which are not separate."
-	vuer0b_default_template: STRING = "the type '$9' of the tuple label of the separate call `$7' is expanded, but it contains directly or indirectly attributes of reference types which are not separate."
 	vuex1a_default_template: STRING = "`$7' is not the final name of a feature in class $5."
 	vuex2a_default_template: STRING = "`$7' is not the final name of a feature in class $8."
 	vuex2b_default_template: STRING = "feature `$8' of class $9 is not exported to class $5."
@@ -18257,6 +18176,7 @@ feature {NONE} -- Implementation
 	gvzzz0a_default_template: STRING = "validity error"
 			-- Default templates
 
+	v1ea1g_etl_code: STRING = "V1EA-1G"
 	v1se1g_etl_code: STRING = "V1SE-1G"
 	v1se2g_etl_code: STRING = "V1SE-2G"
 	v1se3g_etl_code: STRING = "V1SE-3G"
@@ -18380,9 +18300,7 @@ feature {NONE} -- Implementation
 	vuar1_etl_code: STRING = "VUAR-1"
 	vuar2_etl_code: STRING = "VUAR-2"
 	vuar3g_etl_code: STRING = "VUAR-3G"
-	vuar4g_etl_code: STRING = "VUAR-4G"
 	vucr_etl_code: STRING = "VUCR"
-	vuer_etl_code: STRING = "VUER"
 	vuex1_etl_code: STRING = "VUEX-1"
 	vuex2_etl_code: STRING = "VUEX-2"
 	vuno3_etl_code: STRING = "VUNO-3"
@@ -18451,6 +18369,10 @@ feature {NONE} -- Implementation
 			template_code_not_void: Result /= Void
 		end
 
+	v1ea1ga_template_code: STRING = "v1ea1ga"
+	v1ea1gb_template_code: STRING = "v1ea1gb"
+	v1ea1gc_template_code: STRING = "v1ea1gc"
+	v1ea1gd_template_code: STRING = "v1ea1gd"
 	v1se1ga_template_code: STRING = "v1se1ga"
 	v1se2ga_template_code: STRING = "v1se2ga"
 	v1se2gb_template_code: STRING = "v1se2gb"
@@ -18588,7 +18510,6 @@ feature {NONE} -- Implementation
 	vffd7a_template_code: STRING = "vffd7a"
 	vffd7b_template_code: STRING = "vffd7b"
 	vffd11ga_template_code: STRING = "vffd11ga"
-	vffd11gb_template_code: STRING = "vffd11gb"
 	vgcc1a_template_code: STRING = "vgcc1a"
 	vgcc3a_template_code: STRING = "vgcc3a"
 	vgcc5a_template_code: STRING = "vgcc5a"
@@ -18730,8 +18651,6 @@ feature {NONE} -- Implementation
 	vuar2b_template_code: STRING = "vuar2b"
 	vuar3ga_template_code: STRING = "vuar3ga"
 	vuar3gb_template_code: STRING = "vuar3gb"
-	vuar4ga_template_code: STRING = "vuar4ga"
-	vuar4gb_template_code: STRING = "vuar4gb"
 	vucr0a_template_code: STRING = "vucr0a"
 	vucr0b_template_code: STRING = "vucr0b"
 	vucr0c_template_code: STRING = "vucr0c"
@@ -18742,8 +18661,6 @@ feature {NONE} -- Implementation
 	vucr0h_template_code: STRING = "vucr0h"
 	vucr0i_template_code: STRING = "vucr0i"
 	vucr0j_template_code: STRING = "vucr0j"
-	vuer0a_template_code: STRING = "vuer0a"
-	vuer0b_template_code: STRING = "vuer0b"
 	vuex1a_template_code: STRING = "vuex1a"
 	vuex2a_template_code: STRING = "vuex2a"
 	vuex2b_template_code: STRING = "vuex2b"

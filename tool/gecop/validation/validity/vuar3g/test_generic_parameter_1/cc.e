@@ -1,4 +1,4 @@
-class CC [G]
+class CC [G -> ANY]
 
 inherit
 

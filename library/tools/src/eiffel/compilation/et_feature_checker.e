@@ -849,6 +849,47 @@ feature {NONE} -- Feature validity
 				error_handler.report_vucr0a_error (current_class, a_feature)
 				had_error := True
 			end
+			if current_system.scoop_mode then
+				if current_class.is_expanded then
+					if l_type.is_type_reference (current_type) then
+						if l_type.is_type_non_separate (current_type) then
+								-- Error: the reference type of an attribute of an expanded class
+								-- should be separate.	
+							set_fatal_error
+							error_handler.report_v1ea1ga_error (current_class, current_class_impl, a_feature, l_type.named_type (current_type))
+							had_error := True
+						elseif not l_type.is_type_separate (current_type) then
+								-- Error: the reference type of an attribute of an expanded class
+								-- should be separate (which is potentially not the case if it is
+								-- a formal generic parameter, hence the test 'not is_type_separate'
+								-- instead of just 'is_type_non_separate').	
+							set_fatal_error
+							error_handler.report_v1ea1gc_error (current_class, current_class_impl, a_feature, l_type.named_type (current_type))
+							had_error := True
+						end
+					elseif not l_type.is_type_expanded (current_type) then
+						if l_type.is_type_non_separate (current_type) then
+								-- Error: the reference type (potentially, if it is a formal generic
+								-- parameter, hence the test 'not is_type_expanded' instead of just
+								-- 'is_type_reference') of an attribute of an expanded class
+								-- should be separate.	
+							set_fatal_error
+							error_handler.report_v1ea1gb_error (current_class, current_class_impl, a_feature, l_type.named_type (current_type))
+							had_error := True
+						elseif not l_type.is_type_separate (current_type) then
+								-- Error: the reference type (potentially, if it is a formal generic
+								-- parameter, hence the test 'not is_type_expanded' instead of just
+								-- 'is_type_reference') of an attribute of an expanded class
+								-- should be separate (which is potentially not the case if it is
+								-- a formal generic parameter, hence the test 'not is_type_separate'
+								-- instead of just 'is_type_non_separate').	
+							set_fatal_error
+							error_handler.report_v1ea1gd_error (current_class, current_class_impl, a_feature, l_type.named_type (current_type))
+							had_error := True
+						end
+					end
+				end
+			end
 			has_fatal_error := had_error
 		end
 
@@ -1479,6 +1520,47 @@ feature {NONE} -- Feature validity
 				error_handler.report_vucr0a_error (current_class, a_feature)
 				had_error := True
 			end
+			if current_system.scoop_mode then
+				if current_class.is_expanded then
+					if l_type.is_type_reference (current_type) then
+						if l_type.is_type_non_separate (current_type) then
+								-- Error: the reference type of an attribute of an expanded class
+								-- should be separate.	
+							set_fatal_error
+							error_handler.report_v1ea1ga_error (current_class, current_class_impl, a_feature, l_type.named_type (current_type))
+							had_error := True
+						elseif not l_type.is_type_separate (current_type) then
+								-- Error: the reference type of an attribute of an expanded class
+								-- should be separate (which is potentially not the case if it is
+								-- a formal generic parameter, hence the test 'not is_type_separate'
+								-- instead of just 'is_type_non_separate').	
+							set_fatal_error
+							error_handler.report_v1ea1gc_error (current_class, current_class_impl, a_feature, l_type.named_type (current_type))
+							had_error := True
+						end
+					elseif not l_type.is_type_expanded (current_type) then
+						if l_type.is_type_non_separate (current_type) then
+								-- Error: the reference type (potentially, if it is a formal generic
+								-- parameter, hence the test 'not is_type_expanded' instead of just
+								-- 'is_type_reference') of an attribute of an expanded class
+								-- should be separate.	
+							set_fatal_error
+							error_handler.report_v1ea1gb_error (current_class, current_class_impl, a_feature, l_type.named_type (current_type))
+							had_error := True
+						elseif not l_type.is_type_separate (current_type) then
+								-- Error: the reference type (potentially, if it is a formal generic
+								-- parameter, hence the test 'not is_type_expanded' instead of just
+								-- 'is_type_reference') of an attribute of an expanded class
+								-- should be separate (which is potentially not the case if it is
+								-- a formal generic parameter, hence the test 'not is_type_separate'
+								-- instead of just 'is_type_non_separate').	
+							set_fatal_error
+							error_handler.report_v1ea1gd_error (current_class, current_class_impl, a_feature, l_type.named_type (current_type))
+							had_error := True
+						end
+					end
+				end
+			end
 			has_fatal_error := had_error
 		end
 
@@ -1656,23 +1738,15 @@ feature {NONE} -- Feature validity
 				had_error := True
 			end
 			if current_system.scoop_mode and then a_feature.is_once_per_process then
-				if l_type.is_type_reference (current_type) then
-					if not l_type.is_type_separate (current_type) then
-							-- Error: the reference type of a once-per-process function
-							-- should be separate.
-						set_fatal_error
-						error_handler.report_vffd11ga_error (current_class, current_class_impl, a_feature, l_type.named_type (current_type))
-						had_error := True
-					end
-				else
-						-- Error: the expanded type of a once-per-process function
-						-- should not contain (directly or indirectly) attributes of
-						-- reference types which are not separate.
-					if l_type.has_nested_non_separate_reference_attributes (current_type) then
-						set_fatal_error
-						error_handler.report_vffd11gb_error (current_class, current_class_impl, a_feature, l_type.named_type (current_type))
-						had_error := True
-					end
+				if l_type.is_type_reference (current_type) and then not l_type.is_type_separate (current_type) then
+						-- Error: the reference type of a once-per-process function
+						-- should be separate.
+						-- (Note that we don't use "not l_type.is_type_expanded" instead
+						-- of "l_type.is_type_reference" because the type of a once-per-process
+						-- function cannot be a formal generic parameter.)
+					set_fatal_error
+					error_handler.report_vffd11ga_error (current_class, current_class_impl, a_feature, l_type.named_type (current_type))
+					had_error := True
 				end
 			end
 			has_fatal_error := had_error or had_key_error
@@ -2661,12 +2735,9 @@ feature {NONE} -- Instruction validity
 			l_is_target_type_separate: BOOLEAN
 			l_formal_argument_index: INTEGER
 			l_target_named_type: ET_NAMED_TYPE
-			l_old_assigner_instruction: like current_assigner_instruction
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
-			l_old_assigner_instruction := current_assigner_instruction
-			current_assigner_instruction := an_instruction
 			l_formal_argument_index := 1
 			l_call := an_instruction.call
 			l_target_context := new_context (current_type)
@@ -2857,24 +2928,6 @@ feature {NONE} -- Instruction validity
 								l_target_context.force_last (l_expected_type)
 							end
 						end
-						if not l_source_context.is_type_reference and tokens.identity_type.has_nested_non_separate_reference_attributes (l_source_context) then
-								-- Error: It's a separate call (qualified call with a target of separate type),
-								-- the actual argument has an expanded type (potentially, if it a formal generic
-								-- parameter, hence the test 'not is_type_reference' instead of just
-								-- 'is_type_expanded'), but it contains attributes of reference types which
-								-- are not separate.
-							set_fatal_error
-							if l_assigner_procedure /= Void then
-								error_handler.report_vuar4ga_error (current_class, current_class_impl, l_name, l_assigner_procedure, l_target_base_class, l_formal_argument_index, l_source_context.named_type, l_expected_type_context.named_type)
-							else
-								check tuple_label: l_name.is_tuple_label end
-								l_target_context.remove_last
-								l_target_named_type := l_target_context.named_type
-								l_target_context.force_last (l_expected_type)
-								error_handler.report_vuar4gb_error (current_class, current_class_impl, l_name, l_target_named_type, l_source_context.named_type, l_expected_type_context.named_type)
-								l_target_context.force_last (l_expected_type)
-							end
-						end
 					end
 				end
 				l_target_context.remove_last
@@ -2889,7 +2942,6 @@ feature {NONE} -- Instruction validity
 			end
 			free_context (l_source_context)
 			free_context (l_target_context)
-			current_assigner_instruction := l_old_assigner_instruction
 		end
 
 	check_assignment_validity (an_instruction: ET_ASSIGNMENT)
@@ -10116,7 +10168,6 @@ feature {NONE} -- Expression validity
 			l_type: ET_TYPE
 			l_seed: INTEGER
 			l_is_target_separate: BOOLEAN
-			l_target_type: ET_NAMED_TYPE
 		do
 			has_fatal_error := False
 			l_name := a_call.name
@@ -10170,22 +10221,6 @@ feature {NONE} -- Expression validity
 					end
 					a_context.force_last (l_type)
 					if l_is_target_separate then
-						if attached current_assigner_instruction as l_assigner_instruction and then l_assigner_instruction.call = a_call then
-							-- Do not report VUER validity errors for call part of assigner instructions
-							-- because this call will not be evaluated at runtime, and therefore there
-							-- is not risk of objects crossing SCOOP region boundaries.
-						elseif not a_context.is_type_reference and a_context.named_type.has_nested_non_separate_reference_attributes (a_context.root_context) then
-								-- Error: It's a separate call (qualified call with a target of separate type),
-								-- the result has an expanded type (potentially, if it a formal generic
-								-- parameter, hence the test 'not is_type_reference' instead of just
-								-- 'is_type_expanded'), but it contains attributes of reference types which
-								-- are not separate.
-							a_context.remove_last
-							l_target_type := a_context.named_type
-							a_context.force_last (l_type)
-							set_fatal_error
-							error_handler.report_vuer0b_error (current_class, current_class_impl, a_call.name, l_target_type, a_context.named_type)
-						end
 						if not l_type.is_type_separate (a_context.base_class) then
 								-- If the target of the call is separate, then the type of the call
 								-- is separate as well, even if the declared type of the query is not.
@@ -10266,19 +10301,6 @@ feature {NONE} -- Expression validity
 			a_context.force_last (l_type)
 			if current_system.scoop_mode then
 				if l_is_target_separate then
-					if attached current_assigner_instruction as l_assigner_instruction and then l_assigner_instruction.call = a_call then
-						-- Do not report VUER validity errors for call part of assigner instructions
-						-- because this call will not be evaluated at runtime, and therefore there
-						-- is not risk of objects crossing SCOOP region boundaries.
-					elseif not a_context.is_type_reference and a_context.named_type.has_nested_non_separate_reference_attributes (a_context.root_context) then
-							-- Error: It's a separate call (qualified call with a target of separate type),
-							-- the result has an expanded type (potentially, if it a formal generic
-							-- parameter, hence the test 'not is_type_reference' instead of just
-							-- 'is_type_expanded'), but it contains attributes of reference types which
-							-- are not separate.
-						set_fatal_error
-						error_handler.report_vuer0a_error (current_class, current_class_impl, a_call.name, a_query, l_class, a_context.named_type)
-					end
 					if not l_type.is_type_separate (a_context.base_class) then
 							-- If the target of the call is separate, then the type of the call
 							-- is separate as well, even if the declared type of the query is not.
@@ -11967,23 +11989,6 @@ feature {NONE} -- Expression validity
 									-- after the check-instruction) for formal arguments!
 								check qualified_call: l_class /= Void then end
 								error_handler.report_vuar3ga_error (current_class, current_class_impl, l_name, a_feature, l_class, i, l_actual_named_type, l_formal_named_type)
-							end
-							if not l_actual_context.is_type_reference and l_actual_context.named_type.has_nested_non_separate_reference_attributes (l_actual_context.root_context) then
-									-- Error: It's a separate call (qualified call with a target of separate type),
-									-- the actual argument has an expanded type (potentially, if it a formal generic
-									-- parameter, hence the test 'not is_type_reference' instead of just
-									-- 'is_type_expanded'), but it contains attributes of reference types which
-									-- are not separate.
-								had_error := True
-								set_fatal_error
-								l_actual_named_type := l_actual_context.named_type
-								l_formal_named_type := l_formal_context.named_type
-								l_class := a_class
-									-- Use a local variable because ISE does not support
-									-- this CAP (i.e. considering `l_class' as attached
-									-- after the check-instruction) for formal arguments!
-								check qualified_call: l_class /= Void then end
-								error_handler.report_vuar4ga_error (current_class, current_class_impl, l_name, a_feature, l_class, i, l_actual_named_type, l_formal_named_type)
 							end
 						end
 					end
@@ -16861,9 +16866,6 @@ feature {NONE} -- Access
 
 	current_target_type: ET_TYPE_CONTEXT
 			-- Type of the target of expression being processed
-
-	current_assigner_instruction: detachable ET_ASSIGNER_INSTRUCTION
-			-- Assigner instruction currently being processed, if any
 
 feature {NONE} -- Object-tests
 

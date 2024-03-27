@@ -37,10 +37,8 @@ conditions for every declaration of a feature `f` in its unfolded form:
 
 * Another condition is needed in the context of SCOOP, the Eiffel concurrency mechanism:
 
-  11. `G` [\[tests\]](../vffd11g) In SCOOP mode, if the *Declaration_body* describes a once per process function, the resut type is either separate, or expanded and does not contain (directly or indirectly) attributes of reference types which are not separate.
+  11. `G` [\[tests\]](../vffd11g) If the *Declaration_body* describes a once per process function, the result type is either separate or expanded.
   
-  ISE Eiffel (as of 23.09.10.7341 and after) reports this validity rule violation using the code `VFFD-8`, but does not check the case of expanded types which contain (directly or indirectly) attributes of reference types which are not separate.
-
-  This validity rule still fails to catch cases where an object of expanded type with non-separate reference attributes is assigned to a `Result` of a reference type. Gobo Eiffel and ISE Eiffel (as of 23.09.10.7341 and after) both fail to report this issue.
+  ISE Eiffel (as of 23.09.10.7341 and after) reports this validity rule violation using the code `VFFD-8`.
 
   SCOOP is not described in the ECMA Eiffel standard, therefore this condition is not part of the standard.

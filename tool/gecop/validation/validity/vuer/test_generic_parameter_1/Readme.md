@@ -9,3 +9,5 @@ In this test, in class `BB` there is a separate call to the function `f` from cl
 ### Notes
 
 * ISE Eiffel (as of 23.09.10.7341 and after) fails to report this validity rule violation.
+
+* Gobo Eiffel reports a validity error `V1EA-1G` instead. This is because the issue of having non-separate reference attributes in expanded classes is more general than just this particular case.

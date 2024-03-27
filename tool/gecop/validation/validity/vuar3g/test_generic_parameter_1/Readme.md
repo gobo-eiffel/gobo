@@ -10,4 +10,3 @@ In this test, in class `BB` there is a separate call to the procedure `f` from c
 
 * ISE Eiffel (as of 23.09.10.7341 and after) fails to report this validity rule violation.
 
-* Gobo Eiffel also reports the violation of rule `VUAR-4G`. This is because the actual generic parameter may also be an expanded type with attributes whose types are reference but not separate.

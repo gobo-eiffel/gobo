@@ -327,25 +327,6 @@ feature -- Status report
 		deferred
 		end
 
-	has_non_separate_reference_attributes: BOOLEAN
-			-- Does current type context contain attributes whose types are declared
-			-- of non-separate reference types when viewed from `a_context'?
-			-- True in case of a formal generic parameter because the actual
-			-- generic parameter may contain non-separate reference attributes.
-		require
-			-- no_cycle: no cycle in anchored types involved.
-		deferred
-		end
-
-	has_nested_non_separate_reference_attributes: BOOLEAN
-			-- Does current type context contain non-separate reference attributes when
-			-- viewed from `a_context', or recursively does it contain expanded
-			-- attributes whose types contain non-separate reference attributes?
-		require
-			-- no_cycle: no cycle in anchored types involved.
-		deferred
-		end
-
 	is_controlled: BOOLEAN
 			-- Is current type a controlled separate type?
 		deferred

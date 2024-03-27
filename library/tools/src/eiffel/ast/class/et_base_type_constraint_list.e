@@ -207,47 +207,6 @@ feature -- Status report
 			end
 		end
 
-	has_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Does one of the constraint types contain attributes whose types are declared
-			-- of non-separate reference types when viewed from `a_context'?
-			-- True in case of a formal generic parameter because the actual
-			-- generic parameter may contain non-separate reference attributes.
-		local
-			j: INTEGER
-		do
-			from
-				j := count - 1
-			until
-				j < 0
-			loop
-				if storage.item (j).has_non_separate_reference_attributes (a_context) then
-					Result := True
-					j := 0 -- Jump out of the loop.
-				end
-				j := j - 1
-			end
-		end
-
-	has_nested_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Does one of the constraint types contain non-separate reference attributes
-			-- when viewed from `a_context', or recursively does it contain expanded
-			-- attributes whose types contain non-separate reference attributes?
-		local
-			j: INTEGER
-		do
-			from
-				j := count - 1
-			until
-				j < 0
-			loop
-				if storage.item (j).has_nested_non_separate_reference_attributes (a_context) then
-					Result := True
-					j := 0 -- Jump out of the loop.
-				end
-				j := j - 1
-			end
-		end
-
 feature -- Setting
 
 	set_left_brace (l: like left_brace)

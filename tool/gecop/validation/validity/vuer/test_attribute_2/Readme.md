@@ -9,3 +9,5 @@ In this test, there is a separate call to the attribute `c` from class `BB`. The
 ### Notes
 
 * This is a case where the result is expanded and contains *indirectly* an attribute whose type is reference but not separate.
+
+* Gobo Eiffel reports a validity error `V1EA-1G` instead. This is because the issue of having non-separate reference attributes in expanded classes is more general than just this particular case.
