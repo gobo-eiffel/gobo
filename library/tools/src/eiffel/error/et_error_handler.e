@@ -878,6 +878,102 @@ feature -- Validity errors
 			end
 		end
 
+	report_v1ea1ga_error (a_class, a_class_impl: ET_CLASS; a_attribute: ET_ATTRIBUTE; a_type: ET_NAMED_TYPE)
+			-- Report V1EA-1G error: the type `a_type' of the attribute `a_attribute' declared in
+			-- `a_class_impl' and viewed from one of its expanded descendants `a_class' (possibly itself),
+			-- is a reference type, but is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_is_expanded: a_class.is_expanded
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			a_type_not_void: a_type /= Void
+			a_type_named_type: a_type.is_named_type
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_v1ea1g_error (a_class) then
+				create l_error.make_v1ea1ga (a_class, a_class_impl, a_attribute, a_type)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_v1ea1gb_error (a_class, a_class_impl: ET_CLASS; a_attribute: ET_ATTRIBUTE; a_type: ET_NAMED_TYPE)
+			-- Report V1EA-1G error: the type `a_type' of the attribute `a_attribute' declared in
+			-- `a_class_impl' and viewed from one of its expanded descendants `a_class' (possibly itself),
+			-- may be a reference type, but is not separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_is_expanded: a_class.is_expanded
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			a_type_not_void: a_type /= Void
+			a_type_named_type: a_type.is_named_type
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_v1ea1g_error (a_class) then
+				create l_error.make_v1ea1gb (a_class, a_class_impl, a_attribute, a_type)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_v1ea1gc_error (a_class, a_class_impl: ET_CLASS; a_attribute: ET_ATTRIBUTE; a_type: ET_NAMED_TYPE)
+			-- Report V1EA-1G error: the type `a_type' of the attribute `a_attribute' declared in
+			-- `a_class_impl' and viewed from one of its expanded descendants `a_class' (possibly itself),
+			-- is a reference type, but may not be separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_is_expanded: a_class.is_expanded
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			a_type_not_void: a_type /= Void
+			a_type_named_type: a_type.is_named_type
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_v1ea1g_error (a_class) then
+				create l_error.make_v1ea1gc (a_class, a_class_impl, a_attribute, a_type)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_v1ea1gd_error (a_class, a_class_impl: ET_CLASS; a_attribute: ET_ATTRIBUTE; a_type: ET_NAMED_TYPE)
+			-- Report V1EA-1G error: the type `a_type' of the attribute `a_attribute' declared in
+			-- `a_class_impl' and viewed from one of its expanded descendants `a_class' (possibly itself),
+			-- may be a reference type, but may not be separate.
+			--
+			-- Not in ECMA-367-2.
+			-- SCOOP.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_is_expanded: a_class.is_expanded
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			a_type_not_void: a_type /= Void
+			a_type_named_type: a_type.is_named_type
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_v1ea1g_error (a_class) then
+				create l_error.make_v1ea1gd (a_class, a_class_impl, a_attribute, a_type)
+				report_validity_error (l_error)
+			end
+		end
+
 	report_v1se1ga_error (a_class: ET_CLASS; arg1, arg2: ET_INLINE_SEPARATE_ARGUMENT)
 			-- Report V1SE-1G error: `arg1' and `arg2' are two arguments of
 			-- of an inline separate instruction in `a_class' with the same name.
@@ -3894,31 +3990,6 @@ feature -- Validity errors
 			end
 		end
 
-	report_vffd11gb_error (a_class, a_class_impl: ET_CLASS; a_once_function: ET_ONCE_FUNCTION; a_result_type: ET_NAMED_TYPE)
-			-- Report VFFD-11G error: the result type of the once-per-process function declared in
-			-- `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself),
-			-- is an expanded type, but it contains (directly or indirectly) an attribute of reference
-			-- type which is not separate.
-			--
-			-- Not in ECMA-367-2.
-			-- SCOOP.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_once_function_not_void: a_once_function /= Void
-			once_per_process: a_once_function.is_once_per_process
-			a_result_type_not_void: a_result_type /= Void
-			a_result_type_named_type: a_result_type.is_named_type
-		local
-			l_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vffd11g_error (a_class) then
-				create l_error.make_vffd11gb (a_class, a_class_impl, a_once_function, a_result_type)
-				report_validity_error (l_error)
-			end
-		end
-
 	report_vgcc1a_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_COMPONENT; a_target: ET_CLASS)
 			-- Report VGCC-1 error: the creation instruction or expression
 			-- `a_creation', appearing in `a_class_impl' and viewed from
@@ -6883,63 +6954,6 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar4ga_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; arg: INTEGER; an_actual_type, a_formal_type: ET_NAMED_TYPE)
-			-- Report VUAR-4G error: the `arg'-th actual argument of the separate call `a_name', appearing
-			-- in `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself), has an
-			-- expanded type, but it contains (directly or indirectly) an attribute of reference type which
-			-- is not separate.
-			--
-			-- Not in ECMA-367-2.
-			-- SCOOP.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_class_not_void: a_target_class /= Void
-			an_actual_type_not_void: an_actual_type /= Void
-			an_actual_type_named_type: an_actual_type.is_named_type
-			a_formal_type_not_void: a_formal_type /= Void
-			a_formal_type_named_type: a_formal_type.is_named_type
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vuar4g_error (a_class) then
-				create an_error.make_vuar4ga (a_class, a_class_impl, a_name, a_feature, a_target_class, arg, an_actual_type, a_formal_type)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vuar4gb_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target_type, a_source_type, a_label_type: ET_NAMED_TYPE)
-			-- Report VUAR-4G error: the source of the separate assigner call `a_name', appearing in
-			-- `a_class_impl' and viewed from one of its descendants `a_class' (possibly itself),
-			-- has an expanded type, but it contains (directly or indirectly) an attribute of reference
-			-- type which is not separate.
-			--
-			-- Not in ECMA-367-2.
-			-- SCOOP.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_name_is_tuple_label: a_name.is_tuple_label
-			a_target_type_not_void: a_target_type /= Void
-			a_target_type_named_type: a_target_type.is_named_type
-			a_source_type_not_void: a_source_type /= Void
-			a_source_type_named_type: a_source_type.is_named_type
-			a_label_type_not_void: a_label_type /= Void
-			a_label_type_named_type: a_label_type.is_named_type
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vuar4g_error (a_class) then
-				create an_error.make_vuar4gb (a_class, a_class_impl, a_name, a_target_type, a_source_type, a_label_type)
-				report_validity_error (an_error)
-			end
-		end
-
 	report_vucr0a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report VUCR error: attributes cannot be used in static calls.
 			--
@@ -7140,57 +7154,6 @@ feature -- Validity errors
 			if reportable_vucr_error (a_class) then
 				create an_error.make_vucr0j (a_class, a_class_impl, a_agent)
 				report_validity_error (an_error)
-			end
-		end
-
-	report_vuer0a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_query: ET_QUERY; a_target_class: ET_CLASS; a_result_type: ET_NAMED_TYPE)
-			-- Report VUER error: the result of the separate call `a_name', appearing in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself), has an expanded type,
-			-- but it contains (directly or indirectly) an attribute of reference type which is not separate.
-			--
-			-- Not in ECMA-367-2.
-			-- SCOOP.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_query_not_void: a_query /= Void
-			a_target_class_not_void: a_target_class /= Void
-			a_result_type_not_void: a_result_type /= Void
-			a_result_type_named_type: a_result_type.is_named_type
-		local
-			l_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vuer_error (a_class) then
-				create l_error.make_vuer0a (a_class, a_class_impl, a_name, a_query, a_target_class, a_result_type)
-				report_validity_error (l_error)
-			end
-		end
-
-	report_vuer0b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_target_type, a_label_type: ET_NAMED_TYPE)
-			-- Report VUER error: the result of the separate call `a_name', appearing in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself), has an expanded type,
-			-- but it contains (directly or indirectly) an attribute of reference type which is not separate.
-			--
-			-- Not in ECMA-367-2.
-			-- SCOOP.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_name_is_tuple_label: a_name.is_tuple_label
-			a_target_type_not_void: a_target_type /= Void
-			a_target_type_named_type: a_target_type.is_named_type
-			a_label_type_not_void: a_label_type /= Void
-			a_label_type_named_type: a_label_type.is_named_type
-		local
-			l_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vuer_error (a_class) then
-				create l_error.make_vuer0b (a_class, a_class_impl, a_name, a_target_type, a_label_type)
-				report_validity_error (l_error)
 			end
 		end
 
@@ -8964,6 +8927,16 @@ feature -- Validity errors
 
 feature -- Validity error status
 
+	reportable_v1ea1g_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a V1EA-1G error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_v1se1g_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a V1SE-1G error be reported when it
 			-- appears in `a_class'?
@@ -10174,28 +10147,8 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vuar4g_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VUAR-4G error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
 	reportable_vucr_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUCR error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_vuer_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VUER error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

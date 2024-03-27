@@ -118,23 +118,6 @@ feature -- Status report
 			Result := type.is_type_non_separate (a_context)
 		end
 
-	has_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Does the type of the current constraint contain attributes whose types are declared
-			-- of non-separate reference types when viewed from `a_context'?
-			-- True in case of a formal generic parameter because the actual
-			-- generic parameter may contain non-separate reference attributes.
-		do
-			Result := type.has_non_separate_reference_attributes (a_context)
-		end
-
-	has_nested_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Does the type of the current constraint contain non-separate reference attributes
-			-- when viewed from `a_context', or recursively does it contain expanded
-			-- attributes whose types contain non-separate reference attributes?
-		do
-			Result := type.has_nested_non_separate_reference_attributes (a_context)
-		end
-
 feature -- Setting
 
 	set_type (a_type: like type)

@@ -9,3 +9,5 @@ In this test, there is a separate call to the procedure `f` from class `BB`. The
 ### Notes
 
 * This is a case where the actual argument is expanded and contains *indirectly* an attribute whose type is reference but not separate.
+
+* Gobo Eiffel reports a validity error `V1EA-1G` instead. This is because the issue of having non-separate reference attributes in expanded classes is more general than just this particular case.

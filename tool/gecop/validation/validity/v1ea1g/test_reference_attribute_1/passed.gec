@@ -1,0 +1,2 @@
+[V1EA-1G] class BB (9,2): the type 'detachable STRING' of the attribute `s' of the expanded class `BB' is a reference type, but it is not separate.
+----

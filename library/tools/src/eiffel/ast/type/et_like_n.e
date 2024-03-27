@@ -460,47 +460,6 @@ feature -- Status report
 			end
 		end
 
-	has_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Does current type contain attributes whose types are declared
-			-- of non-separate reference types when viewed from `a_context'?
-			-- True in case of a formal generic parameter because the actual
-			-- generic parameter may contain non-separate reference attributes.
-		local
-			l_previous_context: ET_NESTED_TYPE_CONTEXT
-		do
-			l_previous_context := a_context.as_nested_type_context
-			if l_previous_context.valid_index (index) then
-				l_previous_context.force_last (previous)
-				Result := l_previous_context.item (index).has_non_separate_reference_attributes (l_previous_context)
-				l_previous_context.remove_last
-			else
-					-- We reached the root context.
-				l_previous_context.force_last (tokens.like_0)
-				Result := l_previous_context.root_context.has_non_separate_reference_attributes (l_previous_context)
-				l_previous_context.remove_last
-			end
-		end
-
-	has_nested_non_separate_reference_attributes (a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Does current type contain non-separate reference attributes when
-			-- viewed from `a_context', or recursively does it contain expanded
-			-- attributes whose types contain non-separate reference attributes?
-		local
-			l_previous_context: ET_NESTED_TYPE_CONTEXT
-		do
-			l_previous_context := a_context.as_nested_type_context
-			if l_previous_context.valid_index (index) then
-				l_previous_context.force_last (previous)
-				Result := l_previous_context.item (index).has_nested_non_separate_reference_attributes (l_previous_context)
-				l_previous_context.remove_last
-			else
-					-- We reached the root context.
-				l_previous_context.force_last (tokens.like_0)
-				Result := l_previous_context.root_context.has_nested_non_separate_reference_attributes (l_previous_context)
-				l_previous_context.remove_last
-			end
-		end
-
 	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does the base type of current type contain `a_class'
 			-- when it appears in `a_context'?

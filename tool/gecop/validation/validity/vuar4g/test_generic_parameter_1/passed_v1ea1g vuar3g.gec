@@ -1,0 +1,4 @@
+[V1EA-1G] class DD (9,2): the type 'detachable STRING' of the attribute `name' of the expanded class `DD' is a reference type, but it is not separate.
+----
+[VUAR-3G] class BB (18,6): the 1-th actual argument of the separate call `f' has a reference type 'G', but the type 'G' of the formal argument of feature `f' in class CC is not separate.
+----
