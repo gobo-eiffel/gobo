@@ -1322,6 +1322,7 @@ feature {NONE} -- Event handling
 					l_dynamic_procedure := l_dynamic_creation_primary_type.dynamic_procedure (a_procedure, current_dynamic_system)
 					if current_system.scoop_mode and l_dynamic_creation_type.is_separate then
 						l_dynamic_procedure.set_separate_creation (True)
+						current_dynamic_system.set_has_separate_creation (True)
 					else
 						l_dynamic_procedure.set_creation (True)
 					end
@@ -1360,6 +1361,7 @@ feature {NONE} -- Event handling
 					l_dynamic_procedure := l_dynamic_creation_primary_type.dynamic_procedure (a_procedure, current_dynamic_system)
 					if current_system.scoop_mode and l_dynamic_creation_type.is_separate then
 						l_dynamic_procedure.set_separate_creation (True)
+						current_dynamic_system.set_has_separate_creation (True)
 					else
 						l_dynamic_procedure.set_creation (True)
 					end
