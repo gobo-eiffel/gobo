@@ -120,11 +120,11 @@ feature -- Test Gobo Eiffel Compiler
 			a_geant_filename := geant_filename
 			l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
 				-- Compile program.
-			execute_shell_with_timeout (l_geant_pathname + " -b %"" + a_geant_filename + "%"" + l_executable + l_thread_option + " -Dgelint_option=true compile_" + a_debug + "ge" + output1_log, three_minutes_in_milliseconds)
+			execute_shell_with_timeout (l_geant_pathname + " -b %"" + a_geant_filename + "%"" + l_executable + l_thread_option + " -Dgelint_option=true compile_" + a_debug + "ge", output1_log, three_minutes_in_milliseconds)
 			concat_output1 (agent filter_output_gec)
 				-- Execute program.
 			if file_system.file_exists (file_system.pathname (testrun_dirname, program_exe)) then
-				execute_shell_with_timeout (program_exe + output2_log, three_minutes_in_milliseconds)
+				execute_shell_with_timeout (program_exe, output2_log, three_minutes_in_milliseconds)
 				concat_output2
 			end
 				-- Test.
@@ -260,7 +260,7 @@ feature -- Test gelint
 			else
 				l_thread_option := ""
 			end
-			execute_shell (l_executable + l_thread_option + " --variable=GOBO_EIFFEL=ge --flat %"" + ecf_filename + "%"" + output1_log)
+			execute_shell (l_executable + l_thread_option + " --variable=GOBO_EIFFEL=ge --flat %"" + ecf_filename + "%"", output1_log)
 			concat_output1 (agent filter_output_gelint)
 				-- Test.
 			create l_directory.make (program_dirname)
@@ -395,15 +395,15 @@ feature -- Test ISE Eiffel
 			a_geant_filename := geant_filename
 			l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
 				-- Compile program.
-			execute_shell (l_geant_pathname + " -b %"" + a_geant_filename + "%"" + l_executable + l_dotnet + " compile_" + a_debug + "ise" + output1_log)
+			execute_shell (l_geant_pathname + " -b %"" + a_geant_filename + "%"" + l_executable + l_dotnet + " compile_" + a_debug + "ise", output1_log)
 			concat_output1 (agent filter_output_ise)
 				-- Execute program.
 			if file_system.file_exists (file_system.pathname (testrun_dirname, program_exe)) then
-				execute_shell (program_exe + output2_log)
+				execute_shell (program_exe, output2_log)
 				concat_output2
 			end
 				-- Clean.
-			execute_shell (l_geant_pathname + " -b %"" + a_geant_filename + "%" clobber" + output3_log)
+			execute_shell (l_geant_pathname + " -b %"" + a_geant_filename + "%" clobber", output3_log)
 			concat_output3
 				-- Test.
 			create l_directory.make (program_dirname)
@@ -841,8 +841,8 @@ feature {NONE} -- Output logs
 
 	output1_log: STRING
 			-- Where and how to redirect compilation output logs
-		once
-			Result := " > " + output1_log_basename + " 2> " + error1_log_basename
+		do
+			Result := " > " + output1_log_filename + " 2> " + error1_log_filename
 		ensure
 			output1_log_not_void: Result /= Void
 			output1_log_not_empty: Result.count > 0
@@ -874,8 +874,8 @@ feature {NONE} -- Output logs
 
 	output2_log: STRING
 			-- Where and how to redirect execution output logs
-		once
-			Result := " > " + output2_log_basename + " 2> " + error2_log_basename
+		do
+			Result := " > " + output2_log_filename + " 2> " + error2_log_filename
 		ensure
 			output2_log_not_void: Result /= Void
 			output2_log_not_empty: Result.count > 0
@@ -907,8 +907,8 @@ feature {NONE} -- Output logs
 
 	output3_log: STRING
 			-- Where and how to redirect cleaning output logs
-		once
-			Result := " > " + output3_log_basename + " 2> " + error3_log_basename
+		do
+			Result := " > " + output3_log_filename + " 2> " + error3_log_filename
 		ensure
 			output3_log_not_void: Result /= Void
 			output3_log_not_empty: Result.count > 0
@@ -1144,11 +1144,12 @@ feature {NONE} -- Output logs
 
 feature {NONE} -- Execution
 
-	execute_shell (a_shell_command: STRING)
+	execute_shell (a_shell_command: STRING; a_output_log: STRING)
 			-- Execute `a_shell_command'.
 		require
 			a_shell_command_not_void: a_shell_command /= Void
 			a_shell_command_not_empty: a_shell_command.count > 0
+			a_output_log_not_void: a_output_log /= Void
 		local
 			l_command: DP_SHELL_COMMAND
 			l_command_name: STRING
@@ -1158,18 +1159,19 @@ feature {NONE} -- Execution
 			l_command_name.replace_substring_all ("\", "\\")
 			l_command_name.replace_substring_all ("%"", "\%"")
 			l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
-			l_command_name := l_geant_pathname + " -b %"" + execution_buildname + "%" -Dexecutable=%"" + l_command_name + "%" -Ddirectory=%"" + testrun_dirname + "%" execute"
+			l_command_name := l_geant_pathname + " -b %"" + execution_buildname + "%" -Dexecutable=%"" + l_command_name + "%" -Ddirectory=%"" + testrun_dirname + "%" execute" + a_output_log
 
 			create l_command.make (l_command_name)
 			l_command.execute
 		end
 
-	execute_shell_with_timeout (a_shell_command: STRING; a_timeout_ms: NATURAL_64)
+	execute_shell_with_timeout (a_shell_command: STRING; a_output_log: STRING; a_timeout_ms: NATURAL_64)
 			-- Execute `a_shell_command'.
 			-- Wait for the command to terminate for at most `a_timeout_ms' milliseconds.
 		require
 			a_shell_command_not_void: a_shell_command /= Void
 			a_shell_command_not_empty: a_shell_command.count > 0
+			a_output_log_not_void: a_output_log /= Void
 		local
 			l_command: DP_SHELL_COMMAND
 			l_command_name: STRING
@@ -1179,7 +1181,7 @@ feature {NONE} -- Execution
 			l_command_name.replace_substring_all ("\", "\\")
 			l_command_name.replace_substring_all ("%"", "\%"")
 			l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
-			l_command_name := l_geant_pathname + " -b %"" + execution_buildname + "%" -Dexecutable=%"" + l_command_name + "%" -Dtimeout=%"" + a_timeout_ms.out + "%" -Ddirectory=%"" + testrun_dirname + "%" execute_with_timeout"
+			l_command_name := l_geant_pathname + " -b %"" + execution_buildname + "%" -Dexecutable=%"" + l_command_name + "%" -Dtimeout=%"" + a_timeout_ms.out + "%" -Ddirectory=%"" + testrun_dirname + "%" execute_with_timeout" + a_output_log
 
 			create l_command.make (l_command_name)
 			l_command.execute
@@ -1230,7 +1232,7 @@ feature {NONE} -- Constants
 			-- Default value for `testrun_dirname'
 
 	three_minutes_in_milliseconds: NATURAL_64 = 180_000
-			-- 3 minute sin milliseconds
+			-- 3 minutes in milliseconds
 
 invariant
 
