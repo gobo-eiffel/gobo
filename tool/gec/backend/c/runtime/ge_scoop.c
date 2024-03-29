@@ -838,7 +838,7 @@ void GE_scoop_processor_run(GE_context* a_context)
 				GE_mutex_unlock(l_mutex);
 			}
 		} else {
-			/*GE_scoop_region_destroy(a_context->region);*/
+			GE_scoop_region_destroy(a_context->region);
 			a_context->region = 0;
 			a_context->exception_manager = EIF_VOID;
 			a_context->process_onces = 0;
@@ -846,7 +846,6 @@ void GE_scoop_processor_run(GE_context* a_context)
 			break;
 		}
 	}
-	fprintf(stderr, "--------------------G2\n");
 }
 
 /* 
