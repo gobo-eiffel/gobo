@@ -101,15 +101,6 @@ struct GE_thread_context_struct {
 #ifdef GE_USE_SCOOP
 	int is_scoop_processor; /* Is current thread a SCOOP processor? */
 #endif
-		/*
-		 * The following may contain Eiffel objects.
-		 * Keep a reference to them here so that the GC keeps them alive.
-		 * Otherwise they are declared in GE_context, which might 
-		 * malloced as "atomic" (i.e. containing no collectable objects)
-		 * so that the SCOOP processor can be marked as not used even
-		 * if it is still referenced from GE_context.
-		*/
-	EIF_REFERENCE exception_manager; /* Exception manager */
 };
 
 #ifdef __cplusplus

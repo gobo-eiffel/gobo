@@ -143,6 +143,7 @@ struct GE_context_struct {
 #endif
 #ifdef GE_USE_SCOOP
 	GE_scoop_region* region; /* SCOOP region whose processor is executing the current code */
+	volatile char is_region_alive;
 #endif
 };
 #define TC GE_context

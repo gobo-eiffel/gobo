@@ -98,6 +98,26 @@ typedef struct {
 extern GE_once_mutexes* GE_process_once_mutexes;
 
 /*
+ * Numbers of once-per-thread features.
+ */
+extern unsigned int GE_thread_onces_boolean_count;
+extern unsigned int GE_thread_onces_character_8_count;
+extern unsigned int GE_thread_onces_character_32_count;
+extern unsigned int GE_thread_onces_integer_8_count;
+extern unsigned int GE_thread_onces_integer_16_count;
+extern unsigned int GE_thread_onces_integer_32_count;
+extern unsigned int GE_thread_onces_integer_64_count;
+extern unsigned int GE_thread_onces_natural_8_count;
+extern unsigned int GE_thread_onces_natural_16_count;
+extern unsigned int GE_thread_onces_natural_32_count;
+extern unsigned int GE_thread_onces_natural_64_count;
+extern unsigned int GE_thread_onces_pointer_count;
+extern unsigned int GE_thread_onces_real_32_count;
+extern unsigned int GE_thread_onces_real_64_count;
+extern unsigned int GE_thread_onces_reference_count;
+extern unsigned int GE_thread_onces_procedure_count;
+
+/*
  * Create a new 'GE_once_mutexes' struct which can deal with the
  * numbers of once features passed as argument.
  */

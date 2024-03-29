@@ -64,6 +64,7 @@ struct GE_scoop_region_struct {
 	char is_impersonation_allowed; /* Protected by `mutex'. */
 	GE_scoop_session* first_session; /* Protected by `mutex'. */
 	GE_scoop_session* last_session; /* Protected by `mutex'. */
+	GE_scoop_session** last_session_keep_alive; /* To keep alive the last submitted session not executed yet, and hence its region. Protected by `mutex'. */
 	EIF_MUTEX_TYPE* mutex; /* To add, remove and access SCOOP sessions, and to access `is_impersonation_allowed'. */
 	EIF_COND_TYPE* condition_variable; /* To add, remove and access SCOOP sessions, and to access `is_impersonation_allowed'. */
 	EIF_MUTEX_TYPE* sync_mutex; /* For synchronization in case of synchronous calls. */
@@ -235,11 +236,6 @@ extern void GE_free_scoop_call(GE_scoop_call* a_call);
  * Free memory allocated by `a_session'.
  */
 extern void GE_free_scoop_session(GE_scoop_session* a_session);
-
-/*
- * Free memory allocated by `a_region'.
- */
-extern void GE_free_scoop_region(GE_scoop_region* a_region);
 
 #ifdef __cplusplus
 }

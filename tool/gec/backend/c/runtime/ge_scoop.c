@@ -25,6 +25,9 @@
 #ifndef GE_THREAD_H
 #include "ge_thread.h"
 #endif
+#ifndef GE_ONCE_H
+#include "ge_once.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -98,13 +101,102 @@ uint32_t GE_decrement_scoop_sessions_count()
 }
 
 /*
+ * Initialize `process_onces' and `thread_onces' in `a_region'.
+ */
+static void GE_scoop_init_onces(GE_scoop_region* a_region)
+{
+	a_region->process_onces = GE_new_onces(
+		GE_process_onces->boolean_count,
+		GE_process_onces->character_8_count,
+		GE_process_onces->character_32_count,
+		GE_process_onces->integer_8_count,
+		GE_process_onces->integer_16_count,
+		GE_process_onces->integer_32_count,
+		GE_process_onces->integer_64_count,
+		GE_process_onces->natural_8_count,
+		GE_process_onces->natural_16_count,
+		GE_process_onces->natural_32_count,
+		GE_process_onces->natural_64_count,
+		GE_process_onces->pointer_count,
+		GE_process_onces->real_32_count,
+		GE_process_onces->real_64_count,
+		GE_process_onces->reference_count,
+		GE_process_onces->procedure_count);
+	a_region->thread_onces = GE_new_onces(
+		GE_thread_onces_boolean_count,
+		GE_thread_onces_character_8_count,
+		GE_thread_onces_character_32_count,
+		GE_thread_onces_integer_8_count,
+		GE_thread_onces_integer_16_count,
+		GE_thread_onces_integer_32_count,
+		GE_thread_onces_integer_64_count,
+		GE_thread_onces_natural_8_count,
+		GE_thread_onces_natural_16_count,
+		GE_thread_onces_natural_32_count,
+		GE_thread_onces_natural_64_count,
+		GE_thread_onces_pointer_count,
+		GE_thread_onces_real_32_count,
+		GE_thread_onces_real_64_count,
+		GE_thread_onces_reference_count,
+		GE_thread_onces_procedure_count);
+}
+
+/*
+ * Initialization of exception handling for `a_region'.
+ */
+void GE_scoop_init_exception(GE_scoop_region* a_region)
+{
+	EIF_REFERENCE l_exception_manager;
+	GE_context* l_context = a_region->context;
+
+	l_exception_manager = GE_new_exception_manager(l_context, EIF_TRUE);
+	a_region->exception_manager = l_exception_manager;
+	GE_init_exception_manager(l_context, l_exception_manager);
+}
+
+/* Free and destroy uncollectable data in `a_region'. */
+static void GE_scoop_region_destroy(GE_scoop_region* a_region)
+{
+	GE_mutex_destroy((EIF_POINTER)a_region->mutex);
+	GE_condition_variable_destroy((EIF_POINTER)a_region->condition_variable);
+	GE_mutex_destroy((EIF_POINTER)a_region->sync_mutex);
+	GE_condition_variable_destroy((EIF_POINTER)a_region->sync_condition_variable);
+	GE_free(a_region->last_session_keep_alive);
+}
+
+#ifdef GE_USE_BOEHM_GC
+/*
+ * To be called by the GC when there is no Eiffel objects
+ * in the SCOOP region `a_region' anymore.
+ */
+static void GE_scoop_region_dispose(void* a_region, void* data)
+{
+	GE_scoop_region* l_region = (GE_scoop_region*)a_region;
+	GE_context* l_context = l_region->context;
+
+	if (l_context && l_context->region == l_region) {
+		l_context->is_region_alive = 0;
+		if (GE_mutex_try_lock((EIF_POINTER)l_region->mutex)) {
+			GE_condition_variable_broadcast((EIF_POINTER)l_region->condition_variable);
+			GE_mutex_unlock((EIF_POINTER)l_region->mutex);
+		}
+	} else if (l_region->is_passive) {
+		GE_scoop_region_destroy(l_region);
+	}
+}
+#endif
+
+/*
  * New of SCOOP region.
  */
 GE_scoop_region* GE_new_scoop_region(GE_context* a_context, char a_is_passive)
 {
 	GE_scoop_region* l_region;
 
-	l_region = (GE_scoop_region*)GE_calloc_uncollectable(1, sizeof(GE_scoop_region));
+	l_region = (GE_scoop_region*)GE_calloc(1, sizeof(GE_scoop_region));
+	/* Allocate `last_session_keep_alive' with `_uncollectable' to that we can keep
+	 * alive the region if there are still some submitted sessions to be executed. */
+	l_region->last_session_keep_alive = (GE_scoop_session**)GE_calloc_uncollectable(1, sizeof(GE_scoop_session*));
 	l_region->mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
 	l_region->condition_variable = (EIF_COND_TYPE*)GE_condition_variable_create();
 	l_region->sync_mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
@@ -112,11 +204,14 @@ GE_scoop_region* GE_new_scoop_region(GE_context* a_context, char a_is_passive)
 	l_region->is_impersonation_allowed = '\1';
 	l_region->is_passive = a_is_passive;
 	GE_scoop_region_set_context(l_region, a_context);
-	GE_thread_init_onces(a_context);
-	l_region->process_onces = a_context->process_onces;
-	l_region->thread_onces = a_context->thread_onces;
-	GE_init_exception(a_context);
-	l_region->exception_manager = a_context->exception_manager;
+	GE_scoop_init_onces(l_region);
+	a_context->process_onces = l_region->process_onces;
+	a_context->thread_onces = l_region->thread_onces;
+	GE_scoop_init_exception(l_region);
+	a_context->exception_manager = l_region->exception_manager;
+#ifdef GE_USE_BOEHM_GC
+	GC_REGISTER_FINALIZER_NO_ORDER((void*)(l_region), (void (*) (void*, void*))&GE_scoop_region_dispose, NULL, NULL, NULL);
+#endif
 	return l_region;
 }
 
@@ -127,7 +222,7 @@ static GE_scoop_session* GE_new_scoop_session(GE_scoop_region* a_callee)
 {
 	GE_scoop_session* l_session;
 
-	l_session = (GE_scoop_session*)GE_calloc_uncollectable(1, sizeof(GE_scoop_session));
+	l_session = (GE_scoop_session*)GE_calloc(1, sizeof(GE_scoop_session));
 	l_session->callee = a_callee;
 	l_session->mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
 	l_session->condition_variable = (EIF_COND_TYPE*)GE_condition_variable_create();
@@ -158,7 +253,7 @@ void GE_scoop_multisessions_open_stop()
 }
 
 /*
- * Add a synchronization call betweenthe processor of `a_caller' and 
+ * Add a synchronization call between the processor of `a_caller' and 
  * the processor of the callee of `a_session' if not synchronized yet.
  */
 static void GE_scoop_session_add_condition(GE_scoop_region* a_caller, GE_scoop_session* a_session, GE_scoop_condition* a_condition)
@@ -292,6 +387,7 @@ static void GE_add_scoop_session(GE_scoop_session* a_session)
 		l_region->first_session = a_session;
 	}
 	l_region->last_session = a_session;
+	*(l_region->last_session_keep_alive) = a_session;
 	GE_condition_variable_broadcast((EIF_POINTER)l_region->condition_variable);
 	GE_mutex_unlock((EIF_POINTER)l_region->mutex);
 }
@@ -317,6 +413,7 @@ static void GE_remove_scoop_session(GE_scoop_session* a_session)
 		l_other_session->previous = a_session->previous;
 	} else {
 		l_region->last_session = a_session->previous;
+		*(l_region->last_session_keep_alive) = l_region->last_session;
 	}
 	GE_mutex_unlock((EIF_POINTER)l_region->mutex);
 	GE_decrement_scoop_sessions_count();
@@ -331,7 +428,7 @@ GE_scoop_condition* GE_new_scoop_condition(uint32_t a_counter)
 {
 	GE_scoop_condition* l_condition;
 
-	l_condition = (GE_scoop_condition*)GE_malloc_uncollectable(sizeof(GE_scoop_condition));
+	l_condition = (GE_scoop_condition*)GE_malloc(sizeof(GE_scoop_condition));
 	l_condition->wait_counter = a_counter;
 	l_condition->trigger_counter = 0;
 	l_condition->mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
@@ -372,7 +469,7 @@ GE_scoop_call* GE_new_scoop_call(GE_scoop_region* a_caller, char a_is_synchronou
 {
 	GE_scoop_call* l_call;
 
-	l_call = (GE_scoop_call*)GE_calloc_uncollectable(1, a_size);
+	l_call = (GE_scoop_call*)GE_calloc(1, a_size);
 	l_call->caller = a_caller;
 	l_call->is_synchronous = a_is_synchronous;
 	l_call->is_condition = 0;
@@ -436,6 +533,7 @@ void GE_scoop_region_set_context(GE_scoop_region* a_region, GE_context* a_contex
 	a_region->context = a_context;
 	if (a_context) {
 		a_context->region = a_region;
+		a_context->is_region_alive = '\1';
 		a_context->exception_manager = a_region->exception_manager;
 		a_context->process_onces = a_region->process_onces;
 		a_context->thread_onces = a_region->thread_onces;
@@ -666,29 +764,89 @@ void GE_scoop_region_release_locks(GE_scoop_region* a_caller, GE_scoop_region* a
 }
 
 /*
+ * Mutex to be used in `GE_scoop_processor_run'.
+ *
+ * Note that this function is outside of `GE_scoop_processor_run' to
+ * make sure that there is no register or something on the function
+ * stack keeping the region alive.
+ */
+static EIF_POINTER GE_scoop_processor_run_mutex(GE_context* a_context)
+{
+	return (EIF_POINTER)a_context->region->mutex;
+}
+
+/*
+ * Condition variable to be used in `GE_scoop_processor_run'.
+ *
+ * Note that this function is outside of `GE_scoop_processor_run' to
+ * make sure that there is no register or something on the function
+ * stack keeping the region alive.
+ */
+static EIF_POINTER GE_scoop_processor_run_condition_variable(GE_context* a_context)
+{
+	return (EIF_POINTER)a_context->region->condition_variable;
+}
+
+/*
+ * Lock `a_context->region->mutex'.
+ * If there is at least one session in the region, unlock the mutex.
+ * execute this session, and return 1.
+ * Otherwise, keep the mutex locked and return 0.
+ *
+ * Note that this function is outside of `GE_scoop_processor_run' to
+ * make sure that there is no register or something on the function
+ * stack keeping the region alive.
+ */
+static int GE_scoop_processor_run_one_iteration(GE_context* a_context)
+{
+	GE_scoop_region* l_region = a_context->region;
+	EIF_POINTER l_mutex = GE_scoop_processor_run_mutex(a_context);
+	GE_scoop_session* l_session;
+
+	GE_mutex_lock(l_mutex);
+	l_session = l_region->first_session;
+	if (l_session) {
+		GE_mutex_unlock(l_mutex);
+		GE_scoop_session_execute(a_context, l_session);
+		GE_remove_scoop_session(l_session);
+		return 1;
+	}
+	return 0;
+}
+
+/*
  * Execute the main loop of the SCOOP processor of `a_context->region'.
  */
 void GE_scoop_processor_run(GE_context* a_context)
 {
-	GE_scoop_session* l_session;
-	EIF_POINTER l_mutex = (EIF_POINTER)a_context->region->mutex;
-	EIF_POINTER l_condition_variable = (EIF_POINTER)a_context->region->condition_variable;
+	EIF_POINTER l_mutex = GE_scoop_processor_run_mutex(a_context);
+	EIF_POINTER l_condition_variable = GE_scoop_processor_run_condition_variable(a_context);
 
-	while (a_context->region) {
-		GE_mutex_lock(l_mutex);
-		l_session = a_context->region->first_session;
-		if (l_session) {
-			GE_mutex_unlock(l_mutex);
-			GE_scoop_session_execute(a_context, l_session);
-			GE_remove_scoop_session(l_session);
-		} else if (GE_scoop_sessions_count() == 0) {
-			GE_mutex_unlock(l_mutex);
-			break;
+	while (1) {
+		if (a_context->is_region_alive) {
+			if (GE_scoop_processor_run_one_iteration(a_context)) {
+			} else if (GE_scoop_sessions_count() == 0) {
+				GE_mutex_unlock(l_mutex);
+				break;
+			} else {
+#ifdef GE_USE_BOEHM_GC
+				/* Use timeout in case `GE_scoop_region_dispose' was not able to wake it up. */
+				GE_condition_variable_wait_with_timeout(l_condition_variable, l_mutex, 2000);
+#else
+				GE_condition_variable_wait(l_condition_variable, l_mutex);
+#endif
+				GE_mutex_unlock(l_mutex);
+			}
 		} else {
-			GE_condition_variable_wait(l_condition_variable, l_mutex);
-			GE_mutex_unlock(l_mutex);
+			/*GE_scoop_region_destroy(a_context->region);*/
+			a_context->region = 0;
+			a_context->exception_manager = EIF_VOID;
+			a_context->process_onces = 0;
+			a_context->thread_onces = 0;
+			break;
 		}
 	}
+	fprintf(stderr, "--------------------G2\n");
 }
 
 /* 
@@ -727,18 +885,6 @@ void GE_free_scoop_session(GE_scoop_session* a_session)
 	GE_mutex_destroy((EIF_POINTER)a_session->mutex);
 	GE_condition_variable_destroy((EIF_POINTER)a_session->condition_variable);
 	GE_free(a_session);
-}
-
-/*
- * Free memory allocated by `a_region'.
- */
-void GE_free_scoop_region(GE_scoop_region* a_region)
-{
-	GE_mutex_destroy((EIF_POINTER)a_region->mutex);
-	GE_condition_variable_destroy((EIF_POINTER)a_region->condition_variable);
-	GE_mutex_destroy((EIF_POINTER)a_region->sync_mutex);
-	GE_condition_variable_destroy((EIF_POINTER)a_region->sync_condition_variable);
-	GE_free(a_region);
 }
 
 #ifdef __cplusplus
