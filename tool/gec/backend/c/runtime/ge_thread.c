@@ -46,22 +46,22 @@ extern "C" {
 /*
  * Numbers of once-per-thread features.
  */
-static unsigned int GE_thread_onces_boolean_count;
-static unsigned int GE_thread_onces_character_8_count;
-static unsigned int GE_thread_onces_character_32_count;
-static unsigned int GE_thread_onces_integer_8_count;
-static unsigned int GE_thread_onces_integer_16_count;
-static unsigned int GE_thread_onces_integer_32_count;
-static unsigned int GE_thread_onces_integer_64_count;
-static unsigned int GE_thread_onces_natural_8_count;
-static unsigned int GE_thread_onces_natural_16_count;
-static unsigned int GE_thread_onces_natural_32_count;
-static unsigned int GE_thread_onces_natural_64_count;
-static unsigned int GE_thread_onces_pointer_count;
-static unsigned int GE_thread_onces_real_32_count;
-static unsigned int GE_thread_onces_real_64_count;
-static unsigned int GE_thread_onces_reference_count;
-static unsigned int GE_thread_onces_procedure_count;
+unsigned int GE_thread_onces_boolean_count;
+unsigned int GE_thread_onces_character_8_count;
+unsigned int GE_thread_onces_character_32_count;
+unsigned int GE_thread_onces_integer_8_count;
+unsigned int GE_thread_onces_integer_16_count;
+unsigned int GE_thread_onces_integer_32_count;
+unsigned int GE_thread_onces_integer_64_count;
+unsigned int GE_thread_onces_natural_8_count;
+unsigned int GE_thread_onces_natural_16_count;
+unsigned int GE_thread_onces_natural_32_count;
+unsigned int GE_thread_onces_natural_64_count;
+unsigned int GE_thread_onces_pointer_count;
+unsigned int GE_thread_onces_real_32_count;
+unsigned int GE_thread_onces_real_64_count;
+unsigned int GE_thread_onces_reference_count;
+unsigned int GE_thread_onces_procedure_count;
 
 /*
  * Mutexes used to protect the calls to once-per-process features.
@@ -1334,7 +1334,7 @@ static unsigned __stdcall GE_thread_routine(void* arg)
 static void* GE_thread_routine(void* arg)
 #endif
 {
-	GE_context* l_context = (GE_context*)arg;
+	GE_context* l_context = (GE_context*)arg; /* Keep alive while the thread is running. */
 	GE_thread_context* l_thread_context = l_context->thread;
 	GE_thread_context* l_parent_thread_context = l_thread_context->parent_context;
 
@@ -1407,7 +1407,16 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 	unsigned int l_attr_stack_size = 0;
 	unsigned int l_attr_priority = GE_thread_default_priority();
 	int l_raise_error = 0;
+
+#ifdef GE_USE_SCOOP
+	/* We need to allocate with `_uncollectable' because there might be a lapse of
+	 * time between the end of the current function and when `l_thread_context'
+	 * is assigned in `GE_thread_routine'. During that time it will be only 
+	 * referenced by `l_context' which is allocted with `_atomic'. */
+	l_thread_context = (GE_thread_context*)GE_unprotected_calloc_uncollectable(1, sizeof(GE_thread_context));
+#else
 	l_thread_context = (GE_thread_context*)GE_unprotected_calloc(1, sizeof(GE_thread_context));
+#endif
 	if (!l_thread_context) {
 		GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
 	} else {
@@ -1437,30 +1446,29 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 				GE_raise_with_message(GE_EX_EXT, "Cannot create thread children mutex");
 			}
 		}
-		/*
-		 * Execute this code here, from the current thread, instead of at the beginnig
-		 * of the new thread, because the Boehm GC crashes from time to time (more
-		 * frequently when using clang in debug mode) apparently when allocating the
-		 * large arrays to keep track of the once-per-thread data at the beginning of
-		 * the new thread (but not here in the current thread).
-		 * This also has the advantage of letting the current thread handle any
-		 * possible exception, instead of have the entire program crash because an
-		 * handled exception in the new thread (because its exception handler is not
-		 * fully initialized yet). So we have to make sure that all data reachable
-		 * from `l_context' (and `l_context' itself) are collectable to avoid memory
-		 * leak in case of such exception.
-		 */
-		l_context = (GE_context*)GE_malloc(sizeof(GE_context));
-		*l_context = GE_default_context;
-		l_context->thread = l_thread_context;
 #ifdef GE_USE_SCOOP
 		l_thread_context->is_scoop_processor = is_scoop_processor;
 		if (is_scoop_processor) {
+			/* Use `GE_malloc_atomic' because we want `l_context->region' to be
+			 * collected if it is the only reference left. Other data are kept 
+			 * alive thanks to a reference from the SCOOP region. */
+			l_context = (GE_context*)GE_malloc_atomic(sizeof(GE_context));
+			*l_context = GE_default_context;
+			l_context->thread = l_thread_context;
+			GE_init_exception(l_context);
 			GE_scoop_region_set_context(current->region, l_context);
-				/* Do not keep track of the current object so that it can be
-				reclaimed by the GC if it is not referenced anywhere else. */
+			/* Do not keep track of the current object so that it can be
+			   reclaimed by the GC if it is not referenced anywhere else. */
 		} else {
+#endif
+			/* Use `GE_malloc' because we want all data reachable from `l_context'
+			   to be kept alive while `l_context' is alive. */
+			l_context = (GE_context*)GE_malloc(sizeof(GE_context));
+			*l_context = GE_default_context;
+			l_context->thread = l_thread_context;
+#ifdef GE_USE_SCOOP
 			l_context->region = current->region;
+			l_context->is_region_alive = '\1';
 #endif
 			l_thread_context->current = current;
 			l_thread_context->routine = routine;
@@ -1495,7 +1503,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, l_context) == 0) {
 					l_thread_context->thread_id = l_thread_id;
 #ifdef GE_USE_SCOOP
-					if (!l_thread_context->is_scoop_processor) {
+					if (!is_scoop_processor) {
 #endif
 						l_current_thread_context->last_thread_id = l_thread_id;
 						l_current_thread_context->n_children++;
@@ -1522,7 +1530,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 		} else {
 			l_thread_context->thread_id = l_thread_id;
 #ifdef GE_USE_SCOOP
-			if (!l_thread_context->is_scoop_processor) {
+			if (!is_scoop_processor) {
 #endif
 				l_current_thread_context->last_thread_id = l_thread_id;
 				l_current_thread_context->n_children++;
@@ -1536,8 +1544,20 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 #if defined GE_USE_POSIX_THREADS || defined EIF_WINDOWS
 		if (l_raise_error) {
 #endif
-			GE_free_onces(l_context->process_onces);
-			GE_free_onces(l_context->thread_onces);
+#ifdef GE_USE_SCOOP
+			if (is_scoop_processor) {
+				l_context->region->context = 0;
+			} else {
+#endif
+				if (l_context->process_onces) {
+					GE_free_onces(l_context->process_onces);
+				}
+				if (l_context->thread_onces) {
+					GE_free_onces(l_context->thread_onces);
+				}
+#ifdef GE_USE_SCOOP
+			}
+#endif
 			GE_free_exception(l_context);
 			GE_free(l_thread_context);
 			GE_free(l_context);
@@ -1593,7 +1613,7 @@ void* GE_thread_create_wel_per_thread_data(size_t a_size)
 	GE_context* volatile l_context;
 
 	EIF_TSD_GET(GE_context*, GE_thread_context_key, l_context, "Cannot get execution context for current thread");
-	l_result = (void*)GE_calloc_uncollectable(1, a_size);
+	l_result = (void*)GE_calloc(1, a_size);
 	l_context->thread->wel_per_thread_data = l_result;
 	return l_result;
 }
@@ -1762,16 +1782,22 @@ void GE_thread_exit(void)
 		}
 #endif
 		EIF_TSD_SET(GE_thread_context_key, 0, "Cannot remove thread context to TSD.");
-		GE_free_onces(l_context->process_onces);
-		GE_free_onces(l_context->thread_onces);
-#ifdef GE_USE_SCOOP
-		GE_free_scoop_region(l_context->region);
-#endif
+		if (l_context->process_onces) {
+			GE_free_onces(l_context->process_onces);
+		}
+		if (l_context->thread_onces) {
+			GE_free_onces(l_context->thread_onces);
+		}
 		GE_free_exception(l_context);
 		if (l_thread_context->wel_per_thread_data) {
 			GE_free(l_thread_context->wel_per_thread_data);
 			l_thread_context->wel_per_thread_data = 0;
 		}
+#ifdef GE_USE_SCOOP
+		if (l_thread_context->is_scoop_processor && l_context->region) {
+			l_context->region->context = 0;
+		}
+#endif
 		if (l_free_thread_context) {
 			GE_free(l_thread_context);
 		}

@@ -20181,7 +20181,7 @@ feature {NONE} -- Deep features generation
 						-- Clear item slots beyond 'count' if needed.
 					current_file.put_string (c_ifndef)
 					current_file.put_character (' ')
-					if l_special_type.has_nested_reference_fields then
+					if use_scoop or l_special_type.has_nested_reference_fields then
 						current_file.put_line (c_ge_malloc_cleared)
 					else
 						current_file.put_line (c_ge_malloc_atomic_cleared)
@@ -31617,7 +31617,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Clear discarded item slots if needed.
 				current_file.put_string (c_ifndef)
 				current_file.put_character (' ')
-				if l_special_type.has_nested_reference_fields then
+				if use_scoop or l_special_type.has_nested_reference_fields then
 					current_file.put_line (c_ge_malloc_cleared)
 				else
 					current_file.put_line (c_ge_malloc_atomic_cleared)
@@ -31925,7 +31925,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Clear discarded item slots if needed.
 				current_file.put_string (c_ifndef)
 				current_file.put_character (' ')
-				if l_special_type.has_nested_reference_fields then
+				if use_scoop or l_special_type.has_nested_reference_fields then
 					current_file.put_line (c_ge_malloc_cleared)
 				else
 					current_file.put_line (c_ge_malloc_atomic_cleared)
@@ -35599,7 +35599,7 @@ feature {NONE} -- Memory allocation
 		local
 			l_special_type: detachable ET_DYNAMIC_SPECIAL_TYPE
 			l_item_type: detachable ET_DYNAMIC_PRIMARY_TYPE
-			l_has_nested_reference_fields: BOOLEAN
+			l_atomic_malloc: BOOLEAN
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_integer_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
@@ -35693,10 +35693,10 @@ feature {NONE} -- Memory allocation
 			current_file.put_character ('(')
 			print_type_declaration (a_type, current_file)
 			current_file.put_character (')')
-			if a_type.has_nested_reference_fields then
-				l_has_nested_reference_fields := True
+			if use_scoop or a_type.has_nested_reference_fields then
 				current_file.put_string (c_ge_malloc)
 			else
+				l_atomic_malloc := True
 				current_file.put_string (c_ge_malloc_atomic)
 			end
 			current_file.put_character ('(')
@@ -35787,10 +35787,10 @@ feature {NONE} -- Memory allocation
 					-- Initialize items if needed.
 				current_file.put_string (c_ifndef)
 				current_file.put_character (' ')
-				if l_has_nested_reference_fields then
-					current_file.put_line (c_ge_malloc_cleared)
-				else
+				if l_atomic_malloc then
 					current_file.put_line (c_ge_malloc_atomic_cleared)
+				else
+					current_file.put_line (c_ge_malloc_cleared)
 				end
 				print_indentation
 				current_file.put_string (c_memset)
@@ -41939,6 +41939,7 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_scoop.h", False, a_header_file)
 					include_runtime_header_file ("ge_gc.h", False, a_header_file)
 					include_runtime_header_file ("ge_thread.h", False, a_header_file)
+					include_runtime_header_file ("ge_once.h", False, a_header_file)
 				elseif a_filename.same_string ("ge_string.c") then
 					include_runtime_header_file ("ge_string.h", False, a_header_file)
 					include_runtime_header_file ("ge_native_string.h", False, a_header_file)

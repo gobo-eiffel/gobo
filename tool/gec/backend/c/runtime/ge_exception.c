@@ -107,7 +107,11 @@ static void GE_init_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
 {
 	a_trace->count = 0;
 	a_trace->capacity = 0;
+#ifdef GE_USE_SCOOP
+	a_trace->area = (char*)GE_malloc_atomic_uncollectable(4096);
+#else
 	a_trace->area = (char*)GE_malloc_atomic(4096);
+#endif
 	a_trace->area[0] = '\0';
 	a_trace->capacity = 4096;
 }
@@ -278,9 +282,9 @@ static void GE_print_object_location_reason_effect(GE_exception_trace_buffer* a_
 	l_effect_count = (int)strlen(a_effect);
 
 		/* 1 - precision of 211 = 254 - 43, 43 being number of characters written
-			   for `a_object_addr' and `a_location'.
+		 *     for `a_object_addr' and `a_location'.
 		 * 2 - precision of 181 = 254 - 73, 73 being number of characters written
-			   for `a_object_addr', `a_location' and `a_reason'.
+		 *     for `a_object_addr', `a_location' and `a_reason'.
 		 * 3 - 22, number of characters written for `a_location'
 		 * 4 - 29, number of characters written for `a_reason' */
 
@@ -415,7 +419,7 @@ GE_context GE_default_context = {0, 0, 0, 0, 0, 0, '\1', 0, 0, {0, 0, 0}, {0, 0,
 	, 0, 0, 0
 #endif
 #ifdef GE_USE_SCOOP
-	, 0
+	, 0, 0
 #endif
 	};
 
@@ -446,12 +450,15 @@ void GE_init_exception(GE_context* a_context)
 
 	GE_init_exception_trace_buffer(&a_context->exception_trace_buffer);
 	GE_init_exception_trace_buffer(&a_context->last_exception_trace);
-	l_exception_manager = GE_new_exception_manager(a_context, EIF_TRUE);
-	a_context->exception_manager = l_exception_manager;
-#ifdef GE_USE_THREADS
-	a_context->thread->exception_manager = l_exception_manager;
+#ifdef GE_USE_SCOOP
+	if (!a_context->thread->is_scoop_processor) {
 #endif
-	GE_init_exception_manager(a_context, l_exception_manager);
+		l_exception_manager = GE_new_exception_manager(a_context, EIF_TRUE);
+		a_context->exception_manager = l_exception_manager;
+		GE_init_exception_manager(a_context, l_exception_manager);
+#ifdef GE_USE_SCOOP
+	}
+#endif
 }
 
 /*
@@ -462,9 +469,6 @@ void GE_free_exception(GE_context* a_context)
 	GE_free_exception_trace_buffer(&(a_context->exception_trace_buffer));
 	GE_free_exception_trace_buffer(&(a_context->last_exception_trace));
 	a_context->exception_manager = EIF_VOID;
-#ifdef GE_USE_THREADS
-	a_context->thread->exception_manager = EIF_VOID;
-#endif
 }
 
 /*
