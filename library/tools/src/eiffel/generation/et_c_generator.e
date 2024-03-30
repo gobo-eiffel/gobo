@@ -199,6 +199,7 @@ feature {NONE} -- Initialization
 			create free_temp_variables.make (40)
 			create frozen_temp_variables.make (40)
 			create volatile_temp_variables.make (40)
+			create separate_temp_variables.make (40)
 			create used_separate_temp_variables.make (40)
 			create free_separate_temp_variables.make (40)
 			create frozen_separate_temp_variables.make (40)
@@ -21046,6 +21047,7 @@ feature {NONE} -- Separate calls
 			old_file: KI_TEXT_OUTPUT_STREAM
 			old_function_header_buffer: like current_function_header_buffer
 			old_function_body_buffer: like current_function_body_buffer
+			old_temp_variables: like temp_variables
 			old_used_temp_variables: like used_temp_variables
 			old_free_temp_variables: like free_temp_variables
 			old_frozen_temp_variables: like frozen_temp_variables
@@ -21072,10 +21074,12 @@ feature {NONE} -- Separate calls
 			current_function_header_buffer := current_separate_function_header_buffer
 			current_function_body_buffer := current_separate_function_body_buffer
 			current_file := current_function_header_buffer
+			old_temp_variables := temp_variables
 			old_used_temp_variables := used_temp_variables
 			old_free_temp_variables := free_temp_variables
 			old_frozen_temp_variables := frozen_temp_variables
 			old_volatile_temp_variables := volatile_temp_variables
+			temp_variables := separate_temp_variables
 			used_temp_variables := used_separate_temp_variables
 			free_temp_variables := free_separate_temp_variables
 			frozen_temp_variables := frozen_separate_temp_variables
@@ -21889,6 +21893,7 @@ feature {NONE} -- Separate calls
 			current_function_header_buffer := old_function_header_buffer
 			current_function_body_buffer := old_function_body_buffer
 			current_file := old_file
+			temp_variables := old_temp_variables
 			used_temp_variables := old_used_temp_variables
 			free_temp_variables := old_free_temp_variables
 			frozen_temp_variables := old_frozen_temp_variables
@@ -43661,6 +43666,10 @@ feature {NONE} -- Temporary variables (Implementation)
 			-- Temporary variables which need to be declared as 'volatile'
 			-- (e.g. because their address is used).
 
+	separate_temp_variables: DS_ARRAYED_LIST [ET_IDENTIFIER]
+			-- Names of temporary variables generated so far
+			-- (for SCOOP separate calls, when generating separate C functions)
+
 	used_separate_temp_variables: DS_ARRAYED_LIST [detachable ET_DYNAMIC_PRIMARY_TYPE]
 			-- Temporary variables currently in used by the current feature
 			-- (for SCOOP separate calls, when generating separate C functions)
@@ -45267,8 +45276,10 @@ invariant
 	frozen_temp_variables_count: frozen_temp_variables.count = used_temp_variables.count
 	volatile_temp_variables_not_void: volatile_temp_variables /= Void
 	volatile_temp_variables_count: volatile_temp_variables.count = used_temp_variables.count
+	separate_temp_variables_not_void: separate_temp_variables /= Void
+	no_void_separate_temp_variable: not separate_temp_variables.has_void
 	used_separate_temp_variables_not_void: used_separate_temp_variables /= Void
-	used_separate_temp_variables_count: used_separate_temp_variables.count <= temp_variables.count
+	used_separate_temp_variables_count: used_separate_temp_variables.count <= separate_temp_variables.count
 	free_separate_temp_variables_not_void: free_separate_temp_variables /= Void
 	free_separate_temp_variables_count: free_separate_temp_variables.count = used_separate_temp_variables.count
 	frozen_separate_temp_variables_not_void: frozen_separate_temp_variables /= Void
