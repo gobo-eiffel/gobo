@@ -508,6 +508,10 @@ void GE_scoop_session_add_call(GE_scoop_session* a_session, GE_scoop_call* a_cal
 	if (l_is_synchronous) {
 		GE_condition_variable_wait((EIF_POINTER)l_caller->sync_condition_variable, (EIF_POINTER)l_caller->sync_mutex);
 		GE_mutex_unlock((EIF_POINTER)l_caller->sync_mutex);
+		if (a_session->callee->is_dirty) {
+			a_session->callee->is_dirty = 0;
+			GE_raise(GE_EX_DIRTY);
+		}
 	}
 }
 
@@ -547,17 +551,9 @@ void GE_scoop_region_impersonate(GE_scoop_region* a_caller, GE_scoop_region* a_c
 {
 	GE_context* l_callee_context;
 	GE_context* l_caller_context;
-	GE_context l_temp_context;
 
 	l_caller_context = a_caller->context;
 	l_callee_context = a_callee->context;
-	if (l_caller_context && l_callee_context) {
-		l_temp_context = *l_caller_context;
-		*l_caller_context = *l_callee_context;
-		*l_callee_context = l_temp_context;
-		l_callee_context->thread = l_caller_context->thread;
-		l_caller_context->thread = l_temp_context.thread;
-	}
 	GE_scoop_region_set_context(a_caller, l_callee_context);
 	GE_scoop_region_set_context(a_callee, l_caller_context);
 }
@@ -620,33 +616,42 @@ char GE_scoop_region_has_lock_on(GE_scoop_region* a_caller, GE_scoop_region* a_c
 static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_session* a_session, GE_scoop_call* a_call)
 {
 	GE_scoop_region* l_caller;
+	GE_scoop_region* l_callee;
+	GE_context l_old_context;
 	char l_is_synchronous = a_call->is_synchronous;
 	GE_rescue r;
-	uint32_t tr = a_context->in_rescue;
 	char l_to_be_freed = 0;
 
-
+	l_caller = a_call->caller;
+	l_callee = a_session->callee;
 	if (a_call->execute) {
-		if (l_is_synchronous) {
-			GE_scoop_region_pass_locks(a_call->caller, a_session->callee);
-		}
-		if (GE_setjmp(r.jb) != 0) {
-			a_context->in_rescue = tr + 1;
+		if (!l_callee->is_dirty) {
+			l_old_context = *a_context;
 			if (l_is_synchronous) {
-				l_caller = a_call->caller;
-				GE_scoop_region_release_locks(l_caller, a_session->callee);
-				GE_mutex_lock((EIF_POINTER)l_caller->sync_mutex);
-				GE_condition_variable_broadcast((EIF_POINTER)l_caller->sync_condition_variable);
-				GE_mutex_unlock((EIF_POINTER)l_caller->sync_mutex);
+				GE_scoop_region_pass_locks(l_caller, l_callee);
 			}
-			GE_jump_to_last_rescue(a_context);
-		}
-		r.previous = a_context->last_rescue;
-		a_context->last_rescue = &r;
-		a_call->execute(a_context, a_session, a_call);
-		a_context->last_rescue = r.previous;
-		if (l_is_synchronous) {
-			GE_scoop_region_release_locks(a_call->caller, a_session->callee);
+			if (GE_setjmp(r.jb) != 0) {
+				l_callee->is_dirty = '\1';
+				if (l_is_synchronous) {
+					GE_scoop_region_release_locks(l_caller, l_callee);
+					GE_mutex_lock((EIF_POINTER)l_caller->sync_mutex);
+					GE_condition_variable_broadcast((EIF_POINTER)l_caller->sync_condition_variable);
+					GE_mutex_unlock((EIF_POINTER)l_caller->sync_mutex);
+				} else {
+#ifdef GE_STOP_ON_DIRTY_ASYNCHRONOUS_EXCEPTION
+					GE_jump_to_last_rescue(a_context);
+#endif
+				}
+				*a_context = l_old_context;
+				return;
+			}
+			r.previous = a_context->last_rescue;
+			a_context->last_rescue = &r;
+			a_call->execute(a_context, a_session, a_call);
+			*a_context = l_old_context;
+			if (l_is_synchronous) {
+				GE_scoop_region_release_locks(l_caller, l_callee);
+			}
 		}
 	} else if (a_call->is_condition) {
 		GE_scoop_condition* l_condition = ((GE_scoop_condition_call*)a_call)->condition;
@@ -668,7 +673,6 @@ static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_session* a_ses
 		}
 	}
 	if (l_is_synchronous) {
-		l_caller = a_call->caller;
 		GE_mutex_lock((EIF_POINTER)l_caller->sync_mutex);
 		GE_condition_variable_broadcast((EIF_POINTER)l_caller->sync_condition_variable);
 		GE_mutex_unlock((EIF_POINTER)l_caller->sync_mutex);
@@ -702,6 +706,7 @@ static void GE_scoop_session_execute(GE_context* a_context, GE_scoop_session* a_
 			GE_condition_variable_wait((EIF_POINTER)a_session->condition_variable, (EIF_POINTER)a_session->mutex);
 			GE_mutex_unlock((EIF_POINTER)a_session->mutex);
 		} else {
+			a_session->callee->is_dirty = 0;
 			GE_mutex_unlock((EIF_POINTER)a_session->mutex);
 			break;
 		}

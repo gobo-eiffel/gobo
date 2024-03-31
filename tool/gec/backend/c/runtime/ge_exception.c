@@ -82,7 +82,7 @@ static char* GE_exception_tags[] = {
 	"COM error.",						/* GE_EX_COM */
 	"Runtime check violated.",			/* GE_EX_RT_CHECK */
 	"Old expression evaluation failed.",/* GE_EX_OLD */
-	"Serialization failed."				/* GE_EX_SEL */
+	"Serialization failed.",			/* GE_EX_SEL */
 	"SCOOP processor dirty."			/* GE_EX_DIRTY */
 };
 

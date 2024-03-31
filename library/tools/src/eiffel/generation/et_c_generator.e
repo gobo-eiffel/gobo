@@ -2713,18 +2713,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_character ('r')
 					current_file.put_character (';')
 					current_file.put_new_line
-					print_indentation
-					current_file.put_string (c_uint32_t)
-					current_file.put_character (' ')
-					current_file.put_string (c_tr)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_string (c_ac)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_in_rescue)
-					current_file.put_character (';')
-					current_file.put_new_line
 				end
 			end
 				--
@@ -2816,20 +2804,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_character ('{')
 				current_file.put_new_line
 				indent
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_in_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_tr)
-				current_file.put_character (' ')
-				current_file.put_character ('+')
-				current_file.put_character (' ')
-				current_file.put_character ('1')
-				current_file.put_character (';')
-				current_file.put_new_line
 					-- Make sure to exit from the current SCOOP sessions
 					-- before propagating the exception.
 				check l_has_separate_arguments: l_arguments /= Void then end
@@ -7084,7 +7058,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				end
 			end
 			l_rescue := a_feature.rescue_clause
-			if l_rescue /= Void or l_is_once or l_has_separate_arguments then
+			if l_rescue /= Void or l_is_once then
 				print_indentation
 				current_file.put_string (c_ge_rescue)
 				current_file.put_character (' ')
@@ -7101,6 +7075,15 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
 				current_file.put_string (c_in_rescue)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			if l_has_separate_arguments then
+				print_indentation
+				current_file.put_string (c_ge_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character ('2')
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -7177,7 +7160,117 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			reset_rescue_data
 			locals_written := locals_written_in_rescue
 			locals_read := locals_read_in_rescue
-			if l_rescue /= Void or l_is_once or l_has_separate_arguments then
+			if l_has_separate_arguments then
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_ge_setjmp)
+				current_file.put_character ('(')
+				current_file.put_character ('r')
+				current_file.put_character ('2')
+				current_file.put_character ('.')
+				current_file.put_character ('j')
+				current_file.put_character ('b')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('!')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('0')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+					-- Make sure to exit from the current SCOOP sessions
+					-- before propagating the exception.
+				if l_has_separate_formal_arguments then
+					check l_has_separate_formal_arguments: l_arguments /= Void then end
+					nb := l_arguments.count
+					from i := 1 until i > nb loop
+						l_argument := l_arguments.formal_argument (i)
+						l_name := l_argument.name
+						l_argument_type := dynamic_type_set (l_name).static_type
+						if l_argument_type.is_separate then
+							print_indentation
+							current_file.put_string (c_if)
+							current_file.put_character (' ')
+							current_file.put_character ('(')
+							print_separate_argument_session_name (l_name, current_file)
+							current_file.put_character (')')
+							current_file.put_character (' ')
+							current_file.put_string (c_ge_scoop_session_close)
+							current_file.put_character ('(')
+							current_file.put_string (c_sr)
+							print_comma
+							print_separate_argument_session_name (l_name, current_file)
+							current_file.put_character (')')
+							print_semicolon_newline
+						end
+						i := i + 1
+					end
+				end
+					-- Even the SCOOP sessions from the inline separate instructions.
+				if attached a_feature.inline_separate_arguments as l_inline_separate_arguments then
+					nb := l_inline_separate_arguments.count
+					from i := 1 until i > nb loop
+						l_name := l_inline_separate_arguments.argument (i).name
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_separate_argument_session_name (l_name, current_file)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_string (c_ge_scoop_session_close)
+						current_file.put_character ('(')
+						current_file.put_string (c_sr)
+						print_comma
+						print_separate_argument_session_name (l_name, current_file)
+						current_file.put_character (')')
+						print_semicolon_newline
+						i := i + 1
+					end
+				end
+				print_indentation
+				current_file.put_string (c_ge_jump_to_last_rescue)
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_character ('r')
+				current_file.put_character ('2')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('&')
+				current_file.put_character ('r')
+				current_file.put_character ('2')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			if l_rescue /= Void or l_is_once then
 				print_indentation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
@@ -7242,58 +7335,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						end
 					end
 				end
-					-- Make sure to exit from the current SCOOP sessions
-					-- before propagating the exception.
-				if l_has_separate_formal_arguments then
-					check l_has_separate_formal_arguments: l_arguments /= Void then end
-					nb := l_arguments.count
-					from i := 1 until i > nb loop
-						l_argument := l_arguments.formal_argument (i)
-						l_name := l_argument.name
-						l_argument_type := dynamic_type_set (l_name).static_type
-						if l_argument_type.is_separate then
-							print_indentation
-							current_file.put_string (c_if)
-							current_file.put_character (' ')
-							current_file.put_character ('(')
-							print_separate_argument_session_name (l_name, current_file)
-							current_file.put_character (')')
-							current_file.put_character (' ')
-							current_file.put_string (c_ge_scoop_session_close)
-							current_file.put_character ('(')
-							current_file.put_string (c_sr)
-							print_comma
-							print_separate_argument_session_name (l_name, current_file)
-							current_file.put_character (')')
-							print_semicolon_newline
-						end
-						i := i + 1
-					end
-				end
-				if l_has_separate_arguments then
-						-- Even the SCOOP sessions from the inline separate instructions.
-					if attached a_feature.inline_separate_arguments as l_inline_separate_arguments then
-						nb := l_inline_separate_arguments.count
-						from i := 1 until i > nb loop
-							l_name := l_inline_separate_arguments.argument (i).name
-							print_indentation
-							current_file.put_string (c_if)
-							current_file.put_character (' ')
-							current_file.put_character ('(')
-							print_separate_argument_session_name (l_name, current_file)
-							current_file.put_character (')')
-							current_file.put_character (' ')
-							current_file.put_string (c_ge_scoop_session_close)
-							current_file.put_character ('(')
-							current_file.put_string (c_sr)
-							print_comma
-							print_separate_argument_session_name (l_name, current_file)
-							current_file.put_character (')')
-							print_semicolon_newline
-							i := i + 1
-						end
-					end
-				end
 				if l_rescue /= Void then
 					print_indentation
 					current_file.put_string (c_ge_raise)
@@ -7353,7 +7394,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			end
 			l_result_written_in_body := result_written
 			l_result_read_in_body := result_read
-			if l_rescue /= Void or l_is_once or l_has_separate_arguments then
+			if l_rescue /= Void or l_is_once then
 				print_indentation
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
@@ -7370,6 +7411,21 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if a_result_type /= Void then
 					-- The 'Result' entity is always implicitly read in the body to return its value.
 				l_result_read_in_body := True
+			end
+			if l_has_separate_arguments then
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character ('2')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (';')
+				current_file.put_new_line
 			end
 			if l_has_separate_formal_arguments then
 					-- Exit from the current SCOOP sessions.
@@ -18765,18 +18821,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_character ('r')
 				current_file.put_character (';')
 				current_file.put_new_line
-				print_indentation
-				current_file.put_string (c_uint32_t)
-				current_file.put_character (' ')
-				current_file.put_string (c_tr)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_in_rescue)
-				current_file.put_character (';')
-				current_file.put_new_line
 			end
 			if l_result /= Void then
 					-- Query or Tuple label.
@@ -18812,20 +18856,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_character ('{')
 				current_file.put_new_line
 				indent
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_in_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_tr)
-				current_file.put_character (' ')
-				current_file.put_character ('+')
-				current_file.put_character (' ')
-				current_file.put_character ('1')
-				current_file.put_character (';')
-				current_file.put_new_line
 				print_indentation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
@@ -21294,18 +21324,6 @@ feature {NONE} -- Separate calls
 				current_file.put_character ('r')
 				current_file.put_character (';')
 				current_file.put_new_line
-				print_indentation
-				current_file.put_string (c_uint32_t)
-				current_file.put_character (' ')
-				current_file.put_string (c_tr)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_in_rescue)
-				current_file.put_character (';')
-				current_file.put_new_line
 			end
 				-- Print body to `current_file'.
 			current_file := current_function_body_buffer
@@ -21621,6 +21639,39 @@ feature {NONE} -- Separate calls
 					current_file.put_character (')')
 					print_semicolon_newline
 					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_string (c_se)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_callee)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_is_dirty)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					current_file.put_string (c_se)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_callee)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_is_dirty)
+					print_assign_to
+					current_file.put_character ('0')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ge_raise)
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_ex_dirty)
+					current_file.put_character (')')
+					print_semicolon_newline
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+					print_indentation
 					current_file.put_string (c_ge_scoop_region_pass_locks)
 					current_file.put_character ('(')
 					current_file.put_string (c_sr)
@@ -21633,7 +21684,7 @@ feature {NONE} -- Separate calls
 						-- Use impersonation (i.e. the call will be executed by
 						-- the processor of the current region on behalf of the
 						-- processor of the other SCOOP region, pretending
-						-- that it is the prcoessor associated with this other
+						-- that it is the processor associated with this other
 						-- SCOOP region).
 					print_indentation
 					current_file.put_string (c_ge_scoop_region_impersonate)
@@ -21670,23 +21721,6 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('{')
 					current_file.put_new_line
 					indent
-					print_indentation
-					current_file.put_string (c_ac)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_in_rescue)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_string (c_tr)
-					current_file.put_character (' ')
-					current_file.put_character ('+')
-					current_file.put_character (' ')
-					current_file.put_character ('1')
-					current_file.put_character (';')
-					current_file.put_new_line
-
-					current_file.put_line("GE_show_console(); fprintf(stderr, %"Exception in GE_scoop_call_execute\n%");")
-
 					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
@@ -37340,7 +37374,10 @@ feature {NONE} -- Inlining
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			if nested_inlining_count >= max_nested_inlining_count then
+			if exception_trace_mode then
+					-- Exception trace mode makes the code too big to inline.
+				Result := False
+			elseif nested_inlining_count >= max_nested_inlining_count then
 				Result := False
 			elseif not are_inlinable_call_operands (a_feature, a_target_type) then
 				Result := False
@@ -37384,7 +37421,10 @@ feature {NONE} -- Inlining
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
-			if nested_inlining_count >= max_nested_inlining_count then
+			if exception_trace_mode then
+					-- Exception trace mode makes the code too big to inline.
+				Result := False
+			elseif nested_inlining_count >= max_nested_inlining_count then
 				Result := False
 			elseif not are_inlinable_call_operands (a_feature, a_target_type) then
 				Result := False
@@ -44843,6 +44883,7 @@ feature {NONE} -- Constants
 	c_ge_encoded_type_from_name: STRING = "GE_encoded_type_from_name"
 	c_ge_ex_cdef: STRING = "GE_EX_CDEF"
 	c_ge_ex_check: STRING = "GE_EX_CHECK"
+	c_ge_ex_dirty: STRING = "GE_EX_DIRTY"
 	c_ge_ex_fail: STRING = "GE_EX_FAIL"
 	c_ge_ex_fatal: STRING = "GE_EX_FATAL"
 	c_ge_ex_prog: STRING = "GE_EX_PROG"
@@ -45109,6 +45150,7 @@ feature {NONE} -- Constants
 	c_int32_t: STRING = "int32_t"
 	c_int64_t: STRING = "int64_t"
 	c_intptr_t: STRING = "intptr_t"
+	c_is_dirty: STRING = "is_dirty"
 	c_is_passive: STRING = "is_passive"
 	c_is_special: STRING = "is_special"
 	c_last_rescue: STRING = "last_rescue"
