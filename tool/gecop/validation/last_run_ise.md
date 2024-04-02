@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     468 tests
+    # Passed:     479 tests
     # FAILED:     153 tests
     # Aborted:    0 test
-    # Total:      621 tests
+    # Total:      632 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo1/test\_bar\_2](definition/difo1/test\_bar\_2)\] test\_failed</br>

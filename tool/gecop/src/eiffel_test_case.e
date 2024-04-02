@@ -478,7 +478,7 @@ feature {NONE} -- Test ISE Eiffel
 			a_regexp9.compile (a_pattern9)
 			assert ("cannot compile regexp '" + a_pattern9 + "'", a_regexp9.is_compiled)
 			a_regexp9.optimize
-			a_pattern10 := "(.*([^-]|[^-]-)) @[0-9]+ *"
+			a_pattern10 := "(.*([^-]|[^-]-) )@[0-9]+( +[^ :][^:]*:)? *"
 			create a_regexp10.make
 			a_regexp10.compile (a_pattern10)
 			assert ("cannot compile regexp '" + a_pattern10 + "'", a_regexp10.is_compiled)
@@ -538,7 +538,8 @@ feature {NONE} -- Test ISE Eiffel
 							elseif a_regexp10.recognizes (a_line) then
 									-- These are breakpoint positions in exception traces.
 								out_file.put_string (a_regexp10.captured_substring (1))
-								out_file.put_line (" @N")
+								out_file.put_string ("@N")
+								out_file.put_line (a_regexp10.captured_substring (3))
 							else
 								out_file.put_line (a_line)
 							end
@@ -942,7 +943,7 @@ feature {NONE} -- Output logs
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
 			a_regexp1.optimize
-			a_pattern2 := "(.*([^-]|[^-]-)) @[0-9]+ *"
+			a_pattern2 := "(.*([^-]|[^-]-) )@[0-9]+( +[^ :][^:]*:)? *"
 			create a_regexp2.make
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
@@ -977,7 +978,8 @@ feature {NONE} -- Output logs
 							elseif a_regexp2.recognizes (a_line) then
 									-- These are breakpoint positions in exception traces.
 								out_file.put_string (a_regexp2.captured_substring (1))
-								out_file.put_line (" @N")
+								out_file.put_string ("@N")
+								out_file.put_line (a_regexp2.captured_substring (3))
 							else
 								out_file.put_line (a_line)
 							end
