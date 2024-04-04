@@ -245,6 +245,10 @@ feature {NONE} -- Eiffel config file parsing
 						if l_value /= Void and then l_value.is_boolean then
 							ecf_gelint_option := l_value.to_boolean
 						end
+						l_value := l_target.variables.value ("scoop_exceptions")
+						if l_value /= Void and then not l_value.is_empty then
+							ecf_scoop_exceptions_option := l_value
+						end
 					end
 					last_system := l_ecf_system
 				end
@@ -253,6 +257,11 @@ feature {NONE} -- Eiffel config file parsing
 
 	ecf_gelint_option: BOOLEAN
 			-- Same as command-line option --gelint, but specified from the ECF file
+
+	ecf_scoop_exceptions_option: detachable STRING
+			-- Indicate what to do when a SCOOP region becomes dirty after an unhandled exception.
+			-- default: same as in the SCOOP specification.
+			-- stop_when_dirty: the application should stop when a SCOOP region becomes dirty after an unhandled exception.
 
 feature {NONE} -- Processing
 
@@ -324,6 +333,7 @@ feature {NONE} -- Processing
 					-- in the Eiffel config file.
 				l_generator.set_use_boehm_gc (use_boehm_gc)
 			end
+			l_generator.set_scoop_exceptions_stop_when_dirty (scoop_exceptions_stop_when_dirty)
 			l_generator.set_finalize_mode (is_finalize)
 			l_generator.set_split_mode (not no_split)
 			if split_size > 0 then
@@ -458,6 +468,13 @@ feature -- Arguments
 			-- Should gelint be run on the full content of each class being compiled?
 		do
 			Result := gelint_flag.was_found or ecf_gelint_option
+		end
+
+	scoop_exceptions_stop_when_dirty: BOOLEAN
+			-- Should the application stop when a SCOOP region becomes dirty after an unhandled exception?
+		do
+			Result := attached ecf_scoop_exceptions_option as l_ecf_scoop_exceptions_option and then
+				l_ecf_scoop_exceptions_option.as_lower.same_string ("stop_when_dirty")
 		end
 
 	ise_version: UT_VERSION

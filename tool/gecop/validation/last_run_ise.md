@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     468 tests
-    # FAILED:     153 tests
+    # Passed:     480 tests
+    # FAILED:     154 tests
     # Aborted:    0 test
-    # Total:      621 tests
+    # Total:      634 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo1/test\_bar\_2](definition/difo1/test\_bar\_2)\] test\_failed</br>
@@ -26,6 +26,7 @@ FAIL:  \[[semantics/m9as/test\_generic\_argument\_1](semantics/m9as/test\_generi
 FAIL:  \[[semantics/m9as/test\_generic\_target\_1](semantics/m9as/test\_generic\_target\_1)\] test\_failed</br>
 FAIL:  \[[semantics/m9as/test\_two\_separate\_arguments\_4](semantics/m9as/test\_two\_separate\_arguments\_4)\] test\_failed</br>
 FAIL:  \[[semantics/m9as/test\_two\_separate\_arguments\_7](semantics/m9as/test\_two\_separate\_arguments\_7)\] test\_failed</br>
+FAIL:  \[[semantics/m9se/test\_command\_asynchronous\_8](semantics/m9se/test\_command\_asynchronous\_8)\] test\_failed</br>
 FAIL:  \[[semantics/mbas/test\_expanded\_convert\_to\_2](semantics/mbas/test\_expanded\_convert\_to\_2)\] test\_failed</br>
 FAIL:  \[[semantics/mbre1/test\_conversion\_expanded\_2](semantics/mbre1/test\_conversion\_expanded\_2)\] test\_failed</br>
 FAIL:  \[[semantics/mbre1/test\_conversion\_expanded\_3](semantics/mbre1/test\_conversion\_expanded\_3)\] test\_failed</br>

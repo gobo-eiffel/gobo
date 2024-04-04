@@ -82,7 +82,7 @@ static char* GE_exception_tags[] = {
 	"COM error.",						/* GE_EX_COM */
 	"Runtime check violated.",			/* GE_EX_RT_CHECK */
 	"Old expression evaluation failed.",/* GE_EX_OLD */
-	"Serialization failed."				/* GE_EX_SEL */
+	"Serialization failed.",			/* GE_EX_SEL */
 	"SCOOP processor dirty."			/* GE_EX_DIRTY */
 };
 
@@ -132,7 +132,7 @@ static void GE_free_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
  * Append `a_string' to `a_trace'.
  * Resize area if needed.
  */
-static void GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_trace, char* a_string)
+void GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_trace, char* a_string)
 {
 	int l_length = strlen(a_string);
 	uint32_t l_new_capacity;
@@ -160,7 +160,7 @@ static void GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_tra
 /*
  * Wipe out `a_trace'.
  */
-static void GE_wipe_out_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
+void GE_wipe_out_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
 {
 	char* l_area = a_trace->area;
 
@@ -338,16 +338,31 @@ static void GE_print_exception_trace(GE_context* a_context, long a_code, const c
 	char* l_root_feature = "root's creation";
 	const char* l_class_name;
 	const char* l_feature_name;
+	unsigned long l_thread_id = 0;
+	char* l_thread_name = "";
+	unsigned long l_region_id = 0;
 
 #ifdef GE_USE_THREADS
-	sprintf(buffer, "%s\n", "******************************** Thread exception *****************************");
-	GE_append_to_exception_trace_buffer(a_trace, buffer);
 	if (a_context == GE_main_context) {
 			/* Main thread. */
-		sprintf(buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", "Root thread", (unsigned long)0, "(thread id)");
+		l_thread_name = "Root thread";
 	} else {
-		sprintf(buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", "Child thread", (unsigned long)(uint64_t)a_context->thread->thread_id, "(thread id)");
+		l_thread_id = (unsigned long)(uint64_t)a_context->thread->thread_id;
+		l_thread_name = "Child thread";
 	}
+#endif	
+#ifdef GE_USE_SCOOP
+	l_region_id = (unsigned long)(uint64_t)a_context->region;
+	sprintf(buffer, "%s\n", "******************************** SCOOP exception ******************************");
+	GE_append_to_exception_trace_buffer(a_trace, buffer);
+	sprintf(buffer,"%-10.10s 0x%016" EIF_POINTER_DISPLAY " %-12.12s 0x%" EIF_POINTER_DISPLAY " %s\n", "In region", l_region_id, "(region id)", l_thread_id, "(thread id)");
+	GE_append_to_exception_trace_buffer(a_trace, buffer);
+	sprintf(buffer, "%s\n", "*******************************************************************************");
+	GE_append_to_exception_trace_buffer(a_trace, buffer);
+#elif defined(GE_USE_THREADS)
+	sprintf(buffer, "%s\n", "******************************** Thread exception *****************************");
+	GE_append_to_exception_trace_buffer(a_trace, buffer);
+	sprintf(buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", l_thread_name, l_thread_id, "(thread id)");
 	GE_append_to_exception_trace_buffer(a_trace, buffer);
 	sprintf(buffer, "%s\n", "*******************************************************************************");
 	GE_append_to_exception_trace_buffer(a_trace, buffer);
@@ -364,7 +379,7 @@ static void GE_print_exception_trace(GE_context* a_context, long a_code, const c
 		l_root_class = "ROOT CLASS";
 	}
 	l_call = a_context->call;
-	if (l_call) {
+	if (l_call && l_call->caller) {
 		l_class_name = l_call->class_name;
 		l_feature_name = l_call->feature_name;
 #ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
@@ -393,22 +408,19 @@ static void GE_print_exception_trace(GE_context* a_context, long a_code, const c
 		l_object = l_call->object;
 #endif
 		l_reason = "Routine failure.";
-		l_effect = "Fail";
+		if (l_call->caller) {
+			l_effect = "Fail";
+		} else {
+			l_effect = "Exit";
+			if (strcmp(l_call->feature_name, "separate call") == 0) {
+				l_reason = "Dirty region.";
+			}
+		}
 		GE_print_object_location_reason_effect(a_trace, l_object, l_location, l_reason, l_effect);
 		sprintf(buffer, "%s\n", "-------------------------------------------------------------------------------");
 		GE_append_to_exception_trace_buffer(a_trace, buffer);
 		l_call = l_call->caller;
 	}
-	l_tag = "";
-	GE_print_class_feature_tag(a_trace, l_root_class, l_root_feature, l_tag);
-#ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
-	l_object = NULL;
-#endif
-	l_reason = "Routine failure.";
-	l_effect = "Exit";
-	GE_print_object_location_reason_effect(a_trace, l_object, l_location, l_reason, l_effect);
-	sprintf(buffer, "%s\n", "-------------------------------------------------------------------------------");
-	GE_append_to_exception_trace_buffer(a_trace, buffer);
 }
 
 /*

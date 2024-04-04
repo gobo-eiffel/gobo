@@ -1337,7 +1337,13 @@ static void* GE_thread_routine(void* arg)
 	GE_context* l_context = (GE_context*)arg; /* Keep alive while the thread is running. */
 	GE_thread_context* l_thread_context = l_context->thread;
 	GE_thread_context* l_parent_thread_context = l_thread_context->parent_context;
+#ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
+	GE_call tc = {l_thread_context->current,"","thread's creation",0};
+#else
+	GE_call tc = {"","thread's creation",0};
+#endif
 
+	l_context->call = &tc;
 	GE_unprotected_mutex_lock((EIF_POINTER)l_parent_thread_context->children_mutex);
 	/* Wait for the parent thread to set the thread id. */
 #ifdef GE_USE_SCOOP
@@ -1352,6 +1358,7 @@ static void* GE_thread_routine(void* arg)
 	SIGRESUME;
 #ifdef GE_USE_SCOOP
 	if (l_thread_context->is_scoop_processor) {
+			tc.feature_name = "separate call";
 			GE_scoop_processor_run(l_context);
 	} else
 #endif
