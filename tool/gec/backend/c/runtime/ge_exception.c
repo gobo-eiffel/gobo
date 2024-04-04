@@ -355,7 +355,7 @@ static void GE_print_exception_trace(GE_context* a_context, long a_code, const c
 	l_region_id = (unsigned long)(uint64_t)a_context->region;
 	sprintf(buffer, "%s\n", "******************************** SCOOP exception ******************************");
 	GE_append_to_exception_trace_buffer(a_trace, buffer);
-	sprintf(buffer,"%-19.19s 0x%08" EIF_POINTER_DISPLAY " %-11.11s 0x%" EIF_POINTER_DISPLAY " %s\n", "In region", l_region_id, "(region id)", l_thread_id, "(thread id)");
+	sprintf(buffer,"%-10.10s 0x%016" EIF_POINTER_DISPLAY " %-12.12s 0x%" EIF_POINTER_DISPLAY " %s\n", "In region", l_region_id, "(region id)", l_thread_id, "(thread id)");
 	GE_append_to_exception_trace_buffer(a_trace, buffer);
 	sprintf(buffer, "%s\n", "*******************************************************************************");
 	GE_append_to_exception_trace_buffer(a_trace, buffer);

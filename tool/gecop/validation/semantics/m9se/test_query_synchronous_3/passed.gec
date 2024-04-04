@@ -3,7 +3,7 @@ aa: system execution failed.
 Following is the set of recorded exceptions:
 
 ******************************** SCOOP exception ******************************
-In region           <XXXXXXXX> (region id) <XXXXXXXX> (thread id)
+In region  0xXXXXXXXXXXXXXXXX (region id)  0xXXXXXXXX (thread id)
 *******************************************************************************
 -------------------------------------------------------------------------------
 Class / Object      Routine                Nature of exception           Effect

@@ -954,7 +954,7 @@ feature {NONE} -- Output logs
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
 			a_regexp2.optimize
-			a_pattern3 := "(.*)0x([0-9A-F]{8})( +\(region id\))(.*)"
+			a_pattern3 := "(.*)0x([0-9A-F]{16})( +\(region id\))(.*)"
 			create a_regexp3.make
 			a_regexp3.compile (a_pattern3)
 			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
@@ -999,19 +999,19 @@ feature {NONE} -- Output logs
 							elseif a_regexp3.recognizes (a_line) then
 									-- These are object addresses in exception traces.
 								out_file.put_string (a_regexp3.captured_substring (1))
-								out_file.put_string ("<XXXXXXXX>")
+								out_file.put_string ("0xXXXXXXXXXXXXXXXX")
 								out_file.put_string (a_regexp3.captured_substring (3))
 								a_line := a_regexp3.captured_substring (4)
 								if a_regexp4.recognizes (a_line) then
 									out_file.put_string (a_regexp4.captured_substring (1))
-									out_file.put_string ("<XXXXXXXX>")
+									out_file.put_string ("0xXXXXXXXX")
 									out_file.put_line (a_regexp4.captured_substring (3))
 								else
 									out_file.put_line (a_line)
 								end
 							elseif a_regexp4.recognizes (a_line) then
 								out_file.put_string (a_regexp4.captured_substring (1))
-								out_file.put_string ("<XXXXXXXX>")
+								out_file.put_string ("0xXXXXXXXX")
 								out_file.put_line (a_regexp4.captured_substring (3))
 							else
 								out_file.put_line (a_line)
