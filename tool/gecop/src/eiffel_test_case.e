@@ -260,7 +260,7 @@ feature -- Test gelint
 			else
 				l_thread_option := ""
 			end
-			execute_shell (l_executable + l_thread_option + " --variable=GOBO_EIFFEL=ge --flat %"" + ecf_filename + "%"", output1_log)
+			execute_shell_with_timeout (l_executable + l_thread_option + " --variable=GOBO_EIFFEL=ge --flat %"" + ecf_filename + "%"", output1_log, three_minutes_in_milliseconds)
 			concat_output1 (agent filter_output_gelint)
 				-- Test.
 			create l_directory.make (program_dirname)
@@ -395,15 +395,15 @@ feature -- Test ISE Eiffel
 			a_geant_filename := geant_filename
 			l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
 				-- Compile program.
-			execute_shell (l_geant_pathname + " -b %"" + a_geant_filename + "%"" + l_executable + l_dotnet + " compile_" + a_debug + "ise", output1_log)
+			execute_shell_with_timeout (l_geant_pathname + " -b %"" + a_geant_filename + "%"" + l_executable + l_dotnet + " compile_" + a_debug + "ise", output1_log, ten_minutes_in_milliseconds)
 			concat_output1 (agent filter_output_ise)
 				-- Execute program.
 			if file_system.file_exists (file_system.pathname (testrun_dirname, program_exe)) then
-				execute_shell (program_exe, output2_log)
+				execute_shell_with_timeout (program_exe, output2_log, three_minutes_in_milliseconds)
 				concat_output2
 			end
 				-- Clean.
-			execute_shell (l_geant_pathname + " -b %"" + a_geant_filename + "%" clobber", output3_log)
+			execute_shell_with_timeout (l_geant_pathname + " -b %"" + a_geant_filename + "%" clobber", output3_log, three_minutes_in_milliseconds)
 			concat_output3
 				-- Test.
 			create l_directory.make (program_dirname)
@@ -931,8 +931,14 @@ feature {NONE} -- Output logs
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1, a_pattern2: STRING
-			a_regexp1, a_regexp2: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1: STRING
+			a_pattern2: STRING
+			a_pattern3: STRING
+			a_pattern4: STRING
+			a_regexp1: RX_PCRE_REGULAR_EXPRESSION
+			a_regexp2: RX_PCRE_REGULAR_EXPRESSION
+			a_regexp3: RX_PCRE_REGULAR_EXPRESSION
+			a_regexp4: RX_PCRE_REGULAR_EXPRESSION
 			l_input_filename: STRING
 			l_output2_log_filename: STRING
 			l_first_line: BOOLEAN
@@ -948,6 +954,16 @@ feature {NONE} -- Output logs
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
 			a_regexp2.optimize
+			a_pattern3 := "(.*)0x([0-9A-F]{8})( +\(region id\))(.*)"
+			create a_regexp3.make
+			a_regexp3.compile (a_pattern3)
+			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
+			a_regexp3.optimize
+			a_pattern4 := "(.*)0x([1-9A-F]|[0-9A-F]{2,})( +\(thread id\) *)"
+			create a_regexp4.make
+			a_regexp4.compile (a_pattern4)
+			assert ("cannot compile regexp '" + a_pattern4 + "'", a_regexp4.is_compiled)
+			a_regexp4.optimize
 				-- Copy files.
 			create out_file.make (output_log_filename)
 			out_file.open_append
@@ -980,11 +996,30 @@ feature {NONE} -- Output logs
 								out_file.put_string (a_regexp2.captured_substring (1))
 								out_file.put_string ("@N")
 								out_file.put_line (a_regexp2.captured_substring (3))
+							elseif a_regexp3.recognizes (a_line) then
+									-- These are object addresses in exception traces.
+								out_file.put_string (a_regexp3.captured_substring (1))
+								out_file.put_string ("<XXXXXXXX>")
+								out_file.put_string (a_regexp3.captured_substring (3))
+								a_line := a_regexp3.captured_substring (4)
+								if a_regexp4.recognizes (a_line) then
+									out_file.put_string (a_regexp4.captured_substring (1))
+									out_file.put_string ("<XXXXXXXX>")
+									out_file.put_line (a_regexp4.captured_substring (3))
+								else
+									out_file.put_line (a_line)
+								end
+							elseif a_regexp4.recognizes (a_line) then
+								out_file.put_string (a_regexp4.captured_substring (1))
+								out_file.put_string ("<XXXXXXXX>")
+								out_file.put_line (a_regexp4.captured_substring (3))
 							else
 								out_file.put_line (a_line)
 							end
 							a_regexp1.wipe_out
 							a_regexp2.wipe_out
+							a_regexp3.wipe_out
+							a_regexp4.wipe_out
 							in_file.read_line
 							l_first_line := False
 						end
@@ -1235,6 +1270,9 @@ feature {NONE} -- Constants
 
 	three_minutes_in_milliseconds: NATURAL_64 = 180_000
 			-- 3 minutes in milliseconds
+
+	ten_minutes_in_milliseconds: NATURAL_64 = 600_000
+			-- 10 minutes in milliseconds
 
 invariant
 

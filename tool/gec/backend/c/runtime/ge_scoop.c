@@ -484,6 +484,7 @@ void GE_scoop_session_add_call(GE_scoop_session* a_session, GE_scoop_call* a_cal
 {
 	GE_scoop_call* l_last_call;
 	GE_scoop_region* l_caller = a_call->caller;
+	GE_scoop_region* l_callee = a_session->callee;
 	char l_is_synchronous = a_call->is_synchronous;
 
 	if (l_is_synchronous) {
@@ -508,8 +509,13 @@ void GE_scoop_session_add_call(GE_scoop_session* a_session, GE_scoop_call* a_cal
 	if (l_is_synchronous) {
 		GE_condition_variable_wait((EIF_POINTER)l_caller->sync_condition_variable, (EIF_POINTER)l_caller->sync_mutex);
 		GE_mutex_unlock((EIF_POINTER)l_caller->sync_mutex);
-		if (a_session->callee->is_dirty) {
-			a_session->callee->is_dirty = 0;
+		if (l_callee->progagate_exception) {
+			l_callee->progagate_exception = 0;
+			/* The exception is propagated to the caller region. */
+			GE_jump_to_last_rescue(l_caller->context);
+		}
+		if (l_callee->is_dirty) {
+			l_callee->is_dirty = 0;
 			GE_raise(GE_EX_DIRTY);
 		}
 	}
@@ -617,6 +623,7 @@ static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_session* a_ses
 {
 	GE_scoop_region* l_caller;
 	GE_scoop_region* l_callee;
+	GE_context* l_caller_context;
 	GE_context l_old_context;
 	char l_is_synchronous = a_call->is_synchronous;
 	GE_rescue r;
@@ -629,20 +636,31 @@ static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_session* a_ses
 			l_old_context = *a_context;
 			if (l_is_synchronous) {
 				GE_scoop_region_pass_locks(l_caller, l_callee);
+				l_caller_context = l_caller->context;
+				a_context->call = l_caller_context->call;
 			}
 			if (GE_setjmp(r.jb) != 0) {
-				l_callee->is_dirty = '\1';
 				if (l_is_synchronous) {
+					/* The exception will be propagated to the caller region. */
+					GE_append_to_exception_trace_buffer(&l_caller_context->last_exception_trace, a_context->last_exception_trace.area);
+					GE_append_to_exception_trace_buffer(&l_caller_context->exception_trace_buffer, a_context->exception_trace_buffer.area);
+					*a_context = l_old_context;
+					GE_wipe_out_exception_trace_buffer(&a_context->last_exception_trace);
+					GE_wipe_out_exception_trace_buffer(&a_context->exception_trace_buffer);
 					GE_scoop_region_release_locks(l_caller, l_callee);
+					l_callee->progagate_exception = '\1';
 					GE_mutex_lock((EIF_POINTER)l_caller->sync_mutex);
 					GE_condition_variable_broadcast((EIF_POINTER)l_caller->sync_condition_variable);
 					GE_mutex_unlock((EIF_POINTER)l_caller->sync_mutex);
 				} else {
-#ifdef GE_STOP_ON_DIRTY_ASYNCHRONOUS_EXCEPTION
+					l_callee->is_dirty = '\1';
+#ifdef GE_SCOOP_EXCEPTIONS_STOP_WHEN_DIRTY
 					GE_jump_to_last_rescue(a_context);
 #endif
+					*a_context = l_old_context;
+					GE_wipe_out_exception_trace_buffer(&a_context->last_exception_trace);
+					GE_wipe_out_exception_trace_buffer(&a_context->exception_trace_buffer);
 				}
-				*a_context = l_old_context;
 				return;
 			}
 			r.previous = a_context->last_rescue;

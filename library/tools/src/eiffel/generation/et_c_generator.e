@@ -379,6 +379,9 @@ feature -- Compilation options
 			Result := scoop_mode and current_dynamic_system.has_separate_creation
 		end
 
+	scoop_exceptions_stop_when_dirty: BOOLEAN
+			-- Should the application stop when a SCOOP region becomes dirty after an unhandled exception?
+
 	check_for_void_target_mode: BOOLEAN
 			-- Should the attachment status of the target of qualified calls
 			-- be checked at runtime?
@@ -472,6 +475,14 @@ feature -- Compilation options setting
 			use_boehm_gc := b
 		ensure
 			use_boehm_gc_set: use_boehm_gc = b
+		end
+
+	set_scoop_exceptions_stop_when_dirty (b: BOOLEAN)
+			-- Set `scoop_exceptions_stop_when_dirty' to `b'.
+		do
+			scoop_exceptions_stop_when_dirty := b
+		ensure
+			scoop_exceptions_stop_when_dirty_set: scoop_exceptions_stop_when_dirty = b
 		end
 
 feature -- Generation
@@ -1344,6 +1355,12 @@ feature {NONE} -- C code Generation
 					header_file.put_string (c_define)
 					header_file.put_character (' ')
 					header_file.put_line (c_ge_use_scoop)
+					l_newline_needed_in_header_file := True
+				end
+				if scoop_exceptions_stop_when_dirty then
+					header_file.put_string (c_define)
+					header_file.put_character (' ')
+					header_file.put_line (c_ge_scoop_exceptions_stop_when_dirty)
 					l_newline_needed_in_header_file := True
 				end
 				if l_newline_needed_in_header_file then
@@ -21549,11 +21566,9 @@ feature {NONE} -- Separate calls
 					current_file.put_character (' ')
 					current_file.put_string (c_else)
 					current_file.put_character (' ')
-					if l_is_creation_call then
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-					end
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
 				end
 			end
 			if not l_is_asynchronous_call then
@@ -21562,9 +21577,33 @@ feature {NONE} -- Separate calls
 					-- a chance to disable impersonation during creation)
 					-- unless we create a passive region.
 				if not l_is_creation_call or else l_is_passive_region then
-					if l_is_synchronous_call then
-						print_indentation
-					end
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_string (c_se)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+						-- Note: we need to call 'GE_scoop_session_add_sync_call' before
+						-- 'GE_scoop_session_is_impersonation_allowed' because the flag
+						-- `is_impersonation_allowed` may be set by an asynchronous call
+						-- (e.g. the creation procedure) which has not been executed yet.
+					print_indentation
+					current_file.put_string (c_ge_scoop_session_add_sync_call)
+					current_file.put_character ('(')
+					current_file.put_string (c_sr)
+					print_comma
+					current_file.put_string (c_se)
+					current_file.put_character (')')
+					print_semicolon_newline
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
 					current_file.put_character ('(')
@@ -21630,47 +21669,6 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('{')
 					current_file.put_new_line
 					indent
-					print_indentation
-					current_file.put_string (c_ge_scoop_session_add_sync_call)
-					current_file.put_character ('(')
-					current_file.put_string (c_sr)
-					print_comma
-					current_file.put_string (c_se)
-					current_file.put_character (')')
-					print_semicolon_newline
-					print_indentation
-					current_file.put_string (c_if)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					current_file.put_string (c_se)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_callee)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_is_dirty)
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
-					print_indentation
-					current_file.put_string (c_se)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_callee)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_is_dirty)
-					print_assign_to
-					current_file.put_character ('0')
-					print_semicolon_newline
-					print_indentation
-					current_file.put_string (c_ge_raise)
-					current_file.put_character ('(')
-					current_file.put_string (c_ge_ex_dirty)
-					current_file.put_character (')')
-					print_semicolon_newline
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_new_line
 					print_indentation
 					current_file.put_string (c_ge_scoop_region_pass_locks)
 					current_file.put_character ('(')
@@ -21867,7 +21865,7 @@ feature {NONE} -- Separate calls
 					current_file.put_new_line
 				end
 				if not l_is_asynchronous_call then
-					if not l_is_synchronous_call and l_is_creation_call then
+					if not l_is_synchronous_call then
 						dedent
 						print_indentation
 						current_file.put_character ('}')
@@ -33403,28 +33401,55 @@ feature {NONE} -- C function generation
 				print_indentation
 				current_file.put_string (c_ge_context)
 				current_file.put_character (' ')
-				current_file.put_string (c_tc)
+				current_file.put_string (c_ac)
+				current_file.put_character ('2')
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
 				current_file.put_string (c_ge_default_context)
 				current_file.put_character (';')
 				current_file.put_new_line
+					-- Variable for exception trace.
+				print_indentation
+				current_file.put_string (c_ge_call)
+				current_file.put_character (' ')
+				current_file.put_string (c_tc)
+				print_assign_to
+				current_file.put_character ('{')
+				if current_in_exception_trace then
+					current_file.put_character ('0')
+					current_file.put_character (',')
+				end
+				print_escaped_string (l_root_type.base_class.upper_name)
+				current_file.put_character (',')
+				current_file.put_character ('%"')
+				current_file.put_string ("root's creation")
+				current_file.put_character ('%"')
+				current_file.put_character (',')
+				current_file.put_character ('0')
+				current_file.put_character ('}')
+				current_file.put_character (';')
+				current_file.put_new_line
 				print_indentation
 				print_context_type_declaration (current_file)
 				current_file.put_character (' ')
 				current_file.put_string (c_ac)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
+				current_file.put_character ('&')
+				current_file.put_string (c_ac)
+				current_file.put_character ('2')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_call)
+				print_assign_to
 				current_file.put_string (c_tc_address)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				print_indentation
 				current_file.put_string ("GE_type_info_count = ");
 				current_file.put_integer (dynamic_types.count)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				print_indentation
 				current_file.put_line ("GE_argc = argc;")
 				print_indentation
@@ -33434,110 +33459,86 @@ feature {NONE} -- C function generation
 				print_indentation
 				current_file.put_string ("GE_system_name = ")
 				print_escaped_string (system_name)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				print_indentation
 				current_file.put_string ("GE_root_class_name = ")
 				print_escaped_string (l_root_type.base_class.upper_name)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				debug ("gobo_ids")
 					current_file.put_line ("reset_gobo_ids();")
 				end
 					-- Exception handling.
 				print_indentation
 				current_file.put_string (c_ge_new_exception_manager)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				current_file.put_character ('&')
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (current_dynamic_system.ise_exception_manager_type.id)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				if attached current_dynamic_system.ise_exception_manager_init_exception_manager_feature as l_ise_exception_manager_init_exception_manager_feature then
 					print_indentation
 					current_file.put_string (c_ge_init_exception_manager)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
+					print_assign_to
 					current_file.put_character ('&')
 					print_routine_name (l_ise_exception_manager_init_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 				end
 				if attached current_dynamic_system.ise_exception_manager_last_exception_feature as l_ise_exception_manager_last_exception_feature then
 					print_indentation
 					current_file.put_string (c_ge_last_exception)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
+					print_assign_to
 					current_file.put_character ('&')
 					print_routine_name (l_ise_exception_manager_last_exception_feature, current_dynamic_system.ise_exception_manager_type, current_file)
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 				end
 				if attached current_dynamic_system.ise_exception_manager_once_raise_feature as l_ise_exception_manager_once_raise_feature then
 					print_indentation
 					current_file.put_string (c_ge_once_raise)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
+					print_assign_to
 					current_file.put_character ('&')
 					print_routine_name (l_ise_exception_manager_once_raise_feature, current_dynamic_system.ise_exception_manager_type, current_file)
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 				end
 				if attached current_dynamic_system.ise_exception_manager_set_exception_data_feature as l_ise_exception_manager_set_exception_data_feature then
 					print_indentation
 					current_file.put_string (c_ge_set_exception_data)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
+					print_assign_to
 					current_file.put_character ('&')
 					print_routine_name (l_ise_exception_manager_set_exception_data_feature, current_dynamic_system.ise_exception_manager_type, current_file)
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 				end
 				print_indentation
 				current_file.put_string ("GE_init_onces")
 				current_file.put_character ('(')
 				from i := 1 until i > once_kind_count loop
 					if i /= 1 then
-						current_file.put_character (',')
-						current_file.put_character (' ')
+						print_comma
 					end
 					current_file.put_integer (once_per_process_counts.item (i))
 					i := i + 1
 				end
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				if use_threads then
 					print_indentation
 					current_file.put_string (c_ge_once_per_object_data_mutex)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
+					print_assign_to
 					current_file.put_string (c_ge_mutex_create)
 					current_file.put_character ('(')
 					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 					print_indentation
 					current_file.put_string (c_ge_thread_onces_set_counts)
 					current_file.put_character ('(')
 					from i := 1 until i > once_kind_count loop
 						if i /= 1 then
-							current_file.put_character (',')
-							current_file.put_character (' ')
+							print_comma
 						end
 						current_file.put_integer (once_per_thread_counts.item (i))
 						i := i + 1
 					end
 					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 						-- We need to call 'GE_init_thread' before 'GE_init_exception' because
 						-- 'GE_init_exception' will create once-per-thread objects.
 					print_indentation
@@ -33592,9 +33593,7 @@ feature {NONE} -- C function generation
 					-- Create root object.
 				print_indentation
 				print_temp_name (l_temp, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				create l_root_call.make (l_root_creation_procedure.static_feature.name, Void)
 				l_root_call.name.set_seed (l_root_creation_procedure.static_feature.first_seed)
 				create l_root_creation.make (l_root_type.base_type, l_root_call)
@@ -33604,8 +33603,7 @@ feature {NONE} -- C function generation
 				print_creation_expression (l_root_creation)
 					-- Clean up.
 				extra_dynamic_type_sets.remove_last
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				if use_scoop then
 					print_indentation
 					current_file.put_string (c_ge_decrement_scoop_sessions_count)
@@ -33633,8 +33631,7 @@ feature {NONE} -- C function generation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
 				current_file.put_character ('0')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				dedent
 			end
 			current_file.put_character ('}')
@@ -44883,7 +44880,6 @@ feature {NONE} -- Constants
 	c_ge_encoded_type_from_name: STRING = "GE_encoded_type_from_name"
 	c_ge_ex_cdef: STRING = "GE_EX_CDEF"
 	c_ge_ex_check: STRING = "GE_EX_CHECK"
-	c_ge_ex_dirty: STRING = "GE_EX_DIRTY"
 	c_ge_ex_fail: STRING = "GE_EX_FAIL"
 	c_ge_ex_fatal: STRING = "GE_EX_FATAL"
 	c_ge_ex_prog: STRING = "GE_EX_PROG"
@@ -45045,6 +45041,7 @@ feature {NONE} -- Constants
 	c_ge_scoop_call: STRING = "GE_scoop_call"
 	c_ge_scoop_condition: STRING = "GE_scoop_condition"
 	c_ge_scoop_condition_decrement: STRING = "GE_scoop_condition_decrement"
+	c_ge_scoop_exceptions_stop_when_dirty: STRING = "GE_SCOOP_EXCEPTIONS_STOP_WHEN_DIRTY"
 	c_ge_scoop_multisessions_open_start: STRING = "GE_scoop_multisessions_open_start"
 	c_ge_scoop_multisessions_open_stop: STRING = "GE_scoop_multisessions_open_stop"
 	c_ge_scoop_processor_run: STRING = "GE_scoop_processor_run"
@@ -45150,7 +45147,6 @@ feature {NONE} -- Constants
 	c_int32_t: STRING = "int32_t"
 	c_int64_t: STRING = "int64_t"
 	c_intptr_t: STRING = "intptr_t"
-	c_is_dirty: STRING = "is_dirty"
 	c_is_passive: STRING = "is_passive"
 	c_is_special: STRING = "is_special"
 	c_last_rescue: STRING = "last_rescue"

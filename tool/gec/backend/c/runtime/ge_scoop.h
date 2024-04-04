@@ -63,6 +63,7 @@ struct GE_scoop_region_struct {
 	GE_scoop_session* first_locked_session; /* Not protected by a mutex. */
 	char is_impersonation_allowed; /* Protected by `mutex'. */
 	char is_dirty; /* Has an unhandled exception been raised? */
+	char progagate_exception; /* Should an exception be propagated to the caller region? */
 	GE_scoop_session* first_session; /* Protected by `mutex'. */
 	GE_scoop_session* last_session; /* Protected by `mutex'. */
 	GE_scoop_session** last_session_keep_alive; /* To keep alive the last submitted session not executed yet, and hence its region. Protected by `mutex'. */

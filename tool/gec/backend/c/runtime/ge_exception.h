@@ -205,6 +205,17 @@ extern void (*GE_set_exception_data)(GE_context*, EIF_REFERENCE, EIF_INTEGER_32,
 extern char* GE_exception_tag(long a_code);
 
 /*
+ * Append `a_string' to `a_trace'.
+ * Resize area if needed.
+ */
+extern void GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_trace, char* a_string);
+
+/*
+ * Wipe out `a_trace'.
+ */
+extern void GE_wipe_out_exception_trace_buffer(GE_exception_trace_buffer* a_trace);
+
+/*
  * Raise an exception with code `a_code'.
  */
 extern void GE_raise(long a_code);

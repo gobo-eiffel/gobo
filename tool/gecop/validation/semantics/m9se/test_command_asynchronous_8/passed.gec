@@ -3,7 +3,7 @@ aa: system execution failed.
 Following is the set of recorded exceptions:
 
 ******************************** SCOOP exception ******************************
-In region           <XXXXXXXX> (region id) 0x0 (thread id)
+In region           <XXXXXXXX> (region id) <XXXXXXXX> (thread id)
 *******************************************************************************
 -------------------------------------------------------------------------------
 Class / Object      Routine                Nature of exception           Effect
@@ -28,12 +28,6 @@ CC                  z
 BB                  g                                                   
 <XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
 -------------------------------------------------------------------------------
-AA                  f                                                   
-<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
--------------------------------------------------------------------------------
-AA                  make                                                
-<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
--------------------------------------------------------------------------------
-AA                  root's creation                                     
-<XXXXXXXXXXXXXXXX>                         Routine failure.              Exit
+                    separate call                                       
+<XXXXXXXXXXXXXXXX>                         Dirty region.                 Exit
 -------------------------------------------------------------------------------
