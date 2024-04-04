@@ -17,7 +17,7 @@ A separate call is a feature call whose target is of a separate type. Queries ar
 3. The callee needs a lock currently held by the caller (lock passing).
 4. The caller holds the locks of the callee (separate callbacks).
 
-A lock is an exclusive access to a SCOOP region and all objects therein, which is obtained when an object of this region is controlled (e.g. when it is attached to a formal argument of the enclosing feature, see definition of controlled [here](../m9sc/Readme.md)). Note that this also includes non-separate reference objects, because a processor always holds a lock over its own region. Lock passing happens for every synchronous call, in particular also for queries and passive processors.
+A lock is an exclusive access to a SCOOP region and all objects therein. See definition of exclusive access [here](../m9ea/Readme.md). Note that this also includes non-separate reference objects, because a processor always holds a lock over its own region. Lock passing happens for every synchronous call, in particular also for queries and passive processors.
 
 ### Notes
 

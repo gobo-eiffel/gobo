@@ -24,8 +24,8 @@ FAIL:  \[[definition/dlcf3/test\_export\_f\_repeated\_1](definition/dlcf3/test\_
 FAIL:  \[[semantics/m1ee/test\_standard\_is\_equal\_1](semantics/m1ee/test\_standard\_is\_equal\_1)\] test\_failed</br>
 FAIL:  \[[semantics/m9as/test\_generic\_argument\_1](semantics/m9as/test\_generic\_argument\_1)\] test\_failed</br>
 FAIL:  \[[semantics/m9as/test\_generic\_target\_1](semantics/m9as/test\_generic\_target\_1)\] test\_failed</br>
-FAIL:  \[[semantics/m9as/test\_two\_separate\_arguments\_4](semantics/m9as/test\_two\_separate\_arguments\_4)\] test\_failed</br>
-FAIL:  \[[semantics/m9as/test\_two\_separate\_arguments\_7](semantics/m9as/test\_two\_separate\_arguments\_7)\] test\_failed</br>
+FAIL:  \[[semantics/m9ea/test\_two\_separate\_arguments\_4](semantics/m9ea/test\_two\_separate\_arguments\_4)\] test\_failed</br>
+FAIL:  \[[semantics/m9ea/test\_two\_separate\_arguments\_7](semantics/m9ea/test\_two\_separate\_arguments\_7)\] test\_failed</br>
 FAIL:  \[[semantics/m9se/test\_command\_asynchronous\_8](semantics/m9se/test\_command\_asynchronous\_8)\] test\_failed</br>
 FAIL:  \[[semantics/mbas/test\_expanded\_convert\_to\_2](semantics/mbas/test\_expanded\_convert\_to\_2)\] test\_failed</br>
 FAIL:  \[[semantics/mbre1/test\_conversion\_expanded\_2](semantics/mbre1/test\_conversion\_expanded\_2)\] test\_failed</br>
