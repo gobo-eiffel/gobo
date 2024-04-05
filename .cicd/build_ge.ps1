@@ -52,7 +52,7 @@ if ($LastExitCode -ne 0) {
 	exit $LastExitCode
 }
 
-if ($GOBO_CI_OS -eq "linux" -or $GOBO_CI_OS -eq "macos") {
+if (($GOBO_CI_OS -eq "linux" -or $GOBO_CI_OS -eq "macos") -and $CiTool -ne "gitlab") {
 	file "$env:GOBO/bin/gec"
 	if ($LastExitCode -ne 0) {
 		Write-Error "Command 'file $env:GOBO/bin/gec' exited with code $LastExitCode"
