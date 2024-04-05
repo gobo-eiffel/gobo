@@ -1,12 +1,99 @@
 # Release History
 
-## Version ?? - ??
+## Version 24.04.xx+xxxxxxx - xx April 2024
+
+### geant
+
+* Added option `timeout` to task `<exec>`.
+* Added command-line option `--thread` to override the maximum
+  number of threads to be used by thread-capable tasks.
+* Added new task `<gecc>`.
+
+### gec
+
+* Added support for SCOOP. Using preconditions as wait conditions
+  is not supported yet.
+* Do not generate the SCOOP overhead when there is no separate creation
+  in the program.
+* Generate intermediary files in a subfolder `.gobo`.
+* Use the Boehm GC by default (included in the Git repository and
+  bundled into the delivery package).
+* Use Zig toolchain as default backend C compiler (bundled into
+  the delivery package).
+* Allow `gec` to accept an Eiffel file as argument instead of an
+  ECF file. An internal ECF template will be used in that case.
+* CAT-calls are now ignored at compile time (they will be caught
+  at runtime). Use the command-line option `--catcall` with `warning`
+  to get the previous behavior (warning at compile time and caught
+  at runtime). All applications in the Gobo Eiffel package are compiled
+  using the option `--catcall` with `error` to guarantee at 
+  compile time that they don't contain any CAT-calls.
+* Build dynamic type sets of external C functions (assuming that
+  the C code does not set an attribute of the resulting objects
+  with an object whose dynamic type is not already part of the dynamic
+  type set of this attribute as inferred from the Eiffel code).
+* Allow the C files included in the gtk3 implementation of the
+  ISE EiffelVision2 library to be compiled correctly using the
+  Gobo Eiffel runtime.
+* Allow the C files included in the ISE EiffelCurl library to be
+  compiled correctly using the Gobo Eiffel runtime.
+* Fixed implementation of `PLATFORM.is_64_bits`.
+* Accept the following external C syntaxes:
+  `C [macro <ev_gtk.h>] | "eif_argv.h"` and 
+  `C Macro use <ev_gtk.h>` used in ISE EiffelVision2.
+* Do not generate Makefiles anymore under Linux/MacOS. Rely on
+  `gecc` instead.
+* Do not check call-on-void-target at runtime in void-safe mode
+  by default anymore. Use the ECF setting `check_for_void_target`
+  to get this behavior.
+* Added support for inlining in the generated C code. Can be
+  configured using the ECF settings `inlining` and `inlining_size`.
+* Changed the default for the command-line option `--thread`
+  to be `-3` instead of `0` ("number of available CPUs -3" instead
+  of "number of available CPUs").
+
+### gecc
+
+* Changed the default for the command-line option `--thread`
+  to be `-3` instead of `0` ("number of available CPUs -3" instead
+  of "number of available CPUs").
+
+### gecop
+
+* Added test cases for SCOOP semantics and validity rules.
+* Added command-line option `--progress` to show the names.
+* Changed the default for the command-line option `--thread`
+  to be `-3` instead of `0` ("number of available CPUs -3" instead
+  of "number of available CPUs").
+
+### gedoc
+
+* Changed the default for the command-line option `--thread`
+  to be `-3` instead of `0` ("number of available CPUs -3" instead
+  of "number of available CPUs").
+
+### gelint
+
+* Added support for SCOOP.
+* Allow `gelint` to accept an Eiffel file as argument instead of an
+  ECF file. An internal ECF template will be used in that case.
+* Changed the default for the command-line option `--thread`
+  to be `-3` instead of `0` ("number of available CPUs -3" instead
+  of "number of available CPUs").
 
 ### Gobo Eiffel Tools Library
 
+* Added support for SCOOP.
+* Added support for ECF version 1.23.0.
 * Avoid reporting errors which are the consequence of other errors
   already reported.
-* Added support for separate instructions `separate ... do ... end`.
+
+### Miscellaneous
+
+* The Gobo Eiffel delivery package can be unzipped and used without the
+  need for any configuration. No need to set environment variables or
+  create an ECF file to compile your first "Hello World" program in Eiffel.
+* Added nightly builds in [GitHub repository](https://github.com/gobo-eiffel/gobo/releases/tag/nightly).
 
 ## Version 22.01.09.4 - 9 January 2022
 
@@ -109,7 +196,8 @@
 
 ### Miscellaneous
 
-* Added test execution in [GitHub Actions](https://github.com/gobo-eiffel/gobo/actions) and [Azure DevOps](https://dev.azure.com/ericb0733/gobo/_build?definitionId=1).
+* Added test execution in [GitHub Actions](https://github.com/gobo-eiffel/gobo/actions) 
+  and [Azure DevOps](https://dev.azure.com/ericb0733/gobo/_build?definitionId=1).
 * Upgraded all ECF files to ECF 1.22.0.
 * Display more progress information when installing the Gobo Eiffel package
   unless the option `-s` is specified.
