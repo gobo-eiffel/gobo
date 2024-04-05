@@ -30,7 +30,7 @@ extern "C" {
 
 #ifdef GE_USE_THREADS
 #define EIF_GET_CONTEXT \
-	GE_context* eif_globals = GE_current_context();
+	GE_thread_context* eif_globals = GE_current_context()->thread;
 #else
 #define EIF_GET_CONTEXT
 #endif
