@@ -285,9 +285,9 @@ feature {NONE} -- Processing
 			a_file.put_line ("%T%Talias")
 			a_file.put_line ("%T%T%T%"[")
 			a_file.put_line ("%T%T%T%T{")
-			a_file.put_line ("%T%T%T%T#define A(x) \")
-			a_file.put_line ("%T%T%T%T%T#x")
-			a_file.put_line ("%T%T%T%T#define B(x) A(\x##x)")
+			a_file.put_line ("%T%T%T%T#define A(z) \")
+			a_file.put_line ("%T%T%T%T%T#z")
+			a_file.put_line ("%T%T%T%T#define B(z) A(\x##z)")
 			a_file.put_string ("%T%T%T%Tchar l_data[] =")
 			from i := 1 until i > a_byte_size loop
 				if (i - 1) \\ 20 = 0 then
