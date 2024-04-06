@@ -932,6 +932,7 @@ feature {NONE} -- Compilation script generation
 					end
 					l_rc_filename :=  l_base_name + rc_file_extension
 					if file_system.file_exists (l_rc_filename) then
+						l_rc_filename := file_system.pathname (file_system.relative_parent_directory, l_rc_filename)
 						l_res_filename := l_base_name + res_file_extension
 						a_variables.force (l_rc_filename, "rc_file")
 						a_variables.force (l_res_filename, "res_file")
