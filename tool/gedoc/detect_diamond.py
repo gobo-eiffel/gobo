@@ -5,6 +5,8 @@ import os
 import sys
 import pandas as pd
 import pathlib
+import traceback
+import pdb
 
 home_dir = os.path.expanduser('~')
 script_path = os.path.abspath(__file__)
@@ -55,20 +57,33 @@ def find_longest_common_ancestors_len(paths):
   return l
 
 
+# for pretty print
+def path_string(path):
+  # pdb.set_trace()
+  # assert(isinstance(path, set))
+  return ',\n\t'.join(path)
+
+
 INHERITED_FIELDS_FN = "inherited_fields.path"
 def detect_diamond(ecf_fn):
   edges = pd.read_csv(INHERITED_FIELDS_FN, sep="[,\.]", skiprows=3, skipfooter=1, engine='python',
-      names=["kind", "src_class", "src_field", "tgt_class", "tgt_field"])
+      names=["kind", "src_class", "src_field", "tgt_class", "tgt_field"]).dropna()
   # print(edges)
 
   # populate the direct parent_fields dict
   for i, edge in edges.iterrows():
-    # print(edge)
-    tgt = edge["tgt_class"] + "." + edge["tgt_field"]
-    src = edge["src_class"] + "." + edge["src_field"]
-    if tgt not in parent_fields:
-      parent_fields[tgt] = set()
-    parent_fields[tgt].add(src)
+    try:
+      # print(edge)
+      tgt = edge["tgt_class"] + "." + edge["tgt_field"]
+      src = edge["src_class"] + "." + edge["src_field"]
+      if tgt not in parent_fields:
+        parent_fields[tgt] = set()
+      parent_fields[tgt].add(src)
+    except:
+      print("skip ", ecf_fn)
+      # pdb.set_trace()
+      sys.exit(-1)
+
   # print("total fields: ", len(parent_fields))
 
   for field in parent_fields.keys():  # mark all the field's ancestors at *any* level
@@ -90,7 +105,7 @@ def detect_diamond(ecf_fn):
         print("new_fields:", new_fields)
         print("diamond core: ", paths[0][l-1], " => ", new_fields)
         for new_field, path in field_paths.items():
-          print("  ", new_field, [p[l-1:] for p in path])
+          print("  %s:\n\t%s" % (new_field, ';'.join([path_string(p[l-1:]) for p in path])))
 
 
 def process_all_ecf(dir):
@@ -108,6 +123,7 @@ def process_ecf(ecf_fn):
       os.system(cmd)
       detect_diamond(ecf_fn)
     except:
+      traceback.print_exc()
       print("skip ", ecf_fn)
 
 if __name__ == "__main__":
