@@ -4,7 +4,7 @@
 		"C functions used to implement class STORABLE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -88,6 +88,14 @@ char* class_translation_new (EIF_INTEGER i)
 	/* TODO */
 	GE_show_console();
 	fprintf(stderr, "'class_translation_new' in 'eif_retrieve.h' not implemented\n");
+	return (char*)0;
+}
+
+char *portable_retrieve(int (*char_read_function)(char *, int))
+{
+	/* TODO */
+	GE_show_console();
+	fprintf(stderr, "'portable_retrieve' in 'eif_retrieve.h' not implemented\n");
 	return (char*)0;
 }
 

@@ -4,7 +4,7 @@
 		"C functions used to implement Thread support"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -138,6 +138,9 @@ extern "C" {
 #ifdef EIF_WINDOWS
 #define eif_thr_create_wel_per_thread_data(a_size) GE_thread_create_wel_per_thread_data(a_size)
 #endif
+
+/* To compile the C code of EiffelNet. */
+extern int socket_fides;
 
 #endif
 

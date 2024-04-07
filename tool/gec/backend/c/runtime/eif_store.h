@@ -35,6 +35,9 @@ extern EIF_POINTER* stream_malloc(EIF_INTEGER stream_size);
 extern void stream_free(EIF_POINTER* stream);
 extern void set_buffer_size(EIF_INTEGER);
 
+/* Features needed for EiffelNet or any other libraries that wants to use some storable compatible storage. */
+extern void eif_store_object(int(*char_write)(char *, int), EIF_REFERENCE object, char store_type);
+
 #ifdef __cplusplus
 }
 #endif

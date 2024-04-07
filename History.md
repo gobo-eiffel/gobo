@@ -37,6 +37,8 @@
   Gobo Eiffel runtime.
 * Allow the C files included in the ISE EiffelCurl library to be
   compiled correctly using the Gobo Eiffel runtime.
+* Allow the C files included in the ISE EiffelNet library to be
+  compiled correctly using the Gobo Eiffel runtime.
 * Fixed implementation of `PLATFORM.is_64_bits`.
 * Accept the following external C syntaxes:
   `C [macro <ev_gtk.h>] | "eif_argv.h"` and 

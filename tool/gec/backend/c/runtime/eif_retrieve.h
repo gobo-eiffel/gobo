@@ -4,7 +4,7 @@
 		"C functions used to implement class STORABLE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -25,6 +25,12 @@
 extern "C" {
 #endif
 
+/* Internal representation of the different kinds of storage */
+#define BASIC_STORE '\0'
+#define GENERAL_STORE '\01'
+#define INDEPENDENT_STORE '\02'
+#define RECOVERABLE_STORE '\03'
+
 extern char* eretrieve(EIF_INTEGER file_desc);
 extern void eif_set_discard_pointer_values(EIF_BOOLEAN state);
 extern EIF_REFERENCE stream_eretrieve(EIF_POINTER* buffer, EIF_INTEGER size, EIF_INTEGER start_pos, EIF_INTEGER* real_size);
@@ -34,6 +40,7 @@ extern void class_translation_clear(void);
 extern EIF_INTEGER class_translation_count(void);
 extern char* class_translation_old(EIF_INTEGER i);
 extern char* class_translation_new(EIF_INTEGER i);
+extern char *portable_retrieve(int (*char_read_function)(char *, int));
 
 #ifdef __cplusplus
 }

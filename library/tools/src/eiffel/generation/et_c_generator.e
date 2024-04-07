@@ -492,6 +492,8 @@ feature -- Generation
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_system_name_not_void: a_system_name /= Void
+		local
+			l_variables: like c_config
 		do
 			has_fatal_error := False
 			if c_compiler_used.same_string ("zig") then
@@ -503,279 +505,33 @@ feature -- Generation
 					c_filenames_counter_offset := c_filenames_counter_offset * 100
 				end
 			end
+			l_variables := c_config
 			if use_boehm_gc then
-				add_boehm_gc_c_files (a_system_name)
+				generate_boehm_gc_c_files (a_system_name)
 			end
+			generate_external_configuration (a_system_name, l_variables)
 			generate_c_code (a_system_name)
-			generate_compilation_script (a_system_name)
+			generate_compilation_script (a_system_name, l_variables)
 			c_filenames.wipe_out
 			c_filenames_counter_offset := 0
 		end
 
 feature {NONE} -- Compilation script generation
 
-	generate_compilation_script (a_system_name: STRING)
-			-- Generate C compilation script file for `current_dynamic_system'.
+	generate_compilation_script (a_system_name: STRING; a_variables: like c_config)
+			-- Generate script to compile the C code.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_system_name_not_void: a_system_name /= Void
-		local
-			l_obj_filenames: STRING
-			l_variables: like c_config
-			l_filename: STRING
-			l_base_name: STRING
-			i, nb: INTEGER
-			l_obj: STRING
-			l_env_regexp: RX_PCRE_REGULAR_EXPRESSION
-			l_wel_regexp: RX_PCRE_REGULAR_EXPRESSION
-			l_com_regexp: RX_PCRE_REGULAR_EXPRESSION
-			l_com_runtime_regexp: RX_PCRE_REGULAR_EXPRESSION
-			l_curl_regexp: RX_PCRE_REGULAR_EXPRESSION
-			l_gtk3_regexp: RX_PCRE_REGULAR_EXPRESSION
-			l_replacement: STRING
-			l_external_include_pathnames: DS_ARRAYED_LIST [STRING]
-			l_external_library_pathnames: DS_ARRAYED_LIST [STRING]
-			l_external_object_pathnames: DS_ARRAYED_LIST [STRING]
-			l_external_cflags: DS_ARRAYED_LIST [STRING]
-			l_external_linker_flags: DS_ARRAYED_LIST [STRING]
-			l_external_obj_filenames: STRING
-			l_includes: STRING
-			l_libs: STRING
-			l_cflags: STRING
-			l_lflags: STRING
-			l_cflag: STRING
-			l_lflag: STRING
-			l_pathname: STRING
-			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
-			l_external_c_filenames: DS_HASH_TABLE [STRING, STRING]
-			old_system_name: STRING
-		do
-			old_system_name := system_name
-			system_name := a_system_name
-			l_base_name := a_system_name
-			l_variables := c_config
-			create l_env_regexp.make
-			l_env_regexp.compile ("\$\(([^)]+)\)")
-			create l_wel_regexp.make
-			l_wel_regexp.set_case_insensitive (True)
-			l_wel_regexp.compile ("(.*[\\/]library[\\/]wel[\\/]).*[\\/](mt)?wel\.lib")
-			create l_com_regexp.make
-			l_com_regexp.set_case_insensitive (True)
-			l_com_regexp.compile ("(.*[\\/]library[\\/]com[\\/]).*[\\/](mt)?com\.(lib|a)")
-			create l_com_runtime_regexp.make
-			l_com_runtime_regexp.set_case_insensitive (True)
-			l_com_runtime_regexp.compile ("(.*[\\/]library[\\/]com[\\/]).*[\\/](mt)?com_runtime\.(lib|a)")
-			create l_curl_regexp.make
-			l_curl_regexp.set_case_insensitive (True)
-			l_curl_regexp.compile ("(.*[\\/]library[\\/]curl[\\/]).*[\\/](mt)?eiffel_curl(_static)?\.(lib|o)")
-			create l_gtk3_regexp.make
-			l_gtk3_regexp.set_case_insensitive (True)
-			l_gtk3_regexp.compile ("`(.*[\\/]library[\\/]vision2[\\/]implementation[\\/]gtk3[\\/]clib)[\\/]vision2-gtk-config +(--threads +)?--object`")
-				-- Include files.
-			create l_includes.make (256)
-			l_external_include_pathnames := current_system.external_include_pathnames
-			nb := l_external_include_pathnames.count
-			if nb > 1 then
-					-- Add '$GOBO/backend/c/runtime' to the list of include paths if at least
-					-- one include path has been specified in the ECF file. That way if one such
-					-- include file tries to include one of the runtime 'eif_*.h' file, it can
-					-- be found by the C compiler.
-				l_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "runtime">>)
-				l_pathname := Execution_environment.interpreted_string (l_pathname)
-				l_includes.append_string ("-I")
-				l_includes.append_character ('%"')
-				l_includes.append_string (l_pathname)
-				l_includes.append_character ('%"')
-			end
-			from i := 1 until i > nb loop
-				l_pathname := l_external_include_pathnames.item (i)
-				l_env_regexp.match (l_pathname)
-				l_replacement := STRING_.new_empty_string (l_pathname, 6)
-				l_replacement.append_string ("${\1\}")
-				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
-				l_includes.append_character (' ')
-				l_includes.append_string ("-I")
-				if l_pathname.starts_with ("%"") then
-					l_includes.append_string (l_pathname)
-				else
-					l_includes.append_character ('%"')
-					l_includes.append_string (l_pathname)
-					l_includes.append_character ('%"')
-				end
-				i := i + 1
-			end
-			l_variables.force (l_includes, "includes")
-				-- C flags.
-			create l_cflags.make (256)
-			l_variables.search ("cflags")
-			if l_variables.found then
-				l_cflags.append_string (l_variables.found_item)
-			end
-			l_external_cflags := current_system.external_cflags
-			nb := l_external_cflags.count
-			from i := 1 until i > nb loop
-				l_cflag := l_external_cflags.item (i)
-				l_env_regexp.match (l_cflag)
-				l_replacement := STRING_.new_empty_string (l_cflag, 6)
-				l_replacement.append_string ("${\1\}")
-				l_cflag := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
-				if not l_cflags.is_empty then
-					l_cflags.append_character (' ')
-				end
-				l_cflags.append_string (l_cflag)
-				i := i + 1
-			end
-			l_variables.force (l_cflags, "cflags")
-				-- Linker flags.
-			create l_lflags.make (256)
-			l_variables.search ("lflags")
-			if l_variables.found then
-				l_lflags.append_string (l_variables.found_item)
-			end
-			l_external_linker_flags := current_system.external_linker_flags
-			nb := l_external_linker_flags.count
-			from i := 1 until i > nb loop
-				l_lflag := l_external_linker_flags.item (i)
-				l_env_regexp.match (l_lflag)
-				l_replacement := STRING_.new_empty_string (l_lflag, 6)
-				l_replacement.append_string ("${\1\}")
-				l_lflag := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
-				if l_wel_regexp.recognizes (l_lflag) then
-					add_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib", c_filenames)
-				elseif l_com_regexp.recognizes (l_lflag) then
-					add_external_c_files ("com", l_com_regexp.captured_substring (1) + "Clib", c_filenames)
-				elseif l_com_runtime_regexp.recognizes (l_lflag) then
-					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime", c_filenames)
-				elseif l_curl_regexp.recognizes (l_lflag) then
-					add_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib", c_filenames)
-				elseif l_gtk3_regexp.recognizes (l_lflag) then
-					add_external_c_files ("vision2_gtk3", l_gtk3_regexp.captured_substring (1), c_filenames)
-				else
-					if not l_lflags.is_empty then
-						l_lflags.append_character (' ')
-					end
-					l_lflags.append_string (l_lflag)
-				end
-				i := i + 1
-			end
-			l_variables.force (l_lflags, "lflags")
-				-- C libraries.
-			create l_external_c_filenames.make_map (10)
-			l_external_c_filenames.set_key_equality_tester (string_equality_tester)
-			create l_libs.make (256)
-			l_external_library_pathnames := current_system.external_library_pathnames
-			nb := l_external_library_pathnames.count
-			from i := 1 until i > nb loop
-				l_pathname := l_external_library_pathnames.item (i)
-				l_env_regexp.match (l_pathname)
-				l_replacement := STRING_.new_empty_string (l_pathname, 6)
-				l_replacement.append_string ("${\1\}")
-				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
-				if l_wel_regexp.recognizes (l_pathname) then
-					add_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib", c_filenames)
-				elseif l_com_regexp.recognizes (l_pathname) then
-					add_external_c_files ("com", l_com_regexp.captured_substring (1) + "Clib", c_filenames)
-				elseif l_com_runtime_regexp.recognizes (l_pathname) then
-					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime", c_filenames)
-				elseif l_curl_regexp.recognizes (l_pathname) then
-					add_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib", c_filenames)
-				elseif l_gtk3_regexp.recognizes (l_pathname) then
-					add_external_c_files ("vision2_gtk3", l_gtk3_regexp.captured_substring (1), c_filenames)
-				else
-					if i /= 1 then
-						l_libs.append_character (' ')
-					end
-					if l_pathname.starts_with ("%"") then
-						l_libs.append_string (l_pathname)
-					else
-						l_libs.append_character ('%"')
-						l_libs.append_string (l_pathname)
-						l_libs.append_character ('%"')
-					end
-				end
-				i := i + 1
-			end
-			l_variables.force (l_libs, "libs")
-				-- Executable name.
-			l_variables.force (l_base_name + l_variables.item ("exe"), "exe")
-				-- Object files.
-			create l_obj_filenames.make (100)
-			create l_external_obj_filenames.make (100)
-			l_obj := l_variables.item ("obj")
-			l_external_object_pathnames := current_system.external_object_pathnames
-			nb := l_external_object_pathnames.count
-			from i := 1 until i > nb loop
-				l_pathname := l_external_object_pathnames.item (i)
-				l_env_regexp.match (l_pathname)
-				l_replacement := STRING_.new_empty_string (l_pathname, 6)
-				l_replacement.append_string ("${\1\}")
-				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
-				if l_wel_regexp.recognizes (l_pathname) then
-					add_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib", c_filenames)
-				elseif l_com_regexp.recognizes (l_pathname) then
-					add_external_c_files ("com", l_com_regexp.captured_substring (1) + "Clib", c_filenames)
-				elseif l_com_runtime_regexp.recognizes (l_pathname) then
-					add_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime", c_filenames)
-				elseif l_curl_regexp.recognizes (l_pathname) then
-					add_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib", c_filenames)
-				elseif l_gtk3_regexp.recognizes (l_pathname) then
-					add_external_c_files ("vision2_gtk3", l_gtk3_regexp.captured_substring (1), c_filenames)
-				else
-					if not l_external_obj_filenames.is_empty then
-						l_external_obj_filenames.append_character (' ')
-					end
-					if l_pathname.starts_with ("%"") then
-						l_external_obj_filenames.append_string (l_pathname)
-					else
-						l_external_obj_filenames.append_character ('%"')
-						l_external_obj_filenames.append_string (l_pathname)
-						l_external_obj_filenames.append_character ('%"')
-					end
-				end
-				i := i + 1
-			end
-				-- List objects in reverse order so that it looks like
-				-- a countdown when compiling since the filenames are numbered.
-			l_cursor := c_filenames.new_cursor
-			from l_cursor.finish until l_cursor.before loop
-				if not l_cursor.is_last then
-					l_obj_filenames.append_character (' ')
-				end
-				l_filename := l_cursor.key
-				l_obj_filenames.append_string (l_filename)
-				l_obj_filenames.append_string (l_obj)
-				l_cursor.back
-			end
-			if not l_external_obj_filenames.is_empty then
-				l_obj_filenames.append_character (' ')
-				l_obj_filenames.append_string (l_external_obj_filenames)
-			end
-			l_cursor := l_external_c_filenames.new_cursor
-			from l_cursor.start until l_cursor.after loop
-				l_obj_filenames.append_character (' ')
-				l_filename := l_cursor.key
-				l_obj_filenames.append_string (l_filename)
-				l_obj_filenames.append_string (l_obj)
-				l_cursor.forth
-			end
-			l_variables.force (l_obj_filenames, "objs")
-				-- Header file.
-			l_variables.force (l_base_name + h_file_extension, "header")
-				-- Script.
-			generate_compilation_shell_script (l_base_name, l_variables, l_obj_filenames, l_env_regexp, l_external_c_filenames)
-			system_name := old_system_name
-		end
-
-	generate_compilation_shell_script (a_system_name: STRING; a_variables: like c_config; an_obj_filenames: STRING; an_env_regexp: RX_PCRE_REGULAR_EXPRESSION; an_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
-			-- Generate script to compile the C code.
-		require
-			a_system_name_not_void: a_system_name /= Void
 			a_variables_not_void: a_variables /= Void
-			an_obj_filenames_not_void: an_obj_filenames /= Void
-			an_env_regexp_not_void: an_env_regexp /= Void
-			an_external_c_filenames_not_void: an_external_c_filenames /= Void
+			no_void_variable: not a_variables.has_void_item
+			cc_defined: a_variables.has ("cc")
+			link_defined: a_variables.has ("link")
+			exe_defined: a_variables.has ("exe")
+			obj_defined: a_variables.has ("obj")
 		local
 			l_base_name: STRING
+			l_env_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_script_filename: STRING
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_link_template: STRING
@@ -792,6 +548,8 @@ feature {NONE} -- Compilation script generation
 			l_external_resource_pathnames: DS_ARRAYED_LIST [STRING]
 			l_cc_template: STRING
 			l_filename: STRING
+			l_obj_filenames: STRING
+			l_obj: STRING
 			l_windows_variables: DS_STRING_HASH_TABLE
 		do
 			l_base_name := a_system_name
@@ -800,6 +558,8 @@ feature {NONE} -- Compilation script generation
 			else
 				l_script_filename := l_base_name + sh_file_extension
 			end
+			create l_env_regexp.make
+			l_env_regexp.compile ("\$\(([^)]+)\)")
 			l_script_filename := file_system.pathname (c_folder, l_script_filename)
 			create l_file.make (l_script_filename)
 			l_file.recursive_open_write
@@ -845,10 +605,10 @@ feature {NONE} -- Compilation script generation
 					nb := l_external_make_pathnames.count
 					from i := 1 until i > nb loop
 						l_pathname := l_external_make_pathnames.item (i)
-						an_env_regexp.match (l_pathname)
+						l_env_regexp.match (l_pathname)
 						l_replacement := STRING_.new_empty_string (l_pathname, 6)
 						l_replacement.append_string ("${\1\}")
-						l_pathname := Execution_environment.interpreted_string (an_env_regexp.replace_all (l_replacement))
+						l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
 						if not l_pathname.starts_with ("%"") then
 							l_pathname := "%"" + l_pathname + "%""
 						end
@@ -858,12 +618,24 @@ feature {NONE} -- Compilation script generation
 						i := i + 1
 					end
 				end
+				l_obj_filenames := a_variables.value ("objs")
+				if l_obj_filenames = Void then
+					create l_obj_filenames.make (100)
+					a_variables.force (l_obj_filenames, "objs")
+				end
 					-- Compile files in reverse order so that it looks like
 					-- a countdown since the filenames are numbered.
 				l_cc_template := a_variables.item ("cc")
+				l_obj := a_variables.item ("obj")
 				l_cursor := c_filenames.new_cursor
 				from l_cursor.finish until l_cursor.before loop
-					l_filename := l_cursor.key + l_cursor.item
+					if not l_obj_filenames.is_empty then
+						l_obj_filenames.append_character (' ')
+					end
+					l_filename := l_cursor.key
+					l_obj_filenames.append_string (l_filename)
+					l_obj_filenames.append_string (l_obj)
+					l_filename := l_filename + l_cursor.item
 					a_variables.force (l_filename, "c")
 					l_command_name := a_variables.expanded_string (l_cc_template, False)
 					if l_windows_variables /= Void then
@@ -871,17 +643,6 @@ feature {NONE} -- Compilation script generation
 					end
 					l_file.put_line (l_command_name)
 					l_cursor.back
-				end
-				l_cursor := an_external_c_filenames.new_cursor
-				from l_cursor.start until l_cursor.after loop
-					l_filename := l_cursor.key + l_cursor.item
-					a_variables.force (l_filename, "c")
-					l_command_name := a_variables.expanded_string (l_cc_template, False)
-					if l_windows_variables /= Void then
-						l_command_name := l_windows_variables.expanded_string (l_command_name, False)
-					end
-					l_file.put_line (l_command_name)
-					l_cursor.forth
 				end
 					-- Resource files.
 				a_variables.search ("rc")
@@ -891,10 +652,10 @@ feature {NONE} -- Compilation script generation
 					nb := l_external_resource_pathnames.count
 					from i := 1 until i > nb loop
 						l_pathname := l_external_resource_pathnames.item (i)
-						an_env_regexp.match (l_pathname)
+						l_env_regexp.match (l_pathname)
 						l_replacement := STRING_.new_empty_string (l_pathname, 6)
 						l_replacement.append_string ("${\1\}")
-						l_pathname := Execution_environment.interpreted_string (an_env_regexp.replace_all (l_replacement))
+						l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
 						if file_system.has_extension (l_pathname, resx_file_extension) then
 								-- Skip .Net resource files.
 							l_res_filename := Void
@@ -919,13 +680,15 @@ feature {NONE} -- Compilation script generation
 							l_file.put_line (l_command_name)
 						end
 						if l_res_filename /= Void then
-							an_obj_filenames.append_character (' ')
+							if not l_obj_filenames.is_empty then
+								l_obj_filenames.append_character (' ')
+							end
 							if l_res_filename.starts_with ("%"") then
-								an_obj_filenames.append_string (l_res_filename)
+								l_obj_filenames.append_string (l_res_filename)
 							else
-								an_obj_filenames.append_character ('%"')
-								an_obj_filenames.append_string (l_res_filename)
-								an_obj_filenames.append_character ('%"')
+								l_obj_filenames.append_character ('%"')
+								l_obj_filenames.append_string (l_res_filename)
+								l_obj_filenames.append_character ('%"')
 							end
 						end
 						i := i + 1
@@ -941,8 +704,10 @@ feature {NONE} -- Compilation script generation
 							l_command_name := l_windows_variables.expanded_string (l_command_name, False)
 						end
 						l_file.put_line (l_command_name)
-						an_obj_filenames.append_character (' ')
-						an_obj_filenames.append_string (l_res_filename)
+						if not l_obj_filenames.is_empty then
+							l_obj_filenames.append_character (' ')
+						end
+						l_obj_filenames.append_string (l_res_filename)
 					end
 				end
 				l_link_template := a_variables.item ("link")
@@ -1040,15 +805,255 @@ feature {NONE} -- Compilation script generation
 			end
 		ensure
 			c_config_not_void: Result /= Void
-			no_void_variables: not Result.has_void_item
+			no_void_variable: not Result.has_void_item
 			cc_defined: Result.has ("cc")
 			link_defined: Result.has ("link")
 			exe_defined: Result.has ("exe")
 			obj_defined: Result.has ("obj")
 		end
 
-	add_boehm_gc_c_files (a_system_name: STRING)
-			-- Add C files of Boehm GC to the compilation script.
+feature {NONE} -- Generate external C files
+
+	generate_external_configuration (a_system_name: STRING; a_variables: like c_config)
+			-- Generate C compilation script file for `current_dynamic_system'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_system_name_not_void: a_system_name /= Void
+			a_variables_not_void: a_variables /= Void
+			no_void_variable: not a_variables.has_void_item
+			cc_defined: a_variables.has ("cc")
+			link_defined: a_variables.has ("link")
+			exe_defined: a_variables.has ("exe")
+			obj_defined: a_variables.has ("obj")
+		local
+			l_obj_filenames: STRING
+			l_base_name: STRING
+			i, nb: INTEGER
+			l_env_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_com_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_com_runtime_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_curl_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_net_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_vision2_gtk3_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_wel_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_replacement: STRING
+			l_external_include_pathnames: DS_ARRAYED_LIST [STRING]
+			l_external_library_pathnames: DS_ARRAYED_LIST [STRING]
+			l_external_object_pathnames: DS_ARRAYED_LIST [STRING]
+			l_external_cflags: DS_ARRAYED_LIST [STRING]
+			l_external_linker_flags: DS_ARRAYED_LIST [STRING]
+			l_external_obj_filenames: STRING
+			l_includes: STRING
+			l_libs: STRING
+			l_cflags: STRING
+			l_lflags: STRING
+			l_cflag: STRING
+			l_lflag: STRING
+			l_pathname: STRING
+			old_system_name: STRING
+		do
+			old_system_name := system_name
+			system_name := a_system_name
+			l_base_name := a_system_name
+			create l_env_regexp.make
+			l_env_regexp.compile ("\$\(([^)]+)\)")
+			create l_com_regexp.make
+			l_com_regexp.set_case_insensitive (True)
+			l_com_regexp.compile ("(.*[\\/]library[\\/]com[\\/]).*[\\/](mt)?com\.(lib|a)")
+			create l_com_runtime_regexp.make
+			l_com_runtime_regexp.set_case_insensitive (True)
+			l_com_runtime_regexp.compile ("(.*[\\/]library[\\/]com[\\/]).*[\\/](mt)?com_runtime\.(lib|a)")
+			create l_curl_regexp.make
+			l_curl_regexp.set_case_insensitive (True)
+			l_curl_regexp.compile ("(.*[\\/]library[\\/]curl[\\/]).*[\\/](mt)?eiffel_curl(_static)?\.(lib|o)")
+			create l_net_regexp.make
+			l_net_regexp.set_case_insensitive (True)
+			l_net_regexp.compile ("(.*[\\/]library[\\/]net[\\/]).*[\\/]((mt)?net\.lib|lib(mt)?net\.a)")
+			create l_vision2_gtk3_regexp.make
+			l_vision2_gtk3_regexp.set_case_insensitive (True)
+			l_vision2_gtk3_regexp.compile ("`(.*[\\/]library[\\/]vision2[\\/]implementation[\\/]gtk3[\\/]clib)[\\/]vision2-gtk-config +(--threads +)?--object`")
+			create l_wel_regexp.make
+			l_wel_regexp.set_case_insensitive (True)
+			l_wel_regexp.compile ("(.*[\\/]library[\\/]wel[\\/]).*[\\/](mt)?wel\.lib")
+				-- Include files.
+			create l_includes.make (256)
+			l_external_include_pathnames := current_system.external_include_pathnames
+			nb := l_external_include_pathnames.count
+			if nb > 1 then
+					-- Add '$GOBO/backend/c/runtime' to the list of include paths if at least
+					-- one include path has been specified in the ECF file. That way if one such
+					-- include file tries to include one of the runtime 'eif_*.h' file, it can
+					-- be found by the C compiler.
+				l_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "runtime">>)
+				l_pathname := Execution_environment.interpreted_string (l_pathname)
+				l_includes.append_string ("-I")
+				l_includes.append_character ('%"')
+				l_includes.append_string (l_pathname)
+				l_includes.append_character ('%"')
+			end
+			from i := 1 until i > nb loop
+				l_pathname := l_external_include_pathnames.item (i)
+				l_env_regexp.match (l_pathname)
+				l_replacement := STRING_.new_empty_string (l_pathname, 6)
+				l_replacement.append_string ("${\1\}")
+				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+				l_includes.append_character (' ')
+				l_includes.append_string ("-I")
+				if l_pathname.starts_with ("%"") then
+					l_includes.append_string (l_pathname)
+				else
+					l_includes.append_character ('%"')
+					l_includes.append_string (l_pathname)
+					l_includes.append_character ('%"')
+				end
+				i := i + 1
+			end
+			a_variables.force (l_includes, "includes")
+				-- C flags.
+			create l_cflags.make (256)
+			a_variables.search ("cflags")
+			if a_variables.found then
+				l_cflags.append_string (a_variables.found_item)
+			end
+			l_external_cflags := current_system.external_cflags
+			nb := l_external_cflags.count
+			from i := 1 until i > nb loop
+				l_cflag := l_external_cflags.item (i)
+				l_env_regexp.match (l_cflag)
+				l_replacement := STRING_.new_empty_string (l_cflag, 6)
+				l_replacement.append_string ("${\1\}")
+				l_cflag := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+				if not l_cflags.is_empty then
+					l_cflags.append_character (' ')
+				end
+				l_cflags.append_string (l_cflag)
+				i := i + 1
+			end
+			a_variables.force (l_cflags, "cflags")
+				-- Linker flags.
+			create l_lflags.make (256)
+			a_variables.search ("lflags")
+			if a_variables.found then
+				l_lflags.append_string (a_variables.found_item)
+			end
+			l_external_linker_flags := current_system.external_linker_flags
+			nb := l_external_linker_flags.count
+			from i := 1 until i > nb loop
+				l_lflag := l_external_linker_flags.item (i)
+				l_env_regexp.match (l_lflag)
+				l_replacement := STRING_.new_empty_string (l_lflag, 6)
+				l_replacement.append_string ("${\1\}")
+				l_lflag := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+				if l_com_regexp.recognizes (l_lflag) then
+					generate_external_c_files ("com", l_com_regexp.captured_substring (1) + "Clib")
+				elseif l_com_runtime_regexp.recognizes (l_lflag) then
+					generate_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime")
+				elseif l_curl_regexp.recognizes (l_lflag) then
+					generate_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib")
+				elseif l_net_regexp.recognizes (l_lflag) then
+					generate_external_c_files ("net", l_net_regexp.captured_substring (1) + "Clib")
+				elseif l_vision2_gtk3_regexp.recognizes (l_lflag) then
+					generate_external_c_files ("vision2_gtk3", l_vision2_gtk3_regexp.captured_substring (1))
+				elseif l_wel_regexp.recognizes (l_lflag) then
+					generate_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib")
+				else
+					if not l_lflags.is_empty then
+						l_lflags.append_character (' ')
+					end
+					l_lflags.append_string (l_lflag)
+				end
+				i := i + 1
+			end
+			a_variables.force (l_lflags, "lflags")
+				-- C libraries.
+			create l_libs.make (256)
+			l_external_library_pathnames := current_system.external_library_pathnames
+			nb := l_external_library_pathnames.count
+			from i := 1 until i > nb loop
+				l_pathname := l_external_library_pathnames.item (i)
+				l_env_regexp.match (l_pathname)
+				l_replacement := STRING_.new_empty_string (l_pathname, 6)
+				l_replacement.append_string ("${\1\}")
+				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+				if l_com_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("com", l_com_regexp.captured_substring (1) + "Clib")
+				elseif l_com_runtime_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime")
+				elseif l_curl_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib")
+				elseif l_net_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("net", l_net_regexp.captured_substring (1) + "Clib")
+				elseif l_vision2_gtk3_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("vision2_gtk3", l_vision2_gtk3_regexp.captured_substring (1))
+				elseif l_wel_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib")
+				else
+					if i /= 1 then
+						l_libs.append_character (' ')
+					end
+					if l_pathname.starts_with ("%"") then
+						l_libs.append_string (l_pathname)
+					else
+						l_libs.append_character ('%"')
+						l_libs.append_string (l_pathname)
+						l_libs.append_character ('%"')
+					end
+				end
+				i := i + 1
+			end
+			a_variables.force (l_libs, "libs")
+				-- Executable name.
+			a_variables.force (l_base_name + a_variables.item ("exe"), "exe")
+				-- Object files.
+			create l_obj_filenames.make (100)
+			create l_external_obj_filenames.make (100)
+			l_external_object_pathnames := current_system.external_object_pathnames
+			nb := l_external_object_pathnames.count
+			from i := 1 until i > nb loop
+				l_pathname := l_external_object_pathnames.item (i)
+				l_env_regexp.match (l_pathname)
+				l_replacement := STRING_.new_empty_string (l_pathname, 6)
+				l_replacement.append_string ("${\1\}")
+				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
+				if l_com_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("com", l_com_regexp.captured_substring (1) + "Clib")
+				elseif l_com_runtime_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime")
+				elseif l_curl_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib")
+				elseif l_net_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("net", l_net_regexp.captured_substring (1) + "Clib")
+				elseif l_vision2_gtk3_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("vision2_gtk3", l_vision2_gtk3_regexp.captured_substring (1))
+				elseif l_wel_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib")
+				else
+					if not l_external_obj_filenames.is_empty then
+						l_external_obj_filenames.append_character (' ')
+					end
+					if l_pathname.starts_with ("%"") then
+						l_external_obj_filenames.append_string (l_pathname)
+					else
+						l_external_obj_filenames.append_character ('%"')
+						l_external_obj_filenames.append_string (l_pathname)
+						l_external_obj_filenames.append_character ('%"')
+					end
+				end
+				i := i + 1
+			end
+			if not l_external_obj_filenames.is_empty then
+				l_obj_filenames.append_character (' ')
+				l_obj_filenames.append_string (l_external_obj_filenames)
+			end
+			a_variables.force (l_obj_filenames, "objs")
+				-- Header file.
+			a_variables.force (l_base_name + h_file_extension, "header")
+			system_name := old_system_name
+		end
+
+	generate_boehm_gc_c_files (a_system_name: STRING)
+			-- Generate C files for Boehm GC.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_system_name_not_void: a_system_name /= Void
 			use_boehm_gc: use_boehm_gc
@@ -1157,12 +1162,12 @@ feature {NONE} -- Compilation script generation
 			end
 		end
 
-	add_external_c_files (a_library_name, a_clib_dirname: STRING; a_external_c_filenames: DS_HASH_TABLE [STRING, STRING])
-			-- Add C files of `a_library_name' found in `a_clib_dirname' to the compilation script.
+	generate_external_c_files (a_library_name, a_clib_dirname: STRING)
+			-- Generate C files for `a_library_name' with the C code found in `a_clib_dirname'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_library_name_not_void: a_library_name /= Void
 			a_clib_dirname_not_void: a_clib_dirname /= Void
-			a_external_c_filenames_not_void: a_external_c_filenames /= Void
 		local
 			l_external_file: KL_TEXT_OUTPUT_FILE
 			l_external_filename: detachable STRING
@@ -1179,7 +1184,13 @@ feature {NONE} -- Compilation script generation
 			i, nb: INTEGER
 			j, nb2: INTEGER
 			l_common_defines: DS_ARRAYED_LIST [STRING]
+			l_common_undefines: DS_ARRAYED_LIST [STRING]
 			l_common_includes: DS_ARRAYED_LIST [STRING]
+			l_filenames_only_windows: detachable DS_HASH_SET [STRING]
+			l_filenames_except_windows: detachable DS_HASH_SET [STRING]
+			l_filenames_need_define: detachable DS_HASH_TABLE [TUPLE [first: STRING; second: detachable STRING], STRING]
+			l_need_define: detachable TUPLE [first: STRING; second: detachable STRING]
+			l_endif: BOOLEAN
 		do
 			create l_all_filenames.make (2)
 			create l_dir.make (a_clib_dirname)
@@ -1214,6 +1225,7 @@ feature {NONE} -- Compilation script generation
 			create l_comparator
 			create l_sorter.make (l_comparator)
 			create l_common_defines.make (15)
+			create l_common_undefines.make (15)
 			create l_common_includes.make (5)
 			if use_threads then
 				l_common_defines.force_last (c_ge_use_threads)
@@ -1221,8 +1233,17 @@ feature {NONE} -- Compilation script generation
 			if use_scoop then
 				l_common_defines.force_last (c_ge_use_scoop)
 			end
+			if a_library_name.same_string ("net") then
+				l_common_undefines.force_last ("_UNICODE")
+				l_common_undefines.force_last ("UNICODE")
+				include_runtime_header_file ("eif_retrieve.h", False, header_file)
+				include_runtime_header_file ("eif_store.h", False, header_file)
+				include_runtime_header_file ("eif_threads.h", False, header_file)
+			elseif a_library_name.same_string ("wel") then
+				l_common_defines.force_last ("_UNICODE")
+				l_common_defines.force_last ("UNICODE")
+			end
 			l_common_includes.force_last ("ge_eiffel.h")
-			l_common_includes.force_last ("ge_gc.h")
 				-- Two header files needed to compile EiffelCOM.
 			l_common_includes.force_last ("eif_cecil.h")
 			l_common_includes.force_last ("eif_plug.h")
@@ -1235,11 +1256,7 @@ feature {NONE} -- Compilation script generation
 				else
 					l_extension := cpp_file_extension
 				end
-				if a_external_c_filenames = c_filenames then
-					l_basename := system_name + (c_filenames.count + c_filenames_counter_offset + 1).out
-				else
-					l_basename := a_library_name + j.out
-				end
+				l_basename := system_name + (c_filenames.count + c_filenames_counter_offset + 1).out
 				l_external_filename := file_system.pathname (c_folder, l_basename + l_extension)
 				create l_external_file.make (l_external_filename)
 				l_external_file.recursive_open_write
@@ -1247,7 +1264,7 @@ feature {NONE} -- Compilation script generation
 					set_fatal_error
 					report_cannot_write_error (l_external_filename)
 				else
-					a_external_c_filenames.force_last (l_extension, l_basename)
+					c_filenames.force_last (l_extension, l_basename)
 					l_external_file.put_string ("/* C files for ")
 					l_external_file.put_string (a_library_name)
 					l_external_file.put_string (" */")
@@ -1260,7 +1277,14 @@ feature {NONE} -- Compilation script generation
 						l_external_file.put_line (l_common_defines.item (i))
 						i := i + 1
 					end
-					if nb > 0 then
+					nb := l_common_undefines.count
+					from i := 1 until i > nb loop
+						l_external_file.put_string (c_undef)
+						l_external_file.put_character (' ')
+						l_external_file.put_line (l_common_undefines.item (i))
+						i := i + 1
+					end
+					if not l_common_defines.is_empty or not l_common_undefines.is_empty then
 						l_external_file.put_new_line
 					end
 					nb := l_common_includes.count
@@ -1276,9 +1300,41 @@ feature {NONE} -- Compilation script generation
 					if nb > 0 then
 						l_external_file.put_new_line
 					end
+					if a_library_name.same_string ("net") then
+						create l_filenames_only_windows.make_equal (3)
+						l_filenames_only_windows.force_last ("hostname.c")
+						l_filenames_only_windows.force_last ("syncpoll.c")
+						l_filenames_only_windows.force_last ("ipv6win.c")
+						create l_filenames_except_windows.make_equal (2)
+						l_filenames_except_windows.force_last ("local.c")
+						l_filenames_except_windows.force_last ("ipv6ux.c")
+						create l_filenames_need_define.make (1)
+						l_filenames_need_define.force_last (["SOCKETADDRESS", "SOCKETADDRESS__2"], "network.c")
+					end
 					nb := l_filenames.count
 					from i := 1 until i > nb loop
 						l_filename := l_filenames.item (i)
+						if l_filenames_only_windows /= Void and then l_filenames_only_windows.has (l_filename) then
+							l_endif := True
+							l_external_file.put_string (c_ifdef)
+							l_external_file.put_character (' ')
+							l_external_file.put_line (c_eif_windows)
+						elseif l_filenames_except_windows /= Void and then l_filenames_except_windows.has (l_filename) then
+							l_endif := True
+							l_external_file.put_string (c_ifndef)
+							l_external_file.put_character (' ')
+							l_external_file.put_line (c_eif_windows)
+						elseif l_filenames_need_define /= Void and then l_filenames_need_define.has (l_filename) then
+							l_need_define := l_filenames_need_define.item (l_filename)
+							l_external_file.put_string (c_define)
+							l_external_file.put_character (' ')
+							l_external_file.put_string (l_need_define.first)
+							if attached l_need_define.second as l_second then
+								l_external_file.put_character (' ')
+								l_external_file.put_string (l_second)
+							end
+							l_external_file.put_new_line
+						end
 						l_filename := file_system.pathname (a_clib_dirname, l_filename)
 						l_filename := STRING_.replaced_all_substrings (l_filename, "\", "\\")
 						l_external_file.put_string (c_include)
@@ -1287,6 +1343,15 @@ feature {NONE} -- Compilation script generation
 						l_external_file.put_string (l_filename)
 						l_external_file.put_character ('"')
 						l_external_file.put_new_line
+						if l_endif then
+							l_endif := False
+							l_external_file.put_line (c_endif)
+						elseif l_need_define /= Void then
+							l_external_file.put_string (c_undef)
+							l_external_file.put_character (' ')
+							l_external_file.put_line (l_need_define.first)
+							l_need_define := Void
+						end
 						i := i + 1
 					end
 					l_external_file.close
@@ -41766,6 +41831,8 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_string.h", a_force, a_file)
 					include_runtime_header_file ("eif_globals.h", a_force, a_file)
 					include_runtime_header_file ("eif_except.h", a_force, a_file)
+				elseif a_filename.same_string ("eif_error.h") then
+					include_runtime_header_file ("eif_except.h", a_force, a_file)
 				elseif a_filename.same_string ("eif_except.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					include_runtime_header_file ("ge_exception.h", a_force, a_file)
@@ -41816,6 +41883,7 @@ feature {NONE} -- Include files
 					if use_threads then
 						include_runtime_header_file ("ge_thread.h", False, a_file)
 					end
+					l_c_filename := "eif_threads.c"
 				elseif a_filename.same_string ("eif_traverse.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					l_c_filename := "eif_traverse.c"
@@ -41942,6 +42010,8 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("eif_store.c") then
 					include_runtime_header_file ("eif_store.h", False, a_header_file)
 					include_runtime_header_file ("ge_console.h", False, a_header_file)
+				elseif a_filename.same_string ("eif_threads.c") then
+					include_runtime_header_file ("eif_threads.h", False, a_header_file)
 				elseif a_filename.same_string ("eif_traverse.c") then
 					include_runtime_header_file ("eif_traverse.h", False, a_header_file)
 					include_runtime_header_file ("ge_console.h", False, a_header_file)

@@ -115,6 +115,14 @@ void set_buffer_size(EIF_INTEGER new_size)
 	fprintf(stderr, "'set_buffer_size' in 'eif_store.h' not implemented\n");
 }
 
+/* Features needed for EiffelNet or any other libraries that wants to use some storable compatible storage. */
+void eif_store_object(int(*char_write)(char *, int), EIF_REFERENCE object, char store_type)
+{
+	/* TODO */
+	GE_show_console();
+	fprintf(stderr, "'eif_store_object' in 'eif_store.h' not implemented\n");
+}
+
 #ifdef __cplusplus
 }
 #endif

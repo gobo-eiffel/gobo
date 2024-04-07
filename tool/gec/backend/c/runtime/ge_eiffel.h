@@ -321,6 +321,7 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 	Interoperability with ISE.
 */
 #define RTI64C(x) GE_int64(x)
+#define RTU64C(x) GE_nat64(x)
 #define EIF_OBJECT EIF_REFERENCE
 #define EIF_OBJ EIF_OBJECT
 #define OVERHEAD sizeof(EIF_ANY)
