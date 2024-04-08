@@ -32,9 +32,8 @@
   the C code does not set an attribute of the resulting objects
   with an object whose dynamic type is not already part of the dynamic
   type set of this attribute as inferred from the Eiffel code).
-* Allow the C files included in the gtk3 implementation of the
-  ISE EiffelVision2 library to be compiled correctly using the
-  Gobo Eiffel runtime.
+* Allow the C files included in the ISE EiffelVision2 library to
+  be compiled correctly using the Gobo Eiffel runtime.
 * Allow the C files included in the ISE EiffelCurl library to be
   compiled correctly using the Gobo Eiffel runtime.
 * Allow the C files included in the ISE EiffelNet library to be

@@ -47,6 +47,7 @@
 #ifdef WIN32
 #define EIF_WINDOWS 1
 #define GE_WINDOWS
+#define WIN32_LEAN_AND_MEAN 1 /* Needed when using winsock2.h. */
 #include <windows.h>
 #endif
 

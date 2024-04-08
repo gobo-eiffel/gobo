@@ -833,9 +833,12 @@ feature {NONE} -- Generate external C files
 			l_com_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_com_runtime_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_curl_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_libpng_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_net_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_vision2_windows_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_vision2_gtk3_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_wel_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_zlib_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_replacement: STRING
 			l_external_include_pathnames: DS_ARRAYED_LIST [STRING]
 			l_external_library_pathnames: DS_ARRAYED_LIST [STRING]
@@ -866,15 +869,24 @@ feature {NONE} -- Generate external C files
 			create l_curl_regexp.make
 			l_curl_regexp.set_case_insensitive (True)
 			l_curl_regexp.compile ("(.*[\\/]library[\\/]curl[\\/]).*[\\/](mt)?eiffel_curl(_static)?\.(lib|o)")
+			create l_libpng_regexp.make
+			l_libpng_regexp.set_case_insensitive (True)
+			l_libpng_regexp.compile ("(.*[\\/]C_library[\\/]libpng)[\\/].*[\\/]libpng\.lib")
 			create l_net_regexp.make
 			l_net_regexp.set_case_insensitive (True)
 			l_net_regexp.compile ("(.*[\\/]library[\\/]net[\\/]).*[\\/]((mt)?net\.lib|lib(mt)?net\.a)")
 			create l_vision2_gtk3_regexp.make
 			l_vision2_gtk3_regexp.set_case_insensitive (True)
 			l_vision2_gtk3_regexp.compile ("`(.*[\\/]library[\\/]vision2[\\/]implementation[\\/]gtk3[\\/]clib)[\\/]vision2-gtk-config +(--threads +)?--object`")
+			create l_vision2_windows_regexp.make
+			l_vision2_windows_regexp.set_case_insensitive (True)
+			l_vision2_windows_regexp.compile ("(.*[\\/]library[\\/]vision2[\\/]).*[\\/](mt)?vision2\.lib")
 			create l_wel_regexp.make
 			l_wel_regexp.set_case_insensitive (True)
 			l_wel_regexp.compile ("(.*[\\/]library[\\/]wel[\\/]).*[\\/](mt)?wel\.lib")
+			create l_zlib_regexp.make
+			l_zlib_regexp.set_case_insensitive (True)
+			l_zlib_regexp.compile ("(.*[\\/]C_library[\\/]zlib)[\\/].*[\\/]zlib\.lib")
 				-- Include files.
 			create l_includes.make (256)
 			l_external_include_pathnames := current_system.external_include_pathnames
@@ -886,10 +898,7 @@ feature {NONE} -- Generate external C files
 					-- be found by the C compiler.
 				l_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "runtime">>)
 				l_pathname := Execution_environment.interpreted_string (l_pathname)
-				l_includes.append_string ("-I")
-				l_includes.append_character ('%"')
-				l_includes.append_string (l_pathname)
-				l_includes.append_character ('%"')
+				add_to_include_paths (l_pathname, l_includes)
 			end
 			from i := 1 until i > nb loop
 				l_pathname := l_external_include_pathnames.item (i)
@@ -897,15 +906,7 @@ feature {NONE} -- Generate external C files
 				l_replacement := STRING_.new_empty_string (l_pathname, 6)
 				l_replacement.append_string ("${\1\}")
 				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
-				l_includes.append_character (' ')
-				l_includes.append_string ("-I")
-				if l_pathname.starts_with ("%"") then
-					l_includes.append_string (l_pathname)
-				else
-					l_includes.append_character ('%"')
-					l_includes.append_string (l_pathname)
-					l_includes.append_character ('%"')
-				end
+				add_to_include_paths (l_pathname, l_includes)
 				i := i + 1
 			end
 			a_variables.force (l_includes, "includes")
@@ -932,6 +933,7 @@ feature {NONE} -- Generate external C files
 			a_variables.force (l_cflags, "cflags")
 				-- Linker flags.
 			create l_lflags.make (256)
+			create l_libs.make (256)
 			a_variables.search ("lflags")
 			if a_variables.found then
 				l_lflags.append_string (a_variables.found_item)
@@ -950,12 +952,22 @@ feature {NONE} -- Generate external C files
 					generate_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime")
 				elseif l_curl_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib")
+				elseif l_libpng_regexp.recognizes (l_lflag) then
+					add_to_include_paths (l_libpng_regexp.captured_substring (1), l_includes)
+					generate_external_c_files ("libpng", l_libpng_regexp.captured_substring (1))
 				elseif l_net_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("net", l_net_regexp.captured_substring (1) + "Clib")
 				elseif l_vision2_gtk3_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("vision2_gtk3", l_vision2_gtk3_regexp.captured_substring (1))
+				elseif l_vision2_windows_regexp.recognizes (l_lflag) then
+					generate_external_c_files ("vision2_windows", l_vision2_windows_regexp.captured_substring (1) + "Clib")
 				elseif l_wel_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib")
+					if c_compiler_used.same_string ("zig") then
+						add_windows_libs_to_library_paths (l_libs)
+					end
+				elseif l_zlib_regexp.recognizes (l_lflag) then
+					generate_external_c_files ("zlib", l_zlib_regexp.captured_substring (1))
 				else
 					if not l_lflags.is_empty then
 						l_lflags.append_character (' ')
@@ -966,7 +978,6 @@ feature {NONE} -- Generate external C files
 			end
 			a_variables.force (l_lflags, "lflags")
 				-- C libraries.
-			create l_libs.make (256)
 			l_external_library_pathnames := current_system.external_library_pathnames
 			nb := l_external_library_pathnames.count
 			from i := 1 until i > nb loop
@@ -981,23 +992,24 @@ feature {NONE} -- Generate external C files
 					generate_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime")
 				elseif l_curl_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib")
+				elseif l_libpng_regexp.recognizes (l_pathname) then
+					add_to_include_paths (l_libpng_regexp.captured_substring (1), l_includes)
+					generate_external_c_files ("libpng", l_libpng_regexp.captured_substring (1))
 				elseif l_net_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("net", l_net_regexp.captured_substring (1) + "Clib")
 				elseif l_vision2_gtk3_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("vision2_gtk3", l_vision2_gtk3_regexp.captured_substring (1))
+				elseif l_vision2_windows_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("vision2_windows", l_vision2_windows_regexp.captured_substring (1) + "Clib")
 				elseif l_wel_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib")
+					if c_compiler_used.same_string ("zig") then
+						add_windows_libs_to_library_paths (l_libs)
+					end
+				elseif l_zlib_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("zlib", l_zlib_regexp.captured_substring (1))
 				else
-					if i /= 1 then
-						l_libs.append_character (' ')
-					end
-					if l_pathname.starts_with ("%"") then
-						l_libs.append_string (l_pathname)
-					else
-						l_libs.append_character ('%"')
-						l_libs.append_string (l_pathname)
-						l_libs.append_character ('%"')
-					end
+					add_to_library_paths (l_pathname, l_libs)
 				end
 				i := i + 1
 			end
@@ -1021,12 +1033,22 @@ feature {NONE} -- Generate external C files
 					generate_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime")
 				elseif l_curl_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib")
+				elseif l_libpng_regexp.recognizes (l_pathname) then
+					add_to_include_paths (l_libpng_regexp.captured_substring (1), l_includes)
+					generate_external_c_files ("libpng", l_libpng_regexp.captured_substring (1))
 				elseif l_net_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("net", l_net_regexp.captured_substring (1) + "Clib")
 				elseif l_vision2_gtk3_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("vision2_gtk3", l_vision2_gtk3_regexp.captured_substring (1))
+				elseif l_vision2_windows_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("vision2_windows", l_vision2_windows_regexp.captured_substring (1) + "Clib")
 				elseif l_wel_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib")
+					if c_compiler_used.same_string ("zig") then
+						add_windows_libs_to_library_paths (l_libs)
+					end
+				elseif l_zlib_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("zlib", l_zlib_regexp.captured_substring (1))
 				else
 					if not l_external_obj_filenames.is_empty then
 						l_external_obj_filenames.append_character (' ')
@@ -1049,6 +1071,66 @@ feature {NONE} -- Generate external C files
 				-- Header file.
 			a_variables.force (l_base_name + h_file_extension, "header")
 			system_name := old_system_name
+		end
+
+	add_to_include_paths (a_pathname: STRING; a_include_paths: STRING)
+			-- Add `a_pathname' to the list of include paths `a_include_paths'.
+		require
+			a_pathname_not_void: a_pathname /= Void
+			a_include_paths_not_void: a_include_paths /= Void
+		do
+			if not a_include_paths.is_empty then
+				a_include_paths.append_character (' ')
+			end
+			a_include_paths.append_string ("-I")
+			if a_pathname.starts_with ("%"") then
+				a_include_paths.append_string (a_pathname)
+			else
+				a_include_paths.append_character ('%"')
+				a_include_paths.append_string (a_pathname)
+				a_include_paths.append_character ('%"')
+			end
+		end
+
+	add_to_library_paths (a_pathname: STRING; a_library_paths: STRING)
+			-- Add `a_pathname' to the list of library paths `a_library_paths'.
+		require
+			a_pathname_not_void: a_pathname /= Void
+			a_library_paths_not_void: a_library_paths /= Void
+		do
+			if not a_library_paths.has_substring (a_pathname) then
+				if not a_library_paths.is_empty then
+					a_library_paths.append_character (' ')
+				end
+				if a_pathname.starts_with ("%"") then
+					a_library_paths.append_string (a_pathname)
+				else
+					a_library_paths.append_character ('%"')
+					a_library_paths.append_string (a_pathname)
+					a_library_paths.append_character ('%"')
+				end
+			end
+		end
+
+	add_windows_libs_to_library_paths (a_library_paths: STRING)
+			-- Add Windows standard libraries to the list of library paths `a_library_paths'.
+		require
+			a_library_paths_not_void: a_library_paths /= Void
+		do
+			add_to_library_paths ("USER32.lib", a_library_paths)
+			add_to_library_paths ("WS2_32.lib", a_library_paths)
+			add_to_library_paths ("ADVAPI32.lib", a_library_paths)
+			add_to_library_paths ("GDI32.lib", a_library_paths)
+			add_to_library_paths ("SHELL32.lib", a_library_paths)
+			add_to_library_paths ("MSIMG32.lib", a_library_paths)
+			add_to_library_paths ("COMDLG32.lib", a_library_paths)
+			add_to_library_paths ("UUID.lib", a_library_paths)
+			add_to_library_paths ("OLE32.lib", a_library_paths)
+			add_to_library_paths ("OLEAUT32.lib", a_library_paths)
+			add_to_library_paths ("COMCTL32.lib", a_library_paths)
+			add_to_library_paths ("MPR.LIB", a_library_paths)
+			add_to_library_paths ("SHLWAPI.LIB", a_library_paths)
+			add_to_library_paths ("WINSPOOL.LIB", a_library_paths)
 		end
 
 	generate_boehm_gc_c_files (a_system_name: STRING)
@@ -1191,7 +1273,13 @@ feature {NONE} -- Generate external C files
 			l_filenames_need_define: detachable DS_HASH_TABLE [TUPLE [first: STRING; second: detachable STRING], STRING]
 			l_need_define: detachable TUPLE [first: STRING; second: detachable STRING]
 			l_endif: BOOLEAN
+			l_single_files: BOOLEAN
 		do
+			if a_library_name.same_string ("zlib") then
+					-- Compile one C file at a time.
+					-- Otherwise we get conflicts.
+				l_single_files := True
+			end
 			create l_all_filenames.make (2)
 			create l_dir.make (a_clib_dirname)
 			l_dir.open_read
@@ -1206,13 +1294,13 @@ feature {NONE} -- Generate external C files
 				loop
 					l_filename := l_dir.last_entry
 					if l_filename.ends_with (c_file_extension) then
-						if l_c_filenames = Void then
+						if l_c_filenames = Void or l_single_files then
 							create l_c_filenames.make (50)
 							l_all_filenames.force_last (l_c_filenames)
 						end
 						l_c_filenames.force_last (l_filename)
 					elseif l_filename.ends_with (cpp_file_extension) then
-						if l_cpp_filenames = Void then
+						if l_cpp_filenames = Void or l_single_files then
 							create l_cpp_filenames.make (50)
 							l_all_filenames.force_last (l_cpp_filenames)
 						end
@@ -1234,19 +1322,25 @@ feature {NONE} -- Generate external C files
 				l_common_defines.force_last (c_ge_use_scoop)
 			end
 			if a_library_name.same_string ("net") then
+				l_common_defines.force_last ("FD_SETSIZE 256")
 				l_common_undefines.force_last ("_UNICODE")
 				l_common_undefines.force_last ("UNICODE")
+				l_common_undefines.force_last ("DEBUG")
 				include_runtime_header_file ("eif_retrieve.h", False, header_file)
 				include_runtime_header_file ("eif_store.h", False, header_file)
 				include_runtime_header_file ("eif_threads.h", False, header_file)
-			elseif a_library_name.same_string ("wel") then
-				l_common_defines.force_last ("_UNICODE")
-				l_common_defines.force_last ("UNICODE")
+			elseif a_library_name.same_string ("zlib") then
+				l_common_undefines.force_last ("_UNICODE")
+				l_common_undefines.force_last ("UNICODE")
 			end
-			l_common_includes.force_last ("ge_eiffel.h")
-				-- Two header files needed to compile EiffelCOM.
-			l_common_includes.force_last ("eif_cecil.h")
-			l_common_includes.force_last ("eif_plug.h")
+			if not a_library_name.same_string ("zlib") then
+				l_common_includes.force_last ("ge_eiffel.h")
+			end
+			if a_library_name.same_string ("com") or a_library_name.same_string ("com_runtime") then
+					-- Two header files needed to compile EiffelCOM.
+				l_common_includes.force_last ("eif_cecil.h")
+				l_common_includes.force_last ("eif_plug.h")
+			end
 			nb2 := l_all_filenames.count
 			from j := 1 until j > nb2 loop
 				l_filenames := l_all_filenames.item (j)
@@ -1310,6 +1404,9 @@ feature {NONE} -- Generate external C files
 						l_filenames_except_windows.force_last ("ipv6ux.c")
 						create l_filenames_need_define.make (1)
 						l_filenames_need_define.force_last (["SOCKETADDRESS", "SOCKETADDRESS__2"], "network.c")
+					elseif a_library_name.same_string ("libpng") then
+						create l_filenames_except_windows.make_equal (1)
+						l_filenames_except_windows.force_last ("example.c")
 					end
 					nb := l_filenames.count
 					from i := 1 until i > nb loop
@@ -1324,7 +1421,8 @@ feature {NONE} -- Generate external C files
 							l_external_file.put_string (c_ifndef)
 							l_external_file.put_character (' ')
 							l_external_file.put_line (c_eif_windows)
-						elseif l_filenames_need_define /= Void and then l_filenames_need_define.has (l_filename) then
+						end
+						if l_filenames_need_define /= Void and then l_filenames_need_define.has (l_filename) then
 							l_need_define := l_filenames_need_define.item (l_filename)
 							l_external_file.put_string (c_define)
 							l_external_file.put_character (' ')
