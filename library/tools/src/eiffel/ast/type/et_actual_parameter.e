@@ -5,7 +5,7 @@
 		"Eiffel actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_ACTUAL_PARAMETER
@@ -115,10 +115,12 @@ feature -- Output
 			-- types such as INTEGER_32. Also, implicit type marks are
 			-- replaced with explicit type marks, except when the actual
 			-- generic parameters are base types where the type mark is not
-			-- shown at all if 'attached', or if 'expanded' and thebase class
+			-- shown at all if 'attached', or if 'expanded' and the base class
 			-- is expanded, or if 'separate' and the base class is separate
 			-- (e.g. "FOO [BAR, INTEGER_8, detachable BAZ]" instead of
 			-- "FOO [attached BAR, expanded INTEGER_8, detachable BAZ]").
+			-- Do not show the 'detachable' type mark for base types in
+			-- non-void-safe mode.
 			-- Also, tuple types have no labels.
 		require
 			a_string_not_void: a_string /= Void
