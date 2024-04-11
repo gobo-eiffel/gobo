@@ -2129,9 +2129,9 @@ feature {NONE} -- Feature generation
 				l_feature := constant_features.key_for_iteration
 				if not once_features.has (l_feature) then
 					if not attached l_feature.type as l_type then
-							-- Internal feature: a constant attribute has a type.
+							-- Internal error: a constant attribute has a type.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_constants_declaration", 1, "constant attribute with no type.")
 					else
 							-- The deanchored form of the type of the constant feature
 							-- should not contain any formal generic parameter (in fact
@@ -2184,7 +2184,7 @@ feature {NONE} -- Feature generation
 		do
 				-- Internal error: deferred features cannot be executed at run-time.
 			set_fatal_error
-			error_handler.report_giaaa_error
+			error_handler.report_giaac_error (generator, "print_deferred_function", 1, "deferred functions cannot be executed at run-time.")
 		end
 
 	print_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE)
@@ -2194,7 +2194,7 @@ feature {NONE} -- Feature generation
 		do
 				-- Internal error: deferred features cannot be executed at run-time.
 			set_fatal_error
-			error_handler.report_giaaa_error
+			error_handler.report_giaac_error (generator, "print_deferred_procedure", 1, "deferred procedures cannot be executed at run-time.")
 		end
 
 	print_do_function (a_feature: ET_DO_FUNCTION)
@@ -2221,7 +2221,7 @@ feature {NONE} -- Feature generation
 			if current_feature.static_feature /= a_feature then
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_function", 1, "inconsistent `current_feature'.")
 			elseif in_static_feature then
 				print_external_routine (a_feature, False, False)
 			else
@@ -2242,7 +2242,7 @@ feature {NONE} -- Feature generation
 			if current_feature.static_feature /= a_feature then
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_procedure", 1, "inconsistent `current_feature'.")
 			elseif in_static_feature then
 				print_external_routine (a_feature, False, False)
 			else
@@ -3190,7 +3190,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -3247,7 +3247,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_any_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -3284,7 +3284,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_arguments_32_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -3327,7 +3327,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_boolean_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -3352,7 +3352,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_boolean_ref_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -3395,7 +3395,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_character_n_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -3420,7 +3420,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_character_n_ref_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -3475,7 +3475,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_com_failure_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -3508,7 +3508,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_exception_manager_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -3529,7 +3529,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_exception_manager_factory_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -3556,7 +3556,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_function_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -3599,7 +3599,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_identified_routines_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -3798,7 +3798,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_integer_n_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -3823,7 +3823,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_integer_n_ref_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -4290,7 +4290,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_ise_runtime_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -4315,7 +4315,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_memory_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -4430,7 +4430,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_platform_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -4475,7 +4475,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_pointer_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -4500,7 +4500,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_pointer_ref_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -4677,7 +4677,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_real_n_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -4720,7 +4720,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_real_n_ref_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -4771,7 +4771,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_special_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -4834,7 +4834,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_tuple_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -4903,7 +4903,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_type_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -4969,7 +4969,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -4992,7 +4992,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_any_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5015,7 +5015,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_boolean_ref_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5038,7 +5038,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_character_n_ref_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5061,7 +5061,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_com_failure_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5088,7 +5088,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_exception_manager_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5111,7 +5111,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_identified_routines_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5134,7 +5134,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_integer_n_ref_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5157,7 +5157,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_ise_exception_manager_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5314,7 +5314,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_ise_runtime_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5337,7 +5337,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_memory_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5360,7 +5360,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_pointer_ref_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5385,7 +5385,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_procedure_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5408,7 +5408,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_real_n_ref_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5437,7 +5437,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_special_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5490,7 +5490,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_tuple_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5553,7 +5553,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 								-- Internal error: TYPED_POINTER [XX] has one generic parameter.
 								-- This should have been checked already.
 							set_fatal_error
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "print_external_c_prototype", 1, "missing generic parameter for type 'TYPED_POINTER'.")
 						else
 							l_actual_parameter := current_dynamic_system.dynamic_primary_type (l_actual_parameters.type (1), current_system.any_type)
 							print_type_declaration (l_actual_parameter, header_file)
@@ -5647,7 +5647,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 									-- Internal error: TYPED_POINTER [XX] has one generic parameter.
 									-- This should have been checked already.
 								set_fatal_error
-								error_handler.report_giaaa_error
+								error_handler.report_giaac_error (generator, "print_external_c_body", 1, "missing generic parameter for type 'TYPED_POINTER'.")
 							else
 								l_actual_parameter := current_dynamic_system.dynamic_primary_type (l_actual_parameters.type (1), current_system.any_type)
 								current_file.put_character ('(')
@@ -5693,7 +5693,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 									-- Internal error: TYPED_POINTER [XX] has one generic parameter.
 									-- This should have been checked already.
 								set_fatal_error
-								error_handler.report_giaaa_error
+								error_handler.report_giaac_error (generator, "print_external_c_body", 2, "missing generic parameter for type 'TYPED_POINTER'.")
 							else
 								l_actual_parameter := current_dynamic_system.dynamic_primary_type (l_actual_parameters.type (1), current_system.any_type)
 								current_file.put_character ('(')
@@ -5787,7 +5787,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 								-- Internal error: TYPED_POINTER [XX] has one generic parameter.
 								-- This should have been checked already.
 							set_fatal_error
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "print_external_c_struct_body", 1, "missing generic parameter for type 'TYPED_POINTER'.")
 						else
 							l_actual_parameter := current_dynamic_system.dynamic_primary_type (l_actual_parameters.type (1), current_system.any_type)
 							current_file.put_character ('(')
@@ -5837,7 +5837,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 								-- Internal error: TYPED_POINTER [XX] has one generic parameter.
 								-- This should have been checked already.
 							set_fatal_error
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "print_external_c_struct_body", 2, "missing generic parameter for type 'TYPED_POINTER'.")
 						else
 							l_actual_parameter := current_dynamic_system.dynamic_primary_type (l_actual_parameters.type (1), current_system.any_type)
 							current_file.put_character ('(')
@@ -6007,7 +6007,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 													-- Internal error: TYPED_POINTER [XX] has one generic parameter.
 													-- This should have been checked already.
 												set_fatal_error
-												error_handler.report_giaaa_error
+												error_handler.report_giaac_error (generator, "print_external_c_inline_body", 1, "missing generic parameter for type 'TYPED_POINTER'.")
 											else
 												l_actual_parameter := current_dynamic_system.dynamic_primary_type (l_actual_parameters.type (1), current_system.any_type)
 												current_file.put_character ('(')
@@ -6142,7 +6142,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 							-- Internal error: TYPED_POINTER [XX] has one generic parameter.
 							-- This should have been checked already.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_external_cpp_body", 1, "missing generic parameter for type 'TYPED_POINTER'.")
 					else
 						l_actual_parameter := current_dynamic_system.dynamic_primary_type (l_actual_parameters.type (1), current_system.any_type)
 						current_file.put_character ('(')
@@ -6202,7 +6202,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 									-- Internal error: TYPED_POINTER [XX] has one generic parameter.
 									-- This should have been checked already.
 								set_fatal_error
-								error_handler.report_giaaa_error
+								error_handler.report_giaac_error (generator, "print_external_cpp_body", 2, "missing generic parameter for type 'TYPED_POINTER'.")
 							else
 								l_actual_parameter := current_dynamic_system.dynamic_primary_type (l_actual_parameters.type (1), current_system.any_type)
 								current_file.put_character ('(')
@@ -6245,7 +6245,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 									-- Internal error: TYPED_POINTER [XX] has one generic parameter.
 									-- This should have been checked already.
 								set_fatal_error
-								error_handler.report_giaaa_error
+								error_handler.report_giaac_error (generator, "print_external_cpp_body", 3, "missing generic parameter for type 'TYPED_POINTER'.")
 							else
 								l_actual_parameter := current_dynamic_system.dynamic_primary_type (l_actual_parameters.type (1), current_system.any_type)
 								current_file.put_character ('(')
@@ -6457,7 +6457,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 									-- Internal error: TYPED_POINTER [XX] has one generic parameter.
 									-- This should have been checked already.
 								set_fatal_error
-								error_handler.report_giaaa_error
+								error_handler.report_giaac_error (generator, "print_external_dllwin_body", 1, "missing generic parameter for type 'TYPED_POINTER'.")
 							else
 								l_actual_parameter := current_dynamic_system.dynamic_primary_type (l_actual_parameters.type (1), current_system.any_type)
 								print_type_declaration (l_actual_parameter, current_file)
@@ -6508,7 +6508,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 									-- Internal error: TYPED_POINTER [XX] has one generic parameter.
 									-- This should have been checked already.
 								set_fatal_error
-								error_handler.report_giaaa_error
+								error_handler.report_giaac_error (generator, "print_external_dllwin_body", 2, "missing generic parameter for type 'TYPED_POINTER'.")
 							else
 								l_actual_parameter := current_dynamic_system.dynamic_primary_type (l_actual_parameters.type (1), current_system.any_type)
 								current_file.put_character ('(')
@@ -6551,7 +6551,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 									-- Internal error: TYPED_POINTER [XX] has one generic parameter.
 									-- This should have been checked already.
 								set_fatal_error
-								error_handler.report_giaaa_error
+								error_handler.report_giaac_error (generator, "print_external_dllwin_body", 3, "missing generic parameter for type 'TYPED_POINTER'.")
 							else
 								l_actual_parameter := current_dynamic_system.dynamic_primary_type (l_actual_parameters.type (1), current_system.any_type)
 								current_file.put_character ('(')
@@ -6593,7 +6593,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if current_feature.static_feature /= a_feature then
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_internal_function", 1, "inconsistent `current_feature'.")
 			elseif in_static_feature then
 				print_internal_feature (a_feature, False)
 			else
@@ -6614,7 +6614,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if current_feature.static_feature /= a_feature then
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_internal_procedure", 1, "inconsistent `current_feature'.")
 			elseif in_static_feature then
 				print_internal_feature (a_feature, False)
 			else
@@ -7763,7 +7763,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if current_feature.static_feature /= a_feature then
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_attribute", 1, "inconsistent `current_feature'.")
 			else
 				print_attribute_wrapper (a_feature)
 			end
@@ -7791,7 +7791,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if current_feature.static_feature /= a_feature then
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_constant_attribute", 1, "inconsistent `current_feature'.")
 			elseif in_static_feature then
 				print_attribute_wrapper (a_feature)
 			else
@@ -7810,7 +7810,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if current_feature.static_feature /= a_feature then
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_unique_attribute", 1, "inconsistent `current_feature'.")
 			elseif in_static_feature then
 				print_attribute_wrapper (a_feature)
 			else
@@ -7849,7 +7849,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if l_result_type_set = Void then
 					-- Internal error: a query has a result type set.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_attribute_wrapper", 1, "attribute with no type.")
 			else
 				l_result_type := l_result_type_set.static_type.primary_type
 				print_type_declaration (l_result_type, header_file)
@@ -8744,7 +8744,7 @@ feature {NONE} -- Instruction generation
 					-- It has been computed in ET_FEATURE_CHECKER or else an
 					-- error should have already been reported.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_creation_instruction", 1, "creation procedure not found.")
 			else
 				if l_actuals /= Void then
 					nb := l_actuals.count
@@ -9502,7 +9502,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 					-- have been resolved when flattening the features of the
 					-- implementation class of current feature.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_precursor_instruction", 1, "precursor with no parent type.")
 			else
 				had_error := has_fatal_error
 				has_fatal_error := False
@@ -9516,14 +9516,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 								-- on `l_current_class' at this stage, and any error
 								-- should have already been reported.
 							set_fatal_error
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "print_precursor_instruction", 2, "ancestors not built.")
 						else
 							l_ancestor := l_current_class.ancestor (l_parent_type)
 							if l_ancestor = Void then
 									-- Internal error: `l_parent_type' is an ancestor
 									-- of `l_class_impl', and hence of `l_current_class'.
 								set_fatal_error
-								error_handler.report_giaaa_error
+								error_handler.report_giaac_error (generator, "print_precursor_instruction", 3, "parent type not found.")
 							else
 								l_parent_type := l_ancestor
 							end
@@ -9540,7 +9540,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 							-- already have been resolved when flattening the
 							-- features of `l_class_impl'.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_precursor_instruction", 4, "precursor procedure not found.")
 					else
 						l_parent_dynamic_type := current_dynamic_system.dynamic_primary_type (l_parent_type, current_type.base_type)
 						l_dynamic_precursor := current_feature.dynamic_precursor (l_procedure, l_parent_dynamic_type, current_dynamic_system)
@@ -9701,7 +9701,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 						if not attached current_feature.procedure_call (a_call) as l_dynamic_call then
 								-- Internal error: the dynamic call should have been created in ET_DYNAMIC_TYPE_BUILDER.
 							set_fatal_error
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "print_qualified_call_instruction", 1, "dynamic call not found.")
 						else
 							register_polymorphic_called_features (l_dynamic_call)
 							print_indentation
@@ -9990,7 +9990,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 					-- It has been computed in ET_FEATURE_CHECKER or else an
 					-- error should have already been reported.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_instruction_static_call", 1, "procedure not found.")
 			else
 				register_called_static_feature (l_dynamic_procedure)
 				print_indentation
@@ -10209,7 +10209,7 @@ feature {NONE} -- Procedure call generation
 						-- Internal error: there should be a procedure with `l_seed'.
 						-- It has been computed in ET_FEATURE_CHECKER.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_named_procedure_call", 1, "procedure not found.")
 				else
 					print_procedure_call (l_dynamic_feature, a_target_type, a_check_void_target)
 				end
@@ -10237,19 +10237,19 @@ feature {NONE} -- Procedure call generation
 			if call_operands.count /= 2 then
 					-- Internal error: the Tuple label setter should have one argument.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_tuple_label_setter_call", 1, "wrong number of arguments.")
 			else
 				if not attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type then
 						-- Internal error: the type of the target should be a Tuple type.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_tuple_label_setter_call", 2, "target type is not 'TUPLE'.")
 				else
 					l_seed := a_name.seed
 					l_item_type_sets := l_tuple_type.item_type_sets
 					if l_seed < 1 or l_seed > l_item_type_sets.count then
 							-- Internal error: invalid Tuple label.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_tuple_label_setter_call", 3, "invalid Tuple label.")
 					else
 						print_indentation
 						l_tuple_expression := call_operands.first
@@ -10348,11 +10348,11 @@ feature {NONE} -- Procedure call generation
 			if l_operands_count /= a_feature.static_feature.arguments_count + 1 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_inlined_procedure_call", 1, "wrong number of arguments.")
 			elseif not attached {ET_INTERNAL_PROCEDURE} a_feature.static_feature as l_internal_procedure then
 					-- Internal error: only internal routines are inlinable
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_inlined_procedure_call", 2, "only internal routines are inlinable.")
 			elseif attached l_internal_procedure.compound as l_compound then
 				register_inlined_feature (a_feature)
 				nested_inlining_count := nested_inlining_count + 1
@@ -11972,7 +11972,7 @@ feature {NONE} -- Expression generation
 					-- It has been computed in ET_FEATURE_CHECKER or else an
 					-- error should have already been reported.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_creation_expression", 1, "creation procedure not found.")
 			elseif use_scoop and l_target_type.is_separate then
 				print_separate_creation_procedure_call (an_expression, l_procedure, l_target_primary_type)
 				l_is_separate_call := True
@@ -12058,7 +12058,7 @@ feature {NONE} -- Expression generation
 						-- Internal error: TYPED_POINTER should have an attribute
 						-- `pointer_item' at first position.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_current_address", 1, "'TYPED_POINTER' has no attribute `pointer_item'.")
 				else
 					print_indentation
 					print_attribute_access (l_queries.first, l_temp, l_dynamic_type, False)
@@ -12233,7 +12233,7 @@ feature {NONE} -- Expression generation
 						-- Internal error: TYPED_POINTER should have an attribute
 						-- `pointer_item' at first position.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_feature_address", 1, "'TYPED_POINTER' has no attribute `pointer_item'.")
 				else
 					print_indentation
 					print_attribute_access (l_queries.first, l_temp, l_dynamic_type, False)
@@ -12346,7 +12346,7 @@ feature {NONE} -- Expression generation
 							if l_value_type_set = Void then
 									-- Internal error: we know that `l_query' is an attribute.
 								set_fatal_error
-								error_handler.report_giaaa_error
+								error_handler.report_giaac_error (generator, "print_feature_address", 2, "attribute with no type.")
 							elseif l_value_type_set.is_expanded then
 								print_type_cast (l_pointer_type, current_file)
 								current_file.put_character ('&')
@@ -12415,7 +12415,7 @@ feature {NONE} -- Expression generation
 								-- Internal error: It has been checked in ET_FEATURE_CHECKER that
 								-- we should have either $argument, $local or $feature_name.
 							set_fatal_error
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "print_feature_address", 3, "unknown `name' in '$name'.")
 						end
 					end
 				end
@@ -12450,7 +12450,7 @@ feature {NONE} -- Expression generation
 						-- Internal error: we know at this stage that the
 						-- number of formal and actual aguments is the same.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_formal_argument", 1, "invalid formal argument.")
 				else
 					agent_arguments.actual_argument (l_seed).process (Current)
 				end
@@ -12688,7 +12688,7 @@ feature {NONE} -- Expression generation
 			if not attached {ET_DYNAMIC_INLINED_EXPRESSION} a_expression as l_inlined_expression then
 					-- Internal error: not supported.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaab_error (generator, "print_inlined_expression", 1)
 			else
 				l_old_inlining_context := inlining_context
 				l_inlining_context := l_inlined_expression.context
@@ -12707,7 +12707,7 @@ feature {NONE} -- Expression generation
 					if operand_stack.is_empty then
 							-- Internal error: an operand should have been added.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_inlined_expression", 2, "operand has not been added")
 					elseif operand_stack.item = l_expression then
 						operand_stack.replace (l_inlined_expression)
 					else
@@ -13407,19 +13407,19 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					-- features 'area', 'lower' and 'upper' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_manifest_array", 1, "'ARRAY' has less than 3 attributes.")
 			else
 				l_queries := l_dynamic_type.queries
 				l_dynamic_type_set := l_queries.first.result_type_set
 				if l_dynamic_type_set = Void then
 						-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_manifest_array", 2, "attribute `area' has no type.")
 				elseif not attached {ET_DYNAMIC_SPECIAL_TYPE} l_dynamic_type_set.static_type.primary_type as l_special_type then
 						-- Internal error: it has already been checked in ET_DYNAMIC_SYSTEM.compile_kernel
 						-- that the attribute `area' is of SPECIAL type.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_manifest_array", 3, "attribute `area' is not of type 'SPECIAL'.")
 				else
 					l_static_item_type := l_special_type.item_type_set.static_type
 				end
@@ -13427,7 +13427,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				if l_dynamic_type_set = Void then
 						-- Error in feature 'upper', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_manifest_array", 4, "attribute `upper' has no type.")
 				else
 					l_integer_type := l_dynamic_type_set.static_type.primary_type
 				end
@@ -13662,7 +13662,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					-- Internal error: the dynamic type of `an_expression'
 					-- should be a Tuple_type.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_manifest_tuple", 1, "manifest tuple is not of type 'TUPLE'.")
 			else
 				nb := an_expression.count
 				manifest_tuple_types.force_last (l_tuple_type)
@@ -13742,7 +13742,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 						-- computed. It is nothing else than the type of this manifest
 						-- type expression.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_manifest_type", 1, "no meta type found for manifest type.")
 				else
 					current_file.put_character ('(')
 					current_file.put_character ('(')
@@ -14126,7 +14126,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					-- have been resolved when flattening the features of the
 					-- implementation class of current feature.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_precursor_expression", 1, "precursor with no parent type.")
 			else
 				had_error := has_fatal_error
 				has_fatal_error := False
@@ -14141,14 +14141,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 								-- on `l_current_class' at this stage, and any error
 								-- should have already been reported.
 							set_fatal_error
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "print_precursor_expression", 2, "ancestors not built.")
 						else
 							l_ancestor := l_current_class.ancestor (l_parent_type)
 							if l_ancestor = Void then
 									-- Internal error: `l_parent_type' is an ancestor
 									-- of `l_class_impl', and hence of `l_current_class'.
 								set_fatal_error
-								error_handler.report_giaaa_error
+								error_handler.report_giaac_error (generator, "print_precursor_expression", 3, "parent type not found.")
 							else
 								l_parent_type := l_ancestor
 							end
@@ -14165,7 +14165,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 							-- already have been resolved when flattening the
 							-- features of `l_class_impl'.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_precursor_expression", 4, "precursor query not found.")
 					else
 						if in_operand then
 							if l_assignment_target /= Void then
@@ -14374,7 +14374,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 						-- have exactly one argument. This is guaranteed
 						-- by the fact that they are infix features.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_qualified_call_expression", 1, "semistrict operator does not have exactly one argument.")
 				else
 					print_indentation
 					current_file.put_string (c_if)
@@ -14592,7 +14592,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 							-- Internal error: there should be a query with `a_seed'.
 							-- It has been computed in ET_FEATURE_CHECKER.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_qualified_call_expression", 2, "query not found.")
 						l_printed := True
 					elseif l_query.is_constant_attribute then
 						l_target_dynamic_type := l_target_type_set.dynamic_type (1)
@@ -14629,7 +14629,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					elseif l_dynamic_call = Void then
 							-- Internal error: the dynamic call should have been created in ET_DYNAMIC_TYPE_BUILDER.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_qualified_call_expression", 3, "dynamic call not found.")
 					else
 						l_dynamic_call.set_force_result_boxing (l_force_result_boxing)
 						register_polymorphic_called_features (l_dynamic_call)
@@ -14951,7 +14951,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 						-- Internal error: TYPED_POINTER should have an attribute
 						-- `pointer_item' at first position.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_result_address", 1, "'TYPED_POINTER' has no attribute `pointer_item'.")
 				else
 					print_indentation
 					print_attribute_access (l_queries.first, l_temp, l_dynamic_type, False)
@@ -14970,7 +14970,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 						-- Internal error: it should have been checked elsewhere that
 						-- the current feature is a function.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_result_address", 2, "enclosing feature is not a function.")
 				elseif l_result_type_set.is_expanded then
 					print_type_cast (l_pointer_type, current_file)
 					if current_agent = Void and then current_feature.is_once then
@@ -15137,16 +15137,16 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					-- It has been computed in ET_FEATURE_CHECKER or else an
 					-- error should have already been reported.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_expression_static_call", 1, "query not found.")
 			elseif l_query.is_attribute then
 					-- Internal error: no object available.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_expression_static_call", 2, "query is an attribute.")
 			elseif l_query.is_constant_attribute then
 				if not attached {ET_CONSTANT_ATTRIBUTE} l_query as l_constant_attribute then
 						-- Internal error.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_expression_static_call", 3, "invalid constant attribute.")
 				elseif attached {ET_MANIFEST_STRING} l_constant_attribute.constant as l_string_constant then
 					l_once_feature := l_constant_attribute.implementation_feature
 					constant_features.force_last (l_string_constant, l_once_feature)
@@ -15162,7 +15162,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 				if not attached {ET_UNIQUE_ATTRIBUTE} l_query as l_unique_attribute then
 						-- Internal error.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_expression_static_call", 4, "invalid unique attribute.")
 				else
 					l_dynamic_type_set := dynamic_type_set (a_expression)
 					l_dynamic_type := l_dynamic_type_set.static_type.primary_type
@@ -15283,12 +15283,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 							-- Internal error: the temporary
 							-- variable should be known at this stage.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_temporary_variable", 1, "unknown temporary variable.")
 					elseif not attached temp_variable_type (a_name) as l_static_type then
 							-- Internal error: the type of the temporary
 							-- variable should be known at this stage.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_temporary_variable", 2, "missing type for temporary variable.")
 					elseif l_static_type.is_expanded then
 							-- Pass the address of the expanded object.
 							--
@@ -15460,7 +15460,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 				if l_dynamic_feature = Void then
 						-- Internal error: there should be a query for that seed.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_unqualified_call_expression", 1, "query not found.")
 				else
 					l_call_type := l_call_type_set.static_type.primary_type
 					if
@@ -15818,7 +15818,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 							-- Internal error: there should be a query with `l_seed'.
 							-- It has been computed in ET_FEATURE_CHECKER.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_writable", 1, "attribute not found.")
 					else
 						print_attribute_access (l_query, tokens.current_keyword, current_type, False)
 					end
@@ -16044,7 +16044,7 @@ feature {NONE} -- Equality generation
 			if not attached l_dynamic_type.seeded_dynamic_query (current_system.is_equal_seed, current_dynamic_system) as l_is_equal_feature then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_equality_call_with_one_object_equality", 1, "feature `is_equal' not found.")
 			else
 				if l_left_type_set.can_be_void then
 					l_parenthese_count := l_parenthese_count + 1
@@ -16411,7 +16411,7 @@ feature {NONE} -- Equality generation
 					if not attached l_dynamic_type.seeded_dynamic_query (current_system.is_equal_seed, current_dynamic_system) as l_is_equal_feature then
 							-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_equality_function_body", 1, "feature `is_equal' not found.")
 					else
 						l_formal_type := argument_type_set_in_feature (1, l_is_equal_feature).static_type
 						if not l_dynamic_type.conforms_to_primary_type (l_formal_type.primary_type) then
@@ -16758,13 +16758,13 @@ feature {NONE} -- Query call generation
 						-- Internal error: if `a_name' is a Tuple label then the
 						-- target type should be a Tuple_type.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_adapted_named_query_call", 1, "target type of tuple label is not 'TUPLE'.")
 				else
 					l_tuple_item_type_sets := l_tuple_type.item_type_sets
 					if l_seed < 1 or l_seed > l_tuple_item_type_sets.count then
 							-- Internal error: invalid Tuple label.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_adapted_named_query_call", 2, "invalid tuple label.")
 					else
 						l_query_type_set := l_tuple_item_type_sets.item (l_seed)
 						print_adapted_expression_with_agent (agent print_attribute_tuple_item_access (l_seed, call_operands.first, a_target_type, a_check_void_target), l_query_type_set, a_result_type, in_call_target)
@@ -16776,7 +16776,7 @@ feature {NONE} -- Query call generation
 					-- Internal error: there should be a query with `l_seed'.
 					-- It has been computed in ET_FEATURE_CHECKER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_adapted_named_query_call", 3, "query not found.")
 			end
 		end
 
@@ -16806,7 +16806,7 @@ feature {NONE} -- Query call generation
 			elseif not attached a_feature.result_type_set as l_query_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_adapted_query_call", 1, "feature is not a query.")
 			else
 				l_use_boxed_pointer := in_call_target and then (attached {ET_ATTRIBUTE} l_static_query or a_feature.is_builtin_special_item)
 				print_adapted_expression_with_agent (agent print_query_call (a_feature, a_target_type, a_check_void_target), l_query_type_set, a_result_type, l_use_boxed_pointer)
@@ -16834,7 +16834,7 @@ feature {NONE} -- Query call generation
 			if not attached a_feature.result_type_set as l_query_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_adapted_extended_attribute_call", 1, "feature is not a query.")
 			elseif
 				a_static_feature.has_self_initializing_code and then
 				not l_query_type_set.static_type.is_self_initializing
@@ -16880,7 +16880,7 @@ feature {NONE} -- Query call generation
 			if not attached a_feature.result_type_set as l_query_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_adapted_once_function_call", 1, "feature is not a query.")
 			elseif l_query_type_set.is_expanded and then not a_result_type.is_expanded then
 				current_file.put_character ('(')
 					-- Call the once function in order to be sure that it have been executed at least once.
@@ -16932,7 +16932,7 @@ feature {NONE} -- Query call generation
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_query_call", 1, "feature is not a query.")
 			elseif attached {ET_CONSTANT_ATTRIBUTE} l_static_query as l_constant_attribute then
 -- TODO: Need to check whether the target is Void or not, even though it does not matter here.
 				if attached {ET_MANIFEST_STRING} l_constant_attribute.constant as l_string_constant then
@@ -17048,31 +17048,31 @@ feature {NONE} -- Query call generation
 			if l_operands_count /= a_feature.static_feature.arguments_count + 1 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_inlined_query_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: it has to have a result, otherwise it's
 					-- not a query call.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_inlined_query_call", 2, "feature is not a query.")
 			elseif not attached {ET_INTERNAL_FUNCTION} a_feature.static_feature as l_internal_function then
 					-- Internal error: only internal routines are inlinable.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_inlined_query_call", 3, "feature is not an internal function.")
 			elseif not attached l_internal_function.compound as l_compound then
 					-- Internal error: an inlinable function should have an single
 					-- instruction which is an assignment to 'Result'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_inlined_query_call", 4, "inlinable function with no single assignment to 'Result'.")
 			elseif l_compound.count /= 1 then
 					-- Internal error: an inlinable function should have an single
 					-- instruction which is an assignment to 'Result'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_inlined_query_call", 5, "inlinable function with no single assignment to 'Result'.")
 			elseif not attached {ET_ASSIGNMENT} l_compound.first as l_assignment then
 					-- Internal error: an inlinable function should have an single
 					-- instruction which is an assignment to 'Result'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_inlined_query_call", 6, "inlinable function with no single assignment to 'Result'.")
 			else
 				register_inlined_feature (a_feature)
 				nested_inlining_count := nested_inlining_count + 1
@@ -18451,7 +18451,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 						-- Internal error: a temporary variable should have properly been declared
 						-- when printing `l_tuple_item_expression'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_agent_open_target_operand", 1, "invalid temporary variable.")
 				end
 				dedent
 				print_indentation_end_newline
@@ -18514,7 +18514,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			if not attached {ET_DYNAMIC_ROUTINE_TYPE} dynamic_type_set (an_agent).static_type.primary_type as l_agent_type then
 					-- Internal error: the type of `an_agent' should be an Agent type.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_agent_declaration", 1, "type of agent is not an agent type.")
 			else
 					--
 					-- Determine open and closed operands.
@@ -18868,7 +18868,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 						-- Internal error: the Agent type should have a procedure 'set_rout_disp_final'.
 						-- See ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_agent_declaration", 2, "feature `set_rout_disp_final' not found in agent type.")
 				else
 					register_called_feature (l_set_rout_disp_final_feature)
 					print_indentation
@@ -19620,11 +19620,11 @@ feature {NONE} -- Polymorphic call functions generation
 				if not attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type then
 						-- Internal error: a Tuple label can only be applied to a tuple object.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_polymorphic_call_function", 1, "type of tuple label is not 'TUPLE'.")
 				elseif not l_tuple_type.item_type_sets.valid_index (l_index) then
 						-- Internal error: invalid Tuple label.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_polymorphic_call_function", 2, "invalid tuple label.")
 				elseif l_actual_arguments /= Void and then not l_actual_arguments.is_empty then
 						-- This is a Tuple label setter.
 					l_formal_arguments_count := 1
@@ -19641,7 +19641,7 @@ feature {NONE} -- Polymorphic call functions generation
 						-- Internal error: there should be a feature with that seed.
 						-- It has been computed in ET_FEATURE_FLATTENER.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_polymorphic_call_function", 3, "feature not found.")
 				else
 					if attached l_feature.type as l_feature_type then
 						check is_query: l_feature.is_query end
@@ -19752,7 +19752,7 @@ feature {NONE} -- Polymorphic call functions generation
 						-- the number of actual arguments should be the same as the
 						-- number of formal arguments.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_polymorphic_call_function", 4, "wrong number of arguments.")
 				elseif l_manifest_tuple /= Void then
 					nb := l_manifest_tuple.count
 					from i := 1 until i > nb loop
@@ -20147,14 +20147,14 @@ feature {NONE} -- Polymorphic call functions generation
 								-- Internal error: all calls should have the same signature.
 								-- This is checked by the call to `same_declared_signature'.
 							set_fatal_error
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "set_polymorphic_call_argument_type_sets", 1, "calls with different signatures.")
 							l_call := a_last_call
 						elseif l_manifest_tuple /= Void then
 							if not attached {ET_MANIFEST_TUPLE} l_actual_arguments.actual_argument (1) as l_attached_manifest_tuple or else l_attached_manifest_tuple.count /= nb then
 									-- Internal error: all calls should have the same signature.
 									-- This is checked by the call to `same_declared_signature'.
 								set_fatal_error
-								error_handler.report_giaaa_error
+								error_handler.report_giaac_error (generator, "set_polymorphic_call_argument_type_sets", 2, "calls with different signatures.")
 								l_manifest_tuple := Void
 								l_call := a_last_call
 							else
@@ -20527,7 +20527,7 @@ feature {NONE} -- Deep features generation
 								-- features 'count' and 'capacity' as first features.
 								-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 							set_fatal_error
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "print_deep_twin_function", 1, "missing attributes in 'SPECIAL'.")
 						else
 							l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.item (2))
 							l_capacity_type := l_dynamic_type_set.static_type.primary_type
@@ -20631,7 +20631,7 @@ feature {NONE} -- Deep features generation
 							if l_attribute_type_set = Void then
 									-- Internal error: an attribute should have a result type.
 								set_fatal_error
-								error_handler.report_giaaa_error
+								error_handler.report_giaac_error (generator, "print_deep_twin_function", 2, "attribue with no type.")
 							elseif l_attribute_type_set.is_empty then
 									-- If the dynamic type set of the attribute is empty,
 									-- then this attribute is always Void. No need to twin
@@ -21550,7 +21550,7 @@ feature {NONE} -- Separate calls
 						-- It has been computed in ET_FEATURE_CHECKER or else an
 						-- error should have already been reported.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_separate_call_declaration", 1, "procedure not found.")
 				end
 				print_indentation
 				current_file.put_string (c_ge_scoop_region_set_context)
@@ -22768,7 +22768,7 @@ feature {NONE} -- Built-in feature generation
 			if call_operands.count /= nb + 1 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_procedure_c_call", 1, "wrong_number of arguments.")
 			else
 				print_indentation
 				current_file.put_string (a_c_function_name)
@@ -22830,11 +22830,11 @@ feature {NONE} -- Built-in feature generation
 			if call_operands.count /= nb + 1 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_query_c_call", 1, "wrong_number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_query_c_call", 2, "feature is not a query.")
 			else
 				print_declaration_type_cast_from_c (l_result_type_set.static_type.primary_type, current_file)
 				current_file.put_character ('(')
@@ -22893,7 +22893,7 @@ feature {NONE} -- Built-in feature generation
 			if l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parse.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_conforms_to_body", 1, "wrong number of arguments.")
 			else
 				l_argument_type_set := argument_type_set (1)
 				nb := l_argument_type_set.count
@@ -23105,7 +23105,7 @@ feature {NONE} -- Built-in feature generation
 					-- have been computed when analyzing the dynamic type sets of
 					-- `a_feature'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_generating_type_call", 1, "meta type not found.")
 			else
 				current_file.put_character ('(')
 				print_type_declaration (l_meta_type, current_file)
@@ -23204,11 +23204,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_same_type_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_same_type_call", 2, "feature is not a query.")
 			else
 				l_argument := call_operands.item (2)
 				l_argument_type_set := dynamic_type_set (l_argument)
@@ -23256,11 +23256,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by ET_BUILTIN_FEATURE_CHECKER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_is_equal_body", 1, "wrong number of arguments.")
 			elseif not attached current_feature.result_type_set as l_result_type_set then
 					-- Internal error: `current_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_is_equal_body", 2, "feature is not a query.")
 			else
 				fill_call_formal_arguments (a_feature)
 				l_argument_type_set := argument_type_set_in_feature (1, current_feature)
@@ -23357,7 +23357,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				if not attached l_field_type.seeded_dynamic_query (current_system.is_equal_seed, current_dynamic_system) as l_is_equal_feature then
 						-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_any_standard_is_equal_field", 1, "feature `is_equal' not found.")
 				else
 						-- Call 'is_equal'.
 					print_target_operand (a_target_field, l_field_type)
@@ -23440,7 +23440,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				if not attached l_attribute.result_type_set as l_attribute_type_set then
 						-- Internal error: should never happen: queries have a result type set.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_any_standard_is_equal_attributes", 1, "attribue with no type.")
 				else
 						-- Prepare dynamic type sets of attribute expressions.
 					extra_dynamic_type_sets.force_last (l_attribute_type_set)
@@ -23489,16 +23489,16 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- features 'count' and 'capacity' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_is_equal_special_items", 1, "missing attributes in 'SPECIAL'.")
 			elseif not attached current_type.seeded_dynamic_query (current_system.special_item_seed, current_dynamic_system) as l_item_routine then
 					-- Internal error: this error should have been reported
 					-- in `ET_DYNAMIC_SYSTEM.compile_kernel'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_is_equal_special_items", 2, "featute `item' not found in 'SPECIAL'.")
 			elseif not attached l_item_routine.result_type_set as l_item_type_set then
 					-- Internal error: should never happen: queries have a result type set.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_is_equal_special_items", 3, "featute `item' with no type in 'SPECIAL'.")
 			else
 				l_item_type := l_item_type_set.static_type.primary_type
 				l_dynamic_type_set := result_type_set_in_feature (a_special_type.queries.first)
@@ -23669,11 +23669,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_is_equal_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_is_equal_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -23875,7 +23875,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by ET_BUILTIN_FEATURE_CHECKER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_copy_body", 1, "wrong number of arguments.")
 			elseif current_type.base_class.is_type_class then
 				-- Cannot have two instances of class "TYPE" representing the same Eiffel type.
 			elseif attached {ET_DYNAMIC_SPECIAL_TYPE} current_type as l_special_type then
@@ -23967,7 +23967,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- features 'count' and 'capacity' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_copy_body_with_special", 1, "missing attributes in 'SPECIAL'.")
 			else
 				l_item_type_set := a_special_type.item_type_set
 				l_item_type := l_item_type_set.static_type.primary_type
@@ -24069,7 +24069,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				if not attached l_attribute.result_type_set as l_attribute_type_set then
 						-- Internal error: should never happen: queries have a result type set.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_any_standard_copy_custom_attributes", 1, "attribue with no type.")
 				else
 					l_attribute_type := l_attribute_type_set.static_type.primary_type
 					if l_attribute_type.is_basic then
@@ -24139,16 +24139,16 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this error should have been reported
 					-- in `ET_DYNAMIC_SYSTEM.compile_kernel'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_copy_custom_special_items", 1, "feature `item' not found in 'SPECIAL'.")
 			elseif not attached l_item_routine.result_type_set as l_item_type_set then
 					-- Internal error: should never happen: queries have a result type set.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_copy_custom_special_items", 2, "feature `item' has no type in 'SPECIAL'.")
 			elseif not attached temp_variable_type (a_item_count) as l_item_count_type then
 					-- Internal error: the type of the temporary
 					-- variable should be known at this stage.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_copy_custom_special_items", 3, "temporary variable has no type.")
 			else
 				l_item_type := l_item_type_set.static_type.primary_type
 				if l_item_type.is_basic then
@@ -24307,7 +24307,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_copy_call", 1, "wrong number of arguments.")
 			elseif a_target_type.base_class.is_type_class then
 				-- Cannot have two instances of class "TYPE" representing the same Eiffel type.
 			else
@@ -24458,7 +24458,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- features 'count' and 'capacity' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_twin_body_with_special", 1, "missing attributes in 'SPECIAL'.")
 			else
 				l_result := new_result_expression
 				extra_dynamic_type_sets.force_last (a_special_type)
@@ -24508,7 +24508,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 1 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_twin_call", 1, "wrong number of arguments.")
 			else
 				l_target := call_operands.first
 				if a_target_type.base_class.is_type_class then
@@ -24585,7 +24585,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			elseif not attached current_type.seeded_dynamic_procedure (current_system.copy_seed, current_dynamic_system) as l_copy_feature then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_twin_body", 1, "procedure `copy' not found.")
 			elseif attached {ET_DYNAMIC_SPECIAL_TYPE} current_type as l_special_type then
 				print_builtin_any_twin_body_with_special (l_special_type, l_copy_feature)
 			elseif current_type.is_expanded then
@@ -24684,7 +24684,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- features 'count' and 'capacity' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_twin_body_with_special", 1, "missing attributes in 'SPECIAL'.")
 			else
 					-- Create new object.
 				l_result := new_result_expression
@@ -24752,7 +24752,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			elseif call_operands.count /= 1 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_twin_call", 1, "wrong number of arguments.")
 			else
 				l_target := call_operands.first
 				if a_target_type.base_class.is_type_class then
@@ -24787,7 +24787,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if l_result_type_set = Void then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_arguments_32_argument_count_call", 1, "feature is not a query.")
 			else
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
 				current_file.put_character ('(')
@@ -24820,11 +24820,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if l_result_type_set = Void then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_arguments_32_i_th_argument_pointer_call", 1, "feature is not a query.")
 			elseif call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_arguments_32_i_th_argument_pointer_call", 2, "wrong number of arguments.")
 			else
 				l_argument := call_operands.item (2)
 				l_actual_type_set := dynamic_type_set (l_argument)
@@ -24857,7 +24857,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_arguments_32_i_th_argument_string_call", 1, "wrong number of arguments.")
 			else
 				l_argument := call_operands.item (2)
 				l_actual_type_set := dynamic_type_set (l_argument)
@@ -24891,11 +24891,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_boolean_and_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_boolean_and_call", 2, "feature os not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -24907,7 +24907,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_boolean_and_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('&')
@@ -24940,11 +24940,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_boolean_and_then_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_boolean_and_then_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -24956,7 +24956,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_boolean_and_then_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('&')
@@ -24989,11 +24989,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_boolean_implies_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_boolean_implies_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -25007,7 +25007,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_boolean_implies_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character (')')
@@ -25038,7 +25038,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_boolean_not_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -25050,7 +25050,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_boolean_not_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character (')')
@@ -25076,11 +25076,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_boolean_or_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_boolean_or_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -25092,7 +25092,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_boolean_or_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('|')
@@ -25125,11 +25125,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_boolean_or_else_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_boolean_or_else_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -25141,7 +25141,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_boolean_or_else_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('|')
@@ -25174,11 +25174,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_boolean_xor_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_boolean_xor_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -25190,7 +25190,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_boolean_xor_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('^')
@@ -25250,7 +25250,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_boolean_ref_set_item_call", 1, "wrong number of arguments.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -25321,7 +25321,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_character_n_code_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -25331,7 +25331,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_character_n_code_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -25353,7 +25353,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_character_n_natural_32_code_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -25363,7 +25363,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_character_n_natural_32_code_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -25385,7 +25385,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_character_n_to_character_8_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -25395,7 +25395,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_character_n_to_character_8_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -25417,7 +25417,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_character_n_to_character_32_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -25427,7 +25427,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_character_n_to_character_32_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -25480,7 +25480,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_character_n_ref_set_item_call", 1, "wrong number of arguments.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -25553,11 +25553,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_com_failure_c_strlen_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_com_failure_c_strlen_call", 2, "feature is not a query.")
 			else
 				l_argument := call_operands.item (2)
 				include_runtime_header_file ("ge_com_failure.h", False, header_file)
@@ -25589,11 +25589,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_com_failure_ccom_hresult_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_com_failure_ccom_hresult_call", 2, "feature is not a query.")
 			else
 				l_argument := call_operands.item (2)
 				include_runtime_header_file ("ge_com_failure.h", False, header_file)
@@ -25625,11 +25625,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_com_failure_ccom_hresult_code_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_com_failure_ccom_hresult_code_call", 2, "feature is not a query.")
 			else
 				l_argument := call_operands.item (2)
 				include_runtime_header_file ("ge_com_failure.h", False, header_file)
@@ -25661,11 +25661,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_com_failure_ccom_hresult_facility_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_com_failure_ccom_hresult_facility_call", 2, "feature is not a query.")
 			else
 				l_argument := call_operands.item (2)
 				include_runtime_header_file ("ge_com_failure.h", False, header_file)
@@ -25693,11 +25693,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 1 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_com_failure_character_size_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_com_failure_character_size_call", 2, "feature is not a query.")
 			else
 				include_runtime_header_file ("ge_com_failure.h", False, header_file)
 				print_declaration_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -25725,11 +25725,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_com_failure_cwin_error_text_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_com_failure_cwin_error_text_call", 2, "feature is not a query.")
 			else
 				l_argument := call_operands.item (2)
 				include_runtime_header_file ("ge_com_failure.h", False, header_file)
@@ -25761,7 +25761,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_com_failure_cwin_local_free_call", 1, "wrong number of arguments.")
 			else
 				include_runtime_header_file ("ge_com_failure.h", False, header_file)
 				print_indentation
@@ -25794,11 +25794,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- same seed as `a_feature'. Otherwise we get an error when
 					-- flattening the features of "ISE_EXCEPTION_MANAGER".
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_catch_body", 1, "feature `catch' not found in 'ISE_EXCEPTION_MANAGER'.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_catch_body", 2, "wrong number of arguments.")
 			else
 				print_indentation
 				register_called_feature (l_ise_exception_manager_feature)
@@ -25836,11 +25836,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- same seed as `a_feature'. Otherwise we get an error when
 					-- flattening the features of "ISE_EXCEPTION_MANAGER".
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_exception_from_code_body", 1, "feature `exception_from_code' not found in 'ISE_EXCEPTION_MANAGER'.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_exception_from_code_body", 2, "wrong number of arguments.")
 			else
 				print_indentation
 				print_result_name (current_file)
@@ -25882,11 +25882,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- same seed as `a_feature'. Otherwise we get an error when
 					-- flattening the features of "ISE_EXCEPTION_MANAGER".
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_ignore_body", 1, "feature `ignore' not found in 'ISE_EXCEPTION_MANAGER'.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_ignore_body", 2, "wrong number of arguments.")
 			else
 				print_indentation
 				register_called_feature (l_ise_exception_manager_feature)
@@ -25924,11 +25924,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- same seed as `a_feature'. Otherwise we get an error when
 					-- flattening the features of "ISE_EXCEPTION_MANAGER".
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_caught_body", 1, "feature `is_caught' not found in 'ISE_EXCEPTION_MANAGER'.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_caught_body", 2, "wrong number of arguments.")
 			else
 				print_indentation
 				print_result_name (current_file)
@@ -25970,11 +25970,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- same seed as `a_feature'. Otherwise we get an error when
 					-- flattening the features of "ISE_EXCEPTION_MANAGER".
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_ignorable_body", 1, "feature `is_ignorable' not found in 'ISE_EXCEPTION_MANAGER'.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_ignorable_body", 2, "wrong number of arguments.")
 			else
 				print_indentation
 				print_result_name (current_file)
@@ -26016,11 +26016,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- same seed as `a_feature'. Otherwise we get an error when
 					-- flattening the features of "ISE_EXCEPTION_MANAGER".
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_ignored_body", 1, "feature `is_ignored' not found in 'ISE_EXCEPTION_MANAGER'.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_ignored_body", 2, "wrong number of arguments.")
 			else
 				print_indentation
 				print_result_name (current_file)
@@ -26062,11 +26062,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- same seed as `a_feature'. Otherwise we get an error when
 					-- flattening the features of "ISE_EXCEPTION_MANAGER".
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_raisable_body", 1, "feature `is_raisable' not found in 'ISE_EXCEPTION_MANAGER'.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_raisable_body", 2, "wrong number of arguments.")
 			else
 				print_indentation
 				print_result_name (current_file)
@@ -26105,7 +26105,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- same seed as `a_feature'. Otherwise we get an error when
 					-- flattening the features of "ISE_EXCEPTION_MANAGER".
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_last_exception_body", 1, "feature `last_exception' not found in 'ISE_EXCEPTION_MANAGER'.")
 			else
 				print_indentation
 				print_result_name (current_file)
@@ -26144,11 +26144,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- same seed as `a_feature'. Otherwise we get an error when
 					-- flattening the features of "ISE_EXCEPTION_MANAGER".
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_raise_body", 1, "feature `raise' not found in 'ISE_EXCEPTION_MANAGER'.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_raise_body", 2, "wrong number of arguments.")
 			else
 				print_indentation
 				register_called_feature (l_ise_exception_manager_feature)
@@ -26186,11 +26186,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- same seed as `a_feature'. Otherwise we get an error when
 					-- flattening the features of "ISE_EXCEPTION_MANAGER".
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_set_is_ignored_body", 1, "feature `set_is_ignored' not found in 'ISE_EXCEPTION_MANAGER'.")
 			elseif l_arguments = Void or else l_arguments.count /= 2 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_set_is_ignored_body", 2, "wrong number of arguments.")
 			else
 				print_indentation
 				register_called_feature (l_ise_exception_manager_feature)
@@ -26231,11 +26231,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- same seed as `a_feature'. Otherwise we get an error when
 					-- flattening the features of "ISE_EXCEPTION_MANAGER".
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_type_of_code_body", 1, "feature `type_of_code' not found in 'ISE_EXCEPTION_MANAGER'.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_type_of_code_body", 2, "wrong number of arguments.")
 			else
 				print_indentation
 				print_result_name (current_file)
@@ -26300,7 +26300,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_function_fast_item_call", 1, "feature is not a query.")
 			else
 				print_typed_default_entity_value (l_result_type_set.static_type.primary_type, current_file)
 			end
@@ -26375,7 +26375,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_identified_routines_eif_id_object_call", 1, "wrong number of arguments.")
 			else
 				l_argument := call_operands.item (2)
 				l_actual_type_set := dynamic_type_set (l_argument)
@@ -26406,11 +26406,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_identified_routines_eif_is_object_id_of_current_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_identified_routines_eif_is_object_id_of_current_call", 2, "feature is not a query.")
 			else
 				l_argument := call_operands.item (2)
 				l_actual_type_set := dynamic_type_set (l_argument)
@@ -26455,7 +26455,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_identified_routines_eif_object_id_call", 1, "wrong number of arguments.")
 			else
 				l_argument := call_operands.item (2)
 				l_actual_type_set := dynamic_type_set (l_argument)
@@ -26486,7 +26486,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_identified_routines_eif_object_id_free_call", 1, "wrong number of arguments.")
 			else
 				l_argument := call_operands.item (2)
 				l_actual_type_set := dynamic_type_set (l_argument)
@@ -26517,7 +26517,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_integer_8_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -26527,7 +26527,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_integer_8_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -26549,7 +26549,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_integer_16_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -26559,7 +26559,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_integer_16_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -26581,7 +26581,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_integer_32_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -26591,7 +26591,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_integer_32_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -26613,7 +26613,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_integer_64_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -26623,7 +26623,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_integer_64_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -26645,7 +26645,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_natural_8_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -26655,7 +26655,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_natural_8_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -26677,7 +26677,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_natural_16_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -26687,7 +26687,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_natural_16_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -26709,7 +26709,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_natural_32_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -26719,7 +26719,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_natural_32_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -26741,7 +26741,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_natural_64_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -26751,7 +26751,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_as_natural_64_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -26776,11 +26776,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_and_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_and_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -26792,7 +26792,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_and_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('&')
@@ -26821,7 +26821,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_not_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -26833,7 +26833,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_not_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character (')')
@@ -26859,11 +26859,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_or_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_or_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -26875,7 +26875,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_or_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('|')
@@ -26907,11 +26907,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_shift_left_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_shift_left_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -26947,7 +26947,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_shift_left_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('<')
@@ -26980,11 +26980,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_shift_right_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_shift_right_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -26996,7 +26996,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_shift_right_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('>')
@@ -27029,11 +27029,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_xor_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_xor_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -27045,7 +27045,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_bit_xor_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('^')
@@ -27074,7 +27074,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_identity_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -27084,7 +27084,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_identity_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -27109,11 +27109,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_integer_quotient_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_integer_quotient_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -27125,7 +27125,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_integer_quotient_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('/')
@@ -27157,11 +27157,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_integer_remainder_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_integer_remainder_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -27173,7 +27173,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_integer_remainder_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('%%')
@@ -27209,11 +27209,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_is_less_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_is_less_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -27225,7 +27225,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_is_less_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('<')
@@ -27257,11 +27257,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_minus_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_minus_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -27273,7 +27273,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_minus_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('-')
@@ -27302,7 +27302,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_opposite_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -27314,7 +27314,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_opposite_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character (')')
@@ -27340,11 +27340,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_plus_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_plus_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -27356,7 +27356,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_plus_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('+')
@@ -27388,11 +27388,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_power_call", 1, "wrong numberof arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_power_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -27409,7 +27409,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_power_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character (',')
@@ -27445,11 +27445,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_product_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_product_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -27461,7 +27461,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_product_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('*')
@@ -27493,11 +27493,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_quotient_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_quotient_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -27512,7 +27512,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_quotient_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('/')
@@ -27544,7 +27544,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_to_character_8_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -27554,7 +27554,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_to_character_8_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -27576,7 +27576,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_to_character_32_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -27586,7 +27586,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_to_character_32_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -27608,7 +27608,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_to_double_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -27618,7 +27618,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_to_double_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -27640,7 +27640,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_to_real_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -27650,7 +27650,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_to_real_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -27672,7 +27672,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_to_real_32_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -27682,7 +27682,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_to_real_32_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -27704,7 +27704,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_to_real_64_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -27714,7 +27714,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_integer_n_to_real_64_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -27767,7 +27767,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_integer_n_ref_set_item_call", 1, "wrong number of arguments.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -29332,7 +29332,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.arguments as l_arguments or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_ise_runtime_set_pre_ecma_mapping_body", 1, "wrong number of arguments.")
 			else
 				print_indentation
 				current_file.put_string (c_ac)
@@ -29529,11 +29529,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 3 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_memory_find_referers_call", 1, "wrong number of arguments.")
 			elseif l_result_type_set = Void then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_memory_find_referers_call", 2, "feature is not a query.")
 			else
 				include_runtime_header_file ("eif_traverse.h", False, header_file)
 				print_declaration_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -29582,7 +29582,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_platform_boolean_bytes_call", 1, "feature is not a query.")
 			else
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
 				current_file.put_character ('(')
@@ -29608,7 +29608,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_platform_character_bytes_call", 1, "feature is not a query.")
 			else
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
 				current_file.put_character ('(')
@@ -29634,7 +29634,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_platform_double_bytes_call", 1, "feature is not a query.")
 			else
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
 				current_file.put_character ('(')
@@ -29660,7 +29660,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_platform_integer_bytes_call", 1, "feature is not a query.")
 			else
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
 				current_file.put_character ('(')
@@ -29820,7 +29820,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_platform_pointer_bytes_call", 1, "feature is not a query.")
 			else
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
 				current_file.put_character ('(')
@@ -29846,7 +29846,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_platform_real_bytes_call", 1, "feature is not a query.")
 			else
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
 				current_file.put_character ('(')
@@ -29872,7 +29872,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_platform_wide_character_bytes_call", 1, "feature is not a query.")
 			else
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
 				current_file.put_character ('(')
@@ -29901,7 +29901,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_pointer_hash_code_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_integer_type := l_result_type_set.static_type.primary_type
@@ -29915,7 +29915,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_pointer_hash_code_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 					-- Clear the sign bit to ensure that the hash-code is positive.
@@ -29954,7 +29954,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_pointer_is_default_pointer_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_result_type := l_result_type_set.static_type.primary_type
@@ -29965,7 +29965,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_pointer_is_default_pointer_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character ('=')
 				current_file.put_character ('=')
@@ -30001,7 +30001,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			else
 -- TODO: use feature `item'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_pointer_out_body", 1, "target type is not a basic type.")
 			end
 			current_file.put_new_line
 			print_indentation
@@ -30038,11 +30038,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_pointer_plus_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_pointer_plus_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -30060,7 +30060,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_pointer_plus_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character (')')
@@ -30088,7 +30088,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_pointer_to_integer_32_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -30099,7 +30099,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_pointer_to_integer_32_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -30152,7 +30152,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_pointer_ref_set_item_call", 1, "wrong nimber of arguments.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -30274,7 +30274,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_ceiling_real_32_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				include_runtime_header_file ("ge_real.h", False, header_file)
@@ -30290,7 +30290,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_ceiling_real_32_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character (')')
@@ -30313,7 +30313,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_ceiling_real_64_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				include_runtime_header_file ("ge_real.h", False, header_file)
@@ -30329,7 +30329,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_ceiling_real_64_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character (')')
@@ -30352,7 +30352,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_floor_real_32_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				include_runtime_header_file ("ge_real.h", False, header_file)
@@ -30368,7 +30368,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_floor_real_32_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character (')')
@@ -30391,7 +30391,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_floor_real_64_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				include_runtime_header_file ("ge_real.h", False, header_file)
@@ -30407,7 +30407,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_floor_real_64_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character (')')
@@ -30430,7 +30430,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_identity_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -30440,7 +30440,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_identity_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -30623,11 +30623,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_is_less_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_is_less_call", 2, "feature is not a query.")
 			elseif total_order_on_reals_mode and then a_target_type = current_dynamic_system.real_32_type then
 				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_builtin_query_c_call (a_feature, c_ge_real_32_is_less, False, False, a_target_type, a_check_void_target)
@@ -30645,7 +30645,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_is_less_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('<')
@@ -30674,7 +30674,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_is_nan_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				include_runtime_header_file ("ge_real.h", False, header_file)
@@ -30692,7 +30692,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_is_nan_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -30714,7 +30714,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_is_negative_infinity_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				include_runtime_header_file ("ge_real.h", False, header_file)
@@ -30732,7 +30732,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_is_negative_infinity_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -30754,7 +30754,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_is_positive_infinity_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				include_runtime_header_file ("ge_real.h", False, header_file)
@@ -30772,7 +30772,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_is_positive_infinity_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -30797,11 +30797,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_minus_call", 1, "wrong numberof arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_minus_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -30813,7 +30813,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_minus_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('-')
@@ -30842,7 +30842,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_opposite_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -30854,7 +30854,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_opposite_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character (')')
@@ -30888,7 +30888,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			else
 -- TODO: use feature `item'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_out_body", 1, "target type is not a basic type.")
 			end
 			current_file.put_new_line
 			print_indentation
@@ -30925,11 +30925,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_plus_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_plus_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -30941,7 +30941,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_plus_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('+')
@@ -30973,11 +30973,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_power_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_power_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -30994,7 +30994,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_power_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character (',')
@@ -31030,11 +31030,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_product_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_product_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -31046,7 +31046,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_product_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('*')
@@ -31078,11 +31078,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_quotient_call", 1, "wrong number of arguments.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_quotient_call", 2, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -31094,7 +31094,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_quotient_call", 3, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 				current_file.put_character ('/')
@@ -31123,7 +31123,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_to_double_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -31133,7 +31133,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_to_double_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -31155,7 +31155,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_truncated_to_integer_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -31165,7 +31165,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_truncated_to_integer_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -31187,7 +31187,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_truncated_to_integer_64_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -31197,7 +31197,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_truncated_to_integer_64_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -31219,7 +31219,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_truncated_to_real_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
@@ -31229,7 +31229,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_real_n_truncated_to_real_call", 2, "target type is not a basic type.")
 				end
 				current_file.put_character (')')
 			end
@@ -31274,7 +31274,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_ref_nan_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				include_runtime_header_file ("ge_real.h", False, header_file)
@@ -31307,7 +31307,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_ref_negative_infinity_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				include_runtime_header_file ("ge_real.h", False, header_file)
@@ -31340,7 +31340,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_ref_positive_infinity_call", 1, "feature is not a query.")
 			else
 				l_target := call_operands.first
 				include_runtime_header_file ("ge_real.h", False, header_file)
@@ -31381,7 +31381,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_real_n_ref_set_item_call", 1, "wrong number of arguments.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -31476,21 +31476,21 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- This built-in feature can only be in class PROCEDURE (and
 					-- its descendants) or class FUNCTION (and its descendants).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_routine_call_call", 1, "target type is not an Agent type.")
 			elseif l_routine_type.attribute_count < 2 then
 					-- Internal error: the Agent type should have at least the attributes
 					-- 'rout_disp' and 'closed_operands' as first queries.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_routine_call_call", 2, "missing attributes in Agent type.")
 			elseif not attached l_routine_type.queries.item (2).result_type_set as l_closed_operands_type_set then
 					-- Internal error: 'closed_operands' should be an attribute,
 					-- hence with a result type set.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_routine_call_call", 3, "attribute `closed_operands' has no type.")
 			elseif call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_routine_call_call", 4, "wrong number of arguments.")
 			else
 				l_routine_object := call_operands.first
 				l_tuple := call_operands.item (2)
@@ -31527,7 +31527,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						-- Internal error: The formal argument of this built-in
 						-- routine should be a Tuple type.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_builtin_routine_call_call", 5, "argument is not of type 'TUPLE'.")
 				else
 					if not a_feature.is_procedure then
 						current_file.put_character ('(')
@@ -31656,7 +31656,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 								else
 										-- Internal error: The types conforming a tuple type should be tuple types.
 									set_fatal_error
-									error_handler.report_giaaa_error
+									error_handler.report_giaac_error (generator, "print_builtin_routine_call_call", 6, "type conforming to a tuple type is not a tuple type.")
 								end
 								j := j + 1
 							end
@@ -31745,17 +31745,17 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 					-- This built-in can only be in class SPECIAL (and its descendants).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_special_aliased_resized_area_body", 1, "target type is not 'SPECIAL'.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parse.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_special_aliased_resized_area_body", 2, "wrong number of arguments.")
 			elseif l_special_type.attribute_count < 2 then
 					-- Internal error: class "SPECIAL" should have at least the
 					-- features 'count' and 'capacity' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_special_aliased_resized_area_body", 3, "missing attributes in 'SPECIAL'.")
 			else
 				l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.item (2))
 				l_capacity_type := l_dynamic_type_set.static_type.primary_type
@@ -31881,7 +31881,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_special_base_address_call", 1, "feature is not a query.")
 			else
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
 				current_file.put_character ('(')
@@ -31933,7 +31933,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 					-- This built-in can only be in class SPECIAL (and its descendants).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_special_element_size_call", 1, "target type is not 'SPECIAL'.")
 			else
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -31959,17 +31959,17 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 					-- This built-in can only be in class SPECIAL (and its descendants).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_special_extend_body", 1, "target type is not 'SPECIAL'.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parse.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_special_extend_body", 2, "wrong number of arguments.")
 			elseif l_special_type.attribute_count < 2 then
 					-- Internal error: class "SPECIAL" should have at least the
 					-- features 'count' and 'capacity' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_special_extend_body", 3, "missing attributes in 'SPECIAL'.")
 			else
 				l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.first)
 				l_count_type := l_dynamic_type_set.static_type.primary_type
@@ -32029,7 +32029,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_special_item_call", 1, "wrong number of arguments.")
 			else
 				l_argument := call_operands.item (2)
 				l_actual_type_set := dynamic_type_set (l_argument)
@@ -32059,7 +32059,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 3 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_special_put_call", 1, "wrong number of arguments.")
 			else
 				print_indentation
 				print_attribute_special_item_access (call_operands.first, a_target_type, a_check_void_target)
@@ -32099,17 +32099,17 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 					-- This built-in can only be in class SPECIAL (and its descendants).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_special_set_count_body", 1, "target type is not 'SPECIAL'.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parse.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_special_set_count_body", 2, "wrong number of arguments.")
 			elseif l_special_type.attribute_count < 2 then
 					-- Internal error: class "SPECIAL" should have at least the
 					-- features 'count' and 'capacity' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_special_set_count_body", 3, "missing attributes in 'SPECIAL'.")
 			else
 				l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.first)
 				l_count_type := l_dynamic_type_set.static_type.primary_type
@@ -32186,15 +32186,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- This built-in feature can only be in class TUPLE (and
 					-- its descendants).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_tuple_basic_expanded_item_body", 1, "target type is not 'TUPLE'.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_tuple_basic_expanded_item_body", 2, "wrong number of arguments.")
 			elseif not attached current_feature.result_type_set as l_result_type_set then
 					-- Internal error: `current_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_tuple_basic_expanded_item_body", 3, "feature is not a query.")
 			else
 				l_result_type := l_result_type_set.static_type
 				print_indentation
@@ -32285,11 +32285,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- This built-in feature can only be in class TUPLE (and
 					-- its descendants).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_tuple_count_call", 1, "target type is not 'TUPLE'.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_tuple_count_call", 2, "feature is not a query.")
 			else
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
 				current_file.put_character ('(')
@@ -32357,15 +32357,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- This built-in feature can only be in class TUPLE (and
 					-- its descendants).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_tuple_item_code_body", 1, "target type is not 'TUPLE'.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_tuple_item_code_body", 2, "wrong number of arguments.")
 			elseif not attached current_feature.result_type_set as l_result_type_set then
 					-- Internal error: `current_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_tuple_item_code_body", 3, "feature is not a query.")
 			else
 				print_indentation
 				current_file.put_string (c_switch)
@@ -32524,11 +32524,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- This built-in feature can only be in class TUPLE (and
 					-- its descendants).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_tuple_put_basic_expanded_item_body", 1, "target type is not 'TUPLE'.")
 			elseif l_arguments = Void or else l_arguments.count /= 2 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_tuple_put_basic_expanded_item_body", 2, "wrong numberof arguments.")
 			else
 				l_argument_type := argument_type_set (1).static_type
 				print_indentation
@@ -32733,11 +32733,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- This built-in feature can only be in class TUPLE (and
 					-- its descendants).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_tuple_put_reference_body", 1, "target type is not 'TUPLE'.")
 			elseif l_arguments = Void or else l_arguments.count /= 2 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_tuple_put_reference_body", 2, "wrong number of arguments.")
 			else
 				l_argument := l_arguments.formal_argument (1).name
 				l_argument_type_set := argument_type_set (1)
@@ -32828,11 +32828,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- This built-in feature can only be in class TUPLE (and
 					-- its descendants).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_tuple_reference_item_body", 1, "target type is not 'TUPLE'.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_tuple_reference_item_body", 2, "wrong number of arguments.")
 			else
 				print_indentation
 				current_file.put_string (c_switch)
@@ -32903,7 +32903,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			if call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_tuple_set_object_comparison_call", 1, "wrong number of arguments.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -32963,7 +32963,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: we should have already checked by now
 					-- that class TYPE has a generic parameter.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_type_default_call", 1, "wrong number of generic parameters.")
 			else
 				l_type := current_dynamic_system.dynamic_primary_type (l_parameters.type (1), a_target_type.base_type)
 				print_typed_default_entity_value (l_type, current_file)
@@ -32991,11 +32991,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: we should have already checked by now
 					-- that class TYPE has a generic parameter.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_type_generic_parameter_type_body", 1, "wrong number of generic parameters.")
 			elseif l_arguments = Void or else l_arguments.count /= 1 then
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_type_generic_parameter_type_body", 2, "wrong number of arguments.")
 			else
 				l_base_type := l_parameters.type (1).shallow_base_type (current_type.base_type)
 				l_parameters := l_base_type.actual_parameters
@@ -33010,7 +33010,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 							-- have been computed when analyzing the dynamic type sets of
 							-- `a_feature'.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_builtin_type_generic_parameter_type_body", 3, "meta type not found.")
 					else
 						print_indentation
 						print_result_name (current_file)
@@ -33057,7 +33057,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 								-- have been computed when analyzing the dynamic type sets of
 								-- `a_feature'.
 							set_fatal_error
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "print_builtin_type_generic_parameter_type_body", 4, "meta type not found.")
 						else
 							print_indentation
 							current_file.put_string (c_case)
@@ -33138,11 +33138,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: we should have already checked by now
 					-- that class TYPE has a generic parameter.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_type_generic_parameter_count_call", 1, "wrong number of generic parameters.")
 			elseif not attached a_feature.result_type_set as l_result_type_set then
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_type_generic_parameter_count_call", 2, "feature is not a query.")
 			else
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
 				current_file.put_character ('(')
@@ -33169,7 +33169,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: we should have already checked by now
 					-- that class TYPE has a generic parameter.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_type_has_default_call", 1, "wrong number of generic parameters.")
 			elseif not current_system.attachment_type_conformance_mode then
 				current_file.put_string (c_eif_true)
 			elseif l_parameters.type (1).is_type_expanded (a_target_type.base_type) then
@@ -33253,7 +33253,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: we should have already checked by now
 					-- that class TYPE has a generic parameter.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_type_is_expanded_call", 1, "wrong number of generic parameters.")
 			else
 				if l_parameters.type (1).is_type_expanded (a_target_type.base_type) then
 					current_file.put_string (c_eif_true)
@@ -33284,7 +33284,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: we should have already checked by now
 					-- that class TYPE has a generic parameter.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_type_new_instance_call", 1, "wrong number of generic parameters.")
 			else
 				l_type := current_dynamic_system.dynamic_type (l_parameters.type (1), a_target_type.base_type)
 				l_primary_type := l_type.primary_type
@@ -33344,7 +33344,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 							-- have been computed when analyzing the dynamic type sets
 							-- of `a_feature'.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_builtin_type_new_instance_call", 2, "meta type not found.")
 					else
 						current_file.put_character ('(')
 						print_type_declaration (l_meta_type, current_file)
@@ -33405,11 +33405,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: we should have already checked by now
 					-- that class TYPE has a generic parameter.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_type_new_special_any_instance_call", 1, "wrong number of generic parameters.")
 			elseif call_operands.count /= 2 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_builtin_type_new_special_any_instance_call", 2, "wrong number of arguments.")
 			else
 				l_result_type := current_dynamic_system.dynamic_primary_type (l_parameters.type (1), a_target_type.base_type)
 				if not attached {ET_DYNAMIC_SPECIAL_TYPE} l_result_type as l_special_type or else l_special_type.item_type_set.static_type.is_expanded then
@@ -33820,7 +33820,6 @@ feature {NONE} -- C function generation
 			l_area_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_count_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_temp: ET_IDENTIFIER
-			l_queries: ET_DYNAMIC_FEATURE_LIST
 			old_file: KI_TEXT_OUTPUT_STREAM
 		do
 			l_string_type := current_dynamic_system.string_8_type
@@ -33830,11 +33829,11 @@ feature {NONE} -- C function generation
 					-- features 'area' and 'count' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_new_string_8_function", 1, "missing attributes in 'STRING_8'.")
 			elseif not attached l_string_type.queries.item (2).result_type_set as l_dynamic_type_set then
 					-- Error in feature 'count', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_new_string_8_function", 2, "attribute `count' has no type.")
 			else
 				l_count_type := l_dynamic_type_set.static_type.primary_type
 					-- Print signature to `header_file' and `current_file'.
@@ -33966,23 +33965,15 @@ feature {NONE} -- C function generation
 					current_file.put_character (')')
 					current_file.put_character (';')
 					current_file.put_new_line
-					if l_string_type.attribute_count < 2 then
-							-- Internal error: the "STRING_8" type should have at least
-							-- the attributes 'area' and 'count' as first features.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_queries := l_string_type.queries
-							-- Set 'area'.
-						print_indentation
-						print_attribute_access (l_queries.first, tokens.result_keyword, l_string_type, False)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						print_temp_name (l_temp, current_file)
-						current_file.put_character (';')
-						current_file.put_new_line
-					end
+						-- Set 'area'.
+					print_indentation
+					print_attribute_access (l_string_type.queries.first, tokens.result_keyword, l_string_type, False)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_temp_name (l_temp, current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
 					mark_temp_variable_free (l_temp)
 				else
 					print_indentation
@@ -34026,7 +34017,6 @@ feature {NONE} -- C function generation
 			l_area_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_count_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_temp: ET_IDENTIFIER
-			l_queries: ET_DYNAMIC_FEATURE_LIST
 			old_file: KI_TEXT_OUTPUT_STREAM
 		do
 			l_string_type := current_dynamic_system.string_32_type
@@ -34036,11 +34026,11 @@ feature {NONE} -- C function generation
 					-- features 'area' and 'count' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_new_string_32_function", 1, "missing attributes in 'STRING_32'.")
 			elseif not attached l_string_type.queries.item (2).result_type_set as l_dynamic_type_set then
 					-- Error in feature 'count', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_new_string_32_function", 2, "attribute `count' has no type.")
 			else
 				l_count_type := l_dynamic_type_set.static_type.primary_type
 					-- Print signature to `header_file' and `current_file'.
@@ -34172,23 +34162,15 @@ feature {NONE} -- C function generation
 					current_file.put_character (')')
 					current_file.put_character (';')
 					current_file.put_new_line
-					if l_string_type.attribute_count < 2 then
-							-- Internal error: the "STRING_32" type should have at least
-							-- the attributes 'area' and 'count' as first features.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_queries := l_string_type.queries
-							-- Set 'area'.
-						print_indentation
-						print_attribute_access (l_queries.first, tokens.result_keyword, l_string_type, False)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						print_temp_name (l_temp, current_file)
-						current_file.put_character (';')
-						current_file.put_new_line
-					end
+						-- Set 'area'.
+					print_indentation
+					print_attribute_access (l_string_type.queries.first, tokens.result_keyword, l_string_type, False)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_temp_name (l_temp, current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
 					mark_temp_variable_free (l_temp)
 				else
 					print_indentation
@@ -34232,7 +34214,6 @@ feature {NONE} -- C function generation
 			l_area_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_count_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_temp: ET_IDENTIFIER
-			l_queries: ET_DYNAMIC_FEATURE_LIST
 			old_file: KI_TEXT_OUTPUT_STREAM
 		do
 			l_string_type := current_dynamic_system.immutable_string_8_type
@@ -34242,11 +34223,11 @@ feature {NONE} -- C function generation
 					-- features 'area' and 'count' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_new_immutable_string_8_function", 1, "missing attributes in 'IMMUTABLE_STRING_8'.")
 			elseif not attached l_string_type.queries.item (2).result_type_set as l_dynamic_type_set then
 					-- Error in feature 'count', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_new_immutable_string_8_function", 2, "attribute `count' has no type.")
 			else
 				l_count_type := l_dynamic_type_set.static_type.primary_type
 					-- Print signature to `header_file' and `current_file'.
@@ -34378,23 +34359,15 @@ feature {NONE} -- C function generation
 					current_file.put_character (')')
 					current_file.put_character (';')
 					current_file.put_new_line
-					if l_string_type.attribute_count < 2 then
-							-- Internal error: the "IMMUTABLE_STRING_8" type should have at least
-							-- the attributes 'area' and 'count' as first features.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_queries := l_string_type.queries
-							-- Set 'area'.
-						print_indentation
-						print_attribute_access (l_queries.first, tokens.result_keyword, l_string_type, False)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						print_temp_name (l_temp, current_file)
-						current_file.put_character (';')
-						current_file.put_new_line
-					end
+						-- Set 'area'.
+					print_indentation
+					print_attribute_access (l_string_type.queries.first, tokens.result_keyword, l_string_type, False)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_temp_name (l_temp, current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
 					mark_temp_variable_free (l_temp)
 				else
 					print_indentation
@@ -34438,7 +34411,6 @@ feature {NONE} -- C function generation
 			l_area_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_count_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_temp: ET_IDENTIFIER
-			l_queries: ET_DYNAMIC_FEATURE_LIST
 			old_file: KI_TEXT_OUTPUT_STREAM
 		do
 			l_string_type := current_dynamic_system.immutable_string_32_type
@@ -34448,11 +34420,11 @@ feature {NONE} -- C function generation
 					-- features 'area' and 'count' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_new_immutable_string_32_function", 1, "missing attributes in 'IMMUTABLE_STRING_32'.")
 			elseif not attached l_string_type.queries.item (2).result_type_set as l_dynamic_type_set then
 					-- Error in feature 'count', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_new_immutable_string_32_function", 2, "attribute `count' has no type.")
 			else
 				l_count_type := l_dynamic_type_set.static_type.primary_type
 					-- Print signature to `header_file' and `current_file'.
@@ -34584,23 +34556,15 @@ feature {NONE} -- C function generation
 					current_file.put_character (')')
 					current_file.put_character (';')
 					current_file.put_new_line
-					if l_string_type.attribute_count < 2 then
-							-- Internal error: the "IMMUTABLE_STRING_32" type should have at least
-							-- the attributes 'area' and 'count' as first features.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_queries := l_string_type.queries
-							-- Set 'area'.
-						print_indentation
-						print_attribute_access (l_queries.first, tokens.result_keyword, l_string_type, False)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						print_temp_name (l_temp, current_file)
-						current_file.put_character (';')
-						current_file.put_new_line
-					end
+						-- Set 'area'.
+					print_indentation
+					print_attribute_access (l_string_type.queries.first, tokens.result_keyword, l_string_type, False)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_temp_name (l_temp, current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
 					mark_temp_variable_free (l_temp)
 				else
 					print_indentation
@@ -34652,20 +34616,20 @@ feature {NONE} -- C function generation
 					-- features 'area', 'lower' and 'upper' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_manifest_array_function", 1, "missing attributes in 'ARRAY'.")
 			elseif not attached l_queries.first.result_type_set as l_dynamic_type_set then
 					-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_manifest_array_function", 2, "attribute `area' has no type.")
 			elseif not attached {ET_DYNAMIC_SPECIAL_TYPE} l_dynamic_type_set.static_type.primary_type as l_special_type then
-				-- Internal error: it has already been checked in ET_DYNAMIC_SYSTEM.compile_kernel
+					-- Internal error: it has already been checked in ET_DYNAMIC_SYSTEM.compile_kernel
 					-- that the attribute `area' is of SPECIAL type.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_manifest_array_function", 3, "type of attribute `area' is not 'SPECIAL'.")
 			elseif not attached l_queries.item (3).result_type_set as l_integer_dynamic_type_set then
 					-- Error in feature 'upper', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_manifest_array_function", 4, "attribute `upper' has no type.")
 			else
 				l_integer_type := l_integer_dynamic_type_set.static_type.primary_type
 				l_item_type := l_special_type.item_type_set.static_type.primary_type
@@ -34923,20 +34887,20 @@ feature {NONE} -- C function generation
 					-- features 'area', 'lower' and 'upper' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_big_manifest_array_function", 1, "missing attributes in 'ARRAY'.")
 			elseif not attached l_queries.first.result_type_set as l_dynamic_type_set then
 					-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_big_manifest_array_function", 2, "attribute `area' has no type.")
 			elseif not attached {ET_DYNAMIC_SPECIAL_TYPE} l_dynamic_type_set.static_type.primary_type as l_special_type then
 					-- Internal error: it has already been checked in ET_DYNAMIC_SYSTEM.compile_kernel
 					-- that the attribute `area' is of SPECIAL type.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_big_manifest_array_function", 3, "type of attribute `area' is not 'SPECIAL'.")
 			elseif not attached l_queries.item (3).result_type_set as l_integer_dynamic_type_set then
 					-- Error in feature 'upper', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_big_manifest_array_function", 4, "attribute `upper' has no type.")
 			else
 				l_integer_type := l_integer_dynamic_type_set.static_type.primary_type
 				l_item_type := l_special_type.item_type_set.static_type.primary_type
@@ -35528,7 +35492,7 @@ feature {NONE} -- C function generation
 				if l_type = Void then
 						-- Internal feature: a constant attribute has a type.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_init_const_function", 1, "constant attribute has no type.")
 				else
 						-- The deanchored form of the type of the constant feature
 						-- should not contain any formal generic parameter (in fact
@@ -35850,7 +35814,7 @@ feature {NONE} -- Memory allocation
 						-- features 'count' and 'capacity' as first features.
 						-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_object_allocation_function", 1, "missing attributes in 'SPECIAL'.")
 				else
 					l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.item (2))
 					l_integer_type := l_dynamic_type_set.static_type.primary_type
@@ -36669,7 +36633,7 @@ feature {NONE} -- Once feature generation
 			else
 					-- Internal error: this once key is not supported.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_once_status", 1, "invalid once key.")
 			end
 		end
 
@@ -36786,7 +36750,7 @@ feature {NONE} -- Once feature generation
 			else
 					-- Internal error: this once key is not supported.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_once_value", 1, "invalid once key.")
 			end
 		end
 
@@ -36898,7 +36862,7 @@ feature {NONE} -- Once feature generation
 			else
 					-- Internal error: this once key is not supported.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_once_exception", 1, "invalid once key.")
 			end
 		end
 
@@ -37355,7 +37319,7 @@ feature {NONE} -- Once feature generation
 			else
 					-- Internal error: this once key is not supported.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_once_mutex", 1, "invalid once key.")
 			end
 		end
 
@@ -37729,7 +37693,7 @@ feature {NONE} -- Type generation
 					-- Internal error: this should already have been taken care of
 					-- by ET_ANCESTOR_BUILDER (see validity rule VHPR-1).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "sort_types", 1, "cycle in type conformance graph.")
 			elseif attached l_sorter.sorted_items as l_sorted_types then
 				dynamic_types := l_sorted_types
 			else
@@ -37831,7 +37795,7 @@ feature {NONE} -- Type generation
 								if not attached l_query.result_type_set as l_result_type_set then
 										-- Internal error: queries should have a result type.
 									set_fatal_error
-									error_handler.report_giaaa_error
+									error_handler.report_giaac_error (generator, "print_types", 1, "query with no type.")
 								else
 									l_attribute_type := l_result_type_set.static_type.primary_type
 									if l_attribute_type.is_expanded then
@@ -37862,7 +37826,7 @@ feature {NONE} -- Type generation
 					-- Eiffel validity rule (see VLEC in ETL2), or by proper handling if ECMA
 					-- relaxed this rule (through the introduction of attached types).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "print_types", 2, "cycle in expanded attributes")
 			elseif attached l_expanded_sorter.sorted_items as l_expanded_types then
 					-- Struct for each expanded type.
 				nb := l_expanded_types.count
@@ -38570,7 +38534,7 @@ feature {NONE} -- Type generation
 					if not attached l_query.result_type_set as l_result_type_set then
 							-- Internal error: queries should have a result type.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_type_struct", 1, "query with no type.")
 					else
 						a_file.put_character ('%T')
 						print_type_declaration (l_result_type_set.static_type.primary_type, a_file)
@@ -38795,7 +38759,7 @@ feature {NONE} -- Type generation
 				elseif not attached l_query.result_type_set as l_result_type_set then
 						-- Internal error: queries should have a result type.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_once_per_object_data_struct", 1, "query with no type.")
 				else
 					a_file.put_character ('%T')
 					a_file.put_string (c_unsigned)
@@ -39138,7 +39102,7 @@ feature {NONE} -- Type generation
 								else
 										-- Internal error: attributes have a result type.
 									set_fatal_error
-									error_handler.report_giaaa_error
+									error_handler.report_giaac_error (generator, "print_types_array", 1, "attribute with no type.")
 									current_file.put_character ('0')
 								end
 								l_comma_needed := True
@@ -39922,7 +39886,7 @@ feature {NONE} -- Default initialization values generation
 					if not attached l_query.result_type_set as l_result_type_set then
 							-- Internal error: queries should have a result type.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "print_default_object_value", 1, "query with no type.")
 					else
 						if not l_empty_struct then
 							a_file.put_character (',')
@@ -40269,7 +40233,7 @@ feature {NONE} -- Feature name generation
 						-- feature 'capacity' as second feature.
 						-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_attribute_special_capacity_name", 1, "missing attributes in 'SPECIAL'.")
 				else
 					print_attribute_name (a_type.queries.item (2), a_type, a_file)
 				end
@@ -40294,7 +40258,7 @@ feature {NONE} -- Feature name generation
 						-- feature 'count' as first feature.
 						-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "print_attribute_special_count_name", 1, "missing attributes in 'SPECIAL'.")
 				else
 					print_attribute_name (a_type.queries.first, a_type, a_file)
 				end
@@ -43347,7 +43311,7 @@ feature {NONE} -- Dynamic type sets
 					else
 							-- Internal error: dynamic type set not known.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "dynamic_type_set", 1, "unknown dynamic type set.")
 						Result := current_dynamic_system.unknown_type
 					end
 				end
@@ -43370,7 +43334,7 @@ feature {NONE} -- Dynamic type sets
 			else
 					-- Internal error: dynamic type set not known.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "dynamic_type_set_in_feature", 1, "unknown dynamic type set.")
 				Result := current_dynamic_system.unknown_type
 			end
 		ensure
@@ -43392,7 +43356,7 @@ feature {NONE} -- Dynamic type sets
 				else
 						-- Internal error: dynamic type set not known.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "argument_type_set", 1, "unknown dynamic type set.")
 					Result := current_dynamic_system.unknown_type
 				end
 			end
@@ -43411,7 +43375,7 @@ feature {NONE} -- Dynamic type sets
 			else
 					-- Internal error: dynamic type set not known.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "argument_type_set_in_feature", 1, "unknown dynamic type set.")
 				Result := current_dynamic_system.unknown_type
 			end
 		ensure
@@ -43429,7 +43393,7 @@ feature {NONE} -- Dynamic type sets
 			else
 					-- Internal error: dynamic type set not known.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "result_type_set_in_feature", 1, "unknown dynamic type set.")
 				Result := current_dynamic_system.unknown_type
 			end
 		ensure
@@ -43738,7 +43702,7 @@ feature {NONE} -- Temporary variables
 					-- Internal error: the precondition `a_temp_used'
 					-- has been violated.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "mark_temp_variable_free", 1, "temporary variable not used.")
 			end
 		ensure
 			a_temp_free: is_temp_variable_free (a_temp)
@@ -44509,7 +44473,7 @@ feature {NONE} -- Operand stack
 			if nb > operand_stack.count then
 					-- Internal error.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				error_handler.report_giaac_error (generator, "fill_call_operands", 1, "not enough operands.")
 					-- Put some dummy operands to preserve the postcondition.
 				from i := 1 until i > nb loop
 					call_operands.put_last (tokens.current_keyword)

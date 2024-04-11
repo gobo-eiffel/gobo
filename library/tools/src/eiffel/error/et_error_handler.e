@@ -10636,10 +10636,35 @@ feature -- Internal errors
 	report_giaaa_error
 			-- Report GIAAA internal error.
 		local
-			an_error: ET_INTERNAL_ERROR
+			l_error: ET_INTERNAL_ERROR
 		do
-			create an_error.make_giaaa
-			report_internal_error (an_error)
+			create l_error.make_giaaa
+			report_internal_error (l_error)
+		end
+
+	report_giaab_error (a_class_name, a_feature_name: STRING; a_index: INTEGER)
+			--  Report GIAAB internal error.
+		require
+			a_class_name_not_void: a_class_name /= Void
+			a_feature_name_not_void: a_feature_name /= Void
+		local
+			l_error: ET_INTERNAL_ERROR
+		do
+			create l_error.make_giaab (a_class_name, a_feature_name, a_index)
+			report_internal_error (l_error)
+		end
+
+	report_giaac_error (a_class_name, a_feature_name: STRING; a_index: INTEGER; a_message: STRING)
+			--  Report GIAAC internal error.
+		require
+			a_class_name_not_void: a_class_name /= Void
+			a_feature_name_not_void: a_feature_name /= Void
+			a_message_not_void: a_message /= Void
+		local
+			l_error: ET_INTERNAL_ERROR
+		do
+			create l_error.make_giaac (a_class_name, a_feature_name, a_index, a_message)
+			report_internal_error (l_error)
 		end
 
 feature -- Reporting
