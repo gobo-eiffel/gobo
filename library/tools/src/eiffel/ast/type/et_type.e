@@ -1243,6 +1243,8 @@ feature -- Output
 			-- is expanded, or if 'separate' and the base class is separate
 			-- (e.g. "FOO [BAR, INTEGER_8, detachable BAZ]" instead of
 			-- "FOO [attached BAR, expanded INTEGER_8, detachable BAZ]").
+			-- Do not show the 'detachable' type mark for base types in
+			-- non-void-safe mode.
 			-- Also, tuple types have no labels.
 		do
 			create Result.make (15)
@@ -1259,6 +1261,7 @@ feature -- Output
 			l_old_type_mark: like type_mark
 		do
 			l_old_type_mark := type_mark
+			type_mark := Void
 			append_unaliased_to_string (a_string)
 			type_mark := l_old_type_mark
 		end

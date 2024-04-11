@@ -781,19 +781,23 @@ feature -- Output
 			-- types such as INTEGER_32. Also, implicit type marks are
 			-- replaced with explicit type marks, except when the actual
 			-- generic parameters are base types where the type mark is not
-			-- shown at all if 'attached', or if 'expanded' and thebase class
+			-- shown at all if 'attached', or if 'expanded' and the base class
 			-- is expanded, or if 'separate' and the base class is separate
 			-- (e.g. "FOO [BAR, INTEGER_8, detachable BAZ]" instead of
 			-- "FOO [attached BAR, expanded INTEGER_8, detachable BAZ]").
+			-- Do not show the 'detachable' type mark for base types in
+			-- non-void-safe mode.
 			-- Also, tuple types have no labels.
 		local
 			l_base_class: ET_CLASS
 		do
+			l_base_class := base_class
 			if attached type.type_mark as l_type_mark then
-				l_base_class := base_class
-				if l_type_mark.is_detachable_mark then
-					a_string.append_string (tokens.detachable_keyword.text)
-					a_string.append_character (' ')
+				if not l_type_mark.is_expanded_mark and not l_base_class.is_expanded then
+					if l_type_mark.is_detachable_mark and l_base_class.current_system.attachment_type_conformance_mode then
+						a_string.append_string (tokens.detachable_keyword.text)
+						a_string.append_character (' ')
+					end
 				end
 				if l_type_mark.is_expanded_mark and not l_base_class.is_expanded then
 					a_string.append_string (tokens.expanded_keyword.text)
