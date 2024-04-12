@@ -31457,6 +31457,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_tuple_source_type_set: ET_DYNAMIC_TYPE_SET
 			l_tuple_conforming_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
 			l_has_non_conforming_types: BOOLEAN
+			l_has_conforming_types: BOOLEAN
 			i, nb: INTEGER
 			nb_open_operands: INTEGER
 			j, nb2: INTEGER
@@ -31469,7 +31470,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_operand: ET_EXPRESSION
 			l_operand_type_set: ET_DYNAMIC_TYPE_SET
 			l_old_extra_dynamic_type_sets_count: INTEGER
-			l_temp: detachable ET_IDENTIFIER
 		do
 			if not attached {ET_DYNAMIC_ROUTINE_TYPE} a_target_type as l_routine_type then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
@@ -31529,9 +31529,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					set_fatal_error
 					error_handler.report_giaac_error (generator, "print_builtin_routine_call_call", 5, "argument is not of type 'TUPLE'.")
 				else
-					if not a_feature.is_procedure then
-						current_file.put_character ('(')
-					end
 						-- Mark the temporary variables representing the tuple and the
 						-- routine object as frozen so that they are not reused in any
 						-- way when printing the tuple item extract expressions.
@@ -31558,21 +31555,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						-- field to pass to feature 'f'.
 					l_tuple_conforming_type_set := conforming_type_set (l_tuple_source_type_set, l_tuple_target_type)
 					l_has_non_conforming_types := l_tuple_conforming_type_set.count /= l_tuple_source_type_set.count
-					if l_has_non_conforming_types then
-							-- Force the generation of a CAT-call check.
-						if a_feature.is_procedure then
-							l_temp := new_temp_variable (l_tuple_target_primary_type)
-							print_indentation
-							print_temp_name (l_temp, current_file)
-							print_assign_to
-							print_attachment_expression (l_tuple, l_tuple_source_type_set, l_tuple_target_type)
-							print_semicolon_newline
-							mark_temp_variable_free (l_temp)
-						else
-							print_attachment_expression (l_tuple, l_tuple_source_type_set, l_tuple_target_type)
-							print_comma
-						end
-					end
+					l_has_conforming_types := not l_tuple_conforming_type_set.is_empty
 					if a_feature.is_procedure then
 						print_indentation
 					end
@@ -31593,10 +31576,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_type_declaration (l_closed_operands_type_set.static_type.primary_type, current_file)
 					print_comma
 					print_type_declaration (l_tuple_target_primary_type, current_file)
-					from i := 1 until i > nb_open_operands loop
-						print_comma
-						print_type_declaration (l_open_operand_type_sets.item (i).static_type.primary_type, current_file)
-						i := i + 1
+					if l_has_conforming_types then
+						from i := 1 until i > nb_open_operands loop
+							print_comma
+							print_type_declaration (l_open_operand_type_sets.item (i).static_type.primary_type, current_file)
+							i := i + 1
+						end
 					end
 					current_file.put_character (')')
 					current_file.put_character (')')
@@ -31616,100 +31601,117 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_adapted_attribute_access (l_routine_type.queries.item (2), l_routine_object, l_routine_type, False)
 					print_comma
 					if attached {ET_MANIFEST_TUPLE} l_tuple as l_manifest_tuple then
-							-- There is no tuple for open operands here.
-						current_file.put_character ('0')
-						nb := l_manifest_tuple.count.min (nb_open_operands)
-						from i := 1 until i > nb loop
-							l_operand := l_manifest_tuple.expression (i)
-							l_operand_type_set := dynamic_type_set (l_operand)
-								-- Note that we did not call `print_attachment_operand' because
-								-- the open arguments with copy semantics will be cloned within
-								-- the execution of 'root_disp' when passing the actual arguments
-								-- to the underlying Eiffel routine (i.e. `f` when the agent is
-								-- `agent a.f (?)`). But we call `print_attachment_expression' below
-								-- because we still need to box or unbox the arguments when needed
-								-- (e.g. the formal argument of `f` is declared of type `ANY` but
-								-- we call the agent with `my_agent.call ([2])`).
-							print_comma
-							print_attachment_expression (l_operand, l_operand_type_set, l_open_operand_type_sets.item (i).static_type)
-							i := i + 1
+						if l_has_non_conforming_types then
+								-- Force the generation of a CAT-call check.
+							print_attachment_expression (l_tuple, l_tuple_source_type_set, l_tuple_target_type)
+						else
+								-- There is no tuple for open operands here.
+							current_file.put_character ('0')
+						end
+						if l_has_conforming_types then
+							nb := l_manifest_tuple.count.min (nb_open_operands)
+							from i := 1 until i > nb loop
+								l_operand := l_manifest_tuple.expression (i)
+								l_operand_type_set := dynamic_type_set (l_operand)
+									-- Note that we did not call `print_attachment_operand' because
+									-- the open arguments with copy semantics will be cloned within
+									-- the execution of 'root_disp' when passing the actual arguments
+									-- to the underlying Eiffel routine (i.e. `f` when the agent is
+									-- `agent a.f (?)`). But we call `print_attachment_expression' below
+									-- because we still need to box or unbox the arguments when needed
+									-- (e.g. the formal argument of `f` is declared of type `ANY` but
+									-- we call the agent with `my_agent.call ([2])`).
+								print_comma
+								print_attachment_expression (l_operand, l_operand_type_set, l_open_operand_type_sets.item (i).static_type)
+								i := i + 1
+							end
 						end
 					elseif nb_open_operands > 0 then
-							-- Tuple with the open operands.
-						print_expression (l_tuple)
-							-- Prepare dynamic type sets.
-							-- Temporarily change the dynamic type set of the
-							-- tuple so that it is only made up of conforming
-							-- type, without any remaining CAT-call problems.
-						extra_dynamic_type_sets.force_last (l_tuple_conforming_type_set)
-						old_tuple_index := l_tuple.index
-						l_tuple.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
-							-- Extract the items of the tuple to pass them as argument
-							-- of the function to fill in the open operands of the agent.
-						from i := 1 until i > nb_open_operands loop
-								-- Prepare the expression to extract the tuple item.
-							create l_tuple_item_type_set.make_empty (l_tuple_target_primary_type.item_type_sets.item (i).static_type)
-							nb2 := l_tuple_conforming_type_set.count
-							from j := 1 until j > nb2 loop
-								if attached {ET_DYNAMIC_TUPLE_TYPE} l_tuple_conforming_type_set.dynamic_type (j) as l_tuple_conforming_type then
-									l_tuple_item_type_set.put_types (l_tuple_conforming_type.item_type_sets.item (i))
-								else
-										-- Internal error: The types conforming a tuple type should be tuple types.
-									set_fatal_error
-									error_handler.report_giaac_error (generator, "print_builtin_routine_call_call", 6, "type conforming to a tuple type is not a tuple type.")
-								end
-								j := j + 1
-							end
-							extra_dynamic_type_sets.force_last (l_tuple_item_type_set)
-							l_tuple_label := new_tuple_label (i)
-							l_tuple_item_expression := new_qualified_call_expression (l_tuple, l_tuple_label, Void)
-							l_tuple_item_expression.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
-								-- Register the call to extract the tuple item so that
-								-- it is handled correctly in case of polymorphism.
-								-- The special treatment for polymorphism only occurs
-								-- when the target has more than 2 possible dynamic types.
-							l_query_call := Void
-							if l_tuple_conforming_type_set.count > 2 then
-								create l_query_target_type_set.make (l_tuple_target_type)
-								if l_tuple_conforming_type_set.is_never_void then
-									l_query_target_type_set.set_never_void
-								end
-								l_query_target_type_set.put_types (l_tuple_conforming_type_set)
-								create l_query_call.make (l_tuple_item_expression, l_query_target_type_set, l_tuple_item_type_set, current_feature, current_type)
-								l_tuple_conforming_type_set.static_type.primary_type.put_query_call (l_query_call)
-							end
-								-- Print the actual call to extract the tuple item.
-								-- Note that we did not call `print_attachment_operand' because
-								-- the open arguments with copy semantics will be cloned within
-								-- the execution of 'root_disp' when passing the actual arguments
-								-- to the underlying Eiffel routine (i.e. `f` when the agent is
-								-- `agent a.f (?)`). But we call `print_attachment_expression' below
-								-- because we still need to box or unbox the arguments when needed
-								-- (e.g. the formal argument of `f` is declared of type `ANY` but
-								-- we call the agent with `my_agent.call ([2])`).
-							print_comma
-							print_attachment_expression (l_tuple_item_expression, l_tuple_item_type_set, l_open_operand_type_sets.item (i).static_type)
-								-- Clean up.
-							if l_query_call = Void then
-								free_qualified_call_expression (l_tuple_item_expression)
-								free_tuple_label (l_tuple_label)
-							end
-								-- No need to check for the void-ness of the tuple when accessing
-								-- each of its items. The first time is enough.
-							l_tuple_conforming_type_set.set_never_void
-							i := i + 1
+						if l_has_non_conforming_types then
+								-- Force the generation of a CAT-call check.
+							print_attachment_expression (l_tuple, l_tuple_source_type_set, l_tuple_target_type)
+						else
+								-- Tuple with the open operands.
+							print_expression (l_tuple)
 						end
-							-- Clean up.
-						l_tuple.set_index (old_tuple_index)
+						if l_has_conforming_types then
+								-- Prepare dynamic type sets.
+								-- Temporarily change the dynamic type set of the
+								-- tuple so that it is only made up of conforming
+								-- type, without any remaining CAT-call problems.
+							extra_dynamic_type_sets.force_last (l_tuple_conforming_type_set)
+							old_tuple_index := l_tuple.index
+							l_tuple.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
+								-- Extract the items of the tuple to pass them as argument
+								-- of the function to fill in the open operands of the agent.
+							from i := 1 until i > nb_open_operands loop
+									-- Prepare the expression to extract the tuple item.
+								create l_tuple_item_type_set.make_empty (l_tuple_target_primary_type.item_type_sets.item (i).static_type)
+								nb2 := l_tuple_conforming_type_set.count
+								from j := 1 until j > nb2 loop
+									if attached {ET_DYNAMIC_TUPLE_TYPE} l_tuple_conforming_type_set.dynamic_type (j) as l_tuple_conforming_type then
+										l_tuple_item_type_set.put_types (l_tuple_conforming_type.item_type_sets.item (i))
+									else
+											-- Internal error: The types conforming a tuple type should be tuple types.
+										set_fatal_error
+										error_handler.report_giaac_error (generator, "print_builtin_routine_call_call", 6, "type conforming to a tuple type is not a tuple type.")
+									end
+									j := j + 1
+								end
+								extra_dynamic_type_sets.force_last (l_tuple_item_type_set)
+								l_tuple_label := new_tuple_label (i)
+								l_tuple_item_expression := new_qualified_call_expression (l_tuple, l_tuple_label, Void)
+								l_tuple_item_expression.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
+									-- Register the call to extract the tuple item so that
+									-- it is handled correctly in case of polymorphism.
+									-- The special treatment for polymorphism only occurs
+									-- when the target has more than 2 possible dynamic types.
+								l_query_call := Void
+								if l_tuple_conforming_type_set.count > 2 then
+									create l_query_target_type_set.make (l_tuple_target_type)
+									if l_tuple_conforming_type_set.is_never_void then
+										l_query_target_type_set.set_never_void
+									end
+									l_query_target_type_set.put_types (l_tuple_conforming_type_set)
+									create l_query_call.make (l_tuple_item_expression, l_query_target_type_set, l_tuple_item_type_set, current_feature, current_type)
+									l_tuple_conforming_type_set.static_type.primary_type.put_query_call (l_query_call)
+								end
+									-- Print the actual call to extract the tuple item.
+									-- Note that we did not call `print_attachment_operand' because
+									-- the open arguments with copy semantics will be cloned within
+									-- the execution of 'root_disp' when passing the actual arguments
+									-- to the underlying Eiffel routine (i.e. `f` when the agent is
+									-- `agent a.f (?)`). But we call `print_attachment_expression' below
+									-- because we still need to box or unbox the arguments when needed
+									-- (e.g. the formal argument of `f` is declared of type `ANY` but
+									-- we call the agent with `my_agent.call ([2])`).
+								print_comma
+								print_attachment_expression (l_tuple_item_expression, l_tuple_item_type_set, l_open_operand_type_sets.item (i).static_type)
+									-- Clean up.
+								if l_query_call = Void then
+									free_qualified_call_expression (l_tuple_item_expression)
+									free_tuple_label (l_tuple_label)
+								end
+									-- No need to check for the void-ness of the tuple when accessing
+									-- each of its items. The first time is enough.
+								l_tuple_conforming_type_set.set_never_void
+								i := i + 1
+							end
+								-- Clean up.
+							l_tuple.set_index (old_tuple_index)
+						end
 					else
-							-- No need to pass the empty tuple with open operands here.
-						current_file.put_character ('0')
+						if l_has_non_conforming_types then
+								-- Force the generation of a CAT-call check.
+							print_attachment_expression (l_tuple, l_tuple_source_type_set, l_tuple_target_type)
+						else
+								-- No need to pass the empty tuple with open operands here.
+							current_file.put_character ('0')
+						end
 					end
 					current_file.put_character (')')
 					if a_feature.is_procedure then
 						print_semicolon_newline
-					else
-						current_file.put_character (')')
 					end
 						-- Clean up.
 					extra_dynamic_type_sets.keep_first (l_old_extra_dynamic_type_sets_count)
