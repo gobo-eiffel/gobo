@@ -14396,9 +14396,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					indent
 					if l_assignment_target /= Void then
 						l_semistrict_target := l_assignment_target
-						if attached {ET_IDENTIFIER} l_assignment_target as l_identifier and then l_identifier.is_temporary then
-							l_temp := l_identifier
-						end
 					else
 						if attached {ET_IDENTIFIER} call_operands.first as l_identifier and then l_identifier.is_temporary and then is_temp_variable_free (l_identifier) then
 							l_temp_target := l_identifier
