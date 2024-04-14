@@ -14396,9 +14396,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					indent
 					if l_assignment_target /= Void then
 						l_semistrict_target := l_assignment_target
-						if attached {ET_IDENTIFIER} l_assignment_target as l_identifier and then l_identifier.is_temporary then
-							l_temp := l_identifier
-						end
 					else
 						if attached {ET_IDENTIFIER} call_operands.first as l_identifier and then l_identifier.is_temporary and then is_temp_variable_free (l_identifier) then
 							l_temp_target := l_identifier
@@ -23916,13 +23913,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character (')')
 				end
 				print_assign_to
-				if not current_type.is_expanded then
+				if current_type.is_expanded then
+					print_attachment_expression (a_source, dynamic_type_set (a_source), current_type)
+				else
 					current_file.put_character ('*')
+					print_type_cast (current_type, current_file)
+					current_file.put_character ('(')
+					print_attachment_expression (a_source, dynamic_type_set (a_source), current_type)
+					current_file.put_character (')')
 				end
-				print_type_cast (current_type, current_file)
-				current_file.put_character ('(')
-				print_attachment_expression (a_source, dynamic_type_set (a_source), current_type)
-				current_file.put_character (')')
 				print_semicolon_newline
 				print_assign_temp_variable_to_flags_attribute (a_target, current_type, False)
 				print_assign_temp_variable_to_onces_attribute (a_target, current_type, False)
@@ -44258,7 +44257,7 @@ feature {NONE} -- Inlined operands
 		end
 
 	free_inlined_operands
-			-- Free all inlined_operand objects so that they can be reused.
+			-- Free all inlined operand objects so that they can be reused.
 		local
 			i, nb: INTEGER
 			l_inlined_operand: ET_DYNAMIC_INLINED_EXPRESSION
