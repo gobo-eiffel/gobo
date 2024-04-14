@@ -44240,7 +44240,7 @@ feature {NONE} -- Inlined operands
 		end
 
 	free_inlined_operands
-			-- Free all inlined_operand objects so that they can be reused.
+			-- Free all inlined operand objects so that they can be reused.
 		local
 			i, nb: INTEGER
 			l_inlined_operand: ET_DYNAMIC_INLINED_EXPRESSION
