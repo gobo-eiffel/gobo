@@ -839,6 +839,9 @@ feature {NONE} -- Generate external C files
 			l_vision2_gtk3_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_wel_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_zlib_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_ise_compiler_bench_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_ise_compiler_cli_writer_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_ise_compiler_platform_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_replacement: STRING
 			l_external_include_pathnames: DS_ARRAYED_LIST [STRING]
 			l_external_library_pathnames: DS_ARRAYED_LIST [STRING]
@@ -887,6 +890,15 @@ feature {NONE} -- Generate external C files
 			create l_zlib_regexp.make
 			l_zlib_regexp.set_case_insensitive (True)
 			l_zlib_regexp.compile ("(.*[\\/]C_library[\\/]zlib)[\\/].*[\\/]zlib\.lib")
+			create l_ise_compiler_bench_regexp.make
+			l_ise_compiler_bench_regexp.set_case_insensitive (True)
+			l_ise_compiler_bench_regexp.compile (".*[\\/]Src[\\/]C[\\/]bench([\\/]((mt)?w?compiler\.lib|lib(mt)?w?compiler\.a))?")
+			create l_ise_compiler_cli_writer_regexp.make
+			l_ise_compiler_cli_writer_regexp.set_case_insensitive (True)
+			l_ise_compiler_cli_writer_regexp.compile ("(.*[\\/]Src[\\/]framework[\\/]cli_writer[\\/]).*[\\/]cli_writer\.lib")
+			create l_ise_compiler_platform_regexp.make
+			l_ise_compiler_platform_regexp.set_case_insensitive (True)
+			l_ise_compiler_platform_regexp.compile (".*[\\/]Src[\\/]C[\\/]platform([\\/](platform\.lib|libplatform\.a))?")
 				-- Include files.
 			create l_includes.make (256)
 			l_external_include_pathnames := current_system.external_include_pathnames
@@ -906,7 +918,13 @@ feature {NONE} -- Generate external C files
 				l_replacement := STRING_.new_empty_string (l_pathname, 6)
 				l_replacement.append_string ("${\1\}")
 				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
-				add_to_include_paths (l_pathname, l_includes)
+				if l_ise_compiler_bench_regexp.recognizes (l_pathname) then
+					-- Ignore. Use Gobo Eiffel runtime instead of ISE Eiffel runtime.
+				elseif l_ise_compiler_platform_regexp.recognizes (l_pathname) then
+					-- Ignore. Use Gobo Eiffel runtime instead of ISE Eiffel runtime.
+				else
+					add_to_include_paths (l_pathname, l_includes)
+				end
 				i := i + 1
 			end
 			a_variables.force (l_includes, "includes")
@@ -1049,6 +1067,12 @@ feature {NONE} -- Generate external C files
 					end
 				elseif l_zlib_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("zlib", l_zlib_regexp.captured_substring (1))
+				elseif l_ise_compiler_bench_regexp.recognizes (l_pathname) then
+					-- Ignore. Use Gobo Eiffel runtime instead of ISE Eiffel runtime.
+				elseif l_ise_compiler_cli_writer_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("cli_writer", l_ise_compiler_cli_writer_regexp.captured_substring (1) + "Clib")
+				elseif l_ise_compiler_platform_regexp.recognizes (l_pathname) then
+					-- Ignore. Use Gobo Eiffel runtime instead of ISE Eiffel runtime.
 				else
 					if not l_external_obj_filenames.is_empty then
 						l_external_obj_filenames.append_character (' ')

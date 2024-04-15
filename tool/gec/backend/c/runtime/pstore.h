@@ -23,6 +23,8 @@ extern "C" {
 #endif
 
 extern long store_append(EIF_INTEGER f_desc, EIF_REFERENCE o, fnptr mid, fnptr nid, EIF_REFERENCE s);
+extern void parsing_store_initialize(void);
+extern void parsing_store_dispose(void);
 extern void parsing_store(EIF_INTEGER file_desc, EIF_REFERENCE object);
 
 #ifdef __cplusplus

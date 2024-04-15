@@ -33,6 +33,20 @@ long store_append(EIF_INTEGER f_desc, EIF_REFERENCE o, fnptr mid, fnptr nid, EIF
 	return 0;
 }
 
+void parsing_store_initialize()
+{
+	/* TODO */
+	GE_show_console();
+	fprintf(stderr, "'parsing_store_initialize' in 'pstore.h' not implemented\n");
+}
+
+void parsing_store_dispose()
+{
+	/* TODO */
+	GE_show_console();
+	fprintf(stderr, "'parsing_store_dispose' in 'pstore.h' not implemented\n");
+}
+
 void parsing_store(EIF_INTEGER file_desc, EIF_REFERENCE object)
 {
 	/* TODO */

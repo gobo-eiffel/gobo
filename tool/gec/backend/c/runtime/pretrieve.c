@@ -38,6 +38,13 @@ EIF_REFERENCE retrieve_all(EIF_INTEGER f_desc, long position)
 	return 0;
 }
 
+void parsing_retrieve_initialize(void)
+{
+	/* TODO */
+	GE_show_console();
+	fprintf(stderr, "'parsing_retrieve_initialize' in 'pretrieve.h' not implemented\n");
+}
+
 EIF_REFERENCE parsing_retrieve(EIF_INTEGER f_desc, EIF_INTEGER a_pos)
 {
 	/* TODO */
