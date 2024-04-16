@@ -9505,10 +9505,16 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 			l_actual: ET_EXPRESSION
+			nb_operands: INTEGER
+			l_argument_offset: INTEGER
 			had_error: BOOLEAN
 		do
 			if line_generation_mode then
 				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
+			end
+			if not in_static_feature then
+				operand_stack.force (tokens.current_keyword)
+				nb_operands := 1
 			end
 			if attached an_instruction.arguments as l_actuals then
 				nb := l_actuals.count
@@ -9518,8 +9524,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 					print_attachment_operand (l_actual, l_actual_type_set)
 					i := i + 1
 				end
+				nb_operands := nb_operands + nb
 			end
-			fill_call_operands (nb)
+			fill_call_operands (nb_operands)
 			l_parent_type := an_instruction.parent_type
 			if l_parent_type = Void then
 					-- Internal error: the Precursor construct should already
@@ -9579,21 +9586,20 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 							print_routine_name (l_dynamic_precursor, current_type, current_file)
 							current_file.put_character ('(')
 							current_file.put_string (c_ac)
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_current_name (current_file)
+							print_comma
+							print_expression (call_operands.first)
+							l_argument_offset := 1
 						end
-						from i := 1 until i > nb loop
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							l_actual_type_set := dynamic_type_set (call_operands.item (i))
-							l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_precursor)
-							print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
+						from i := 1 + l_argument_offset until i > nb_operands loop
+							print_comma
+							l_actual := call_operands.item (i)
+							l_actual_type_set := dynamic_type_set (l_actual)
+							l_formal_type_set := argument_type_set_in_feature (i - l_argument_offset, l_dynamic_precursor)
+							print_attachment_expression (l_actual, l_actual_type_set, l_formal_type_set.static_type)
 							i := i + 1
 						end
 						current_file.put_character (')')
-						current_file.put_character (';')
-						current_file.put_new_line
+						print_semicolon_newline
 					end
 				end
 			end
@@ -14130,10 +14136,16 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 			l_actual: ET_EXPRESSION
+			nb_operands: INTEGER
+			l_argument_offset: INTEGER
 			had_error: BOOLEAN
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
+			if not in_static_feature then
+				operand_stack.force (tokens.current_keyword)
+				nb_operands := 1
+			end
 			if attached an_expression.arguments as l_actuals then
 				nb := l_actuals.count
 				from i := 1 until i > nb loop
@@ -14142,8 +14154,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					print_attachment_operand (l_actual, l_actual_type_set)
 					i := i + 1
 				end
+				nb_operands := nb_operands + nb
 			end
-			fill_call_operands (nb)
+			fill_call_operands (nb_operands)
 			l_parent_type := an_expression.parent_type
 			if l_parent_type = Void then
 					-- Internal error: the Precursor construct should already
@@ -14208,9 +14221,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 								print_indentation
 								print_temp_name (l_temp, current_file)
 							end
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
+							print_assign_to
 							current_file.put_character ('(')
 						end
 						l_parent_dynamic_type := current_dynamic_system.dynamic_primary_type (l_parent_type, current_type.base_type)
@@ -14225,23 +14236,22 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 							print_routine_name (l_dynamic_precursor, current_type, current_file)
 							current_file.put_character ('(')
 							current_file.put_string (c_ac)
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_current_name (current_file)
+							print_comma
+							print_expression (call_operands.first)
+							l_argument_offset := 1
 						end
-						from i := 1 until i > nb loop
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							l_actual_type_set := dynamic_type_set (call_operands.item (i))
-							l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_precursor)
-							print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
+						from i := 1 + l_argument_offset until i > nb_operands loop
+							print_comma
+							l_actual := call_operands.item (i)
+							l_actual_type_set := dynamic_type_set (l_actual)
+							l_formal_type_set := argument_type_set_in_feature (i - l_argument_offset, l_dynamic_precursor)
+							print_attachment_expression (l_actual, l_actual_type_set, l_formal_type_set.static_type)
 							i := i + 1
 						end
 						current_file.put_character (')')
 						if in_operand then
 							current_file.put_character (')')
-							current_file.put_character (';')
-							current_file.put_new_line
+							print_semicolon_newline
 						end
 					end
 				end
