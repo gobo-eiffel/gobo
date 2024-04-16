@@ -145,6 +145,17 @@ void eif_sleep(EIF_INTEGER_64 nanoseconds)
 #endif
 }
 
+/* Needed to compile ISE's compiler. */
+EIF_REFERENCE eif_date_string (EIF_INTEGER a_date)
+{
+	EIF_REFERENCE result;
+	time_t l_date = (time_t) a_date;
+	char *date_string = ctime((time_t*)&l_date);
+
+	result = RTMS(date_string);
+	return (EIF_REFERENCE) result;
+}
+
 #ifdef __cplusplus
 }
 #endif

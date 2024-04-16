@@ -839,6 +839,9 @@ feature {NONE} -- Generate external C files
 			l_vision2_gtk3_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_wel_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_zlib_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_ise_compiler_bench_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_ise_compiler_cli_writer_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_ise_compiler_platform_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_replacement: STRING
 			l_external_include_pathnames: DS_ARRAYED_LIST [STRING]
 			l_external_library_pathnames: DS_ARRAYED_LIST [STRING]
@@ -887,6 +890,15 @@ feature {NONE} -- Generate external C files
 			create l_zlib_regexp.make
 			l_zlib_regexp.set_case_insensitive (True)
 			l_zlib_regexp.compile ("(.*[\\/]C_library[\\/]zlib)[\\/].*[\\/]zlib\.lib")
+			create l_ise_compiler_bench_regexp.make
+			l_ise_compiler_bench_regexp.set_case_insensitive (True)
+			l_ise_compiler_bench_regexp.compile (".*[\\/]Src[\\/]C[\\/]bench([\\/]((mt)?w?compiler\.lib|lib(mt)?w?compiler\.a))?")
+			create l_ise_compiler_cli_writer_regexp.make
+			l_ise_compiler_cli_writer_regexp.set_case_insensitive (True)
+			l_ise_compiler_cli_writer_regexp.compile ("(.*[\\/]Src[\\/]framework[\\/]cli_writer[\\/]).*[\\/]cli_writer\.lib")
+			create l_ise_compiler_platform_regexp.make
+			l_ise_compiler_platform_regexp.set_case_insensitive (True)
+			l_ise_compiler_platform_regexp.compile (".*[\\/]Src[\\/]C[\\/]platform([\\/](platform\.lib|libplatform\.a))?")
 				-- Include files.
 			create l_includes.make (256)
 			l_external_include_pathnames := current_system.external_include_pathnames
@@ -906,7 +918,13 @@ feature {NONE} -- Generate external C files
 				l_replacement := STRING_.new_empty_string (l_pathname, 6)
 				l_replacement.append_string ("${\1\}")
 				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
-				add_to_include_paths (l_pathname, l_includes)
+				if l_ise_compiler_bench_regexp.recognizes (l_pathname) then
+					-- Ignore. Use Gobo Eiffel runtime instead of ISE Eiffel runtime.
+				elseif l_ise_compiler_platform_regexp.recognizes (l_pathname) then
+					-- Ignore. Use Gobo Eiffel runtime instead of ISE Eiffel runtime.
+				else
+					add_to_include_paths (l_pathname, l_includes)
+				end
 				i := i + 1
 			end
 			a_variables.force (l_includes, "includes")
@@ -1049,6 +1067,12 @@ feature {NONE} -- Generate external C files
 					end
 				elseif l_zlib_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("zlib", l_zlib_regexp.captured_substring (1))
+				elseif l_ise_compiler_bench_regexp.recognizes (l_pathname) then
+					-- Ignore. Use Gobo Eiffel runtime instead of ISE Eiffel runtime.
+				elseif l_ise_compiler_cli_writer_regexp.recognizes (l_pathname) then
+					generate_external_c_files ("cli_writer", l_ise_compiler_cli_writer_regexp.captured_substring (1) + "Clib")
+				elseif l_ise_compiler_platform_regexp.recognizes (l_pathname) then
+					-- Ignore. Use Gobo Eiffel runtime instead of ISE Eiffel runtime.
 				else
 					if not l_external_obj_filenames.is_empty then
 						l_external_obj_filenames.append_character (' ')
@@ -41840,6 +41864,10 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("eif_types.h", False, a_file)
 				elseif a_filename.same_string ("%"ge_time.h%"") then
 					include_runtime_header_file ("ge_time.h", False, a_file)
+				elseif a_filename.same_string ("%"pretrieve.h%"") then
+					include_runtime_header_file ("pretrieve.h", False, a_file)
+				elseif a_filename.same_string ("%"pstore.h%"") then
+					include_runtime_header_file ("pstore.h", False, a_file)
 				else
 					included_header_filenames.force_last (a_filename)
 				end
@@ -41940,6 +41968,8 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("eif_store.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					l_c_filename := "eif_store.c"
+				elseif a_filename.same_string ("eif_struct.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 				elseif a_filename.same_string ("eif_threads.h") then
 					include_runtime_header_file ("eif_cecil.h", a_force, a_file)
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
@@ -42006,6 +42036,12 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					include_runtime_header_file ("ge_exception.h", a_force, a_file)
 					l_c_filename := "ge_types.c"
+				elseif a_filename.same_string ("pretrieve.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "pretrieve.c"
+				elseif a_filename.same_string ("pstore.h") then
+					include_runtime_header_file ("eif_struct.h", a_force, a_file)
+					l_c_filename := "pstore.c"
 				end
 				if a_force then
 					include_runtime_file (a_filename, a_file)
@@ -42140,6 +42176,11 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("ge_types.c") then
 					include_runtime_header_file ("ge_types.h", False, a_header_file)
 					include_runtime_header_file ("ge_string.h", False, a_header_file)
+				elseif a_filename.same_string ("pretrieve.c") then
+					include_runtime_header_file ("pretrieve.h", False, a_header_file)
+				elseif a_filename.same_string ("pstore.c") then
+					include_runtime_header_file ("eif_except.h", False, a_header_file)
+					include_runtime_header_file ("pstore.h", False, a_header_file)
 				end
 				included_runtime_c_files.force_last (a_filename)
 			end
