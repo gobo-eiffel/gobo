@@ -12135,36 +12135,23 @@ feature {NONE} -- Expression generation
 			l_right_operand := a_expression.right
 			l_left_type_set := dynamic_type_set (l_left_operand)
 			l_right_type_set := dynamic_type_set (l_right_operand)
-			if
-				in_operand and then
-				l_left_type_set.count = 1 and then l_right_type_set.count = 1 and then
-				not l_left_type_set.dynamic_type (1).has_redefined_is_equal_routine and then
-				attached {ET_IDENTIFIER} l_left_operand and then
-				attached {ET_IDENTIFIER} l_right_operand
-			then
-					-- No need to keep the result of the equality expression in a temporary variable.
-					-- It can be printed directly in place because no feature calls are involved
-					-- (not risk to not preserve the order of evaluation of the operands).
-				operand_stack.force (a_expression)
-			else
-				l_assignment_target := assignment_target
-				assignment_target := Void
-					-- Process operands.
-				print_operand (l_left_operand)
-					-- Call `print_attachment_operand' and not `print_operand'
-					-- because the right operand might be the argument of a call
-					-- to 'is_equal' and it will require some cloning if its
-					-- type is expanded.
-				print_attachment_operand (l_right_operand, l_right_type_set)
-				fill_call_operands (2)
-				assignment_target := l_assignment_target
-				l_equality_types := new_equality_types (l_left_type_set, l_right_type_set)
-				print_equality_call (a_expression, a_expression.operator.is_not_equal, l_equality_types)
-				if current_equalities.is_empty or else current_equalities.last /= l_equality_types then
-					free_equality_types (l_equality_types)
-				end
-				call_operands.wipe_out
+			l_assignment_target := assignment_target
+			assignment_target := Void
+				-- Process operands.
+			print_operand (l_left_operand)
+				-- Call `print_attachment_operand' and not `print_operand'
+				-- because the right operand might be the argument of a call
+				-- to 'is_equal' and it will require some cloning if its
+				-- type is expanded.
+			print_attachment_operand (l_right_operand, l_right_type_set)
+			fill_call_operands (2)
+			assignment_target := l_assignment_target
+			l_equality_types := new_equality_types (l_left_type_set, l_right_type_set)
+			print_equality_call (a_expression, a_expression.operator.is_not_equal, l_equality_types)
+			if current_equalities.is_empty or else current_equalities.last /= l_equality_types then
+				free_equality_types (l_equality_types)
 			end
+			call_operands.wipe_out
 		end
 
 	print_expression (an_expression: ET_EXPRESSION)
@@ -13850,36 +13837,23 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			l_right_operand := a_expression.right
 			l_left_type_set := dynamic_type_set (l_left_operand)
 			l_right_type_set := dynamic_type_set (l_right_operand)
-			if
-				in_operand and then
-				l_left_type_set.count = 1 and then l_right_type_set.count = 1 and then
-				not l_left_type_set.dynamic_type (1).has_redefined_is_equal_routine and then
-				attached {ET_IDENTIFIER} l_left_operand and then
-				attached {ET_IDENTIFIER} l_right_operand
-			then
-					-- No need to keep the result of the equality expression in a temporary variable.
-					-- It can be printed directly in place because no feature calls are involved
-					-- (not risk to not preserve the order of evaluation of the operands).
-				operand_stack.force (a_expression)
-			else
-				l_assignment_target := assignment_target
-				assignment_target := Void
-					-- Process operands.
-				print_operand (l_left_operand)
-					-- Call `print_attachment_operand' and not `print_operand'
-					-- because the right operand might be the argument of a call
-					-- to 'is_equal' and it will require some cloning if its
-					-- type is expanded.
-				print_attachment_operand (l_right_operand, l_right_type_set)
-				fill_call_operands (2)
-				assignment_target := l_assignment_target
-				l_equality_types := new_object_equality_types (l_left_type_set, l_right_type_set)
-				print_equality_call (a_expression, a_expression.operator.is_not_tilde, l_equality_types)
-				if current_equalities.is_empty or else current_equalities.last /= l_equality_types then
-					free_object_equality_types (l_equality_types)
-				end
-				call_operands.wipe_out
+			l_assignment_target := assignment_target
+			assignment_target := Void
+				-- Process operands.
+			print_operand (l_left_operand)
+				-- Call `print_attachment_operand' and not `print_operand'
+				-- because the right operand might be the argument of a call
+				-- to 'is_equal' and it will require some cloning if its
+				-- type is expanded.
+			print_attachment_operand (l_right_operand, l_right_type_set)
+			fill_call_operands (2)
+			assignment_target := l_assignment_target
+			l_equality_types := new_object_equality_types (l_left_type_set, l_right_type_set)
+			print_equality_call (a_expression, a_expression.operator.is_not_tilde, l_equality_types)
+			if current_equalities.is_empty or else current_equalities.last /= l_equality_types then
+				free_object_equality_types (l_equality_types)
 			end
+			call_operands.wipe_out
 		end
 
 	print_object_test (an_expression: ET_OBJECT_TEST)
