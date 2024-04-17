@@ -12131,27 +12131,40 @@ feature {NONE} -- Expression generation
 			l_equality_types: ET_DYNAMIC_EQUALITY_TYPES
 			l_assignment_target: like assignment_target
 		do
-			l_assignment_target := assignment_target
-			assignment_target := Void
 			l_left_operand := a_expression.left
 			l_right_operand := a_expression.right
 			l_left_type_set := dynamic_type_set (l_left_operand)
 			l_right_type_set := dynamic_type_set (l_right_operand)
-				-- Process operands.
-			print_operand (l_left_operand)
-				-- Call `print_attachment_operand' and not `print_operand'
-				-- because the right operand might be the argument of a call
-				-- to 'is_equal' and it will require some cloning if its
-				-- type is expanded.
-			print_attachment_operand (l_right_operand, l_right_type_set)
-			fill_call_operands (2)
-			assignment_target := l_assignment_target
-			l_equality_types := new_equality_types (l_left_type_set, l_right_type_set)
-			print_equality_call (a_expression, a_expression.operator.is_not_equal, l_equality_types)
-			if current_equalities.is_empty or else current_equalities.last /= l_equality_types then
-				free_equality_types (l_equality_types)
+			if
+				in_operand and then
+				l_left_type_set.count = 1 and then l_right_type_set.count = 1 and then
+				not l_left_type_set.dynamic_type (1).has_redefined_is_equal_routine and then
+				attached {ET_IDENTIFIER} l_left_operand and then
+				attached {ET_IDENTIFIER} l_right_operand
+			then
+					-- No need to keep the result of the equality expression in a temporary variable.
+					-- It can be printed directly in place because no feature calls are involved
+					-- (not risk to not preserve the order of evaluation of the operands).
+				operand_stack.force (a_expression)
+			else
+				l_assignment_target := assignment_target
+				assignment_target := Void
+					-- Process operands.
+				print_operand (l_left_operand)
+					-- Call `print_attachment_operand' and not `print_operand'
+					-- because the right operand might be the argument of a call
+					-- to 'is_equal' and it will require some cloning if its
+					-- type is expanded.
+				print_attachment_operand (l_right_operand, l_right_type_set)
+				fill_call_operands (2)
+				assignment_target := l_assignment_target
+				l_equality_types := new_equality_types (l_left_type_set, l_right_type_set)
+				print_equality_call (a_expression, a_expression.operator.is_not_equal, l_equality_types)
+				if current_equalities.is_empty or else current_equalities.last /= l_equality_types then
+					free_equality_types (l_equality_types)
+				end
+				call_operands.wipe_out
 			end
-			call_operands.wipe_out
 		end
 
 	print_expression (an_expression: ET_EXPRESSION)
@@ -13833,27 +13846,40 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			l_equality_types: ET_DYNAMIC_OBJECT_EQUALITY_TYPES
 			l_assignment_target: like assignment_target
 		do
-			l_assignment_target := assignment_target
-			assignment_target := Void
 			l_left_operand := a_expression.left
 			l_right_operand := a_expression.right
 			l_left_type_set := dynamic_type_set (l_left_operand)
 			l_right_type_set := dynamic_type_set (l_right_operand)
-				-- Process operands.
-			print_operand (l_left_operand)
-				-- Call `print_attachment_operand' and not `print_operand'
-				-- because the right operand might be the argument of a call
-				-- to 'is_equal' and it will require some cloning if its
-				-- type is expanded.
-			print_attachment_operand (l_right_operand, l_right_type_set)
-			fill_call_operands (2)
-			assignment_target := l_assignment_target
-			l_equality_types := new_object_equality_types (l_left_type_set, l_right_type_set)
-			print_equality_call (a_expression, a_expression.operator.is_not_tilde, l_equality_types)
-			if current_equalities.is_empty or else current_equalities.last /= l_equality_types then
-				free_object_equality_types (l_equality_types)
+			if
+				in_operand and then
+				l_left_type_set.count = 1 and then l_right_type_set.count = 1 and then
+				not l_left_type_set.dynamic_type (1).has_redefined_is_equal_routine and then
+				attached {ET_IDENTIFIER} l_left_operand and then
+				attached {ET_IDENTIFIER} l_right_operand
+			then
+					-- No need to keep the result of the equality expression in a temporary variable.
+					-- It can be printed directly in place because no feature calls are involved
+					-- (not risk to not preserve the order of evaluation of the operands).
+				operand_stack.force (a_expression)
+			else
+				l_assignment_target := assignment_target
+				assignment_target := Void
+					-- Process operands.
+				print_operand (l_left_operand)
+					-- Call `print_attachment_operand' and not `print_operand'
+					-- because the right operand might be the argument of a call
+					-- to 'is_equal' and it will require some cloning if its
+					-- type is expanded.
+				print_attachment_operand (l_right_operand, l_right_type_set)
+				fill_call_operands (2)
+				assignment_target := l_assignment_target
+				l_equality_types := new_object_equality_types (l_left_type_set, l_right_type_set)
+				print_equality_call (a_expression, a_expression.operator.is_not_tilde, l_equality_types)
+				if current_equalities.is_empty or else current_equalities.last /= l_equality_types then
+					free_object_equality_types (l_equality_types)
+				end
+				call_operands.wipe_out
 			end
-			call_operands.wipe_out
 		end
 
 	print_object_test (an_expression: ET_OBJECT_TEST)
@@ -14360,6 +14386,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			l_is_separate_call: BOOLEAN
 			l_old_max_nested_inlining_count: INTEGER
 			l_inlined_call: BOOLEAN
+			l_is_basic_attribute: BOOLEAN
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -14552,146 +14579,175 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 						-- We can inline the call only if it's not a separate call,
 						-- it's not a tuple access, and the call is not polymorphic.
 					l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-					if
-						attached l_target_dynamic_type.seeded_dynamic_query (l_name.seed, current_dynamic_system) as l_dynamic_feature
-						and then is_inlinable_function (l_dynamic_feature, l_target_dynamic_type)
-					then
-						print_adapted_query_call (l_dynamic_feature, l_target_dynamic_type, l_call_type, True)
-						l_inlined_call := True
-						fill_call_operands (1)
-					end
-				end
-				if in_operand then
-					print_indentation
-					if l_assignment_target /= Void then
-						operand_stack.force (l_assignment_target)
-						print_writable (l_assignment_target)
-					else
-						l_temp := new_temp_variable (l_call_type)
-						mark_temp_variable_frozen (l_temp)
-							-- We will set the index of `l_temp' later because
-							-- it could still be used in `call_operands'.
-						l_temp_index := a_call.index
-						if l_force_result_boxing then
-								-- `current_dynamic_system.any_type' is the first type set
-								-- in `extra_dynamic_type_sets'.
-							l_temp_index := current_dynamic_type_sets.count + 1
+					if attached l_target_dynamic_type.seeded_dynamic_query (l_name.seed, current_dynamic_system) as l_dynamic_feature then
+						if l_target_static_type.is_basic and l_dynamic_feature.is_attribute then
+								-- Built-in feature 'item' in basic type such as INTEGER.
+								-- The result is the object itself (i.e. the target of the
+								-- call) which is already in `call_operands'.
+							l_inlined_call := True
+							l_is_basic_attribute := True
+						elseif is_inlinable_function (l_dynamic_feature, l_target_dynamic_type) then
+							print_adapted_query_call (l_dynamic_feature, l_target_dynamic_type, l_call_type, True)
+							fill_call_operands (1)
+							l_inlined_call := True
 						end
-						operand_stack.force (l_temp)
-						print_temp_name (l_temp, current_file)
-					end
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-				end
-				if l_is_separate_call then
-					print_separate_qualified_call_expression (a_call)
-				elseif l_inlined_call then
-					print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
-				elseif nb2 = 0 then
-						-- Call on Void target.
-					current_file.put_character ('(')
-					print_target_expression (call_operands.first, l_target_static_type, True)
-					from i := 2 until i > nb loop
-						current_file.put_character (',')
-						current_file.put_character (' ')
-						print_expression (call_operands.item (i))
-						i := i + 1
-					end
-					current_file.put_character (',')
-					current_file.put_character (' ')
-					print_typed_default_entity_value (l_call_type, current_file)
-					current_file.put_character (')')
-				elseif nb2 = 1 then
-						-- Static binding.
-					l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-					print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
-				else
-						-- Dynamic binding.
-					if l_name.is_tuple_label then
-						-- Fields in Tuples are not necessarily aligned, and some need (un)boxing,
-						-- for example:
-						--    t1: TUPLE [a: ANY; b: INTEGER]
-						--    t2: TUPLE [a: CHARACTER; b: INTEGER]
-						--    t1 := t2
-						--    any := t1.a
-						--    int := t1.b
-						-- TODO (optimization): But when there are aligned with no (un)boxing,
-						-- we could avoid having polymorphic calls.
-					elseif not attached l_target_static_type.base_class.seeded_query (l_seed) as l_query then
-							-- Internal error: there should be a query with `a_seed'.
-							-- It has been computed in ET_FEATURE_CHECKER.
-						set_fatal_error
-						error_handler.report_giaac_error (generator, "print_qualified_call_expression", 2, "query not found.")
-						l_printed := True
-					elseif l_query.is_constant_attribute then
-						l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-						print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
-						l_printed := True
-					elseif l_query.is_unique_attribute then
-						l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-						print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
-						l_printed := True
-					end
-					if l_printed then
-						-- Do nothing.
-					elseif nb2 = 2 then
-							-- No inlining here.
-						l_old_max_nested_inlining_count := max_nested_inlining_count
-						max_nested_inlining_count := 0
-							-- First type.
-						l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-						current_file.put_character ('(')
-						current_file.put_character ('(')
-						print_attribute_type_id_access (call_operands.first, l_target_static_type, True)
-						current_file.put_character ('=')
-						current_file.put_character ('=')
-						current_file.put_integer (l_target_dynamic_type.id)
-						current_file.put_character (')')
-						current_file.put_character ('?')
-						print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
-						current_file.put_character (':')
-							-- Second type.
-						l_target_dynamic_type := l_target_type_set.dynamic_type (2)
-						print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
-						current_file.put_character (')')
-						max_nested_inlining_count := l_old_max_nested_inlining_count
-					elseif l_dynamic_call = Void then
-							-- Internal error: the dynamic call should have been created in ET_DYNAMIC_TYPE_BUILDER.
-						set_fatal_error
-						error_handler.report_giaac_error (generator, "print_qualified_call_expression", 3, "dynamic call not found.")
-					else
-						l_dynamic_call.set_force_result_boxing (l_force_result_boxing)
-						register_polymorphic_called_features (l_dynamic_call)
-						print_call_name (a_call, current_feature, l_target_static_type, l_force_result_boxing, current_file)
-						current_file.put_character ('(')
-						current_file.put_string (c_ac)
-						current_file.put_character (',')
-						current_file.put_character (' ')
-						print_target_expression (call_operands.first, l_target_static_type, True)
-						if l_manifest_tuple_operand /= Void then
-							nb := l_manifest_tuple_operand.count
-							from i := 1 until i > nb loop
-								current_file.put_character (',')
-								current_file.put_character (' ')
-								print_expression (l_manifest_tuple_operand.expression (i))
-								i := i + 1
+						if l_inlined_call then
+							if in_operand then
+								if l_force_result_boxing then
+									l_printed := False
+								elseif attached {ET_IDENTIFIER} call_operands.first as l_identifier then
+									if l_identifier.is_temporary and then is_temp_variable_free (l_identifier) then
+										l_temp := l_identifier
+										mark_temp_variable_used (l_temp)
+										mark_temp_variable_frozen (l_temp)
+										l_temp_index := a_call.index
+									end
+									operand_stack.force (l_identifier)
+									l_printed := True
+								elseif l_is_basic_attribute then
+									operand_stack.force (call_operands.first)
+									l_printed := True
+								end
+							else
+								print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
+								l_printed := True
 							end
+						end
+					end
+				end
+				if not l_printed then
+					if in_operand then
+						print_indentation
+						if l_assignment_target /= Void then
+							operand_stack.force (l_assignment_target)
+							print_writable (l_assignment_target)
 						else
-							from i := 2 until i > nb loop
-								current_file.put_character (',')
-								current_file.put_character (' ')
-								print_expression (call_operands.item (i))
-								i := i + 1
+							l_temp := new_temp_variable (l_call_type)
+							mark_temp_variable_frozen (l_temp)
+								-- We will set the index of `l_temp' later because
+								-- it could still be used in `call_operands'.
+							l_temp_index := a_call.index
+							if l_force_result_boxing then
+									-- `current_dynamic_system.any_type' is the first type set
+									-- in `extra_dynamic_type_sets'.
+								l_temp_index := current_dynamic_type_sets.count + 1
 							end
+							operand_stack.force (l_temp)
+							print_temp_name (l_temp, current_file)
 						end
-						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_character ('(')
 					end
-				end
-				if in_operand then
-					current_file.put_character (')')
-					print_semicolon_newline
+					if l_is_separate_call then
+						print_separate_qualified_call_expression (a_call)
+					elseif l_inlined_call then
+						print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
+					elseif nb2 = 0 then
+							-- Call on Void target.
+						current_file.put_character ('(')
+						print_target_expression (call_operands.first, l_target_static_type, True)
+						from i := 2 until i > nb loop
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							print_expression (call_operands.item (i))
+							i := i + 1
+						end
+						current_file.put_character (',')
+						current_file.put_character (' ')
+						print_typed_default_entity_value (l_call_type, current_file)
+						current_file.put_character (')')
+					elseif nb2 = 1 then
+							-- Static binding.
+						l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+						print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
+					else
+							-- Dynamic binding.
+						if l_name.is_tuple_label then
+							-- Fields in Tuples are not necessarily aligned, and some need (un)boxing,
+							-- for example:
+							--    t1: TUPLE [a: ANY; b: INTEGER]
+							--    t2: TUPLE [a: CHARACTER; b: INTEGER]
+							--    t1 := t2
+							--    any := t1.a
+							--    int := t1.b
+							-- TODO (optimization): But when there are aligned with no (un)boxing,
+							-- we could avoid having polymorphic calls.
+						elseif not attached l_target_static_type.base_class.seeded_query (l_seed) as l_query then
+								-- Internal error: there should be a query with `a_seed'.
+								-- It has been computed in ET_FEATURE_CHECKER.
+							set_fatal_error
+							error_handler.report_giaac_error (generator, "print_qualified_call_expression", 2, "query not found.")
+							l_printed := True
+						elseif l_query.is_constant_attribute then
+							l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+							print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
+							l_printed := True
+						elseif l_query.is_unique_attribute then
+							l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+							print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
+							l_printed := True
+						end
+						if l_printed then
+							-- Do nothing.
+						elseif nb2 = 2 then
+								-- No inlining here.
+							l_old_max_nested_inlining_count := max_nested_inlining_count
+							max_nested_inlining_count := 0
+								-- First type.
+							l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+							current_file.put_character ('(')
+							current_file.put_character ('(')
+							print_attribute_type_id_access (call_operands.first, l_target_static_type, True)
+							current_file.put_character ('=')
+							current_file.put_character ('=')
+							current_file.put_integer (l_target_dynamic_type.id)
+							current_file.put_character (')')
+							current_file.put_character ('?')
+							print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
+							current_file.put_character (':')
+								-- Second type.
+							l_target_dynamic_type := l_target_type_set.dynamic_type (2)
+							print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
+							current_file.put_character (')')
+							max_nested_inlining_count := l_old_max_nested_inlining_count
+						elseif l_dynamic_call = Void then
+								-- Internal error: the dynamic call should have been created in ET_DYNAMIC_TYPE_BUILDER.
+							set_fatal_error
+							error_handler.report_giaac_error (generator, "print_qualified_call_expression", 3, "dynamic call not found.")
+						else
+							l_dynamic_call.set_force_result_boxing (l_force_result_boxing)
+							register_polymorphic_called_features (l_dynamic_call)
+							print_call_name (a_call, current_feature, l_target_static_type, l_force_result_boxing, current_file)
+							current_file.put_character ('(')
+							current_file.put_string (c_ac)
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							print_target_expression (call_operands.first, l_target_static_type, True)
+							if l_manifest_tuple_operand /= Void then
+								nb := l_manifest_tuple_operand.count
+								from i := 1 until i > nb loop
+									current_file.put_character (',')
+									current_file.put_character (' ')
+									print_expression (l_manifest_tuple_operand.expression (i))
+									i := i + 1
+								end
+							else
+								from i := 2 until i > nb loop
+									current_file.put_character (',')
+									current_file.put_character (' ')
+									print_expression (call_operands.item (i))
+									i := i + 1
+								end
+							end
+							current_file.put_character (')')
+						end
+					end
+					if in_operand then
+						current_file.put_character (')')
+						print_semicolon_newline
+					end
 				end
 			end
 			call_operands.wipe_out
@@ -15480,6 +15536,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			l_first_line: STRING
 			l_git_sha1: STRING
 			l_gobo_version: STRING
+			l_printed: BOOLEAN
 		do
 			if in_static_feature then
 				print_expression_static_call (a_call, current_type, a_call.name, a_call.arguments)
@@ -15704,52 +15761,71 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 							print_adapted_query_call (l_dynamic_feature, current_type, l_call_type, False)
 							l_inlined_call := True
 							fill_call_operands (1)
-						end
-						if in_operand then
-							if l_assignment_target /= Void then
-								operand_stack.force (l_assignment_target)
-								print_indentation
-								print_writable (l_assignment_target)
-							else
-								l_temp := new_temp_variable (l_call_type)
-								mark_temp_variable_frozen (l_temp)
-									-- We will set the index of `l_temp' later because
-									-- it could still be used in `call_operands'.
-								l_temp_index := a_call.index
+							if in_operand then
 								if l_force_result_boxing then
-										-- `current_dynamic_system.any_type' is the first type set
-										-- in `extra_dynamic_type_sets'.
-									l_temp_index := current_dynamic_type_sets.count + 1
+									l_printed := False
+								elseif attached {ET_IDENTIFIER} call_operands.first as l_identifier then
+									if l_identifier.is_temporary and then is_temp_variable_free (l_identifier) then
+										l_temp := l_identifier
+										mark_temp_variable_used (l_temp)
+										mark_temp_variable_frozen (l_temp)
+										l_temp_index := a_call.index
+									end
+									operand_stack.force (l_identifier)
+									l_printed := True
 								end
-								operand_stack.force (l_temp)
-								print_indentation
-								print_temp_name (l_temp, current_file)
+							else
+								print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
+								l_printed := True
 							end
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
-							current_file.put_character ('(')
 						end
-						if l_inlined_call then
-							print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
-						else
-								-- When there is no result type of the form 'like argument',
-								-- then there is no need to call `print_adapted_query_call'
-								-- because an unqualified call is not polymorphic, and therefore
-								-- the type of the query is exactly the type expected by
-								-- the caller. This is another story with 'like argument'.
-								-- For example 'clone (1)' is expected to be of type INTEGER
-								-- and 'clone ("gobo")' is expected to be of type STRING.
-								-- But the corresponding generated function for 'clone' will
-								-- be declared to return an ANY. Hence the need for a call
-								-- to `print_adapted_query_call' in this case.
-								-- There is also the case when `l_force_result_boxing' is True.
-							print_adapted_query_call (l_dynamic_feature, current_type, l_call_type, False)
-						end
-						if in_operand then
-							current_file.put_character (')')
-							current_file.put_character (';')
-							current_file.put_new_line
+						if not l_printed then
+							if in_operand then
+								if l_assignment_target /= Void then
+									operand_stack.force (l_assignment_target)
+									print_indentation
+									print_writable (l_assignment_target)
+								else
+									l_temp := new_temp_variable (l_call_type)
+									mark_temp_variable_frozen (l_temp)
+										-- We will set the index of `l_temp' later because
+										-- it could still be used in `call_operands'.
+									l_temp_index := a_call.index
+									if l_force_result_boxing then
+											-- `current_dynamic_system.any_type' is the first type set
+											-- in `extra_dynamic_type_sets'.
+										l_temp_index := current_dynamic_type_sets.count + 1
+									end
+									operand_stack.force (l_temp)
+									print_indentation
+									print_temp_name (l_temp, current_file)
+								end
+								current_file.put_character (' ')
+								current_file.put_character ('=')
+								current_file.put_character (' ')
+								current_file.put_character ('(')
+							end
+							if l_inlined_call then
+								print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
+							else
+									-- When there is no result type of the form 'like argument',
+									-- then there is no need to call `print_adapted_query_call'
+									-- because an unqualified call is not polymorphic, and therefore
+									-- the type of the query is exactly the type expected by
+									-- the caller. This is another story with 'like argument'.
+									-- For example 'clone (1)' is expected to be of type INTEGER
+									-- and 'clone ("gobo")' is expected to be of type STRING.
+									-- But the corresponding generated function for 'clone' will
+									-- be declared to return an ANY. Hence the need for a call
+									-- to `print_adapted_query_call' in this case.
+									-- There is also the case when `l_force_result_boxing' is True.
+								print_adapted_query_call (l_dynamic_feature, current_type, l_call_type, False)
+							end
+							if in_operand then
+								current_file.put_character (')')
+								current_file.put_character (';')
+								current_file.put_new_line
+							end
 						end
 						call_operands.wipe_out
 						if l_manifest_tuple_operand /= Void then
@@ -16055,6 +16131,7 @@ feature {NONE} -- Equality generation
 			l_index: INTEGER
 			l_old_index: INTEGER
 			l_boolean_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_old_max_nested_inlining_count: INTEGER
 		do
 			if a_negated then
 				l_eif_true := c_eif_false
@@ -16186,18 +16263,19 @@ feature {NONE} -- Equality generation
 						current_file.put_character ('(')
 						current_file.put_string (c_not)
 					end
-					if not l_dynamic_type.has_redefined_is_equal_routine then
-						print_builtin_any_is_equal_call (l_is_equal_feature, l_dynamic_type, False)
+					if l_dynamic_type.has_redefined_is_equal_routine then
+							-- No inlining.
+						l_old_max_nested_inlining_count := max_nested_inlining_count
+						max_nested_inlining_count := 0
+						print_query_call (l_is_equal_feature, l_dynamic_type, False)
+						max_nested_inlining_count := l_old_max_nested_inlining_count
 					else
-						register_called_feature (l_is_equal_feature)
-						print_routine_name (l_is_equal_feature, l_dynamic_type, current_file)
-						current_file.put_character ('(')
-						current_file.put_string (c_ac)
-						print_comma
-						print_target_expression (l_left_operand, l_dynamic_type, False)
-						print_comma
-						print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
-						current_file.put_character (')')
+							-- Make sure to call the built-in version, even for types
+							-- such as INTEGER_32, etc. where 'is_equal' is redefined 
+							-- as 'Result := other.item = item' instead of using the
+							-- built-in version from "ANY" (which introduces an infinite
+							-- recursive call.).
+						print_builtin_any_is_equal_call (l_is_equal_feature, l_dynamic_type, False)
 					end
 					if a_negated then
 						current_file.put_character (')')
@@ -16360,6 +16438,7 @@ feature {NONE} -- Equality generation
 			l_index: INTEGER
 			l_old_index: INTEGER
 			l_boolean_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_old_max_nested_inlining_count: INTEGER
 		do
 			if a_common_object_equality_types.is_empty then
 				print_indentation
@@ -16486,18 +16565,19 @@ feature {NONE} -- Equality generation
 							l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
 							l_old_index := l_right_operand.index
 							l_right_operand.set_index (l_index)
-							if not l_dynamic_type.has_redefined_is_equal_routine then
-								print_builtin_any_is_equal_call (l_is_equal_feature, l_dynamic_type, False)
+							if l_dynamic_type.has_redefined_is_equal_routine then
+									-- No inlining.
+								l_old_max_nested_inlining_count := max_nested_inlining_count
+								max_nested_inlining_count := 0
+								print_query_call (l_is_equal_feature, l_dynamic_type, False)
+								max_nested_inlining_count := l_old_max_nested_inlining_count
 							else
-								register_called_feature (l_is_equal_feature)
-								print_routine_name (l_is_equal_feature, l_dynamic_type, current_file)
-								current_file.put_character ('(')
-								current_file.put_string (c_ac)
-								print_comma
-								print_target_expression (l_left_operand, l_dynamic_type, False)
-								print_comma
-								print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
-								current_file.put_character (')')
+									-- Make sure to call the built-in version, even for types
+									-- such as INTEGER_32, etc. where 'is_equal' is redefined 
+									-- as 'Result := other.item = item' instead of using the
+									-- built-in version from "ANY" (which introduces an infinite
+									-- recursive call.).
+								print_builtin_any_is_equal_call (l_is_equal_feature, l_dynamic_type, False)
 							end
 							l_right_operand.set_index (l_old_index)
 							extra_dynamic_type_sets.remove_last
@@ -23381,7 +23461,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_equality_expression: ET_EQUALITY_EXPRESSION
 			l_index: INTEGER
 			l_boolean_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_old_max_nested_inlining_count: INTEGER
 		do
+				-- No inlining.
+			l_old_max_nested_inlining_count := max_nested_inlining_count
+			max_nested_inlining_count := 0
 			l_field_type := a_field_type_set.static_type.primary_type
 			if l_field_type.is_expanded then
 					-- Copy semantics.
@@ -23400,8 +23484,16 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character ('(')
 					print_result_name (current_file)
 					print_and_then
-					register_called_feature (l_is_equal_feature)
-					print_query_call (l_is_equal_feature, l_field_type, False)
+					if l_field_type.has_redefined_is_equal_routine then
+						print_query_call (l_is_equal_feature, l_field_type, False)
+					else
+							-- Make sure to call the built-in version, even for types
+							-- such as INTEGER_32, etc. where 'is_equal' is redefined 
+							-- as 'Result := other.item = item' instead of using the
+							-- built-in version from "ANY" (which introduces an infinite
+							-- recursive call.).
+						print_builtin_any_is_equal_call (l_is_equal_feature, l_field_type, False)
+					end
 					current_file.put_character (')')
 					print_semicolon_newline
 					call_operands.wipe_out
@@ -23445,6 +23537,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_semicolon_newline
 				call_operands.wipe_out
 			end
+			max_nested_inlining_count := l_old_max_nested_inlining_count
 		end
 
 	print_builtin_any_standard_is_equal_attributes (a_source, a_target: ET_EXPRESSION)
