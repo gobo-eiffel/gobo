@@ -278,6 +278,11 @@ feature {NONE} -- Initialization
 			if a_system.current_system.inlining_mode then
 				max_nested_inlining_count := a_system.current_system.inlining_size.max (0)
 			end
+			create inlined_void.make
+			create inlined_integer.make ("0", 0, False)
+			create inlined_real.make ("0.0")
+			create inlined_character.make ('U')
+			create inlined_boolean.make
 			create called_features.make (1000)
 			create called_static_features.make (1000)
 			create inlined_features.make (10000)
@@ -17122,12 +17127,14 @@ feature {NONE} -- Query call generation
 			l_old_call_target_type: like call_target_type
 			l_old_in_static_feature: like in_static_feature
 			l_operands_count: INTEGER
-			l_expression: ET_EXPRESSION
+			l_expression: detachable ET_EXPRESSION
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_old_inlining_context: ET_DYNAMIC_CALL_CONTEXT
 			l_caller_inlining_context: ET_DYNAMIC_CALL_CONTEXT
 			l_inlining_context: ET_DYNAMIC_CALL_CONTEXT
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_default_value_type: detachable ET_DYNAMIC_TYPE
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			l_operands_count := call_operands.count
 			if l_operands_count /= a_feature.static_feature.arguments_count + 1 then
@@ -17148,6 +17155,24 @@ feature {NONE} -- Query call generation
 					-- instruction which is an assignment to 'Result'.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_inlined_query_call", 4, "inlinable function with no single assignment to 'Result'.")
+			elseif l_compound.count = 0 then
+				l_result_type := l_result_type_set.static_type
+				if not l_result_type.is_attached then
+					l_expression := inlined_void
+					l_default_value_type := current_dynamic_system.none_type
+				elseif l_result_type.is_integer_n then
+					l_expression := inlined_integer
+					l_default_value_type := l_result_type
+				elseif l_result_type.is_real_n then
+					l_expression := inlined_real
+					l_default_value_type := l_result_type
+				elseif l_result_type.is_character_n then
+					l_expression := inlined_character
+					l_default_value_type := l_result_type
+				elseif l_result_type = current_dynamic_system.boolean_type then
+					l_expression := inlined_boolean
+					l_default_value_type := l_result_type
+				end
 			elseif l_compound.count /= 1 then
 					-- Internal error: an inlinable function should have an single
 					-- instruction which is an assignment to 'Result'.
@@ -17159,6 +17184,9 @@ feature {NONE} -- Query call generation
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_inlined_query_call", 6, "inlinable function with no single assignment to 'Result'.")
 			else
+				l_expression := l_assignment.source
+			end
+			if l_expression /= Void then
 				register_inlined_feature (a_feature)
 				nested_inlining_count := nested_inlining_count + 1
 				l_old_inlining_context := inlining_context
@@ -17177,7 +17205,10 @@ feature {NONE} -- Query call generation
 				current_feature := a_feature
 				current_type := a_feature.target_type
 				current_dynamic_type_sets := a_feature.dynamic_type_sets
-				l_expression := l_assignment.source
+				if l_default_value_type /= Void then
+					extra_dynamic_type_sets.force_last (l_default_value_type)
+					l_expression.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
+				end
 				l_dynamic_type_set := dynamic_type_set (l_expression)
 				print_indentation
 				current_file.put_string ("/* -> ")
@@ -17195,6 +17226,9 @@ feature {NONE} -- Query call generation
 				current_feature := l_caller_inlining_context.current_feature
 				current_type := current_feature.target_type
 				current_dynamic_type_sets := current_feature.dynamic_type_sets
+				if l_default_value_type /= Void then
+					extra_dynamic_type_sets.remove_last
+				end
 				call_target_type := l_old_call_target_type
 				in_static_feature := l_old_in_static_feature
 				inlining_context := l_old_inlining_context
@@ -37631,9 +37665,7 @@ feature {NONE} -- Inlining
 				Result := False
 			elseif not attached l_do_procedure.compound as l_compound then
 				Result := True
-			elseif l_compound.nested_instruction_count /= 1 then
-				Result := False
-			elseif l_compound.has_result then
+			elseif l_compound.nested_instruction_count > 1 then
 				Result := False
 			elseif l_compound.has_address_expression then
 				Result := False
@@ -37656,6 +37688,8 @@ feature {NONE} -- Inlining
 			a_feature_not_void: a_feature /= Void
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if exception_trace_mode then
 					-- Exception trace mode makes the code too big to inline.
@@ -37678,6 +37712,13 @@ feature {NONE} -- Inlining
 				Result := False
 			elseif not attached l_do_function.compound as l_compound then
 				Result := False
+			elseif l_compound.count = 0 and attached a_feature.result_type_set as l_result_type_set then
+				l_result_type := l_result_type_set.static_type
+				Result := not l_result_type.is_attached or
+					l_result_type.is_integer_n or
+					l_result_type.is_real_n or
+					l_result_type.is_character_n or
+					l_result_type = current_dynamic_system.boolean_type
 			elseif l_compound.count /= 1 then
 				Result := False
 			elseif not attached {ET_ASSIGNMENT} l_compound.first as l_assignment then
@@ -37759,6 +37800,21 @@ feature {NONE} -- Inlining
 				Result := True
 			end
 		end
+
+	inlined_void: ET_VOID
+			-- 'Void' used when inlining empty functions
+
+	inlined_integer: ET_REGULAR_INTEGER_CONSTANT
+			-- '0' used when inlining empty functions
+
+	inlined_real: ET_REGULAR_REAL_CONSTANT
+			-- '0.0' used when inlining empty functions
+
+	inlined_character: ET_C2_CHARACTER_CONSTANT
+			-- '%U' used when inlining empty functions
+
+	inlined_boolean: ET_FALSE_CONSTANT
+			-- 'False' used when inlining empty functions
 
 feature {NONE} -- Type generation
 
@@ -45635,6 +45691,11 @@ invariant
 	volatile_inline_separate_arguments_not_void: volatile_inline_separate_arguments /= Void
 		-- Inlining.
 	max_nested_inlining_count_not_negative: max_nested_inlining_count >= 0
+	inlined_void_not_void: inlined_void /= Void
+	inlined_integer_not_void: inlined_integer /= Void
+	inlined_real_not_void: inlined_real /= Void
+	inlined_character_not_void: inlined_character /= Void
+	inlined_boolean_not_void: inlined_boolean /= Void
 		-- Inlined operands.
 	used_inlined_operands_not_void: used_inlined_operands /= Void
 	no_void_used_inlined_operand: not used_inlined_operands.has_void

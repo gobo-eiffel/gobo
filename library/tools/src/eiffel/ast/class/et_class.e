@@ -388,6 +388,12 @@ feature -- Status report
 			Result := class_code = class_codes.boolean_class_code
 		end
 
+	is_character_n_class: BOOLEAN
+			-- Is current class one of "CHARACTER_8", "CHARACTER_32"?
+		do
+			Result := class_codes.is_character_n (class_code)
+		end
+
 	is_character_8_class: BOOLEAN
 			-- Is current class the "CHARACTER_8" class?
 		do
@@ -398,6 +404,14 @@ feature -- Status report
 			-- Is current class the "CHARACTER_32" class?
 		do
 			Result := class_code = class_codes.character_32_class_code
+		end
+
+	is_integer_n_class: BOOLEAN
+			-- Is current class one of "INTEGER_8", "INTEGER_16",
+			-- "INTEGER_32", "INTEGER_64", "NATURAL_8", "NATURAL_16",
+			-- "NATURAL_32", "NATURAL_64"?
+		do
+			Result := class_codes.is_integer_n (class_code)
 		end
 
 	is_integer_8_class: BOOLEAN
@@ -458,6 +472,12 @@ feature -- Status report
 			-- Is current class the "DISPOSABLE" class?
 		do
 			Result := class_code = class_codes.disposable_class_code
+		end
+
+	is_real_n_class: BOOLEAN
+			-- Is current class one of "REAL_32", "REAL_64"?
+		do
+			Result := class_codes.is_real_n (class_code)
 		end
 
 	is_real_32_class: BOOLEAN
