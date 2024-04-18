@@ -5,7 +5,7 @@
 		"Eiffel dynamic types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_DYNAMIC_TYPE
@@ -63,6 +63,32 @@ feature -- Status report
 			Result := base_class.is_basic
 		ensure
 			definition: Result = base_class.is_basic
+		end
+
+	is_character_n: BOOLEAN
+			-- Is current type one of "CHARACTER_8", "CHARACTER_32"?
+		do
+			Result := base_class.is_character_n_class
+		ensure
+			definition: Result = base_class.is_character_n_class
+		end
+
+	is_integer_n: BOOLEAN
+			-- Is current type one of "INTEGER_8", "INTEGER_16",
+			-- "INTEGER_32", "INTEGER_64", "NATURAL_8", "NATURAL_16",
+			-- "NATURAL_32", "NATURAL_64"?
+		do
+			Result := base_class.is_integer_n_class
+		ensure
+			definition: Result = base_class.is_integer_n_class
+		end
+
+	is_real_n: BOOLEAN
+			-- Is current type one of "REAL_32", "REAL_64"?
+		do
+			Result := base_class.is_real_n_class
+		ensure
+			definition: Result = base_class.is_real_n_class
 		end
 
 	is_self_initializing: BOOLEAN

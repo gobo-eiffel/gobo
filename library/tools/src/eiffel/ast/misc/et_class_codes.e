@@ -5,7 +5,7 @@
 		"Eiffel class codes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CLASS_CODES
@@ -43,6 +43,38 @@ feature -- Status report
 			-- "NATURAL_32", "NATURAL_64", "REAL_32", "REAL_64".
 		do
 			Result := integer_8_class_code <= a_code and a_code <= real_64_class_code
+		ensure
+			instance_free: class
+		end
+
+	is_integer_n (a_code: NATURAL_8): BOOLEAN
+			-- Does `a_code' correspond to a sized integer class?
+			--
+			-- Note: a sized integer class is one of "INTEGER_8", "INTEGER_16",
+			-- "INTEGER_32", "INTEGER_64", "NATURAL_8", "NATURAL_16",
+			-- "NATURAL_32", "NATURAL_64".
+		do
+			Result := integer_8_class_code <= a_code and a_code <= natural_64_class_code
+		ensure
+			instance_free: class
+		end
+
+	is_real_n (a_code: NATURAL_8): BOOLEAN
+			-- Does `a_code' correspond to a sized real class?
+			--
+			-- Note: a sized real class is one of "REAL_32", "REAL_64".
+		do
+			Result := real_32_class_code <= a_code and a_code <= real_64_class_code
+		ensure
+			instance_free: class
+		end
+
+	is_character_n (a_code: NATURAL_8): BOOLEAN
+			-- Does `a_code' correspond to a sized character class?
+			--
+			-- Note: a sized character class is one of "CHARACTER_8", "CHARACTER_32".
+		do
+			Result := character_8_class_code <= a_code and a_code <= character_32_class_code
 		ensure
 			instance_free: class
 		end
