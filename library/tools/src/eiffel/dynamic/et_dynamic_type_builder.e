@@ -984,6 +984,8 @@ feature {NONE} -- Feature validity
 			inspect a_feature.builtin_class_code
 			when {ET_TOKEN_CODES}.builtin_any_class then
 				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_any_generating_type then
+					report_builtin_any_generating_type (a_feature)
 				when {ET_TOKEN_CODES}.builtin_any_twin then
 					report_builtin_any_twin (a_feature)
 				else
@@ -3331,6 +3333,27 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			-- Do nothing.
+		end
+
+	report_builtin_any_generating_type (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'ANY.generating_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+			l_result_primary_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				if current_dynamic_type.base_class.is_type_class then
+					l_result_type := current_dynamic_system.type_none_type
+				else
+					l_result_type := result_type_set.static_type
+				end
+				l_result_primary_type := l_result_type.primary_type
+				mark_type_alive (l_result_primary_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
 		end
 
 	report_builtin_any_twin (a_feature: ET_EXTERNAL_FUNCTION)

@@ -77,6 +77,7 @@ feature {NONE} -- Initialization
 			string_32_type := unknown_type
 			special_character_8_type := unknown_type
 			special_character_32_type := unknown_type
+			type_none_type := unknown_type
 			ise_exception_manager_type := unknown_type
 			any_type := unknown_type
 			none_type := unknown_type
@@ -103,6 +104,7 @@ feature {NONE} -- Initialization
 			string_32_type_not_void: string_32_type /= Void
 			special_character_8_type_not_void: special_character_8_type /= Void
 			special_character_32_type_not_void: special_character_32_type /= Void
+			type_none_type_not_void: type_none_type /= Void
 			ise_exception_manager_type_not_void: ise_exception_manager_type /= Void
 			unknown_type_not_void: unknown_type /= Void
 		end
@@ -260,6 +262,9 @@ feature -- Types
 
 	special_character_32_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "SPECIAL [CHARACTER_32]"
+
+	type_none_type: ET_DYNAMIC_PRIMARY_TYPE
+			-- Type "TYPE [NONE]"
 
 	ise_exception_manager_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type "ISE_EXCEPTION_MANAGER"
@@ -2246,6 +2251,12 @@ feature {NONE} -- Compilation
 						end
 					end
 				end
+					-- Type "TYPE [NONE]"
+				l_class := current_system.type_detachable_any_type.base_class
+				create l_actual_parameters.make_with_capacity (1)
+				l_actual_parameters.put_first (current_system.none_type)
+				create l_generic_class_type.make_generic (Void, l_class.name, l_actual_parameters, l_class)
+				type_none_type := dynamic_primary_type (l_generic_class_type, l_any)
 					-- Type "ANY".
 				any_type := dynamic_primary_type (current_system.any_type, l_any)
 					-- Type "NONE".
@@ -2624,6 +2635,7 @@ invariant
 	string_32_type_not_void: string_32_type /= Void
 	special_character_8_type_not_void: special_character_8_type /= Void
 	special_character_32_type_not_void: special_character_32_type /= Void
+	type_none_type_not_void: type_none_type /= Void
 	ise_exception_manager_type_not_void: ise_exception_manager_type /= Void
 	unknown_type_not_void: unknown_type /= Void
 	root_creation_procedure: attached root_creation_procedure as l_root_creation_procedure implies l_root_creation_procedure.is_procedure
