@@ -49,6 +49,11 @@
   to get this behavior.
 * Added support for inlining in the generated C code. Can be
   configured using the ECF settings `inlining` and `inlining_size`.
+* Changed implementation of built-in function `generating_type`
+  in class `TYPE` so that it returns an object of type
+  `TYPE [NONE]` instead of `TYPE [detachable TYPE [G]]`. This is
+  to avoid an infinite loop when computing the set of dynamic
+  types at compile time.
 * Changed the default for the command-line option `--thread`
   to be `-3` instead of `0` ("number of available CPUs -3" instead
   of "number of available CPUs").

@@ -23245,9 +23245,18 @@ feature {NONE} -- Built-in feature generation
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		local
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_attached_index: INTEGER
 			l_meta_type: detachable ET_DYNAMIC_PRIMARY_TYPE
 		do
-			l_meta_type := a_target_type.meta_type
+			if a_target_type.base_class.is_type_class then
+				l_dynamic_type := current_dynamic_system.none_type
+				l_attached_index := 1
+			else
+				l_dynamic_type := a_target_type
+				l_attached_index := 0
+			end
+			l_meta_type := l_dynamic_type.meta_type
 			if l_meta_type = Void then
 					-- Internal error: the meta type of the target type should
 					-- have been computed when analyzing the dynamic type sets of
@@ -23262,10 +23271,10 @@ feature {NONE} -- Built-in feature generation
 				current_file.put_character ('(')
 				current_file.put_string (c_ge_types)
 				current_file.put_character ('[')
-				current_file.put_integer (a_target_type.id)
+				current_file.put_integer (l_dynamic_type.id)
 				current_file.put_character (']')
 				current_file.put_character ('[')
-				current_file.put_integer (0)
+				current_file.put_integer (l_attached_index)
 				current_file.put_character (']')
 				current_file.put_character (')')
 			end
