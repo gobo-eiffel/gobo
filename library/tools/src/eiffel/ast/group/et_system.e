@@ -387,6 +387,9 @@ feature -- Compilation options
 	system_name: detachable STRING
 			-- Name of system
 
+	executable_name: detachable STRING
+			-- Name of executable to be generated
+
 	external_include_pathnames: DS_ARRAYED_LIST [STRING]
 			-- External include pathnames
 
@@ -520,6 +523,14 @@ feature -- Compilation options setting
 			system_name := a_name
 		ensure
 			system_name_set: system_name = a_name
+		end
+
+	set_executable_name (a_name: like executable_name)
+			-- Set `executable_name' to `a_name'.
+		do
+			executable_name := a_name
+		ensure
+			executable_name_set: executable_name = a_name
 		end
 
 	set_external_include_pathnames (a_pathnames: like external_include_pathnames)

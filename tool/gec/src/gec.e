@@ -340,7 +340,9 @@ feature {NONE} -- Processing
 				l_generator.set_split_threshold (split_size)
 			end
 			l_current_system := a_system.current_system
-			if attached l_current_system.system_name as l_name then
+			if attached l_current_system.executable_name as l_name then
+				l_system_name := l_name
+			elseif attached l_current_system.system_name as l_name then
 				l_system_name := l_name
 			elseif attached l_current_system.root_type as l_root_type then
 				l_system_name := l_root_type.base_class.lower_name
@@ -390,7 +392,9 @@ feature {NONE} -- Processing
 			l_gecc_pathname: STRING
 		do
 			dt1 := a_system_processor.benchmark_start_time
-			if attached a_system.system_name as l_name then
+			if attached a_system.executable_name as l_name then
+				l_system_name := l_name
+			elseif attached a_system.system_name as l_name then
 				l_system_name := l_name
 			elseif attached a_system.root_type as l_root_type then
 				l_system_name := l_root_type.base_class.lower_name

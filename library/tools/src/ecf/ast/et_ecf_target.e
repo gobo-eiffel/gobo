@@ -538,6 +538,11 @@ feature -- Basic operations
 			if l_value /= Void and then l_value.is_boolean then
 				a_system.set_exception_trace_mode (l_value.to_boolean)
 			end
+				-- "executable_name".
+			l_value := settings.value ({ET_ECF_SETTING_NAMES}.executable_name_setting_name)
+			if l_value /= Void and then not l_value.is_empty then
+				a_system.set_executable_name (l_value)
+			end
 				-- "total_order_on_reals".
 			l_value := settings.value ({ET_ECF_SETTING_NAMES}.total_order_on_reals_setting_name)
 			if l_value /= Void and then l_value.is_boolean then
