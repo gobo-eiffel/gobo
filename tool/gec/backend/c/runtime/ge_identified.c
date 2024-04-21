@@ -4,7 +4,7 @@
 		"C functions used to implement class IDENTIFIED"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -39,7 +39,7 @@ typedef struct GE_weak_pointer {
 /*
  * Create a new weak pointer to `object'.
  */
-GE_weak_pointer* GE_new_weak_pointer(EIF_REFERENCE object)
+static GE_weak_pointer* GE_new_weak_pointer(EIF_REFERENCE object)
 {
 	GE_weak_pointer* wp;
 
@@ -58,7 +58,7 @@ GE_weak_pointer* GE_new_weak_pointer(EIF_REFERENCE object)
 /*
  * Direct access to the object held in the weak pointer.
  */
-EIF_REFERENCE GE_weak_pointer_object_without_lock(GE_weak_pointer* wp)
+static EIF_REFERENCE GE_weak_pointer_object_without_lock(GE_weak_pointer* wp)
 {
 	if (wp == 0) {
 		return (EIF_REFERENCE)0;
@@ -71,7 +71,7 @@ EIF_REFERENCE GE_weak_pointer_object_without_lock(GE_weak_pointer* wp)
  * Access to the object held in the weak pointer.
  */
 #ifdef GE_USE_BOEHM_GC
-EIF_REFERENCE GE_weak_pointer_object(GE_weak_pointer* wp)
+static EIF_REFERENCE GE_weak_pointer_object(GE_weak_pointer* wp)
 {
 	return (EIF_REFERENCE)GC_call_with_alloc_lock((GC_fn_type)GE_weak_pointer_object_without_lock, wp);
 }
@@ -102,17 +102,17 @@ EIF_REFERENCE GE_weak_pointer_object(GE_weak_pointer* wp)
  * inner array located at index (id / GE_ID_OBJECT_CHUNK_SIZE) in the
  * outer array.
  */
-GE_weak_pointer*** GE_id_objects;
+static GE_weak_pointer*** GE_id_objects;
 
 /*
  * Capacity of the outer array of `GE_id_objects'.
  */
-EIF_INTEGER_32 GE_id_objects_capacity;
+static EIF_INTEGER_32 GE_id_objects_capacity;
 
 /*
  * Last id associated with an object.
  */
-EIF_INTEGER_32 GE_last_object_id;
+static EIF_INTEGER_32 GE_last_object_id;
 
 /*
  * Initialize data to keep track of object ids.
