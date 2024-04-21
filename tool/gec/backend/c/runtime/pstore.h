@@ -26,6 +26,10 @@ extern long store_append(EIF_INTEGER f_desc, EIF_REFERENCE o, fnptr mid, fnptr n
 extern void parsing_store_initialize(void);
 extern void parsing_store_dispose(void);
 extern void parsing_store(EIF_INTEGER file_desc, EIF_REFERENCE object);
+extern EIF_REFERENCE partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj);
+extern EIF_REFERENCE retrieve_all(EIF_INTEGER f_desc, long position);
+extern void parsing_retrieve_initialize(void);
+extern EIF_REFERENCE parsing_retrieve(EIF_INTEGER f_desc, EIF_INTEGER a_pos);
 
 #ifdef __cplusplus
 }
