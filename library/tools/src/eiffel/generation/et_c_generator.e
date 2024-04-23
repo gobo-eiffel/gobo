@@ -284,7 +284,6 @@ feature {NONE} -- Initialization
 			create inlined_character.make ('U')
 			create inlined_boolean.make
 			create called_features.make (1000)
-			create called_static_features.make (1000)
 			create inlined_features.make (10000)
 			create included_header_filenames.make (100)
 			included_header_filenames.set_equality_tester (string_equality_tester)
@@ -1502,7 +1501,6 @@ feature {NONE} -- C code Generation
 			l_header_file: KL_TEXT_OUTPUT_FILE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_newline_needed_in_header_file: BOOLEAN
-			old_in_static_feature: BOOLEAN
 		do
 			old_system_name := system_name
 			system_name := a_system_name
@@ -1636,23 +1634,10 @@ feature {NONE} -- C code Generation
 						register_called_feature (l_ise_exception_manager_set_exception_data_feature)
 					end
 					register_called_feature (l_root_procedure)
-					from until
-						called_features.is_empty and
-						called_static_features.is_empty
-					loop
-						from until called_features.is_empty loop
-							l_dynamic_feature := called_features.last
-							called_features.remove_last
-							print_feature (l_dynamic_feature)
-						end
-						from until called_static_features.is_empty loop
-							l_dynamic_feature := called_static_features.last
-							called_static_features.remove_last
-							old_in_static_feature := in_static_feature
-							in_static_feature := True
-							print_feature (l_dynamic_feature)
-							in_static_feature := old_in_static_feature
-						end
+					from until called_features.is_empty loop
+						l_dynamic_feature := called_features.last
+						called_features.remove_last
+						print_feature (l_dynamic_feature)
 					end
 				end
 					-- Print inline feature names.
@@ -2251,8 +2236,6 @@ feature {NONE} -- Feature generation
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_external_function", 1, "inconsistent `current_feature'.")
-			elseif in_static_feature then
-				print_external_routine (a_feature, False, False)
 			else
 				if current_feature.is_regular then
 					print_external_routine (a_feature, False, False)
@@ -2272,8 +2255,6 @@ feature {NONE} -- Feature generation
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_external_procedure", 1, "inconsistent `current_feature'.")
-			elseif in_static_feature then
-				print_external_routine (a_feature, False, False)
 			else
 				if current_feature.is_regular then
 					print_external_routine (a_feature, False, False)
@@ -2295,7 +2276,7 @@ feature {NONE} -- Feature generation
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
 			is_creation: a_creation implies current_feature.is_creation
-			one_kind: (not in_static_feature and not a_creation and not a_inline) or (in_static_feature xor a_creation xor a_inline)
+			one_kind: (not a_creation and not a_inline) or (a_creation xor a_inline)
 		local
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_result_type: detachable ET_DYNAMIC_PRIMARY_TYPE
@@ -2356,17 +2337,6 @@ feature {NONE} -- Feature generation
 				print_context_type_declaration (current_file)
 				current_file.put_character (' ')
 				current_file.put_string (c_ac)
-			elseif in_static_feature then
-				print_static_routine_name (current_feature, current_type, header_file)
-				print_static_routine_name (current_feature, current_type, current_file)
-				header_file.put_character ('(')
-				current_file.put_character ('(')
-				print_context_type_declaration (header_file)
-				header_file.put_character (' ')
-				header_file.put_string (c_ac)
-				print_context_type_declaration (current_file)
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
 			elseif a_creation then
 				print_creation_procedure_name (current_feature, current_type, header_file)
 				print_creation_procedure_name (current_feature, current_type, current_file)
@@ -2386,30 +2356,32 @@ feature {NONE} -- Feature generation
 				print_context_type_declaration (header_file)
 				header_file.put_character (' ')
 				header_file.put_string (c_ac)
-				header_file.put_character (',')
-				header_file.put_character (' ')
 				print_context_type_declaration (current_file)
 				current_file.put_character (' ')
 				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				if current_type.is_expanded then
-					header_file.put_string (c_volatile)
+				if not current_feature.is_static then
+					header_file.put_character (',')
 					header_file.put_character (' ')
-					print_type_declaration (current_type, header_file)
-					header_file.put_character ('*')
-					current_file.put_string (c_volatile)
+					current_file.put_character (',')
 					current_file.put_character (' ')
-					print_type_declaration (current_type, current_file)
-					current_file.put_character ('*')
-				else
-					print_type_declaration (current_type, header_file)
-					print_type_declaration (current_type, current_file)
+					if current_type.is_expanded then
+						header_file.put_string (c_volatile)
+						header_file.put_character (' ')
+						print_type_declaration (current_type, header_file)
+						header_file.put_character ('*')
+						current_file.put_string (c_volatile)
+						current_file.put_character (' ')
+						print_type_declaration (current_type, current_file)
+						current_file.put_character ('*')
+					else
+						print_type_declaration (current_type, header_file)
+						print_type_declaration (current_type, current_file)
+					end
+					header_file.put_character (' ')
+					current_file.put_character (' ')
+					print_current_name (header_file)
+					print_current_name (current_file)
 				end
-				header_file.put_character (' ')
-				current_file.put_character (' ')
-				print_current_name (header_file)
-				print_current_name (current_file)
 			end
 			l_arguments := a_feature.arguments
 			if l_arguments /= Void then
@@ -2468,7 +2440,7 @@ feature {NONE} -- Feature generation
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				if current_in_exception_trace then
-					if in_static_feature or a_creation then
+					if current_feature.is_static or a_creation then
 						current_file.put_character ('0')
 					else
 						print_current_name (current_file)
@@ -6623,8 +6595,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_internal_function", 1, "inconsistent `current_feature'.")
-			elseif in_static_feature then
-				print_internal_feature (a_feature, False)
 			else
 				if current_feature.is_regular then
 					print_internal_feature (a_feature, False)
@@ -6644,8 +6614,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_internal_procedure", 1, "inconsistent `current_feature'.")
-			elseif in_static_feature then
-				print_internal_feature (a_feature, False)
 			else
 				if current_feature.is_regular then
 					print_internal_feature (a_feature, False)
@@ -6665,7 +6633,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
 			is_creation: a_creation implies current_feature.is_creation
-			one_kind: (not in_static_feature and not a_creation) or (in_static_feature xor a_creation)
 		local
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_result_type: detachable ET_DYNAMIC_PRIMARY_TYPE
@@ -6709,18 +6676,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			end
 			header_file.put_character (' ')
 			current_file.put_character (' ')
-			if in_static_feature then
-				print_static_routine_name (current_feature, current_type, header_file)
-				print_static_routine_name (current_feature, current_type, current_file)
-				header_file.put_character ('(')
-				current_file.put_character ('(')
-				print_context_type_declaration (header_file)
-				header_file.put_character (' ')
-				header_file.put_string (c_ac)
-				print_context_type_declaration (current_file)
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-			elseif a_creation then
+			if a_creation then
 				print_creation_procedure_name (current_feature, current_type, header_file)
 				print_creation_procedure_name (current_feature, current_type, current_file)
 				header_file.put_character ('(')
@@ -6739,30 +6695,32 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_context_type_declaration (header_file)
 				header_file.put_character (' ')
 				header_file.put_string (c_ac)
-				header_file.put_character (',')
-				header_file.put_character (' ')
 				print_context_type_declaration (current_file)
 				current_file.put_character (' ')
 				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				if current_type.is_expanded then
-					header_file.put_string (c_volatile)
+				if not current_feature.is_static then
+					header_file.put_character (',')
 					header_file.put_character (' ')
-					print_type_declaration (current_type, header_file)
-					header_file.put_character ('*')
-					current_file.put_string (c_volatile)
+					current_file.put_character (',')
 					current_file.put_character (' ')
-					print_type_declaration (current_type, current_file)
-					current_file.put_character ('*')
-				else
-					print_type_declaration (current_type, header_file)
-					print_type_declaration (current_type, current_file)
+					if current_type.is_expanded then
+						header_file.put_string (c_volatile)
+						header_file.put_character (' ')
+						print_type_declaration (current_type, header_file)
+						header_file.put_character ('*')
+						current_file.put_string (c_volatile)
+						current_file.put_character (' ')
+						print_type_declaration (current_type, current_file)
+						current_file.put_character ('*')
+					else
+						print_type_declaration (current_type, header_file)
+						print_type_declaration (current_type, current_file)
+					end
+					header_file.put_character (' ')
+					current_file.put_character (' ')
+					print_current_name (header_file)
+					print_current_name (current_file)
 				end
-				header_file.put_character (' ')
-				current_file.put_character (' ')
-				print_current_name (header_file)
-				print_current_name (current_file)
 			end
 			l_arguments := a_feature.arguments
 			if l_arguments /= Void then
@@ -6807,7 +6765,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_character (' ')
 					current_file.put_character ('{')
 					if current_in_exception_trace then
-						if in_static_feature or a_creation then
+						if current_feature.is_static or a_creation then
 							current_file.put_character ('0')
 						else
 							print_current_name (current_file)
@@ -7821,12 +7779,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_constant_attribute", 1, "inconsistent `current_feature'.")
-			elseif in_static_feature then
+			elseif current_feature.is_regular then
 				print_attribute_wrapper (a_feature)
-			else
-				if current_feature.is_regular then
-					print_attribute_wrapper (a_feature)
-				end
 			end
 		end
 
@@ -7840,12 +7794,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- Internal error: inconsistent `current_feature'.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_unique_attribute", 1, "inconsistent `current_feature'.")
-			elseif in_static_feature then
+			elseif current_feature.is_regular then
 				print_attribute_wrapper (a_feature)
-			else
-				if current_feature.is_regular then
-					print_attribute_wrapper (a_feature)
-				end
 			end
 		end
 
@@ -7885,30 +7835,19 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_type_declaration (l_result_type, current_file)
 				header_file.put_character (' ')
 				current_file.put_character (' ')
-				if in_static_feature then
-					print_static_routine_name (current_feature, current_type, header_file)
-					print_static_routine_name (current_feature, current_type, current_file)
-					header_file.put_character ('(')
-					current_file.put_character ('(')
-					print_context_type_declaration (header_file)
-					header_file.put_character (' ')
-					header_file.put_string (c_ac)
-					print_context_type_declaration (current_file)
-					current_file.put_character (' ')
-					current_file.put_string (c_ac)
-				else
-					print_routine_name (current_feature, current_type, header_file)
-					print_routine_name (current_feature, current_type, current_file)
-					header_file.put_character ('(')
-					current_file.put_character ('(')
-					print_context_type_declaration (header_file)
-					header_file.put_character (' ')
-					header_file.put_string (c_ac)
+				print_routine_name (current_feature, current_type, header_file)
+				print_routine_name (current_feature, current_type, current_file)
+				header_file.put_character ('(')
+				current_file.put_character ('(')
+				print_context_type_declaration (header_file)
+				header_file.put_character (' ')
+				header_file.put_string (c_ac)
+				print_context_type_declaration (current_file)
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				if not current_feature.is_static then
 					header_file.put_character (',')
 					header_file.put_character (' ')
-					print_context_type_declaration (current_file)
-					current_file.put_character (' ')
-					current_file.put_string (c_ac)
 					current_file.put_character (',')
 					current_file.put_character (' ')
 					if current_type.is_expanded then
@@ -9517,21 +9456,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			if line_generation_mode then
 				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
 			end
-			if not in_static_feature then
-				operand_stack.force (tokens.current_keyword)
-				nb_operands := 1
-			end
-			if attached an_instruction.arguments as l_actuals then
-				nb := l_actuals.count
-				from i := 1 until i > nb loop
-					l_actual := l_actuals.actual_argument (i)
-					l_actual_type_set := dynamic_type_set (l_actual)
-					print_attachment_operand (l_actual, l_actual_type_set)
-					i := i + 1
-				end
-				nb_operands := nb_operands + nb
-			end
-			fill_call_operands (nb_operands)
 			l_parent_type := an_instruction.parent_type
 			if l_parent_type = Void then
 					-- Internal error: the Precursor construct should already
@@ -9580,17 +9504,27 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 					else
 						l_parent_dynamic_type := current_dynamic_system.dynamic_primary_type (l_parent_type, current_type.base_type)
 						l_dynamic_precursor := current_feature.dynamic_precursor (l_procedure, l_parent_dynamic_type, current_dynamic_system)
+						if not l_dynamic_precursor.is_static then
+							operand_stack.force (tokens.current_keyword)
+							nb_operands := 1
+						end
+						if attached an_instruction.arguments as l_actuals then
+							nb := l_actuals.count
+							from i := 1 until i > nb loop
+								l_actual := l_actuals.actual_argument (i)
+								l_actual_type_set := dynamic_type_set (l_actual)
+								print_attachment_operand (l_actual, l_actual_type_set)
+								i := i + 1
+							end
+							nb_operands := nb_operands + nb
+						end
+						fill_call_operands (nb_operands)
 						print_indentation
-						if in_static_feature then
-							register_called_static_feature (l_dynamic_precursor)
-							print_static_routine_name (l_dynamic_precursor, current_type, current_file)
-							current_file.put_character ('(')
-							current_file.put_string (c_ac)
-						else
-							register_called_feature (l_dynamic_precursor)
-							print_routine_name (l_dynamic_precursor, current_type, current_file)
-							current_file.put_character ('(')
-							current_file.put_string (c_ac)
+						register_called_feature (l_dynamic_precursor)
+						print_routine_name (l_dynamic_precursor, current_type, current_file)
+						current_file.put_character ('(')
+						current_file.put_string (c_ac)
+						if not l_dynamic_precursor.is_static then
 							print_comma
 							print_expression (call_operands.first)
 							l_argument_offset := 1
@@ -10026,10 +9960,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 					-- error should have already been reported.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_instruction_static_call", 1, "procedure not found.")
+			elseif not l_dynamic_procedure.is_static then
+					-- Internal error: `l_dynamic_procedure' is not instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_instruction_static_call", 2, "procedure is not instance-free.")
 			else
-				register_called_static_feature (l_dynamic_procedure)
+				register_called_feature (l_dynamic_procedure)
 				print_indentation
-				print_static_routine_name (l_dynamic_procedure, a_target_type, current_file)
+				print_routine_name (l_dynamic_procedure, a_target_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
 				from i := 1 until i > nb loop
@@ -10063,7 +10001,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			if line_generation_mode then
 				print_position (a_call.position, current_feature.static_feature.implementation_class)
 			end
-			if in_static_feature then
+			if not attached current_type.seeded_dynamic_procedure (a_call.name.seed, current_dynamic_system) as l_dynamic_feature then
+					-- Internal error: there should be a procedure for that seed.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_unqualified_call_instruction", 1, "procedure not found.")
+			elseif l_dynamic_feature.is_static then
 				print_instruction_static_call (current_type, a_call.name, a_call.arguments)
 			else
 				l_actuals := a_call.arguments
@@ -10343,21 +10285,20 @@ feature {NONE} -- Procedure call generation
 			print_routine_name (a_feature, a_target_type, current_file)
 			current_file.put_character ('(')
 			current_file.put_string (c_ac)
-			current_file.put_character (',')
-			current_file.put_character (' ')
 			nb := call_operands.count
-			print_procedure_target_expression (call_operands.first, a_target_type, a_check_void_target)
+			if not a_feature.is_static then
+				print_comma
+				print_procedure_target_expression (call_operands.first, a_target_type, a_check_void_target)
+			end
 			from i := 2 until i > nb loop
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 				l_actual_type_set := dynamic_type_set (call_operands.item (i))
 				l_formal_type_set := argument_type_set_in_feature (i - 1, a_feature)
 				print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
 				i := i + 1
 			end
 			current_file.put_character (')')
-			current_file.put_character (';')
-			current_file.put_new_line
+			print_semicolon_newline
 		end
 
 	print_inlined_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -10372,7 +10313,6 @@ feature {NONE} -- Procedure call generation
 			a_feature_is_inlinable: is_inlinable_procedure (a_feature, a_target_type)
 		local
 			l_old_call_target_type: like call_target_type
-			l_old_in_static_feature: like in_static_feature
 			l_operands_count: INTEGER
 			l_old_inlining_context: ET_DYNAMIC_CALL_CONTEXT
 			l_caller_inlining_context: ET_DYNAMIC_CALL_CONTEXT
@@ -10402,8 +10342,6 @@ feature {NONE} -- Procedure call generation
 				inlining_context := l_inlining_context
 				l_old_call_target_type := call_target_type
 				call_target_type := Void
-				l_old_in_static_feature := in_static_feature
-				in_static_feature := False
 				current_feature := a_feature
 				current_type := a_feature.target_type
 				current_dynamic_type_sets := a_feature.dynamic_type_sets
@@ -10421,7 +10359,6 @@ feature {NONE} -- Procedure call generation
 				current_type := current_feature.target_type
 				current_dynamic_type_sets := current_feature.dynamic_type_sets
 				call_target_type := l_old_call_target_type
-				in_static_feature := l_old_in_static_feature
 				inlining_context := l_old_inlining_context
 				nested_inlining_count := nested_inlining_count - 1
 			end
@@ -12457,8 +12394,7 @@ feature {NONE} -- Expression generation
 				current_file.put_character (')')
 			end
 			if not l_pointer then
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 		end
 
@@ -14147,21 +14083,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
-			if not in_static_feature then
-				operand_stack.force (tokens.current_keyword)
-				nb_operands := 1
-			end
-			if attached an_expression.arguments as l_actuals then
-				nb := l_actuals.count
-				from i := 1 until i > nb loop
-					l_actual := l_actuals.actual_argument (i)
-					l_actual_type_set := dynamic_type_set (l_actual)
-					print_attachment_operand (l_actual, l_actual_type_set)
-					i := i + 1
-				end
-				nb_operands := nb_operands + nb
-			end
-			fill_call_operands (nb_operands)
 			l_parent_type := an_expression.parent_type
 			if l_parent_type = Void then
 					-- Internal error: the Precursor construct should already
@@ -14209,6 +14130,23 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 						set_fatal_error
 						error_handler.report_giaac_error (generator, "print_precursor_expression", 4, "precursor query not found.")
 					else
+						l_parent_dynamic_type := current_dynamic_system.dynamic_primary_type (l_parent_type, current_type.base_type)
+						l_dynamic_precursor := current_feature.dynamic_precursor (l_query, l_parent_dynamic_type, current_dynamic_system)
+						if not l_dynamic_precursor.is_static then
+							operand_stack.force (tokens.current_keyword)
+							nb_operands := 1
+						end
+						if attached an_expression.arguments as l_actuals then
+							nb := l_actuals.count
+							from i := 1 until i > nb loop
+								l_actual := l_actuals.actual_argument (i)
+								l_actual_type_set := dynamic_type_set (l_actual)
+								print_attachment_operand (l_actual, l_actual_type_set)
+								i := i + 1
+							end
+							nb_operands := nb_operands + nb
+						end
+						fill_call_operands (nb_operands)
 						if in_operand then
 							if l_assignment_target /= Void then
 								operand_stack.force (l_assignment_target)
@@ -14229,18 +14167,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 							print_assign_to
 							current_file.put_character ('(')
 						end
-						l_parent_dynamic_type := current_dynamic_system.dynamic_primary_type (l_parent_type, current_type.base_type)
-						l_dynamic_precursor := current_feature.dynamic_precursor (l_query, l_parent_dynamic_type, current_dynamic_system)
-						if in_static_feature then
-							register_called_static_feature (l_dynamic_precursor)
-							print_static_routine_name (l_dynamic_precursor, current_type, current_file)
-							current_file.put_character ('(')
-							current_file.put_string (c_ac)
-						else
-							register_called_feature (l_dynamic_precursor)
-							print_routine_name (l_dynamic_precursor, current_type, current_file)
-							current_file.put_character ('(')
-							current_file.put_string (c_ac)
+						register_called_feature (l_dynamic_precursor)
+						print_routine_name (l_dynamic_precursor, current_type, current_file)
+						current_file.put_character ('(')
+						current_file.put_string (c_ac)
+						if not l_dynamic_precursor.is_static then
 							print_comma
 							print_expression (call_operands.first)
 							l_argument_offset := 1
@@ -15239,24 +15170,28 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 				end
 			else
 				l_dynamic_feature := a_target_type.dynamic_query (l_query, current_dynamic_system)
-				register_called_static_feature (l_dynamic_feature)
-				print_static_routine_name (l_dynamic_feature, a_target_type, current_file)
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				from i := 1 until i > nb loop
-					current_file.put_character (',')
-					current_file.put_character (' ')
-					l_actual_type_set := dynamic_type_set (call_operands.item (i))
-					l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_feature)
-					print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-					i := i + 1
+				if not l_dynamic_feature.is_static then
+						-- Internal error: `l_dynamic_feature' is not instance-free.
+					set_fatal_error
+					error_handler.report_giaac_error (generator, "print_expression_static_call", 5, "query is not instance-free.")
+				else
+					register_called_feature (l_dynamic_feature)
+					print_routine_name (l_dynamic_feature, a_target_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					from i := 1 until i > nb loop
+						print_comma
+						l_actual_type_set := dynamic_type_set (call_operands.item (i))
+						l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_feature)
+						print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
+						i := i + 1
+					end
+					current_file.put_character (')')
 				end
-				current_file.put_character (')')
 			end
 			if in_operand then
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 			call_operands.wipe_out
 			if l_temp /= Void then
@@ -15517,215 +15452,273 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			l_gobo_version: STRING
 			l_printed: BOOLEAN
 		do
-			if in_static_feature then
+			l_dynamic_feature := current_type.seeded_dynamic_query (a_call.name.seed, current_dynamic_system)
+			if l_dynamic_feature = Void then
+					-- Internal error: there should be a query for that seed.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_unqualified_call_expression", 1, "query not found.")
+			elseif l_dynamic_feature.is_static then
 				print_expression_static_call (a_call, current_type, a_call.name, a_call.arguments)
 			else
 				l_assignment_target := assignment_target
 				assignment_target := Void
 				l_call_type_set := dynamic_type_set (a_call)
-				l_dynamic_feature := current_type.seeded_dynamic_query (a_call.name.seed, current_dynamic_system)
-				if l_dynamic_feature = Void then
-						-- Internal error: there should be a query for that seed.
-					set_fatal_error
-					error_handler.report_giaac_error (generator, "print_unqualified_call_expression", 1, "query not found.")
-				else
-					l_call_type := l_call_type_set.static_type.primary_type
-					if
-						l_dynamic_feature.is_attribute and then
-						(not attached {ET_EXTENDED_ATTRIBUTE} l_dynamic_feature.static_feature as l_extended_attribute or else
-						not l_extended_attribute.has_self_initializing_code or else
-						not attached l_dynamic_feature.result_type_set as l_result_type_set or else
-						l_result_type_set.static_type.is_self_initializing)
-					then
-							-- This is an attribute for which there is no self-initialization code
-							-- to be executed.
-						if in_operand then
-							operand_stack.force (a_call)
-						elseif l_dynamic_feature.is_builtin then
-								-- This is a built-in attribute (such as feature 'item' in 'INTEGER_REF').
-								-- The call might be the operand (target or argument) of another call.
-								-- Therefore we need to take some care when dealing with `call_operands'.
-								-- We need to keep track of the operands of this possible other call
-								-- while processing the current call to the built-in attribute, for
-								-- which only the target ('Current') needs to be on `call_operands'.
-							if call_operands.is_empty then
-								call_operands.force_last (tokens.current_keyword)
-							else
-								l_old_call_target := call_operands.first
-								call_operands.replace (tokens.current_keyword, 1)
-							end
-							if in_call_target and l_call_type.is_expanded then
-									-- Pass the address of the built-in attribute expanded object.
-								current_file.put_character ('&')
-								current_file.put_character ('(')
-									-- No need to call `print_adapted_query_call' here because an
-									-- unqualified call is not polymorphic, and therefore the type
-									-- of the query is exactly the type expected by the caller.
-								print_query_call (l_dynamic_feature, current_type, False)
-								current_file.put_character (')')
-							else
-									-- No need to call `print_adapted_query_call' here because an
-									-- unqualified call is not polymorphic, and therefore the type
-									-- of the query is exactly the type expected by the caller.
-								print_query_call (l_dynamic_feature, current_type, False)
-							end
-							if l_old_call_target /= Void then
-								call_operands.replace (l_old_call_target, 1)
-								l_old_call_target := Void
-							else
-								call_operands.wipe_out
-							end
-						elseif attached call_target_type as l_call_target_type then
-							check in_call_target: in_call_target end
-							if l_call_type.is_expanded then
-									-- Pass the address of the expanded object.
-								current_file.put_character ('&')
-								current_file.put_character ('(')
-								print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
-								current_file.put_character (')')
-							elseif l_call_target_type.is_expanded then
-									-- We need to unbox the object and then pass its address.
-								current_file.put_character ('&')
-								current_file.put_character ('(')
-								print_boxed_attribute_item_access (a_call, l_call_target_type, call_target_check_void)
-								current_file.put_character (')')
-							else
-								print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
-							end
+				l_call_type := l_call_type_set.static_type.primary_type
+				if
+					l_dynamic_feature.is_attribute and then
+					(not attached {ET_EXTENDED_ATTRIBUTE} l_dynamic_feature.static_feature as l_extended_attribute or else
+					not l_extended_attribute.has_self_initializing_code or else
+					not attached l_dynamic_feature.result_type_set as l_result_type_set or else
+					l_result_type_set.static_type.is_self_initializing)
+				then
+						-- This is an attribute for which there is no self-initialization code
+						-- to be executed.
+					if in_operand then
+						operand_stack.force (a_call)
+					elseif l_dynamic_feature.is_builtin then
+							-- This is a built-in attribute (such as feature 'item' in 'INTEGER_REF').
+							-- The call might be the operand (target or argument) of another call.
+							-- Therefore we need to take some care when dealing with `call_operands'.
+							-- We need to keep track of the operands of this possible other call
+							-- while processing the current call to the built-in attribute, for
+							-- which only the target ('Current') needs to be on `call_operands'.
+						if call_operands.is_empty then
+							call_operands.force_last (tokens.current_keyword)
+						else
+							l_old_call_target := call_operands.first
+							call_operands.replace (tokens.current_keyword, 1)
+						end
+						if in_call_target and l_call_type.is_expanded then
+								-- Pass the address of the built-in attribute expanded object.
+							current_file.put_character ('&')
+							current_file.put_character ('(')
+								-- No need to call `print_adapted_query_call' here because an
+								-- unqualified call is not polymorphic, and therefore the type
+								-- of the query is exactly the type expected by the caller.
+							print_query_call (l_dynamic_feature, current_type, False)
+							current_file.put_character (')')
+						else
+								-- No need to call `print_adapted_query_call' here because an
+								-- unqualified call is not polymorphic, and therefore the type
+								-- of the query is exactly the type expected by the caller.
+							print_query_call (l_dynamic_feature, current_type, False)
+						end
+						if l_old_call_target /= Void then
+							call_operands.replace (l_old_call_target, 1)
+							l_old_call_target := Void
+						else
+							call_operands.wipe_out
+						end
+					elseif attached call_target_type as l_call_target_type then
+						check in_call_target: in_call_target end
+						if l_call_type.is_expanded then
+								-- Pass the address of the expanded object.
+							current_file.put_character ('&')
+							current_file.put_character ('(')
+							print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
+							current_file.put_character (')')
+						elseif l_call_target_type.is_expanded then
+								-- We need to unbox the object and then pass its address.
+							current_file.put_character ('&')
+							current_file.put_character ('(')
+							print_boxed_attribute_item_access (a_call, l_call_target_type, call_target_check_void)
+							current_file.put_character (')')
 						else
 							print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
 						end
-					elseif l_dynamic_feature.is_constant_attribute then
-						if in_operand then
-							if in_call_target then
-								if l_call_type.is_expanded then
-									in_operand := False
-									l_temp := new_temp_variable (l_call_type)
-									mark_temp_variable_frozen (l_temp)
-									print_indentation
-									print_temp_name (l_temp, current_file)
-									current_file.put_character (' ')
-									current_file.put_character ('=')
-									current_file.put_character (' ')
-									print_unqualified_call_expression (a_call)
-									current_file.put_character (';')
-									current_file.put_new_line
-									l_temp.set_index (a_call.index)
-									operand_stack.force (l_temp)
-									in_operand := True
-								else
-									operand_stack.force (a_call)
-								end
+					else
+						print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
+					end
+				elseif l_dynamic_feature.is_constant_attribute then
+					if in_operand then
+						if in_call_target then
+							if l_call_type.is_expanded then
+								in_operand := False
+								l_temp := new_temp_variable (l_call_type)
+								mark_temp_variable_frozen (l_temp)
+								print_indentation
+								print_temp_name (l_temp, current_file)
+								current_file.put_character (' ')
+								current_file.put_character ('=')
+								current_file.put_character (' ')
+								print_unqualified_call_expression (a_call)
+								current_file.put_character (';')
+								current_file.put_new_line
+								l_temp.set_index (a_call.index)
+								operand_stack.force (l_temp)
+								in_operand := True
 							else
 								operand_stack.force (a_call)
 							end
-						elseif attached {ET_CONSTANT_ATTRIBUTE} l_dynamic_feature.static_feature as l_constant_attribute then
-							if attached {ET_MANIFEST_STRING} l_constant_attribute.constant as l_string_constant then
-									-- Try to inject the commit SHA-1 to the Gobo version if not already done yet.
-									-- Useful when compiling Gobo tools from a local Git clone.
-								if
-									l_string_constant.value.same_string ("xx.xx.xx+xxxxxxxxx") and
-									l_constant_attribute.implementation_class.upper_name.same_string ("UT_GOBO_VERSION")
-								then
-									l_git_filename := file_system.nested_pathname ("${GOBO}", <<".git", "HEAD">>)
+						else
+							operand_stack.force (a_call)
+						end
+					elseif attached {ET_CONSTANT_ATTRIBUTE} l_dynamic_feature.static_feature as l_constant_attribute then
+						if attached {ET_MANIFEST_STRING} l_constant_attribute.constant as l_string_constant then
+								-- Try to inject the commit SHA-1 to the Gobo version if not already done yet.
+								-- Useful when compiling Gobo tools from a local Git clone.
+							if
+								l_string_constant.value.same_string ("xx.xx.xx+xxxxxxxxx") and
+								l_constant_attribute.implementation_class.upper_name.same_string ("UT_GOBO_VERSION")
+							then
+								l_git_filename := file_system.nested_pathname ("${GOBO}", <<".git", "HEAD">>)
+								l_git_filename := Execution_environment.interpreted_string (l_git_filename)
+								l_first_line := file_system.file_first_line (l_git_filename)
+								if l_first_line.starts_with ("ref: ") then
+									l_first_line.remove_head (5)
+									l_git_filename := file_system.nested_pathname ("${GOBO}", <<".git", l_first_line>>)
 									l_git_filename := Execution_environment.interpreted_string (l_git_filename)
 									l_first_line := file_system.file_first_line (l_git_filename)
-									if l_first_line.starts_with ("ref: ") then
-										l_first_line.remove_head (5)
-										l_git_filename := file_system.nested_pathname ("${GOBO}", <<".git", l_first_line>>)
-										l_git_filename := Execution_environment.interpreted_string (l_git_filename)
-										l_first_line := file_system.file_first_line (l_git_filename)
-									end
-									if l_first_line.count = 40 then
-										l_git_sha1 := l_first_line
-										l_git_sha1.keep_head (9)
-										l_gobo_version := "00.00.00+" + l_git_sha1
-										if attached {ET_REGULAR_MANIFEST_STRING} l_string_constant as l_regular_manifest_string then
-											l_regular_manifest_string.set_literal (l_gobo_version)
-										end
+								end
+								if l_first_line.count = 40 then
+									l_git_sha1 := l_first_line
+									l_git_sha1.keep_head (9)
+									l_gobo_version := "00.00.00+" + l_git_sha1
+									if attached {ET_REGULAR_MANIFEST_STRING} l_string_constant as l_regular_manifest_string then
+										l_regular_manifest_string.set_literal (l_gobo_version)
 									end
 								end
-								l_once_feature := l_constant_attribute.implementation_feature
-								constant_features.force_last (l_string_constant, l_once_feature)
-								print_once_value_name (l_once_feature, current_file)
-							else
-								l_constant := l_constant_attribute.constant
-								old_index := l_constant.index
-								l_constant.set_index (a_call.index)
-								print_expression (l_constant)
-								l_constant.set_index (old_index)
 							end
+							l_once_feature := l_constant_attribute.implementation_feature
+							constant_features.force_last (l_string_constant, l_once_feature)
+							print_once_value_name (l_once_feature, current_file)
+						else
+							l_constant := l_constant_attribute.constant
+							old_index := l_constant.index
+							l_constant.set_index (a_call.index)
+							print_expression (l_constant)
+							l_constant.set_index (old_index)
 						end
-					else
-						if
-							in_call_target and then
-							(l_dynamic_feature.is_builtin_special_item or l_dynamic_feature.is_once) and then
-							l_call_type.is_expanded and then
-							(not l_call_type.is_basic or else in_procedure_call_target)
-						then
-								-- We want the result be boxed even though the result static type is expanded.
-								-- This is needed when the call is a "SPECIAL" item or a once function, the call
-								-- result type is expanded, and it is the target of another call. In that case we
-								-- force the result type to be of reference type in order to force the boxing of
-								-- the result so that the other call is applied on the result object itself and
-								-- not on a copy of this object.
-								-- Note that for optimization we don't force boxing when the type is a basic
-								-- type unless the result object is the target of a procedure call (e.g.
-								-- 'copy', 'standard_copy' or 'set_item' which will overwrite the value of
-								-- the target).
-							l_call_type := current_dynamic_system.any_type
-							l_force_result_boxing := True
-						end
-						l_actuals := a_call.arguments
-						l_seed := a_call.name.seed
-							-- Check whether this a call to FUNCTION.item with a manifest
-							-- tuple as argument. We have a special treatment in that case
-							-- to avoid having to create the manifest tuple when possible.
-						if l_seed = current_system.function_item_seed and then not a_call.is_call_agent then
-							if l_actuals /= Void and then l_actuals.count = 1 then
-								if attached {ET_MANIFEST_TUPLE} l_actuals.actual_argument (1) as l_manifest_tuple then
-									operand_stack.force (tokens.current_keyword)
-									nb := l_manifest_tuple.count
-									from i := 1 until i > nb loop
-										l_actual := l_manifest_tuple.expression (i)
-										l_actual_type_set := dynamic_type_set (l_actual)
-										print_attachment_operand (l_actual, l_actual_type_set)
-										i := i + 1
-									end
-									nb := nb + 1
-									fill_call_operands (nb)
-									l_manifest_tuple_operand := agent_manifest_tuple
-									l_manifest_tuple_operand.resize (nb - 1)
-									from i := nb until i < 2 loop
-										l_manifest_tuple_operand.put_first (call_operands.item (i))
-										i := i - 1
-									end
-									l_manifest_tuple_operand.set_index (l_manifest_tuple.index)
-									mark_expressions_frozen (l_manifest_tuple_operand)
-									l_target_operand := call_operands.first
-									call_operands.wipe_out
-									call_operands.put_last (l_target_operand)
-									call_operands.put_last (l_manifest_tuple_operand)
-									nb := 2
-								end
-							end
-						end
-						if l_manifest_tuple_operand = Void then
-							operand_stack.force (tokens.current_keyword)
-							nb := 0
-							if l_actuals /= Void then
-								nb := l_actuals.count
+					end
+				else
+					if
+						in_call_target and then
+						(l_dynamic_feature.is_builtin_special_item or l_dynamic_feature.is_once) and then
+						l_call_type.is_expanded and then
+						(not l_call_type.is_basic or else in_procedure_call_target)
+					then
+							-- We want the result be boxed even though the result static type is expanded.
+							-- This is needed when the call is a "SPECIAL" item or a once function, the call
+							-- result type is expanded, and it is the target of another call. In that case we
+							-- force the result type to be of reference type in order to force the boxing of
+							-- the result so that the other call is applied on the result object itself and
+							-- not on a copy of this object.
+							-- Note that for optimization we don't force boxing when the type is a basic
+							-- type unless the result object is the target of a procedure call (e.g.
+							-- 'copy', 'standard_copy' or 'set_item' which will overwrite the value of
+							-- the target).
+						l_call_type := current_dynamic_system.any_type
+						l_force_result_boxing := True
+					end
+					l_actuals := a_call.arguments
+					l_seed := a_call.name.seed
+						-- Check whether this a call to FUNCTION.item with a manifest
+						-- tuple as argument. We have a special treatment in that case
+						-- to avoid having to create the manifest tuple when possible.
+					if l_seed = current_system.function_item_seed and then not a_call.is_call_agent then
+						if l_actuals /= Void and then l_actuals.count = 1 then
+							if attached {ET_MANIFEST_TUPLE} l_actuals.actual_argument (1) as l_manifest_tuple then
+								operand_stack.force (tokens.current_keyword)
+								nb := l_manifest_tuple.count
 								from i := 1 until i > nb loop
-									l_actual := l_actuals.actual_argument (i)
+									l_actual := l_manifest_tuple.expression (i)
 									l_actual_type_set := dynamic_type_set (l_actual)
 									print_attachment_operand (l_actual, l_actual_type_set)
 									i := i + 1
 								end
+								nb := nb + 1
+								fill_call_operands (nb)
+								l_manifest_tuple_operand := agent_manifest_tuple
+								l_manifest_tuple_operand.resize (nb - 1)
+								from i := nb until i < 2 loop
+									l_manifest_tuple_operand.put_first (call_operands.item (i))
+									i := i - 1
+								end
+								l_manifest_tuple_operand.set_index (l_manifest_tuple.index)
+								mark_expressions_frozen (l_manifest_tuple_operand)
+								l_target_operand := call_operands.first
+								call_operands.wipe_out
+								call_operands.put_last (l_target_operand)
+								call_operands.put_last (l_manifest_tuple_operand)
+								nb := 2
 							end
-							nb := nb + 1
-							fill_call_operands (nb)
 						end
-						if is_inlinable_function (l_dynamic_feature, current_type) then
+					end
+					if l_manifest_tuple_operand = Void then
+						operand_stack.force (tokens.current_keyword)
+						nb := 0
+						if l_actuals /= Void then
+							nb := l_actuals.count
+							from i := 1 until i > nb loop
+								l_actual := l_actuals.actual_argument (i)
+								l_actual_type_set := dynamic_type_set (l_actual)
+								print_attachment_operand (l_actual, l_actual_type_set)
+								i := i + 1
+							end
+						end
+						nb := nb + 1
+						fill_call_operands (nb)
+					end
+					if is_inlinable_function (l_dynamic_feature, current_type) then
+							-- When there is no result type of the form 'like argument',
+							-- then there is no need to call `print_adapted_query_call'
+							-- because an unqualified call is not polymorphic, and therefore
+							-- the type of the query is exactly the type expected by
+							-- the caller. This is another story with 'like argument'.
+							-- For example 'clone (1)' is expected to be of type INTEGER
+							-- and 'clone ("gobo")' is expected to be of type STRING.
+							-- But the corresponding generated function for 'clone' will
+							-- be declared to return an ANY. Hence the need for a call
+							-- to `print_adapted_query_call' in this case.
+							-- There is also the case when `l_force_result_boxing' is True.
+						print_adapted_query_call (l_dynamic_feature, current_type, l_call_type, False)
+						l_inlined_call := True
+						fill_call_operands (1)
+						if in_operand then
+							if l_force_result_boxing then
+								l_printed := False
+							elseif attached {ET_IDENTIFIER} call_operands.first as l_identifier then
+								if l_identifier.is_temporary and then is_temp_variable_free (l_identifier) then
+									l_temp := l_identifier
+									mark_temp_variable_used (l_temp)
+									mark_temp_variable_frozen (l_temp)
+									l_temp_index := a_call.index
+								end
+								operand_stack.force (l_identifier)
+								l_printed := True
+							end
+						else
+							print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
+							l_printed := True
+						end
+					end
+					if not l_printed then
+						if in_operand then
+							if l_assignment_target /= Void then
+								operand_stack.force (l_assignment_target)
+								print_indentation
+								print_writable (l_assignment_target)
+							else
+								l_temp := new_temp_variable (l_call_type)
+								mark_temp_variable_frozen (l_temp)
+									-- We will set the index of `l_temp' later because
+									-- it could still be used in `call_operands'.
+								l_temp_index := a_call.index
+								if l_force_result_boxing then
+										-- `current_dynamic_system.any_type' is the first type set
+										-- in `extra_dynamic_type_sets'.
+									l_temp_index := current_dynamic_type_sets.count + 1
+								end
+								operand_stack.force (l_temp)
+								print_indentation
+								print_temp_name (l_temp, current_file)
+							end
+							print_assign_to
+							current_file.put_character ('(')
+						end
+						if l_inlined_call then
+							print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
+						else
 								-- When there is no result type of the form 'like argument',
 								-- then there is no need to call `print_adapted_query_call'
 								-- because an unqualified call is not polymorphic, and therefore
@@ -15738,86 +15731,23 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 								-- to `print_adapted_query_call' in this case.
 								-- There is also the case when `l_force_result_boxing' is True.
 							print_adapted_query_call (l_dynamic_feature, current_type, l_call_type, False)
-							l_inlined_call := True
-							fill_call_operands (1)
-							if in_operand then
-								if l_force_result_boxing then
-									l_printed := False
-								elseif attached {ET_IDENTIFIER} call_operands.first as l_identifier then
-									if l_identifier.is_temporary and then is_temp_variable_free (l_identifier) then
-										l_temp := l_identifier
-										mark_temp_variable_used (l_temp)
-										mark_temp_variable_frozen (l_temp)
-										l_temp_index := a_call.index
-									end
-									operand_stack.force (l_identifier)
-									l_printed := True
-								end
-							else
-								print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
-								l_printed := True
-							end
 						end
-						if not l_printed then
-							if in_operand then
-								if l_assignment_target /= Void then
-									operand_stack.force (l_assignment_target)
-									print_indentation
-									print_writable (l_assignment_target)
-								else
-									l_temp := new_temp_variable (l_call_type)
-									mark_temp_variable_frozen (l_temp)
-										-- We will set the index of `l_temp' later because
-										-- it could still be used in `call_operands'.
-									l_temp_index := a_call.index
-									if l_force_result_boxing then
-											-- `current_dynamic_system.any_type' is the first type set
-											-- in `extra_dynamic_type_sets'.
-										l_temp_index := current_dynamic_type_sets.count + 1
-									end
-									operand_stack.force (l_temp)
-									print_indentation
-									print_temp_name (l_temp, current_file)
-								end
-								current_file.put_character (' ')
-								current_file.put_character ('=')
-								current_file.put_character (' ')
-								current_file.put_character ('(')
-							end
-							if l_inlined_call then
-								print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
-							else
-									-- When there is no result type of the form 'like argument',
-									-- then there is no need to call `print_adapted_query_call'
-									-- because an unqualified call is not polymorphic, and therefore
-									-- the type of the query is exactly the type expected by
-									-- the caller. This is another story with 'like argument'.
-									-- For example 'clone (1)' is expected to be of type INTEGER
-									-- and 'clone ("gobo")' is expected to be of type STRING.
-									-- But the corresponding generated function for 'clone' will
-									-- be declared to return an ANY. Hence the need for a call
-									-- to `print_adapted_query_call' in this case.
-									-- There is also the case when `l_force_result_boxing' is True.
-								print_adapted_query_call (l_dynamic_feature, current_type, l_call_type, False)
-							end
-							if in_operand then
-								current_file.put_character (')')
-								current_file.put_character (';')
-								current_file.put_new_line
-							end
+						if in_operand then
+							current_file.put_character (')')
+							print_semicolon_newline
 						end
-						call_operands.wipe_out
-						if l_manifest_tuple_operand /= Void then
-							mark_expressions_unfrozen (l_manifest_tuple_operand)
-							l_manifest_tuple_operand.wipe_out
-						end
-						if l_temp /= Void then
-							mark_temp_variable_unfrozen (l_temp)
-							if l_temp_index /= 0 then
-									-- We had to wait until this stage to set the index of `l_temp'
-									-- because it could have still been used in `call_operands'.
-								l_temp.set_index (l_temp_index)
-							end
+					end
+					call_operands.wipe_out
+					if l_manifest_tuple_operand /= Void then
+						mark_expressions_unfrozen (l_manifest_tuple_operand)
+						l_manifest_tuple_operand.wipe_out
+					end
+					if l_temp /= Void then
+						mark_temp_variable_unfrozen (l_temp)
+						if l_temp_index /= 0 then
+								-- We had to wait until this stage to set the index of `l_temp'
+								-- because it could have still been used in `call_operands'.
+							l_temp.set_index (l_temp_index)
 						end
 					end
 				end
@@ -16250,7 +16180,7 @@ feature {NONE} -- Equality generation
 						max_nested_inlining_count := l_old_max_nested_inlining_count
 					else
 							-- Make sure to call the built-in version, even for types
-							-- such as INTEGER_32, etc. where 'is_equal' is redefined 
+							-- such as INTEGER_32, etc. where 'is_equal' is redefined
 							-- as 'Result := other.item = item' instead of using the
 							-- built-in version from "ANY" (which introduces an infinite
 							-- recursive call.).
@@ -16552,7 +16482,7 @@ feature {NONE} -- Equality generation
 								max_nested_inlining_count := l_old_max_nested_inlining_count
 							else
 									-- Make sure to call the built-in version, even for types
-									-- such as INTEGER_32, etc. where 'is_equal' is redefined 
+									-- such as INTEGER_32, etc. where 'is_equal' is redefined
 									-- as 'Result := other.item = item' instead of using the
 									-- built-in version from "ANY" (which introduces an infinite
 									-- recursive call.).
@@ -17098,13 +17028,13 @@ feature {NONE} -- Query call generation
 			print_routine_name (a_feature, a_target_type, current_file)
 			current_file.put_character ('(')
 			current_file.put_string (c_ac)
-			current_file.put_character (',')
-			current_file.put_character (' ')
+			if not a_feature.is_static then
+				print_comma
+				print_target_expression (call_operands.first, a_target_type, a_check_void_target)
+			end
 			nb := call_operands.count
-			print_target_expression (call_operands.first, a_target_type, a_check_void_target)
 			from i := 2 until i > nb loop
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 				l_actual_type_set := dynamic_type_set (call_operands.item (i))
 				l_formal_type_set := argument_type_set_in_feature (i - 1, a_feature)
 				print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
@@ -17125,7 +17055,6 @@ feature {NONE} -- Query call generation
 			a_feature_is_inlinable: is_inlinable_function (a_feature, a_target_type)
 		local
 			l_old_call_target_type: like call_target_type
-			l_old_in_static_feature: like in_static_feature
 			l_operands_count: INTEGER
 			l_expression: detachable ET_EXPRESSION
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
@@ -17199,9 +17128,6 @@ feature {NONE} -- Query call generation
 				fill_inlining_operands (a_target_type, l_inlining_context, l_caller_inlining_context)
 				inlining_context := l_inlining_context
 				l_old_call_target_type := call_target_type
-				call_target_type := Void
-				l_old_in_static_feature := in_static_feature
-				in_static_feature := False
 				current_feature := a_feature
 				current_type := a_feature.target_type
 				current_dynamic_type_sets := a_feature.dynamic_type_sets
@@ -17230,7 +17156,6 @@ feature {NONE} -- Query call generation
 					extra_dynamic_type_sets.remove_last
 				end
 				call_target_type := l_old_call_target_type
-				in_static_feature := l_old_in_static_feature
 				inlining_context := l_old_inlining_context
 				nested_inlining_count := nested_inlining_count - 1
 			end
@@ -19018,6 +18943,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 					-- See ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_agent_object_declaration", 1, "feature `set_rout_disp_final' not found in agent type.")
+			elseif l_set_rout_disp_final_feature.is_static then
+					-- Internal error: the procedure 'set_rout_disp_final' should not be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_agent_object_declaration", 2, "feature `set_rout_disp_final' is an instance-free feature.")
 			else
 				register_called_feature (l_set_rout_disp_final_feature)
 				print_indentation
@@ -23534,7 +23463,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						print_query_call (l_is_equal_feature, l_field_type, False)
 					else
 							-- Make sure to call the built-in version, even for types
-							-- such as INTEGER_32, etc. where 'is_equal' is redefined 
+							-- such as INTEGER_32, etc. where 'is_equal' is redefined
 							-- as 'Result := other.item = item' instead of using the
 							-- built-in version from "ANY" (which introduces an infinite
 							-- recursive call.).
@@ -23844,6 +23773,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: `a_feature' is a query.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_any_standard_is_equal_call", 2, "feature is not a query.")
+			elseif a_feature.is_static then
+					-- Internal error: `a_feature' should not be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_is_equal_call", 3, "feature is instance-free.")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
@@ -24480,6 +24413,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_any_standard_copy_call", 1, "wrong number of arguments.")
+			elseif a_feature.is_static then
+					-- Internal error: `a_feature' should not be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_copy_call", 2, "feature is instance-free.")
 			elseif a_target_type.base_class.is_type_class then
 				-- Cannot have two instances of class "TYPE" representing the same Eiffel type.
 			else
@@ -24681,6 +24618,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_any_standard_twin_call", 1, "wrong number of arguments.")
+			elseif a_feature.is_static then
+					-- Internal error: `a_feature' should not be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_standard_twin_call", 2, "feature is instance-free.")
 			else
 				l_target := call_operands.first
 				if a_target_type.base_class.is_type_class then
@@ -24776,24 +24717,30 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			expanded_type: current_type.is_expanded
 			a_copy_feature_not_void: a_copy_feature /= Void
 		do
-				-- Call 'copy'.
-			register_called_feature (a_copy_feature)
-			print_indentation
-			print_routine_name (a_copy_feature, current_type, current_file)
-			current_file.put_character ('(')
-			current_file.put_string (c_ac)
-			print_comma
-			current_file.put_character ('&')
-			print_result_name (current_file)
-			print_comma
-				-- We don't call `print_attachment_operand' here to avoid calling
-				-- 'twin' (and hence 'copy') on the argument of 'copy'. Otherwise we
-				-- will call 'copy' recursively (possibly infinite recursion) with the
-				-- same argument.
-			current_file.put_character ('*')
-			print_current_name (current_file)
-			current_file.put_character (')')
-			print_semicolon_newline
+			if a_copy_feature.is_static then
+					-- Internal error: `a_copy_feature' should not be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_twin_body_with_expanded", 1, "feature is instance-free.")
+			else
+					-- Call 'copy'.
+				register_called_feature (a_copy_feature)
+				print_indentation
+				print_routine_name (a_copy_feature, current_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
+				current_file.put_character ('&')
+				print_result_name (current_file)
+				print_comma
+					-- We don't call `print_attachment_operand' here to avoid calling
+					-- 'twin' (and hence 'copy') on the argument of 'copy'. Otherwise we
+					-- will call 'copy' recursively (possibly infinite recursion) with the
+					-- same argument.
+				current_file.put_character ('*')
+				print_current_name (current_file)
+				current_file.put_character (')')
+				print_semicolon_newline
+			end
 		end
 
 	print_builtin_any_twin_body_with_reference (a_copy_feature: ET_DYNAMIC_FEATURE)
@@ -24805,32 +24752,38 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			reference_type: not current_type.is_expanded
 			a_copy_feature_not_void: a_copy_feature /= Void
 		do
-				-- Create new object.
-			print_indentation_assign_to_result
-			current_file.put_string (c_ge_new)
-			current_file.put_integer (current_type.id)
-			current_file.put_character ('(')
-			current_file.put_string (c_ac)
-			print_comma
-			current_file.put_string (c_eif_true)
-			current_file.put_character (')')
-			print_semicolon_newline
-				-- Call 'copy'.
-			register_called_feature (a_copy_feature)
-			print_indentation
-			print_routine_name (a_copy_feature, current_type, current_file)
-			current_file.put_character ('(')
-			current_file.put_string (c_ac)
-			print_comma
-				-- We don't call `print_attachment_operand' here to avoid calling
-				-- 'twin' (and hence 'copy') on the argument of 'copy'. Otherwise we
-				-- will call 'copy' recursively (possibly infinite recursion) with the
-				-- same argument.
-			print_result_name (current_file)
-			print_comma
-			print_current_name (current_file)
-			current_file.put_character (')')
-			print_semicolon_newline
+			if a_copy_feature.is_static then
+					-- Internal error: `a_copy_feature' should not be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_twin_body_with_reference", 1, "feature is instance-free.")
+			else
+					-- Create new object.
+				print_indentation_assign_to_result
+				current_file.put_string (c_ge_new)
+				current_file.put_integer (current_type.id)
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
+				current_file.put_string (c_eif_true)
+				current_file.put_character (')')
+				print_semicolon_newline
+					-- Call 'copy'.
+				register_called_feature (a_copy_feature)
+				print_indentation
+				print_routine_name (a_copy_feature, current_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
+					-- We don't call `print_attachment_operand' here to avoid calling
+					-- 'twin' (and hence 'copy') on the argument of 'copy'. Otherwise we
+					-- will call 'copy' recursively (possibly infinite recursion) with the
+					-- same argument.
+				print_result_name (current_file)
+				print_comma
+				print_current_name (current_file)
+				current_file.put_character (')')
+				print_semicolon_newline
+			end
 		end
 
 	print_builtin_any_twin_body_with_special (a_special_type: ET_DYNAMIC_SPECIAL_TYPE; a_copy_feature: ET_DYNAMIC_FEATURE)
@@ -24857,6 +24810,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_any_twin_body_with_special", 1, "missing attributes in 'SPECIAL'.")
+			elseif a_copy_feature.is_static then
+					-- Internal error: `a_copy_feature' should not be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_twin_body_with_special", 2, "feature is instance-free.")
 			else
 					-- Create new object.
 				l_result := new_result_expression
@@ -24925,20 +24882,23 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_any_twin_call", 1, "wrong number of arguments.")
-			else
+			elseif a_feature.is_static then
+					-- Internal error: `a_feature' should not be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_any_twin_call", 2, "feature is instance-free.")
+			elseif a_target_type.base_class.is_type_class then
+					-- Cannot have two instances of class "TYPE" representing the same Eiffel type.
 				l_target := call_operands.first
-				if a_target_type.base_class.is_type_class then
-						-- Cannot have two instances of class "TYPE" representing the same Eiffel type.
-					print_target_expression (l_target, a_target_type, a_check_void_target)
-				else
-					register_called_feature (a_feature)
-					print_routine_name (a_feature, a_target_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_string (c_ac)
-					print_comma
-					print_target_expression (l_target, a_target_type, a_check_void_target)
-					current_file.put_character (')')
-				end
+				print_target_expression (l_target, a_target_type, a_check_void_target)
+			else
+				register_called_feature (a_feature)
+				print_routine_name (a_feature, a_target_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
+				l_target := call_operands.first
+				print_target_expression (l_target, a_target_type, a_check_void_target)
+				current_file.put_character (')')
 			end
 		end
 
@@ -25971,23 +25931,20 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_catch_body", 2, "wrong number of arguments.")
+			elseif not l_ise_exception_manager_feature.is_static then
+					-- Internal error: `l_ise_exception_manager_feature' should be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_catch_body", 3, "feature is not instance-free.")
 			else
 				print_indentation
 				register_called_feature (l_ise_exception_manager_feature)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_exception_manager)
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 		end
 
@@ -26013,27 +25970,22 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_exception_from_code_body", 2, "wrong number of arguments.")
+			elseif not l_ise_exception_manager_feature.is_static then
+					-- Internal error: `l_ise_exception_manager_feature' should be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_exception_from_code_body", 3, "feature is not instance-free.")
 			else
 				print_indentation
 				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				register_called_feature (l_ise_exception_manager_feature)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_exception_manager)
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 		end
 
@@ -26059,23 +26011,20 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_ignore_body", 2, "wrong number of arguments.")
+			elseif not l_ise_exception_manager_feature.is_static then
+					-- Internal error: `l_ise_exception_manager_feature' should be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_ignore_body", 3, "feature is not instance-free.")
 			else
 				print_indentation
 				register_called_feature (l_ise_exception_manager_feature)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_exception_manager)
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 		end
 
@@ -26101,6 +26050,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_caught_body", 2, "wrong number of arguments.")
+			elseif not l_ise_exception_manager_feature.is_static then
+					-- Internal error: `l_ise_exception_manager_feature' should be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_caught_body", 3, "feature is not instance-free.")
 			else
 				print_indentation
 				print_result_name (current_file)
@@ -26111,17 +26064,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_exception_manager)
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 		end
 
@@ -26147,27 +26093,22 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_ignorable_body", 2, "wrong number of arguments.")
+			elseif not l_ise_exception_manager_feature.is_static then
+					-- Internal error: `l_ise_exception_manager_feature' should be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_ignorable_body", 3, "feature is not instance-free.")
 			else
 				print_indentation
 				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				register_called_feature (l_ise_exception_manager_feature)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_exception_manager)
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 		end
 
@@ -26193,27 +26134,22 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_ignored_body", 2, "wrong number of arguments.")
+			elseif not l_ise_exception_manager_feature.is_static then
+					-- Internal error: `l_ise_exception_manager_feature' should be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_ignored_body", 3, "feature is not instance-free.")
 			else
 				print_indentation
 				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				register_called_feature (l_ise_exception_manager_feature)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_exception_manager)
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 		end
 
@@ -26239,27 +26175,22 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_raisable_body", 2, "wrong number of arguments.")
+			elseif not l_ise_exception_manager_feature.is_static then
+					-- Internal error: `l_ise_exception_manager_feature' should be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_is_raisable_body", 3, "feature is not instance-free.")
 			else
 				print_indentation
 				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				register_called_feature (l_ise_exception_manager_feature)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_exception_manager)
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 		end
 
@@ -26278,24 +26209,20 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- flattening the features of "ISE_EXCEPTION_MANAGER".
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_last_exception_body", 1, "feature `last_exception' not found in 'ISE_EXCEPTION_MANAGER'.")
+			elseif not l_ise_exception_manager_feature.is_static then
+					-- Internal error: `l_ise_exception_manager_feature' should be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_last_exception_body", 2, "feature is not instance-free.")
 			else
 				print_indentation
 				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				register_called_feature (l_ise_exception_manager_feature)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_exception_manager)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 		end
 
@@ -26321,23 +26248,20 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_raise_body", 2, "wrong number of arguments.")
+			elseif not l_ise_exception_manager_feature.is_static then
+					-- Internal error: `l_ise_exception_manager_feature' should be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_raise_body", 3, "feature is not instance-free.")
 			else
 				print_indentation
 				register_called_feature (l_ise_exception_manager_feature)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_exception_manager)
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 		end
 
@@ -26363,26 +26287,22 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_set_is_ignored_body", 2, "wrong number of arguments.")
+			elseif not l_ise_exception_manager_feature.is_static then
+					-- Internal error: `l_ise_exception_manager_feature' should be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_set_is_ignored_body", 3, "feature is not instance-free.")
 			else
 				print_indentation
 				register_called_feature (l_ise_exception_manager_feature)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_exception_manager)
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 				print_argument_name (l_arguments.formal_argument (2).name, current_file)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 		end
 
@@ -26408,27 +26328,22 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Internal error: this error should have been reported by the parser.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_type_of_code_body", 2, "wrong number of arguments.")
+			elseif not l_ise_exception_manager_feature.is_static then
+					-- Internal error: `l_ise_exception_manager_feature' should be instance-free.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_exception_manager_type_of_code_body", 3, "feature is not instance-free.")
 			else
 				print_indentation
 				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				register_called_feature (l_ise_exception_manager_feature)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_exception_manager)
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 		end
 
@@ -36526,7 +36441,13 @@ feature {NONE} -- Memory allocation
 					end
 					dispose_procedures.force_last_new (l_dispose_procedure, a_type)
 				end
-				if l_dispose_procedure /= Void then
+				if l_dispose_procedure = Void then
+					-- No dispose procedure.
+				elseif l_dispose_procedure.is_static then
+						-- Internal error: `l_dispose_procedure' should not be instance-free.
+					set_fatal_error
+					error_handler.report_giaac_error (generator, "print_dispose_registration", 1, "feature `dispose'is instance-free.")
+				else
 					print_indentation
 					current_file.put_string (c_ge_register_dispose)
 					current_file.put_character ('(')
@@ -36535,8 +36456,7 @@ feature {NONE} -- Memory allocation
 					current_file.put_character ('&')
 					print_routine_name (l_dispose_procedure, a_type, current_file)
 					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 					register_called_feature (l_dispose_procedure)
 				end
 			end
@@ -40207,7 +40127,11 @@ feature {NONE} -- Feature name generation
 		do
 			if short_names then
 				print_type_name (a_type, a_file)
-				a_file.put_character ('f')
+				if a_routine.is_static then
+					a_file.put_character ('s')
+				else
+					a_file.put_character ('f')
+				end
 				if attached {ET_DYNAMIC_PRECURSOR} a_routine as l_precursor then
 					a_file.put_integer (l_precursor.current_feature.id)
 					a_file.put_character ('p')
@@ -40217,30 +40141,6 @@ feature {NONE} -- Feature name generation
 -- TODO: long names
 				short_names := True
 				print_routine_name (a_routine, a_type, a_file)
-				short_names := False
-			end
-		end
-
-	print_static_routine_name (a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
-			-- Print name of static feature `a_feature' from `a_type' to `a_file'.
-		require
-			a_routine_not_void: a_routine /= Void
-			a_type_not_void: a_type /= Void
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		do
-			if short_names then
-				print_type_name (a_type, a_file)
-				a_file.put_character ('s')
-				if attached {ET_DYNAMIC_PRECURSOR} a_routine as l_precursor then
-					a_file.put_integer (l_precursor.current_feature.id)
-					a_file.put_character ('p')
-				end
-				a_file.put_integer (a_routine.id)
-			else
--- TODO: long names
-				short_names := True
-				print_static_routine_name (a_routine, a_type, a_file)
 				short_names := False
 			end
 		end
@@ -40791,11 +40691,7 @@ feature {NONE} -- Feature name generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			if in_static_feature then
-				print_static_routine_name (a_routine, a_type, a_file)
-			else
-				print_routine_name (a_routine, a_type, a_file)
-			end
+			print_routine_name (a_routine, a_type, a_file)
 			a_file.put_character ('o')
 			a_file.put_character ('t')
 			a_file.put_integer (i)
@@ -40864,11 +40760,7 @@ feature {NONE} -- Feature name generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			if in_static_feature then
-				print_static_routine_name (a_routine, a_type, a_file)
-			else
-				print_routine_name (a_routine, a_type, a_file)
-			end
+			print_routine_name (a_routine, a_type, a_file)
 			a_file.put_character ('e')
 			a_file.put_integer (i)
 		end
@@ -40966,11 +40858,7 @@ feature {NONE} -- Feature name generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			if in_static_feature then
-				print_static_routine_name (a_routine, a_type, a_file)
-			else
-				print_routine_name (a_routine, a_type, a_file)
-			end
+			print_routine_name (a_routine, a_type, a_file)
 			a_file.put_character ('a')
 			a_file.put_character ('c')
 			a_file.put_integer (i)
@@ -40984,11 +40872,7 @@ feature {NONE} -- Feature name generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			if in_static_feature then
-				print_static_routine_name (a_routine, a_type, a_file)
-			else
-				print_routine_name (a_routine, a_type, a_file)
-			end
+			print_routine_name (a_routine, a_type, a_file)
 			a_file.put_character ('a')
 			a_file.put_character ('f')
 			a_file.put_integer (i)
@@ -41003,11 +40887,7 @@ feature {NONE} -- Feature name generation
 			a_file_open_write: a_file.is_open_write
 			use_scoop: use_scoop
 		do
-			if in_static_feature then
-				print_static_routine_name (a_routine, a_type, a_file)
-			else
-				print_routine_name (a_routine, a_type, a_file)
-			end
+			print_routine_name (a_routine, a_type, a_file)
 			a_file.put_character ('s')
 			a_file.put_character ('c')
 			a_file.put_integer (i)
@@ -41022,11 +40902,7 @@ feature {NONE} -- Feature name generation
 			a_file_open_write: a_file.is_open_write
 			use_scoop: use_scoop
 		do
-			if in_static_feature then
-				print_static_routine_name (a_routine, a_type, a_file)
-			else
-				print_routine_name (a_routine, a_type, a_file)
-			end
+			print_routine_name (a_routine, a_type, a_file)
 			a_file.put_character ('s')
 			a_file.put_character ('f')
 			a_file.put_integer (i)
@@ -41041,11 +40917,7 @@ feature {NONE} -- Feature name generation
 			a_file_open_write: a_file.is_open_write
 			use_scoop: use_scoop
 		do
-			if in_static_feature then
-				print_static_routine_name (a_routine, a_type, a_file)
-			else
-				print_routine_name (a_routine, a_type, a_file)
-			end
+			print_routine_name (a_routine, a_type, a_file)
 			a_file.put_character ('s')
 			a_file.put_character ('o')
 			a_file.put_integer (i)
@@ -41060,11 +40932,7 @@ feature {NONE} -- Feature name generation
 			a_file_open_write: a_file.is_open_write
 			use_scoop: use_scoop
 		do
-			if in_static_feature then
-				print_static_routine_name (a_routine, a_type, a_file)
-			else
-				print_routine_name (a_routine, a_type, a_file)
-			end
+			print_routine_name (a_routine, a_type, a_file)
 			a_file.put_character ('s')
 			a_file.put_character ('o')
 			a_file.put_character ('t')
@@ -44628,23 +44496,6 @@ feature {NONE} -- Called feature registration
 	called_features: DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE]
 			-- Features being called
 
-	register_called_static_feature (a_feature: ET_DYNAMIC_FEATURE)
-			-- Make sure that `a_feature' is added to `called_static_features' if not already done.
-		require
-			a_feature_not_void: a_feature /= Void
-		do
-			if not a_feature.is_static_generated then
-				a_feature.set_static_generated (True)
-				called_static_features.force_last (a_feature)
-			end
-		ensure
-			a_feature_registered: a_feature.is_static_generated
-			last_in_stack: not old a_feature.is_generated implies called_static_features.last = a_feature
-		end
-
-	called_static_features: DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE]
-			-- Features being called statically (i.e. calls of the form {A}.f).
-
 	register_inlined_feature (a_feature: ET_DYNAMIC_FEATURE)
 			-- Make sure that `a_feature' is marked has being inlined.
 		require
@@ -44865,9 +44716,6 @@ feature {NONE} -- Volatile variables
 		end
 
 feature {NONE} -- Implementation
-
-	in_static_feature: BOOLEAN
-			-- Is a feature to be used in a static call being printed?
 
 	in_operand: BOOLEAN
 			-- Is an operand being processed?
@@ -45638,8 +45486,6 @@ invariant
 	no_void_current_equality: not current_equalities.has_void
 	called_features_not_void: called_features /= Void
 	no_void_called_feature: not called_features.has_void
-	called_static_features_not_void: called_static_features /= Void
-	no_void_called_static_feature: not called_static_features.has_void
 	inlined_features_not_void: inlined_features /= Void
 	no_void_inlined_feature: not inlined_features.has_void
 	once_features_not_void: once_features /= Void

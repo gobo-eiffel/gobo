@@ -44,6 +44,7 @@ goto no_verbose
 :windows
 	set MV=rename
 	set RM=del
+	set RMDIR=rmdir /s /q
 	set BIN_DIR=%GOBO%\bin
 	set BOOTSTRAP_DIR=%GOBO%\tool\gec\bootstrap
 	set OBJ=.obj
@@ -243,19 +244,7 @@ goto exit
 	%MV% "%BIN_DIR%\gec%EXE%" gec1%EXE%
 	"%BIN_DIR%\gec1%EXE%" --finalize "%GOBO%\tool\gec\src\system.ecf"
 	%RM% "%BIN_DIR%\gec1%EXE%"
-	%RM% gec*.h
-	%RM% gec*.c
-	%RM% gec*%OBJ%
-	rem Make sure 'gec.bat' exists to avoid getting some warning when removing it.
-	echo "" > gec.bat
-	%RM% gec*.bat
-	rem Make sure 'gec.sh' exists to avoid getting some warning when removing it.
-	echo "" > gec.sh
-	%RM% gec*.sh
-	rem Make sure 'gec.make' exists to avoid getting some warning when removing it.
-	echo "" > gec.make
-	%RM% gec*.make
-	if ".%CC%." == ".bcc32." %RM% gec.tds
+	%RMDIR% .gobo
 	goto exit
 
 :usage

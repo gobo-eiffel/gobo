@@ -182,22 +182,22 @@ extern EIF_REFERENCE (*GE_new_exception_manager)(GE_context*, EIF_BOOLEAN);
 /*
  * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.init_exception_manager.
  */
-extern void (*GE_init_exception_manager)(GE_context*, EIF_REFERENCE);
+extern void (*GE_init_exception_manager)(GE_context*);
 
 /*
  * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.last_exception.
  */
-extern EIF_REFERENCE (*GE_last_exception)(GE_context*, EIF_REFERENCE);
+extern EIF_REFERENCE (*GE_last_exception)(GE_context*);
 
 /*
  * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.once_raise.
  */
-extern void (*GE_once_raise)(GE_context*, EIF_REFERENCE, EIF_REFERENCE);
+extern void (*GE_once_raise)(GE_context*, EIF_REFERENCE);
 
 /*
  * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.set_exception_data.
  */
-extern void (*GE_set_exception_data)(GE_context*, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
+extern void (*GE_set_exception_data)(GE_context*, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
 
 /*
  * Exception tag associated with `a_code'.

@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			l_dynamic_type_set_builder := a_system.dynamic_type_set_builder
 			static_feature := a_feature
 			target_type := a_target_type
+			is_static := a_feature.is_static
 			dynamic_type_sets := empty_dynamic_type_sets
 			create query_calls.make_map (10)
 			create procedure_calls.make_map (10)
@@ -337,6 +338,9 @@ feature -- Status report
 
 	is_regular: BOOLEAN
 			-- Is current feature used as a regular feature?
+
+	is_static: BOOLEAN
+			-- Can feature be used as a static feature (i.e. in a call of the form {A}.f)?
 
 	is_address: BOOLEAN
 			-- Is address of current feature used?
