@@ -151,7 +151,7 @@ void GE_scoop_init_exception(GE_scoop_region* a_region)
 
 	l_exception_manager = GE_new_exception_manager(l_context, EIF_TRUE);
 	a_region->exception_manager = l_exception_manager;
-	GE_init_exception_manager(l_context, l_exception_manager);
+	GE_init_exception_manager(l_context);
 }
 
 /* Free and destroy uncollectable data in `a_region'. */
