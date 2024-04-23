@@ -50,12 +50,12 @@ fi
 
 MV=mv
 RM=rm
-RMDIR=rm -rf
+RMDIR='rm -rf'
 STRIP=strip
 OBJ=.o
 EXE=
-BIN_DIR=$GOBO/bin
-BOOTSTRAP_DIR=$GOBO/tool/gec/bootstrap
+BIN_DIR="$GOBO/bin"
+BOOTSTRAP_DIR="$GOBO/tool/gec/bootstrap"
 
 cd $BIN_DIR
 
