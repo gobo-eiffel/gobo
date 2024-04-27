@@ -8220,16 +8220,13 @@ feature {NONE} -- Instruction generation
 			if call_operands.first /= l_target then
 				print_indentation
 				print_writable (l_target)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				if an_instruction.no_target_twin then
 					print_expression (call_operands.first)
 				else
 					print_attachment_expression (call_operands.first, l_source_type_set, l_target_type)
 				end
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 			call_operands.wipe_out
 			if current_agent = Void and then current_feature.is_once then
@@ -9447,10 +9444,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			l_parent_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			i, nb: INTEGER
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 			l_actual: ET_EXPRESSION
-			nb_operands: INTEGER
-			l_argument_offset: INTEGER
 			had_error: BOOLEAN
 		do
 			if line_generation_mode then
@@ -9504,10 +9498,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 					else
 						l_parent_dynamic_type := current_dynamic_system.dynamic_primary_type (l_parent_type, current_type.base_type)
 						l_dynamic_precursor := current_feature.dynamic_precursor (l_procedure, l_parent_dynamic_type, current_dynamic_system)
-						if not l_dynamic_precursor.is_static then
-							operand_stack.force (tokens.current_keyword)
-							nb_operands := 1
-						end
+						operand_stack.force (tokens.current_keyword)
 						if attached an_instruction.arguments as l_actuals then
 							nb := l_actuals.count
 							from i := 1 until i > nb loop
@@ -9516,33 +9507,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 								print_attachment_operand (l_actual, l_actual_type_set)
 								i := i + 1
 							end
-							nb_operands := nb_operands + nb
 						end
-						fill_call_operands (nb_operands)
-						print_indentation
-						register_called_feature (l_dynamic_precursor)
-						print_routine_name (l_dynamic_precursor, current_type, current_file)
-						current_file.put_character ('(')
-						current_file.put_string (c_ac)
-						if not l_dynamic_precursor.is_static then
-							print_comma
-							print_expression (call_operands.first)
-							l_argument_offset := 1
-						end
-						from i := 1 + l_argument_offset until i > nb_operands loop
-							print_comma
-							l_actual := call_operands.item (i)
-							l_actual_type_set := dynamic_type_set (l_actual)
-							l_formal_type_set := argument_type_set_in_feature (i - l_argument_offset, l_dynamic_precursor)
-							print_attachment_expression (l_actual, l_actual_type_set, l_formal_type_set.static_type)
-							i := i + 1
-						end
-						current_file.put_character (')')
-						print_semicolon_newline
+						nb := nb + 1
+						fill_call_operands (nb)
+						print_procedure_call (l_dynamic_precursor, current_type, False)
+						call_operands.wipe_out
 					end
 				end
 			end
-			call_operands.wipe_out
 		end
 
 	print_qualified_call_instruction (a_call: ET_QUALIFIED_FEATURE_CALL_INSTRUCTION)
@@ -9919,69 +9891,29 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			a_instruction_not_void: a_instruction /= Void
 		local
 			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
+			i, nb: INTEGER
+			l_actuals: detachable ET_ACTUAL_ARGUMENTS
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_actual: ET_EXPRESSION
 		do
 			if line_generation_mode then
 				print_position (a_instruction.position, current_feature.static_feature.implementation_class)
 			end
-			l_target_type := current_dynamic_system.dynamic_primary_type (a_instruction.type, current_type.base_type)
-			print_instruction_static_call (l_target_type, a_instruction.name, a_instruction.arguments)
-		end
-
-	print_instruction_static_call (a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_name: ET_CALL_NAME; a_arguments: detachable ET_ACTUAL_ARGUMENTS)
-			-- Print instruction which is expected to be a static call to
-			-- feature with the same seed as `a_name' in type `a_target_type'
-			-- and with `a_arguments'.
-		require
-			a_target_type_not_void: a_target_type /= Void
-			a_name_not_void: a_name /= Void
-		local
-			l_dynamic_procedure: detachable ET_DYNAMIC_FEATURE
-			l_seed: INTEGER
-			i, nb: INTEGER
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_formal_type_set: ET_DYNAMIC_TYPE_SET
-			l_actual: ET_EXPRESSION
-		do
-			if a_arguments /= Void then
-				nb := a_arguments.count
+				-- Add dummy target (which will not be used).
+			operand_stack.force (tokens.current_keyword)
+			l_actuals := a_instruction.arguments
+			if l_actuals /= Void then
+				nb := l_actuals.count
 				from i := 1 until i > nb loop
-					l_actual := a_arguments.actual_argument (i)
+					l_actual := l_actuals.actual_argument (i)
 					l_actual_type_set := dynamic_type_set (l_actual)
 					print_attachment_operand (l_actual, l_actual_type_set)
 					i := i + 1
 				end
 			end
-			fill_call_operands (nb)
-			l_seed := a_name.seed
-			l_dynamic_procedure := a_target_type.seeded_dynamic_procedure (l_seed, current_dynamic_system)
-			if l_dynamic_procedure = Void then
-					-- Internal error: there should be a procedure with `l_seed'.
-					-- It has been computed in ET_FEATURE_CHECKER or else an
-					-- error should have already been reported.
-				set_fatal_error
-				error_handler.report_giaac_error (generator, "print_instruction_static_call", 1, "procedure not found.")
-			elseif not l_dynamic_procedure.is_static then
-					-- Internal error: `l_dynamic_procedure' is not instance-free.
-				set_fatal_error
-				error_handler.report_giaac_error (generator, "print_instruction_static_call", 2, "procedure is not instance-free.")
-			else
-				register_called_feature (l_dynamic_procedure)
-				print_indentation
-				print_routine_name (l_dynamic_procedure, a_target_type, current_file)
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				from i := 1 until i > nb loop
-					current_file.put_character (',')
-					current_file.put_character (' ')
-					l_actual_type_set := dynamic_type_set (call_operands.item (i))
-					l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_procedure)
-					print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-					i := i + 1
-				end
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-			end
+			fill_call_operands (nb + 1)
+			l_target_type := current_dynamic_system.dynamic_primary_type (a_instruction.type, current_type.base_type)
+			print_named_procedure_call (a_instruction.name, l_target_type, False)
 			call_operands.wipe_out
 		end
 
@@ -10005,8 +9937,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 					-- Internal error: there should be a procedure for that seed.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_unqualified_call_instruction", 1, "procedure not found.")
-			elseif l_dynamic_feature.is_static then
-				print_instruction_static_call (current_type, a_call.name, a_call.arguments)
 			else
 				l_actuals := a_call.arguments
 				l_seed := a_call.name.seed
@@ -10328,7 +10258,7 @@ feature {NONE} -- Procedure call generation
 					-- Internal error: only internal routines are inlinable
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_inlined_procedure_call", 2, "only internal routines are inlinable.")
-			elseif attached l_internal_procedure.compound as l_compound then
+			elseif attached l_internal_procedure.compound as l_compound and then not l_compound.is_empty then
 				register_inlined_feature (a_feature)
 				nested_inlining_count := nested_inlining_count + 1
 				l_old_inlining_context := inlining_context
@@ -10361,6 +10291,16 @@ feature {NONE} -- Procedure call generation
 				call_target_type := l_old_call_target_type
 				inlining_context := l_old_inlining_context
 				nested_inlining_count := nested_inlining_count - 1
+			else
+				register_inlined_feature (a_feature)
+				print_indentation
+				current_file.put_string ("/* -> ")
+				print_routine_name (a_feature, a_feature.target_type, current_file)
+				current_file.put_string (" */")
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string ("/* <- */")
+				current_file.put_new_line
 			end
 		end
 
@@ -14068,21 +14008,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			l_class_impl: ET_CLASS
 			l_dynamic_precursor: ET_DYNAMIC_PRECURSOR
 			l_parent_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
-			i, nb: INTEGER
-			l_temp: detachable ET_IDENTIFIER
-			l_temp_index: INTEGER
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_assignment_target: like assignment_target
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_formal_type_set: ET_DYNAMIC_TYPE_SET
-			l_actual: ET_EXPRESSION
-			nb_operands: INTEGER
-			l_argument_offset: INTEGER
 			had_error: BOOLEAN
 		do
-			l_assignment_target := assignment_target
-			assignment_target := Void
 			l_parent_type := an_expression.parent_type
 			if l_parent_type = Void then
 					-- Internal error: the Precursor construct should already
@@ -14132,73 +14059,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					else
 						l_parent_dynamic_type := current_dynamic_system.dynamic_primary_type (l_parent_type, current_type.base_type)
 						l_dynamic_precursor := current_feature.dynamic_precursor (l_query, l_parent_dynamic_type, current_dynamic_system)
-						if not l_dynamic_precursor.is_static then
-							operand_stack.force (tokens.current_keyword)
-							nb_operands := 1
-						end
-						if attached an_expression.arguments as l_actuals then
-							nb := l_actuals.count
-							from i := 1 until i > nb loop
-								l_actual := l_actuals.actual_argument (i)
-								l_actual_type_set := dynamic_type_set (l_actual)
-								print_attachment_operand (l_actual, l_actual_type_set)
-								i := i + 1
-							end
-							nb_operands := nb_operands + nb
-						end
-						fill_call_operands (nb_operands)
-						if in_operand then
-							if l_assignment_target /= Void then
-								operand_stack.force (l_assignment_target)
-								print_indentation
-								print_writable (l_assignment_target)
-							else
-								l_dynamic_type_set := dynamic_type_set (an_expression)
-								l_dynamic_type := l_dynamic_type_set.static_type.primary_type
-								l_temp := new_temp_variable (l_dynamic_type)
-								mark_temp_variable_frozen (l_temp)
-									-- We will set the index of `l_temp' later because
-									-- it could still be used in `call_operands'.
-								l_temp_index := an_expression.index
-								operand_stack.force (l_temp)
-								print_indentation
-								print_temp_name (l_temp, current_file)
-							end
-							print_assign_to
-							current_file.put_character ('(')
-						end
-						register_called_feature (l_dynamic_precursor)
-						print_routine_name (l_dynamic_precursor, current_type, current_file)
-						current_file.put_character ('(')
-						current_file.put_string (c_ac)
-						if not l_dynamic_precursor.is_static then
-							print_comma
-							print_expression (call_operands.first)
-							l_argument_offset := 1
-						end
-						from i := 1 + l_argument_offset until i > nb_operands loop
-							print_comma
-							l_actual := call_operands.item (i)
-							l_actual_type_set := dynamic_type_set (l_actual)
-							l_formal_type_set := argument_type_set_in_feature (i - l_argument_offset, l_dynamic_precursor)
-							print_attachment_expression (l_actual, l_actual_type_set, l_formal_type_set.static_type)
-							i := i + 1
-						end
-						current_file.put_character (')')
-						if in_operand then
-							current_file.put_character (')')
-							print_semicolon_newline
+						if l_dynamic_precursor.is_constant_attribute or l_dynamic_precursor.is_unique_attribute then
+							print_unqualified_constant_attribute_call_expression (an_expression, l_dynamic_precursor)
+						else
+							print_unqualified_function_call_expression (an_expression, l_dynamic_precursor)
 						end
 					end
-				end
-			end
-			call_operands.wipe_out
-			if l_temp /= Void then
-				mark_temp_variable_unfrozen (l_temp)
-				if l_temp_index /= 0 then
-						-- We had to wait until this stage to set the index of `l_temp'
-						-- because it could have still been used in `call_operands'.
-					l_temp.set_index (l_temp_index)
 				end
 			end
 		end
@@ -14281,7 +14147,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			l_call_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_temp: detachable ET_IDENTIFIER
 			l_temp_index: INTEGER
-			l_temp_target: detachable ET_IDENTIFIER
 			l_assignment_target: like assignment_target
 			l_semistrict_target: ET_WRITABLE
 			l_implies: BOOLEAN
@@ -14338,8 +14203,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 				l_name.is_infix_and_then_symbol or l_name.is_infix_or_else_symbol or
 				l_name.is_infix_implies_symbol or l_name.is_infix_and_symbol or l_name.is_infix_or_symbol)
 			then
-				print_operand (l_target)
-				fill_call_operands (1)
 				if l_actuals = Void or else l_actuals.count /= 1 then
 						-- Internal error: these semistrict operators
 						-- have exactly one argument. This is guaranteed
@@ -14347,6 +14210,26 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					set_fatal_error
 					error_handler.report_giaac_error (generator, "print_qualified_call_expression", 1, "semistrict operator does not have exactly one argument.")
 				else
+					if l_assignment_target /= Void then
+						l_semistrict_target := l_assignment_target
+					else
+						l_temp := new_temp_variable (l_target_static_type)
+							-- We will set the index of `l_temp' later because
+							-- it could still be used in `call_operands'.
+						l_temp_index := l_target.index
+						mark_temp_variable_frozen (l_temp)
+						l_semistrict_target := l_temp
+					end
+					print_assignment_operand (l_target, l_target_type_set, l_semistrict_target, l_target_static_type)
+					fill_call_operands (1)
+					if l_semistrict_target /= call_operands.first then
+						print_indentation
+						print_writable (l_semistrict_target)
+						print_assign_to
+						current_file.put_string ("/* **** */")
+						print_attachment_expression (call_operands.first, l_target_type_set, l_target_static_type)
+						print_semicolon_newline
+					end
 					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
@@ -14364,47 +14247,24 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 					current_file.put_character (' ')
 					current_file.put_character ('{')
 					current_file.put_new_line
-					indent
-					if l_assignment_target /= Void then
-						l_semistrict_target := l_assignment_target
-					else
-						if attached {ET_IDENTIFIER} call_operands.first as l_identifier and then l_identifier.is_temporary and then is_temp_variable_free (l_identifier) then
-							l_temp_target := l_identifier
-							l_temp := l_temp_target
-							mark_temp_variable_used (l_temp)
-						else
-							l_temp := new_temp_variable (l_target_static_type)
-								-- We will set the index of `l_temp' later because
-								-- it could still be used in `call_operands'.
-							l_temp_index := call_operands.first.index
-						end
-						mark_temp_variable_frozen (l_temp)
-						l_semistrict_target := l_temp
-					end
 					call_operands.wipe_out
+					indent
 					l_actual := l_actuals.actual_argument (1)
 					l_actual_type_set := dynamic_type_set (l_actual)
 					print_assignment_operand (l_actual, l_actual_type_set, l_semistrict_target, l_target_static_type)
 					fill_call_operands (1)
-					if call_operands.first /= l_semistrict_target then
+					if l_semistrict_target /= call_operands.first then
 						print_indentation
 						print_writable (l_semistrict_target)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_expression (call_operands.first)
-						current_file.put_character (')')
-						current_file.put_character (';')
-						current_file.put_new_line
+						print_assign_to
+						print_attachment_expression (call_operands.first, l_actual_type_set, l_target_static_type)
+						print_semicolon_newline
 					end
 					dedent
 					print_indentation
 					current_file.put_character ('}')
 					l_implies := l_name.is_infix_implies or l_name.is_infix_implies_symbol
-					if not l_implies and l_semistrict_target = l_temp_target then
-						current_file.put_new_line
-					else
+					if l_implies then
 						current_file.put_character (' ')
 						current_file.put_string (c_else)
 						current_file.put_character (' ')
@@ -14413,21 +14273,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 						indent
 						print_indentation
 						print_writable (l_semistrict_target)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						if l_or or l_implies then
-							current_file.put_string (c_eif_true)
-						else
-							current_file.put_string (c_eif_false)
-						end
-						current_file.put_character (';')
-						current_file.put_new_line
+						print_assign_to
+						current_file.put_string (c_eif_true)
+						print_semicolon_newline
 						dedent
 						print_indentation
 						current_file.put_character ('}')
-						current_file.put_new_line
 					end
+					current_file.put_new_line
 					operand_stack.force (l_semistrict_target)
 				end
 			else
@@ -15063,144 +14916,26 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			a_expression_not_void: a_expression /= Void
 		local
 			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
 			l_target_type := current_dynamic_system.dynamic_primary_type (a_expression.type, current_type.base_type)
-			print_expression_static_call (a_expression, l_target_type, a_expression.name, a_expression.arguments)
-		end
-
-	print_expression_static_call (a_expression: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_name: ET_CALL_NAME; a_arguments: detachable ET_ACTUAL_ARGUMENTS)
-			-- Print `a_expression', which is expected to be a static call to
-			-- feature with the same seed as `a_name' in type `a_target_type'
-			-- and with `a_arguments'.
-		require
-			a_expression_not_void: a_expression /= Void
-			a_target_type_not_void: a_target_type /= Void
-			a_name_not_void: a_name /= Void
-		local
-			l_query: detachable ET_QUERY
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_seed: INTEGER
-			i, nb: INTEGER
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_temp: detachable ET_IDENTIFIER
-			l_temp_index: INTEGER
-			l_assignment_target: like assignment_target
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_formal_type_set: ET_DYNAMIC_TYPE_SET
-			old_index: INTEGER
-			l_constant: ET_CONSTANT
-			l_once_feature: ET_FEATURE
-			l_actual: ET_EXPRESSION
-		do
-			l_assignment_target := assignment_target
-			assignment_target := Void
-			if a_arguments /= Void then
-				nb := a_arguments.count
-				from i := 1 until i > nb loop
-					l_actual := a_arguments.actual_argument (i)
-					l_actual_type_set := dynamic_type_set (l_actual)
-					print_attachment_operand (l_actual, l_actual_type_set)
-					i := i + 1
-				end
-			end
-			fill_call_operands (nb)
-			if in_operand then
-				if l_assignment_target /= Void then
-					operand_stack.force (l_assignment_target)
-					print_indentation
-					print_writable (l_assignment_target)
-				else
-					l_dynamic_type_set := dynamic_type_set (a_expression)
-					l_dynamic_type := l_dynamic_type_set.static_type.primary_type
-					l_temp := new_temp_variable (l_dynamic_type)
-					mark_temp_variable_frozen (l_temp)
-						-- We will set the index of `l_temp' later because
-						-- it could still be used in `call_operands'.
-					l_temp_index := a_expression.index
-					operand_stack.force (l_temp)
-					print_indentation
-					print_temp_name (l_temp, current_file)
-				end
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-			end
-			l_seed := a_name.seed
-			l_query := a_target_type.base_class.seeded_query (l_seed)
-			if l_query = Void then
+			if not attached l_target_type.base_class.seeded_query (a_expression.name.seed) as l_query then
 					-- Internal error: there should be a query with `l_seed'.
 					-- It has been computed in ET_FEATURE_CHECKER or else an
 					-- error should have already been reported.
 				set_fatal_error
-				error_handler.report_giaac_error (generator, "print_expression_static_call", 1, "query not found.")
+				error_handler.report_giaac_error (generator, "print_static_call_expression", 1, "query not found.")
 			elseif l_query.is_attribute then
 					-- Internal error: no object available.
 				set_fatal_error
-				error_handler.report_giaac_error (generator, "print_expression_static_call", 2, "query is an attribute.")
-			elseif l_query.is_constant_attribute then
-				if not attached {ET_CONSTANT_ATTRIBUTE} l_query as l_constant_attribute then
-						-- Internal error.
-					set_fatal_error
-					error_handler.report_giaac_error (generator, "print_expression_static_call", 3, "invalid constant attribute.")
-				elseif attached {ET_MANIFEST_STRING} l_constant_attribute.constant as l_string_constant then
-					l_once_feature := l_constant_attribute.implementation_feature
-					constant_features.force_last (l_string_constant, l_once_feature)
-					print_once_value_name (l_once_feature, current_file)
-				else
-					l_constant := l_constant_attribute.constant
-					old_index := l_constant.index
-					l_constant.set_index (a_expression.index)
-					print_expression (l_constant)
-					l_constant.set_index (old_index)
-				end
-			elseif l_query.is_unique_attribute then
-				if not attached {ET_UNIQUE_ATTRIBUTE} l_query as l_unique_attribute then
-						-- Internal error.
-					set_fatal_error
-					error_handler.report_giaac_error (generator, "print_expression_static_call", 4, "invalid unique attribute.")
-				else
-					l_dynamic_type_set := dynamic_type_set (a_expression)
-					l_dynamic_type := l_dynamic_type_set.static_type.primary_type
-					print_type_cast (l_dynamic_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_integer (l_unique_attribute.constant.to_integer_32)
-					current_file.put_character (')')
-				end
+				error_handler.report_giaac_error (generator, "print_static_call_expression", 2, "query is an attribute.")
+			elseif l_query.is_constant_attribute or l_query.is_unique_attribute then
+				l_dynamic_feature := l_target_type.dynamic_query (l_query, current_dynamic_system)
+				check l_dynamic_feature_valid: l_dynamic_feature.is_constant_attribute or l_dynamic_feature.is_unique_attribute end
+				print_unqualified_constant_attribute_call_expression (a_expression, l_dynamic_feature)
 			else
-				l_dynamic_feature := a_target_type.dynamic_query (l_query, current_dynamic_system)
-				if not l_dynamic_feature.is_static then
-						-- Internal error: `l_dynamic_feature' is not instance-free.
-					set_fatal_error
-					error_handler.report_giaac_error (generator, "print_expression_static_call", 5, "query is not instance-free.")
-				else
-					register_called_feature (l_dynamic_feature)
-					print_routine_name (l_dynamic_feature, a_target_type, current_file)
-					current_file.put_character ('(')
-					current_file.put_string (c_ac)
-					from i := 1 until i > nb loop
-						print_comma
-						l_actual_type_set := dynamic_type_set (call_operands.item (i))
-						l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_feature)
-						print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-						i := i + 1
-					end
-					current_file.put_character (')')
-				end
-			end
-			if in_operand then
-				current_file.put_character (')')
-				print_semicolon_newline
-			end
-			call_operands.wipe_out
-			if l_temp /= Void then
-				mark_temp_variable_unfrozen (l_temp)
-				if l_temp_index /= 0 then
-						-- We had to wait until this stage to set the index of `l_temp'
-						-- because it could have still been used in `call_operands'.
-					l_temp.set_index (l_temp_index)
-				end
+				l_dynamic_feature := l_target_type.dynamic_query (l_query, current_dynamic_system)
+				print_unqualified_function_call_expression (a_expression, l_dynamic_feature)
 			end
 		end
 
@@ -15426,8 +15161,154 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			-- Print unqualified call expression.
 		require
 			a_call_not_void: a_call /= Void
+		do
+			if not attached current_type.seeded_dynamic_query (a_call.name.seed, current_dynamic_system) as l_dynamic_feature then
+					-- Internal error: there should be a query for that seed.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_unqualified_call_expression", 1, "query not found.")
+			elseif l_dynamic_feature.is_attribute_with_no_self_initializing_code then
+				print_unqualified_attribute_call_expression (a_call, l_dynamic_feature)
+			elseif l_dynamic_feature.is_constant_attribute or l_dynamic_feature.is_unique_attribute then
+				print_unqualified_constant_attribute_call_expression (a_call, l_dynamic_feature)
+			else
+				print_unqualified_function_call_expression (a_call, l_dynamic_feature)
+			end
+		end
+
+	print_unqualified_attribute_call_expression (a_call: ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION; a_feature: ET_DYNAMIC_FEATURE)
+			-- Print expression `a_call' which is an unqualified call to the
+			-- attribute `a_feature' (static binding).
+		require
+			a_call_not_void: a_call /= Void
+			a_feature_not_void: a_feature /= void
+			a_feature_is_attribute: a_feature.is_attribute_with_no_self_initializing_code
 		local
-			l_actuals: detachable ET_ACTUAL_ARGUMENTS
+			l_call_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_old_call_target: detachable ET_EXPRESSION
+		do
+			assignment_target := Void
+			l_call_type := dynamic_type_set (a_call).static_type.primary_type
+			if in_operand then
+				operand_stack.force (a_call)
+			elseif a_feature.is_builtin then
+					-- This is a built-in attribute (such as feature 'item' in 'INTEGER_REF').
+					-- The call might be the operand (target or argument) of another call.
+					-- Therefore we need to take some care when dealing with `call_operands'.
+					-- We need to keep track of the operands of this possible other call
+					-- while processing the current call to the built-in attribute, for
+					-- which only the target ('Current') needs to be on `call_operands'.
+				if call_operands.is_empty then
+					call_operands.force_last (tokens.current_keyword)
+				else
+					l_old_call_target := call_operands.first
+					call_operands.replace (tokens.current_keyword, 1)
+				end
+				if in_call_target and l_call_type.is_expanded then
+						-- Pass the address of the built-in attribute expanded object.
+					current_file.put_character ('&')
+					current_file.put_character ('(')
+						-- No need to call `print_adapted_query_call' here because an
+						-- unqualified call is not polymorphic, and therefore the type
+						-- of the query is exactly the type expected by the caller.
+					print_query_call (a_feature, current_type, False)
+					current_file.put_character (')')
+				else
+						-- No need to call `print_adapted_query_call' here because an
+						-- unqualified call is not polymorphic, and therefore the type
+						-- of the query is exactly the type expected by the caller.
+					print_query_call (a_feature, current_type, False)
+				end
+				if l_old_call_target /= Void then
+					call_operands.replace (l_old_call_target, 1)
+				else
+					call_operands.wipe_out
+				end
+			elseif attached call_target_type as l_call_target_type then
+				check in_call_target: in_call_target end
+				if l_call_type.is_expanded then
+						-- Pass the address of the expanded object.
+					current_file.put_character ('&')
+					current_file.put_character ('(')
+					print_attribute_access (a_feature, tokens.current_keyword, current_type, False)
+					current_file.put_character (')')
+				elseif l_call_target_type.is_expanded then
+						-- We need to unbox the object and then pass its address.
+					current_file.put_character ('&')
+					current_file.put_character ('(')
+					print_boxed_attribute_item_access (a_call, l_call_target_type, call_target_check_void)
+					current_file.put_character (')')
+				else
+					print_attribute_access (a_feature, tokens.current_keyword, current_type, False)
+				end
+			else
+				print_attribute_access (a_feature, tokens.current_keyword, current_type, False)
+			end
+		end
+
+	print_unqualified_constant_attribute_call_expression (a_call: ET_CALL_EXPRESSION_WITH_ACTUAL_ARGUMENTS; a_feature: ET_DYNAMIC_FEATURE)
+			-- Print expression `a_call' which is an unqualified or static (non-object) call
+			-- to the constant or unique attribute `a_feature' (static binding).
+		require
+			a_call_not_void: a_call /= Void
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_constant_attribute: a_feature.is_constant_attribute or a_feature.is_unique_attribute
+		local
+			l_call_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_temp: detachable ET_IDENTIFIER
+			l_old_call_target: detachable ET_EXPRESSION
+		do
+			assignment_target := Void
+			if in_operand then
+				if in_call_target then
+					l_call_type := dynamic_type_set (a_call).static_type.primary_type
+					if l_call_type.is_expanded then
+						l_temp := new_temp_variable (l_call_type)
+						mark_temp_variable_frozen (l_temp)
+						print_indentation
+						print_temp_name (l_temp, current_file)
+						print_assign_to
+						in_operand := False
+						print_unqualified_constant_attribute_call_expression (a_call, a_feature)
+						in_operand := True
+						print_semicolon_newline
+						l_temp.set_index (a_call.index)
+						operand_stack.force (l_temp)
+						mark_temp_variable_unfrozen (l_temp)
+					else
+						operand_stack.force (a_call)
+					end
+				else
+					operand_stack.force (a_call)
+				end
+			else
+					-- The call might be the operand (target or argument) of another call.
+					-- Therefore we need to take some care when dealing with `call_operands'.
+					-- We need to keep track of the operands of this possible other call
+					-- while processing the current call to the constantd or unique attribute,
+					-- for which only the target ('Current') needs to be on `call_operands'.
+				if call_operands.is_empty then
+					call_operands.force_last (tokens.current_keyword)
+				else
+					l_old_call_target := call_operands.first
+					call_operands.replace (tokens.current_keyword, 1)
+				end
+				print_query_call (a_feature, a_feature.target_type, False)
+				if l_old_call_target /= Void then
+					call_operands.replace (l_old_call_target, 1)
+				else
+					call_operands.wipe_out
+				end
+			end
+		end
+
+	print_unqualified_function_call_expression (a_call: ET_CALL_EXPRESSION_WITH_ACTUAL_ARGUMENTS; a_feature: ET_DYNAMIC_FEATURE)
+			-- Print expression `a_call' which is an unqualified or static (non-object) call
+			-- to the function `a_feature' (static binding).
+		require
+			a_call_not_void: a_call /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
 			l_actual: ET_EXPRESSION
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
@@ -15436,320 +15317,172 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			l_temp: detachable ET_IDENTIFIER
 			l_temp_index: INTEGER
 			l_assignment_target: like assignment_target
-			l_dynamic_feature: detachable ET_DYNAMIC_FEATURE
-			l_once_feature: ET_FEATURE
-			l_old_call_target: detachable ET_EXPRESSION
 			l_manifest_tuple_operand: detachable ET_MANIFEST_TUPLE
 			l_target_operand: ET_EXPRESSION
 			l_seed: INTEGER
-			old_index: INTEGER
-			l_constant: ET_CONSTANT
 			l_force_result_boxing: BOOLEAN
 			l_inlined_call: BOOLEAN
-			l_git_filename: STRING
-			l_first_line: STRING
-			l_git_sha1: STRING
-			l_gobo_version: STRING
 			l_printed: BOOLEAN
 		do
-			l_dynamic_feature := current_type.seeded_dynamic_query (a_call.name.seed, current_dynamic_system)
-			if l_dynamic_feature = Void then
-					-- Internal error: there should be a query for that seed.
-				set_fatal_error
-				error_handler.report_giaac_error (generator, "print_unqualified_call_expression", 1, "query not found.")
-			elseif l_dynamic_feature.is_static then
-				print_expression_static_call (a_call, current_type, a_call.name, a_call.arguments)
-			else
-				l_assignment_target := assignment_target
-				assignment_target := Void
-				l_call_type_set := dynamic_type_set (a_call)
-				l_call_type := l_call_type_set.static_type.primary_type
-				if
-					l_dynamic_feature.is_attribute and then
-					(not attached {ET_EXTENDED_ATTRIBUTE} l_dynamic_feature.static_feature as l_extended_attribute or else
-					not l_extended_attribute.has_self_initializing_code or else
-					not attached l_dynamic_feature.result_type_set as l_result_type_set or else
-					l_result_type_set.static_type.is_self_initializing)
-				then
-						-- This is an attribute for which there is no self-initialization code
-						-- to be executed.
-					if in_operand then
-						operand_stack.force (a_call)
-					elseif l_dynamic_feature.is_builtin then
-							-- This is a built-in attribute (such as feature 'item' in 'INTEGER_REF').
-							-- The call might be the operand (target or argument) of another call.
-							-- Therefore we need to take some care when dealing with `call_operands'.
-							-- We need to keep track of the operands of this possible other call
-							-- while processing the current call to the built-in attribute, for
-							-- which only the target ('Current') needs to be on `call_operands'.
-						if call_operands.is_empty then
-							call_operands.force_last (tokens.current_keyword)
-						else
-							l_old_call_target := call_operands.first
-							call_operands.replace (tokens.current_keyword, 1)
-						end
-						if in_call_target and l_call_type.is_expanded then
-								-- Pass the address of the built-in attribute expanded object.
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-								-- No need to call `print_adapted_query_call' here because an
-								-- unqualified call is not polymorphic, and therefore the type
-								-- of the query is exactly the type expected by the caller.
-							print_query_call (l_dynamic_feature, current_type, False)
-							current_file.put_character (')')
-						else
-								-- No need to call `print_adapted_query_call' here because an
-								-- unqualified call is not polymorphic, and therefore the type
-								-- of the query is exactly the type expected by the caller.
-							print_query_call (l_dynamic_feature, current_type, False)
-						end
-						if l_old_call_target /= Void then
-							call_operands.replace (l_old_call_target, 1)
-							l_old_call_target := Void
-						else
-							call_operands.wipe_out
-						end
-					elseif attached call_target_type as l_call_target_type then
-						check in_call_target: in_call_target end
-						if l_call_type.is_expanded then
-								-- Pass the address of the expanded object.
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-							print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
-							current_file.put_character (')')
-						elseif l_call_target_type.is_expanded then
-								-- We need to unbox the object and then pass its address.
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-							print_boxed_attribute_item_access (a_call, l_call_target_type, call_target_check_void)
-							current_file.put_character (')')
-						else
-							print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
-						end
-					else
-						print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
+			l_assignment_target := assignment_target
+			assignment_target := Void
+			l_call_type_set := dynamic_type_set (a_call)
+			l_call_type := l_call_type_set.static_type.primary_type
+			if
+				in_call_target and then
+				(a_feature.is_builtin_special_item or a_feature.is_once) and then
+				l_call_type.is_expanded and then
+				(not l_call_type.is_basic or else in_procedure_call_target)
+			then
+					-- We want the result be boxed even though the result static type is expanded.
+					-- This is needed when the call is a "SPECIAL" item or a once function, the call
+					-- result type is expanded, and it is the target of another call. In that case we
+					-- force the result type to be of reference type in order to force the boxing of
+					-- the result so that the other call is applied on the result object itself and
+					-- not on a copy of this object.
+					-- Note that for optimization we don't force boxing when the type is a basic
+					-- type unless the result object is the target of a procedure call (e.g.
+					-- 'copy', 'standard_copy' or 'set_item' which will overwrite the value of
+					-- the target).
+				l_call_type := current_dynamic_system.any_type
+				l_force_result_boxing := True
+			end
+			l_seed := a_call.name.seed
+			l_actuals := a_call.arguments
+				-- Check whether this a call to FUNCTION.item with a manifest
+				-- tuple as argument. We have a special treatment in that case
+				-- to avoid having to create the manifest tuple when possible.
+			if l_seed = current_system.function_item_seed and then not a_call.is_call_agent then
+				if l_actuals /= Void and then l_actuals.count = 1 and then attached {ET_MANIFEST_TUPLE} l_actuals.actual_argument (1) as l_manifest_tuple then
+					operand_stack.force (tokens.current_keyword)
+					nb := l_manifest_tuple.count
+					from i := 1 until i > nb loop
+						l_actual := l_manifest_tuple.expression (i)
+						l_actual_type_set := dynamic_type_set (l_actual)
+						print_attachment_operand (l_actual, l_actual_type_set)
+						i := i + 1
 					end
-				elseif l_dynamic_feature.is_constant_attribute then
-					if in_operand then
-						if in_call_target then
-							if l_call_type.is_expanded then
-								in_operand := False
-								l_temp := new_temp_variable (l_call_type)
-								mark_temp_variable_frozen (l_temp)
-								print_indentation
-								print_temp_name (l_temp, current_file)
-								current_file.put_character (' ')
-								current_file.put_character ('=')
-								current_file.put_character (' ')
-								print_unqualified_call_expression (a_call)
-								current_file.put_character (';')
-								current_file.put_new_line
-								l_temp.set_index (a_call.index)
-								operand_stack.force (l_temp)
-								in_operand := True
-							else
-								operand_stack.force (a_call)
-							end
-						else
-							operand_stack.force (a_call)
+					nb := nb + 1
+					fill_call_operands (nb)
+					l_manifest_tuple_operand := agent_manifest_tuple
+					l_manifest_tuple_operand.resize (nb - 1)
+					from i := nb until i < 2 loop
+						l_manifest_tuple_operand.put_first (call_operands.item (i))
+						i := i - 1
+					end
+					l_manifest_tuple_operand.set_index (l_manifest_tuple.index)
+					mark_expressions_frozen (l_manifest_tuple_operand)
+					l_target_operand := call_operands.first
+					call_operands.wipe_out
+					call_operands.put_last (l_target_operand)
+					call_operands.put_last (l_manifest_tuple_operand)
+					nb := 2
+				end
+			end
+			if l_manifest_tuple_operand = Void then
+				operand_stack.force (tokens.current_keyword)
+				nb := 0
+				if l_actuals /= Void then
+					nb := l_actuals.count
+					from i := 1 until i > nb loop
+						l_actual := l_actuals.actual_argument (i)
+						l_actual_type_set := dynamic_type_set (l_actual)
+						print_attachment_operand (l_actual, l_actual_type_set)
+						i := i + 1
+					end
+				end
+				nb := nb + 1
+				fill_call_operands (nb)
+			end
+			if is_inlinable_function (a_feature, a_feature.target_type) then
+					-- When there is no result type of the form 'like argument',
+					-- then there is no need to call `print_adapted_query_call'
+					-- because an unqualified or static call is not polymorphic,
+					-- and therefore the type of the query is exactly the type
+					-- expected by the caller. This is another story with 'like argument'.
+					-- For example 'clone (1)' is expected to be of type INTEGER
+					-- and 'clone ("gobo")' is expected to be of type STRING.
+					-- But the corresponding generated function for 'clone' will
+					-- be declared to return an ANY. Hence the need for a call
+					-- to `print_adapted_query_call' in this case.
+					-- There is also the case when `l_force_result_boxing' is True.
+				print_adapted_query_call (a_feature, a_feature.target_type, l_call_type, False)
+				l_inlined_call := True
+				fill_call_operands (1)
+				if in_operand then
+					if l_force_result_boxing then
+						l_printed := False
+					elseif attached {ET_IDENTIFIER} call_operands.first as l_identifier then
+						if l_identifier.is_temporary and then is_temp_variable_free (l_identifier) then
+							l_temp := l_identifier
+							mark_temp_variable_used (l_temp)
+							mark_temp_variable_frozen (l_temp)
+							l_temp_index := a_call.index
 						end
-					elseif attached {ET_CONSTANT_ATTRIBUTE} l_dynamic_feature.static_feature as l_constant_attribute then
-						if attached {ET_MANIFEST_STRING} l_constant_attribute.constant as l_string_constant then
-								-- Try to inject the commit SHA-1 to the Gobo version if not already done yet.
-								-- Useful when compiling Gobo tools from a local Git clone.
-							if
-								l_string_constant.value.same_string ("xx.xx.xx+xxxxxxxxx") and
-								l_constant_attribute.implementation_class.upper_name.same_string ("UT_GOBO_VERSION")
-							then
-								l_git_filename := file_system.nested_pathname ("${GOBO}", <<".git", "HEAD">>)
-								l_git_filename := Execution_environment.interpreted_string (l_git_filename)
-								l_first_line := file_system.file_first_line (l_git_filename)
-								if l_first_line.starts_with ("ref: ") then
-									l_first_line.remove_head (5)
-									l_git_filename := file_system.nested_pathname ("${GOBO}", <<".git", l_first_line>>)
-									l_git_filename := Execution_environment.interpreted_string (l_git_filename)
-									l_first_line := file_system.file_first_line (l_git_filename)
-								end
-								if l_first_line.count = 40 then
-									l_git_sha1 := l_first_line
-									l_git_sha1.keep_head (9)
-									l_gobo_version := "00.00.00+" + l_git_sha1
-									if attached {ET_REGULAR_MANIFEST_STRING} l_string_constant as l_regular_manifest_string then
-										l_regular_manifest_string.set_literal (l_gobo_version)
-									end
-								end
-							end
-							l_once_feature := l_constant_attribute.implementation_feature
-							constant_features.force_last (l_string_constant, l_once_feature)
-							print_once_value_name (l_once_feature, current_file)
-						else
-							l_constant := l_constant_attribute.constant
-							old_index := l_constant.index
-							l_constant.set_index (a_call.index)
-							print_expression (l_constant)
-							l_constant.set_index (old_index)
-						end
+						operand_stack.force (l_identifier)
+						l_printed := True
 					end
 				else
-					if
-						in_call_target and then
-						(l_dynamic_feature.is_builtin_special_item or l_dynamic_feature.is_once) and then
-						l_call_type.is_expanded and then
-						(not l_call_type.is_basic or else in_procedure_call_target)
-					then
-							-- We want the result be boxed even though the result static type is expanded.
-							-- This is needed when the call is a "SPECIAL" item or a once function, the call
-							-- result type is expanded, and it is the target of another call. In that case we
-							-- force the result type to be of reference type in order to force the boxing of
-							-- the result so that the other call is applied on the result object itself and
-							-- not on a copy of this object.
-							-- Note that for optimization we don't force boxing when the type is a basic
-							-- type unless the result object is the target of a procedure call (e.g.
-							-- 'copy', 'standard_copy' or 'set_item' which will overwrite the value of
-							-- the target).
-						l_call_type := current_dynamic_system.any_type
-						l_force_result_boxing := True
-					end
-					l_actuals := a_call.arguments
-					l_seed := a_call.name.seed
-						-- Check whether this a call to FUNCTION.item with a manifest
-						-- tuple as argument. We have a special treatment in that case
-						-- to avoid having to create the manifest tuple when possible.
-					if l_seed = current_system.function_item_seed and then not a_call.is_call_agent then
-						if l_actuals /= Void and then l_actuals.count = 1 then
-							if attached {ET_MANIFEST_TUPLE} l_actuals.actual_argument (1) as l_manifest_tuple then
-								operand_stack.force (tokens.current_keyword)
-								nb := l_manifest_tuple.count
-								from i := 1 until i > nb loop
-									l_actual := l_manifest_tuple.expression (i)
-									l_actual_type_set := dynamic_type_set (l_actual)
-									print_attachment_operand (l_actual, l_actual_type_set)
-									i := i + 1
-								end
-								nb := nb + 1
-								fill_call_operands (nb)
-								l_manifest_tuple_operand := agent_manifest_tuple
-								l_manifest_tuple_operand.resize (nb - 1)
-								from i := nb until i < 2 loop
-									l_manifest_tuple_operand.put_first (call_operands.item (i))
-									i := i - 1
-								end
-								l_manifest_tuple_operand.set_index (l_manifest_tuple.index)
-								mark_expressions_frozen (l_manifest_tuple_operand)
-								l_target_operand := call_operands.first
-								call_operands.wipe_out
-								call_operands.put_last (l_target_operand)
-								call_operands.put_last (l_manifest_tuple_operand)
-								nb := 2
-							end
+					print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
+					l_printed := True
+				end
+			end
+			if not l_printed then
+				if in_operand then
+					if l_assignment_target /= Void then
+						operand_stack.force (l_assignment_target)
+						print_indentation
+						print_writable (l_assignment_target)
+					else
+						l_temp := new_temp_variable (l_call_type)
+						mark_temp_variable_frozen (l_temp)
+							-- We will set the index of `l_temp' later because
+							-- it could still be used in `call_operands'.
+						l_temp_index := a_call.index
+						if l_force_result_boxing then
+								-- `current_dynamic_system.any_type' is the first type set
+								-- in `extra_dynamic_type_sets'.
+							l_temp_index := current_dynamic_type_sets.count + 1
 						end
+						operand_stack.force (l_temp)
+						print_indentation
+						print_temp_name (l_temp, current_file)
 					end
-					if l_manifest_tuple_operand = Void then
-						operand_stack.force (tokens.current_keyword)
-						nb := 0
-						if l_actuals /= Void then
-							nb := l_actuals.count
-							from i := 1 until i > nb loop
-								l_actual := l_actuals.actual_argument (i)
-								l_actual_type_set := dynamic_type_set (l_actual)
-								print_attachment_operand (l_actual, l_actual_type_set)
-								i := i + 1
-							end
-						end
-						nb := nb + 1
-						fill_call_operands (nb)
-					end
-					if is_inlinable_function (l_dynamic_feature, current_type) then
-							-- When there is no result type of the form 'like argument',
-							-- then there is no need to call `print_adapted_query_call'
-							-- because an unqualified call is not polymorphic, and therefore
-							-- the type of the query is exactly the type expected by
-							-- the caller. This is another story with 'like argument'.
-							-- For example 'clone (1)' is expected to be of type INTEGER
-							-- and 'clone ("gobo")' is expected to be of type STRING.
-							-- But the corresponding generated function for 'clone' will
-							-- be declared to return an ANY. Hence the need for a call
-							-- to `print_adapted_query_call' in this case.
-							-- There is also the case when `l_force_result_boxing' is True.
-						print_adapted_query_call (l_dynamic_feature, current_type, l_call_type, False)
-						l_inlined_call := True
-						fill_call_operands (1)
-						if in_operand then
-							if l_force_result_boxing then
-								l_printed := False
-							elseif attached {ET_IDENTIFIER} call_operands.first as l_identifier then
-								if l_identifier.is_temporary and then is_temp_variable_free (l_identifier) then
-									l_temp := l_identifier
-									mark_temp_variable_used (l_temp)
-									mark_temp_variable_frozen (l_temp)
-									l_temp_index := a_call.index
-								end
-								operand_stack.force (l_identifier)
-								l_printed := True
-							end
-						else
-							print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
-							l_printed := True
-						end
-					end
-					if not l_printed then
-						if in_operand then
-							if l_assignment_target /= Void then
-								operand_stack.force (l_assignment_target)
-								print_indentation
-								print_writable (l_assignment_target)
-							else
-								l_temp := new_temp_variable (l_call_type)
-								mark_temp_variable_frozen (l_temp)
-									-- We will set the index of `l_temp' later because
-									-- it could still be used in `call_operands'.
-								l_temp_index := a_call.index
-								if l_force_result_boxing then
-										-- `current_dynamic_system.any_type' is the first type set
-										-- in `extra_dynamic_type_sets'.
-									l_temp_index := current_dynamic_type_sets.count + 1
-								end
-								operand_stack.force (l_temp)
-								print_indentation
-								print_temp_name (l_temp, current_file)
-							end
-							print_assign_to
-							current_file.put_character ('(')
-						end
-						if l_inlined_call then
-							print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
-						else
-								-- When there is no result type of the form 'like argument',
-								-- then there is no need to call `print_adapted_query_call'
-								-- because an unqualified call is not polymorphic, and therefore
-								-- the type of the query is exactly the type expected by
-								-- the caller. This is another story with 'like argument'.
-								-- For example 'clone (1)' is expected to be of type INTEGER
-								-- and 'clone ("gobo")' is expected to be of type STRING.
-								-- But the corresponding generated function for 'clone' will
-								-- be declared to return an ANY. Hence the need for a call
-								-- to `print_adapted_query_call' in this case.
-								-- There is also the case when `l_force_result_boxing' is True.
-							print_adapted_query_call (l_dynamic_feature, current_type, l_call_type, False)
-						end
-						if in_operand then
-							current_file.put_character (')')
-							print_semicolon_newline
-						end
-					end
-					call_operands.wipe_out
-					if l_manifest_tuple_operand /= Void then
-						mark_expressions_unfrozen (l_manifest_tuple_operand)
-						l_manifest_tuple_operand.wipe_out
-					end
-					if l_temp /= Void then
-						mark_temp_variable_unfrozen (l_temp)
-						if l_temp_index /= 0 then
-								-- We had to wait until this stage to set the index of `l_temp'
-								-- because it could have still been used in `call_operands'.
-							l_temp.set_index (l_temp_index)
-						end
-					end
+					print_assign_to
+					current_file.put_character ('(')
+				end
+				if l_inlined_call then
+					print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
+				else
+						-- When there is no result type of the form 'like argument',
+						-- then there is no need to call `print_adapted_query_call'
+						-- because an unqualified or static call is not polymorphic,
+						-- and therefore the type of the query is exactly the type
+						-- expected by the caller. This is another story with 'like argument'.
+						-- For example 'clone (1)' is expected to be of type INTEGER
+						-- and 'clone ("gobo")' is expected to be of type STRING.
+						-- But the corresponding generated function for 'clone' will
+						-- be declared to return an ANY. Hence the need for a call
+						-- to `print_adapted_query_call' in this case.
+						-- There is also the case when `l_force_result_boxing' is True.
+					print_adapted_query_call (a_feature, a_feature.target_type, l_call_type, False)
+				end
+				if in_operand then
+					current_file.put_character (')')
+					print_semicolon_newline
+				end
+			end
+			call_operands.wipe_out
+			if l_manifest_tuple_operand /= Void then
+				mark_expressions_unfrozen (l_manifest_tuple_operand)
+				l_manifest_tuple_operand.wipe_out
+			end
+			if l_temp /= Void then
+				mark_temp_variable_unfrozen (l_temp)
+				if l_temp_index /= 0 then
+						-- We had to wait until this stage to set the index of `l_temp'
+						-- because it could have still been used in `call_operands'.
+					l_temp.set_index (l_temp_index)
 				end
 			end
 		end
@@ -16955,16 +16688,24 @@ feature {NONE} -- Query call generation
 				error_handler.report_giaac_error (generator, "print_query_call", 1, "feature is not a query.")
 			elseif attached {ET_CONSTANT_ATTRIBUTE} l_static_query as l_constant_attribute then
 -- TODO: Need to check whether the target is Void or not, even though it does not matter here.
-				if attached {ET_MANIFEST_STRING} l_constant_attribute.constant as l_string_constant then
+				l_constant := l_constant_attribute.constant
+				if attached {ET_MANIFEST_STRING} l_constant as l_string_constant then
+						-- Try to inject the commit SHA-1 to the Gobo version if not already done yet.
+						-- Useful when compiling Gobo tools from a local Git clone.
+					if
+						l_string_constant.value.same_string ("xx.xx.xx+xxxxxxxxx") and
+						l_constant_attribute.implementation_class.upper_name.same_string ("UT_GOBO_VERSION")
+					then
+						l_constant := gobo_version_string_constant
+					end
 					l_once_feature := l_constant_attribute.implementation_feature
-					constant_features.force_last (l_string_constant, l_once_feature)
+					constant_features.force_last (l_constant, l_once_feature)
 					print_once_value_name (l_once_feature, current_file)
 				else
 					old_type := current_type
 					current_type := a_feature.target_type
 					old_feature := current_feature
 					current_feature := a_feature
-					l_constant := l_constant_attribute.constant
 					old_index := l_constant.index
 					extra_dynamic_type_sets.force_last (l_result_type_set)
 					l_constant.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
@@ -16980,11 +16721,7 @@ feature {NONE} -- Query call generation
 				current_file.put_character ('(')
 				current_file.put_integer (l_unique_attribute.constant.to_integer_32)
 				current_file.put_character (')')
-			elseif
-				attached {ET_EXTENDED_ATTRIBUTE} l_static_query as l_extended_attribute and then
-				l_extended_attribute.has_self_initializing_code and then
-				not l_result_type_set.static_type.is_self_initializing
-			then
+			elseif a_feature.is_attribute_with_self_initializing_code then
 					-- Note: If there is no attribute initialization code, then
 					-- this is a regular attribute, possibly with assertions
 					-- or a 'note' clause.
@@ -42732,6 +42469,10 @@ feature {ET_AST_NODE} -- Processing
 				print_agent_open_operand (an_identifier)
 			elseif an_identifier.is_agent_closed_operand then
 				print_agent_closed_operand (an_identifier)
+			elseif an_identifier.is_feature_name then
+					-- Most likely an attribute as the target of an assignment.
+					-- One possible case is in the implementation of semistrict operator calls.
+				print_writable (an_identifier)
 			end
 		end
 
@@ -43232,6 +42973,33 @@ feature {NONE} -- Access
 			-- Those dynamic type ids which are used as keys are of the form
 			-- "<type-id1>,<type-id2>,...,<type-idN>" and are sorted in increasing order.
 
+	gobo_version_string_constant: ET_REGULAR_MANIFEST_STRING
+			-- String consant containing the current commit SHA-1 if any.
+			-- Useful when compiling Gobo tools from a local Git clone.
+		local
+			l_git_filename: STRING
+			l_first_line: STRING
+			l_git_sha1: STRING
+			l_gobo_version: STRING
+		do
+			l_gobo_version := "xx.xx.xx+xxxxxxxxx"
+			l_git_filename := file_system.nested_pathname ("${GOBO}", <<".git", "HEAD">>)
+			l_git_filename := Execution_environment.interpreted_string (l_git_filename)
+			l_first_line := file_system.file_first_line (l_git_filename)
+			if l_first_line.starts_with ("ref: ") then
+				l_first_line.remove_head (5)
+				l_git_filename := file_system.nested_pathname ("${GOBO}", <<".git", l_first_line>>)
+				l_git_filename := Execution_environment.interpreted_string (l_git_filename)
+				l_first_line := file_system.file_first_line (l_git_filename)
+			end
+			if l_first_line.count = 40 then
+				l_git_sha1 := l_first_line
+				l_git_sha1.keep_head (9)
+				l_gobo_version := "00.00.00+" + l_git_sha1
+			end
+			create Result.make (l_gobo_version)
+		end
+		
 feature {NONE} -- Once features
 
 	once_features: DS_HASH_TABLE [INTEGER, ET_FEATURE]

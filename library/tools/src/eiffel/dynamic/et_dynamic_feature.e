@@ -372,6 +372,46 @@ feature -- Status report
 			query: Result implies is_query
 		end
 
+	is_attribute_with_no_self_initializing_code: BOOLEAN
+			-- Is feature an attribute with no self-initializing code?
+			--
+			-- Note: The semantics rule MEVS, in ECMA-367 3-36, section 8.19.20,
+			-- says that the attribute initialization code is not executed
+			-- if the type of the attribute is self-initializing.
+		do
+			Result := is_attribute and then
+				(not attached {ET_EXTENDED_ATTRIBUTE} static_feature as l_extended_attribute or else
+				not l_extended_attribute.has_self_initializing_code or else
+				not attached result_type_set as l_result_type_set or else
+				l_result_type_set.static_type.is_self_initializing)
+		ensure
+			definition: Result = (is_attribute and then
+				(not attached {ET_EXTENDED_ATTRIBUTE} static_feature as l_extended_attribute or else
+				not l_extended_attribute.has_self_initializing_code or else
+				not attached result_type_set as l_result_type_set or else
+				l_result_type_set.static_type.is_self_initializing))
+		end
+
+	is_attribute_with_self_initializing_code: BOOLEAN
+			-- Is feature an attribute with self-initializing code?
+			--
+			-- Note: The semantics rule MEVS, in ECMA-367 3-36, section 8.19.20,
+			-- says that the attribute initialization code is not executed
+			-- if the type of the attribute is self-initializing.
+		do
+			Result := is_attribute and then
+				attached {ET_EXTENDED_ATTRIBUTE} static_feature as l_extended_attribute and then
+				l_extended_attribute.has_self_initializing_code and then
+				attached result_type_set as l_result_type_set and then
+				not l_result_type_set.static_type.is_self_initializing
+		ensure
+			definition: Result = (is_attribute and then
+				attached {ET_EXTENDED_ATTRIBUTE} static_feature as l_extended_attribute and then
+				l_extended_attribute.has_self_initializing_code and then
+				attached result_type_set as l_result_type_set and then
+				not l_result_type_set.static_type.is_self_initializing)
+		end
+
 	is_constant_attribute: BOOLEAN
 			-- Is feature a constant attribute?
 		do

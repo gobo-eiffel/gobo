@@ -17,6 +17,15 @@ inherit
 			parenthesis_call
 		end
 
+	ET_CALL_EXPRESSION_WITH_ACTUAL_ARGUMENT_LIST
+		undefine
+			reset,
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test
+		end
+
 	ET_CHOICE_CONSTANT
 		undefine
 			reset,

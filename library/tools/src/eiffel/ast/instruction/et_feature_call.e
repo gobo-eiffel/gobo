@@ -18,6 +18,8 @@ inherit
 		end
 
 	ET_CALL_WITH_ACTUAL_ARGUMENTS
+		undefine
+			is_call_agent
 		redefine
 			arguments,
 			has_result,

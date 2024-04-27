@@ -17,12 +17,16 @@ inherit
 			reset
 		end
 
-	ET_CALL_WITH_ACTUAL_ARGUMENT_LIST
+	ET_CALL_EXPRESSION_WITH_ACTUAL_ARGUMENT_LIST
 		undefine
+			is_call_agent,
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			is_instance_free,
+			reset,
+			add_separate_arguments
 		end
 
 create

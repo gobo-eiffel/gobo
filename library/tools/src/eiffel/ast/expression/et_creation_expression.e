@@ -12,7 +12,7 @@ deferred class ET_CREATION_EXPRESSION
 
 inherit
 
-	ET_EXPRESSION
+	ET_CALL_EXPRESSION_WITH_ACTUAL_ARGUMENTS
 		undefine
 			has_result,
 			has_address_expression,
