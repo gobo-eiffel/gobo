@@ -12545,8 +12545,144 @@ feature {NONE} -- Expression generation
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
+		local
+			l_name: ET_CALL_NAME
+			l_target: ET_EXPRESSION
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type: ET_DYNAMIC_TYPE
+			l_target_static_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
-			print_qualified_call_expression (an_expression)
+			l_target := an_expression.left
+			l_name := an_expression.name
+			l_target_type_set := dynamic_type_set (l_target)
+			l_target_type := l_target_type_set.static_type
+			l_target_static_type := l_target_type.primary_type
+			if
+				l_target_static_type = current_dynamic_system.boolean_type and in_operand and then
+				(l_name.is_infix_and_then or l_name.is_infix_or_else or l_name.is_infix_implies or
+				l_name.is_infix_and or l_name.is_infix_or or
+				l_name.is_infix_and_then_symbol or l_name.is_infix_or_else_symbol or
+				l_name.is_infix_implies_symbol or l_name.is_infix_and_symbol or l_name.is_infix_or_symbol)
+			then
+				print_semistrict_infix_expression (an_expression)
+			else
+				print_qualified_call_expression (an_expression)
+			end
+		end
+
+	print_semistrict_infix_expression (a_call: ET_INFIX_EXPRESSION)
+			-- Print semistrict infix expression.
+		require
+			a_call_not_void: a_call /= Void
+			boolean_operator: dynamic_type_set (a_call.left).static_type.primary_type = current_dynamic_system.boolean_type
+			a_call_is_semistrict: a_call.name.is_infix_and_then or a_call.name.is_infix_or_else or a_call.name.is_infix_implies or
+				a_call.name.is_infix_and or a_call.name.is_infix_or or
+				a_call.name.is_infix_and_then_symbol or a_call.name.is_infix_or_else_symbol or
+				a_call.name.is_infix_implies_symbol or a_call.name.is_infix_and_symbol or a_call.name.is_infix_or_symbol
+		local
+			l_name: ET_CALL_NAME
+			l_target: ET_EXPRESSION
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type: ET_DYNAMIC_TYPE
+			l_target_static_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_temp: detachable ET_IDENTIFIER
+			l_temp_index: INTEGER
+			l_assignment_target: like assignment_target
+			l_semistrict_target: ET_WRITABLE
+			l_implies: BOOLEAN
+			l_or: BOOLEAN
+			l_actual: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_semistrict_target_not_set: BOOLEAN
+		do
+			l_assignment_target := assignment_target
+			assignment_target := Void
+			l_target := a_call.left
+			l_name := a_call.name
+			l_target_type_set := dynamic_type_set (l_target)
+			l_target_type := l_target_type_set.static_type
+			l_target_static_type := l_target_type.primary_type
+			if in_operand then
+				if l_assignment_target /= Void then
+					l_semistrict_target := l_assignment_target
+					print_operand (l_target)
+				else
+					l_temp := new_temp_variable (l_target_static_type)
+						-- We will set the index of `l_temp' later because
+						-- it could still be used in `call_operands'.
+					l_temp_index := l_target.index
+					mark_temp_variable_frozen (l_temp)
+					l_semistrict_target := l_temp
+					print_assignment_operand (l_target, l_target_type_set, l_semistrict_target, l_target_static_type)
+				end
+				fill_call_operands (1)
+				l_semistrict_target_not_set := l_semistrict_target /= call_operands.first
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				l_or := l_name.is_infix_or_else or l_name.is_infix_or or l_name.is_infix_or_else_symbol or l_name.is_infix_or_symbol
+				if l_or then
+					current_file.put_character ('!')
+					current_file.put_character ('(')
+				end
+				print_expression (call_operands.first)
+				if l_or then
+					current_file.put_character (')')
+				end
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				call_operands.wipe_out
+				indent
+				l_actual := a_call.right
+				l_actual_type_set := dynamic_type_set (l_actual)
+				print_assignment_operand (l_actual, l_actual_type_set, l_semistrict_target, l_target_static_type)
+				fill_call_operands (1)
+				if l_semistrict_target /= call_operands.first then
+					print_indentation
+					print_writable (l_semistrict_target)
+					print_assign_to
+					print_attachment_expression (call_operands.first, l_actual_type_set, l_target_static_type)
+					print_semicolon_newline
+				end
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				l_implies := l_name.is_infix_implies or l_name.is_infix_implies_symbol
+				if l_implies or l_semistrict_target_not_set then
+					current_file.put_character (' ')
+					current_file.put_string (c_else)
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					print_writable (l_semistrict_target)
+					print_assign_to
+					if l_or or l_implies then
+						current_file.put_string (c_eif_true)
+					else
+						current_file.put_string (c_eif_false)
+					end
+					print_semicolon_newline
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+				end
+				current_file.put_new_line
+				operand_stack.force (l_semistrict_target)
+				call_operands.wipe_out
+				if l_temp /= Void then
+					mark_temp_variable_unfrozen (l_temp)
+					if l_temp_index /= 0 then
+							-- We had to wait until this stage to set the index of `l_temp'
+							-- because it could have still been used in `call_operands'.
+						l_temp.set_index (l_temp_index)
+					end
+				end
+			end
 		end
 
 	print_inline_separate_argument (a_name: ET_IDENTIFIER)
@@ -14148,9 +14284,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 			l_temp: detachable ET_IDENTIFIER
 			l_temp_index: INTEGER
 			l_assignment_target: like assignment_target
-			l_semistrict_target: ET_WRITABLE
-			l_implies: BOOLEAN
-			l_or: BOOLEAN
 			l_printed: BOOLEAN
 			l_manifest_tuple_operand: detachable ET_MANIFEST_TUPLE
 			l_target_operand: ET_EXPRESSION
@@ -14196,321 +14329,232 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_old_expression")
 				l_call_type := current_dynamic_system.any_type
 				l_force_result_boxing := True
 			end
+			l_seed := l_name.seed
+				-- Check whether this a call to FUNCTION.item with a manifest
+				-- tuple as argument. We have a special treatment in that case
+				-- to avoid having to create the manifest tuple when possible.
 			if
-				l_target_static_type = current_dynamic_system.boolean_type and in_operand and then
-				(l_name.is_infix_and_then or l_name.is_infix_or_else or l_name.is_infix_implies or
-				l_name.is_infix_and or l_name.is_infix_or or
-				l_name.is_infix_and_then_symbol or l_name.is_infix_or_else_symbol or
-				l_name.is_infix_implies_symbol or l_name.is_infix_and_symbol or l_name.is_infix_or_symbol)
+				not (use_scoop and l_target_type.is_separate) and then
+				not a_call.is_tuple_label and then
+				l_seed = current_system.function_item_seed and then
+				not a_call.is_call_agent
 			then
-				if l_actuals = Void or else l_actuals.count /= 1 then
-						-- Internal error: these semistrict operators
-						-- have exactly one argument. This is guaranteed
-						-- by the fact that they are infix features.
-					set_fatal_error
-					error_handler.report_giaac_error (generator, "print_qualified_call_expression", 1, "semistrict operator does not have exactly one argument.")
-				else
-					if l_assignment_target /= Void then
-						l_semistrict_target := l_assignment_target
-					else
-						l_temp := new_temp_variable (l_target_static_type)
-							-- We will set the index of `l_temp' later because
-							-- it could still be used in `call_operands'.
-						l_temp_index := l_target.index
-						mark_temp_variable_frozen (l_temp)
-						l_semistrict_target := l_temp
-					end
-					print_assignment_operand (l_target, l_target_type_set, l_semistrict_target, l_target_static_type)
-					fill_call_operands (1)
-					if l_semistrict_target /= call_operands.first then
-						print_indentation
-						print_writable (l_semistrict_target)
-						print_assign_to
-						current_file.put_string ("/* **** */")
-						print_attachment_expression (call_operands.first, l_target_type_set, l_target_static_type)
-						print_semicolon_newline
-					end
-					print_indentation
-					current_file.put_string (c_if)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					l_or := l_name.is_infix_or_else or l_name.is_infix_or or l_name.is_infix_or_else_symbol or l_name.is_infix_or_symbol
-					if l_or then
-						current_file.put_character ('!')
-						current_file.put_character ('(')
-					end
-					print_expression (call_operands.first)
-					if l_or then
-						current_file.put_character (')')
-					end
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					call_operands.wipe_out
-					indent
-					l_actual := l_actuals.actual_argument (1)
-					l_actual_type_set := dynamic_type_set (l_actual)
-					print_assignment_operand (l_actual, l_actual_type_set, l_semistrict_target, l_target_static_type)
-					fill_call_operands (1)
-					if l_semistrict_target /= call_operands.first then
-						print_indentation
-						print_writable (l_semistrict_target)
-						print_assign_to
-						print_attachment_expression (call_operands.first, l_actual_type_set, l_target_static_type)
-						print_semicolon_newline
-					end
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					l_implies := l_name.is_infix_implies or l_name.is_infix_implies_symbol
-					if l_implies then
-						current_file.put_character (' ')
-						current_file.put_string (c_else)
-						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-						print_indentation
-						print_writable (l_semistrict_target)
-						print_assign_to
-						current_file.put_string (c_eif_true)
-						print_semicolon_newline
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-					end
-					current_file.put_new_line
-					operand_stack.force (l_semistrict_target)
-				end
-			else
-				l_seed := l_name.seed
-					-- Check whether this a call to FUNCTION.item with a manifest
-					-- tuple as argument. We have a special treatment in that case
-					-- to avoid having to create the manifest tuple when possible.
-				if
-					not (use_scoop and l_target_type.is_separate) and then
-					not a_call.is_tuple_label and then
-					l_seed = current_system.function_item_seed and then
-					not a_call.is_call_agent
-				then
-					if l_actuals /= Void and then l_actuals.count = 1 then
-						if attached {ET_MANIFEST_TUPLE} l_actuals.actual_argument (1) as l_manifest_tuple then
-							print_target_operand (l_target, l_target_static_type)
-							nb := l_manifest_tuple.count
-							from i := 1 until i > nb loop
-								l_actual := l_manifest_tuple.expression (i)
-								l_actual_type_set := dynamic_type_set (l_actual)
-								print_attachment_operand (l_actual, l_actual_type_set)
-								i := i + 1
-							end
-							nb := nb + 1
-							fill_call_operands (nb)
-							l_manifest_tuple_operand := agent_manifest_tuple
-							l_manifest_tuple_operand.resize (nb - 1)
-							from i := nb until i < 2 loop
-								l_manifest_tuple_operand.put_first (call_operands.item (i))
-								i := i - 1
-							end
-							l_manifest_tuple_operand.set_index (l_manifest_tuple.index)
-							mark_expressions_frozen (l_manifest_tuple_operand)
-							l_target_operand := call_operands.first
-							call_operands.wipe_out
-							call_operands.put_last (l_target_operand)
-							call_operands.put_last (l_manifest_tuple_operand)
-							nb := 2
-						end
-					end
-				end
-				if l_manifest_tuple_operand = Void then
-					print_target_operand (l_target, l_target_static_type)
-					if l_actuals /= Void then
-						nb := l_actuals.count
+				if l_actuals /= Void and then l_actuals.count = 1 then
+					if attached {ET_MANIFEST_TUPLE} l_actuals.actual_argument (1) as l_manifest_tuple then
+						print_target_operand (l_target, l_target_static_type)
+						nb := l_manifest_tuple.count
 						from i := 1 until i > nb loop
-							l_actual := l_actuals.actual_argument (i)
+							l_actual := l_manifest_tuple.expression (i)
 							l_actual_type_set := dynamic_type_set (l_actual)
 							print_attachment_operand (l_actual, l_actual_type_set)
 							i := i + 1
 						end
-					end
-					nb := nb + 1
-					fill_call_operands (nb)
-				end
-				l_is_separate_call := use_scoop and a_call /= separate_call_expression and l_target_type.is_separate
-				nb2 := l_target_type_set.count
-				if nb2 = 1 and not l_is_separate_call and not l_name.is_tuple_label then
-						-- We can inline the call only if it's not a separate call,
-						-- it's not a tuple access, and the call is not polymorphic.
-					l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-					if attached l_target_dynamic_type.seeded_dynamic_query (l_name.seed, current_dynamic_system) as l_dynamic_feature then
-						if l_target_static_type.is_basic and l_dynamic_feature.is_attribute then
-								-- Built-in feature 'item' in basic type such as INTEGER.
-								-- The result is the object itself (i.e. the target of the
-								-- call) which is already in `call_operands'.
-							l_inlined_call := True
-							l_is_basic_attribute := True
-						elseif is_inlinable_function (l_dynamic_feature, l_target_dynamic_type) then
-							print_adapted_query_call (l_dynamic_feature, l_target_dynamic_type, l_call_type, True)
-							fill_call_operands (1)
-							l_inlined_call := True
+						nb := nb + 1
+						fill_call_operands (nb)
+						l_manifest_tuple_operand := agent_manifest_tuple
+						l_manifest_tuple_operand.resize (nb - 1)
+						from i := nb until i < 2 loop
+							l_manifest_tuple_operand.put_first (call_operands.item (i))
+							i := i - 1
 						end
-						if l_inlined_call then
-							if in_operand then
-								if l_force_result_boxing then
-									l_printed := False
-								elseif attached {ET_IDENTIFIER} call_operands.first as l_identifier then
-									if l_identifier.is_temporary and then is_temp_variable_free (l_identifier) then
-										l_temp := l_identifier
-										mark_temp_variable_used (l_temp)
-										mark_temp_variable_frozen (l_temp)
-										l_temp_index := a_call.index
-									end
-									operand_stack.force (l_identifier)
-									l_printed := True
-								elseif l_is_basic_attribute then
-									operand_stack.force (call_operands.first)
-									l_printed := True
+						l_manifest_tuple_operand.set_index (l_manifest_tuple.index)
+						mark_expressions_frozen (l_manifest_tuple_operand)
+						l_target_operand := call_operands.first
+						call_operands.wipe_out
+						call_operands.put_last (l_target_operand)
+						call_operands.put_last (l_manifest_tuple_operand)
+						nb := 2
+					end
+				end
+			end
+			if l_manifest_tuple_operand = Void then
+				print_target_operand (l_target, l_target_static_type)
+				if l_actuals /= Void then
+					nb := l_actuals.count
+					from i := 1 until i > nb loop
+						l_actual := l_actuals.actual_argument (i)
+						l_actual_type_set := dynamic_type_set (l_actual)
+						print_attachment_operand (l_actual, l_actual_type_set)
+						i := i + 1
+					end
+				end
+				nb := nb + 1
+				fill_call_operands (nb)
+			end
+			l_is_separate_call := use_scoop and a_call /= separate_call_expression and l_target_type.is_separate
+			nb2 := l_target_type_set.count
+			if nb2 = 1 and not l_is_separate_call and not l_name.is_tuple_label then
+					-- We can inline the call only if it's not a separate call,
+					-- it's not a tuple access, and the call is not polymorphic.
+				l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+				if attached l_target_dynamic_type.seeded_dynamic_query (l_name.seed, current_dynamic_system) as l_dynamic_feature then
+					if l_target_static_type.is_basic and l_dynamic_feature.is_attribute then
+							-- Built-in feature 'item' in basic type such as INTEGER.
+							-- The result is the object itself (i.e. the target of the
+							-- call) which is already in `call_operands'.
+						l_inlined_call := True
+						l_is_basic_attribute := True
+					elseif is_inlinable_function (l_dynamic_feature, l_target_dynamic_type) then
+						print_adapted_query_call (l_dynamic_feature, l_target_dynamic_type, l_call_type, True)
+						fill_call_operands (1)
+						l_inlined_call := True
+					end
+					if l_inlined_call then
+						if in_operand then
+							if l_force_result_boxing then
+								l_printed := False
+							elseif attached {ET_IDENTIFIER} call_operands.first as l_identifier then
+								if l_identifier.is_temporary and then is_temp_variable_free (l_identifier) then
+									l_temp := l_identifier
+									mark_temp_variable_used (l_temp)
+									mark_temp_variable_frozen (l_temp)
+									l_temp_index := a_call.index
 								end
-							else
-								print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
+								operand_stack.force (l_identifier)
+								l_printed := True
+							elseif l_is_basic_attribute then
+								operand_stack.force (call_operands.first)
 								l_printed := True
 							end
+						else
+							print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
+							l_printed := True
 						end
 					end
 				end
-				if not l_printed then
-					if in_operand then
-						print_indentation
-						if l_assignment_target /= Void then
-							operand_stack.force (l_assignment_target)
-							print_writable (l_assignment_target)
-						else
-							l_temp := new_temp_variable (l_call_type)
-							mark_temp_variable_frozen (l_temp)
-								-- We will set the index of `l_temp' later because
-								-- it could still be used in `call_operands'.
-							l_temp_index := a_call.index
-							if l_force_result_boxing then
-									-- `current_dynamic_system.any_type' is the first type set
-									-- in `extra_dynamic_type_sets'.
-								l_temp_index := current_dynamic_type_sets.count + 1
-							end
-							operand_stack.force (l_temp)
-							print_temp_name (l_temp, current_file)
+			end
+			if not l_printed then
+				if in_operand then
+					print_indentation
+					if l_assignment_target /= Void then
+						operand_stack.force (l_assignment_target)
+						print_writable (l_assignment_target)
+					else
+						l_temp := new_temp_variable (l_call_type)
+						mark_temp_variable_frozen (l_temp)
+							-- We will set the index of `l_temp' later because
+							-- it could still be used in `call_operands'.
+						l_temp_index := a_call.index
+						if l_force_result_boxing then
+								-- `current_dynamic_system.any_type' is the first type set
+								-- in `extra_dynamic_type_sets'.
+							l_temp_index := current_dynamic_type_sets.count + 1
 						end
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_character ('(')
+						operand_stack.force (l_temp)
+						print_temp_name (l_temp, current_file)
 					end
-					if l_is_separate_call then
-						print_separate_qualified_call_expression (a_call)
-					elseif l_inlined_call then
-						print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
-					elseif nb2 = 0 then
-							-- Call on Void target.
-						current_file.put_character ('(')
-						print_target_expression (call_operands.first, l_target_static_type, True)
-						from i := 2 until i > nb loop
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_expression (call_operands.item (i))
-							i := i + 1
-						end
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+				end
+				if l_is_separate_call then
+					print_separate_qualified_call_expression (a_call)
+				elseif l_inlined_call then
+					print_attachment_expression (call_operands.first, l_call_type_set, l_call_type)
+				elseif nb2 = 0 then
+						-- Call on Void target.
+					current_file.put_character ('(')
+					print_target_expression (call_operands.first, l_target_static_type, True)
+					from i := 2 until i > nb loop
 						current_file.put_character (',')
 						current_file.put_character (' ')
-						print_typed_default_entity_value (l_call_type, current_file)
-						current_file.put_character (')')
-					elseif nb2 = 1 then
-							-- Static binding.
+						print_expression (call_operands.item (i))
+						i := i + 1
+					end
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					print_typed_default_entity_value (l_call_type, current_file)
+					current_file.put_character (')')
+				elseif nb2 = 1 then
+						-- Static binding.
+					l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+					print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
+				else
+						-- Dynamic binding.
+					if l_name.is_tuple_label then
+						-- Fields in Tuples are not necessarily aligned, and some need (un)boxing,
+						-- for example:
+						--    t1: TUPLE [a: ANY; b: INTEGER]
+						--    t2: TUPLE [a: CHARACTER; b: INTEGER]
+						--    t1 := t2
+						--    any := t1.a
+						--    int := t1.b
+						-- TODO (optimization): But when there are aligned with no (un)boxing,
+						-- we could avoid having polymorphic calls.
+					elseif not attached l_target_static_type.base_class.seeded_query (l_seed) as l_query then
+							-- Internal error: there should be a query with `a_seed'.
+							-- It has been computed in ET_FEATURE_CHECKER.
+						set_fatal_error
+						error_handler.report_giaac_error (generator, "print_qualified_call_expression", 1, "query not found.")
+						l_printed := True
+					elseif l_query.is_constant_attribute then
 						l_target_dynamic_type := l_target_type_set.dynamic_type (1)
 						print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
-					else
-							-- Dynamic binding.
-						if l_name.is_tuple_label then
-							-- Fields in Tuples are not necessarily aligned, and some need (un)boxing,
-							-- for example:
-							--    t1: TUPLE [a: ANY; b: INTEGER]
-							--    t2: TUPLE [a: CHARACTER; b: INTEGER]
-							--    t1 := t2
-							--    any := t1.a
-							--    int := t1.b
-							-- TODO (optimization): But when there are aligned with no (un)boxing,
-							-- we could avoid having polymorphic calls.
-						elseif not attached l_target_static_type.base_class.seeded_query (l_seed) as l_query then
-								-- Internal error: there should be a query with `a_seed'.
-								-- It has been computed in ET_FEATURE_CHECKER.
-							set_fatal_error
-							error_handler.report_giaac_error (generator, "print_qualified_call_expression", 2, "query not found.")
-							l_printed := True
-						elseif l_query.is_constant_attribute then
-							l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-							print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
-							l_printed := True
-						elseif l_query.is_unique_attribute then
-							l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-							print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
-							l_printed := True
-						end
-						if l_printed then
-							-- Do nothing.
-						elseif nb2 = 2 then
-								-- No inlining here.
-							l_old_max_nested_inlining_count := max_nested_inlining_count
-							max_nested_inlining_count := 0
-								-- First type.
-							l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							print_attribute_type_id_access (call_operands.first, l_target_static_type, True)
-							current_file.put_character ('=')
-							current_file.put_character ('=')
-							current_file.put_integer (l_target_dynamic_type.id)
-							current_file.put_character (')')
-							current_file.put_character ('?')
-							print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
-							current_file.put_character (':')
-								-- Second type.
-							l_target_dynamic_type := l_target_type_set.dynamic_type (2)
-							print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
-							current_file.put_character (')')
-							max_nested_inlining_count := l_old_max_nested_inlining_count
-						elseif l_dynamic_call = Void then
-								-- Internal error: the dynamic call should have been created in ET_DYNAMIC_TYPE_BUILDER.
-							set_fatal_error
-							error_handler.report_giaac_error (generator, "print_qualified_call_expression", 3, "dynamic call not found.")
-						else
-							l_dynamic_call.set_force_result_boxing (l_force_result_boxing)
-							register_polymorphic_called_features (l_dynamic_call)
-							print_call_name (a_call, current_feature, l_target_static_type, l_force_result_boxing, current_file)
-							current_file.put_character ('(')
-							current_file.put_string (c_ac)
-							current_file.put_character (',')
-							current_file.put_character (' ')
-							print_target_expression (call_operands.first, l_target_static_type, True)
-							if l_manifest_tuple_operand /= Void then
-								nb := l_manifest_tuple_operand.count
-								from i := 1 until i > nb loop
-									current_file.put_character (',')
-									current_file.put_character (' ')
-									print_expression (l_manifest_tuple_operand.expression (i))
-									i := i + 1
-								end
-							else
-								from i := 2 until i > nb loop
-									current_file.put_character (',')
-									current_file.put_character (' ')
-									print_expression (call_operands.item (i))
-									i := i + 1
-								end
-							end
-							current_file.put_character (')')
-						end
+						l_printed := True
+					elseif l_query.is_unique_attribute then
+						l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+						print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, True)
+						l_printed := True
 					end
-					if in_operand then
+					if l_printed then
+						-- Do nothing.
+					elseif nb2 = 2 then
+							-- No inlining here.
+						l_old_max_nested_inlining_count := max_nested_inlining_count
+						max_nested_inlining_count := 0
+							-- First type.
+						l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+						current_file.put_character ('(')
+						current_file.put_character ('(')
+						print_attribute_type_id_access (call_operands.first, l_target_static_type, True)
+						current_file.put_character ('=')
+						current_file.put_character ('=')
+						current_file.put_integer (l_target_dynamic_type.id)
 						current_file.put_character (')')
-						print_semicolon_newline
+						current_file.put_character ('?')
+						print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
+						current_file.put_character (':')
+							-- Second type.
+						l_target_dynamic_type := l_target_type_set.dynamic_type (2)
+						print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
+						current_file.put_character (')')
+						max_nested_inlining_count := l_old_max_nested_inlining_count
+					elseif l_dynamic_call = Void then
+							-- Internal error: the dynamic call should have been created in ET_DYNAMIC_TYPE_BUILDER.
+						set_fatal_error
+						error_handler.report_giaac_error (generator, "print_qualified_call_expression", 2, "dynamic call not found.")
+					else
+						l_dynamic_call.set_force_result_boxing (l_force_result_boxing)
+						register_polymorphic_called_features (l_dynamic_call)
+						print_call_name (a_call, current_feature, l_target_static_type, l_force_result_boxing, current_file)
+						current_file.put_character ('(')
+						current_file.put_string (c_ac)
+						current_file.put_character (',')
+						current_file.put_character (' ')
+						print_target_expression (call_operands.first, l_target_static_type, True)
+						if l_manifest_tuple_operand /= Void then
+							nb := l_manifest_tuple_operand.count
+							from i := 1 until i > nb loop
+								current_file.put_character (',')
+								current_file.put_character (' ')
+								print_expression (l_manifest_tuple_operand.expression (i))
+								i := i + 1
+							end
+						else
+							from i := 2 until i > nb loop
+								current_file.put_character (',')
+								current_file.put_character (' ')
+								print_expression (call_operands.item (i))
+								i := i + 1
+							end
+						end
+						current_file.put_character (')')
 					end
+				end
+				if in_operand then
+					current_file.put_character (')')
+					print_semicolon_newline
 				end
 			end
 			call_operands.wipe_out
@@ -42999,7 +43043,7 @@ feature {NONE} -- Access
 			end
 			create Result.make (l_gobo_version)
 		end
-		
+
 feature {NONE} -- Once features
 
 	once_features: DS_HASH_TABLE [INTEGER, ET_FEATURE]

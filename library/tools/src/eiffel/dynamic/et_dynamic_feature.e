@@ -324,9 +324,6 @@ feature -- Status report
 	is_generated: BOOLEAN
 			-- Has code for current feature been registered to be generated?
 
-	is_static_generated: BOOLEAN
-			-- Has code for the statically called version of current feature been registered to be generated?
-
 	is_inlined: BOOLEAN
 			-- Has code for current feature been inlined?
 
@@ -880,14 +877,6 @@ feature -- Status setting
 			is_generated := b
 		ensure
 			generated_set: is_generated = b
-		end
-
-	set_static_generated (b: BOOLEAN)
-			-- Set `is_static_generated' to `b'.
-		do
-			is_static_generated := b
-		ensure
-			static_generated_set: is_static_generated = b
 		end
 
 	set_inlined (b: BOOLEAN)
