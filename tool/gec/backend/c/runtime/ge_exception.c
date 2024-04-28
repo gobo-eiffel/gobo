@@ -467,7 +467,7 @@ void GE_init_exception(GE_context* a_context)
 #endif
 		l_exception_manager = GE_new_exception_manager(a_context, EIF_TRUE);
 		a_context->exception_manager = l_exception_manager;
-		GE_init_exception_manager(a_context, l_exception_manager);
+		GE_init_exception_manager(a_context);
 #ifdef GE_USE_SCOOP
 	}
 #endif
@@ -492,22 +492,22 @@ EIF_REFERENCE (*GE_new_exception_manager)(GE_context*, EIF_BOOLEAN);
 /*
  * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.init_exception_manager.
  */
-void (*GE_init_exception_manager)(GE_context*, EIF_REFERENCE);
+void (*GE_init_exception_manager)(GE_context*);
 
 /*
  * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.last_exception.
  */
-EIF_REFERENCE (*GE_last_exception)(GE_context*, EIF_REFERENCE);
+EIF_REFERENCE (*GE_last_exception)(GE_context*);
 
 /*
  * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.once_raise.
  */
-void (*GE_once_raise)(GE_context*, EIF_REFERENCE, EIF_REFERENCE);
+void (*GE_once_raise)(GE_context*, EIF_REFERENCE);
 
 /*
  * Pointer to Eiffel routine ISE_EXCEPTION_MANAGER.set_exception_data.
  */
-void (*GE_set_exception_data)(GE_context*, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
+void (*GE_set_exception_data)(GE_context*, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
 
 /*
  * Jump to execute the rescue of the last routine with a rescue
@@ -552,12 +552,9 @@ static void GE_call_set_exception_data(GE_context* a_context, long code, int new
 	EIF_REFERENCE l_rf_routine;
 	EIF_REFERENCE l_rf_class;
 	EIF_REFERENCE l_trace;
-	EIF_REFERENCE l_exception_manager;
 
-	l_exception_manager = a_context->exception_manager;
-	if (!l_exception_manager) {
+	if (!a_context->exception_manager) {
 		GE_init_exception(a_context);
-		l_exception_manager = a_context->exception_manager;
 	}
 	if (tag) {
 		l_tag = GE_str(tag);
@@ -589,7 +586,7 @@ static void GE_call_set_exception_data(GE_context* a_context, long code, int new
 	} else {
 		l_trace = GE_ms("", 0);
 	}
-	GE_set_exception_data(a_context, l_exception_manager, (EIF_INTEGER_32) code, EIF_TEST(new_obj), (EIF_INTEGER_32) signal_code, (EIF_INTEGER_32) error_code, l_tag, l_recipient, l_eclass, l_rf_routine, l_rf_class, l_trace, (EIF_INTEGER_32) line_number, EIF_TEST(is_invariant_entry));
+	GE_set_exception_data(a_context, (EIF_INTEGER_32) code, EIF_TEST(new_obj), (EIF_INTEGER_32) signal_code, (EIF_INTEGER_32) error_code, l_tag, l_recipient, l_eclass, l_rf_routine, l_rf_class, l_trace, (EIF_INTEGER_32) line_number, EIF_TEST(is_invariant_entry));
 }
 
 /*
@@ -696,12 +693,7 @@ void GE_developer_raise(long a_code, char* a_meaning, char* a_message)
  */
 void GE_raise_once_exception(GE_context* a_context, EIF_REFERENCE a_exception)
 {
-	EIF_REFERENCE l_exception_manager;
-
-	l_exception_manager = a_context->exception_manager;
-	if (l_exception_manager) {
-		GE_once_raise(a_context, l_exception_manager, a_exception);
-	}
+	GE_once_raise(a_context, a_exception);
 }
 
 /*
@@ -709,13 +701,7 @@ void GE_raise_once_exception(GE_context* a_context, EIF_REFERENCE a_exception)
  */
 EIF_REFERENCE GE_last_exception_raised(GE_context* a_context)
 {
-	EIF_REFERENCE l_exception_manager;
-
-	l_exception_manager = a_context->exception_manager;
-	if (l_exception_manager) {
-		return GE_last_exception(a_context, l_exception_manager);
-	}
-	return EIF_VOID;
+	return GE_last_exception(a_context);
 }
 
 /*

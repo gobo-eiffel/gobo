@@ -50,11 +50,12 @@ fi
 
 MV=mv
 RM=rm
+RMDIR='rm -rf'
 STRIP=strip
 OBJ=.o
 EXE=
-BIN_DIR=$GOBO/bin
-BOOTSTRAP_DIR=$GOBO/tool/gec/bootstrap
+BIN_DIR="$GOBO/bin"
+BOOTSTRAP_DIR="$GOBO/tool/gec/bootstrap"
 
 cd $BIN_DIR
 
@@ -237,18 +238,7 @@ if [ "$EIF" = "ge" ]; then
 	"$BIN_DIR/gec1$EXE" --finalize $THREAD_OPTION "$GOBO/tool/gec/src/system.ecf"
 	$RM "$BIN_DIR/gec1$EXE"
 	$STRIP gec$EXE
-	$RM gec*.h
-	$RM gec*.c
-	$RM gec*$OBJ
-	# Make sure 'gec.bat' exists to avoid getting some warning when removing it.
-	echo "" > gec.bat
-	$RM gec*.bat
-	# Make sure 'gec.sh' exists to avoid getting some warning when removing it.
-	echo "" > gec.sh
-	$RM gec*.sh
-	# Make sure 'gec.make' exists to avoid getting some warning when removing it.
-	echo "" > gec.make
-	$RM gec*.make
+	$RMDIR .gobo
 else
 	echo "Unknown Eiffel compiler: $EIF"
 	exit 1

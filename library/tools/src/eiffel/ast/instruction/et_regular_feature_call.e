@@ -19,6 +19,7 @@ inherit
 
 	ET_CALL_WITH_ACTUAL_ARGUMENT_LIST
 		undefine
+			is_call_agent,
 			has_result,
 			has_address_expression,
 			has_agent,

@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			l_dynamic_type_set_builder := a_system.dynamic_type_set_builder
 			static_feature := a_feature
 			target_type := a_target_type
+			is_static := a_feature.is_static
 			dynamic_type_sets := empty_dynamic_type_sets
 			create query_calls.make_map (10)
 			create procedure_calls.make_map (10)
@@ -323,9 +324,6 @@ feature -- Status report
 	is_generated: BOOLEAN
 			-- Has code for current feature been registered to be generated?
 
-	is_static_generated: BOOLEAN
-			-- Has code for the statically called version of current feature been registered to be generated?
-
 	is_inlined: BOOLEAN
 			-- Has code for current feature been inlined?
 
@@ -337,6 +335,9 @@ feature -- Status report
 
 	is_regular: BOOLEAN
 			-- Is current feature used as a regular feature?
+
+	is_static: BOOLEAN
+			-- Can feature be used as a static feature (i.e. in a call of the form {A}.f)?
 
 	is_address: BOOLEAN
 			-- Is address of current feature used?
@@ -366,6 +367,46 @@ feature -- Status report
 			end
 		ensure
 			query: Result implies is_query
+		end
+
+	is_attribute_with_no_self_initializing_code: BOOLEAN
+			-- Is feature an attribute with no self-initializing code?
+			--
+			-- Note: The semantics rule MEVS, in ECMA-367 3-36, section 8.19.20,
+			-- says that the attribute initialization code is not executed
+			-- if the type of the attribute is self-initializing.
+		do
+			Result := is_attribute and then
+				(not attached {ET_EXTENDED_ATTRIBUTE} static_feature as l_extended_attribute or else
+				not l_extended_attribute.has_self_initializing_code or else
+				not attached result_type_set as l_result_type_set or else
+				l_result_type_set.static_type.is_self_initializing)
+		ensure
+			definition: Result = (is_attribute and then
+				(not attached {ET_EXTENDED_ATTRIBUTE} static_feature as l_extended_attribute or else
+				not l_extended_attribute.has_self_initializing_code or else
+				not attached result_type_set as l_result_type_set or else
+				l_result_type_set.static_type.is_self_initializing))
+		end
+
+	is_attribute_with_self_initializing_code: BOOLEAN
+			-- Is feature an attribute with self-initializing code?
+			--
+			-- Note: The semantics rule MEVS, in ECMA-367 3-36, section 8.19.20,
+			-- says that the attribute initialization code is not executed
+			-- if the type of the attribute is self-initializing.
+		do
+			Result := is_attribute and then
+				attached {ET_EXTENDED_ATTRIBUTE} static_feature as l_extended_attribute and then
+				l_extended_attribute.has_self_initializing_code and then
+				attached result_type_set as l_result_type_set and then
+				not l_result_type_set.static_type.is_self_initializing
+		ensure
+			definition: Result = (is_attribute and then
+				attached {ET_EXTENDED_ATTRIBUTE} static_feature as l_extended_attribute and then
+				l_extended_attribute.has_self_initializing_code and then
+				attached result_type_set as l_result_type_set and then
+				not l_result_type_set.static_type.is_self_initializing)
 		end
 
 	is_constant_attribute: BOOLEAN
@@ -836,14 +877,6 @@ feature -- Status setting
 			is_generated := b
 		ensure
 			generated_set: is_generated = b
-		end
-
-	set_static_generated (b: BOOLEAN)
-			-- Set `is_static_generated' to `b'.
-		do
-			is_static_generated := b
-		ensure
-			static_generated_set: is_static_generated = b
 		end
 
 	set_inlined (b: BOOLEAN)

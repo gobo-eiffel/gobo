@@ -24,6 +24,7 @@ inherit
 
 	ET_SEPARATE_CALL
 		undefine
+			is_call_agent,
 			has_result,
 			has_address_expression,
 			has_agent,

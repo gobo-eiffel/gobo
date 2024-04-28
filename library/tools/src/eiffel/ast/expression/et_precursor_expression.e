@@ -17,7 +17,9 @@ inherit
 			parenthesis_call
 		end
 
-	ET_EXPRESSION
+	ET_CALL_EXPRESSION_WITH_ACTUAL_ARGUMENT_LIST
+		rename
+			name as precursor_keyword
 		undefine
 			reset,
 			has_result,

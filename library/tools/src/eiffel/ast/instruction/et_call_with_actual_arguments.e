@@ -30,6 +30,12 @@ feature -- Access
 
 feature -- Status report
 
+	is_call_agent: BOOLEAN
+			-- Is current call a call agent?
+		do
+			Result := False
+		end
+
 	has_result: BOOLEAN
 			-- Does the entity 'Result' appear in one of the actual
 			-- arguments or (recursively) in one of their subexpressions?

@@ -31,6 +31,7 @@ inherit
 			make as make_qualified_call
 		undefine
 			process,
+			is_call_agent,
 			has_result,
 			has_address_expression,
 			has_agent,
