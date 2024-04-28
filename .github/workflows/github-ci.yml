@@ -65,7 +65,7 @@ jobs:
           path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
-  macos_aarch64_build:
+  macos_arm64_build:
     if: ${{ github.repository == 'ebezault/gobo' || github.repository == 'gobo-eiffel/gobo' }}
     runs-on: macos-14
     strategy:
@@ -79,12 +79,12 @@ jobs:
         shell: pwsh
       - uses: actions/upload-artifact@v4
         with:
-          name: gobo_bin_macos_aarch64_${{ matrix.c_compiler }}
+          name: gobo_bin_macos_arm64_${{ matrix.c_compiler }}
           path: bin
           retention-days: 1
       - uses: actions/upload-artifact@v4
         with:
-          name: gobo_c_config_macos_aarch64_${{ matrix.c_compiler }}
+          name: gobo_c_config_macos_arm64_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
@@ -170,9 +170,9 @@ jobs:
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
         shell: pwsh
 
-  macos_aarch64_test:
+  macos_arm64_test:
     runs-on: macos-14
-    needs: macos_aarch64_build
+    needs: macos_arm64_build
     strategy:
       fail-fast: false
       matrix:
@@ -183,11 +183,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: gobo_bin_macos_aarch64_${{ matrix.c_compiler }}
+          name: gobo_bin_macos_arm64_${{ matrix.c_compiler }}
           path: bin
       - uses: actions/download-artifact@v4
         with:
-          name: gobo_c_config_macos_aarch64_${{ matrix.c_compiler }}
+          name: gobo_c_config_macos_arm64_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
