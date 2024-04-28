@@ -75,17 +75,17 @@ if ($LastExitCode -ne 0) {
 }
 
 Write-Host "Zig version: "
+& "$env:GOBO/tool/gec/backend/c/zig/zig" version
+if ($LastExitCode -ne 0) {
+	Write-Error "Command '$env:GOBO/tool/gec/backend/c/zig/zig version' exited with code $LastExitCode"
+	exit $LastExitCode
+}
 if (($GOBO_CI_OS -eq "linux" -or $GOBO_CI_OS -eq "macos") -and $CiTool -ne "gitlab") {
 	file "$env:GOBO/tool/gec/backend/c/zig/zig"
 	if ($LastExitCode -ne 0) {
 		Write-Error "Command 'file $env:GOBO/tool/gec/backend/c/zig/zig' exited with code $LastExitCode"
 		exit $LastExitCode
 	}
-}
-& "$env:GOBO/tool/gec/backend/c/zig/zig" version
-if ($LastExitCode -ne 0) {
-	Write-Error "Command '$env:GOBO/tool/gec/backend/c/zig/zig version' exited with code $LastExitCode"
-	exit $LastExitCode
 }
 & "$env:GOBO/tool/gec/backend/c/zig/zig" cc --version
 if ($LastExitCode -ne 0) {
