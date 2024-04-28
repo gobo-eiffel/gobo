@@ -32,7 +32,7 @@ if ($LastExitCode -ne 0) {
 	exit $LastExitCode
 }
 
-$GOBO_CI_ZIG_VERSION = "0.12.0-dev.3212+40e64245f"
+$GOBO_CI_ZIG_VERSION = "0.12.0"
 
 switch ($GOBO_CI_OS) {
 	"linux" {
