@@ -44,7 +44,7 @@ jobs:
 
   macos_build:
     if: ${{ github.repository == 'ebezault/gobo' || github.repository == 'gobo-eiffel/gobo' }}
-    runs-on: macos-latest
+    runs-on: macos-13
     strategy:
       fail-fast: false
       matrix:
@@ -120,11 +120,11 @@ jobs:
         shell: pwsh
 
   macos_test:
+    runs-on: macos-13
     needs: macos_build
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, macos-13]
         c_compiler: [zig, clang]
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
@@ -133,11 +133,6 @@ jobs:
             eiffel_compiler: ise
           - c_compiler: clang
             eiffel_compiler: debug_ise
-          - os: macos-latest
-            eiffel_compiler: ise
-          - os: macos-latest
-            eiffel_compiler: debug_ise
-    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4

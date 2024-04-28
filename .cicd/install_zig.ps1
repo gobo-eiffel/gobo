@@ -40,7 +40,7 @@ switch ($GOBO_CI_OS) {
 		$GOBO_CI_ZIG_ARCHIVE_EXTENSION = ".tar.xz"
 	}
 	"macos" {
-		$GOBO_CI_ZIG_PLATFORM = "macos-aarch64"
+		$GOBO_CI_ZIG_PLATFORM = "macos-x86_64"
 		$GOBO_CI_ZIG_ARCHIVE_EXTENSION = ".tar.xz"
 	}
 	"windows" {
