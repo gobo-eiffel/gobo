@@ -81,6 +81,7 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 	}
 
 	$GOBO_CI_C_COMPILER = $CCompiler
+	$GOBO_CI_ARCH = "x86_64"
 
 	switch ($CiTool) {
 		"azure" {
@@ -125,6 +126,14 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 				default {
 					Write-Error "Platform not supported: $env:RUNNER_OS"
 					exit 1
+				}
+			}
+			switch ($env:RUNNER_ARCH) {
+				"ARM64" {
+					$GOBO_CI_ARCH = 'arm64'
+				}
+				"X64" {
+					$GOBO_CI_ARCH = 'x86_64'
 				}
 			}
 		}
@@ -224,6 +233,7 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 
 	$env:PATH = "$env:GOBO/bin$([IO.Path]::PathSeparator)$env:PATH"
 	
+	Write-Host "`$GOBO_CI_ARCH = $GOBO_CI_ARCH"
 	Write-Host "`$GOBO_CI_C_COMPILER = $GOBO_CI_C_COMPILER"
 	Write-Host "`$GOBO_CI_BUILD_SCRIPT = $GOBO_CI_BUILD_SCRIPT"
 	Get-ChildItem env:* | Sort-Object Name
