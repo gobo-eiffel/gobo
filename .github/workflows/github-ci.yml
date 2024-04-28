@@ -100,6 +100,11 @@ jobs:
         c_compiler: [zig, gcc]
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
+        exclude:
+        - c_compiler: gcc
+          eiffel_compiler: ise
+        - c_compiler: gcc
+          eiffel_compiler: debug_ise
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -123,6 +128,11 @@ jobs:
         c_compiler: [zig, clang]
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
+        exclude:
+          - c_compiler: clang
+            eiffel_compiler: ise
+          - c_compiler: clang
+            eiffel_compiler: debug_ise
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -146,6 +156,11 @@ jobs:
         c_compiler: [zig, msc]
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
+        exclude:
+        - c_compiler: msc
+          eiffel_compiler: ise
+        - c_compiler: msc
+          eiffel_compiler: debug_ise
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
