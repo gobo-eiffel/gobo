@@ -14,21 +14,8 @@
 #pragma once
 #endif
 
-#ifndef GE_EIFFEL_H
-#include "ge_eiffel.h"
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-extern EIF_REFERENCE partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj);
-extern EIF_REFERENCE retrieve_all(EIF_INTEGER f_desc, long position);
-extern void parsing_retrieve_initialize(void);
-extern EIF_REFERENCE parsing_retrieve(EIF_INTEGER f_desc, EIF_INTEGER a_pos);
-
-#ifdef __cplusplus
-}
+#ifndef ISE_PSTORE_H
+#include "pstore.h"
 #endif
 
 #endif

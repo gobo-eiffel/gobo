@@ -41857,8 +41857,7 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_exception.h", a_force, a_file)
 					l_c_filename := "ge_types.c"
 				elseif a_filename.same_string ("pretrieve.h") then
-					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
-					l_c_filename := "pretrieve.c"
+					include_runtime_header_file ("pstore.h", a_force, a_file)
 				elseif a_filename.same_string ("pstore.h") then
 					include_runtime_header_file ("eif_struct.h", a_force, a_file)
 					l_c_filename := "pstore.c"
@@ -41996,10 +41995,9 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("ge_types.c") then
 					include_runtime_header_file ("ge_types.h", False, a_header_file)
 					include_runtime_header_file ("ge_string.h", False, a_header_file)
-				elseif a_filename.same_string ("pretrieve.c") then
-					include_runtime_header_file ("pretrieve.h", False, a_header_file)
 				elseif a_filename.same_string ("pstore.c") then
 					include_runtime_header_file ("eif_except.h", False, a_header_file)
+					include_runtime_header_file ("ge_gc.h", False, a_header_file)
 					include_runtime_header_file ("pstore.h", False, a_header_file)
 				end
 				included_runtime_c_files.force_last (a_filename)
