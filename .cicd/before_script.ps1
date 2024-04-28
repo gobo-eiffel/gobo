@@ -226,7 +226,7 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 	
 	Write-Host "`$GOBO_CI_C_COMPILER = $GOBO_CI_C_COMPILER"
 	Write-Host "`$GOBO_CI_BUILD_SCRIPT = $GOBO_CI_BUILD_SCRIPT"
-	Get-ChildItem env:*
+	Get-ChildItem env:* | Sort-Object Name
 
 	& "$PSScriptRoot/set_gobo_version.ps1"
 	if ($LastExitCode -ne 0) {
