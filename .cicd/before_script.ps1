@@ -105,6 +105,14 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 					exit 1
 				}
 			}
+			switch ($env:AGENT_OSARCHITECTURE) {
+				"ARM64" {
+					$GOBO_CI_ARCH = 'arm64'
+				}
+				"X64" {
+					$GOBO_CI_ARCH = 'x86_64'
+				}
+			}
 		}
 		"github" {
 			$env:GOBO = $env:GITHUB_WORKSPACE
