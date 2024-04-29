@@ -145,45 +145,6 @@ inherit
 			set_name
 		end
 
-	ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION
-		rename
-			name as identifier
-		undefine
-			first_position,
-			last_position,
-			is_tuple_label,
-			has_result,
-			has_address_expression,
-			has_agent,
-			has_typed_object_test,
-			reset,
-			is_equal,
-			break
-		redefine
-			is_instance_free,
-			is_never_void,
-			add_separate_arguments
-		end
-
-	ET_UNQUALIFIED_FEATURE_CALL_INSTRUCTION
-		rename
-			name as identifier
-		undefine
-			parenthesis_call,
-			first_position,
-			last_position,
-			is_tuple_label,
-			has_result,
-			has_address_expression,
-			has_agent,
-			has_typed_object_test,
-			reset,
-			is_equal,
-			break
-		redefine
-			is_instance_free
-		end
-
 	KL_IMPORTED_STRING_ROUTINES
 		export
 			{NONE} all
@@ -284,13 +245,6 @@ feature -- Access
 					i := i + 1
 				end
 			end
-		end
-
-	arguments: detachable ET_ACTUAL_ARGUMENTS
-			-- Arguments
-		do
-		ensure then
-			no_arguments: Result = Void
 		end
 
 	hash_code: INTEGER

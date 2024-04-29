@@ -5,7 +5,7 @@
 		"Eiffel expression type finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_EXPRESSION_TYPE_FINDER
@@ -3299,8 +3299,6 @@ feature {ET_AST_NODE} -- Processing
 				find_iteration_item_type (an_identifier, current_context)
 			elseif an_identifier.is_inline_separate_argument then
 				find_inline_separate_argument_type (an_identifier, current_context)
-			elseif an_identifier.is_feature_name then
-				find_unqualified_call_expression_type (an_identifier, current_context)
 			else
 					-- Internal error: invalid kind of identifier.
 					-- This error should have already been reported when checking

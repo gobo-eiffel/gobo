@@ -2370,12 +2370,8 @@ feature {NONE} -- AST factory
 				end
 				if l_seed = 0 then
 					a_name.set_feature_name (True)
-					Result := ast_factory.new_unqualified_call_instruction (a_name, args)
-				elseif args /= Void then
-					Result := ast_factory.new_unqualified_call_instruction (a_name, args)
-				else
-					Result := a_name
 				end
+				Result := ast_factory.new_unqualified_call_instruction (a_name, args)
 			end
 		end
 
