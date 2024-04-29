@@ -57,15 +57,15 @@ $GOBO_CI_GE_VERSION = $GOBO_CI_GE_VERSION.Substring(12)
 
 switch ($GOBO_CI_OS) {
 	"linux" {
-		$GOBO_CI_GE_PLATFORM = "linux-x86_64"
+		$GOBO_CI_GE_PLATFORM = "linux-$GOBO_CI_ARCH"
 		$GOBO_CI_GE_ARCHIVE_EXTENSION = ".tar.xz"
 	}
 	"macos" {
-		$GOBO_CI_GE_PLATFORM = "macos-x86_64"
+		$GOBO_CI_GE_PLATFORM = "macos-$GOBO_CI_ARCH"
 		$GOBO_CI_GE_ARCHIVE_EXTENSION = ".tar.xz"
 	}
 	"windows" {
-		$GOBO_CI_GE_PLATFORM = "windows-x86_64"
+		$GOBO_CI_GE_PLATFORM = "windows-$GOBO_CI_ARCH"
 		$GOBO_CI_GE_ARCHIVE_EXTENSION = ".7z"
 	}
 }

@@ -32,7 +32,7 @@ if ($LastExitCode -ne 0) {
 	exit $LastExitCode
 }
 
-$GOBO_CI_ZIG_VERSION = "0.12.0-dev.3212+40e64245f"
+$GOBO_CI_ZIG_VERSION = "0.12.0"
 
 switch ($GOBO_CI_OS) {
 	"linux" {
@@ -40,7 +40,11 @@ switch ($GOBO_CI_OS) {
 		$GOBO_CI_ZIG_ARCHIVE_EXTENSION = ".tar.xz"
 	}
 	"macos" {
-		$GOBO_CI_ZIG_PLATFORM = "macos-x86_64"
+		if ($GOBO_CI_ARCH -eq "arm64") {
+			$GOBO_CI_ZIG_PLATFORM = "macos-aarch64"
+		} else {
+			$GOBO_CI_ZIG_PLATFORM = "macos-x86_64"
+		}
 		$GOBO_CI_ZIG_ARCHIVE_EXTENSION = ".tar.xz"
 	}
 	"windows" {
@@ -79,6 +83,13 @@ Write-Host "Zig version: "
 if ($LastExitCode -ne 0) {
 	Write-Error "Command '$env:GOBO/tool/gec/backend/c/zig/zig version' exited with code $LastExitCode"
 	exit $LastExitCode
+}
+if (($GOBO_CI_OS -eq "linux" -or $GOBO_CI_OS -eq "macos") -and $CiTool -ne "gitlab") {
+	file "$env:GOBO/tool/gec/backend/c/zig/zig"
+	if ($LastExitCode -ne 0) {
+		Write-Error "Command 'file $env:GOBO/tool/gec/backend/c/zig/zig' exited with code $LastExitCode"
+		exit $LastExitCode
+	}
 }
 & "$env:GOBO/tool/gec/backend/c/zig/zig" cc --version
 if ($LastExitCode -ne 0) {

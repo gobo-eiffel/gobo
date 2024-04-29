@@ -46,11 +46,25 @@ switch ($GOBO_CI_OS) {
 		$env:ISE_PLATFORM = "linux-x86-64"
 		$env:ISE_C_COMPILER = "gcc"
 		$GOBO_CI_ISE_ARCHIVE_EXTENSION = ".tar.bz2"
+		if ($CCompiler -ne "gcc") {
+			gcc --version
+			if ($LastExitCode -ne 0) {
+				Write-Error "Command 'gcc --version' exited with code $LastExitCode"
+				exit $LastExitCode
+			}
+		}
 	}
 	"macos" {
 		$env:ISE_PLATFORM = "macosx-x86-64"
 		$env:ISE_C_COMPILER = "clang"
 		$GOBO_CI_ISE_ARCHIVE_EXTENSION = ".tar.bz2"
+		if ($CCompiler -ne "clang") {
+			clang --version
+			if ($LastExitCode -ne 0) {
+				Write-Error "Command 'clang --version' exited with code $LastExitCode"
+				exit $LastExitCode
+			}
+		}
 	}
 	"windows" {
 		$env:ISE_PLATFORM = "win64"
