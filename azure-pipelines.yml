@@ -1,7 +1,8 @@
 # For available vm_images, see https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml
 
 variables:
-  GE_NO_DEFAULT_BOEHM_GC: true
+  GOBO_CLI_GC: no
+  GOBO_CLI_SETTING: exception_trace=true
 
 stages:
 

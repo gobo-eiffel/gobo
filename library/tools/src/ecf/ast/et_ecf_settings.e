@@ -80,6 +80,39 @@ feature -- Setting
 			primary_value_set: primary_value (a_name) = a_value
 		end
 
+	set_primary_value_from_definition (a_definition: STRING)
+			-- Set setting from `a_definition' of the form "name=value".
+		require
+			a_definition_not_void: a_definition /= Void
+		local
+			l_count: INTEGER
+			l_index: INTEGER
+		do
+			l_count := a_definition.count
+			if l_count > 0 then
+				l_index := a_definition.index_of ('=', 1)
+				if l_index = 0 then
+					set_primary_value (a_definition, "")
+				elseif l_index = l_count then
+					set_primary_value (a_definition.substring (1, l_index - 1), "")
+				elseif l_index /= 1 then
+					set_primary_value (a_definition.substring (1, l_index - 1), a_definition.substring (l_index + 1, l_count))
+				end
+			end
+		end
+
+	set_primary_values_from_definitions (a_definitions: DS_LIST [detachable STRING])
+			-- Set settings from `a_definitions' of the form "name=value".
+		require
+			a_definitions_not_void: a_definitions /= Void
+		do
+			across a_definitions as i_definition loop
+				if attached i_definition as l_definition then
+					set_primary_value_from_definition (l_definition)
+				end
+			end
+		end
+
 	set_secondary_settings (a_settings: like secondary_settings)
 			-- Set `secondary_settings' to `a_settings'.
 		require
