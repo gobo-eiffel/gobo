@@ -776,6 +776,8 @@ feature {NONE} -- Compilation script generation
 				create l_c_config_parser.make (error_handler)
 				if operating_system.is_windows then
 					l_c_config_parser.define_value ("True", c_eif_windows)
+				elseif {PLATFORM}.is_unix then
+					l_c_config_parser.define_value ("True", c_eif_linux)
 				end
 				if not finalize_mode then
 					l_c_config_parser.define_value ("True", "EIF_WORKBENCH")
@@ -44817,6 +44819,7 @@ feature {NONE} -- Constants
 	c_eif_is_vms: STRING = "EIF_IS_VMS"
 	c_eif_is_vxworks: STRING = "EIF_IS_VXWORKS"
 	c_eif_is_windows: STRING = "EIF_IS_WINDOWS"
+	c_eif_linux: STRING = "EIF_LINUX"
 	c_eif_mem_free: STRING = "eif_mem_free"
 	c_eif_native_char: STRING = "EIF_NATIVE_CHAR"
 	c_eif_natural: STRING = "EIF_NATURAL"
