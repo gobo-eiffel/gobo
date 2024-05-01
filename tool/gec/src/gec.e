@@ -533,10 +533,12 @@ feature -- Arguments
 	use_boehm_gc: BOOLEAN
 			-- Should the application be compiled with the Boehm GC?
 		do
-			if gc_option.was_found and then attached gc_option.parameter as l_parameter then
+			if attached Execution_environment.variable_value (gobo_cli_gc_variable_name) as l_variable_value then
+				Result := STRING_.same_string (l_variable_value, "boehm")
+			elseif gc_option.was_found and then attached gc_option.parameter as l_parameter then
 				Result := STRING_.same_string (l_parameter, "boehm")
-			elseif attached Execution_environment.variable_value ("GE_NO_DEFAULT_BOEHM_GC") as l_no_default_boehm_gc and then not l_no_default_boehm_gc.is_empty then
-				Result := False
+			elseif attached Execution_environment.variable_value (gobo_default_gc_variable_name) as l_variable_value then
+				Result := STRING_.same_string (l_variable_value, "boehm")
 			else
 				Result := attached gobo_variables.boehm_gc_value as l_boehm_gc and then not l_boehm_gc.is_empty
 			end
@@ -862,25 +864,26 @@ feature -- Argument parsing
 			a_parser_not_void: a_parser /= Void
 		local
 			l_override_settings: detachable ET_ECF_SETTINGS
-			l_definition: STRING
-			l_index: INTEGER
+			l_gobo_cli_setting_variable_value: detachable STRING
+			l_gobo_default_setting_variable_value: detachable STRING
+			l_splitter: ST_SPLITTER
 		do
-			if not a_option.parameters.is_empty or is_finalize then
+			if attached Execution_environment.variable_value (gobo_default_setting_variable_name) as l_variable_value and then not l_variable_value.is_empty then
+				l_gobo_default_setting_variable_value := l_variable_value
+			end
+			if attached Execution_environment.variable_value (gobo_cli_setting_variable_name) as l_variable_value and then not l_variable_value.is_empty then
+				l_gobo_cli_setting_variable_value := l_variable_value
+			end
+			if not a_option.parameters.is_empty or is_finalize or l_gobo_default_setting_variable_value /= Void or l_gobo_cli_setting_variable_value /= Void then
 				create l_override_settings.make
-				across a_option.parameters as i_setting loop
-					if attached i_setting as l_setting then
-						l_definition := l_setting
-						if l_definition.count > 0 then
-							l_index := l_definition.index_of ('=', 1)
-							if l_index = 0 then
-								l_override_settings.set_primary_value (l_definition, "")
-							elseif l_index = l_definition.count then
-								l_override_settings.set_primary_value (l_definition.substring (1, l_index - 1), "")
-							elseif l_index /= 1 then
-								l_override_settings.set_primary_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
-							end
-						end
-					end
+				if l_gobo_default_setting_variable_value /= Void then
+					create l_splitter.make_with_separators (", ")
+					l_override_settings.set_primary_values_from_definitions (l_splitter.split (l_gobo_default_setting_variable_value))
+				end
+				l_override_settings.set_primary_values_from_definitions (a_option.parameters)
+				if l_gobo_cli_setting_variable_value /= Void then
+					create l_splitter.make_with_separators (", ")
+					l_override_settings.set_primary_values_from_definitions (l_splitter.split (l_gobo_cli_setting_variable_value))
 				end
 				if is_finalize then
 					l_override_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.finalize_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
@@ -1011,6 +1014,28 @@ feature -- Argument parsing
 				end
 			end
 		end
+
+feature {NONE} -- Environment variables
+
+	gobo_cli_setting_variable_name: STRING = "GOBO_CLI_SETTING"
+			-- Environment variable name to specify settings
+			-- as if they were specified with the command-line
+			-- argument '--setting'.
+
+	gobo_default_setting_variable_name: STRING = "GOBO_DEFAULT_SETTING"
+			-- Environment variable name to specify settings
+			-- which are not overridden with the command-line
+			-- argument '--setting'.
+
+	gobo_cli_gc_variable_name: STRING = "GOBO_CLI_GC"
+			-- Environment variable name to specify the GC to
+			-- be used as if it was specified with the command-line
+			-- argument '--gc'.
+
+	gobo_default_gc_variable_name: STRING = "GOBO_DEFAULT_GC"
+			-- Environment variable name to specify the GC to
+			-- be used if not overridden with the command-line
+			-- argument '--gc'.
 
 feature -- Error handling
 

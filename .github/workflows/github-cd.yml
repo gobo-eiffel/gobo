@@ -7,7 +7,7 @@ on:
     - cron: '22 4 * * *'
 
 env:
-  GE_NO_DEFAULT_BOEHM_GC: true
+  GOBO_CLI_GC: no
 
 jobs:
 
