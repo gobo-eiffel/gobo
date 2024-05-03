@@ -61,6 +61,19 @@ switch ($GOBO_CI_OS) {
 	}
 }
 
+if (($GOBO_CI_OS -eq "linux" -or $GOBO_CI_OS -eq "macos") -and $CiTool -ne "gitlab") {
+	file "$env:GOBO/bin/gec"
+	if ($LastExitCode -ne 0) {
+		Write-Error "Command 'file $env:GOBO/bin/gec' exited with code $LastExitCode"
+		exit $LastExitCode
+	}
+	which gec
+	if ($LastExitCode -ne 0) {
+		Write-Error "Command 'which gec' exited with code $LastExitCode"
+		exit $LastExitCode
+	}
+}
+
 gec --version --verbose
 if ($LastExitCode -ne 0) {
 	Write-Error "Command 'gec --version --verbose' exited with code $LastExitCode"

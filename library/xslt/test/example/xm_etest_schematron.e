@@ -5,7 +5,7 @@
 		"Test 'xslt/schematron' example"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2024, Colin Adams and others"
 	license: "MIT License"
 
 class XM_ETEST_SCHEMATRON
@@ -39,8 +39,8 @@ feature -- Test
 			compile_program
 				-- Run example.
 			schematron_exe := program_exe
-			assert_execute (schematron_exe + " --output=report.txt " +  data_filename + " " + schema_filename  + output_log)
-			assert_integers_equal ("One error message", 69, file_system.file_count (error_log_filename))
+			assert_execute_with_command_output (schematron_exe + " --output=report.txt " +  data_filename + " " + schema_filename + output2_log, output2_log_filename, error2_log_filename)
+			assert_integers_equal ("One error message", 69, file_system.file_count (error2_log_filename))
 			assert_files_equal ("diff", report_filename, "report.txt")
 		end
 

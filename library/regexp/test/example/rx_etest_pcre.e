@@ -5,7 +5,7 @@
 		"Test 'pcre' example"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class RX_ETEST_PCRE
@@ -36,19 +36,19 @@ feature -- Test
 			compile_program
 				-- Run example.
 			pcre_exe := program_exe
-			assert_execute (pcre_exe + output_log)
-			assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
-			if file_system.same_text_files (pcre_filename, output_log_filename) then
+			assert_execute_with_command_output (pcre_exe + output2_log, output2_log_filename, error2_log_filename)
+			assert_integers_equal ("no_error_log", 0, file_system.file_count (error2_log_filename))
+			if file_system.same_text_files (pcre_filename, output2_log_filename) then
 				assert ("diff", True)
 			else
 					-- Free version of ISE Eiffel?
 				file_system.delete_file (freeise_pcre_filename)
 				file_system.concat_files (freeise_pcre_filename, freeise_log_filename)
 				file_system.concat_files (freeise_pcre_filename, pcre_filename)
-				if file_system.same_text_files (freeise_pcre_filename, output_log_filename) then
+				if file_system.same_text_files (freeise_pcre_filename, output2_log_filename) then
 					assert ("freeise_diff", True)
 				else
-					assert_files_equal ("diff2", pcre_filename, output_log_filename)
+					assert_files_equal ("diff2", pcre_filename, output2_log_filename)
 				end
 			end
 		end

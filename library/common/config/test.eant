@@ -140,7 +140,7 @@
 		<delete file="EiffelSoftware.Runtime.dll"/>
 		<delete file="${system}.h2o"/>
 		<delete directory="TESTGEN"/>
-		<delete file="xcompile.log"/>
+		<delete file="xcompile.log" fail_on_error="false"/> <!-- Deletion sometimes fails on Windows in azure devops pipelines. -->
 		<geant target="other_clean"/>
 	</target>
 

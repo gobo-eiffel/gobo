@@ -5,7 +5,7 @@
 		"Test 'eiffel_parser' example"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class PR_ETEST_EIFFEL_PARSER
@@ -36,16 +36,16 @@ feature -- Test
 			compile_program
 				-- Run example.
 			eiffel_parser_exe := program_exe
-			assert_execute (eiffel_parser_exe + " 2 " + sample_e_filename + output_log)
-			if file_system.file_count (output_log_filename) = 0 then
+			assert_execute_with_command_output (eiffel_parser_exe + " 2 " + sample_e_filename + output2_log, output2_log_filename, error2_log_filename)
+			if file_system.file_count (output2_log_filename) = 0 then
 				assert ("no_output_log", True)
-			elseif file_system.same_text_files (freeise_log_filename, output_log_filename) then
+			elseif file_system.same_text_files (freeise_log_filename, output2_log_filename) then
 					-- Free version of ISE Eiffel?
 				assert ("freeise_no_output_log", True)
 			else
-				assert_integers_equal ("no_output_log2", 0, file_system.file_count (output_log_filename))
+				assert_integers_equal ("no_output_log2", 0, file_system.file_count (output2_log_filename))
 			end
-			assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
+			assert_integers_equal ("no_error_log", 0, file_system.file_count (error2_log_filename))
 		end
 
 feature {NONE} -- Implementation
