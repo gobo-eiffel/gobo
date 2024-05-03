@@ -35838,9 +35838,28 @@ feature {NONE} -- Memory allocation
 					current_file.put_line (c_ge_malloc_cleared)
 				end
 				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				print_greater_than
+				current_file.put_character ('1')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
 				current_file.put_string (c_memset)
 				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_string (c_char)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
 				print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
+				current_file.put_character (')')
 				current_file.put_character (',')
 				current_file.put_character ('0')
 				current_file.put_character (',')
@@ -35853,6 +35872,9 @@ feature {NONE} -- Memory allocation
 				current_file.put_character (')')
 				current_file.put_character (')')
 				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				current_file.put_character ('}')
 				current_file.put_new_line
 				current_file.put_line (c_endif)
 			end
