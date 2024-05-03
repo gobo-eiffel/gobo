@@ -1,4 +1,4 @@
-# For available vm_images, see https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml
+# For available vmImages, see https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml
 
 variables:
   GOBO_CLI_GC: no
@@ -37,13 +37,13 @@ stages:
   - template: .azure/build.yml
     parameters:
       os: windows
-      c_compiler: msc
+      c_compiler: zig
       vm_image: windows-latest
 
   - template: .azure/build.yml
     parameters:
       os: windows
-      c_compiler: zig
+      c_compiler: msc
       vm_image: windows-2019
 
 #
@@ -77,11 +77,11 @@ stages:
   - template: .azure/test.yml
     parameters:
       os: windows
-      c_compiler: msc
+      c_compiler: zig
       vm_image: windows-latest
 
   - template: .azure/test.yml
     parameters:
       os: windows
-      c_compiler: zig
+      c_compiler: msc
       vm_image: windows-2019
