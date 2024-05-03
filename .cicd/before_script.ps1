@@ -97,7 +97,7 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 					$GOBO_CI_OS = "windows"
 					if ($GOBO_CI_C_COMPILER -eq "msc") {
 						# Setting the environment variables for `cl`.
-						Invoke-Environment('"C:\Program Files\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
+						Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
 					}
 				}
 				default {
