@@ -29,7 +29,7 @@ feature -- Test
 				l_thread_option := ""
 			end
 			l_gecop_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("gecop")
-			assert_execute (l_gecop_pathname + " --tool=" + program_name + " --tool-executable=" + l_program_full_filename + l_thread_option + " --keep-testdir" + output_log)
+			assert_execute_with_command_output (l_gecop_pathname + " --tool=" + program_name + " --tool-executable=" + l_program_full_filename + l_thread_option + " --keep-testdir" + output2_log, output2_log_filename, error2_log_filename)
 			assert_expected_validation_results
 		end
 
@@ -42,7 +42,7 @@ feature -- Test
 			l_tag: STRING
 			l_message: STRING
 		do
-			create l_file.make (output_log_filename)
+			create l_file.make (output2_log_filename)
 			l_file.open_read
 			if l_file.is_open_read then
 				create l_string.make (4096)

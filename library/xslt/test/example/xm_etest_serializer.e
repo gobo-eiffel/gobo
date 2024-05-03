@@ -5,7 +5,7 @@
 		"Test 'xslt/serializer' example"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class XM_ETEST_SERIALIZER
@@ -36,9 +36,9 @@ feature -- Test
 		do
 			compile_program
 				-- Run example.
-			assert_execute (program_exe + " --omit-xml-declaration=yes " + input_filename + output_log)
-			assert_files_equal ("output_log", input_filename, output_log_filename)
-			assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
+			assert_execute_with_command_output (program_exe + " --omit-xml-declaration=yes " + input_filename + output2_log, output2_log_filename, error2_log_filename)
+			assert_files_equal ("output_log", input_filename, output2_log_filename)
+			assert_integers_equal ("no_error_log", 0, file_system.file_count (error2_log_filename))
 		end
 
 feature {NONE} -- Implementation

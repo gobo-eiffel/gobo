@@ -5,7 +5,7 @@
 		"Test 'telco' benchmark"
 
 	library: "Gobo Eiffel Math Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class MA_ETEST_TELCO
@@ -42,10 +42,10 @@ feature -- Test
 			compile_program
 				-- Run example.
 			telco_exe := program_exe
-			assert_execute (telco_exe + output_log)
-			assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
+			assert_execute_with_command_output (telco_exe + output2_log, output2_log_filename, error2_log_filename)
+			assert_integers_equal ("no_error_log", 0, file_system.file_count (error2_log_filename))
 			assert_files_equal ("diff", telco_outc_filename, "telco.outc")
-			create l_input_file.make (output_log_filename)
+			create l_input_file.make (output2_log_filename)
 			l_input_file.open_read
 			if not l_input_file.is_open_read then
 				assert ("read_output_file", False)

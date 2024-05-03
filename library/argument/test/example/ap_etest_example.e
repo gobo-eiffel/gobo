@@ -5,7 +5,7 @@
 		"Test argument parsing example"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class AP_ETEST_EXAMPLE
@@ -41,13 +41,13 @@ feature -- Test
 			app_exe := program_exe
 				-- Run example.
 			args := "-b true -i 5"
-			assert_execute (app_exe + " " + args + output_log)
-			assert_files_equal ("output_log1", output1_filename, output_log_filename)
-			assert_integers_equal ("no_error_log1", 0, file_system.file_count (error_log_filename))
+			assert_execute_with_command_output (app_exe + " " + args + output2_log, output2_log_filename, error2_log_filename)
+			assert_files_equal ("output_log1", output1_filename, output2_log_filename)
+			assert_integers_equal ("no_error_log1", 0, file_system.file_count (error2_log_filename))
 			args := "-a --alt-string=gobo"
-			assert_execute (app_exe + " " + args + output_log)
-			assert_files_equal ("output_log2", output2_filename, output_log_filename)
-			assert_integers_equal ("no_error_log2", 0, file_system.file_count (error_log_filename))
+			assert_execute_with_command_output (app_exe + " " + args + output3_log, output3_log_filename, error3_log_filename)
+			assert_files_equal ("output_log2", output2_filename, output3_log_filename)
+			assert_integers_equal ("no_error_log2", 0, file_system.file_count (error3_log_filename))
 		end
 
 feature {NONE} -- Implementation

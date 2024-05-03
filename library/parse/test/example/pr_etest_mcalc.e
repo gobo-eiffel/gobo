@@ -5,7 +5,7 @@
 		"Test 'mcalc' example"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class PR_ETEST_MCALC
@@ -33,8 +33,8 @@ feature -- Test
 		do
 			compile_program
 			file_system.copy_file (mcalc_input_filename, input_text_filename)
-			assert_execute (program_exe + input_text + output_log)
-			assert ("expected_output", file_system.same_text_files (mcalc_output_filename, output_log_filename))
+			assert_execute_with_command_output (program_exe + input_text + output2_log, output2_log_filename, error2_log_filename)
+			assert ("expected_output", file_system.same_text_files (mcalc_output_filename, output2_log_filename))
 		end
 
 feature {NONE} -- Implementation

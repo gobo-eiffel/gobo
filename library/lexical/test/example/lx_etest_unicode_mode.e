@@ -5,7 +5,7 @@
 		"Test Unicode unicode mode example"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class LX_ETEST_UNICODE_MODE
@@ -40,28 +40,28 @@ feature -- Test
 				-- Run example.
 			byte_scanner_exe := program_exe
 				-- Input1.
-			assert_execute (byte_scanner_exe + " " + input1_filename + " output.txt" + output_log)
-			if file_system.file_count (output_log_filename) = 0 then
+			assert_execute_with_command_output (byte_scanner_exe + " " + input1_filename + " output.txt" + output2_log, output2_log_filename, error2_log_filename)
+			if file_system.file_count (output2_log_filename) = 0 then
 				assert ("no_output_log", True)
-			elseif file_system.same_text_files (freeise_log_filename, output_log_filename) then
+			elseif file_system.same_text_files (freeise_log_filename, output2_log_filename) then
 					-- Free version of ISE Eiffel?
 				assert ("freeise_no_output_log", True)
 			else
-				assert_integers_equal ("no_output_log2", 0, file_system.file_count (output_log_filename))
+				assert_integers_equal ("no_output_log2", 0, file_system.file_count (output2_log_filename))
 			end
-			assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
+			assert_integers_equal ("no_error_log", 0, file_system.file_count (error2_log_filename))
 			assert_files_equal ("diff", output1_filename, "output.txt")
 				-- Input2.
-			assert_execute (byte_scanner_exe + " " + input2_filename + " output.txt" + output_log)
-			if file_system.file_count (output_log_filename) = 0 then
+			assert_execute_with_command_output (byte_scanner_exe + " " + input2_filename + " output.txt" + output3_log, output3_log_filename, error3_log_filename)
+			if file_system.file_count (output3_log_filename) = 0 then
 				assert ("no_output_log", True)
-			elseif file_system.same_text_files (freeise_log_filename, output_log_filename) then
+			elseif file_system.same_text_files (freeise_log_filename, output3_log_filename) then
 					-- Free version of ISE Eiffel?
 				assert ("freeise_no_output_log", True)
 			else
-				assert_integers_equal ("no_output_log2", 0, file_system.file_count (output_log_filename))
+				assert_integers_equal ("no_output_log2", 0, file_system.file_count (output3_log_filename))
 			end
-			assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
+			assert_integers_equal ("no_error_log", 0, file_system.file_count (error3_log_filename))
 			assert_files_equal ("diff", output2_filename, "output.txt")
 		end
 
