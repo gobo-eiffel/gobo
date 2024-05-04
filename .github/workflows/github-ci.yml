@@ -12,6 +12,9 @@ on:
       - '*/**'
   pull_request:
 
+env:
+  GOBO_CLI_SETTING: exception_trace=true
+
 jobs:
 
 #
