@@ -149,8 +149,8 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1, a_pattern2, a_pattern3, a_pattern4: STRING
-			a_regexp1, a_regexp2, a_regexp3, a_regexp4: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5: STRING
+			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 			l_first_line: BOOLEAN
 		do
@@ -170,11 +170,16 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			a_regexp3.compile (a_pattern3)
 			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
 			a_regexp3.optimize
-			a_pattern4 := "(line [0-9]+ column [0-9]+ in )([^\\/]*[\\/])*([a-z][a-z0-9_]*\.e)"
+			a_pattern4 := "ld: warning: REFERENCED_DYNAMICALLY flag on symbol '_catch_exception[_a-z]*' is deprecated"
 			create a_regexp4.make
 			a_regexp4.compile (a_pattern4)
 			assert ("cannot compile regexp '" + a_pattern4 + "'", a_regexp4.is_compiled)
 			a_regexp4.optimize
+			a_pattern5 := "(line [0-9]+ column [0-9]+ in )([^\\/]*[\\/])*([a-z][a-z0-9_]*\.e)"
+			create a_regexp5.make
+			a_regexp5.compile (a_pattern5)
+			assert ("cannot compile regexp '" + a_pattern5 + "'", a_regexp5.is_compiled)
+			a_regexp5.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -203,13 +208,16 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 						elseif a_regexp3.recognizes (a_line) then
 								-- Skip this line and the previous empty line.
 							l_empty_line := False
+						elseif a_regexp4.recognizes (a_line) then
+								-- Skip this line and the previous empty line.
+							l_empty_line := False
 						else
 							if l_empty_line then
 								out_file.put_new_line
 								l_empty_line := False
 							end
-							if a_regexp4.recognizes (a_line) then
-								out_file.put_line (a_regexp4.captured_substring (1) + a_regexp4.captured_substring (3))
+							if a_regexp5.recognizes (a_line) then
+								out_file.put_line (a_regexp5.captured_substring (1) + a_regexp5.captured_substring (3))
 							else
 								out_file.put_line (a_line)
 							end
@@ -218,6 +226,7 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 						a_regexp2.wipe_out
 						a_regexp3.wipe_out
 						a_regexp4.wipe_out
+						a_regexp5.wipe_out
 						in_file.read_line
 						l_first_line := False
 					end
