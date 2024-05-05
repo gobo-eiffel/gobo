@@ -691,7 +691,6 @@ EIF_INTEGER eif_file_gss(FILE* f, char* s, EIF_INTEGER bound)
 	size_t amount = fread(s, sizeof(char), (size_t)bound, f);
 
 	if (ferror(f)) {	/* An I/O error occurred */
-		perror("eif_file_gss");
 		eise_io("FILE: unable to read stream.");					/* Raise exception */
 	}
 
