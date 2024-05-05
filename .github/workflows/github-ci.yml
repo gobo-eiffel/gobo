@@ -12,9 +12,6 @@ on:
       - '*/**'
   pull_request:
 
-env:
-  GOBO_CLI_GC: no
-
 jobs:
 
 #

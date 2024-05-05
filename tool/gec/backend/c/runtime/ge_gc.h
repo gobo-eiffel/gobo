@@ -105,16 +105,16 @@ extern "C" {
 
 #if !defined(GE_USE_BOEHM_GC)
 #define GE_init_gc() /* do nothing */
-#elif defined(GE_WINDOWS) || defined(GE_MACOS) || !defined(__clang__)
+#elif defined(GE_WINDOWS) || (defined(GE_MACOS) && !defined(__aarch64__)) || !defined(__clang__)
 #define GE_init_gc() \
 	GC_INIT(); \
 	GC_allow_register_threads(); \
 	GC_enable_incremental()
 #else
 /*
-* No incremenatal GC under Linux when compiled wtih zig/clang,
-* because otherwise the programdoes not behave as expected.
-*/
+ * No incremental GC under Macos arm64 and Linux when compiled wtih zig/clang,
+ * because otherwise the program does not behave as expected.
+ */
 #define GE_init_gc() \
 	GC_INIT(); \
 	GC_allow_register_threads()
