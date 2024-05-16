@@ -78,6 +78,7 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 			Write-Error "Command 'cmd /c $Command > nul 2>&1 && set' exited with code $LastExitCode"
 			# exit $LastExitCode
 		}
+		exit 0
 	}
 
 	$GOBO_CI_C_COMPILER = $CCompiler
