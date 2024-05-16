@@ -102,6 +102,7 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 						if (Test-Path "$vs2022_setting_script") {
 							Invoke-Environment("'$vs2022_setting_script'")
 						} elseif (Test-Path "$vs2019_setting_script") {
+							. "$vs2019_setting_script"
 							Invoke-Environment("call '$vs2019_setting_script'")
 						} else {
 							Write-Error "VisualStudio not found"
