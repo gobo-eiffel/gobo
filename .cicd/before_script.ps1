@@ -76,7 +76,7 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 		}}
 		if ($LastExitCode -ne 0) {
 			Write-Error "Command 'cmd /c $Command > nul 2>&1 && set' exited with code $LastExitCode"
-			exit $LastExitCode
+			# exit $LastExitCode
 		}
 	}
 
@@ -103,6 +103,9 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 							Invoke-Environment("'$vs2022_setting_script'")
 						} elseif (Test-Path "$vs2019_setting_script") {
 							Invoke-Environment("call '$vs2019_setting_script'")
+						} else {
+							Write-Error "VisualStudio not found"
+							exit 1
 						}
 					}
 				}
