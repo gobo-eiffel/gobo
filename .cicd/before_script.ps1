@@ -76,9 +76,8 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 		}}
 		if ($LastExitCode -ne 0) {
 			Write-Error "Command 'cmd /c $Command > nul 2>&1 && set' exited with code $LastExitCode"
-			# exit $LastExitCode
+			exit $LastExitCode
 		}
-		exit 0
 	}
 
 	$GOBO_CI_C_COMPILER = $CCompiler
@@ -101,10 +100,9 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 						$vs2022_setting_script = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"
 						$vs2019_setting_script = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"
 						if (Test-Path "$vs2022_setting_script") {
-							Invoke-Environment("'$vs2022_setting_script'")
+							Invoke-Environment("`"$vs2022_setting_script`"")
 						} elseif (Test-Path "$vs2019_setting_script") {
-							. "$vs2019_setting_script"
-							Invoke-Environment("call '$vs2019_setting_script'")
+							Invoke-Environment("`"$vs2019_setting_script`"")
 						} else {
 							Write-Error "VisualStudio not found"
 							exit 1
