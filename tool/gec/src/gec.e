@@ -416,8 +416,11 @@ feature {NONE} -- Processing
 				create l_command.make (l_gecc_pathname + " --thread=" + thread_count.out + " " + l_script_filename)
 				l_command.execute
 				l_exit_code := l_command.exit_code
-			else
+			elseif {PLATFORM}.is_thread_capable then
 				create l_gecc.execute_with_arguments (<<"--thread=" + thread_count.out, l_script_filename>>)
+				l_exit_code := l_gecc.exit_code
+			else
+				create l_gecc.execute_with_arguments (<<l_script_filename>>)
 				l_exit_code := l_gecc.exit_code
 			end
 			file_system.cd (file_system.relative_parent_directory)
@@ -900,25 +903,26 @@ feature -- Argument parsing
 			a_parser_not_void: a_parser /= Void
 		local
 			l_override_capabilities: detachable ET_ECF_CAPABILITIES
-			l_definition: STRING
-			l_index: INTEGER
+			l_gobo_cli_capability_variable_value: detachable STRING
+			l_gobo_default_capability_variable_value: detachable STRING
+			l_splitter: ST_SPLITTER
 		do
-			if not a_option.parameters.is_empty then
+			if attached Execution_environment.variable_value (gobo_default_capability_variable_name) as l_variable_value and then not l_variable_value.is_empty then
+				l_gobo_default_capability_variable_value := l_variable_value
+			end
+			if attached Execution_environment.variable_value (gobo_cli_capability_variable_name) as l_variable_value and then not l_variable_value.is_empty then
+				l_gobo_cli_capability_variable_value := l_variable_value
+			end
+			if not a_option.parameters.is_empty or l_gobo_default_capability_variable_value /= Void or l_gobo_cli_capability_variable_value /= Void then
 				create l_override_capabilities.make
-				across a_option.parameters as i_capability loop
-					if attached i_capability as l_capability then
-						l_definition := l_capability
-						if l_definition.count > 0 then
-							l_index := l_definition.index_of ('=', 1)
-							if l_index = 0 then
-								l_override_capabilities.set_primary_use_value (l_definition, "")
-							elseif l_index = l_definition.count then
-								l_override_capabilities.set_primary_use_value (l_definition.substring (1, l_index - 1), "")
-							elseif l_index /= 1 then
-								l_override_capabilities.set_primary_use_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
-							end
-						end
-					end
+				if l_gobo_default_capability_variable_value /= Void then
+					create l_splitter.make_with_separators (", ")
+					l_override_capabilities.set_primary_use_values_from_definitions (l_splitter.split (l_gobo_default_capability_variable_value))
+				end
+				l_override_capabilities.set_primary_use_values_from_definitions (a_option.parameters)
+				if l_gobo_cli_capability_variable_value /= Void then
+					create l_splitter.make_with_separators (", ")
+					l_override_capabilities.set_primary_use_values_from_definitions (l_splitter.split (l_gobo_cli_capability_variable_value))
 				end
 			end
 			override_capabilities := l_override_capabilities
@@ -1026,6 +1030,16 @@ feature {NONE} -- Environment variables
 			-- Environment variable name to specify settings
 			-- which are not overridden with the command-line
 			-- argument '--setting'.
+
+	gobo_cli_capability_variable_name: STRING = "GOBO_CLI_CAPABILITY"
+			-- Environment variable name to specify capabilities
+			-- as if they were specified with the command-line
+			-- argument '--capability'.
+
+	gobo_default_capability_variable_name: STRING = "GOBO_DEFAULT_CAPABILITY"
+			-- Environment variable name to specify capabilities
+			-- which are not overridden with the command-line
+			-- argument '--capability'.
 
 	gobo_cli_gc_variable_name: STRING = "GOBO_CLI_GC"
 			-- Environment variable name to specify the GC to
