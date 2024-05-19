@@ -20,11 +20,12 @@ jobs:
 
   linux_build:
     if: ${{ github.repository == 'ebezault/gobo' || github.repository == 'gobo-eiffel/gobo' }}
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         c_compiler: [zig, gcc]
+        os: [ubuntu-24.04, ubuntu-22.04, ubuntu-20.04]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: build
@@ -32,22 +33,23 @@ jobs:
         shell: pwsh
       - uses: actions/upload-artifact@v4
         with:
-          name: gobo_bin_linux_${{ matrix.c_compiler }}
+          name: gobo_bin_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: bin
           retention-days: 1
       - uses: actions/upload-artifact@v4
         with:
-          name: gobo_c_config_linux_${{ matrix.c_compiler }}
+          name: gobo_c_config_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
-  macos_x86_64_build:
+  macos_build:
     if: ${{ github.repository == 'ebezault/gobo' || github.repository == 'gobo-eiffel/gobo' }}
-    runs-on: macos-13
     strategy:
       fail-fast: false
       matrix:
         c_compiler: [zig, clang]
+        os: [macos-14, macos-13, macos-12]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: build
@@ -55,57 +57,35 @@ jobs:
         shell: pwsh
       - uses: actions/upload-artifact@v4
         with:
-          name: gobo_bin_macos_x86_64_${{ matrix.c_compiler }}
+          name: gobo_bin_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: bin
           retention-days: 1
       - uses: actions/upload-artifact@v4
         with:
-          name: gobo_c_config_macos_x86_64_${{ matrix.c_compiler }}
-          path: tool/gec/backend/c/config/default.cfg
-          retention-days: 1
-
-  macos_arm64_build:
-    if: ${{ github.repository == 'ebezault/gobo' || github.repository == 'gobo-eiffel/gobo' }}
-    runs-on: macos-14
-    strategy:
-      fail-fast: false
-      matrix:
-        c_compiler: [zig, clang]
-    steps:
-      - uses: actions/checkout@v4
-      - name: build
-        run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github ${{ matrix.c_compiler }}
-        shell: pwsh
-      - uses: actions/upload-artifact@v4
-        with:
-          name: gobo_bin_macos_arm64_${{ matrix.c_compiler }}
-          path: bin
-          retention-days: 1
-      - uses: actions/upload-artifact@v4
-        with:
-          name: gobo_c_config_macos_arm64_${{ matrix.c_compiler }}
+          name: gobo_c_config_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
   windows_build:
     if: ${{ github.repository == 'ebezault/gobo' || github.repository == 'gobo-eiffel/gobo' }}
-    runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
         c_compiler: [zig, msc]
+        os: [windows-2022, windows-2019]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github ${{ matrix.c_compiler }}
       - uses: actions/upload-artifact@v4
         with:
-          name: gobo_bin_windows_${{ matrix.c_compiler }}
+          name: gobo_bin_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: bin
           retention-days: 1
       - uses: actions/upload-artifact@v4
         with:
-          name: gobo_c_config_windows_${{ matrix.c_compiler }}
+          name: gobo_c_config_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config/default.cfg
           retention-days: 1
 
@@ -114,7 +94,6 @@ jobs:
 #
   
   linux_test:
-    runs-on: ubuntu-latest
     needs: linux_build
     strategy:
       fail-fast: false
@@ -122,78 +101,46 @@ jobs:
         c_compiler: [zig, gcc]
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
-        exclude:
-        - c_compiler: gcc
-          eiffel_compiler: ise
-        - c_compiler: gcc
-          eiffel_compiler: debug_ise
+        os: [ubuntu-24.04, ubuntu-22.04, ubuntu-20.04]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: gobo_bin_linux_${{ matrix.c_compiler }}
+          name: gobo_bin_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: bin
       - uses: actions/download-artifact@v4
         with:
-          name: gobo_c_config_linux_${{ matrix.c_compiler }}
+          name: gobo_c_config_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
         shell: pwsh
 
-  macos_x86_64_test:
-    runs-on: macos-13
-    needs: macos_x86_64_build
+  macos_test:
     strategy:
       fail-fast: false
       matrix:
         c_compiler: [zig, clang]
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
-        exclude:
-          - c_compiler: clang
-            eiffel_compiler: ise
-          - c_compiler: clang
-            eiffel_compiler: debug_ise
+        os: [macos-14, macos-13, macos-12]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: gobo_bin_macos_x86_64_${{ matrix.c_compiler }}
+          name: gobo_bin_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: bin
       - uses: actions/download-artifact@v4
         with:
-          name: gobo_c_config_macos_x86_64_${{ matrix.c_compiler }}
-          path: tool/gec/backend/c/config
-      - name: test
-        run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
-        shell: pwsh
-
-  macos_arm64_test:
-    runs-on: macos-14
-    needs: macos_arm64_build
-    strategy:
-      fail-fast: false
-      matrix:
-        c_compiler: [zig, clang]
-        eiffel_compiler: [ge, debug_ge]
-        system_under_test: [library, tool]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: gobo_bin_macos_arm64_${{ matrix.c_compiler }}
-          path: bin
-      - uses: actions/download-artifact@v4
-        with:
-          name: gobo_c_config_macos_arm64_${{ matrix.c_compiler }}
+          name: gobo_c_config_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
         shell: pwsh
 
   windows_test:
-    runs-on: windows-latest
     needs: windows_build
     strategy:
       fail-fast: false
@@ -201,20 +148,17 @@ jobs:
         c_compiler: [zig, msc]
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
-        exclude:
-        - c_compiler: msc
-          eiffel_compiler: ise
-        - c_compiler: msc
-          eiffel_compiler: debug_ise
+        os: [windows-2022, windows-2019]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: gobo_bin_windows_${{ matrix.c_compiler }}
+          name: gobo_bin_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: bin
       - uses: actions/download-artifact@v4
         with:
-          name: gobo_c_config_windows_${{ matrix.c_compiler }}
+          name: gobo_c_config_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config
       - name: test
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_ge.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
