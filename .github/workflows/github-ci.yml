@@ -126,6 +126,11 @@ jobs:
         eiffel_compiler: [ge, debug_ge, ise, debug_ise]
         system_under_test: [library, tool]
         os: [macos-14, macos-13, macos-12]
+        exclude:
+          - os: macos-14
+            eiffel_compiler: ise
+          - os: macos-14
+            eiffel_compiler: debug_ise
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
