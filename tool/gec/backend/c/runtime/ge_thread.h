@@ -187,6 +187,12 @@ extern void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EI
 extern GE_context* GE_thread_current_context(void);
 
 /*
+ * Execution context of current thread.
+ * Return Null in case of non-Eiffel threads.
+ */
+extern GE_context* GE_unprotected_thread_current_context(void);
+
+/*
  * Thead ID of current thread.
  */
 extern EIF_POINTER GE_thread_id(void);

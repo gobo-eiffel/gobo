@@ -1587,6 +1587,18 @@ GE_context* GE_thread_current_context(void)
 }
 
 /*
+ * Execution context of current thread.
+ * Return Null in case of non-Eiffel threads.
+ */
+GE_context* GE_unprotected_thread_current_context(void)
+{
+	GE_context* volatile l_context;
+
+	EIF_TSD_GET0(GE_context*, GE_thread_context_key, l_context);
+	return l_context;
+}
+
+/*
  * Thread ID of current thread.
  */
 EIF_POINTER GE_thread_id(void)
