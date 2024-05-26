@@ -682,10 +682,17 @@ void GE_init_signal()
 				old = signal(l_sig, GE_handle_signal);
 		}
 #endif	/* GE_USE_THREADS */
-		if (old == SIG_IGN)
+		if (old == SIG_IGN) {
 			GE_ignored_signals[l_sig] = 1;	/* Signal was ignored by default */
-		else
+		} else if (old != SIG_DFL) {
+			/* Oops - someone already called `signal'.
+			 * Their handler is still the one to use, so restore it.
+			 */
+			signal(l_sig, old);
+			GE_ignored_signals[l_sig] = 0;
+		} else {
 			GE_ignored_signals[l_sig] = 0;	/* Signal was not ignored */
+		}
 	}
 
 	/* Hardwired defaults: ignore SIGCHLD (or SIGCLD), SIGIO, SIGURG, SIGCONT
