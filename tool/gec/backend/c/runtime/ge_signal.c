@@ -23,18 +23,22 @@
 
 #include <signal.h>
 
-#if !defined(EIF_THREADS) && !defined(EIF_WINDOWS) && defined(GE_USE_BOEHM_GC)
+#ifdef GE_USE_THREADS
+#ifndef GE_THREAD_H
+#include "ge_thread.h"
+#endif
+#elif !defined(GE_WINDOWS) && defined(GE_USE_BOEHM_GC)
 #include <pthread.h>
 #endif
 
 #ifndef NSIG
-#ifdef EIF_WINDOWS
+#ifdef GE_WINDOWS
 #define GE_NSIG 23
 #else
 #define GE_NSIG 32
 #endif
 #else
-#ifdef EIF_THREADS
+#ifdef GE_USE_THREADS
 #define GE_NSIG	32 /* In MT-mode, it is better not to deal with signals above 32. */
 #else
 #define	GE_NSIG	NSIG /* GE_NSIG is NSIG in a single threaded runtime. */
@@ -45,12 +49,12 @@
 extern "C" {
 #endif
 
-#ifndef EIF_THREADS
-#ifdef EIF_WINDOWS
+#ifdef GE_USE_THREADS
+static EIF_MUTEX_TYPE* GE_ignored_signals_mutex; /* Mutex to access `GE_ignored_signals'. */
+#elif defined (GE_WINDOWS)
 static DWORD GE_root_thread_id = 0; /* Thread ID of the main thread in non-multithreaded mode. */
 #elif defined(GE_USE_BOEHM_GC)
 static pthread_t GE_root_thread_id = 0; /* Thread ID of the main thread in non-multithreaded mode. */
-#endif
 #endif
 
 /* Indicates which signals are ignored or not. */
@@ -67,15 +71,15 @@ static void GE_handle_general_signal(int a_sig, int is_fpe)
 		/* Check if signal was caught in a non-Eiffel thread. In which case we wimply
 		 * print out the signal number except if this is SIGINT or SIGBREAK which are
 		 * usually the result of a user action to stop the process. */
-#if defined(EIF_THREADS) || defined(EIF_WINDOWS) || defined(GE_USE_BOEHM_GC)
-#ifdef EIF_THREADS
+#if defined(GE_USE_THREADS) || defined(GE_WINDOWS) || defined(GE_USE_BOEHM_GC)
+#ifdef GE_USE_THREADS
 	if (GE_unprotected_thread_current_context() == (void*) 0)
-#elif defined(EIF_WINDOWS)
+#elif defined(GE_WINDOWS)
 		/* On Windows for a non-multithreaded program, if we are called from a different
 		 * thread than the root one, we clearly cannot continue. */
 	if (GE_root_thread_id != GetCurrentThreadId())
 #elif defined(GE_USE_BOEHM_GC)
-	if (pthread_equal(GE_root_thread_id, pthread_self()))
+	if (!pthread_equal(GE_root_thread_id, pthread_self()))
 #endif
 	{
 #ifdef SIGBREAK
@@ -90,8 +94,18 @@ static void GE_handle_general_signal(int a_sig, int is_fpe)
 	}
 #endif
 
-	if ((a_sig >= 1 && a_sig < GE_NSIG) && GE_ignored_signals[a_sig])	/* If signal is to be ignored */
-		return; /* Nothing to be done */
+	if (a_sig >= 1 && a_sig < GE_NSIG) {
+		char l_ignored;
+#ifdef GE_USE_THREADS
+		GE_mutex_lock(GE_ignored_signals_mutex);
+#endif
+		l_ignored = GE_ignored_signals[a_sig];
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
+		if (l_ignored)	/* If signal is to be ignored */
+			return; /* Nothing to be done */
+	}
 
 	GE_current_context()->signal_number = a_sig;
 	GE_raise_with_message((is_fpe?GE_EX_FLOAT:GE_EX_SIG), GE_signal_name(a_sig));
@@ -296,43 +310,66 @@ void GE_catch_signal(EIF_INTEGER a_sig)
 	if (a_sig == SIGPROF)
 		return;
 #endif
-
+#ifdef GE_USE_THREADS
+	GE_mutex_lock(GE_ignored_signals_mutex);
+#endif
 	GE_ignored_signals[a_sig] = 0;
 #ifdef SIGTTIN
 	if (a_sig == SIGTTIN) {
 		signal(SIGTTIN, SIG_DFL);	/* Ignore background input signal */
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
 #endif
 #ifdef SIGTTOU
 	if (a_sig == SIGTTOU) {
 		signal(SIGTTOU, SIG_DFL);	/* Ignore background output signal */
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
 #endif
 #ifdef SIGTSTP
 	if (a_sig == SIGTSTP) {
 		signal(SIGTSTP, SIG_DFL);	/* Restore default behaviour */
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
 #endif
 #ifdef SIGCONT
 	if (a_sig == SIGCONT) {
 		signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
 #endif
 #ifdef SIGTRAP
 	if (a_sig == SIGTRAP) {
 		signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
 #endif
 #ifdef SIGFPE
 	if (a_sig == SIGFPE) {
 		signal(SIGFPE, GE_handle_fpe_signal);		/* Raise an Eiffel exception when caught */
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
+#endif
+#ifdef GE_USE_THREADS
+	GE_mutex_unlock(GE_ignored_signals_mutex);
 #endif
 }
 
@@ -354,43 +391,66 @@ void GE_ignore_signal(EIF_INTEGER a_sig)
 	if (a_sig == SIGPROF)
 		return;
 #endif
-
+#ifdef GE_USE_THREADS
+		GE_mutex_lock(GE_ignored_signals_mutex);
+#endif
 	GE_ignored_signals[a_sig] = 1;
 #ifdef SIGTTIN
 	if (a_sig == SIGTTIN) {
-		signal(SIGTTIN, SIG_IGN);	
+		signal(SIGTTIN, SIG_IGN);
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
 #endif
 #ifdef SIGTTOU
 	if (a_sig == SIGTTOU) {
 		signal(SIGTTOU, SIG_IGN);
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
 #endif
 #ifdef SIGTSTP
 	if (a_sig == SIGTSTP) {
 		signal(SIGTSTP, SIG_IGN);
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
 #endif
 #ifdef SIGCONT
 	if (a_sig == SIGCONT) {
 		signal(SIGCONT, SIG_IGN);
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
 #endif
 #ifdef SIGTRAP
 	if (a_sig == SIGTRAP) {
 		signal(SIGTRAP, SIG_IGN);
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
 #endif
 #ifdef SIGFPE
 	if (a_sig == SIGFPE) {
-		signal(SIGFPE, SIG_IGN);	
+		signal(SIGFPE, SIG_IGN);
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
+#endif
+#ifdef GE_USE_THREADS
+	GE_mutex_unlock(GE_ignored_signals_mutex);
 #endif
 }
 
@@ -400,16 +460,27 @@ void GE_ignore_signal(EIF_INTEGER a_sig)
  */
 char GE_is_signal_caught(EIF_INTEGER a_sig)
 {
+	char l_ignored;
 
 	if (GE_is_signal_defined(a_sig) == (char)0)
 		return (char)0;
-	return (char)((GE_ignored_signals[a_sig] == 1)? 0: 1);
+#ifdef GE_USE_THREADS
+	GE_mutex_lock(GE_ignored_signals_mutex);
+#endif
+	l_ignored = GE_ignored_signals[a_sig];
+#ifdef GE_USE_THREADS
+	GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
+	return (char)((l_ignored == 1)? 0: 1);
 }
 
 /* Reset all the signals to their default handling. */
 void GE_reset_all_signals(void)
 {
 	int l_sig;
+#ifdef GE_USE_THREADS
+	GE_mutex_lock(GE_ignored_signals_mutex);
+#endif
 	for (l_sig = 1; l_sig < GE_NSIG; l_sig++)
 #ifdef SIGPROF
 		if (l_sig != SIGPROF)
@@ -436,6 +507,9 @@ void GE_reset_all_signals(void)
 #ifdef SIGFPE
 	signal(SIGFPE, GE_handle_fpe_signal);	/* Raise an Eiffel exception when caught */
 #endif
+#ifdef GE_USE_THREADS
+	GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 }
 
 /* Reset signal `a_sig' to its default handling. */
@@ -455,42 +529,66 @@ void GE_reset_signal_to_default(EIF_INTEGER a_sig)
 		return;
 #endif
 
+#ifdef GE_USE_THREADS
+	GE_mutex_lock(GE_ignored_signals_mutex);
+#endif
 	GE_ignored_signals[a_sig] = GE_originally_ignored_signals[a_sig];
 #ifdef SIGTTIN
 	if (a_sig == SIGTTIN) {
 		signal(SIGTTIN, SIG_IGN);	/* Ignore background input signal */
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
 #endif
 #ifdef SIGTTOU
 	if (a_sig == SIGTTOU) {
 	 	signal(SIGTTOU, SIG_IGN);	/* Ignore background output signal */
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
 #endif
 #ifdef SIGTSTP
 	if (a_sig == SIGTSTP) {
 		signal(SIGTSTP, SIG_DFL);	/* Restore default behaviour */
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
 #endif
 #ifdef SIGCONT
 	if (a_sig == SIGCONT) {
 		signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
 #endif
 #ifdef SIGTRAP
 	if (a_sig == SIGTRAP) {
 		signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
 #endif
 #ifdef SIGFPE
 	if (a_sig == SIGFPE) {
 		signal(SIGFPE, GE_handle_fpe_signal);	/* Raise an Eiffel exception when caught */
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_ignored_signals_mutex);
+#endif
 		return;
 	}
+#endif
+#ifdef GE_USE_THREADS
+	GE_mutex_unlock(GE_ignored_signals_mutex);
 #endif
 }
 
@@ -509,12 +607,12 @@ void GE_init_signal()
 	int l_sig;
 	void (*old)(int);	/* Old signal handler */
 
-#ifndef EIF_THREADS
-#ifdef EIF_WINDOWS
+#ifdef GE_USE_THREADS
+	GE_ignored_signals_mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
+#elif defined(GE_WINDOWS)
 	GE_root_thread_id = GetCurrentThreadId();
 #elif defined(GE_USE_BOEHM_GC)
 	GE_root_thread_id = pthread_self();
-#endif
 #endif
 
 	for (l_sig = 1; l_sig < GE_NSIG; l_sig++) {
@@ -526,13 +624,13 @@ void GE_init_signal()
 		 */
 		GE_ignored_signals[l_sig] = 1; 
 
-#ifdef EIF_THREADS
+#ifdef GE_USE_THREADS
 	/* In Multi-threaded mode, we do not want to call
      * signal () on some specific signals.
 	 */
 	switch (l_sig) {
 	
-#if defined(EIF_POSIX_THREADS)
+#if defined(GE_USE_POSIX_THREADS)
 		/* So far, used in Linux threads */
 		case SIGUSR1:
 			break;
@@ -541,25 +639,25 @@ void GE_init_signal()
 			break;
 #endif
 
-#if defined(SIGPTRESCHED) && defined(EIF_POSIX_THREADS) && defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE==199506L)
+#if defined(SIGPTRESCHED) && defined(GE_USE_POSIX_THREADS) && defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE==199506L)
 		/* So far, used in Posix 1003.1c threads */
 		case SIGPTRESCHED:
 			break;
 #endif
 
-#if defined(SIGPTINTR) && defined(EIF_POSIX_THREADS) && defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE==199506L)
+#if defined(SIGPTINTR) && defined(GE_USE_POSIX_THREADS) && defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE==199506L)
 		/* So far, used in Posix 1003.1c */
 		case SIGPTINTR:
 			break;
 #endif
 
-#if defined(SIGRTMIN) && defined(EIF_POSIX_THREADS) && defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE==199309L)
+#if defined(SIGRTMIN) && defined(GE_USE_POSIX_THREADS) && defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE==199309L)
 		/* So far, used in Posix 1003.1b */
 		case SIGRTMIN:
 			break;
 #endif
 
-#if defined(SIGRTMAX) && defined(EIF_POSIX_THREADS) && defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE==199309L)
+#if defined(SIGRTMAX) && defined(GE_USE_POSIX_THREADS) && defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE==199309L)
 		/* So far, used in Posix 1003.1b */
 		case SIGRTMAX:
 			break;
@@ -583,7 +681,7 @@ void GE_init_signal()
 #endif
 				old = signal(l_sig, GE_handle_signal);
 		}
-#endif	/* EIF_THREADS */
+#endif	/* GE_USE_THREADS */
 		if (old == SIG_IGN)
 			GE_ignored_signals[l_sig] = 1;	/* Signal was ignored by default */
 		else

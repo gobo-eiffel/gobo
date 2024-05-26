@@ -41993,6 +41993,9 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("ge_signal.c") then
 					include_runtime_header_file ("ge_signal.h", False, a_header_file)
 					include_runtime_header_file ("ge_exception.h", False, a_header_file)
+					if use_threads then
+						include_runtime_header_file ("ge_thread.h", False, a_header_file)
+					end
 				elseif a_filename.same_string ("ge_string.c") then
 					include_runtime_header_file ("ge_string.h", False, a_header_file)
 					include_runtime_header_file ("ge_native_string.h", False, a_header_file)
