@@ -2231,7 +2231,7 @@ T2303 GE_default2303 = {2303,0,0,0};
 T0* GE_new_str8(T6 c)
 {
 	T0* R;
-TC* ac = GE_current_context();
+	TC* ac = GE_current_context();
 	T0* t1;
 	t1 = GE_new15(ac, c+1, EIF_FALSE);
 	*(T15*)t1 = GE_default15;
@@ -2245,7 +2245,7 @@ TC* ac = GE_current_context();
 T0* GE_new_str32(T6 c)
 {
 	T0* R;
-TC* ac = GE_current_context();
+	TC* ac = GE_current_context();
 	T0* t1;
 	t1 = GE_new16(ac, c+1, EIF_FALSE);
 	*(T16*)t1 = GE_default16;
@@ -2259,7 +2259,7 @@ TC* ac = GE_current_context();
 T0* GE_new_istr8(T6 c)
 {
 	T0* R;
-TC* ac = GE_current_context();
+	TC* ac = GE_current_context();
 	R = EIF_VOID;
 	return R;
 }
@@ -2267,7 +2267,7 @@ TC* ac = GE_current_context();
 T0* GE_new_istr32(T6 c)
 {
 	T0* R;
-TC* ac = GE_current_context();
+	TC* ac = GE_current_context();
 	T0* t1;
 	t1 = GE_new16(ac, c+1, EIF_FALSE);
 	*(T16*)t1 = GE_default16;
@@ -2282,14 +2282,14 @@ TC* ac = GE_current_context();
 T0* GE_new15(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T15)+(a1>1?(a1-1):0)*sizeof(T2));
+	size_t s = sizeof(T15)+((a1>1)?(a1-1):0)*sizeof(T2);
 	if (initialize) {
-		*(T15*)R = GE_default15;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 15;
 		((T15*)(R))->a2 = a1;
-		((T15*)(R))->a1 = 0;
-#ifndef GE_malloc_atomic_cleared
-		memset(((T15*)(R))->z2,0,a1*sizeof(T2));
-#endif
+		((T15*)(R))->offset = offsetof(T15, z2);
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -2298,14 +2298,14 @@ T0* GE_new15(TC* ac, T6 a1, T1 initialize)
 T0* GE_new16(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T16)+(a1>1?(a1-1):0)*sizeof(T3));
+	size_t s = sizeof(T16)+((a1>1)?(a1-1):0)*sizeof(T3);
 	if (initialize) {
-		*(T16*)R = GE_default16;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 16;
 		((T16*)(R))->a2 = a1;
-		((T16*)(R))->a1 = 0;
-#ifndef GE_malloc_atomic_cleared
-		memset(((T16*)(R))->z2,0,a1*sizeof(T3));
-#endif
+		((T16*)(R))->offset = offsetof(T16, z2);
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -2314,9 +2314,12 @@ T0* GE_new16(TC* ac, T6 a1, T1 initialize)
 T0* GE_new17(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T17));
+	size_t s = sizeof(T17);
 	if (initialize) {
-		*(T17*)R = GE_default17;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 17;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2325,9 +2328,12 @@ T0* GE_new17(TC* ac, T1 initialize)
 T0* GE_new18(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T18));
+	size_t s = sizeof(T18);
 	if (initialize) {
-		*(T18*)R = GE_default18;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 18;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2336,9 +2342,12 @@ T0* GE_new18(TC* ac, T1 initialize)
 T0* GE_new20(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T20));
+	size_t s = sizeof(T20);
 	if (initialize) {
-		*(T20*)R = GE_default20;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 20;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2347,9 +2356,12 @@ T0* GE_new20(TC* ac, T1 initialize)
 T0* GE_new21(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T21));
+	size_t s = sizeof(T21);
 	if (initialize) {
-		*(T21*)R = GE_default21;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 21;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -2358,9 +2370,12 @@ T0* GE_new21(TC* ac, T1 initialize)
 T0* GE_new26(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T26));
+	size_t s = sizeof(T26);
 	if (initialize) {
-		*(T26*)R = GE_default26;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 26;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2369,9 +2384,12 @@ T0* GE_new26(TC* ac, T1 initialize)
 T0* GE_new27(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T27));
+	size_t s = sizeof(T27);
 	if (initialize) {
-		*(T27*)R = GE_default27;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 27;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2380,9 +2398,12 @@ T0* GE_new27(TC* ac, T1 initialize)
 T0* GE_new28(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T28));
+	size_t s = sizeof(T28);
 	if (initialize) {
-		*(T28*)R = GE_default28;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 28;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2391,9 +2412,12 @@ T0* GE_new28(TC* ac, T1 initialize)
 T0* GE_new29(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T29));
+	size_t s = sizeof(T29);
 	if (initialize) {
-		*(T29*)R = GE_default29;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 29;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2402,9 +2426,12 @@ T0* GE_new29(TC* ac, T1 initialize)
 T0* GE_new30(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T30));
+	size_t s = sizeof(T30);
 	if (initialize) {
-		*(T30*)R = GE_default30;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 30;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2413,9 +2440,12 @@ T0* GE_new30(TC* ac, T1 initialize)
 T0* GE_new31(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T31));
+	size_t s = sizeof(T31);
 	if (initialize) {
-		*(T31*)R = GE_default31;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 31;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2424,9 +2454,12 @@ T0* GE_new31(TC* ac, T1 initialize)
 T0* GE_new32(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T32));
+	size_t s = sizeof(T32);
 	if (initialize) {
-		*(T32*)R = GE_default32;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 32;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2435,9 +2468,12 @@ T0* GE_new32(TC* ac, T1 initialize)
 T0* GE_new33(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T33));
+	size_t s = sizeof(T33);
 	if (initialize) {
-		*(T33*)R = GE_default33;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 33;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2446,9 +2482,12 @@ T0* GE_new33(TC* ac, T1 initialize)
 T0* GE_new34(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T34));
+	size_t s = sizeof(T34);
 	if (initialize) {
-		*(T34*)R = GE_default34;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 34;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2457,14 +2496,14 @@ T0* GE_new34(TC* ac, T1 initialize)
 T0* GE_new35(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T35)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T35)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T35*)R = GE_default35;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 35;
 		((T35*)(R))->a2 = a1;
-		((T35*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T35*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T35*)(R))->offset = offsetof(T35, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2473,9 +2512,12 @@ T0* GE_new35(TC* ac, T6 a1, T1 initialize)
 T0* GE_new36(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T36));
+	size_t s = sizeof(T36);
 	if (initialize) {
-		*(T36*)R = GE_default36;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 36;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -2484,9 +2526,12 @@ T0* GE_new36(TC* ac, T1 initialize)
 T0* GE_new37(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T37));
+	size_t s = sizeof(T37);
 	if (initialize) {
-		*(T37*)R = GE_default37;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 37;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -2495,9 +2540,12 @@ T0* GE_new37(TC* ac, T1 initialize)
 T0* GE_new38(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T38));
+	size_t s = sizeof(T38);
 	if (initialize) {
-		*(T38*)R = GE_default38;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 38;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -2506,9 +2554,12 @@ T0* GE_new38(TC* ac, T1 initialize)
 T0* GE_new39(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T39));
+	size_t s = sizeof(T39);
 	if (initialize) {
-		*(T39*)R = GE_default39;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 39;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -2517,9 +2568,12 @@ T0* GE_new39(TC* ac, T1 initialize)
 T0* GE_new42(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T42));
+	size_t s = sizeof(T42);
 	if (initialize) {
-		*(T42*)R = GE_default42;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 42;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2528,11 +2582,14 @@ T0* GE_new42(TC* ac, T1 initialize)
 T0* GE_new43(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T43));
-	GE_register_dispose(R,&T43f60);
+	size_t s = sizeof(T43);
 	if (initialize) {
-		*(T43*)R = GE_default43;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 43;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
+	GE_register_dispose(R,&T43f60);
 	return R;
 }
 
@@ -2540,9 +2597,12 @@ T0* GE_new43(TC* ac, T1 initialize)
 T0* GE_new44(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T44));
+	size_t s = sizeof(T44);
 	if (initialize) {
-		*(T44*)R = GE_default44;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 44;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -2551,9 +2611,12 @@ T0* GE_new44(TC* ac, T1 initialize)
 T0* GE_new45(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T45));
+	size_t s = sizeof(T45);
 	if (initialize) {
-		*(T45*)R = GE_default45;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 45;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -2562,9 +2625,12 @@ T0* GE_new45(TC* ac, T1 initialize)
 T0* GE_new46(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T46));
+	size_t s = sizeof(T46);
 	if (initialize) {
-		*(T46*)R = GE_default46;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 46;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2573,9 +2639,12 @@ T0* GE_new46(TC* ac, T1 initialize)
 T0* GE_new49(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T49));
+	size_t s = sizeof(T49);
 	if (initialize) {
-		*(T49*)R = GE_default49;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 49;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -2584,9 +2653,12 @@ T0* GE_new49(TC* ac, T1 initialize)
 T0* GE_new50(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T50));
+	size_t s = sizeof(T50);
 	if (initialize) {
-		*(T50*)R = GE_default50;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 50;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2595,9 +2667,12 @@ T0* GE_new50(TC* ac, T1 initialize)
 T0* GE_new52(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T52));
+	size_t s = sizeof(T52);
 	if (initialize) {
-		*(T52*)R = GE_default52;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 52;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2606,9 +2681,12 @@ T0* GE_new52(TC* ac, T1 initialize)
 T0* GE_new53(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T53));
+	size_t s = sizeof(T53);
 	if (initialize) {
-		*(T53*)R = GE_default53;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 53;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2617,9 +2695,12 @@ T0* GE_new53(TC* ac, T1 initialize)
 T0* GE_new54(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T54));
+	size_t s = sizeof(T54);
 	if (initialize) {
-		*(T54*)R = GE_default54;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 54;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2628,9 +2709,12 @@ T0* GE_new54(TC* ac, T1 initialize)
 T0* GE_new56(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T56));
+	size_t s = sizeof(T56);
 	if (initialize) {
-		*(T56*)R = GE_default56;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 56;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -2639,9 +2723,12 @@ T0* GE_new56(TC* ac, T1 initialize)
 T0* GE_new57(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T57));
+	size_t s = sizeof(T57);
 	if (initialize) {
-		*(T57*)R = GE_default57;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 57;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2650,9 +2737,12 @@ T0* GE_new57(TC* ac, T1 initialize)
 T0* GE_new58(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T58));
+	size_t s = sizeof(T58);
 	if (initialize) {
-		*(T58*)R = GE_default58;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 58;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2661,9 +2751,12 @@ T0* GE_new58(TC* ac, T1 initialize)
 T0* GE_new59(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T59));
+	size_t s = sizeof(T59);
 	if (initialize) {
-		*(T59*)R = GE_default59;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 59;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2672,9 +2765,12 @@ T0* GE_new59(TC* ac, T1 initialize)
 T0* GE_new63(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T63));
+	size_t s = sizeof(T63);
 	if (initialize) {
-		*(T63*)R = GE_default63;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 63;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2683,9 +2779,12 @@ T0* GE_new63(TC* ac, T1 initialize)
 T0* GE_new65(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T65));
+	size_t s = sizeof(T65);
 	if (initialize) {
-		*(T65*)R = GE_default65;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 65;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -2694,9 +2793,12 @@ T0* GE_new65(TC* ac, T1 initialize)
 T0* GE_new66(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T66));
+	size_t s = sizeof(T66);
 	if (initialize) {
-		*(T66*)R = GE_default66;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 66;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2705,9 +2807,12 @@ T0* GE_new66(TC* ac, T1 initialize)
 T0* GE_new67(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T67));
+	size_t s = sizeof(T67);
 	if (initialize) {
-		*(T67*)R = GE_default67;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 67;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2716,9 +2821,12 @@ T0* GE_new67(TC* ac, T1 initialize)
 T0* GE_new68(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T68));
+	size_t s = sizeof(T68);
 	if (initialize) {
-		*(T68*)R = GE_default68;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 68;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2727,9 +2835,12 @@ T0* GE_new68(TC* ac, T1 initialize)
 T0* GE_new69(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T69));
+	size_t s = sizeof(T69);
 	if (initialize) {
-		*(T69*)R = GE_default69;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 69;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2738,9 +2849,12 @@ T0* GE_new69(TC* ac, T1 initialize)
 T0* GE_new70(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T70));
+	size_t s = sizeof(T70);
 	if (initialize) {
-		*(T70*)R = GE_default70;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 70;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2749,9 +2863,12 @@ T0* GE_new70(TC* ac, T1 initialize)
 T0* GE_new74(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T74));
+	size_t s = sizeof(T74);
 	if (initialize) {
-		*(T74*)R = GE_default74;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 74;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2760,9 +2877,12 @@ T0* GE_new74(TC* ac, T1 initialize)
 T0* GE_new75(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T75));
+	size_t s = sizeof(T75);
 	if (initialize) {
-		*(T75*)R = GE_default75;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 75;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2771,9 +2891,12 @@ T0* GE_new75(TC* ac, T1 initialize)
 T0* GE_new76(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T76));
+	size_t s = sizeof(T76);
 	if (initialize) {
-		*(T76*)R = GE_default76;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 76;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -2782,9 +2905,12 @@ T0* GE_new76(TC* ac, T1 initialize)
 T0* GE_new77(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T77));
+	size_t s = sizeof(T77);
 	if (initialize) {
-		*(T77*)R = GE_default77;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 77;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2793,9 +2919,12 @@ T0* GE_new77(TC* ac, T1 initialize)
 T0* GE_new78(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T78));
+	size_t s = sizeof(T78);
 	if (initialize) {
-		*(T78*)R = GE_default78;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 78;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2804,9 +2933,12 @@ T0* GE_new78(TC* ac, T1 initialize)
 T0* GE_new80(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T80));
+	size_t s = sizeof(T80);
 	if (initialize) {
-		*(T80*)R = GE_default80;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 80;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2815,9 +2947,12 @@ T0* GE_new80(TC* ac, T1 initialize)
 T0* GE_new81(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T81));
+	size_t s = sizeof(T81);
 	if (initialize) {
-		*(T81*)R = GE_default81;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 81;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -2826,9 +2961,12 @@ T0* GE_new81(TC* ac, T1 initialize)
 T0* GE_new82(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T82));
+	size_t s = sizeof(T82);
 	if (initialize) {
-		*(T82*)R = GE_default82;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 82;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2837,9 +2975,12 @@ T0* GE_new82(TC* ac, T1 initialize)
 T0* GE_new83(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T83));
+	size_t s = sizeof(T83);
 	if (initialize) {
-		*(T83*)R = GE_default83;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 83;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2848,9 +2989,12 @@ T0* GE_new83(TC* ac, T1 initialize)
 T0* GE_new85(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T85));
+	size_t s = sizeof(T85);
 	if (initialize) {
-		*(T85*)R = GE_default85;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 85;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2859,9 +3003,12 @@ T0* GE_new85(TC* ac, T1 initialize)
 T0* GE_new86(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T86));
+	size_t s = sizeof(T86);
 	if (initialize) {
-		*(T86*)R = GE_default86;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 86;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2870,9 +3017,12 @@ T0* GE_new86(TC* ac, T1 initialize)
 T0* GE_new87(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T87));
+	size_t s = sizeof(T87);
 	if (initialize) {
-		*(T87*)R = GE_default87;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 87;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2881,9 +3031,12 @@ T0* GE_new87(TC* ac, T1 initialize)
 T0* GE_new88(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T88));
+	size_t s = sizeof(T88);
 	if (initialize) {
-		*(T88*)R = GE_default88;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 88;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2892,9 +3045,12 @@ T0* GE_new88(TC* ac, T1 initialize)
 T0* GE_new89(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T89));
+	size_t s = sizeof(T89);
 	if (initialize) {
-		*(T89*)R = GE_default89;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 89;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2903,9 +3059,12 @@ T0* GE_new89(TC* ac, T1 initialize)
 T0* GE_new90(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T90));
+	size_t s = sizeof(T90);
 	if (initialize) {
-		*(T90*)R = GE_default90;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 90;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2914,9 +3073,12 @@ T0* GE_new90(TC* ac, T1 initialize)
 T0* GE_new91(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T91));
+	size_t s = sizeof(T91);
 	if (initialize) {
-		*(T91*)R = GE_default91;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 91;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2925,9 +3087,12 @@ T0* GE_new91(TC* ac, T1 initialize)
 T0* GE_new92(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T92));
+	size_t s = sizeof(T92);
 	if (initialize) {
-		*(T92*)R = GE_default92;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 92;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2936,9 +3101,12 @@ T0* GE_new92(TC* ac, T1 initialize)
 T0* GE_new94(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T94));
+	size_t s = sizeof(T94);
 	if (initialize) {
-		*(T94*)R = GE_default94;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 94;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2947,9 +3115,12 @@ T0* GE_new94(TC* ac, T1 initialize)
 T0* GE_new95(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T95));
+	size_t s = sizeof(T95);
 	if (initialize) {
-		*(T95*)R = GE_default95;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 95;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2958,9 +3129,12 @@ T0* GE_new95(TC* ac, T1 initialize)
 T0* GE_new97(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T97));
+	size_t s = sizeof(T97);
 	if (initialize) {
-		*(T97*)R = GE_default97;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 97;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -2969,9 +3143,12 @@ T0* GE_new97(TC* ac, T1 initialize)
 T0* GE_new99(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T99));
+	size_t s = sizeof(T99);
 	if (initialize) {
-		*(T99*)R = GE_default99;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 99;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2980,9 +3157,12 @@ T0* GE_new99(TC* ac, T1 initialize)
 T0* GE_new100(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T100));
+	size_t s = sizeof(T100);
 	if (initialize) {
-		*(T100*)R = GE_default100;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 100;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -2991,9 +3171,12 @@ T0* GE_new100(TC* ac, T1 initialize)
 T0* GE_new102(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T102));
+	size_t s = sizeof(T102);
 	if (initialize) {
-		*(T102*)R = GE_default102;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 102;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3002,9 +3185,12 @@ T0* GE_new102(TC* ac, T1 initialize)
 T0* GE_new103(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T103));
+	size_t s = sizeof(T103);
 	if (initialize) {
-		*(T103*)R = GE_default103;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 103;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3013,9 +3199,12 @@ T0* GE_new103(TC* ac, T1 initialize)
 T0* GE_new105(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T105));
+	size_t s = sizeof(T105);
 	if (initialize) {
-		*(T105*)R = GE_default105;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 105;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -3024,9 +3213,12 @@ T0* GE_new105(TC* ac, T1 initialize)
 T0* GE_new106(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T106));
+	size_t s = sizeof(T106);
 	if (initialize) {
-		*(T106*)R = GE_default106;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 106;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3035,9 +3227,12 @@ T0* GE_new106(TC* ac, T1 initialize)
 T0* GE_new107(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T107));
+	size_t s = sizeof(T107);
 	if (initialize) {
-		*(T107*)R = GE_default107;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 107;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3046,9 +3241,12 @@ T0* GE_new107(TC* ac, T1 initialize)
 T0* GE_new108(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T108));
+	size_t s = sizeof(T108);
 	if (initialize) {
-		*(T108*)R = GE_default108;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 108;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -3057,9 +3255,12 @@ T0* GE_new108(TC* ac, T1 initialize)
 T0* GE_new109(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T109));
+	size_t s = sizeof(T109);
 	if (initialize) {
-		*(T109*)R = GE_default109;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 109;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3068,9 +3269,12 @@ T0* GE_new109(TC* ac, T1 initialize)
 T0* GE_new113(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T113));
+	size_t s = sizeof(T113);
 	if (initialize) {
-		*(T113*)R = GE_default113;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 113;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3079,9 +3283,12 @@ T0* GE_new113(TC* ac, T1 initialize)
 T0* GE_new114(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T114));
+	size_t s = sizeof(T114);
 	if (initialize) {
-		*(T114*)R = GE_default114;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 114;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3090,9 +3297,12 @@ T0* GE_new114(TC* ac, T1 initialize)
 T0* GE_new116(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T116));
+	size_t s = sizeof(T116);
 	if (initialize) {
-		*(T116*)R = GE_default116;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 116;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3101,9 +3311,12 @@ T0* GE_new116(TC* ac, T1 initialize)
 T0* GE_new117(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T117));
+	size_t s = sizeof(T117);
 	if (initialize) {
-		*(T117*)R = GE_default117;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 117;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3112,9 +3325,12 @@ T0* GE_new117(TC* ac, T1 initialize)
 T0* GE_new118(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T118));
+	size_t s = sizeof(T118);
 	if (initialize) {
-		*(T118*)R = GE_default118;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 118;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3123,9 +3339,12 @@ T0* GE_new118(TC* ac, T1 initialize)
 T0* GE_new119(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T119));
+	size_t s = sizeof(T119);
 	if (initialize) {
-		*(T119*)R = GE_default119;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 119;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -3134,9 +3353,12 @@ T0* GE_new119(TC* ac, T1 initialize)
 T0* GE_new120(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T120));
+	size_t s = sizeof(T120);
 	if (initialize) {
-		*(T120*)R = GE_default120;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 120;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3145,9 +3367,12 @@ T0* GE_new120(TC* ac, T1 initialize)
 T0* GE_new122(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T122));
+	size_t s = sizeof(T122);
 	if (initialize) {
-		*(T122*)R = GE_default122;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 122;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3156,9 +3381,12 @@ T0* GE_new122(TC* ac, T1 initialize)
 T0* GE_new124(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T124));
+	size_t s = sizeof(T124);
 	if (initialize) {
-		*(T124*)R = GE_default124;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 124;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3167,9 +3395,12 @@ T0* GE_new124(TC* ac, T1 initialize)
 T0* GE_new126(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T126));
+	size_t s = sizeof(T126);
 	if (initialize) {
-		*(T126*)R = GE_default126;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 126;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3178,9 +3409,12 @@ T0* GE_new126(TC* ac, T1 initialize)
 T0* GE_new127(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T127));
+	size_t s = sizeof(T127);
 	if (initialize) {
-		*(T127*)R = GE_default127;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 127;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3189,9 +3423,12 @@ T0* GE_new127(TC* ac, T1 initialize)
 T0* GE_new128(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T128));
+	size_t s = sizeof(T128);
 	if (initialize) {
-		*(T128*)R = GE_default128;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 128;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3200,9 +3437,12 @@ T0* GE_new128(TC* ac, T1 initialize)
 T0* GE_new129(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T129));
+	size_t s = sizeof(T129);
 	if (initialize) {
-		*(T129*)R = GE_default129;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 129;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3211,9 +3451,12 @@ T0* GE_new129(TC* ac, T1 initialize)
 T0* GE_new130(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T130));
+	size_t s = sizeof(T130);
 	if (initialize) {
-		*(T130*)R = GE_default130;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 130;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3222,9 +3465,12 @@ T0* GE_new130(TC* ac, T1 initialize)
 T0* GE_new131(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T131));
+	size_t s = sizeof(T131);
 	if (initialize) {
-		*(T131*)R = GE_default131;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 131;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3233,9 +3479,12 @@ T0* GE_new131(TC* ac, T1 initialize)
 T0* GE_new132(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T132));
+	size_t s = sizeof(T132);
 	if (initialize) {
-		*(T132*)R = GE_default132;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 132;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3244,9 +3493,12 @@ T0* GE_new132(TC* ac, T1 initialize)
 T0* GE_new134(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T134));
+	size_t s = sizeof(T134);
 	if (initialize) {
-		*(T134*)R = GE_default134;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 134;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3255,9 +3507,12 @@ T0* GE_new134(TC* ac, T1 initialize)
 T0* GE_new135(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T135));
+	size_t s = sizeof(T135);
 	if (initialize) {
-		*(T135*)R = GE_default135;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 135;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3266,9 +3521,12 @@ T0* GE_new135(TC* ac, T1 initialize)
 T0* GE_new136(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T136));
+	size_t s = sizeof(T136);
 	if (initialize) {
-		*(T136*)R = GE_default136;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 136;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3277,9 +3535,12 @@ T0* GE_new136(TC* ac, T1 initialize)
 T0* GE_new137(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T137));
+	size_t s = sizeof(T137);
 	if (initialize) {
-		*(T137*)R = GE_default137;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 137;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3288,9 +3549,12 @@ T0* GE_new137(TC* ac, T1 initialize)
 T0* GE_new138(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T138));
+	size_t s = sizeof(T138);
 	if (initialize) {
-		*(T138*)R = GE_default138;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 138;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3299,9 +3563,12 @@ T0* GE_new138(TC* ac, T1 initialize)
 T0* GE_new139(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T139));
+	size_t s = sizeof(T139);
 	if (initialize) {
-		*(T139*)R = GE_default139;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 139;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3310,9 +3577,12 @@ T0* GE_new139(TC* ac, T1 initialize)
 T0* GE_new140(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T140));
+	size_t s = sizeof(T140);
 	if (initialize) {
-		*(T140*)R = GE_default140;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 140;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3321,9 +3591,12 @@ T0* GE_new140(TC* ac, T1 initialize)
 T0* GE_new141(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T141));
+	size_t s = sizeof(T141);
 	if (initialize) {
-		*(T141*)R = GE_default141;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 141;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3332,9 +3605,12 @@ T0* GE_new141(TC* ac, T1 initialize)
 T0* GE_new142(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T142));
+	size_t s = sizeof(T142);
 	if (initialize) {
-		*(T142*)R = GE_default142;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 142;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3343,9 +3619,12 @@ T0* GE_new142(TC* ac, T1 initialize)
 T0* GE_new143(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T143));
+	size_t s = sizeof(T143);
 	if (initialize) {
-		*(T143*)R = GE_default143;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 143;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3354,9 +3633,12 @@ T0* GE_new143(TC* ac, T1 initialize)
 T0* GE_new144(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T144));
+	size_t s = sizeof(T144);
 	if (initialize) {
-		*(T144*)R = GE_default144;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 144;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3365,9 +3647,12 @@ T0* GE_new144(TC* ac, T1 initialize)
 T0* GE_new145(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T145));
+	size_t s = sizeof(T145);
 	if (initialize) {
-		*(T145*)R = GE_default145;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 145;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3376,9 +3661,12 @@ T0* GE_new145(TC* ac, T1 initialize)
 T0* GE_new146(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T146));
+	size_t s = sizeof(T146);
 	if (initialize) {
-		*(T146*)R = GE_default146;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 146;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3387,9 +3675,12 @@ T0* GE_new146(TC* ac, T1 initialize)
 T0* GE_new147(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T147));
+	size_t s = sizeof(T147);
 	if (initialize) {
-		*(T147*)R = GE_default147;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 147;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3398,9 +3689,12 @@ T0* GE_new147(TC* ac, T1 initialize)
 T0* GE_new148(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T148));
+	size_t s = sizeof(T148);
 	if (initialize) {
-		*(T148*)R = GE_default148;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 148;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3409,9 +3703,12 @@ T0* GE_new148(TC* ac, T1 initialize)
 T0* GE_new149(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T149));
+	size_t s = sizeof(T149);
 	if (initialize) {
-		*(T149*)R = GE_default149;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 149;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3420,9 +3717,12 @@ T0* GE_new149(TC* ac, T1 initialize)
 T0* GE_new150(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T150));
+	size_t s = sizeof(T150);
 	if (initialize) {
-		*(T150*)R = GE_default150;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 150;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3431,9 +3731,12 @@ T0* GE_new150(TC* ac, T1 initialize)
 T0* GE_new151(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T151));
+	size_t s = sizeof(T151);
 	if (initialize) {
-		*(T151*)R = GE_default151;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 151;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -3442,9 +3745,12 @@ T0* GE_new151(TC* ac, T1 initialize)
 T0* GE_new152(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T152));
+	size_t s = sizeof(T152);
 	if (initialize) {
-		*(T152*)R = GE_default152;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 152;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -3453,9 +3759,12 @@ T0* GE_new152(TC* ac, T1 initialize)
 T0* GE_new153(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T153));
+	size_t s = sizeof(T153);
 	if (initialize) {
-		*(T153*)R = GE_default153;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 153;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -3464,14 +3773,14 @@ T0* GE_new153(TC* ac, T1 initialize)
 T0* GE_new154(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T154)+(a1>1?(a1-1):0)*sizeof(T6));
+	size_t s = sizeof(T154)+((a1>1)?(a1-1):0)*sizeof(T6);
 	if (initialize) {
-		*(T154*)R = GE_default154;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 154;
 		((T154*)(R))->a2 = a1;
-		((T154*)(R))->a1 = 0;
-#ifndef GE_malloc_atomic_cleared
-		memset(((T154*)(R))->z2,0,a1*sizeof(T6));
-#endif
+		((T154*)(R))->offset = offsetof(T154, z2);
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -3480,14 +3789,14 @@ T0* GE_new154(TC* ac, T6 a1, T1 initialize)
 T0* GE_new155(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T155)+(a1>1?(a1-1):0)*sizeof(T1));
+	size_t s = sizeof(T155)+((a1>1)?(a1-1):0)*sizeof(T1);
 	if (initialize) {
-		*(T155*)R = GE_default155;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 155;
 		((T155*)(R))->a2 = a1;
-		((T155*)(R))->a1 = 0;
-#ifndef GE_malloc_atomic_cleared
-		memset(((T155*)(R))->z2,0,a1*sizeof(T1));
-#endif
+		((T155*)(R))->offset = offsetof(T155, z2);
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -3496,9 +3805,12 @@ T0* GE_new155(TC* ac, T6 a1, T1 initialize)
 T0* GE_new156(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T156));
+	size_t s = sizeof(T156);
 	if (initialize) {
-		*(T156*)R = GE_default156;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 156;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -3507,11 +3819,14 @@ T0* GE_new156(TC* ac, T1 initialize)
 T0* GE_new159(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T159));
-	GE_register_dispose(R,&T159f9);
+	size_t s = sizeof(T159);
 	if (initialize) {
-		*(T159*)R = GE_default159;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 159;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
+	GE_register_dispose(R,&T159f9);
 	return R;
 }
 
@@ -3519,9 +3834,12 @@ T0* GE_new159(TC* ac, T1 initialize)
 T0* GE_new160(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T160));
+	size_t s = sizeof(T160);
 	if (initialize) {
-		*(T160*)R = GE_default160;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 160;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3530,9 +3848,12 @@ T0* GE_new160(TC* ac, T1 initialize)
 T0* GE_new161(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T161));
+	size_t s = sizeof(T161);
 	if (initialize) {
-		*(T161*)R = GE_default161;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 161;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -3541,11 +3862,14 @@ T0* GE_new161(TC* ac, T1 initialize)
 T0* GE_new162(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T162));
-	GE_register_dispose(R,&T162f9);
+	size_t s = sizeof(T162);
 	if (initialize) {
-		*(T162*)R = GE_default162;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 162;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
+	GE_register_dispose(R,&T162f9);
 	return R;
 }
 
@@ -3553,9 +3877,12 @@ T0* GE_new162(TC* ac, T1 initialize)
 T0* GE_new164(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T164));
+	size_t s = sizeof(T164);
 	if (initialize) {
-		*(T164*)R = GE_default164;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 164;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3564,9 +3891,12 @@ T0* GE_new164(TC* ac, T1 initialize)
 T0* GE_new166(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T166));
+	size_t s = sizeof(T166);
 	if (initialize) {
-		*(T166*)R = GE_default166;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 166;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3575,9 +3905,12 @@ T0* GE_new166(TC* ac, T1 initialize)
 T0* GE_new167(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T167));
+	size_t s = sizeof(T167);
 	if (initialize) {
-		*(T167*)R = GE_default167;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 167;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -3586,9 +3919,12 @@ T0* GE_new167(TC* ac, T1 initialize)
 T0* GE_new169(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T169));
+	size_t s = sizeof(T169);
 	if (initialize) {
-		*(T169*)R = GE_default169;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 169;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3597,9 +3933,12 @@ T0* GE_new169(TC* ac, T1 initialize)
 T0* GE_new170(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T170));
+	size_t s = sizeof(T170);
 	if (initialize) {
-		*(T170*)R = GE_default170;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 170;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3608,9 +3947,12 @@ T0* GE_new170(TC* ac, T1 initialize)
 T0* GE_new171(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T171));
+	size_t s = sizeof(T171);
 	if (initialize) {
-		*(T171*)R = GE_default171;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 171;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3619,9 +3961,12 @@ T0* GE_new171(TC* ac, T1 initialize)
 T0* GE_new172(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T172));
+	size_t s = sizeof(T172);
 	if (initialize) {
-		*(T172*)R = GE_default172;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 172;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3630,9 +3975,12 @@ T0* GE_new172(TC* ac, T1 initialize)
 T0* GE_new173(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T173));
+	size_t s = sizeof(T173);
 	if (initialize) {
-		*(T173*)R = GE_default173;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 173;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3641,9 +3989,12 @@ T0* GE_new173(TC* ac, T1 initialize)
 T0* GE_new174(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T174));
+	size_t s = sizeof(T174);
 	if (initialize) {
-		*(T174*)R = GE_default174;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 174;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3652,9 +4003,12 @@ T0* GE_new174(TC* ac, T1 initialize)
 T0* GE_new176(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T176));
+	size_t s = sizeof(T176);
 	if (initialize) {
-		*(T176*)R = GE_default176;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 176;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -3663,9 +4017,12 @@ T0* GE_new176(TC* ac, T1 initialize)
 T0* GE_new177(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T177));
+	size_t s = sizeof(T177);
 	if (initialize) {
-		*(T177*)R = GE_default177;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 177;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3674,9 +4031,12 @@ T0* GE_new177(TC* ac, T1 initialize)
 T0* GE_new178(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T178));
+	size_t s = sizeof(T178);
 	if (initialize) {
-		*(T178*)R = GE_default178;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 178;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -3685,9 +4045,12 @@ T0* GE_new178(TC* ac, T1 initialize)
 T0* GE_new180(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T180));
+	size_t s = sizeof(T180);
 	if (initialize) {
-		*(T180*)R = GE_default180;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 180;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3696,9 +4059,12 @@ T0* GE_new180(TC* ac, T1 initialize)
 T0* GE_new181(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T181));
+	size_t s = sizeof(T181);
 	if (initialize) {
-		*(T181*)R = GE_default181;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 181;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3707,9 +4073,12 @@ T0* GE_new181(TC* ac, T1 initialize)
 T0* GE_new182(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T182));
+	size_t s = sizeof(T182);
 	if (initialize) {
-		*(T182*)R = GE_default182;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 182;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3718,9 +4087,12 @@ T0* GE_new182(TC* ac, T1 initialize)
 T0* GE_new183(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T183));
+	size_t s = sizeof(T183);
 	if (initialize) {
-		*(T183*)R = GE_default183;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 183;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3729,9 +4101,12 @@ T0* GE_new183(TC* ac, T1 initialize)
 T0* GE_new185(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T185));
+	size_t s = sizeof(T185);
 	if (initialize) {
-		*(T185*)R = GE_default185;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 185;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3740,9 +4115,12 @@ T0* GE_new185(TC* ac, T1 initialize)
 T0* GE_new186(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T186));
+	size_t s = sizeof(T186);
 	if (initialize) {
-		*(T186*)R = GE_default186;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 186;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3751,9 +4129,12 @@ T0* GE_new186(TC* ac, T1 initialize)
 T0* GE_new187(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T187));
+	size_t s = sizeof(T187);
 	if (initialize) {
-		*(T187*)R = GE_default187;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 187;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3762,9 +4143,12 @@ T0* GE_new187(TC* ac, T1 initialize)
 T0* GE_new188(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T188));
+	size_t s = sizeof(T188);
 	if (initialize) {
-		*(T188*)R = GE_default188;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 188;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3773,9 +4157,12 @@ T0* GE_new188(TC* ac, T1 initialize)
 T0* GE_new189(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T189));
+	size_t s = sizeof(T189);
 	if (initialize) {
-		*(T189*)R = GE_default189;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 189;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3784,9 +4171,12 @@ T0* GE_new189(TC* ac, T1 initialize)
 T0* GE_new191(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T191));
+	size_t s = sizeof(T191);
 	if (initialize) {
-		*(T191*)R = GE_default191;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 191;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3795,9 +4185,12 @@ T0* GE_new191(TC* ac, T1 initialize)
 T0* GE_new192(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T192));
+	size_t s = sizeof(T192);
 	if (initialize) {
-		*(T192*)R = GE_default192;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 192;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3806,9 +4199,12 @@ T0* GE_new192(TC* ac, T1 initialize)
 T0* GE_new193(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T193));
+	size_t s = sizeof(T193);
 	if (initialize) {
-		*(T193*)R = GE_default193;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 193;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3817,9 +4213,12 @@ T0* GE_new193(TC* ac, T1 initialize)
 T0* GE_new194(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T194));
+	size_t s = sizeof(T194);
 	if (initialize) {
-		*(T194*)R = GE_default194;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 194;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3828,9 +4227,12 @@ T0* GE_new194(TC* ac, T1 initialize)
 T0* GE_new195(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T195));
+	size_t s = sizeof(T195);
 	if (initialize) {
-		*(T195*)R = GE_default195;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 195;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3839,9 +4241,12 @@ T0* GE_new195(TC* ac, T1 initialize)
 T0* GE_new198(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T198));
+	size_t s = sizeof(T198);
 	if (initialize) {
-		*(T198*)R = GE_default198;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 198;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3850,9 +4255,12 @@ T0* GE_new198(TC* ac, T1 initialize)
 T0* GE_new199(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T199));
+	size_t s = sizeof(T199);
 	if (initialize) {
-		*(T199*)R = GE_default199;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 199;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3861,9 +4269,12 @@ T0* GE_new199(TC* ac, T1 initialize)
 T0* GE_new201(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T201));
+	size_t s = sizeof(T201);
 	if (initialize) {
-		*(T201*)R = GE_default201;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 201;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3872,9 +4283,12 @@ T0* GE_new201(TC* ac, T1 initialize)
 T0* GE_new203(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T203));
+	size_t s = sizeof(T203);
 	if (initialize) {
-		*(T203*)R = GE_default203;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 203;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3883,9 +4297,12 @@ T0* GE_new203(TC* ac, T1 initialize)
 T0* GE_new204(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T204));
+	size_t s = sizeof(T204);
 	if (initialize) {
-		*(T204*)R = GE_default204;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 204;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3894,9 +4311,12 @@ T0* GE_new204(TC* ac, T1 initialize)
 T0* GE_new205(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T205));
+	size_t s = sizeof(T205);
 	if (initialize) {
-		*(T205*)R = GE_default205;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 205;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3905,9 +4325,12 @@ T0* GE_new205(TC* ac, T1 initialize)
 T0* GE_new206(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T206));
+	size_t s = sizeof(T206);
 	if (initialize) {
-		*(T206*)R = GE_default206;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 206;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3916,9 +4339,12 @@ T0* GE_new206(TC* ac, T1 initialize)
 T0* GE_new207(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T207));
+	size_t s = sizeof(T207);
 	if (initialize) {
-		*(T207*)R = GE_default207;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 207;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3927,9 +4353,12 @@ T0* GE_new207(TC* ac, T1 initialize)
 T0* GE_new208(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T208));
+	size_t s = sizeof(T208);
 	if (initialize) {
-		*(T208*)R = GE_default208;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 208;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3938,9 +4367,12 @@ T0* GE_new208(TC* ac, T1 initialize)
 T0* GE_new209(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T209));
+	size_t s = sizeof(T209);
 	if (initialize) {
-		*(T209*)R = GE_default209;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 209;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3949,9 +4381,12 @@ T0* GE_new209(TC* ac, T1 initialize)
 T0* GE_new210(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T210));
+	size_t s = sizeof(T210);
 	if (initialize) {
-		*(T210*)R = GE_default210;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 210;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -3960,9 +4395,12 @@ T0* GE_new210(TC* ac, T1 initialize)
 T0* GE_new212(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T212));
+	size_t s = sizeof(T212);
 	if (initialize) {
-		*(T212*)R = GE_default212;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 212;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3971,9 +4409,12 @@ T0* GE_new212(TC* ac, T1 initialize)
 T0* GE_new213(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T213));
+	size_t s = sizeof(T213);
 	if (initialize) {
-		*(T213*)R = GE_default213;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 213;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3982,9 +4423,12 @@ T0* GE_new213(TC* ac, T1 initialize)
 T0* GE_new214(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T214));
+	size_t s = sizeof(T214);
 	if (initialize) {
-		*(T214*)R = GE_default214;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 214;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -3993,9 +4437,12 @@ T0* GE_new214(TC* ac, T1 initialize)
 T0* GE_new215(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T215));
+	size_t s = sizeof(T215);
 	if (initialize) {
-		*(T215*)R = GE_default215;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 215;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4004,9 +4451,12 @@ T0* GE_new215(TC* ac, T1 initialize)
 T0* GE_new216(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T216));
+	size_t s = sizeof(T216);
 	if (initialize) {
-		*(T216*)R = GE_default216;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 216;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4015,9 +4465,12 @@ T0* GE_new216(TC* ac, T1 initialize)
 T0* GE_new217(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T217));
+	size_t s = sizeof(T217);
 	if (initialize) {
-		*(T217*)R = GE_default217;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 217;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4026,9 +4479,12 @@ T0* GE_new217(TC* ac, T1 initialize)
 T0* GE_new218(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T218));
+	size_t s = sizeof(T218);
 	if (initialize) {
-		*(T218*)R = GE_default218;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 218;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4037,9 +4493,12 @@ T0* GE_new218(TC* ac, T1 initialize)
 T0* GE_new219(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T219));
+	size_t s = sizeof(T219);
 	if (initialize) {
-		*(T219*)R = GE_default219;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 219;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4048,9 +4507,12 @@ T0* GE_new219(TC* ac, T1 initialize)
 T0* GE_new220(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T220));
+	size_t s = sizeof(T220);
 	if (initialize) {
-		*(T220*)R = GE_default220;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 220;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4059,9 +4521,12 @@ T0* GE_new220(TC* ac, T1 initialize)
 T0* GE_new221(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T221));
+	size_t s = sizeof(T221);
 	if (initialize) {
-		*(T221*)R = GE_default221;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 221;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4070,9 +4535,12 @@ T0* GE_new221(TC* ac, T1 initialize)
 T0* GE_new222(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T222));
+	size_t s = sizeof(T222);
 	if (initialize) {
-		*(T222*)R = GE_default222;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 222;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4081,9 +4549,12 @@ T0* GE_new222(TC* ac, T1 initialize)
 T0* GE_new225(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T225));
+	size_t s = sizeof(T225);
 	if (initialize) {
-		*(T225*)R = GE_default225;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 225;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4092,9 +4563,12 @@ T0* GE_new225(TC* ac, T1 initialize)
 T0* GE_new228(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T228));
+	size_t s = sizeof(T228);
 	if (initialize) {
-		*(T228*)R = GE_default228;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 228;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4103,9 +4577,12 @@ T0* GE_new228(TC* ac, T1 initialize)
 T0* GE_new229(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T229));
+	size_t s = sizeof(T229);
 	if (initialize) {
-		*(T229*)R = GE_default229;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 229;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4114,9 +4591,12 @@ T0* GE_new229(TC* ac, T1 initialize)
 T0* GE_new231(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T231));
+	size_t s = sizeof(T231);
 	if (initialize) {
-		*(T231*)R = GE_default231;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 231;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4125,9 +4605,12 @@ T0* GE_new231(TC* ac, T1 initialize)
 T0* GE_new232(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T232));
+	size_t s = sizeof(T232);
 	if (initialize) {
-		*(T232*)R = GE_default232;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 232;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4136,9 +4619,12 @@ T0* GE_new232(TC* ac, T1 initialize)
 T0* GE_new233(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T233));
+	size_t s = sizeof(T233);
 	if (initialize) {
-		*(T233*)R = GE_default233;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 233;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4147,9 +4633,12 @@ T0* GE_new233(TC* ac, T1 initialize)
 T0* GE_new234(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T234));
+	size_t s = sizeof(T234);
 	if (initialize) {
-		*(T234*)R = GE_default234;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 234;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4158,9 +4647,12 @@ T0* GE_new234(TC* ac, T1 initialize)
 T0* GE_new235(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T235));
+	size_t s = sizeof(T235);
 	if (initialize) {
-		*(T235*)R = GE_default235;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 235;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4169,9 +4661,12 @@ T0* GE_new235(TC* ac, T1 initialize)
 T0* GE_new236(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T236));
+	size_t s = sizeof(T236);
 	if (initialize) {
-		*(T236*)R = GE_default236;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 236;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4180,9 +4675,12 @@ T0* GE_new236(TC* ac, T1 initialize)
 T0* GE_new237(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T237));
+	size_t s = sizeof(T237);
 	if (initialize) {
-		*(T237*)R = GE_default237;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 237;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4191,9 +4689,12 @@ T0* GE_new237(TC* ac, T1 initialize)
 T0* GE_new238(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T238));
+	size_t s = sizeof(T238);
 	if (initialize) {
-		*(T238*)R = GE_default238;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 238;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4202,9 +4703,12 @@ T0* GE_new238(TC* ac, T1 initialize)
 T0* GE_new239(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T239));
+	size_t s = sizeof(T239);
 	if (initialize) {
-		*(T239*)R = GE_default239;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 239;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4213,9 +4717,12 @@ T0* GE_new239(TC* ac, T1 initialize)
 T0* GE_new241(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T241));
+	size_t s = sizeof(T241);
 	if (initialize) {
-		*(T241*)R = GE_default241;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 241;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4224,9 +4731,12 @@ T0* GE_new241(TC* ac, T1 initialize)
 T0* GE_new243(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T243));
+	size_t s = sizeof(T243);
 	if (initialize) {
-		*(T243*)R = GE_default243;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 243;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4235,9 +4745,12 @@ T0* GE_new243(TC* ac, T1 initialize)
 T0* GE_new244(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T244));
+	size_t s = sizeof(T244);
 	if (initialize) {
-		*(T244*)R = GE_default244;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 244;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4246,9 +4759,12 @@ T0* GE_new244(TC* ac, T1 initialize)
 T0* GE_new245(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T245));
+	size_t s = sizeof(T245);
 	if (initialize) {
-		*(T245*)R = GE_default245;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 245;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4257,9 +4773,12 @@ T0* GE_new245(TC* ac, T1 initialize)
 T0* GE_new246(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T246));
+	size_t s = sizeof(T246);
 	if (initialize) {
-		*(T246*)R = GE_default246;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 246;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4268,9 +4787,12 @@ T0* GE_new246(TC* ac, T1 initialize)
 T0* GE_new247(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T247));
+	size_t s = sizeof(T247);
 	if (initialize) {
-		*(T247*)R = GE_default247;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 247;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4279,9 +4801,12 @@ T0* GE_new247(TC* ac, T1 initialize)
 T0* GE_new248(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T248));
+	size_t s = sizeof(T248);
 	if (initialize) {
-		*(T248*)R = GE_default248;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 248;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4290,9 +4815,12 @@ T0* GE_new248(TC* ac, T1 initialize)
 T0* GE_new249(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T249));
+	size_t s = sizeof(T249);
 	if (initialize) {
-		*(T249*)R = GE_default249;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 249;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4301,9 +4829,12 @@ T0* GE_new249(TC* ac, T1 initialize)
 T0* GE_new250(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T250));
+	size_t s = sizeof(T250);
 	if (initialize) {
-		*(T250*)R = GE_default250;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 250;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4312,9 +4843,12 @@ T0* GE_new250(TC* ac, T1 initialize)
 T0* GE_new251(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T251));
+	size_t s = sizeof(T251);
 	if (initialize) {
-		*(T251*)R = GE_default251;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 251;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4323,9 +4857,12 @@ T0* GE_new251(TC* ac, T1 initialize)
 T0* GE_new252(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T252));
+	size_t s = sizeof(T252);
 	if (initialize) {
-		*(T252*)R = GE_default252;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 252;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4334,9 +4871,12 @@ T0* GE_new252(TC* ac, T1 initialize)
 T0* GE_new253(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T253));
+	size_t s = sizeof(T253);
 	if (initialize) {
-		*(T253*)R = GE_default253;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 253;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4345,9 +4885,12 @@ T0* GE_new253(TC* ac, T1 initialize)
 T0* GE_new254(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T254));
+	size_t s = sizeof(T254);
 	if (initialize) {
-		*(T254*)R = GE_default254;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 254;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4356,9 +4899,12 @@ T0* GE_new254(TC* ac, T1 initialize)
 T0* GE_new255(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T255));
+	size_t s = sizeof(T255);
 	if (initialize) {
-		*(T255*)R = GE_default255;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 255;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4367,9 +4913,12 @@ T0* GE_new255(TC* ac, T1 initialize)
 T0* GE_new256(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T256));
+	size_t s = sizeof(T256);
 	if (initialize) {
-		*(T256*)R = GE_default256;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 256;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4378,9 +4927,12 @@ T0* GE_new256(TC* ac, T1 initialize)
 T0* GE_new257(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T257));
+	size_t s = sizeof(T257);
 	if (initialize) {
-		*(T257*)R = GE_default257;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 257;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4389,9 +4941,12 @@ T0* GE_new257(TC* ac, T1 initialize)
 T0* GE_new258(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T258));
+	size_t s = sizeof(T258);
 	if (initialize) {
-		*(T258*)R = GE_default258;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 258;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4400,9 +4955,12 @@ T0* GE_new258(TC* ac, T1 initialize)
 T0* GE_new259(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T259));
+	size_t s = sizeof(T259);
 	if (initialize) {
-		*(T259*)R = GE_default259;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 259;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4411,9 +4969,12 @@ T0* GE_new259(TC* ac, T1 initialize)
 T0* GE_new260(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T260));
+	size_t s = sizeof(T260);
 	if (initialize) {
-		*(T260*)R = GE_default260;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 260;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4422,9 +4983,12 @@ T0* GE_new260(TC* ac, T1 initialize)
 T0* GE_new261(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T261));
+	size_t s = sizeof(T261);
 	if (initialize) {
-		*(T261*)R = GE_default261;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 261;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4433,9 +4997,12 @@ T0* GE_new261(TC* ac, T1 initialize)
 T0* GE_new262(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T262));
+	size_t s = sizeof(T262);
 	if (initialize) {
-		*(T262*)R = GE_default262;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 262;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4444,9 +5011,12 @@ T0* GE_new262(TC* ac, T1 initialize)
 T0* GE_new263(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T263));
+	size_t s = sizeof(T263);
 	if (initialize) {
-		*(T263*)R = GE_default263;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 263;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4455,9 +5025,12 @@ T0* GE_new263(TC* ac, T1 initialize)
 T0* GE_new265(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T265));
+	size_t s = sizeof(T265);
 	if (initialize) {
-		*(T265*)R = GE_default265;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 265;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4466,9 +5039,12 @@ T0* GE_new265(TC* ac, T1 initialize)
 T0* GE_new267(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T267));
+	size_t s = sizeof(T267);
 	if (initialize) {
-		*(T267*)R = GE_default267;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 267;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4477,9 +5053,12 @@ T0* GE_new267(TC* ac, T1 initialize)
 T0* GE_new268(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T268));
+	size_t s = sizeof(T268);
 	if (initialize) {
-		*(T268*)R = GE_default268;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 268;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4488,9 +5067,12 @@ T0* GE_new268(TC* ac, T1 initialize)
 T0* GE_new271(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T271));
+	size_t s = sizeof(T271);
 	if (initialize) {
-		*(T271*)R = GE_default271;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 271;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4499,14 +5081,14 @@ T0* GE_new271(TC* ac, T1 initialize)
 T0* GE_new272(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T272)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T272)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T272*)R = GE_default272;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 272;
 		((T272*)(R))->a2 = a1;
-		((T272*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T272*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T272*)(R))->offset = offsetof(T272, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4515,9 +5097,12 @@ T0* GE_new272(TC* ac, T6 a1, T1 initialize)
 T0* GE_new273(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T273));
+	size_t s = sizeof(T273);
 	if (initialize) {
-		*(T273*)R = GE_default273;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 273;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4526,14 +5111,14 @@ T0* GE_new273(TC* ac, T1 initialize)
 T0* GE_new274(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T274)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T274)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T274*)R = GE_default274;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 274;
 		((T274*)(R))->a2 = a1;
-		((T274*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T274*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T274*)(R))->offset = offsetof(T274, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4542,9 +5127,12 @@ T0* GE_new274(TC* ac, T6 a1, T1 initialize)
 T0* GE_new275(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T275));
+	size_t s = sizeof(T275);
 	if (initialize) {
-		*(T275*)R = GE_default275;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 275;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4553,9 +5141,12 @@ T0* GE_new275(TC* ac, T1 initialize)
 T0* GE_new276(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T276));
+	size_t s = sizeof(T276);
 	if (initialize) {
-		*(T276*)R = GE_default276;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 276;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4564,14 +5155,14 @@ T0* GE_new276(TC* ac, T1 initialize)
 T0* GE_new277(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T277)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T277)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T277*)R = GE_default277;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 277;
 		((T277*)(R))->a2 = a1;
-		((T277*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T277*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T277*)(R))->offset = offsetof(T277, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4580,9 +5171,12 @@ T0* GE_new277(TC* ac, T6 a1, T1 initialize)
 T0* GE_new278(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T278));
+	size_t s = sizeof(T278);
 	if (initialize) {
-		*(T278*)R = GE_default278;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 278;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4591,9 +5185,12 @@ T0* GE_new278(TC* ac, T1 initialize)
 T0* GE_new279(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T279));
+	size_t s = sizeof(T279);
 	if (initialize) {
-		*(T279*)R = GE_default279;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 279;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4602,14 +5199,14 @@ T0* GE_new279(TC* ac, T1 initialize)
 T0* GE_new280(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T280)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T280)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T280*)R = GE_default280;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 280;
 		((T280*)(R))->a2 = a1;
-		((T280*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T280*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T280*)(R))->offset = offsetof(T280, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4618,9 +5215,12 @@ T0* GE_new280(TC* ac, T6 a1, T1 initialize)
 T0* GE_new281(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T281));
+	size_t s = sizeof(T281);
 	if (initialize) {
-		*(T281*)R = GE_default281;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 281;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4629,9 +5229,12 @@ T0* GE_new281(TC* ac, T1 initialize)
 T0* GE_new282(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T282));
+	size_t s = sizeof(T282);
 	if (initialize) {
-		*(T282*)R = GE_default282;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 282;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4640,14 +5243,14 @@ T0* GE_new282(TC* ac, T1 initialize)
 T0* GE_new283(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T283)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T283)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T283*)R = GE_default283;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 283;
 		((T283*)(R))->a2 = a1;
-		((T283*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T283*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T283*)(R))->offset = offsetof(T283, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4656,9 +5259,12 @@ T0* GE_new283(TC* ac, T6 a1, T1 initialize)
 T0* GE_new284(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T284));
+	size_t s = sizeof(T284);
 	if (initialize) {
-		*(T284*)R = GE_default284;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 284;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4667,14 +5273,14 @@ T0* GE_new284(TC* ac, T1 initialize)
 T0* GE_new286(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T286)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T286)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T286*)R = GE_default286;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 286;
 		((T286*)(R))->a2 = a1;
-		((T286*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T286*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T286*)(R))->offset = offsetof(T286, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4683,9 +5289,12 @@ T0* GE_new286(TC* ac, T6 a1, T1 initialize)
 T0* GE_new287(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T287));
+	size_t s = sizeof(T287);
 	if (initialize) {
-		*(T287*)R = GE_default287;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 287;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4694,14 +5303,14 @@ T0* GE_new287(TC* ac, T1 initialize)
 T0* GE_new289(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T289)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T289)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T289*)R = GE_default289;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 289;
 		((T289*)(R))->a2 = a1;
-		((T289*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T289*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T289*)(R))->offset = offsetof(T289, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4710,9 +5319,12 @@ T0* GE_new289(TC* ac, T6 a1, T1 initialize)
 T0* GE_new290(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T290));
+	size_t s = sizeof(T290);
 	if (initialize) {
-		*(T290*)R = GE_default290;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 290;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4721,14 +5333,14 @@ T0* GE_new290(TC* ac, T1 initialize)
 T0* GE_new292(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T292)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T292)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T292*)R = GE_default292;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 292;
 		((T292*)(R))->a2 = a1;
-		((T292*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T292*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T292*)(R))->offset = offsetof(T292, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4737,9 +5349,12 @@ T0* GE_new292(TC* ac, T6 a1, T1 initialize)
 T0* GE_new293(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T293));
+	size_t s = sizeof(T293);
 	if (initialize) {
-		*(T293*)R = GE_default293;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 293;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4748,14 +5363,14 @@ T0* GE_new293(TC* ac, T1 initialize)
 T0* GE_new295(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T295)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T295)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T295*)R = GE_default295;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 295;
 		((T295*)(R))->a2 = a1;
-		((T295*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T295*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T295*)(R))->offset = offsetof(T295, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4764,9 +5379,12 @@ T0* GE_new295(TC* ac, T6 a1, T1 initialize)
 T0* GE_new296(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T296));
+	size_t s = sizeof(T296);
 	if (initialize) {
-		*(T296*)R = GE_default296;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 296;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4775,9 +5393,12 @@ T0* GE_new296(TC* ac, T1 initialize)
 T0* GE_new297(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T297));
+	size_t s = sizeof(T297);
 	if (initialize) {
-		*(T297*)R = GE_default297;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 297;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4786,14 +5407,14 @@ T0* GE_new297(TC* ac, T1 initialize)
 T0* GE_new298(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T298)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T298)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T298*)R = GE_default298;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 298;
 		((T298*)(R))->a2 = a1;
-		((T298*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T298*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T298*)(R))->offset = offsetof(T298, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4802,9 +5423,12 @@ T0* GE_new298(TC* ac, T6 a1, T1 initialize)
 T0* GE_new299(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T299));
+	size_t s = sizeof(T299);
 	if (initialize) {
-		*(T299*)R = GE_default299;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 299;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4813,9 +5437,12 @@ T0* GE_new299(TC* ac, T1 initialize)
 T0* GE_new300(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T300));
+	size_t s = sizeof(T300);
 	if (initialize) {
-		*(T300*)R = GE_default300;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 300;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4824,14 +5451,14 @@ T0* GE_new300(TC* ac, T1 initialize)
 T0* GE_new301(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T301)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T301)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T301*)R = GE_default301;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 301;
 		((T301*)(R))->a2 = a1;
-		((T301*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T301*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T301*)(R))->offset = offsetof(T301, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4840,9 +5467,12 @@ T0* GE_new301(TC* ac, T6 a1, T1 initialize)
 T0* GE_new302(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T302));
+	size_t s = sizeof(T302);
 	if (initialize) {
-		*(T302*)R = GE_default302;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 302;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4851,9 +5481,12 @@ T0* GE_new302(TC* ac, T1 initialize)
 T0* GE_new303(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T303));
+	size_t s = sizeof(T303);
 	if (initialize) {
-		*(T303*)R = GE_default303;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 303;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4862,14 +5495,14 @@ T0* GE_new303(TC* ac, T1 initialize)
 T0* GE_new304(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T304)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T304)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T304*)R = GE_default304;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 304;
 		((T304*)(R))->a2 = a1;
-		((T304*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T304*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T304*)(R))->offset = offsetof(T304, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4878,9 +5511,12 @@ T0* GE_new304(TC* ac, T6 a1, T1 initialize)
 T0* GE_new305(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T305));
+	size_t s = sizeof(T305);
 	if (initialize) {
-		*(T305*)R = GE_default305;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 305;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4889,14 +5525,14 @@ T0* GE_new305(TC* ac, T1 initialize)
 T0* GE_new307(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T307)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T307)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T307*)R = GE_default307;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 307;
 		((T307*)(R))->a2 = a1;
-		((T307*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T307*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T307*)(R))->offset = offsetof(T307, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4905,9 +5541,12 @@ T0* GE_new307(TC* ac, T6 a1, T1 initialize)
 T0* GE_new308(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T308));
+	size_t s = sizeof(T308);
 	if (initialize) {
-		*(T308*)R = GE_default308;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 308;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4916,9 +5555,12 @@ T0* GE_new308(TC* ac, T1 initialize)
 T0* GE_new309(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T309));
+	size_t s = sizeof(T309);
 	if (initialize) {
-		*(T309*)R = GE_default309;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 309;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4927,14 +5569,14 @@ T0* GE_new309(TC* ac, T1 initialize)
 T0* GE_new310(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T310)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T310)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T310*)R = GE_default310;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 310;
 		((T310*)(R))->a2 = a1;
-		((T310*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T310*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T310*)(R))->offset = offsetof(T310, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4943,9 +5585,12 @@ T0* GE_new310(TC* ac, T6 a1, T1 initialize)
 T0* GE_new311(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T311));
+	size_t s = sizeof(T311);
 	if (initialize) {
-		*(T311*)R = GE_default311;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 311;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4954,14 +5599,14 @@ T0* GE_new311(TC* ac, T1 initialize)
 T0* GE_new313(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T313)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T313)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T313*)R = GE_default313;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 313;
 		((T313*)(R))->a2 = a1;
-		((T313*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T313*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T313*)(R))->offset = offsetof(T313, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4970,9 +5615,12 @@ T0* GE_new313(TC* ac, T6 a1, T1 initialize)
 T0* GE_new314(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T314));
+	size_t s = sizeof(T314);
 	if (initialize) {
-		*(T314*)R = GE_default314;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 314;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -4981,14 +5629,14 @@ T0* GE_new314(TC* ac, T1 initialize)
 T0* GE_new316(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T316)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T316)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T316*)R = GE_default316;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 316;
 		((T316*)(R))->a2 = a1;
-		((T316*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T316*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T316*)(R))->offset = offsetof(T316, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -4997,9 +5645,12 @@ T0* GE_new316(TC* ac, T6 a1, T1 initialize)
 T0* GE_new317(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T317));
+	size_t s = sizeof(T317);
 	if (initialize) {
-		*(T317*)R = GE_default317;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 317;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5008,9 +5659,12 @@ T0* GE_new317(TC* ac, T1 initialize)
 T0* GE_new318(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T318));
+	size_t s = sizeof(T318);
 	if (initialize) {
-		*(T318*)R = GE_default318;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 318;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5019,14 +5673,14 @@ T0* GE_new318(TC* ac, T1 initialize)
 T0* GE_new319(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T319)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T319)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T319*)R = GE_default319;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 319;
 		((T319*)(R))->a2 = a1;
-		((T319*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T319*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T319*)(R))->offset = offsetof(T319, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5035,9 +5689,12 @@ T0* GE_new319(TC* ac, T6 a1, T1 initialize)
 T0* GE_new320(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T320));
+	size_t s = sizeof(T320);
 	if (initialize) {
-		*(T320*)R = GE_default320;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 320;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5046,9 +5703,12 @@ T0* GE_new320(TC* ac, T1 initialize)
 T0* GE_new321(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T321));
+	size_t s = sizeof(T321);
 	if (initialize) {
-		*(T321*)R = GE_default321;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 321;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5057,14 +5717,14 @@ T0* GE_new321(TC* ac, T1 initialize)
 T0* GE_new322(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T322)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T322)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T322*)R = GE_default322;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 322;
 		((T322*)(R))->a2 = a1;
-		((T322*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T322*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T322*)(R))->offset = offsetof(T322, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5073,9 +5733,12 @@ T0* GE_new322(TC* ac, T6 a1, T1 initialize)
 T0* GE_new323(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T323));
+	size_t s = sizeof(T323);
 	if (initialize) {
-		*(T323*)R = GE_default323;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 323;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5084,9 +5747,12 @@ T0* GE_new323(TC* ac, T1 initialize)
 T0* GE_new324(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T324));
+	size_t s = sizeof(T324);
 	if (initialize) {
-		*(T324*)R = GE_default324;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 324;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5095,14 +5761,14 @@ T0* GE_new324(TC* ac, T1 initialize)
 T0* GE_new325(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T325)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T325)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T325*)R = GE_default325;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 325;
 		((T325*)(R))->a2 = a1;
-		((T325*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T325*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T325*)(R))->offset = offsetof(T325, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5111,9 +5777,12 @@ T0* GE_new325(TC* ac, T6 a1, T1 initialize)
 T0* GE_new326(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T326));
+	size_t s = sizeof(T326);
 	if (initialize) {
-		*(T326*)R = GE_default326;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 326;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5122,9 +5791,12 @@ T0* GE_new326(TC* ac, T1 initialize)
 T0* GE_new327(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T327));
+	size_t s = sizeof(T327);
 	if (initialize) {
-		*(T327*)R = GE_default327;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 327;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5133,14 +5805,14 @@ T0* GE_new327(TC* ac, T1 initialize)
 T0* GE_new328(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T328)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T328)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T328*)R = GE_default328;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 328;
 		((T328*)(R))->a2 = a1;
-		((T328*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T328*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T328*)(R))->offset = offsetof(T328, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5149,9 +5821,12 @@ T0* GE_new328(TC* ac, T6 a1, T1 initialize)
 T0* GE_new329(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T329));
+	size_t s = sizeof(T329);
 	if (initialize) {
-		*(T329*)R = GE_default329;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 329;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5160,9 +5835,12 @@ T0* GE_new329(TC* ac, T1 initialize)
 T0* GE_new330(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T330));
+	size_t s = sizeof(T330);
 	if (initialize) {
-		*(T330*)R = GE_default330;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 330;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5171,14 +5849,14 @@ T0* GE_new330(TC* ac, T1 initialize)
 T0* GE_new331(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T331)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T331)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T331*)R = GE_default331;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 331;
 		((T331*)(R))->a2 = a1;
-		((T331*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T331*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T331*)(R))->offset = offsetof(T331, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5187,9 +5865,12 @@ T0* GE_new331(TC* ac, T6 a1, T1 initialize)
 T0* GE_new332(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T332));
+	size_t s = sizeof(T332);
 	if (initialize) {
-		*(T332*)R = GE_default332;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 332;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5198,9 +5879,12 @@ T0* GE_new332(TC* ac, T1 initialize)
 T0* GE_new333(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T333));
+	size_t s = sizeof(T333);
 	if (initialize) {
-		*(T333*)R = GE_default333;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 333;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5209,14 +5893,14 @@ T0* GE_new333(TC* ac, T1 initialize)
 T0* GE_new334(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T334)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T334)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T334*)R = GE_default334;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 334;
 		((T334*)(R))->a2 = a1;
-		((T334*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T334*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T334*)(R))->offset = offsetof(T334, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5225,9 +5909,12 @@ T0* GE_new334(TC* ac, T6 a1, T1 initialize)
 T0* GE_new335(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T335));
+	size_t s = sizeof(T335);
 	if (initialize) {
-		*(T335*)R = GE_default335;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 335;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5236,9 +5923,12 @@ T0* GE_new335(TC* ac, T1 initialize)
 T0* GE_new336(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T336));
+	size_t s = sizeof(T336);
 	if (initialize) {
-		*(T336*)R = GE_default336;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 336;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5247,14 +5937,14 @@ T0* GE_new336(TC* ac, T1 initialize)
 T0* GE_new337(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T337)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T337)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T337*)R = GE_default337;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 337;
 		((T337*)(R))->a2 = a1;
-		((T337*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T337*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T337*)(R))->offset = offsetof(T337, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5263,9 +5953,12 @@ T0* GE_new337(TC* ac, T6 a1, T1 initialize)
 T0* GE_new338(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T338));
+	size_t s = sizeof(T338);
 	if (initialize) {
-		*(T338*)R = GE_default338;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 338;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5274,9 +5967,12 @@ T0* GE_new338(TC* ac, T1 initialize)
 T0* GE_new339(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T339));
+	size_t s = sizeof(T339);
 	if (initialize) {
-		*(T339*)R = GE_default339;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 339;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5285,14 +5981,14 @@ T0* GE_new339(TC* ac, T1 initialize)
 T0* GE_new340(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T340)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T340)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T340*)R = GE_default340;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 340;
 		((T340*)(R))->a2 = a1;
-		((T340*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T340*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T340*)(R))->offset = offsetof(T340, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5301,9 +5997,12 @@ T0* GE_new340(TC* ac, T6 a1, T1 initialize)
 T0* GE_new341(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T341));
+	size_t s = sizeof(T341);
 	if (initialize) {
-		*(T341*)R = GE_default341;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 341;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5312,9 +6011,12 @@ T0* GE_new341(TC* ac, T1 initialize)
 T0* GE_new342(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T342));
+	size_t s = sizeof(T342);
 	if (initialize) {
-		*(T342*)R = GE_default342;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 342;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5323,14 +6025,14 @@ T0* GE_new342(TC* ac, T1 initialize)
 T0* GE_new343(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T343)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T343)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T343*)R = GE_default343;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 343;
 		((T343*)(R))->a2 = a1;
-		((T343*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T343*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T343*)(R))->offset = offsetof(T343, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5339,9 +6041,12 @@ T0* GE_new343(TC* ac, T6 a1, T1 initialize)
 T0* GE_new344(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T344));
+	size_t s = sizeof(T344);
 	if (initialize) {
-		*(T344*)R = GE_default344;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 344;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5350,9 +6055,12 @@ T0* GE_new344(TC* ac, T1 initialize)
 T0* GE_new345(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T345));
+	size_t s = sizeof(T345);
 	if (initialize) {
-		*(T345*)R = GE_default345;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 345;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5361,14 +6069,14 @@ T0* GE_new345(TC* ac, T1 initialize)
 T0* GE_new346(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T346)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T346)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T346*)R = GE_default346;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 346;
 		((T346*)(R))->a2 = a1;
-		((T346*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T346*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T346*)(R))->offset = offsetof(T346, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5377,9 +6085,12 @@ T0* GE_new346(TC* ac, T6 a1, T1 initialize)
 T0* GE_new347(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T347));
+	size_t s = sizeof(T347);
 	if (initialize) {
-		*(T347*)R = GE_default347;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 347;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5388,14 +6099,14 @@ T0* GE_new347(TC* ac, T1 initialize)
 T0* GE_new348(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T348)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T348)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T348*)R = GE_default348;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 348;
 		((T348*)(R))->a2 = a1;
-		((T348*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T348*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T348*)(R))->offset = offsetof(T348, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5404,9 +6115,12 @@ T0* GE_new348(TC* ac, T6 a1, T1 initialize)
 T0* GE_new349(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T349));
+	size_t s = sizeof(T349);
 	if (initialize) {
-		*(T349*)R = GE_default349;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 349;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5415,14 +6129,14 @@ T0* GE_new349(TC* ac, T1 initialize)
 T0* GE_new350(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T350)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T350)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T350*)R = GE_default350;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 350;
 		((T350*)(R))->a2 = a1;
-		((T350*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T350*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T350*)(R))->offset = offsetof(T350, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5431,9 +6145,12 @@ T0* GE_new350(TC* ac, T6 a1, T1 initialize)
 T0* GE_new351(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T351));
+	size_t s = sizeof(T351);
 	if (initialize) {
-		*(T351*)R = GE_default351;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 351;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5442,14 +6159,14 @@ T0* GE_new351(TC* ac, T1 initialize)
 T0* GE_new353(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T353)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T353)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T353*)R = GE_default353;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 353;
 		((T353*)(R))->a2 = a1;
-		((T353*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T353*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T353*)(R))->offset = offsetof(T353, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5458,9 +6175,12 @@ T0* GE_new353(TC* ac, T6 a1, T1 initialize)
 T0* GE_new354(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T354));
+	size_t s = sizeof(T354);
 	if (initialize) {
-		*(T354*)R = GE_default354;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 354;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5469,14 +6189,14 @@ T0* GE_new354(TC* ac, T1 initialize)
 T0* GE_new356(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T356)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T356)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T356*)R = GE_default356;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 356;
 		((T356*)(R))->a2 = a1;
-		((T356*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T356*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T356*)(R))->offset = offsetof(T356, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5485,9 +6205,12 @@ T0* GE_new356(TC* ac, T6 a1, T1 initialize)
 T0* GE_new357(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T357));
+	size_t s = sizeof(T357);
 	if (initialize) {
-		*(T357*)R = GE_default357;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 357;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5496,9 +6219,12 @@ T0* GE_new357(TC* ac, T1 initialize)
 T0* GE_new358(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T358));
+	size_t s = sizeof(T358);
 	if (initialize) {
-		*(T358*)R = GE_default358;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 358;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5507,14 +6233,14 @@ T0* GE_new358(TC* ac, T1 initialize)
 T0* GE_new359(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T359)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T359)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T359*)R = GE_default359;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 359;
 		((T359*)(R))->a2 = a1;
-		((T359*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T359*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T359*)(R))->offset = offsetof(T359, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5523,9 +6249,12 @@ T0* GE_new359(TC* ac, T6 a1, T1 initialize)
 T0* GE_new360(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T360));
+	size_t s = sizeof(T360);
 	if (initialize) {
-		*(T360*)R = GE_default360;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 360;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5534,14 +6263,14 @@ T0* GE_new360(TC* ac, T1 initialize)
 T0* GE_new362(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T362)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T362)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T362*)R = GE_default362;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 362;
 		((T362*)(R))->a2 = a1;
-		((T362*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T362*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T362*)(R))->offset = offsetof(T362, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5550,9 +6279,12 @@ T0* GE_new362(TC* ac, T6 a1, T1 initialize)
 T0* GE_new363(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T363));
+	size_t s = sizeof(T363);
 	if (initialize) {
-		*(T363*)R = GE_default363;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 363;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5561,9 +6293,12 @@ T0* GE_new363(TC* ac, T1 initialize)
 T0* GE_new364(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T364));
+	size_t s = sizeof(T364);
 	if (initialize) {
-		*(T364*)R = GE_default364;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 364;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5572,14 +6307,14 @@ T0* GE_new364(TC* ac, T1 initialize)
 T0* GE_new365(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T365)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T365)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T365*)R = GE_default365;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 365;
 		((T365*)(R))->a2 = a1;
-		((T365*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T365*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T365*)(R))->offset = offsetof(T365, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5588,9 +6323,12 @@ T0* GE_new365(TC* ac, T6 a1, T1 initialize)
 T0* GE_new366(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T366));
+	size_t s = sizeof(T366);
 	if (initialize) {
-		*(T366*)R = GE_default366;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 366;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5599,9 +6337,12 @@ T0* GE_new366(TC* ac, T1 initialize)
 T0* GE_new367(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T367));
+	size_t s = sizeof(T367);
 	if (initialize) {
-		*(T367*)R = GE_default367;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 367;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5610,14 +6351,14 @@ T0* GE_new367(TC* ac, T1 initialize)
 T0* GE_new368(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T368)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T368)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T368*)R = GE_default368;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 368;
 		((T368*)(R))->a2 = a1;
-		((T368*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T368*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T368*)(R))->offset = offsetof(T368, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5626,9 +6367,12 @@ T0* GE_new368(TC* ac, T6 a1, T1 initialize)
 T0* GE_new369(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T369));
+	size_t s = sizeof(T369);
 	if (initialize) {
-		*(T369*)R = GE_default369;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 369;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5637,14 +6381,14 @@ T0* GE_new369(TC* ac, T1 initialize)
 T0* GE_new371(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T371)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T371)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T371*)R = GE_default371;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 371;
 		((T371*)(R))->a2 = a1;
-		((T371*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T371*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T371*)(R))->offset = offsetof(T371, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5653,9 +6397,12 @@ T0* GE_new371(TC* ac, T6 a1, T1 initialize)
 T0* GE_new372(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T372));
+	size_t s = sizeof(T372);
 	if (initialize) {
-		*(T372*)R = GE_default372;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 372;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5664,9 +6411,12 @@ T0* GE_new372(TC* ac, T1 initialize)
 T0* GE_new373(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T373));
+	size_t s = sizeof(T373);
 	if (initialize) {
-		*(T373*)R = GE_default373;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 373;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5675,14 +6425,14 @@ T0* GE_new373(TC* ac, T1 initialize)
 T0* GE_new374(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T374)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T374)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T374*)R = GE_default374;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 374;
 		((T374*)(R))->a2 = a1;
-		((T374*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T374*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T374*)(R))->offset = offsetof(T374, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5691,9 +6441,12 @@ T0* GE_new374(TC* ac, T6 a1, T1 initialize)
 T0* GE_new375(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T375));
+	size_t s = sizeof(T375);
 	if (initialize) {
-		*(T375*)R = GE_default375;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 375;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5702,9 +6455,12 @@ T0* GE_new375(TC* ac, T1 initialize)
 T0* GE_new376(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T376));
+	size_t s = sizeof(T376);
 	if (initialize) {
-		*(T376*)R = GE_default376;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 376;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5713,14 +6469,14 @@ T0* GE_new376(TC* ac, T1 initialize)
 T0* GE_new377(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T377)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T377)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T377*)R = GE_default377;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 377;
 		((T377*)(R))->a2 = a1;
-		((T377*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T377*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T377*)(R))->offset = offsetof(T377, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5729,9 +6485,12 @@ T0* GE_new377(TC* ac, T6 a1, T1 initialize)
 T0* GE_new378(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T378));
+	size_t s = sizeof(T378);
 	if (initialize) {
-		*(T378*)R = GE_default378;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 378;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5740,9 +6499,12 @@ T0* GE_new378(TC* ac, T1 initialize)
 T0* GE_new379(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T379));
+	size_t s = sizeof(T379);
 	if (initialize) {
-		*(T379*)R = GE_default379;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 379;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5751,14 +6513,14 @@ T0* GE_new379(TC* ac, T1 initialize)
 T0* GE_new380(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T380)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T380)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T380*)R = GE_default380;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 380;
 		((T380*)(R))->a2 = a1;
-		((T380*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T380*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T380*)(R))->offset = offsetof(T380, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5767,9 +6529,12 @@ T0* GE_new380(TC* ac, T6 a1, T1 initialize)
 T0* GE_new381(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T381));
+	size_t s = sizeof(T381);
 	if (initialize) {
-		*(T381*)R = GE_default381;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 381;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5778,9 +6543,12 @@ T0* GE_new381(TC* ac, T1 initialize)
 T0* GE_new382(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T382));
+	size_t s = sizeof(T382);
 	if (initialize) {
-		*(T382*)R = GE_default382;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 382;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5789,14 +6557,14 @@ T0* GE_new382(TC* ac, T1 initialize)
 T0* GE_new383(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T383)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T383)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T383*)R = GE_default383;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 383;
 		((T383*)(R))->a2 = a1;
-		((T383*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T383*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T383*)(R))->offset = offsetof(T383, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5805,9 +6573,12 @@ T0* GE_new383(TC* ac, T6 a1, T1 initialize)
 T0* GE_new384(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T384));
+	size_t s = sizeof(T384);
 	if (initialize) {
-		*(T384*)R = GE_default384;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 384;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5816,14 +6587,14 @@ T0* GE_new384(TC* ac, T1 initialize)
 T0* GE_new386(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T386)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T386)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T386*)R = GE_default386;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 386;
 		((T386*)(R))->a2 = a1;
-		((T386*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T386*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T386*)(R))->offset = offsetof(T386, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5832,9 +6603,12 @@ T0* GE_new386(TC* ac, T6 a1, T1 initialize)
 T0* GE_new387(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T387));
+	size_t s = sizeof(T387);
 	if (initialize) {
-		*(T387*)R = GE_default387;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 387;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5843,14 +6617,14 @@ T0* GE_new387(TC* ac, T1 initialize)
 T0* GE_new389(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T389)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T389)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T389*)R = GE_default389;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 389;
 		((T389*)(R))->a2 = a1;
-		((T389*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T389*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T389*)(R))->offset = offsetof(T389, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5859,9 +6633,12 @@ T0* GE_new389(TC* ac, T6 a1, T1 initialize)
 T0* GE_new390(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T390));
+	size_t s = sizeof(T390);
 	if (initialize) {
-		*(T390*)R = GE_default390;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 390;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5870,14 +6647,14 @@ T0* GE_new390(TC* ac, T1 initialize)
 T0* GE_new392(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T392)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T392)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T392*)R = GE_default392;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 392;
 		((T392*)(R))->a2 = a1;
-		((T392*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T392*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T392*)(R))->offset = offsetof(T392, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5886,9 +6663,12 @@ T0* GE_new392(TC* ac, T6 a1, T1 initialize)
 T0* GE_new393(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T393));
+	size_t s = sizeof(T393);
 	if (initialize) {
-		*(T393*)R = GE_default393;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 393;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5897,9 +6677,12 @@ T0* GE_new393(TC* ac, T1 initialize)
 T0* GE_new394(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T394));
+	size_t s = sizeof(T394);
 	if (initialize) {
-		*(T394*)R = GE_default394;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 394;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5908,14 +6691,14 @@ T0* GE_new394(TC* ac, T1 initialize)
 T0* GE_new395(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T395)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T395)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T395*)R = GE_default395;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 395;
 		((T395*)(R))->a2 = a1;
-		((T395*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T395*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T395*)(R))->offset = offsetof(T395, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5924,9 +6707,12 @@ T0* GE_new395(TC* ac, T6 a1, T1 initialize)
 T0* GE_new396(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T396));
+	size_t s = sizeof(T396);
 	if (initialize) {
-		*(T396*)R = GE_default396;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 396;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5935,14 +6721,14 @@ T0* GE_new396(TC* ac, T1 initialize)
 T0* GE_new397(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T397)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T397)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T397*)R = GE_default397;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 397;
 		((T397*)(R))->a2 = a1;
-		((T397*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T397*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T397*)(R))->offset = offsetof(T397, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5951,9 +6737,12 @@ T0* GE_new397(TC* ac, T6 a1, T1 initialize)
 T0* GE_new398(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T398));
+	size_t s = sizeof(T398);
 	if (initialize) {
-		*(T398*)R = GE_default398;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 398;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5962,14 +6751,14 @@ T0* GE_new398(TC* ac, T1 initialize)
 T0* GE_new399(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T399)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T399)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T399*)R = GE_default399;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 399;
 		((T399*)(R))->a2 = a1;
-		((T399*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T399*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T399*)(R))->offset = offsetof(T399, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -5978,9 +6767,12 @@ T0* GE_new399(TC* ac, T6 a1, T1 initialize)
 T0* GE_new400(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T400));
+	size_t s = sizeof(T400);
 	if (initialize) {
-		*(T400*)R = GE_default400;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 400;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -5989,14 +6781,14 @@ T0* GE_new400(TC* ac, T1 initialize)
 T0* GE_new401(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T401)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T401)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T401*)R = GE_default401;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 401;
 		((T401*)(R))->a2 = a1;
-		((T401*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T401*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T401*)(R))->offset = offsetof(T401, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6005,9 +6797,12 @@ T0* GE_new401(TC* ac, T6 a1, T1 initialize)
 T0* GE_new402(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T402));
+	size_t s = sizeof(T402);
 	if (initialize) {
-		*(T402*)R = GE_default402;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 402;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6016,9 +6811,12 @@ T0* GE_new402(TC* ac, T1 initialize)
 T0* GE_new403(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T403));
+	size_t s = sizeof(T403);
 	if (initialize) {
-		*(T403*)R = GE_default403;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 403;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6027,14 +6825,14 @@ T0* GE_new403(TC* ac, T1 initialize)
 T0* GE_new404(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T404)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T404)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T404*)R = GE_default404;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 404;
 		((T404*)(R))->a2 = a1;
-		((T404*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T404*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T404*)(R))->offset = offsetof(T404, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6043,9 +6841,12 @@ T0* GE_new404(TC* ac, T6 a1, T1 initialize)
 T0* GE_new405(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T405));
+	size_t s = sizeof(T405);
 	if (initialize) {
-		*(T405*)R = GE_default405;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 405;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6054,14 +6855,14 @@ T0* GE_new405(TC* ac, T1 initialize)
 T0* GE_new407(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T407)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T407)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T407*)R = GE_default407;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 407;
 		((T407*)(R))->a2 = a1;
-		((T407*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T407*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T407*)(R))->offset = offsetof(T407, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6070,9 +6871,12 @@ T0* GE_new407(TC* ac, T6 a1, T1 initialize)
 T0* GE_new408(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T408));
+	size_t s = sizeof(T408);
 	if (initialize) {
-		*(T408*)R = GE_default408;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 408;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6081,14 +6885,14 @@ T0* GE_new408(TC* ac, T1 initialize)
 T0* GE_new410(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T410)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T410)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T410*)R = GE_default410;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 410;
 		((T410*)(R))->a2 = a1;
-		((T410*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T410*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T410*)(R))->offset = offsetof(T410, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6097,9 +6901,12 @@ T0* GE_new410(TC* ac, T6 a1, T1 initialize)
 T0* GE_new411(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T411));
+	size_t s = sizeof(T411);
 	if (initialize) {
-		*(T411*)R = GE_default411;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 411;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6108,14 +6915,14 @@ T0* GE_new411(TC* ac, T1 initialize)
 T0* GE_new413(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T413)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T413)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T413*)R = GE_default413;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 413;
 		((T413*)(R))->a2 = a1;
-		((T413*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T413*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T413*)(R))->offset = offsetof(T413, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6124,9 +6931,12 @@ T0* GE_new413(TC* ac, T6 a1, T1 initialize)
 T0* GE_new414(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T414));
+	size_t s = sizeof(T414);
 	if (initialize) {
-		*(T414*)R = GE_default414;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 414;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6135,9 +6945,12 @@ T0* GE_new414(TC* ac, T1 initialize)
 T0* GE_new415(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T415));
+	size_t s = sizeof(T415);
 	if (initialize) {
-		*(T415*)R = GE_default415;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 415;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6146,14 +6959,14 @@ T0* GE_new415(TC* ac, T1 initialize)
 T0* GE_new416(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T416)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T416)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T416*)R = GE_default416;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 416;
 		((T416*)(R))->a2 = a1;
-		((T416*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T416*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T416*)(R))->offset = offsetof(T416, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6162,9 +6975,12 @@ T0* GE_new416(TC* ac, T6 a1, T1 initialize)
 T0* GE_new417(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T417));
+	size_t s = sizeof(T417);
 	if (initialize) {
-		*(T417*)R = GE_default417;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 417;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6173,9 +6989,12 @@ T0* GE_new417(TC* ac, T1 initialize)
 T0* GE_new418(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T418));
+	size_t s = sizeof(T418);
 	if (initialize) {
-		*(T418*)R = GE_default418;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 418;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6184,14 +7003,14 @@ T0* GE_new418(TC* ac, T1 initialize)
 T0* GE_new419(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T419)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T419)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T419*)R = GE_default419;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 419;
 		((T419*)(R))->a2 = a1;
-		((T419*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T419*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T419*)(R))->offset = offsetof(T419, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6200,9 +7019,12 @@ T0* GE_new419(TC* ac, T6 a1, T1 initialize)
 T0* GE_new420(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T420));
+	size_t s = sizeof(T420);
 	if (initialize) {
-		*(T420*)R = GE_default420;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 420;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6211,9 +7033,12 @@ T0* GE_new420(TC* ac, T1 initialize)
 T0* GE_new421(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T421));
+	size_t s = sizeof(T421);
 	if (initialize) {
-		*(T421*)R = GE_default421;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 421;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6222,14 +7047,14 @@ T0* GE_new421(TC* ac, T1 initialize)
 T0* GE_new422(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T422)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T422)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T422*)R = GE_default422;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 422;
 		((T422*)(R))->a2 = a1;
-		((T422*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T422*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T422*)(R))->offset = offsetof(T422, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6238,9 +7063,12 @@ T0* GE_new422(TC* ac, T6 a1, T1 initialize)
 T0* GE_new423(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T423));
+	size_t s = sizeof(T423);
 	if (initialize) {
-		*(T423*)R = GE_default423;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 423;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6249,14 +7077,14 @@ T0* GE_new423(TC* ac, T1 initialize)
 T0* GE_new425(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T425)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T425)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T425*)R = GE_default425;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 425;
 		((T425*)(R))->a2 = a1;
-		((T425*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T425*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T425*)(R))->offset = offsetof(T425, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6265,9 +7093,12 @@ T0* GE_new425(TC* ac, T6 a1, T1 initialize)
 T0* GE_new426(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T426));
+	size_t s = sizeof(T426);
 	if (initialize) {
-		*(T426*)R = GE_default426;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 426;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6276,14 +7107,14 @@ T0* GE_new426(TC* ac, T1 initialize)
 T0* GE_new428(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T428)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T428)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T428*)R = GE_default428;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 428;
 		((T428*)(R))->a2 = a1;
-		((T428*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T428*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T428*)(R))->offset = offsetof(T428, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6292,9 +7123,12 @@ T0* GE_new428(TC* ac, T6 a1, T1 initialize)
 T0* GE_new429(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T429));
+	size_t s = sizeof(T429);
 	if (initialize) {
-		*(T429*)R = GE_default429;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 429;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6303,14 +7137,14 @@ T0* GE_new429(TC* ac, T1 initialize)
 T0* GE_new431(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T431)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T431)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T431*)R = GE_default431;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 431;
 		((T431*)(R))->a2 = a1;
-		((T431*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T431*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T431*)(R))->offset = offsetof(T431, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6319,9 +7153,12 @@ T0* GE_new431(TC* ac, T6 a1, T1 initialize)
 T0* GE_new432(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T432));
+	size_t s = sizeof(T432);
 	if (initialize) {
-		*(T432*)R = GE_default432;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 432;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6330,9 +7167,12 @@ T0* GE_new432(TC* ac, T1 initialize)
 T0* GE_new433(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T433));
+	size_t s = sizeof(T433);
 	if (initialize) {
-		*(T433*)R = GE_default433;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 433;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6341,14 +7181,14 @@ T0* GE_new433(TC* ac, T1 initialize)
 T0* GE_new434(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T434)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T434)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T434*)R = GE_default434;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 434;
 		((T434*)(R))->a2 = a1;
-		((T434*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T434*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T434*)(R))->offset = offsetof(T434, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6357,9 +7197,12 @@ T0* GE_new434(TC* ac, T6 a1, T1 initialize)
 T0* GE_new435(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T435));
+	size_t s = sizeof(T435);
 	if (initialize) {
-		*(T435*)R = GE_default435;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 435;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6368,9 +7211,12 @@ T0* GE_new435(TC* ac, T1 initialize)
 T0* GE_new436(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T436));
+	size_t s = sizeof(T436);
 	if (initialize) {
-		*(T436*)R = GE_default436;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 436;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6379,14 +7225,14 @@ T0* GE_new436(TC* ac, T1 initialize)
 T0* GE_new437(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T437)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T437)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T437*)R = GE_default437;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 437;
 		((T437*)(R))->a2 = a1;
-		((T437*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T437*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T437*)(R))->offset = offsetof(T437, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6395,9 +7241,12 @@ T0* GE_new437(TC* ac, T6 a1, T1 initialize)
 T0* GE_new438(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T438));
+	size_t s = sizeof(T438);
 	if (initialize) {
-		*(T438*)R = GE_default438;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 438;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6406,9 +7255,12 @@ T0* GE_new438(TC* ac, T1 initialize)
 T0* GE_new439(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T439));
+	size_t s = sizeof(T439);
 	if (initialize) {
-		*(T439*)R = GE_default439;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 439;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6417,14 +7269,14 @@ T0* GE_new439(TC* ac, T1 initialize)
 T0* GE_new440(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T440)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T440)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T440*)R = GE_default440;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 440;
 		((T440*)(R))->a2 = a1;
-		((T440*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T440*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T440*)(R))->offset = offsetof(T440, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6433,9 +7285,12 @@ T0* GE_new440(TC* ac, T6 a1, T1 initialize)
 T0* GE_new441(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T441));
+	size_t s = sizeof(T441);
 	if (initialize) {
-		*(T441*)R = GE_default441;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 441;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6444,14 +7299,14 @@ T0* GE_new441(TC* ac, T1 initialize)
 T0* GE_new442(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T442)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T442)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T442*)R = GE_default442;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 442;
 		((T442*)(R))->a2 = a1;
-		((T442*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T442*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T442*)(R))->offset = offsetof(T442, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6460,9 +7315,12 @@ T0* GE_new442(TC* ac, T6 a1, T1 initialize)
 T0* GE_new443(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T443));
+	size_t s = sizeof(T443);
 	if (initialize) {
-		*(T443*)R = GE_default443;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 443;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6471,14 +7329,14 @@ T0* GE_new443(TC* ac, T1 initialize)
 T0* GE_new444(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T444)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T444)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T444*)R = GE_default444;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 444;
 		((T444*)(R))->a2 = a1;
-		((T444*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T444*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T444*)(R))->offset = offsetof(T444, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6487,9 +7345,12 @@ T0* GE_new444(TC* ac, T6 a1, T1 initialize)
 T0* GE_new445(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T445));
+	size_t s = sizeof(T445);
 	if (initialize) {
-		*(T445*)R = GE_default445;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 445;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6498,9 +7359,12 @@ T0* GE_new445(TC* ac, T1 initialize)
 T0* GE_new446(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T446));
+	size_t s = sizeof(T446);
 	if (initialize) {
-		*(T446*)R = GE_default446;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 446;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6509,14 +7373,14 @@ T0* GE_new446(TC* ac, T1 initialize)
 T0* GE_new447(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T447)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T447)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T447*)R = GE_default447;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 447;
 		((T447*)(R))->a2 = a1;
-		((T447*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T447*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T447*)(R))->offset = offsetof(T447, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6525,9 +7389,12 @@ T0* GE_new447(TC* ac, T6 a1, T1 initialize)
 T0* GE_new448(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T448));
+	size_t s = sizeof(T448);
 	if (initialize) {
-		*(T448*)R = GE_default448;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 448;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6536,9 +7403,12 @@ T0* GE_new448(TC* ac, T1 initialize)
 T0* GE_new449(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T449));
+	size_t s = sizeof(T449);
 	if (initialize) {
-		*(T449*)R = GE_default449;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 449;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6547,14 +7417,14 @@ T0* GE_new449(TC* ac, T1 initialize)
 T0* GE_new450(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T450)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T450)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T450*)R = GE_default450;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 450;
 		((T450*)(R))->a2 = a1;
-		((T450*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T450*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T450*)(R))->offset = offsetof(T450, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6563,9 +7433,12 @@ T0* GE_new450(TC* ac, T6 a1, T1 initialize)
 T0* GE_new451(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T451));
+	size_t s = sizeof(T451);
 	if (initialize) {
-		*(T451*)R = GE_default451;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 451;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6574,9 +7447,12 @@ T0* GE_new451(TC* ac, T1 initialize)
 T0* GE_new452(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T452));
+	size_t s = sizeof(T452);
 	if (initialize) {
-		*(T452*)R = GE_default452;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 452;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6585,14 +7461,14 @@ T0* GE_new452(TC* ac, T1 initialize)
 T0* GE_new453(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T453)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T453)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T453*)R = GE_default453;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 453;
 		((T453*)(R))->a2 = a1;
-		((T453*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T453*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T453*)(R))->offset = offsetof(T453, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6601,9 +7477,12 @@ T0* GE_new453(TC* ac, T6 a1, T1 initialize)
 T0* GE_new454(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T454));
+	size_t s = sizeof(T454);
 	if (initialize) {
-		*(T454*)R = GE_default454;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 454;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6612,9 +7491,12 @@ T0* GE_new454(TC* ac, T1 initialize)
 T0* GE_new455(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T455));
+	size_t s = sizeof(T455);
 	if (initialize) {
-		*(T455*)R = GE_default455;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 455;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6623,14 +7505,14 @@ T0* GE_new455(TC* ac, T1 initialize)
 T0* GE_new456(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T456)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T456)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T456*)R = GE_default456;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 456;
 		((T456*)(R))->a2 = a1;
-		((T456*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T456*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T456*)(R))->offset = offsetof(T456, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6639,9 +7521,12 @@ T0* GE_new456(TC* ac, T6 a1, T1 initialize)
 T0* GE_new457(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T457));
+	size_t s = sizeof(T457);
 	if (initialize) {
-		*(T457*)R = GE_default457;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 457;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6650,9 +7535,12 @@ T0* GE_new457(TC* ac, T1 initialize)
 T0* GE_new458(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T458));
+	size_t s = sizeof(T458);
 	if (initialize) {
-		*(T458*)R = GE_default458;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 458;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6661,14 +7549,14 @@ T0* GE_new458(TC* ac, T1 initialize)
 T0* GE_new459(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T459)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T459)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T459*)R = GE_default459;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 459;
 		((T459*)(R))->a2 = a1;
-		((T459*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T459*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T459*)(R))->offset = offsetof(T459, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6677,9 +7565,12 @@ T0* GE_new459(TC* ac, T6 a1, T1 initialize)
 T0* GE_new460(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T460));
+	size_t s = sizeof(T460);
 	if (initialize) {
-		*(T460*)R = GE_default460;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 460;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6688,14 +7579,14 @@ T0* GE_new460(TC* ac, T1 initialize)
 T0* GE_new462(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T462)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T462)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T462*)R = GE_default462;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 462;
 		((T462*)(R))->a2 = a1;
-		((T462*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T462*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T462*)(R))->offset = offsetof(T462, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6704,9 +7595,12 @@ T0* GE_new462(TC* ac, T6 a1, T1 initialize)
 T0* GE_new463(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T463));
+	size_t s = sizeof(T463);
 	if (initialize) {
-		*(T463*)R = GE_default463;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 463;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6715,14 +7609,14 @@ T0* GE_new463(TC* ac, T1 initialize)
 T0* GE_new464(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T464)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T464)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T464*)R = GE_default464;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 464;
 		((T464*)(R))->a2 = a1;
-		((T464*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T464*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T464*)(R))->offset = offsetof(T464, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6731,9 +7625,12 @@ T0* GE_new464(TC* ac, T6 a1, T1 initialize)
 T0* GE_new465(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T465));
+	size_t s = sizeof(T465);
 	if (initialize) {
-		*(T465*)R = GE_default465;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 465;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6742,14 +7639,14 @@ T0* GE_new465(TC* ac, T1 initialize)
 T0* GE_new467(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T467)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T467)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T467*)R = GE_default467;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 467;
 		((T467*)(R))->a2 = a1;
-		((T467*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T467*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T467*)(R))->offset = offsetof(T467, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6758,9 +7655,12 @@ T0* GE_new467(TC* ac, T6 a1, T1 initialize)
 T0* GE_new468(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T468));
+	size_t s = sizeof(T468);
 	if (initialize) {
-		*(T468*)R = GE_default468;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 468;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6769,14 +7669,14 @@ T0* GE_new468(TC* ac, T1 initialize)
 T0* GE_new470(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T470)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T470)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T470*)R = GE_default470;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 470;
 		((T470*)(R))->a2 = a1;
-		((T470*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T470*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T470*)(R))->offset = offsetof(T470, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6785,9 +7685,12 @@ T0* GE_new470(TC* ac, T6 a1, T1 initialize)
 T0* GE_new471(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T471));
+	size_t s = sizeof(T471);
 	if (initialize) {
-		*(T471*)R = GE_default471;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 471;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6796,14 +7699,14 @@ T0* GE_new471(TC* ac, T1 initialize)
 T0* GE_new473(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T473)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T473)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T473*)R = GE_default473;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 473;
 		((T473*)(R))->a2 = a1;
-		((T473*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T473*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T473*)(R))->offset = offsetof(T473, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6812,9 +7715,12 @@ T0* GE_new473(TC* ac, T6 a1, T1 initialize)
 T0* GE_new474(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T474));
+	size_t s = sizeof(T474);
 	if (initialize) {
-		*(T474*)R = GE_default474;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 474;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6823,14 +7729,14 @@ T0* GE_new474(TC* ac, T1 initialize)
 T0* GE_new476(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T476)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T476)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T476*)R = GE_default476;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 476;
 		((T476*)(R))->a2 = a1;
-		((T476*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T476*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T476*)(R))->offset = offsetof(T476, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6839,9 +7745,12 @@ T0* GE_new476(TC* ac, T6 a1, T1 initialize)
 T0* GE_new477(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T477));
+	size_t s = sizeof(T477);
 	if (initialize) {
-		*(T477*)R = GE_default477;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 477;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6850,14 +7759,14 @@ T0* GE_new477(TC* ac, T1 initialize)
 T0* GE_new478(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T478)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T478)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T478*)R = GE_default478;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 478;
 		((T478*)(R))->a2 = a1;
-		((T478*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T478*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T478*)(R))->offset = offsetof(T478, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6866,9 +7775,12 @@ T0* GE_new478(TC* ac, T6 a1, T1 initialize)
 T0* GE_new479(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T479));
+	size_t s = sizeof(T479);
 	if (initialize) {
-		*(T479*)R = GE_default479;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 479;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6877,9 +7789,12 @@ T0* GE_new479(TC* ac, T1 initialize)
 T0* GE_new480(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T480));
+	size_t s = sizeof(T480);
 	if (initialize) {
-		*(T480*)R = GE_default480;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 480;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6888,14 +7803,14 @@ T0* GE_new480(TC* ac, T1 initialize)
 T0* GE_new481(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T481)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T481)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T481*)R = GE_default481;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 481;
 		((T481*)(R))->a2 = a1;
-		((T481*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T481*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T481*)(R))->offset = offsetof(T481, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6904,9 +7819,12 @@ T0* GE_new481(TC* ac, T6 a1, T1 initialize)
 T0* GE_new482(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T482));
+	size_t s = sizeof(T482);
 	if (initialize) {
-		*(T482*)R = GE_default482;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 482;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6915,9 +7833,12 @@ T0* GE_new482(TC* ac, T1 initialize)
 T0* GE_new483(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T483));
+	size_t s = sizeof(T483);
 	if (initialize) {
-		*(T483*)R = GE_default483;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 483;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6926,14 +7847,14 @@ T0* GE_new483(TC* ac, T1 initialize)
 T0* GE_new484(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T484)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T484)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T484*)R = GE_default484;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 484;
 		((T484*)(R))->a2 = a1;
-		((T484*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T484*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T484*)(R))->offset = offsetof(T484, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6942,9 +7863,12 @@ T0* GE_new484(TC* ac, T6 a1, T1 initialize)
 T0* GE_new485(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T485));
+	size_t s = sizeof(T485);
 	if (initialize) {
-		*(T485*)R = GE_default485;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 485;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6953,14 +7877,14 @@ T0* GE_new485(TC* ac, T1 initialize)
 T0* GE_new486(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T486)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T486)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T486*)R = GE_default486;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 486;
 		((T486*)(R))->a2 = a1;
-		((T486*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T486*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T486*)(R))->offset = offsetof(T486, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6969,9 +7893,12 @@ T0* GE_new486(TC* ac, T6 a1, T1 initialize)
 T0* GE_new487(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T487));
+	size_t s = sizeof(T487);
 	if (initialize) {
-		*(T487*)R = GE_default487;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 487;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -6980,14 +7907,14 @@ T0* GE_new487(TC* ac, T1 initialize)
 T0* GE_new489(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T489)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T489)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T489*)R = GE_default489;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 489;
 		((T489*)(R))->a2 = a1;
-		((T489*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T489*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T489*)(R))->offset = offsetof(T489, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -6996,9 +7923,12 @@ T0* GE_new489(TC* ac, T6 a1, T1 initialize)
 T0* GE_new490(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T490));
+	size_t s = sizeof(T490);
 	if (initialize) {
-		*(T490*)R = GE_default490;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 490;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7007,9 +7937,12 @@ T0* GE_new490(TC* ac, T1 initialize)
 T0* GE_new491(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T491));
+	size_t s = sizeof(T491);
 	if (initialize) {
-		*(T491*)R = GE_default491;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 491;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7018,14 +7951,14 @@ T0* GE_new491(TC* ac, T1 initialize)
 T0* GE_new492(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T492)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T492)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T492*)R = GE_default492;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 492;
 		((T492*)(R))->a2 = a1;
-		((T492*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T492*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T492*)(R))->offset = offsetof(T492, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7034,9 +7967,12 @@ T0* GE_new492(TC* ac, T6 a1, T1 initialize)
 T0* GE_new493(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T493));
+	size_t s = sizeof(T493);
 	if (initialize) {
-		*(T493*)R = GE_default493;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 493;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7045,14 +7981,14 @@ T0* GE_new493(TC* ac, T1 initialize)
 T0* GE_new495(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T495)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T495)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T495*)R = GE_default495;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 495;
 		((T495*)(R))->a2 = a1;
-		((T495*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T495*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T495*)(R))->offset = offsetof(T495, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7061,9 +7997,12 @@ T0* GE_new495(TC* ac, T6 a1, T1 initialize)
 T0* GE_new496(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T496));
+	size_t s = sizeof(T496);
 	if (initialize) {
-		*(T496*)R = GE_default496;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 496;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7072,9 +8011,12 @@ T0* GE_new496(TC* ac, T1 initialize)
 T0* GE_new497(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T497));
+	size_t s = sizeof(T497);
 	if (initialize) {
-		*(T497*)R = GE_default497;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 497;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7083,14 +8025,14 @@ T0* GE_new497(TC* ac, T1 initialize)
 T0* GE_new498(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T498)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T498)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T498*)R = GE_default498;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 498;
 		((T498*)(R))->a2 = a1;
-		((T498*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T498*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T498*)(R))->offset = offsetof(T498, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7099,9 +8041,12 @@ T0* GE_new498(TC* ac, T6 a1, T1 initialize)
 T0* GE_new499(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T499));
+	size_t s = sizeof(T499);
 	if (initialize) {
-		*(T499*)R = GE_default499;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 499;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7110,9 +8055,12 @@ T0* GE_new499(TC* ac, T1 initialize)
 T0* GE_new500(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T500));
+	size_t s = sizeof(T500);
 	if (initialize) {
-		*(T500*)R = GE_default500;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 500;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7121,14 +8069,14 @@ T0* GE_new500(TC* ac, T1 initialize)
 T0* GE_new501(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T501)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T501)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T501*)R = GE_default501;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 501;
 		((T501*)(R))->a2 = a1;
-		((T501*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T501*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T501*)(R))->offset = offsetof(T501, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7137,9 +8085,12 @@ T0* GE_new501(TC* ac, T6 a1, T1 initialize)
 T0* GE_new502(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T502));
+	size_t s = sizeof(T502);
 	if (initialize) {
-		*(T502*)R = GE_default502;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 502;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7148,14 +8099,14 @@ T0* GE_new502(TC* ac, T1 initialize)
 T0* GE_new504(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T504)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T504)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T504*)R = GE_default504;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 504;
 		((T504*)(R))->a2 = a1;
-		((T504*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T504*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T504*)(R))->offset = offsetof(T504, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7164,9 +8115,12 @@ T0* GE_new504(TC* ac, T6 a1, T1 initialize)
 T0* GE_new505(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T505));
+	size_t s = sizeof(T505);
 	if (initialize) {
-		*(T505*)R = GE_default505;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 505;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7175,9 +8129,12 @@ T0* GE_new505(TC* ac, T1 initialize)
 T0* GE_new506(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T506));
+	size_t s = sizeof(T506);
 	if (initialize) {
-		*(T506*)R = GE_default506;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 506;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7186,14 +8143,14 @@ T0* GE_new506(TC* ac, T1 initialize)
 T0* GE_new507(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T507)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T507)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T507*)R = GE_default507;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 507;
 		((T507*)(R))->a2 = a1;
-		((T507*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T507*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T507*)(R))->offset = offsetof(T507, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7202,9 +8159,12 @@ T0* GE_new507(TC* ac, T6 a1, T1 initialize)
 T0* GE_new508(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T508));
+	size_t s = sizeof(T508);
 	if (initialize) {
-		*(T508*)R = GE_default508;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 508;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7213,9 +8173,12 @@ T0* GE_new508(TC* ac, T1 initialize)
 T0* GE_new509(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T509));
+	size_t s = sizeof(T509);
 	if (initialize) {
-		*(T509*)R = GE_default509;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 509;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7224,14 +8187,14 @@ T0* GE_new509(TC* ac, T1 initialize)
 T0* GE_new510(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T510)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T510)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T510*)R = GE_default510;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 510;
 		((T510*)(R))->a2 = a1;
-		((T510*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T510*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T510*)(R))->offset = offsetof(T510, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7240,9 +8203,12 @@ T0* GE_new510(TC* ac, T6 a1, T1 initialize)
 T0* GE_new511(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T511));
+	size_t s = sizeof(T511);
 	if (initialize) {
-		*(T511*)R = GE_default511;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 511;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7251,9 +8217,12 @@ T0* GE_new511(TC* ac, T1 initialize)
 T0* GE_new512(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T512));
+	size_t s = sizeof(T512);
 	if (initialize) {
-		*(T512*)R = GE_default512;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 512;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7262,14 +8231,14 @@ T0* GE_new512(TC* ac, T1 initialize)
 T0* GE_new513(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T513)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T513)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T513*)R = GE_default513;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 513;
 		((T513*)(R))->a2 = a1;
-		((T513*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T513*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T513*)(R))->offset = offsetof(T513, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7278,9 +8247,12 @@ T0* GE_new513(TC* ac, T6 a1, T1 initialize)
 T0* GE_new514(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T514));
+	size_t s = sizeof(T514);
 	if (initialize) {
-		*(T514*)R = GE_default514;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 514;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7289,14 +8261,14 @@ T0* GE_new514(TC* ac, T1 initialize)
 T0* GE_new516(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T516)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T516)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T516*)R = GE_default516;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 516;
 		((T516*)(R))->a2 = a1;
-		((T516*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T516*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T516*)(R))->offset = offsetof(T516, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7305,9 +8277,12 @@ T0* GE_new516(TC* ac, T6 a1, T1 initialize)
 T0* GE_new517(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T517));
+	size_t s = sizeof(T517);
 	if (initialize) {
-		*(T517*)R = GE_default517;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 517;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7316,9 +8291,12 @@ T0* GE_new517(TC* ac, T1 initialize)
 T0* GE_new518(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T518));
+	size_t s = sizeof(T518);
 	if (initialize) {
-		*(T518*)R = GE_default518;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 518;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7327,14 +8305,14 @@ T0* GE_new518(TC* ac, T1 initialize)
 T0* GE_new519(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T519)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T519)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T519*)R = GE_default519;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 519;
 		((T519*)(R))->a2 = a1;
-		((T519*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T519*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T519*)(R))->offset = offsetof(T519, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7343,9 +8321,12 @@ T0* GE_new519(TC* ac, T6 a1, T1 initialize)
 T0* GE_new520(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T520));
+	size_t s = sizeof(T520);
 	if (initialize) {
-		*(T520*)R = GE_default520;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 520;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7354,14 +8335,14 @@ T0* GE_new520(TC* ac, T1 initialize)
 T0* GE_new522(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T522)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T522)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T522*)R = GE_default522;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 522;
 		((T522*)(R))->a2 = a1;
-		((T522*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T522*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T522*)(R))->offset = offsetof(T522, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7370,9 +8351,12 @@ T0* GE_new522(TC* ac, T6 a1, T1 initialize)
 T0* GE_new523(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T523));
+	size_t s = sizeof(T523);
 	if (initialize) {
-		*(T523*)R = GE_default523;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 523;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7381,9 +8365,12 @@ T0* GE_new523(TC* ac, T1 initialize)
 T0* GE_new524(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T524));
+	size_t s = sizeof(T524);
 	if (initialize) {
-		*(T524*)R = GE_default524;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 524;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7392,14 +8379,14 @@ T0* GE_new524(TC* ac, T1 initialize)
 T0* GE_new525(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T525)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T525)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T525*)R = GE_default525;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 525;
 		((T525*)(R))->a2 = a1;
-		((T525*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T525*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T525*)(R))->offset = offsetof(T525, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7408,9 +8395,12 @@ T0* GE_new525(TC* ac, T6 a1, T1 initialize)
 T0* GE_new526(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T526));
+	size_t s = sizeof(T526);
 	if (initialize) {
-		*(T526*)R = GE_default526;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 526;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7419,9 +8409,12 @@ T0* GE_new526(TC* ac, T1 initialize)
 T0* GE_new527(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T527));
+	size_t s = sizeof(T527);
 	if (initialize) {
-		*(T527*)R = GE_default527;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 527;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7430,14 +8423,14 @@ T0* GE_new527(TC* ac, T1 initialize)
 T0* GE_new528(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T528)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T528)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T528*)R = GE_default528;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 528;
 		((T528*)(R))->a2 = a1;
-		((T528*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T528*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T528*)(R))->offset = offsetof(T528, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7446,9 +8439,12 @@ T0* GE_new528(TC* ac, T6 a1, T1 initialize)
 T0* GE_new529(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T529));
+	size_t s = sizeof(T529);
 	if (initialize) {
-		*(T529*)R = GE_default529;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 529;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7457,9 +8453,12 @@ T0* GE_new529(TC* ac, T1 initialize)
 T0* GE_new530(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T530));
+	size_t s = sizeof(T530);
 	if (initialize) {
-		*(T530*)R = GE_default530;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 530;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7468,14 +8467,14 @@ T0* GE_new530(TC* ac, T1 initialize)
 T0* GE_new531(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T531)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T531)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T531*)R = GE_default531;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 531;
 		((T531*)(R))->a2 = a1;
-		((T531*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T531*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T531*)(R))->offset = offsetof(T531, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7484,9 +8483,12 @@ T0* GE_new531(TC* ac, T6 a1, T1 initialize)
 T0* GE_new532(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T532));
+	size_t s = sizeof(T532);
 	if (initialize) {
-		*(T532*)R = GE_default532;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 532;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7495,9 +8497,12 @@ T0* GE_new532(TC* ac, T1 initialize)
 T0* GE_new533(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T533));
+	size_t s = sizeof(T533);
 	if (initialize) {
-		*(T533*)R = GE_default533;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 533;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7506,14 +8511,14 @@ T0* GE_new533(TC* ac, T1 initialize)
 T0* GE_new534(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T534)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T534)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T534*)R = GE_default534;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 534;
 		((T534*)(R))->a2 = a1;
-		((T534*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T534*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T534*)(R))->offset = offsetof(T534, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7522,9 +8527,12 @@ T0* GE_new534(TC* ac, T6 a1, T1 initialize)
 T0* GE_new535(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T535));
+	size_t s = sizeof(T535);
 	if (initialize) {
-		*(T535*)R = GE_default535;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 535;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7533,14 +8541,14 @@ T0* GE_new535(TC* ac, T1 initialize)
 T0* GE_new537(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T537)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T537)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T537*)R = GE_default537;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 537;
 		((T537*)(R))->a2 = a1;
-		((T537*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T537*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T537*)(R))->offset = offsetof(T537, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7549,9 +8557,12 @@ T0* GE_new537(TC* ac, T6 a1, T1 initialize)
 T0* GE_new538(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T538));
+	size_t s = sizeof(T538);
 	if (initialize) {
-		*(T538*)R = GE_default538;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 538;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7560,9 +8571,12 @@ T0* GE_new538(TC* ac, T1 initialize)
 T0* GE_new539(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T539));
+	size_t s = sizeof(T539);
 	if (initialize) {
-		*(T539*)R = GE_default539;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 539;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7571,14 +8585,14 @@ T0* GE_new539(TC* ac, T1 initialize)
 T0* GE_new540(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T540)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T540)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T540*)R = GE_default540;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 540;
 		((T540*)(R))->a2 = a1;
-		((T540*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T540*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T540*)(R))->offset = offsetof(T540, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7587,9 +8601,12 @@ T0* GE_new540(TC* ac, T6 a1, T1 initialize)
 T0* GE_new541(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T541));
+	size_t s = sizeof(T541);
 	if (initialize) {
-		*(T541*)R = GE_default541;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 541;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7598,14 +8615,14 @@ T0* GE_new541(TC* ac, T1 initialize)
 T0* GE_new542(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T542)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T542)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T542*)R = GE_default542;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 542;
 		((T542*)(R))->a2 = a1;
-		((T542*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T542*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T542*)(R))->offset = offsetof(T542, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7614,9 +8631,12 @@ T0* GE_new542(TC* ac, T6 a1, T1 initialize)
 T0* GE_new543(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T543));
+	size_t s = sizeof(T543);
 	if (initialize) {
-		*(T543*)R = GE_default543;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 543;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7625,14 +8645,14 @@ T0* GE_new543(TC* ac, T1 initialize)
 T0* GE_new545(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T545)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T545)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T545*)R = GE_default545;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 545;
 		((T545*)(R))->a2 = a1;
-		((T545*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T545*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T545*)(R))->offset = offsetof(T545, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7641,9 +8661,12 @@ T0* GE_new545(TC* ac, T6 a1, T1 initialize)
 T0* GE_new546(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T546));
+	size_t s = sizeof(T546);
 	if (initialize) {
-		*(T546*)R = GE_default546;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 546;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7652,9 +8675,12 @@ T0* GE_new546(TC* ac, T1 initialize)
 T0* GE_new547(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T547));
+	size_t s = sizeof(T547);
 	if (initialize) {
-		*(T547*)R = GE_default547;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 547;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7663,14 +8689,14 @@ T0* GE_new547(TC* ac, T1 initialize)
 T0* GE_new548(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T548)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T548)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T548*)R = GE_default548;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 548;
 		((T548*)(R))->a2 = a1;
-		((T548*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T548*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T548*)(R))->offset = offsetof(T548, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7679,9 +8705,12 @@ T0* GE_new548(TC* ac, T6 a1, T1 initialize)
 T0* GE_new549(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T549));
+	size_t s = sizeof(T549);
 	if (initialize) {
-		*(T549*)R = GE_default549;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 549;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7690,14 +8719,14 @@ T0* GE_new549(TC* ac, T1 initialize)
 T0* GE_new551(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T551)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T551)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T551*)R = GE_default551;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 551;
 		((T551*)(R))->a2 = a1;
-		((T551*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T551*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T551*)(R))->offset = offsetof(T551, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7706,9 +8735,12 @@ T0* GE_new551(TC* ac, T6 a1, T1 initialize)
 T0* GE_new552(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T552));
+	size_t s = sizeof(T552);
 	if (initialize) {
-		*(T552*)R = GE_default552;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 552;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7717,9 +8749,12 @@ T0* GE_new552(TC* ac, T1 initialize)
 T0* GE_new553(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T553));
+	size_t s = sizeof(T553);
 	if (initialize) {
-		*(T553*)R = GE_default553;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 553;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7728,14 +8763,14 @@ T0* GE_new553(TC* ac, T1 initialize)
 T0* GE_new554(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T554)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T554)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T554*)R = GE_default554;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 554;
 		((T554*)(R))->a2 = a1;
-		((T554*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T554*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T554*)(R))->offset = offsetof(T554, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7744,9 +8779,12 @@ T0* GE_new554(TC* ac, T6 a1, T1 initialize)
 T0* GE_new555(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T555));
+	size_t s = sizeof(T555);
 	if (initialize) {
-		*(T555*)R = GE_default555;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 555;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7755,9 +8793,12 @@ T0* GE_new555(TC* ac, T1 initialize)
 T0* GE_new556(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T556));
+	size_t s = sizeof(T556);
 	if (initialize) {
-		*(T556*)R = GE_default556;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 556;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7766,14 +8807,14 @@ T0* GE_new556(TC* ac, T1 initialize)
 T0* GE_new557(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T557)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T557)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T557*)R = GE_default557;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 557;
 		((T557*)(R))->a2 = a1;
-		((T557*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T557*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T557*)(R))->offset = offsetof(T557, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7782,9 +8823,12 @@ T0* GE_new557(TC* ac, T6 a1, T1 initialize)
 T0* GE_new558(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T558));
+	size_t s = sizeof(T558);
 	if (initialize) {
-		*(T558*)R = GE_default558;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 558;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7793,9 +8837,12 @@ T0* GE_new558(TC* ac, T1 initialize)
 T0* GE_new559(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T559));
+	size_t s = sizeof(T559);
 	if (initialize) {
-		*(T559*)R = GE_default559;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 559;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7804,14 +8851,14 @@ T0* GE_new559(TC* ac, T1 initialize)
 T0* GE_new560(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T560)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T560)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T560*)R = GE_default560;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 560;
 		((T560*)(R))->a2 = a1;
-		((T560*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T560*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T560*)(R))->offset = offsetof(T560, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7820,9 +8867,12 @@ T0* GE_new560(TC* ac, T6 a1, T1 initialize)
 T0* GE_new561(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T561));
+	size_t s = sizeof(T561);
 	if (initialize) {
-		*(T561*)R = GE_default561;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 561;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7831,14 +8881,14 @@ T0* GE_new561(TC* ac, T1 initialize)
 T0* GE_new563(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T563)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T563)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T563*)R = GE_default563;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 563;
 		((T563*)(R))->a2 = a1;
-		((T563*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T563*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T563*)(R))->offset = offsetof(T563, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7847,9 +8897,12 @@ T0* GE_new563(TC* ac, T6 a1, T1 initialize)
 T0* GE_new564(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T564));
+	size_t s = sizeof(T564);
 	if (initialize) {
-		*(T564*)R = GE_default564;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 564;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7858,9 +8911,12 @@ T0* GE_new564(TC* ac, T1 initialize)
 T0* GE_new565(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T565));
+	size_t s = sizeof(T565);
 	if (initialize) {
-		*(T565*)R = GE_default565;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 565;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7869,14 +8925,14 @@ T0* GE_new565(TC* ac, T1 initialize)
 T0* GE_new566(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T566)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T566)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T566*)R = GE_default566;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 566;
 		((T566*)(R))->a2 = a1;
-		((T566*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T566*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T566*)(R))->offset = offsetof(T566, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7885,9 +8941,12 @@ T0* GE_new566(TC* ac, T6 a1, T1 initialize)
 T0* GE_new567(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T567));
+	size_t s = sizeof(T567);
 	if (initialize) {
-		*(T567*)R = GE_default567;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 567;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7896,9 +8955,12 @@ T0* GE_new567(TC* ac, T1 initialize)
 T0* GE_new568(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T568));
+	size_t s = sizeof(T568);
 	if (initialize) {
-		*(T568*)R = GE_default568;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 568;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7907,14 +8969,14 @@ T0* GE_new568(TC* ac, T1 initialize)
 T0* GE_new569(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T569)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T569)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T569*)R = GE_default569;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 569;
 		((T569*)(R))->a2 = a1;
-		((T569*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T569*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T569*)(R))->offset = offsetof(T569, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7923,9 +8985,12 @@ T0* GE_new569(TC* ac, T6 a1, T1 initialize)
 T0* GE_new570(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T570));
+	size_t s = sizeof(T570);
 	if (initialize) {
-		*(T570*)R = GE_default570;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 570;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7934,9 +8999,12 @@ T0* GE_new570(TC* ac, T1 initialize)
 T0* GE_new571(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T571));
+	size_t s = sizeof(T571);
 	if (initialize) {
-		*(T571*)R = GE_default571;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 571;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7945,14 +9013,14 @@ T0* GE_new571(TC* ac, T1 initialize)
 T0* GE_new572(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T572)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T572)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T572*)R = GE_default572;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 572;
 		((T572*)(R))->a2 = a1;
-		((T572*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T572*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T572*)(R))->offset = offsetof(T572, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7961,9 +9029,12 @@ T0* GE_new572(TC* ac, T6 a1, T1 initialize)
 T0* GE_new573(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T573));
+	size_t s = sizeof(T573);
 	if (initialize) {
-		*(T573*)R = GE_default573;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 573;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7972,14 +9043,14 @@ T0* GE_new573(TC* ac, T1 initialize)
 T0* GE_new575(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T575)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T575)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T575*)R = GE_default575;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 575;
 		((T575*)(R))->a2 = a1;
-		((T575*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T575*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T575*)(R))->offset = offsetof(T575, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -7988,9 +9059,12 @@ T0* GE_new575(TC* ac, T6 a1, T1 initialize)
 T0* GE_new576(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T576));
+	size_t s = sizeof(T576);
 	if (initialize) {
-		*(T576*)R = GE_default576;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 576;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -7999,14 +9073,14 @@ T0* GE_new576(TC* ac, T1 initialize)
 T0* GE_new578(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T578)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T578)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T578*)R = GE_default578;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 578;
 		((T578*)(R))->a2 = a1;
-		((T578*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T578*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T578*)(R))->offset = offsetof(T578, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8015,9 +9089,12 @@ T0* GE_new578(TC* ac, T6 a1, T1 initialize)
 T0* GE_new579(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T579));
+	size_t s = sizeof(T579);
 	if (initialize) {
-		*(T579*)R = GE_default579;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 579;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8026,14 +9103,14 @@ T0* GE_new579(TC* ac, T1 initialize)
 T0* GE_new581(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T581)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T581)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T581*)R = GE_default581;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 581;
 		((T581*)(R))->a2 = a1;
-		((T581*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T581*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T581*)(R))->offset = offsetof(T581, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8042,9 +9119,12 @@ T0* GE_new581(TC* ac, T6 a1, T1 initialize)
 T0* GE_new582(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T582));
+	size_t s = sizeof(T582);
 	if (initialize) {
-		*(T582*)R = GE_default582;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 582;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8053,9 +9133,12 @@ T0* GE_new582(TC* ac, T1 initialize)
 T0* GE_new583(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T583));
+	size_t s = sizeof(T583);
 	if (initialize) {
-		*(T583*)R = GE_default583;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 583;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8064,14 +9147,14 @@ T0* GE_new583(TC* ac, T1 initialize)
 T0* GE_new584(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T584)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T584)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T584*)R = GE_default584;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 584;
 		((T584*)(R))->a2 = a1;
-		((T584*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T584*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T584*)(R))->offset = offsetof(T584, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8080,9 +9163,12 @@ T0* GE_new584(TC* ac, T6 a1, T1 initialize)
 T0* GE_new585(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T585));
+	size_t s = sizeof(T585);
 	if (initialize) {
-		*(T585*)R = GE_default585;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 585;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8091,14 +9177,14 @@ T0* GE_new585(TC* ac, T1 initialize)
 T0* GE_new587(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T587)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T587)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T587*)R = GE_default587;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 587;
 		((T587*)(R))->a2 = a1;
-		((T587*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T587*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T587*)(R))->offset = offsetof(T587, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8107,9 +9193,12 @@ T0* GE_new587(TC* ac, T6 a1, T1 initialize)
 T0* GE_new588(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T588));
+	size_t s = sizeof(T588);
 	if (initialize) {
-		*(T588*)R = GE_default588;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 588;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8118,9 +9207,12 @@ T0* GE_new588(TC* ac, T1 initialize)
 T0* GE_new589(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T589));
+	size_t s = sizeof(T589);
 	if (initialize) {
-		*(T589*)R = GE_default589;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 589;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8129,14 +9221,14 @@ T0* GE_new589(TC* ac, T1 initialize)
 T0* GE_new590(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T590)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T590)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T590*)R = GE_default590;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 590;
 		((T590*)(R))->a2 = a1;
-		((T590*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T590*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T590*)(R))->offset = offsetof(T590, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8145,9 +9237,12 @@ T0* GE_new590(TC* ac, T6 a1, T1 initialize)
 T0* GE_new591(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T591));
+	size_t s = sizeof(T591);
 	if (initialize) {
-		*(T591*)R = GE_default591;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 591;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8156,14 +9251,14 @@ T0* GE_new591(TC* ac, T1 initialize)
 T0* GE_new592(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T592)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T592)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T592*)R = GE_default592;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 592;
 		((T592*)(R))->a2 = a1;
-		((T592*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T592*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T592*)(R))->offset = offsetof(T592, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8172,9 +9267,12 @@ T0* GE_new592(TC* ac, T6 a1, T1 initialize)
 T0* GE_new593(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T593));
+	size_t s = sizeof(T593);
 	if (initialize) {
-		*(T593*)R = GE_default593;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 593;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8183,9 +9281,12 @@ T0* GE_new593(TC* ac, T1 initialize)
 T0* GE_new594(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T594));
+	size_t s = sizeof(T594);
 	if (initialize) {
-		*(T594*)R = GE_default594;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 594;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8194,14 +9295,14 @@ T0* GE_new594(TC* ac, T1 initialize)
 T0* GE_new595(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T595)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T595)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T595*)R = GE_default595;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 595;
 		((T595*)(R))->a2 = a1;
-		((T595*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T595*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T595*)(R))->offset = offsetof(T595, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8210,9 +9311,12 @@ T0* GE_new595(TC* ac, T6 a1, T1 initialize)
 T0* GE_new596(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T596));
+	size_t s = sizeof(T596);
 	if (initialize) {
-		*(T596*)R = GE_default596;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 596;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8221,14 +9325,14 @@ T0* GE_new596(TC* ac, T1 initialize)
 T0* GE_new597(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T597)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T597)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T597*)R = GE_default597;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 597;
 		((T597*)(R))->a2 = a1;
-		((T597*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T597*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T597*)(R))->offset = offsetof(T597, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8237,9 +9341,12 @@ T0* GE_new597(TC* ac, T6 a1, T1 initialize)
 T0* GE_new598(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T598));
+	size_t s = sizeof(T598);
 	if (initialize) {
-		*(T598*)R = GE_default598;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 598;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8248,14 +9355,14 @@ T0* GE_new598(TC* ac, T1 initialize)
 T0* GE_new599(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T599)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T599)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T599*)R = GE_default599;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 599;
 		((T599*)(R))->a2 = a1;
-		((T599*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T599*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T599*)(R))->offset = offsetof(T599, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8264,9 +9371,12 @@ T0* GE_new599(TC* ac, T6 a1, T1 initialize)
 T0* GE_new600(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T600));
+	size_t s = sizeof(T600);
 	if (initialize) {
-		*(T600*)R = GE_default600;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 600;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8275,9 +9385,12 @@ T0* GE_new600(TC* ac, T1 initialize)
 T0* GE_new601(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T601));
+	size_t s = sizeof(T601);
 	if (initialize) {
-		*(T601*)R = GE_default601;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 601;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8286,14 +9399,14 @@ T0* GE_new601(TC* ac, T1 initialize)
 T0* GE_new602(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T602)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T602)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T602*)R = GE_default602;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 602;
 		((T602*)(R))->a2 = a1;
-		((T602*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T602*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T602*)(R))->offset = offsetof(T602, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8302,9 +9415,12 @@ T0* GE_new602(TC* ac, T6 a1, T1 initialize)
 T0* GE_new603(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T603));
+	size_t s = sizeof(T603);
 	if (initialize) {
-		*(T603*)R = GE_default603;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 603;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8313,9 +9429,12 @@ T0* GE_new603(TC* ac, T1 initialize)
 T0* GE_new604(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T604));
+	size_t s = sizeof(T604);
 	if (initialize) {
-		*(T604*)R = GE_default604;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 604;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8324,14 +9443,14 @@ T0* GE_new604(TC* ac, T1 initialize)
 T0* GE_new605(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T605)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T605)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T605*)R = GE_default605;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 605;
 		((T605*)(R))->a2 = a1;
-		((T605*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T605*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T605*)(R))->offset = offsetof(T605, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8340,9 +9459,12 @@ T0* GE_new605(TC* ac, T6 a1, T1 initialize)
 T0* GE_new606(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T606));
+	size_t s = sizeof(T606);
 	if (initialize) {
-		*(T606*)R = GE_default606;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 606;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8351,14 +9473,14 @@ T0* GE_new606(TC* ac, T1 initialize)
 T0* GE_new608(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T608)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T608)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T608*)R = GE_default608;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 608;
 		((T608*)(R))->a2 = a1;
-		((T608*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T608*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T608*)(R))->offset = offsetof(T608, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8367,9 +9489,12 @@ T0* GE_new608(TC* ac, T6 a1, T1 initialize)
 T0* GE_new609(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T609));
+	size_t s = sizeof(T609);
 	if (initialize) {
-		*(T609*)R = GE_default609;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 609;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8378,14 +9503,14 @@ T0* GE_new609(TC* ac, T1 initialize)
 T0* GE_new611(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T611)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T611)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T611*)R = GE_default611;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 611;
 		((T611*)(R))->a2 = a1;
-		((T611*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T611*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T611*)(R))->offset = offsetof(T611, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8394,9 +9519,12 @@ T0* GE_new611(TC* ac, T6 a1, T1 initialize)
 T0* GE_new612(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T612));
+	size_t s = sizeof(T612);
 	if (initialize) {
-		*(T612*)R = GE_default612;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 612;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8405,9 +9533,12 @@ T0* GE_new612(TC* ac, T1 initialize)
 T0* GE_new613(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T613));
+	size_t s = sizeof(T613);
 	if (initialize) {
-		*(T613*)R = GE_default613;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 613;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8416,14 +9547,14 @@ T0* GE_new613(TC* ac, T1 initialize)
 T0* GE_new614(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T614)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T614)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T614*)R = GE_default614;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 614;
 		((T614*)(R))->a2 = a1;
-		((T614*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T614*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T614*)(R))->offset = offsetof(T614, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8432,9 +9563,12 @@ T0* GE_new614(TC* ac, T6 a1, T1 initialize)
 T0* GE_new615(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T615));
+	size_t s = sizeof(T615);
 	if (initialize) {
-		*(T615*)R = GE_default615;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 615;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8443,14 +9577,14 @@ T0* GE_new615(TC* ac, T1 initialize)
 T0* GE_new617(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T617)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T617)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T617*)R = GE_default617;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 617;
 		((T617*)(R))->a2 = a1;
-		((T617*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T617*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T617*)(R))->offset = offsetof(T617, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8459,9 +9593,12 @@ T0* GE_new617(TC* ac, T6 a1, T1 initialize)
 T0* GE_new618(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T618));
+	size_t s = sizeof(T618);
 	if (initialize) {
-		*(T618*)R = GE_default618;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 618;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8470,14 +9607,14 @@ T0* GE_new618(TC* ac, T1 initialize)
 T0* GE_new620(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T620)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T620)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T620*)R = GE_default620;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 620;
 		((T620*)(R))->a2 = a1;
-		((T620*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T620*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T620*)(R))->offset = offsetof(T620, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8486,9 +9623,12 @@ T0* GE_new620(TC* ac, T6 a1, T1 initialize)
 T0* GE_new621(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T621));
+	size_t s = sizeof(T621);
 	if (initialize) {
-		*(T621*)R = GE_default621;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 621;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8497,14 +9637,14 @@ T0* GE_new621(TC* ac, T1 initialize)
 T0* GE_new622(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T622)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T622)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T622*)R = GE_default622;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 622;
 		((T622*)(R))->a2 = a1;
-		((T622*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T622*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T622*)(R))->offset = offsetof(T622, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8513,9 +9653,12 @@ T0* GE_new622(TC* ac, T6 a1, T1 initialize)
 T0* GE_new623(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T623));
+	size_t s = sizeof(T623);
 	if (initialize) {
-		*(T623*)R = GE_default623;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 623;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8524,9 +9667,12 @@ T0* GE_new623(TC* ac, T1 initialize)
 T0* GE_new624(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T624));
+	size_t s = sizeof(T624);
 	if (initialize) {
-		*(T624*)R = GE_default624;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 624;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8535,14 +9681,14 @@ T0* GE_new624(TC* ac, T1 initialize)
 T0* GE_new625(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T625)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T625)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T625*)R = GE_default625;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 625;
 		((T625*)(R))->a2 = a1;
-		((T625*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T625*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T625*)(R))->offset = offsetof(T625, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8551,9 +9697,12 @@ T0* GE_new625(TC* ac, T6 a1, T1 initialize)
 T0* GE_new626(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T626));
+	size_t s = sizeof(T626);
 	if (initialize) {
-		*(T626*)R = GE_default626;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 626;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8562,9 +9711,12 @@ T0* GE_new626(TC* ac, T1 initialize)
 T0* GE_new627(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T627));
+	size_t s = sizeof(T627);
 	if (initialize) {
-		*(T627*)R = GE_default627;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 627;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8573,14 +9725,14 @@ T0* GE_new627(TC* ac, T1 initialize)
 T0* GE_new628(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T628)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T628)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T628*)R = GE_default628;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 628;
 		((T628*)(R))->a2 = a1;
-		((T628*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T628*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T628*)(R))->offset = offsetof(T628, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8589,9 +9741,12 @@ T0* GE_new628(TC* ac, T6 a1, T1 initialize)
 T0* GE_new629(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T629));
+	size_t s = sizeof(T629);
 	if (initialize) {
-		*(T629*)R = GE_default629;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 629;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8600,9 +9755,12 @@ T0* GE_new629(TC* ac, T1 initialize)
 T0* GE_new630(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T630));
+	size_t s = sizeof(T630);
 	if (initialize) {
-		*(T630*)R = GE_default630;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 630;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8611,14 +9769,14 @@ T0* GE_new630(TC* ac, T1 initialize)
 T0* GE_new631(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T631)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T631)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T631*)R = GE_default631;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 631;
 		((T631*)(R))->a2 = a1;
-		((T631*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T631*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T631*)(R))->offset = offsetof(T631, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8627,9 +9785,12 @@ T0* GE_new631(TC* ac, T6 a1, T1 initialize)
 T0* GE_new632(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T632));
+	size_t s = sizeof(T632);
 	if (initialize) {
-		*(T632*)R = GE_default632;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 632;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8638,14 +9799,14 @@ T0* GE_new632(TC* ac, T1 initialize)
 T0* GE_new633(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T633)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T633)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T633*)R = GE_default633;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 633;
 		((T633*)(R))->a2 = a1;
-		((T633*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T633*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T633*)(R))->offset = offsetof(T633, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8654,9 +9815,12 @@ T0* GE_new633(TC* ac, T6 a1, T1 initialize)
 T0* GE_new634(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T634));
+	size_t s = sizeof(T634);
 	if (initialize) {
-		*(T634*)R = GE_default634;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 634;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8665,14 +9829,14 @@ T0* GE_new634(TC* ac, T1 initialize)
 T0* GE_new636(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T636)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T636)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T636*)R = GE_default636;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 636;
 		((T636*)(R))->a2 = a1;
-		((T636*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T636*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T636*)(R))->offset = offsetof(T636, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8681,9 +9845,12 @@ T0* GE_new636(TC* ac, T6 a1, T1 initialize)
 T0* GE_new637(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T637));
+	size_t s = sizeof(T637);
 	if (initialize) {
-		*(T637*)R = GE_default637;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 637;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8692,14 +9859,14 @@ T0* GE_new637(TC* ac, T1 initialize)
 T0* GE_new639(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T639)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T639)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T639*)R = GE_default639;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 639;
 		((T639*)(R))->a2 = a1;
-		((T639*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T639*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T639*)(R))->offset = offsetof(T639, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8708,9 +9875,12 @@ T0* GE_new639(TC* ac, T6 a1, T1 initialize)
 T0* GE_new640(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T640));
+	size_t s = sizeof(T640);
 	if (initialize) {
-		*(T640*)R = GE_default640;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 640;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8719,9 +9889,12 @@ T0* GE_new640(TC* ac, T1 initialize)
 T0* GE_new641(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T641));
+	size_t s = sizeof(T641);
 	if (initialize) {
-		*(T641*)R = GE_default641;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 641;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8730,14 +9903,14 @@ T0* GE_new641(TC* ac, T1 initialize)
 T0* GE_new642(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T642)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T642)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T642*)R = GE_default642;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 642;
 		((T642*)(R))->a2 = a1;
-		((T642*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T642*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T642*)(R))->offset = offsetof(T642, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8746,9 +9919,12 @@ T0* GE_new642(TC* ac, T6 a1, T1 initialize)
 T0* GE_new643(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T643));
+	size_t s = sizeof(T643);
 	if (initialize) {
-		*(T643*)R = GE_default643;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 643;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8757,14 +9933,14 @@ T0* GE_new643(TC* ac, T1 initialize)
 T0* GE_new645(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T645)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T645)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T645*)R = GE_default645;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 645;
 		((T645*)(R))->a2 = a1;
-		((T645*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T645*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T645*)(R))->offset = offsetof(T645, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8773,9 +9949,12 @@ T0* GE_new645(TC* ac, T6 a1, T1 initialize)
 T0* GE_new646(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T646));
+	size_t s = sizeof(T646);
 	if (initialize) {
-		*(T646*)R = GE_default646;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 646;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8784,14 +9963,14 @@ T0* GE_new646(TC* ac, T1 initialize)
 T0* GE_new648(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T648)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T648)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T648*)R = GE_default648;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 648;
 		((T648*)(R))->a2 = a1;
-		((T648*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T648*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T648*)(R))->offset = offsetof(T648, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8800,9 +9979,12 @@ T0* GE_new648(TC* ac, T6 a1, T1 initialize)
 T0* GE_new649(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T649));
+	size_t s = sizeof(T649);
 	if (initialize) {
-		*(T649*)R = GE_default649;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 649;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8811,9 +9993,12 @@ T0* GE_new649(TC* ac, T1 initialize)
 T0* GE_new650(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T650));
+	size_t s = sizeof(T650);
 	if (initialize) {
-		*(T650*)R = GE_default650;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 650;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8822,14 +10007,14 @@ T0* GE_new650(TC* ac, T1 initialize)
 T0* GE_new651(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T651)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T651)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T651*)R = GE_default651;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 651;
 		((T651*)(R))->a2 = a1;
-		((T651*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T651*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T651*)(R))->offset = offsetof(T651, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8838,9 +10023,12 @@ T0* GE_new651(TC* ac, T6 a1, T1 initialize)
 T0* GE_new652(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T652));
+	size_t s = sizeof(T652);
 	if (initialize) {
-		*(T652*)R = GE_default652;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 652;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8849,9 +10037,12 @@ T0* GE_new652(TC* ac, T1 initialize)
 T0* GE_new653(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T653));
+	size_t s = sizeof(T653);
 	if (initialize) {
-		*(T653*)R = GE_default653;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 653;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8860,14 +10051,14 @@ T0* GE_new653(TC* ac, T1 initialize)
 T0* GE_new654(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T654)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T654)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T654*)R = GE_default654;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 654;
 		((T654*)(R))->a2 = a1;
-		((T654*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T654*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T654*)(R))->offset = offsetof(T654, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8876,9 +10067,12 @@ T0* GE_new654(TC* ac, T6 a1, T1 initialize)
 T0* GE_new655(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T655));
+	size_t s = sizeof(T655);
 	if (initialize) {
-		*(T655*)R = GE_default655;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 655;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8887,9 +10081,12 @@ T0* GE_new655(TC* ac, T1 initialize)
 T0* GE_new656(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T656));
+	size_t s = sizeof(T656);
 	if (initialize) {
-		*(T656*)R = GE_default656;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 656;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8898,14 +10095,14 @@ T0* GE_new656(TC* ac, T1 initialize)
 T0* GE_new657(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T657)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T657)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T657*)R = GE_default657;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 657;
 		((T657*)(R))->a2 = a1;
-		((T657*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T657*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T657*)(R))->offset = offsetof(T657, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8914,9 +10111,12 @@ T0* GE_new657(TC* ac, T6 a1, T1 initialize)
 T0* GE_new658(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T658));
+	size_t s = sizeof(T658);
 	if (initialize) {
-		*(T658*)R = GE_default658;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 658;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8925,9 +10125,12 @@ T0* GE_new658(TC* ac, T1 initialize)
 T0* GE_new659(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T659));
+	size_t s = sizeof(T659);
 	if (initialize) {
-		*(T659*)R = GE_default659;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 659;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8936,14 +10139,14 @@ T0* GE_new659(TC* ac, T1 initialize)
 T0* GE_new660(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T660)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T660)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T660*)R = GE_default660;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 660;
 		((T660*)(R))->a2 = a1;
-		((T660*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T660*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T660*)(R))->offset = offsetof(T660, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8952,9 +10155,12 @@ T0* GE_new660(TC* ac, T6 a1, T1 initialize)
 T0* GE_new661(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T661));
+	size_t s = sizeof(T661);
 	if (initialize) {
-		*(T661*)R = GE_default661;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 661;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -8963,9 +10169,12 @@ T0* GE_new661(TC* ac, T1 initialize)
 T0* GE_new662(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T662));
+	size_t s = sizeof(T662);
 	if (initialize) {
-		*(T662*)R = GE_default662;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 662;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8974,14 +10183,14 @@ T0* GE_new662(TC* ac, T1 initialize)
 T0* GE_new663(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T663)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T663)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T663*)R = GE_default663;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 663;
 		((T663*)(R))->a2 = a1;
-		((T663*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T663*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T663*)(R))->offset = offsetof(T663, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -8990,9 +10199,12 @@ T0* GE_new663(TC* ac, T6 a1, T1 initialize)
 T0* GE_new664(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T664));
+	size_t s = sizeof(T664);
 	if (initialize) {
-		*(T664*)R = GE_default664;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 664;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -9001,14 +10213,14 @@ T0* GE_new664(TC* ac, T1 initialize)
 T0* GE_new666(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T666)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T666)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T666*)R = GE_default666;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 666;
 		((T666*)(R))->a2 = a1;
-		((T666*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T666*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T666*)(R))->offset = offsetof(T666, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9017,9 +10229,12 @@ T0* GE_new666(TC* ac, T6 a1, T1 initialize)
 T0* GE_new668(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T668));
+	size_t s = sizeof(T668);
 	if (initialize) {
-		*(T668*)R = GE_default668;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 668;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9028,9 +10243,12 @@ T0* GE_new668(TC* ac, T1 initialize)
 T0* GE_new669(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T669));
+	size_t s = sizeof(T669);
 	if (initialize) {
-		*(T669*)R = GE_default669;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 669;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9039,9 +10257,12 @@ T0* GE_new669(TC* ac, T1 initialize)
 T0* GE_new670(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T670));
+	size_t s = sizeof(T670);
 	if (initialize) {
-		*(T670*)R = GE_default670;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 670;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9050,9 +10271,12 @@ T0* GE_new670(TC* ac, T1 initialize)
 T0* GE_new671(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T671));
+	size_t s = sizeof(T671);
 	if (initialize) {
-		*(T671*)R = GE_default671;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 671;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9061,9 +10285,12 @@ T0* GE_new671(TC* ac, T1 initialize)
 T0* GE_new672(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T672));
+	size_t s = sizeof(T672);
 	if (initialize) {
-		*(T672*)R = GE_default672;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 672;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9072,9 +10299,12 @@ T0* GE_new672(TC* ac, T1 initialize)
 T0* GE_new673(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T673));
+	size_t s = sizeof(T673);
 	if (initialize) {
-		*(T673*)R = GE_default673;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 673;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9083,9 +10313,12 @@ T0* GE_new673(TC* ac, T1 initialize)
 T0* GE_new674(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T674));
+	size_t s = sizeof(T674);
 	if (initialize) {
-		*(T674*)R = GE_default674;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 674;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9094,9 +10327,12 @@ T0* GE_new674(TC* ac, T1 initialize)
 T0* GE_new675(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T675));
+	size_t s = sizeof(T675);
 	if (initialize) {
-		*(T675*)R = GE_default675;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 675;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9105,9 +10341,12 @@ T0* GE_new675(TC* ac, T1 initialize)
 T0* GE_new676(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T676));
+	size_t s = sizeof(T676);
 	if (initialize) {
-		*(T676*)R = GE_default676;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 676;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9116,9 +10355,12 @@ T0* GE_new676(TC* ac, T1 initialize)
 T0* GE_new677(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T677));
+	size_t s = sizeof(T677);
 	if (initialize) {
-		*(T677*)R = GE_default677;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 677;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9127,9 +10369,12 @@ T0* GE_new677(TC* ac, T1 initialize)
 T0* GE_new678(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T678));
+	size_t s = sizeof(T678);
 	if (initialize) {
-		*(T678*)R = GE_default678;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 678;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9138,9 +10383,12 @@ T0* GE_new678(TC* ac, T1 initialize)
 T0* GE_new679(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T679));
+	size_t s = sizeof(T679);
 	if (initialize) {
-		*(T679*)R = GE_default679;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 679;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9149,9 +10397,12 @@ T0* GE_new679(TC* ac, T1 initialize)
 T0* GE_new680(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T680));
+	size_t s = sizeof(T680);
 	if (initialize) {
-		*(T680*)R = GE_default680;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 680;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9160,9 +10411,12 @@ T0* GE_new680(TC* ac, T1 initialize)
 T0* GE_new681(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T681));
+	size_t s = sizeof(T681);
 	if (initialize) {
-		*(T681*)R = GE_default681;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 681;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9171,9 +10425,12 @@ T0* GE_new681(TC* ac, T1 initialize)
 T0* GE_new683(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T683));
+	size_t s = sizeof(T683);
 	if (initialize) {
-		*(T683*)R = GE_default683;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 683;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9182,9 +10439,12 @@ T0* GE_new683(TC* ac, T1 initialize)
 T0* GE_new684(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T684));
+	size_t s = sizeof(T684);
 	if (initialize) {
-		*(T684*)R = GE_default684;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 684;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9193,9 +10453,12 @@ T0* GE_new684(TC* ac, T1 initialize)
 T0* GE_new685(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T685));
+	size_t s = sizeof(T685);
 	if (initialize) {
-		*(T685*)R = GE_default685;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 685;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9204,9 +10467,12 @@ T0* GE_new685(TC* ac, T1 initialize)
 T0* GE_new686(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T686));
+	size_t s = sizeof(T686);
 	if (initialize) {
-		*(T686*)R = GE_default686;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 686;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9215,9 +10481,12 @@ T0* GE_new686(TC* ac, T1 initialize)
 T0* GE_new688(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T688));
+	size_t s = sizeof(T688);
 	if (initialize) {
-		*(T688*)R = GE_default688;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 688;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9226,9 +10495,12 @@ T0* GE_new688(TC* ac, T1 initialize)
 T0* GE_new689(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T689));
+	size_t s = sizeof(T689);
 	if (initialize) {
-		*(T689*)R = GE_default689;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 689;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9237,9 +10509,12 @@ T0* GE_new689(TC* ac, T1 initialize)
 T0* GE_new690(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T690));
+	size_t s = sizeof(T690);
 	if (initialize) {
-		*(T690*)R = GE_default690;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 690;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9248,9 +10523,12 @@ T0* GE_new690(TC* ac, T1 initialize)
 T0* GE_new691(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T691));
+	size_t s = sizeof(T691);
 	if (initialize) {
-		*(T691*)R = GE_default691;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 691;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9259,9 +10537,12 @@ T0* GE_new691(TC* ac, T1 initialize)
 T0* GE_new692(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T692));
+	size_t s = sizeof(T692);
 	if (initialize) {
-		*(T692*)R = GE_default692;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 692;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9270,9 +10551,12 @@ T0* GE_new692(TC* ac, T1 initialize)
 T0* GE_new693(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T693));
+	size_t s = sizeof(T693);
 	if (initialize) {
-		*(T693*)R = GE_default693;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 693;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9281,9 +10565,12 @@ T0* GE_new693(TC* ac, T1 initialize)
 T0* GE_new694(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T694));
+	size_t s = sizeof(T694);
 	if (initialize) {
-		*(T694*)R = GE_default694;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 694;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9292,9 +10579,12 @@ T0* GE_new694(TC* ac, T1 initialize)
 T0* GE_new695(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T695));
+	size_t s = sizeof(T695);
 	if (initialize) {
-		*(T695*)R = GE_default695;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 695;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9303,9 +10593,12 @@ T0* GE_new695(TC* ac, T1 initialize)
 T0* GE_new696(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T696));
+	size_t s = sizeof(T696);
 	if (initialize) {
-		*(T696*)R = GE_default696;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 696;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9314,9 +10607,12 @@ T0* GE_new696(TC* ac, T1 initialize)
 T0* GE_new697(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T697));
+	size_t s = sizeof(T697);
 	if (initialize) {
-		*(T697*)R = GE_default697;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 697;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9325,9 +10621,12 @@ T0* GE_new697(TC* ac, T1 initialize)
 T0* GE_new699(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T699));
+	size_t s = sizeof(T699);
 	if (initialize) {
-		*(T699*)R = GE_default699;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 699;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9336,9 +10635,12 @@ T0* GE_new699(TC* ac, T1 initialize)
 T0* GE_new700(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T700));
+	size_t s = sizeof(T700);
 	if (initialize) {
-		*(T700*)R = GE_default700;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 700;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9347,9 +10649,12 @@ T0* GE_new700(TC* ac, T1 initialize)
 T0* GE_new702(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T702));
+	size_t s = sizeof(T702);
 	if (initialize) {
-		*(T702*)R = GE_default702;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 702;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9358,9 +10663,12 @@ T0* GE_new702(TC* ac, T1 initialize)
 T0* GE_new703(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T703));
+	size_t s = sizeof(T703);
 	if (initialize) {
-		*(T703*)R = GE_default703;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 703;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9369,9 +10677,12 @@ T0* GE_new703(TC* ac, T1 initialize)
 T0* GE_new704(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T704));
+	size_t s = sizeof(T704);
 	if (initialize) {
-		*(T704*)R = GE_default704;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 704;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9380,9 +10691,12 @@ T0* GE_new704(TC* ac, T1 initialize)
 T0* GE_new705(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T705));
+	size_t s = sizeof(T705);
 	if (initialize) {
-		*(T705*)R = GE_default705;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 705;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9391,9 +10705,12 @@ T0* GE_new705(TC* ac, T1 initialize)
 T0* GE_new706(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T706));
+	size_t s = sizeof(T706);
 	if (initialize) {
-		*(T706*)R = GE_default706;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 706;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9402,9 +10719,12 @@ T0* GE_new706(TC* ac, T1 initialize)
 T0* GE_new707(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T707));
+	size_t s = sizeof(T707);
 	if (initialize) {
-		*(T707*)R = GE_default707;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 707;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9413,9 +10733,12 @@ T0* GE_new707(TC* ac, T1 initialize)
 T0* GE_new708(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T708));
+	size_t s = sizeof(T708);
 	if (initialize) {
-		*(T708*)R = GE_default708;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 708;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9424,9 +10747,12 @@ T0* GE_new708(TC* ac, T1 initialize)
 T0* GE_new710(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T710));
+	size_t s = sizeof(T710);
 	if (initialize) {
-		*(T710*)R = GE_default710;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 710;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9435,9 +10761,12 @@ T0* GE_new710(TC* ac, T1 initialize)
 T0* GE_new711(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T711));
+	size_t s = sizeof(T711);
 	if (initialize) {
-		*(T711*)R = GE_default711;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 711;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9446,9 +10775,12 @@ T0* GE_new711(TC* ac, T1 initialize)
 T0* GE_new712(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T712));
+	size_t s = sizeof(T712);
 	if (initialize) {
-		*(T712*)R = GE_default712;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 712;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9457,9 +10789,12 @@ T0* GE_new712(TC* ac, T1 initialize)
 T0* GE_new713(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T713));
+	size_t s = sizeof(T713);
 	if (initialize) {
-		*(T713*)R = GE_default713;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 713;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9468,9 +10803,12 @@ T0* GE_new713(TC* ac, T1 initialize)
 T0* GE_new714(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T714));
+	size_t s = sizeof(T714);
 	if (initialize) {
-		*(T714*)R = GE_default714;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 714;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9479,9 +10817,12 @@ T0* GE_new714(TC* ac, T1 initialize)
 T0* GE_new715(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T715));
+	size_t s = sizeof(T715);
 	if (initialize) {
-		*(T715*)R = GE_default715;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 715;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9490,9 +10831,12 @@ T0* GE_new715(TC* ac, T1 initialize)
 T0* GE_new716(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T716));
+	size_t s = sizeof(T716);
 	if (initialize) {
-		*(T716*)R = GE_default716;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 716;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9501,9 +10845,12 @@ T0* GE_new716(TC* ac, T1 initialize)
 T0* GE_new719(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T719));
+	size_t s = sizeof(T719);
 	if (initialize) {
-		*(T719*)R = GE_default719;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 719;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9512,9 +10859,12 @@ T0* GE_new719(TC* ac, T1 initialize)
 T0* GE_new720(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T720));
+	size_t s = sizeof(T720);
 	if (initialize) {
-		*(T720*)R = GE_default720;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 720;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9523,9 +10873,12 @@ T0* GE_new720(TC* ac, T1 initialize)
 T0* GE_new722(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T722));
+	size_t s = sizeof(T722);
 	if (initialize) {
-		*(T722*)R = GE_default722;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 722;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9534,9 +10887,12 @@ T0* GE_new722(TC* ac, T1 initialize)
 T0* GE_new724(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T724));
+	size_t s = sizeof(T724);
 	if (initialize) {
-		*(T724*)R = GE_default724;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 724;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9545,9 +10901,12 @@ T0* GE_new724(TC* ac, T1 initialize)
 T0* GE_new725(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T725));
+	size_t s = sizeof(T725);
 	if (initialize) {
-		*(T725*)R = GE_default725;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 725;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9556,9 +10915,12 @@ T0* GE_new725(TC* ac, T1 initialize)
 T0* GE_new726(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T726));
+	size_t s = sizeof(T726);
 	if (initialize) {
-		*(T726*)R = GE_default726;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 726;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9567,9 +10929,12 @@ T0* GE_new726(TC* ac, T1 initialize)
 T0* GE_new727(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T727));
+	size_t s = sizeof(T727);
 	if (initialize) {
-		*(T727*)R = GE_default727;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 727;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9578,9 +10943,12 @@ T0* GE_new727(TC* ac, T1 initialize)
 T0* GE_new728(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T728));
+	size_t s = sizeof(T728);
 	if (initialize) {
-		*(T728*)R = GE_default728;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 728;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9589,9 +10957,12 @@ T0* GE_new728(TC* ac, T1 initialize)
 T0* GE_new729(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T729));
+	size_t s = sizeof(T729);
 	if (initialize) {
-		*(T729*)R = GE_default729;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 729;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9600,9 +10971,12 @@ T0* GE_new729(TC* ac, T1 initialize)
 T0* GE_new731(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T731));
+	size_t s = sizeof(T731);
 	if (initialize) {
-		*(T731*)R = GE_default731;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 731;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9611,9 +10985,12 @@ T0* GE_new731(TC* ac, T1 initialize)
 T0* GE_new732(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T732));
+	size_t s = sizeof(T732);
 	if (initialize) {
-		*(T732*)R = GE_default732;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 732;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9622,9 +10999,12 @@ T0* GE_new732(TC* ac, T1 initialize)
 T0* GE_new734(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T734));
+	size_t s = sizeof(T734);
 	if (initialize) {
-		*(T734*)R = GE_default734;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 734;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9633,9 +11013,12 @@ T0* GE_new734(TC* ac, T1 initialize)
 T0* GE_new735(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T735));
+	size_t s = sizeof(T735);
 	if (initialize) {
-		*(T735*)R = GE_default735;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 735;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9644,9 +11027,12 @@ T0* GE_new735(TC* ac, T1 initialize)
 T0* GE_new736(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T736));
+	size_t s = sizeof(T736);
 	if (initialize) {
-		*(T736*)R = GE_default736;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 736;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9655,9 +11041,12 @@ T0* GE_new736(TC* ac, T1 initialize)
 T0* GE_new737(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T737));
+	size_t s = sizeof(T737);
 	if (initialize) {
-		*(T737*)R = GE_default737;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 737;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9666,9 +11055,12 @@ T0* GE_new737(TC* ac, T1 initialize)
 T0* GE_new739(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T739));
+	size_t s = sizeof(T739);
 	if (initialize) {
-		*(T739*)R = GE_default739;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 739;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9677,9 +11069,12 @@ T0* GE_new739(TC* ac, T1 initialize)
 T0* GE_new740(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T740));
+	size_t s = sizeof(T740);
 	if (initialize) {
-		*(T740*)R = GE_default740;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 740;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9688,9 +11083,12 @@ T0* GE_new740(TC* ac, T1 initialize)
 T0* GE_new741(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T741));
+	size_t s = sizeof(T741);
 	if (initialize) {
-		*(T741*)R = GE_default741;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 741;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9699,9 +11097,12 @@ T0* GE_new741(TC* ac, T1 initialize)
 T0* GE_new742(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T742));
+	size_t s = sizeof(T742);
 	if (initialize) {
-		*(T742*)R = GE_default742;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 742;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9710,9 +11111,12 @@ T0* GE_new742(TC* ac, T1 initialize)
 T0* GE_new743(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T743));
+	size_t s = sizeof(T743);
 	if (initialize) {
-		*(T743*)R = GE_default743;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 743;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9721,9 +11125,12 @@ T0* GE_new743(TC* ac, T1 initialize)
 T0* GE_new744(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T744));
+	size_t s = sizeof(T744);
 	if (initialize) {
-		*(T744*)R = GE_default744;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 744;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9732,9 +11139,12 @@ T0* GE_new744(TC* ac, T1 initialize)
 T0* GE_new745(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T745));
+	size_t s = sizeof(T745);
 	if (initialize) {
-		*(T745*)R = GE_default745;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 745;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9743,9 +11153,12 @@ T0* GE_new745(TC* ac, T1 initialize)
 T0* GE_new746(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T746));
+	size_t s = sizeof(T746);
 	if (initialize) {
-		*(T746*)R = GE_default746;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 746;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9754,9 +11167,12 @@ T0* GE_new746(TC* ac, T1 initialize)
 T0* GE_new747(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T747));
+	size_t s = sizeof(T747);
 	if (initialize) {
-		*(T747*)R = GE_default747;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 747;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9765,9 +11181,12 @@ T0* GE_new747(TC* ac, T1 initialize)
 T0* GE_new748(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T748));
+	size_t s = sizeof(T748);
 	if (initialize) {
-		*(T748*)R = GE_default748;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 748;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9776,9 +11195,12 @@ T0* GE_new748(TC* ac, T1 initialize)
 T0* GE_new749(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T749));
+	size_t s = sizeof(T749);
 	if (initialize) {
-		*(T749*)R = GE_default749;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 749;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9787,9 +11209,12 @@ T0* GE_new749(TC* ac, T1 initialize)
 T0* GE_new750(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T750));
+	size_t s = sizeof(T750);
 	if (initialize) {
-		*(T750*)R = GE_default750;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 750;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9798,9 +11223,12 @@ T0* GE_new750(TC* ac, T1 initialize)
 T0* GE_new751(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T751));
+	size_t s = sizeof(T751);
 	if (initialize) {
-		*(T751*)R = GE_default751;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 751;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9809,9 +11237,12 @@ T0* GE_new751(TC* ac, T1 initialize)
 T0* GE_new752(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T752));
+	size_t s = sizeof(T752);
 	if (initialize) {
-		*(T752*)R = GE_default752;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 752;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9820,9 +11251,12 @@ T0* GE_new752(TC* ac, T1 initialize)
 T0* GE_new753(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T753));
+	size_t s = sizeof(T753);
 	if (initialize) {
-		*(T753*)R = GE_default753;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 753;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9831,9 +11265,12 @@ T0* GE_new753(TC* ac, T1 initialize)
 T0* GE_new754(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T754));
+	size_t s = sizeof(T754);
 	if (initialize) {
-		*(T754*)R = GE_default754;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 754;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9842,9 +11279,12 @@ T0* GE_new754(TC* ac, T1 initialize)
 T0* GE_new755(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T755));
+	size_t s = sizeof(T755);
 	if (initialize) {
-		*(T755*)R = GE_default755;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 755;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9853,9 +11293,12 @@ T0* GE_new755(TC* ac, T1 initialize)
 T0* GE_new756(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T756));
+	size_t s = sizeof(T756);
 	if (initialize) {
-		*(T756*)R = GE_default756;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 756;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9864,9 +11307,12 @@ T0* GE_new756(TC* ac, T1 initialize)
 T0* GE_new757(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T757));
+	size_t s = sizeof(T757);
 	if (initialize) {
-		*(T757*)R = GE_default757;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 757;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9875,9 +11321,12 @@ T0* GE_new757(TC* ac, T1 initialize)
 T0* GE_new759(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T759));
+	size_t s = sizeof(T759);
 	if (initialize) {
-		*(T759*)R = GE_default759;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 759;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9886,9 +11335,12 @@ T0* GE_new759(TC* ac, T1 initialize)
 T0* GE_new760(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T760));
+	size_t s = sizeof(T760);
 	if (initialize) {
-		*(T760*)R = GE_default760;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 760;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9897,9 +11349,12 @@ T0* GE_new760(TC* ac, T1 initialize)
 T0* GE_new761(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T761));
+	size_t s = sizeof(T761);
 	if (initialize) {
-		*(T761*)R = GE_default761;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 761;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9908,9 +11363,12 @@ T0* GE_new761(TC* ac, T1 initialize)
 T0* GE_new762(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T762));
+	size_t s = sizeof(T762);
 	if (initialize) {
-		*(T762*)R = GE_default762;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 762;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9919,9 +11377,12 @@ T0* GE_new762(TC* ac, T1 initialize)
 T0* GE_new763(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T763));
+	size_t s = sizeof(T763);
 	if (initialize) {
-		*(T763*)R = GE_default763;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 763;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9930,9 +11391,12 @@ T0* GE_new763(TC* ac, T1 initialize)
 T0* GE_new764(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T764));
+	size_t s = sizeof(T764);
 	if (initialize) {
-		*(T764*)R = GE_default764;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 764;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9941,9 +11405,12 @@ T0* GE_new764(TC* ac, T1 initialize)
 T0* GE_new765(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T765));
+	size_t s = sizeof(T765);
 	if (initialize) {
-		*(T765*)R = GE_default765;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 765;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9952,9 +11419,12 @@ T0* GE_new765(TC* ac, T1 initialize)
 T0* GE_new766(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T766));
+	size_t s = sizeof(T766);
 	if (initialize) {
-		*(T766*)R = GE_default766;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 766;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9963,9 +11433,12 @@ T0* GE_new766(TC* ac, T1 initialize)
 T0* GE_new769(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T769));
+	size_t s = sizeof(T769);
 	if (initialize) {
-		*(T769*)R = GE_default769;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 769;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9974,9 +11447,12 @@ T0* GE_new769(TC* ac, T1 initialize)
 T0* GE_new770(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T770));
+	size_t s = sizeof(T770);
 	if (initialize) {
-		*(T770*)R = GE_default770;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 770;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9985,9 +11461,12 @@ T0* GE_new770(TC* ac, T1 initialize)
 T0* GE_new772(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T772));
+	size_t s = sizeof(T772);
 	if (initialize) {
-		*(T772*)R = GE_default772;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 772;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -9996,9 +11475,12 @@ T0* GE_new772(TC* ac, T1 initialize)
 T0* GE_new774(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T774));
+	size_t s = sizeof(T774);
 	if (initialize) {
-		*(T774*)R = GE_default774;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 774;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10007,14 +11489,14 @@ T0* GE_new774(TC* ac, T1 initialize)
 T0* GE_new775(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T775)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T775)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T775*)R = GE_default775;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 775;
 		((T775*)(R))->a2 = a1;
-		((T775*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T775*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T775*)(R))->offset = offsetof(T775, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10023,9 +11505,12 @@ T0* GE_new775(TC* ac, T6 a1, T1 initialize)
 T0* GE_new776(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T776));
+	size_t s = sizeof(T776);
 	if (initialize) {
-		*(T776*)R = GE_default776;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 776;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -10034,9 +11519,12 @@ T0* GE_new776(TC* ac, T1 initialize)
 T0* GE_new777(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T777));
+	size_t s = sizeof(T777);
 	if (initialize) {
-		*(T777*)R = GE_default777;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 777;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10045,9 +11533,12 @@ T0* GE_new777(TC* ac, T1 initialize)
 T0* GE_new778(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T778));
+	size_t s = sizeof(T778);
 	if (initialize) {
-		*(T778*)R = GE_default778;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 778;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10056,9 +11547,12 @@ T0* GE_new778(TC* ac, T1 initialize)
 T0* GE_new779(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T779));
+	size_t s = sizeof(T779);
 	if (initialize) {
-		*(T779*)R = GE_default779;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 779;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -10067,9 +11561,12 @@ T0* GE_new779(TC* ac, T1 initialize)
 T0* GE_new780(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T780));
+	size_t s = sizeof(T780);
 	if (initialize) {
-		*(T780*)R = GE_default780;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 780;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -10078,9 +11575,12 @@ T0* GE_new780(TC* ac, T1 initialize)
 T0* GE_new781(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T781));
+	size_t s = sizeof(T781);
 	if (initialize) {
-		*(T781*)R = GE_default781;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 781;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10089,9 +11589,12 @@ T0* GE_new781(TC* ac, T1 initialize)
 T0* GE_new782(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T782));
+	size_t s = sizeof(T782);
 	if (initialize) {
-		*(T782*)R = GE_default782;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 782;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10100,9 +11603,12 @@ T0* GE_new782(TC* ac, T1 initialize)
 T0* GE_new783(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T783));
+	size_t s = sizeof(T783);
 	if (initialize) {
-		*(T783*)R = GE_default783;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 783;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10111,9 +11617,12 @@ T0* GE_new783(TC* ac, T1 initialize)
 T0* GE_new784(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T784));
+	size_t s = sizeof(T784);
 	if (initialize) {
-		*(T784*)R = GE_default784;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 784;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10122,9 +11631,12 @@ T0* GE_new784(TC* ac, T1 initialize)
 T0* GE_new785(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T785));
+	size_t s = sizeof(T785);
 	if (initialize) {
-		*(T785*)R = GE_default785;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 785;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10133,9 +11645,12 @@ T0* GE_new785(TC* ac, T1 initialize)
 T0* GE_new786(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T786));
+	size_t s = sizeof(T786);
 	if (initialize) {
-		*(T786*)R = GE_default786;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 786;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10144,9 +11659,12 @@ T0* GE_new786(TC* ac, T1 initialize)
 T0* GE_new787(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T787));
+	size_t s = sizeof(T787);
 	if (initialize) {
-		*(T787*)R = GE_default787;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 787;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10155,9 +11673,12 @@ T0* GE_new787(TC* ac, T1 initialize)
 T0* GE_new788(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T788));
+	size_t s = sizeof(T788);
 	if (initialize) {
-		*(T788*)R = GE_default788;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 788;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10166,9 +11687,12 @@ T0* GE_new788(TC* ac, T1 initialize)
 T0* GE_new789(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T789));
+	size_t s = sizeof(T789);
 	if (initialize) {
-		*(T789*)R = GE_default789;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 789;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10177,9 +11701,12 @@ T0* GE_new789(TC* ac, T1 initialize)
 T0* GE_new791(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T791));
+	size_t s = sizeof(T791);
 	if (initialize) {
-		*(T791*)R = GE_default791;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 791;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10188,9 +11715,12 @@ T0* GE_new791(TC* ac, T1 initialize)
 T0* GE_new792(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T792));
+	size_t s = sizeof(T792);
 	if (initialize) {
-		*(T792*)R = GE_default792;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 792;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -10199,9 +11729,12 @@ T0* GE_new792(TC* ac, T1 initialize)
 T0* GE_new793(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T793));
+	size_t s = sizeof(T793);
 	if (initialize) {
-		*(T793*)R = GE_default793;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 793;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10210,9 +11743,12 @@ T0* GE_new793(TC* ac, T1 initialize)
 T0* GE_new795(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T795));
+	size_t s = sizeof(T795);
 	if (initialize) {
-		*(T795*)R = GE_default795;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 795;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10221,9 +11757,12 @@ T0* GE_new795(TC* ac, T1 initialize)
 T0* GE_new796(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T796));
+	size_t s = sizeof(T796);
 	if (initialize) {
-		*(T796*)R = GE_default796;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 796;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10232,9 +11771,12 @@ T0* GE_new796(TC* ac, T1 initialize)
 T0* GE_new799(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T799));
+	size_t s = sizeof(T799);
 	if (initialize) {
-		*(T799*)R = GE_default799;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 799;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10243,9 +11785,12 @@ T0* GE_new799(TC* ac, T1 initialize)
 T0* GE_new800(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T800));
+	size_t s = sizeof(T800);
 	if (initialize) {
-		*(T800*)R = GE_default800;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 800;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10254,9 +11799,12 @@ T0* GE_new800(TC* ac, T1 initialize)
 T0* GE_new801(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T801));
+	size_t s = sizeof(T801);
 	if (initialize) {
-		*(T801*)R = GE_default801;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 801;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10265,9 +11813,12 @@ T0* GE_new801(TC* ac, T1 initialize)
 T0* GE_new802(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T802));
+	size_t s = sizeof(T802);
 	if (initialize) {
-		*(T802*)R = GE_default802;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 802;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10276,9 +11827,12 @@ T0* GE_new802(TC* ac, T1 initialize)
 T0* GE_new804(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T804));
+	size_t s = sizeof(T804);
 	if (initialize) {
-		*(T804*)R = GE_default804;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 804;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10287,9 +11841,12 @@ T0* GE_new804(TC* ac, T1 initialize)
 T0* GE_new805(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T805));
+	size_t s = sizeof(T805);
 	if (initialize) {
-		*(T805*)R = GE_default805;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 805;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10298,9 +11855,12 @@ T0* GE_new805(TC* ac, T1 initialize)
 T0* GE_new806(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T806));
+	size_t s = sizeof(T806);
 	if (initialize) {
-		*(T806*)R = GE_default806;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 806;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10309,9 +11869,12 @@ T0* GE_new806(TC* ac, T1 initialize)
 T0* GE_new807(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T807));
+	size_t s = sizeof(T807);
 	if (initialize) {
-		*(T807*)R = GE_default807;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 807;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -10320,9 +11883,12 @@ T0* GE_new807(TC* ac, T1 initialize)
 T0* GE_new809(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T809));
+	size_t s = sizeof(T809);
 	if (initialize) {
-		*(T809*)R = GE_default809;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 809;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10331,9 +11897,12 @@ T0* GE_new809(TC* ac, T1 initialize)
 T0* GE_new810(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T810));
+	size_t s = sizeof(T810);
 	if (initialize) {
-		*(T810*)R = GE_default810;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 810;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10342,9 +11911,12 @@ T0* GE_new810(TC* ac, T1 initialize)
 T0* GE_new811(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T811));
+	size_t s = sizeof(T811);
 	if (initialize) {
-		*(T811*)R = GE_default811;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 811;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10353,9 +11925,12 @@ T0* GE_new811(TC* ac, T1 initialize)
 T0* GE_new812(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T812));
+	size_t s = sizeof(T812);
 	if (initialize) {
-		*(T812*)R = GE_default812;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 812;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10364,9 +11939,12 @@ T0* GE_new812(TC* ac, T1 initialize)
 T0* GE_new813(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T813));
+	size_t s = sizeof(T813);
 	if (initialize) {
-		*(T813*)R = GE_default813;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 813;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10375,9 +11953,12 @@ T0* GE_new813(TC* ac, T1 initialize)
 T0* GE_new814(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T814));
+	size_t s = sizeof(T814);
 	if (initialize) {
-		*(T814*)R = GE_default814;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 814;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10386,9 +11967,12 @@ T0* GE_new814(TC* ac, T1 initialize)
 T0* GE_new815(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T815));
+	size_t s = sizeof(T815);
 	if (initialize) {
-		*(T815*)R = GE_default815;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 815;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10397,9 +11981,12 @@ T0* GE_new815(TC* ac, T1 initialize)
 T0* GE_new816(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T816));
+	size_t s = sizeof(T816);
 	if (initialize) {
-		*(T816*)R = GE_default816;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 816;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10408,9 +11995,12 @@ T0* GE_new816(TC* ac, T1 initialize)
 T0* GE_new817(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T817));
+	size_t s = sizeof(T817);
 	if (initialize) {
-		*(T817*)R = GE_default817;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 817;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10419,9 +12009,12 @@ T0* GE_new817(TC* ac, T1 initialize)
 T0* GE_new818(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T818));
+	size_t s = sizeof(T818);
 	if (initialize) {
-		*(T818*)R = GE_default818;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 818;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10430,9 +12023,12 @@ T0* GE_new818(TC* ac, T1 initialize)
 T0* GE_new820(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T820));
+	size_t s = sizeof(T820);
 	if (initialize) {
-		*(T820*)R = GE_default820;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 820;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10441,9 +12037,12 @@ T0* GE_new820(TC* ac, T1 initialize)
 T0* GE_new821(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T821));
+	size_t s = sizeof(T821);
 	if (initialize) {
-		*(T821*)R = GE_default821;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 821;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10452,9 +12051,12 @@ T0* GE_new821(TC* ac, T1 initialize)
 T0* GE_new822(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T822));
+	size_t s = sizeof(T822);
 	if (initialize) {
-		*(T822*)R = GE_default822;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 822;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10463,9 +12065,12 @@ T0* GE_new822(TC* ac, T1 initialize)
 T0* GE_new824(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T824));
+	size_t s = sizeof(T824);
 	if (initialize) {
-		*(T824*)R = GE_default824;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 824;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10474,9 +12079,12 @@ T0* GE_new824(TC* ac, T1 initialize)
 T0* GE_new826(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T826));
+	size_t s = sizeof(T826);
 	if (initialize) {
-		*(T826*)R = GE_default826;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 826;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10485,9 +12093,12 @@ T0* GE_new826(TC* ac, T1 initialize)
 T0* GE_new827(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T827));
+	size_t s = sizeof(T827);
 	if (initialize) {
-		*(T827*)R = GE_default827;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 827;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10496,9 +12107,12 @@ T0* GE_new827(TC* ac, T1 initialize)
 T0* GE_new828(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T828));
+	size_t s = sizeof(T828);
 	if (initialize) {
-		*(T828*)R = GE_default828;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 828;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10507,9 +12121,12 @@ T0* GE_new828(TC* ac, T1 initialize)
 T0* GE_new829(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T829));
+	size_t s = sizeof(T829);
 	if (initialize) {
-		*(T829*)R = GE_default829;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 829;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10518,9 +12135,12 @@ T0* GE_new829(TC* ac, T1 initialize)
 T0* GE_new830(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T830));
+	size_t s = sizeof(T830);
 	if (initialize) {
-		*(T830*)R = GE_default830;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 830;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10529,9 +12149,12 @@ T0* GE_new830(TC* ac, T1 initialize)
 T0* GE_new831(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T831));
+	size_t s = sizeof(T831);
 	if (initialize) {
-		*(T831*)R = GE_default831;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 831;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10540,9 +12163,12 @@ T0* GE_new831(TC* ac, T1 initialize)
 T0* GE_new832(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T832));
+	size_t s = sizeof(T832);
 	if (initialize) {
-		*(T832*)R = GE_default832;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 832;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10551,9 +12177,12 @@ T0* GE_new832(TC* ac, T1 initialize)
 T0* GE_new833(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T833));
+	size_t s = sizeof(T833);
 	if (initialize) {
-		*(T833*)R = GE_default833;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 833;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10562,9 +12191,12 @@ T0* GE_new833(TC* ac, T1 initialize)
 T0* GE_new835(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T835));
+	size_t s = sizeof(T835);
 	if (initialize) {
-		*(T835*)R = GE_default835;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 835;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10573,9 +12205,12 @@ T0* GE_new835(TC* ac, T1 initialize)
 T0* GE_new837(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T837));
+	size_t s = sizeof(T837);
 	if (initialize) {
-		*(T837*)R = GE_default837;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 837;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10584,9 +12219,12 @@ T0* GE_new837(TC* ac, T1 initialize)
 T0* GE_new838(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T838));
+	size_t s = sizeof(T838);
 	if (initialize) {
-		*(T838*)R = GE_default838;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 838;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10595,9 +12233,12 @@ T0* GE_new838(TC* ac, T1 initialize)
 T0* GE_new839(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T839));
+	size_t s = sizeof(T839);
 	if (initialize) {
-		*(T839*)R = GE_default839;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 839;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10606,9 +12247,12 @@ T0* GE_new839(TC* ac, T1 initialize)
 T0* GE_new840(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T840));
+	size_t s = sizeof(T840);
 	if (initialize) {
-		*(T840*)R = GE_default840;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 840;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10617,9 +12261,12 @@ T0* GE_new840(TC* ac, T1 initialize)
 T0* GE_new841(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T841));
+	size_t s = sizeof(T841);
 	if (initialize) {
-		*(T841*)R = GE_default841;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 841;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -10628,9 +12275,12 @@ T0* GE_new841(TC* ac, T1 initialize)
 T0* GE_new842(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T842));
+	size_t s = sizeof(T842);
 	if (initialize) {
-		*(T842*)R = GE_default842;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 842;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10639,9 +12289,12 @@ T0* GE_new842(TC* ac, T1 initialize)
 T0* GE_new843(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T843));
+	size_t s = sizeof(T843);
 	if (initialize) {
-		*(T843*)R = GE_default843;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 843;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10650,9 +12303,12 @@ T0* GE_new843(TC* ac, T1 initialize)
 T0* GE_new845(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T845));
+	size_t s = sizeof(T845);
 	if (initialize) {
-		*(T845*)R = GE_default845;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 845;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10661,9 +12317,12 @@ T0* GE_new845(TC* ac, T1 initialize)
 T0* GE_new847(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T847));
+	size_t s = sizeof(T847);
 	if (initialize) {
-		*(T847*)R = GE_default847;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 847;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10672,9 +12331,12 @@ T0* GE_new847(TC* ac, T1 initialize)
 T0* GE_new848(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T848));
+	size_t s = sizeof(T848);
 	if (initialize) {
-		*(T848*)R = GE_default848;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 848;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10683,9 +12345,12 @@ T0* GE_new848(TC* ac, T1 initialize)
 T0* GE_new849(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T849));
+	size_t s = sizeof(T849);
 	if (initialize) {
-		*(T849*)R = GE_default849;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 849;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10694,14 +12359,14 @@ T0* GE_new849(TC* ac, T1 initialize)
 T0* GE_new850(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T850)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T850)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T850*)R = GE_default850;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 850;
 		((T850*)(R))->a2 = a1;
-		((T850*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T850*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T850*)(R))->offset = offsetof(T850, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10710,9 +12375,12 @@ T0* GE_new850(TC* ac, T6 a1, T1 initialize)
 T0* GE_new853(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T853));
+	size_t s = sizeof(T853);
 	if (initialize) {
-		*(T853*)R = GE_default853;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 853;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10721,9 +12389,12 @@ T0* GE_new853(TC* ac, T1 initialize)
 T0* GE_new854(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T854));
+	size_t s = sizeof(T854);
 	if (initialize) {
-		*(T854*)R = GE_default854;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 854;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10732,9 +12403,12 @@ T0* GE_new854(TC* ac, T1 initialize)
 T0* GE_new855(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T855));
+	size_t s = sizeof(T855);
 	if (initialize) {
-		*(T855*)R = GE_default855;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 855;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -10743,9 +12417,12 @@ T0* GE_new855(TC* ac, T1 initialize)
 T0* GE_new857(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T857));
+	size_t s = sizeof(T857);
 	if (initialize) {
-		*(T857*)R = GE_default857;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 857;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10754,9 +12431,12 @@ T0* GE_new857(TC* ac, T1 initialize)
 T0* GE_new858(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T858));
+	size_t s = sizeof(T858);
 	if (initialize) {
-		*(T858*)R = GE_default858;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 858;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10765,9 +12445,12 @@ T0* GE_new858(TC* ac, T1 initialize)
 T0* GE_new859(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T859));
+	size_t s = sizeof(T859);
 	if (initialize) {
-		*(T859*)R = GE_default859;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 859;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10776,9 +12459,12 @@ T0* GE_new859(TC* ac, T1 initialize)
 T0* GE_new860(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T860));
+	size_t s = sizeof(T860);
 	if (initialize) {
-		*(T860*)R = GE_default860;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 860;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10787,9 +12473,12 @@ T0* GE_new860(TC* ac, T1 initialize)
 T0* GE_new861(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T861));
+	size_t s = sizeof(T861);
 	if (initialize) {
-		*(T861*)R = GE_default861;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 861;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10798,9 +12487,12 @@ T0* GE_new861(TC* ac, T1 initialize)
 T0* GE_new862(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T862));
+	size_t s = sizeof(T862);
 	if (initialize) {
-		*(T862*)R = GE_default862;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 862;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10809,9 +12501,12 @@ T0* GE_new862(TC* ac, T1 initialize)
 T0* GE_new864(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T864));
+	size_t s = sizeof(T864);
 	if (initialize) {
-		*(T864*)R = GE_default864;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 864;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10820,9 +12515,12 @@ T0* GE_new864(TC* ac, T1 initialize)
 T0* GE_new867(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T867));
+	size_t s = sizeof(T867);
 	if (initialize) {
-		*(T867*)R = GE_default867;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 867;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10831,9 +12529,12 @@ T0* GE_new867(TC* ac, T1 initialize)
 T0* GE_new868(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T868));
+	size_t s = sizeof(T868);
 	if (initialize) {
-		*(T868*)R = GE_default868;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 868;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10842,9 +12543,12 @@ T0* GE_new868(TC* ac, T1 initialize)
 T0* GE_new869(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T869));
+	size_t s = sizeof(T869);
 	if (initialize) {
-		*(T869*)R = GE_default869;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 869;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10853,9 +12557,12 @@ T0* GE_new869(TC* ac, T1 initialize)
 T0* GE_new870(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T870));
+	size_t s = sizeof(T870);
 	if (initialize) {
-		*(T870*)R = GE_default870;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 870;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10864,9 +12571,12 @@ T0* GE_new870(TC* ac, T1 initialize)
 T0* GE_new871(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T871));
+	size_t s = sizeof(T871);
 	if (initialize) {
-		*(T871*)R = GE_default871;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 871;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10875,9 +12585,12 @@ T0* GE_new871(TC* ac, T1 initialize)
 T0* GE_new872(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T872));
+	size_t s = sizeof(T872);
 	if (initialize) {
-		*(T872*)R = GE_default872;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 872;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10886,9 +12599,12 @@ T0* GE_new872(TC* ac, T1 initialize)
 T0* GE_new873(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T873));
+	size_t s = sizeof(T873);
 	if (initialize) {
-		*(T873*)R = GE_default873;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 873;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10897,9 +12613,12 @@ T0* GE_new873(TC* ac, T1 initialize)
 T0* GE_new874(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T874));
+	size_t s = sizeof(T874);
 	if (initialize) {
-		*(T874*)R = GE_default874;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 874;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10908,9 +12627,12 @@ T0* GE_new874(TC* ac, T1 initialize)
 T0* GE_new875(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T875));
+	size_t s = sizeof(T875);
 	if (initialize) {
-		*(T875*)R = GE_default875;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 875;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10919,9 +12641,12 @@ T0* GE_new875(TC* ac, T1 initialize)
 T0* GE_new876(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T876));
+	size_t s = sizeof(T876);
 	if (initialize) {
-		*(T876*)R = GE_default876;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 876;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10930,9 +12655,12 @@ T0* GE_new876(TC* ac, T1 initialize)
 T0* GE_new877(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T877));
+	size_t s = sizeof(T877);
 	if (initialize) {
-		*(T877*)R = GE_default877;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 877;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10941,9 +12669,12 @@ T0* GE_new877(TC* ac, T1 initialize)
 T0* GE_new878(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T878));
+	size_t s = sizeof(T878);
 	if (initialize) {
-		*(T878*)R = GE_default878;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 878;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10952,9 +12683,12 @@ T0* GE_new878(TC* ac, T1 initialize)
 T0* GE_new879(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T879));
+	size_t s = sizeof(T879);
 	if (initialize) {
-		*(T879*)R = GE_default879;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 879;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10963,9 +12697,12 @@ T0* GE_new879(TC* ac, T1 initialize)
 T0* GE_new880(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T880));
+	size_t s = sizeof(T880);
 	if (initialize) {
-		*(T880*)R = GE_default880;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 880;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10974,9 +12711,12 @@ T0* GE_new880(TC* ac, T1 initialize)
 T0* GE_new881(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T881));
+	size_t s = sizeof(T881);
 	if (initialize) {
-		*(T881*)R = GE_default881;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 881;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10985,9 +12725,12 @@ T0* GE_new881(TC* ac, T1 initialize)
 T0* GE_new882(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T882));
+	size_t s = sizeof(T882);
 	if (initialize) {
-		*(T882*)R = GE_default882;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 882;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -10996,9 +12739,12 @@ T0* GE_new882(TC* ac, T1 initialize)
 T0* GE_new883(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T883));
+	size_t s = sizeof(T883);
 	if (initialize) {
-		*(T883*)R = GE_default883;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 883;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11007,9 +12753,12 @@ T0* GE_new883(TC* ac, T1 initialize)
 T0* GE_new884(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T884));
+	size_t s = sizeof(T884);
 	if (initialize) {
-		*(T884*)R = GE_default884;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 884;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11018,9 +12767,12 @@ T0* GE_new884(TC* ac, T1 initialize)
 T0* GE_new885(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T885));
+	size_t s = sizeof(T885);
 	if (initialize) {
-		*(T885*)R = GE_default885;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 885;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11029,9 +12781,12 @@ T0* GE_new885(TC* ac, T1 initialize)
 T0* GE_new886(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T886));
+	size_t s = sizeof(T886);
 	if (initialize) {
-		*(T886*)R = GE_default886;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 886;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11040,9 +12795,12 @@ T0* GE_new886(TC* ac, T1 initialize)
 T0* GE_new888(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T888));
+	size_t s = sizeof(T888);
 	if (initialize) {
-		*(T888*)R = GE_default888;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 888;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11051,9 +12809,12 @@ T0* GE_new888(TC* ac, T1 initialize)
 T0* GE_new889(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T889));
+	size_t s = sizeof(T889);
 	if (initialize) {
-		*(T889*)R = GE_default889;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 889;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11062,9 +12823,12 @@ T0* GE_new889(TC* ac, T1 initialize)
 T0* GE_new894(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T894));
+	size_t s = sizeof(T894);
 	if (initialize) {
-		*(T894*)R = GE_default894;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 894;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11073,9 +12837,12 @@ T0* GE_new894(TC* ac, T1 initialize)
 T0* GE_new897(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T897));
+	size_t s = sizeof(T897);
 	if (initialize) {
-		*(T897*)R = GE_default897;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 897;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11084,9 +12851,12 @@ T0* GE_new897(TC* ac, T1 initialize)
 T0* GE_new899(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T899));
+	size_t s = sizeof(T899);
 	if (initialize) {
-		*(T899*)R = GE_default899;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 899;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11095,9 +12865,12 @@ T0* GE_new899(TC* ac, T1 initialize)
 T0* GE_new900(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T900));
+	size_t s = sizeof(T900);
 	if (initialize) {
-		*(T900*)R = GE_default900;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 900;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11106,9 +12879,12 @@ T0* GE_new900(TC* ac, T1 initialize)
 T0* GE_new902(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T902));
+	size_t s = sizeof(T902);
 	if (initialize) {
-		*(T902*)R = GE_default902;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 902;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11117,9 +12893,12 @@ T0* GE_new902(TC* ac, T1 initialize)
 T0* GE_new903(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T903));
+	size_t s = sizeof(T903);
 	if (initialize) {
-		*(T903*)R = GE_default903;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 903;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11128,9 +12907,12 @@ T0* GE_new903(TC* ac, T1 initialize)
 T0* GE_new904(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T904));
+	size_t s = sizeof(T904);
 	if (initialize) {
-		*(T904*)R = GE_default904;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 904;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11139,9 +12921,12 @@ T0* GE_new904(TC* ac, T1 initialize)
 T0* GE_new906(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T906));
+	size_t s = sizeof(T906);
 	if (initialize) {
-		*(T906*)R = GE_default906;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 906;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -11150,9 +12935,12 @@ T0* GE_new906(TC* ac, T1 initialize)
 T0* GE_new907(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T907));
+	size_t s = sizeof(T907);
 	if (initialize) {
-		*(T907*)R = GE_default907;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 907;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11161,14 +12949,14 @@ T0* GE_new907(TC* ac, T1 initialize)
 T0* GE_new908(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T908)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T908)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T908*)R = GE_default908;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 908;
 		((T908*)(R))->a2 = a1;
-		((T908*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T908*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T908*)(R))->offset = offsetof(T908, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11177,9 +12965,12 @@ T0* GE_new908(TC* ac, T6 a1, T1 initialize)
 T0* GE_new909(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T909));
+	size_t s = sizeof(T909);
 	if (initialize) {
-		*(T909*)R = GE_default909;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 909;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11188,9 +12979,12 @@ T0* GE_new909(TC* ac, T1 initialize)
 T0* GE_new910(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T910));
+	size_t s = sizeof(T910);
 	if (initialize) {
-		*(T910*)R = GE_default910;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 910;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11199,9 +12993,12 @@ T0* GE_new910(TC* ac, T1 initialize)
 T0* GE_new911(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T911));
+	size_t s = sizeof(T911);
 	if (initialize) {
-		*(T911*)R = GE_default911;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 911;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11210,9 +13007,12 @@ T0* GE_new911(TC* ac, T1 initialize)
 T0* GE_new912(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T912));
+	size_t s = sizeof(T912);
 	if (initialize) {
-		*(T912*)R = GE_default912;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 912;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11221,9 +13021,12 @@ T0* GE_new912(TC* ac, T1 initialize)
 T0* GE_new913(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T913));
+	size_t s = sizeof(T913);
 	if (initialize) {
-		*(T913*)R = GE_default913;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 913;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11232,9 +13035,12 @@ T0* GE_new913(TC* ac, T1 initialize)
 T0* GE_new914(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T914));
+	size_t s = sizeof(T914);
 	if (initialize) {
-		*(T914*)R = GE_default914;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 914;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11243,9 +13049,12 @@ T0* GE_new914(TC* ac, T1 initialize)
 T0* GE_new915(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T915));
+	size_t s = sizeof(T915);
 	if (initialize) {
-		*(T915*)R = GE_default915;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 915;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11254,9 +13063,12 @@ T0* GE_new915(TC* ac, T1 initialize)
 T0* GE_new916(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T916));
+	size_t s = sizeof(T916);
 	if (initialize) {
-		*(T916*)R = GE_default916;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 916;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11265,9 +13077,12 @@ T0* GE_new916(TC* ac, T1 initialize)
 T0* GE_new917(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T917));
+	size_t s = sizeof(T917);
 	if (initialize) {
-		*(T917*)R = GE_default917;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 917;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11276,9 +13091,12 @@ T0* GE_new917(TC* ac, T1 initialize)
 T0* GE_new918(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T918));
+	size_t s = sizeof(T918);
 	if (initialize) {
-		*(T918*)R = GE_default918;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 918;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11287,9 +13105,12 @@ T0* GE_new918(TC* ac, T1 initialize)
 T0* GE_new919(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T919));
+	size_t s = sizeof(T919);
 	if (initialize) {
-		*(T919*)R = GE_default919;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 919;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11298,9 +13119,12 @@ T0* GE_new919(TC* ac, T1 initialize)
 T0* GE_new920(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T920));
+	size_t s = sizeof(T920);
 	if (initialize) {
-		*(T920*)R = GE_default920;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 920;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11309,9 +13133,12 @@ T0* GE_new920(TC* ac, T1 initialize)
 T0* GE_new921(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T921));
+	size_t s = sizeof(T921);
 	if (initialize) {
-		*(T921*)R = GE_default921;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 921;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11320,9 +13147,12 @@ T0* GE_new921(TC* ac, T1 initialize)
 T0* GE_new922(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T922));
+	size_t s = sizeof(T922);
 	if (initialize) {
-		*(T922*)R = GE_default922;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 922;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11331,9 +13161,12 @@ T0* GE_new922(TC* ac, T1 initialize)
 T0* GE_new923(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T923));
+	size_t s = sizeof(T923);
 	if (initialize) {
-		*(T923*)R = GE_default923;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 923;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11342,9 +13175,12 @@ T0* GE_new923(TC* ac, T1 initialize)
 T0* GE_new924(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T924));
+	size_t s = sizeof(T924);
 	if (initialize) {
-		*(T924*)R = GE_default924;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 924;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11353,9 +13189,12 @@ T0* GE_new924(TC* ac, T1 initialize)
 T0* GE_new925(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T925));
+	size_t s = sizeof(T925);
 	if (initialize) {
-		*(T925*)R = GE_default925;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 925;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11364,9 +13203,12 @@ T0* GE_new925(TC* ac, T1 initialize)
 T0* GE_new926(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T926));
+	size_t s = sizeof(T926);
 	if (initialize) {
-		*(T926*)R = GE_default926;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 926;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11375,9 +13217,12 @@ T0* GE_new926(TC* ac, T1 initialize)
 T0* GE_new927(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T927));
+	size_t s = sizeof(T927);
 	if (initialize) {
-		*(T927*)R = GE_default927;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 927;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11386,9 +13231,12 @@ T0* GE_new927(TC* ac, T1 initialize)
 T0* GE_new928(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T928));
+	size_t s = sizeof(T928);
 	if (initialize) {
-		*(T928*)R = GE_default928;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 928;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11397,9 +13245,12 @@ T0* GE_new928(TC* ac, T1 initialize)
 T0* GE_new929(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T929));
+	size_t s = sizeof(T929);
 	if (initialize) {
-		*(T929*)R = GE_default929;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 929;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11408,9 +13259,12 @@ T0* GE_new929(TC* ac, T1 initialize)
 T0* GE_new930(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T930));
+	size_t s = sizeof(T930);
 	if (initialize) {
-		*(T930*)R = GE_default930;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 930;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11419,9 +13273,12 @@ T0* GE_new930(TC* ac, T1 initialize)
 T0* GE_new931(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T931));
+	size_t s = sizeof(T931);
 	if (initialize) {
-		*(T931*)R = GE_default931;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 931;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11430,9 +13287,12 @@ T0* GE_new931(TC* ac, T1 initialize)
 T0* GE_new932(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T932));
+	size_t s = sizeof(T932);
 	if (initialize) {
-		*(T932*)R = GE_default932;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 932;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11441,9 +13301,12 @@ T0* GE_new932(TC* ac, T1 initialize)
 T0* GE_new933(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T933));
+	size_t s = sizeof(T933);
 	if (initialize) {
-		*(T933*)R = GE_default933;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 933;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11452,9 +13315,12 @@ T0* GE_new933(TC* ac, T1 initialize)
 T0* GE_new934(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T934));
+	size_t s = sizeof(T934);
 	if (initialize) {
-		*(T934*)R = GE_default934;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 934;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11463,9 +13329,12 @@ T0* GE_new934(TC* ac, T1 initialize)
 T0* GE_new935(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T935));
+	size_t s = sizeof(T935);
 	if (initialize) {
-		*(T935*)R = GE_default935;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 935;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11474,9 +13343,12 @@ T0* GE_new935(TC* ac, T1 initialize)
 T0* GE_new937(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T937));
+	size_t s = sizeof(T937);
 	if (initialize) {
-		*(T937*)R = GE_default937;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 937;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11485,9 +13357,12 @@ T0* GE_new937(TC* ac, T1 initialize)
 T0* GE_new938(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T938));
+	size_t s = sizeof(T938);
 	if (initialize) {
-		*(T938*)R = GE_default938;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 938;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11496,9 +13371,12 @@ T0* GE_new938(TC* ac, T1 initialize)
 T0* GE_new939(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T939));
+	size_t s = sizeof(T939);
 	if (initialize) {
-		*(T939*)R = GE_default939;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 939;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11507,9 +13385,12 @@ T0* GE_new939(TC* ac, T1 initialize)
 T0* GE_new940(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T940));
+	size_t s = sizeof(T940);
 	if (initialize) {
-		*(T940*)R = GE_default940;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 940;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11518,9 +13399,12 @@ T0* GE_new940(TC* ac, T1 initialize)
 T0* GE_new941(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T941));
+	size_t s = sizeof(T941);
 	if (initialize) {
-		*(T941*)R = GE_default941;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 941;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11529,9 +13413,12 @@ T0* GE_new941(TC* ac, T1 initialize)
 T0* GE_new942(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T942));
+	size_t s = sizeof(T942);
 	if (initialize) {
-		*(T942*)R = GE_default942;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 942;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11540,9 +13427,12 @@ T0* GE_new942(TC* ac, T1 initialize)
 T0* GE_new943(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T943));
+	size_t s = sizeof(T943);
 	if (initialize) {
-		*(T943*)R = GE_default943;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 943;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11551,9 +13441,12 @@ T0* GE_new943(TC* ac, T1 initialize)
 T0* GE_new944(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T944));
+	size_t s = sizeof(T944);
 	if (initialize) {
-		*(T944*)R = GE_default944;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 944;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11562,9 +13455,12 @@ T0* GE_new944(TC* ac, T1 initialize)
 T0* GE_new945(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T945));
+	size_t s = sizeof(T945);
 	if (initialize) {
-		*(T945*)R = GE_default945;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 945;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11573,9 +13469,12 @@ T0* GE_new945(TC* ac, T1 initialize)
 T0* GE_new946(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T946));
+	size_t s = sizeof(T946);
 	if (initialize) {
-		*(T946*)R = GE_default946;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 946;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11584,9 +13483,12 @@ T0* GE_new946(TC* ac, T1 initialize)
 T0* GE_new947(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T947));
+	size_t s = sizeof(T947);
 	if (initialize) {
-		*(T947*)R = GE_default947;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 947;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11595,9 +13497,12 @@ T0* GE_new947(TC* ac, T1 initialize)
 T0* GE_new948(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T948));
+	size_t s = sizeof(T948);
 	if (initialize) {
-		*(T948*)R = GE_default948;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 948;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11606,9 +13511,12 @@ T0* GE_new948(TC* ac, T1 initialize)
 T0* GE_new949(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T949));
+	size_t s = sizeof(T949);
 	if (initialize) {
-		*(T949*)R = GE_default949;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 949;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11617,11 +13525,14 @@ T0* GE_new949(TC* ac, T1 initialize)
 T0* GE_new950(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T950));
-	GE_register_dispose(R,&T950f32);
+	size_t s = sizeof(T950);
 	if (initialize) {
-		*(T950*)R = GE_default950;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 950;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
+	GE_register_dispose(R,&T950f32);
 	return R;
 }
 
@@ -11629,9 +13540,12 @@ T0* GE_new950(TC* ac, T1 initialize)
 T0* GE_new951(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T951));
+	size_t s = sizeof(T951);
 	if (initialize) {
-		*(T951*)R = GE_default951;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 951;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11640,9 +13554,12 @@ T0* GE_new951(TC* ac, T1 initialize)
 T0* GE_new952(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T952));
+	size_t s = sizeof(T952);
 	if (initialize) {
-		*(T952*)R = GE_default952;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 952;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11651,9 +13568,12 @@ T0* GE_new952(TC* ac, T1 initialize)
 T0* GE_new953(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T953));
+	size_t s = sizeof(T953);
 	if (initialize) {
-		*(T953*)R = GE_default953;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 953;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11662,11 +13582,14 @@ T0* GE_new953(TC* ac, T1 initialize)
 T0* GE_new954(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T954));
-	GE_register_dispose(R,&T954f36);
+	size_t s = sizeof(T954);
 	if (initialize) {
-		*(T954*)R = GE_default954;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 954;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
+	GE_register_dispose(R,&T954f36);
 	return R;
 }
 
@@ -11674,9 +13597,12 @@ T0* GE_new954(TC* ac, T1 initialize)
 T0* GE_new955(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T955));
+	size_t s = sizeof(T955);
 	if (initialize) {
-		*(T955*)R = GE_default955;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 955;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11685,9 +13611,12 @@ T0* GE_new955(TC* ac, T1 initialize)
 T0* GE_new956(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T956));
+	size_t s = sizeof(T956);
 	if (initialize) {
-		*(T956*)R = GE_default956;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 956;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11696,9 +13625,12 @@ T0* GE_new956(TC* ac, T1 initialize)
 T0* GE_new957(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T957));
+	size_t s = sizeof(T957);
 	if (initialize) {
-		*(T957*)R = GE_default957;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 957;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -11707,9 +13639,12 @@ T0* GE_new957(TC* ac, T1 initialize)
 T0* GE_new958(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T958));
+	size_t s = sizeof(T958);
 	if (initialize) {
-		*(T958*)R = GE_default958;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 958;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11718,9 +13653,12 @@ T0* GE_new958(TC* ac, T1 initialize)
 T0* GE_new961(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T961));
+	size_t s = sizeof(T961);
 	if (initialize) {
-		*(T961*)R = GE_default961;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 961;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11729,9 +13667,12 @@ T0* GE_new961(TC* ac, T1 initialize)
 T0* GE_new962(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T962));
+	size_t s = sizeof(T962);
 	if (initialize) {
-		*(T962*)R = GE_default962;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 962;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11740,9 +13681,12 @@ T0* GE_new962(TC* ac, T1 initialize)
 T0* GE_new963(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T963));
+	size_t s = sizeof(T963);
 	if (initialize) {
-		*(T963*)R = GE_default963;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 963;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11751,9 +13695,12 @@ T0* GE_new963(TC* ac, T1 initialize)
 T0* GE_new965(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T965));
+	size_t s = sizeof(T965);
 	if (initialize) {
-		*(T965*)R = GE_default965;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 965;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11762,9 +13709,12 @@ T0* GE_new965(TC* ac, T1 initialize)
 T0* GE_new966(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T966));
+	size_t s = sizeof(T966);
 	if (initialize) {
-		*(T966*)R = GE_default966;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 966;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11773,9 +13723,12 @@ T0* GE_new966(TC* ac, T1 initialize)
 T0* GE_new968(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T968));
+	size_t s = sizeof(T968);
 	if (initialize) {
-		*(T968*)R = GE_default968;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 968;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11784,9 +13737,12 @@ T0* GE_new968(TC* ac, T1 initialize)
 T0* GE_new969(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T969));
+	size_t s = sizeof(T969);
 	if (initialize) {
-		*(T969*)R = GE_default969;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 969;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11795,9 +13751,12 @@ T0* GE_new969(TC* ac, T1 initialize)
 T0* GE_new970(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T970));
+	size_t s = sizeof(T970);
 	if (initialize) {
-		*(T970*)R = GE_default970;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 970;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -11806,9 +13765,12 @@ T0* GE_new970(TC* ac, T1 initialize)
 T0* GE_new976(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T976));
+	size_t s = sizeof(T976);
 	if (initialize) {
-		*(T976*)R = GE_default976;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 976;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11817,9 +13779,12 @@ T0* GE_new976(TC* ac, T1 initialize)
 T0* GE_new980(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T980));
+	size_t s = sizeof(T980);
 	if (initialize) {
-		*(T980*)R = GE_default980;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 980;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11828,9 +13793,12 @@ T0* GE_new980(TC* ac, T1 initialize)
 T0* GE_new981(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T981));
+	size_t s = sizeof(T981);
 	if (initialize) {
-		*(T981*)R = GE_default981;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 981;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11839,9 +13807,12 @@ T0* GE_new981(TC* ac, T1 initialize)
 T0* GE_new982(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T982));
+	size_t s = sizeof(T982);
 	if (initialize) {
-		*(T982*)R = GE_default982;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 982;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11850,9 +13821,12 @@ T0* GE_new982(TC* ac, T1 initialize)
 T0* GE_new984(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T984));
+	size_t s = sizeof(T984);
 	if (initialize) {
-		*(T984*)R = GE_default984;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 984;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11861,9 +13835,12 @@ T0* GE_new984(TC* ac, T1 initialize)
 T0* GE_new985(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T985));
+	size_t s = sizeof(T985);
 	if (initialize) {
-		*(T985*)R = GE_default985;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 985;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11872,9 +13849,12 @@ T0* GE_new985(TC* ac, T1 initialize)
 T0* GE_new986(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T986));
+	size_t s = sizeof(T986);
 	if (initialize) {
-		*(T986*)R = GE_default986;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 986;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11883,9 +13863,12 @@ T0* GE_new986(TC* ac, T1 initialize)
 T0* GE_new987(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T987));
+	size_t s = sizeof(T987);
 	if (initialize) {
-		*(T987*)R = GE_default987;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 987;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11894,9 +13877,12 @@ T0* GE_new987(TC* ac, T1 initialize)
 T0* GE_new988(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T988));
+	size_t s = sizeof(T988);
 	if (initialize) {
-		*(T988*)R = GE_default988;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 988;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11905,9 +13891,12 @@ T0* GE_new988(TC* ac, T1 initialize)
 T0* GE_new989(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T989));
+	size_t s = sizeof(T989);
 	if (initialize) {
-		*(T989*)R = GE_default989;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 989;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -11916,9 +13905,12 @@ T0* GE_new989(TC* ac, T1 initialize)
 T0* GE_new994(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T994));
+	size_t s = sizeof(T994);
 	if (initialize) {
-		*(T994*)R = GE_default994;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 994;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11927,9 +13919,12 @@ T0* GE_new994(TC* ac, T1 initialize)
 T0* GE_new995(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T995));
+	size_t s = sizeof(T995);
 	if (initialize) {
-		*(T995*)R = GE_default995;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 995;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11938,9 +13933,12 @@ T0* GE_new995(TC* ac, T1 initialize)
 T0* GE_new999(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T999));
+	size_t s = sizeof(T999);
 	if (initialize) {
-		*(T999*)R = GE_default999;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 999;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11949,9 +13947,12 @@ T0* GE_new999(TC* ac, T1 initialize)
 T0* GE_new1004(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1004));
+	size_t s = sizeof(T1004);
 	if (initialize) {
-		*(T1004*)R = GE_default1004;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1004;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11960,9 +13961,12 @@ T0* GE_new1004(TC* ac, T1 initialize)
 T0* GE_new1005(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1005));
+	size_t s = sizeof(T1005);
 	if (initialize) {
-		*(T1005*)R = GE_default1005;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1005;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11971,14 +13975,14 @@ T0* GE_new1005(TC* ac, T1 initialize)
 T0* GE_new1006(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1006)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1006)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1006*)R = GE_default1006;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1006;
 		((T1006*)(R))->a2 = a1;
-		((T1006*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1006*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1006*)(R))->offset = offsetof(T1006, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -11987,9 +13991,12 @@ T0* GE_new1006(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1007(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1007));
+	size_t s = sizeof(T1007);
 	if (initialize) {
-		*(T1007*)R = GE_default1007;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1007;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -11998,9 +14005,12 @@ T0* GE_new1007(TC* ac, T1 initialize)
 T0* GE_new1008(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1008));
+	size_t s = sizeof(T1008);
 	if (initialize) {
-		*(T1008*)R = GE_default1008;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1008;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12009,9 +14019,12 @@ T0* GE_new1008(TC* ac, T1 initialize)
 T0* GE_new1011(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1011));
+	size_t s = sizeof(T1011);
 	if (initialize) {
-		*(T1011*)R = GE_default1011;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1011;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12020,9 +14033,12 @@ T0* GE_new1011(TC* ac, T1 initialize)
 T0* GE_new1012(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1012));
+	size_t s = sizeof(T1012);
 	if (initialize) {
-		*(T1012*)R = GE_default1012;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1012;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12031,9 +14047,12 @@ T0* GE_new1012(TC* ac, T1 initialize)
 T0* GE_new1014(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1014));
+	size_t s = sizeof(T1014);
 	if (initialize) {
-		*(T1014*)R = GE_default1014;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1014;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12042,9 +14061,12 @@ T0* GE_new1014(TC* ac, T1 initialize)
 T0* GE_new1015(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1015));
+	size_t s = sizeof(T1015);
 	if (initialize) {
-		*(T1015*)R = GE_default1015;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1015;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12053,9 +14075,12 @@ T0* GE_new1015(TC* ac, T1 initialize)
 T0* GE_new1017(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1017));
+	size_t s = sizeof(T1017);
 	if (initialize) {
-		*(T1017*)R = GE_default1017;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1017;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12064,9 +14089,12 @@ T0* GE_new1017(TC* ac, T1 initialize)
 T0* GE_new1019(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1019));
+	size_t s = sizeof(T1019);
 	if (initialize) {
-		*(T1019*)R = GE_default1019;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1019;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12075,9 +14103,12 @@ T0* GE_new1019(TC* ac, T1 initialize)
 T0* GE_new1020(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1020));
+	size_t s = sizeof(T1020);
 	if (initialize) {
-		*(T1020*)R = GE_default1020;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1020;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12086,9 +14117,12 @@ T0* GE_new1020(TC* ac, T1 initialize)
 T0* GE_new1022(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1022));
+	size_t s = sizeof(T1022);
 	if (initialize) {
-		*(T1022*)R = GE_default1022;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1022;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12097,9 +14131,12 @@ T0* GE_new1022(TC* ac, T1 initialize)
 T0* GE_new1023(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1023));
+	size_t s = sizeof(T1023);
 	if (initialize) {
-		*(T1023*)R = GE_default1023;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1023;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12108,9 +14145,12 @@ T0* GE_new1023(TC* ac, T1 initialize)
 T0* GE_new1024(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1024));
+	size_t s = sizeof(T1024);
 	if (initialize) {
-		*(T1024*)R = GE_default1024;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1024;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12119,9 +14159,12 @@ T0* GE_new1024(TC* ac, T1 initialize)
 T0* GE_new1029(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1029));
+	size_t s = sizeof(T1029);
 	if (initialize) {
-		*(T1029*)R = GE_default1029;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1029;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12130,9 +14173,12 @@ T0* GE_new1029(TC* ac, T1 initialize)
 T0* GE_new1032(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1032));
+	size_t s = sizeof(T1032);
 	if (initialize) {
-		*(T1032*)R = GE_default1032;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1032;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12141,9 +14187,12 @@ T0* GE_new1032(TC* ac, T1 initialize)
 T0* GE_new1033(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1033));
+	size_t s = sizeof(T1033);
 	if (initialize) {
-		*(T1033*)R = GE_default1033;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1033;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12152,9 +14201,12 @@ T0* GE_new1033(TC* ac, T1 initialize)
 T0* GE_new1034(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1034));
+	size_t s = sizeof(T1034);
 	if (initialize) {
-		*(T1034*)R = GE_default1034;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1034;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12163,9 +14215,12 @@ T0* GE_new1034(TC* ac, T1 initialize)
 T0* GE_new1035(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1035));
+	size_t s = sizeof(T1035);
 	if (initialize) {
-		*(T1035*)R = GE_default1035;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1035;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12174,9 +14229,12 @@ T0* GE_new1035(TC* ac, T1 initialize)
 T0* GE_new1038(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1038));
+	size_t s = sizeof(T1038);
 	if (initialize) {
-		*(T1038*)R = GE_default1038;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1038;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12185,9 +14243,12 @@ T0* GE_new1038(TC* ac, T1 initialize)
 T0* GE_new1040(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1040));
+	size_t s = sizeof(T1040);
 	if (initialize) {
-		*(T1040*)R = GE_default1040;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1040;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12196,9 +14257,12 @@ T0* GE_new1040(TC* ac, T1 initialize)
 T0* GE_new1042(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1042));
+	size_t s = sizeof(T1042);
 	if (initialize) {
-		*(T1042*)R = GE_default1042;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1042;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12207,9 +14271,12 @@ T0* GE_new1042(TC* ac, T1 initialize)
 T0* GE_new1043(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1043));
+	size_t s = sizeof(T1043);
 	if (initialize) {
-		*(T1043*)R = GE_default1043;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1043;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12218,9 +14285,12 @@ T0* GE_new1043(TC* ac, T1 initialize)
 T0* GE_new1044(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1044));
+	size_t s = sizeof(T1044);
 	if (initialize) {
-		*(T1044*)R = GE_default1044;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1044;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12229,9 +14299,12 @@ T0* GE_new1044(TC* ac, T1 initialize)
 T0* GE_new1045(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1045));
+	size_t s = sizeof(T1045);
 	if (initialize) {
-		*(T1045*)R = GE_default1045;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1045;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12240,9 +14313,12 @@ T0* GE_new1045(TC* ac, T1 initialize)
 T0* GE_new1047(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1047));
+	size_t s = sizeof(T1047);
 	if (initialize) {
-		*(T1047*)R = GE_default1047;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1047;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12251,9 +14327,12 @@ T0* GE_new1047(TC* ac, T1 initialize)
 T0* GE_new1048(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1048));
+	size_t s = sizeof(T1048);
 	if (initialize) {
-		*(T1048*)R = GE_default1048;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1048;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12262,9 +14341,12 @@ T0* GE_new1048(TC* ac, T1 initialize)
 T0* GE_new1049(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1049));
+	size_t s = sizeof(T1049);
 	if (initialize) {
-		*(T1049*)R = GE_default1049;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1049;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12273,9 +14355,12 @@ T0* GE_new1049(TC* ac, T1 initialize)
 T0* GE_new1050(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1050));
+	size_t s = sizeof(T1050);
 	if (initialize) {
-		*(T1050*)R = GE_default1050;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1050;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12284,9 +14369,12 @@ T0* GE_new1050(TC* ac, T1 initialize)
 T0* GE_new1051(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1051));
+	size_t s = sizeof(T1051);
 	if (initialize) {
-		*(T1051*)R = GE_default1051;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1051;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12295,9 +14383,12 @@ T0* GE_new1051(TC* ac, T1 initialize)
 T0* GE_new1052(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1052));
+	size_t s = sizeof(T1052);
 	if (initialize) {
-		*(T1052*)R = GE_default1052;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1052;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12306,9 +14397,12 @@ T0* GE_new1052(TC* ac, T1 initialize)
 T0* GE_new1053(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1053));
+	size_t s = sizeof(T1053);
 	if (initialize) {
-		*(T1053*)R = GE_default1053;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1053;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12317,9 +14411,12 @@ T0* GE_new1053(TC* ac, T1 initialize)
 T0* GE_new1056(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1056));
+	size_t s = sizeof(T1056);
 	if (initialize) {
-		*(T1056*)R = GE_default1056;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1056;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12328,9 +14425,12 @@ T0* GE_new1056(TC* ac, T1 initialize)
 T0* GE_new1058(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1058));
+	size_t s = sizeof(T1058);
 	if (initialize) {
-		*(T1058*)R = GE_default1058;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1058;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12339,9 +14439,12 @@ T0* GE_new1058(TC* ac, T1 initialize)
 T0* GE_new1059(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1059));
+	size_t s = sizeof(T1059);
 	if (initialize) {
-		*(T1059*)R = GE_default1059;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1059;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12350,11 +14453,14 @@ T0* GE_new1059(TC* ac, T1 initialize)
 T0* GE_new1060(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1060));
-	GE_register_dispose(R,&T1060f32);
+	size_t s = sizeof(T1060);
 	if (initialize) {
-		*(T1060*)R = GE_default1060;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1060;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
+	GE_register_dispose(R,&T1060f32);
 	return R;
 }
 
@@ -12362,11 +14468,14 @@ T0* GE_new1060(TC* ac, T1 initialize)
 T0* GE_new1061(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1061));
-	GE_register_dispose(R,&T1061f32);
+	size_t s = sizeof(T1061);
 	if (initialize) {
-		*(T1061*)R = GE_default1061;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1061;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
+	GE_register_dispose(R,&T1061f32);
 	return R;
 }
 
@@ -12374,9 +14483,12 @@ T0* GE_new1061(TC* ac, T1 initialize)
 T0* GE_new1062(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1062));
+	size_t s = sizeof(T1062);
 	if (initialize) {
-		*(T1062*)R = GE_default1062;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1062;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12385,14 +14497,14 @@ T0* GE_new1062(TC* ac, T1 initialize)
 T0* GE_new1063(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1063)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1063)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1063*)R = GE_default1063;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1063;
 		((T1063*)(R))->a2 = a1;
-		((T1063*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1063*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1063*)(R))->offset = offsetof(T1063, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12401,14 +14513,14 @@ T0* GE_new1063(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1064(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1064)+(a1>1?(a1-1):0)*sizeof(T8));
+	size_t s = sizeof(T1064)+((a1>1)?(a1-1):0)*sizeof(T8);
 	if (initialize) {
-		*(T1064*)R = GE_default1064;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1064;
 		((T1064*)(R))->a2 = a1;
-		((T1064*)(R))->a1 = 0;
-#ifndef GE_malloc_atomic_cleared
-		memset(((T1064*)(R))->z2,0,a1*sizeof(T8));
-#endif
+		((T1064*)(R))->offset = offsetof(T1064, z2);
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12417,9 +14529,12 @@ T0* GE_new1064(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1066(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1066));
+	size_t s = sizeof(T1066);
 	if (initialize) {
-		*(T1066*)R = GE_default1066;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1066;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12428,9 +14543,12 @@ T0* GE_new1066(TC* ac, T1 initialize)
 T0* GE_new1067(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1067));
+	size_t s = sizeof(T1067);
 	if (initialize) {
-		*(T1067*)R = GE_default1067;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1067;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12439,9 +14557,12 @@ T0* GE_new1067(TC* ac, T1 initialize)
 T0* GE_new1068(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1068));
+	size_t s = sizeof(T1068);
 	if (initialize) {
-		*(T1068*)R = GE_default1068;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1068;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12450,9 +14571,12 @@ T0* GE_new1068(TC* ac, T1 initialize)
 T0* GE_new1069(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1069));
+	size_t s = sizeof(T1069);
 	if (initialize) {
-		*(T1069*)R = GE_default1069;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1069;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12461,14 +14585,14 @@ T0* GE_new1069(TC* ac, T1 initialize)
 T0* GE_new1070(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1070)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1070)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1070*)R = GE_default1070;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1070;
 		((T1070*)(R))->a2 = a1;
-		((T1070*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1070*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1070*)(R))->offset = offsetof(T1070, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12477,9 +14601,12 @@ T0* GE_new1070(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1073(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1073));
+	size_t s = sizeof(T1073);
 	if (initialize) {
-		*(T1073*)R = GE_default1073;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1073;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12488,9 +14615,12 @@ T0* GE_new1073(TC* ac, T1 initialize)
 T0* GE_new1074(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1074));
+	size_t s = sizeof(T1074);
 	if (initialize) {
-		*(T1074*)R = GE_default1074;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1074;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12499,14 +14629,14 @@ T0* GE_new1074(TC* ac, T1 initialize)
 T0* GE_new1075(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1075)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1075)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1075*)R = GE_default1075;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1075;
 		((T1075*)(R))->a2 = a1;
-		((T1075*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1075*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1075*)(R))->offset = offsetof(T1075, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12515,9 +14645,12 @@ T0* GE_new1075(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1076(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1076));
+	size_t s = sizeof(T1076);
 	if (initialize) {
-		*(T1076*)R = GE_default1076;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1076;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12526,14 +14659,14 @@ T0* GE_new1076(TC* ac, T1 initialize)
 T0* GE_new1078(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1078)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1078)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1078*)R = GE_default1078;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1078;
 		((T1078*)(R))->a2 = a1;
-		((T1078*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1078*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1078*)(R))->offset = offsetof(T1078, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12542,9 +14675,12 @@ T0* GE_new1078(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1079(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1079));
+	size_t s = sizeof(T1079);
 	if (initialize) {
-		*(T1079*)R = GE_default1079;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1079;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12553,14 +14689,14 @@ T0* GE_new1079(TC* ac, T1 initialize)
 T0* GE_new1080(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1080)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1080)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1080*)R = GE_default1080;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1080;
 		((T1080*)(R))->a2 = a1;
-		((T1080*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1080*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1080*)(R))->offset = offsetof(T1080, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12569,9 +14705,12 @@ T0* GE_new1080(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1081(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1081));
+	size_t s = sizeof(T1081);
 	if (initialize) {
-		*(T1081*)R = GE_default1081;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1081;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12580,14 +14719,14 @@ T0* GE_new1081(TC* ac, T1 initialize)
 T0* GE_new1083(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1083)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1083)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1083*)R = GE_default1083;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1083;
 		((T1083*)(R))->a2 = a1;
-		((T1083*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1083*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1083*)(R))->offset = offsetof(T1083, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12596,9 +14735,12 @@ T0* GE_new1083(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1085(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1085));
+	size_t s = sizeof(T1085);
 	if (initialize) {
-		*(T1085*)R = GE_default1085;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1085;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12607,9 +14749,12 @@ T0* GE_new1085(TC* ac, T1 initialize)
 T0* GE_new1086(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1086));
+	size_t s = sizeof(T1086);
 	if (initialize) {
-		*(T1086*)R = GE_default1086;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1086;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12618,9 +14763,12 @@ T0* GE_new1086(TC* ac, T1 initialize)
 T0* GE_new1087(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1087));
+	size_t s = sizeof(T1087);
 	if (initialize) {
-		*(T1087*)R = GE_default1087;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1087;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12629,9 +14777,12 @@ T0* GE_new1087(TC* ac, T1 initialize)
 T0* GE_new1089(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1089));
+	size_t s = sizeof(T1089);
 	if (initialize) {
-		*(T1089*)R = GE_default1089;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1089;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12640,14 +14791,14 @@ T0* GE_new1089(TC* ac, T1 initialize)
 T0* GE_new1090(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1090)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1090)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1090*)R = GE_default1090;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1090;
 		((T1090*)(R))->a2 = a1;
-		((T1090*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1090*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1090*)(R))->offset = offsetof(T1090, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12656,9 +14807,12 @@ T0* GE_new1090(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1091(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1091));
+	size_t s = sizeof(T1091);
 	if (initialize) {
-		*(T1091*)R = GE_default1091;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1091;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12667,9 +14821,12 @@ T0* GE_new1091(TC* ac, T1 initialize)
 T0* GE_new1092(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1092));
+	size_t s = sizeof(T1092);
 	if (initialize) {
-		*(T1092*)R = GE_default1092;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1092;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12678,9 +14835,12 @@ T0* GE_new1092(TC* ac, T1 initialize)
 T0* GE_new1093(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1093));
+	size_t s = sizeof(T1093);
 	if (initialize) {
-		*(T1093*)R = GE_default1093;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1093;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12689,9 +14849,12 @@ T0* GE_new1093(TC* ac, T1 initialize)
 T0* GE_new1094(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1094));
+	size_t s = sizeof(T1094);
 	if (initialize) {
-		*(T1094*)R = GE_default1094;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1094;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12700,14 +14863,14 @@ T0* GE_new1094(TC* ac, T1 initialize)
 T0* GE_new1096(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1096)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1096)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1096*)R = GE_default1096;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1096;
 		((T1096*)(R))->a2 = a1;
-		((T1096*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1096*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1096*)(R))->offset = offsetof(T1096, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12716,9 +14879,12 @@ T0* GE_new1096(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1097(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1097));
+	size_t s = sizeof(T1097);
 	if (initialize) {
-		*(T1097*)R = GE_default1097;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1097;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12727,9 +14893,12 @@ T0* GE_new1097(TC* ac, T1 initialize)
 T0* GE_new1098(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1098));
+	size_t s = sizeof(T1098);
 	if (initialize) {
-		*(T1098*)R = GE_default1098;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1098;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12738,14 +14907,14 @@ T0* GE_new1098(TC* ac, T1 initialize)
 T0* GE_new1099(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1099)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1099)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1099*)R = GE_default1099;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1099;
 		((T1099*)(R))->a2 = a1;
-		((T1099*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1099*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1099*)(R))->offset = offsetof(T1099, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12754,9 +14923,12 @@ T0* GE_new1099(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1100(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1100));
+	size_t s = sizeof(T1100);
 	if (initialize) {
-		*(T1100*)R = GE_default1100;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1100;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12765,14 +14937,14 @@ T0* GE_new1100(TC* ac, T1 initialize)
 T0* GE_new1101(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1101)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1101)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1101*)R = GE_default1101;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1101;
 		((T1101*)(R))->a2 = a1;
-		((T1101*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1101*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1101*)(R))->offset = offsetof(T1101, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12781,9 +14953,12 @@ T0* GE_new1101(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1102(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1102));
+	size_t s = sizeof(T1102);
 	if (initialize) {
-		*(T1102*)R = GE_default1102;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1102;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12792,9 +14967,12 @@ T0* GE_new1102(TC* ac, T1 initialize)
 T0* GE_new1103(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1103));
+	size_t s = sizeof(T1103);
 	if (initialize) {
-		*(T1103*)R = GE_default1103;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1103;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12803,9 +14981,12 @@ T0* GE_new1103(TC* ac, T1 initialize)
 T0* GE_new1104(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1104));
+	size_t s = sizeof(T1104);
 	if (initialize) {
-		*(T1104*)R = GE_default1104;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1104;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12814,9 +14995,12 @@ T0* GE_new1104(TC* ac, T1 initialize)
 T0* GE_new1105(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1105));
+	size_t s = sizeof(T1105);
 	if (initialize) {
-		*(T1105*)R = GE_default1105;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1105;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12825,9 +15009,12 @@ T0* GE_new1105(TC* ac, T1 initialize)
 T0* GE_new1106(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1106));
+	size_t s = sizeof(T1106);
 	if (initialize) {
-		*(T1106*)R = GE_default1106;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1106;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12836,9 +15023,12 @@ T0* GE_new1106(TC* ac, T1 initialize)
 T0* GE_new1107(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1107));
+	size_t s = sizeof(T1107);
 	if (initialize) {
-		*(T1107*)R = GE_default1107;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1107;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12847,9 +15037,12 @@ T0* GE_new1107(TC* ac, T1 initialize)
 T0* GE_new1109(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1109));
+	size_t s = sizeof(T1109);
 	if (initialize) {
-		*(T1109*)R = GE_default1109;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1109;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12858,9 +15051,12 @@ T0* GE_new1109(TC* ac, T1 initialize)
 T0* GE_new1110(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1110));
+	size_t s = sizeof(T1110);
 	if (initialize) {
-		*(T1110*)R = GE_default1110;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1110;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12869,9 +15065,12 @@ T0* GE_new1110(TC* ac, T1 initialize)
 T0* GE_new1111(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1111));
+	size_t s = sizeof(T1111);
 	if (initialize) {
-		*(T1111*)R = GE_default1111;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1111;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12880,9 +15079,12 @@ T0* GE_new1111(TC* ac, T1 initialize)
 T0* GE_new1112(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1112));
+	size_t s = sizeof(T1112);
 	if (initialize) {
-		*(T1112*)R = GE_default1112;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1112;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12891,9 +15093,12 @@ T0* GE_new1112(TC* ac, T1 initialize)
 T0* GE_new1113(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1113));
+	size_t s = sizeof(T1113);
 	if (initialize) {
-		*(T1113*)R = GE_default1113;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1113;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12902,9 +15107,12 @@ T0* GE_new1113(TC* ac, T1 initialize)
 T0* GE_new1114(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1114));
+	size_t s = sizeof(T1114);
 	if (initialize) {
-		*(T1114*)R = GE_default1114;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1114;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12913,9 +15121,12 @@ T0* GE_new1114(TC* ac, T1 initialize)
 T0* GE_new1115(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1115));
+	size_t s = sizeof(T1115);
 	if (initialize) {
-		*(T1115*)R = GE_default1115;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1115;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12924,9 +15135,12 @@ T0* GE_new1115(TC* ac, T1 initialize)
 T0* GE_new1117(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1117));
+	size_t s = sizeof(T1117);
 	if (initialize) {
-		*(T1117*)R = GE_default1117;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1117;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12935,9 +15149,12 @@ T0* GE_new1117(TC* ac, T1 initialize)
 T0* GE_new1118(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1118));
+	size_t s = sizeof(T1118);
 	if (initialize) {
-		*(T1118*)R = GE_default1118;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1118;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -12946,9 +15163,12 @@ T0* GE_new1118(TC* ac, T1 initialize)
 T0* GE_new1120(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1120));
+	size_t s = sizeof(T1120);
 	if (initialize) {
-		*(T1120*)R = GE_default1120;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1120;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12957,9 +15177,12 @@ T0* GE_new1120(TC* ac, T1 initialize)
 T0* GE_new1121(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1121));
+	size_t s = sizeof(T1121);
 	if (initialize) {
-		*(T1121*)R = GE_default1121;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1121;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12968,9 +15191,12 @@ T0* GE_new1121(TC* ac, T1 initialize)
 T0* GE_new1122(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1122));
+	size_t s = sizeof(T1122);
 	if (initialize) {
-		*(T1122*)R = GE_default1122;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1122;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12979,9 +15205,12 @@ T0* GE_new1122(TC* ac, T1 initialize)
 T0* GE_new1123(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1123));
+	size_t s = sizeof(T1123);
 	if (initialize) {
-		*(T1123*)R = GE_default1123;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1123;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -12990,9 +15219,12 @@ T0* GE_new1123(TC* ac, T1 initialize)
 T0* GE_new1124(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1124));
+	size_t s = sizeof(T1124);
 	if (initialize) {
-		*(T1124*)R = GE_default1124;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1124;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13001,9 +15233,12 @@ T0* GE_new1124(TC* ac, T1 initialize)
 T0* GE_new1125(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1125));
+	size_t s = sizeof(T1125);
 	if (initialize) {
-		*(T1125*)R = GE_default1125;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1125;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13012,9 +15247,12 @@ T0* GE_new1125(TC* ac, T1 initialize)
 T0* GE_new1126(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1126));
+	size_t s = sizeof(T1126);
 	if (initialize) {
-		*(T1126*)R = GE_default1126;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1126;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13023,9 +15261,12 @@ T0* GE_new1126(TC* ac, T1 initialize)
 T0* GE_new1127(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1127));
+	size_t s = sizeof(T1127);
 	if (initialize) {
-		*(T1127*)R = GE_default1127;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1127;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13034,9 +15275,12 @@ T0* GE_new1127(TC* ac, T1 initialize)
 T0* GE_new1128(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1128));
+	size_t s = sizeof(T1128);
 	if (initialize) {
-		*(T1128*)R = GE_default1128;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1128;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13045,9 +15289,12 @@ T0* GE_new1128(TC* ac, T1 initialize)
 T0* GE_new1129(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1129));
+	size_t s = sizeof(T1129);
 	if (initialize) {
-		*(T1129*)R = GE_default1129;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1129;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13056,9 +15303,12 @@ T0* GE_new1129(TC* ac, T1 initialize)
 T0* GE_new1130(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1130));
+	size_t s = sizeof(T1130);
 	if (initialize) {
-		*(T1130*)R = GE_default1130;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1130;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13067,9 +15317,12 @@ T0* GE_new1130(TC* ac, T1 initialize)
 T0* GE_new1131(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1131));
+	size_t s = sizeof(T1131);
 	if (initialize) {
-		*(T1131*)R = GE_default1131;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1131;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13078,9 +15331,12 @@ T0* GE_new1131(TC* ac, T1 initialize)
 T0* GE_new1132(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1132));
+	size_t s = sizeof(T1132);
 	if (initialize) {
-		*(T1132*)R = GE_default1132;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1132;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13089,9 +15345,12 @@ T0* GE_new1132(TC* ac, T1 initialize)
 T0* GE_new1133(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1133));
+	size_t s = sizeof(T1133);
 	if (initialize) {
-		*(T1133*)R = GE_default1133;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1133;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13100,9 +15359,12 @@ T0* GE_new1133(TC* ac, T1 initialize)
 T0* GE_new1134(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1134));
+	size_t s = sizeof(T1134);
 	if (initialize) {
-		*(T1134*)R = GE_default1134;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1134;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13111,9 +15373,12 @@ T0* GE_new1134(TC* ac, T1 initialize)
 T0* GE_new1135(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1135));
+	size_t s = sizeof(T1135);
 	if (initialize) {
-		*(T1135*)R = GE_default1135;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1135;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13122,9 +15387,12 @@ T0* GE_new1135(TC* ac, T1 initialize)
 T0* GE_new1136(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1136));
+	size_t s = sizeof(T1136);
 	if (initialize) {
-		*(T1136*)R = GE_default1136;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1136;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13133,9 +15401,12 @@ T0* GE_new1136(TC* ac, T1 initialize)
 T0* GE_new1137(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1137));
+	size_t s = sizeof(T1137);
 	if (initialize) {
-		*(T1137*)R = GE_default1137;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1137;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13144,9 +15415,12 @@ T0* GE_new1137(TC* ac, T1 initialize)
 T0* GE_new1138(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1138));
+	size_t s = sizeof(T1138);
 	if (initialize) {
-		*(T1138*)R = GE_default1138;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1138;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13155,9 +15429,12 @@ T0* GE_new1138(TC* ac, T1 initialize)
 T0* GE_new1139(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1139));
+	size_t s = sizeof(T1139);
 	if (initialize) {
-		*(T1139*)R = GE_default1139;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1139;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13166,9 +15443,12 @@ T0* GE_new1139(TC* ac, T1 initialize)
 T0* GE_new1140(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1140));
+	size_t s = sizeof(T1140);
 	if (initialize) {
-		*(T1140*)R = GE_default1140;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1140;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13177,9 +15457,12 @@ T0* GE_new1140(TC* ac, T1 initialize)
 T0* GE_new1141(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1141));
+	size_t s = sizeof(T1141);
 	if (initialize) {
-		*(T1141*)R = GE_default1141;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1141;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13188,9 +15471,12 @@ T0* GE_new1141(TC* ac, T1 initialize)
 T0* GE_new1142(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1142));
+	size_t s = sizeof(T1142);
 	if (initialize) {
-		*(T1142*)R = GE_default1142;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1142;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13199,9 +15485,12 @@ T0* GE_new1142(TC* ac, T1 initialize)
 T0* GE_new1144(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1144));
+	size_t s = sizeof(T1144);
 	if (initialize) {
-		*(T1144*)R = GE_default1144;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1144;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13210,14 +15499,14 @@ T0* GE_new1144(TC* ac, T1 initialize)
 T0* GE_new1145(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1145)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1145)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1145*)R = GE_default1145;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1145;
 		((T1145*)(R))->a2 = a1;
-		((T1145*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1145*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1145*)(R))->offset = offsetof(T1145, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13226,9 +15515,12 @@ T0* GE_new1145(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1146(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1146));
+	size_t s = sizeof(T1146);
 	if (initialize) {
-		*(T1146*)R = GE_default1146;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1146;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13237,14 +15529,14 @@ T0* GE_new1146(TC* ac, T1 initialize)
 T0* GE_new1147(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1147)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1147)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1147*)R = GE_default1147;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1147;
 		((T1147*)(R))->a2 = a1;
-		((T1147*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1147*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1147*)(R))->offset = offsetof(T1147, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13253,9 +15545,12 @@ T0* GE_new1147(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1148(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1148));
+	size_t s = sizeof(T1148);
 	if (initialize) {
-		*(T1148*)R = GE_default1148;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1148;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13264,14 +15559,14 @@ T0* GE_new1148(TC* ac, T1 initialize)
 T0* GE_new1149(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1149)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1149)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1149*)R = GE_default1149;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1149;
 		((T1149*)(R))->a2 = a1;
-		((T1149*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1149*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1149*)(R))->offset = offsetof(T1149, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13280,9 +15575,12 @@ T0* GE_new1149(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1150(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1150));
+	size_t s = sizeof(T1150);
 	if (initialize) {
-		*(T1150*)R = GE_default1150;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1150;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13291,14 +15589,14 @@ T0* GE_new1150(TC* ac, T1 initialize)
 T0* GE_new1151(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1151)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1151)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1151*)R = GE_default1151;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1151;
 		((T1151*)(R))->a2 = a1;
-		((T1151*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1151*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1151*)(R))->offset = offsetof(T1151, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13307,9 +15605,12 @@ T0* GE_new1151(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1152(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1152));
+	size_t s = sizeof(T1152);
 	if (initialize) {
-		*(T1152*)R = GE_default1152;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1152;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13318,14 +15619,14 @@ T0* GE_new1152(TC* ac, T1 initialize)
 T0* GE_new1153(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1153)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1153)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1153*)R = GE_default1153;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1153;
 		((T1153*)(R))->a2 = a1;
-		((T1153*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1153*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1153*)(R))->offset = offsetof(T1153, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13334,9 +15635,12 @@ T0* GE_new1153(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1154(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1154));
+	size_t s = sizeof(T1154);
 	if (initialize) {
-		*(T1154*)R = GE_default1154;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1154;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13345,14 +15649,14 @@ T0* GE_new1154(TC* ac, T1 initialize)
 T0* GE_new1155(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1155)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1155)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1155*)R = GE_default1155;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1155;
 		((T1155*)(R))->a2 = a1;
-		((T1155*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1155*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1155*)(R))->offset = offsetof(T1155, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13361,9 +15665,12 @@ T0* GE_new1155(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1156(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1156));
+	size_t s = sizeof(T1156);
 	if (initialize) {
-		*(T1156*)R = GE_default1156;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1156;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13372,14 +15679,14 @@ T0* GE_new1156(TC* ac, T1 initialize)
 T0* GE_new1157(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1157)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1157)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1157*)R = GE_default1157;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1157;
 		((T1157*)(R))->a2 = a1;
-		((T1157*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1157*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1157*)(R))->offset = offsetof(T1157, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13388,9 +15695,12 @@ T0* GE_new1157(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1158(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1158));
+	size_t s = sizeof(T1158);
 	if (initialize) {
-		*(T1158*)R = GE_default1158;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1158;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13399,9 +15709,12 @@ T0* GE_new1158(TC* ac, T1 initialize)
 T0* GE_new1159(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1159));
+	size_t s = sizeof(T1159);
 	if (initialize) {
-		*(T1159*)R = GE_default1159;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1159;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13410,14 +15723,14 @@ T0* GE_new1159(TC* ac, T1 initialize)
 T0* GE_new1160(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1160)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1160)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1160*)R = GE_default1160;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1160;
 		((T1160*)(R))->a2 = a1;
-		((T1160*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1160*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1160*)(R))->offset = offsetof(T1160, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13426,9 +15739,12 @@ T0* GE_new1160(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1161(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1161));
+	size_t s = sizeof(T1161);
 	if (initialize) {
-		*(T1161*)R = GE_default1161;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1161;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13437,9 +15753,12 @@ T0* GE_new1161(TC* ac, T1 initialize)
 T0* GE_new1162(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1162));
+	size_t s = sizeof(T1162);
 	if (initialize) {
-		*(T1162*)R = GE_default1162;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1162;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13448,14 +15767,14 @@ T0* GE_new1162(TC* ac, T1 initialize)
 T0* GE_new1163(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1163)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1163)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1163*)R = GE_default1163;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1163;
 		((T1163*)(R))->a2 = a1;
-		((T1163*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1163*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1163*)(R))->offset = offsetof(T1163, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13464,9 +15783,12 @@ T0* GE_new1163(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1164(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1164));
+	size_t s = sizeof(T1164);
 	if (initialize) {
-		*(T1164*)R = GE_default1164;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1164;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13475,9 +15797,12 @@ T0* GE_new1164(TC* ac, T1 initialize)
 T0* GE_new1165(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1165));
+	size_t s = sizeof(T1165);
 	if (initialize) {
-		*(T1165*)R = GE_default1165;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1165;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13486,9 +15811,12 @@ T0* GE_new1165(TC* ac, T1 initialize)
 T0* GE_new1166(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1166));
+	size_t s = sizeof(T1166);
 	if (initialize) {
-		*(T1166*)R = GE_default1166;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1166;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13497,9 +15825,12 @@ T0* GE_new1166(TC* ac, T1 initialize)
 T0* GE_new1167(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1167));
+	size_t s = sizeof(T1167);
 	if (initialize) {
-		*(T1167*)R = GE_default1167;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1167;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13508,14 +15839,14 @@ T0* GE_new1167(TC* ac, T1 initialize)
 T0* GE_new1168(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1168)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1168)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1168*)R = GE_default1168;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1168;
 		((T1168*)(R))->a2 = a1;
-		((T1168*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1168*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1168*)(R))->offset = offsetof(T1168, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13524,9 +15855,12 @@ T0* GE_new1168(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1169(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1169));
+	size_t s = sizeof(T1169);
 	if (initialize) {
-		*(T1169*)R = GE_default1169;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1169;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13535,14 +15869,14 @@ T0* GE_new1169(TC* ac, T1 initialize)
 T0* GE_new1171(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1171)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1171)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1171*)R = GE_default1171;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1171;
 		((T1171*)(R))->a2 = a1;
-		((T1171*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1171*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1171*)(R))->offset = offsetof(T1171, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13551,9 +15885,12 @@ T0* GE_new1171(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1173(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1173));
+	size_t s = sizeof(T1173);
 	if (initialize) {
-		*(T1173*)R = GE_default1173;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1173;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13562,14 +15899,14 @@ T0* GE_new1173(TC* ac, T1 initialize)
 T0* GE_new1175(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1175)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1175)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1175*)R = GE_default1175;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1175;
 		((T1175*)(R))->a2 = a1;
-		((T1175*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1175*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1175*)(R))->offset = offsetof(T1175, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13578,9 +15915,12 @@ T0* GE_new1175(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1176(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1176));
+	size_t s = sizeof(T1176);
 	if (initialize) {
-		*(T1176*)R = GE_default1176;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1176;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13589,14 +15929,14 @@ T0* GE_new1176(TC* ac, T1 initialize)
 T0* GE_new1178(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1178)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1178)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1178*)R = GE_default1178;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1178;
 		((T1178*)(R))->a2 = a1;
-		((T1178*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1178*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1178*)(R))->offset = offsetof(T1178, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13605,9 +15945,12 @@ T0* GE_new1178(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1179(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1179));
+	size_t s = sizeof(T1179);
 	if (initialize) {
-		*(T1179*)R = GE_default1179;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1179;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13616,14 +15959,14 @@ T0* GE_new1179(TC* ac, T1 initialize)
 T0* GE_new1180(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1180)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1180)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1180*)R = GE_default1180;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1180;
 		((T1180*)(R))->a2 = a1;
-		((T1180*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1180*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1180*)(R))->offset = offsetof(T1180, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13632,9 +15975,12 @@ T0* GE_new1180(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1181(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1181));
+	size_t s = sizeof(T1181);
 	if (initialize) {
-		*(T1181*)R = GE_default1181;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1181;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13643,14 +15989,14 @@ T0* GE_new1181(TC* ac, T1 initialize)
 T0* GE_new1182(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1182)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1182)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1182*)R = GE_default1182;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1182;
 		((T1182*)(R))->a2 = a1;
-		((T1182*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1182*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1182*)(R))->offset = offsetof(T1182, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13659,9 +16005,12 @@ T0* GE_new1182(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1183(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1183));
+	size_t s = sizeof(T1183);
 	if (initialize) {
-		*(T1183*)R = GE_default1183;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1183;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13670,14 +16019,14 @@ T0* GE_new1183(TC* ac, T1 initialize)
 T0* GE_new1184(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1184)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1184)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1184*)R = GE_default1184;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1184;
 		((T1184*)(R))->a2 = a1;
-		((T1184*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1184*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1184*)(R))->offset = offsetof(T1184, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13686,9 +16035,12 @@ T0* GE_new1184(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1185(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1185));
+	size_t s = sizeof(T1185);
 	if (initialize) {
-		*(T1185*)R = GE_default1185;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1185;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13697,14 +16049,14 @@ T0* GE_new1185(TC* ac, T1 initialize)
 T0* GE_new1186(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1186)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1186)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1186*)R = GE_default1186;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1186;
 		((T1186*)(R))->a2 = a1;
-		((T1186*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1186*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1186*)(R))->offset = offsetof(T1186, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13713,9 +16065,12 @@ T0* GE_new1186(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1187(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1187));
+	size_t s = sizeof(T1187);
 	if (initialize) {
-		*(T1187*)R = GE_default1187;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1187;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13724,9 +16079,12 @@ T0* GE_new1187(TC* ac, T1 initialize)
 T0* GE_new1188(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1188));
+	size_t s = sizeof(T1188);
 	if (initialize) {
-		*(T1188*)R = GE_default1188;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1188;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13735,9 +16093,12 @@ T0* GE_new1188(TC* ac, T1 initialize)
 T0* GE_new1189(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1189));
+	size_t s = sizeof(T1189);
 	if (initialize) {
-		*(T1189*)R = GE_default1189;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1189;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13746,14 +16107,14 @@ T0* GE_new1189(TC* ac, T1 initialize)
 T0* GE_new1190(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1190)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1190)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1190*)R = GE_default1190;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1190;
 		((T1190*)(R))->a2 = a1;
-		((T1190*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1190*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1190*)(R))->offset = offsetof(T1190, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13762,9 +16123,12 @@ T0* GE_new1190(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1193(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1193));
+	size_t s = sizeof(T1193);
 	if (initialize) {
-		*(T1193*)R = GE_default1193;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1193;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13773,14 +16137,14 @@ T0* GE_new1193(TC* ac, T1 initialize)
 T0* GE_new1194(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1194)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1194)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1194*)R = GE_default1194;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1194;
 		((T1194*)(R))->a2 = a1;
-		((T1194*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1194*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1194*)(R))->offset = offsetof(T1194, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13789,9 +16153,12 @@ T0* GE_new1194(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1197(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1197));
+	size_t s = sizeof(T1197);
 	if (initialize) {
-		*(T1197*)R = GE_default1197;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1197;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13800,9 +16167,12 @@ T0* GE_new1197(TC* ac, T1 initialize)
 T0* GE_new1198(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1198));
+	size_t s = sizeof(T1198);
 	if (initialize) {
-		*(T1198*)R = GE_default1198;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1198;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13811,9 +16181,12 @@ T0* GE_new1198(TC* ac, T1 initialize)
 T0* GE_new1199(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1199));
+	size_t s = sizeof(T1199);
 	if (initialize) {
-		*(T1199*)R = GE_default1199;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1199;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13822,9 +16195,12 @@ T0* GE_new1199(TC* ac, T1 initialize)
 T0* GE_new1200(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1200));
+	size_t s = sizeof(T1200);
 	if (initialize) {
-		*(T1200*)R = GE_default1200;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1200;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13833,9 +16209,12 @@ T0* GE_new1200(TC* ac, T1 initialize)
 T0* GE_new1202(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1202));
+	size_t s = sizeof(T1202);
 	if (initialize) {
-		*(T1202*)R = GE_default1202;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1202;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13844,9 +16223,12 @@ T0* GE_new1202(TC* ac, T1 initialize)
 T0* GE_new1203(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1203));
+	size_t s = sizeof(T1203);
 	if (initialize) {
-		*(T1203*)R = GE_default1203;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1203;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13855,9 +16237,12 @@ T0* GE_new1203(TC* ac, T1 initialize)
 T0* GE_new1204(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1204));
+	size_t s = sizeof(T1204);
 	if (initialize) {
-		*(T1204*)R = GE_default1204;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1204;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13866,9 +16251,12 @@ T0* GE_new1204(TC* ac, T1 initialize)
 T0* GE_new1205(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1205));
+	size_t s = sizeof(T1205);
 	if (initialize) {
-		*(T1205*)R = GE_default1205;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1205;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13877,9 +16265,12 @@ T0* GE_new1205(TC* ac, T1 initialize)
 T0* GE_new1207(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1207));
+	size_t s = sizeof(T1207);
 	if (initialize) {
-		*(T1207*)R = GE_default1207;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1207;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13888,9 +16279,12 @@ T0* GE_new1207(TC* ac, T1 initialize)
 T0* GE_new1209(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1209));
+	size_t s = sizeof(T1209);
 	if (initialize) {
-		*(T1209*)R = GE_default1209;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1209;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13899,9 +16293,12 @@ T0* GE_new1209(TC* ac, T1 initialize)
 T0* GE_new1210(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1210));
+	size_t s = sizeof(T1210);
 	if (initialize) {
-		*(T1210*)R = GE_default1210;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1210;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13910,9 +16307,12 @@ T0* GE_new1210(TC* ac, T1 initialize)
 T0* GE_new1211(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1211));
+	size_t s = sizeof(T1211);
 	if (initialize) {
-		*(T1211*)R = GE_default1211;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1211;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13921,14 +16321,14 @@ T0* GE_new1211(TC* ac, T1 initialize)
 T0* GE_new1212(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1212)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1212)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1212*)R = GE_default1212;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1212;
 		((T1212*)(R))->a2 = a1;
-		((T1212*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1212*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1212*)(R))->offset = offsetof(T1212, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13937,9 +16337,12 @@ T0* GE_new1212(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1213(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1213));
+	size_t s = sizeof(T1213);
 	if (initialize) {
-		*(T1213*)R = GE_default1213;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1213;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13948,9 +16351,12 @@ T0* GE_new1213(TC* ac, T1 initialize)
 T0* GE_new1214(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1214));
+	size_t s = sizeof(T1214);
 	if (initialize) {
-		*(T1214*)R = GE_default1214;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1214;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13959,14 +16365,14 @@ T0* GE_new1214(TC* ac, T1 initialize)
 T0* GE_new1215(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1215)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1215)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1215*)R = GE_default1215;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1215;
 		((T1215*)(R))->a2 = a1;
-		((T1215*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1215*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1215*)(R))->offset = offsetof(T1215, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13975,9 +16381,12 @@ T0* GE_new1215(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1216(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1216));
+	size_t s = sizeof(T1216);
 	if (initialize) {
-		*(T1216*)R = GE_default1216;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1216;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -13986,9 +16395,12 @@ T0* GE_new1216(TC* ac, T1 initialize)
 T0* GE_new1217(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1217));
+	size_t s = sizeof(T1217);
 	if (initialize) {
-		*(T1217*)R = GE_default1217;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1217;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -13997,14 +16409,14 @@ T0* GE_new1217(TC* ac, T1 initialize)
 T0* GE_new1218(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1218)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1218)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1218*)R = GE_default1218;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1218;
 		((T1218*)(R))->a2 = a1;
-		((T1218*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1218*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1218*)(R))->offset = offsetof(T1218, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14013,9 +16425,12 @@ T0* GE_new1218(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1219(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1219));
+	size_t s = sizeof(T1219);
 	if (initialize) {
-		*(T1219*)R = GE_default1219;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1219;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14024,9 +16439,12 @@ T0* GE_new1219(TC* ac, T1 initialize)
 T0* GE_new1220(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1220));
+	size_t s = sizeof(T1220);
 	if (initialize) {
-		*(T1220*)R = GE_default1220;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1220;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14035,14 +16453,14 @@ T0* GE_new1220(TC* ac, T1 initialize)
 T0* GE_new1221(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1221)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1221)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1221*)R = GE_default1221;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1221;
 		((T1221*)(R))->a2 = a1;
-		((T1221*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1221*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1221*)(R))->offset = offsetof(T1221, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14051,9 +16469,12 @@ T0* GE_new1221(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1222(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1222));
+	size_t s = sizeof(T1222);
 	if (initialize) {
-		*(T1222*)R = GE_default1222;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1222;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14062,9 +16483,12 @@ T0* GE_new1222(TC* ac, T1 initialize)
 T0* GE_new1223(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1223));
+	size_t s = sizeof(T1223);
 	if (initialize) {
-		*(T1223*)R = GE_default1223;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1223;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14073,14 +16497,14 @@ T0* GE_new1223(TC* ac, T1 initialize)
 T0* GE_new1224(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1224)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1224)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1224*)R = GE_default1224;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1224;
 		((T1224*)(R))->a2 = a1;
-		((T1224*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1224*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1224*)(R))->offset = offsetof(T1224, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14089,9 +16513,12 @@ T0* GE_new1224(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1225(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1225));
+	size_t s = sizeof(T1225);
 	if (initialize) {
-		*(T1225*)R = GE_default1225;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1225;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14100,9 +16527,12 @@ T0* GE_new1225(TC* ac, T1 initialize)
 T0* GE_new1226(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1226));
+	size_t s = sizeof(T1226);
 	if (initialize) {
-		*(T1226*)R = GE_default1226;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1226;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14111,14 +16541,14 @@ T0* GE_new1226(TC* ac, T1 initialize)
 T0* GE_new1227(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1227)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1227)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1227*)R = GE_default1227;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1227;
 		((T1227*)(R))->a2 = a1;
-		((T1227*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1227*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1227*)(R))->offset = offsetof(T1227, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14127,9 +16557,12 @@ T0* GE_new1227(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1228(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1228));
+	size_t s = sizeof(T1228);
 	if (initialize) {
-		*(T1228*)R = GE_default1228;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1228;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14138,9 +16571,12 @@ T0* GE_new1228(TC* ac, T1 initialize)
 T0* GE_new1229(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1229));
+	size_t s = sizeof(T1229);
 	if (initialize) {
-		*(T1229*)R = GE_default1229;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1229;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14149,14 +16585,14 @@ T0* GE_new1229(TC* ac, T1 initialize)
 T0* GE_new1230(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1230)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1230)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1230*)R = GE_default1230;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1230;
 		((T1230*)(R))->a2 = a1;
-		((T1230*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1230*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1230*)(R))->offset = offsetof(T1230, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14165,9 +16601,12 @@ T0* GE_new1230(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1231(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1231));
+	size_t s = sizeof(T1231);
 	if (initialize) {
-		*(T1231*)R = GE_default1231;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1231;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14176,9 +16615,12 @@ T0* GE_new1231(TC* ac, T1 initialize)
 T0* GE_new1232(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1232));
+	size_t s = sizeof(T1232);
 	if (initialize) {
-		*(T1232*)R = GE_default1232;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1232;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14187,9 +16629,12 @@ T0* GE_new1232(TC* ac, T1 initialize)
 T0* GE_new1233(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1233));
+	size_t s = sizeof(T1233);
 	if (initialize) {
-		*(T1233*)R = GE_default1233;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1233;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14198,14 +16643,14 @@ T0* GE_new1233(TC* ac, T1 initialize)
 T0* GE_new1234(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1234)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1234)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1234*)R = GE_default1234;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1234;
 		((T1234*)(R))->a2 = a1;
-		((T1234*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1234*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1234*)(R))->offset = offsetof(T1234, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14214,9 +16659,12 @@ T0* GE_new1234(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1237(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1237));
+	size_t s = sizeof(T1237);
 	if (initialize) {
-		*(T1237*)R = GE_default1237;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1237;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14225,9 +16673,12 @@ T0* GE_new1237(TC* ac, T1 initialize)
 T0* GE_new1238(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1238));
+	size_t s = sizeof(T1238);
 	if (initialize) {
-		*(T1238*)R = GE_default1238;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1238;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14236,9 +16687,12 @@ T0* GE_new1238(TC* ac, T1 initialize)
 T0* GE_new1240(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1240));
+	size_t s = sizeof(T1240);
 	if (initialize) {
-		*(T1240*)R = GE_default1240;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1240;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14247,9 +16701,12 @@ T0* GE_new1240(TC* ac, T1 initialize)
 T0* GE_new1241(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1241));
+	size_t s = sizeof(T1241);
 	if (initialize) {
-		*(T1241*)R = GE_default1241;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1241;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14258,9 +16715,12 @@ T0* GE_new1241(TC* ac, T1 initialize)
 T0* GE_new1242(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1242));
+	size_t s = sizeof(T1242);
 	if (initialize) {
-		*(T1242*)R = GE_default1242;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1242;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14269,14 +16729,14 @@ T0* GE_new1242(TC* ac, T1 initialize)
 T0* GE_new1243(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1243)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1243)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1243*)R = GE_default1243;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1243;
 		((T1243*)(R))->a2 = a1;
-		((T1243*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1243*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1243*)(R))->offset = offsetof(T1243, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14285,9 +16745,12 @@ T0* GE_new1243(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1244(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1244));
+	size_t s = sizeof(T1244);
 	if (initialize) {
-		*(T1244*)R = GE_default1244;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1244;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14296,9 +16759,12 @@ T0* GE_new1244(TC* ac, T1 initialize)
 T0* GE_new1245(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1245));
+	size_t s = sizeof(T1245);
 	if (initialize) {
-		*(T1245*)R = GE_default1245;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1245;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14307,14 +16773,14 @@ T0* GE_new1245(TC* ac, T1 initialize)
 T0* GE_new1248(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1248)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1248)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1248*)R = GE_default1248;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1248;
 		((T1248*)(R))->a2 = a1;
-		((T1248*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1248*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1248*)(R))->offset = offsetof(T1248, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14323,9 +16789,12 @@ T0* GE_new1248(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1250(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1250));
+	size_t s = sizeof(T1250);
 	if (initialize) {
-		*(T1250*)R = GE_default1250;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1250;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14334,9 +16803,12 @@ T0* GE_new1250(TC* ac, T1 initialize)
 T0* GE_new1251(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1251));
+	size_t s = sizeof(T1251);
 	if (initialize) {
-		*(T1251*)R = GE_default1251;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1251;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14345,9 +16817,12 @@ T0* GE_new1251(TC* ac, T1 initialize)
 T0* GE_new1252(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1252));
+	size_t s = sizeof(T1252);
 	if (initialize) {
-		*(T1252*)R = GE_default1252;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1252;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14356,14 +16831,14 @@ T0* GE_new1252(TC* ac, T1 initialize)
 T0* GE_new1253(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1253)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1253)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1253*)R = GE_default1253;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1253;
 		((T1253*)(R))->a2 = a1;
-		((T1253*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1253*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1253*)(R))->offset = offsetof(T1253, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14372,9 +16847,12 @@ T0* GE_new1253(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1255(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1255));
+	size_t s = sizeof(T1255);
 	if (initialize) {
-		*(T1255*)R = GE_default1255;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1255;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14383,9 +16861,12 @@ T0* GE_new1255(TC* ac, T1 initialize)
 T0* GE_new1257(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1257));
+	size_t s = sizeof(T1257);
 	if (initialize) {
-		*(T1257*)R = GE_default1257;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1257;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14394,9 +16875,12 @@ T0* GE_new1257(TC* ac, T1 initialize)
 T0* GE_new1258(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1258));
+	size_t s = sizeof(T1258);
 	if (initialize) {
-		*(T1258*)R = GE_default1258;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1258;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14405,14 +16889,14 @@ T0* GE_new1258(TC* ac, T1 initialize)
 T0* GE_new1259(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1259)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1259)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1259*)R = GE_default1259;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1259;
 		((T1259*)(R))->a2 = a1;
-		((T1259*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1259*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1259*)(R))->offset = offsetof(T1259, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14421,9 +16905,12 @@ T0* GE_new1259(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1260(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1260));
+	size_t s = sizeof(T1260);
 	if (initialize) {
-		*(T1260*)R = GE_default1260;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1260;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14432,9 +16919,12 @@ T0* GE_new1260(TC* ac, T1 initialize)
 T0* GE_new1264(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1264));
+	size_t s = sizeof(T1264);
 	if (initialize) {
-		*(T1264*)R = GE_default1264;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1264;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14443,14 +16933,14 @@ T0* GE_new1264(TC* ac, T1 initialize)
 T0* GE_new1265(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1265)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1265)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1265*)R = GE_default1265;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1265;
 		((T1265*)(R))->a2 = a1;
-		((T1265*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1265*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1265*)(R))->offset = offsetof(T1265, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14459,9 +16949,12 @@ T0* GE_new1265(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1266(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1266));
+	size_t s = sizeof(T1266);
 	if (initialize) {
-		*(T1266*)R = GE_default1266;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1266;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14470,9 +16963,12 @@ T0* GE_new1266(TC* ac, T1 initialize)
 T0* GE_new1267(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1267));
+	size_t s = sizeof(T1267);
 	if (initialize) {
-		*(T1267*)R = GE_default1267;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1267;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14481,14 +16977,14 @@ T0* GE_new1267(TC* ac, T1 initialize)
 T0* GE_new1268(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1268)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1268)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1268*)R = GE_default1268;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1268;
 		((T1268*)(R))->a2 = a1;
-		((T1268*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1268*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1268*)(R))->offset = offsetof(T1268, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14497,9 +16993,12 @@ T0* GE_new1268(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1269(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1269));
+	size_t s = sizeof(T1269);
 	if (initialize) {
-		*(T1269*)R = GE_default1269;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1269;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14508,9 +17007,12 @@ T0* GE_new1269(TC* ac, T1 initialize)
 T0* GE_new1270(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1270));
+	size_t s = sizeof(T1270);
 	if (initialize) {
-		*(T1270*)R = GE_default1270;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1270;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14519,9 +17021,12 @@ T0* GE_new1270(TC* ac, T1 initialize)
 T0* GE_new1271(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1271));
+	size_t s = sizeof(T1271);
 	if (initialize) {
-		*(T1271*)R = GE_default1271;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1271;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14530,14 +17035,14 @@ T0* GE_new1271(TC* ac, T1 initialize)
 T0* GE_new1272(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1272)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1272)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1272*)R = GE_default1272;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1272;
 		((T1272*)(R))->a2 = a1;
-		((T1272*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1272*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1272*)(R))->offset = offsetof(T1272, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14546,9 +17051,12 @@ T0* GE_new1272(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1273(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1273));
+	size_t s = sizeof(T1273);
 	if (initialize) {
-		*(T1273*)R = GE_default1273;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1273;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14557,9 +17065,12 @@ T0* GE_new1273(TC* ac, T1 initialize)
 T0* GE_new1275(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1275));
+	size_t s = sizeof(T1275);
 	if (initialize) {
-		*(T1275*)R = GE_default1275;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1275;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14568,9 +17079,12 @@ T0* GE_new1275(TC* ac, T1 initialize)
 T0* GE_new1276(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1276));
+	size_t s = sizeof(T1276);
 	if (initialize) {
-		*(T1276*)R = GE_default1276;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1276;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14579,9 +17093,12 @@ T0* GE_new1276(TC* ac, T1 initialize)
 T0* GE_new1277(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1277));
+	size_t s = sizeof(T1277);
 	if (initialize) {
-		*(T1277*)R = GE_default1277;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1277;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14590,9 +17107,12 @@ T0* GE_new1277(TC* ac, T1 initialize)
 T0* GE_new1279(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1279));
+	size_t s = sizeof(T1279);
 	if (initialize) {
-		*(T1279*)R = GE_default1279;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1279;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14601,9 +17121,12 @@ T0* GE_new1279(TC* ac, T1 initialize)
 T0* GE_new1280(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1280));
+	size_t s = sizeof(T1280);
 	if (initialize) {
-		*(T1280*)R = GE_default1280;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1280;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14612,9 +17135,12 @@ T0* GE_new1280(TC* ac, T1 initialize)
 T0* GE_new1281(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1281));
+	size_t s = sizeof(T1281);
 	if (initialize) {
-		*(T1281*)R = GE_default1281;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1281;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14623,14 +17149,14 @@ T0* GE_new1281(TC* ac, T1 initialize)
 T0* GE_new1283(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1283)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1283)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1283*)R = GE_default1283;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1283;
 		((T1283*)(R))->a2 = a1;
-		((T1283*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1283*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1283*)(R))->offset = offsetof(T1283, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14639,9 +17165,12 @@ T0* GE_new1283(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1284(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1284));
+	size_t s = sizeof(T1284);
 	if (initialize) {
-		*(T1284*)R = GE_default1284;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1284;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14650,9 +17179,12 @@ T0* GE_new1284(TC* ac, T1 initialize)
 T0* GE_new1285(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1285));
+	size_t s = sizeof(T1285);
 	if (initialize) {
-		*(T1285*)R = GE_default1285;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1285;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14661,9 +17193,12 @@ T0* GE_new1285(TC* ac, T1 initialize)
 T0* GE_new1287(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1287));
+	size_t s = sizeof(T1287);
 	if (initialize) {
-		*(T1287*)R = GE_default1287;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1287;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14672,14 +17207,14 @@ T0* GE_new1287(TC* ac, T1 initialize)
 T0* GE_new1288(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1288)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1288)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1288*)R = GE_default1288;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1288;
 		((T1288*)(R))->a2 = a1;
-		((T1288*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1288*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1288*)(R))->offset = offsetof(T1288, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14688,9 +17223,12 @@ T0* GE_new1288(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1289(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1289));
+	size_t s = sizeof(T1289);
 	if (initialize) {
-		*(T1289*)R = GE_default1289;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1289;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14699,9 +17237,12 @@ T0* GE_new1289(TC* ac, T1 initialize)
 T0* GE_new1290(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1290));
+	size_t s = sizeof(T1290);
 	if (initialize) {
-		*(T1290*)R = GE_default1290;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1290;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14710,9 +17251,12 @@ T0* GE_new1290(TC* ac, T1 initialize)
 T0* GE_new1291(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1291));
+	size_t s = sizeof(T1291);
 	if (initialize) {
-		*(T1291*)R = GE_default1291;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1291;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14721,14 +17265,14 @@ T0* GE_new1291(TC* ac, T1 initialize)
 T0* GE_new1292(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1292)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1292)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1292*)R = GE_default1292;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1292;
 		((T1292*)(R))->a2 = a1;
-		((T1292*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1292*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1292*)(R))->offset = offsetof(T1292, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14737,9 +17281,12 @@ T0* GE_new1292(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1293(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1293));
+	size_t s = sizeof(T1293);
 	if (initialize) {
-		*(T1293*)R = GE_default1293;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1293;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14748,9 +17295,12 @@ T0* GE_new1293(TC* ac, T1 initialize)
 T0* GE_new1294(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1294));
+	size_t s = sizeof(T1294);
 	if (initialize) {
-		*(T1294*)R = GE_default1294;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1294;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14759,14 +17309,14 @@ T0* GE_new1294(TC* ac, T1 initialize)
 T0* GE_new1295(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1295)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1295)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1295*)R = GE_default1295;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1295;
 		((T1295*)(R))->a2 = a1;
-		((T1295*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1295*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1295*)(R))->offset = offsetof(T1295, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14775,9 +17325,12 @@ T0* GE_new1295(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1296(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1296));
+	size_t s = sizeof(T1296);
 	if (initialize) {
-		*(T1296*)R = GE_default1296;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1296;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14786,9 +17339,12 @@ T0* GE_new1296(TC* ac, T1 initialize)
 T0* GE_new1297(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1297));
+	size_t s = sizeof(T1297);
 	if (initialize) {
-		*(T1297*)R = GE_default1297;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1297;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14797,14 +17353,14 @@ T0* GE_new1297(TC* ac, T1 initialize)
 T0* GE_new1298(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1298)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1298)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1298*)R = GE_default1298;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1298;
 		((T1298*)(R))->a2 = a1;
-		((T1298*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1298*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1298*)(R))->offset = offsetof(T1298, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14813,9 +17369,12 @@ T0* GE_new1298(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1299(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1299));
+	size_t s = sizeof(T1299);
 	if (initialize) {
-		*(T1299*)R = GE_default1299;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1299;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14824,9 +17383,12 @@ T0* GE_new1299(TC* ac, T1 initialize)
 T0* GE_new1300(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1300));
+	size_t s = sizeof(T1300);
 	if (initialize) {
-		*(T1300*)R = GE_default1300;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1300;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14835,9 +17397,12 @@ T0* GE_new1300(TC* ac, T1 initialize)
 T0* GE_new1301(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1301));
+	size_t s = sizeof(T1301);
 	if (initialize) {
-		*(T1301*)R = GE_default1301;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1301;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14846,14 +17411,14 @@ T0* GE_new1301(TC* ac, T1 initialize)
 T0* GE_new1302(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1302)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1302)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1302*)R = GE_default1302;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1302;
 		((T1302*)(R))->a2 = a1;
-		((T1302*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1302*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1302*)(R))->offset = offsetof(T1302, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14862,9 +17427,12 @@ T0* GE_new1302(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1303(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1303));
+	size_t s = sizeof(T1303);
 	if (initialize) {
-		*(T1303*)R = GE_default1303;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1303;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14873,9 +17441,12 @@ T0* GE_new1303(TC* ac, T1 initialize)
 T0* GE_new1304(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1304));
+	size_t s = sizeof(T1304);
 	if (initialize) {
-		*(T1304*)R = GE_default1304;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1304;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14884,9 +17455,12 @@ T0* GE_new1304(TC* ac, T1 initialize)
 T0* GE_new1305(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1305));
+	size_t s = sizeof(T1305);
 	if (initialize) {
-		*(T1305*)R = GE_default1305;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1305;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14895,14 +17469,14 @@ T0* GE_new1305(TC* ac, T1 initialize)
 T0* GE_new1306(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1306)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1306)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1306*)R = GE_default1306;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1306;
 		((T1306*)(R))->a2 = a1;
-		((T1306*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1306*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1306*)(R))->offset = offsetof(T1306, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14911,9 +17485,12 @@ T0* GE_new1306(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1307(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1307));
+	size_t s = sizeof(T1307);
 	if (initialize) {
-		*(T1307*)R = GE_default1307;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1307;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14922,14 +17499,14 @@ T0* GE_new1307(TC* ac, T1 initialize)
 T0* GE_new1308(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1308)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1308)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1308*)R = GE_default1308;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1308;
 		((T1308*)(R))->a2 = a1;
-		((T1308*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1308*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1308*)(R))->offset = offsetof(T1308, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14938,9 +17515,12 @@ T0* GE_new1308(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1309(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1309));
+	size_t s = sizeof(T1309);
 	if (initialize) {
-		*(T1309*)R = GE_default1309;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1309;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -14949,9 +17529,12 @@ T0* GE_new1309(TC* ac, T1 initialize)
 T0* GE_new1310(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1310));
+	size_t s = sizeof(T1310);
 	if (initialize) {
-		*(T1310*)R = GE_default1310;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1310;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14960,9 +17543,12 @@ T0* GE_new1310(TC* ac, T1 initialize)
 T0* GE_new1311(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1311));
+	size_t s = sizeof(T1311);
 	if (initialize) {
-		*(T1311*)R = GE_default1311;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1311;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14971,9 +17557,12 @@ T0* GE_new1311(TC* ac, T1 initialize)
 T0* GE_new1314(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1314));
+	size_t s = sizeof(T1314);
 	if (initialize) {
-		*(T1314*)R = GE_default1314;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1314;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14982,9 +17571,12 @@ T0* GE_new1314(TC* ac, T1 initialize)
 T0* GE_new1315(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1315));
+	size_t s = sizeof(T1315);
 	if (initialize) {
-		*(T1315*)R = GE_default1315;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1315;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -14993,9 +17585,12 @@ T0* GE_new1315(TC* ac, T1 initialize)
 T0* GE_new1317(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1317));
+	size_t s = sizeof(T1317);
 	if (initialize) {
-		*(T1317*)R = GE_default1317;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1317;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15004,9 +17599,12 @@ T0* GE_new1317(TC* ac, T1 initialize)
 T0* GE_new1319(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1319));
+	size_t s = sizeof(T1319);
 	if (initialize) {
-		*(T1319*)R = GE_default1319;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1319;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15015,9 +17613,12 @@ T0* GE_new1319(TC* ac, T1 initialize)
 T0* GE_new1320(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1320));
+	size_t s = sizeof(T1320);
 	if (initialize) {
-		*(T1320*)R = GE_default1320;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1320;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15026,14 +17627,14 @@ T0* GE_new1320(TC* ac, T1 initialize)
 T0* GE_new1322(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1322)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1322)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1322*)R = GE_default1322;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1322;
 		((T1322*)(R))->a2 = a1;
-		((T1322*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1322*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1322*)(R))->offset = offsetof(T1322, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15042,9 +17643,12 @@ T0* GE_new1322(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1323(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1323));
+	size_t s = sizeof(T1323);
 	if (initialize) {
-		*(T1323*)R = GE_default1323;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1323;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15053,9 +17657,12 @@ T0* GE_new1323(TC* ac, T1 initialize)
 T0* GE_new1324(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1324));
+	size_t s = sizeof(T1324);
 	if (initialize) {
-		*(T1324*)R = GE_default1324;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1324;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15064,9 +17671,12 @@ T0* GE_new1324(TC* ac, T1 initialize)
 T0* GE_new1325(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1325));
+	size_t s = sizeof(T1325);
 	if (initialize) {
-		*(T1325*)R = GE_default1325;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1325;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15075,14 +17685,14 @@ T0* GE_new1325(TC* ac, T1 initialize)
 T0* GE_new1326(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1326)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1326)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1326*)R = GE_default1326;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1326;
 		((T1326*)(R))->a2 = a1;
-		((T1326*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1326*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1326*)(R))->offset = offsetof(T1326, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15091,9 +17701,12 @@ T0* GE_new1326(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1329(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1329));
+	size_t s = sizeof(T1329);
 	if (initialize) {
-		*(T1329*)R = GE_default1329;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1329;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15102,9 +17715,12 @@ T0* GE_new1329(TC* ac, T1 initialize)
 T0* GE_new1330(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1330));
+	size_t s = sizeof(T1330);
 	if (initialize) {
-		*(T1330*)R = GE_default1330;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1330;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15113,14 +17729,14 @@ T0* GE_new1330(TC* ac, T1 initialize)
 T0* GE_new1331(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1331)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1331)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1331*)R = GE_default1331;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1331;
 		((T1331*)(R))->a2 = a1;
-		((T1331*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1331*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1331*)(R))->offset = offsetof(T1331, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15129,9 +17745,12 @@ T0* GE_new1331(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1332(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1332));
+	size_t s = sizeof(T1332);
 	if (initialize) {
-		*(T1332*)R = GE_default1332;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1332;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15140,14 +17759,14 @@ T0* GE_new1332(TC* ac, T1 initialize)
 T0* GE_new1333(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1333)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1333)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1333*)R = GE_default1333;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1333;
 		((T1333*)(R))->a2 = a1;
-		((T1333*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1333*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1333*)(R))->offset = offsetof(T1333, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15156,9 +17775,12 @@ T0* GE_new1333(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1334(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1334));
+	size_t s = sizeof(T1334);
 	if (initialize) {
-		*(T1334*)R = GE_default1334;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1334;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15167,9 +17789,12 @@ T0* GE_new1334(TC* ac, T1 initialize)
 T0* GE_new1335(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1335));
+	size_t s = sizeof(T1335);
 	if (initialize) {
-		*(T1335*)R = GE_default1335;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1335;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15178,14 +17803,14 @@ T0* GE_new1335(TC* ac, T1 initialize)
 T0* GE_new1336(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1336)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1336)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1336*)R = GE_default1336;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1336;
 		((T1336*)(R))->a2 = a1;
-		((T1336*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1336*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1336*)(R))->offset = offsetof(T1336, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15194,9 +17819,12 @@ T0* GE_new1336(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1337(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1337));
+	size_t s = sizeof(T1337);
 	if (initialize) {
-		*(T1337*)R = GE_default1337;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1337;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15205,14 +17833,14 @@ T0* GE_new1337(TC* ac, T1 initialize)
 T0* GE_new1338(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1338)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1338)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1338*)R = GE_default1338;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1338;
 		((T1338*)(R))->a2 = a1;
-		((T1338*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1338*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1338*)(R))->offset = offsetof(T1338, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15221,14 +17849,14 @@ T0* GE_new1338(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1339(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1339)+(a1>1?(a1-1):0)*sizeof(T10));
+	size_t s = sizeof(T1339)+((a1>1)?(a1-1):0)*sizeof(T10);
 	if (initialize) {
-		*(T1339*)R = GE_default1339;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1339;
 		((T1339*)(R))->a2 = a1;
-		((T1339*)(R))->a1 = 0;
-#ifndef GE_malloc_atomic_cleared
-		memset(((T1339*)(R))->z2,0,a1*sizeof(T10));
-#endif
+		((T1339*)(R))->offset = offsetof(T1339, z2);
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15237,9 +17865,12 @@ T0* GE_new1339(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1340(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1340));
+	size_t s = sizeof(T1340);
 	if (initialize) {
-		*(T1340*)R = GE_default1340;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1340;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15248,9 +17879,12 @@ T0* GE_new1340(TC* ac, T1 initialize)
 T0* GE_new1341(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1341));
+	size_t s = sizeof(T1341);
 	if (initialize) {
-		*(T1341*)R = GE_default1341;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1341;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15259,14 +17893,14 @@ T0* GE_new1341(TC* ac, T1 initialize)
 T0* GE_new1342(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1342)+(a1>1?(a1-1):0)*sizeof(T11));
+	size_t s = sizeof(T1342)+((a1>1)?(a1-1):0)*sizeof(T11);
 	if (initialize) {
-		*(T1342*)R = GE_default1342;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1342;
 		((T1342*)(R))->a2 = a1;
-		((T1342*)(R))->a1 = 0;
-#ifndef GE_malloc_atomic_cleared
-		memset(((T1342*)(R))->z2,0,a1*sizeof(T11));
-#endif
+		((T1342*)(R))->offset = offsetof(T1342, z2);
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15275,9 +17909,12 @@ T0* GE_new1342(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1343(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1343));
+	size_t s = sizeof(T1343);
 	if (initialize) {
-		*(T1343*)R = GE_default1343;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1343;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15286,9 +17923,12 @@ T0* GE_new1343(TC* ac, T1 initialize)
 T0* GE_new1344(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1344));
+	size_t s = sizeof(T1344);
 	if (initialize) {
-		*(T1344*)R = GE_default1344;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1344;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15297,14 +17937,14 @@ T0* GE_new1344(TC* ac, T1 initialize)
 T0* GE_new1345(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1345)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1345)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1345*)R = GE_default1345;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1345;
 		((T1345*)(R))->a2 = a1;
-		((T1345*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1345*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1345*)(R))->offset = offsetof(T1345, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15313,14 +17953,14 @@ T0* GE_new1345(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1346(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1346)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1346)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1346*)R = GE_default1346;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1346;
 		((T1346*)(R))->a2 = a1;
-		((T1346*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1346*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1346*)(R))->offset = offsetof(T1346, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15329,9 +17969,12 @@ T0* GE_new1346(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1347(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1347));
+	size_t s = sizeof(T1347);
 	if (initialize) {
-		*(T1347*)R = GE_default1347;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1347;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15340,9 +17983,12 @@ T0* GE_new1347(TC* ac, T1 initialize)
 T0* GE_new1350(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1350));
+	size_t s = sizeof(T1350);
 	if (initialize) {
-		*(T1350*)R = GE_default1350;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1350;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15351,9 +17997,12 @@ T0* GE_new1350(TC* ac, T1 initialize)
 T0* GE_new1352(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1352));
+	size_t s = sizeof(T1352);
 	if (initialize) {
-		*(T1352*)R = GE_default1352;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1352;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15362,14 +18011,14 @@ T0* GE_new1352(TC* ac, T1 initialize)
 T0* GE_new1353(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1353)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1353)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1353*)R = GE_default1353;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1353;
 		((T1353*)(R))->a2 = a1;
-		((T1353*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1353*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1353*)(R))->offset = offsetof(T1353, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15378,9 +18027,12 @@ T0* GE_new1353(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1354(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1354));
+	size_t s = sizeof(T1354);
 	if (initialize) {
-		*(T1354*)R = GE_default1354;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1354;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15389,9 +18041,12 @@ T0* GE_new1354(TC* ac, T1 initialize)
 T0* GE_new1355(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1355));
+	size_t s = sizeof(T1355);
 	if (initialize) {
-		*(T1355*)R = GE_default1355;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1355;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15400,9 +18055,12 @@ T0* GE_new1355(TC* ac, T1 initialize)
 T0* GE_new1356(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1356));
+	size_t s = sizeof(T1356);
 	if (initialize) {
-		*(T1356*)R = GE_default1356;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1356;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15411,9 +18069,12 @@ T0* GE_new1356(TC* ac, T1 initialize)
 T0* GE_new1357(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1357));
+	size_t s = sizeof(T1357);
 	if (initialize) {
-		*(T1357*)R = GE_default1357;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1357;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15422,14 +18083,14 @@ T0* GE_new1357(TC* ac, T1 initialize)
 T0* GE_new1358(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1358)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1358)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1358*)R = GE_default1358;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1358;
 		((T1358*)(R))->a2 = a1;
-		((T1358*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1358*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1358*)(R))->offset = offsetof(T1358, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15438,9 +18099,12 @@ T0* GE_new1358(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1359(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1359));
+	size_t s = sizeof(T1359);
 	if (initialize) {
-		*(T1359*)R = GE_default1359;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1359;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15449,14 +18113,14 @@ T0* GE_new1359(TC* ac, T1 initialize)
 T0* GE_new1360(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1360)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1360)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1360*)R = GE_default1360;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1360;
 		((T1360*)(R))->a2 = a1;
-		((T1360*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1360*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1360*)(R))->offset = offsetof(T1360, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15465,9 +18129,12 @@ T0* GE_new1360(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1361(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1361));
+	size_t s = sizeof(T1361);
 	if (initialize) {
-		*(T1361*)R = GE_default1361;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1361;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15476,9 +18143,12 @@ T0* GE_new1361(TC* ac, T1 initialize)
 T0* GE_new1362(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1362));
+	size_t s = sizeof(T1362);
 	if (initialize) {
-		*(T1362*)R = GE_default1362;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1362;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15487,9 +18157,12 @@ T0* GE_new1362(TC* ac, T1 initialize)
 T0* GE_new1363(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1363));
+	size_t s = sizeof(T1363);
 	if (initialize) {
-		*(T1363*)R = GE_default1363;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1363;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15498,14 +18171,14 @@ T0* GE_new1363(TC* ac, T1 initialize)
 T0* GE_new1364(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1364)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1364)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1364*)R = GE_default1364;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1364;
 		((T1364*)(R))->a2 = a1;
-		((T1364*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1364*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1364*)(R))->offset = offsetof(T1364, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15514,9 +18187,12 @@ T0* GE_new1364(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1365(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1365));
+	size_t s = sizeof(T1365);
 	if (initialize) {
-		*(T1365*)R = GE_default1365;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1365;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15525,9 +18201,12 @@ T0* GE_new1365(TC* ac, T1 initialize)
 T0* GE_new1366(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1366));
+	size_t s = sizeof(T1366);
 	if (initialize) {
-		*(T1366*)R = GE_default1366;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1366;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15536,14 +18215,14 @@ T0* GE_new1366(TC* ac, T1 initialize)
 T0* GE_new1367(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1367)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1367)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1367*)R = GE_default1367;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1367;
 		((T1367*)(R))->a2 = a1;
-		((T1367*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1367*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1367*)(R))->offset = offsetof(T1367, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15552,9 +18231,12 @@ T0* GE_new1367(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1368(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1368));
+	size_t s = sizeof(T1368);
 	if (initialize) {
-		*(T1368*)R = GE_default1368;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1368;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15563,14 +18245,14 @@ T0* GE_new1368(TC* ac, T1 initialize)
 T0* GE_new1369(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1369)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1369)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1369*)R = GE_default1369;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1369;
 		((T1369*)(R))->a2 = a1;
-		((T1369*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1369*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1369*)(R))->offset = offsetof(T1369, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15579,9 +18261,12 @@ T0* GE_new1369(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1370(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1370));
+	size_t s = sizeof(T1370);
 	if (initialize) {
-		*(T1370*)R = GE_default1370;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1370;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15590,9 +18275,12 @@ T0* GE_new1370(TC* ac, T1 initialize)
 T0* GE_new1371(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1371));
+	size_t s = sizeof(T1371);
 	if (initialize) {
-		*(T1371*)R = GE_default1371;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1371;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15601,9 +18289,12 @@ T0* GE_new1371(TC* ac, T1 initialize)
 T0* GE_new1372(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1372));
+	size_t s = sizeof(T1372);
 	if (initialize) {
-		*(T1372*)R = GE_default1372;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1372;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15612,14 +18303,14 @@ T0* GE_new1372(TC* ac, T1 initialize)
 T0* GE_new1373(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1373)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1373)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1373*)R = GE_default1373;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1373;
 		((T1373*)(R))->a2 = a1;
-		((T1373*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1373*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1373*)(R))->offset = offsetof(T1373, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15628,9 +18319,12 @@ T0* GE_new1373(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1374(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1374));
+	size_t s = sizeof(T1374);
 	if (initialize) {
-		*(T1374*)R = GE_default1374;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1374;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15639,9 +18333,12 @@ T0* GE_new1374(TC* ac, T1 initialize)
 T0* GE_new1375(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1375));
+	size_t s = sizeof(T1375);
 	if (initialize) {
-		*(T1375*)R = GE_default1375;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1375;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15650,14 +18347,14 @@ T0* GE_new1375(TC* ac, T1 initialize)
 T0* GE_new1376(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1376)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1376)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1376*)R = GE_default1376;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1376;
 		((T1376*)(R))->a2 = a1;
-		((T1376*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1376*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1376*)(R))->offset = offsetof(T1376, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15666,9 +18363,12 @@ T0* GE_new1376(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1377(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1377));
+	size_t s = sizeof(T1377);
 	if (initialize) {
-		*(T1377*)R = GE_default1377;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1377;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15677,14 +18377,14 @@ T0* GE_new1377(TC* ac, T1 initialize)
 T0* GE_new1378(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1378)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1378)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1378*)R = GE_default1378;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1378;
 		((T1378*)(R))->a2 = a1;
-		((T1378*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1378*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1378*)(R))->offset = offsetof(T1378, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15693,9 +18393,12 @@ T0* GE_new1378(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1379(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1379));
+	size_t s = sizeof(T1379);
 	if (initialize) {
-		*(T1379*)R = GE_default1379;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1379;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15704,9 +18407,12 @@ T0* GE_new1379(TC* ac, T1 initialize)
 T0* GE_new1380(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1380));
+	size_t s = sizeof(T1380);
 	if (initialize) {
-		*(T1380*)R = GE_default1380;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1380;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15715,14 +18421,14 @@ T0* GE_new1380(TC* ac, T1 initialize)
 T0* GE_new1381(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1381)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1381)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1381*)R = GE_default1381;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1381;
 		((T1381*)(R))->a2 = a1;
-		((T1381*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1381*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1381*)(R))->offset = offsetof(T1381, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15731,9 +18437,12 @@ T0* GE_new1381(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1382(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1382));
+	size_t s = sizeof(T1382);
 	if (initialize) {
-		*(T1382*)R = GE_default1382;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1382;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15742,9 +18451,12 @@ T0* GE_new1382(TC* ac, T1 initialize)
 T0* GE_new1383(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1383));
+	size_t s = sizeof(T1383);
 	if (initialize) {
-		*(T1383*)R = GE_default1383;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1383;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15753,9 +18465,12 @@ T0* GE_new1383(TC* ac, T1 initialize)
 T0* GE_new1384(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1384));
+	size_t s = sizeof(T1384);
 	if (initialize) {
-		*(T1384*)R = GE_default1384;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1384;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15764,9 +18479,12 @@ T0* GE_new1384(TC* ac, T1 initialize)
 T0* GE_new1385(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1385));
+	size_t s = sizeof(T1385);
 	if (initialize) {
-		*(T1385*)R = GE_default1385;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1385;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15775,14 +18493,14 @@ T0* GE_new1385(TC* ac, T1 initialize)
 T0* GE_new1387(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1387)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1387)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1387*)R = GE_default1387;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1387;
 		((T1387*)(R))->a2 = a1;
-		((T1387*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1387*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1387*)(R))->offset = offsetof(T1387, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15791,9 +18509,12 @@ T0* GE_new1387(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1388(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1388));
+	size_t s = sizeof(T1388);
 	if (initialize) {
-		*(T1388*)R = GE_default1388;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1388;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15802,9 +18523,12 @@ T0* GE_new1388(TC* ac, T1 initialize)
 T0* GE_new1389(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1389));
+	size_t s = sizeof(T1389);
 	if (initialize) {
-		*(T1389*)R = GE_default1389;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1389;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15813,9 +18537,12 @@ T0* GE_new1389(TC* ac, T1 initialize)
 T0* GE_new1390(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1390));
+	size_t s = sizeof(T1390);
 	if (initialize) {
-		*(T1390*)R = GE_default1390;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1390;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15824,14 +18551,14 @@ T0* GE_new1390(TC* ac, T1 initialize)
 T0* GE_new1393(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1393)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1393)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1393*)R = GE_default1393;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1393;
 		((T1393*)(R))->a2 = a1;
-		((T1393*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1393*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1393*)(R))->offset = offsetof(T1393, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15840,9 +18567,12 @@ T0* GE_new1393(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1394(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1394));
+	size_t s = sizeof(T1394);
 	if (initialize) {
-		*(T1394*)R = GE_default1394;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1394;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15851,9 +18581,12 @@ T0* GE_new1394(TC* ac, T1 initialize)
 T0* GE_new1395(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1395));
+	size_t s = sizeof(T1395);
 	if (initialize) {
-		*(T1395*)R = GE_default1395;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1395;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15862,9 +18595,12 @@ T0* GE_new1395(TC* ac, T1 initialize)
 T0* GE_new1396(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1396));
+	size_t s = sizeof(T1396);
 	if (initialize) {
-		*(T1396*)R = GE_default1396;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1396;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15873,14 +18609,14 @@ T0* GE_new1396(TC* ac, T1 initialize)
 T0* GE_new1397(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1397)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1397)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1397*)R = GE_default1397;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1397;
 		((T1397*)(R))->a2 = a1;
-		((T1397*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1397*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1397*)(R))->offset = offsetof(T1397, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15889,9 +18625,12 @@ T0* GE_new1397(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1398(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1398));
+	size_t s = sizeof(T1398);
 	if (initialize) {
-		*(T1398*)R = GE_default1398;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1398;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15900,9 +18639,12 @@ T0* GE_new1398(TC* ac, T1 initialize)
 T0* GE_new1399(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1399));
+	size_t s = sizeof(T1399);
 	if (initialize) {
-		*(T1399*)R = GE_default1399;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1399;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15911,9 +18653,12 @@ T0* GE_new1399(TC* ac, T1 initialize)
 T0* GE_new1400(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1400));
+	size_t s = sizeof(T1400);
 	if (initialize) {
-		*(T1400*)R = GE_default1400;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1400;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15922,14 +18667,14 @@ T0* GE_new1400(TC* ac, T1 initialize)
 T0* GE_new1401(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1401)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1401)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1401*)R = GE_default1401;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1401;
 		((T1401*)(R))->a2 = a1;
-		((T1401*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1401*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1401*)(R))->offset = offsetof(T1401, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15938,9 +18683,12 @@ T0* GE_new1401(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1403(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1403));
+	size_t s = sizeof(T1403);
 	if (initialize) {
-		*(T1403*)R = GE_default1403;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1403;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15949,9 +18697,12 @@ T0* GE_new1403(TC* ac, T1 initialize)
 T0* GE_new1404(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1404));
+	size_t s = sizeof(T1404);
 	if (initialize) {
-		*(T1404*)R = GE_default1404;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1404;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15960,14 +18711,14 @@ T0* GE_new1404(TC* ac, T1 initialize)
 T0* GE_new1405(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1405)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1405)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1405*)R = GE_default1405;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1405;
 		((T1405*)(R))->a2 = a1;
-		((T1405*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1405*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1405*)(R))->offset = offsetof(T1405, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -15976,9 +18727,12 @@ T0* GE_new1405(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1407(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1407));
+	size_t s = sizeof(T1407);
 	if (initialize) {
-		*(T1407*)R = GE_default1407;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1407;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -15987,14 +18741,14 @@ T0* GE_new1407(TC* ac, T1 initialize)
 T0* GE_new1408(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1408)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1408)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1408*)R = GE_default1408;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1408;
 		((T1408*)(R))->a2 = a1;
-		((T1408*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1408*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1408*)(R))->offset = offsetof(T1408, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16003,9 +18757,12 @@ T0* GE_new1408(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1410(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1410));
+	size_t s = sizeof(T1410);
 	if (initialize) {
-		*(T1410*)R = GE_default1410;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1410;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16014,9 +18771,12 @@ T0* GE_new1410(TC* ac, T1 initialize)
 T0* GE_new1411(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1411));
+	size_t s = sizeof(T1411);
 	if (initialize) {
-		*(T1411*)R = GE_default1411;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1411;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -16025,14 +18785,14 @@ T0* GE_new1411(TC* ac, T1 initialize)
 T0* GE_new1412(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1412)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1412)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1412*)R = GE_default1412;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1412;
 		((T1412*)(R))->a2 = a1;
-		((T1412*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1412*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1412*)(R))->offset = offsetof(T1412, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16041,9 +18801,12 @@ T0* GE_new1412(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1413(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1413));
+	size_t s = sizeof(T1413);
 	if (initialize) {
-		*(T1413*)R = GE_default1413;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1413;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -16052,9 +18815,12 @@ T0* GE_new1413(TC* ac, T1 initialize)
 T0* GE_new1414(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1414));
+	size_t s = sizeof(T1414);
 	if (initialize) {
-		*(T1414*)R = GE_default1414;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1414;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16063,14 +18829,14 @@ T0* GE_new1414(TC* ac, T1 initialize)
 T0* GE_new1415(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1415)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1415)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1415*)R = GE_default1415;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1415;
 		((T1415*)(R))->a2 = a1;
-		((T1415*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1415*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1415*)(R))->offset = offsetof(T1415, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16079,9 +18845,12 @@ T0* GE_new1415(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1416(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1416));
+	size_t s = sizeof(T1416);
 	if (initialize) {
-		*(T1416*)R = GE_default1416;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1416;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -16090,9 +18859,12 @@ T0* GE_new1416(TC* ac, T1 initialize)
 T0* GE_new1417(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1417));
+	size_t s = sizeof(T1417);
 	if (initialize) {
-		*(T1417*)R = GE_default1417;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1417;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16101,9 +18873,12 @@ T0* GE_new1417(TC* ac, T1 initialize)
 T0* GE_new1418(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1418));
+	size_t s = sizeof(T1418);
 	if (initialize) {
-		*(T1418*)R = GE_default1418;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1418;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16112,9 +18887,12 @@ T0* GE_new1418(TC* ac, T1 initialize)
 T0* GE_new1419(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1419));
+	size_t s = sizeof(T1419);
 	if (initialize) {
-		*(T1419*)R = GE_default1419;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1419;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16123,9 +18901,12 @@ T0* GE_new1419(TC* ac, T1 initialize)
 T0* GE_new1422(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1422));
+	size_t s = sizeof(T1422);
 	if (initialize) {
-		*(T1422*)R = GE_default1422;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1422;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16134,14 +18915,14 @@ T0* GE_new1422(TC* ac, T1 initialize)
 T0* GE_new1427(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1427)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1427)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1427*)R = GE_default1427;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1427;
 		((T1427*)(R))->a2 = a1;
-		((T1427*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1427*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1427*)(R))->offset = offsetof(T1427, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16150,9 +18931,12 @@ T0* GE_new1427(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1428(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1428));
+	size_t s = sizeof(T1428);
 	if (initialize) {
-		*(T1428*)R = GE_default1428;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1428;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -16161,9 +18945,12 @@ T0* GE_new1428(TC* ac, T1 initialize)
 T0* GE_new1429(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1429));
+	size_t s = sizeof(T1429);
 	if (initialize) {
-		*(T1429*)R = GE_default1429;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1429;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16172,14 +18959,14 @@ T0* GE_new1429(TC* ac, T1 initialize)
 T0* GE_new1430(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1430)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1430)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1430*)R = GE_default1430;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1430;
 		((T1430*)(R))->a2 = a1;
-		((T1430*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1430*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1430*)(R))->offset = offsetof(T1430, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16188,9 +18975,12 @@ T0* GE_new1430(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1432(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1432));
+	size_t s = sizeof(T1432);
 	if (initialize) {
-		*(T1432*)R = GE_default1432;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1432;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -16199,9 +18989,12 @@ T0* GE_new1432(TC* ac, T1 initialize)
 T0* GE_new1433(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1433));
+	size_t s = sizeof(T1433);
 	if (initialize) {
-		*(T1433*)R = GE_default1433;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1433;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16210,9 +19003,12 @@ T0* GE_new1433(TC* ac, T1 initialize)
 T0* GE_new1434(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1434));
+	size_t s = sizeof(T1434);
 	if (initialize) {
-		*(T1434*)R = GE_default1434;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1434;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16221,9 +19017,12 @@ T0* GE_new1434(TC* ac, T1 initialize)
 T0* GE_new1435(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1435));
+	size_t s = sizeof(T1435);
 	if (initialize) {
-		*(T1435*)R = GE_default1435;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1435;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16232,9 +19031,12 @@ T0* GE_new1435(TC* ac, T1 initialize)
 T0* GE_new1436(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1436));
+	size_t s = sizeof(T1436);
 	if (initialize) {
-		*(T1436*)R = GE_default1436;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1436;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16243,9 +19045,12 @@ T0* GE_new1436(TC* ac, T1 initialize)
 T0* GE_new1438(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1438));
+	size_t s = sizeof(T1438);
 	if (initialize) {
-		*(T1438*)R = GE_default1438;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1438;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16254,9 +19059,12 @@ T0* GE_new1438(TC* ac, T1 initialize)
 T0* GE_new1439(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1439));
+	size_t s = sizeof(T1439);
 	if (initialize) {
-		*(T1439*)R = GE_default1439;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1439;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -16265,9 +19073,12 @@ T0* GE_new1439(TC* ac, T1 initialize)
 T0* GE_new1441(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1441));
+	size_t s = sizeof(T1441);
 	if (initialize) {
-		*(T1441*)R = GE_default1441;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1441;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -16276,9 +19087,12 @@ T0* GE_new1441(TC* ac, T1 initialize)
 T0* GE_new1442(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1442));
+	size_t s = sizeof(T1442);
 	if (initialize) {
-		*(T1442*)R = GE_default1442;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1442;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16287,9 +19101,12 @@ T0* GE_new1442(TC* ac, T1 initialize)
 T0* GE_new1443(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1443));
+	size_t s = sizeof(T1443);
 	if (initialize) {
-		*(T1443*)R = GE_default1443;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1443;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16298,9 +19115,12 @@ T0* GE_new1443(TC* ac, T1 initialize)
 T0* GE_new1444(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1444));
+	size_t s = sizeof(T1444);
 	if (initialize) {
-		*(T1444*)R = GE_default1444;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1444;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16309,9 +19129,12 @@ T0* GE_new1444(TC* ac, T1 initialize)
 T0* GE_new1445(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1445));
+	size_t s = sizeof(T1445);
 	if (initialize) {
-		*(T1445*)R = GE_default1445;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1445;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16320,9 +19143,12 @@ T0* GE_new1445(TC* ac, T1 initialize)
 T0* GE_new1446(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1446));
+	size_t s = sizeof(T1446);
 	if (initialize) {
-		*(T1446*)R = GE_default1446;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1446;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16331,9 +19157,12 @@ T0* GE_new1446(TC* ac, T1 initialize)
 T0* GE_new1447(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1447));
+	size_t s = sizeof(T1447);
 	if (initialize) {
-		*(T1447*)R = GE_default1447;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1447;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16342,9 +19171,12 @@ T0* GE_new1447(TC* ac, T1 initialize)
 T0* GE_new1448(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1448));
+	size_t s = sizeof(T1448);
 	if (initialize) {
-		*(T1448*)R = GE_default1448;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1448;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16353,9 +19185,12 @@ T0* GE_new1448(TC* ac, T1 initialize)
 T0* GE_new1450(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1450));
+	size_t s = sizeof(T1450);
 	if (initialize) {
-		*(T1450*)R = GE_default1450;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1450;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16364,9 +19199,12 @@ T0* GE_new1450(TC* ac, T1 initialize)
 T0* GE_new1453(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1453));
+	size_t s = sizeof(T1453);
 	if (initialize) {
-		*(T1453*)R = GE_default1453;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1453;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16375,14 +19213,14 @@ T0* GE_new1453(TC* ac, T1 initialize)
 T0* GE_new1454(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1454)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1454)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1454*)R = GE_default1454;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1454;
 		((T1454*)(R))->a2 = a1;
-		((T1454*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1454*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1454*)(R))->offset = offsetof(T1454, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16391,9 +19229,12 @@ T0* GE_new1454(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1455(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1455));
+	size_t s = sizeof(T1455);
 	if (initialize) {
-		*(T1455*)R = GE_default1455;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1455;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -16402,9 +19243,12 @@ T0* GE_new1455(TC* ac, T1 initialize)
 T0* GE_new1456(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1456));
+	size_t s = sizeof(T1456);
 	if (initialize) {
-		*(T1456*)R = GE_default1456;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1456;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -16413,14 +19257,14 @@ T0* GE_new1456(TC* ac, T1 initialize)
 T0* GE_new1457(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1457)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1457)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1457*)R = GE_default1457;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1457;
 		((T1457*)(R))->a2 = a1;
-		((T1457*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1457*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1457*)(R))->offset = offsetof(T1457, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16429,9 +19273,12 @@ T0* GE_new1457(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1458(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1458));
+	size_t s = sizeof(T1458);
 	if (initialize) {
-		*(T1458*)R = GE_default1458;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1458;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16440,9 +19287,12 @@ T0* GE_new1458(TC* ac, T1 initialize)
 T0* GE_new1459(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1459));
+	size_t s = sizeof(T1459);
 	if (initialize) {
-		*(T1459*)R = GE_default1459;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1459;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16451,9 +19301,12 @@ T0* GE_new1459(TC* ac, T1 initialize)
 T0* GE_new1460(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1460));
+	size_t s = sizeof(T1460);
 	if (initialize) {
-		*(T1460*)R = GE_default1460;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1460;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16462,9 +19315,12 @@ T0* GE_new1460(TC* ac, T1 initialize)
 T0* GE_new1461(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1461));
+	size_t s = sizeof(T1461);
 	if (initialize) {
-		*(T1461*)R = GE_default1461;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1461;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16473,9 +19329,12 @@ T0* GE_new1461(TC* ac, T1 initialize)
 T0* GE_new1462(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1462));
+	size_t s = sizeof(T1462);
 	if (initialize) {
-		*(T1462*)R = GE_default1462;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1462;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16484,9 +19343,12 @@ T0* GE_new1462(TC* ac, T1 initialize)
 T0* GE_new1463(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1463));
+	size_t s = sizeof(T1463);
 	if (initialize) {
-		*(T1463*)R = GE_default1463;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1463;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16495,9 +19357,12 @@ T0* GE_new1463(TC* ac, T1 initialize)
 T0* GE_new1464(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1464));
+	size_t s = sizeof(T1464);
 	if (initialize) {
-		*(T1464*)R = GE_default1464;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1464;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16506,9 +19371,12 @@ T0* GE_new1464(TC* ac, T1 initialize)
 T0* GE_new1465(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1465));
+	size_t s = sizeof(T1465);
 	if (initialize) {
-		*(T1465*)R = GE_default1465;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1465;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16517,9 +19385,12 @@ T0* GE_new1465(TC* ac, T1 initialize)
 T0* GE_new1466(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1466));
+	size_t s = sizeof(T1466);
 	if (initialize) {
-		*(T1466*)R = GE_default1466;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1466;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16528,9 +19399,12 @@ T0* GE_new1466(TC* ac, T1 initialize)
 T0* GE_new1467(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1467));
+	size_t s = sizeof(T1467);
 	if (initialize) {
-		*(T1467*)R = GE_default1467;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1467;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16539,9 +19413,12 @@ T0* GE_new1467(TC* ac, T1 initialize)
 T0* GE_new1468(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1468));
+	size_t s = sizeof(T1468);
 	if (initialize) {
-		*(T1468*)R = GE_default1468;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1468;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16550,9 +19427,12 @@ T0* GE_new1468(TC* ac, T1 initialize)
 T0* GE_new1469(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1469));
+	size_t s = sizeof(T1469);
 	if (initialize) {
-		*(T1469*)R = GE_default1469;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1469;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16561,9 +19441,12 @@ T0* GE_new1469(TC* ac, T1 initialize)
 T0* GE_new1470(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1470));
+	size_t s = sizeof(T1470);
 	if (initialize) {
-		*(T1470*)R = GE_default1470;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1470;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16572,9 +19455,12 @@ T0* GE_new1470(TC* ac, T1 initialize)
 T0* GE_new1471(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1471));
+	size_t s = sizeof(T1471);
 	if (initialize) {
-		*(T1471*)R = GE_default1471;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1471;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16583,9 +19469,12 @@ T0* GE_new1471(TC* ac, T1 initialize)
 T0* GE_new1473(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1473));
+	size_t s = sizeof(T1473);
 	if (initialize) {
-		*(T1473*)R = GE_default1473;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1473;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16594,9 +19483,12 @@ T0* GE_new1473(TC* ac, T1 initialize)
 T0* GE_new1474(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1474));
+	size_t s = sizeof(T1474);
 	if (initialize) {
-		*(T1474*)R = GE_default1474;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1474;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16605,9 +19497,12 @@ T0* GE_new1474(TC* ac, T1 initialize)
 T0* GE_new1475(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1475));
+	size_t s = sizeof(T1475);
 	if (initialize) {
-		*(T1475*)R = GE_default1475;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1475;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16616,9 +19511,12 @@ T0* GE_new1475(TC* ac, T1 initialize)
 T0* GE_new1476(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1476));
+	size_t s = sizeof(T1476);
 	if (initialize) {
-		*(T1476*)R = GE_default1476;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1476;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16627,9 +19525,12 @@ T0* GE_new1476(TC* ac, T1 initialize)
 T0* GE_new1477(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1477));
+	size_t s = sizeof(T1477);
 	if (initialize) {
-		*(T1477*)R = GE_default1477;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1477;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16638,9 +19539,12 @@ T0* GE_new1477(TC* ac, T1 initialize)
 T0* GE_new1478(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1478));
+	size_t s = sizeof(T1478);
 	if (initialize) {
-		*(T1478*)R = GE_default1478;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1478;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16649,9 +19553,12 @@ T0* GE_new1478(TC* ac, T1 initialize)
 T0* GE_new1479(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1479));
+	size_t s = sizeof(T1479);
 	if (initialize) {
-		*(T1479*)R = GE_default1479;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1479;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16660,9 +19567,12 @@ T0* GE_new1479(TC* ac, T1 initialize)
 T0* GE_new1480(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1480));
+	size_t s = sizeof(T1480);
 	if (initialize) {
-		*(T1480*)R = GE_default1480;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1480;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16671,9 +19581,12 @@ T0* GE_new1480(TC* ac, T1 initialize)
 T0* GE_new1481(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1481));
+	size_t s = sizeof(T1481);
 	if (initialize) {
-		*(T1481*)R = GE_default1481;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1481;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16682,9 +19595,12 @@ T0* GE_new1481(TC* ac, T1 initialize)
 T0* GE_new1482(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1482));
+	size_t s = sizeof(T1482);
 	if (initialize) {
-		*(T1482*)R = GE_default1482;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1482;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16693,9 +19609,12 @@ T0* GE_new1482(TC* ac, T1 initialize)
 T0* GE_new1483(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1483));
+	size_t s = sizeof(T1483);
 	if (initialize) {
-		*(T1483*)R = GE_default1483;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1483;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16704,9 +19623,12 @@ T0* GE_new1483(TC* ac, T1 initialize)
 T0* GE_new1484(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1484));
+	size_t s = sizeof(T1484);
 	if (initialize) {
-		*(T1484*)R = GE_default1484;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1484;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16715,9 +19637,12 @@ T0* GE_new1484(TC* ac, T1 initialize)
 T0* GE_new1485(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1485));
+	size_t s = sizeof(T1485);
 	if (initialize) {
-		*(T1485*)R = GE_default1485;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1485;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16726,9 +19651,12 @@ T0* GE_new1485(TC* ac, T1 initialize)
 T0* GE_new1486(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1486));
+	size_t s = sizeof(T1486);
 	if (initialize) {
-		*(T1486*)R = GE_default1486;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1486;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16737,9 +19665,12 @@ T0* GE_new1486(TC* ac, T1 initialize)
 T0* GE_new1487(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1487));
+	size_t s = sizeof(T1487);
 	if (initialize) {
-		*(T1487*)R = GE_default1487;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1487;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16748,9 +19679,12 @@ T0* GE_new1487(TC* ac, T1 initialize)
 T0* GE_new1488(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1488));
+	size_t s = sizeof(T1488);
 	if (initialize) {
-		*(T1488*)R = GE_default1488;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1488;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16759,9 +19693,12 @@ T0* GE_new1488(TC* ac, T1 initialize)
 T0* GE_new1489(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1489));
+	size_t s = sizeof(T1489);
 	if (initialize) {
-		*(T1489*)R = GE_default1489;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1489;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -16770,9 +19707,12 @@ T0* GE_new1489(TC* ac, T1 initialize)
 T0* GE_new1490(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1490));
+	size_t s = sizeof(T1490);
 	if (initialize) {
-		*(T1490*)R = GE_default1490;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1490;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16781,9 +19721,12 @@ T0* GE_new1490(TC* ac, T1 initialize)
 T0* GE_new1491(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1491));
+	size_t s = sizeof(T1491);
 	if (initialize) {
-		*(T1491*)R = GE_default1491;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1491;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16792,9 +19735,12 @@ T0* GE_new1491(TC* ac, T1 initialize)
 T0* GE_new1492(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1492));
+	size_t s = sizeof(T1492);
 	if (initialize) {
-		*(T1492*)R = GE_default1492;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1492;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16803,9 +19749,12 @@ T0* GE_new1492(TC* ac, T1 initialize)
 T0* GE_new1494(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1494));
+	size_t s = sizeof(T1494);
 	if (initialize) {
-		*(T1494*)R = GE_default1494;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1494;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16814,9 +19763,12 @@ T0* GE_new1494(TC* ac, T1 initialize)
 T0* GE_new1495(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1495));
+	size_t s = sizeof(T1495);
 	if (initialize) {
-		*(T1495*)R = GE_default1495;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1495;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16825,9 +19777,12 @@ T0* GE_new1495(TC* ac, T1 initialize)
 T0* GE_new1496(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1496));
+	size_t s = sizeof(T1496);
 	if (initialize) {
-		*(T1496*)R = GE_default1496;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1496;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16836,9 +19791,12 @@ T0* GE_new1496(TC* ac, T1 initialize)
 T0* GE_new1497(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1497));
+	size_t s = sizeof(T1497);
 	if (initialize) {
-		*(T1497*)R = GE_default1497;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1497;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16847,9 +19805,12 @@ T0* GE_new1497(TC* ac, T1 initialize)
 T0* GE_new1498(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1498));
+	size_t s = sizeof(T1498);
 	if (initialize) {
-		*(T1498*)R = GE_default1498;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1498;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -16858,9 +19819,12 @@ T0* GE_new1498(TC* ac, T1 initialize)
 T0* GE_new1499(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1499));
+	size_t s = sizeof(T1499);
 	if (initialize) {
-		*(T1499*)R = GE_default1499;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1499;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -16869,9 +19833,12 @@ T0* GE_new1499(TC* ac, T1 initialize)
 T0* GE_new1500(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1500));
+	size_t s = sizeof(T1500);
 	if (initialize) {
-		*(T1500*)R = GE_default1500;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1500;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16880,9 +19847,12 @@ T0* GE_new1500(TC* ac, T1 initialize)
 T0* GE_new1502(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1502));
+	size_t s = sizeof(T1502);
 	if (initialize) {
-		*(T1502*)R = GE_default1502;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1502;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16891,9 +19861,12 @@ T0* GE_new1502(TC* ac, T1 initialize)
 T0* GE_new1503(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1503));
+	size_t s = sizeof(T1503);
 	if (initialize) {
-		*(T1503*)R = GE_default1503;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1503;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16902,9 +19875,12 @@ T0* GE_new1503(TC* ac, T1 initialize)
 T0* GE_new1505(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1505));
+	size_t s = sizeof(T1505);
 	if (initialize) {
-		*(T1505*)R = GE_default1505;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1505;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -16913,9 +19889,12 @@ T0* GE_new1505(TC* ac, T1 initialize)
 T0* GE_new1506(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1506));
+	size_t s = sizeof(T1506);
 	if (initialize) {
-		*(T1506*)R = GE_default1506;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1506;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -16924,9 +19903,12 @@ T0* GE_new1506(TC* ac, T1 initialize)
 T0* GE_new1507(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1507));
+	size_t s = sizeof(T1507);
 	if (initialize) {
-		*(T1507*)R = GE_default1507;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1507;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16935,9 +19917,12 @@ T0* GE_new1507(TC* ac, T1 initialize)
 T0* GE_new1508(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1508));
+	size_t s = sizeof(T1508);
 	if (initialize) {
-		*(T1508*)R = GE_default1508;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1508;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16946,9 +19931,12 @@ T0* GE_new1508(TC* ac, T1 initialize)
 T0* GE_new1509(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1509));
+	size_t s = sizeof(T1509);
 	if (initialize) {
-		*(T1509*)R = GE_default1509;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1509;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16957,9 +19945,12 @@ T0* GE_new1509(TC* ac, T1 initialize)
 T0* GE_new1510(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1510));
+	size_t s = sizeof(T1510);
 	if (initialize) {
-		*(T1510*)R = GE_default1510;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1510;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16968,9 +19959,12 @@ T0* GE_new1510(TC* ac, T1 initialize)
 T0* GE_new1512(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1512));
+	size_t s = sizeof(T1512);
 	if (initialize) {
-		*(T1512*)R = GE_default1512;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1512;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16979,9 +19973,12 @@ T0* GE_new1512(TC* ac, T1 initialize)
 T0* GE_new1513(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1513));
+	size_t s = sizeof(T1513);
 	if (initialize) {
-		*(T1513*)R = GE_default1513;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1513;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -16990,9 +19987,12 @@ T0* GE_new1513(TC* ac, T1 initialize)
 T0* GE_new1514(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1514));
+	size_t s = sizeof(T1514);
 	if (initialize) {
-		*(T1514*)R = GE_default1514;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1514;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17001,9 +20001,12 @@ T0* GE_new1514(TC* ac, T1 initialize)
 T0* GE_new1515(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1515));
+	size_t s = sizeof(T1515);
 	if (initialize) {
-		*(T1515*)R = GE_default1515;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1515;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17012,9 +20015,12 @@ T0* GE_new1515(TC* ac, T1 initialize)
 T0* GE_new1516(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1516));
+	size_t s = sizeof(T1516);
 	if (initialize) {
-		*(T1516*)R = GE_default1516;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1516;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17023,9 +20029,12 @@ T0* GE_new1516(TC* ac, T1 initialize)
 T0* GE_new1517(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1517));
+	size_t s = sizeof(T1517);
 	if (initialize) {
-		*(T1517*)R = GE_default1517;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1517;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17034,9 +20043,12 @@ T0* GE_new1517(TC* ac, T1 initialize)
 T0* GE_new1518(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1518));
+	size_t s = sizeof(T1518);
 	if (initialize) {
-		*(T1518*)R = GE_default1518;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1518;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17045,9 +20057,12 @@ T0* GE_new1518(TC* ac, T1 initialize)
 T0* GE_new1519(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1519));
+	size_t s = sizeof(T1519);
 	if (initialize) {
-		*(T1519*)R = GE_default1519;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1519;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17056,9 +20071,12 @@ T0* GE_new1519(TC* ac, T1 initialize)
 T0* GE_new1520(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1520));
+	size_t s = sizeof(T1520);
 	if (initialize) {
-		*(T1520*)R = GE_default1520;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1520;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17067,9 +20085,12 @@ T0* GE_new1520(TC* ac, T1 initialize)
 T0* GE_new1521(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1521));
+	size_t s = sizeof(T1521);
 	if (initialize) {
-		*(T1521*)R = GE_default1521;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1521;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17078,9 +20099,12 @@ T0* GE_new1521(TC* ac, T1 initialize)
 T0* GE_new1522(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1522));
+	size_t s = sizeof(T1522);
 	if (initialize) {
-		*(T1522*)R = GE_default1522;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1522;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17089,9 +20113,12 @@ T0* GE_new1522(TC* ac, T1 initialize)
 T0* GE_new1523(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1523));
+	size_t s = sizeof(T1523);
 	if (initialize) {
-		*(T1523*)R = GE_default1523;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1523;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17100,9 +20127,12 @@ T0* GE_new1523(TC* ac, T1 initialize)
 T0* GE_new1524(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1524));
+	size_t s = sizeof(T1524);
 	if (initialize) {
-		*(T1524*)R = GE_default1524;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1524;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17111,9 +20141,12 @@ T0* GE_new1524(TC* ac, T1 initialize)
 T0* GE_new1525(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1525));
+	size_t s = sizeof(T1525);
 	if (initialize) {
-		*(T1525*)R = GE_default1525;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1525;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17122,9 +20155,12 @@ T0* GE_new1525(TC* ac, T1 initialize)
 T0* GE_new1526(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1526));
+	size_t s = sizeof(T1526);
 	if (initialize) {
-		*(T1526*)R = GE_default1526;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1526;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17133,9 +20169,12 @@ T0* GE_new1526(TC* ac, T1 initialize)
 T0* GE_new1527(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1527));
+	size_t s = sizeof(T1527);
 	if (initialize) {
-		*(T1527*)R = GE_default1527;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1527;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17144,9 +20183,12 @@ T0* GE_new1527(TC* ac, T1 initialize)
 T0* GE_new1528(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1528));
+	size_t s = sizeof(T1528);
 	if (initialize) {
-		*(T1528*)R = GE_default1528;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1528;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17155,9 +20197,12 @@ T0* GE_new1528(TC* ac, T1 initialize)
 T0* GE_new1529(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1529));
+	size_t s = sizeof(T1529);
 	if (initialize) {
-		*(T1529*)R = GE_default1529;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1529;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17166,9 +20211,12 @@ T0* GE_new1529(TC* ac, T1 initialize)
 T0* GE_new1530(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1530));
+	size_t s = sizeof(T1530);
 	if (initialize) {
-		*(T1530*)R = GE_default1530;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1530;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17177,9 +20225,12 @@ T0* GE_new1530(TC* ac, T1 initialize)
 T0* GE_new1531(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1531));
+	size_t s = sizeof(T1531);
 	if (initialize) {
-		*(T1531*)R = GE_default1531;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1531;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17188,9 +20239,12 @@ T0* GE_new1531(TC* ac, T1 initialize)
 T0* GE_new1532(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1532));
+	size_t s = sizeof(T1532);
 	if (initialize) {
-		*(T1532*)R = GE_default1532;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1532;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17199,9 +20253,12 @@ T0* GE_new1532(TC* ac, T1 initialize)
 T0* GE_new1533(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1533));
+	size_t s = sizeof(T1533);
 	if (initialize) {
-		*(T1533*)R = GE_default1533;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1533;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17210,9 +20267,12 @@ T0* GE_new1533(TC* ac, T1 initialize)
 T0* GE_new1534(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1534));
+	size_t s = sizeof(T1534);
 	if (initialize) {
-		*(T1534*)R = GE_default1534;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1534;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17221,9 +20281,12 @@ T0* GE_new1534(TC* ac, T1 initialize)
 T0* GE_new1535(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1535));
+	size_t s = sizeof(T1535);
 	if (initialize) {
-		*(T1535*)R = GE_default1535;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1535;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17232,9 +20295,12 @@ T0* GE_new1535(TC* ac, T1 initialize)
 T0* GE_new1538(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1538));
+	size_t s = sizeof(T1538);
 	if (initialize) {
-		*(T1538*)R = GE_default1538;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1538;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17243,9 +20309,12 @@ T0* GE_new1538(TC* ac, T1 initialize)
 T0* GE_new1542(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1542));
+	size_t s = sizeof(T1542);
 	if (initialize) {
-		*(T1542*)R = GE_default1542;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1542;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17254,9 +20323,12 @@ T0* GE_new1542(TC* ac, T1 initialize)
 T0* GE_new1543(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1543));
+	size_t s = sizeof(T1543);
 	if (initialize) {
-		*(T1543*)R = GE_default1543;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1543;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17265,9 +20337,12 @@ T0* GE_new1543(TC* ac, T1 initialize)
 T0* GE_new1544(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1544));
+	size_t s = sizeof(T1544);
 	if (initialize) {
-		*(T1544*)R = GE_default1544;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1544;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17276,9 +20351,12 @@ T0* GE_new1544(TC* ac, T1 initialize)
 T0* GE_new1547(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1547));
+	size_t s = sizeof(T1547);
 	if (initialize) {
-		*(T1547*)R = GE_default1547;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1547;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17287,9 +20365,12 @@ T0* GE_new1547(TC* ac, T1 initialize)
 T0* GE_new1548(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1548));
+	size_t s = sizeof(T1548);
 	if (initialize) {
-		*(T1548*)R = GE_default1548;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1548;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17298,14 +20379,14 @@ T0* GE_new1548(TC* ac, T1 initialize)
 T0* GE_new1552(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1552)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1552)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1552*)R = GE_default1552;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1552;
 		((T1552*)(R))->a2 = a1;
-		((T1552*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1552*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1552*)(R))->offset = offsetof(T1552, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17314,9 +20395,12 @@ T0* GE_new1552(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1553(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1553));
+	size_t s = sizeof(T1553);
 	if (initialize) {
-		*(T1553*)R = GE_default1553;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1553;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17325,14 +20409,14 @@ T0* GE_new1553(TC* ac, T1 initialize)
 T0* GE_new1555(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1555)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1555)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1555*)R = GE_default1555;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1555;
 		((T1555*)(R))->a2 = a1;
-		((T1555*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1555*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1555*)(R))->offset = offsetof(T1555, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17341,9 +20425,12 @@ T0* GE_new1555(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1556(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1556));
+	size_t s = sizeof(T1556);
 	if (initialize) {
-		*(T1556*)R = GE_default1556;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1556;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17352,9 +20439,12 @@ T0* GE_new1556(TC* ac, T1 initialize)
 T0* GE_new1559(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1559));
+	size_t s = sizeof(T1559);
 	if (initialize) {
-		*(T1559*)R = GE_default1559;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1559;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17363,9 +20453,12 @@ T0* GE_new1559(TC* ac, T1 initialize)
 T0* GE_new1561(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1561));
+	size_t s = sizeof(T1561);
 	if (initialize) {
-		*(T1561*)R = GE_default1561;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1561;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17374,9 +20467,12 @@ T0* GE_new1561(TC* ac, T1 initialize)
 T0* GE_new1562(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1562));
+	size_t s = sizeof(T1562);
 	if (initialize) {
-		*(T1562*)R = GE_default1562;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1562;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17385,9 +20481,12 @@ T0* GE_new1562(TC* ac, T1 initialize)
 T0* GE_new1563(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1563));
+	size_t s = sizeof(T1563);
 	if (initialize) {
-		*(T1563*)R = GE_default1563;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1563;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17396,9 +20495,12 @@ T0* GE_new1563(TC* ac, T1 initialize)
 T0* GE_new1564(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1564));
+	size_t s = sizeof(T1564);
 	if (initialize) {
-		*(T1564*)R = GE_default1564;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1564;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17407,9 +20509,12 @@ T0* GE_new1564(TC* ac, T1 initialize)
 T0* GE_new1566(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1566));
+	size_t s = sizeof(T1566);
 	if (initialize) {
-		*(T1566*)R = GE_default1566;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1566;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17418,9 +20523,12 @@ T0* GE_new1566(TC* ac, T1 initialize)
 T0* GE_new1574(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1574));
+	size_t s = sizeof(T1574);
 	if (initialize) {
-		*(T1574*)R = GE_default1574;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1574;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17429,14 +20537,14 @@ T0* GE_new1574(TC* ac, T1 initialize)
 T0* GE_new1576(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1576)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1576)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1576*)R = GE_default1576;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1576;
 		((T1576*)(R))->a2 = a1;
-		((T1576*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1576*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1576*)(R))->offset = offsetof(T1576, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17445,9 +20553,12 @@ T0* GE_new1576(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1577(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1577));
+	size_t s = sizeof(T1577);
 	if (initialize) {
-		*(T1577*)R = GE_default1577;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1577;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17456,14 +20567,14 @@ T0* GE_new1577(TC* ac, T1 initialize)
 T0* GE_new1578(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1578)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1578)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1578*)R = GE_default1578;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1578;
 		((T1578*)(R))->a2 = a1;
-		((T1578*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1578*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1578*)(R))->offset = offsetof(T1578, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17472,9 +20583,12 @@ T0* GE_new1578(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1579(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1579));
+	size_t s = sizeof(T1579);
 	if (initialize) {
-		*(T1579*)R = GE_default1579;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1579;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17483,9 +20597,12 @@ T0* GE_new1579(TC* ac, T1 initialize)
 T0* GE_new1580(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1580));
+	size_t s = sizeof(T1580);
 	if (initialize) {
-		*(T1580*)R = GE_default1580;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1580;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17494,14 +20611,14 @@ T0* GE_new1580(TC* ac, T1 initialize)
 T0* GE_new1582(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1582)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1582)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1582*)R = GE_default1582;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1582;
 		((T1582*)(R))->a2 = a1;
-		((T1582*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1582*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1582*)(R))->offset = offsetof(T1582, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17510,9 +20627,12 @@ T0* GE_new1582(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1583(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1583));
+	size_t s = sizeof(T1583);
 	if (initialize) {
-		*(T1583*)R = GE_default1583;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1583;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17521,14 +20641,14 @@ T0* GE_new1583(TC* ac, T1 initialize)
 T0* GE_new1584(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1584)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1584)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1584*)R = GE_default1584;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1584;
 		((T1584*)(R))->a2 = a1;
-		((T1584*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1584*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1584*)(R))->offset = offsetof(T1584, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17537,9 +20657,12 @@ T0* GE_new1584(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1586(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1586));
+	size_t s = sizeof(T1586);
 	if (initialize) {
-		*(T1586*)R = GE_default1586;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1586;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17548,14 +20671,14 @@ T0* GE_new1586(TC* ac, T1 initialize)
 T0* GE_new1587(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1587)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1587)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1587*)R = GE_default1587;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1587;
 		((T1587*)(R))->a2 = a1;
-		((T1587*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1587*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1587*)(R))->offset = offsetof(T1587, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17564,9 +20687,12 @@ T0* GE_new1587(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1589(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1589));
+	size_t s = sizeof(T1589);
 	if (initialize) {
-		*(T1589*)R = GE_default1589;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1589;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17575,14 +20701,14 @@ T0* GE_new1589(TC* ac, T1 initialize)
 T0* GE_new1590(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1590)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1590)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1590*)R = GE_default1590;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1590;
 		((T1590*)(R))->a2 = a1;
-		((T1590*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1590*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1590*)(R))->offset = offsetof(T1590, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17591,9 +20717,12 @@ T0* GE_new1590(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1591(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1591));
+	size_t s = sizeof(T1591);
 	if (initialize) {
-		*(T1591*)R = GE_default1591;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1591;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17602,14 +20731,14 @@ T0* GE_new1591(TC* ac, T1 initialize)
 T0* GE_new1592(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1592)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1592)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1592*)R = GE_default1592;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1592;
 		((T1592*)(R))->a2 = a1;
-		((T1592*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1592*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1592*)(R))->offset = offsetof(T1592, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17618,9 +20747,12 @@ T0* GE_new1592(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1593(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1593));
+	size_t s = sizeof(T1593);
 	if (initialize) {
-		*(T1593*)R = GE_default1593;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1593;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17629,14 +20761,14 @@ T0* GE_new1593(TC* ac, T1 initialize)
 T0* GE_new1594(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1594)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1594)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1594*)R = GE_default1594;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1594;
 		((T1594*)(R))->a2 = a1;
-		((T1594*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1594*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1594*)(R))->offset = offsetof(T1594, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17645,9 +20777,12 @@ T0* GE_new1594(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1595(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1595));
+	size_t s = sizeof(T1595);
 	if (initialize) {
-		*(T1595*)R = GE_default1595;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1595;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17656,14 +20791,14 @@ T0* GE_new1595(TC* ac, T1 initialize)
 T0* GE_new1596(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1596)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1596)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1596*)R = GE_default1596;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1596;
 		((T1596*)(R))->a2 = a1;
-		((T1596*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1596*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1596*)(R))->offset = offsetof(T1596, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17672,9 +20807,12 @@ T0* GE_new1596(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1598(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1598));
+	size_t s = sizeof(T1598);
 	if (initialize) {
-		*(T1598*)R = GE_default1598;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1598;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17683,14 +20821,14 @@ T0* GE_new1598(TC* ac, T1 initialize)
 T0* GE_new1599(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1599)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1599)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1599*)R = GE_default1599;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1599;
 		((T1599*)(R))->a2 = a1;
-		((T1599*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1599*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1599*)(R))->offset = offsetof(T1599, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17699,9 +20837,12 @@ T0* GE_new1599(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1600(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1600));
+	size_t s = sizeof(T1600);
 	if (initialize) {
-		*(T1600*)R = GE_default1600;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1600;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17710,14 +20851,14 @@ T0* GE_new1600(TC* ac, T1 initialize)
 T0* GE_new1601(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1601)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1601)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1601*)R = GE_default1601;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1601;
 		((T1601*)(R))->a2 = a1;
-		((T1601*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1601*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1601*)(R))->offset = offsetof(T1601, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17726,9 +20867,12 @@ T0* GE_new1601(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1603(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1603));
+	size_t s = sizeof(T1603);
 	if (initialize) {
-		*(T1603*)R = GE_default1603;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1603;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17737,14 +20881,14 @@ T0* GE_new1603(TC* ac, T1 initialize)
 T0* GE_new1605(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1605)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1605)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1605*)R = GE_default1605;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1605;
 		((T1605*)(R))->a2 = a1;
-		((T1605*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1605*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1605*)(R))->offset = offsetof(T1605, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17753,9 +20897,12 @@ T0* GE_new1605(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1606(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1606));
+	size_t s = sizeof(T1606);
 	if (initialize) {
-		*(T1606*)R = GE_default1606;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1606;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17764,14 +20911,14 @@ T0* GE_new1606(TC* ac, T1 initialize)
 T0* GE_new1608(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1608)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1608)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1608*)R = GE_default1608;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1608;
 		((T1608*)(R))->a2 = a1;
-		((T1608*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1608*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1608*)(R))->offset = offsetof(T1608, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17780,9 +20927,12 @@ T0* GE_new1608(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1609(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1609));
+	size_t s = sizeof(T1609);
 	if (initialize) {
-		*(T1609*)R = GE_default1609;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1609;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17791,14 +20941,14 @@ T0* GE_new1609(TC* ac, T1 initialize)
 T0* GE_new1610(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1610)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1610)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1610*)R = GE_default1610;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1610;
 		((T1610*)(R))->a2 = a1;
-		((T1610*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1610*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1610*)(R))->offset = offsetof(T1610, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17807,9 +20957,12 @@ T0* GE_new1610(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1611(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1611));
+	size_t s = sizeof(T1611);
 	if (initialize) {
-		*(T1611*)R = GE_default1611;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1611;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17818,14 +20971,14 @@ T0* GE_new1611(TC* ac, T1 initialize)
 T0* GE_new1612(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1612)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1612)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1612*)R = GE_default1612;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1612;
 		((T1612*)(R))->a2 = a1;
-		((T1612*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1612*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1612*)(R))->offset = offsetof(T1612, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17834,9 +20987,12 @@ T0* GE_new1612(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1613(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1613));
+	size_t s = sizeof(T1613);
 	if (initialize) {
-		*(T1613*)R = GE_default1613;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1613;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17845,14 +21001,14 @@ T0* GE_new1613(TC* ac, T1 initialize)
 T0* GE_new1615(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1615)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1615)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1615*)R = GE_default1615;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1615;
 		((T1615*)(R))->a2 = a1;
-		((T1615*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1615*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1615*)(R))->offset = offsetof(T1615, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17861,9 +21017,12 @@ T0* GE_new1615(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1616(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1616));
+	size_t s = sizeof(T1616);
 	if (initialize) {
-		*(T1616*)R = GE_default1616;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1616;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17872,14 +21031,14 @@ T0* GE_new1616(TC* ac, T1 initialize)
 T0* GE_new1617(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1617)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1617)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1617*)R = GE_default1617;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1617;
 		((T1617*)(R))->a2 = a1;
-		((T1617*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1617*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1617*)(R))->offset = offsetof(T1617, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17888,9 +21047,12 @@ T0* GE_new1617(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1618(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1618));
+	size_t s = sizeof(T1618);
 	if (initialize) {
-		*(T1618*)R = GE_default1618;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1618;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17899,14 +21061,14 @@ T0* GE_new1618(TC* ac, T1 initialize)
 T0* GE_new1619(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1619)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1619)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1619*)R = GE_default1619;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1619;
 		((T1619*)(R))->a2 = a1;
-		((T1619*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1619*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1619*)(R))->offset = offsetof(T1619, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17915,9 +21077,12 @@ T0* GE_new1619(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1620(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1620));
+	size_t s = sizeof(T1620);
 	if (initialize) {
-		*(T1620*)R = GE_default1620;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1620;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17926,9 +21091,12 @@ T0* GE_new1620(TC* ac, T1 initialize)
 T0* GE_new1622(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1622));
+	size_t s = sizeof(T1622);
 	if (initialize) {
-		*(T1622*)R = GE_default1622;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1622;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17937,9 +21105,12 @@ T0* GE_new1622(TC* ac, T1 initialize)
 T0* GE_new1624(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1624));
+	size_t s = sizeof(T1624);
 	if (initialize) {
-		*(T1624*)R = GE_default1624;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1624;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -17948,9 +21119,12 @@ T0* GE_new1624(TC* ac, T1 initialize)
 T0* GE_new1626(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1626));
+	size_t s = sizeof(T1626);
 	if (initialize) {
-		*(T1626*)R = GE_default1626;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1626;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17959,9 +21133,12 @@ T0* GE_new1626(TC* ac, T1 initialize)
 T0* GE_new1627(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1627));
+	size_t s = sizeof(T1627);
 	if (initialize) {
-		*(T1627*)R = GE_default1627;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1627;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17970,9 +21147,12 @@ T0* GE_new1627(TC* ac, T1 initialize)
 T0* GE_new1628(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1628));
+	size_t s = sizeof(T1628);
 	if (initialize) {
-		*(T1628*)R = GE_default1628;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1628;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17981,9 +21161,12 @@ T0* GE_new1628(TC* ac, T1 initialize)
 T0* GE_new1629(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1629));
+	size_t s = sizeof(T1629);
 	if (initialize) {
-		*(T1629*)R = GE_default1629;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1629;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -17992,9 +21175,12 @@ T0* GE_new1629(TC* ac, T1 initialize)
 T0* GE_new1630(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1630));
+	size_t s = sizeof(T1630);
 	if (initialize) {
-		*(T1630*)R = GE_default1630;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1630;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18003,9 +21189,12 @@ T0* GE_new1630(TC* ac, T1 initialize)
 T0* GE_new1631(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1631));
+	size_t s = sizeof(T1631);
 	if (initialize) {
-		*(T1631*)R = GE_default1631;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1631;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18014,9 +21203,12 @@ T0* GE_new1631(TC* ac, T1 initialize)
 T0* GE_new1632(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1632));
+	size_t s = sizeof(T1632);
 	if (initialize) {
-		*(T1632*)R = GE_default1632;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1632;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18025,9 +21217,12 @@ T0* GE_new1632(TC* ac, T1 initialize)
 T0* GE_new1634(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1634));
+	size_t s = sizeof(T1634);
 	if (initialize) {
-		*(T1634*)R = GE_default1634;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1634;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18036,9 +21231,12 @@ T0* GE_new1634(TC* ac, T1 initialize)
 T0* GE_new1635(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1635));
+	size_t s = sizeof(T1635);
 	if (initialize) {
-		*(T1635*)R = GE_default1635;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1635;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18047,9 +21245,12 @@ T0* GE_new1635(TC* ac, T1 initialize)
 T0* GE_new1636(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1636));
+	size_t s = sizeof(T1636);
 	if (initialize) {
-		*(T1636*)R = GE_default1636;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1636;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18058,9 +21259,12 @@ T0* GE_new1636(TC* ac, T1 initialize)
 T0* GE_new1643(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1643));
+	size_t s = sizeof(T1643);
 	if (initialize) {
-		*(T1643*)R = GE_default1643;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1643;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18069,9 +21273,12 @@ T0* GE_new1643(TC* ac, T1 initialize)
 T0* GE_new1644(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1644));
+	size_t s = sizeof(T1644);
 	if (initialize) {
-		*(T1644*)R = GE_default1644;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1644;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18080,9 +21287,12 @@ T0* GE_new1644(TC* ac, T1 initialize)
 T0* GE_new1645(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1645));
+	size_t s = sizeof(T1645);
 	if (initialize) {
-		*(T1645*)R = GE_default1645;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1645;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18091,9 +21301,12 @@ T0* GE_new1645(TC* ac, T1 initialize)
 T0* GE_new1647(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1647));
+	size_t s = sizeof(T1647);
 	if (initialize) {
-		*(T1647*)R = GE_default1647;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1647;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18102,9 +21315,12 @@ T0* GE_new1647(TC* ac, T1 initialize)
 T0* GE_new1648(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1648));
+	size_t s = sizeof(T1648);
 	if (initialize) {
-		*(T1648*)R = GE_default1648;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1648;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -18113,14 +21329,14 @@ T0* GE_new1648(TC* ac, T1 initialize)
 T0* GE_new1649(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1649)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1649)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1649*)R = GE_default1649;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1649;
 		((T1649*)(R))->a2 = a1;
-		((T1649*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1649*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1649*)(R))->offset = offsetof(T1649, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18129,9 +21345,12 @@ T0* GE_new1649(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1650(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1650));
+	size_t s = sizeof(T1650);
 	if (initialize) {
-		*(T1650*)R = GE_default1650;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1650;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18140,9 +21359,12 @@ T0* GE_new1650(TC* ac, T1 initialize)
 T0* GE_new1652(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1652));
+	size_t s = sizeof(T1652);
 	if (initialize) {
-		*(T1652*)R = GE_default1652;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1652;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18151,9 +21373,12 @@ T0* GE_new1652(TC* ac, T1 initialize)
 T0* GE_new1653(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1653));
+	size_t s = sizeof(T1653);
 	if (initialize) {
-		*(T1653*)R = GE_default1653;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1653;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18162,9 +21387,12 @@ T0* GE_new1653(TC* ac, T1 initialize)
 T0* GE_new1654(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1654));
+	size_t s = sizeof(T1654);
 	if (initialize) {
-		*(T1654*)R = GE_default1654;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1654;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18173,9 +21401,12 @@ T0* GE_new1654(TC* ac, T1 initialize)
 T0* GE_new1655(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1655));
+	size_t s = sizeof(T1655);
 	if (initialize) {
-		*(T1655*)R = GE_default1655;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1655;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18184,9 +21415,12 @@ T0* GE_new1655(TC* ac, T1 initialize)
 T0* GE_new1656(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1656));
+	size_t s = sizeof(T1656);
 	if (initialize) {
-		*(T1656*)R = GE_default1656;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1656;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18195,14 +21429,14 @@ T0* GE_new1656(TC* ac, T1 initialize)
 T0* GE_new1658(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1658)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1658)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1658*)R = GE_default1658;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1658;
 		((T1658*)(R))->a2 = a1;
-		((T1658*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1658*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1658*)(R))->offset = offsetof(T1658, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18211,9 +21445,12 @@ T0* GE_new1658(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1659(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1659));
+	size_t s = sizeof(T1659);
 	if (initialize) {
-		*(T1659*)R = GE_default1659;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1659;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -18222,9 +21459,12 @@ T0* GE_new1659(TC* ac, T1 initialize)
 T0* GE_new1660(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1660));
+	size_t s = sizeof(T1660);
 	if (initialize) {
-		*(T1660*)R = GE_default1660;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1660;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18233,14 +21473,14 @@ T0* GE_new1660(TC* ac, T1 initialize)
 T0* GE_new1661(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1661)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1661)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1661*)R = GE_default1661;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1661;
 		((T1661*)(R))->a2 = a1;
-		((T1661*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1661*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1661*)(R))->offset = offsetof(T1661, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18249,9 +21489,12 @@ T0* GE_new1661(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1662(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1662));
+	size_t s = sizeof(T1662);
 	if (initialize) {
-		*(T1662*)R = GE_default1662;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1662;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -18260,9 +21503,12 @@ T0* GE_new1662(TC* ac, T1 initialize)
 T0* GE_new1663(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1663));
+	size_t s = sizeof(T1663);
 	if (initialize) {
-		*(T1663*)R = GE_default1663;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1663;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18271,14 +21517,14 @@ T0* GE_new1663(TC* ac, T1 initialize)
 T0* GE_new1664(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1664)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1664)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1664*)R = GE_default1664;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1664;
 		((T1664*)(R))->a2 = a1;
-		((T1664*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1664*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1664*)(R))->offset = offsetof(T1664, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18287,9 +21533,12 @@ T0* GE_new1664(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1665(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1665));
+	size_t s = sizeof(T1665);
 	if (initialize) {
-		*(T1665*)R = GE_default1665;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1665;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -18298,9 +21547,12 @@ T0* GE_new1665(TC* ac, T1 initialize)
 T0* GE_new1666(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1666));
+	size_t s = sizeof(T1666);
 	if (initialize) {
-		*(T1666*)R = GE_default1666;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1666;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18309,9 +21561,12 @@ T0* GE_new1666(TC* ac, T1 initialize)
 T0* GE_new1667(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1667));
+	size_t s = sizeof(T1667);
 	if (initialize) {
-		*(T1667*)R = GE_default1667;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1667;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18320,9 +21575,12 @@ T0* GE_new1667(TC* ac, T1 initialize)
 T0* GE_new1669(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1669));
+	size_t s = sizeof(T1669);
 	if (initialize) {
-		*(T1669*)R = GE_default1669;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1669;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18331,9 +21589,12 @@ T0* GE_new1669(TC* ac, T1 initialize)
 T0* GE_new1670(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1670));
+	size_t s = sizeof(T1670);
 	if (initialize) {
-		*(T1670*)R = GE_default1670;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1670;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18342,9 +21603,12 @@ T0* GE_new1670(TC* ac, T1 initialize)
 T0* GE_new1671(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1671));
+	size_t s = sizeof(T1671);
 	if (initialize) {
-		*(T1671*)R = GE_default1671;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1671;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18353,9 +21617,12 @@ T0* GE_new1671(TC* ac, T1 initialize)
 T0* GE_new1672(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1672));
+	size_t s = sizeof(T1672);
 	if (initialize) {
-		*(T1672*)R = GE_default1672;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1672;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18364,14 +21631,14 @@ T0* GE_new1672(TC* ac, T1 initialize)
 T0* GE_new1673(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1673)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1673)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1673*)R = GE_default1673;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1673;
 		((T1673*)(R))->a2 = a1;
-		((T1673*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1673*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1673*)(R))->offset = offsetof(T1673, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18380,14 +21647,14 @@ T0* GE_new1673(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1676(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1676)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1676)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1676*)R = GE_default1676;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1676;
 		((T1676*)(R))->a2 = a1;
-		((T1676*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1676*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1676*)(R))->offset = offsetof(T1676, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18396,9 +21663,12 @@ T0* GE_new1676(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1677(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1677));
+	size_t s = sizeof(T1677);
 	if (initialize) {
-		*(T1677*)R = GE_default1677;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1677;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -18407,9 +21677,12 @@ T0* GE_new1677(TC* ac, T1 initialize)
 T0* GE_new1678(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1678));
+	size_t s = sizeof(T1678);
 	if (initialize) {
-		*(T1678*)R = GE_default1678;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1678;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -18418,9 +21691,12 @@ T0* GE_new1678(TC* ac, T1 initialize)
 T0* GE_new1680(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1680));
+	size_t s = sizeof(T1680);
 	if (initialize) {
-		*(T1680*)R = GE_default1680;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1680;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18429,9 +21705,12 @@ T0* GE_new1680(TC* ac, T1 initialize)
 T0* GE_new1681(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1681));
+	size_t s = sizeof(T1681);
 	if (initialize) {
-		*(T1681*)R = GE_default1681;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1681;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -18440,14 +21719,14 @@ T0* GE_new1681(TC* ac, T1 initialize)
 T0* GE_new1682(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1682)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1682)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1682*)R = GE_default1682;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1682;
 		((T1682*)(R))->a2 = a1;
-		((T1682*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1682*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1682*)(R))->offset = offsetof(T1682, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18456,9 +21735,12 @@ T0* GE_new1682(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1683(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1683));
+	size_t s = sizeof(T1683);
 	if (initialize) {
-		*(T1683*)R = GE_default1683;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1683;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18467,9 +21749,12 @@ T0* GE_new1683(TC* ac, T1 initialize)
 T0* GE_new1685(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1685));
+	size_t s = sizeof(T1685);
 	if (initialize) {
-		*(T1685*)R = GE_default1685;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1685;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18478,9 +21763,12 @@ T0* GE_new1685(TC* ac, T1 initialize)
 T0* GE_new1686(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1686));
+	size_t s = sizeof(T1686);
 	if (initialize) {
-		*(T1686*)R = GE_default1686;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1686;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -18489,14 +21777,14 @@ T0* GE_new1686(TC* ac, T1 initialize)
 T0* GE_new1687(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1687)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1687)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1687*)R = GE_default1687;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1687;
 		((T1687*)(R))->a2 = a1;
-		((T1687*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1687*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1687*)(R))->offset = offsetof(T1687, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18505,9 +21793,12 @@ T0* GE_new1687(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1688(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1688));
+	size_t s = sizeof(T1688);
 	if (initialize) {
-		*(T1688*)R = GE_default1688;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1688;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18516,9 +21807,12 @@ T0* GE_new1688(TC* ac, T1 initialize)
 T0* GE_new1689(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1689));
+	size_t s = sizeof(T1689);
 	if (initialize) {
-		*(T1689*)R = GE_default1689;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1689;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18527,9 +21821,12 @@ T0* GE_new1689(TC* ac, T1 initialize)
 T0* GE_new1690(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1690));
+	size_t s = sizeof(T1690);
 	if (initialize) {
-		*(T1690*)R = GE_default1690;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1690;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18538,9 +21835,12 @@ T0* GE_new1690(TC* ac, T1 initialize)
 T0* GE_new1692(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1692));
+	size_t s = sizeof(T1692);
 	if (initialize) {
-		*(T1692*)R = GE_default1692;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1692;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18549,9 +21849,12 @@ T0* GE_new1692(TC* ac, T1 initialize)
 T0* GE_new1693(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1693));
+	size_t s = sizeof(T1693);
 	if (initialize) {
-		*(T1693*)R = GE_default1693;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1693;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18560,9 +21863,12 @@ T0* GE_new1693(TC* ac, T1 initialize)
 T0* GE_new1694(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1694));
+	size_t s = sizeof(T1694);
 	if (initialize) {
-		*(T1694*)R = GE_default1694;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1694;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18571,9 +21877,12 @@ T0* GE_new1694(TC* ac, T1 initialize)
 T0* GE_new1695(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1695));
+	size_t s = sizeof(T1695);
 	if (initialize) {
-		*(T1695*)R = GE_default1695;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1695;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -18582,9 +21891,12 @@ T0* GE_new1695(TC* ac, T1 initialize)
 T0* GE_new1696(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1696));
+	size_t s = sizeof(T1696);
 	if (initialize) {
-		*(T1696*)R = GE_default1696;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1696;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18593,9 +21905,12 @@ T0* GE_new1696(TC* ac, T1 initialize)
 T0* GE_new1698(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1698));
+	size_t s = sizeof(T1698);
 	if (initialize) {
-		*(T1698*)R = GE_default1698;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1698;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18604,9 +21919,12 @@ T0* GE_new1698(TC* ac, T1 initialize)
 T0* GE_new1700(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1700));
+	size_t s = sizeof(T1700);
 	if (initialize) {
-		*(T1700*)R = GE_default1700;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1700;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18615,9 +21933,12 @@ T0* GE_new1700(TC* ac, T1 initialize)
 T0* GE_new1701(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1701));
+	size_t s = sizeof(T1701);
 	if (initialize) {
-		*(T1701*)R = GE_default1701;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1701;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18626,9 +21947,12 @@ T0* GE_new1701(TC* ac, T1 initialize)
 T0* GE_new1702(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1702));
+	size_t s = sizeof(T1702);
 	if (initialize) {
-		*(T1702*)R = GE_default1702;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1702;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18637,9 +21961,12 @@ T0* GE_new1702(TC* ac, T1 initialize)
 T0* GE_new1703(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1703));
+	size_t s = sizeof(T1703);
 	if (initialize) {
-		*(T1703*)R = GE_default1703;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1703;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18648,9 +21975,12 @@ T0* GE_new1703(TC* ac, T1 initialize)
 T0* GE_new1704(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1704));
+	size_t s = sizeof(T1704);
 	if (initialize) {
-		*(T1704*)R = GE_default1704;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1704;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18659,9 +21989,12 @@ T0* GE_new1704(TC* ac, T1 initialize)
 T0* GE_new1705(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1705));
+	size_t s = sizeof(T1705);
 	if (initialize) {
-		*(T1705*)R = GE_default1705;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1705;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18670,9 +22003,12 @@ T0* GE_new1705(TC* ac, T1 initialize)
 T0* GE_new1706(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1706));
+	size_t s = sizeof(T1706);
 	if (initialize) {
-		*(T1706*)R = GE_default1706;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1706;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18681,9 +22017,12 @@ T0* GE_new1706(TC* ac, T1 initialize)
 T0* GE_new1709(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1709));
+	size_t s = sizeof(T1709);
 	if (initialize) {
-		*(T1709*)R = GE_default1709;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1709;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18692,9 +22031,12 @@ T0* GE_new1709(TC* ac, T1 initialize)
 T0* GE_new1711(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1711));
+	size_t s = sizeof(T1711);
 	if (initialize) {
-		*(T1711*)R = GE_default1711;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1711;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18703,14 +22045,14 @@ T0* GE_new1711(TC* ac, T1 initialize)
 T0* GE_new1712(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1712)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1712)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1712*)R = GE_default1712;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1712;
 		((T1712*)(R))->a2 = a1;
-		((T1712*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1712*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1712*)(R))->offset = offsetof(T1712, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18719,9 +22061,12 @@ T0* GE_new1712(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1715(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1715));
+	size_t s = sizeof(T1715);
 	if (initialize) {
-		*(T1715*)R = GE_default1715;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1715;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -18730,9 +22075,12 @@ T0* GE_new1715(TC* ac, T1 initialize)
 T0* GE_new1719(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1719));
+	size_t s = sizeof(T1719);
 	if (initialize) {
-		*(T1719*)R = GE_default1719;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1719;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18741,9 +22089,12 @@ T0* GE_new1719(TC* ac, T1 initialize)
 T0* GE_new1720(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1720));
+	size_t s = sizeof(T1720);
 	if (initialize) {
-		*(T1720*)R = GE_default1720;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1720;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18752,9 +22103,12 @@ T0* GE_new1720(TC* ac, T1 initialize)
 T0* GE_new1721(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1721));
+	size_t s = sizeof(T1721);
 	if (initialize) {
-		*(T1721*)R = GE_default1721;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1721;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18763,9 +22117,12 @@ T0* GE_new1721(TC* ac, T1 initialize)
 T0* GE_new1724(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1724));
+	size_t s = sizeof(T1724);
 	if (initialize) {
-		*(T1724*)R = GE_default1724;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1724;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -18774,9 +22131,12 @@ T0* GE_new1724(TC* ac, T1 initialize)
 T0* GE_new1725(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1725));
+	size_t s = sizeof(T1725);
 	if (initialize) {
-		*(T1725*)R = GE_default1725;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1725;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18785,9 +22145,12 @@ T0* GE_new1725(TC* ac, T1 initialize)
 T0* GE_new1726(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1726));
+	size_t s = sizeof(T1726);
 	if (initialize) {
-		*(T1726*)R = GE_default1726;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1726;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -18796,9 +22159,12 @@ T0* GE_new1726(TC* ac, T1 initialize)
 T0* GE_new1727(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1727));
+	size_t s = sizeof(T1727);
 	if (initialize) {
-		*(T1727*)R = GE_default1727;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1727;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18807,9 +22173,12 @@ T0* GE_new1727(TC* ac, T1 initialize)
 T0* GE_new1728(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1728));
+	size_t s = sizeof(T1728);
 	if (initialize) {
-		*(T1728*)R = GE_default1728;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1728;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18818,9 +22187,12 @@ T0* GE_new1728(TC* ac, T1 initialize)
 T0* GE_new1729(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1729));
+	size_t s = sizeof(T1729);
 	if (initialize) {
-		*(T1729*)R = GE_default1729;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1729;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18829,14 +22201,14 @@ T0* GE_new1729(TC* ac, T1 initialize)
 T0* GE_new1730(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1730)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1730)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1730*)R = GE_default1730;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1730;
 		((T1730*)(R))->a2 = a1;
-		((T1730*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1730*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1730*)(R))->offset = offsetof(T1730, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18845,9 +22217,12 @@ T0* GE_new1730(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1733(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1733));
+	size_t s = sizeof(T1733);
 	if (initialize) {
-		*(T1733*)R = GE_default1733;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1733;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18856,9 +22231,12 @@ T0* GE_new1733(TC* ac, T1 initialize)
 T0* GE_new1734(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1734));
+	size_t s = sizeof(T1734);
 	if (initialize) {
-		*(T1734*)R = GE_default1734;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1734;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -18867,9 +22245,12 @@ T0* GE_new1734(TC* ac, T1 initialize)
 T0* GE_new1737(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1737));
+	size_t s = sizeof(T1737);
 	if (initialize) {
-		*(T1737*)R = GE_default1737;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1737;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -18878,9 +22259,12 @@ T0* GE_new1737(TC* ac, T1 initialize)
 T0* GE_new1738(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1738));
+	size_t s = sizeof(T1738);
 	if (initialize) {
-		*(T1738*)R = GE_default1738;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1738;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18889,9 +22273,12 @@ T0* GE_new1738(TC* ac, T1 initialize)
 T0* GE_new1739(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1739));
+	size_t s = sizeof(T1739);
 	if (initialize) {
-		*(T1739*)R = GE_default1739;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1739;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18900,9 +22287,12 @@ T0* GE_new1739(TC* ac, T1 initialize)
 T0* GE_new1740(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1740));
+	size_t s = sizeof(T1740);
 	if (initialize) {
-		*(T1740*)R = GE_default1740;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1740;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18911,9 +22301,12 @@ T0* GE_new1740(TC* ac, T1 initialize)
 T0* GE_new1741(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1741));
+	size_t s = sizeof(T1741);
 	if (initialize) {
-		*(T1741*)R = GE_default1741;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1741;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18922,9 +22315,12 @@ T0* GE_new1741(TC* ac, T1 initialize)
 T0* GE_new1742(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1742));
+	size_t s = sizeof(T1742);
 	if (initialize) {
-		*(T1742*)R = GE_default1742;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1742;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18933,9 +22329,12 @@ T0* GE_new1742(TC* ac, T1 initialize)
 T0* GE_new1743(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1743));
+	size_t s = sizeof(T1743);
 	if (initialize) {
-		*(T1743*)R = GE_default1743;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1743;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18944,9 +22343,12 @@ T0* GE_new1743(TC* ac, T1 initialize)
 T0* GE_new1744(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1744));
+	size_t s = sizeof(T1744);
 	if (initialize) {
-		*(T1744*)R = GE_default1744;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1744;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18955,9 +22357,12 @@ T0* GE_new1744(TC* ac, T1 initialize)
 T0* GE_new1747(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1747));
+	size_t s = sizeof(T1747);
 	if (initialize) {
-		*(T1747*)R = GE_default1747;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1747;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18966,9 +22371,12 @@ T0* GE_new1747(TC* ac, T1 initialize)
 T0* GE_new1748(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1748));
+	size_t s = sizeof(T1748);
 	if (initialize) {
-		*(T1748*)R = GE_default1748;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1748;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18977,9 +22385,12 @@ T0* GE_new1748(TC* ac, T1 initialize)
 T0* GE_new1749(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1749));
+	size_t s = sizeof(T1749);
 	if (initialize) {
-		*(T1749*)R = GE_default1749;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1749;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -18988,9 +22399,12 @@ T0* GE_new1749(TC* ac, T1 initialize)
 T0* GE_new1750(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1750));
+	size_t s = sizeof(T1750);
 	if (initialize) {
-		*(T1750*)R = GE_default1750;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1750;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -18999,9 +22413,12 @@ T0* GE_new1750(TC* ac, T1 initialize)
 T0* GE_new1751(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1751));
+	size_t s = sizeof(T1751);
 	if (initialize) {
-		*(T1751*)R = GE_default1751;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1751;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19010,14 +22427,14 @@ T0* GE_new1751(TC* ac, T1 initialize)
 T0* GE_new1752(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1752)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1752)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1752*)R = GE_default1752;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1752;
 		((T1752*)(R))->a2 = a1;
-		((T1752*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1752*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1752*)(R))->offset = offsetof(T1752, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19026,9 +22443,12 @@ T0* GE_new1752(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1753(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1753));
+	size_t s = sizeof(T1753);
 	if (initialize) {
-		*(T1753*)R = GE_default1753;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1753;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19037,9 +22457,12 @@ T0* GE_new1753(TC* ac, T1 initialize)
 T0* GE_new1755(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1755));
+	size_t s = sizeof(T1755);
 	if (initialize) {
-		*(T1755*)R = GE_default1755;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1755;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19048,9 +22471,12 @@ T0* GE_new1755(TC* ac, T1 initialize)
 T0* GE_new1756(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1756));
+	size_t s = sizeof(T1756);
 	if (initialize) {
-		*(T1756*)R = GE_default1756;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1756;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19059,14 +22485,14 @@ T0* GE_new1756(TC* ac, T1 initialize)
 T0* GE_new1758(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1758)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1758)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1758*)R = GE_default1758;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1758;
 		((T1758*)(R))->a2 = a1;
-		((T1758*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1758*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1758*)(R))->offset = offsetof(T1758, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19075,14 +22501,14 @@ T0* GE_new1758(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1760(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1760)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1760)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1760*)R = GE_default1760;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1760;
 		((T1760*)(R))->a2 = a1;
-		((T1760*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1760*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1760*)(R))->offset = offsetof(T1760, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19091,9 +22517,12 @@ T0* GE_new1760(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1762(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1762));
+	size_t s = sizeof(T1762);
 	if (initialize) {
-		*(T1762*)R = GE_default1762;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1762;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19102,9 +22531,12 @@ T0* GE_new1762(TC* ac, T1 initialize)
 T0* GE_new1763(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1763));
+	size_t s = sizeof(T1763);
 	if (initialize) {
-		*(T1763*)R = GE_default1763;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1763;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19113,9 +22545,12 @@ T0* GE_new1763(TC* ac, T1 initialize)
 T0* GE_new1764(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1764));
+	size_t s = sizeof(T1764);
 	if (initialize) {
-		*(T1764*)R = GE_default1764;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1764;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19124,14 +22559,14 @@ T0* GE_new1764(TC* ac, T1 initialize)
 T0* GE_new1765(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1765)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1765)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1765*)R = GE_default1765;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1765;
 		((T1765*)(R))->a2 = a1;
-		((T1765*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1765*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1765*)(R))->offset = offsetof(T1765, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19140,9 +22575,12 @@ T0* GE_new1765(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1767(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1767));
+	size_t s = sizeof(T1767);
 	if (initialize) {
-		*(T1767*)R = GE_default1767;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1767;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19151,9 +22589,12 @@ T0* GE_new1767(TC* ac, T1 initialize)
 T0* GE_new1768(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1768));
+	size_t s = sizeof(T1768);
 	if (initialize) {
-		*(T1768*)R = GE_default1768;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1768;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19162,14 +22603,14 @@ T0* GE_new1768(TC* ac, T1 initialize)
 T0* GE_new1769(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1769)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1769)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1769*)R = GE_default1769;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1769;
 		((T1769*)(R))->a2 = a1;
-		((T1769*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1769*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1769*)(R))->offset = offsetof(T1769, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19178,9 +22619,12 @@ T0* GE_new1769(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1770(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1770));
+	size_t s = sizeof(T1770);
 	if (initialize) {
-		*(T1770*)R = GE_default1770;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1770;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19189,9 +22633,12 @@ T0* GE_new1770(TC* ac, T1 initialize)
 T0* GE_new1771(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1771));
+	size_t s = sizeof(T1771);
 	if (initialize) {
-		*(T1771*)R = GE_default1771;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1771;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19200,9 +22647,12 @@ T0* GE_new1771(TC* ac, T1 initialize)
 T0* GE_new1772(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1772));
+	size_t s = sizeof(T1772);
 	if (initialize) {
-		*(T1772*)R = GE_default1772;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1772;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19211,14 +22661,14 @@ T0* GE_new1772(TC* ac, T1 initialize)
 T0* GE_new1774(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1774)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1774)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1774*)R = GE_default1774;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1774;
 		((T1774*)(R))->a2 = a1;
-		((T1774*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1774*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1774*)(R))->offset = offsetof(T1774, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19227,9 +22677,12 @@ T0* GE_new1774(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1775(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1775));
+	size_t s = sizeof(T1775);
 	if (initialize) {
-		*(T1775*)R = GE_default1775;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1775;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19238,9 +22691,12 @@ T0* GE_new1775(TC* ac, T1 initialize)
 T0* GE_new1776(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1776));
+	size_t s = sizeof(T1776);
 	if (initialize) {
-		*(T1776*)R = GE_default1776;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1776;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19249,9 +22705,12 @@ T0* GE_new1776(TC* ac, T1 initialize)
 T0* GE_new1777(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1777));
+	size_t s = sizeof(T1777);
 	if (initialize) {
-		*(T1777*)R = GE_default1777;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1777;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19260,9 +22719,12 @@ T0* GE_new1777(TC* ac, T1 initialize)
 T0* GE_new1778(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1778));
+	size_t s = sizeof(T1778);
 	if (initialize) {
-		*(T1778*)R = GE_default1778;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1778;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19271,9 +22733,12 @@ T0* GE_new1778(TC* ac, T1 initialize)
 T0* GE_new1779(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1779));
+	size_t s = sizeof(T1779);
 	if (initialize) {
-		*(T1779*)R = GE_default1779;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1779;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19282,9 +22747,12 @@ T0* GE_new1779(TC* ac, T1 initialize)
 T0* GE_new1780(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1780));
+	size_t s = sizeof(T1780);
 	if (initialize) {
-		*(T1780*)R = GE_default1780;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1780;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19293,9 +22761,12 @@ T0* GE_new1780(TC* ac, T1 initialize)
 T0* GE_new1785(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1785));
+	size_t s = sizeof(T1785);
 	if (initialize) {
-		*(T1785*)R = GE_default1785;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1785;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19304,9 +22775,12 @@ T0* GE_new1785(TC* ac, T1 initialize)
 T0* GE_new1789(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1789));
+	size_t s = sizeof(T1789);
 	if (initialize) {
-		*(T1789*)R = GE_default1789;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1789;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19315,14 +22789,14 @@ T0* GE_new1789(TC* ac, T1 initialize)
 T0* GE_new1790(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1790)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1790)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1790*)R = GE_default1790;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1790;
 		((T1790*)(R))->a2 = a1;
-		((T1790*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1790*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1790*)(R))->offset = offsetof(T1790, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19331,9 +22805,12 @@ T0* GE_new1790(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1791(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1791));
+	size_t s = sizeof(T1791);
 	if (initialize) {
-		*(T1791*)R = GE_default1791;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1791;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19342,9 +22819,12 @@ T0* GE_new1791(TC* ac, T1 initialize)
 T0* GE_new1792(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1792));
+	size_t s = sizeof(T1792);
 	if (initialize) {
-		*(T1792*)R = GE_default1792;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1792;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19353,9 +22833,12 @@ T0* GE_new1792(TC* ac, T1 initialize)
 T0* GE_new1794(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1794));
+	size_t s = sizeof(T1794);
 	if (initialize) {
-		*(T1794*)R = GE_default1794;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1794;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19364,9 +22847,12 @@ T0* GE_new1794(TC* ac, T1 initialize)
 T0* GE_new1796(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1796));
+	size_t s = sizeof(T1796);
 	if (initialize) {
-		*(T1796*)R = GE_default1796;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1796;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19375,9 +22861,12 @@ T0* GE_new1796(TC* ac, T1 initialize)
 T0* GE_new1797(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1797));
+	size_t s = sizeof(T1797);
 	if (initialize) {
-		*(T1797*)R = GE_default1797;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1797;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19386,9 +22875,12 @@ T0* GE_new1797(TC* ac, T1 initialize)
 T0* GE_new1798(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1798));
+	size_t s = sizeof(T1798);
 	if (initialize) {
-		*(T1798*)R = GE_default1798;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1798;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19397,9 +22889,12 @@ T0* GE_new1798(TC* ac, T1 initialize)
 T0* GE_new1799(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1799));
+	size_t s = sizeof(T1799);
 	if (initialize) {
-		*(T1799*)R = GE_default1799;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1799;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19408,9 +22903,12 @@ T0* GE_new1799(TC* ac, T1 initialize)
 T0* GE_new1800(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1800));
+	size_t s = sizeof(T1800);
 	if (initialize) {
-		*(T1800*)R = GE_default1800;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1800;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19419,9 +22917,12 @@ T0* GE_new1800(TC* ac, T1 initialize)
 T0* GE_new1801(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1801));
+	size_t s = sizeof(T1801);
 	if (initialize) {
-		*(T1801*)R = GE_default1801;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1801;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19430,9 +22931,12 @@ T0* GE_new1801(TC* ac, T1 initialize)
 T0* GE_new1803(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1803));
+	size_t s = sizeof(T1803);
 	if (initialize) {
-		*(T1803*)R = GE_default1803;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1803;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19441,9 +22945,12 @@ T0* GE_new1803(TC* ac, T1 initialize)
 T0* GE_new1804(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1804));
+	size_t s = sizeof(T1804);
 	if (initialize) {
-		*(T1804*)R = GE_default1804;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1804;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19452,9 +22959,12 @@ T0* GE_new1804(TC* ac, T1 initialize)
 T0* GE_new1805(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1805));
+	size_t s = sizeof(T1805);
 	if (initialize) {
-		*(T1805*)R = GE_default1805;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1805;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19463,9 +22973,12 @@ T0* GE_new1805(TC* ac, T1 initialize)
 T0* GE_new1806(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1806));
+	size_t s = sizeof(T1806);
 	if (initialize) {
-		*(T1806*)R = GE_default1806;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1806;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19474,9 +22987,12 @@ T0* GE_new1806(TC* ac, T1 initialize)
 T0* GE_new1807(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1807));
+	size_t s = sizeof(T1807);
 	if (initialize) {
-		*(T1807*)R = GE_default1807;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1807;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19485,9 +23001,12 @@ T0* GE_new1807(TC* ac, T1 initialize)
 T0* GE_new1808(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1808));
+	size_t s = sizeof(T1808);
 	if (initialize) {
-		*(T1808*)R = GE_default1808;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1808;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19496,9 +23015,12 @@ T0* GE_new1808(TC* ac, T1 initialize)
 T0* GE_new1809(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1809));
+	size_t s = sizeof(T1809);
 	if (initialize) {
-		*(T1809*)R = GE_default1809;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1809;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19507,9 +23029,12 @@ T0* GE_new1809(TC* ac, T1 initialize)
 T0* GE_new1811(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1811));
+	size_t s = sizeof(T1811);
 	if (initialize) {
-		*(T1811*)R = GE_default1811;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1811;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19518,9 +23043,12 @@ T0* GE_new1811(TC* ac, T1 initialize)
 T0* GE_new1812(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1812));
+	size_t s = sizeof(T1812);
 	if (initialize) {
-		*(T1812*)R = GE_default1812;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1812;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19529,9 +23057,12 @@ T0* GE_new1812(TC* ac, T1 initialize)
 T0* GE_new1813(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1813));
+	size_t s = sizeof(T1813);
 	if (initialize) {
-		*(T1813*)R = GE_default1813;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1813;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19540,9 +23071,12 @@ T0* GE_new1813(TC* ac, T1 initialize)
 T0* GE_new1814(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1814));
+	size_t s = sizeof(T1814);
 	if (initialize) {
-		*(T1814*)R = GE_default1814;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1814;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19551,9 +23085,12 @@ T0* GE_new1814(TC* ac, T1 initialize)
 T0* GE_new1821(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1821));
+	size_t s = sizeof(T1821);
 	if (initialize) {
-		*(T1821*)R = GE_default1821;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1821;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19562,9 +23099,12 @@ T0* GE_new1821(TC* ac, T1 initialize)
 T0* GE_new1822(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1822));
+	size_t s = sizeof(T1822);
 	if (initialize) {
-		*(T1822*)R = GE_default1822;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1822;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19573,9 +23113,12 @@ T0* GE_new1822(TC* ac, T1 initialize)
 T0* GE_new1823(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1823));
+	size_t s = sizeof(T1823);
 	if (initialize) {
-		*(T1823*)R = GE_default1823;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1823;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19584,9 +23127,12 @@ T0* GE_new1823(TC* ac, T1 initialize)
 T0* GE_new1825(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1825));
+	size_t s = sizeof(T1825);
 	if (initialize) {
-		*(T1825*)R = GE_default1825;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1825;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19595,9 +23141,12 @@ T0* GE_new1825(TC* ac, T1 initialize)
 T0* GE_new1827(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1827));
+	size_t s = sizeof(T1827);
 	if (initialize) {
-		*(T1827*)R = GE_default1827;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1827;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19606,9 +23155,12 @@ T0* GE_new1827(TC* ac, T1 initialize)
 T0* GE_new1830(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1830));
+	size_t s = sizeof(T1830);
 	if (initialize) {
-		*(T1830*)R = GE_default1830;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1830;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19617,9 +23169,12 @@ T0* GE_new1830(TC* ac, T1 initialize)
 T0* GE_new1834(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1834));
+	size_t s = sizeof(T1834);
 	if (initialize) {
-		*(T1834*)R = GE_default1834;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1834;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19628,9 +23183,12 @@ T0* GE_new1834(TC* ac, T1 initialize)
 T0* GE_new1838(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1838));
+	size_t s = sizeof(T1838);
 	if (initialize) {
-		*(T1838*)R = GE_default1838;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1838;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19639,9 +23197,12 @@ T0* GE_new1838(TC* ac, T1 initialize)
 T0* GE_new1840(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1840));
+	size_t s = sizeof(T1840);
 	if (initialize) {
-		*(T1840*)R = GE_default1840;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1840;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19650,9 +23211,12 @@ T0* GE_new1840(TC* ac, T1 initialize)
 T0* GE_new1841(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1841));
+	size_t s = sizeof(T1841);
 	if (initialize) {
-		*(T1841*)R = GE_default1841;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1841;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19661,9 +23225,12 @@ T0* GE_new1841(TC* ac, T1 initialize)
 T0* GE_new1842(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1842));
+	size_t s = sizeof(T1842);
 	if (initialize) {
-		*(T1842*)R = GE_default1842;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1842;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19672,9 +23239,12 @@ T0* GE_new1842(TC* ac, T1 initialize)
 T0* GE_new1844(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1844));
+	size_t s = sizeof(T1844);
 	if (initialize) {
-		*(T1844*)R = GE_default1844;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1844;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19683,9 +23253,12 @@ T0* GE_new1844(TC* ac, T1 initialize)
 T0* GE_new1859(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1859));
+	size_t s = sizeof(T1859);
 	if (initialize) {
-		*(T1859*)R = GE_default1859;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1859;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19694,9 +23267,12 @@ T0* GE_new1859(TC* ac, T1 initialize)
 T0* GE_new1862(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1862));
+	size_t s = sizeof(T1862);
 	if (initialize) {
-		*(T1862*)R = GE_default1862;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1862;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19705,9 +23281,12 @@ T0* GE_new1862(TC* ac, T1 initialize)
 T0* GE_new1866(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1866));
+	size_t s = sizeof(T1866);
 	if (initialize) {
-		*(T1866*)R = GE_default1866;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1866;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19716,9 +23295,12 @@ T0* GE_new1866(TC* ac, T1 initialize)
 T0* GE_new1867(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1867));
+	size_t s = sizeof(T1867);
 	if (initialize) {
-		*(T1867*)R = GE_default1867;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1867;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19727,9 +23309,12 @@ T0* GE_new1867(TC* ac, T1 initialize)
 T0* GE_new1868(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1868));
+	size_t s = sizeof(T1868);
 	if (initialize) {
-		*(T1868*)R = GE_default1868;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1868;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19738,9 +23323,12 @@ T0* GE_new1868(TC* ac, T1 initialize)
 T0* GE_new1870(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1870));
+	size_t s = sizeof(T1870);
 	if (initialize) {
-		*(T1870*)R = GE_default1870;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1870;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19749,14 +23337,14 @@ T0* GE_new1870(TC* ac, T1 initialize)
 T0* GE_new1873(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1873)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1873)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1873*)R = GE_default1873;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1873;
 		((T1873*)(R))->a2 = a1;
-		((T1873*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1873*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1873*)(R))->offset = offsetof(T1873, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19765,9 +23353,12 @@ T0* GE_new1873(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1874(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1874));
+	size_t s = sizeof(T1874);
 	if (initialize) {
-		*(T1874*)R = GE_default1874;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1874;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19776,9 +23367,12 @@ T0* GE_new1874(TC* ac, T1 initialize)
 T0* GE_new1882(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1882));
+	size_t s = sizeof(T1882);
 	if (initialize) {
-		*(T1882*)R = GE_default1882;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1882;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19787,9 +23381,12 @@ T0* GE_new1882(TC* ac, T1 initialize)
 T0* GE_new1884(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1884));
+	size_t s = sizeof(T1884);
 	if (initialize) {
-		*(T1884*)R = GE_default1884;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1884;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19798,9 +23395,12 @@ T0* GE_new1884(TC* ac, T1 initialize)
 T0* GE_new1887(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1887));
+	size_t s = sizeof(T1887);
 	if (initialize) {
-		*(T1887*)R = GE_default1887;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1887;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19809,14 +23409,14 @@ T0* GE_new1887(TC* ac, T1 initialize)
 T0* GE_new1896(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1896)+(a1>1?(a1-1):0)*sizeof(T9));
+	size_t s = sizeof(T1896)+((a1>1)?(a1-1):0)*sizeof(T9);
 	if (initialize) {
-		*(T1896*)R = GE_default1896;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1896;
 		((T1896*)(R))->a2 = a1;
-		((T1896*)(R))->a1 = 0;
-#ifndef GE_malloc_atomic_cleared
-		memset(((T1896*)(R))->z2,0,a1*sizeof(T9));
-#endif
+		((T1896*)(R))->offset = offsetof(T1896, z2);
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19825,9 +23425,12 @@ T0* GE_new1896(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1897(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1897));
+	size_t s = sizeof(T1897);
 	if (initialize) {
-		*(T1897*)R = GE_default1897;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1897;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19836,9 +23439,12 @@ T0* GE_new1897(TC* ac, T1 initialize)
 T0* GE_new1898(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1898));
+	size_t s = sizeof(T1898);
 	if (initialize) {
-		*(T1898*)R = GE_default1898;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1898;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19847,14 +23453,14 @@ T0* GE_new1898(TC* ac, T1 initialize)
 T0* GE_new1899(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1899)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1899)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1899*)R = GE_default1899;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1899;
 		((T1899*)(R))->a2 = a1;
-		((T1899*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1899*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1899*)(R))->offset = offsetof(T1899, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19863,9 +23469,12 @@ T0* GE_new1899(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1900(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1900));
+	size_t s = sizeof(T1900);
 	if (initialize) {
-		*(T1900*)R = GE_default1900;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1900;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -19874,9 +23483,12 @@ T0* GE_new1900(TC* ac, T1 initialize)
 T0* GE_new1901(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1901));
+	size_t s = sizeof(T1901);
 	if (initialize) {
-		*(T1901*)R = GE_default1901;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1901;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19885,9 +23497,12 @@ T0* GE_new1901(TC* ac, T1 initialize)
 T0* GE_new1902(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1902));
+	size_t s = sizeof(T1902);
 	if (initialize) {
-		*(T1902*)R = GE_default1902;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1902;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19896,9 +23511,12 @@ T0* GE_new1902(TC* ac, T1 initialize)
 T0* GE_new1903(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1903));
+	size_t s = sizeof(T1903);
 	if (initialize) {
-		*(T1903*)R = GE_default1903;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1903;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19907,9 +23525,12 @@ T0* GE_new1903(TC* ac, T1 initialize)
 T0* GE_new1904(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1904));
+	size_t s = sizeof(T1904);
 	if (initialize) {
-		*(T1904*)R = GE_default1904;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1904;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19918,9 +23539,12 @@ T0* GE_new1904(TC* ac, T1 initialize)
 T0* GE_new1905(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1905));
+	size_t s = sizeof(T1905);
 	if (initialize) {
-		*(T1905*)R = GE_default1905;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1905;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19929,9 +23553,12 @@ T0* GE_new1905(TC* ac, T1 initialize)
 T0* GE_new1906(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1906));
+	size_t s = sizeof(T1906);
 	if (initialize) {
-		*(T1906*)R = GE_default1906;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1906;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19940,9 +23567,12 @@ T0* GE_new1906(TC* ac, T1 initialize)
 T0* GE_new1907(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1907));
+	size_t s = sizeof(T1907);
 	if (initialize) {
-		*(T1907*)R = GE_default1907;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1907;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19951,9 +23581,12 @@ T0* GE_new1907(TC* ac, T1 initialize)
 T0* GE_new1908(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1908));
+	size_t s = sizeof(T1908);
 	if (initialize) {
-		*(T1908*)R = GE_default1908;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1908;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19962,9 +23595,12 @@ T0* GE_new1908(TC* ac, T1 initialize)
 T0* GE_new1909(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1909));
+	size_t s = sizeof(T1909);
 	if (initialize) {
-		*(T1909*)R = GE_default1909;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1909;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19973,9 +23609,12 @@ T0* GE_new1909(TC* ac, T1 initialize)
 T0* GE_new1910(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1910));
+	size_t s = sizeof(T1910);
 	if (initialize) {
-		*(T1910*)R = GE_default1910;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1910;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19984,9 +23623,12 @@ T0* GE_new1910(TC* ac, T1 initialize)
 T0* GE_new1911(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1911));
+	size_t s = sizeof(T1911);
 	if (initialize) {
-		*(T1911*)R = GE_default1911;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1911;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -19995,9 +23637,12 @@ T0* GE_new1911(TC* ac, T1 initialize)
 T0* GE_new1912(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1912));
+	size_t s = sizeof(T1912);
 	if (initialize) {
-		*(T1912*)R = GE_default1912;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1912;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20006,9 +23651,12 @@ T0* GE_new1912(TC* ac, T1 initialize)
 T0* GE_new1913(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1913));
+	size_t s = sizeof(T1913);
 	if (initialize) {
-		*(T1913*)R = GE_default1913;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1913;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20017,14 +23665,14 @@ T0* GE_new1913(TC* ac, T1 initialize)
 T0* GE_new1914(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1914)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1914)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1914*)R = GE_default1914;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1914;
 		((T1914*)(R))->a2 = a1;
-		((T1914*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1914*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1914*)(R))->offset = offsetof(T1914, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20033,9 +23681,12 @@ T0* GE_new1914(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1915(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1915));
+	size_t s = sizeof(T1915);
 	if (initialize) {
-		*(T1915*)R = GE_default1915;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1915;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20044,9 +23695,12 @@ T0* GE_new1915(TC* ac, T1 initialize)
 T0* GE_new1916(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1916));
+	size_t s = sizeof(T1916);
 	if (initialize) {
-		*(T1916*)R = GE_default1916;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1916;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20055,14 +23709,14 @@ T0* GE_new1916(TC* ac, T1 initialize)
 T0* GE_new1917(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1917)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1917)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1917*)R = GE_default1917;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1917;
 		((T1917*)(R))->a2 = a1;
-		((T1917*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1917*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1917*)(R))->offset = offsetof(T1917, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20071,9 +23725,12 @@ T0* GE_new1917(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1920(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1920));
+	size_t s = sizeof(T1920);
 	if (initialize) {
-		*(T1920*)R = GE_default1920;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1920;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20082,9 +23739,12 @@ T0* GE_new1920(TC* ac, T1 initialize)
 T0* GE_new1921(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1921));
+	size_t s = sizeof(T1921);
 	if (initialize) {
-		*(T1921*)R = GE_default1921;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1921;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20093,9 +23753,12 @@ T0* GE_new1921(TC* ac, T1 initialize)
 T0* GE_new1922(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1922));
+	size_t s = sizeof(T1922);
 	if (initialize) {
-		*(T1922*)R = GE_default1922;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1922;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20104,14 +23767,14 @@ T0* GE_new1922(TC* ac, T1 initialize)
 T0* GE_new1923(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1923)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1923)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1923*)R = GE_default1923;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1923;
 		((T1923*)(R))->a2 = a1;
-		((T1923*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1923*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1923*)(R))->offset = offsetof(T1923, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20120,9 +23783,12 @@ T0* GE_new1923(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1924(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1924));
+	size_t s = sizeof(T1924);
 	if (initialize) {
-		*(T1924*)R = GE_default1924;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1924;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20131,9 +23797,12 @@ T0* GE_new1924(TC* ac, T1 initialize)
 T0* GE_new1925(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1925));
+	size_t s = sizeof(T1925);
 	if (initialize) {
-		*(T1925*)R = GE_default1925;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1925;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20142,9 +23811,12 @@ T0* GE_new1925(TC* ac, T1 initialize)
 T0* GE_new1926(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1926));
+	size_t s = sizeof(T1926);
 	if (initialize) {
-		*(T1926*)R = GE_default1926;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1926;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20153,9 +23825,12 @@ T0* GE_new1926(TC* ac, T1 initialize)
 T0* GE_new1927(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1927));
+	size_t s = sizeof(T1927);
 	if (initialize) {
-		*(T1927*)R = GE_default1927;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1927;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20164,9 +23839,12 @@ T0* GE_new1927(TC* ac, T1 initialize)
 T0* GE_new1928(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1928));
+	size_t s = sizeof(T1928);
 	if (initialize) {
-		*(T1928*)R = GE_default1928;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1928;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20175,14 +23853,14 @@ T0* GE_new1928(TC* ac, T1 initialize)
 T0* GE_new1929(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1929)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1929)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1929*)R = GE_default1929;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1929;
 		((T1929*)(R))->a2 = a1;
-		((T1929*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1929*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1929*)(R))->offset = offsetof(T1929, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20191,9 +23869,12 @@ T0* GE_new1929(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1931(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1931));
+	size_t s = sizeof(T1931);
 	if (initialize) {
-		*(T1931*)R = GE_default1931;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1931;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20202,9 +23883,12 @@ T0* GE_new1931(TC* ac, T1 initialize)
 T0* GE_new1933(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1933));
+	size_t s = sizeof(T1933);
 	if (initialize) {
-		*(T1933*)R = GE_default1933;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1933;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20213,14 +23897,14 @@ T0* GE_new1933(TC* ac, T1 initialize)
 T0* GE_new1934(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1934)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1934)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1934*)R = GE_default1934;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1934;
 		((T1934*)(R))->a2 = a1;
-		((T1934*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1934*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1934*)(R))->offset = offsetof(T1934, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20229,9 +23913,12 @@ T0* GE_new1934(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1935(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1935));
+	size_t s = sizeof(T1935);
 	if (initialize) {
-		*(T1935*)R = GE_default1935;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1935;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20240,9 +23927,12 @@ T0* GE_new1935(TC* ac, T1 initialize)
 T0* GE_new1936(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1936));
+	size_t s = sizeof(T1936);
 	if (initialize) {
-		*(T1936*)R = GE_default1936;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1936;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20251,9 +23941,12 @@ T0* GE_new1936(TC* ac, T1 initialize)
 T0* GE_new1937(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1937));
+	size_t s = sizeof(T1937);
 	if (initialize) {
-		*(T1937*)R = GE_default1937;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1937;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20262,9 +23955,12 @@ T0* GE_new1937(TC* ac, T1 initialize)
 T0* GE_new1938(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1938));
+	size_t s = sizeof(T1938);
 	if (initialize) {
-		*(T1938*)R = GE_default1938;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1938;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20273,9 +23969,12 @@ T0* GE_new1938(TC* ac, T1 initialize)
 T0* GE_new1939(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1939));
+	size_t s = sizeof(T1939);
 	if (initialize) {
-		*(T1939*)R = GE_default1939;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1939;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20284,9 +23983,12 @@ T0* GE_new1939(TC* ac, T1 initialize)
 T0* GE_new1940(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1940));
+	size_t s = sizeof(T1940);
 	if (initialize) {
-		*(T1940*)R = GE_default1940;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1940;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20295,14 +23997,14 @@ T0* GE_new1940(TC* ac, T1 initialize)
 T0* GE_new1941(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1941)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1941)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1941*)R = GE_default1941;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1941;
 		((T1941*)(R))->a2 = a1;
-		((T1941*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1941*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1941*)(R))->offset = offsetof(T1941, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20311,9 +24013,12 @@ T0* GE_new1941(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1942(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1942));
+	size_t s = sizeof(T1942);
 	if (initialize) {
-		*(T1942*)R = GE_default1942;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1942;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20322,9 +24027,12 @@ T0* GE_new1942(TC* ac, T1 initialize)
 T0* GE_new1943(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1943));
+	size_t s = sizeof(T1943);
 	if (initialize) {
-		*(T1943*)R = GE_default1943;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1943;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20333,9 +24041,12 @@ T0* GE_new1943(TC* ac, T1 initialize)
 T0* GE_new1946(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1946));
+	size_t s = sizeof(T1946);
 	if (initialize) {
-		*(T1946*)R = GE_default1946;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1946;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20344,9 +24055,12 @@ T0* GE_new1946(TC* ac, T1 initialize)
 T0* GE_new1947(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1947));
+	size_t s = sizeof(T1947);
 	if (initialize) {
-		*(T1947*)R = GE_default1947;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1947;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20355,9 +24069,12 @@ T0* GE_new1947(TC* ac, T1 initialize)
 T0* GE_new1948(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1948));
+	size_t s = sizeof(T1948);
 	if (initialize) {
-		*(T1948*)R = GE_default1948;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1948;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20366,14 +24083,14 @@ T0* GE_new1948(TC* ac, T1 initialize)
 T0* GE_new1949(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1949)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1949)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1949*)R = GE_default1949;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1949;
 		((T1949*)(R))->a2 = a1;
-		((T1949*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1949*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1949*)(R))->offset = offsetof(T1949, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20382,9 +24099,12 @@ T0* GE_new1949(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1950(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1950));
+	size_t s = sizeof(T1950);
 	if (initialize) {
-		*(T1950*)R = GE_default1950;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1950;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20393,9 +24113,12 @@ T0* GE_new1950(TC* ac, T1 initialize)
 T0* GE_new1951(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1951));
+	size_t s = sizeof(T1951);
 	if (initialize) {
-		*(T1951*)R = GE_default1951;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1951;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20404,14 +24127,14 @@ T0* GE_new1951(TC* ac, T1 initialize)
 T0* GE_new1952(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1952)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1952)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1952*)R = GE_default1952;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1952;
 		((T1952*)(R))->a2 = a1;
-		((T1952*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1952*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1952*)(R))->offset = offsetof(T1952, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20420,9 +24143,12 @@ T0* GE_new1952(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1953(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1953));
+	size_t s = sizeof(T1953);
 	if (initialize) {
-		*(T1953*)R = GE_default1953;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1953;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20431,9 +24157,12 @@ T0* GE_new1953(TC* ac, T1 initialize)
 T0* GE_new1954(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1954));
+	size_t s = sizeof(T1954);
 	if (initialize) {
-		*(T1954*)R = GE_default1954;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1954;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20442,14 +24171,14 @@ T0* GE_new1954(TC* ac, T1 initialize)
 T0* GE_new1955(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1955)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1955)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1955*)R = GE_default1955;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1955;
 		((T1955*)(R))->a2 = a1;
-		((T1955*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1955*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1955*)(R))->offset = offsetof(T1955, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20458,9 +24187,12 @@ T0* GE_new1955(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1956(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1956));
+	size_t s = sizeof(T1956);
 	if (initialize) {
-		*(T1956*)R = GE_default1956;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1956;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20469,9 +24201,12 @@ T0* GE_new1956(TC* ac, T1 initialize)
 T0* GE_new1957(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1957));
+	size_t s = sizeof(T1957);
 	if (initialize) {
-		*(T1957*)R = GE_default1957;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1957;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20480,14 +24215,14 @@ T0* GE_new1957(TC* ac, T1 initialize)
 T0* GE_new1958(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1958)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1958)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1958*)R = GE_default1958;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1958;
 		((T1958*)(R))->a2 = a1;
-		((T1958*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1958*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1958*)(R))->offset = offsetof(T1958, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20496,9 +24231,12 @@ T0* GE_new1958(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1959(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1959));
+	size_t s = sizeof(T1959);
 	if (initialize) {
-		*(T1959*)R = GE_default1959;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1959;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20507,14 +24245,14 @@ T0* GE_new1959(TC* ac, T1 initialize)
 T0* GE_new1960(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1960)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1960)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1960*)R = GE_default1960;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1960;
 		((T1960*)(R))->a2 = a1;
-		((T1960*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1960*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1960*)(R))->offset = offsetof(T1960, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20523,9 +24261,12 @@ T0* GE_new1960(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1961(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1961));
+	size_t s = sizeof(T1961);
 	if (initialize) {
-		*(T1961*)R = GE_default1961;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1961;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20534,9 +24275,12 @@ T0* GE_new1961(TC* ac, T1 initialize)
 T0* GE_new1963(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1963));
+	size_t s = sizeof(T1963);
 	if (initialize) {
-		*(T1963*)R = GE_default1963;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1963;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20545,14 +24289,14 @@ T0* GE_new1963(TC* ac, T1 initialize)
 T0* GE_new1964(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1964)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1964)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1964*)R = GE_default1964;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1964;
 		((T1964*)(R))->a2 = a1;
-		((T1964*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1964*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1964*)(R))->offset = offsetof(T1964, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20561,9 +24305,12 @@ T0* GE_new1964(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1965(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1965));
+	size_t s = sizeof(T1965);
 	if (initialize) {
-		*(T1965*)R = GE_default1965;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1965;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20572,9 +24319,12 @@ T0* GE_new1965(TC* ac, T1 initialize)
 T0* GE_new1966(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1966));
+	size_t s = sizeof(T1966);
 	if (initialize) {
-		*(T1966*)R = GE_default1966;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1966;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20583,9 +24333,12 @@ T0* GE_new1966(TC* ac, T1 initialize)
 T0* GE_new1967(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1967));
+	size_t s = sizeof(T1967);
 	if (initialize) {
-		*(T1967*)R = GE_default1967;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1967;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20594,9 +24347,12 @@ T0* GE_new1967(TC* ac, T1 initialize)
 T0* GE_new1968(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1968));
+	size_t s = sizeof(T1968);
 	if (initialize) {
-		*(T1968*)R = GE_default1968;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1968;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20605,9 +24361,12 @@ T0* GE_new1968(TC* ac, T1 initialize)
 T0* GE_new1969(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1969));
+	size_t s = sizeof(T1969);
 	if (initialize) {
-		*(T1969*)R = GE_default1969;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1969;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20616,9 +24375,12 @@ T0* GE_new1969(TC* ac, T1 initialize)
 T0* GE_new1971(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1971));
+	size_t s = sizeof(T1971);
 	if (initialize) {
-		*(T1971*)R = GE_default1971;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1971;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20627,14 +24389,14 @@ T0* GE_new1971(TC* ac, T1 initialize)
 T0* GE_new1972(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1972)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1972)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1972*)R = GE_default1972;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1972;
 		((T1972*)(R))->a2 = a1;
-		((T1972*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1972*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1972*)(R))->offset = offsetof(T1972, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20643,9 +24405,12 @@ T0* GE_new1972(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1974(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1974));
+	size_t s = sizeof(T1974);
 	if (initialize) {
-		*(T1974*)R = GE_default1974;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1974;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20654,9 +24419,12 @@ T0* GE_new1974(TC* ac, T1 initialize)
 T0* GE_new1975(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1975));
+	size_t s = sizeof(T1975);
 	if (initialize) {
-		*(T1975*)R = GE_default1975;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1975;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20665,9 +24433,12 @@ T0* GE_new1975(TC* ac, T1 initialize)
 T0* GE_new1976(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1976));
+	size_t s = sizeof(T1976);
 	if (initialize) {
-		*(T1976*)R = GE_default1976;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1976;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20676,9 +24447,12 @@ T0* GE_new1976(TC* ac, T1 initialize)
 T0* GE_new1977(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1977));
+	size_t s = sizeof(T1977);
 	if (initialize) {
-		*(T1977*)R = GE_default1977;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1977;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20687,14 +24461,14 @@ T0* GE_new1977(TC* ac, T1 initialize)
 T0* GE_new1978(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1978)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1978)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1978*)R = GE_default1978;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1978;
 		((T1978*)(R))->a2 = a1;
-		((T1978*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1978*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1978*)(R))->offset = offsetof(T1978, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20703,9 +24477,12 @@ T0* GE_new1978(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1979(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1979));
+	size_t s = sizeof(T1979);
 	if (initialize) {
-		*(T1979*)R = GE_default1979;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1979;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20714,14 +24491,14 @@ T0* GE_new1979(TC* ac, T1 initialize)
 T0* GE_new1980(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1980)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1980)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1980*)R = GE_default1980;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1980;
 		((T1980*)(R))->a2 = a1;
-		((T1980*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1980*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1980*)(R))->offset = offsetof(T1980, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20730,9 +24507,12 @@ T0* GE_new1980(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1981(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1981));
+	size_t s = sizeof(T1981);
 	if (initialize) {
-		*(T1981*)R = GE_default1981;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1981;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20741,9 +24521,12 @@ T0* GE_new1981(TC* ac, T1 initialize)
 T0* GE_new1982(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1982));
+	size_t s = sizeof(T1982);
 	if (initialize) {
-		*(T1982*)R = GE_default1982;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1982;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20752,14 +24535,14 @@ T0* GE_new1982(TC* ac, T1 initialize)
 T0* GE_new1983(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1983)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1983)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1983*)R = GE_default1983;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1983;
 		((T1983*)(R))->a2 = a1;
-		((T1983*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1983*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1983*)(R))->offset = offsetof(T1983, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20768,9 +24551,12 @@ T0* GE_new1983(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1986(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1986));
+	size_t s = sizeof(T1986);
 	if (initialize) {
-		*(T1986*)R = GE_default1986;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1986;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20779,9 +24565,12 @@ T0* GE_new1986(TC* ac, T1 initialize)
 T0* GE_new1987(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1987));
+	size_t s = sizeof(T1987);
 	if (initialize) {
-		*(T1987*)R = GE_default1987;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1987;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20790,9 +24579,12 @@ T0* GE_new1987(TC* ac, T1 initialize)
 T0* GE_new1988(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1988));
+	size_t s = sizeof(T1988);
 	if (initialize) {
-		*(T1988*)R = GE_default1988;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1988;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20801,9 +24593,12 @@ T0* GE_new1988(TC* ac, T1 initialize)
 T0* GE_new1989(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1989));
+	size_t s = sizeof(T1989);
 	if (initialize) {
-		*(T1989*)R = GE_default1989;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1989;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20812,9 +24607,12 @@ T0* GE_new1989(TC* ac, T1 initialize)
 T0* GE_new1990(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1990));
+	size_t s = sizeof(T1990);
 	if (initialize) {
-		*(T1990*)R = GE_default1990;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1990;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20823,14 +24621,14 @@ T0* GE_new1990(TC* ac, T1 initialize)
 T0* GE_new1991(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1991)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1991)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1991*)R = GE_default1991;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1991;
 		((T1991*)(R))->a2 = a1;
-		((T1991*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1991*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1991*)(R))->offset = offsetof(T1991, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20839,9 +24637,12 @@ T0* GE_new1991(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1992(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1992));
+	size_t s = sizeof(T1992);
 	if (initialize) {
-		*(T1992*)R = GE_default1992;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1992;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20850,9 +24651,12 @@ T0* GE_new1992(TC* ac, T1 initialize)
 T0* GE_new1993(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1993));
+	size_t s = sizeof(T1993);
 	if (initialize) {
-		*(T1993*)R = GE_default1993;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1993;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20861,9 +24665,12 @@ T0* GE_new1993(TC* ac, T1 initialize)
 T0* GE_new1995(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1995));
+	size_t s = sizeof(T1995);
 	if (initialize) {
-		*(T1995*)R = GE_default1995;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1995;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20872,9 +24679,12 @@ T0* GE_new1995(TC* ac, T1 initialize)
 T0* GE_new1996(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T1996));
+	size_t s = sizeof(T1996);
 	if (initialize) {
-		*(T1996*)R = GE_default1996;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 1996;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -20883,9 +24693,12 @@ T0* GE_new1996(TC* ac, T1 initialize)
 T0* GE_new1997(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1997));
+	size_t s = sizeof(T1997);
 	if (initialize) {
-		*(T1997*)R = GE_default1997;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1997;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20894,14 +24707,14 @@ T0* GE_new1997(TC* ac, T1 initialize)
 T0* GE_new1998(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1998)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T1998)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T1998*)R = GE_default1998;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1998;
 		((T1998*)(R))->a2 = a1;
-		((T1998*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T1998*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T1998*)(R))->offset = offsetof(T1998, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20910,9 +24723,12 @@ T0* GE_new1998(TC* ac, T6 a1, T1 initialize)
 T0* GE_new1999(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T1999));
+	size_t s = sizeof(T1999);
 	if (initialize) {
-		*(T1999*)R = GE_default1999;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 1999;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20921,9 +24737,12 @@ T0* GE_new1999(TC* ac, T1 initialize)
 T0* GE_new2000(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2000));
+	size_t s = sizeof(T2000);
 	if (initialize) {
-		*(T2000*)R = GE_default2000;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2000;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20932,9 +24751,12 @@ T0* GE_new2000(TC* ac, T1 initialize)
 T0* GE_new2002(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2002));
+	size_t s = sizeof(T2002);
 	if (initialize) {
-		*(T2002*)R = GE_default2002;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2002;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20943,9 +24765,12 @@ T0* GE_new2002(TC* ac, T1 initialize)
 T0* GE_new2003(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2003));
+	size_t s = sizeof(T2003);
 	if (initialize) {
-		*(T2003*)R = GE_default2003;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2003;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20954,9 +24779,12 @@ T0* GE_new2003(TC* ac, T1 initialize)
 T0* GE_new2004(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2004));
+	size_t s = sizeof(T2004);
 	if (initialize) {
-		*(T2004*)R = GE_default2004;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2004;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20965,9 +24793,12 @@ T0* GE_new2004(TC* ac, T1 initialize)
 T0* GE_new2005(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2005));
+	size_t s = sizeof(T2005);
 	if (initialize) {
-		*(T2005*)R = GE_default2005;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2005;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20976,9 +24807,12 @@ T0* GE_new2005(TC* ac, T1 initialize)
 T0* GE_new2006(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2006));
+	size_t s = sizeof(T2006);
 	if (initialize) {
-		*(T2006*)R = GE_default2006;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2006;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20987,9 +24821,12 @@ T0* GE_new2006(TC* ac, T1 initialize)
 T0* GE_new2007(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2007));
+	size_t s = sizeof(T2007);
 	if (initialize) {
-		*(T2007*)R = GE_default2007;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2007;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -20998,9 +24835,12 @@ T0* GE_new2007(TC* ac, T1 initialize)
 T0* GE_new2008(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2008));
+	size_t s = sizeof(T2008);
 	if (initialize) {
-		*(T2008*)R = GE_default2008;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2008;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21009,9 +24849,12 @@ T0* GE_new2008(TC* ac, T1 initialize)
 T0* GE_new2009(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2009));
+	size_t s = sizeof(T2009);
 	if (initialize) {
-		*(T2009*)R = GE_default2009;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2009;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21020,9 +24863,12 @@ T0* GE_new2009(TC* ac, T1 initialize)
 T0* GE_new2010(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2010));
+	size_t s = sizeof(T2010);
 	if (initialize) {
-		*(T2010*)R = GE_default2010;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2010;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21031,9 +24877,12 @@ T0* GE_new2010(TC* ac, T1 initialize)
 T0* GE_new2012(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2012));
+	size_t s = sizeof(T2012);
 	if (initialize) {
-		*(T2012*)R = GE_default2012;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2012;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21042,9 +24891,12 @@ T0* GE_new2012(TC* ac, T1 initialize)
 T0* GE_new2013(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2013));
+	size_t s = sizeof(T2013);
 	if (initialize) {
-		*(T2013*)R = GE_default2013;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2013;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21053,9 +24905,12 @@ T0* GE_new2013(TC* ac, T1 initialize)
 T0* GE_new2014(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2014));
+	size_t s = sizeof(T2014);
 	if (initialize) {
-		*(T2014*)R = GE_default2014;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2014;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21064,9 +24919,12 @@ T0* GE_new2014(TC* ac, T1 initialize)
 T0* GE_new2015(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2015));
+	size_t s = sizeof(T2015);
 	if (initialize) {
-		*(T2015*)R = GE_default2015;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2015;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21075,9 +24933,12 @@ T0* GE_new2015(TC* ac, T1 initialize)
 T0* GE_new2018(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2018));
+	size_t s = sizeof(T2018);
 	if (initialize) {
-		*(T2018*)R = GE_default2018;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2018;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21086,9 +24947,12 @@ T0* GE_new2018(TC* ac, T1 initialize)
 T0* GE_new2019(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2019));
+	size_t s = sizeof(T2019);
 	if (initialize) {
-		*(T2019*)R = GE_default2019;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2019;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21097,9 +24961,12 @@ T0* GE_new2019(TC* ac, T1 initialize)
 T0* GE_new2020(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2020));
+	size_t s = sizeof(T2020);
 	if (initialize) {
-		*(T2020*)R = GE_default2020;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2020;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21108,9 +24975,12 @@ T0* GE_new2020(TC* ac, T1 initialize)
 T0* GE_new2023(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2023));
+	size_t s = sizeof(T2023);
 	if (initialize) {
-		*(T2023*)R = GE_default2023;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2023;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21119,9 +24989,12 @@ T0* GE_new2023(TC* ac, T1 initialize)
 T0* GE_new2024(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2024));
+	size_t s = sizeof(T2024);
 	if (initialize) {
-		*(T2024*)R = GE_default2024;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2024;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21130,9 +25003,12 @@ T0* GE_new2024(TC* ac, T1 initialize)
 T0* GE_new2028(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2028));
+	size_t s = sizeof(T2028);
 	if (initialize) {
-		*(T2028*)R = GE_default2028;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2028;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -21141,9 +25017,12 @@ T0* GE_new2028(TC* ac, T1 initialize)
 T0* GE_new2029(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2029));
+	size_t s = sizeof(T2029);
 	if (initialize) {
-		*(T2029*)R = GE_default2029;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2029;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21152,9 +25031,12 @@ T0* GE_new2029(TC* ac, T1 initialize)
 T0* GE_new2030(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2030));
+	size_t s = sizeof(T2030);
 	if (initialize) {
-		*(T2030*)R = GE_default2030;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2030;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21163,9 +25045,12 @@ T0* GE_new2030(TC* ac, T1 initialize)
 T0* GE_new2031(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2031));
+	size_t s = sizeof(T2031);
 	if (initialize) {
-		*(T2031*)R = GE_default2031;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2031;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21174,9 +25059,12 @@ T0* GE_new2031(TC* ac, T1 initialize)
 T0* GE_new2036(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2036));
+	size_t s = sizeof(T2036);
 	if (initialize) {
-		*(T2036*)R = GE_default2036;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2036;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21185,9 +25073,12 @@ T0* GE_new2036(TC* ac, T1 initialize)
 T0* GE_new2037(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2037));
+	size_t s = sizeof(T2037);
 	if (initialize) {
-		*(T2037*)R = GE_default2037;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2037;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21196,9 +25087,12 @@ T0* GE_new2037(TC* ac, T1 initialize)
 T0* GE_new2038(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2038));
+	size_t s = sizeof(T2038);
 	if (initialize) {
-		*(T2038*)R = GE_default2038;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2038;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21207,9 +25101,12 @@ T0* GE_new2038(TC* ac, T1 initialize)
 T0* GE_new2039(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2039));
+	size_t s = sizeof(T2039);
 	if (initialize) {
-		*(T2039*)R = GE_default2039;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2039;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21218,9 +25115,12 @@ T0* GE_new2039(TC* ac, T1 initialize)
 T0* GE_new2040(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2040));
+	size_t s = sizeof(T2040);
 	if (initialize) {
-		*(T2040*)R = GE_default2040;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2040;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21229,9 +25129,12 @@ T0* GE_new2040(TC* ac, T1 initialize)
 T0* GE_new2041(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2041));
+	size_t s = sizeof(T2041);
 	if (initialize) {
-		*(T2041*)R = GE_default2041;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2041;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21240,9 +25143,12 @@ T0* GE_new2041(TC* ac, T1 initialize)
 T0* GE_new2051(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2051));
+	size_t s = sizeof(T2051);
 	if (initialize) {
-		*(T2051*)R = GE_default2051;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2051;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21251,9 +25157,12 @@ T0* GE_new2051(TC* ac, T1 initialize)
 T0* GE_new2052(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2052));
+	size_t s = sizeof(T2052);
 	if (initialize) {
-		*(T2052*)R = GE_default2052;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2052;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21262,9 +25171,12 @@ T0* GE_new2052(TC* ac, T1 initialize)
 T0* GE_new2055(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2055));
+	size_t s = sizeof(T2055);
 	if (initialize) {
-		*(T2055*)R = GE_default2055;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2055;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21273,9 +25185,12 @@ T0* GE_new2055(TC* ac, T1 initialize)
 T0* GE_new2061(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2061));
+	size_t s = sizeof(T2061);
 	if (initialize) {
-		*(T2061*)R = GE_default2061;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2061;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21284,9 +25199,12 @@ T0* GE_new2061(TC* ac, T1 initialize)
 T0* GE_new2062(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2062));
+	size_t s = sizeof(T2062);
 	if (initialize) {
-		*(T2062*)R = GE_default2062;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2062;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21295,9 +25213,12 @@ T0* GE_new2062(TC* ac, T1 initialize)
 T0* GE_new2063(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2063));
+	size_t s = sizeof(T2063);
 	if (initialize) {
-		*(T2063*)R = GE_default2063;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2063;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21306,9 +25227,12 @@ T0* GE_new2063(TC* ac, T1 initialize)
 T0* GE_new2064(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2064));
+	size_t s = sizeof(T2064);
 	if (initialize) {
-		*(T2064*)R = GE_default2064;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2064;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21317,9 +25241,12 @@ T0* GE_new2064(TC* ac, T1 initialize)
 T0* GE_new2065(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2065));
+	size_t s = sizeof(T2065);
 	if (initialize) {
-		*(T2065*)R = GE_default2065;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2065;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21328,9 +25255,12 @@ T0* GE_new2065(TC* ac, T1 initialize)
 T0* GE_new2066(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2066));
+	size_t s = sizeof(T2066);
 	if (initialize) {
-		*(T2066*)R = GE_default2066;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2066;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21339,9 +25269,12 @@ T0* GE_new2066(TC* ac, T1 initialize)
 T0* GE_new2067(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2067));
+	size_t s = sizeof(T2067);
 	if (initialize) {
-		*(T2067*)R = GE_default2067;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2067;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21350,9 +25283,12 @@ T0* GE_new2067(TC* ac, T1 initialize)
 T0* GE_new2068(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2068));
+	size_t s = sizeof(T2068);
 	if (initialize) {
-		*(T2068*)R = GE_default2068;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2068;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21361,9 +25297,12 @@ T0* GE_new2068(TC* ac, T1 initialize)
 T0* GE_new2069(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2069));
+	size_t s = sizeof(T2069);
 	if (initialize) {
-		*(T2069*)R = GE_default2069;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2069;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21372,9 +25311,12 @@ T0* GE_new2069(TC* ac, T1 initialize)
 T0* GE_new2070(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2070));
+	size_t s = sizeof(T2070);
 	if (initialize) {
-		*(T2070*)R = GE_default2070;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2070;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21383,9 +25325,12 @@ T0* GE_new2070(TC* ac, T1 initialize)
 T0* GE_new2071(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2071));
+	size_t s = sizeof(T2071);
 	if (initialize) {
-		*(T2071*)R = GE_default2071;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2071;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21394,9 +25339,12 @@ T0* GE_new2071(TC* ac, T1 initialize)
 T0* GE_new2072(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2072));
+	size_t s = sizeof(T2072);
 	if (initialize) {
-		*(T2072*)R = GE_default2072;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2072;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21405,9 +25353,12 @@ T0* GE_new2072(TC* ac, T1 initialize)
 T0* GE_new2073(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2073));
+	size_t s = sizeof(T2073);
 	if (initialize) {
-		*(T2073*)R = GE_default2073;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2073;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21416,9 +25367,12 @@ T0* GE_new2073(TC* ac, T1 initialize)
 T0* GE_new2074(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2074));
+	size_t s = sizeof(T2074);
 	if (initialize) {
-		*(T2074*)R = GE_default2074;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2074;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21427,9 +25381,12 @@ T0* GE_new2074(TC* ac, T1 initialize)
 T0* GE_new2075(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2075));
+	size_t s = sizeof(T2075);
 	if (initialize) {
-		*(T2075*)R = GE_default2075;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2075;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21438,9 +25395,12 @@ T0* GE_new2075(TC* ac, T1 initialize)
 T0* GE_new2078(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2078));
+	size_t s = sizeof(T2078);
 	if (initialize) {
-		*(T2078*)R = GE_default2078;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2078;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21449,9 +25409,12 @@ T0* GE_new2078(TC* ac, T1 initialize)
 T0* GE_new2079(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2079));
+	size_t s = sizeof(T2079);
 	if (initialize) {
-		*(T2079*)R = GE_default2079;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2079;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21460,9 +25423,12 @@ T0* GE_new2079(TC* ac, T1 initialize)
 T0* GE_new2080(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2080));
+	size_t s = sizeof(T2080);
 	if (initialize) {
-		*(T2080*)R = GE_default2080;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2080;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21471,9 +25437,12 @@ T0* GE_new2080(TC* ac, T1 initialize)
 T0* GE_new2082(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2082));
+	size_t s = sizeof(T2082);
 	if (initialize) {
-		*(T2082*)R = GE_default2082;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2082;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21482,9 +25451,12 @@ T0* GE_new2082(TC* ac, T1 initialize)
 T0* GE_new2083(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2083));
+	size_t s = sizeof(T2083);
 	if (initialize) {
-		*(T2083*)R = GE_default2083;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2083;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21493,9 +25465,12 @@ T0* GE_new2083(TC* ac, T1 initialize)
 T0* GE_new2085(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2085));
+	size_t s = sizeof(T2085);
 	if (initialize) {
-		*(T2085*)R = GE_default2085;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2085;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21504,14 +25479,14 @@ T0* GE_new2085(TC* ac, T1 initialize)
 T0* GE_new2087(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2087)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2087)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2087*)R = GE_default2087;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2087;
 		((T2087*)(R))->a2 = a1;
-		((T2087*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2087*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2087*)(R))->offset = offsetof(T2087, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21520,9 +25495,12 @@ T0* GE_new2087(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2088(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2088));
+	size_t s = sizeof(T2088);
 	if (initialize) {
-		*(T2088*)R = GE_default2088;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2088;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -21531,9 +25509,12 @@ T0* GE_new2088(TC* ac, T1 initialize)
 T0* GE_new2089(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2089));
+	size_t s = sizeof(T2089);
 	if (initialize) {
-		*(T2089*)R = GE_default2089;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2089;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21542,14 +25523,14 @@ T0* GE_new2089(TC* ac, T1 initialize)
 T0* GE_new2091(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2091)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2091)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2091*)R = GE_default2091;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2091;
 		((T2091*)(R))->a2 = a1;
-		((T2091*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2091*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2091*)(R))->offset = offsetof(T2091, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21558,9 +25539,12 @@ T0* GE_new2091(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2092(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2092));
+	size_t s = sizeof(T2092);
 	if (initialize) {
-		*(T2092*)R = GE_default2092;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2092;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -21569,9 +25553,12 @@ T0* GE_new2092(TC* ac, T1 initialize)
 T0* GE_new2093(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2093));
+	size_t s = sizeof(T2093);
 	if (initialize) {
-		*(T2093*)R = GE_default2093;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2093;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21580,14 +25567,14 @@ T0* GE_new2093(TC* ac, T1 initialize)
 T0* GE_new2094(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2094)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2094)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2094*)R = GE_default2094;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2094;
 		((T2094*)(R))->a2 = a1;
-		((T2094*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2094*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2094*)(R))->offset = offsetof(T2094, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21596,9 +25583,12 @@ T0* GE_new2094(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2095(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2095));
+	size_t s = sizeof(T2095);
 	if (initialize) {
-		*(T2095*)R = GE_default2095;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2095;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -21607,9 +25597,12 @@ T0* GE_new2095(TC* ac, T1 initialize)
 T0* GE_new2096(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2096));
+	size_t s = sizeof(T2096);
 	if (initialize) {
-		*(T2096*)R = GE_default2096;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2096;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21618,9 +25611,12 @@ T0* GE_new2096(TC* ac, T1 initialize)
 T0* GE_new2097(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2097));
+	size_t s = sizeof(T2097);
 	if (initialize) {
-		*(T2097*)R = GE_default2097;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2097;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -21629,14 +25625,14 @@ T0* GE_new2097(TC* ac, T1 initialize)
 T0* GE_new2098(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2098)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2098)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2098*)R = GE_default2098;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2098;
 		((T2098*)(R))->a2 = a1;
-		((T2098*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2098*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2098*)(R))->offset = offsetof(T2098, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21645,9 +25641,12 @@ T0* GE_new2098(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2099(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2099));
+	size_t s = sizeof(T2099);
 	if (initialize) {
-		*(T2099*)R = GE_default2099;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2099;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21656,9 +25655,12 @@ T0* GE_new2099(TC* ac, T1 initialize)
 T0* GE_new2100(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2100));
+	size_t s = sizeof(T2100);
 	if (initialize) {
-		*(T2100*)R = GE_default2100;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2100;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -21667,14 +25669,14 @@ T0* GE_new2100(TC* ac, T1 initialize)
 T0* GE_new2101(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2101)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2101)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2101*)R = GE_default2101;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2101;
 		((T2101*)(R))->a2 = a1;
-		((T2101*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2101*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2101*)(R))->offset = offsetof(T2101, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21683,9 +25685,12 @@ T0* GE_new2101(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2102(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2102));
+	size_t s = sizeof(T2102);
 	if (initialize) {
-		*(T2102*)R = GE_default2102;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2102;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21694,9 +25699,12 @@ T0* GE_new2102(TC* ac, T1 initialize)
 T0* GE_new2103(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2103));
+	size_t s = sizeof(T2103);
 	if (initialize) {
-		*(T2103*)R = GE_default2103;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2103;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -21705,14 +25713,14 @@ T0* GE_new2103(TC* ac, T1 initialize)
 T0* GE_new2104(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2104)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2104)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2104*)R = GE_default2104;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2104;
 		((T2104*)(R))->a2 = a1;
-		((T2104*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2104*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2104*)(R))->offset = offsetof(T2104, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21721,9 +25729,12 @@ T0* GE_new2104(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2105(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2105));
+	size_t s = sizeof(T2105);
 	if (initialize) {
-		*(T2105*)R = GE_default2105;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2105;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21732,9 +25743,12 @@ T0* GE_new2105(TC* ac, T1 initialize)
 T0* GE_new2106(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2106));
+	size_t s = sizeof(T2106);
 	if (initialize) {
-		*(T2106*)R = GE_default2106;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2106;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -21743,14 +25757,14 @@ T0* GE_new2106(TC* ac, T1 initialize)
 T0* GE_new2107(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2107)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2107)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2107*)R = GE_default2107;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2107;
 		((T2107*)(R))->a2 = a1;
-		((T2107*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2107*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2107*)(R))->offset = offsetof(T2107, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21759,9 +25773,12 @@ T0* GE_new2107(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2108(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2108));
+	size_t s = sizeof(T2108);
 	if (initialize) {
-		*(T2108*)R = GE_default2108;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2108;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21770,9 +25787,12 @@ T0* GE_new2108(TC* ac, T1 initialize)
 T0* GE_new2109(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2109));
+	size_t s = sizeof(T2109);
 	if (initialize) {
-		*(T2109*)R = GE_default2109;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2109;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -21781,14 +25801,14 @@ T0* GE_new2109(TC* ac, T1 initialize)
 T0* GE_new2110(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2110)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2110)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2110*)R = GE_default2110;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2110;
 		((T2110*)(R))->a2 = a1;
-		((T2110*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2110*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2110*)(R))->offset = offsetof(T2110, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21797,9 +25817,12 @@ T0* GE_new2110(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2111(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2111));
+	size_t s = sizeof(T2111);
 	if (initialize) {
-		*(T2111*)R = GE_default2111;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2111;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21808,9 +25831,12 @@ T0* GE_new2111(TC* ac, T1 initialize)
 T0* GE_new2112(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2112));
+	size_t s = sizeof(T2112);
 	if (initialize) {
-		*(T2112*)R = GE_default2112;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2112;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -21819,14 +25845,14 @@ T0* GE_new2112(TC* ac, T1 initialize)
 T0* GE_new2113(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2113)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2113)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2113*)R = GE_default2113;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2113;
 		((T2113*)(R))->a2 = a1;
-		((T2113*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2113*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2113*)(R))->offset = offsetof(T2113, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21835,9 +25861,12 @@ T0* GE_new2113(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2114(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2114));
+	size_t s = sizeof(T2114);
 	if (initialize) {
-		*(T2114*)R = GE_default2114;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2114;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21846,9 +25875,12 @@ T0* GE_new2114(TC* ac, T1 initialize)
 T0* GE_new2115(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2115));
+	size_t s = sizeof(T2115);
 	if (initialize) {
-		*(T2115*)R = GE_default2115;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2115;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -21857,14 +25889,14 @@ T0* GE_new2115(TC* ac, T1 initialize)
 T0* GE_new2116(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2116)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2116)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2116*)R = GE_default2116;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2116;
 		((T2116*)(R))->a2 = a1;
-		((T2116*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2116*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2116*)(R))->offset = offsetof(T2116, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21873,9 +25905,12 @@ T0* GE_new2116(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2117(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2117));
+	size_t s = sizeof(T2117);
 	if (initialize) {
-		*(T2117*)R = GE_default2117;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2117;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21884,9 +25919,12 @@ T0* GE_new2117(TC* ac, T1 initialize)
 T0* GE_new2118(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2118));
+	size_t s = sizeof(T2118);
 	if (initialize) {
-		*(T2118*)R = GE_default2118;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2118;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -21895,14 +25933,14 @@ T0* GE_new2118(TC* ac, T1 initialize)
 T0* GE_new2119(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2119)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2119)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2119*)R = GE_default2119;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2119;
 		((T2119*)(R))->a2 = a1;
-		((T2119*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2119*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2119*)(R))->offset = offsetof(T2119, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21911,9 +25949,12 @@ T0* GE_new2119(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2120(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2120));
+	size_t s = sizeof(T2120);
 	if (initialize) {
-		*(T2120*)R = GE_default2120;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2120;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21922,9 +25963,12 @@ T0* GE_new2120(TC* ac, T1 initialize)
 T0* GE_new2121(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2121));
+	size_t s = sizeof(T2121);
 	if (initialize) {
-		*(T2121*)R = GE_default2121;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2121;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -21933,14 +25977,14 @@ T0* GE_new2121(TC* ac, T1 initialize)
 T0* GE_new2122(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2122)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2122)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2122*)R = GE_default2122;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2122;
 		((T2122*)(R))->a2 = a1;
-		((T2122*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2122*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2122*)(R))->offset = offsetof(T2122, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21949,9 +25993,12 @@ T0* GE_new2122(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2123(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2123));
+	size_t s = sizeof(T2123);
 	if (initialize) {
-		*(T2123*)R = GE_default2123;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2123;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21960,9 +26007,12 @@ T0* GE_new2123(TC* ac, T1 initialize)
 T0* GE_new2124(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2124));
+	size_t s = sizeof(T2124);
 	if (initialize) {
-		*(T2124*)R = GE_default2124;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2124;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -21971,14 +26021,14 @@ T0* GE_new2124(TC* ac, T1 initialize)
 T0* GE_new2125(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2125)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2125)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2125*)R = GE_default2125;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2125;
 		((T2125*)(R))->a2 = a1;
-		((T2125*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2125*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2125*)(R))->offset = offsetof(T2125, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21987,9 +26037,12 @@ T0* GE_new2125(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2126(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2126));
+	size_t s = sizeof(T2126);
 	if (initialize) {
-		*(T2126*)R = GE_default2126;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2126;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -21998,9 +26051,12 @@ T0* GE_new2126(TC* ac, T1 initialize)
 T0* GE_new2127(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2127));
+	size_t s = sizeof(T2127);
 	if (initialize) {
-		*(T2127*)R = GE_default2127;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2127;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -22009,14 +26065,14 @@ T0* GE_new2127(TC* ac, T1 initialize)
 T0* GE_new2128(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2128)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2128)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2128*)R = GE_default2128;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2128;
 		((T2128*)(R))->a2 = a1;
-		((T2128*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2128*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2128*)(R))->offset = offsetof(T2128, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22025,9 +26081,12 @@ T0* GE_new2128(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2129(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2129));
+	size_t s = sizeof(T2129);
 	if (initialize) {
-		*(T2129*)R = GE_default2129;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2129;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22036,9 +26095,12 @@ T0* GE_new2129(TC* ac, T1 initialize)
 T0* GE_new2130(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2130));
+	size_t s = sizeof(T2130);
 	if (initialize) {
-		*(T2130*)R = GE_default2130;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2130;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -22047,14 +26109,14 @@ T0* GE_new2130(TC* ac, T1 initialize)
 T0* GE_new2131(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2131)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2131)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2131*)R = GE_default2131;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2131;
 		((T2131*)(R))->a2 = a1;
-		((T2131*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2131*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2131*)(R))->offset = offsetof(T2131, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22063,9 +26125,12 @@ T0* GE_new2131(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2132(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2132));
+	size_t s = sizeof(T2132);
 	if (initialize) {
-		*(T2132*)R = GE_default2132;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2132;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22074,9 +26139,12 @@ T0* GE_new2132(TC* ac, T1 initialize)
 T0* GE_new2134(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2134));
+	size_t s = sizeof(T2134);
 	if (initialize) {
-		*(T2134*)R = GE_default2134;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2134;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22085,9 +26153,12 @@ T0* GE_new2134(TC* ac, T1 initialize)
 T0* GE_new2135(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2135));
+	size_t s = sizeof(T2135);
 	if (initialize) {
-		*(T2135*)R = GE_default2135;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2135;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22096,9 +26167,12 @@ T0* GE_new2135(TC* ac, T1 initialize)
 T0* GE_new2136(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2136));
+	size_t s = sizeof(T2136);
 	if (initialize) {
-		*(T2136*)R = GE_default2136;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2136;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22107,14 +26181,14 @@ T0* GE_new2136(TC* ac, T1 initialize)
 T0* GE_new2138(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2138)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2138)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2138*)R = GE_default2138;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2138;
 		((T2138*)(R))->a2 = a1;
-		((T2138*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2138*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2138*)(R))->offset = offsetof(T2138, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22123,9 +26197,12 @@ T0* GE_new2138(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2141(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2141));
+	size_t s = sizeof(T2141);
 	if (initialize) {
-		*(T2141*)R = GE_default2141;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2141;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -22134,9 +26211,12 @@ T0* GE_new2141(TC* ac, T1 initialize)
 T0* GE_new2142(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2142));
+	size_t s = sizeof(T2142);
 	if (initialize) {
-		*(T2142*)R = GE_default2142;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2142;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22145,9 +26225,12 @@ T0* GE_new2142(TC* ac, T1 initialize)
 T0* GE_new2143(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2143));
+	size_t s = sizeof(T2143);
 	if (initialize) {
-		*(T2143*)R = GE_default2143;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2143;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22156,9 +26239,12 @@ T0* GE_new2143(TC* ac, T1 initialize)
 T0* GE_new2145(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2145));
+	size_t s = sizeof(T2145);
 	if (initialize) {
-		*(T2145*)R = GE_default2145;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2145;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22167,14 +26253,14 @@ T0* GE_new2145(TC* ac, T1 initialize)
 T0* GE_new2146(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2146)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2146)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2146*)R = GE_default2146;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2146;
 		((T2146*)(R))->a2 = a1;
-		((T2146*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2146*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2146*)(R))->offset = offsetof(T2146, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22183,9 +26269,12 @@ T0* GE_new2146(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2149(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2149));
+	size_t s = sizeof(T2149);
 	if (initialize) {
-		*(T2149*)R = GE_default2149;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2149;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -22194,9 +26283,12 @@ T0* GE_new2149(TC* ac, T1 initialize)
 T0* GE_new2150(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2150));
+	size_t s = sizeof(T2150);
 	if (initialize) {
-		*(T2150*)R = GE_default2150;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2150;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22205,9 +26297,12 @@ T0* GE_new2150(TC* ac, T1 initialize)
 T0* GE_new2151(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2151));
+	size_t s = sizeof(T2151);
 	if (initialize) {
-		*(T2151*)R = GE_default2151;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2151;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22216,9 +26311,12 @@ T0* GE_new2151(TC* ac, T1 initialize)
 T0* GE_new2152(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2152));
+	size_t s = sizeof(T2152);
 	if (initialize) {
-		*(T2152*)R = GE_default2152;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2152;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22227,9 +26325,12 @@ T0* GE_new2152(TC* ac, T1 initialize)
 T0* GE_new2153(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2153));
+	size_t s = sizeof(T2153);
 	if (initialize) {
-		*(T2153*)R = GE_default2153;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2153;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22238,9 +26339,12 @@ T0* GE_new2153(TC* ac, T1 initialize)
 T0* GE_new2154(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2154));
+	size_t s = sizeof(T2154);
 	if (initialize) {
-		*(T2154*)R = GE_default2154;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2154;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -22249,9 +26353,12 @@ T0* GE_new2154(TC* ac, T1 initialize)
 T0* GE_new2155(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2155));
+	size_t s = sizeof(T2155);
 	if (initialize) {
-		*(T2155*)R = GE_default2155;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2155;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22260,9 +26367,12 @@ T0* GE_new2155(TC* ac, T1 initialize)
 T0* GE_new2158(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2158));
+	size_t s = sizeof(T2158);
 	if (initialize) {
-		*(T2158*)R = GE_default2158;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2158;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22271,9 +26381,12 @@ T0* GE_new2158(TC* ac, T1 initialize)
 T0* GE_new2159(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2159));
+	size_t s = sizeof(T2159);
 	if (initialize) {
-		*(T2159*)R = GE_default2159;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2159;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22282,9 +26395,12 @@ T0* GE_new2159(TC* ac, T1 initialize)
 T0* GE_new2162(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2162));
+	size_t s = sizeof(T2162);
 	if (initialize) {
-		*(T2162*)R = GE_default2162;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2162;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22293,9 +26409,12 @@ T0* GE_new2162(TC* ac, T1 initialize)
 T0* GE_new2163(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2163));
+	size_t s = sizeof(T2163);
 	if (initialize) {
-		*(T2163*)R = GE_default2163;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2163;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22304,9 +26423,12 @@ T0* GE_new2163(TC* ac, T1 initialize)
 T0* GE_new2165(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2165));
+	size_t s = sizeof(T2165);
 	if (initialize) {
-		*(T2165*)R = GE_default2165;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2165;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22315,9 +26437,12 @@ T0* GE_new2165(TC* ac, T1 initialize)
 T0* GE_new2166(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2166));
+	size_t s = sizeof(T2166);
 	if (initialize) {
-		*(T2166*)R = GE_default2166;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2166;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22326,9 +26451,12 @@ T0* GE_new2166(TC* ac, T1 initialize)
 T0* GE_new2167(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2167));
+	size_t s = sizeof(T2167);
 	if (initialize) {
-		*(T2167*)R = GE_default2167;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2167;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22337,14 +26465,14 @@ T0* GE_new2167(TC* ac, T1 initialize)
 T0* GE_new2170(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2170)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2170)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2170*)R = GE_default2170;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2170;
 		((T2170*)(R))->a2 = a1;
-		((T2170*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2170*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2170*)(R))->offset = offsetof(T2170, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22353,9 +26481,12 @@ T0* GE_new2170(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2173(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2173));
+	size_t s = sizeof(T2173);
 	if (initialize) {
-		*(T2173*)R = GE_default2173;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2173;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -22364,9 +26495,12 @@ T0* GE_new2173(TC* ac, T1 initialize)
 T0* GE_new2174(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2174));
+	size_t s = sizeof(T2174);
 	if (initialize) {
-		*(T2174*)R = GE_default2174;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2174;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22375,9 +26509,12 @@ T0* GE_new2174(TC* ac, T1 initialize)
 T0* GE_new2175(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2175));
+	size_t s = sizeof(T2175);
 	if (initialize) {
-		*(T2175*)R = GE_default2175;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2175;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22386,9 +26523,12 @@ T0* GE_new2175(TC* ac, T1 initialize)
 T0* GE_new2176(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2176));
+	size_t s = sizeof(T2176);
 	if (initialize) {
-		*(T2176*)R = GE_default2176;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2176;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22397,9 +26537,12 @@ T0* GE_new2176(TC* ac, T1 initialize)
 T0* GE_new2177(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2177));
+	size_t s = sizeof(T2177);
 	if (initialize) {
-		*(T2177*)R = GE_default2177;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2177;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -22408,9 +26551,12 @@ T0* GE_new2177(TC* ac, T1 initialize)
 T0* GE_new2178(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2178));
+	size_t s = sizeof(T2178);
 	if (initialize) {
-		*(T2178*)R = GE_default2178;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2178;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22419,9 +26565,12 @@ T0* GE_new2178(TC* ac, T1 initialize)
 T0* GE_new2179(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2179));
+	size_t s = sizeof(T2179);
 	if (initialize) {
-		*(T2179*)R = GE_default2179;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2179;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22430,9 +26579,12 @@ T0* GE_new2179(TC* ac, T1 initialize)
 T0* GE_new2180(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2180));
+	size_t s = sizeof(T2180);
 	if (initialize) {
-		*(T2180*)R = GE_default2180;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2180;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22441,9 +26593,12 @@ T0* GE_new2180(TC* ac, T1 initialize)
 T0* GE_new2181(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2181));
+	size_t s = sizeof(T2181);
 	if (initialize) {
-		*(T2181*)R = GE_default2181;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2181;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22452,9 +26607,12 @@ T0* GE_new2181(TC* ac, T1 initialize)
 T0* GE_new2182(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2182));
+	size_t s = sizeof(T2182);
 	if (initialize) {
-		*(T2182*)R = GE_default2182;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2182;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22463,9 +26621,12 @@ T0* GE_new2182(TC* ac, T1 initialize)
 T0* GE_new2183(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2183));
+	size_t s = sizeof(T2183);
 	if (initialize) {
-		*(T2183*)R = GE_default2183;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2183;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -22474,9 +26635,12 @@ T0* GE_new2183(TC* ac, T1 initialize)
 T0* GE_new2184(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2184));
+	size_t s = sizeof(T2184);
 	if (initialize) {
-		*(T2184*)R = GE_default2184;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2184;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22485,9 +26649,12 @@ T0* GE_new2184(TC* ac, T1 initialize)
 T0* GE_new2185(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2185));
+	size_t s = sizeof(T2185);
 	if (initialize) {
-		*(T2185*)R = GE_default2185;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2185;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -22496,14 +26663,14 @@ T0* GE_new2185(TC* ac, T1 initialize)
 T0* GE_new2186(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2186)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2186)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2186*)R = GE_default2186;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2186;
 		((T2186*)(R))->a2 = a1;
-		((T2186*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2186*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2186*)(R))->offset = offsetof(T2186, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22512,9 +26679,12 @@ T0* GE_new2186(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2187(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2187));
+	size_t s = sizeof(T2187);
 	if (initialize) {
-		*(T2187*)R = GE_default2187;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2187;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -22523,14 +26693,14 @@ T0* GE_new2187(TC* ac, T1 initialize)
 T0* GE_new2188(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2188)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2188)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2188*)R = GE_default2188;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2188;
 		((T2188*)(R))->a2 = a1;
-		((T2188*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2188*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2188*)(R))->offset = offsetof(T2188, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22539,9 +26709,12 @@ T0* GE_new2188(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2189(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2189));
+	size_t s = sizeof(T2189);
 	if (initialize) {
-		*(T2189*)R = GE_default2189;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2189;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -22550,9 +26723,12 @@ T0* GE_new2189(TC* ac, T1 initialize)
 T0* GE_new2190(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2190));
+	size_t s = sizeof(T2190);
 	if (initialize) {
-		*(T2190*)R = GE_default2190;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2190;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22561,14 +26737,14 @@ T0* GE_new2190(TC* ac, T1 initialize)
 T0* GE_new2191(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2191)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2191)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2191*)R = GE_default2191;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2191;
 		((T2191*)(R))->a2 = a1;
-		((T2191*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2191*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2191*)(R))->offset = offsetof(T2191, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22577,9 +26753,12 @@ T0* GE_new2191(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2192(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2192));
+	size_t s = sizeof(T2192);
 	if (initialize) {
-		*(T2192*)R = GE_default2192;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2192;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22588,9 +26767,12 @@ T0* GE_new2192(TC* ac, T1 initialize)
 T0* GE_new2193(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2193));
+	size_t s = sizeof(T2193);
 	if (initialize) {
-		*(T2193*)R = GE_default2193;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2193;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22599,9 +26781,12 @@ T0* GE_new2193(TC* ac, T1 initialize)
 T0* GE_new2194(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2194));
+	size_t s = sizeof(T2194);
 	if (initialize) {
-		*(T2194*)R = GE_default2194;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2194;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22610,9 +26795,12 @@ T0* GE_new2194(TC* ac, T1 initialize)
 T0* GE_new2195(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2195));
+	size_t s = sizeof(T2195);
 	if (initialize) {
-		*(T2195*)R = GE_default2195;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2195;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22621,9 +26809,12 @@ T0* GE_new2195(TC* ac, T1 initialize)
 T0* GE_new2196(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2196));
+	size_t s = sizeof(T2196);
 	if (initialize) {
-		*(T2196*)R = GE_default2196;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2196;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22632,9 +26823,12 @@ T0* GE_new2196(TC* ac, T1 initialize)
 T0* GE_new2197(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2197));
+	size_t s = sizeof(T2197);
 	if (initialize) {
-		*(T2197*)R = GE_default2197;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2197;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22643,9 +26837,12 @@ T0* GE_new2197(TC* ac, T1 initialize)
 T0* GE_new2198(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2198));
+	size_t s = sizeof(T2198);
 	if (initialize) {
-		*(T2198*)R = GE_default2198;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2198;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22654,9 +26851,12 @@ T0* GE_new2198(TC* ac, T1 initialize)
 T0* GE_new2199(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2199));
+	size_t s = sizeof(T2199);
 	if (initialize) {
-		*(T2199*)R = GE_default2199;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2199;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22665,9 +26865,12 @@ T0* GE_new2199(TC* ac, T1 initialize)
 T0* GE_new2200(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2200));
+	size_t s = sizeof(T2200);
 	if (initialize) {
-		*(T2200*)R = GE_default2200;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2200;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22676,9 +26879,12 @@ T0* GE_new2200(TC* ac, T1 initialize)
 T0* GE_new2201(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2201));
+	size_t s = sizeof(T2201);
 	if (initialize) {
-		*(T2201*)R = GE_default2201;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2201;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22687,9 +26893,12 @@ T0* GE_new2201(TC* ac, T1 initialize)
 T0* GE_new2202(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2202));
+	size_t s = sizeof(T2202);
 	if (initialize) {
-		*(T2202*)R = GE_default2202;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2202;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22698,9 +26907,12 @@ T0* GE_new2202(TC* ac, T1 initialize)
 T0* GE_new2203(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2203));
+	size_t s = sizeof(T2203);
 	if (initialize) {
-		*(T2203*)R = GE_default2203;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2203;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22709,9 +26921,12 @@ T0* GE_new2203(TC* ac, T1 initialize)
 T0* GE_new2204(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2204));
+	size_t s = sizeof(T2204);
 	if (initialize) {
-		*(T2204*)R = GE_default2204;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2204;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22720,14 +26935,14 @@ T0* GE_new2204(TC* ac, T1 initialize)
 T0* GE_new2205(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2205)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2205)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2205*)R = GE_default2205;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2205;
 		((T2205*)(R))->a2 = a1;
-		((T2205*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2205*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2205*)(R))->offset = offsetof(T2205, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22736,9 +26951,12 @@ T0* GE_new2205(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2206(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2206));
+	size_t s = sizeof(T2206);
 	if (initialize) {
-		*(T2206*)R = GE_default2206;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2206;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22747,9 +26965,12 @@ T0* GE_new2206(TC* ac, T1 initialize)
 T0* GE_new2207(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2207));
+	size_t s = sizeof(T2207);
 	if (initialize) {
-		*(T2207*)R = GE_default2207;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2207;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22758,9 +26979,12 @@ T0* GE_new2207(TC* ac, T1 initialize)
 T0* GE_new2208(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2208));
+	size_t s = sizeof(T2208);
 	if (initialize) {
-		*(T2208*)R = GE_default2208;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2208;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22769,9 +26993,12 @@ T0* GE_new2208(TC* ac, T1 initialize)
 T0* GE_new2209(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2209));
+	size_t s = sizeof(T2209);
 	if (initialize) {
-		*(T2209*)R = GE_default2209;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2209;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22780,9 +27007,12 @@ T0* GE_new2209(TC* ac, T1 initialize)
 T0* GE_new2210(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2210));
+	size_t s = sizeof(T2210);
 	if (initialize) {
-		*(T2210*)R = GE_default2210;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2210;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -22791,9 +27021,12 @@ T0* GE_new2210(TC* ac, T1 initialize)
 T0* GE_new2211(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2211));
+	size_t s = sizeof(T2211);
 	if (initialize) {
-		*(T2211*)R = GE_default2211;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2211;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22802,14 +27035,14 @@ T0* GE_new2211(TC* ac, T1 initialize)
 T0* GE_new2212(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2212)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2212)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2212*)R = GE_default2212;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2212;
 		((T2212*)(R))->a2 = a1;
-		((T2212*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2212*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2212*)(R))->offset = offsetof(T2212, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22818,9 +27051,12 @@ T0* GE_new2212(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2213(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2213));
+	size_t s = sizeof(T2213);
 	if (initialize) {
-		*(T2213*)R = GE_default2213;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2213;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22829,9 +27065,12 @@ T0* GE_new2213(TC* ac, T1 initialize)
 T0* GE_new2214(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2214));
+	size_t s = sizeof(T2214);
 	if (initialize) {
-		*(T2214*)R = GE_default2214;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2214;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22840,9 +27079,12 @@ T0* GE_new2214(TC* ac, T1 initialize)
 T0* GE_new2215(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2215));
+	size_t s = sizeof(T2215);
 	if (initialize) {
-		*(T2215*)R = GE_default2215;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2215;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22851,9 +27093,12 @@ T0* GE_new2215(TC* ac, T1 initialize)
 T0* GE_new2216(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2216));
+	size_t s = sizeof(T2216);
 	if (initialize) {
-		*(T2216*)R = GE_default2216;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2216;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22862,9 +27107,12 @@ T0* GE_new2216(TC* ac, T1 initialize)
 T0* GE_new2217(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2217));
+	size_t s = sizeof(T2217);
 	if (initialize) {
-		*(T2217*)R = GE_default2217;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2217;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22873,9 +27121,12 @@ T0* GE_new2217(TC* ac, T1 initialize)
 T0* GE_new2223(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2223));
+	size_t s = sizeof(T2223);
 	if (initialize) {
-		*(T2223*)R = GE_default2223;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2223;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22884,9 +27135,12 @@ T0* GE_new2223(TC* ac, T1 initialize)
 T0* GE_new2224(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2224));
+	size_t s = sizeof(T2224);
 	if (initialize) {
-		*(T2224*)R = GE_default2224;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2224;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22895,9 +27149,12 @@ T0* GE_new2224(TC* ac, T1 initialize)
 T0* GE_new2225(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2225));
+	size_t s = sizeof(T2225);
 	if (initialize) {
-		*(T2225*)R = GE_default2225;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2225;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22906,9 +27163,12 @@ T0* GE_new2225(TC* ac, T1 initialize)
 T0* GE_new2228(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2228));
+	size_t s = sizeof(T2228);
 	if (initialize) {
-		*(T2228*)R = GE_default2228;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2228;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22917,9 +27177,12 @@ T0* GE_new2228(TC* ac, T1 initialize)
 T0* GE_new2230(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2230));
+	size_t s = sizeof(T2230);
 	if (initialize) {
-		*(T2230*)R = GE_default2230;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2230;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22928,9 +27191,12 @@ T0* GE_new2230(TC* ac, T1 initialize)
 T0* GE_new2231(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2231));
+	size_t s = sizeof(T2231);
 	if (initialize) {
-		*(T2231*)R = GE_default2231;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2231;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22939,14 +27205,14 @@ T0* GE_new2231(TC* ac, T1 initialize)
 T0* GE_new2232(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2232)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2232)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2232*)R = GE_default2232;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2232;
 		((T2232*)(R))->a2 = a1;
-		((T2232*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2232*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2232*)(R))->offset = offsetof(T2232, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22955,9 +27221,12 @@ T0* GE_new2232(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2233(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2233));
+	size_t s = sizeof(T2233);
 	if (initialize) {
-		*(T2233*)R = GE_default2233;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2233;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22966,14 +27235,14 @@ T0* GE_new2233(TC* ac, T1 initialize)
 T0* GE_new2234(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2234)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2234)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2234*)R = GE_default2234;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2234;
 		((T2234*)(R))->a2 = a1;
-		((T2234*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2234*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2234*)(R))->offset = offsetof(T2234, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22982,9 +27251,12 @@ T0* GE_new2234(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2235(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2235));
+	size_t s = sizeof(T2235);
 	if (initialize) {
-		*(T2235*)R = GE_default2235;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2235;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -22993,9 +27265,12 @@ T0* GE_new2235(TC* ac, T1 initialize)
 T0* GE_new2236(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2236));
+	size_t s = sizeof(T2236);
 	if (initialize) {
-		*(T2236*)R = GE_default2236;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2236;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23004,9 +27279,12 @@ T0* GE_new2236(TC* ac, T1 initialize)
 T0* GE_new2237(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2237));
+	size_t s = sizeof(T2237);
 	if (initialize) {
-		*(T2237*)R = GE_default2237;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2237;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23015,9 +27293,12 @@ T0* GE_new2237(TC* ac, T1 initialize)
 T0* GE_new2238(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2238));
+	size_t s = sizeof(T2238);
 	if (initialize) {
-		*(T2238*)R = GE_default2238;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2238;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -23026,9 +27307,12 @@ T0* GE_new2238(TC* ac, T1 initialize)
 T0* GE_new2239(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2239));
+	size_t s = sizeof(T2239);
 	if (initialize) {
-		*(T2239*)R = GE_default2239;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2239;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -23037,9 +27321,12 @@ T0* GE_new2239(TC* ac, T1 initialize)
 T0* GE_new2240(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2240));
+	size_t s = sizeof(T2240);
 	if (initialize) {
-		*(T2240*)R = GE_default2240;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2240;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23048,9 +27335,12 @@ T0* GE_new2240(TC* ac, T1 initialize)
 T0* GE_new2241(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2241));
+	size_t s = sizeof(T2241);
 	if (initialize) {
-		*(T2241*)R = GE_default2241;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2241;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -23059,14 +27349,14 @@ T0* GE_new2241(TC* ac, T1 initialize)
 T0* GE_new2242(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2242)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2242)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2242*)R = GE_default2242;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2242;
 		((T2242*)(R))->a2 = a1;
-		((T2242*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2242*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2242*)(R))->offset = offsetof(T2242, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23075,9 +27365,12 @@ T0* GE_new2242(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2243(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2243));
+	size_t s = sizeof(T2243);
 	if (initialize) {
-		*(T2243*)R = GE_default2243;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2243;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -23086,9 +27379,12 @@ T0* GE_new2243(TC* ac, T1 initialize)
 T0* GE_new2244(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2244));
+	size_t s = sizeof(T2244);
 	if (initialize) {
-		*(T2244*)R = GE_default2244;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2244;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23097,14 +27393,14 @@ T0* GE_new2244(TC* ac, T1 initialize)
 T0* GE_new2245(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2245)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2245)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2245*)R = GE_default2245;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2245;
 		((T2245*)(R))->a2 = a1;
-		((T2245*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2245*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2245*)(R))->offset = offsetof(T2245, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23113,9 +27409,12 @@ T0* GE_new2245(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2246(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2246));
+	size_t s = sizeof(T2246);
 	if (initialize) {
-		*(T2246*)R = GE_default2246;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2246;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -23124,9 +27423,12 @@ T0* GE_new2246(TC* ac, T1 initialize)
 T0* GE_new2248(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2248));
+	size_t s = sizeof(T2248);
 	if (initialize) {
-		*(T2248*)R = GE_default2248;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2248;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -23135,9 +27437,12 @@ T0* GE_new2248(TC* ac, T1 initialize)
 T0* GE_new2249(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2249));
+	size_t s = sizeof(T2249);
 	if (initialize) {
-		*(T2249*)R = GE_default2249;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2249;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23146,14 +27451,14 @@ T0* GE_new2249(TC* ac, T1 initialize)
 T0* GE_new2250(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2250)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2250)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2250*)R = GE_default2250;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2250;
 		((T2250*)(R))->a2 = a1;
-		((T2250*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2250*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2250*)(R))->offset = offsetof(T2250, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23162,9 +27467,12 @@ T0* GE_new2250(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2252(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2252));
+	size_t s = sizeof(T2252);
 	if (initialize) {
-		*(T2252*)R = GE_default2252;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2252;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23173,9 +27481,12 @@ T0* GE_new2252(TC* ac, T1 initialize)
 T0* GE_new2254(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2254));
+	size_t s = sizeof(T2254);
 	if (initialize) {
-		*(T2254*)R = GE_default2254;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2254;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23184,9 +27495,12 @@ T0* GE_new2254(TC* ac, T1 initialize)
 T0* GE_new2255(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2255));
+	size_t s = sizeof(T2255);
 	if (initialize) {
-		*(T2255*)R = GE_default2255;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2255;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23195,9 +27509,12 @@ T0* GE_new2255(TC* ac, T1 initialize)
 T0* GE_new2258(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2258));
+	size_t s = sizeof(T2258);
 	if (initialize) {
-		*(T2258*)R = GE_default2258;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2258;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23206,9 +27523,12 @@ T0* GE_new2258(TC* ac, T1 initialize)
 T0* GE_new2259(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2259));
+	size_t s = sizeof(T2259);
 	if (initialize) {
-		*(T2259*)R = GE_default2259;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2259;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23217,9 +27537,12 @@ T0* GE_new2259(TC* ac, T1 initialize)
 T0* GE_new2261(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2261));
+	size_t s = sizeof(T2261);
 	if (initialize) {
-		*(T2261*)R = GE_default2261;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2261;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23228,9 +27551,12 @@ T0* GE_new2261(TC* ac, T1 initialize)
 T0* GE_new2262(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2262));
+	size_t s = sizeof(T2262);
 	if (initialize) {
-		*(T2262*)R = GE_default2262;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2262;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23239,9 +27565,12 @@ T0* GE_new2262(TC* ac, T1 initialize)
 T0* GE_new2263(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2263));
+	size_t s = sizeof(T2263);
 	if (initialize) {
-		*(T2263*)R = GE_default2263;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2263;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23250,14 +27579,14 @@ T0* GE_new2263(TC* ac, T1 initialize)
 T0* GE_new2264(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2264)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2264)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2264*)R = GE_default2264;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2264;
 		((T2264*)(R))->a2 = a1;
-		((T2264*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2264*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2264*)(R))->offset = offsetof(T2264, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23266,9 +27595,12 @@ T0* GE_new2264(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2265(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2265));
+	size_t s = sizeof(T2265);
 	if (initialize) {
-		*(T2265*)R = GE_default2265;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2265;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23277,9 +27609,12 @@ T0* GE_new2265(TC* ac, T1 initialize)
 T0* GE_new2267(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2267));
+	size_t s = sizeof(T2267);
 	if (initialize) {
-		*(T2267*)R = GE_default2267;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2267;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23288,14 +27623,14 @@ T0* GE_new2267(TC* ac, T1 initialize)
 T0* GE_new2269(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2269)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2269)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2269*)R = GE_default2269;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2269;
 		((T2269*)(R))->a2 = a1;
-		((T2269*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2269*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2269*)(R))->offset = offsetof(T2269, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23304,9 +27639,12 @@ T0* GE_new2269(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2271(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2271));
+	size_t s = sizeof(T2271);
 	if (initialize) {
-		*(T2271*)R = GE_default2271;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2271;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -23315,9 +27653,12 @@ T0* GE_new2271(TC* ac, T1 initialize)
 T0* GE_new2272(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2272));
+	size_t s = sizeof(T2272);
 	if (initialize) {
-		*(T2272*)R = GE_default2272;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2272;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23326,14 +27667,14 @@ T0* GE_new2272(TC* ac, T1 initialize)
 T0* GE_new2274(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2274)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2274)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2274*)R = GE_default2274;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2274;
 		((T2274*)(R))->a2 = a1;
-		((T2274*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2274*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2274*)(R))->offset = offsetof(T2274, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23342,9 +27683,12 @@ T0* GE_new2274(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2275(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2275));
+	size_t s = sizeof(T2275);
 	if (initialize) {
-		*(T2275*)R = GE_default2275;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2275;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -23353,9 +27697,12 @@ T0* GE_new2275(TC* ac, T1 initialize)
 T0* GE_new2276(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2276));
+	size_t s = sizeof(T2276);
 	if (initialize) {
-		*(T2276*)R = GE_default2276;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2276;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23364,9 +27711,12 @@ T0* GE_new2276(TC* ac, T1 initialize)
 T0* GE_new2277(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2277));
+	size_t s = sizeof(T2277);
 	if (initialize) {
-		*(T2277*)R = GE_default2277;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2277;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23375,9 +27725,12 @@ T0* GE_new2277(TC* ac, T1 initialize)
 T0* GE_new2278(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2278));
+	size_t s = sizeof(T2278);
 	if (initialize) {
-		*(T2278*)R = GE_default2278;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2278;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23386,9 +27739,12 @@ T0* GE_new2278(TC* ac, T1 initialize)
 T0* GE_new2279(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2279));
+	size_t s = sizeof(T2279);
 	if (initialize) {
-		*(T2279*)R = GE_default2279;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2279;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23397,9 +27753,12 @@ T0* GE_new2279(TC* ac, T1 initialize)
 T0* GE_new2281(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2281));
+	size_t s = sizeof(T2281);
 	if (initialize) {
-		*(T2281*)R = GE_default2281;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2281;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23408,9 +27767,12 @@ T0* GE_new2281(TC* ac, T1 initialize)
 T0* GE_new2282(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2282));
+	size_t s = sizeof(T2282);
 	if (initialize) {
-		*(T2282*)R = GE_default2282;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2282;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23419,9 +27781,12 @@ T0* GE_new2282(TC* ac, T1 initialize)
 T0* GE_new2283(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2283));
+	size_t s = sizeof(T2283);
 	if (initialize) {
-		*(T2283*)R = GE_default2283;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2283;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23430,9 +27795,12 @@ T0* GE_new2283(TC* ac, T1 initialize)
 T0* GE_new2284(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2284));
+	size_t s = sizeof(T2284);
 	if (initialize) {
-		*(T2284*)R = GE_default2284;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2284;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23441,9 +27809,12 @@ T0* GE_new2284(TC* ac, T1 initialize)
 T0* GE_new2286(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2286));
+	size_t s = sizeof(T2286);
 	if (initialize) {
-		*(T2286*)R = GE_default2286;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2286;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23452,9 +27823,12 @@ T0* GE_new2286(TC* ac, T1 initialize)
 T0* GE_new2291(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2291));
+	size_t s = sizeof(T2291);
 	if (initialize) {
-		*(T2291*)R = GE_default2291;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2291;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -23463,9 +27837,12 @@ T0* GE_new2291(TC* ac, T1 initialize)
 T0* GE_new2294(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2294));
+	size_t s = sizeof(T2294);
 	if (initialize) {
-		*(T2294*)R = GE_default2294;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2294;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -23474,14 +27851,14 @@ T0* GE_new2294(TC* ac, T1 initialize)
 T0* GE_new2297(TC* ac, T6 a1, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2297)+(a1>1?(a1-1):0)*sizeof(T0*));
+	size_t s = sizeof(T2297)+((a1>1)?(a1-1):0)*sizeof(T0*);
 	if (initialize) {
-		*(T2297*)R = GE_default2297;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2297;
 		((T2297*)(R))->a2 = a1;
-		((T2297*)(R))->a1 = 0;
-#ifndef GE_malloc_cleared
-		memset(((T2297*)(R))->z2,0,a1*sizeof(T0*));
-#endif
+		((T2297*)(R))->offset = offsetof(T2297, z2);
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23490,9 +27867,12 @@ T0* GE_new2297(TC* ac, T6 a1, T1 initialize)
 T0* GE_new2298(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc_atomic(sizeof(T2298));
+	size_t s = sizeof(T2298);
 	if (initialize) {
-		*(T2298*)R = GE_default2298;
+		R = (T0*)GE_calloc_atomic(1, s);
+		((T0*)(R))->id = 2298;
+	} else {
+		R = (T0*)GE_malloc_atomic(s);
 	}
 	return R;
 }
@@ -23501,9 +27881,12 @@ T0* GE_new2298(TC* ac, T1 initialize)
 T0* GE_new2299(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2299));
+	size_t s = sizeof(T2299);
 	if (initialize) {
-		*(T2299*)R = GE_default2299;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2299;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23512,9 +27895,12 @@ T0* GE_new2299(TC* ac, T1 initialize)
 T0* GE_new2300(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2300));
+	size_t s = sizeof(T2300);
 	if (initialize) {
-		*(T2300*)R = GE_default2300;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2300;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23523,9 +27909,12 @@ T0* GE_new2300(TC* ac, T1 initialize)
 T0* GE_new2301(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2301));
+	size_t s = sizeof(T2301);
 	if (initialize) {
-		*(T2301*)R = GE_default2301;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2301;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
@@ -23534,15 +27923,18 @@ T0* GE_new2301(TC* ac, T1 initialize)
 T0* GE_new2303(TC* ac, T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_malloc(sizeof(T2303));
+	size_t s = sizeof(T2303);
 	if (initialize) {
-		*(T2303*)R = GE_default2303;
+		R = (T0*)GE_calloc(1, s);
+		((T0*)(R))->id = 2303;
+	} else {
+		R = (T0*)GE_malloc(s);
 	}
 	return R;
 }
 
 /* GEC.execute */
-T0* T26c72(TC* ac)
+T0* T26c74(TC* ac)
 {
 	T0* C;
 	GE_rescue r;
@@ -23571,7 +27963,7 @@ GE_retry:
 	ac->last_rescue = &r;
 	t1 = (T26s41(ac));
 	t1 = (T33f5(ac, t1));
-	T26f73(ac, C, t1);
+	T26f75(ac, C, t1);
 	t1 = (T26s40(ac));
 	T36s2(ac, ((T26*)(C))->a1);
 	ac->last_rescue = r.previous;
@@ -23579,15 +27971,15 @@ GE_retry:
 }
 
 /* GEC.execute_with_arguments */
-void T26f73(TC* ac, T0* C, T0* a1)
+void T26f75(TC* ac, T0* C, T0* a1)
 {
 	T0* l1 = 0;
 	l1 = T42c193(ac);
-	T26f74(ac, C, a1, l1);
+	T26f76(ac, C, a1, l1);
 }
 
 /* GEC.execute_with_arguments_and_error_handler */
-void T26f74(TC* ac, T0* C, T0* a1, T0* a2)
+void T26f76(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	GE_rescue r;
 	uint32_t tr = ac->in_rescue;
@@ -23613,7 +28005,7 @@ GE_retry:
 	t1 = (T26s36(ac));
 	T45s18(ac);
 	((T26*)(C))->a2 = a2;
-	T26f75(ac, C, a1);
+	T26f77(ac, C, a1);
 	t2 = (T1)((((T26*)(C))->a1) == ((T6)(GE_int32(0))));
 	if (t2) {
 		t3 = (T46f9(ac, ((T26*)(C))->a3));
@@ -23630,14 +28022,14 @@ GE_retry:
 			T43f62(ac, l2);
 			t2 = (T43f30(ac, l2));
 			if (t2) {
-				T26f76(ac, C, l2);
+				T26f78(ac, C, l2);
 				T43f63(ac, l2);
 				t2 = (T1)(((T26*)(C))->a5==EIF_VOID);
 				if (t2) {
 					((T26*)(C))->a1 = (T6)(GE_int32(1));
 				}
 			} else {
-				T26f77(ac, C, l1);
+				T26f79(ac, C, l1);
 				((T26*)(C))->a1 = (T6)(GE_int32(1));
 			}
 			t1 = (T26s44(ac));
@@ -23648,7 +28040,7 @@ GE_ms8("config", 6),
 GE_ms8("ecf", 3),
 GE_ms8("default.ecf", 11));
 			l1 = (((((T0*)(t1))->id==151)?T151s3(ac, GE_ms8("${GOBO}", 7), t4):T152s3(ac, GE_ms8("${GOBO}", 7), t4)));
-			t1 = (T26s60(ac));
+			t1 = (T26s62(ac));
 			l1 = (T49f2(ac, t1, l1));
 		}
 		t2 = (T1)((((T26*)(C))->a1) == ((T6)(GE_int32(0))));
@@ -23658,11 +28050,11 @@ GE_ms8("default.ecf", 11));
 			t2 = (T43f30(ac, l2));
 			if (t2) {
 				((T26*)(C))->a6 = EIF_VOID;
-				T26f78(ac, C, l2);
+				T26f80(ac, C, l2);
 				T43f63(ac, l2);
 				t2 = (((T26*)(C))->a6?((m1 = ((T26*)(C))->a6, EIF_TRUE)):EIF_FALSE);
 				if (t2) {
-					T26f79(ac, C, m1);
+					T26f81(ac, C, m1);
 					t2 = (T1)((((T26*)(C))->a1) == ((T6)(GE_int32(0))));
 					if (t2) {
 						t2 = (((((T0*)(((T26*)(C))->a2))->id==42)?((T42*)(((T26*)(C))->a2))->a1:((T63*)(((T26*)(C))->a2))->a1));
@@ -23674,7 +28066,7 @@ GE_ms8("default.ecf", 11));
 					((T26*)(C))->a1 = (T6)(GE_int32(3));
 				}
 			} else {
-				T26f77(ac, C, l1);
+				T26f79(ac, C, l1);
 				((T26*)(C))->a1 = (T6)(GE_int32(1));
 			}
 		}
@@ -23683,7 +28075,7 @@ GE_ms8("default.ecf", 11));
 }
 
 /* GEC.process_system */
-void T26f79(TC* ac, T0* C, T0* a1)
+void T26f81(TC* ac, T0* C, T0* a1)
 {
 	T0* l1 = 0;
 	T0* l2 = 0;
@@ -23811,14 +28203,14 @@ void T26f79(TC* ac, T0* C, T0* a1)
 			if (t1) {
 				((T26*)(C))->a1 = (T6)(GE_int32(1));
 			} else {
-				T26f88(ac, C, l1, l2);
+				T26f90(ac, C, l1, l2);
 				t1 = (T1)((((T26*)(C))->a1) == ((T6)(GE_int32(0))));
 				if (t1) {
 					t2 = (T26f54(ac, C));
 					t1 = ((T1)(!(t2)));
 				}
 				if (t1) {
-					T26f89(ac, C, a1, l2);
+					T26f91(ac, C, a1, l2);
 				}
 			}
 		}
@@ -32362,7 +36754,7 @@ T1 T853f44(TC* ac, T0* C)
 }
 
 /* GEC.compile_c_code */
-void T26f89(TC* ac, T0* C, T0* a1, T0* a2)
+void T26f91(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T0* l1 = 0;
 	T0* l2 = 0;
@@ -32401,7 +36793,7 @@ void T26f89(TC* ac, T0* C, T0* a1, T0* a2)
 			}
 		}
 	}
-	t1 = (T26s64(ac));
+	t1 = (T26s66(ac));
 	t2 = (T119s1(ac));
 	if (t2) {
 		l3 = (T17x2211872T0(ac, l1, GE_ms8(".bat", 4)));
@@ -32410,11 +36802,11 @@ void T26f89(TC* ac, T0* C, T0* a1, T0* a2)
 	}
 	t1 = (T26s44(ac));
 	if (((T0*)(t1))->id==151) {
-		T151f39(ac, t1, ge1866ov30572601);
+		T151f39(ac, t1, ge1866ov30572603);
 	} else {
-		T152f36(ac, t1, ge1866ov30572601);
+		T152f36(ac, t1, ge1866ov30572603);
 	}
-	t2 = (T26f66(ac, C));
+	t2 = (T26f68(ac, C));
 	if (t2) {
 		t1 = (T26s44(ac));
 		t1 = (((((T0*)(t1))->id==151)?T151f5(ac, t1, l3):T152f5(ac, t1, l3)));
@@ -32422,7 +36814,7 @@ void T26f89(TC* ac, T0* C, T0* a1, T0* a2)
 		T117f11(ac, l2);
 		l6 = (((T117*)(l2))->a1);
 	} else {
-		t2 = (T26f67(ac, C));
+		t2 = (T26f69(ac, C));
 		if (t2) {
 			l8 = (T44s2(ac, GE_ms8("gecc", 4)));
 			t1 = (T17x2211872T0(ac, l8, GE_ms8(" --thread=", 10)));
@@ -32435,14 +36827,22 @@ void T26f89(TC* ac, T0* C, T0* a1, T0* a2)
 			T117f11(ac, l2);
 			l6 = (((T117*)(l2))->a1);
 		} else {
-			t5 = (T26f46(ac, C));
-			t1 = (T6f7(ac, &t5));
-			t1 = (T17f5(ac, GE_ms8("--thread=", 9), t1));
-			t1 = GE_ma34(ac, (T6)2, (T6)2,
+			t2 = (EIF_TRUE);
+			if (t2) {
+				t5 = (T26f46(ac, C));
+				t1 = (T6f7(ac, &t5));
+				t1 = (T17f5(ac, GE_ms8("--thread=", 9), t1));
+				t1 = GE_ma34(ac, (T6)2, (T6)2,
 t1,
 l3);
-			l5 = T118c11(ac, t1);
-			l6 = (((T118*)(l5))->a1);
+				l5 = T118c11(ac, t1);
+				l6 = (((T118*)(l5))->a1);
+			} else {
+				t1 = GE_ma34(ac, (T6)1, (T6)1,
+l3);
+				l5 = T118c11(ac, t1);
+				l6 = (((T118*)(l5))->a1);
+			}
 		}
 	}
 	t1 = (T26s44(ac));
@@ -32458,7 +36858,7 @@ l3);
 	l4 = (T17x2211872T0(ac, l1, t1));
 	t1 = (T26s44(ac));
 	t4 = (T26s44(ac));
-	t4 = (((((T0*)(t4))->id==151)?T151s8(ac, ge1866ov30572601, l4):T152s8(ac, ge1866ov30572601, l4)));
+	t4 = (((((T0*)(t4))->id==151)?T151s8(ac, ge1866ov30572603, l4):T152s8(ac, ge1866ov30572603, l4)));
 	if (((T0*)(t1))->id==151) {
 		T151s40(ac, t4, l4);
 	} else {
@@ -63757,7 +68157,7 @@ return l_result;
 }
 
 /* GEC.c_compile_using_gecc */
-T1 T26f67(TC* ac, T0* C)
+T1 T26f69(TC* ac, T0* C)
 {
 	T1 R = 0;
 	T0* m1 = 0;
@@ -64493,7 +68893,7 @@ T1 T151s24(TC* ac, T0* a1)
 }
 
 /* GEC.c_compile_using_script */
-T1 T26f66(TC* ac, T0* C)
+T1 T26f68(TC* ac, T0* C)
 {
 	T1 R = 0;
 	T0* m1 = 0;
@@ -64765,7 +69165,7 @@ T1 T119s1(TC* ac)
 }
 
 /* GEC.operating_system */
-T0* T26s64(TC* ac)
+T0* T26s66(TC* ac)
 {
 	GE_rescue r;
 	uint32_t tr = ac->in_rescue;
@@ -65127,7 +69527,7 @@ T1 T26f54(TC* ac, T0* C)
 }
 
 /* GEC.compile_degree_minus_3 */
-void T26f88(TC* ac, T0* C, T0* a1, T0* a2)
+void T26f90(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T0* l1 = 0;
 	T0* l2 = 0;
@@ -65142,25 +69542,25 @@ void T26f88(TC* ac, T0* C, T0* a1, T0* a2)
 	T0* t4;
 	T6 t5;
 	l4 = (((((T0*)(a2))->id==853)?T853f45(ac, a2):T66f39(ac, a2)));
-	l3 = T114c653(ac, a1, a2);
+	l3 = T114c657(ac, a1, a2);
 	t1 = (T57f18(ac, ((T26*)(C))->a19));
 	if (!(t1)) {
-		t1 = (T26f61(ac, C));
+		t1 = (T26f63(ac, C));
 	}
 	if (t1) {
-		t1 = (T26f61(ac, C));
-		T114f654(ac, l3, t1);
+		t1 = (T26f63(ac, C));
+		T114f658(ac, l3, t1);
 	}
-	t1 = (T26f62(ac, C));
-	T114f655(ac, l3, t1);
+	t1 = (T26f64(ac, C));
+	T114f659(ac, l3, t1);
 	t1 = (T26f59(ac, C));
-	T114f656(ac, l3, t1);
-	t1 = (T26f63(ac, C));
+	T114f660(ac, l3, t1);
+	t1 = (T26f65(ac, C));
 	t1 = ((T1)(!(t1)));
-	T114f657(ac, l3, t1);
+	T114f661(ac, l3, t1);
 	t1 = (T6f4(ac, &(((T26*)(C))->a35), (T6)(GE_int32(0))));
 	if (t1) {
-		T114f658(ac, l3, ((T26*)(C))->a35);
+		T114f662(ac, l3, ((T26*)(C))->a35);
 	}
 	l1 = (((T95*)(a1))->a2);
 	t2 = (((T87*)(l1))->a106);
@@ -65183,7 +69583,7 @@ void T26f88(TC* ac, T0* C, T0* a1, T0* a2)
 			}
 		}
 	}
-	T114f659(ac, l3, l2);
+	T114f663(ac, l3, l2);
 	t1 = (T26f49(ac, C));
 	if (t1) {
 		t3 = (T26f38(ac, C));
@@ -65888,7 +70288,7 @@ void T229f8(TC* ac, T0* C, T2 a1)
 }
 
 /* ET_C_GENERATOR.generate */
-void T114f659(TC* ac, T0* C, T0* a1)
+void T114f663(TC* ac, T0* C, T0* a1)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -65910,11 +70310,11 @@ void T114f659(TC* ac, T0* C, T0* a1)
 	}
 	l1 = (T114f168(ac, C));
 	if (((T114*)(C))->a10) {
-		T114f663(ac, C, a1);
+		T114f667(ac, C, a1);
 	}
-	T114f664(ac, C, a1, l1);
-	T114f665(ac, C, a1);
-	T114f666(ac, C, a1, l1);
+	T114f668(ac, C, a1, l1);
+	T114f669(ac, C, a1);
+	T114f670(ac, C, a1, l1);
 	T827f52(ac, ((T114*)(C))->a105);
 	((T114*)(C))->a108 = (T7)(GE_int64(0));
 }
@@ -66020,7 +70420,7 @@ void T951f14(TC* ac, T0* C)
 }
 
 /* ET_C_GENERATOR.generate_compilation_script */
-void T114f666(TC* ac, T0* C, T0* a1, T0* a2)
+void T114f670(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T0* l1 = 0;
 	T0* l2 = 0;
@@ -66060,9 +70460,9 @@ void T114f666(TC* ac, T0* C, T0* a1, T0* a2)
 	t1 = (T114s183(ac));
 	t2 = (T119s1(ac));
 	if (t2) {
-		l3 = (T17x2211872T0(ac, l1, ge1523ov24953480));
+		l3 = (T17x2211872T0(ac, l1, ge1523ov24953484));
 	} else {
-		l3 = (T17x2211872T0(ac, l1, ge1523ov24953488));
+		l3 = (T17x2211872T0(ac, l1, ge1523ov24953492));
 	}
 	l2 = T107c309(ac);
 	T107f310(ac, l2, GE_ms8("\\$\\(([^)]+)\\)", 13));
@@ -66234,7 +70634,7 @@ void T114f666(TC* ac, T0* C, T0* a1, T0* a2)
 				t1 = (T114s269(ac));
 				l16 = (T108s3(ac, l15, (T6)(GE_int32(6))));
 				T17x2293820T0(ac, l16, GE_ms8("${\\1\\}", 6));
-				t1 = (T114s334(ac));
+				t1 = (T114s338(ac));
 				t4 = (T107f186(ac, l2, l16));
 				l15 = (T49f2(ac, t1, t4));
 				t2 = (T17x2211868T0(ac, l15, GE_ms8("\"", 1)));
@@ -66301,30 +70701,30 @@ void T114f666(TC* ac, T0* C, T0* a1, T0* a2)
 				t1 = (T114s269(ac));
 				l16 = (T108s3(ac, l15, (T6)(GE_int32(6))));
 				T17x2293820T0(ac, l16, GE_ms8("${\\1\\}", 6));
-				t1 = (T114s334(ac));
+				t1 = (T114s338(ac));
 				t4 = (T107f186(ac, l2, l16));
 				l15 = (T49f2(ac, t1, t4));
 				t1 = (T114s214(ac));
-				t2 = (((((T0*)(t1))->id==151)?T151s2(ac, l15, ge1523ov24953486):T152s2(ac, l15, ge1523ov24953486)));
+				t2 = (((((T0*)(t1))->id==151)?T151s2(ac, l15, ge1523ov24953490):T152s2(ac, l15, ge1523ov24953490)));
 				if (t2) {
 					l9 = EIF_VOID;
 				} else {
 					t1 = (T114s214(ac));
-					t2 = (((((T0*)(t1))->id==151)?T151s2(ac, l15, ge1523ov24953485):T152s2(ac, l15, ge1523ov24953485)));
+					t2 = (((((T0*)(t1))->id==151)?T151s2(ac, l15, ge1523ov24953489):T152s2(ac, l15, ge1523ov24953489)));
 					if (t2) {
 						l9 = l15;
 					} else {
 						l8 = l15;
 						t1 = (T114s214(ac));
-						t2 = (((((T0*)(t1))->id==151)?T151s2(ac, l15, ge1523ov24953487):T152s2(ac, l15, ge1523ov24953487)));
+						t2 = (((((T0*)(t1))->id==151)?T151s2(ac, l15, ge1523ov24953491):T152s2(ac, l15, ge1523ov24953491)));
 						if (t2) {
 							l9 = (T17x229387(ac, l15));
-							t5 = (((T17*)(ge1523ov24953487))->a2);
+							t5 = (((T17*)(ge1523ov24953491))->a2);
 							T17x2326531T6(ac, l9, t5);
-							T17x2293820T0(ac, l9, ge1523ov24953485);
+							T17x2293820T0(ac, l9, ge1523ov24953489);
 						} else {
 							l9 = (T17x229387(ac, l15));
-							T17x2293820T0(ac, l9, ge1523ov24953485);
+							T17x2293820T0(ac, l9, ge1523ov24953489);
 						}
 						T949f55(ac, a2, l8, GE_ms8("rc_file", 7));
 						T949f55(ac, a2, l9, GE_ms8("res_file", 8));
@@ -66354,7 +70754,7 @@ void T114f666(TC* ac, T0* C, T0* a1, T0* a2)
 				}
 				l11 = ((T6)((l11)+((T6)(GE_int32(1)))));
 			}
-			l8 = (T17x2211872T0(ac, l1, ge1523ov24953487));
+			l8 = (T17x2211872T0(ac, l1, ge1523ov24953491));
 			t1 = (T114s214(ac));
 			t2 = (((((T0*)(t1))->id==151)?T151s10(ac, l8):T152s10(ac, l8)));
 			if (t2) {
@@ -66362,7 +70762,7 @@ void T114f666(TC* ac, T0* C, T0* a1, T0* a2)
 				t4 = (T114s214(ac));
 				t4 = (((((T0*)(t4))->id==151)?ge421ov6144033:ge418ov6144033));
 				l8 = (((((T0*)(t1))->id==151)?T151s8(ac, t4, l8):T152s8(ac, t4, l8)));
-				l9 = (T17x2211872T0(ac, l1, ge1523ov24953485));
+				l9 = (T17x2211872T0(ac, l1, ge1523ov24953489));
 				T949f55(ac, a2, l8, GE_ms8("rc_file", 7));
 				T949f55(ac, a2, l9, GE_ms8("res_file", 8));
 				l6 = (T949f43(ac, a2, l7, EIF_FALSE));
@@ -66389,13 +70789,13 @@ void T114f666(TC* ac, T0* C, T0* a1, T0* a2)
 		T950f39(ac, l4);
 		T950f41(ac, l4, (T6)(GE_int32(511)));
 	} else {
-		T114f667(ac, C);
-		T114f669(ac, C, l3);
+		T114f671(ac, C);
+		T114f673(ac, C, l3);
 	}
 }
 
 /* ET_C_GENERATOR.report_cannot_write_error */
-void T114f669(TC* ac, T0* C, T0* a1)
+void T114f673(TC* ac, T0* C, T0* a1)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -68955,7 +73355,7 @@ T0* T953c8(TC* ac, T0* a1)
 }
 
 /* ET_C_GENERATOR.set_fatal_error */
-void T114f667(TC* ac, T0* C)
+void T114f671(TC* ac, T0* C)
 {
 	((T114*)(C))->a3 = EIF_TRUE;
 }
@@ -74726,7 +79126,7 @@ T0* T107s249(TC* ac)
 }
 
 /* ET_C_GENERATOR.execution_environment */
-T0* T114s334(TC* ac)
+T0* T114s338(TC* ac)
 {
 	GE_rescue r;
 	uint32_t tr = ac->in_rescue;
@@ -76064,16 +80464,16 @@ T0* T114s214(TC* ac)
 	t1 = (T114s183(ac));
 	t2 = (T119s1(ac));
 	if (t2) {
-		R = (T114s585(ac));
+		R = (T114s589(ac));
 		ac->thread_onces->reference_value[20] = R;
 	} else {
 		t1 = (T114s183(ac));
 		t2 = (T119s2(ac));
 		if (t2) {
-			R = (T114s586(ac));
+			R = (T114s590(ac));
 			ac->thread_onces->reference_value[20] = R;
 		} else {
-			R = (T114s586(ac));
+			R = (T114s590(ac));
 			ac->thread_onces->reference_value[20] = R;
 		}
 	}
@@ -76082,7 +80482,7 @@ T0* T114s214(TC* ac)
 }
 
 /* ET_C_GENERATOR.unix_file_system */
-T0* T114s586(TC* ac)
+T0* T114s590(TC* ac)
 {
 	GE_rescue r;
 	uint32_t tr = ac->in_rescue;
@@ -76110,7 +80510,7 @@ T0* T114s586(TC* ac)
 }
 
 /* ET_C_GENERATOR.windows_file_system */
-T0* T114s585(TC* ac)
+T0* T114s589(TC* ac)
 {
 	GE_rescue r;
 	uint32_t tr = ac->in_rescue;
@@ -82007,7 +86407,7 @@ T0* T114s183(TC* ac)
 }
 
 /* ET_C_GENERATOR.generate_c_code */
-void T114f665(TC* ac, T0* C, T0* a1)
+void T114f669(TC* ac, T0* C, T0* a1)
 {
 	T0* l1 = 0;
 	T0* l2 = 0;
@@ -82034,24 +86434,24 @@ void T114f665(TC* ac, T0* C, T0* a1)
 	l1 = ((T114*)(C))->a11;
 	((T114*)(C))->a11 = a1;
 	t1 = (T114s214(ac));
-	t2 = (T17x2211872T0(ac, a1, ge1523ov24953484));
+	t2 = (T17x2211872T0(ac, a1, ge1523ov24953488));
 	l4 = (((((T0*)(t1))->id==151)?T151s8(ac, ge1523ov24952904, t2):T152s8(ac, ge1523ov24952904, t2)));
 	l5 = T950c33(ac, l4);
 	T950f34(ac, l5);
 	t3 = (T950f22(ac, l5));
 	t3 = ((T1)(!(t3)));
 	if (t3) {
-		T114f667(ac, C);
-		T114f669(ac, C, l4);
+		T114f671(ac, C);
+		T114f673(ac, C, l4);
 	} else {
-		T114f674(ac, C);
-		T114f675(ac, C);
+		T114f678(ac, C);
+		T114f679(ac, C);
 		l3 = ((T114*)(C))->a13;
 		((T114*)(C))->a13 = l5;
 		l2 = ((T114*)(C))->a12;
 		((T114*)(C))->a12 = ((T114*)(C))->a20;
-		T114f676(ac, C);
-		t3 = (T114f348(ac, C));
+		T114f680(ac, C);
+		t3 = (T114f351(ac, C));
 		if (t3) {
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
 				T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
@@ -82064,13 +86464,13 @@ void T114f665(TC* ac, T0* C, T0* a1)
 				T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
 			}
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
-				T950f35(ac, ((T114*)(C))->a13, ge1523ov24953105);
+				T950f35(ac, ((T114*)(C))->a13, ge1523ov24953106);
 			} else {
-				T229f4(ac, ((T114*)(C))->a13, ge1523ov24953105);
+				T229f4(ac, ((T114*)(C))->a13, ge1523ov24953106);
 			}
 			l7 = EIF_TRUE;
 		}
-		t3 = (T114f353(ac, C));
+		t3 = (T114f356(ac, C));
 		if (t3) {
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
 				T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
@@ -82101,32 +86501,13 @@ void T114f665(TC* ac, T0* C, T0* a1)
 				T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
 			}
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
-				T950f35(ac, ((T114*)(C))->a13, ge1523ov24953409);
-			} else {
-				T229f4(ac, ((T114*)(C))->a13, ge1523ov24953409);
-			}
-			l7 = EIF_TRUE;
-		}
-		t3 = (T114f397(ac, C));
-		if (t3) {
-			if (((T0*)(((T114*)(C))->a13))->id==950) {
-				T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
-			} else {
-				T229f5(ac, ((T114*)(C))->a13, ge1523ov24953070);
-			}
-			if (((T0*)(((T114*)(C))->a13))->id==950) {
-				T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
-			} else {
-				T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
-			}
-			if (((T0*)(((T114*)(C))->a13))->id==950) {
 				T950f35(ac, ((T114*)(C))->a13, ge1523ov24953412);
 			} else {
 				T229f4(ac, ((T114*)(C))->a13, ge1523ov24953412);
 			}
 			l7 = EIF_TRUE;
 		}
-		t3 = (T114f625(ac, C));
+		t3 = (T114f400(ac, C));
 		if (t3) {
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
 				T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
@@ -82139,9 +86520,28 @@ void T114f665(TC* ac, T0* C, T0* a1)
 				T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
 			}
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
-				T950f35(ac, ((T114*)(C))->a13, ge1523ov24953411);
+				T950f35(ac, ((T114*)(C))->a13, ge1523ov24953415);
 			} else {
-				T229f4(ac, ((T114*)(C))->a13, ge1523ov24953411);
+				T229f4(ac, ((T114*)(C))->a13, ge1523ov24953415);
+			}
+			l7 = EIF_TRUE;
+		}
+		t3 = (T114f629(ac, C));
+		if (t3) {
+			if (((T0*)(((T114*)(C))->a13))->id==950) {
+				T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
+			} else {
+				T229f5(ac, ((T114*)(C))->a13, ge1523ov24953070);
+			}
+			if (((T0*)(((T114*)(C))->a13))->id==950) {
+				T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
+			} else {
+				T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
+			}
+			if (((T0*)(((T114*)(C))->a13))->id==950) {
+				T950f35(ac, ((T114*)(C))->a13, ge1523ov24953414);
+			} else {
+				T229f4(ac, ((T114*)(C))->a13, ge1523ov24953414);
 			}
 			l7 = EIF_TRUE;
 		}
@@ -82157,9 +86557,9 @@ void T114f665(TC* ac, T0* C, T0* a1)
 				T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
 			}
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
-				T950f35(ac, ((T114*)(C))->a13, ge1523ov24953328);
+				T950f35(ac, ((T114*)(C))->a13, ge1523ov24953331);
 			} else {
-				T229f4(ac, ((T114*)(C))->a13, ge1523ov24953328);
+				T229f4(ac, ((T114*)(C))->a13, ge1523ov24953331);
 			}
 			l7 = EIF_TRUE;
 		}
@@ -82221,152 +86621,158 @@ void T114f665(TC* ac, T0* C, T0* a1)
 				T229f7(ac, ((T114*)(C))->a13);
 			}
 		}
-		T114f677(ac, C, GE_ms8("ge_eiffel.h", 11), EIF_TRUE, ((T114*)(C))->a13);
+		T114f681(ac, C, GE_ms8("ge_eiffel.h", 11), EIF_TRUE, ((T114*)(C))->a13);
 		if (((T0*)(((T114*)(C))->a13))->id==950) {
 			T950f36(ac, ((T114*)(C))->a13);
 		} else {
 			T229f7(ac, ((T114*)(C))->a13);
 		}
-		t3 = (T114f397(ac, C));
+		t3 = (T114f400(ac, C));
 		if (t3) {
-			T114f677(ac, C, GE_ms8("ge_thread_types.h", 17), EIF_TRUE, ((T114*)(C))->a13);
+			T114f681(ac, C, GE_ms8("ge_thread_types.h", 17), EIF_TRUE, ((T114*)(C))->a13);
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
 				T950f36(ac, ((T114*)(C))->a13);
 			} else {
 				T229f7(ac, ((T114*)(C))->a13);
 			}
 		}
-		T114f677(ac, C, GE_ms8("ge_once.h", 9), EIF_TRUE, ((T114*)(C))->a13);
+		T114f681(ac, C, GE_ms8("ge_once.h", 9), EIF_TRUE, ((T114*)(C))->a13);
 		if (((T0*)(((T114*)(C))->a13))->id==950) {
 			T950f36(ac, ((T114*)(C))->a13);
 		} else {
 			T229f7(ac, ((T114*)(C))->a13);
 		}
-		T114f677(ac, C, GE_ms8("ge_exception.h", 14), EIF_TRUE, ((T114*)(C))->a13);
+		T114f681(ac, C, GE_ms8("ge_exception.h", 14), EIF_TRUE, ((T114*)(C))->a13);
 		if (((T0*)(((T114*)(C))->a13))->id==950) {
 			T950f36(ac, ((T114*)(C))->a13);
 		} else {
 			T229f7(ac, ((T114*)(C))->a13);
 		}
-		t3 = (T114f397(ac, C));
+		t3 = (T114f400(ac, C));
 		if (t3) {
-			T114f677(ac, C, GE_ms8("ge_thread.h", 11), EIF_TRUE, ((T114*)(C))->a13);
+			T114f681(ac, C, GE_ms8("ge_thread.h", 11), EIF_TRUE, ((T114*)(C))->a13);
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
 				T950f36(ac, ((T114*)(C))->a13);
 			} else {
 				T229f7(ac, ((T114*)(C))->a13);
 			}
 		}
-		t3 = (T114f625(ac, C));
+		t3 = (T114f629(ac, C));
 		if (t3) {
-			T114f677(ac, C, GE_ms8("ge_scoop.h", 10), EIF_TRUE, ((T114*)(C))->a13);
+			T114f681(ac, C, GE_ms8("ge_scoop.h", 10), EIF_TRUE, ((T114*)(C))->a13);
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
 				T950f36(ac, ((T114*)(C))->a13);
 			} else {
 				T229f7(ac, ((T114*)(C))->a13);
 			}
 		}
-		T114f677(ac, C, GE_ms8("ge_native_string.h", 18), EIF_TRUE, ((T114*)(C))->a13);
+		T114f681(ac, C, GE_ms8("ge_native_string.h", 18), EIF_TRUE, ((T114*)(C))->a13);
 		if (((T0*)(((T114*)(C))->a13))->id==950) {
 			T950f36(ac, ((T114*)(C))->a13);
 		} else {
 			T229f7(ac, ((T114*)(C))->a13);
 		}
-		T114f677(ac, C, GE_ms8("ge_arguments.h", 14), EIF_TRUE, ((T114*)(C))->a13);
+		T114f681(ac, C, GE_ms8("ge_arguments.h", 14), EIF_TRUE, ((T114*)(C))->a13);
 		if (((T0*)(((T114*)(C))->a13))->id==950) {
 			T950f36(ac, ((T114*)(C))->a13);
 		} else {
 			T229f7(ac, ((T114*)(C))->a13);
 		}
-		T114f677(ac, C, GE_ms8("ge_types.h", 10), EIF_TRUE, ((T114*)(C))->a13);
+		T114f681(ac, C, GE_ms8("ge_types.h", 10), EIF_TRUE, ((T114*)(C))->a13);
 		if (((T0*)(((T114*)(C))->a13))->id==950) {
 			T950f36(ac, ((T114*)(C))->a13);
 		} else {
 			T229f7(ac, ((T114*)(C))->a13);
 		}
-		T114f677(ac, C, GE_ms8("ge_string.h", 11), EIF_TRUE, ((T114*)(C))->a13);
+		T114f681(ac, C, GE_ms8("ge_string.h", 11), EIF_TRUE, ((T114*)(C))->a13);
 		if (((T0*)(((T114*)(C))->a13))->id==950) {
 			T950f36(ac, ((T114*)(C))->a13);
 		} else {
 			T229f7(ac, ((T114*)(C))->a13);
 		}
-		T114f677(ac, C, GE_ms8("ge_console.h", 12), EIF_TRUE, ((T114*)(C))->a13);
+		T114f681(ac, C, GE_ms8("ge_console.h", 12), EIF_TRUE, ((T114*)(C))->a13);
 		if (((T0*)(((T114*)(C))->a13))->id==950) {
 			T950f36(ac, ((T114*)(C))->a13);
 		} else {
 			T229f7(ac, ((T114*)(C))->a13);
 		}
-		T114f677(ac, C, GE_ms8("ge_main.h", 9), EIF_TRUE, ((T114*)(C))->a13);
+		T114f681(ac, C, GE_ms8("ge_main.h", 9), EIF_TRUE, ((T114*)(C))->a13);
 		if (((T0*)(((T114*)(C))->a13))->id==950) {
 			T950f36(ac, ((T114*)(C))->a13);
 		} else {
 			T229f7(ac, ((T114*)(C))->a13);
 		}
-		T114f677(ac, C, GE_ms8("ge_gc.h", 7), EIF_TRUE, ((T114*)(C))->a13);
+		T114f681(ac, C, GE_ms8("ge_gc.h", 7), EIF_TRUE, ((T114*)(C))->a13);
 		if (((T0*)(((T114*)(C))->a13))->id==950) {
 			T950f36(ac, ((T114*)(C))->a13);
 		} else {
 			T229f7(ac, ((T114*)(C))->a13);
 		}
-		T114f677(ac, C, GE_ms8("ge_identified.h", 15), EIF_TRUE, ((T114*)(C))->a13);
+		T114f681(ac, C, GE_ms8("ge_signal.h", 11), EIF_TRUE, ((T114*)(C))->a13);
 		if (((T0*)(((T114*)(C))->a13))->id==950) {
 			T950f36(ac, ((T114*)(C))->a13);
 		} else {
 			T229f7(ac, ((T114*)(C))->a13);
 		}
-		T114f677(ac, C, GE_ms8("eif_cecil.h", 11), EIF_FALSE, ((T114*)(C))->a13);
-		T114f677(ac, C, GE_ms8("eif_plug.h", 10), EIF_FALSE, ((T114*)(C))->a13);
-		T114f678(ac, C, ((T114*)(C))->a13);
-		T114f679(ac, C, ((T114*)(C))->a13);
-		T114f680(ac, C);
+		T114f681(ac, C, GE_ms8("ge_identified.h", 15), EIF_TRUE, ((T114*)(C))->a13);
 		if (((T0*)(((T114*)(C))->a13))->id==950) {
 			T950f36(ac, ((T114*)(C))->a13);
 		} else {
 			T229f7(ac, ((T114*)(C))->a13);
 		}
-		T114f681(ac, C);
+		T114f681(ac, C, GE_ms8("eif_cecil.h", 11), EIF_FALSE, ((T114*)(C))->a13);
+		T114f681(ac, C, GE_ms8("eif_plug.h", 10), EIF_FALSE, ((T114*)(C))->a13);
+		T114f682(ac, C, ((T114*)(C))->a13);
+		T114f683(ac, C, ((T114*)(C))->a13);
+		T114f684(ac, C);
+		if (((T0*)(((T114*)(C))->a13))->id==950) {
+			T950f36(ac, ((T114*)(C))->a13);
+		} else {
+			T229f7(ac, ((T114*)(C))->a13);
+		}
+		T114f685(ac, C);
 		if (((T0*)(((T114*)(C))->a12))->id==912) {
 			T912f5(ac, ((T114*)(C))->a12);
 		} else {
 			T229f7(ac, ((T114*)(C))->a12);
 		}
-		T114f680(ac, C);
+		T114f684(ac, C);
 		if (((T0*)(((T114*)(C))->a13))->id==950) {
 			T950f36(ac, ((T114*)(C))->a13);
 		} else {
 			T229f7(ac, ((T114*)(C))->a13);
 		}
-		T114f682(ac, C);
-		T114f683(ac, C);
-		T114f684(ac, C);
-		T114f685(ac, C);
 		T114f686(ac, C);
 		T114f687(ac, C);
 		T114f688(ac, C);
+		T114f689(ac, C);
+		T114f690(ac, C);
+		T114f691(ac, C);
+		T114f692(ac, C);
 		t1 = (((T95*)(((T114*)(C))->a5))->a38);
 		t3 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 		if (t3) {
 			t1 = (((T95*)(((T114*)(C))->a5))->a49);
 			t3 = (t1?((m2 = t1, EIF_TRUE)):EIF_FALSE);
 			if (t3) {
-				T114f689(ac, C, m2);
+				T114f693(ac, C, m2);
 			}
 			t1 = (((T95*)(((T114*)(C))->a5))->a50);
 			t3 = (t1?((m3 = t1, EIF_TRUE)):EIF_FALSE);
 			if (t3) {
-				T114f689(ac, C, m3);
+				T114f693(ac, C, m3);
 			}
 			t1 = (((T95*)(((T114*)(C))->a5))->a51);
 			t3 = (t1?((m4 = t1, EIF_TRUE)):EIF_FALSE);
 			if (t3) {
-				T114f689(ac, C, m4);
+				T114f693(ac, C, m4);
 			}
 			t1 = (((T95*)(((T114*)(C))->a5))->a52);
 			t3 = (t1?((m5 = t1, EIF_TRUE)):EIF_FALSE);
 			if (t3) {
-				T114f689(ac, C, m5);
+				T114f693(ac, C, m5);
 			}
-			T114f689(ac, C, m1);
+			T114f693(ac, C, m1);
 			while (1) {
 				t3 = (T946f10(ac, ((T114*)(C))->a99));
 				if (t3) {
@@ -82374,7 +86780,7 @@ void T114f665(TC* ac, T0* C, T0* a1)
 				}
 				l6 = (T946f6(ac, ((T114*)(C))->a99));
 				T946f12(ac, ((T114*)(C))->a99);
-				T114f690(ac, C, l6);
+				T114f694(ac, C, l6);
 			}
 		}
 		T947f37(ac, ((T114*)(C))->a100);
@@ -82390,7 +86796,7 @@ void T114f665(TC* ac, T0* C, T0* a1)
 				T229f5(ac, ((T114*)(C))->a13, GE_ms8("/* Inlined ", 11));
 			}
 			t1 = (((((T0*)(l6))->id==845)?((T845*)(l6))->a5:((T860*)(l6))->a1));
-			T114f691(ac, C, l6, t1, ((T114*)(C))->a13);
+			T114f695(ac, C, l6, t1, ((T114*)(C))->a13);
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
 				T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
 			} else {
@@ -82407,7 +86813,7 @@ void T114f665(TC* ac, T0* C, T0* a1)
 				T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
 			}
 			t1 = (((((T0*)(l6))->id==845)?((T845*)(l6))->a5:((T860*)(l6))->a1));
-			T114f692(ac, C, l6, t1, ((T114*)(C))->a13);
+			T114f696(ac, C, l6, t1, ((T114*)(C))->a13);
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
 				T950f37(ac, ((T114*)(C))->a13, GE_ms8(" */", 3));
 			} else {
@@ -82421,9 +86827,9 @@ void T114f665(TC* ac, T0* C, T0* a1)
 			T947f38(ac, ((T114*)(C))->a100);
 		}
 		T947f39(ac, ((T114*)(C))->a100);
-		T114f693(ac, C);
-		T114f694(ac, C);
-		T114f695(ac, C);
+		T114f697(ac, C);
+		T114f698(ac, C);
+		T114f699(ac, C);
 		T930f38(ac, ((T114*)(C))->a79);
 		while (1) {
 			t3 = (T930f30(ac, ((T114*)(C))->a79));
@@ -82431,13 +86837,13 @@ void T114f665(TC* ac, T0* C, T0* a1)
 				break;
 			}
 			t1 = (T930f17(ac, ((T114*)(C))->a79));
-			T114f696(ac, C, t1);
+			T114f700(ac, C, t1);
 			if (((T0*)(((T114*)(C))->a12))->id==912) {
 				T912f5(ac, ((T114*)(C))->a12);
 			} else {
 				T229f7(ac, ((T114*)(C))->a12);
 			}
-			T114f680(ac, C);
+			T114f684(ac, C);
 			T930f39(ac, ((T114*)(C))->a79);
 		}
 		T930f40(ac, ((T114*)(C))->a79);
@@ -82448,13 +86854,13 @@ void T114f665(TC* ac, T0* C, T0* a1)
 				break;
 			}
 			t1 = (T930f17(ac, ((T114*)(C))->a80));
-			T114f697(ac, C, t1);
+			T114f701(ac, C, t1);
 			if (((T0*)(((T114*)(C))->a12))->id==912) {
 				T912f5(ac, ((T114*)(C))->a12);
 			} else {
 				T229f7(ac, ((T114*)(C))->a12);
 			}
-			T114f680(ac, C);
+			T114f684(ac, C);
 			T930f39(ac, ((T114*)(C))->a80);
 		}
 		T930f40(ac, ((T114*)(C))->a80);
@@ -82465,48 +86871,48 @@ void T114f665(TC* ac, T0* C, T0* a1)
 				break;
 			}
 			t1 = (T938f29(ac, ((T114*)(C))->a81));
-			T114f698(ac, C, t1);
+			T114f702(ac, C, t1);
 			if (((T0*)(((T114*)(C))->a12))->id==912) {
 				T912f5(ac, ((T114*)(C))->a12);
 			} else {
 				T229f7(ac, ((T114*)(C))->a12);
 			}
-			T114f680(ac, C);
+			T114f684(ac, C);
 			T938f37(ac, ((T114*)(C))->a81);
 		}
 		T938f38(ac, ((T114*)(C))->a81);
-		T114f699(ac, C);
-		T114f700(ac, C);
-		if (((T0*)(((T114*)(C))->a12))->id==912) {
-			T912f5(ac, ((T114*)(C))->a12);
-		} else {
-			T229f7(ac, ((T114*)(C))->a12);
-		}
-		T114f680(ac, C);
-		T114f701(ac, C);
-		if (((T0*)(((T114*)(C))->a12))->id==912) {
-			T912f5(ac, ((T114*)(C))->a12);
-		} else {
-			T229f7(ac, ((T114*)(C))->a12);
-		}
-		T114f680(ac, C);
-		T114f702(ac, C);
-		T114f680(ac, C);
 		T114f703(ac, C);
-		if (((T0*)(((T114*)(C))->a12))->id==912) {
-			T912f5(ac, ((T114*)(C))->a12);
-		} else {
-			T229f7(ac, ((T114*)(C))->a12);
-		}
-		T114f680(ac, C);
 		T114f704(ac, C);
 		if (((T0*)(((T114*)(C))->a12))->id==912) {
 			T912f5(ac, ((T114*)(C))->a12);
 		} else {
 			T229f7(ac, ((T114*)(C))->a12);
 		}
-		T114f680(ac, C);
-		T114f705(ac, C, ((T114*)(C))->a13);
+		T114f684(ac, C);
+		T114f705(ac, C);
+		if (((T0*)(((T114*)(C))->a12))->id==912) {
+			T912f5(ac, ((T114*)(C))->a12);
+		} else {
+			T229f7(ac, ((T114*)(C))->a12);
+		}
+		T114f684(ac, C);
+		T114f706(ac, C);
+		T114f684(ac, C);
+		T114f707(ac, C);
+		if (((T0*)(((T114*)(C))->a12))->id==912) {
+			T912f5(ac, ((T114*)(C))->a12);
+		} else {
+			T229f7(ac, ((T114*)(C))->a12);
+		}
+		T114f684(ac, C);
+		T114f708(ac, C);
+		if (((T0*)(((T114*)(C))->a12))->id==912) {
+			T912f5(ac, ((T114*)(C))->a12);
+		} else {
+			T229f7(ac, ((T114*)(C))->a12);
+		}
+		T114f684(ac, C);
+		T114f709(ac, C, ((T114*)(C))->a13);
 		if (((T0*)(((T114*)(C))->a13))->id==950) {
 			T950f36(ac, ((T114*)(C))->a13);
 		} else {
@@ -82518,11 +86924,11 @@ void T114f665(TC* ac, T0* C, T0* a1)
 			if (t3) {
 				break;
 			}
-			T114f705(ac, C, ((T114*)(C))->a12);
+			T114f709(ac, C, ((T114*)(C))->a12);
 			t1 = (T99f20(ac, ((T114*)(C))->a104));
-			T114f706(ac, C, t1, ((T114*)(C))->a12);
-			T114f678(ac, C, ((T114*)(C))->a12);
-			T114f680(ac, C);
+			T114f710(ac, C, t1, ((T114*)(C))->a12);
+			T114f682(ac, C, ((T114*)(C))->a12);
+			T114f684(ac, C);
 			T99f75(ac, ((T114*)(C))->a104);
 		}
 		if (((T0*)(((T114*)(C))->a13))->id==950) {
@@ -82540,7 +86946,7 @@ void T114f665(TC* ac, T0* C, T0* a1)
 			t3 = ((T1)(!(t3)));
 			if (t3) {
 				t1 = (T948f30(ac, ((T114*)(C))->a103));
-				T114f706(ac, C, t1, ((T114*)(C))->a13);
+				T114f710(ac, C, t1, ((T114*)(C))->a13);
 			}
 			T948f45(ac, ((T114*)(C))->a103);
 		}
@@ -82548,9 +86954,9 @@ void T114f665(TC* ac, T0* C, T0* a1)
 		t3 = ((T1)(!(t3)));
 		if (t3) {
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
-				T950f37(ac, ((T114*)(C))->a13, ge1523ov24953422);
+				T950f37(ac, ((T114*)(C))->a13, ge1523ov24953425);
 			} else {
-				T229f5(ac, ((T114*)(C))->a13, ge1523ov24953422);
+				T229f5(ac, ((T114*)(C))->a13, ge1523ov24953425);
 			}
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
 				T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
@@ -82569,9 +86975,9 @@ void T114f665(TC* ac, T0* C, T0* a1)
 					break;
 				}
 				if (((T0*)(((T114*)(C))->a13))->id==950) {
-					T950f37(ac, ((T114*)(C))->a13, ge1523ov24953426);
+					T950f37(ac, ((T114*)(C))->a13, ge1523ov24953429);
 				} else {
-					T229f5(ac, ((T114*)(C))->a13, ge1523ov24953426);
+					T229f5(ac, ((T114*)(C))->a13, ge1523ov24953429);
 				}
 				if (((T0*)(((T114*)(C))->a13))->id==950) {
 					T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
@@ -82592,9 +86998,9 @@ void T114f665(TC* ac, T0* C, T0* a1)
 				T99f75(ac, ((T114*)(C))->a102);
 			}
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
-				T950f35(ac, ((T114*)(C))->a13, ge1523ov24953113);
+				T950f35(ac, ((T114*)(C))->a13, ge1523ov24953114);
 			} else {
-				T229f4(ac, ((T114*)(C))->a13, ge1523ov24953113);
+				T229f4(ac, ((T114*)(C))->a13, ge1523ov24953114);
 			}
 		}
 		T99f42(ac, ((T114*)(C))->a101);
@@ -82604,9 +87010,9 @@ void T114f665(TC* ac, T0* C, T0* a1)
 				break;
 			}
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
-				T950f37(ac, ((T114*)(C))->a13, ge1523ov24953426);
+				T950f37(ac, ((T114*)(C))->a13, ge1523ov24953429);
 			} else {
-				T229f5(ac, ((T114*)(C))->a13, ge1523ov24953426);
+				T229f5(ac, ((T114*)(C))->a13, ge1523ov24953429);
 			}
 			if (((T0*)(((T114*)(C))->a13))->id==950) {
 				T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
@@ -82682,61 +87088,10 @@ void T114f665(TC* ac, T0* C, T0* a1)
 			t3 = (T950f22(ac, l5));
 			t3 = ((T1)(!(t3)));
 			if (t3) {
-				T114f667(ac, C);
-				T114f669(ac, C, l4);
+				T114f671(ac, C);
+				T114f673(ac, C, l4);
 			} else {
 				if (((T114*)(C))->a132) {
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
-					} else {
-						T229f5(ac, ((T114*)(C))->a13, ge1523ov24953070);
-					}
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
-					} else {
-						T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
-					}
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f35(ac, ((T114*)(C))->a13, ge1523ov24953404);
-					} else {
-						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953404);
-					}
-				}
-				if (((T114*)(C))->a133) {
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
-					} else {
-						T229f5(ac, ((T114*)(C))->a13, ge1523ov24953070);
-					}
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
-					} else {
-						T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
-					}
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f35(ac, ((T114*)(C))->a13, ge1523ov24953408);
-					} else {
-						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953408);
-					}
-				}
-				if (((T114*)(C))->a134) {
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
-					} else {
-						T229f5(ac, ((T114*)(C))->a13, ge1523ov24953070);
-					}
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
-					} else {
-						T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
-					}
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f35(ac, ((T114*)(C))->a13, ge1523ov24953405);
-					} else {
-						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953405);
-					}
-				}
-				if (((T114*)(C))->a135) {
 					if (((T0*)(((T114*)(C))->a13))->id==950) {
 						T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
 					} else {
@@ -82753,6 +87108,57 @@ void T114f665(TC* ac, T0* C, T0* a1)
 						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953407);
 					}
 				}
+				if (((T114*)(C))->a133) {
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
+					} else {
+						T229f5(ac, ((T114*)(C))->a13, ge1523ov24953070);
+					}
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
+					} else {
+						T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
+					}
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f35(ac, ((T114*)(C))->a13, ge1523ov24953411);
+					} else {
+						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953411);
+					}
+				}
+				if (((T114*)(C))->a134) {
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
+					} else {
+						T229f5(ac, ((T114*)(C))->a13, ge1523ov24953070);
+					}
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
+					} else {
+						T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
+					}
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f35(ac, ((T114*)(C))->a13, ge1523ov24953408);
+					} else {
+						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953408);
+					}
+				}
+				if (((T114*)(C))->a135) {
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
+					} else {
+						T229f5(ac, ((T114*)(C))->a13, ge1523ov24953070);
+					}
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
+					} else {
+						T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
+					}
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f35(ac, ((T114*)(C))->a13, ge1523ov24953410);
+					} else {
+						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953410);
+					}
+				}
 				if (((T114*)(C))->a136) {
 					if (((T0*)(((T114*)(C))->a13))->id==950) {
 						T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
@@ -82765,63 +87171,12 @@ void T114f665(TC* ac, T0* C, T0* a1)
 						T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
 					}
 					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f35(ac, ((T114*)(C))->a13, ge1523ov24953406);
+						T950f35(ac, ((T114*)(C))->a13, ge1523ov24953409);
 					} else {
-						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953406);
+						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953409);
 					}
 				}
 				if (((T114*)(C))->a137) {
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
-					} else {
-						T229f5(ac, ((T114*)(C))->a13, ge1523ov24953070);
-					}
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
-					} else {
-						T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
-					}
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f35(ac, ((T114*)(C))->a13, ge1523ov24953413);
-					} else {
-						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953413);
-					}
-				}
-				if (((T114*)(C))->a138) {
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
-					} else {
-						T229f5(ac, ((T114*)(C))->a13, ge1523ov24953070);
-					}
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
-					} else {
-						T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
-					}
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f35(ac, ((T114*)(C))->a13, ge1523ov24953415);
-					} else {
-						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953415);
-					}
-				}
-				if (((T114*)(C))->a139) {
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
-					} else {
-						T229f5(ac, ((T114*)(C))->a13, ge1523ov24953070);
-					}
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
-					} else {
-						T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
-					}
-					if (((T0*)(((T114*)(C))->a13))->id==950) {
-						T950f35(ac, ((T114*)(C))->a13, ge1523ov24953414);
-					} else {
-						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953414);
-					}
-				}
-				if (((T114*)(C))->a140) {
 					if (((T0*)(((T114*)(C))->a13))->id==950) {
 						T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
 					} else {
@@ -82838,6 +87193,57 @@ void T114f665(TC* ac, T0* C, T0* a1)
 						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953416);
 					}
 				}
+				if (((T114*)(C))->a138) {
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
+					} else {
+						T229f5(ac, ((T114*)(C))->a13, ge1523ov24953070);
+					}
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
+					} else {
+						T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
+					}
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f35(ac, ((T114*)(C))->a13, ge1523ov24953418);
+					} else {
+						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953418);
+					}
+				}
+				if (((T114*)(C))->a139) {
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
+					} else {
+						T229f5(ac, ((T114*)(C))->a13, ge1523ov24953070);
+					}
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
+					} else {
+						T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
+					}
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f35(ac, ((T114*)(C))->a13, ge1523ov24953417);
+					} else {
+						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953417);
+					}
+				}
+				if (((T114*)(C))->a140) {
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f37(ac, ((T114*)(C))->a13, ge1523ov24953070);
+					} else {
+						T229f5(ac, ((T114*)(C))->a13, ge1523ov24953070);
+					}
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f38(ac, ((T114*)(C))->a13, (T2)(' '));
+					} else {
+						T229f8(ac, ((T114*)(C))->a13, (T2)(' '));
+					}
+					if (((T0*)(((T114*)(C))->a13))->id==950) {
+						T950f35(ac, ((T114*)(C))->a13, ge1523ov24953419);
+					} else {
+						T229f4(ac, ((T114*)(C))->a13, ge1523ov24953419);
+					}
+				}
 				t3 = ((T1)(!(l7)));
 				if (t3) {
 					if (((T0*)(((T114*)(C))->a13))->id==950) {
@@ -82847,7 +87253,7 @@ void T114f665(TC* ac, T0* C, T0* a1)
 					}
 				}
 				t1 = (T17x2211872T0(ac, l4, GE_ms8("ge", 2)));
-				T114f707(ac, C, t1, ((T114*)(C))->a13);
+				T114f711(ac, C, t1, ((T114*)(C))->a13);
 				T950f39(ac, l5);
 				t1 = (T114s214(ac));
 				t2 = (T17x2211872T0(ac, l4, GE_ms8("ge", 2)));
@@ -82867,8 +87273,8 @@ void T114f665(TC* ac, T0* C, T0* a1)
 			((T114*)(C))->a139 = EIF_FALSE;
 			((T114*)(C))->a140 = EIF_FALSE;
 		}
-		T114f708(ac, C);
-		T114f709(ac, C);
+		T114f712(ac, C);
+		T114f713(ac, C);
 		((T114*)(C))->a13 = l3;
 		((T114*)(C))->a12 = l2;
 		((T114*)(C))->a14 = (((T95*)(((T114*)(C))->a5))->a12);
@@ -113143,2852 +117549,6 @@ T1 T848f20ot3(TC* ac, T0* a1)
 	default:
 		return EIF_FALSE;
 	}
-}
-
-/* ET_CLASS_TYPE.named_base_class_in_context */
-T0* T102f8(TC* ac, T0* C, T0* a1)
-{
-	T0* R = 0;
-	R = ((T102*)(C))->a3;
-	return R;
-}
-
-/* ET_QUALIFIED_LIKE_TYPE.named_base_class */
-T0* T725f27(TC* ac, T0* C, T0* a1)
-{
-	T0* R = 0;
-	T0* l1 = 0;
-	T0* l2 = 0;
-	T0* l3 = 0;
-	T0* l4 = 0;
-	T6 l5 = 0;
-	T6 t1;
-	T1 t2;
-	T0* t3;
-	t1 = (T725f37(ac, C));
-	t2 = (T1)((t1) == ((T6)(GE_int32(0))));
-	if (t2) {
-		t3 = (T725s38(ac));
-		R = (T81s2(ac));
-	} else {
-		l2 = ((T725*)(C))->a3;
-		t3 = (T846x22773761(ac, a1));
-		t3 = (T101x22773763(ac, t3));
-		t2 = (T1)(((T725*)(C))->a4==t3);
-		if (t2) {
-			t3 = (T725f39(ac, C));
-			l1 = (T202x22740997T0T0(ac, l2, t3, a1));
-			t3 = (T725f39(ac, C));
-			l4 = (T1773x15237123T0(ac, l1, t3));
-		} else {
-			t1 = (T725f37(ac, C));
-			l1 = (T202x22740998T6T0(ac, l2, t1, a1));
-			t3 = (T1773x15237121(ac, l1));
-			t1 = (T725f37(ac, C));
-			l4 = (T70f85(ac, t3, t1));
-		}
-		t2 = (T1)(l4==EIF_VOID);
-		if (t2) {
-			t3 = (T725s38(ac));
-			R = (T81s2(ac));
-		} else {
-			l3 = (T846x22773816(ac, a1));
-			l5 = (((T847*)(l3))->a2);
-			T847f61(ac, l3, l2);
-			t2 = (l1?(T725f27ot1(ac, l1)):EIF_FALSE);
-			t2 = ((T1)(!(t2)));
-			T886s11(ac, t2, l1, l3);
-			t3 = (T616x18481161(ac, l4));
-			R = (T202x22740996T0(ac, t3, l3));
-			T847f65(ac, l3, l5);
-		}
-	}
-	return R;
-}
-
-T1 T725f27ot1(TC* ac, T0* a1)
-{
-	switch (((T0*)(a1))->id) {
-	case 70:
-		return EIF_TRUE;
-	default:
-		return EIF_FALSE;
-	}
-}
-
-/* ET_QUALIFIED_LIKE_BRACED_TYPE.named_base_class */
-T0* T724f28(TC* ac, T0* C, T0* a1)
-{
-	T0* R = 0;
-	T0* l1 = 0;
-	T0* l2 = 0;
-	T0* l3 = 0;
-	T0* l4 = 0;
-	T6 l5 = 0;
-	T6 t1;
-	T1 t2;
-	T0* t3;
-	t1 = (T724f38(ac, C));
-	t2 = (T1)((t1) == ((T6)(GE_int32(0))));
-	if (t2) {
-		t3 = (T724s9(ac));
-		R = (T81s2(ac));
-	} else {
-		l2 = ((T724*)(C))->a4;
-		t3 = (T846x22773761(ac, a1));
-		t3 = (T101x22773763(ac, t3));
-		t2 = (T1)(((T724*)(C))->a5==t3);
-		if (t2) {
-			t3 = (T724f39(ac, C));
-			l1 = (T202x22740997T0T0(ac, l2, t3, a1));
-			t3 = (T724f39(ac, C));
-			l4 = (T1773x15237123T0(ac, l1, t3));
-		} else {
-			t1 = (T724f38(ac, C));
-			l1 = (T202x22740998T6T0(ac, l2, t1, a1));
-			t3 = (T1773x15237121(ac, l1));
-			t1 = (T724f38(ac, C));
-			l4 = (T70f85(ac, t3, t1));
-		}
-		t2 = (T1)(l4==EIF_VOID);
-		if (t2) {
-			t3 = (T724s9(ac));
-			R = (T81s2(ac));
-		} else {
-			l3 = (T846x22773816(ac, a1));
-			l5 = (((T847*)(l3))->a2);
-			T847f61(ac, l3, l2);
-			t2 = (l1?(T724f28ot1(ac, l1)):EIF_FALSE);
-			t2 = ((T1)(!(t2)));
-			T886s11(ac, t2, l1, l3);
-			t3 = (T616x18481161(ac, l4));
-			R = (T202x22740996T0(ac, t3, l3));
-			T847f65(ac, l3, l5);
-		}
-	}
-	return R;
-}
-
-T1 T724f28ot1(TC* ac, T0* a1)
-{
-	switch (((T0*)(a1))->id) {
-	case 70:
-		return EIF_TRUE;
-	default:
-		return EIF_FALSE;
-	}
-}
-
-/* ET_LIKE_CURRENT.named_base_class */
-T0* T199f12(TC* ac, T0* C, T0* a1)
-{
-	T0* R = 0;
-	R = (T846x22773764(ac, a1));
-	return R;
-}
-
-/* ET_CLASS_TYPE_STATUS_CHECKER2.process_qualified_like_type */
-void T1936f9(TC* ac, T0* C, T0* a1)
-{
-	T1936f14(ac, C, a1);
-}
-
-/* ET_CLASS_TYPE_STATUS_CHECKER2.check_qualified_like_identifier_validity */
-void T1936f14(TC* ac, T0* C, T0* a1)
-{
-	T0* t1;
-	t1 = (((((T0*)(a1))->id==724)?((T724*)(a1))->a4:((T725*)(a1))->a3));
-	T202x20758538T0(ac, t1, C);
-}
-
-/* ET_CLASS_TYPE_STATUS_CHECKER1.process_qualified_like_type */
-void T1935f9(TC* ac, T0* C, T0* a1)
-{
-	T1935f13(ac, C, a1);
-}
-
-/* ET_CLASS_TYPE_STATUS_CHECKER1.check_qualified_like_identifier_validity */
-void T1935f13(TC* ac, T0* C, T0* a1)
-{
-	T0* t1;
-	t1 = (((((T0*)(a1))->id==724)?((T724*)(a1))->a4:((T725*)(a1))->a3));
-	T202x20758538T0(ac, t1, C);
-}
-
-/* ET_PARENT_CHECKER3.process_qualified_like_type */
-void T1138f16(TC* ac, T0* C, T0* a1)
-{
-}
-
-/* ET_PARENT_CHECKER2.process_qualified_like_type */
-void T1128f19(TC* ac, T0* C, T0* a1)
-{
-}
-
-/* ET_PARENT_CHECKER1.process_qualified_like_type */
-void T1112f18(TC* ac, T0* C, T0* a1)
-{
-	T1112f21(ac, C, a1);
-}
-
-/* ET_PARENT_CHECKER1.process_like_type */
-void T1112f21(TC* ac, T0* C, T0* a1)
-{
-	T0* m1 = 0;
-	T1 t1;
-	t1 = (((T1112*)(C))->a4?((m1 = ((T1112*)(C))->a4, EIF_TRUE)):EIF_FALSE);
-	if (t1) {
-		T1112f22(ac, C, a1, m1);
-	}
-}
-
-/* ET_PARENT_CHECKER1.check_like_type_validity */
-void T1112f22(TC* ac, T0* C, T0* a1, T0* a2)
-{
-	T0* t1;
-	T1112f12(ac, C);
-	t1 = (T1112f6(ac, C));
-	if (((T0*)(t1))->id==42) {
-		T42f608(ac, t1, ((T1112*)(C))->a2, a1);
-	} else {
-		T63f608(ac, t1, ((T1112*)(C))->a2, a1);
-	}
-}
-
-/* ET_NULL_ERROR_HANDLER.report_vhpr3a_error */
-void T63f608(TC* ac, T0* C, T0* a1, T0* a2)
-{
-	T0* l1 = 0;
-	T1 t1;
-	t1 = (T63f189(ac, C, a1));
-	if (t1) {
-		l1 = T1445c1286(ac, a1, a2);
-		T63f239(ac, C, l1);
-	}
-}
-
-/* ET_NULL_ERROR_HANDLER.report_validity_error */
-void T63f239(TC* ac, T0* C, T0* a1)
-{
-	T1 t1;
-	if (((T63*)(C))->a6) {
-		t1 = (((T1445*)(a1))->a1);
-	} else {
-		t1 = EIF_FALSE;
-	}
-	if (!(t1)) {
-		if (((T63*)(C))->a10) {
-			t1 = (((T1445*)(a1))->a2);
-		} else {
-			t1 = EIF_FALSE;
-		}
-	}
-	if (t1) {
-		T159f11(ac, ((T63*)(C))->a3);
-		T63f197(ac, C, a1);
-		T63f238(ac, C, EIF_TRUE);
-		t1 = EIF_FALSE;
-		if (t1) {
-			T229f4(ac, ((T63*)(C))->a2, GE_ms8("----", 4));
-		}
-		T159f12(ac, ((T63*)(C))->a3);
-	}
-}
-
-/* ET_NULL_ERROR_HANDLER.set_has_eiffel_error */
-void T63f238(TC* ac, T0* C, T1 a1)
-{
-	((T63*)(C))->a8 = a1;
-	if (a1) {
-		((T63*)(C))->a1 = EIF_TRUE;
-	}
-}
-
-/* ET_NULL_ERROR_HANDLER.report_info */
-void T63f197(TC* ac, T0* C, T0* a1)
-{
-	T0* t1;
-	t1 = (T63f11(ac, C, a1));
-	T63f199(ac, C, t1);
-}
-
-/* ET_NULL_ERROR_HANDLER.report_info_message */
-void T63f199(TC* ac, T0* C, T0* a1)
-{
-	T229f4(ac, ((T63*)(C))->a2, a1);
-}
-
-/* ET_VALIDITY_ERROR.make_vhpr3a */
-T0* T1445c1286(TC* ac, T0* a1, T0* a2)
-{
-	T0* C;
-	T0* t1;
-	volatile T6 t2;
-	volatile T6 t3;
-	C = GE_new1445(ac, EIF_TRUE);
-	((T1445*)(C))->a5 = a1;
-	((T1445*)(C))->a6 = a1;
-	((T1445*)(C))->a7 = (T544x20758529(ac, a2));
-	((T1445*)(C))->a8 = (T1445f14(ac, C, ge1522ov24937179));
-	((T1445*)(C))->a9 = ge1522ov24936896;
-	((T1445*)(C))->a3 = (T1445f18(ac, C, ge1522ov24936628));
-	((T1445*)(C))->a4 = T34c7(ac, ge724ov11862022, (T6)(GE_int32(1)), (T6)(GE_int32(7)));
-	T34f8(ac, ((T1445*)(C))->a4, ((T1445*)(C))->a9, (T6)(GE_int32(1)));
-	t1 = (T1445f20(ac, C));
-	T34f8(ac, ((T1445*)(C))->a4, t1, (T6)(GE_int32(2)));
-	t2 = (T285x20971521(ac, ((T1445*)(C))->a7));
-	t1 = (T6f7(ac, &t2));
-	T34f8(ac, ((T1445*)(C))->a4, t1, (T6)(GE_int32(3)));
-	t3 = (T285x20971522(ac, ((T1445*)(C))->a7));
-	t1 = (T6f7(ac, &t3));
-	T34f8(ac, ((T1445*)(C))->a4, t1, (T6)(GE_int32(4)));
-	t1 = (T70f81(ac, ((T1445*)(C))->a5));
-	T34f8(ac, ((T1445*)(C))->a4, t1, (T6)(GE_int32(5)));
-	t1 = (T70f81(ac, ((T1445*)(C))->a6));
-	T34f8(ac, ((T1445*)(C))->a4, t1, (T6)(GE_int32(6)));
-	t1 = (T544x22741075(ac, a2));
-	T34f8(ac, ((T1445*)(C))->a4, t1, (T6)(GE_int32(7)));
-	T1445f931(ac, C, EIF_TRUE);
-	return C;
-}
-
-/* ET_VALIDITY_ERROR.set_compilers */
-void T1445f931(TC* ac, T0* C, T1 a1)
-{
-	((T1445*)(C))->a1 = a1;
-	((T1445*)(C))->a10 = a1;
-	((T1445*)(C))->a2 = a1;
-	((T1445*)(C))->a11 = a1;
-}
-
-/* ET_QUALIFIED_LIKE_TYPE.to_text */
-T0* T725f70(TC* ac, T0* C)
-{
-	T0* R = 0;
-	R = T17c49(ac, (T6)(GE_int32(15)));
-	T725f89(ac, C, R);
-	return R;
-}
-
-/* ET_QUALIFIED_LIKE_TYPE.append_to_string */
-void T725f89(TC* ac, T0* C, T0* a1)
-{
-	T0* m1 = 0;
-	T1 t1;
-	T0* t2;
-	t1 = (((T725*)(C))->a2?((m1 = ((T725*)(C))->a2, EIF_TRUE)):EIF_FALSE);
-	if (t1) {
-		T175x21184537T0(ac, m1, a1);
-	}
-	T544x22741083T0(ac, ((T725*)(C))->a3, a1);
-	T17f52(ac, a1, (T2)('.'));
-	t2 = (T725f39(ac, C));
-	t2 = (T303f27(ac, t2));
-	T17f50(ac, a1, t2);
-}
-
-/* ET_LIKE_FEATURE.append_to_string */
-void T722f93(TC* ac, T0* C, T0* a1)
-{
-	T0* m1 = 0;
-	T1 t1;
-	T0* t2;
-	t1 = (((T722*)(C))->a2?((m1 = ((T722*)(C))->a2, EIF_TRUE)):EIF_FALSE);
-	if (t1) {
-		T175x21184537T0(ac, m1, a1);
-	}
-	T17f50(ac, a1, ge1380ov22609927);
-	t2 = (T303f27(ac, ((T722*)(C))->a1));
-	T17f50(ac, a1, t2);
-}
-
-/* ET_QUALIFIED_LIKE_BRACED_TYPE.append_to_string */
-void T724f93(TC* ac, T0* C, T0* a1)
-{
-	T0* m1 = 0;
-	T1 t1;
-	T0* t2;
-	t1 = (((T724*)(C))->a2?((m1 = ((T724*)(C))->a2, EIF_TRUE)):EIF_FALSE);
-	if (t1) {
-		T175x21184537T0(ac, m1, a1);
-	}
-	T17f50(ac, a1, ge1380ov22609927);
-	T17f52(ac, a1, (T2)('{'));
-	T202x22741083T0(ac, ((T724*)(C))->a4, a1);
-	T17f52(ac, a1, (T2)('}'));
-	T17f52(ac, a1, (T2)('.'));
-	t2 = (T724f39(ac, C));
-	t2 = (T303f27(ac, t2));
-	T17f50(ac, a1, t2);
-}
-
-/* ET_CONSTRAINED_FORMAL_PARAMETER.append_to_string */
-void T691f92(TC* ac, T0* C, T0* a1)
-{
-	T0* m1 = 0;
-	T1 t1;
-	T0* t2;
-	t1 = (((T691*)(C))->a6?((m1 = ((T691*)(C))->a6, EIF_TRUE)):EIF_FALSE);
-	if (t1) {
-		T191f101(ac, m1, a1);
-	}
-	t2 = (T691f58(ac, C));
-	T17f50(ac, a1, t2);
-}
-
-/* ET_CONSTRAINED_FORMAL_PARAMETER.upper_name */
-T0* T691f58(TC* ac, T0* C)
-{
-	T0* R = 0;
-	R = (T303f7(ac, ((T691*)(C))->a8));
-	return R;
-}
-
-/* ET_IDENTIFIER.upper_name */
-T0* T303f7(TC* ac, T0* C)
-{
-	T0* R = 0;
-	volatile T6 l1 = 0;
-	T6 l2 = 0;
-	volatile T2 l3 = 0;
-	T1 t1;
-	R = ((T303*)(C))->a1;
-	l2 = (T17x2228263(ac, R));
-	l1 = (T6)(GE_int32(1));
-	while (1) {
-		t1 = (T6f4(ac, (&l1), l2));
-		if (t1) {
-			break;
-		}
-		l3 = (T17x2572289T6(ac, R, l1));
-		t1 = (T2f12(ac, (&l3), (T2)('a')));
-		if (t1) {
-			t1 = (T2f10(ac, (&l3), (T2)('z')));
-		}
-		if (t1) {
-			R = (T17x2228286(ac, R));
-			l1 = ((T6)((l2)+((T6)(GE_int32(1)))));
-		} else {
-			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-		}
-	}
-	return R;
-}
-
-/* UC_UTF8_STRING.as_upper */
-T0* T1066f39(TC* ac, T0* C)
-{
-	T0* R = 0;
-	R = (T1066f33(ac, C));
-	T1066f91(ac, R);
-	return R;
-}
-
-/* UC_UTF8_STRING.to_upper */
-void T1066f91(TC* ac, T0* C)
-{
-	volatile T6 l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	T6 l4 = 0;
-	volatile T6 l5 = 0;
-	T6 l6 = 0;
-	T6 l7 = 0;
-	T1 t1;
-	T0* t2;
-	T6 t3;
-	T6 t4;
-	l2 = ((T1066*)(C))->a3;
-	l1 = (T6)(GE_int32(1));
-	while (1) {
-		t1 = (T6f4(ac, (&l1), l2));
-		if (t1) {
-			break;
-		}
-		l6 = (T1066f17(ac, C, l1));
-		t2 = (T1066s64(ac));
-		l7 = (T906s29(ac, l6));
-		t1 = (T1)(!(T1)((l7) == (l6)));
-		if (t1) {
-			t2 = (T1066s45(ac));
-			l3 = (T167s28(ac, l6));
-			t2 = (T1066s45(ac));
-			l4 = (T167s28(ac, l7));
-			t1 = (T1)((l4) == (l3));
-			if (t1) {
-			} else {
-				t1 = ((T1)((l4)<(l3)));
-				if (t1) {
-					t3 = ((T6)((l1)+(l3)));
-					t4 = ((T6)((l3)-(l4)));
-					T1066f106(ac, C, t3, t4);
-				} else {
-					l2 = ((T6)((l4)-(l3)));
-					l5 = ((T6)((((T1066*)(C))->a3)+(l2)));
-					t3 = (T1066f61(ac, C));
-					t1 = (T6f4(ac, (&l5), t3));
-					if (t1) {
-						T1066f99(ac, C, l5);
-					}
-					t3 = ((T6)((l1)+(l3)));
-					T1066f107(ac, C, t3, l2);
-				}
-			}
-			T1066f108(ac, C, l7, l4, l1);
-		}
-		l1 = (T1066f18(ac, C, l1));
-	}
-}
-
-/* UC_UNICODE_ROUTINES.upper_code */
-T6 T906s29(TC* ac, T6 a1)
-{
-	T6 R = 0;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	T6 l4 = 0;
-	T0* t1;
-	T6 t2;
-	T1 t3;
-	l1 = ((T6)((a1)/((T6)(GE_int32(65536)))));
-	l4 = ((T6)((a1)%((T6)(GE_int32(65536)))));
-	l2 = ((T6)((l4)/((T6)(GE_int32(256)))));
-	l3 = ((T6)((l4)%((T6)(GE_int32(256)))));
-	t1 = (T906s30(ac));
-	t1 = (((T1346*)(t1))->z2[l1]);
-	t1 = (((T1345*)(t1))->z2[l2]);
-	t2 = ((T6)((l3)+((T6)(GE_int32(1)))));
-	R = (T940f4(ac, t1, t2));
-	t3 = (T1)((R) == ((T6)(GE_int32(-1))));
-	if (t3) {
-		R = a1;
-	}
-	return R;
-}
-
-/* UC_UNICODE_ROUTINES.upper_codes */
-T0* T906s30(TC* ac)
-{
-	GE_rescue r;
-	uint32_t tr = ac->in_rescue;
-	T0* R = 0;
-	T0* t1;
-	if (ac->thread_onces->reference_status[155]) {
-		if (ac->thread_onces->reference_exception[155]) {
-			GE_raise_once_exception(ac, ac->thread_onces->reference_exception[155]);
-		}
-		return ac->thread_onces->reference_value[155];
-	} else {
-		ac->thread_onces->reference_status[155] = '\1';
-		ac->thread_onces->reference_value[155] = R;
-	}
-	if (GE_setjmp(r.jb) != 0) {
-		ac->in_rescue = tr + 1;
-		ac->thread_onces->reference_exception[155] = GE_last_exception_raised(ac);
-		GE_jump_to_last_rescue(ac);
-	}
-	r.previous = ac->last_rescue;
-	ac->last_rescue = &r;
-	t1 = (T906s31(ac));
-	R = T1346c4(ac, t1, (T6)(GE_int32(17)));
-	ac->thread_onces->reference_value[155] = R;
-	t1 = (T906s32(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(1))] = (t1);
-	t1 = (T906s33(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(2))] = (t1);
-	t1 = (T906s33(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(3))] = (t1);
-	t1 = (T906s33(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(4))] = (t1);
-	t1 = (T906s33(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(5))] = (t1);
-	t1 = (T906s33(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(6))] = (t1);
-	t1 = (T906s33(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(7))] = (t1);
-	t1 = (T906s33(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(8))] = (t1);
-	t1 = (T906s33(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(9))] = (t1);
-	t1 = (T906s33(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(10))] = (t1);
-	t1 = (T906s33(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(11))] = (t1);
-	t1 = (T906s33(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(12))] = (t1);
-	t1 = (T906s33(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(13))] = (t1);
-	t1 = (T906s33(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(14))] = (t1);
-	t1 = (T906s33(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(15))] = (t1);
-	t1 = (T906s33(ac));
-	((T1346*)(R))->z2[(T6)(GE_int32(16))] = (t1);
-	ac->last_rescue = r.previous;
-	return R;
-}
-
-/* UC_UNICODE_ROUTINES.empty_upper_code_plane */
-T0* T906s33(TC* ac)
-{
-	GE_rescue r;
-	uint32_t tr = ac->in_rescue;
-	T0* R = 0;
-	T0* t1;
-	if (ac->thread_onces->reference_status[156]) {
-		if (ac->thread_onces->reference_exception[156]) {
-			GE_raise_once_exception(ac, ac->thread_onces->reference_exception[156]);
-		}
-		return ac->thread_onces->reference_value[156];
-	} else {
-		ac->thread_onces->reference_status[156] = '\1';
-		ac->thread_onces->reference_value[156] = R;
-	}
-	if (GE_setjmp(r.jb) != 0) {
-		ac->in_rescue = tr + 1;
-		ac->thread_onces->reference_exception[156] = GE_last_exception_raised(ac);
-		GE_jump_to_last_rescue(ac);
-	}
-	r.previous = ac->last_rescue;
-	ac->last_rescue = &r;
-	t1 = (T906s40(ac));
-	R = T1345c4(ac, t1, (T6)(GE_int32(256)));
-	ac->thread_onces->reference_value[156] = R;
-	ac->last_rescue = r.previous;
-	return R;
-}
-
-/* UC_UNICODE_ROUTINES.empty_upper_code_segment */
-T0* T906s40(TC* ac)
-{
-	GE_rescue r;
-	uint32_t tr = ac->in_rescue;
-	T0* R = 0;
-	T0* t1;
-	T6 t2;
-	if (ac->thread_onces->reference_status[157]) {
-		if (ac->thread_onces->reference_exception[157]) {
-			GE_raise_once_exception(ac, ac->thread_onces->reference_exception[157]);
-		}
-		return ac->thread_onces->reference_value[157];
-	} else {
-		ac->thread_onces->reference_status[157] = '\1';
-		ac->thread_onces->reference_value[157] = R;
-	}
-	if (GE_setjmp(r.jb) != 0) {
-		ac->in_rescue = tr + 1;
-		ac->thread_onces->reference_exception[157] = GE_last_exception_raised(ac);
-		GE_jump_to_last_rescue(ac);
-	}
-	r.previous = ac->last_rescue;
-	ac->last_rescue = &r;
-	t1 = (T906s28(ac));
-	t2 = (T1347s1(ac, (T6)(GE_int32(-1))));
-	R = GE_ma940(ac, (T6)256, (T6)256,
-t2,
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)));
-	ac->thread_onces->reference_value[157] = R;
-	ac->last_rescue = r.previous;
-	return R;
-}
-
-/* UC_UNICODE_ROUTINES.upper_code_plane_1 */
-T0* T906s32(TC* ac)
-{
-	GE_rescue r;
-	uint32_t tr = ac->in_rescue;
-	T0* R = 0;
-	T0* t1;
-	if (ac->thread_onces->reference_status[158]) {
-		if (ac->thread_onces->reference_exception[158]) {
-			GE_raise_once_exception(ac, ac->thread_onces->reference_exception[158]);
-		}
-		return ac->thread_onces->reference_value[158];
-	} else {
-		ac->thread_onces->reference_status[158] = '\1';
-		ac->thread_onces->reference_value[158] = R;
-	}
-	if (GE_setjmp(r.jb) != 0) {
-		ac->in_rescue = tr + 1;
-		ac->thread_onces->reference_exception[158] = GE_last_exception_raised(ac);
-		GE_jump_to_last_rescue(ac);
-	}
-	r.previous = ac->last_rescue;
-	ac->last_rescue = &r;
-	t1 = (T906s40(ac));
-	R = T1345c4(ac, t1, (T6)(GE_int32(256)));
-	ac->thread_onces->reference_value[158] = R;
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(1))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(2))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(3))] = (t1);
-	t1 = (T906s51(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(4))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(5))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(6))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(7))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(8))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(9))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(10))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(11))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(12))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(13))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(14))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(15))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(16))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(17))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(18))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(19))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(20))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(21))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(22))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(23))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(24))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(25))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(26))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(27))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(28))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(29))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(30))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(31))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(32))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(33))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(34))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(35))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(36))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(37))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(38))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(39))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(40))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(41))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(42))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(43))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(44))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(45))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(46))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(47))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(48))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(49))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(50))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(51))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(52))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(53))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(54))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(55))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(56))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(57))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(58))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(59))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(60))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(61))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(62))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(63))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(64))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(65))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(66))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(67))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(68))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(69))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(70))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(71))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(72))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(73))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(74))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(75))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(76))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(77))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(78))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(79))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(80))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(81))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(82))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(83))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(84))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(85))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(86))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(87))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(88))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(89))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(90))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(91))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(92))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(93))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(94))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(95))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(96))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(97))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(98))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(99))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(100))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(101))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(102))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(103))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(104))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(105))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(106))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(107))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(108))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(109))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(110))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(111))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(112))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(113))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(114))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(115))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(116))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(117))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(118))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(119))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(120))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(121))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(122))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(123))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(124))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(125))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(126))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(127))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(128))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(129))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(130))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(131))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(132))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(133))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(134))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(135))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(136))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(137))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(138))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(139))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(140))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(141))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(142))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(143))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(144))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(145))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(146))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(147))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(148))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(149))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(150))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(151))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(152))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(153))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(154))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(155))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(156))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(157))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(158))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(159))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(160))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(161))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(162))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(163))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(164))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(165))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(166))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(167))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(168))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(169))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(170))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(171))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(172))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(173))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(174))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(175))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(176))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(177))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(178))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(179))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(180))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(181))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(182))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(183))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(184))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(185))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(186))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(187))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(188))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(189))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(190))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(191))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(192))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(193))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(194))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(195))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(196))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(197))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(198))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(199))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(200))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(201))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(202))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(203))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(204))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(205))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(206))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(207))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(208))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(209))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(210))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(211))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(212))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(213))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(214))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(215))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(216))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(217))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(218))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(219))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(220))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(221))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(222))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(223))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(224))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(225))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(226))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(227))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(228))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(229))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(230))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(231))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(232))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(233))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(234))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(235))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(236))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(237))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(238))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(239))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(240))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(241))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(242))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(243))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(244))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(245))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(246))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(247))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(248))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(249))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(250))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(251))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(252))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(253))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(254))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(255))] = (t1);
-	ac->last_rescue = r.previous;
-	return R;
-}
-
-/* UC_UNICODE_ROUTINES.upper_code_plane_1_segment_4 */
-T0* T906s51(TC* ac)
-{
-	GE_rescue r;
-	uint32_t tr = ac->in_rescue;
-	T0* R = 0;
-	T0* t1;
-	T6 t2;
-	if (ac->thread_onces->reference_status[159]) {
-		if (ac->thread_onces->reference_exception[159]) {
-			GE_raise_once_exception(ac, ac->thread_onces->reference_exception[159]);
-		}
-		return ac->thread_onces->reference_value[159];
-	} else {
-		ac->thread_onces->reference_status[159] = '\1';
-		ac->thread_onces->reference_value[159] = R;
-	}
-	if (GE_setjmp(r.jb) != 0) {
-		ac->in_rescue = tr + 1;
-		ac->thread_onces->reference_exception[159] = GE_last_exception_raised(ac);
-		GE_jump_to_last_rescue(ac);
-	}
-	r.previous = ac->last_rescue;
-	ac->last_rescue = &r;
-	t1 = (T906s28(ac));
-	t2 = (T1347s1(ac, (T6)(GE_int32(-1))));
-	R = GE_ma940(ac, (T6)256, (T6)256,
-t2,
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(66560)),
-(T6)(GE_int32(66561)),
-(T6)(GE_int32(66562)),
-(T6)(GE_int32(66563)),
-(T6)(GE_int32(66564)),
-(T6)(GE_int32(66565)),
-(T6)(GE_int32(66566)),
-(T6)(GE_int32(66567)),
-(T6)(GE_int32(66568)),
-(T6)(GE_int32(66569)),
-(T6)(GE_int32(66570)),
-(T6)(GE_int32(66571)),
-(T6)(GE_int32(66572)),
-(T6)(GE_int32(66573)),
-(T6)(GE_int32(66574)),
-(T6)(GE_int32(66575)),
-(T6)(GE_int32(66576)),
-(T6)(GE_int32(66577)),
-(T6)(GE_int32(66578)),
-(T6)(GE_int32(66579)),
-(T6)(GE_int32(66580)),
-(T6)(GE_int32(66581)),
-(T6)(GE_int32(66582)),
-(T6)(GE_int32(66583)),
-(T6)(GE_int32(66584)),
-(T6)(GE_int32(66585)),
-(T6)(GE_int32(66586)),
-(T6)(GE_int32(66587)),
-(T6)(GE_int32(66588)),
-(T6)(GE_int32(66589)),
-(T6)(GE_int32(66590)),
-(T6)(GE_int32(66591)),
-(T6)(GE_int32(66592)),
-(T6)(GE_int32(66593)),
-(T6)(GE_int32(66594)),
-(T6)(GE_int32(66595)),
-(T6)(GE_int32(66596)),
-(T6)(GE_int32(66597)),
-(T6)(GE_int32(66598)),
-(T6)(GE_int32(66599)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)));
-	ac->thread_onces->reference_value[159] = R;
-	ac->last_rescue = r.previous;
-	return R;
-}
-
-/* UC_UNICODE_ROUTINES.upper_code_plane_0 */
-T0* T906s31(TC* ac)
-{
-	GE_rescue r;
-	uint32_t tr = ac->in_rescue;
-	T0* R = 0;
-	T0* t1;
-	if (ac->thread_onces->reference_status[160]) {
-		if (ac->thread_onces->reference_exception[160]) {
-			GE_raise_once_exception(ac, ac->thread_onces->reference_exception[160]);
-		}
-		return ac->thread_onces->reference_value[160];
-	} else {
-		ac->thread_onces->reference_status[160] = '\1';
-		ac->thread_onces->reference_value[160] = R;
-	}
-	if (GE_setjmp(r.jb) != 0) {
-		ac->in_rescue = tr + 1;
-		ac->thread_onces->reference_exception[160] = GE_last_exception_raised(ac);
-		GE_jump_to_last_rescue(ac);
-	}
-	r.previous = ac->last_rescue;
-	ac->last_rescue = &r;
-	t1 = (T906s34(ac));
-	R = T1345c4(ac, t1, (T6)(GE_int32(256)));
-	ac->thread_onces->reference_value[160] = R;
-	t1 = (T906s35(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(1))] = (t1);
-	t1 = (T906s36(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(2))] = (t1);
-	t1 = (T906s37(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(3))] = (t1);
-	t1 = (T906s38(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(4))] = (t1);
-	t1 = (T906s39(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(5))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(6))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(7))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(8))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(9))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(10))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(11))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(12))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(13))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(14))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(15))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(16))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(17))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(18))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(19))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(20))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(21))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(22))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(23))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(24))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(25))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(26))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(27))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(28))] = (t1);
-	t1 = (T906s41(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(29))] = (t1);
-	t1 = (T906s42(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(30))] = (t1);
-	t1 = (T906s43(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(31))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(32))] = (t1);
-	t1 = (T906s44(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(33))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(34))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(35))] = (t1);
-	t1 = (T906s45(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(36))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(37))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(38))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(39))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(40))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(41))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(42))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(43))] = (t1);
-	t1 = (T906s46(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(44))] = (t1);
-	t1 = (T906s47(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(45))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(46))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(47))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(48))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(49))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(50))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(51))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(52))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(53))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(54))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(55))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(56))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(57))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(58))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(59))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(60))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(61))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(62))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(63))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(64))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(65))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(66))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(67))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(68))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(69))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(70))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(71))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(72))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(73))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(74))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(75))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(76))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(77))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(78))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(79))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(80))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(81))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(82))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(83))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(84))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(85))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(86))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(87))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(88))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(89))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(90))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(91))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(92))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(93))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(94))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(95))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(96))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(97))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(98))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(99))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(100))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(101))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(102))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(103))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(104))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(105))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(106))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(107))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(108))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(109))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(110))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(111))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(112))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(113))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(114))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(115))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(116))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(117))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(118))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(119))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(120))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(121))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(122))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(123))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(124))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(125))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(126))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(127))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(128))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(129))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(130))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(131))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(132))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(133))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(134))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(135))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(136))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(137))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(138))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(139))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(140))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(141))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(142))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(143))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(144))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(145))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(146))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(147))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(148))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(149))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(150))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(151))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(152))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(153))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(154))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(155))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(156))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(157))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(158))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(159))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(160))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(161))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(162))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(163))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(164))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(165))] = (t1);
-	t1 = (T906s48(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(166))] = (t1);
-	t1 = (T906s49(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(167))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(168))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(169))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(170))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(171))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(172))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(173))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(174))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(175))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(176))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(177))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(178))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(179))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(180))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(181))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(182))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(183))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(184))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(185))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(186))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(187))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(188))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(189))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(190))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(191))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(192))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(193))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(194))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(195))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(196))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(197))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(198))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(199))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(200))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(201))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(202))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(203))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(204))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(205))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(206))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(207))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(208))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(209))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(210))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(211))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(212))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(213))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(214))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(215))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(216))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(217))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(218))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(219))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(220))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(221))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(222))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(223))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(224))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(225))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(226))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(227))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(228))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(229))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(230))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(231))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(232))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(233))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(234))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(235))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(236))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(237))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(238))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(239))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(240))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(241))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(242))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(243))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(244))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(245))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(246))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(247))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(248))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(249))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(250))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(251))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(252))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(253))] = (t1);
-	t1 = (T906s40(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(254))] = (t1);
-	t1 = (T906s50(ac));
-	((T1345*)(R))->z2[(T6)(GE_int32(255))] = (t1);
-	ac->last_rescue = r.previous;
-	return R;
-}
-
-/* UC_UNICODE_ROUTINES.upper_code_plane_0_segment_255 */
-T0* T906s50(TC* ac)
-{
-	GE_rescue r;
-	uint32_t tr = ac->in_rescue;
-	T0* R = 0;
-	T0* t1;
-	T6 t2;
-	if (ac->thread_onces->reference_status[161]) {
-		if (ac->thread_onces->reference_exception[161]) {
-			GE_raise_once_exception(ac, ac->thread_onces->reference_exception[161]);
-		}
-		return ac->thread_onces->reference_value[161];
-	} else {
-		ac->thread_onces->reference_status[161] = '\1';
-		ac->thread_onces->reference_value[161] = R;
-	}
-	if (GE_setjmp(r.jb) != 0) {
-		ac->in_rescue = tr + 1;
-		ac->thread_onces->reference_exception[161] = GE_last_exception_raised(ac);
-		GE_jump_to_last_rescue(ac);
-	}
-	r.previous = ac->last_rescue;
-	ac->last_rescue = &r;
-	t1 = (T906s28(ac));
-	t2 = (T1347s1(ac, (T6)(GE_int32(-1))));
-	R = GE_ma940(ac, (T6)256, (T6)256,
-t2,
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(65313)),
-(T6)(GE_int32(65314)),
-(T6)(GE_int32(65315)),
-(T6)(GE_int32(65316)),
-(T6)(GE_int32(65317)),
-(T6)(GE_int32(65318)),
-(T6)(GE_int32(65319)),
-(T6)(GE_int32(65320)),
-(T6)(GE_int32(65321)),
-(T6)(GE_int32(65322)),
-(T6)(GE_int32(65323)),
-(T6)(GE_int32(65324)),
-(T6)(GE_int32(65325)),
-(T6)(GE_int32(65326)),
-(T6)(GE_int32(65327)),
-(T6)(GE_int32(65328)),
-(T6)(GE_int32(65329)),
-(T6)(GE_int32(65330)),
-(T6)(GE_int32(65331)),
-(T6)(GE_int32(65332)),
-(T6)(GE_int32(65333)),
-(T6)(GE_int32(65334)),
-(T6)(GE_int32(65335)),
-(T6)(GE_int32(65336)),
-(T6)(GE_int32(65337)),
-(T6)(GE_int32(65338)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)));
-	ac->thread_onces->reference_value[161] = R;
-	ac->last_rescue = r.previous;
-	return R;
-}
-
-/* UC_UNICODE_ROUTINES.upper_code_plane_0_segment_167 */
-T0* T906s49(TC* ac)
-{
-	GE_rescue r;
-	uint32_t tr = ac->in_rescue;
-	T0* R = 0;
-	T0* t1;
-	T6 t2;
-	if (ac->thread_onces->reference_status[162]) {
-		if (ac->thread_onces->reference_exception[162]) {
-			GE_raise_once_exception(ac, ac->thread_onces->reference_exception[162]);
-		}
-		return ac->thread_onces->reference_value[162];
-	} else {
-		ac->thread_onces->reference_status[162] = '\1';
-		ac->thread_onces->reference_value[162] = R;
-	}
-	if (GE_setjmp(r.jb) != 0) {
-		ac->in_rescue = tr + 1;
-		ac->thread_onces->reference_exception[162] = GE_last_exception_raised(ac);
-		GE_jump_to_last_rescue(ac);
-	}
-	r.previous = ac->last_rescue;
-	ac->last_rescue = &r;
-	t1 = (T906s28(ac));
-	t2 = (T1347s1(ac, (T6)(GE_int32(-1))));
-	R = GE_ma940(ac, (T6)256, (T6)256,
-t2,
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42786)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42788)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42790)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42792)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42794)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42796)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42798)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42802)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42804)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42806)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42808)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42810)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42812)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42814)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42816)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42818)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42820)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42822)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42824)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42826)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42828)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42830)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42832)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42834)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42836)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42838)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42840)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42842)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42844)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42846)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42848)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42850)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42852)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42854)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42856)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42858)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42860)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42862)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42873)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42875)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42878)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42880)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42882)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42884)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42886)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(42891)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)),
-(T6)(GE_int32(-1)));
-	ac->thread_onces->reference_value[162] = R;
-	ac->last_rescue = r.previous;
-	return R;
 }
 
 

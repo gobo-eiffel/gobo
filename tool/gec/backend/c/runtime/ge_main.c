@@ -26,6 +26,9 @@
 #ifndef GE_GC_H
 #include "ge_gc.h"
 #endif
+#ifndef GE_SIGNAL_H
+#include "ge_signal.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -144,6 +147,7 @@ int main(int dummy_arg1, char** dummy_argv)
 	EIF_NATIVE_CHAR* cmd;
 
 	GE_init_gc();
+	GE_init_signal();
 	GE_set_windows_exception_filter();
 		/* Variables used in WEL. */
 	eif_hInstance = GetModuleHandle(NULL);
@@ -177,6 +181,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 int main(int argc, char** argv)
 {
 	GE_init_gc();
+	GE_init_signal();
 	return GE_main(argc, argv);
 }
 

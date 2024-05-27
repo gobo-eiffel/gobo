@@ -1600,6 +1600,8 @@ feature {NONE} -- C code Generation
 				header_file.put_new_line
 				include_runtime_header_file ("ge_gc.h", True, header_file)
 				header_file.put_new_line
+				include_runtime_header_file ("ge_signal.h", True, header_file)
+				header_file.put_new_line
 				include_runtime_header_file ("ge_identified.h", True, header_file)
 				header_file.put_new_line
 					-- Two header files needed to compile EiffelCOM.
@@ -41790,8 +41792,8 @@ feature {NONE} -- Include files
 					if use_scoop then
 						include_runtime_header_file ("ge_scoop.h", a_force, a_file)
 					end
-				elseif a_filename.same_string ("eif_sig.h") then
-					l_c_filename := "eif_sig.c"
+				elseif a_filename.same_string ("eif_sig.h") Then
+					include_runtime_header_file ("ge_signal.h", a_force, a_file)
 				elseif a_filename.same_string ("eif_store.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					l_c_filename := "eif_store.c"
@@ -41849,6 +41851,9 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					include_runtime_header_file ("ge_exception.h", a_force, a_file)
 					l_c_filename := "ge_scoop.c"
+				elseif a_filename.same_string ("ge_signal.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "ge_signal.c"
 				elseif a_filename.same_string ("ge_string.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					l_c_filename := "ge_string.c"
@@ -41929,9 +41934,6 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("eif_retrieve.c") then
 					include_runtime_header_file ("eif_retrieve.h", False, a_header_file)
 					include_runtime_header_file ("ge_console.h", False, a_header_file)
-				elseif a_filename.same_string ("eif_sig.c") then
-					include_runtime_header_file ("eif_sig.h", False, a_header_file)
-					include_runtime_header_file ("ge_console.h", False, a_header_file)
 				elseif a_filename.same_string ("eif_store.c") then
 					include_runtime_header_file ("eif_store.h", False, a_header_file)
 					include_runtime_header_file ("ge_console.h", False, a_header_file)
@@ -41974,6 +41976,7 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_arguments.h", False, a_header_file)
 					include_runtime_header_file ("ge_native_string.h", False, a_header_file)
 					include_runtime_header_file ("ge_gc.h", False, a_header_file)
+					include_runtime_header_file ("ge_signal.h", False, a_header_file)
 				elseif a_filename.same_string ("ge_once.c") then
 					include_runtime_header_file ("ge_once.h", False, a_header_file)
 					include_runtime_header_file ("ge_gc.h", False, a_header_file)
@@ -41987,6 +41990,12 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_gc.h", False, a_header_file)
 					include_runtime_header_file ("ge_thread.h", False, a_header_file)
 					include_runtime_header_file ("ge_once.h", False, a_header_file)
+				elseif a_filename.same_string ("ge_signal.c") then
+					include_runtime_header_file ("ge_signal.h", False, a_header_file)
+					include_runtime_header_file ("ge_exception.h", False, a_header_file)
+					if use_threads then
+						include_runtime_header_file ("ge_thread.h", False, a_header_file)
+					end
 				elseif a_filename.same_string ("ge_string.c") then
 					include_runtime_header_file ("ge_string.h", False, a_header_file)
 					include_runtime_header_file ("ge_native_string.h", False, a_header_file)
