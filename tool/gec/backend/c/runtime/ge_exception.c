@@ -439,7 +439,7 @@ GE_context GE_default_context = {0, 0, 0, 0, 0, 0, '\1', 0, 0, {0, 0, 0}, {0, 0,
  * Execution context of main thread.
  * Should be used from the main thread only.
  */
-GE_context* GE_main_context;
+GE_context* GE_main_context = 0;
 
 /*
  * Execution context of current thread.
@@ -554,7 +554,8 @@ static void GE_call_set_exception_data(GE_context* a_context, long code, int new
 	EIF_REFERENCE l_trace;
 
 	if (!a_context->exception_manager) {
-		GE_init_exception(a_context);
+		fprintf(stderr, "\nsystem execution failed while handling an exception before the initialing the exception manager.\n");
+		exit(1);
 	}
 	if (tag) {
 		l_tag = GE_str(tag);
