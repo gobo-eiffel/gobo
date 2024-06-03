@@ -705,64 +705,76 @@ void GE_init_signal()
 		 */
 		GE_ignored_signals[l_sig] = 1; 
 
-#ifdef GE_USE_THREADS
-	/* In Multi-threaded mode, we do not want to call
-     * signal () on some specific signals.
-	 */
-	switch (l_sig) {
-	
-#if defined(GE_USE_POSIX_THREADS)
-		/* So far, used in Linux threads */
-		case SIGUSR1:
-			break;
+		/* In Multi-threaded mode, we do not want to call
+		* signal () on some specific signals.
+		*/
+		switch (l_sig) {
 
-		case SIGUSR2:
-			break;
+#ifdef GE_USE_THREADS
+
+#if defined(GE_USE_POSIX_THREADS)
+			/* So far, used in Linux threads */
+			case SIGUSR1:
+				break;
+
+			case SIGUSR2:
+				break;
 #endif
 
 #if defined(SIGPTRESCHED) && defined(GE_USE_POSIX_THREADS) && defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE==199506L)
-		/* So far, used in Posix 1003.1c threads */
-		case SIGPTRESCHED:
-			break;
+			/* So far, used in Posix 1003.1c threads */
+			case SIGPTRESCHED:
+				break;
 #endif
 
 #if defined(SIGPTINTR) && defined(GE_USE_POSIX_THREADS) && defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE==199506L)
-		/* So far, used in Posix 1003.1c */
-		case SIGPTINTR:
-			break;
+			/* So far, used in Posix 1003.1c */
+			case SIGPTINTR:
+				break;
 #endif
 
 #if defined(SIGRTMIN) && defined(GE_USE_POSIX_THREADS) && defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE==199309L)
-		/* So far, used in Posix 1003.1b */
-		case SIGRTMIN:
-			break;
+			/* So far, used in Posix 1003.1b */
+			case SIGRTMIN:
+				break;
 #endif
 
 #if defined(SIGRTMAX) && defined(GE_USE_POSIX_THREADS) && defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE==199309L)
-		/* So far, used in Posix 1003.1b */
-		case SIGRTMAX:
-			break;
+			/* So far, used in Posix 1003.1b */
+			case SIGRTMAX:
+				break;
 #endif
 
+#endif /* GE_USE_THREADS */
+
+#ifdef GE_USE_BOEHM_GC
+
+#ifdef SIGSEGV
+			/* Used in Boehm GC. */
+			case SIGSEGV:
+				break;
+#endif /* SIGSEGV */
+
+#ifdef SIGBUS
+			/* Used in Boehm GC. */
+			case SIGBUS:
+				break;
+#endif /* SIGBUS */
+
+#endif /* GE_USE_BOEHM_GC */
+
 #ifdef SIGPROF
-		/* When profiling, we must not catch this signal. */
-		case SIGPROF:
-			break;
+			/* When profiling, we must not catch this signal. */
+			case SIGPROF:
+				break;
 #endif /* SIGPROF */
 
-		default:
-			if (GE_is_signal_defined(l_sig) == (char)1) {
-				old = signal(l_sig, GE_handle_signal);
-			}
-	}			
-#else
-		if (GE_is_signal_defined(l_sig) == (char)1) {
-#ifdef SIGPROF
-			if (l_sig != SIGPROF)
-#endif
-				old = signal(l_sig, GE_handle_signal);
-		}
-#endif	/* GE_USE_THREADS */
+			default:
+				if (GE_is_signal_defined(l_sig) == (char)1) {
+					old = signal(l_sig, GE_handle_signal);
+				}
+		}			
+
 		if (old == SIG_IGN) {
 			GE_ignored_signals[l_sig] = 1;	/* Signal was ignored by default */
 		} else {
