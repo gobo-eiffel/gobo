@@ -747,7 +747,7 @@ void GE_init_signal()
 
 #endif /* GE_USE_THREADS */
 
-#ifdef GE_USE_BOEHM_GC
+#ifdef GE_USE_BOEHM_GC_XXX
 
 #ifdef SIGSEGV
 			/* Used in Boehm GC. */
