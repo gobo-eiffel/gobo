@@ -4,7 +4,7 @@
 
 	<description>
 		system: "Gobo Eiffel Regexp Library Unit Tester"
-		copyright: "Copyright (c) 2002-2016, Harald Erdbruegger and others"
+		copyright: "Copyright (c) 2002-2024, Harald Erdbruegger and others"
 		license: "MIT License"
 	</description>
 
@@ -31,7 +31,7 @@
 			Remove other intermediary generated files.
 		</description>
 		<geant file="build.eant" target="clean" dir="pcretest"/>
-		<delete directory="Tpcretest"/>
+		<delete directory="Tpcretest" fail_on_error="false"/> <!-- Deletion sometimes fails on Windows in azure devops pipelines. -->
 	</target>
 
 	<target name="other_clobber" depend="init" export="NONE">
