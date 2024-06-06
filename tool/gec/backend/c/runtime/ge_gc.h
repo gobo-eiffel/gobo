@@ -93,6 +93,8 @@
 #endif
 
 #include "gc.h"
+#else
+#include <stdlib.h>
 #endif
 
 #ifdef __cplusplus
