@@ -28,6 +28,9 @@ extern "C" {
  */
 extern void GE_init_signal(void);
 
+/* Initialize `GE_ignored_signals_mutex'. */
+extern void GE_init_ignored_signals_mutex(void);
+
 /* Description of sinal `a_sig'. */
 extern char *GE_signal_name(EIF_INTEGER a_sig);
 

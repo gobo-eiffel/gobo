@@ -46,22 +46,22 @@ extern "C" {
 /*
  * Numbers of once-per-thread features.
  */
-unsigned int GE_thread_onces_boolean_count;
-unsigned int GE_thread_onces_character_8_count;
-unsigned int GE_thread_onces_character_32_count;
-unsigned int GE_thread_onces_integer_8_count;
-unsigned int GE_thread_onces_integer_16_count;
-unsigned int GE_thread_onces_integer_32_count;
-unsigned int GE_thread_onces_integer_64_count;
-unsigned int GE_thread_onces_natural_8_count;
-unsigned int GE_thread_onces_natural_16_count;
-unsigned int GE_thread_onces_natural_32_count;
-unsigned int GE_thread_onces_natural_64_count;
-unsigned int GE_thread_onces_pointer_count;
-unsigned int GE_thread_onces_real_32_count;
-unsigned int GE_thread_onces_real_64_count;
-unsigned int GE_thread_onces_reference_count;
-unsigned int GE_thread_onces_procedure_count;
+uint32_t GE_thread_onces_boolean_count;
+uint32_t GE_thread_onces_character_8_count;
+uint32_t GE_thread_onces_character_32_count;
+uint32_t GE_thread_onces_integer_8_count;
+uint32_t GE_thread_onces_integer_16_count;
+uint32_t GE_thread_onces_integer_32_count;
+uint32_t GE_thread_onces_integer_64_count;
+uint32_t GE_thread_onces_natural_8_count;
+uint32_t GE_thread_onces_natural_16_count;
+uint32_t GE_thread_onces_natural_32_count;
+uint32_t GE_thread_onces_natural_64_count;
+uint32_t GE_thread_onces_pointer_count;
+uint32_t GE_thread_onces_real_32_count;
+uint32_t GE_thread_onces_real_64_count;
+uint32_t GE_thread_onces_reference_count;
+uint32_t GE_thread_onces_procedure_count;
 
 /*
  * Mutexes used to protect the calls to once-per-process features.
@@ -73,22 +73,22 @@ GE_once_mutexes* GE_process_once_mutexes;
  * numbers of once features passed as argument.
  */
 GE_once_mutexes* GE_new_once_mutexes(
-	unsigned int a_boolean_count,
-	unsigned int a_character_8_count,
-	unsigned int a_character_32_count,
-	unsigned int a_integer_8_count,
-	unsigned int a_integer_16_count,
-	unsigned int a_integer_32_count,
-	unsigned int a_integer_64_count,
-	unsigned int a_natural_8_count,
-	unsigned int a_natural_16_count,
-	unsigned int a_natural_32_count,
-	unsigned int a_natural_64_count,
-	unsigned int a_pointer_count,
-	unsigned int a_real_32_count,
-	unsigned int a_real_64_count,
-	unsigned int a_reference_count,
-	unsigned int a_procedure_count)
+	uint32_t a_boolean_count,
+	uint32_t a_character_8_count,
+	uint32_t a_character_32_count,
+	uint32_t a_integer_8_count,
+	uint32_t a_integer_16_count,
+	uint32_t a_integer_32_count,
+	uint32_t a_integer_64_count,
+	uint32_t a_natural_8_count,
+	uint32_t a_natural_16_count,
+	uint32_t a_natural_32_count,
+	uint32_t a_natural_64_count,
+	uint32_t a_pointer_count,
+	uint32_t a_real_32_count,
+	uint32_t a_real_64_count,
+	uint32_t a_reference_count,
+	uint32_t a_procedure_count)
 {
 	GE_once_mutexes* l_once_mutexes;
 	unsigned int i;
@@ -197,22 +197,22 @@ GE_once_mutexes* GE_new_once_mutexes(
  * Keep track of the numbers of once-per-thread features.
  */
 void GE_thread_onces_set_counts(
-	unsigned int a_boolean_count,
-	unsigned int a_character_8_count,
-	unsigned int a_character_32_count,
-	unsigned int a_integer_8_count,
-	unsigned int a_integer_16_count,
-	unsigned int a_integer_32_count,
-	unsigned int a_integer_64_count,
-	unsigned int a_natural_8_count,
-	unsigned int a_natural_16_count,
-	unsigned int a_natural_32_count,
-	unsigned int a_natural_64_count,
-	unsigned int a_pointer_count,
-	unsigned int a_real_32_count,
-	unsigned int a_real_64_count,
-	unsigned int a_reference_count,
-	unsigned int a_procedure_count)
+	uint32_t a_boolean_count,
+	uint32_t a_character_8_count,
+	uint32_t a_character_32_count,
+	uint32_t a_integer_8_count,
+	uint32_t a_integer_16_count,
+	uint32_t a_integer_32_count,
+	uint32_t a_integer_64_count,
+	uint32_t a_natural_8_count,
+	uint32_t a_natural_16_count,
+	uint32_t a_natural_32_count,
+	uint32_t a_natural_64_count,
+	uint32_t a_pointer_count,
+	uint32_t a_real_32_count,
+	uint32_t a_real_64_count,
+	uint32_t a_reference_count,
+	uint32_t a_procedure_count)
 {
 	GE_thread_onces_boolean_count = a_boolean_count;
 	GE_thread_onces_character_8_count = a_character_8_count;

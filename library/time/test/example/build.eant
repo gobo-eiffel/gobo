@@ -4,7 +4,7 @@
 
 	<description>
 		system: "Gobo Eiffel Time Example Tester"
-		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
@@ -22,7 +22,7 @@
 			Remove other intermediary generated files.
 		</description>
 
-		<delete directory="Tclock"/>
+		<delete directory="Tclock" fail_on_error="false"/> <!-- Deletion sometimes fails on Windows in azure devops pipelines. -->
 	</target>
 
 	<target name="init_system" export="NONE">

@@ -4,7 +4,7 @@
 		"C functions used to implement class THREAD and related threading facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -100,65 +100,65 @@ extern GE_once_mutexes* GE_process_once_mutexes;
 /*
  * Numbers of once-per-thread features.
  */
-extern unsigned int GE_thread_onces_boolean_count;
-extern unsigned int GE_thread_onces_character_8_count;
-extern unsigned int GE_thread_onces_character_32_count;
-extern unsigned int GE_thread_onces_integer_8_count;
-extern unsigned int GE_thread_onces_integer_16_count;
-extern unsigned int GE_thread_onces_integer_32_count;
-extern unsigned int GE_thread_onces_integer_64_count;
-extern unsigned int GE_thread_onces_natural_8_count;
-extern unsigned int GE_thread_onces_natural_16_count;
-extern unsigned int GE_thread_onces_natural_32_count;
-extern unsigned int GE_thread_onces_natural_64_count;
-extern unsigned int GE_thread_onces_pointer_count;
-extern unsigned int GE_thread_onces_real_32_count;
-extern unsigned int GE_thread_onces_real_64_count;
-extern unsigned int GE_thread_onces_reference_count;
-extern unsigned int GE_thread_onces_procedure_count;
+extern uint32_t GE_thread_onces_boolean_count;
+extern uint32_t GE_thread_onces_character_8_count;
+extern uint32_t GE_thread_onces_character_32_count;
+extern uint32_t GE_thread_onces_integer_8_count;
+extern uint32_t GE_thread_onces_integer_16_count;
+extern uint32_t GE_thread_onces_integer_32_count;
+extern uint32_t GE_thread_onces_integer_64_count;
+extern uint32_t GE_thread_onces_natural_8_count;
+extern uint32_t GE_thread_onces_natural_16_count;
+extern uint32_t GE_thread_onces_natural_32_count;
+extern uint32_t GE_thread_onces_natural_64_count;
+extern uint32_t GE_thread_onces_pointer_count;
+extern uint32_t GE_thread_onces_real_32_count;
+extern uint32_t GE_thread_onces_real_64_count;
+extern uint32_t GE_thread_onces_reference_count;
+extern uint32_t GE_thread_onces_procedure_count;
 
 /*
  * Create a new 'GE_once_mutexes' struct which can deal with the
  * numbers of once features passed as argument.
  */
 extern GE_once_mutexes* GE_new_once_mutexes(
-	unsigned int a_boolean_count,
-	unsigned int a_character_8_count,
-	unsigned int a_character_32_count,
-	unsigned int a_integer_8_count,
-	unsigned int a_integer_16_count,
-	unsigned int a_integer_32_count,
-	unsigned int a_integer_64_count,
-	unsigned int a_natural_8_count,
-	unsigned int a_natural_16_count,
-	unsigned int a_natural_32_count,
-	unsigned int a_natural_64_count,
-	unsigned int a_pointer_count,
-	unsigned int a_real_32_count,
-	unsigned int a_real_64_count,
-	unsigned int a_reference_count,
-	unsigned int a_procedure_count);
+	uint32_t a_boolean_count,
+	uint32_t a_character_8_count,
+	uint32_t a_character_32_count,
+	uint32_t a_integer_8_count,
+	uint32_t a_integer_16_count,
+	uint32_t a_integer_32_count,
+	uint32_t a_integer_64_count,
+	uint32_t a_natural_8_count,
+	uint32_t a_natural_16_count,
+	uint32_t a_natural_32_count,
+	uint32_t a_natural_64_count,
+	uint32_t a_pointer_count,
+	uint32_t a_real_32_count,
+	uint32_t a_real_64_count,
+	uint32_t a_reference_count,
+	uint32_t a_procedure_count);
 
 /*
  * Keep track of the numbers of once-per-thread features.
  */
 extern void GE_thread_onces_set_counts(
-	unsigned int a_boolean_count,
-	unsigned int a_character_8_count,
-	unsigned int a_character_32_count,
-	unsigned int a_integer_8_count,
-	unsigned int a_integer_16_count,
-	unsigned int a_integer_32_count,
-	unsigned int a_integer_64_count,
-	unsigned int a_natural_8_count,
-	unsigned int a_natural_16_count,
-	unsigned int a_natural_32_count,
-	unsigned int a_natural_64_count,
-	unsigned int a_pointer_count,
-	unsigned int a_real_32_count,
-	unsigned int a_real_64_count,
-	unsigned int a_reference_count,
-	unsigned int a_procedure_count);
+	uint32_t a_boolean_count,
+	uint32_t a_character_8_count,
+	uint32_t a_character_32_count,
+	uint32_t a_integer_8_count,
+	uint32_t a_integer_16_count,
+	uint32_t a_integer_32_count,
+	uint32_t a_integer_64_count,
+	uint32_t a_natural_8_count,
+	uint32_t a_natural_16_count,
+	uint32_t a_natural_32_count,
+	uint32_t a_natural_64_count,
+	uint32_t a_pointer_count,
+	uint32_t a_real_32_count,
+	uint32_t a_real_64_count,
+	uint32_t a_reference_count,
+	uint32_t a_procedure_count);
 
 /*
  * Initialize `process_onces' and `thread_onces' in `a_context'.
