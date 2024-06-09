@@ -50,6 +50,7 @@ extern "C" {
 #endif
 
 #ifdef GE_USE_THREADS
+
 static EIF_MUTEX_TYPE* GE_ignored_signals_mutex = 0; /* Mutex to access `GE_ignored_signals'. */
 
 /* Initialize `GE_ignored_signals_mutex'. */
@@ -57,6 +58,7 @@ void GE_init_ignored_signals_mutex()
 {
 	GE_ignored_signals_mutex = (EIF_MUTEX_TYPE*)GE_mutex_create();
 }
+
 #elif defined (GE_WINDOWS)
 static DWORD GE_root_thread_id = 0; /* Thread ID of the main thread in non-multithreaded mode. */
 #elif defined(GE_USE_BOEHM_GC)
@@ -323,14 +325,14 @@ char GE_is_signal_defined(EIF_INTEGER a_sig)
 {
 	int i;
 
-	if (a_sig < 1 || a_sig > GE_NSIG - 1) {
+	if (a_sig < 1 || a_sig >= GE_NSIG) {
 		return (char)0;
 	}
 	for (i = 0; ; i++) {
 		if ((EIF_INTEGER)GE_signal_descriptions[i].number == a_sig) {
 			return (char)1;
 		} else if (GE_signal_descriptions[i].number == 0) {
-				return (char)0;
+			return (char)0;
 		}
 	}
 }
@@ -542,7 +544,7 @@ char GE_is_signal_caught(EIF_INTEGER a_sig)
 	if (GE_ignored_signals_mutex)
 		GE_mutex_unlock(GE_ignored_signals_mutex);
 #endif
-	return (char)((l_ignored == 1)? 0: 1);
+	return (char)((l_ignored == (char)1)? 0: 1);
 }
 
 /* Reset all the signals to their default handling. */
@@ -556,28 +558,26 @@ void GE_reset_all_signals(void)
 	for (l_sig = 1; l_sig < GE_NSIG; l_sig++)
 #ifdef SIGPROF
 		if (l_sig != SIGPROF)
-			GE_ignored_signals[l_sig] = GE_originally_ignored_signals[l_sig];
-#else
-		GE_ignored_signals[l_sig] = GE_originally_ignored_signals[l_sig];
 #endif
+			GE_ignored_signals[l_sig] = GE_originally_ignored_signals[l_sig];
 	
 #ifdef SIGTTIN
-	signal(SIGTTIN, SIG_IGN);/* Ignore background input signal */
+	signal(SIGTTIN, SIG_IGN); /* Ignore background input signal */
 #endif
 #ifdef SIGTTOU
-	signal(SIGTTOU, SIG_IGN);/* Ignore background output signal */
+	signal(SIGTTOU, SIG_IGN); /* Ignore background output signal */
 #endif
 #ifdef SIGTSTP
-	signal(SIGTSTP, SIG_DFL);	/* Restore default behaviour */
+	signal(SIGTSTP, SIG_DFL); /* Restore default behaviour */
 #endif
 #ifdef SIGCONT
-	signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
+	signal(SIGCONT, SIG_DFL); /* Restore default behaviour */
 #endif
 #ifdef SIGTRAP
 	signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
 #endif
 #ifdef SIGFPE
-	signal(SIGFPE, GE_handle_fpe_signal);	/* Raise an Eiffel exception when caught */
+	signal(SIGFPE, GE_handle_fpe_signal); /* Raise an Eiffel exception when caught */
 #endif
 #ifdef GE_USE_THREADS
 	if (GE_ignored_signals_mutex)
@@ -705,12 +705,13 @@ void GE_init_signal()
 		 */
 		GE_ignored_signals[l_sig] = 1; 
 
-		/* In Multi-threaded mode, we do not want to call
-		* signal () on some specific signals.
-		*/
 		switch (l_sig) {
 
 #ifdef GE_USE_THREADS
+
+			/* In Multi-threaded mode, we do not want to call
+			* signal() on some specific signals.
+			*/
 
 #if defined(GE_USE_POSIX_THREADS)
 			/* So far, used in Linux threads */
@@ -773,32 +774,64 @@ void GE_init_signal()
 	 */
 
 #ifdef SIGCHLD
-	GE_ignored_signals[SIGCHLD] = 1;	/* Ignore death of a child */
-	signal(SIGCHLD, SIG_DFL);			/* Restore the default value */
+	if (SIGCHLD >= 1 && SIGCHLD < GE_NSIG) {
+		GE_ignored_signals[SIGCHLD] = 1;	/* Ignore death of a child */
+		signal(SIGCHLD, SIG_DFL);			/* Restore the default value */
+	} else {
+		fprintf(stderr, "Out of bound signal %d %d\n", SIGCHLD, GE_NSIG);
+	}
 #endif
 #ifdef SIGCLD
-	GE_ignored_signals[SIGCLD] = 1;		/* Ignore death of a child */
+	if (SIGCLD >= 1 && SIGCLD < GE_NSIG) {
+		GE_ignored_signals[SIGCLD] = 1;		/* Ignore death of a child */
+	} else {
+		fprintf(stderr, "Out of bound signal %d %d\n", SIGCLD, GE_NSIG);
+	}
 #endif
 #ifdef SIGIO
-	GE_ignored_signals[SIGIO] = 1;		/* Ignore pending I/O on descriptor */
+	if (SIGIO >= 1 && SIGIO < GE_NSIG) {
+		GE_ignored_signals[SIGIO] = 1;		/* Ignore pending I/O on descriptor */
+	} else {
+		fprintf(stderr, "Out of bound signal %d %d\n", SIGIO, GE_NSIG);
+	}
 #endif
 #ifdef SIGCONT
-	GE_ignored_signals[SIGCONT] = 1;	/* Ignore continue after a stop */
+	if (SIGCONT >= 1 && SIGCONT < GE_NSIG) {
+		GE_ignored_signals[SIGCONT] = 1;	/* Ignore continue after a stop */
+	} else {
+		fprintf(stderr, "Out of bound signal %d %d\n", SIGCONT, GE_NSIG);
+	}
 #endif
 #ifdef SIGURG
-	GE_ignored_signals[SIGURG] = 1;		/* Ignore urgent condition on socket */
+	if (SIGURG >= 1 && SIGURG < GE_NSIG) {
+		GE_ignored_signals[SIGURG] = 1;		/* Ignore urgent condition on socket */
+	} else {
+		fprintf(stderr, "Out of bound signal %d %d\n", SIGURG, GE_NSIG);
+	}
 #endif
 #ifdef SIGWINCH
-	GE_ignored_signals[SIGWINCH] = 1;	/* Ignore window size change */
-	signal(SIGWINCH, SIG_IGN);
+	if (SIGWINCH >= 1 && SIGWINCH < GE_NSIG) {
+		GE_ignored_signals[SIGWINCH] = 1;	/* Ignore window size change */
+		signal(SIGWINCH, SIG_IGN);
+	} else {
+		fprintf(stderr, "Out of bound signal %d %d\n", SIGWINCH, GE_NSIG);
+	}
 #endif
 #ifdef SIGTTIN
-	GE_ignored_signals[SIGTTIN] = 1;	/* Ignore background input signal */
-	signal(SIGTTIN, SIG_IGN);
+	if (SIGTTIN >= 1 && SIGTTIN < GE_NSIG) {
+		GE_ignored_signals[SIGTTIN] = 1;	/* Ignore background input signal */
+		signal(SIGTTIN, SIG_IGN);
+	} else {
+		fprintf(stderr, "Out of bound signal %d %d\n", SIGTTIN, GE_NSIG);
+	}
 #endif
 #ifdef SIGTTOU
-	GE_ignored_signals[SIGTTOU] = 1;	/* Ignore background output signal */
-	signal(SIGTTOU, SIG_IGN);
+	if (SIGTTOU >= 1 && SIGTTOU < GE_NSIG) {
+		GE_ignored_signals[SIGTTOU] = 1;	/* Ignore background output signal */
+		signal(SIGTTOU, SIG_IGN);
+	} else {
+		fprintf(stderr, "Out of bound signal %d %d\n", SIGTTOU, GE_NSIG);
+	}
 #endif
 
 	/* Do not catch SIGTSTP (stop signal from tty like ^Z under csh or ksh)
@@ -807,12 +840,20 @@ void GE_init_signal()
 	 */
 
 #ifdef SIGTSTP
-	GE_ignored_signals[SIGTSTP] = 0;	/* Do not ignore that signal */
-	signal(SIGTSTP, SIG_DFL);			/* Restore default behaviour */
+	if (SIGTSTP >= 1 && SIGTSTP < GE_NSIG) {
+		GE_ignored_signals[SIGTSTP] = 0;	/* Do not ignore that signal */
+		signal(SIGTSTP, SIG_DFL);			/* Restore default behaviour */
+	} else {
+		fprintf(stderr, "Out of bound signal %d %d\n", SIGTSTP, GE_NSIG);
+	}
 #endif
 #ifdef SIGCONT
-	GE_ignored_signals[SIGCONT] = 0;	/* Do not ignore continue signal */
-	signal(SIGCONT, SIG_DFL);			/* Restore default behaviour */
+	if (SIGCONT >= 1 && SIGCONT < GE_NSIG) {
+		GE_ignored_signals[SIGCONT] = 0;	/* Do not ignore continue signal */
+		signal(SIGCONT, SIG_DFL);			/* Restore default behaviour */
+	} else {
+		fprintf(stderr, "Out of bound signal %d %d\n", SIGCONT, GE_NSIG);
+	}
 #endif
 
 	/* It would not be wise to catch SIGTRAP: C debuggers may use this signal
@@ -821,8 +862,12 @@ void GE_init_signal()
 	 */
 
 #ifdef SIGTRAP
-	GE_ignored_signals[SIGTRAP] = 0;	/* Do not ignore Trap signal */
-	signal(SIGTRAP, SIG_DFL);			/* Restore default behaviour */
+	if (SIGTRAP >= 1 && SIGTRAP < GE_NSIG) {
+		GE_ignored_signals[SIGTRAP] = 0;	/* Do not ignore Trap signal */
+		signal(SIGTRAP, SIG_DFL);			/* Restore default behaviour */
+	} else {
+		fprintf(stderr, "Out of bound signal %d %d\n", SIGTRAP, GE_NSIG);
+	}
 #endif
 
 	/* Special treatment for SIGFPE -- always raise an Eiffel exception when
@@ -831,8 +876,12 @@ void GE_init_signal()
 	 */
 
 #ifdef SIGFPE
-	GE_ignored_signals[SIGFPE] = 0;			/* Do not ignore a floating point signal */
-	signal(SIGFPE, GE_handle_fpe_signal);	/* Raise an Eiffel exception when caught */
+	if (SIGFPE >= 1 && SIGFPE < GE_NSIG) {
+		GE_ignored_signals[SIGFPE] = 0;			/* Do not ignore a floating point signal */
+		signal(SIGFPE, GE_handle_fpe_signal);	/* Raise an Eiffel exception when caught */
+	} else {
+		fprintf(stderr, "Out of bound signal %d %d\n", SIGFPE, GE_NSIG);
+	}
 #endif
 
 	/* Now save all the defaults in the special original status array, in order
