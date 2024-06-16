@@ -33445,17 +33445,6 @@ feature {NONE} -- C function generation
 				print_temp_name (l_temp, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
-				print_indentation
-				current_file.put_string (c_ge_context)
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_character ('2')
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_ge_default_context)
-				current_file.put_character (';')
-				current_file.put_new_line
 					-- Variable for exception trace.
 				print_indentation
 				current_file.put_string (c_ge_call)
@@ -33482,9 +33471,10 @@ feature {NONE} -- C function generation
 				current_file.put_character (' ')
 				current_file.put_string (c_ac)
 				print_assign_to
-				current_file.put_character ('&')
-				current_file.put_string (c_ac)
-				current_file.put_character ('2')
+				current_file.put_string (c_ge_new_context)
+				current_file.put_character ('(')
+				current_file.put_character ('0')
+				current_file.put_character (')')
 				print_semicolon_newline
 				print_indentation
 				current_file.put_string (c_ac)
@@ -44904,7 +44894,6 @@ feature {NONE} -- Constants
 	c_ge_deep: STRING = "GE_deep"
 	c_ge_deep_twin: STRING = "GE_deep_twin"
 	c_ge_default: STRING = "GE_default"
-	c_ge_default_context: STRING = "GE_default_context"
 	c_ge_developer_raise: STRING = "GE_developer_raise"
 	c_ge_dispose_once_per_object_data: STRING = "GE_dispose_once_per_object_data"
 	c_ge_dts: STRING = "GE_dts"
@@ -44998,6 +44987,7 @@ feature {NONE} -- Constants
 	c_ge_natural_64_field: STRING = "GE_natural_64_field"
 	c_ge_natural_64_field_at: STRING = "GE_natural_64_field_at"
 	c_ge_new: STRING = "GE_new"
+	c_ge_new_context: STRING = "GE_new_context"
 	c_ge_new_exception_manager: STRING = "GE_new_exception_manager"
 	c_ge_new_instance_of_encoded_type: STRING = "GE_new_instance_of_encoded_type"
 	c_ge_new_istr8: STRING = "GE_new_istr8"

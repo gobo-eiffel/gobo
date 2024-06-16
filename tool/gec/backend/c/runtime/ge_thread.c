@@ -1453,27 +1453,16 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 				GE_raise_with_message(GE_EX_EXT, "Cannot create thread children mutex");
 			}
 		}
+		l_context = GE_new_context(is_scoop_processor);
+		l_context->thread = l_thread_context;
 #ifdef GE_USE_SCOOP
 		l_thread_context->is_scoop_processor = is_scoop_processor;
 		if (is_scoop_processor) {
-			/* Use `GE_malloc_atomic' because we want `l_context->region' to be
-			 * collected if it is the only reference left. Other data are kept 
-			 * alive thanks to a reference from the SCOOP region. */
-			l_context = (GE_context*)GE_malloc_atomic(sizeof(GE_context));
-			*l_context = GE_default_context;
-			l_context->thread = l_thread_context;
 			GE_init_exception(l_context);
 			GE_scoop_region_set_context(current->region, l_context);
 			/* Do not keep track of the current object so that it can be
 			   reclaimed by the GC if it is not referenced anywhere else. */
 		} else {
-#endif
-			/* Use `GE_malloc' because we want all data reachable from `l_context'
-			   to be kept alive while `l_context' is alive. */
-			l_context = (GE_context*)GE_malloc(sizeof(GE_context));
-			*l_context = GE_default_context;
-			l_context->thread = l_thread_context;
-#ifdef GE_USE_SCOOP
 			l_context->region = current->region;
 			l_context->is_region_alive = '\1';
 #endif

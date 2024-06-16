@@ -155,6 +155,11 @@ struct GE_context_struct {
 extern GE_context GE_default_context;
 
 /*
+ * New execution context.
+ */
+extern GE_context* GE_new_context(int is_scoop_processor);
+
+/*
  * Execution context of main thread.
  */
 extern GE_context* GE_main_context;
