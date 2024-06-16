@@ -153,8 +153,8 @@ goto exit
 :clang
 	set CC=clang
 	set LD=clang
-	set CFLAGS=-pthread -Wno-unused-value -Wno-deprecated-declarations -fno-strict-aliasing -Os -DNDEBUG
-	set LFLAGS=-pthread -fno-strict-aliasing -Os -DNDEBUG
+	set CFLAGS=-pthread -Wno-unused-value -Wno-deprecated-declarations -fno-strict-aliasing -O2 -DNDEBUG
+	set LFLAGS=-pthread -fno-strict-aliasing -O2 -DNDEBUG
 	set LFLAG_OUT=-o 
 	set LLIBS=
 	set OBJ=.obj
@@ -172,8 +172,8 @@ goto exit
 :zig_defined
 	set CC="%ZIG%" cc
 	set LD="%ZIG%" cc
-	set CFLAGS=-pthread -Wno-unused-value -Wno-deprecated-declarations -fno-strict-aliasing -fno-sanitize=undefined -Os -DNDEBUG
-	set LFLAGS=-pthread -fno-strict-aliasing -fno-sanitize=undefined -Os -DNDEBUG
+	set CFLAGS=-pthread -Wno-unused-value -Wno-deprecated-declarations -fno-strict-aliasing -fno-sanitize=undefined -O2 -DNDEBUG
+	set LFLAGS=-pthread -fno-strict-aliasing -fno-sanitize=undefined -O2 -DNDEBUG
 	set LFLAG_OUT=-o 
 	set LLIBS=
 	set OBJ=.obj
