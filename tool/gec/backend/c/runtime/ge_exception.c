@@ -436,6 +436,31 @@ GE_context GE_default_context = {0, 0, 0, 0, 0, 0, '\1', 0, 0, {0, 0, 0}, {0, 0,
 	};
 
 /*
+ * New execution context.
+ */
+GE_context* GE_new_context(int is_scoop_processor)
+{
+	GE_context* l_context;
+
+#ifdef GE_USE_SCOOP
+	if (is_scoop_processor) {
+		/* Use `GE_calloc_atomic' because we want `l_context->region' to be
+		 * collected if it is the only reference left. Other data are kept 
+		 * alive thanks to a reference from the SCOOP region. */
+		l_context = (GE_context*)GE_calloc_atomic(1, sizeof(GE_context));
+	} else
+#endif
+	{
+		/* Use `GE_calloc' because we want all data reachable from `l_context'
+		 * to be kept alive while `l_context' is alive. */
+		l_context = (GE_context*)GE_calloc(1, sizeof(GE_context));
+	}
+	l_context->exception_trace_enabled = '\1';
+	l_context->pre_ecma_mapping_status = 1;
+	return l_context;
+}
+
+/*
  * Execution context of main thread.
  * Should be used from the main thread only.
  */
