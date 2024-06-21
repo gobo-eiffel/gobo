@@ -35181,8 +35181,12 @@ feature {NONE} -- C function generation
 			current_file.put_string (c_ac)
 			current_file.put_character (',')
 			current_file.put_character (' ')
+			header_file.put_string (c_volatile)
+			header_file.put_character (' ')
 			print_type_declaration (a_type, header_file)
 			header_file.put_character ('*')
+			current_file.put_string (c_volatile)
+			current_file.put_character (' ')
 			print_type_declaration (a_type, current_file)
 			current_file.put_character ('*')
 			header_file.put_character (' ')
@@ -35244,6 +35248,10 @@ feature {NONE} -- C function generation
 			print_indentation
 			print_boxed_attribute_pointer_access (tokens.result_keyword, a_type, False)
 			print_assign_to
+			current_file.put_character ('(')
+			print_type_declaration (a_type, current_file)
+			current_file.put_character ('*')
+			current_file.put_character (')')
 			current_file.put_character ('a')
 			current_file.put_character ('1')
 			print_semicolon_newline
@@ -35252,6 +35260,10 @@ feature {NONE} -- C function generation
 			print_boxed_attribute_item_access (tokens.result_keyword, a_type, False)
 			print_assign_to
 			current_file.put_character ('*')
+			current_file.put_character ('(')
+			print_type_declaration (a_type, current_file)
+			current_file.put_character ('*')
+			current_file.put_character (')')
 			current_file.put_character ('a')
 			current_file.put_character ('1')
 			print_semicolon_newline
