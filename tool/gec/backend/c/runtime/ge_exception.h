@@ -102,11 +102,11 @@ struct GE_exception_trace_buffer_struct {
 typedef struct GE_call_struct GE_call;
 struct GE_call_struct {
 #ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
-	void* object; /* Current object */
+	void* volatile object; /* Current object */
 #endif
-	const char* class_name;
-	const char* feature_name;
-	GE_call* caller; /* previous feature in the call chain */
+	const char* volatile class_name;
+	const char* volatile feature_name;
+	GE_call* volatile caller; /* previous feature in the call chain */
 };
 
 /*
