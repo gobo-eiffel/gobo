@@ -20276,9 +20276,15 @@ feature {NONE} -- Deep features generation
 					print_indentation
 					current_file.put_string (c_memset)
 					current_file.put_character ('(')
+					current_file.put_character ('(')
+					current_file.put_string (c_char)
+					current_file.put_character ('*')
+					current_file.put_character (')')
+					current_file.put_character ('(')
 					print_attribute_special_item_access (tokens.current_keyword, l_special_type, False)
 					current_file.put_character ('+')
 					print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+					current_file.put_character (')')
 					current_file.put_character (',')
 					current_file.put_character ('0')
 					current_file.put_character (',')
@@ -31709,9 +31715,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_indentation
 				current_file.put_string (c_memset)
 				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_string (c_char)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
 				print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
 				print_plus
 				print_argument_name (l_argument_name, current_file)
+				current_file.put_character (')')
 				print_comma
 				current_file.put_character ('0')
 				print_comma
@@ -32017,9 +32029,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_indentation
 				current_file.put_string (c_memset)
 				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_string (c_char)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
 				print_attribute_special_item_access (tokens.current_keyword, l_special_type, False)
 				current_file.put_character ('+')
 				print_argument_name (l_argument_name, current_file)
+				current_file.put_character (')')
 				current_file.put_character (',')
 				current_file.put_character ('0')
 				current_file.put_character (',')
@@ -34625,7 +34643,15 @@ feature {NONE} -- C function generation
 				print_type_declaration (l_integer_type, current_file)
 				current_file.put_line (" j = n;")
 				print_indentation
-				print_type_declaration (l_item_type, current_file)
+				if l_item_type.is_expanded then
+					current_file.put_string (c_volatile)
+					current_file.put_character (' ')
+					print_type_declaration (l_item_type, current_file)
+				else
+					print_type_declaration (l_item_type, current_file)
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
+				end
 				current_file.put_character (' ')
 				current_file.put_character ('*')
 				current_file.put_character ('i')
@@ -34828,7 +34854,15 @@ feature {NONE} -- C function generation
 				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
-				print_type_declaration (l_item_type, current_file)
+				if l_item_type.is_expanded then
+					current_file.put_string (c_volatile)
+					current_file.put_character (' ')
+					print_type_declaration (l_item_type, current_file)
+				else
+					print_type_declaration (l_item_type, current_file)
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
+				end
 				current_file.put_character (' ')
 				current_file.put_character ('*')
 				current_file.put_character ('i')
@@ -35969,7 +36003,13 @@ feature {NONE} -- Memory allocation
 			print_indentation
 			current_file.put_string (c_memset)
 			current_file.put_character ('(')
+			current_file.put_character ('(')
+			current_file.put_string (c_char)
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			current_file.put_character ('(')
 			print_result_name (current_file)
+			current_file.put_character (')')
 			current_file.put_character (',')
 			current_file.put_character ('0')
 			current_file.put_character (',')
@@ -38470,7 +38510,15 @@ feature {NONE} -- Type generation
 						-- of "flexible array member" in ISO C 99.
 					a_file.put_character ('%T')
 					l_item_type_set := l_special_type.item_type_set
-					print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
+					if l_item_type_set.is_expanded then
+						a_file.put_string (c_volatile)
+						a_file.put_character (' ')
+						print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
+					else
+						print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
+						a_file.put_character (' ')
+						a_file.put_string (c_volatile)
+					end
 					a_file.put_character (' ')
 					print_attribute_special_item_name (l_special_type, a_file)
 					a_file.put_character ('[')
