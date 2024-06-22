@@ -35783,23 +35783,8 @@ feature {NONE} -- Memory allocation
 			if l_special_type /= Void then
 				l_item_type := l_special_type.item_type_set.static_type.primary_type
 				current_file.put_character ('+')
-				current_file.put_character ('(')
-				current_file.put_character ('(')
 				current_file.put_character ('a')
 				current_file.put_character ('1')
-				current_file.put_character ('>')
-				current_file.put_character ('1')
-				current_file.put_character (')')
-				current_file.put_character ('?')
-				current_file.put_character ('(')
-				current_file.put_character ('a')
-				current_file.put_character ('1')
-				current_file.put_character ('-')
-				current_file.put_character ('1')
-				current_file.put_character (')')
-				current_file.put_character (':')
-				current_file.put_character ('0')
-				current_file.put_character (')')
 				current_file.put_character ('*')
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
@@ -38512,29 +38497,17 @@ feature {NONE} -- Type generation
 					a_file.put_new_line
 				end
 				if attached {ET_DYNAMIC_SPECIAL_TYPE} a_type as l_special_type then
-						-- We use the "struct hack" to represent SPECIAL
-						-- object header. The last member of the struct
-						-- is an array of size 1, but we malloc the needed
-						-- space when creating the SPECIAL object. We use
-						-- an array of size 1 because some compilers don't
-						-- like having an array of size 0 here. Note that
-						-- the "struct hack" is superseded by the concept
-						-- of "flexible array member" in ISO C 99.
+						-- We use "flexible array member" (defined in ISO C 99)
+						-- to represent SPECIAL object header. Note that the
+						-- "struct hack" with the last member of the struct
+						-- being an array of size 1 yields undefined behaviors.
+						-- See https://stackoverflow.com/questions/246977/is-using-flexible-array-members-in-c-bad-practice.
 					a_file.put_character ('%T')
 					l_item_type_set := l_special_type.item_type_set
-					if l_item_type_set.is_expanded then
-						a_file.put_string (c_volatile)
-						a_file.put_character (' ')
-						print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
-					else
-						print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
-						a_file.put_character (' ')
-						a_file.put_string (c_volatile)
-					end
+					print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
 					a_file.put_character (' ')
 					print_attribute_special_item_name (l_special_type, a_file)
 					a_file.put_character ('[')
-					a_file.put_character ('1')
 					a_file.put_character (']')
 					a_file.put_character (';')
 					a_file.put_character (' ')
