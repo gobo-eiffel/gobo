@@ -38504,7 +38504,15 @@ feature {NONE} -- Type generation
 						-- See https://stackoverflow.com/questions/246977/is-using-flexible-array-members-in-c-bad-practice.
 					a_file.put_character ('%T')
 					l_item_type_set := l_special_type.item_type_set
-					print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
+					if l_item_type_set.is_expanded then
+						a_file.put_string (c_volatile)
+						a_file.put_character (' ')
+						print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
+					else
+						print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
+						a_file.put_character (' ')
+						a_file.put_string (c_volatile)
+					end
 					a_file.put_character (' ')
 					print_attribute_special_item_name (l_special_type, a_file)
 					a_file.put_character ('[')
