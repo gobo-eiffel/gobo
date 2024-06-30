@@ -91,7 +91,7 @@ extern "C" {
  */
 typedef struct GE_exception_trace_buffer_struct GE_exception_trace_buffer;
 struct GE_exception_trace_buffer_struct {
-	char* area;
+	char* volatile area;
 	uint32_t count;
 	uint32_t capacity;
 };

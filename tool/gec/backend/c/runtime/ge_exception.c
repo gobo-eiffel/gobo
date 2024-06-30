@@ -162,11 +162,9 @@ void GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_trace, cha
  */
 void GE_wipe_out_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
 {
-	char* l_area = a_trace->area;
-
-	if (l_area) {
-		memset(l_area, 0, a_trace->count);
+	if (a_trace->count > 0) {
 		a_trace->count = 0;
+		a_trace->area[0] = '\0';
 	}
 }
 
