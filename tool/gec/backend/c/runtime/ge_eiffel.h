@@ -236,7 +236,7 @@ typedef struct {EIF_TYPE_INDEX id; uint16_t flags; uint32_t offset; EIF_INTEGER 
 /* SCOOP */
 typedef uint16_t EIF_SCP_PID; /* Processor ID */
 #ifdef GE_USE_SCOOP
-#define RTS_PID(o) (EIF_SCP_PID)(intptr_t)(((EIF_REFERENCE)(o))->region)
+#define RTS_PID(o) (EIF_SCP_PID)(uintptr_t)(((EIF_REFERENCE)(o))->region)
 #else
 #define RTS_PID(o) (EIF_SCP_PID)0
 #endif

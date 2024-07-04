@@ -114,7 +114,7 @@ extern int _open_osfhandle(long, int);
 					with Microsoft which explains the ifdef statement.
 				*/
 #if defined(__LCC__) || defined(EIF_BORLAND)
-			hCrt = _open_osfhandle((intptr_t)hconout, _O_TEXT);
+			hCrt = _open_osfhandle((uintptr_t)hconout, _O_TEXT);
 			dup2(hCrt, _fileno(stdout));
 			hf = _fdopen (hCrt, "w");
 			*stdout = *hf;
@@ -128,7 +128,7 @@ extern int _open_osfhandle(long, int);
 			}
 #endif
 #if defined(__LCC__) || defined(EIF_BORLAND)
-			hCrt = _open_osfhandle((intptr_t)hconerr, _O_TEXT);
+			hCrt = _open_osfhandle((uintptr_t)hconerr, _O_TEXT);
 			dup2(hCrt, _fileno(stderr));
 			hf = _fdopen(hCrt, "w");
 			*stderr = *hf;
@@ -143,7 +143,7 @@ extern int _open_osfhandle(long, int);
 			}
 #endif
 #if defined(__LCC__) || defined(EIF_BORLAND)
-			hCrt = _open_osfhandle((intptr_t)hconin, _O_TEXT | _O_RDONLY);
+			hCrt = _open_osfhandle((uintptr_t)hconin, _O_TEXT | _O_RDONLY);
 			dup2(hCrt, _fileno(stdin));
 			hf = _fdopen(hCrt, "r");
 			*stdin = *hf;
