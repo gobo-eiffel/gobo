@@ -99,7 +99,8 @@ struct GE_exception_trace_buffer_struct {
 /*
  * Information about the feature being executed.
  */
-typedef struct GE_call_struct GE_call;
+typedef struct GE_call_struct GE_call_type;
+#define GE_call volatile GE_call_type
 struct GE_call_struct {
 #ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
 	void* volatile object; /* Current object */
@@ -112,27 +113,29 @@ struct GE_call_struct {
 /*
  * Context of features containing a rescue clause.
  */
-typedef struct GE_rescue_struct GE_rescue;
+typedef struct GE_rescue_struct GE_rescue_type;
+#define GE_rescue volatile GE_rescue_type
 struct GE_rescue_struct {
 	GE_jmp_buf jb;
-	GE_rescue* previous; /* previous context in the call chain */
+	GE_rescue* volatile previous; /* previous context in the call chain */
 };
 
 /*
  * Information about the execution context.
  * One such struct per thread.
  */
-typedef struct GE_context_struct GE_context;
+typedef struct GE_context_struct GE_context_type;
+#define GE_context volatile GE_context_type
 struct GE_context_struct {
-	GE_call* call; /* Call stack */
+	GE_call* volatile call; /* Call stack */
 	uint32_t in_assertion; /* Is an assertion evaluated? */
-	GE_rescue* last_rescue; /* Context of last feature entered containing a rescue clause */
+	GE_rescue* volatile last_rescue; /* Context of last feature entered containing a rescue clause */
 	uint32_t in_rescue; /* Number of rescue clauses currently being executed */
 	EIF_REFERENCE exception_manager; /* Exception manager */
 	char raising_exception; /* Is an exception currently being raised? */
 	char exception_trace_enabled; /* Should exception trace be displayed? */
 	long exception_code; /* Code of the exception currently being raised, 0 otherwise */
-	const char* exception_tag; /* Tag of the exception currently being raised, NULL otherwise */
+	const char* volatile exception_tag; /* Tag of the exception currently being raised, NULL otherwise */
 	GE_exception_trace_buffer exception_trace_buffer; /* String buffer used to build the exception trace */
 	GE_exception_trace_buffer last_exception_trace; /* Last non-routine-failure exception trace */
 	int signal_number; /* Number of last signal received */
