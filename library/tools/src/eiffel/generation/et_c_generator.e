@@ -29749,7 +29749,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_type_cast (l_integer_type, current_file)
 				current_file.put_character ('(')
 				print_type_cast (l_integer_type, current_file)
-				current_file.put_string ("(intptr_t)")
+				current_file.put_character ('(')
+				current_file.put_string (c_intptr_t)
+				current_file.put_character (')')
 				current_file.put_character ('(')
 				if a_target_type.is_basic then
 					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
@@ -29838,7 +29840,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			current_file.put_new_line
 			print_indentation
 			if current_type.is_basic then
-				current_file.put_string ("int l = snprintf(s,20,%"0x%%lX%",(unsigned long)(intptr_t)*C);")
+				current_file.put_string ("int l = snprintf(s,20,%"0x%%lX%",(unsigned long)(uintptr_t)*C);")
 			else
 -- TODO: use feature `item'.
 				set_fatal_error
@@ -29893,7 +29895,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				current_file.put_string (c_intptr_t)
+				current_file.put_string (c_char)
+				current_file.put_character ('*')
 				current_file.put_character (')')
 				current_file.put_character ('(')
 				if a_target_type.is_basic then
@@ -29933,7 +29936,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type.primary_type, current_file)
-				current_file.put_string ("(intptr_t)")
+				current_file.put_character ('(')
+				current_file.put_string (c_intptr_t)
+				current_file.put_character (')')
 				current_file.put_character ('(')
 				if a_target_type.is_basic then
 					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
