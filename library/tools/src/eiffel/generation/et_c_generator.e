@@ -5669,6 +5669,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 								current_file.put_character (')')
 							end
 						else
+							if l_argument_type = current_dynamic_system.pointer_type then
+									-- Get rid of the volatile type marker.
+								current_file.put_character ('(')
+								current_file.put_string (c_void)
+								current_file.put_character ('*')
+								current_file.put_character (')')
+							end
 							print_argument_name (l_name, current_file)
 						end
 						i := i + 1
@@ -5809,6 +5816,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 							current_file.put_character (')')
 						end
 					else
+						if l_argument_type = current_dynamic_system.pointer_type then
+								-- Get rid of the volatile type marker.
+							current_file.put_character ('(')
+							current_file.put_string (c_void)
+							current_file.put_character ('*')
+							current_file.put_character (')')
+						end
 						print_argument_name (l_name, current_file)
 					end
 				end
@@ -5859,6 +5873,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 							current_file.put_character (')')
 						end
 					else
+						if l_argument_type = current_dynamic_system.pointer_type then
+								-- Get rid of the volatile type marker.
+							current_file.put_character ('(')
+							current_file.put_string (c_void)
+							current_file.put_character ('*')
+							current_file.put_character (')')
+						end
 						print_argument_name (l_name, current_file)
 					end
 				else
@@ -6029,6 +6050,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 												current_file.put_character (')')
 											end
 										else
+											if l_argument_type = current_dynamic_system.pointer_type then
+													-- Get rid of the volatile type marker.
+												current_file.put_character ('(')
+												current_file.put_string (c_void)
+												current_file.put_character ('*')
+												current_file.put_character (')')
+											end
 											print_argument_name (l_argument_name, current_file)
 										end
 										i := i + l_max
@@ -6164,6 +6192,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						current_file.put_character (')')
 					end
 				else
+					if l_argument_type = current_dynamic_system.pointer_type then
+							-- Get rid of the volatile type marker.
+						current_file.put_character ('(')
+						current_file.put_string (c_void)
+						current_file.put_character ('*')
+						current_file.put_character (')')
+					end
 					print_argument_name (l_name, current_file)
 				end
 				current_file.put_character (')')
@@ -6224,6 +6259,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 								current_file.put_character (')')
 							end
 						else
+							if l_argument_type = current_dynamic_system.pointer_type then
+									-- Get rid of the volatile type marker.
+								current_file.put_character ('(')
+								current_file.put_string (c_void)
+								current_file.put_character ('*')
+								current_file.put_character (')')
+							end
 							print_argument_name (l_name, current_file)
 						end
 						i := i + 1
@@ -6267,6 +6309,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 								current_file.put_character (')')
 							end
 						else
+							if l_argument_type = current_dynamic_system.pointer_type then
+									-- Get rid of the volatile type marker.
+								current_file.put_character ('(')
+								current_file.put_string (c_void)
+								current_file.put_character ('*')
+								current_file.put_character (')')
+							end
 							print_argument_name (l_name, current_file)
 						end
 						i := i + 1
@@ -6530,6 +6579,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 								current_file.put_character (')')
 							end
 						else
+							if l_argument_type = current_dynamic_system.pointer_type then
+									-- Get rid of the volatile type marker.
+								current_file.put_character ('(')
+								current_file.put_string (c_void)
+								current_file.put_character ('*')
+								current_file.put_character (')')
+							end
 							print_argument_name (l_name, current_file)
 						end
 						i := i + 1
@@ -6573,6 +6629,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 								current_file.put_character (')')
 							end
 						else
+							if l_argument_type = current_dynamic_system.pointer_type then
+									-- Get rid of the volatile type marker.
+								current_file.put_character ('(')
+								current_file.put_string (c_void)
+								current_file.put_character ('*')
+								current_file.put_character (')')
+							end
 							print_argument_name (l_name, current_file)
 						end
 						i := i + 1

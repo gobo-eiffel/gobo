@@ -218,7 +218,7 @@ typedef uint8_t EIF_NATURAL_8;
 typedef uint16_t EIF_NATURAL_16;
 typedef uint32_t EIF_NATURAL_32;
 typedef uint64_t EIF_NATURAL_64;
-typedef void* EIF_POINTER;
+typedef volatile void* EIF_POINTER;
 typedef float EIF_REAL_32;
 typedef double EIF_REAL_64;
 #ifdef GE_USE_SCOOP

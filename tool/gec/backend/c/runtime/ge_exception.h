@@ -234,7 +234,7 @@ extern void GE_raise_with_message(long a_code, const char* msg);
 /*
  * Raise an exception from EXCEPTION_MANAGER.
  */
-extern void GE_developer_raise(long a_code, char* a_meaning, char* a_message);
+extern void GE_developer_raise(long a_code, EIF_POINTER a_meaning, EIF_POINTER a_message);
 
 /*
  * Raise exception which was raised the first time a once routine

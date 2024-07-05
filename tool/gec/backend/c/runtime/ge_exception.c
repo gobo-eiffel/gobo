@@ -706,9 +706,9 @@ void GE_raise_with_message(long a_code, const char* msg)
 /*
  * Raise an exception from EXCEPTION_MANAGER.
  */
-void GE_developer_raise(long a_code, char* a_meaning, char* a_message)
+void GE_developer_raise(long a_code, EIF_POINTER a_meaning, EIF_POINTER a_message)
 {
-	GE_raise_exception(a_code, 0, -1, -1, a_message, NULL, NULL, NULL, NULL, NULL, -1, 0);
+	GE_raise_exception(a_code, 0, -1, -1, (char*)a_message, NULL, NULL, NULL, NULL, NULL, -1, 0);
 }
 
 /*
