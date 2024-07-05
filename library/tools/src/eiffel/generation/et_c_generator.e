@@ -7696,6 +7696,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				-- Variable for 'Result' entity.
 			if a_result_type /= Void then
 				print_indentation
+				print_type_declaration (a_result_type, current_file)
 				if
 					volatile_result or
 					has_rescue and then
@@ -7713,17 +7714,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						-- sure that he C optimizer will not implement it with 'register'.
 						--
 						-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
-					if a_result_type.is_expanded then
-						current_file.put_string (c_volatile)
-						current_file.put_character (' ')
-						print_type_declaration (a_result_type, current_file)
-					else
-						print_type_declaration (a_result_type, current_file)
-						current_file.put_character (' ')
-						current_file.put_string (c_volatile)
-					end
-				else
-					print_type_declaration (a_result_type, current_file)
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
 				end
 				current_file.put_character (' ')
 				print_result_name (current_file)
@@ -7742,6 +7734,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					l_local_type_set := dynamic_type_set (l_name)
 					l_local_type := l_local_type_set.static_type.primary_type
 					print_indentation
+					print_type_declaration (l_local_type, current_file)
 					if
 						volatile_locals.has (l_name.seed) or
 						has_rescue and then
@@ -7760,17 +7753,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 							-- with 'register'.
 							--
 							-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
-						if l_local_type.is_expanded then
-							current_file.put_string (c_volatile)
-							current_file.put_character (' ')
-							print_type_declaration (l_local_type, current_file)
-						else
-							print_type_declaration (l_local_type, current_file)
-							current_file.put_character (' ')
-							current_file.put_string (c_volatile)
-						end
-					else
-						print_type_declaration (l_local_type, current_file)
+						current_file.put_character (' ')
+						current_file.put_string (c_volatile)
 					end
 					current_file.put_character (' ')
 					print_local_name (l_name, current_file)
@@ -8080,21 +8064,15 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				from i := 1 until i > nb loop
 					if attached l_object_tests.object_test (i).name as l_name then
 						if current_object_test_locals.has (l_name.seed) then
-								-- If the address of the iobject-test local is used, we have
-								-- to make sure that the C optimizer will not implement it
-								-- with 'register'.
-								--
-								-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
 							l_type := dynamic_type_set (l_name).static_type.primary_type
 							print_indentation
-							if not volatile_object_test_locals.has (l_name.seed) then
-								print_type_declaration (l_type, current_file)
-							elseif l_type.is_expanded then
-								current_file.put_string (c_volatile)
-								current_file.put_character (' ')
-								print_type_declaration (l_type, current_file)
-							else
-								print_type_declaration (l_type, current_file)
+							print_type_declaration (l_type, current_file)
+							if volatile_object_test_locals.has (l_name.seed) then
+									-- If the address of the iobject-test local is used, we have
+									-- to make sure that the C optimizer will not implement it
+									-- with 'register'.
+									--
+									-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
 								current_file.put_character (' ')
 								current_file.put_string (c_volatile)
 							end
@@ -8125,21 +8103,15 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				from i := 1 until i > nb loop
 					if attached l_iteration_components.iteration_component (i).unfolded_cursor_name as l_name then
 						if current_iteration_cursors.has (l_name.seed) then
-								-- If the address of the iteration cursor is used, we have
-								-- to make sure that the C optimizer will not implement it
-								-- with 'register'.
-								--
-								-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
 							l_type := dynamic_type_set (l_name).static_type.primary_type
 							print_indentation
-							if not volatile_iteration_cursors.has (l_name.seed) then
-								print_type_declaration (l_type, current_file)
-							elseif l_type.is_expanded then
-								current_file.put_string (c_volatile)
-								current_file.put_character (' ')
-								print_type_declaration (l_type, current_file)
-							else
-								print_type_declaration (l_type, current_file)
+							print_type_declaration (l_type, current_file)
+							if volatile_iteration_cursors.has (l_name.seed) then
+									-- If the address of the iteration cursor is used, we have
+									-- to make sure that the C optimizer will not implement it
+									-- with 'register'.
+									--
+									-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
 								current_file.put_character (' ')
 								current_file.put_string (c_volatile)
 							end
@@ -8168,21 +8140,15 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				from i := 1 until i > nb loop
 					if attached l_inline_separate_arguments.argument (i).name as l_name then
 						if current_inline_separate_arguments.has (l_name.seed) then
-								-- If the address of the inline separate argument is used, we have
-								-- to make sure that the C optimizer will not implement it
-								-- with 'register'.
-								--
-								-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
 							l_type := dynamic_type_set (l_name).static_type.primary_type
 							print_indentation
-							if not volatile_inline_separate_arguments.has (l_name.seed) then
-								print_type_declaration (l_type, current_file)
-							elseif l_type.is_expanded then
-								current_file.put_string (c_volatile)
-								current_file.put_character (' ')
-								print_type_declaration (l_type, current_file)
-							else
-								print_type_declaration (l_type, current_file)
+							print_type_declaration (l_type, current_file)
+							if volatile_inline_separate_arguments.has (l_name.seed) then
+									-- If the address of the inline separate argument is used, we have
+									-- to make sure that the C optimizer will not implement it
+									-- with 'register'.
+									--
+									-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
 								current_file.put_character (' ')
 								current_file.put_string (c_volatile)
 							end
@@ -8214,20 +8180,14 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				end
 				if l_type /= Void then
 					l_name := temp_variables.item (i)
-						-- If the address of the temporary variable is used, we have
-						-- to make sure that the C optimizer will not implement it
-						-- with 'register'.
-						--
-						-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
 					print_indentation
-					if not volatile_temp_variables.item (i) then
-						print_type_declaration (l_type, current_file)
-					elseif l_type.is_expanded then
-						current_file.put_string (c_volatile)
-						current_file.put_character (' ')
-						print_type_declaration (l_type, current_file)
-					else
-						print_type_declaration (l_type, current_file)
+					print_type_declaration (l_type, current_file)
+					if volatile_temp_variables.item (i) then
+							-- If the address of the temporary variable is used, we have
+							-- to make sure that the C optimizer will not implement it
+							-- with 'register'.
+							--
+							-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
 						current_file.put_character (' ')
 						current_file.put_string (c_volatile)
 					end
@@ -21360,20 +21320,14 @@ feature {NONE} -- Separate calls
 			print_semicolon_newline
 			if l_result_type /= Void then
 				print_indentation
+				print_type_declaration (l_result_type, current_file)
 					-- Declare the 'Result' as 'volatile' because we will pass
 					-- its address during the separate call so that it is set
 					-- from the other SCOOP processor. This prevents the C optimizer
 					-- to implement it with 'register'.
 					-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
-				if l_result_type.is_expanded then
-					current_file.put_string (c_volatile)
-					current_file.put_character (' ')
-					print_type_declaration (l_result_type, current_file)
-				else
-					print_type_declaration (l_result_type, current_file)
-					current_file.put_character (' ')
-					current_file.put_string (c_volatile)
-				end
+				current_file.put_character (' ')
+				current_file.put_string (c_volatile)
 				current_file.put_character (' ')
 				print_result_name (current_file)
 				print_semicolon_newline
@@ -22128,15 +22082,10 @@ feature {NONE} -- Separate calls
 				l_index := l_call_expression.index
 				l_result_type := dynamic_type_set (l_call_expression).static_type.primary_type
 				print_indentation
-				if l_result_type.is_expanded then
-					current_file.put_string (c_volatile)
-					current_file.put_character (' ')
-					print_type_declaration (l_result_type, current_file)
-				else
-					print_type_declaration (l_result_type, current_file)
-					current_file.put_character (' ')
-					current_file.put_string (c_volatile)
-				end
+				print_type_declaration (l_result_type, current_file)
+				current_file.put_character (' ')
+				current_file.put_string (c_volatile)
+				current_file.put_character (' ')
 				current_file.put_character ('*')
 				current_file.put_character (' ')
 				print_result_name (current_file)
@@ -22564,15 +22513,9 @@ feature {NONE} -- Separate calls
 			if attached {ET_QUALIFIED_FEATURE_CALL_EXPRESSION} a_separate_call as l_call_expression then
 				l_result_type := dynamic_type_set (l_call_expression).static_type.primary_type
 				header_file.put_character ('%T')
-				if l_result_type.is_expanded then
-					header_file.put_string (c_volatile)
-					header_file.put_character (' ')
-					print_type_declaration (l_result_type, header_file)
-				else
-					print_type_declaration (l_result_type, header_file)
-					header_file.put_character (' ')
-					header_file.put_string (c_volatile)
-				end
+				print_type_declaration (l_result_type, header_file)
+				header_file.put_character (' ')
+				header_file.put_string (c_volatile)
 				header_file.put_character ('*')
 				header_file.put_character (' ')
 				print_result_name (header_file)
@@ -34431,15 +34374,9 @@ feature {NONE} -- C function generation
 				print_type_declaration (l_integer_type, current_file)
 				current_file.put_line (" j = n;")
 				print_indentation
-				if l_item_type.is_expanded then
-					current_file.put_string (c_volatile)
-					current_file.put_character (' ')
-					print_type_declaration (l_item_type, current_file)
-				else
-					print_type_declaration (l_item_type, current_file)
-					current_file.put_character (' ')
-					current_file.put_string (c_volatile)
-				end
+				print_type_declaration (l_item_type, current_file)
+				current_file.put_character (' ')
+				current_file.put_string (c_volatile)
 				current_file.put_character (' ')
 				current_file.put_character ('*')
 				current_file.put_character ('i')
@@ -34642,15 +34579,9 @@ feature {NONE} -- C function generation
 				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
-				if l_item_type.is_expanded then
-					current_file.put_string (c_volatile)
-					current_file.put_character (' ')
-					print_type_declaration (l_item_type, current_file)
-				else
-					print_type_declaration (l_item_type, current_file)
-					current_file.put_character (' ')
-					current_file.put_string (c_volatile)
-				end
+				print_type_declaration (l_item_type, current_file)
+				current_file.put_character (' ')
+				current_file.put_string (c_volatile)
 				current_file.put_character (' ')
 				current_file.put_character ('*')
 				current_file.put_character ('i')
@@ -38241,15 +38172,9 @@ feature {NONE} -- Type generation
 						-- See https://stackoverflow.com/questions/246977/is-using-flexible-array-members-in-c-bad-practice.
 					a_file.put_character ('%T')
 					l_item_type_set := l_special_type.item_type_set
-					if l_item_type_set.is_expanded then
-						a_file.put_string (c_volatile)
-						a_file.put_character (' ')
-						print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
-					else
-						print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
-						a_file.put_character (' ')
-						a_file.put_string (c_volatile)
-					end
+					print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
+					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
 					a_file.put_character (' ')
 					print_attribute_special_item_name (l_special_type, a_file)
 					a_file.put_character ('[')
