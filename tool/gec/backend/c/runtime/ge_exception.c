@@ -51,7 +51,7 @@ extern "C" {
  * Pre-defined exception tags. No restriction on size.
  */
 static char* GE_exception_tags[] = {
-	(char *) 0,							/* Nothing */
+	(char*) 0,							/* Nothing */
 	"Feature call on void target.",		/* GE_EX_VOID */
 	"No more memory.",					/* GE_EX_MEM */
 	"Precondition violated.",			/* GE_EX_PRE */

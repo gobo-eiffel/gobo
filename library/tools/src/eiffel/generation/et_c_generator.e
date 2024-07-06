@@ -22478,6 +22478,8 @@ feature {NONE} -- Separate calls
 			header_file.put_new_line
 			header_file.put_string (c_typedef)
 			header_file.put_character (' ')
+			header_file.put_string (c_volatile)
+			header_file.put_character (' ')
 			header_file.put_string (c_struct)
 			header_file.put_character (' ')
 			print_separate_call_object_type_name (i, current_feature, current_type, header_file)
@@ -23876,9 +23878,23 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_indentation
 				current_file.put_string (c_memcpy)
 				current_file.put_character ('(')
+					-- Get rid of the volatile type marker.
+				current_file.put_character ('(')
+				current_file.put_string (c_void)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
 				print_procedure_target_expression (a_target, a_special_type, False)
+				current_file.put_character (')')
 				print_comma
+					-- Get rid of the volatile type marker.
+				current_file.put_character ('(')
+				current_file.put_string (c_void)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
 				print_attachment_expression (a_source, dynamic_type_set (a_source), a_special_type)
+				current_file.put_character (')')
 				print_comma
 				print_attribute_special_offset_access (a_target, a_special_type, False)
 				print_plus
@@ -38011,6 +38027,8 @@ feature {NONE} -- Type generation
 			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string (c_typedef)
+			header_file.put_character (' ')
+			header_file.put_string (c_volatile)
 			a_file.put_character (' ')
 			a_file.put_string (c_struct)
 			a_file.put_character (' ')
@@ -38032,6 +38050,8 @@ feature {NONE} -- Type generation
 			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string (c_typedef)
+			header_file.put_character (' ')
+			header_file.put_string (c_volatile)
 			a_file.put_character (' ')
 			a_file.put_string (c_struct)
 			a_file.put_character (' ')
@@ -38050,6 +38070,8 @@ feature {NONE} -- Type generation
 			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string (c_typedef)
+			header_file.put_character (' ')
+			header_file.put_string (c_volatile)
 			a_file.put_character (' ')
 			a_file.put_string (c_struct)
 			a_file.put_character (' ')
@@ -38271,6 +38293,8 @@ feature {NONE} -- Type generation
 					a_file.put_new_line
 				end
 				a_file.put_character ('%T')
+				a_file.put_string (c_volatile)
+				a_file.put_character (' ')
 				print_type_declaration (a_type, a_file)
 				a_file.put_character ('*')
 				a_file.put_character (' ')

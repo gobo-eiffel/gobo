@@ -49,7 +49,7 @@ static GE_weak_pointer* GE_new_weak_pointer(EIF_REFERENCE object)
 		wp = (GE_weak_pointer*)GE_malloc_atomic(sizeof(GE_weak_pointer));
 		wp->object = object;
 #ifdef GE_USE_BOEHM_GC
-		GC_GENERAL_REGISTER_DISAPPEARING_LINK((void**)(&wp->object), GC_base(object));
+		GC_GENERAL_REGISTER_DISAPPEARING_LINK((void**)(&wp->object), GC_base((void*)object));
 #endif
 		return wp;
 	}

@@ -318,9 +318,9 @@ extern void* GE_unprotected_recalloc(void* p, size_t old_nelem, size_t new_nelem
  * Explicitly deallocate an object.
  */
 #ifdef GE_USE_BOEHM_GC
-#define GE_free(p) GC_FREE((void *)(p))
+#define GE_free(p) GC_FREE((void*)(p))
 #else /* No GC */
-#define GE_free(p) free((void *)(p))
+#define GE_free(p) free((void*)(p))
 #endif
 
 /*

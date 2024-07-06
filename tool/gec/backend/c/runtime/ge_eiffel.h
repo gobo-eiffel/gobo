@@ -222,15 +222,15 @@ typedef volatile void* EIF_POINTER;
 typedef float EIF_REAL_32;
 typedef double EIF_REAL_64;
 #ifdef GE_USE_SCOOP
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; GE_scoop_region* region;} EIF_ANY;
+typedef volatile struct {EIF_TYPE_INDEX id; uint16_t flags; GE_scoop_region* region;} EIF_ANY;
 typedef EIF_ANY* EIF_REFERENCE;
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; GE_scoop_region* region; EIF_REFERENCE area; EIF_INTEGER count;} EIF_STRING;
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; GE_scoop_region* region; uint32_t offset; EIF_INTEGER count; EIF_INTEGER capacity;} EIF_SPECIAL;
+typedef volatile struct {EIF_TYPE_INDEX id; uint16_t flags; GE_scoop_region* region; EIF_REFERENCE area; EIF_INTEGER count;} EIF_STRING;
+typedef volatile struct {EIF_TYPE_INDEX id; uint16_t flags; GE_scoop_region* region; uint32_t offset; EIF_INTEGER count; EIF_INTEGER capacity;} EIF_SPECIAL;
 #else
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags;} EIF_ANY;
+typedef volatile struct {EIF_TYPE_INDEX id; uint16_t flags;} EIF_ANY;
 typedef EIF_ANY* EIF_REFERENCE;
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; EIF_REFERENCE area; EIF_INTEGER count;} EIF_STRING;
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; uint32_t offset; EIF_INTEGER count; EIF_INTEGER capacity;} EIF_SPECIAL;
+typedef volatile struct {EIF_TYPE_INDEX id; uint16_t flags; EIF_REFERENCE area; EIF_INTEGER count;} EIF_STRING;
+typedef volatile struct {EIF_TYPE_INDEX id; uint16_t flags; uint32_t offset; EIF_INTEGER count; EIF_INTEGER capacity;} EIF_SPECIAL;
 #endif
 
 /* SCOOP */

@@ -1496,7 +1496,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 				SIGBLOCK;
 				GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
 					/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
-				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, (void *)l_context) == 0) {
+				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, (void*)l_context) == 0) {
 					l_thread_context->thread_id = l_thread_id;
 #ifdef GE_USE_SCOOP
 					if (!is_scoop_processor) {
@@ -1520,7 +1520,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 		SIGBLOCK;
 		GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
 			/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
-		l_thread_id = (EIF_THR_TYPE)_beginthreadex(NULL, (unsigned int)l_attr_stack_size, GE_thread_routine, (void *)l_context, 0, NULL);
+		l_thread_id = (EIF_THR_TYPE)_beginthreadex(NULL, (unsigned int)l_attr_stack_size, GE_thread_routine, (void*)l_context, 0, NULL);
 		if (l_thread_id == 0) {
 			l_raise_error = 1;
 		} else {
@@ -1556,7 +1556,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 #endif
 			GE_free_exception(l_context);
 			GE_free(l_thread_context);
-			GE_free((void *)l_context);
+			GE_free(l_context);
 			GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
 #if defined GE_USE_POSIX_THREADS || defined EIF_WINDOWS
 		}
@@ -1809,7 +1809,7 @@ void GE_thread_exit(void)
 		if (l_free_thread_context) {
 			GE_free(l_thread_context);
 		}
-		GE_free((void *)l_context);
+		GE_free(l_context);
 #ifdef GE_USE_POSIX_THREADS
 		pthread_exit(NULL);
 #elif defined EIF_WINDOWS
