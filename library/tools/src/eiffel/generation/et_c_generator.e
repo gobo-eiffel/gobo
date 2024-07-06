@@ -38234,8 +38234,6 @@ feature {NONE} -- Type generation
 					l_item_type_set := l_special_type.item_type_set
 					print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
 					a_file.put_character (' ')
-					a_file.put_string (c_volatile)
-					a_file.put_character (' ')
 					print_attribute_special_item_name (l_special_type, a_file)
 					a_file.put_character ('[')
 					a_file.put_character (']')
