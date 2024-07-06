@@ -2050,18 +2050,18 @@ feature {NONE} -- Feature generation
 			print_address_routine_name (current_feature, current_type, current_file)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
+			print_type_declaration (current_type, header_file)
+			print_type_declaration (current_type, current_file)
 			if current_type.is_expanded then
-				header_file.put_string (c_volatile)
-				header_file.put_character (' ')
-				print_type_declaration (current_type, header_file)
+				if current_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
+					header_file.put_character (' ')
+					header_file.put_string (c_volatile)
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
+				end
 				header_file.put_character ('*')
-				current_file.put_string (c_volatile)
-				current_file.put_character (' ')
-				print_type_declaration (current_type, current_file)
 				current_file.put_character ('*')
-			else
-				print_type_declaration (current_type, header_file)
-				print_type_declaration (current_type, current_file)
 			end
 			header_file.put_character (' ')
 			current_file.put_character (' ')
@@ -2368,18 +2368,18 @@ feature {NONE} -- Feature generation
 					header_file.put_character (' ')
 					current_file.put_character (',')
 					current_file.put_character (' ')
+					print_type_declaration (current_type, header_file)
+					print_type_declaration (current_type, current_file)
 					if current_type.is_expanded then
-						header_file.put_string (c_volatile)
-						header_file.put_character (' ')
-						print_type_declaration (current_type, header_file)
+						if current_type.is_basic then
+								-- Note that non-basic basic expanded types are already declared as volatile.
+							header_file.put_character (' ')
+							header_file.put_string (c_volatile)
+							current_file.put_character (' ')
+							current_file.put_string (c_volatile)
+						end
 						header_file.put_character ('*')
-						current_file.put_string (c_volatile)
-						current_file.put_character (' ')
-						print_type_declaration (current_type, current_file)
 						current_file.put_character ('*')
-					else
-						print_type_declaration (current_type, header_file)
-						print_type_declaration (current_type, current_file)
 					end
 					header_file.put_character (' ')
 					current_file.put_character (' ')
@@ -6770,18 +6770,18 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					header_file.put_character (' ')
 					current_file.put_character (',')
 					current_file.put_character (' ')
+					print_type_declaration (current_type, header_file)
+					print_type_declaration (current_type, current_file)
 					if current_type.is_expanded then
-						header_file.put_string (c_volatile)
-						header_file.put_character (' ')
-						print_type_declaration (current_type, header_file)
+						if current_type.is_basic then
+								-- Note that non-basic expanded types are already declared as volatile.
+							header_file.put_character (' ')
+							header_file.put_string (c_volatile)
+							current_file.put_character (' ')
+							current_file.put_string (c_volatile)
+						end
 						header_file.put_character ('*')
-						current_file.put_string (c_volatile)
-						current_file.put_character (' ')
-						print_type_declaration (current_type, current_file)
 						current_file.put_character ('*')
-					else
-						print_type_declaration (current_type, header_file)
-						print_type_declaration (current_type, current_file)
 					end
 					header_file.put_character (' ')
 					current_file.put_character (' ')
@@ -7698,10 +7698,11 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_indentation
 				print_type_declaration (a_result_type, current_file)
 				if
-					volatile_result or
+					(not a_result_type.is_expanded or else a_result_type.is_basic) and
+					(volatile_result or
 					has_rescue and then
 						(l_result_written_in_body or l_result_written_in_rescue) and then
-						(has_retry or l_result_read_in_rescue)
+						(has_retry or l_result_read_in_rescue))
 				then
 						-- The implementation of the rescue mechanism in C uses 'setjmp'
 						-- and 'longjmp'. The use of these two C functions requires that
@@ -7714,6 +7715,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						-- sure that he C optimizer will not implement it with 'register'.
 						--
 						-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+						--
+						-- Note that non-basic expanded types are already declared as volatile.
 					current_file.put_character (' ')
 					current_file.put_string (c_volatile)
 				end
@@ -7736,10 +7739,11 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					print_indentation
 					print_type_declaration (l_local_type, current_file)
 					if
-						volatile_locals.has (l_name.seed) or
+						(not l_local_type.is_expanded or else l_local_type.is_basic) and
+						(volatile_locals.has (l_name.seed) or
 						has_rescue and then
 							(locals_written_in_body.has (l_name.seed) or locals_written_in_rescue.has (l_name.seed)) and then
-							(has_retry or locals_read_in_rescue.has (l_name.seed))
+							(has_retry or locals_read_in_rescue.has (l_name.seed)))
 					then
 							-- The implementation of the rescue mechanism in C uses 'setjmp'
 							-- and 'longjmp'. The use of these two C functions requires that
@@ -7753,6 +7757,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 							-- with 'register'.
 							--
 							-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+							--
+							-- Note that non-basic expanded types are already declared as volatile.
 						current_file.put_character (' ')
 						current_file.put_string (c_volatile)
 					end
@@ -7901,18 +7907,18 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					header_file.put_character (' ')
 					current_file.put_character (',')
 					current_file.put_character (' ')
+					print_type_declaration (current_type, header_file)
+					print_type_declaration (current_type, current_file)
 					if current_type.is_expanded then
-						header_file.put_string (c_volatile)
-						header_file.put_character (' ')
-						print_type_declaration (current_type, header_file)
+						if current_type.is_basic then
+								-- Note that non-basic expanded types are already declared as volatile.
+							header_file.put_character (' ')
+							header_file.put_string (c_volatile)
+							current_file.put_character (' ')
+							current_file.put_string (c_volatile)
+						end
 						header_file.put_character ('*')
-						current_file.put_string (c_volatile)
-						current_file.put_character (' ')
-						print_type_declaration (current_type, current_file)
 						current_file.put_character ('*')
-					else
-						print_type_declaration (current_type, header_file)
-						print_type_declaration (current_type, current_file)
 					end
 					header_file.put_character (' ')
 					current_file.put_character (' ')
@@ -8067,12 +8073,17 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 							l_type := dynamic_type_set (l_name).static_type.primary_type
 							print_indentation
 							print_type_declaration (l_type, current_file)
-							if volatile_object_test_locals.has (l_name.seed) then
-									-- If the address of the iobject-test local is used, we have
+							if
+								(not l_type.is_expanded or else l_type.is_basic) and 
+								volatile_object_test_locals.has (l_name.seed)
+							then
+									-- If the address of the object-test local is used, we have
 									-- to make sure that the C optimizer will not implement it
 									-- with 'register'.
 									--
 									-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+									--
+									-- Note that non-basic expanded types are already declared as volatile.
 								current_file.put_character (' ')
 								current_file.put_string (c_volatile)
 							end
@@ -8106,12 +8117,17 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 							l_type := dynamic_type_set (l_name).static_type.primary_type
 							print_indentation
 							print_type_declaration (l_type, current_file)
-							if volatile_iteration_cursors.has (l_name.seed) then
+							if
+								(not l_type.is_expanded or else l_type.is_basic) and
+								volatile_iteration_cursors.has (l_name.seed)
+							then
 									-- If the address of the iteration cursor is used, we have
 									-- to make sure that the C optimizer will not implement it
 									-- with 'register'.
 									--
 									-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+									--
+									-- Note that non-basic expanded types are already declared as volatile.
 								current_file.put_character (' ')
 								current_file.put_string (c_volatile)
 							end
@@ -8143,12 +8159,17 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 							l_type := dynamic_type_set (l_name).static_type.primary_type
 							print_indentation
 							print_type_declaration (l_type, current_file)
-							if volatile_inline_separate_arguments.has (l_name.seed) then
+							if
+								(not l_type.is_expanded or else l_type.is_basic) and
+								volatile_inline_separate_arguments.has (l_name.seed)
+							then
 									-- If the address of the inline separate argument is used, we have
 									-- to make sure that the C optimizer will not implement it
 									-- with 'register'.
 									--
 									-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+									--
+									-- Note that non-basic expanded types are already declared as volatile.
 								current_file.put_character (' ')
 								current_file.put_string (c_volatile)
 							end
@@ -8182,12 +8203,17 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					l_name := temp_variables.item (i)
 					print_indentation
 					print_type_declaration (l_type, current_file)
-					if volatile_temp_variables.item (i) then
+					if
+						(not l_type.is_expanded or else l_type.is_basic) and
+						volatile_temp_variables.item (i)
+					then
 							-- If the address of the temporary variable is used, we have
 							-- to make sure that the C optimizer will not implement it
 							-- with 'register'.
 							--
 							-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+							--
+							-- Note that non-basic expanded types are already declared as volatile.
 						current_file.put_character (' ')
 						current_file.put_string (c_volatile)
 					end
@@ -18686,10 +18712,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			current_file.put_new_line
 			indent
 			print_indentation
-			if a_agent_type.is_expanded then
-				current_file.put_string (c_volatile)
-				current_file.put_character (' ')
-			end
 			print_type_declaration (a_agent_type, current_file)
 			current_file.put_character (' ')
 			print_result_name (current_file)
@@ -21321,13 +21343,17 @@ feature {NONE} -- Separate calls
 			if l_result_type /= Void then
 				print_indentation
 				print_type_declaration (l_result_type, current_file)
-					-- Declare the 'Result' as 'volatile' because we will pass
-					-- its address during the separate call so that it is set
-					-- from the other SCOOP processor. This prevents the C optimizer
-					-- to implement it with 'register'.
-					-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
-				current_file.put_character (' ')
-				current_file.put_string (c_volatile)
+				if not l_result_type.is_expanded or else l_result_type.is_basic then 
+						-- Declare the 'Result' as 'volatile' because we will pass
+						-- its address during the separate call so that it is set
+						-- from the other SCOOP processor. This prevents the C optimizer
+						-- to implement it with 'register'.
+						-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+						--
+						-- Note that non-basic expanded types are already declared as volatile.
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
+				end
 				current_file.put_character (' ')
 				print_result_name (current_file)
 				print_semicolon_newline
@@ -22084,8 +22110,11 @@ feature {NONE} -- Separate calls
 				print_indentation
 				print_type_declaration (l_result_type, current_file)
 				current_file.put_character (' ')
-				current_file.put_string (c_volatile)
-				current_file.put_character (' ')
+				if not l_result_type.is_expanded or else l_result_type.is_basic then 
+						-- Note that non-basic expanded types are already declared as volatile.
+					current_file.put_string (c_volatile)
+					current_file.put_character (' ')
+				end
 				current_file.put_character ('*')
 				current_file.put_character (' ')
 				print_result_name (current_file)
@@ -22263,18 +22292,12 @@ feature {NONE} -- Separate calls
 			current_file.put_character (' ')
 			if attached {ET_QUALIFIED_FEATURE_CALL_EXPRESSION} a_separate_call as l_call_expression then
 				l_result_type := dynamic_type_set (l_call_expression).static_type.primary_type
-				if l_result_type.is_expanded then
-					header_file.put_string (c_volatile)
-					header_file.put_character (' ')
-					print_type_declaration (l_result_type, header_file)
-					current_file.put_string (c_volatile)
-					current_file.put_character (' ')
-					print_type_declaration (l_result_type, current_file)
-				else
-					print_type_declaration (l_result_type, header_file)
+				print_type_declaration (l_result_type, header_file)
+				print_type_declaration (l_result_type, current_file)
+				if not l_result_type.is_expanded or else l_result_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
 					header_file.put_character (' ')
 					header_file.put_string (c_volatile)
-					print_type_declaration (l_result_type, current_file)
 					current_file.put_character (' ')
 					current_file.put_string (c_volatile)
 				end
@@ -22516,8 +22539,11 @@ feature {NONE} -- Separate calls
 				l_result_type := dynamic_type_set (l_call_expression).static_type.primary_type
 				header_file.put_character ('%T')
 				print_type_declaration (l_result_type, header_file)
-				header_file.put_character (' ')
-				header_file.put_string (c_volatile)
+				if not l_result_type.is_expanded or else l_result_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
+					header_file.put_character (' ')
+					header_file.put_string (c_volatile)
+				end
 				header_file.put_character ('*')
 				header_file.put_character (' ')
 				print_result_name (header_file)
@@ -34391,8 +34417,11 @@ feature {NONE} -- C function generation
 				current_file.put_line (" j = n;")
 				print_indentation
 				print_type_declaration (l_item_type, current_file)
-				current_file.put_character (' ')
-				current_file.put_string (c_volatile)
+				if not l_item_type.is_expanded or else l_item_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
+				end
 				current_file.put_character (' ')
 				current_file.put_character ('*')
 				current_file.put_character ('i')
@@ -34596,8 +34625,11 @@ feature {NONE} -- C function generation
 				current_file.put_new_line
 				print_indentation
 				print_type_declaration (l_item_type, current_file)
-				current_file.put_character (' ')
-				current_file.put_string (c_volatile)
+				if not l_item_type.is_expanded or else l_item_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
+				end
 				current_file.put_character (' ')
 				current_file.put_character ('*')
 				current_file.put_character ('i')
@@ -34914,12 +34946,15 @@ feature {NONE} -- C function generation
 			current_file.put_string (c_ac)
 			current_file.put_character (',')
 			current_file.put_character (' ')
-			header_file.put_string (c_volatile)
-			header_file.put_character (' ')
+			if a_type.is_basic then
+					-- Note that non-basic expanded types are already declared as volatile.
+				header_file.put_string (c_volatile)
+				header_file.put_character (' ')
+				current_file.put_string (c_volatile)
+				current_file.put_character (' ')
+			end
 			print_type_declaration (a_type, header_file)
 			header_file.put_character ('*')
-			current_file.put_string (c_volatile)
-			current_file.put_character (' ')
 			print_type_declaration (a_type, current_file)
 			current_file.put_character ('*')
 			header_file.put_character (' ')
@@ -35317,9 +35352,12 @@ feature {NONE} -- Memory allocation
 				l_temp := new_temp_variable (current_type)
 				mark_temp_variable_volatile (l_temp)
 				print_indentation
-				current_file.put_string (c_volatile)
-				current_file.put_character (' ')
 				print_type_declaration (current_type, current_file)
+				if current_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
+				end
 				current_file.put_character ('*')
 				current_file.put_character (' ')
 				print_current_name (current_file)
@@ -38293,9 +38331,12 @@ feature {NONE} -- Type generation
 					a_file.put_new_line
 				end
 				a_file.put_character ('%T')
-				a_file.put_string (c_volatile)
-				a_file.put_character (' ')
 				print_type_declaration (a_type, a_file)
+				if a_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
+					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+				end
 				a_file.put_character ('*')
 				a_file.put_character (' ')
 				print_boxed_attribute_pointer_name (a_type, a_file)
