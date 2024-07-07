@@ -107,11 +107,7 @@ static void GE_init_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
 {
 	a_trace->count = 0;
 	a_trace->capacity = 0;
-#ifdef GE_USE_SCOOP
 	a_trace->area = (char*)GE_malloc_atomic_uncollectable(4096);
-#else
-	a_trace->area = (char*)GE_malloc_atomic(4096);
-#endif
 	a_trace->area[0] = '\0';
 	a_trace->capacity = 4096;
 }

@@ -93,7 +93,7 @@ GE_once_mutexes* GE_new_once_mutexes(
 	GE_once_mutexes* l_once_mutexes;
 	unsigned int i;
 
-	l_once_mutexes = (GE_once_mutexes*)GE_calloc_atomic(1, sizeof(GE_once_mutexes));
+	l_once_mutexes = (GE_once_mutexes*)GE_calloc_atomic_uncollectable(1, sizeof(GE_once_mutexes));
 	if (a_boolean_count > 0) {
 		l_once_mutexes->boolean_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_boolean_count * sizeof(EIF_POINTER));
 		for (i = 0; i < a_boolean_count; i++) {
@@ -1414,15 +1414,11 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 	unsigned int l_attr_priority = GE_thread_default_priority();
 	int l_raise_error = 0;
 
-#ifdef GE_USE_SCOOP
 	/* We need to allocate with `_uncollectable' because there might be a lapse of
 	 * time between the end of the current function and when `l_thread_context'
 	 * is assigned in `GE_thread_routine'. During that time it will be only 
-	 * referenced by `l_context' which is allocted with `_atomic'. */
+	 * referenced by `l_context' which is allocted with `_atomic' in SCOOP mode. */
 	l_thread_context = (GE_thread_context*)GE_unprotected_calloc_uncollectable(1, sizeof(GE_thread_context));
-#else
-	l_thread_context = (GE_thread_context*)GE_unprotected_calloc(1, sizeof(GE_thread_context));
-#endif
 	if (!l_thread_context) {
 		GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
 	} else {
