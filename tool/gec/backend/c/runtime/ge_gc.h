@@ -296,7 +296,7 @@ extern void* GE_unprotected_calloc_atomic_uncollectable(size_t nelem, size_t els
  * The extra allocated memory is not necessarily zeroed.
  * Raise an exception when no-more-memory.
  */
-#define GE_realloc(p, size) GE_null(GE_unprotected_realloc((void*)(p), (size)))
+#define GE_realloc(p, size) GE_null(GE_unprotected_realloc((p), (size)))
 
 /*
  * Allocate more memory for the given pointer.
@@ -312,7 +312,7 @@ extern void* GE_unprotected_recalloc(void* p, size_t old_nelem, size_t new_nelem
  * The extra allocated memory is zeroed.
  * Raise an exception when no-more-memory.
  */
-#define GE_recalloc(p, old_nelem, new_nelem, elsize) GE_null(GE_unprotected_recalloc((p), (old_nelem), (new_nelem), (elsize)))
+#define GE_recalloc(p, old_nelem, new_nelem, elsize) GE_null(GE_unprotected_recalloc((void*)(p), (old_nelem), (new_nelem), (elsize)))
 
 /*
  * Explicitly deallocate an object.
