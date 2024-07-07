@@ -37,12 +37,12 @@
  */
 #if (defined(_SIGSET_H_types) && !defined(__STRICT_ANSI__))
 #define GE_jmp_buf sigjmp_buf
-#define GE_setjmp(x) sigsetjmp((x),1)
-#define GE_longjmp(x,y) siglongjmp((x),(y))
+#define GE_setjmp(x) sigsetjmp(*(GE_jmp_buf*)&(x),1)
+#define GE_longjmp(x,y) siglongjmp(*(GE_jmp_buf*)(x),(y))
 #else
 #define GE_jmp_buf jmp_buf
-#define GE_setjmp(x) setjmp((x))
-#define GE_longjmp(x,y) longjmp((x),(y))
+#define GE_setjmp(x) setjmp(*(GE_jmp_buf*)(x))
+#define GE_longjmp(x,y) longjmp(*(GE_jmp_buf*)(x),(y))
 #endif
 
 #ifdef __cplusplus
@@ -104,18 +104,18 @@ struct GE_call_struct {
 #ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
 	void* object; /* Current object */
 #endif
-	const char* class_name;
-	const char* feature_name;
+	char* class_name;
+	char* feature_name;
 	GE_call* caller; /* previous feature in the call chain */
 };
 
 /*
  * Context of features containing a rescue clause.
  */
-typedef struct GE_rescue_struct GE_rescue;
+typedef volatile struct GE_rescue_struct GE_rescue;
 struct GE_rescue_struct {
 	GE_jmp_buf jb;
-	GE_rescue* volatile previous; /* previous context in the call chain */
+	GE_rescue* previous; /* previous context in the call chain */
 };
 
 /*
