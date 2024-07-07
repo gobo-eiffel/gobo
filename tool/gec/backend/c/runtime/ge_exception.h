@@ -150,11 +150,6 @@ struct GE_context_struct {
 #define TC GE_context
 
 /*
- * Default initialization for `GE_context'.
- */
-extern GE_context GE_default_context;
-
-/*
  * New execution context.
  */
 extern GE_context* GE_new_context(int is_scoop_processor);

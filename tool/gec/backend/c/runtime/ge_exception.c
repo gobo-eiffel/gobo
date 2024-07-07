@@ -422,18 +422,6 @@ static void GE_print_exception_trace(GE_context* a_context, long a_code, const c
 }
 
 /*
- * Default initialization for `GE_context'.
- */
-GE_context GE_default_context = {0, 0, 0, 0, 0, 0, '\1', 0, 0, {0, 0, 0}, {0, 0, 0}, 0, 1
-#ifdef GE_USE_THREADS
-	, 0, 0, 0
-#endif
-#ifdef GE_USE_SCOOP
-	, 0, 0
-#endif
-	};
-
-/*
  * New execution context.
  */
 GE_context* GE_new_context(int is_scoop_processor)
