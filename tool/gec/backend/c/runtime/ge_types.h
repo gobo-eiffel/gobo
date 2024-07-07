@@ -94,7 +94,7 @@ extern "C" {
  * Ancestor relationship between two types X and Y.
  */
 #ifdef GE_USE_ANCESTORS
-typedef struct {
+typedef volatile struct {
 	EIF_TYPE_INDEX type_id; /* Type id of Y */
 	EIF_BOOLEAN conforms; /* Does X conform to Y? */
 	void (**qualified_calls)(); /* Function pointers, indexed by call id, when the static type of the target is Y and the dynamic type is X */
@@ -105,7 +105,7 @@ typedef struct {
  * Attribute.
  */
 #ifdef GE_USE_ATTRIBUTES
-typedef struct {
+typedef volatile struct {
 #ifdef GE_USE_ATTRIBUTE_NAME
 	const char* name; /* Attribute name */
 #endif
@@ -121,7 +121,7 @@ typedef struct {
 /*
  * Type information.
  */
-typedef struct {
+typedef volatile struct {
 	EIF_TYPE_INDEX type_id;
 	uint16_t flags;
 #ifdef GE_USE_TYPE_GENERATOR
@@ -149,7 +149,7 @@ typedef struct {
 	void (*dispose)(GE_context*, EIF_REFERENCE);
 } GE_type_info;
 
-typedef struct {
+typedef volatile struct {
 	EIF_TYPE_INDEX id; /* Type id of the "TYPE [X]" object */
 	EIF_INTEGER type_id; /* Type id of the type "X" */
 	EIF_BOOLEAN is_special;

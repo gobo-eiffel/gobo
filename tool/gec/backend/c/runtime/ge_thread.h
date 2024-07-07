@@ -73,7 +73,7 @@ extern "C" {
 /*
  * Mutexes used to protect the calls to once-per-process features.
  */
-typedef struct {
+typedef volatile struct {
 	EIF_POINTER* boolean_mutex;
 	EIF_POINTER* character_8_mutex;
 	EIF_POINTER* character_32_mutex;

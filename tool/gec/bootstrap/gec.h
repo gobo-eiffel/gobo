@@ -188,7 +188,7 @@ typedef uint16_t EIF_TYPE_INDEX;
  * It is made of a compiler type-id,
  * and of some annotations (attached/detachable/separate/variant/frozen).
  */
-typedef struct eif_type {
+typedef volatile struct eif_type {
 	EIF_TYPE_INDEX id;
 	EIF_TYPE_INDEX annotations;
 } EIF_TYPE;
@@ -220,25 +220,25 @@ typedef uint8_t EIF_NATURAL_8;
 typedef uint16_t EIF_NATURAL_16;
 typedef uint32_t EIF_NATURAL_32;
 typedef uint64_t EIF_NATURAL_64;
-typedef void* EIF_POINTER;
+typedef volatile void* EIF_POINTER;
 typedef float EIF_REAL_32;
 typedef double EIF_REAL_64;
 #ifdef GE_USE_SCOOP
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; GE_scoop_region* region;} EIF_ANY;
+typedef volatile struct {EIF_TYPE_INDEX id; uint16_t flags; GE_scoop_region* region;} EIF_ANY;
 typedef EIF_ANY* EIF_REFERENCE;
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; GE_scoop_region* region; EIF_REFERENCE area; EIF_INTEGER count;} EIF_STRING;
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; GE_scoop_region* region; uint32_t offset; EIF_INTEGER count; EIF_INTEGER capacity;} EIF_SPECIAL;
+typedef volatile struct {EIF_TYPE_INDEX id; uint16_t flags; GE_scoop_region* region; EIF_REFERENCE area; EIF_INTEGER count;} EIF_STRING;
+typedef volatile struct {EIF_TYPE_INDEX id; uint16_t flags; GE_scoop_region* region; uint32_t offset; EIF_INTEGER count; EIF_INTEGER capacity;} EIF_SPECIAL;
 #else
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags;} EIF_ANY;
+typedef volatile struct {EIF_TYPE_INDEX id; uint16_t flags;} EIF_ANY;
 typedef EIF_ANY* EIF_REFERENCE;
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; EIF_REFERENCE area; EIF_INTEGER count;} EIF_STRING;
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; uint32_t offset; EIF_INTEGER count; EIF_INTEGER capacity;} EIF_SPECIAL;
+typedef volatile struct {EIF_TYPE_INDEX id; uint16_t flags; EIF_REFERENCE area; EIF_INTEGER count;} EIF_STRING;
+typedef volatile struct {EIF_TYPE_INDEX id; uint16_t flags; uint32_t offset; EIF_INTEGER count; EIF_INTEGER capacity;} EIF_SPECIAL;
 #endif
 
 /* SCOOP */
 typedef uint16_t EIF_SCP_PID; /* Processor ID */
 #ifdef GE_USE_SCOOP
-#define RTS_PID(o) (EIF_SCP_PID)(intptr_t)(((EIF_REFERENCE)(o))->region)
+#define RTS_PID(o) (EIF_SCP_PID)(uintptr_t)(((EIF_REFERENCE)(o))->region)
 #else
 #define RTS_PID(o) (EIF_SCP_PID)0
 #endif
@@ -404,7 +404,7 @@ extern "C" {
 #define EIF_MUTEX_TYPE          CRITICAL_SECTION
 #define EIF_SEM_TYPE            HANDLE
 
-typedef struct {
+typedef volatile struct {
 		/* Semaphore used to queue up threads waiting for the condition to become signaled. */
 	EIF_SEM_TYPE* semaphore;
 		/* Serialize access to fields of Current. */
@@ -418,7 +418,7 @@ typedef struct {
 	unsigned long generation;
 } EIF_COND_TYPE;
 
-typedef struct {
+typedef volatile struct {
 	EIF_MUTEX_TYPE* m; /* Internal monitor lock. */
 	int rwlock; /* >0 = # readers, <0 = writer, 0 = none */
 	EIF_COND_TYPE* readers_ok; /* Start waiting readers. */
@@ -428,13 +428,13 @@ typedef struct {
 
 #endif
 
-typedef struct {
+typedef volatile struct {
 	unsigned int priority;
 	unsigned int stack_size;
 } EIF_THR_ATTR_TYPE;
 
 /* Struct for thread context. */
-typedef struct GE_thread_context_struct GE_thread_context;
+typedef volatile struct GE_thread_context_struct GE_thread_context;
 struct GE_thread_context_struct {
 	EIF_THR_TYPE thread_id; /* Thread identifier for associated thread. */
 	EIF_REFERENCE current; /* Eiffel root object. */
@@ -442,12 +442,12 @@ struct GE_thread_context_struct {
 	void (*set_terminated)(EIF_REFERENCE, EIF_BOOLEAN); /* Eiffel routine to set {THREAD}.terminated. */
 	unsigned int initial_priority; /* Initial priority. */
 	EIF_THR_TYPE last_thread_id; /* Last thread created from current thread. */
-	volatile int n_children; /* Number of direct thread children. */
+	int n_children; /* Number of direct thread children. */
 	EIF_MUTEX_TYPE* children_mutex; /* Mutex to wait for thread children. */
 	EIF_COND_TYPE* children_cond; /* Condition variable to wait for thread children. */
 	GE_thread_context* parent_context;	/* Context of parent thread, NULL if main thread. */
 	int thread_exiting; /* Has current thread already called GE_thread_exit? */
-	volatile int is_alive; /* Is current thread still alive? */
+	int is_alive; /* Is current thread still alive? */
 	void* wel_per_thread_data; /* WEL private data */
 #ifdef GE_USE_SCOOP
 	int is_scoop_processor; /* Is current thread a SCOOP processor? */
@@ -467,7 +467,7 @@ struct GE_thread_context_struct {
 		"C functions used to implement once features"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -489,70 +489,70 @@ extern "C" {
  * Struct to keep track of the call status
  * and results of once features.
  */
-typedef struct {
+typedef volatile struct {
 	EIF_BOOLEAN* boolean_value;
 	EIF_REFERENCE* boolean_exception;
 	unsigned char* boolean_status;
-	unsigned int boolean_count;
+	uint32_t boolean_count;
 	EIF_CHARACTER_8* character_8_value;
 	EIF_REFERENCE* character_8_exception;
 	unsigned char* character_8_status;
-	unsigned int character_8_count;
+	uint32_t character_8_count;
 	EIF_CHARACTER_32* character_32_value;
 	EIF_REFERENCE* character_32_exception;
 	unsigned char* character_32_status;
-	unsigned int character_32_count;
+	uint32_t character_32_count;
 	EIF_INTEGER_8* integer_8_value;
 	EIF_REFERENCE* integer_8_exception;
 	unsigned char* integer_8_status;
-	unsigned int integer_8_count;
+	uint32_t integer_8_count;
 	EIF_INTEGER_16* integer_16_value;
 	EIF_REFERENCE* integer_16_exception;
 	unsigned char* integer_16_status;
-	unsigned int integer_16_count;
+	uint32_t integer_16_count;
 	EIF_INTEGER_32* integer_32_value;
 	EIF_REFERENCE* integer_32_exception;
 	unsigned char* integer_32_status;
-	unsigned int integer_32_count;
+	uint32_t integer_32_count;
 	EIF_INTEGER_64* integer_64_value;
 	EIF_REFERENCE* integer_64_exception;
 	unsigned char* integer_64_status;
-	unsigned int integer_64_count;
+	uint32_t integer_64_count;
 	EIF_NATURAL_8* natural_8_value;
 	EIF_REFERENCE* natural_8_exception;
 	unsigned char* natural_8_status;
-	unsigned int natural_8_count;
+	uint32_t natural_8_count;
 	EIF_NATURAL_16* natural_16_value;
 	EIF_REFERENCE* natural_16_exception;
 	unsigned char* natural_16_status;
-	unsigned int natural_16_count;
+	uint32_t natural_16_count;
 	EIF_NATURAL_32* natural_32_value;
 	EIF_REFERENCE* natural_32_exception;
 	unsigned char* natural_32_status;
-	unsigned int natural_32_count;
+	uint32_t natural_32_count;
 	EIF_NATURAL_64* natural_64_value;
 	EIF_REFERENCE* natural_64_exception;
 	unsigned char* natural_64_status;
-	unsigned int natural_64_count;
+	uint32_t natural_64_count;
 	EIF_POINTER* pointer_value;
 	EIF_REFERENCE* pointer_exception;
 	unsigned char* pointer_status;
-	unsigned int pointer_count;
+	uint32_t pointer_count;
 	EIF_REAL_32* real_32_value;
 	EIF_REFERENCE* real_32_exception;
 	unsigned char* real_32_status;
-	unsigned int real_32_count;
+	uint32_t real_32_count;
 	EIF_REAL_64* real_64_value;
 	EIF_REFERENCE* real_64_exception;
 	unsigned char* real_64_status;
-	unsigned int real_64_count;
+	uint32_t real_64_count;
 	EIF_REFERENCE* reference_value;
 	EIF_REFERENCE* reference_exception;
 	unsigned char* reference_status;
-	unsigned int reference_count;
+	uint32_t reference_count;
 	EIF_REFERENCE* procedure_exception;
 	unsigned char* procedure_status;
-	unsigned int procedure_count;
+	uint32_t procedure_count;
 } GE_onces;
 
 /*
@@ -565,44 +565,44 @@ extern GE_onces* GE_process_onces;
  * Initialize `GE_process_onces'.
  */
 extern void GE_init_onces(
-	unsigned int a_boolean_count,
-	unsigned int a_character_8_count,
-	unsigned int a_character_32_count,
-	unsigned int a_integer_8_count,
-	unsigned int a_integer_16_count,
-	unsigned int a_integer_32_count,
-	unsigned int a_integer_64_count,
-	unsigned int a_natural_8_count,
-	unsigned int a_natural_16_count,
-	unsigned int a_natural_32_count,
-	unsigned int a_natural_64_count,
-	unsigned int a_pointer_count,
-	unsigned int a_real_32_count,
-	unsigned int a_real_64_count,
-	unsigned int a_reference_count,
-	unsigned int a_procedure_count);
+	uint32_t a_boolean_count,
+	uint32_t a_character_8_count,
+	uint32_t a_character_32_count,
+	uint32_t a_integer_8_count,
+	uint32_t a_integer_16_count,
+	uint32_t a_integer_32_count,
+	uint32_t a_integer_64_count,
+	uint32_t a_natural_8_count,
+	uint32_t a_natural_16_count,
+	uint32_t a_natural_32_count,
+	uint32_t a_natural_64_count,
+	uint32_t a_pointer_count,
+	uint32_t a_real_32_count,
+	uint32_t a_real_64_count,
+	uint32_t a_reference_count,
+	uint32_t a_procedure_count);
 
 /*
  * Create a new 'GE_onces' struct which can deal with the
  * numbers of once features passed as argument.
  */
 extern GE_onces* GE_new_onces(
-	unsigned int a_boolean_count,
-	unsigned int a_character_8_count,
-	unsigned int a_character_32_count,
-	unsigned int a_integer_8_count,
-	unsigned int a_integer_16_count,
-	unsigned int a_integer_32_count,
-	unsigned int a_integer_64_count,
-	unsigned int a_natural_8_count,
-	unsigned int a_natural_16_count,
-	unsigned int a_natural_32_count,
-	unsigned int a_natural_64_count,
-	unsigned int a_pointer_count,
-	unsigned int a_real_32_count,
-	unsigned int a_real_64_count,
-	unsigned int a_reference_count,
-	unsigned int a_procedure_count);
+	uint32_t a_boolean_count,
+	uint32_t a_character_8_count,
+	uint32_t a_character_32_count,
+	uint32_t a_integer_8_count,
+	uint32_t a_integer_16_count,
+	uint32_t a_integer_32_count,
+	uint32_t a_integer_64_count,
+	uint32_t a_natural_8_count,
+	uint32_t a_natural_16_count,
+	uint32_t a_natural_32_count,
+	uint32_t a_natural_64_count,
+	uint32_t a_pointer_count,
+	uint32_t a_real_32_count,
+	uint32_t a_real_64_count,
+	uint32_t a_reference_count,
+	uint32_t a_procedure_count);
 
 /*
  * Free memory allocated by `a_onces'.
@@ -706,7 +706,7 @@ extern "C" {
 /*
  * String buffer used to build the exception trace.
  */
-typedef struct GE_exception_trace_buffer_struct GE_exception_trace_buffer;
+typedef volatile struct GE_exception_trace_buffer_struct GE_exception_trace_buffer;
 struct GE_exception_trace_buffer_struct {
 	char* area;
 	uint32_t count;
@@ -716,7 +716,7 @@ struct GE_exception_trace_buffer_struct {
 /*
  * Information about the feature being executed.
  */
-typedef struct GE_call_struct GE_call;
+typedef volatile struct GE_call_struct GE_call;
 struct GE_call_struct {
 #ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
 	void* object; /* Current object */
@@ -732,14 +732,14 @@ struct GE_call_struct {
 typedef struct GE_rescue_struct GE_rescue;
 struct GE_rescue_struct {
 	GE_jmp_buf jb;
-	GE_rescue* previous; /* previous context in the call chain */
+	GE_rescue* volatile previous; /* previous context in the call chain */
 };
 
 /*
  * Information about the execution context.
  * One such struct per thread.
  */
-typedef struct GE_context_struct GE_context;
+typedef volatile struct GE_context_struct GE_context;
 struct GE_context_struct {
 	GE_call* call; /* Call stack */
 	uint32_t in_assertion; /* Is an assertion evaluated? */
@@ -761,7 +761,7 @@ struct GE_context_struct {
 #endif
 #ifdef GE_USE_SCOOP
 	GE_scoop_region* region; /* SCOOP region whose processor is executing the current code */
-	volatile char is_region_alive;
+	char is_region_alive;
 #endif
 };
 #define TC GE_context
@@ -770,6 +770,11 @@ struct GE_context_struct {
  * Default initialization for `GE_context'.
  */
 extern GE_context GE_default_context;
+
+/*
+ * New execution context.
+ */
+extern GE_context* GE_new_context(int is_scoop_processor);
 
 /*
  * Execution context of main thread.
@@ -846,7 +851,7 @@ extern void GE_raise_with_message(long a_code, const char* msg);
 /*
  * Raise an exception from EXCEPTION_MANAGER.
  */
-extern void GE_developer_raise(long a_code, char* a_meaning, char* a_message);
+extern void GE_developer_raise(long a_code, EIF_POINTER a_meaning, EIF_POINTER a_message);
 
 /*
  * Raise exception which was raised the first time a once routine
@@ -924,7 +929,7 @@ extern void GE_set_windows_exception_filter(void);
 		"C functions used to implement class THREAD and related threading facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -993,7 +998,7 @@ extern "C" {
 /*
  * Mutexes used to protect the calls to once-per-process features.
  */
-typedef struct {
+typedef volatile struct {
 	EIF_POINTER* boolean_mutex;
 	EIF_POINTER* character_8_mutex;
 	EIF_POINTER* character_32_mutex;
@@ -1020,65 +1025,65 @@ extern GE_once_mutexes* GE_process_once_mutexes;
 /*
  * Numbers of once-per-thread features.
  */
-extern unsigned int GE_thread_onces_boolean_count;
-extern unsigned int GE_thread_onces_character_8_count;
-extern unsigned int GE_thread_onces_character_32_count;
-extern unsigned int GE_thread_onces_integer_8_count;
-extern unsigned int GE_thread_onces_integer_16_count;
-extern unsigned int GE_thread_onces_integer_32_count;
-extern unsigned int GE_thread_onces_integer_64_count;
-extern unsigned int GE_thread_onces_natural_8_count;
-extern unsigned int GE_thread_onces_natural_16_count;
-extern unsigned int GE_thread_onces_natural_32_count;
-extern unsigned int GE_thread_onces_natural_64_count;
-extern unsigned int GE_thread_onces_pointer_count;
-extern unsigned int GE_thread_onces_real_32_count;
-extern unsigned int GE_thread_onces_real_64_count;
-extern unsigned int GE_thread_onces_reference_count;
-extern unsigned int GE_thread_onces_procedure_count;
+extern uint32_t GE_thread_onces_boolean_count;
+extern uint32_t GE_thread_onces_character_8_count;
+extern uint32_t GE_thread_onces_character_32_count;
+extern uint32_t GE_thread_onces_integer_8_count;
+extern uint32_t GE_thread_onces_integer_16_count;
+extern uint32_t GE_thread_onces_integer_32_count;
+extern uint32_t GE_thread_onces_integer_64_count;
+extern uint32_t GE_thread_onces_natural_8_count;
+extern uint32_t GE_thread_onces_natural_16_count;
+extern uint32_t GE_thread_onces_natural_32_count;
+extern uint32_t GE_thread_onces_natural_64_count;
+extern uint32_t GE_thread_onces_pointer_count;
+extern uint32_t GE_thread_onces_real_32_count;
+extern uint32_t GE_thread_onces_real_64_count;
+extern uint32_t GE_thread_onces_reference_count;
+extern uint32_t GE_thread_onces_procedure_count;
 
 /*
  * Create a new 'GE_once_mutexes' struct which can deal with the
  * numbers of once features passed as argument.
  */
 extern GE_once_mutexes* GE_new_once_mutexes(
-	unsigned int a_boolean_count,
-	unsigned int a_character_8_count,
-	unsigned int a_character_32_count,
-	unsigned int a_integer_8_count,
-	unsigned int a_integer_16_count,
-	unsigned int a_integer_32_count,
-	unsigned int a_integer_64_count,
-	unsigned int a_natural_8_count,
-	unsigned int a_natural_16_count,
-	unsigned int a_natural_32_count,
-	unsigned int a_natural_64_count,
-	unsigned int a_pointer_count,
-	unsigned int a_real_32_count,
-	unsigned int a_real_64_count,
-	unsigned int a_reference_count,
-	unsigned int a_procedure_count);
+	uint32_t a_boolean_count,
+	uint32_t a_character_8_count,
+	uint32_t a_character_32_count,
+	uint32_t a_integer_8_count,
+	uint32_t a_integer_16_count,
+	uint32_t a_integer_32_count,
+	uint32_t a_integer_64_count,
+	uint32_t a_natural_8_count,
+	uint32_t a_natural_16_count,
+	uint32_t a_natural_32_count,
+	uint32_t a_natural_64_count,
+	uint32_t a_pointer_count,
+	uint32_t a_real_32_count,
+	uint32_t a_real_64_count,
+	uint32_t a_reference_count,
+	uint32_t a_procedure_count);
 
 /*
  * Keep track of the numbers of once-per-thread features.
  */
 extern void GE_thread_onces_set_counts(
-	unsigned int a_boolean_count,
-	unsigned int a_character_8_count,
-	unsigned int a_character_32_count,
-	unsigned int a_integer_8_count,
-	unsigned int a_integer_16_count,
-	unsigned int a_integer_32_count,
-	unsigned int a_integer_64_count,
-	unsigned int a_natural_8_count,
-	unsigned int a_natural_16_count,
-	unsigned int a_natural_32_count,
-	unsigned int a_natural_64_count,
-	unsigned int a_pointer_count,
-	unsigned int a_real_32_count,
-	unsigned int a_real_64_count,
-	unsigned int a_reference_count,
-	unsigned int a_procedure_count);
+	uint32_t a_boolean_count,
+	uint32_t a_character_8_count,
+	uint32_t a_character_32_count,
+	uint32_t a_integer_8_count,
+	uint32_t a_integer_16_count,
+	uint32_t a_integer_32_count,
+	uint32_t a_integer_64_count,
+	uint32_t a_natural_8_count,
+	uint32_t a_natural_16_count,
+	uint32_t a_natural_32_count,
+	uint32_t a_natural_64_count,
+	uint32_t a_pointer_count,
+	uint32_t a_real_32_count,
+	uint32_t a_real_64_count,
+	uint32_t a_reference_count,
+	uint32_t a_procedure_count);
 
 /*
  * Initialize `process_onces' and `thread_onces' in `a_context'.
@@ -1505,7 +1510,7 @@ extern "C" {
  * Ancestor relationship between two types X and Y.
  */
 #ifdef GE_USE_ANCESTORS
-typedef struct {
+typedef volatile struct {
 	EIF_TYPE_INDEX type_id; /* Type id of Y */
 	EIF_BOOLEAN conforms; /* Does X conform to Y? */
 	void (**qualified_calls)(); /* Function pointers, indexed by call id, when the static type of the target is Y and the dynamic type is X */
@@ -1516,7 +1521,7 @@ typedef struct {
  * Attribute.
  */
 #ifdef GE_USE_ATTRIBUTES
-typedef struct {
+typedef volatile struct {
 #ifdef GE_USE_ATTRIBUTE_NAME
 	const char* name; /* Attribute name */
 #endif
@@ -1532,7 +1537,7 @@ typedef struct {
 /*
  * Type information.
  */
-typedef struct {
+typedef volatile struct {
 	EIF_TYPE_INDEX type_id;
 	uint16_t flags;
 #ifdef GE_USE_TYPE_GENERATOR
@@ -1560,7 +1565,7 @@ typedef struct {
 	void (*dispose)(GE_context*, EIF_REFERENCE);
 } GE_type_info;
 
-typedef struct {
+typedef volatile struct {
 	EIF_TYPE_INDEX id; /* Type id of the "TYPE [X]" object */
 	EIF_INTEGER type_id; /* Type id of the type "X" */
 	EIF_BOOLEAN is_special;
@@ -2294,6 +2299,8 @@ extern int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lp
 #endif
 
 #include "gc.h"
+#else
+#include <stdlib.h>
 #endif
 
 #ifdef __cplusplus
@@ -2517,9 +2524,9 @@ extern void* GE_unprotected_recalloc(void* p, size_t old_nelem, size_t new_nelem
  * Explicitly deallocate an object.
  */
 #ifdef GE_USE_BOEHM_GC
-#define GE_free(p) GC_FREE(p)
+#define GE_free(p) GC_FREE((void*)(p))
 #else /* No GC */
-#define GE_free(p) free(p)
+#define GE_free(p) free((void*)(p))
 #endif
 
 /*
@@ -2623,6 +2630,9 @@ extern "C" {
  * To be called at the beginning of the main thread.
  */
 extern void GE_init_signal(void);
+
+/* Initialize `GE_ignored_signals_mutex'. */
+extern void GE_init_ignored_signals_mutex(void);
 
 /* Description of sinal `a_sig'. */
 extern char *GE_signal_name(EIF_INTEGER a_sig);
@@ -2743,4268 +2753,4268 @@ extern "C" {
 /* BOOLEAN */
 #define T1 EIF_BOOLEAN
 extern T0* GE_boxed1(TC* ac, T1 a1);
-extern T0* GE_boxed_pointer1(TC* ac, T1* a1);
-typedef struct Sb1 Tb1;
+extern T0* GE_boxed_pointer1(TC* ac, volatile T1* a1);
+typedef volatile struct Sb1 Tb1;
 
 /* CHARACTER_8 */
 #define T2 EIF_CHARACTER_8
 extern T0* GE_boxed2(TC* ac, T2 a1);
-extern T0* GE_boxed_pointer2(TC* ac, T2* a1);
-typedef struct Sb2 Tb2;
+extern T0* GE_boxed_pointer2(TC* ac, volatile T2* a1);
+typedef volatile struct Sb2 Tb2;
 
 /* CHARACTER_32 */
 #define T3 EIF_CHARACTER_32
 extern T0* GE_boxed3(TC* ac, T3 a1);
-extern T0* GE_boxed_pointer3(TC* ac, T3* a1);
-typedef struct Sb3 Tb3;
+extern T0* GE_boxed_pointer3(TC* ac, volatile T3* a1);
+typedef volatile struct Sb3 Tb3;
 
 /* INTEGER_8 */
 #define T4 EIF_INTEGER_8
 extern T0* GE_boxed4(TC* ac, T4 a1);
-extern T0* GE_boxed_pointer4(TC* ac, T4* a1);
-typedef struct Sb4 Tb4;
+extern T0* GE_boxed_pointer4(TC* ac, volatile T4* a1);
+typedef volatile struct Sb4 Tb4;
 
 /* INTEGER_16 */
 #define T5 EIF_INTEGER_16
 extern T0* GE_boxed5(TC* ac, T5 a1);
-extern T0* GE_boxed_pointer5(TC* ac, T5* a1);
-typedef struct Sb5 Tb5;
+extern T0* GE_boxed_pointer5(TC* ac, volatile T5* a1);
+typedef volatile struct Sb5 Tb5;
 
 /* INTEGER_32 */
 #define T6 EIF_INTEGER_32
 extern T0* GE_boxed6(TC* ac, T6 a1);
-extern T0* GE_boxed_pointer6(TC* ac, T6* a1);
-typedef struct Sb6 Tb6;
+extern T0* GE_boxed_pointer6(TC* ac, volatile T6* a1);
+typedef volatile struct Sb6 Tb6;
 
 /* INTEGER_64 */
 #define T7 EIF_INTEGER_64
 extern T0* GE_boxed7(TC* ac, T7 a1);
-extern T0* GE_boxed_pointer7(TC* ac, T7* a1);
-typedef struct Sb7 Tb7;
+extern T0* GE_boxed_pointer7(TC* ac, volatile T7* a1);
+typedef volatile struct Sb7 Tb7;
 
 /* NATURAL_8 */
 #define T8 EIF_NATURAL_8
 extern T0* GE_boxed8(TC* ac, T8 a1);
-extern T0* GE_boxed_pointer8(TC* ac, T8* a1);
-typedef struct Sb8 Tb8;
+extern T0* GE_boxed_pointer8(TC* ac, volatile T8* a1);
+typedef volatile struct Sb8 Tb8;
 
 /* NATURAL_16 */
 #define T9 EIF_NATURAL_16
 extern T0* GE_boxed9(TC* ac, T9 a1);
-extern T0* GE_boxed_pointer9(TC* ac, T9* a1);
-typedef struct Sb9 Tb9;
+extern T0* GE_boxed_pointer9(TC* ac, volatile T9* a1);
+typedef volatile struct Sb9 Tb9;
 
 /* NATURAL_32 */
 #define T10 EIF_NATURAL_32
 extern T0* GE_boxed10(TC* ac, T10 a1);
-extern T0* GE_boxed_pointer10(TC* ac, T10* a1);
-typedef struct Sb10 Tb10;
+extern T0* GE_boxed_pointer10(TC* ac, volatile T10* a1);
+typedef volatile struct Sb10 Tb10;
 
 /* NATURAL_64 */
 #define T11 EIF_NATURAL_64
 extern T0* GE_boxed11(TC* ac, T11 a1);
-extern T0* GE_boxed_pointer11(TC* ac, T11* a1);
-typedef struct Sb11 Tb11;
+extern T0* GE_boxed_pointer11(TC* ac, volatile T11* a1);
+typedef volatile struct Sb11 Tb11;
 
 /* REAL_32 */
 #define T12 EIF_REAL_32
 extern T0* GE_boxed12(TC* ac, T12 a1);
-extern T0* GE_boxed_pointer12(TC* ac, T12* a1);
-typedef struct Sb12 Tb12;
+extern T0* GE_boxed_pointer12(TC* ac, volatile T12* a1);
+typedef volatile struct Sb12 Tb12;
 
 /* REAL_64 */
 #define T13 EIF_REAL_64
 extern T0* GE_boxed13(TC* ac, T13 a1);
-extern T0* GE_boxed_pointer13(TC* ac, T13* a1);
-typedef struct Sb13 Tb13;
+extern T0* GE_boxed_pointer13(TC* ac, volatile T13* a1);
+typedef volatile struct Sb13 Tb13;
 
 /* POINTER */
 #define T14 EIF_POINTER
 extern T0* GE_boxed14(TC* ac, T14 a1);
-extern T0* GE_boxed_pointer14(TC* ac, T14* a1);
-typedef struct Sb14 Tb14;
+extern T0* GE_boxed_pointer14(TC* ac, volatile T14* a1);
+typedef volatile struct Sb14 Tb14;
 
 /* SPECIAL [CHARACTER_8] */
-typedef struct S15 T15;
+typedef volatile struct S15 T15;
 
 /* SPECIAL [CHARACTER_32] */
-typedef struct S16 T16;
+typedef volatile struct S16 T16;
 
 /* STRING_8 */
-typedef struct S17 T17;
+typedef volatile struct S17 T17;
 
 /* STRING_32 */
-typedef struct S18 T18;
+typedef volatile struct S18 T18;
 
 /* IMMUTABLE_STRING_32 */
-typedef struct S20 T20;
+typedef volatile struct S20 T20;
 
 /* ISE_EXCEPTION_MANAGER */
-typedef struct S21 T21;
+typedef volatile struct S21 T21;
 
 /* GEC */
-typedef struct S26 T26;
+typedef volatile struct S26 T26;
 
 /* CELL [detachable EXCEPTION] */
-typedef struct S27 T27;
+typedef volatile struct S27 T27;
 
 /* HASH_TABLE [INTEGER_32, INTEGER_32] */
-typedef struct S28 T28;
+typedef volatile struct S28 T28;
 
 /* CELL [detachable TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, STRING_8, STRING_8, STRING_8, STRING_8, STRING_8, STRING_8, INTEGER_32, BOOLEAN]] */
-typedef struct S29 T29;
+typedef volatile struct S29 T29;
 
 /* CELL [NO_MORE_MEMORY] */
-typedef struct S30 T30;
+typedef volatile struct S30 T30;
 
 /* C_STRING */
-typedef struct S31 T31;
+typedef volatile struct S31 T31;
 
 /* TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, STRING_8, STRING_8, STRING_8, STRING_8, STRING_8, STRING_8, INTEGER_32, BOOLEAN] */
-typedef struct S32 T32;
+typedef volatile struct S32 T32;
 
 /* KL_ARGUMENTS */
-typedef struct S33 T33;
+typedef volatile struct S33 T33;
 
 /* ARRAY [STRING_8] */
-typedef struct S34 T34;
+typedef volatile struct S34 T34;
 
 /* SPECIAL [STRING_8] */
-typedef struct S35 T35;
+typedef volatile struct S35 T35;
 
 /* KL_EXCEPTIONS */
-typedef struct S36 T36;
+typedef volatile struct S36 T36;
 
 /* EXCEPTIONS */
-typedef struct S37 T37;
+typedef volatile struct S37 T37;
 
 /* KL_STANDARD_FILES */
-typedef struct S38 T38;
+typedef volatile struct S38 T38;
 
 /* KL_STDERR_FILE */
-typedef struct S39 T39;
+typedef volatile struct S39 T39;
 
 /* UTF_CONVERTER */
-typedef struct S40 T40;
+typedef volatile struct S40 T40;
 extern T0* GE_boxed40(TC* ac, T40 a1);
 extern T0* GE_boxed_pointer40(TC* ac, T40* a1);
-typedef struct Sb40 Tb40;
+typedef volatile struct Sb40 Tb40;
 
 /* ET_ERROR_HANDLER */
-typedef struct S42 T42;
+typedef volatile struct S42 T42;
 
 /* KL_TEXT_INPUT_FILE */
-typedef struct S43 T43;
+typedef volatile struct S43 T43;
 
 /* UT_GOBO_VARIABLES */
-typedef struct S44 T44;
+typedef volatile struct S44 T44;
 
 /* UT_ISE_VARIABLES */
-typedef struct S45 T45;
+typedef volatile struct S45 T45;
 
 /* AP_FLAG */
-typedef struct S46 T46;
+typedef volatile struct S46 T46;
 
 /* KL_EXECUTION_ENVIRONMENT */
-typedef struct S49 T49;
+typedef volatile struct S49 T49;
 
 /* ET_SYSTEM */
-typedef struct S50 T50;
+typedef volatile struct S50 T50;
 
 /* AP_PARSER */
-typedef struct S52 T52;
+typedef volatile struct S52 T52;
 
 /* AP_ALTERNATIVE_OPTIONS_LIST */
-typedef struct S53 T53;
+typedef volatile struct S53 T53;
 
 /* AP_STRING_OPTION */
-typedef struct S54 T54;
+typedef volatile struct S54 T54;
 
 /* UT_VERSION */
-typedef struct S56 T56;
+typedef volatile struct S56 T56;
 
 /* AP_ENUMERATION_OPTION */
-typedef struct S57 T57;
+typedef volatile struct S57 T57;
 
 /* AP_BOOLEAN_OPTION */
-typedef struct S58 T58;
+typedef volatile struct S58 T58;
 
 /* AP_INTEGER_OPTION */
-typedef struct S59 T59;
+typedef volatile struct S59 T59;
 
 /* ET_NULL_ERROR_HANDLER */
-typedef struct S63 T63;
+typedef volatile struct S63 T63;
 
 /* ET_AST_FACTORY */
-typedef struct S65 T65;
+typedef volatile struct S65 T65;
 
 /* ET_SYSTEM_PROCESSOR */
-typedef struct S66 T66;
+typedef volatile struct S66 T66;
 
 /* ET_CLUSTER */
-typedef struct S67 T67;
+typedef volatile struct S67 T67;
 
 /* ET_EIFFEL_PARSER */
-typedef struct S68 T68;
+typedef volatile struct S68 T68;
 
 /* DS_ARRAYED_LIST [ET_CLASS] */
-typedef struct S69 T69;
+typedef volatile struct S69 T69;
 
 /* ET_CLASS */
-typedef struct S70 T70;
+typedef volatile struct S70 T70;
 
 /* TUPLE [ET_CLASS] */
-typedef struct S74 T74;
+typedef volatile struct S74 T74;
 
 /* PROCEDURE [TUPLE [ET_CLASS]] */
-typedef struct S75 T75;
+typedef volatile struct S75 T75;
 
 /* TUPLE */
-typedef struct S76 T76;
+typedef volatile struct S76 T76;
 
 /* TUPLE [DS_ARRAYED_LIST [ET_CLASS]] */
-typedef struct S77 T77;
+typedef volatile struct S77 T77;
 
 /* PREDICATE [TUPLE [ET_CLASS]] */
-typedef struct S78 T78;
+typedef volatile struct S78 T78;
 
 /* ET_CREATOR_LIST */
-typedef struct S80 T80;
+typedef volatile struct S80 T80;
 
 /* ET_TOKEN_CONSTANTS */
-typedef struct S81 T81;
+typedef volatile struct S81 T81;
 
 /* ET_CREATOR */
-typedef struct S82 T82;
+typedef volatile struct S82 T82;
 
 /* UT_CANNOT_READ_FILE_ERROR */
-typedef struct S83 T83;
+typedef volatile struct S83 T83;
 
 /* ET_ECF_SYSTEM_PARSER */
-typedef struct S85 T85;
+typedef volatile struct S85 T85;
 
 /* ET_ECF_ERROR_HANDLER */
-typedef struct S86 T86;
+typedef volatile struct S86 T86;
 
 /* ET_ECF_SYSTEM */
-typedef struct S87 T87;
+typedef volatile struct S87 T87;
 
 /* ET_ECF_TARGET */
-typedef struct S88 T88;
+typedef volatile struct S88 T88;
 
 /* ET_ECF_CLUSTER */
-typedef struct S89 T89;
+typedef volatile struct S89 T89;
 
 /* ET_ECF_SETTINGS */
-typedef struct S90 T90;
+typedef volatile struct S90 T90;
 
 /* ET_ECF_CAPABILITIES */
-typedef struct S91 T91;
+typedef volatile struct S91 T91;
 
 /* ET_ECF_VARIABLES */
-typedef struct S92 T92;
+typedef volatile struct S92 T92;
 
 /* ET_CLUSTERS */
-typedef struct S94 T94;
+typedef volatile struct S94 T94;
 
 /* ET_DYNAMIC_SYSTEM */
-typedef struct S95 T95;
+typedef volatile struct S95 T95;
 
 /* DT_DATE_TIME */
-typedef struct S97 T97;
+typedef volatile struct S97 T97;
 
 /* DS_HASH_SET [STRING_8] */
-typedef struct S99 T99;
+typedef volatile struct S99 T99;
 
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER */
-typedef struct S100 T100;
+typedef volatile struct S100 T100;
 
 /* ET_CLASS_TYPE */
-typedef struct S102 T102;
+typedef volatile struct S102 T102;
 
 /* UT_VERSION_NUMBER */
-typedef struct S103 T103;
+typedef volatile struct S103 T103;
 
 /* EXECUTION_ENVIRONMENT */
-typedef struct S105 T105;
+typedef volatile struct S105 T105;
 
 /* UT_MESSAGE */
-typedef struct S106 T106;
+typedef volatile struct S106 T106;
 
 /* RX_PCRE_REGULAR_EXPRESSION */
-typedef struct S107 T107;
+typedef volatile struct S107 T107;
 
 /* KL_STRING_ROUTINES */
-typedef struct S108 T108;
+typedef volatile struct S108 T108;
 
 /* ST_SPLITTER */
-typedef struct S109 T109;
+typedef volatile struct S109 T109;
 
 /* AP_ERROR */
-typedef struct S113 T113;
+typedef volatile struct S113 T113;
 
 /* ET_C_GENERATOR */
-typedef struct S114 T114;
+typedef volatile struct S114 T114;
 
 /* DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S116 T116;
+typedef volatile struct S116 T116;
 
 /* KL_SHELL_COMMAND */
-typedef struct S117 T117;
+typedef volatile struct S117 T117;
 
 /* GECC */
-typedef struct S118 T118;
+typedef volatile struct S118 T118;
 
 /* KL_OPERATING_SYSTEM */
-typedef struct S119 T119;
+typedef volatile struct S119 T119;
 
 /* VOID_TARGET */
-typedef struct S120 T120;
+typedef volatile struct S120 T120;
 
 /* TYPE [VOID_TARGET] */
 #define T121 EIF_TYPE_OBJ
 
 /* ROUTINE_FAILURE */
-typedef struct S122 T122;
+typedef volatile struct S122 T122;
 
 /* TYPE [ROUTINE_FAILURE] */
 #define T123 EIF_TYPE_OBJ
 
 /* OLD_VIOLATION */
-typedef struct S124 T124;
+typedef volatile struct S124 T124;
 
 /* TYPE [OLD_VIOLATION] */
 #define T125 EIF_TYPE_OBJ
 
 /* NO_MORE_MEMORY */
-typedef struct S126 T126;
+typedef volatile struct S126 T126;
 
 /* INVARIANT_VIOLATION */
-typedef struct S127 T127;
+typedef volatile struct S127 T127;
 
 /* OPERATING_SYSTEM_SIGNAL_FAILURE */
-typedef struct S128 T128;
+typedef volatile struct S128 T128;
 
 /* IO_FAILURE */
-typedef struct S129 T129;
+typedef volatile struct S129 T129;
 
 /* OPERATING_SYSTEM_FAILURE */
-typedef struct S130 T130;
+typedef volatile struct S130 T130;
 
 /* COM_FAILURE */
-typedef struct S131 T131;
+typedef volatile struct S131 T131;
 
 /* EIFFEL_RUNTIME_PANIC */
-typedef struct S132 T132;
+typedef volatile struct S132 T132;
 
 /* PRECONDITION_VIOLATION */
-typedef struct S134 T134;
+typedef volatile struct S134 T134;
 
 /* POSTCONDITION_VIOLATION */
-typedef struct S135 T135;
+typedef volatile struct S135 T135;
 
 /* FLOATING_POINT_FAILURE */
-typedef struct S136 T136;
+typedef volatile struct S136 T136;
 
 /* CHECK_VIOLATION */
-typedef struct S137 T137;
+typedef volatile struct S137 T137;
 
 /* BAD_INSPECT_VALUE */
-typedef struct S138 T138;
+typedef volatile struct S138 T138;
 
 /* VARIANT_VIOLATION */
-typedef struct S139 T139;
+typedef volatile struct S139 T139;
 
 /* LOOP_INVARIANT_VIOLATION */
-typedef struct S140 T140;
+typedef volatile struct S140 T140;
 
 /* RESCUE_FAILURE */
-typedef struct S141 T141;
+typedef volatile struct S141 T141;
 
 /* RESUMPTION_FAILURE */
-typedef struct S142 T142;
+typedef volatile struct S142 T142;
 
 /* CREATE_ON_DEFERRED */
-typedef struct S143 T143;
+typedef volatile struct S143 T143;
 
 /* EXTERNAL_FAILURE */
-typedef struct S144 T144;
+typedef volatile struct S144 T144;
 
 /* VOID_ASSIGNED_TO_EXPANDED */
-typedef struct S145 T145;
+typedef volatile struct S145 T145;
 
 /* EXCEPTION_IN_SIGNAL_HANDLER_FAILURE */
-typedef struct S146 T146;
+typedef volatile struct S146 T146;
 
 /* MISMATCH_FAILURE */
-typedef struct S147 T147;
+typedef volatile struct S147 T147;
 
 /* DEVELOPER_EXCEPTION */
-typedef struct S148 T148;
+typedef volatile struct S148 T148;
 
 /* ADDRESS_APPLIED_TO_MELTED_FEATURE */
-typedef struct S149 T149;
+typedef volatile struct S149 T149;
 
 /* SERIALIZATION_FAILURE */
-typedef struct S150 T150;
+typedef volatile struct S150 T150;
 
 /* KL_WINDOWS_FILE_SYSTEM */
-typedef struct S151 T151;
+typedef volatile struct S151 T151;
 
 /* KL_UNIX_FILE_SYSTEM */
-typedef struct S152 T152;
+typedef volatile struct S152 T152;
 
 /* PRIMES */
-typedef struct S153 T153;
+typedef volatile struct S153 T153;
 
 /* SPECIAL [INTEGER_32] */
-typedef struct S154 T154;
+typedef volatile struct S154 T154;
 
 /* SPECIAL [BOOLEAN] */
-typedef struct S155 T155;
+typedef volatile struct S155 T155;
 
 /* ARGUMENTS_32 */
-typedef struct S156 T156;
+typedef volatile struct S156 T156;
 
 /* MUTEX */
-typedef struct S159 T159;
+typedef volatile struct S159 T159;
 
 /* UT_ERROR_HANDLER */
-typedef struct S160 T160;
+typedef volatile struct S160 T160;
 
 /* KL_STDOUT_FILE */
-typedef struct S161 T161;
+typedef volatile struct S161 T161;
 
 /* MANAGED_POINTER */
-typedef struct S162 T162;
+typedef volatile struct S162 T162;
 
 /* KL_LINKABLE [CHARACTER_8] */
-typedef struct S164 T164;
+typedef volatile struct S164 T164;
 
 /* FILE_INFO */
-typedef struct S166 T166;
+typedef volatile struct S166 T166;
 
 /* UC_UTF8_ROUTINES */
-typedef struct S167 T167;
+typedef volatile struct S167 T167;
 
 /* DS_ARRAYED_LIST [STRING_8] */
-typedef struct S169 T169;
+typedef volatile struct S169 T169;
 
 /* TUPLE [ET_UNIVERSE] */
-typedef struct S170 T170;
+typedef volatile struct S170 T170;
 
 /* PROCEDURE [TUPLE [ET_UNIVERSE]] */
-typedef struct S171 T171;
+typedef volatile struct S171 T171;
 
 /* TUPLE [PROCEDURE [TUPLE [ET_CLASS]], FUNCTION [TUPLE [ET_CLASS], BOOLEAN]] */
-typedef struct S172 T172;
+typedef volatile struct S172 T172;
 
 /* ET_ADAPTED_LIBRARIES */
-typedef struct S173 T173;
+typedef volatile struct S173 T173;
 
 /* ET_ADAPTED_DOTNET_ASSEMBLIES */
-typedef struct S174 T174;
+typedef volatile struct S174 T174;
 
 /* ET_IMPLICIT_TYPE_MARK */
-typedef struct S176 T176;
+typedef volatile struct S176 T176;
 
 /* DS_HASH_TABLE [ET_MASTER_CLASS, ET_CLASS_NAME] */
-typedef struct S177 T177;
+typedef volatile struct S177 T177;
 
 /* ET_CLASS_NAME_TESTER */
-typedef struct S178 T178;
+typedef volatile struct S178 T178;
 
 /* ET_PARENT */
-typedef struct S180 T180;
+typedef volatile struct S180 T180;
 
 /* ET_PARENT_LIST */
-typedef struct S181 T181;
+typedef volatile struct S181 T181;
 
 /* ET_CLIENT_LIST */
-typedef struct S182 T182;
+typedef volatile struct S182 T182;
 
 /* ET_TUPLE_TYPE */
-typedef struct S183 T183;
+typedef volatile struct S183 T183;
 
 /* ET_ACTUAL_PARAMETER_LIST */
-typedef struct S185 T185;
+typedef volatile struct S185 T185;
 
 /* ET_BUILTIN_CONVERT_FEATURE */
-typedef struct S186 T186;
+typedef volatile struct S186 T186;
 
 /* DS_HASH_SET [ET_UNIVERSE] */
-typedef struct S187 T187;
+typedef volatile struct S187 T187;
 
 /* ET_MASTER_CLASS */
-typedef struct S188 T188;
+typedef volatile struct S188 T188;
 
 /* ET_CLIENT */
-typedef struct S189 T189;
+typedef volatile struct S189 T189;
 
 /* ET_KEYWORD */
-typedef struct S191 T191;
+typedef volatile struct S191 T191;
 
 /* ET_ATTACHMENT_MARK_SEPARATE_KEYWORD */
-typedef struct S192 T192;
+typedef volatile struct S192 T192;
 
 /* ET_RENAME_LIST */
-typedef struct S193 T193;
+typedef volatile struct S193 T193;
 
 /* ET_EXPORT_LIST */
-typedef struct S194 T194;
+typedef volatile struct S194 T194;
 
 /* ET_KEYWORD_FEATURE_NAME_LIST */
-typedef struct S195 T195;
+typedef volatile struct S195 T195;
 
 /* ET_NONE_GROUP */
-typedef struct S198 T198;
+typedef volatile struct S198 T198;
 
 /* ET_LIKE_CURRENT */
-typedef struct S199 T199;
+typedef volatile struct S199 T199;
 
 /* ET_UNFOLDED_EMPTY_TUPLE_ACTUAL_PARAMETERS */
-typedef struct S201 T201;
+typedef volatile struct S201 T201;
 
 /* ET_LIBRARY */
-typedef struct S203 T203;
+typedef volatile struct S203 T203;
 
 /* TUPLE [ET_LIBRARY] */
-typedef struct S204 T204;
+typedef volatile struct S204 T204;
 
 /* PROCEDURE [TUPLE [ET_LIBRARY]] */
-typedef struct S205 T205;
+typedef volatile struct S205 T205;
 
 /* TUPLE [DS_HASH_SET [ET_UNIVERSE]] */
-typedef struct S206 T206;
+typedef volatile struct S206 T206;
 
 /* ET_DOTNET_ASSEMBLY */
-typedef struct S207 T207;
+typedef volatile struct S207 T207;
 
 /* TUPLE [ET_DOTNET_ASSEMBLY] */
-typedef struct S208 T208;
+typedef volatile struct S208 T208;
 
 /* PROCEDURE [TUPLE [ET_DOTNET_ASSEMBLY]] */
-typedef struct S209 T209;
+typedef volatile struct S209 T209;
 
 /* ST_WORD_WRAPPER */
-typedef struct S210 T210;
+typedef volatile struct S210 T210;
 
 /* AP_DISPLAY_HELP_FLAG */
-typedef struct S212 T212;
+typedef volatile struct S212 T212;
 
 /* DS_ARRAYED_LIST [AP_OPTION] */
-typedef struct S213 T213;
+typedef volatile struct S213 T213;
 
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST] */
-typedef struct S214 T214;
+typedef volatile struct S214 T214;
 
 /* AP_ERROR_HANDLER */
-typedef struct S215 T215;
+typedef volatile struct S215 T215;
 
 /* DS_LINKABLE [AP_OPTION] */
-typedef struct S216 T216;
+typedef volatile struct S216 T216;
 
 /* DS_LINKED_LIST_CURSOR [AP_OPTION] */
-typedef struct S217 T217;
+typedef volatile struct S217 T217;
 
 /* DS_ARRAYED_LIST [detachable STRING_8] */
-typedef struct S218 T218;
+typedef volatile struct S218 T218;
 
 /* DS_ARRAYED_LIST_CURSOR [detachable STRING_8] */
-typedef struct S219 T219;
+typedef volatile struct S219 T219;
 
 /* DS_LINKED_LIST [STRING_8] */
-typedef struct S220 T220;
+typedef volatile struct S220 T220;
 
 /* KL_STRING_EQUALITY_TESTER */
-typedef struct S221 T221;
+typedef volatile struct S221 T221;
 
 /* KL_EQUALITY_TESTER [STRING_8] */
-typedef struct S222 T222;
+typedef volatile struct S222 T222;
 
 /* DS_LINKED_LIST [BOOLEAN] */
-typedef struct S225 T225;
+typedef volatile struct S225 T225;
 
 /* DS_LINKED_LIST [INTEGER_32] */
-typedef struct S228 T228;
+typedef volatile struct S228 T228;
 
 /* KL_NULL_TEXT_OUTPUT_STREAM */
-typedef struct S229 T229;
+typedef volatile struct S229 T229;
 
 /* ET_EIFFEL_PREPARSER */
-typedef struct S231 T231;
+typedef volatile struct S231 T231;
 
 /* ET_MASTER_CLASS_CHECKER */
-typedef struct S232 T232;
+typedef volatile struct S232 T232;
 
 /* ET_PROVIDER_CHECKER */
-typedef struct S233 T233;
+typedef volatile struct S233 T233;
 
 /* ET_ANCESTOR_BUILDER */
-typedef struct S234 T234;
+typedef volatile struct S234 T234;
 
 /* ET_FEATURE_FLATTENER */
-typedef struct S235 T235;
+typedef volatile struct S235 T235;
 
 /* ET_INTERFACE_CHECKER */
-typedef struct S236 T236;
+typedef volatile struct S236 T236;
 
 /* ET_IMPLEMENTATION_CHECKER */
-typedef struct S237 T237;
+typedef volatile struct S237 T237;
 
 /* ET_AST_NULL_PROCESSOR */
-typedef struct S238 T238;
+typedef volatile struct S238 T238;
 
 /* DS_ARRAYED_LIST [INTEGER_32] */
-typedef struct S239 T239;
+typedef volatile struct S239 T239;
 
 /* ET_DOTNET_ASSEMBLY_CLASSIC_CONSUMER */
-typedef struct S241 T241;
+typedef volatile struct S241 T241;
 
 /* YY_UNICODE_FILE_BUFFER */
-typedef struct S243 T243;
+typedef volatile struct S243 T243;
 
 /* KL_STDIN_FILE */
-typedef struct S244 T244;
+typedef volatile struct S244 T244;
 
 /* DS_ARRAYED_STACK [INTEGER_32] */
-typedef struct S245 T245;
+typedef volatile struct S245 T245;
 
 /* DS_ARRAYED_STACK [detachable ET_FORMAL_ARGUMENT_LIST] */
-typedef struct S246 T246;
+typedef volatile struct S246 T246;
 
 /* DS_ARRAYED_STACK [detachable ET_LOCAL_VARIABLE_LIST] */
-typedef struct S247 T247;
+typedef volatile struct S247 T247;
 
 /* DS_ARRAYED_STACK [detachable ET_KEYWORD] */
-typedef struct S248 T248;
+typedef volatile struct S248 T248;
 
 /* DS_ARRAYED_STACK [detachable ET_SYMBOL] */
-typedef struct S249 T249;
+typedef volatile struct S249 T249;
 
 /* DS_ARRAYED_STACK [detachable ET_OBJECT_TEST_LIST] */
-typedef struct S250 T250;
+typedef volatile struct S250 T250;
 
 /* DS_ARRAYED_STACK [ET_OBJECT_TEST_LIST] */
-typedef struct S251 T251;
+typedef volatile struct S251 T251;
 
 /* DS_ARRAYED_STACK [detachable ET_ITERATION_COMPONENT_LIST] */
-typedef struct S252 T252;
+typedef volatile struct S252 T252;
 
 /* DS_ARRAYED_STACK [ET_ITERATION_COMPONENT_LIST] */
-typedef struct S253 T253;
+typedef volatile struct S253 T253;
 
 /* DS_ARRAYED_STACK [detachable ET_INLINE_SEPARATE_ARGUMENT_LIST] */
-typedef struct S254 T254;
+typedef volatile struct S254 T254;
 
 /* DS_ARRAYED_STACK [ET_INLINE_SEPARATE_ARGUMENT_LIST] */
-typedef struct S255 T255;
+typedef volatile struct S255 T255;
 
 /* DS_ARRAYED_LIST [ET_ASSERTION_ITEM] */
-typedef struct S256 T256;
+typedef volatile struct S256 T256;
 
 /* DS_ARRAYED_LIST [ET_QUERY] */
-typedef struct S257 T257;
+typedef volatile struct S257 T257;
 
 /* DS_ARRAYED_LIST [ET_PROCEDURE] */
-typedef struct S258 T258;
+typedef volatile struct S258 T258;
 
 /* DS_ARRAYED_LIST [detachable ET_CONSTRAINT_TYPE] */
-typedef struct S259 T259;
+typedef volatile struct S259 T259;
 
 /* DS_HASH_SET [ET_NAMED_CLASS] */
-typedef struct S260 T260;
+typedef volatile struct S260 T260;
 
 /* YY_BUFFER */
-typedef struct S261 T261;
+typedef volatile struct S261 T261;
 
 /* ET_UNKNOWN_GROUP */
-typedef struct S262 T262;
+typedef volatile struct S262 T262;
 
 /* KL_SPECIAL_ROUTINES [INTEGER_32] */
-typedef struct S263 T263;
+typedef volatile struct S263 T263;
 
 /* KL_UNICODE_CHARACTER_BUFFER */
-typedef struct S265 T265;
+typedef volatile struct S265 T265;
 
 /* ET_CLIENTS */
-typedef struct S267 T267;
+typedef volatile struct S267 T267;
 
 /* ET_FEATURE_CLAUSE */
-typedef struct S268 T268;
+typedef volatile struct S268 T268;
 
 /* KL_SPECIAL_ROUTINES [detachable ANY] */
-typedef struct S271 T271;
+typedef volatile struct S271 T271;
 
 /* SPECIAL [detachable ANY] */
-typedef struct S272 T272;
+typedef volatile struct S272 T272;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_KEYWORD] */
-typedef struct S273 T273;
+typedef volatile struct S273 T273;
 
 /* SPECIAL [detachable ET_KEYWORD] */
-typedef struct S274 T274;
+typedef volatile struct S274 T274;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_AGENT_KEYWORD] */
-typedef struct S275 T275;
+typedef volatile struct S275 T275;
 
 /* ET_AGENT_KEYWORD */
-typedef struct S276 T276;
+typedef volatile struct S276 T276;
 
 /* SPECIAL [detachable ET_AGENT_KEYWORD] */
-typedef struct S277 T277;
+typedef volatile struct S277 T277;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_PRECURSOR_KEYWORD] */
-typedef struct S278 T278;
+typedef volatile struct S278 T278;
 
 /* ET_PRECURSOR_KEYWORD */
-typedef struct S279 T279;
+typedef volatile struct S279 T279;
 
 /* SPECIAL [detachable ET_PRECURSOR_KEYWORD] */
-typedef struct S280 T280;
+typedef volatile struct S280 T280;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_SYMBOL] */
-typedef struct S281 T281;
+typedef volatile struct S281 T281;
 
 /* ET_SYMBOL */
-typedef struct S282 T282;
+typedef volatile struct S282 T282;
 
 /* SPECIAL [detachable ET_SYMBOL] */
-typedef struct S283 T283;
+typedef volatile struct S283 T283;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_POSITION] */
-typedef struct S284 T284;
+typedef volatile struct S284 T284;
 
 /* SPECIAL [detachable ET_POSITION] */
-typedef struct S286 T286;
+typedef volatile struct S286 T286;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_BOOLEAN_CONSTANT] */
-typedef struct S287 T287;
+typedef volatile struct S287 T287;
 
 /* SPECIAL [detachable ET_BOOLEAN_CONSTANT] */
-typedef struct S289 T289;
+typedef volatile struct S289 T289;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_BREAK] */
-typedef struct S290 T290;
+typedef volatile struct S290 T290;
 
 /* SPECIAL [detachable ET_BREAK] */
-typedef struct S292 T292;
+typedef volatile struct S292 T292;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CHARACTER_CONSTANT] */
-typedef struct S293 T293;
+typedef volatile struct S293 T293;
 
 /* SPECIAL [detachable ET_CHARACTER_CONSTANT] */
-typedef struct S295 T295;
+typedef volatile struct S295 T295;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CURRENT] */
-typedef struct S296 T296;
+typedef volatile struct S296 T296;
 
 /* ET_CURRENT */
-typedef struct S297 T297;
+typedef volatile struct S297 T297;
 
 /* SPECIAL [detachable ET_CURRENT] */
-typedef struct S298 T298;
+typedef volatile struct S298 T298;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_FREE_OPERATOR] */
-typedef struct S299 T299;
+typedef volatile struct S299 T299;
 
 /* ET_FREE_OPERATOR */
-typedef struct S300 T300;
+typedef volatile struct S300 T300;
 
 /* SPECIAL [detachable ET_FREE_OPERATOR] */
-typedef struct S301 T301;
+typedef volatile struct S301 T301;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_IDENTIFIER] */
-typedef struct S302 T302;
+typedef volatile struct S302 T302;
 
 /* ET_IDENTIFIER */
-typedef struct S303 T303;
+typedef volatile struct S303 T303;
 
 /* SPECIAL [detachable ET_IDENTIFIER] */
-typedef struct S304 T304;
+typedef volatile struct S304 T304;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_INTEGER_CONSTANT] */
-typedef struct S305 T305;
+typedef volatile struct S305 T305;
 
 /* SPECIAL [detachable ET_INTEGER_CONSTANT] */
-typedef struct S307 T307;
+typedef volatile struct S307 T307;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_KEYWORD_OPERATOR] */
-typedef struct S308 T308;
+typedef volatile struct S308 T308;
 
 /* ET_KEYWORD_OPERATOR */
-typedef struct S309 T309;
+typedef volatile struct S309 T309;
 
 /* SPECIAL [detachable ET_KEYWORD_OPERATOR] */
-typedef struct S310 T310;
+typedef volatile struct S310 T310;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_STRING] */
-typedef struct S311 T311;
+typedef volatile struct S311 T311;
 
 /* SPECIAL [detachable ET_MANIFEST_STRING] */
-typedef struct S313 T313;
+typedef volatile struct S313 T313;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_REAL_CONSTANT] */
-typedef struct S314 T314;
+typedef volatile struct S314 T314;
 
 /* SPECIAL [detachable ET_REAL_CONSTANT] */
-typedef struct S316 T316;
+typedef volatile struct S316 T316;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_RESULT] */
-typedef struct S317 T317;
+typedef volatile struct S317 T317;
 
 /* ET_RESULT */
-typedef struct S318 T318;
+typedef volatile struct S318 T318;
 
 /* SPECIAL [detachable ET_RESULT] */
-typedef struct S319 T319;
+typedef volatile struct S319 T319;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_RETRY_INSTRUCTION] */
-typedef struct S320 T320;
+typedef volatile struct S320 T320;
 
 /* ET_RETRY_INSTRUCTION */
-typedef struct S321 T321;
+typedef volatile struct S321 T321;
 
 /* SPECIAL [detachable ET_RETRY_INSTRUCTION] */
-typedef struct S322 T322;
+typedef volatile struct S322 T322;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_SYMBOL_OPERATOR] */
-typedef struct S323 T323;
+typedef volatile struct S323 T323;
 
 /* ET_SYMBOL_OPERATOR */
-typedef struct S324 T324;
+typedef volatile struct S324 T324;
 
 /* SPECIAL [detachable ET_SYMBOL_OPERATOR] */
-typedef struct S325 T325;
+typedef volatile struct S325 T325;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_VOID] */
-typedef struct S326 T326;
+typedef volatile struct S326 T326;
 
 /* ET_VOID */
-typedef struct S327 T327;
+typedef volatile struct S327 T327;
 
 /* SPECIAL [detachable ET_VOID] */
-typedef struct S328 T328;
+typedef volatile struct S328 T328;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_SEMICOLON_SYMBOL] */
-typedef struct S329 T329;
+typedef volatile struct S329 T329;
 
 /* ET_SEMICOLON_SYMBOL */
-typedef struct S330 T330;
+typedef volatile struct S330 T330;
 
 /* SPECIAL [detachable ET_SEMICOLON_SYMBOL] */
-typedef struct S331 T331;
+typedef volatile struct S331 T331;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_BRACKET_SYMBOL] */
-typedef struct S332 T332;
+typedef volatile struct S332 T332;
 
 /* ET_BRACKET_SYMBOL */
-typedef struct S333 T333;
+typedef volatile struct S333 T333;
 
 /* SPECIAL [detachable ET_BRACKET_SYMBOL] */
-typedef struct S334 T334;
+typedef volatile struct S334 T334;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_QUESTION_MARK_SYMBOL] */
-typedef struct S335 T335;
+typedef volatile struct S335 T335;
 
 /* ET_QUESTION_MARK_SYMBOL */
-typedef struct S336 T336;
+typedef volatile struct S336 T336;
 
 /* SPECIAL [detachable ET_QUESTION_MARK_SYMBOL] */
-typedef struct S337 T337;
+typedef volatile struct S337 T337;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_ACROSS_EXPRESSION] */
-typedef struct S338 T338;
+typedef volatile struct S338 T338;
 
 /* ET_ACROSS_EXPRESSION */
-typedef struct S339 T339;
+typedef volatile struct S339 T339;
 
 /* SPECIAL [detachable ET_ACROSS_EXPRESSION] */
-typedef struct S340 T340;
+typedef volatile struct S340 T340;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_ACROSS_INSTRUCTION] */
-typedef struct S341 T341;
+typedef volatile struct S341 T341;
 
 /* ET_ACROSS_INSTRUCTION */
-typedef struct S342 T342;
+typedef volatile struct S342 T342;
 
 /* SPECIAL [detachable ET_ACROSS_INSTRUCTION] */
-typedef struct S343 T343;
+typedef volatile struct S343 T343;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_ACTUAL_ARGUMENT_LIST] */
-typedef struct S344 T344;
+typedef volatile struct S344 T344;
 
 /* ET_ACTUAL_ARGUMENT_LIST */
-typedef struct S345 T345;
+typedef volatile struct S345 T345;
 
 /* SPECIAL [detachable ET_ACTUAL_ARGUMENT_LIST] */
-typedef struct S346 T346;
+typedef volatile struct S346 T346;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_ACTUAL_PARAMETER_ITEM] */
-typedef struct S347 T347;
+typedef volatile struct S347 T347;
 
 /* SPECIAL [detachable ET_ACTUAL_PARAMETER_ITEM] */
-typedef struct S348 T348;
+typedef volatile struct S348 T348;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_ACTUAL_PARAMETER_LIST] */
-typedef struct S349 T349;
+typedef volatile struct S349 T349;
 
 /* SPECIAL [detachable ET_ACTUAL_PARAMETER_LIST] */
-typedef struct S350 T350;
+typedef volatile struct S350 T350;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_AGENT_ARGUMENT_OPERAND] */
-typedef struct S351 T351;
+typedef volatile struct S351 T351;
 
 /* SPECIAL [detachable ET_AGENT_ARGUMENT_OPERAND] */
-typedef struct S353 T353;
+typedef volatile struct S353 T353;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_AGENT_ARGUMENT_OPERAND_ITEM] */
-typedef struct S354 T354;
+typedef volatile struct S354 T354;
 
 /* SPECIAL [detachable ET_AGENT_ARGUMENT_OPERAND_ITEM] */
-typedef struct S356 T356;
+typedef volatile struct S356 T356;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_AGENT_ARGUMENT_OPERAND_LIST] */
-typedef struct S357 T357;
+typedef volatile struct S357 T357;
 
 /* ET_AGENT_ARGUMENT_OPERAND_LIST */
-typedef struct S358 T358;
+typedef volatile struct S358 T358;
 
 /* SPECIAL [detachable ET_AGENT_ARGUMENT_OPERAND_LIST] */
-typedef struct S359 T359;
+typedef volatile struct S359 T359;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_AGENT_TARGET] */
-typedef struct S360 T360;
+typedef volatile struct S360 T360;
 
 /* SPECIAL [detachable ET_AGENT_TARGET] */
-typedef struct S362 T362;
+typedef volatile struct S362 T362;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_ALIAS_NAME] */
-typedef struct S363 T363;
+typedef volatile struct S363 T363;
 
 /* ET_ALIAS_NAME */
-typedef struct S364 T364;
+typedef volatile struct S364 T364;
 
 /* SPECIAL [detachable ET_ALIAS_NAME] */
-typedef struct S365 T365;
+typedef volatile struct S365 T365;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_ALIAS_NAME_LIST] */
-typedef struct S366 T366;
+typedef volatile struct S366 T366;
 
 /* ET_ALIAS_NAME_LIST */
-typedef struct S367 T367;
+typedef volatile struct S367 T367;
 
 /* SPECIAL [detachable ET_ALIAS_NAME_LIST] */
-typedef struct S368 T368;
+typedef volatile struct S368 T368;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_ASSIGNER] */
-typedef struct S369 T369;
+typedef volatile struct S369 T369;
 
 /* SPECIAL [detachable ET_ASSIGNER] */
-typedef struct S371 T371;
+typedef volatile struct S371 T371;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_BRACKET_EXPRESSION] */
-typedef struct S372 T372;
+typedef volatile struct S372 T372;
 
 /* ET_BRACKET_EXPRESSION */
-typedef struct S373 T373;
+typedef volatile struct S373 T373;
 
 /* SPECIAL [detachable ET_BRACKET_EXPRESSION] */
-typedef struct S374 T374;
+typedef volatile struct S374 T374;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CALL_AGENT] */
-typedef struct S375 T375;
+typedef volatile struct S375 T375;
 
 /* ET_CALL_AGENT */
-typedef struct S376 T376;
+typedef volatile struct S376 T376;
 
 /* SPECIAL [detachable ET_CALL_AGENT] */
-typedef struct S377 T377;
+typedef volatile struct S377 T377;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_QUALIFIED_CALL_EXPRESSION] */
-typedef struct S378 T378;
+typedef volatile struct S378 T378;
 
 /* ET_QUALIFIED_CALL_EXPRESSION */
-typedef struct S379 T379;
+typedef volatile struct S379 T379;
 
 /* SPECIAL [detachable ET_QUALIFIED_CALL_EXPRESSION] */
-typedef struct S380 T380;
+typedef volatile struct S380 T380;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CHECK_INSTRUCTION] */
-typedef struct S381 T381;
+typedef volatile struct S381 T381;
 
 /* ET_CHECK_INSTRUCTION */
-typedef struct S382 T382;
+typedef volatile struct S382 T382;
 
 /* SPECIAL [detachable ET_CHECK_INSTRUCTION] */
-typedef struct S383 T383;
+typedef volatile struct S383 T383;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CHOICE] */
-typedef struct S384 T384;
+typedef volatile struct S384 T384;
 
 /* SPECIAL [detachable ET_CHOICE] */
-typedef struct S386 T386;
+typedef volatile struct S386 T386;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CHOICE_CONSTANT] */
-typedef struct S387 T387;
+typedef volatile struct S387 T387;
 
 /* SPECIAL [detachable ET_CHOICE_CONSTANT] */
-typedef struct S389 T389;
+typedef volatile struct S389 T389;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CHOICE_ITEM] */
-typedef struct S390 T390;
+typedef volatile struct S390 T390;
 
 /* SPECIAL [detachable ET_CHOICE_ITEM] */
-typedef struct S392 T392;
+typedef volatile struct S392 T392;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CHOICE_LIST] */
-typedef struct S393 T393;
+typedef volatile struct S393 T393;
 
 /* ET_CHOICE_LIST */
-typedef struct S394 T394;
+typedef volatile struct S394 T394;
 
 /* SPECIAL [detachable ET_CHOICE_LIST] */
-typedef struct S395 T395;
+typedef volatile struct S395 T395;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CLASS] */
-typedef struct S396 T396;
+typedef volatile struct S396 T396;
 
 /* SPECIAL [detachable ET_CLASS] */
-typedef struct S397 T397;
+typedef volatile struct S397 T397;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CLIENT_ITEM] */
-typedef struct S398 T398;
+typedef volatile struct S398 T398;
 
 /* SPECIAL [detachable ET_CLIENT_ITEM] */
-typedef struct S399 T399;
+typedef volatile struct S399 T399;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CLIENTS] */
-typedef struct S400 T400;
+typedef volatile struct S400 T400;
 
 /* SPECIAL [detachable ET_CLIENTS] */
-typedef struct S401 T401;
+typedef volatile struct S401 T401;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_COMPOUND] */
-typedef struct S402 T402;
+typedef volatile struct S402 T402;
 
 /* ET_COMPOUND */
-typedef struct S403 T403;
+typedef volatile struct S403 T403;
 
 /* SPECIAL [detachable ET_COMPOUND] */
-typedef struct S404 T404;
+typedef volatile struct S404 T404;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CONDITIONAL] */
-typedef struct S405 T405;
+typedef volatile struct S405 T405;
 
 /* SPECIAL [detachable ET_CONDITIONAL] */
-typedef struct S407 T407;
+typedef volatile struct S407 T407;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CONSTANT] */
-typedef struct S408 T408;
+typedef volatile struct S408 T408;
 
 /* SPECIAL [detachable ET_CONSTANT] */
-typedef struct S410 T410;
+typedef volatile struct S410 T410;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM] */
-typedef struct S411 T411;
+typedef volatile struct S411 T411;
 
 /* SPECIAL [detachable ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM] */
-typedef struct S413 T413;
+typedef volatile struct S413 T413;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST] */
-typedef struct S414 T414;
+typedef volatile struct S414 T414;
 
 /* ET_CONSTRAINT_ACTUAL_PARAMETER_LIST */
-typedef struct S415 T415;
+typedef volatile struct S415 T415;
 
 /* SPECIAL [detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST] */
-typedef struct S416 T416;
+typedef volatile struct S416 T416;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CONSTRAINT_CREATOR] */
-typedef struct S417 T417;
+typedef volatile struct S417 T417;
 
 /* ET_CONSTRAINT_CREATOR */
-typedef struct S418 T418;
+typedef volatile struct S418 T418;
 
 /* SPECIAL [detachable ET_CONSTRAINT_CREATOR] */
-typedef struct S419 T419;
+typedef volatile struct S419 T419;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CONSTRAINT_RENAME_LIST] */
-typedef struct S420 T420;
+typedef volatile struct S420 T420;
 
 /* ET_CONSTRAINT_RENAME_LIST */
-typedef struct S421 T421;
+typedef volatile struct S421 T421;
 
 /* SPECIAL [detachable ET_CONSTRAINT_RENAME_LIST] */
-typedef struct S422 T422;
+typedef volatile struct S422 T422;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CONSTRAINT_TYPE] */
-typedef struct S423 T423;
+typedef volatile struct S423 T423;
 
 /* SPECIAL [detachable ET_CONSTRAINT_TYPE] */
-typedef struct S425 T425;
+typedef volatile struct S425 T425;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CONVERT_FEATURE] */
-typedef struct S426 T426;
+typedef volatile struct S426 T426;
 
 /* SPECIAL [detachable ET_CONVERT_FEATURE] */
-typedef struct S428 T428;
+typedef volatile struct S428 T428;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CONVERT_FEATURE_ITEM] */
-typedef struct S429 T429;
+typedef volatile struct S429 T429;
 
 /* SPECIAL [detachable ET_CONVERT_FEATURE_ITEM] */
-typedef struct S431 T431;
+typedef volatile struct S431 T431;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CONVERT_FEATURE_LIST] */
-typedef struct S432 T432;
+typedef volatile struct S432 T432;
 
 /* ET_CONVERT_FEATURE_LIST */
-typedef struct S433 T433;
+typedef volatile struct S433 T433;
 
 /* SPECIAL [detachable ET_CONVERT_FEATURE_LIST] */
-typedef struct S434 T434;
+typedef volatile struct S434 T434;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CREATE_EXPRESSION] */
-typedef struct S435 T435;
+typedef volatile struct S435 T435;
 
 /* ET_CREATE_EXPRESSION */
-typedef struct S436 T436;
+typedef volatile struct S436 T436;
 
 /* SPECIAL [detachable ET_CREATE_EXPRESSION] */
-typedef struct S437 T437;
+typedef volatile struct S437 T437;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CREATION_REGION] */
-typedef struct S438 T438;
+typedef volatile struct S438 T438;
 
 /* ET_CREATION_REGION */
-typedef struct S439 T439;
+typedef volatile struct S439 T439;
 
 /* SPECIAL [detachable ET_CREATION_REGION] */
-typedef struct S440 T440;
+typedef volatile struct S440 T440;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CREATOR] */
-typedef struct S441 T441;
+typedef volatile struct S441 T441;
 
 /* SPECIAL [detachable ET_CREATOR] */
-typedef struct S442 T442;
+typedef volatile struct S442 T442;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_CREATOR_LIST] */
-typedef struct S443 T443;
+typedef volatile struct S443 T443;
 
 /* SPECIAL [detachable ET_CREATOR_LIST] */
-typedef struct S444 T444;
+typedef volatile struct S444 T444;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_DEBUG_INSTRUCTION] */
-typedef struct S445 T445;
+typedef volatile struct S445 T445;
 
 /* ET_DEBUG_INSTRUCTION */
-typedef struct S446 T446;
+typedef volatile struct S446 T446;
 
 /* SPECIAL [detachable ET_DEBUG_INSTRUCTION] */
-typedef struct S447 T447;
+typedef volatile struct S447 T447;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_EXPRESSION] */
-typedef struct S448 T448;
+typedef volatile struct S448 T448;
 
 /* ET_ELSEIF_EXPRESSION */
-typedef struct S449 T449;
+typedef volatile struct S449 T449;
 
 /* SPECIAL [detachable ET_ELSEIF_EXPRESSION] */
-typedef struct S450 T450;
+typedef volatile struct S450 T450;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_EXPRESSION_LIST] */
-typedef struct S451 T451;
+typedef volatile struct S451 T451;
 
 /* ET_ELSEIF_EXPRESSION_LIST */
-typedef struct S452 T452;
+typedef volatile struct S452 T452;
 
 /* SPECIAL [detachable ET_ELSEIF_EXPRESSION_LIST] */
-typedef struct S453 T453;
+typedef volatile struct S453 T453;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_PART] */
-typedef struct S454 T454;
+typedef volatile struct S454 T454;
 
 /* ET_ELSEIF_PART */
-typedef struct S455 T455;
+typedef volatile struct S455 T455;
 
 /* SPECIAL [detachable ET_ELSEIF_PART] */
-typedef struct S456 T456;
+typedef volatile struct S456 T456;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_PART_LIST] */
-typedef struct S457 T457;
+typedef volatile struct S457 T457;
 
 /* ET_ELSEIF_PART_LIST */
-typedef struct S458 T458;
+typedef volatile struct S458 T458;
 
 /* SPECIAL [detachable ET_ELSEIF_PART_LIST] */
-typedef struct S459 T459;
+typedef volatile struct S459 T459;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_EXPORT] */
-typedef struct S460 T460;
+typedef volatile struct S460 T460;
 
 /* SPECIAL [detachable ET_EXPORT] */
-typedef struct S462 T462;
+typedef volatile struct S462 T462;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_EXPORT_LIST] */
-typedef struct S463 T463;
+typedef volatile struct S463 T463;
 
 /* SPECIAL [detachable ET_EXPORT_LIST] */
-typedef struct S464 T464;
+typedef volatile struct S464 T464;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_EXPRESSION] */
-typedef struct S465 T465;
+typedef volatile struct S465 T465;
 
 /* SPECIAL [detachable ET_EXPRESSION] */
-typedef struct S467 T467;
+typedef volatile struct S467 T467;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_EXPRESSION_ITEM] */
-typedef struct S468 T468;
+typedef volatile struct S468 T468;
 
 /* SPECIAL [detachable ET_EXPRESSION_ITEM] */
-typedef struct S470 T470;
+typedef volatile struct S470 T470;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_EXTENDED_FEATURE_NAME] */
-typedef struct S471 T471;
+typedef volatile struct S471 T471;
 
 /* SPECIAL [detachable ET_EXTENDED_FEATURE_NAME] */
-typedef struct S473 T473;
+typedef volatile struct S473 T473;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_EXTERNAL_ALIAS] */
-typedef struct S474 T474;
+typedef volatile struct S474 T474;
 
 /* SPECIAL [detachable ET_EXTERNAL_ALIAS] */
-typedef struct S476 T476;
+typedef volatile struct S476 T476;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_FEATURE_CLAUSE] */
-typedef struct S477 T477;
+typedef volatile struct S477 T477;
 
 /* SPECIAL [detachable ET_FEATURE_CLAUSE] */
-typedef struct S478 T478;
+typedef volatile struct S478 T478;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_FEATURE_CLAUSE_LIST] */
-typedef struct S479 T479;
+typedef volatile struct S479 T479;
 
 /* ET_FEATURE_CLAUSE_LIST */
-typedef struct S480 T480;
+typedef volatile struct S480 T480;
 
 /* SPECIAL [detachable ET_FEATURE_CLAUSE_LIST] */
-typedef struct S481 T481;
+typedef volatile struct S481 T481;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_FEATURE_EXPORT] */
-typedef struct S482 T482;
+typedef volatile struct S482 T482;
 
 /* ET_FEATURE_EXPORT */
-typedef struct S483 T483;
+typedef volatile struct S483 T483;
 
 /* SPECIAL [detachable ET_FEATURE_EXPORT] */
-typedef struct S484 T484;
+typedef volatile struct S484 T484;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_FEATURE_NAME] */
-typedef struct S485 T485;
+typedef volatile struct S485 T485;
 
 /* SPECIAL [detachable ET_FEATURE_NAME] */
-typedef struct S486 T486;
+typedef volatile struct S486 T486;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_FEATURE_NAME_ITEM] */
-typedef struct S487 T487;
+typedef volatile struct S487 T487;
 
 /* SPECIAL [detachable ET_FEATURE_NAME_ITEM] */
-typedef struct S489 T489;
+typedef volatile struct S489 T489;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_FORMAL_ARGUMENT] */
-typedef struct S490 T490;
+typedef volatile struct S490 T490;
 
 /* ET_FORMAL_ARGUMENT */
-typedef struct S491 T491;
+typedef volatile struct S491 T491;
 
 /* SPECIAL [detachable ET_FORMAL_ARGUMENT] */
-typedef struct S492 T492;
+typedef volatile struct S492 T492;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_FORMAL_ARGUMENT_ITEM] */
-typedef struct S493 T493;
+typedef volatile struct S493 T493;
 
 /* SPECIAL [detachable ET_FORMAL_ARGUMENT_ITEM] */
-typedef struct S495 T495;
+typedef volatile struct S495 T495;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_FORMAL_ARGUMENT_LIST] */
-typedef struct S496 T496;
+typedef volatile struct S496 T496;
 
 /* ET_FORMAL_ARGUMENT_LIST */
-typedef struct S497 T497;
+typedef volatile struct S497 T497;
 
 /* SPECIAL [detachable ET_FORMAL_ARGUMENT_LIST] */
-typedef struct S498 T498;
+typedef volatile struct S498 T498;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_FORMAL_PARAMETER] */
-typedef struct S499 T499;
+typedef volatile struct S499 T499;
 
 /* ET_FORMAL_PARAMETER */
-typedef struct S500 T500;
+typedef volatile struct S500 T500;
 
 /* SPECIAL [detachable ET_FORMAL_PARAMETER] */
-typedef struct S501 T501;
+typedef volatile struct S501 T501;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_FORMAL_PARAMETER_ITEM] */
-typedef struct S502 T502;
+typedef volatile struct S502 T502;
 
 /* SPECIAL [detachable ET_FORMAL_PARAMETER_ITEM] */
-typedef struct S504 T504;
+typedef volatile struct S504 T504;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_FORMAL_PARAMETER_LIST] */
-typedef struct S505 T505;
+typedef volatile struct S505 T505;
 
 /* ET_FORMAL_PARAMETER_LIST */
-typedef struct S506 T506;
+typedef volatile struct S506 T506;
 
 /* SPECIAL [detachable ET_FORMAL_PARAMETER_LIST] */
-typedef struct S507 T507;
+typedef volatile struct S507 T507;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_IF_EXPRESSION] */
-typedef struct S508 T508;
+typedef volatile struct S508 T508;
 
 /* ET_IF_EXPRESSION */
-typedef struct S509 T509;
+typedef volatile struct S509 T509;
 
 /* SPECIAL [detachable ET_IF_EXPRESSION] */
-typedef struct S510 T510;
+typedef volatile struct S510 T510;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_IF_INSTRUCTION] */
-typedef struct S511 T511;
+typedef volatile struct S511 T511;
 
 /* ET_IF_INSTRUCTION */
-typedef struct S512 T512;
+typedef volatile struct S512 T512;
 
 /* SPECIAL [detachable ET_IF_INSTRUCTION] */
-typedef struct S513 T513;
+typedef volatile struct S513 T513;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_INLINE_AGENT] */
-typedef struct S514 T514;
+typedef volatile struct S514 T514;
 
 /* SPECIAL [detachable ET_INLINE_AGENT] */
-typedef struct S516 T516;
+typedef volatile struct S516 T516;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_ARGUMENT] */
-typedef struct S517 T517;
+typedef volatile struct S517 T517;
 
 /* ET_INLINE_SEPARATE_ARGUMENT */
-typedef struct S518 T518;
+typedef volatile struct S518 T518;
 
 /* SPECIAL [detachable ET_INLINE_SEPARATE_ARGUMENT] */
-typedef struct S519 T519;
+typedef volatile struct S519 T519;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_ARGUMENT_ITEM] */
-typedef struct S520 T520;
+typedef volatile struct S520 T520;
 
 /* SPECIAL [detachable ET_INLINE_SEPARATE_ARGUMENT_ITEM] */
-typedef struct S522 T522;
+typedef volatile struct S522 T522;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_ARGUMENTS] */
-typedef struct S523 T523;
+typedef volatile struct S523 T523;
 
 /* ET_INLINE_SEPARATE_ARGUMENTS */
-typedef struct S524 T524;
+typedef volatile struct S524 T524;
 
 /* SPECIAL [detachable ET_INLINE_SEPARATE_ARGUMENTS] */
-typedef struct S525 T525;
+typedef volatile struct S525 T525;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_INSTRUCTION] */
-typedef struct S526 T526;
+typedef volatile struct S526 T526;
 
 /* ET_INLINE_SEPARATE_INSTRUCTION */
-typedef struct S527 T527;
+typedef volatile struct S527 T527;
 
 /* SPECIAL [detachable ET_INLINE_SEPARATE_INSTRUCTION] */
-typedef struct S528 T528;
+typedef volatile struct S528 T528;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_INSPECT_EXPRESSION] */
-typedef struct S529 T529;
+typedef volatile struct S529 T529;
 
 /* ET_INSPECT_EXPRESSION */
-typedef struct S530 T530;
+typedef volatile struct S530 T530;
 
 /* SPECIAL [detachable ET_INSPECT_EXPRESSION] */
-typedef struct S531 T531;
+typedef volatile struct S531 T531;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_INSPECT_INSTRUCTION] */
-typedef struct S532 T532;
+typedef volatile struct S532 T532;
 
 /* ET_INSPECT_INSTRUCTION */
-typedef struct S533 T533;
+typedef volatile struct S533 T533;
 
 /* SPECIAL [detachable ET_INSPECT_INSTRUCTION] */
-typedef struct S534 T534;
+typedef volatile struct S534 T534;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_INSTRUCTION] */
-typedef struct S535 T535;
+typedef volatile struct S535 T535;
 
 /* SPECIAL [detachable ET_INSTRUCTION] */
-typedef struct S537 T537;
+typedef volatile struct S537 T537;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_INVARIANTS] */
-typedef struct S538 T538;
+typedef volatile struct S538 T538;
 
 /* ET_INVARIANTS */
-typedef struct S539 T539;
+typedef volatile struct S539 T539;
 
 /* SPECIAL [detachable ET_INVARIANTS] */
-typedef struct S540 T540;
+typedef volatile struct S540 T540;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_KEYWORD_FEATURE_NAME_LIST] */
-typedef struct S541 T541;
+typedef volatile struct S541 T541;
 
 /* SPECIAL [detachable ET_KEYWORD_FEATURE_NAME_LIST] */
-typedef struct S542 T542;
+typedef volatile struct S542 T542;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_LIKE_TYPE] */
-typedef struct S543 T543;
+typedef volatile struct S543 T543;
 
 /* SPECIAL [detachable ET_LIKE_TYPE] */
-typedef struct S545 T545;
+typedef volatile struct S545 T545;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_LOCAL_VARIABLE] */
-typedef struct S546 T546;
+typedef volatile struct S546 T546;
 
 /* ET_LOCAL_VARIABLE */
-typedef struct S547 T547;
+typedef volatile struct S547 T547;
 
 /* SPECIAL [detachable ET_LOCAL_VARIABLE] */
-typedef struct S548 T548;
+typedef volatile struct S548 T548;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_LOCAL_VARIABLE_ITEM] */
-typedef struct S549 T549;
+typedef volatile struct S549 T549;
 
 /* SPECIAL [detachable ET_LOCAL_VARIABLE_ITEM] */
-typedef struct S551 T551;
+typedef volatile struct S551 T551;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_LOCAL_VARIABLE_LIST] */
-typedef struct S552 T552;
+typedef volatile struct S552 T552;
 
 /* ET_LOCAL_VARIABLE_LIST */
-typedef struct S553 T553;
+typedef volatile struct S553 T553;
 
 /* SPECIAL [detachable ET_LOCAL_VARIABLE_LIST] */
-typedef struct S554 T554;
+typedef volatile struct S554 T554;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_LOOP_INVARIANTS] */
-typedef struct S555 T555;
+typedef volatile struct S555 T555;
 
 /* ET_LOOP_INVARIANTS */
-typedef struct S556 T556;
+typedef volatile struct S556 T556;
 
 /* SPECIAL [detachable ET_LOOP_INVARIANTS] */
-typedef struct S557 T557;
+typedef volatile struct S557 T557;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_ARRAY] */
-typedef struct S558 T558;
+typedef volatile struct S558 T558;
 
 /* ET_MANIFEST_ARRAY */
-typedef struct S559 T559;
+typedef volatile struct S559 T559;
 
 /* SPECIAL [detachable ET_MANIFEST_ARRAY] */
-typedef struct S560 T560;
+typedef volatile struct S560 T560;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_STRING_ITEM] */
-typedef struct S561 T561;
+typedef volatile struct S561 T561;
 
 /* SPECIAL [detachable ET_MANIFEST_STRING_ITEM] */
-typedef struct S563 T563;
+typedef volatile struct S563 T563;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_STRING_LIST] */
-typedef struct S564 T564;
+typedef volatile struct S564 T564;
 
 /* ET_MANIFEST_STRING_LIST */
-typedef struct S565 T565;
+typedef volatile struct S565 T565;
 
 /* SPECIAL [detachable ET_MANIFEST_STRING_LIST] */
-typedef struct S566 T566;
+typedef volatile struct S566 T566;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_TUPLE] */
-typedef struct S567 T567;
+typedef volatile struct S567 T567;
 
 /* ET_MANIFEST_TUPLE */
-typedef struct S568 T568;
+typedef volatile struct S568 T568;
 
 /* SPECIAL [detachable ET_MANIFEST_TUPLE] */
-typedef struct S569 T569;
+typedef volatile struct S569 T569;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_NOTE_LIST] */
-typedef struct S570 T570;
+typedef volatile struct S570 T570;
 
 /* ET_NOTE_LIST */
-typedef struct S571 T571;
+typedef volatile struct S571 T571;
 
 /* SPECIAL [detachable ET_NOTE_LIST] */
-typedef struct S572 T572;
+typedef volatile struct S572 T572;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_NOTE_ITEM] */
-typedef struct S573 T573;
+typedef volatile struct S573 T573;
 
 /* SPECIAL [detachable ET_NOTE_ITEM] */
-typedef struct S575 T575;
+typedef volatile struct S575 T575;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_NOTE_TERM] */
-typedef struct S576 T576;
+typedef volatile struct S576 T576;
 
 /* SPECIAL [detachable ET_NOTE_TERM] */
-typedef struct S578 T578;
+typedef volatile struct S578 T578;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_NOTE_TERM_ITEM] */
-typedef struct S579 T579;
+typedef volatile struct S579 T579;
 
 /* SPECIAL [detachable ET_NOTE_TERM_ITEM] */
-typedef struct S581 T581;
+typedef volatile struct S581 T581;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_NOTE_TERM_LIST] */
-typedef struct S582 T582;
+typedef volatile struct S582 T582;
 
 /* ET_NOTE_TERM_LIST */
-typedef struct S583 T583;
+typedef volatile struct S583 T583;
 
 /* SPECIAL [detachable ET_NOTE_TERM_LIST] */
-typedef struct S584 T584;
+typedef volatile struct S584 T584;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_OBSOLETE] */
-typedef struct S585 T585;
+typedef volatile struct S585 T585;
 
 /* SPECIAL [detachable ET_OBSOLETE] */
-typedef struct S587 T587;
+typedef volatile struct S587 T587;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_PARENTHESIZED_EXPRESSION] */
-typedef struct S588 T588;
+typedef volatile struct S588 T588;
 
 /* ET_PARENTHESIZED_EXPRESSION */
-typedef struct S589 T589;
+typedef volatile struct S589 T589;
 
 /* SPECIAL [detachable ET_PARENTHESIZED_EXPRESSION] */
-typedef struct S590 T590;
+typedef volatile struct S590 T590;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_PARENT] */
-typedef struct S591 T591;
+typedef volatile struct S591 T591;
 
 /* SPECIAL [detachable ET_PARENT] */
-typedef struct S592 T592;
+typedef volatile struct S592 T592;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_PARENT_CLAUSE_LIST] */
-typedef struct S593 T593;
+typedef volatile struct S593 T593;
 
 /* ET_PARENT_CLAUSE_LIST */
-typedef struct S594 T594;
+typedef volatile struct S594 T594;
 
 /* SPECIAL [detachable ET_PARENT_CLAUSE_LIST] */
-typedef struct S595 T595;
+typedef volatile struct S595 T595;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_PARENT_ITEM] */
-typedef struct S596 T596;
+typedef volatile struct S596 T596;
 
 /* SPECIAL [detachable ET_PARENT_ITEM] */
-typedef struct S597 T597;
+typedef volatile struct S597 T597;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_PARENT_LIST] */
-typedef struct S598 T598;
+typedef volatile struct S598 T598;
 
 /* SPECIAL [detachable ET_PARENT_LIST] */
-typedef struct S599 T599;
+typedef volatile struct S599 T599;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_POSTCONDITIONS] */
-typedef struct S600 T600;
+typedef volatile struct S600 T600;
 
 /* ET_POSTCONDITIONS */
-typedef struct S601 T601;
+typedef volatile struct S601 T601;
 
 /* SPECIAL [detachable ET_POSTCONDITIONS] */
-typedef struct S602 T602;
+typedef volatile struct S602 T602;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_PRECONDITIONS] */
-typedef struct S603 T603;
+typedef volatile struct S603 T603;
 
 /* ET_PRECONDITIONS */
-typedef struct S604 T604;
+typedef volatile struct S604 T604;
 
 /* SPECIAL [detachable ET_PRECONDITIONS] */
-typedef struct S605 T605;
+typedef volatile struct S605 T605;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_PROCEDURE] */
-typedef struct S606 T606;
+typedef volatile struct S606 T606;
 
 /* SPECIAL [detachable ET_PROCEDURE] */
-typedef struct S608 T608;
+typedef volatile struct S608 T608;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_QUALIFIED_LIKE_IDENTIFIER] */
-typedef struct S609 T609;
+typedef volatile struct S609 T609;
 
 /* SPECIAL [detachable ET_QUALIFIED_LIKE_IDENTIFIER] */
-typedef struct S611 T611;
+typedef volatile struct S611 T611;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_QUANTIFIER_EXPRESSION] */
-typedef struct S612 T612;
+typedef volatile struct S612 T612;
 
 /* ET_QUANTIFIER_EXPRESSION */
-typedef struct S613 T613;
+typedef volatile struct S613 T613;
 
 /* SPECIAL [detachable ET_QUANTIFIER_EXPRESSION] */
-typedef struct S614 T614;
+typedef volatile struct S614 T614;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_QUERY] */
-typedef struct S615 T615;
+typedef volatile struct S615 T615;
 
 /* SPECIAL [detachable ET_QUERY] */
-typedef struct S617 T617;
+typedef volatile struct S617 T617;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_RENAME_ITEM] */
-typedef struct S618 T618;
+typedef volatile struct S618 T618;
 
 /* SPECIAL [detachable ET_RENAME_ITEM] */
-typedef struct S620 T620;
+typedef volatile struct S620 T620;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_RENAME_LIST] */
-typedef struct S621 T621;
+typedef volatile struct S621 T621;
 
 /* SPECIAL [detachable ET_RENAME_LIST] */
-typedef struct S622 T622;
+typedef volatile struct S622 T622;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_REPEAT_INSTRUCTION] */
-typedef struct S623 T623;
+typedef volatile struct S623 T623;
 
 /* ET_REPEAT_INSTRUCTION */
-typedef struct S624 T624;
+typedef volatile struct S624 T624;
 
 /* SPECIAL [detachable ET_REPEAT_INSTRUCTION] */
-typedef struct S625 T625;
+typedef volatile struct S625 T625;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_STATIC_CALL_EXPRESSION] */
-typedef struct S626 T626;
+typedef volatile struct S626 T626;
 
 /* ET_STATIC_CALL_EXPRESSION */
-typedef struct S627 T627;
+typedef volatile struct S627 T627;
 
 /* SPECIAL [detachable ET_STATIC_CALL_EXPRESSION] */
-typedef struct S628 T628;
+typedef volatile struct S628 T628;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_STRIP_EXPRESSION] */
-typedef struct S629 T629;
+typedef volatile struct S629 T629;
 
 /* ET_STRIP_EXPRESSION */
-typedef struct S630 T630;
+typedef volatile struct S630 T630;
 
 /* SPECIAL [detachable ET_STRIP_EXPRESSION] */
-typedef struct S631 T631;
+typedef volatile struct S631 T631;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_TYPE] */
-typedef struct S632 T632;
+typedef volatile struct S632 T632;
 
 /* SPECIAL [detachable ET_TYPE] */
-typedef struct S633 T633;
+typedef volatile struct S633 T633;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_TYPE_CONSTRAINT] */
-typedef struct S634 T634;
+typedef volatile struct S634 T634;
 
 /* SPECIAL [detachable ET_TYPE_CONSTRAINT] */
-typedef struct S636 T636;
+typedef volatile struct S636 T636;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_TYPE_CONSTRAINT_ITEM] */
-typedef struct S637 T637;
+typedef volatile struct S637 T637;
 
 /* SPECIAL [detachable ET_TYPE_CONSTRAINT_ITEM] */
-typedef struct S639 T639;
+typedef volatile struct S639 T639;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_TYPE_CONSTRAINT_LIST] */
-typedef struct S640 T640;
+typedef volatile struct S640 T640;
 
 /* ET_TYPE_CONSTRAINT_LIST */
-typedef struct S641 T641;
+typedef volatile struct S641 T641;
 
 /* SPECIAL [detachable ET_TYPE_CONSTRAINT_LIST] */
-typedef struct S642 T642;
+typedef volatile struct S642 T642;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_TYPE_ITEM] */
-typedef struct S643 T643;
+typedef volatile struct S643 T643;
 
 /* SPECIAL [detachable ET_TYPE_ITEM] */
-typedef struct S645 T645;
+typedef volatile struct S645 T645;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_TYPE_LIST] */
-typedef struct S646 T646;
+typedef volatile struct S646 T646;
 
 /* SPECIAL [detachable ET_TYPE_LIST] */
-typedef struct S648 T648;
+typedef volatile struct S648 T648;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_VARIANT] */
-typedef struct S649 T649;
+typedef volatile struct S649 T649;
 
 /* ET_VARIANT */
-typedef struct S650 T650;
+typedef volatile struct S650 T650;
 
 /* SPECIAL [detachable ET_VARIANT] */
-typedef struct S651 T651;
+typedef volatile struct S651 T651;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_WHEN_EXPRESSION] */
-typedef struct S652 T652;
+typedef volatile struct S652 T652;
 
 /* ET_WHEN_EXPRESSION */
-typedef struct S653 T653;
+typedef volatile struct S653 T653;
 
 /* SPECIAL [detachable ET_WHEN_EXPRESSION] */
-typedef struct S654 T654;
+typedef volatile struct S654 T654;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_WHEN_EXPRESSION_LIST] */
-typedef struct S655 T655;
+typedef volatile struct S655 T655;
 
 /* ET_WHEN_EXPRESSION_LIST */
-typedef struct S656 T656;
+typedef volatile struct S656 T656;
 
 /* SPECIAL [detachable ET_WHEN_EXPRESSION_LIST] */
-typedef struct S657 T657;
+typedef volatile struct S657 T657;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_WHEN_PART] */
-typedef struct S658 T658;
+typedef volatile struct S658 T658;
 
 /* ET_WHEN_PART */
-typedef struct S659 T659;
+typedef volatile struct S659 T659;
 
 /* SPECIAL [detachable ET_WHEN_PART] */
-typedef struct S660 T660;
+typedef volatile struct S660 T660;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_WHEN_PART_LIST] */
-typedef struct S661 T661;
+typedef volatile struct S661 T661;
 
 /* ET_WHEN_PART_LIST */
-typedef struct S662 T662;
+typedef volatile struct S662 T662;
 
 /* SPECIAL [detachable ET_WHEN_PART_LIST] */
-typedef struct S663 T663;
+typedef volatile struct S663 T663;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_WRITABLE] */
-typedef struct S664 T664;
+typedef volatile struct S664 T664;
 
 /* SPECIAL [detachable ET_WRITABLE] */
-typedef struct S666 T666;
+typedef volatile struct S666 T666;
 
 /* ET_OBJECT_TEST_LIST */
-typedef struct S668 T668;
+typedef volatile struct S668 T668;
 
 /* ET_ITERATION_COMPONENT_LIST */
-typedef struct S669 T669;
+typedef volatile struct S669 T669;
 
 /* ET_INLINE_SEPARATE_ARGUMENT_LIST */
-typedef struct S670 T670;
+typedef volatile struct S670 T670;
 
 /* ET_C3_CHARACTER_CONSTANT */
-typedef struct S671 T671;
+typedef volatile struct S671 T671;
 
 /* ET_REGULAR_MANIFEST_STRING */
-typedef struct S672 T672;
+typedef volatile struct S672 T672;
 
 /* ET_SPECIAL_MANIFEST_STRING */
-typedef struct S673 T673;
+typedef volatile struct S673 T673;
 
 /* ET_VERBATIM_STRING */
-typedef struct S674 T674;
+typedef volatile struct S674 T674;
 
 /* ET_REGULAR_INTEGER_CONSTANT */
-typedef struct S675 T675;
+typedef volatile struct S675 T675;
 
 /* ET_UNDERSCORED_INTEGER_CONSTANT */
-typedef struct S676 T676;
+typedef volatile struct S676 T676;
 
 /* ET_HEXADECIMAL_INTEGER_CONSTANT */
-typedef struct S677 T677;
+typedef volatile struct S677 T677;
 
 /* ET_OCTAL_INTEGER_CONSTANT */
-typedef struct S678 T678;
+typedef volatile struct S678 T678;
 
 /* ET_BINARY_INTEGER_CONSTANT */
-typedef struct S679 T679;
+typedef volatile struct S679 T679;
 
 /* ET_REGULAR_REAL_CONSTANT */
-typedef struct S680 T680;
+typedef volatile struct S680 T680;
 
 /* ET_UNDERSCORED_REAL_CONSTANT */
-typedef struct S681 T681;
+typedef volatile struct S681 T681;
 
 /* ET_TRUE_CONSTANT */
-typedef struct S683 T683;
+typedef volatile struct S683 T683;
 
 /* ET_FALSE_CONSTANT */
-typedef struct S684 T684;
+typedef volatile struct S684 T684;
 
 /* ET_C1_CHARACTER_CONSTANT */
-typedef struct S685 T685;
+typedef volatile struct S685 T685;
 
 /* ET_C2_CHARACTER_CONSTANT */
-typedef struct S686 T686;
+typedef volatile struct S686 T686;
 
 /* ET_TAGGED_NOTE */
-typedef struct S688 T688;
+typedef volatile struct S688 T688;
 
 /* ET_NOTE */
-typedef struct S689 T689;
+typedef volatile struct S689 T689;
 
 /* ET_CUSTOM_ATTRIBUTE */
-typedef struct S690 T690;
+typedef volatile struct S690 T690;
 
 /* ET_CONSTRAINED_FORMAL_PARAMETER */
-typedef struct S691 T691;
+typedef volatile struct S691 T691;
 
 /* ET_TYPE_RENAME_CONSTRAINT */
-typedef struct S692 T692;
+typedef volatile struct S692 T692;
 
 /* ET_CONSTRAINT_NAMED_TYPE */
-typedef struct S693 T693;
+typedef volatile struct S693 T693;
 
 /* ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER */
-typedef struct S694 T694;
+typedef volatile struct S694 T694;
 
 /* ET_CONSTRAINT_LABELED_COMMA_ACTUAL_PARAMETER */
-typedef struct S695 T695;
+typedef volatile struct S695 T695;
 
 /* ET_RENAME */
-typedef struct S696 T696;
+typedef volatile struct S696 T696;
 
 /* ET_ALL_EXPORT */
-typedef struct S697 T697;
+typedef volatile struct S697 T697;
 
 /* ET_CONVERT_FUNCTION */
-typedef struct S699 T699;
+typedef volatile struct S699 T699;
 
 /* ET_CONVERT_PROCEDURE */
-typedef struct S700 T700;
+typedef volatile struct S700 T700;
 
 /* ET_ATTRIBUTE */
-typedef struct S702 T702;
+typedef volatile struct S702 T702;
 
 /* ET_EXTENDED_ATTRIBUTE */
-typedef struct S703 T703;
+typedef volatile struct S703 T703;
 
 /* ET_CONSTANT_ATTRIBUTE */
-typedef struct S704 T704;
+typedef volatile struct S704 T704;
 
 /* ET_UNIQUE_ATTRIBUTE */
-typedef struct S705 T705;
+typedef volatile struct S705 T705;
 
 /* ET_DO_FUNCTION */
-typedef struct S706 T706;
+typedef volatile struct S706 T706;
 
 /* ET_ONCE_FUNCTION */
-typedef struct S707 T707;
+typedef volatile struct S707 T707;
 
 /* ET_DEFERRED_FUNCTION */
-typedef struct S708 T708;
+typedef volatile struct S708 T708;
 
 /* ET_EXTERNAL_FUNCTION */
-typedef struct S710 T710;
+typedef volatile struct S710 T710;
 
 /* ET_DO_PROCEDURE */
-typedef struct S711 T711;
+typedef volatile struct S711 T711;
 
 /* ET_ONCE_PROCEDURE */
-typedef struct S712 T712;
+typedef volatile struct S712 T712;
 
 /* ET_DEFERRED_PROCEDURE */
-typedef struct S713 T713;
+typedef volatile struct S713 T713;
 
 /* ET_EXTERNAL_PROCEDURE */
-typedef struct S714 T714;
+typedef volatile struct S714 T714;
 
 /* ET_ALIASED_FEATURE_NAME */
-typedef struct S715 T715;
+typedef volatile struct S715 T715;
 
 /* ET_ALIAS_FREE_NAME */
-typedef struct S716 T716;
+typedef volatile struct S716 T716;
 
 /* ET_CLASS_ASSERTION */
-typedef struct S719 T719;
+typedef volatile struct S719 T719;
 
 /* ET_LABELED_ACTUAL_PARAMETER */
-typedef struct S720 T720;
+typedef volatile struct S720 T720;
 
 /* ET_LIKE_FEATURE */
-typedef struct S722 T722;
+typedef volatile struct S722 T722;
 
 /* ET_QUALIFIED_LIKE_BRACED_TYPE */
-typedef struct S724 T724;
+typedef volatile struct S724 T724;
 
 /* ET_QUALIFIED_LIKE_TYPE */
-typedef struct S725 T725;
+typedef volatile struct S725 T725;
 
 /* ET_ASSIGNER_INSTRUCTION */
-typedef struct S726 T726;
+typedef volatile struct S726 T726;
 
 /* ET_ASSIGNMENT */
-typedef struct S727 T727;
+typedef volatile struct S727 T727;
 
 /* ET_ASSIGNMENT_ATTEMPT */
-typedef struct S728 T728;
+typedef volatile struct S728 T728;
 
 /* ET_LOOP_INSTRUCTION */
-typedef struct S729 T729;
+typedef volatile struct S729 T729;
 
 /* ET_BANG_INSTRUCTION */
-typedef struct S731 T731;
+typedef volatile struct S731 T731;
 
 /* ET_QUALIFIED_CALL */
-typedef struct S732 T732;
+typedef volatile struct S732 T732;
 
 /* ET_CREATE_INSTRUCTION */
-typedef struct S734 T734;
+typedef volatile struct S734 T734;
 
 /* ET_CHOICE_RANGE */
-typedef struct S735 T735;
+typedef volatile struct S735 T735;
 
 /* ET_QUALIFIED_CALL_INSTRUCTION */
-typedef struct S736 T736;
+typedef volatile struct S736 T736;
 
 /* ET_PRECURSOR_INSTRUCTION */
-typedef struct S737 T737;
+typedef volatile struct S737 T737;
 
 /* ET_STATIC_CALL_INSTRUCTION */
-typedef struct S739 T739;
+typedef volatile struct S739 T739;
 
 /* ET_PRECURSOR_EXPRESSION */
-typedef struct S740 T740;
+typedef volatile struct S740 T740;
 
 /* ET_FEATURE_ADDRESS */
-typedef struct S741 T741;
+typedef volatile struct S741 T741;
 
 /* ET_CURRENT_ADDRESS */
-typedef struct S742 T742;
+typedef volatile struct S742 T742;
 
 /* ET_RESULT_ADDRESS */
-typedef struct S743 T743;
+typedef volatile struct S743 T743;
 
 /* ET_EXPRESSION_ADDRESS */
-typedef struct S744 T744;
+typedef volatile struct S744 T744;
 
 /* ET_INFIX_EXPRESSION */
-typedef struct S745 T745;
+typedef volatile struct S745 T745;
 
 /* ET_INFIX_AND_THEN_OPERATOR */
-typedef struct S746 T746;
+typedef volatile struct S746 T746;
 
 /* ET_INFIX_OR_ELSE_OPERATOR */
-typedef struct S747 T747;
+typedef volatile struct S747 T747;
 
 /* ET_EQUALITY_EXPRESSION */
-typedef struct S748 T748;
+typedef volatile struct S748 T748;
 
 /* ET_OBJECT_EQUALITY_EXPRESSION */
-typedef struct S749 T749;
+typedef volatile struct S749 T749;
 
 /* ET_MANIFEST_TYPE */
-typedef struct S750 T750;
+typedef volatile struct S750 T750;
 
 /* ET_PREFIX_EXPRESSION */
-typedef struct S751 T751;
+typedef volatile struct S751 T751;
 
 /* ET_OLD_EXPRESSION */
-typedef struct S752 T752;
+typedef volatile struct S752 T752;
 
 /* ET_OLD_OBJECT_TEST */
-typedef struct S753 T753;
+typedef volatile struct S753 T753;
 
 /* ET_OBJECT_TEST */
-typedef struct S754 T754;
+typedef volatile struct S754 T754;
 
 /* ET_NAMED_OBJECT_TEST */
-typedef struct S755 T755;
+typedef volatile struct S755 T755;
 
 /* ET_ONCE_MANIFEST_STRING */
-typedef struct S756 T756;
+typedef volatile struct S756 T756;
 
 /* ET_ITERATION_CURSOR */
-typedef struct S757 T757;
+typedef volatile struct S757 T757;
 
 /* ET_DO_FUNCTION_INLINE_AGENT */
-typedef struct S759 T759;
+typedef volatile struct S759 T759;
 
 /* ET_ONCE_FUNCTION_INLINE_AGENT */
-typedef struct S760 T760;
+typedef volatile struct S760 T760;
 
 /* ET_EXTERNAL_FUNCTION_INLINE_AGENT */
-typedef struct S761 T761;
+typedef volatile struct S761 T761;
 
 /* ET_DO_PROCEDURE_INLINE_AGENT */
-typedef struct S762 T762;
+typedef volatile struct S762 T762;
 
 /* ET_ONCE_PROCEDURE_INLINE_AGENT */
-typedef struct S763 T763;
+typedef volatile struct S763 T763;
 
 /* ET_EXTERNAL_PROCEDURE_INLINE_AGENT */
-typedef struct S764 T764;
+typedef volatile struct S764 T764;
 
 /* ET_AGENT_OPEN_TARGET */
-typedef struct S765 T765;
+typedef volatile struct S765 T765;
 
 /* ET_AGENT_TYPED_OPEN_ARGUMENT */
-typedef struct S766 T766;
+typedef volatile struct S766 T766;
 
 /* ET_QUERY_LIST */
-typedef struct S769 T769;
+typedef volatile struct S769 T769;
 
 /* ET_PROCEDURE_LIST */
-typedef struct S770 T770;
+typedef volatile struct S770 T770;
 
 /* ET_TAGGED_ASSERTION */
-typedef struct S772 T772;
+typedef volatile struct S772 T772;
 
 /* ET_FILE_POSITION */
-typedef struct S774 T774;
+typedef volatile struct S774 T774;
 
 /* SPECIAL [ET_CLASS] */
-typedef struct S775 T775;
+typedef volatile struct S775 T775;
 
 /* KL_SPECIAL_ROUTINES [ET_CLASS] */
-typedef struct S776 T776;
+typedef volatile struct S776 T776;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_CLASS] */
-typedef struct S777 T777;
+typedef volatile struct S777 T777;
 
 /* ET_BASE_TYPE_LIST */
-typedef struct S778 T778;
+typedef volatile struct S778 T778;
 
 /* ET_CLASS_CODES */
-typedef struct S779 T779;
+typedef volatile struct S779 T779;
 
 /* ET_ECF_AST_FACTORY */
-typedef struct S780 T780;
+typedef volatile struct S780 T780;
 
 /* DS_CELL [detachable ET_ECF_SYSTEM] */
-typedef struct S781 T781;
+typedef volatile struct S781 T781;
 
 /* TUPLE [ET_ECF_TARGET] */
-typedef struct S782 T782;
+typedef volatile struct S782 T782;
 
 /* PROCEDURE [TUPLE [ET_ECF_TARGET]] */
-typedef struct S783 T783;
+typedef volatile struct S783 T783;
 
 /* TUPLE [ET_ECF_SYSTEM_PARSER] */
-typedef struct S784 T784;
+typedef volatile struct S784 T784;
 
 /* XM_ELEMENT */
-typedef struct S785 T785;
+typedef volatile struct S785 T785;
 
 /* XM_POSITION_TABLE */
-typedef struct S786 T786;
+typedef volatile struct S786 T786;
 
 /* TUPLE [XM_ELEMENT, detachable XM_POSITION_TABLE, STRING_8] */
-typedef struct S787 T787;
+typedef volatile struct S787 T787;
 
 /* PROCEDURE [TUPLE [XM_ELEMENT, detachable XM_POSITION_TABLE, STRING_8]] */
-typedef struct S788 T788;
+typedef volatile struct S788 T788;
 
 /* TUPLE [ET_ECF_SYSTEM_PARSER, detachable STRING_8, PROCEDURE [TUPLE [ET_ECF_TARGET]], DS_CELL [detachable ET_ECF_SYSTEM]] */
-typedef struct S789 T789;
+typedef volatile struct S789 T789;
 
 /* DS_HASH_TABLE [ET_ECF_LIBRARY, STRING_8] */
-typedef struct S791 T791;
+typedef volatile struct S791 T791;
 
 /* KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER */
-typedef struct S792 T792;
+typedef volatile struct S792 T792;
 
 /* DS_HASH_TABLE [ET_ECF_DOTNET_ASSEMBLY, STRING_8] */
-typedef struct S793 T793;
+typedef volatile struct S793 T793;
 
 /* XM_EIFFEL_PARSER */
-typedef struct S795 T795;
+typedef volatile struct S795 T795;
 
 /* XM_TREE_CALLBACKS_PIPE */
-typedef struct S796 T796;
+typedef volatile struct S796 T796;
 
 /* XM_CALLBACKS_TO_TREE_FILTER */
-typedef struct S799 T799;
+typedef volatile struct S799 T799;
 
 /* ET_ECF_STATE */
-typedef struct S800 T800;
+typedef volatile struct S800 T800;
 
 /* ET_ECF_SYSTEM_CONFIG */
-typedef struct S801 T801;
+typedef volatile struct S801 T801;
 
 /* ET_ECF_LIBRARY */
-typedef struct S802 T802;
+typedef volatile struct S802 T802;
 
 /* TUPLE [ET_ADAPTED_LIBRARY] */
-typedef struct S804 T804;
+typedef volatile struct S804 T804;
 
 /* PROCEDURE [TUPLE [ET_ADAPTED_LIBRARY]] */
-typedef struct S805 T805;
+typedef volatile struct S805 T805;
 
 /* XM_DOCUMENT */
-typedef struct S806 T806;
+typedef volatile struct S806 T806;
 
 /* ET_COMPRESSED_POSITION */
-typedef struct S807 T807;
+typedef volatile struct S807 T807;
 
 /* XM_STOP_ON_ERROR_FILTER */
-typedef struct S809 T809;
+typedef volatile struct S809 T809;
 
 /* XM_ATTRIBUTE */
-typedef struct S810 T810;
+typedef volatile struct S810 T810;
 
 /* DS_HASH_TABLE [ET_ECF_SYSTEM_CONFIG, STRING_8] */
-typedef struct S811 T811;
+typedef volatile struct S811 T811;
 
 /* DS_HASH_TABLE [ET_ECF_TARGET, STRING_8] */
-typedef struct S812 T812;
+typedef volatile struct S812 T812;
 
 /* ET_ECF_TARGET_PARENT */
-typedef struct S813 T813;
+typedef volatile struct S813 T813;
 
 /* DS_CELL [detachable ET_ECF_SYSTEM_CONFIG] */
-typedef struct S814 T814;
+typedef volatile struct S814 T814;
 
 /* TUPLE [ET_ECF_SYSTEM_PARSER, ET_ECF_INTERNAL_UNIVERSE, DS_CELL [detachable ET_ECF_SYSTEM_CONFIG]] */
-typedef struct S815 T815;
+typedef volatile struct S815 T815;
 
 /* ET_ECF_TARGETS */
-typedef struct S816 T816;
+typedef volatile struct S816 T816;
 
 /* DS_HASH_TABLE [detachable RX_REGULAR_EXPRESSION, STRING_8] */
-typedef struct S817 T817;
+typedef volatile struct S817 T817;
 
 /* DS_HASH_TABLE_CURSOR [detachable RX_REGULAR_EXPRESSION, STRING_8] */
-typedef struct S818 T818;
+typedef volatile struct S818 T818;
 
 /* DS_CELL [detachable ET_ECF_LIBRARY] */
-typedef struct S820 T820;
+typedef volatile struct S820 T820;
 
 /* ET_ECF_ADAPTED_LIBRARY */
-typedef struct S821 T821;
+typedef volatile struct S821 T821;
 
 /* TUPLE [ET_ECF_SYSTEM_PARSER, ET_ECF_ADAPTED_LIBRARY, DS_CELL [detachable ET_ECF_LIBRARY]] */
-typedef struct S822 T822;
+typedef volatile struct S822 T822;
 
 /* ET_ECF_DOTNET_ASSEMBLY */
-typedef struct S824 T824;
+typedef volatile struct S824 T824;
 
 /* ET_ECF_ADAPTED_DOTNET_ASSEMBLY */
-typedef struct S826 T826;
+typedef volatile struct S826 T826;
 
 /* DS_HASH_TABLE [STRING_8, STRING_8] */
-typedef struct S827 T827;
+typedef volatile struct S827 T827;
 
 /* ET_ECF_ERROR */
-typedef struct S828 T828;
+typedef volatile struct S828 T828;
 
 /* ET_ECF_CLUSTERS */
-typedef struct S829 T829;
+typedef volatile struct S829 T829;
 
 /* KL_AGENT_HASH_FUNCTION [STRING_8] */
-typedef struct S830 T830;
+typedef volatile struct S830 T830;
 
 /* TUPLE [STRING_8] */
-typedef struct S831 T831;
+typedef volatile struct S831 T831;
 
 /* FUNCTION [TUPLE [STRING_8], INTEGER_32] */
-typedef struct S832 T832;
+typedef volatile struct S832 T832;
 
 /* TUPLE [KL_STRING_ROUTINES] */
-typedef struct S833 T833;
+typedef volatile struct S833 T833;
 
 /* DS_HASH_TABLE [ET_IDENTIFIER, STRING_8] */
-typedef struct S835 T835;
+typedef volatile struct S835 T835;
 
 /* DS_ARRAYED_LIST [ET_CLUSTER] */
-typedef struct S837 T837;
+typedef volatile struct S837 T837;
 
 /* ET_DYNAMIC_PRIMARY_TYPE */
-typedef struct S838 T838;
+typedef volatile struct S838 T838;
 
 /* ET_DYNAMIC_FEATURE_LIST */
-typedef struct S839 T839;
+typedef volatile struct S839 T839;
 
 /* DS_HASH_TABLE [ET_DYNAMIC_PRIMARY_TYPE, STRING_8] */
-typedef struct S840 T840;
+typedef volatile struct S840 T840;
 
 /* TUPLE [INTEGER_32] */
-typedef struct S841 T841;
+typedef volatile struct S841 T841;
 
 /* ET_DYNAMIC_NULL_TYPE_SET_BUILDER */
-typedef struct S842 T842;
+typedef volatile struct S842 T842;
 
 /* TUPLE [ET_DYNAMIC_SYSTEM] */
-typedef struct S843 T843;
+typedef volatile struct S843 T843;
 
 /* ET_DYNAMIC_FEATURE */
-typedef struct S845 T845;
+typedef volatile struct S845 T845;
 
 /* ET_NESTED_TYPE_CONTEXT */
-typedef struct S847 T847;
+typedef volatile struct S847 T847;
 
 /* ET_FORMAL_PARAMETER_TYPE */
-typedef struct S848 T848;
+typedef volatile struct S848 T848;
 
 /* ARRAY [ET_TYPE] */
-typedef struct S849 T849;
+typedef volatile struct S849 T849;
 
 /* SPECIAL [ET_TYPE] */
-typedef struct S850 T850;
+typedef volatile struct S850 T850;
 
 /* ET_SYSTEM_MULTIPROCESSOR */
-typedef struct S853 T853;
+typedef volatile struct S853 T853;
 
 /* DS_HASH_SET_CURSOR [STRING_8] */
-typedef struct S854 T854;
+typedef volatile struct S854 T854;
 
 /* KL_SPECIAL_ROUTINES [STRING_8] */
-typedef struct S855 T855;
+typedef volatile struct S855 T855;
 
 /* TYPE [STRING_8] */
 #define T856 EIF_TYPE_OBJ
 
 /* ET_FEATURE_CHECKER */
-typedef struct S857 T857;
+typedef volatile struct S857 T857;
 
 /* ET_DYNAMIC_TYPE_SET_LIST */
-typedef struct S858 T858;
+typedef volatile struct S858 T858;
 
 /* DS_HASH_TABLE [INTEGER_32, ET_DYNAMIC_TYPE] */
-typedef struct S859 T859;
+typedef volatile struct S859 T859;
 
 /* ET_DYNAMIC_PRECURSOR */
-typedef struct S860 T860;
+typedef volatile struct S860 T860;
 
 /* ET_DYNAMIC_PRECURSOR_LIST */
-typedef struct S861 T861;
+typedef volatile struct S861 T861;
 
 /* DS_HASH_TABLE [ET_DYNAMIC_TYPE_SET, ET_DYNAMIC_TYPE] */
-typedef struct S862 T862;
+typedef volatile struct S862 T862;
 
 /* ET_TYPE_CHECKER */
-typedef struct S864 T864;
+typedef volatile struct S864 T864;
 
 /* DS_ARRAYED_LIST [ET_INLINE_AGENT] */
-typedef struct S867 T867;
+typedef volatile struct S867 T867;
 
 /* DS_ARRAYED_LIST [DS_ARRAYED_LIST [ET_PROCEDURE]] */
-typedef struct S868 T868;
+typedef volatile struct S868 T868;
 
 /* DS_ARRAYED_LIST [DS_ARRAYED_LIST [ET_QUERY]] */
-typedef struct S869 T869;
+typedef volatile struct S869 T869;
 
 /* DS_ARRAYED_LIST [DS_ARRAYED_LIST [ET_FEATURE]] */
-typedef struct S870 T870;
+typedef volatile struct S870 T870;
 
 /* DS_ARRAYED_LIST [TUPLE [detachable ET_QUERY, ET_CLASS, ET_NESTED_TYPE_CONTEXT]] */
-typedef struct S871 T871;
+typedef volatile struct S871 T871;
 
 /* DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT] */
-typedef struct S872 T872;
+typedef volatile struct S872 T872;
 
 /* DS_HASH_TABLE [ET_NESTED_TYPE_CONTEXT, ET_NAMED_OBJECT_TEST] */
-typedef struct S873 T873;
+typedef volatile struct S873 T873;
 
 /* ET_OBJECT_TEST_SCOPE */
-typedef struct S874 T874;
+typedef volatile struct S874 T874;
 
 /* ET_OBJECT_TEST_SCOPE_BUILDER */
-typedef struct S875 T875;
+typedef volatile struct S875 T875;
 
 /* DS_HASH_TABLE [ET_NESTED_TYPE_CONTEXT, ET_ITERATION_COMPONENT] */
-typedef struct S876 T876;
+typedef volatile struct S876 T876;
 
 /* ET_ITERATION_ITEM_SCOPE */
-typedef struct S877 T877;
+typedef volatile struct S877 T877;
 
 /* DS_HASH_TABLE [ET_NESTED_TYPE_CONTEXT, ET_INLINE_SEPARATE_ARGUMENT] */
-typedef struct S878 T878;
+typedef volatile struct S878 T878;
 
 /* ET_INLINE_SEPARATE_ARGUMENT_SCOPE */
-typedef struct S879 T879;
+typedef volatile struct S879 T879;
 
 /* ET_ATTACHMENT_SCOPE */
-typedef struct S880 T880;
+typedef volatile struct S880 T880;
 
 /* ET_ATTACHMENT_SCOPE_BUILDER */
-typedef struct S881 T881;
+typedef volatile struct S881 T881;
 
 /* DS_ARRAYED_LIST [ET_ATTACHMENT_SCOPE] */
-typedef struct S882 T882;
+typedef volatile struct S882 T882;
 
 /* DS_HASH_TABLE [ET_ASSERTIONS, ET_FEATURE] */
-typedef struct S883 T883;
+typedef volatile struct S883 T883;
 
 /* DS_ARRAYED_LIST [ET_NOTE_TERM] */
-typedef struct S884 T884;
+typedef volatile struct S884 T884;
 
 /* DS_ARRAYED_LIST [DS_ARRAYED_LIST [ET_ADAPTED_CLASS]] */
-typedef struct S885 T885;
+typedef volatile struct S885 T885;
 
 /* ET_ADAPTED_BASE_CLASS_CHECKER */
-typedef struct S886 T886;
+typedef volatile struct S886 T886;
 
 /* ET_DYNAMIC_QUALIFIED_QUERY_CALL */
-typedef struct S888 T888;
+typedef volatile struct S888 T888;
 
 /* ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL */
-typedef struct S889 T889;
+typedef volatile struct S889 T889;
 
 /* ET_DYNAMIC_TUPLE_TYPE */
-typedef struct S894 T894;
+typedef volatile struct S894 T894;
 
 /* ET_FEATURE_LIST */
-typedef struct S897 T897;
+typedef volatile struct S897 T897;
 
 /* NATIVE_STRING */
-typedef struct S899 T899;
+typedef volatile struct S899 T899;
 
 /* HASH_TABLE [NATIVE_STRING, IMMUTABLE_STRING_32] */
-typedef struct S900 T900;
+typedef volatile struct S900 T900;
 
 /* RX_BYTE_CODE */
-typedef struct S902 T902;
+typedef volatile struct S902 T902;
 
 /* RX_CHARACTER_SET */
-typedef struct S903 T903;
+typedef volatile struct S903 T903;
 
 /* RX_CASE_MAPPING */
-typedef struct S904 T904;
+typedef volatile struct S904 T904;
 
 /* UC_UNICODE_ROUTINES */
-typedef struct S906 T906;
+typedef volatile struct S906 T906;
 
 /* ARRAY [RX_CHARACTER_SET] */
-typedef struct S907 T907;
+typedef volatile struct S907 T907;
 
 /* SPECIAL [RX_CHARACTER_SET] */
-typedef struct S908 T908;
+typedef volatile struct S908 T908;
 
 /* UC_STRING */
-typedef struct S909 T909;
+typedef volatile struct S909 T909;
 
 /* DS_LINKED_LIST_CURSOR [STRING_8] */
-typedef struct S910 T910;
+typedef volatile struct S910 T910;
 
 /* DS_HASH_SET [NATURAL_32] */
-typedef struct S911 T911;
+typedef volatile struct S911 T911;
 
 /* KL_STRING_OUTPUT_STREAM */
-typedef struct S912 T912;
+typedef volatile struct S912 T912;
 
 /* DS_ARRAYED_LIST [ET_IDENTIFIER] */
-typedef struct S913 T913;
+typedef volatile struct S913 T913;
 
 /* DS_ARRAYED_LIST [detachable ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S914 T914;
+typedef volatile struct S914 T914;
 
 /* DS_ARRAYED_LIST [BOOLEAN] */
-typedef struct S915 T915;
+typedef volatile struct S915 T915;
 
 /* DS_ARRAYED_LIST [ET_EQUALITY_EXPRESSION] */
-typedef struct S916 T916;
+typedef volatile struct S916 T916;
 
 /* DS_ARRAYED_LIST [ET_DYNAMIC_EQUALITY_TYPES] */
-typedef struct S917 T917;
+typedef volatile struct S917 T917;
 
 /* DS_ARRAYED_LIST [ET_DYNAMIC_OBJECT_EQUALITY_TYPES] */
-typedef struct S918 T918;
+typedef volatile struct S918 T918;
 
 /* DS_ARRAYED_LIST [ET_UNQUALIFIED_CALL_EXPRESSION] */
-typedef struct S919 T919;
+typedef volatile struct S919 T919;
 
 /* DS_ARRAYED_LIST [ET_QUALIFIED_CALL_EXPRESSION] */
-typedef struct S920 T920;
+typedef volatile struct S920 T920;
 
 /* DS_ARRAYED_LIST [ET_ACTUAL_ARGUMENT_LIST] */
-typedef struct S921 T921;
+typedef volatile struct S921 T921;
 
 /* DS_ARRAYED_LIST [ET_RESULT] */
-typedef struct S922 T922;
+typedef volatile struct S922 T922;
 
 /* ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST */
-typedef struct S923 T923;
+typedef volatile struct S923 T923;
 
 /* ET_DYNAMIC_STANDALONE_TYPE_SET */
-typedef struct S924 T924;
+typedef volatile struct S924 T924;
 
 /* DS_ARRAYED_LIST [ET_DYNAMIC_STANDALONE_TYPE_SET] */
-typedef struct S925 T925;
+typedef volatile struct S925 T925;
 
 /* DS_ARRAYED_STACK [ET_EXPRESSION] */
-typedef struct S926 T926;
+typedef volatile struct S926 T926;
 
 /* DS_ARRAYED_LIST [ET_EXPRESSION] */
-typedef struct S927 T927;
+typedef volatile struct S927 T927;
 
 /* DS_HASH_TABLE [ET_DYNAMIC_PRIMARY_TYPE, INTEGER_32] */
-typedef struct S928 T928;
+typedef volatile struct S928 T928;
 
 /* ET_DYNAMIC_STANDALONE_TYPE_SET_LIST */
-typedef struct S929 T929;
+typedef volatile struct S929 T929;
 
 /* DS_HASH_SET [ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S930 T930;
+typedef volatile struct S930 T930;
 
 /* DS_HASH_TABLE [ET_DYNAMIC_STANDALONE_TYPE_SET, ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S931 T931;
+typedef volatile struct S931 T931;
 
 /* DS_ARRAYED_LIST [ET_OBJECT_TEST] */
-typedef struct S932 T932;
+typedef volatile struct S932 T932;
 
 /* DS_HASH_SET [INTEGER_32] */
-typedef struct S933 T933;
+typedef volatile struct S933 T933;
 
 /* DS_ARRAYED_LIST [ET_AGENT] */
-typedef struct S934 T934;
+typedef volatile struct S934 T934;
 
 /* ET_GENERAL_QUALIFIED_FEATURE_CALL_INSTRUCTION */
-typedef struct S935 T935;
+typedef volatile struct S935 T935;
 
 /* ET_GENERAL_QUALIFIED_FEATURE_CALL_EXPRESSION */
-typedef struct S937 T937;
+typedef volatile struct S937 T937;
 
 /* DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE] */
-typedef struct S938 T938;
+typedef volatile struct S938 T938;
 
 /* DS_HASH_TABLE [INTEGER_32, ET_FEATURE] */
-typedef struct S939 T939;
+typedef volatile struct S939 T939;
 
 /* ARRAY [INTEGER_32] */
-typedef struct S940 T940;
+typedef volatile struct S940 T940;
 
 /* DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE] */
-typedef struct S941 T941;
+typedef volatile struct S941 T941;
 
 /* DS_HASH_TABLE [ET_DYNAMIC_PRIMARY_TYPE, ET_INLINE_CONSTANT] */
-typedef struct S942 T942;
+typedef volatile struct S942 T942;
 
 /* DS_HASH_TABLE [detachable ET_DYNAMIC_FEATURE, ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S943 T943;
+typedef volatile struct S943 T943;
 
 /* DS_ARRAYED_LIST [ET_DYNAMIC_INLINED_EXPRESSION] */
-typedef struct S944 T944;
+typedef volatile struct S944 T944;
 
 /* DS_ARRAYED_LIST [ET_DYNAMIC_CALL_CONTEXT] */
-typedef struct S945 T945;
+typedef volatile struct S945 T945;
 
 /* DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE] */
-typedef struct S946 T946;
+typedef volatile struct S946 T946;
 
 /* DS_HASH_SET [ET_DYNAMIC_FEATURE] */
-typedef struct S947 T947;
+typedef volatile struct S947 T947;
 
 /* DS_HASH_TABLE [BOOLEAN, STRING_8] */
-typedef struct S948 T948;
+typedef volatile struct S948 T948;
 
 /* DS_STRING_HASH_TABLE */
-typedef struct S949 T949;
+typedef volatile struct S949 T949;
 
 /* KL_TEXT_OUTPUT_FILE */
-typedef struct S950 T950;
+typedef volatile struct S950 T950;
 
 /* DS_HASH_TABLE_CURSOR [STRING_8, STRING_8] */
-typedef struct S951 T951;
+typedef volatile struct S951 T951;
 
 /* UT_UNDEFINED_ENVIRONMENT_VARIABLE_ERROR */
-typedef struct S952 T952;
+typedef volatile struct S952 T952;
 
 /* UT_CANNOT_WRITE_TO_FILE_ERROR */
-typedef struct S953 T953;
+typedef volatile struct S953 T953;
 
 /* KL_DIRECTORY */
-typedef struct S954 T954;
+typedef volatile struct S954 T954;
 
 /* DS_ARRAYED_LIST [DS_ARRAYED_LIST [STRING_8]] */
-typedef struct S955 T955;
+typedef volatile struct S955 T955;
 
 /* DS_QUICK_SORTER [STRING_8] */
-typedef struct S956 T956;
+typedef volatile struct S956 T956;
 
 /* UC_STRING_COMPARATOR */
-typedef struct S957 T957;
+typedef volatile struct S957 T957;
 
 /* DS_HASH_TABLE [TUPLE [STRING_8, detachable STRING_8], STRING_8] */
-typedef struct S958 T958;
+typedef volatile struct S958 T958;
 
 /* TUPLE [STRING_8, STRING_8] */
-typedef struct S961 T961;
+typedef volatile struct S961 T961;
 
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S962 T962;
+typedef volatile struct S962 T962;
 
 /* ET_DYNAMIC_EQUALITY_TYPES */
-typedef struct S963 T963;
+typedef volatile struct S963 T963;
 
 /* ET_DYNAMIC_OBJECT_EQUALITY_TYPES */
-typedef struct S965 T965;
+typedef volatile struct S965 T965;
 
 /* ET_DYNAMIC_SPECIAL_TYPE */
-typedef struct S966 T966;
+typedef volatile struct S966 T966;
 
 /* DS_QUICK_SORTER [ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S968 T968;
+typedef volatile struct S968 T968;
 
 /* ET_DYNAMIC_SECONDARY_TYPE */
-typedef struct S969 T969;
+typedef volatile struct S969 T969;
 
 /* ET_DYNAMIC_PRIMARY_TYPE_COMPARATOR_BY_ID */
-typedef struct S970 T970;
+typedef volatile struct S970 T970;
 
 /* DS_HASH_SET_CURSOR [ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S976 T976;
+typedef volatile struct S976 T976;
 
 /* ET_DYNAMIC_INLINED_EXPRESSION */
-typedef struct S980 T980;
+typedef volatile struct S980 T980;
 
 /* ET_DYNAMIC_CALL_CONTEXT */
-typedef struct S981 T981;
+typedef volatile struct S981 T981;
 
 /* DS_QUICK_SORTER [INTEGER_32] */
-typedef struct S982 T982;
+typedef volatile struct S982 T982;
 
 /* PROCEDURE [TUPLE] */
-typedef struct S984 T984;
+typedef volatile struct S984 T984;
 
 /* TUPLE [ET_C_GENERATOR, ET_IDENTIFIER, ET_CURRENT, ET_DYNAMIC_PRIMARY_TYPE, BOOLEAN] */
-typedef struct S985 T985;
+typedef volatile struct S985 T985;
 
 /* TUPLE [ET_C_GENERATOR, ET_IDENTIFIER, ET_RESULT, ET_DYNAMIC_PRIMARY_TYPE, BOOLEAN] */
-typedef struct S986 T986;
+typedef volatile struct S986 T986;
 
 /* TUPLE [ET_C_GENERATOR, ET_DYNAMIC_FEATURE, ET_RESULT, ET_DYNAMIC_PRIMARY_TYPE, BOOLEAN] */
-typedef struct S987 T987;
+typedef volatile struct S987 T987;
 
 /* TUPLE [ET_C_GENERATOR, INTEGER_32, ET_RESULT, ET_DYNAMIC_PRIMARY_TYPE, BOOLEAN] */
-typedef struct S988 T988;
+typedef volatile struct S988 T988;
 
 /* UT_INTEGER_FORMATTER */
-typedef struct S989 T989;
+typedef volatile struct S989 T989;
 
 /* TUPLE [ET_C_GENERATOR, INTEGER_32, ET_EXPRESSION, ET_DYNAMIC_PRIMARY_TYPE, BOOLEAN] */
-typedef struct S994 T994;
+typedef volatile struct S994 T994;
 
 /* TUPLE [ET_C_GENERATOR, ET_EXPRESSION, ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S995 T995;
+typedef volatile struct S995 T995;
 
 /* TUPLE [ET_C_GENERATOR, ET_DYNAMIC_FEATURE, ET_DYNAMIC_PRIMARY_TYPE, BOOLEAN] */
-typedef struct S999 T999;
+typedef volatile struct S999 T999;
 
 /* TUPLE [ET_C_GENERATOR, ET_DYNAMIC_FEATURE, ET_EXPRESSION, ET_DYNAMIC_PRIMARY_TYPE, BOOLEAN] */
-typedef struct S1004 T1004;
+typedef volatile struct S1004 T1004;
 
 /* TUPLE [ET_C_GENERATOR, ET_DYNAMIC_FEATURE, INTEGER_32, INTEGER_32] */
-typedef struct S1005 T1005;
+typedef volatile struct S1005 T1005;
 
 /* SPECIAL [ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S1006 T1006;
+typedef volatile struct S1006 T1006;
 
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S1007 T1007;
+typedef volatile struct S1007 T1007;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S1008 T1008;
+typedef volatile struct S1008 T1008;
 
 /* TUPLE [GECC, DS_ARRAYED_LIST [STRING_8], INTEGER_32, MUTEX] */
-typedef struct S1011 T1011;
+typedef volatile struct S1011 T1011;
 
 /* WORKER_THREAD */
-typedef struct S1012 T1012;
+typedef volatile struct S1012 T1012;
 
 /* PATH */
-typedef struct S1014 T1014;
+typedef volatile struct S1014 T1014;
 
 /* STRING_TO_INTEGER_CONVERTOR */
-typedef struct S1015 T1015;
+typedef volatile struct S1015 T1015;
 
 /* STRING_8_SEARCHER */
-typedef struct S1017 T1017;
+typedef volatile struct S1017 T1017;
 
 /* STD_FILES */
-typedef struct S1019 T1019;
+typedef volatile struct S1019 T1019;
 
 /* HEXADECIMAL_STRING_TO_INTEGER_CONVERTER */
-typedef struct S1020 T1020;
+typedef volatile struct S1020 T1020;
 
 /* DT_SHARED_SYSTEM_CLOCK */
-typedef struct S1022 T1022;
+typedef volatile struct S1022 T1022;
 
 /* DT_SYSTEM_CLOCK */
-typedef struct S1023 T1023;
+typedef volatile struct S1023 T1023;
 
 /* DT_DATE_TIME_DURATION */
-typedef struct S1024 T1024;
+typedef volatile struct S1024 T1024;
 
 /* DS_HASH_TABLE [INTEGER_32, STRING_8] */
-typedef struct S1029 T1029;
+typedef volatile struct S1029 T1029;
 
 /* ET_CONSTRAINT_GENERIC_NAMED_TYPE */
-typedef struct S1032 T1032;
+typedef volatile struct S1032 T1032;
 
 /* ET_UNQUALIFIED_CALL_EXPRESSION */
-typedef struct S1033 T1033;
+typedef volatile struct S1033 T1033;
 
 /* ET_UNQUALIFIED_CALL_INSTRUCTION */
-typedef struct S1034 T1034;
+typedef volatile struct S1034 T1034;
 
 /* KL_ARRAY_ROUTINES [INTEGER_32] */
-typedef struct S1035 T1035;
+typedef volatile struct S1035 T1035;
 
 /* DS_CELL [detachable ET_ECF_CONFIG] */
-typedef struct S1038 T1038;
+typedef volatile struct S1038 T1038;
 
 /* TUPLE [ET_ECF_SYSTEM_PARSER, ET_ECF_SYSTEM, DS_CELL [detachable ET_ECF_CONFIG]] */
-typedef struct S1040 T1040;
+typedef volatile struct S1040 T1040;
 
 /* ET_ECF_OPTIONS */
-typedef struct S1042 T1042;
+typedef volatile struct S1042 T1042;
 
 /* DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT] */
-typedef struct S1043 T1043;
+typedef volatile struct S1043 T1043;
 
 /* XM_NAMESPACE */
-typedef struct S1044 T1044;
+typedef volatile struct S1044 T1044;
 
 /* DS_LINKED_LIST_CURSOR [XM_ELEMENT_NODE] */
-typedef struct S1045 T1045;
+typedef volatile struct S1045 T1045;
 
 /* ET_ECF_REDIRECTION_CONFIG */
-typedef struct S1047 T1047;
+typedef volatile struct S1047 T1047;
 
 /* ET_DYNAMIC_PROCEDURE_TYPE */
-typedef struct S1048 T1048;
+typedef volatile struct S1048 T1048;
 
 /* ET_DYNAMIC_FUNCTION_TYPE */
-typedef struct S1049 T1049;
+typedef volatile struct S1049 T1049;
 
 /* ET_DYNAMIC_PUSH_TYPE_SET */
-typedef struct S1050 T1050;
+typedef volatile struct S1050 T1050;
 
 /* KL_PLATFORM */
-typedef struct S1051 T1051;
+typedef volatile struct S1051 T1051;
 
 /* UT_CONFIG_PARSER */
-typedef struct S1052 T1052;
+typedef volatile struct S1052 T1052;
 
 /* KL_COMPARABLE_COMPARATOR [INTEGER_32] */
-typedef struct S1053 T1053;
+typedef volatile struct S1053 T1053;
 
 /* CELL [INTEGER_32] */
-typedef struct S1056 T1056;
+typedef volatile struct S1056 T1056;
 
 /* KL_PATHNAME */
-typedef struct S1058 T1058;
+typedef volatile struct S1058 T1058;
 
 /* KL_ANY_ROUTINES */
-typedef struct S1059 T1059;
+typedef volatile struct S1059 T1059;
 
 /* KL_WINDOWS_INPUT_FILE */
-typedef struct S1060 T1060;
+typedef volatile struct S1060 T1060;
 
 /* KL_UNIX_INPUT_FILE */
-typedef struct S1061 T1061;
+typedef volatile struct S1061 T1061;
 
 /* ARRAY [IMMUTABLE_STRING_32] */
-typedef struct S1062 T1062;
+typedef volatile struct S1062 T1062;
 
 /* SPECIAL [IMMUTABLE_STRING_32] */
-typedef struct S1063 T1063;
+typedef volatile struct S1063 T1063;
 
 /* SPECIAL [NATURAL_8] */
-typedef struct S1064 T1064;
+typedef volatile struct S1064 T1064;
 
 /* TYPED_POINTER [SPECIAL [NATURAL_8]] */
-typedef struct S1065 T1065;
+typedef volatile struct S1065 T1065;
 extern T0* GE_boxed1065(TC* ac, T1065 a1);
 extern T0* GE_boxed_pointer1065(TC* ac, T1065* a1);
-typedef struct Sb1065 Tb1065;
+typedef volatile struct Sb1065 Tb1065;
 
 /* UC_UTF8_STRING */
-typedef struct S1066 T1066;
+typedef volatile struct S1066 T1066;
 
 /* DS_ARRAYED_LIST_CURSOR [STRING_8] */
-typedef struct S1067 T1067;
+typedef volatile struct S1067 T1067;
 
 /* DS_ARRAYED_LIST [ET_ADAPTED_LIBRARY] */
-typedef struct S1068 T1068;
+typedef volatile struct S1068 T1068;
 
 /* DS_ARRAYED_LIST [ET_ADAPTED_DOTNET_ASSEMBLY] */
-typedef struct S1069 T1069;
+typedef volatile struct S1069 T1069;
 
 /* SPECIAL [ET_MASTER_CLASS] */
-typedef struct S1070 T1070;
+typedef volatile struct S1070 T1070;
 
 /* KL_SPECIAL_ROUTINES [ET_MASTER_CLASS] */
-typedef struct S1073 T1073;
+typedef volatile struct S1073 T1073;
 
 /* KL_SPECIAL_ROUTINES [ET_CLASS_NAME] */
-typedef struct S1074 T1074;
+typedef volatile struct S1074 T1074;
 
 /* SPECIAL [ET_CLASS_NAME] */
-typedef struct S1075 T1075;
+typedef volatile struct S1075 T1075;
 
 /* DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME] */
-typedef struct S1076 T1076;
+typedef volatile struct S1076 T1076;
 
 /* SPECIAL [ET_PARENT_ITEM] */
-typedef struct S1078 T1078;
+typedef volatile struct S1078 T1078;
 
 /* KL_SPECIAL_ROUTINES [ET_PARENT_ITEM] */
-typedef struct S1079 T1079;
+typedef volatile struct S1079 T1079;
 
 /* SPECIAL [ET_CLIENT_ITEM] */
-typedef struct S1080 T1080;
+typedef volatile struct S1080 T1080;
 
 /* KL_SPECIAL_ROUTINES [ET_CLIENT_ITEM] */
-typedef struct S1081 T1081;
+typedef volatile struct S1081 T1081;
 
 /* SPECIAL [ET_ACTUAL_PARAMETER_ITEM] */
-typedef struct S1083 T1083;
+typedef volatile struct S1083 T1083;
 
 /* KL_SPECIAL_ROUTINES [ET_ACTUAL_PARAMETER_ITEM] */
-typedef struct S1085 T1085;
+typedef volatile struct S1085 T1085;
 
 /* ET_BRACED_TYPE_LIST */
-typedef struct S1086 T1086;
+typedef volatile struct S1086 T1086;
 
 /* DS_HASH_SET_CURSOR [ET_UNIVERSE] */
-typedef struct S1087 T1087;
+typedef volatile struct S1087 T1087;
 
 /* KL_SPECIAL_ROUTINES [ET_UNIVERSE] */
-typedef struct S1089 T1089;
+typedef volatile struct S1089 T1089;
 
 /* SPECIAL [ET_UNIVERSE] */
-typedef struct S1090 T1090;
+typedef volatile struct S1090 T1090;
 
 /* DS_ARRAYED_LIST [ET_MASTER_CLASS] */
-typedef struct S1091 T1091;
+typedef volatile struct S1091 T1091;
 
 /* TUPLE [ET_MASTER_CLASS] */
-typedef struct S1092 T1092;
+typedef volatile struct S1092 T1092;
 
 /* PROCEDURE [TUPLE [ET_MASTER_CLASS]] */
-typedef struct S1093 T1093;
+typedef volatile struct S1093 T1093;
 
 /* DS_ARRAYED_LIST_CURSOR [AP_OPTION] */
-typedef struct S1094 T1094;
+typedef volatile struct S1094 T1094;
 
 /* SPECIAL [AP_OPTION] */
-typedef struct S1096 T1096;
+typedef volatile struct S1096 T1096;
 
 /* KL_SPECIAL_ROUTINES [AP_OPTION] */
-typedef struct S1097 T1097;
+typedef volatile struct S1097 T1097;
 
 /* DS_ARRAYED_LIST_CURSOR [AP_ALTERNATIVE_OPTIONS_LIST] */
-typedef struct S1098 T1098;
+typedef volatile struct S1098 T1098;
 
 /* SPECIAL [AP_ALTERNATIVE_OPTIONS_LIST] */
-typedef struct S1099 T1099;
+typedef volatile struct S1099 T1099;
 
 /* KL_SPECIAL_ROUTINES [AP_ALTERNATIVE_OPTIONS_LIST] */
-typedef struct S1100 T1100;
+typedef volatile struct S1100 T1100;
 
 /* SPECIAL [detachable STRING_8] */
-typedef struct S1101 T1101;
+typedef volatile struct S1101 T1101;
 
 /* KL_SPECIAL_ROUTINES [detachable STRING_8] */
-typedef struct S1102 T1102;
+typedef volatile struct S1102 T1102;
 
 /* DS_LINKABLE [STRING_8] */
-typedef struct S1103 T1103;
+typedef volatile struct S1103 T1103;
 
 /* DS_LINKABLE [BOOLEAN] */
-typedef struct S1104 T1104;
+typedef volatile struct S1104 T1104;
 
 /* DS_LINKED_LIST_CURSOR [BOOLEAN] */
-typedef struct S1105 T1105;
+typedef volatile struct S1105 T1105;
 
 /* DS_LINKABLE [INTEGER_32] */
-typedef struct S1106 T1106;
+typedef volatile struct S1106 T1106;
 
 /* DS_LINKED_LIST_CURSOR [INTEGER_32] */
-typedef struct S1107 T1107;
+typedef volatile struct S1107 T1107;
 
 /* YY_FILE_BUFFER */
-typedef struct S1109 T1109;
+typedef volatile struct S1109 T1109;
 
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_CLASS] */
-typedef struct S1110 T1110;
+typedef volatile struct S1110 T1110;
 
 /* DS_HASH_TABLE [ET_BASE_TYPE, ET_CLASS] */
-typedef struct S1111 T1111;
+typedef volatile struct S1111 T1111;
 
 /* ET_PARENT_CHECKER1 */
-typedef struct S1112 T1112;
+typedef volatile struct S1112 T1112;
 
 /* ET_FORMAL_PARAMETER_CHECKER1 */
-typedef struct S1113 T1113;
+typedef volatile struct S1113 T1113;
 
 /* DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME] */
-typedef struct S1114 T1114;
+typedef volatile struct S1114 T1114;
 
 /* ET_FEATURE_NAME_TESTER */
-typedef struct S1115 T1115;
+typedef volatile struct S1115 T1115;
 
 /* DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_ALIAS_NAME] */
-typedef struct S1117 T1117;
+typedef volatile struct S1117 T1117;
 
 /* ET_ALIAS_NAME_TESTER */
-typedef struct S1118 T1118;
+typedef volatile struct S1118 T1118;
 
 /* DS_ARRAYED_LIST [ET_CLIENT_LIST] */
-typedef struct S1120 T1120;
+typedef volatile struct S1120 T1120;
 
 /* DS_HASH_TABLE [ET_CLIENT, ET_CLASS] */
-typedef struct S1121 T1121;
+typedef volatile struct S1121 T1121;
 
 /* ET_FEATURE_ADAPTATION_RESOLVER */
-typedef struct S1122 T1122;
+typedef volatile struct S1122 T1122;
 
 /* ET_DOTNET_FEATURE_ADAPTATION_RESOLVER */
-typedef struct S1123 T1123;
+typedef volatile struct S1123 T1123;
 
 /* ET_IDENTIFIER_TYPE_RESOLVER */
-typedef struct S1124 T1124;
+typedef volatile struct S1124 T1124;
 
 /* ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS_RESOLVER1 */
-typedef struct S1125 T1125;
+typedef volatile struct S1125 T1125;
 
 /* ET_ANCHORED_TYPE_CHECKER */
-typedef struct S1126 T1126;
+typedef volatile struct S1126 T1126;
 
 /* ET_SIGNATURE_CHECKER */
-typedef struct S1127 T1127;
+typedef volatile struct S1127 T1127;
 
 /* ET_PARENT_CHECKER2 */
-typedef struct S1128 T1128;
+typedef volatile struct S1128 T1128;
 
 /* ET_FORMAL_PARAMETER_CHECKER2 */
-typedef struct S1129 T1129;
+typedef volatile struct S1129 T1129;
 
 /* ET_BUILTIN_FEATURE_CHECKER */
-typedef struct S1130 T1130;
+typedef volatile struct S1130 T1130;
 
 /* ET_PRECURSOR_CHECKER */
-typedef struct S1131 T1131;
+typedef volatile struct S1131 T1131;
 
 /* DS_HASH_TABLE [ET_FEATURE, INTEGER_32] */
-typedef struct S1132 T1132;
+typedef volatile struct S1132 T1132;
 
 /* DS_HASH_SET [ET_CLASS] */
-typedef struct S1133 T1133;
+typedef volatile struct S1133 T1133;
 
 /* ET_QUALIFIED_ANCHORED_TYPE_CHECKER */
-typedef struct S1134 T1134;
+typedef volatile struct S1134 T1134;
 
 /* ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS_RESOLVER2 */
-typedef struct S1135 T1135;
+typedef volatile struct S1135 T1135;
 
 /* DS_HASH_TABLE [ET_RENAME, ET_FEATURE_NAME] */
-typedef struct S1136 T1136;
+typedef volatile struct S1136 T1136;
 
 /* DS_HASH_TABLE [ET_RENAME, ET_ALIAS_NAME] */
-typedef struct S1137 T1137;
+typedef volatile struct S1137 T1137;
 
 /* ET_PARENT_CHECKER3 */
-typedef struct S1138 T1138;
+typedef volatile struct S1138 T1138;
 
 /* DS_HASH_SET [ET_PROCEDURE] */
-typedef struct S1139 T1139;
+typedef volatile struct S1139 T1139;
 
 /* DS_HASH_SET [ET_QUERY] */
-typedef struct S1140 T1140;
+typedef volatile struct S1140 T1140;
 
 /* ET_SUPPLIER_BUILDER */
-typedef struct S1141 T1141;
+typedef volatile struct S1141 T1141;
 
 /* DS_ARRAYED_LIST_CURSOR [INTEGER_32] */
-typedef struct S1142 T1142;
+typedef volatile struct S1142 T1142;
 
 /* YY_UNICODE_BUFFER */
-typedef struct S1144 T1144;
+typedef volatile struct S1144 T1144;
 
 /* SPECIAL [detachable ET_OBJECT_TEST_LIST] */
-typedef struct S1145 T1145;
+typedef volatile struct S1145 T1145;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_OBJECT_TEST_LIST] */
-typedef struct S1146 T1146;
+typedef volatile struct S1146 T1146;
 
 /* SPECIAL [ET_OBJECT_TEST_LIST] */
-typedef struct S1147 T1147;
+typedef volatile struct S1147 T1147;
 
 /* KL_SPECIAL_ROUTINES [ET_OBJECT_TEST_LIST] */
-typedef struct S1148 T1148;
+typedef volatile struct S1148 T1148;
 
 /* SPECIAL [detachable ET_ITERATION_COMPONENT_LIST] */
-typedef struct S1149 T1149;
+typedef volatile struct S1149 T1149;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_ITERATION_COMPONENT_LIST] */
-typedef struct S1150 T1150;
+typedef volatile struct S1150 T1150;
 
 /* SPECIAL [ET_ITERATION_COMPONENT_LIST] */
-typedef struct S1151 T1151;
+typedef volatile struct S1151 T1151;
 
 /* KL_SPECIAL_ROUTINES [ET_ITERATION_COMPONENT_LIST] */
-typedef struct S1152 T1152;
+typedef volatile struct S1152 T1152;
 
 /* SPECIAL [detachable ET_INLINE_SEPARATE_ARGUMENT_LIST] */
-typedef struct S1153 T1153;
+typedef volatile struct S1153 T1153;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_ARGUMENT_LIST] */
-typedef struct S1154 T1154;
+typedef volatile struct S1154 T1154;
 
 /* SPECIAL [ET_INLINE_SEPARATE_ARGUMENT_LIST] */
-typedef struct S1155 T1155;
+typedef volatile struct S1155 T1155;
 
 /* KL_SPECIAL_ROUTINES [ET_INLINE_SEPARATE_ARGUMENT_LIST] */
-typedef struct S1156 T1156;
+typedef volatile struct S1156 T1156;
 
 /* SPECIAL [ET_ASSERTION_ITEM] */
-typedef struct S1157 T1157;
+typedef volatile struct S1157 T1157;
 
 /* KL_SPECIAL_ROUTINES [ET_ASSERTION_ITEM] */
-typedef struct S1158 T1158;
+typedef volatile struct S1158 T1158;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ASSERTION_ITEM] */
-typedef struct S1159 T1159;
+typedef volatile struct S1159 T1159;
 
 /* SPECIAL [ET_QUERY] */
-typedef struct S1160 T1160;
+typedef volatile struct S1160 T1160;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_QUERY] */
-typedef struct S1161 T1161;
+typedef volatile struct S1161 T1161;
 
 /* KL_SPECIAL_ROUTINES [ET_QUERY] */
-typedef struct S1162 T1162;
+typedef volatile struct S1162 T1162;
 
 /* SPECIAL [ET_PROCEDURE] */
-typedef struct S1163 T1163;
+typedef volatile struct S1163 T1163;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_PROCEDURE] */
-typedef struct S1164 T1164;
+typedef volatile struct S1164 T1164;
 
 /* KL_SPECIAL_ROUTINES [ET_PROCEDURE] */
-typedef struct S1165 T1165;
+typedef volatile struct S1165 T1165;
 
 /* DS_ARRAYED_LIST_CURSOR [detachable ET_CONSTRAINT_TYPE] */
-typedef struct S1166 T1166;
+typedef volatile struct S1166 T1166;
 
 /* DS_HASH_SET_CURSOR [ET_NAMED_CLASS] */
-typedef struct S1167 T1167;
+typedef volatile struct S1167 T1167;
 
 /* SPECIAL [ET_NAMED_CLASS] */
-typedef struct S1168 T1168;
+typedef volatile struct S1168 T1168;
 
 /* KL_SPECIAL_ROUTINES [ET_NAMED_CLASS] */
-typedef struct S1169 T1169;
+typedef volatile struct S1169 T1169;
 
 /* SPECIAL [ET_EXPRESSION_ITEM] */
-typedef struct S1171 T1171;
+typedef volatile struct S1171 T1171;
 
 /* KL_SPECIAL_ROUTINES [ET_EXPRESSION_ITEM] */
-typedef struct S1173 T1173;
+typedef volatile struct S1173 T1173;
 
 /* SPECIAL [ET_INSTRUCTION] */
-typedef struct S1175 T1175;
+typedef volatile struct S1175 T1175;
 
 /* KL_SPECIAL_ROUTINES [ET_INSTRUCTION] */
-typedef struct S1176 T1176;
+typedef volatile struct S1176 T1176;
 
 /* SPECIAL [ET_INLINE_SEPARATE_ARGUMENT_ITEM] */
-typedef struct S1178 T1178;
+typedef volatile struct S1178 T1178;
 
 /* KL_SPECIAL_ROUTINES [ET_INLINE_SEPARATE_ARGUMENT_ITEM] */
-typedef struct S1179 T1179;
+typedef volatile struct S1179 T1179;
 
 /* SPECIAL [ET_NAMED_OBJECT_TEST] */
-typedef struct S1180 T1180;
+typedef volatile struct S1180 T1180;
 
 /* KL_SPECIAL_ROUTINES [ET_NAMED_OBJECT_TEST] */
-typedef struct S1181 T1181;
+typedef volatile struct S1181 T1181;
 
 /* SPECIAL [ET_ITERATION_COMPONENT] */
-typedef struct S1182 T1182;
+typedef volatile struct S1182 T1182;
 
 /* KL_SPECIAL_ROUTINES [ET_ITERATION_COMPONENT] */
-typedef struct S1183 T1183;
+typedef volatile struct S1183 T1183;
 
 /* SPECIAL [ET_INLINE_SEPARATE_ARGUMENT] */
-typedef struct S1184 T1184;
+typedef volatile struct S1184 T1184;
 
 /* KL_SPECIAL_ROUTINES [ET_INLINE_SEPARATE_ARGUMENT] */
-typedef struct S1185 T1185;
+typedef volatile struct S1185 T1185;
 
 /* SPECIAL [ET_BASE_TYPE] */
-typedef struct S1186 T1186;
+typedef volatile struct S1186 T1186;
 
 /* KL_SPECIAL_ROUTINES [ET_BASE_TYPE] */
-typedef struct S1187 T1187;
+typedef volatile struct S1187 T1187;
 
 /* DS_HASH_TABLE [NATURAL_8, ET_CLASS_NAME] */
-typedef struct S1188 T1188;
+typedef volatile struct S1188 T1188;
 
 /* DS_HASH_TABLE_CURSOR [ET_ECF_LIBRARY, STRING_8] */
-typedef struct S1189 T1189;
+typedef volatile struct S1189 T1189;
 
 /* SPECIAL [ET_ECF_LIBRARY] */
-typedef struct S1190 T1190;
+typedef volatile struct S1190 T1190;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_LIBRARY] */
-typedef struct S1193 T1193;
+typedef volatile struct S1193 T1193;
 
 /* SPECIAL [ET_ECF_DOTNET_ASSEMBLY] */
-typedef struct S1194 T1194;
+typedef volatile struct S1194 T1194;
 
 /* DS_HASH_TABLE_CURSOR [ET_ECF_DOTNET_ASSEMBLY, STRING_8] */
-typedef struct S1197 T1197;
+typedef volatile struct S1197 T1197;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_DOTNET_ASSEMBLY] */
-typedef struct S1198 T1198;
+typedef volatile struct S1198 T1198;
 
 /* XM_EIFFEL_SCANNER */
-typedef struct S1199 T1199;
+typedef volatile struct S1199 T1199;
 
 /* XM_DEFAULT_POSITION */
-typedef struct S1200 T1200;
+typedef volatile struct S1200 T1200;
 
 /* DS_BILINKED_LIST [XM_POSITION] */
-typedef struct S1202 T1202;
+typedef volatile struct S1202 T1202;
 
 /* DS_LINKED_STACK [XM_EIFFEL_SCANNER] */
-typedef struct S1203 T1203;
+typedef volatile struct S1203 T1203;
 
 /* XM_CALLBACKS_NULL */
-typedef struct S1204 T1204;
+typedef volatile struct S1204 T1204;
 
 /* DS_HASH_TABLE [XM_EIFFEL_ENTITY_DEF, STRING_8] */
-typedef struct S1205 T1205;
+typedef volatile struct S1205 T1205;
 
 /* XM_NULL_EXTERNAL_RESOLVER */
-typedef struct S1207 T1207;
+typedef volatile struct S1207 T1207;
 
 /* XM_DTD_CALLBACKS_NULL */
-typedef struct S1209 T1209;
+typedef volatile struct S1209 T1209;
 
 /* KL_SPECIAL_ROUTINES [XM_EIFFEL_PARSER_NAME] */
-typedef struct S1210 T1210;
+typedef volatile struct S1210 T1210;
 
 /* XM_EIFFEL_PARSER_NAME */
-typedef struct S1211 T1211;
+typedef volatile struct S1211 T1211;
 
 /* SPECIAL [XM_EIFFEL_PARSER_NAME] */
-typedef struct S1212 T1212;
+typedef volatile struct S1212 T1212;
 
 /* KL_SPECIAL_ROUTINES [DS_HASH_SET [XM_EIFFEL_PARSER_NAME]] */
-typedef struct S1213 T1213;
+typedef volatile struct S1213 T1213;
 
 /* DS_HASH_SET [XM_EIFFEL_PARSER_NAME] */
-typedef struct S1214 T1214;
+typedef volatile struct S1214 T1214;
 
 /* SPECIAL [DS_HASH_SET [XM_EIFFEL_PARSER_NAME]] */
-typedef struct S1215 T1215;
+typedef volatile struct S1215 T1215;
 
 /* KL_SPECIAL_ROUTINES [XM_DTD_EXTERNAL_ID] */
-typedef struct S1216 T1216;
+typedef volatile struct S1216 T1216;
 
 /* XM_DTD_EXTERNAL_ID */
-typedef struct S1217 T1217;
+typedef volatile struct S1217 T1217;
 
 /* SPECIAL [XM_DTD_EXTERNAL_ID] */
-typedef struct S1218 T1218;
+typedef volatile struct S1218 T1218;
 
 /* KL_SPECIAL_ROUTINES [XM_DTD_ELEMENT_CONTENT] */
-typedef struct S1219 T1219;
+typedef volatile struct S1219 T1219;
 
 /* XM_DTD_ELEMENT_CONTENT */
-typedef struct S1220 T1220;
+typedef volatile struct S1220 T1220;
 
 /* SPECIAL [XM_DTD_ELEMENT_CONTENT] */
-typedef struct S1221 T1221;
+typedef volatile struct S1221 T1221;
 
 /* KL_SPECIAL_ROUTINES [DS_BILINKED_LIST [XM_DTD_ATTRIBUTE_CONTENT]] */
-typedef struct S1222 T1222;
+typedef volatile struct S1222 T1222;
 
 /* DS_BILINKED_LIST [XM_DTD_ATTRIBUTE_CONTENT] */
-typedef struct S1223 T1223;
+typedef volatile struct S1223 T1223;
 
 /* SPECIAL [DS_BILINKED_LIST [XM_DTD_ATTRIBUTE_CONTENT]] */
-typedef struct S1224 T1224;
+typedef volatile struct S1224 T1224;
 
 /* KL_SPECIAL_ROUTINES [XM_DTD_ATTRIBUTE_CONTENT] */
-typedef struct S1225 T1225;
+typedef volatile struct S1225 T1225;
 
 /* XM_DTD_ATTRIBUTE_CONTENT */
-typedef struct S1226 T1226;
+typedef volatile struct S1226 T1226;
 
 /* SPECIAL [XM_DTD_ATTRIBUTE_CONTENT] */
-typedef struct S1227 T1227;
+typedef volatile struct S1227 T1227;
 
 /* KL_SPECIAL_ROUTINES [DS_BILINKED_LIST [STRING_8]] */
-typedef struct S1228 T1228;
+typedef volatile struct S1228 T1228;
 
 /* DS_BILINKED_LIST [STRING_8] */
-typedef struct S1229 T1229;
+typedef volatile struct S1229 T1229;
 
 /* SPECIAL [DS_BILINKED_LIST [STRING_8]] */
-typedef struct S1230 T1230;
+typedef volatile struct S1230 T1230;
 
 /* KL_SPECIAL_ROUTINES [BOOLEAN] */
-typedef struct S1231 T1231;
+typedef volatile struct S1231 T1231;
 
 /* KL_SPECIAL_ROUTINES [XM_EIFFEL_DECLARATION] */
-typedef struct S1232 T1232;
+typedef volatile struct S1232 T1232;
 
 /* XM_EIFFEL_DECLARATION */
-typedef struct S1233 T1233;
+typedef volatile struct S1233 T1233;
 
 /* SPECIAL [XM_EIFFEL_DECLARATION] */
-typedef struct S1234 T1234;
+typedef volatile struct S1234 T1234;
 
 /* XM_EIFFEL_ENTITY_DEF */
-typedef struct S1237 T1237;
+typedef volatile struct S1237 T1237;
 
 /* XM_EIFFEL_SCANNER_DTD */
-typedef struct S1238 T1238;
+typedef volatile struct S1238 T1238;
 
 /* XM_EIFFEL_PE_ENTITY_DEF */
-typedef struct S1240 T1240;
+typedef volatile struct S1240 T1240;
 
 /* XM_NAMESPACE_RESOLVER */
-typedef struct S1241 T1241;
+typedef volatile struct S1241 T1241;
 
 /* ARRAY [XM_CALLBACKS_FILTER] */
-typedef struct S1242 T1242;
+typedef volatile struct S1242 T1242;
 
 /* SPECIAL [XM_CALLBACKS_FILTER] */
-typedef struct S1243 T1243;
+typedef volatile struct S1243 T1243;
 
 /* DS_HASH_SET [XM_NAMESPACE] */
-typedef struct S1244 T1244;
+typedef volatile struct S1244 T1244;
 
 /* XM_LINKED_LIST [XM_DOCUMENT_NODE] */
-typedef struct S1245 T1245;
+typedef volatile struct S1245 T1245;
 
 /* SPECIAL [ET_ECF_SYSTEM_CONFIG] */
-typedef struct S1248 T1248;
+typedef volatile struct S1248 T1248;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_SYSTEM_CONFIG] */
-typedef struct S1250 T1250;
+typedef volatile struct S1250 T1250;
 
 /* DS_HASH_TABLE_CURSOR [ET_ECF_SYSTEM_CONFIG, STRING_8] */
-typedef struct S1251 T1251;
+typedef volatile struct S1251 T1251;
 
 /* DS_HASH_TABLE_CURSOR [ET_ECF_TARGET, STRING_8] */
-typedef struct S1252 T1252;
+typedef volatile struct S1252 T1252;
 
 /* SPECIAL [ET_ECF_TARGET] */
-typedef struct S1253 T1253;
+typedef volatile struct S1253 T1253;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_TARGET] */
-typedef struct S1255 T1255;
+typedef volatile struct S1255 T1255;
 
 /* DS_SPARSE_TABLE_KEYS [detachable RX_REGULAR_EXPRESSION, STRING_8] */
-typedef struct S1257 T1257;
+typedef volatile struct S1257 T1257;
 
 /* KL_SPECIAL_ROUTINES [detachable RX_REGULAR_EXPRESSION] */
-typedef struct S1258 T1258;
+typedef volatile struct S1258 T1258;
 
 /* SPECIAL [detachable RX_REGULAR_EXPRESSION] */
-typedef struct S1259 T1259;
+typedef volatile struct S1259 T1259;
 
 /* ET_DOTNET_ASSEMBLIES */
-typedef struct S1260 T1260;
+typedef volatile struct S1260 T1260;
 
 /* KL_SPECIAL_ROUTINES [ET_IDENTIFIER] */
-typedef struct S1264 T1264;
+typedef volatile struct S1264 T1264;
 
 /* SPECIAL [ET_IDENTIFIER] */
-typedef struct S1265 T1265;
+typedef volatile struct S1265 T1265;
 
 /* DS_HASH_TABLE_CURSOR [ET_IDENTIFIER, STRING_8] */
-typedef struct S1266 T1266;
+typedef volatile struct S1266 T1266;
 
 /* KL_SPECIAL_ROUTINES [ET_CLUSTER] */
-typedef struct S1267 T1267;
+typedef volatile struct S1267 T1267;
 
 /* SPECIAL [ET_CLUSTER] */
-typedef struct S1268 T1268;
+typedef volatile struct S1268 T1268;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_CLUSTER] */
-typedef struct S1269 T1269;
+typedef volatile struct S1269 T1269;
 
 /* DS_HASH_TABLE [ET_DYNAMIC_FEATURE, INTEGER_32] */
-typedef struct S1270 T1270;
+typedef volatile struct S1270 T1270;
 
 /* ET_FEATURE_IDS */
-typedef struct S1271 T1271;
+typedef volatile struct S1271 T1271;
 
 /* SPECIAL [ET_DYNAMIC_FEATURE] */
-typedef struct S1272 T1272;
+typedef volatile struct S1272 T1272;
 
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_FEATURE] */
-typedef struct S1273 T1273;
+typedef volatile struct S1273 T1273;
 
 /* DS_HASH_TABLE_CURSOR [ET_DYNAMIC_PRIMARY_TYPE, STRING_8] */
-typedef struct S1275 T1275;
+typedef volatile struct S1275 T1275;
 
 /* DS_HASH_TABLE [ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL, ET_CALL_NAME] */
-typedef struct S1276 T1276;
+typedef volatile struct S1276 T1276;
 
 /* DS_HASH_TABLE [ET_DYNAMIC_QUALIFIED_QUERY_CALL, ET_CALL_NAME] */
-typedef struct S1277 T1277;
+typedef volatile struct S1277 T1277;
 
 /* KL_SPECIAL_ROUTINES [ET_TYPE] */
-typedef struct S1279 T1279;
+typedef volatile struct S1279 T1279;
 
 /* DS_ARRAYED_LIST [ET_SYSTEM_PROCESSOR] */
-typedef struct S1280 T1280;
+typedef volatile struct S1280 T1280;
 
 /* TUPLE [ET_SYSTEM_PROCESSOR, DS_ARRAYED_LIST [ET_CLASS]] */
-typedef struct S1281 T1281;
+typedef volatile struct S1281 T1281;
 
 /* SPECIAL [ET_DYNAMIC_TYPE_SET] */
-typedef struct S1283 T1283;
+typedef volatile struct S1283 T1283;
 
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_TYPE_SET] */
-typedef struct S1284 T1284;
+typedef volatile struct S1284 T1284;
 
 /* KL_EQUALITY_TESTER [INTEGER_32] */
-typedef struct S1285 T1285;
+typedef volatile struct S1285 T1285;
 
 /* DS_HASH_TABLE_CURSOR [INTEGER_32, ET_DYNAMIC_TYPE] */
-typedef struct S1287 T1287;
+typedef volatile struct S1287 T1287;
 
 /* SPECIAL [ET_DYNAMIC_TYPE] */
-typedef struct S1288 T1288;
+typedef volatile struct S1288 T1288;
 
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_TYPE] */
-typedef struct S1289 T1289;
+typedef volatile struct S1289 T1289;
 
 /* DS_ARRAYED_LIST [ET_ADAPTED_CLASS] */
-typedef struct S1290 T1290;
+typedef volatile struct S1290 T1290;
 
 /* KL_SPECIAL_ROUTINES [ET_INLINE_AGENT] */
-typedef struct S1291 T1291;
+typedef volatile struct S1291 T1291;
 
 /* SPECIAL [ET_INLINE_AGENT] */
-typedef struct S1292 T1292;
+typedef volatile struct S1292 T1292;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_INLINE_AGENT] */
-typedef struct S1293 T1293;
+typedef volatile struct S1293 T1293;
 
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [ET_PROCEDURE]] */
-typedef struct S1294 T1294;
+typedef volatile struct S1294 T1294;
 
 /* SPECIAL [DS_ARRAYED_LIST [ET_PROCEDURE]] */
-typedef struct S1295 T1295;
+typedef volatile struct S1295 T1295;
 
 /* DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [ET_PROCEDURE]] */
-typedef struct S1296 T1296;
+typedef volatile struct S1296 T1296;
 
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [ET_QUERY]] */
-typedef struct S1297 T1297;
+typedef volatile struct S1297 T1297;
 
 /* SPECIAL [DS_ARRAYED_LIST [ET_QUERY]] */
-typedef struct S1298 T1298;
+typedef volatile struct S1298 T1298;
 
 /* DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [ET_QUERY]] */
-typedef struct S1299 T1299;
+typedef volatile struct S1299 T1299;
 
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [ET_FEATURE]] */
-typedef struct S1300 T1300;
+typedef volatile struct S1300 T1300;
 
 /* DS_ARRAYED_LIST [ET_FEATURE] */
-typedef struct S1301 T1301;
+typedef volatile struct S1301 T1301;
 
 /* SPECIAL [DS_ARRAYED_LIST [ET_FEATURE]] */
-typedef struct S1302 T1302;
+typedef volatile struct S1302 T1302;
 
 /* DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [ET_FEATURE]] */
-typedef struct S1303 T1303;
+typedef volatile struct S1303 T1303;
 
 /* KL_SPECIAL_ROUTINES [TUPLE [detachable ET_QUERY, ET_CLASS, ET_NESTED_TYPE_CONTEXT]] */
-typedef struct S1304 T1304;
+typedef volatile struct S1304 T1304;
 
 /* TUPLE [detachable ET_QUERY, ET_CLASS, ET_NESTED_TYPE_CONTEXT] */
-typedef struct S1305 T1305;
+typedef volatile struct S1305 T1305;
 
 /* SPECIAL [TUPLE [detachable ET_QUERY, ET_CLASS, ET_NESTED_TYPE_CONTEXT]] */
-typedef struct S1306 T1306;
+typedef volatile struct S1306 T1306;
 
 /* DS_ARRAYED_LIST_CURSOR [TUPLE [detachable ET_QUERY, ET_CLASS, ET_NESTED_TYPE_CONTEXT]] */
-typedef struct S1307 T1307;
+typedef volatile struct S1307 T1307;
 
 /* SPECIAL [ET_NESTED_TYPE_CONTEXT] */
-typedef struct S1308 T1308;
+typedef volatile struct S1308 T1308;
 
 /* KL_SPECIAL_ROUTINES [ET_NESTED_TYPE_CONTEXT] */
-typedef struct S1309 T1309;
+typedef volatile struct S1309 T1309;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_NESTED_TYPE_CONTEXT] */
-typedef struct S1310 T1310;
+typedef volatile struct S1310 T1310;
 
 /* DS_HASH_TABLE_CURSOR [ET_NESTED_TYPE_CONTEXT, ET_NAMED_OBJECT_TEST] */
-typedef struct S1311 T1311;
+typedef volatile struct S1311 T1311;
 
 /* DS_ARRAYED_LIST [ET_NAMED_OBJECT_TEST] */
-typedef struct S1314 T1314;
+typedef volatile struct S1314 T1314;
 
 /* DS_HASH_TABLE_CURSOR [ET_NESTED_TYPE_CONTEXT, ET_ITERATION_COMPONENT] */
-typedef struct S1315 T1315;
+typedef volatile struct S1315 T1315;
 
 /* DS_ARRAYED_LIST [ET_ITERATION_COMPONENT] */
-typedef struct S1317 T1317;
+typedef volatile struct S1317 T1317;
 
 /* DS_HASH_TABLE_CURSOR [ET_NESTED_TYPE_CONTEXT, ET_INLINE_SEPARATE_ARGUMENT] */
-typedef struct S1319 T1319;
+typedef volatile struct S1319 T1319;
 
 /* DS_ARRAYED_LIST [ET_INLINE_SEPARATE_ARGUMENT] */
-typedef struct S1320 T1320;
+typedef volatile struct S1320 T1320;
 
 /* SPECIAL [ET_ATTACHMENT_SCOPE] */
-typedef struct S1322 T1322;
+typedef volatile struct S1322 T1322;
 
 /* KL_SPECIAL_ROUTINES [ET_ATTACHMENT_SCOPE] */
-typedef struct S1323 T1323;
+typedef volatile struct S1323 T1323;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ATTACHMENT_SCOPE] */
-typedef struct S1324 T1324;
+typedef volatile struct S1324 T1324;
 
 /* DS_HASH_TABLE_CURSOR [ET_ASSERTIONS, ET_FEATURE] */
-typedef struct S1325 T1325;
+typedef volatile struct S1325 T1325;
 
 /* SPECIAL [ET_ASSERTIONS] */
-typedef struct S1326 T1326;
+typedef volatile struct S1326 T1326;
 
 /* KL_SPECIAL_ROUTINES [ET_ASSERTIONS] */
-typedef struct S1329 T1329;
+typedef volatile struct S1329 T1329;
 
 /* KL_SPECIAL_ROUTINES [ET_FEATURE] */
-typedef struct S1330 T1330;
+typedef volatile struct S1330 T1330;
 
 /* SPECIAL [ET_FEATURE] */
-typedef struct S1331 T1331;
+typedef volatile struct S1331 T1331;
 
 /* KL_SPECIAL_ROUTINES [ET_NOTE_TERM] */
-typedef struct S1332 T1332;
+typedef volatile struct S1332 T1332;
 
 /* SPECIAL [ET_NOTE_TERM] */
-typedef struct S1333 T1333;
+typedef volatile struct S1333 T1333;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_NOTE_TERM] */
-typedef struct S1334 T1334;
+typedef volatile struct S1334 T1334;
 
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [ET_ADAPTED_CLASS]] */
-typedef struct S1335 T1335;
+typedef volatile struct S1335 T1335;
 
 /* SPECIAL [DS_ARRAYED_LIST [ET_ADAPTED_CLASS]] */
-typedef struct S1336 T1336;
+typedef volatile struct S1336 T1336;
 
 /* DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [ET_ADAPTED_CLASS]] */
-typedef struct S1337 T1337;
+typedef volatile struct S1337 T1337;
 
 /* SPECIAL [NATIVE_STRING] */
-typedef struct S1338 T1338;
+typedef volatile struct S1338 T1338;
 
 /* SPECIAL [NATURAL_32] */
-typedef struct S1339 T1339;
+typedef volatile struct S1339 T1339;
 
 /* DS_ARRAYED_LIST [RX_CHARACTER_SET] */
-typedef struct S1340 T1340;
+typedef volatile struct S1340 T1340;
 
 /* KL_SPECIAL_ROUTINES [NATURAL_32] */
-typedef struct S1341 T1341;
+typedef volatile struct S1341 T1341;
 
 /* SPECIAL [NATURAL_64] */
-typedef struct S1342 T1342;
+typedef volatile struct S1342 T1342;
 
 /* DS_HASH_TABLE [NATURAL_64, NATURAL_32] */
-typedef struct S1343 T1343;
+typedef volatile struct S1343 T1343;
 
 /* DS_HASH_TABLE_CURSOR [NATURAL_64, NATURAL_32] */
-typedef struct S1344 T1344;
+typedef volatile struct S1344 T1344;
 
 /* SPECIAL [ARRAY [INTEGER_32]] */
-typedef struct S1345 T1345;
+typedef volatile struct S1345 T1345;
 
 /* SPECIAL [SPECIAL [ARRAY [INTEGER_32]]] */
-typedef struct S1346 T1346;
+typedef volatile struct S1346 T1346;
 
 /* KL_INTEGER_ROUTINES */
-typedef struct S1347 T1347;
+typedef volatile struct S1347 T1347;
 
 /* DS_HASH_SET_CURSOR [NATURAL_32] */
-typedef struct S1350 T1350;
+typedef volatile struct S1350 T1350;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_IDENTIFIER] */
-typedef struct S1352 T1352;
+typedef volatile struct S1352 T1352;
 
 /* SPECIAL [detachable ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S1353 T1353;
+typedef volatile struct S1353 T1353;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S1354 T1354;
+typedef volatile struct S1354 T1354;
 
 /* DS_ARRAYED_LIST_CURSOR [detachable ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S1355 T1355;
+typedef volatile struct S1355 T1355;
 
 /* DS_ARRAYED_LIST_CURSOR [BOOLEAN] */
-typedef struct S1356 T1356;
+typedef volatile struct S1356 T1356;
 
 /* KL_SPECIAL_ROUTINES [ET_EQUALITY_EXPRESSION] */
-typedef struct S1357 T1357;
+typedef volatile struct S1357 T1357;
 
 /* SPECIAL [ET_EQUALITY_EXPRESSION] */
-typedef struct S1358 T1358;
+typedef volatile struct S1358 T1358;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_EQUALITY_EXPRESSION] */
-typedef struct S1359 T1359;
+typedef volatile struct S1359 T1359;
 
 /* SPECIAL [ET_DYNAMIC_EQUALITY_TYPES] */
-typedef struct S1360 T1360;
+typedef volatile struct S1360 T1360;
 
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_EQUALITY_TYPES] */
-typedef struct S1361 T1361;
+typedef volatile struct S1361 T1361;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_DYNAMIC_EQUALITY_TYPES] */
-typedef struct S1362 T1362;
+typedef volatile struct S1362 T1362;
 
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_OBJECT_EQUALITY_TYPES] */
-typedef struct S1363 T1363;
+typedef volatile struct S1363 T1363;
 
 /* SPECIAL [ET_DYNAMIC_OBJECT_EQUALITY_TYPES] */
-typedef struct S1364 T1364;
+typedef volatile struct S1364 T1364;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_DYNAMIC_OBJECT_EQUALITY_TYPES] */
-typedef struct S1365 T1365;
+typedef volatile struct S1365 T1365;
 
 /* KL_SPECIAL_ROUTINES [ET_UNQUALIFIED_CALL_EXPRESSION] */
-typedef struct S1366 T1366;
+typedef volatile struct S1366 T1366;
 
 /* SPECIAL [ET_UNQUALIFIED_CALL_EXPRESSION] */
-typedef struct S1367 T1367;
+typedef volatile struct S1367 T1367;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_UNQUALIFIED_CALL_EXPRESSION] */
-typedef struct S1368 T1368;
+typedef volatile struct S1368 T1368;
 
 /* SPECIAL [ET_QUALIFIED_CALL_EXPRESSION] */
-typedef struct S1369 T1369;
+typedef volatile struct S1369 T1369;
 
 /* KL_SPECIAL_ROUTINES [ET_QUALIFIED_CALL_EXPRESSION] */
-typedef struct S1370 T1370;
+typedef volatile struct S1370 T1370;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_QUALIFIED_CALL_EXPRESSION] */
-typedef struct S1371 T1371;
+typedef volatile struct S1371 T1371;
 
 /* KL_SPECIAL_ROUTINES [ET_ACTUAL_ARGUMENT_LIST] */
-typedef struct S1372 T1372;
+typedef volatile struct S1372 T1372;
 
 /* SPECIAL [ET_ACTUAL_ARGUMENT_LIST] */
-typedef struct S1373 T1373;
+typedef volatile struct S1373 T1373;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ACTUAL_ARGUMENT_LIST] */
-typedef struct S1374 T1374;
+typedef volatile struct S1374 T1374;
 
 /* KL_SPECIAL_ROUTINES [ET_RESULT] */
-typedef struct S1375 T1375;
+typedef volatile struct S1375 T1375;
 
 /* SPECIAL [ET_RESULT] */
-typedef struct S1376 T1376;
+typedef volatile struct S1376 T1376;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_RESULT] */
-typedef struct S1377 T1377;
+typedef volatile struct S1377 T1377;
 
 /* SPECIAL [ET_DYNAMIC_STANDALONE_TYPE_SET] */
-typedef struct S1378 T1378;
+typedef volatile struct S1378 T1378;
 
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_STANDALONE_TYPE_SET] */
-typedef struct S1379 T1379;
+typedef volatile struct S1379 T1379;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_DYNAMIC_STANDALONE_TYPE_SET] */
-typedef struct S1380 T1380;
+typedef volatile struct S1380 T1380;
 
 /* SPECIAL [ET_EXPRESSION] */
-typedef struct S1381 T1381;
+typedef volatile struct S1381 T1381;
 
 /* KL_SPECIAL_ROUTINES [ET_EXPRESSION] */
-typedef struct S1382 T1382;
+typedef volatile struct S1382 T1382;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_EXPRESSION] */
-typedef struct S1383 T1383;
+typedef volatile struct S1383 T1383;
 
 /* DS_HASH_TABLE_CURSOR [ET_DYNAMIC_PRIMARY_TYPE, INTEGER_32] */
-typedef struct S1384 T1384;
+typedef volatile struct S1384 T1384;
 
 /* DS_HASH_TABLE_CURSOR [ET_DYNAMIC_STANDALONE_TYPE_SET, ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S1385 T1385;
+typedef volatile struct S1385 T1385;
 
 /* SPECIAL [ET_OBJECT_TEST] */
-typedef struct S1387 T1387;
+typedef volatile struct S1387 T1387;
 
 /* KL_SPECIAL_ROUTINES [ET_OBJECT_TEST] */
-typedef struct S1388 T1388;
+typedef volatile struct S1388 T1388;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_OBJECT_TEST] */
-typedef struct S1389 T1389;
+typedef volatile struct S1389 T1389;
 
 /* DS_HASH_SET_CURSOR [INTEGER_32] */
-typedef struct S1390 T1390;
+typedef volatile struct S1390 T1390;
 
 /* TYPE [INTEGER_32] */
 #define T1391 EIF_TYPE_OBJ
 
 /* SPECIAL [ET_AGENT] */
-typedef struct S1393 T1393;
+typedef volatile struct S1393 T1393;
 
 /* KL_SPECIAL_ROUTINES [ET_AGENT] */
-typedef struct S1394 T1394;
+typedef volatile struct S1394 T1394;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_AGENT] */
-typedef struct S1395 T1395;
+typedef volatile struct S1395 T1395;
 
 /* DS_HASH_SET_CURSOR [ET_DYNAMIC_TUPLE_TYPE] */
-typedef struct S1396 T1396;
+typedef volatile struct S1396 T1396;
 
 /* SPECIAL [ET_DYNAMIC_TUPLE_TYPE] */
-typedef struct S1397 T1397;
+typedef volatile struct S1397 T1397;
 
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_TUPLE_TYPE] */
-typedef struct S1398 T1398;
+typedef volatile struct S1398 T1398;
 
 /* DS_HASH_TABLE_CURSOR [INTEGER_32, ET_FEATURE] */
-typedef struct S1399 T1399;
+typedef volatile struct S1399 T1399;
 
 /* DS_HASH_TABLE_CURSOR [ET_CONSTANT, ET_FEATURE] */
-typedef struct S1400 T1400;
+typedef volatile struct S1400 T1400;
 
 /* SPECIAL [ET_CONSTANT] */
-typedef struct S1401 T1401;
+typedef volatile struct S1401 T1401;
 
 /* KL_SPECIAL_ROUTINES [ET_CONSTANT] */
-typedef struct S1403 T1403;
+typedef volatile struct S1403 T1403;
 
 /* DS_HASH_TABLE_CURSOR [ET_DYNAMIC_PRIMARY_TYPE, ET_INLINE_CONSTANT] */
-typedef struct S1404 T1404;
+typedef volatile struct S1404 T1404;
 
 /* SPECIAL [ET_INLINE_CONSTANT] */
-typedef struct S1405 T1405;
+typedef volatile struct S1405 T1405;
 
 /* KL_SPECIAL_ROUTINES [ET_INLINE_CONSTANT] */
-typedef struct S1407 T1407;
+typedef volatile struct S1407 T1407;
 
 /* SPECIAL [detachable ET_DYNAMIC_FEATURE] */
-typedef struct S1408 T1408;
+typedef volatile struct S1408 T1408;
 
 /* DS_HASH_TABLE_CURSOR [detachable ET_DYNAMIC_FEATURE, ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S1410 T1410;
+typedef volatile struct S1410 T1410;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_DYNAMIC_FEATURE] */
-typedef struct S1411 T1411;
+typedef volatile struct S1411 T1411;
 
 /* SPECIAL [ET_DYNAMIC_INLINED_EXPRESSION] */
-typedef struct S1412 T1412;
+typedef volatile struct S1412 T1412;
 
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_INLINED_EXPRESSION] */
-typedef struct S1413 T1413;
+typedef volatile struct S1413 T1413;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_DYNAMIC_INLINED_EXPRESSION] */
-typedef struct S1414 T1414;
+typedef volatile struct S1414 T1414;
 
 /* SPECIAL [ET_DYNAMIC_CALL_CONTEXT] */
-typedef struct S1415 T1415;
+typedef volatile struct S1415 T1415;
 
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_CALL_CONTEXT] */
-typedef struct S1416 T1416;
+typedef volatile struct S1416 T1416;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_DYNAMIC_CALL_CONTEXT] */
-typedef struct S1417 T1417;
+typedef volatile struct S1417 T1417;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_DYNAMIC_FEATURE] */
-typedef struct S1418 T1418;
+typedef volatile struct S1418 T1418;
 
 /* DS_HASH_SET_CURSOR [ET_DYNAMIC_FEATURE] */
-typedef struct S1419 T1419;
+typedef volatile struct S1419 T1419;
 
 /* TYPE [ET_DYNAMIC_FEATURE] */
 #define T1421 EIF_TYPE_OBJ
 
 /* DS_HASH_TABLE_CURSOR [BOOLEAN, STRING_8] */
-typedef struct S1422 T1422;
+typedef volatile struct S1422 T1422;
 
 /* TYPED_POINTER [ANY] */
-typedef struct S1425 T1425;
+typedef volatile struct S1425 T1425;
 extern T0* GE_boxed1425(TC* ac, T1425 a1);
 extern T0* GE_boxed_pointer1425(TC* ac, T1425* a1);
-typedef struct Sb1425 Tb1425;
+typedef volatile struct Sb1425 Tb1425;
 
 /* SPECIAL [DS_ARRAYED_LIST [STRING_8]] */
-typedef struct S1427 T1427;
+typedef volatile struct S1427 T1427;
 
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [STRING_8]] */
-typedef struct S1428 T1428;
+typedef volatile struct S1428 T1428;
 
 /* DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [STRING_8]] */
-typedef struct S1429 T1429;
+typedef volatile struct S1429 T1429;
 
 /* SPECIAL [TUPLE [STRING_8, detachable STRING_8]] */
-typedef struct S1430 T1430;
+typedef volatile struct S1430 T1430;
 
 /* KL_SPECIAL_ROUTINES [TUPLE [STRING_8, detachable STRING_8]] */
-typedef struct S1432 T1432;
+typedef volatile struct S1432 T1432;
 
 /* DS_HASH_TABLE_CURSOR [TUPLE [STRING_8, detachable STRING_8], STRING_8] */
-typedef struct S1433 T1433;
+typedef volatile struct S1433 T1433;
 
 /* DS_HASH_TABLE [INTEGER_32, ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S1434 T1434;
+typedef volatile struct S1434 T1434;
 
 /* DS_ARRAYED_LIST [detachable DS_LINKABLE [INTEGER_32]] */
-typedef struct S1435 T1435;
+typedef volatile struct S1435 T1435;
 
 /* ARRAY [BOOLEAN] */
-typedef struct S1436 T1436;
+typedef volatile struct S1436 T1436;
 
 /* THREAD_ATTRIBUTES */
-typedef struct S1438 T1438;
+typedef volatile struct S1438 T1438;
 
 /* CELL [BOOLEAN] */
-typedef struct S1439 T1439;
+typedef volatile struct S1439 T1439;
 
 /* CHARACTER_PROPERTY */
-typedef struct S1441 T1441;
+typedef volatile struct S1441 T1441;
 
 /* ET_SYSTEM_ERROR */
-typedef struct S1442 T1442;
+typedef volatile struct S1442 T1442;
 
 /* ET_INTERNAL_ERROR */
-typedef struct S1443 T1443;
+typedef volatile struct S1443 T1443;
 
 /* ET_SYNTAX_ERROR */
-typedef struct S1444 T1444;
+typedef volatile struct S1444 T1444;
 
 /* ET_VALIDITY_ERROR */
-typedef struct S1445 T1445;
+typedef volatile struct S1445 T1445;
 
 /* ET_FORMAL_COMMA_ARGUMENT */
-typedef struct S1446 T1446;
+typedef volatile struct S1446 T1446;
 
 /* ET_LOCAL_COMMA_VARIABLE */
-typedef struct S1447 T1447;
+typedef volatile struct S1447 T1447;
 
 /* ET_LABELED_COMMA_ACTUAL_PARAMETER */
-typedef struct S1448 T1448;
+typedef volatile struct S1448 T1448;
 
 /* ET_KEYWORD_EXPRESSION */
-typedef struct S1450 T1450;
+typedef volatile struct S1450 T1450;
 
 /* DS_ARRAYED_LIST [detachable ET_FORMAL_PARAMETER_TYPE] */
-typedef struct S1453 T1453;
+typedef volatile struct S1453 T1453;
 
 /* SPECIAL [ET_CREATOR] */
-typedef struct S1454 T1454;
+typedef volatile struct S1454 T1454;
 
 /* KL_SPECIAL_ROUTINES [ET_CREATOR] */
-typedef struct S1455 T1455;
+typedef volatile struct S1455 T1455;
 
 /* KL_SPECIAL_ROUTINES [ET_FEATURE_NAME_ITEM] */
-typedef struct S1456 T1456;
+typedef volatile struct S1456 T1456;
 
 /* SPECIAL [ET_FEATURE_NAME_ITEM] */
-typedef struct S1457 T1457;
+typedef volatile struct S1457 T1457;
 
 /* ET_ECF_NOTE_ELEMENT */
-typedef struct S1458 T1458;
+typedef volatile struct S1458 T1458;
 
 /* ET_ECF_ADAPTED_LIBRARIES */
-typedef struct S1459 T1459;
+typedef volatile struct S1459 T1459;
 
 /* ET_ECF_ADAPTED_DOTNET_ASSEMBLIES */
-typedef struct S1460 T1460;
+typedef volatile struct S1460 T1460;
 
 /* ET_ECF_FILE_RULES */
-typedef struct S1461 T1461;
+typedef volatile struct S1461 T1461;
 
 /* ET_ECF_NAMESPACES */
-typedef struct S1462 T1462;
+typedef volatile struct S1462 T1462;
 
 /* ET_ECF_EXTERNAL_CFLAGS */
-typedef struct S1463 T1463;
+typedef volatile struct S1463 T1463;
 
 /* ET_ECF_EXTERNAL_INCLUDES */
-typedef struct S1464 T1464;
+typedef volatile struct S1464 T1464;
 
 /* ET_ECF_EXTERNAL_LIBRARIES */
-typedef struct S1465 T1465;
+typedef volatile struct S1465 T1465;
 
 /* ET_ECF_EXTERNAL_LINKER_FLAGS */
-typedef struct S1466 T1466;
+typedef volatile struct S1466 T1466;
 
 /* ET_ECF_EXTERNAL_MAKES */
-typedef struct S1467 T1467;
+typedef volatile struct S1467 T1467;
 
 /* ET_ECF_EXTERNAL_OBJECTS */
-typedef struct S1468 T1468;
+typedef volatile struct S1468 T1468;
 
 /* ET_ECF_EXTERNAL_RESOURCES */
-typedef struct S1469 T1469;
+typedef volatile struct S1469 T1469;
 
 /* DS_ARRAYED_LIST [ET_ECF_ACTION] */
-typedef struct S1470 T1470;
+typedef volatile struct S1470 T1470;
 
 /* ET_ECF_ADAPTED_PRECOMPILED_LIBRARY */
-typedef struct S1471 T1471;
+typedef volatile struct S1471 T1471;
 
 /* ET_ECF_VERSION */
-typedef struct S1473 T1473;
+typedef volatile struct S1473 T1473;
 
 /* ET_ECF_NAMESPACE */
-typedef struct S1474 T1474;
+typedef volatile struct S1474 T1474;
 
 /* ET_ECF_EXTERNAL_CFLAG */
-typedef struct S1475 T1475;
+typedef volatile struct S1475 T1475;
 
 /* ET_ECF_EXTERNAL_INCLUDE */
-typedef struct S1476 T1476;
+typedef volatile struct S1476 T1476;
 
 /* ET_ECF_EXTERNAL_LIBRARY */
-typedef struct S1477 T1477;
+typedef volatile struct S1477 T1477;
 
 /* ET_ECF_EXTERNAL_LINKER_FLAG */
-typedef struct S1478 T1478;
+typedef volatile struct S1478 T1478;
 
 /* ET_ECF_EXTERNAL_MAKE */
-typedef struct S1479 T1479;
+typedef volatile struct S1479 T1479;
 
 /* ET_ECF_EXTERNAL_OBJECT */
-typedef struct S1480 T1480;
+typedef volatile struct S1480 T1480;
 
 /* ET_ECF_EXTERNAL_RESOURCE */
-typedef struct S1481 T1481;
+typedef volatile struct S1481 T1481;
 
 /* ET_ECF_FILE_RULE */
-typedef struct S1482 T1482;
+typedef volatile struct S1482 T1482;
 
 /* ET_ECF_ACTION */
-typedef struct S1483 T1483;
+typedef volatile struct S1483 T1483;
 
 /* DS_HASH_TABLE [ET_ECF_OPTIONS, STRING_8] */
-typedef struct S1484 T1484;
+typedef volatile struct S1484 T1484;
 
 /* DS_ARRAYED_LIST [ET_ECF_VISIBLE_CLASS] */
-typedef struct S1485 T1485;
+typedef volatile struct S1485 T1485;
 
 /* TUPLE [ET_ECF_OPTIONS] */
-typedef struct S1486 T1486;
+typedef volatile struct S1486 T1486;
 
 /* PROCEDURE [TUPLE [ET_ECF_OPTIONS]] */
-typedef struct S1487 T1487;
+typedef volatile struct S1487 T1487;
 
 /* ET_ECF_ROOT_CLASS */
-typedef struct S1488 T1488;
+typedef volatile struct S1488 T1488;
 
 /* ET_ECF_ROOT_ALL_CLASSES */
-typedef struct S1489 T1489;
+typedef volatile struct S1489 T1489;
 
 /* ET_ECF_ORED_CONDITIONS */
-typedef struct S1490 T1490;
+typedef volatile struct S1490 T1490;
 
 /* ET_ECF_ANDED_CONDITIONS */
-typedef struct S1491 T1491;
+typedef volatile struct S1491 T1491;
 
 /* ET_ECF_VISIBLE_CLASS */
-typedef struct S1492 T1492;
+typedef volatile struct S1492 T1492;
 
 /* ET_ECF_BUILD_CONDITION */
-typedef struct S1494 T1494;
+typedef volatile struct S1494 T1494;
 
 /* ET_ECF_CONCURRENCY_CONDITION */
-typedef struct S1495 T1495;
+typedef volatile struct S1495 T1495;
 
 /* ET_ECF_VOID_SAFETY_CONDITION */
-typedef struct S1496 T1496;
+typedef volatile struct S1496 T1496;
 
 /* ET_ECF_CUSTOM_CONDITION */
-typedef struct S1497 T1497;
+typedef volatile struct S1497 T1497;
 
 /* ET_ECF_DOTNET_CONDITION */
-typedef struct S1498 T1498;
+typedef volatile struct S1498 T1498;
 
 /* ET_ECF_DYNAMIC_RUNTIME_CONDITION */
-typedef struct S1499 T1499;
+typedef volatile struct S1499 T1499;
 
 /* ET_ECF_PLATFORM_CONDITION */
-typedef struct S1500 T1500;
+typedef volatile struct S1500 T1500;
 
 /* ET_ECF_COMPILER_VERSION_CONDITION */
-typedef struct S1502 T1502;
+typedef volatile struct S1502 T1502;
 
 /* ET_ECF_MSIL_CLR_VERSION_CONDITION */
-typedef struct S1503 T1503;
+typedef volatile struct S1503 T1503;
 
 /* UT_COUNTER */
-typedef struct S1505 T1505;
+typedef volatile struct S1505 T1505;
 
 /* KL_AGENT_ROUTINES [ET_CLASS] */
-typedef struct S1506 T1506;
+typedef volatile struct S1506 T1506;
 
 /* TUPLE [UT_COUNTER] */
-typedef struct S1507 T1507;
+typedef volatile struct S1507 T1507;
 
 /* TUPLE [KL_AGENT_ROUTINES [ET_CLASS], PROCEDURE [TUPLE]] */
-typedef struct S1508 T1508;
+typedef volatile struct S1508 T1508;
 
 /* TUPLE [PROCEDURE [TUPLE [ET_CLASS]]] */
-typedef struct S1509 T1509;
+typedef volatile struct S1509 T1509;
 
 /* TUPLE [PROCEDURE [TUPLE [ET_CLASS]], FUNCTION [TUPLE, BOOLEAN]] */
-typedef struct S1510 T1510;
+typedef volatile struct S1510 T1510;
 
 /* DS_HASH_SET [ET_DOTNET_ASSEMBLY] */
-typedef struct S1512 T1512;
+typedef volatile struct S1512 T1512;
 
 /* PREDICATE [TUPLE [ET_DOTNET_ASSEMBLY]] */
-typedef struct S1513 T1513;
+typedef volatile struct S1513 T1513;
 
 /* TUPLE [DS_HASH_SET [ET_DOTNET_ASSEMBLY]] */
-typedef struct S1514 T1514;
+typedef volatile struct S1514 T1514;
 
 /* TUPLE [ET_INTERNAL_UNIVERSE] */
-typedef struct S1515 T1515;
+typedef volatile struct S1515 T1515;
 
 /* PROCEDURE [TUPLE [ET_INTERNAL_UNIVERSE]] */
-typedef struct S1516 T1516;
+typedef volatile struct S1516 T1516;
 
 /* TUPLE [PROCEDURE [TUPLE [ET_DOTNET_ASSEMBLY]], PREDICATE [TUPLE [ET_DOTNET_ASSEMBLY]]] */
-typedef struct S1517 T1517;
+typedef volatile struct S1517 T1517;
 
 /* TUPLE [ET_DOTNET_ASSEMBLIES] */
-typedef struct S1518 T1518;
+typedef volatile struct S1518 T1518;
 
 /* TUPLE [ET_SYSTEM_PROCESSOR] */
-typedef struct S1519 T1519;
+typedef volatile struct S1519 T1519;
 
 /* TUPLE [ET_CLUSTER] */
-typedef struct S1520 T1520;
+typedef volatile struct S1520 T1520;
 
 /* PROCEDURE [TUPLE [ET_CLUSTER]] */
-typedef struct S1521 T1521;
+typedef volatile struct S1521 T1521;
 
 /* TUPLE [ET_ECF_SYSTEM] */
-typedef struct S1522 T1522;
+typedef volatile struct S1522 T1522;
 
 /* DS_HASH_SET [ET_INTERNAL_UNIVERSE] */
-typedef struct S1523 T1523;
+typedef volatile struct S1523 T1523;
 
 /* TUPLE [ET_AST_PROCESSOR] */
-typedef struct S1524 T1524;
+typedef volatile struct S1524 T1524;
 
 /* TUPLE [ET_ADAPTED_DOTNET_ASSEMBLY] */
-typedef struct S1525 T1525;
+typedef volatile struct S1525 T1525;
 
 /* PROCEDURE [TUPLE [ET_ADAPTED_DOTNET_ASSEMBLY]] */
-typedef struct S1526 T1526;
+typedef volatile struct S1526 T1526;
 
 /* ET_ANCESTORS_STATUS_CHECKER */
-typedef struct S1527 T1527;
+typedef volatile struct S1527 T1527;
 
 /* ET_FLATTENING_STATUS_CHECKER */
-typedef struct S1528 T1528;
+typedef volatile struct S1528 T1528;
 
 /* ET_INTERFACE_STATUS_CHECKER */
-typedef struct S1529 T1529;
+typedef volatile struct S1529 T1529;
 
 /* ET_IMPLEMENTATION_STATUS_CHECKER */
-typedef struct S1530 T1530;
+typedef volatile struct S1530 T1530;
 
 /* TUPLE [ET_ANCESTORS_STATUS_CHECKER] */
-typedef struct S1531 T1531;
+typedef volatile struct S1531 T1531;
 
 /* TUPLE [ET_FLATTENING_STATUS_CHECKER] */
-typedef struct S1532 T1532;
+typedef volatile struct S1532 T1532;
 
 /* TUPLE [ET_INTERFACE_STATUS_CHECKER] */
-typedef struct S1533 T1533;
+typedef volatile struct S1533 T1533;
 
 /* TUPLE [ET_IMPLEMENTATION_STATUS_CHECKER] */
-typedef struct S1534 T1534;
+typedef volatile struct S1534 T1534;
 
 /* TUPLE [BOOLEAN] */
-typedef struct S1535 T1535;
+typedef volatile struct S1535 T1535;
 
 /* TUPLE [PROCEDURE [TUPLE [ET_CLUSTER]]] */
-typedef struct S1538 T1538;
+typedef volatile struct S1538 T1538;
 
 /* TUPLE [DS_HASH_SET [ET_INTERNAL_UNIVERSE]] */
-typedef struct S1542 T1542;
+typedef volatile struct S1542 T1542;
 
 /* TUPLE [PROCEDURE [TUPLE [ET_MASTER_CLASS]]] */
-typedef struct S1543 T1543;
+typedef volatile struct S1543 T1543;
 
 /* ET_PARENTHESIS_EXPRESSION */
-typedef struct S1544 T1544;
+typedef volatile struct S1544 T1544;
 
 /* TYPED_POINTER [NATURAL_8] */
-typedef struct S1545 T1545;
+typedef volatile struct S1545 T1545;
 extern T0* GE_boxed1545(TC* ac, T1545 a1);
 extern T0* GE_boxed_pointer1545(TC* ac, T1545* a1);
-typedef struct Sb1545 Tb1545;
+typedef volatile struct Sb1545 Tb1545;
 
 /* TYPED_POINTER [NATURAL_16] */
-typedef struct S1546 T1546;
+typedef volatile struct S1546 T1546;
 extern T0* GE_boxed1546(TC* ac, T1546 a1);
 extern T0* GE_boxed_pointer1546(TC* ac, T1546* a1);
-typedef struct Sb1546 Tb1546;
+typedef volatile struct Sb1546 Tb1546;
 
 /* DS_HASH_SET [ET_LIBRARY] */
-typedef struct S1547 T1547;
+typedef volatile struct S1547 T1547;
 
 /* TUPLE [DS_HASH_SET [ET_LIBRARY]] */
-typedef struct S1548 T1548;
+typedef volatile struct S1548 T1548;
 
 /* SPECIAL [ET_RENAME_ITEM] */
-typedef struct S1552 T1552;
+typedef volatile struct S1552 T1552;
 
 /* KL_SPECIAL_ROUTINES [ET_RENAME_ITEM] */
-typedef struct S1553 T1553;
+typedef volatile struct S1553 T1553;
 
 /* SPECIAL [ET_EXPORT] */
-typedef struct S1555 T1555;
+typedef volatile struct S1555 T1555;
 
 /* KL_SPECIAL_ROUTINES [ET_EXPORT] */
-typedef struct S1556 T1556;
+typedef volatile struct S1556 T1556;
 
 /* ET_CLUSTER_DEPENDENCE_CONSTRAINT */
-typedef struct S1559 T1559;
+typedef volatile struct S1559 T1559;
 
 /* ET_PARENT_FEATURE */
-typedef struct S1561 T1561;
+typedef volatile struct S1561 T1561;
 
 /* DS_QUICK_SORTER [ET_QUERY] */
-typedef struct S1562 T1562;
+typedef volatile struct S1562 T1562;
 
 /* DS_QUICK_SORTER [ET_PROCEDURE] */
-typedef struct S1563 T1563;
+typedef volatile struct S1563 T1563;
 
 /* ET_INHERITED_FEATURE */
-typedef struct S1564 T1564;
+typedef volatile struct S1564 T1564;
 
 /* ET_REDECLARED_FEATURE */
-typedef struct S1566 T1566;
+typedef volatile struct S1566 T1566;
 
 /* KL_CHARACTER_BUFFER */
-typedef struct S1574 T1574;
+typedef volatile struct S1574 T1574;
 
 /* SPECIAL [ET_AGENT_ARGUMENT_OPERAND_ITEM] */
-typedef struct S1576 T1576;
+typedef volatile struct S1576 T1576;
 
 /* KL_SPECIAL_ROUTINES [ET_AGENT_ARGUMENT_OPERAND_ITEM] */
-typedef struct S1577 T1577;
+typedef volatile struct S1577 T1577;
 
 /* SPECIAL [ET_ALIAS_NAME] */
-typedef struct S1578 T1578;
+typedef volatile struct S1578 T1578;
 
 /* KL_SPECIAL_ROUTINES [ET_ALIAS_NAME] */
-typedef struct S1579 T1579;
+typedef volatile struct S1579 T1579;
 
 /* ET_AGENT_IMPLICIT_CURRENT_TARGET */
-typedef struct S1580 T1580;
+typedef volatile struct S1580 T1580;
 
 /* SPECIAL [ET_CHOICE_ITEM] */
-typedef struct S1582 T1582;
+typedef volatile struct S1582 T1582;
 
 /* KL_SPECIAL_ROUTINES [ET_CHOICE_ITEM] */
-typedef struct S1583 T1583;
+typedef volatile struct S1583 T1583;
 
 /* SPECIAL [ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM] */
-typedef struct S1584 T1584;
+typedef volatile struct S1584 T1584;
 
 /* KL_SPECIAL_ROUTINES [ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM] */
-typedef struct S1586 T1586;
+typedef volatile struct S1586 T1586;
 
 /* SPECIAL [ET_CONVERT_FEATURE_ITEM] */
-typedef struct S1587 T1587;
+typedef volatile struct S1587 T1587;
 
 /* KL_SPECIAL_ROUTINES [ET_CONVERT_FEATURE_ITEM] */
-typedef struct S1589 T1589;
+typedef volatile struct S1589 T1589;
 
 /* SPECIAL [ET_ELSEIF_EXPRESSION] */
-typedef struct S1590 T1590;
+typedef volatile struct S1590 T1590;
 
 /* KL_SPECIAL_ROUTINES [ET_ELSEIF_EXPRESSION] */
-typedef struct S1591 T1591;
+typedef volatile struct S1591 T1591;
 
 /* SPECIAL [ET_ELSEIF_PART] */
-typedef struct S1592 T1592;
+typedef volatile struct S1592 T1592;
 
 /* KL_SPECIAL_ROUTINES [ET_ELSEIF_PART] */
-typedef struct S1593 T1593;
+typedef volatile struct S1593 T1593;
 
 /* SPECIAL [ET_FEATURE_CLAUSE] */
-typedef struct S1594 T1594;
+typedef volatile struct S1594 T1594;
 
 /* KL_SPECIAL_ROUTINES [ET_FEATURE_CLAUSE] */
-typedef struct S1595 T1595;
+typedef volatile struct S1595 T1595;
 
 /* SPECIAL [ET_FORMAL_ARGUMENT_ITEM] */
-typedef struct S1596 T1596;
+typedef volatile struct S1596 T1596;
 
 /* KL_SPECIAL_ROUTINES [ET_FORMAL_ARGUMENT_ITEM] */
-typedef struct S1598 T1598;
+typedef volatile struct S1598 T1598;
 
 /* SPECIAL [ET_FORMAL_PARAMETER_ITEM] */
-typedef struct S1599 T1599;
+typedef volatile struct S1599 T1599;
 
 /* KL_SPECIAL_ROUTINES [ET_FORMAL_PARAMETER_ITEM] */
-typedef struct S1600 T1600;
+typedef volatile struct S1600 T1600;
 
 /* SPECIAL [ET_LOCAL_VARIABLE_ITEM] */
-typedef struct S1601 T1601;
+typedef volatile struct S1601 T1601;
 
 /* KL_SPECIAL_ROUTINES [ET_LOCAL_VARIABLE_ITEM] */
-typedef struct S1603 T1603;
+typedef volatile struct S1603 T1603;
 
 /* SPECIAL [ET_MANIFEST_STRING_ITEM] */
-typedef struct S1605 T1605;
+typedef volatile struct S1605 T1605;
 
 /* KL_SPECIAL_ROUTINES [ET_MANIFEST_STRING_ITEM] */
-typedef struct S1606 T1606;
+typedef volatile struct S1606 T1606;
 
 /* SPECIAL [ET_NOTE_ITEM] */
-typedef struct S1608 T1608;
+typedef volatile struct S1608 T1608;
 
 /* KL_SPECIAL_ROUTINES [ET_NOTE_ITEM] */
-typedef struct S1609 T1609;
+typedef volatile struct S1609 T1609;
 
 /* SPECIAL [ET_NOTE_TERM_ITEM] */
-typedef struct S1610 T1610;
+typedef volatile struct S1610 T1610;
 
 /* KL_SPECIAL_ROUTINES [ET_NOTE_TERM_ITEM] */
-typedef struct S1611 T1611;
+typedef volatile struct S1611 T1611;
 
 /* SPECIAL [ET_PARENT_LIST] */
-typedef struct S1612 T1612;
+typedef volatile struct S1612 T1612;
 
 /* KL_SPECIAL_ROUTINES [ET_PARENT_LIST] */
-typedef struct S1613 T1613;
+typedef volatile struct S1613 T1613;
 
 /* SPECIAL [ET_TYPE_CONSTRAINT_ITEM] */
-typedef struct S1615 T1615;
+typedef volatile struct S1615 T1615;
 
 /* KL_SPECIAL_ROUTINES [ET_TYPE_CONSTRAINT_ITEM] */
-typedef struct S1616 T1616;
+typedef volatile struct S1616 T1616;
 
 /* SPECIAL [ET_WHEN_EXPRESSION] */
-typedef struct S1617 T1617;
+typedef volatile struct S1617 T1617;
 
 /* KL_SPECIAL_ROUTINES [ET_WHEN_EXPRESSION] */
-typedef struct S1618 T1618;
+typedef volatile struct S1618 T1618;
 
 /* SPECIAL [ET_WHEN_PART] */
-typedef struct S1619 T1619;
+typedef volatile struct S1619 T1619;
 
 /* KL_SPECIAL_ROUTINES [ET_WHEN_PART] */
-typedef struct S1620 T1620;
+typedef volatile struct S1620 T1620;
 
 /* XM_LINKED_LIST [XM_ELEMENT_NODE] */
-typedef struct S1622 T1622;
+typedef volatile struct S1622 T1622;
 
 /* UC_STRING_EQUALITY_TESTER */
-typedef struct S1624 T1624;
+typedef volatile struct S1624 T1624;
 
 /* DS_LINKED_LIST_CURSOR [DS_PAIR [XM_POSITION, XM_NODE]] */
-typedef struct S1626 T1626;
+typedef volatile struct S1626 T1626;
 
 /* DS_LINKED_LIST [DS_PAIR [XM_POSITION, XM_NODE]] */
-typedef struct S1627 T1627;
+typedef volatile struct S1627 T1627;
 
 /* DS_PAIR [XM_POSITION, XM_NODE] */
-typedef struct S1628 T1628;
+typedef volatile struct S1628 T1628;
 
 /* XM_EIFFEL_INPUT_STREAM */
-typedef struct S1629 T1629;
+typedef volatile struct S1629 T1629;
 
 /* DS_LINKED_LIST_CURSOR [XM_DOCUMENT_NODE] */
-typedef struct S1630 T1630;
+typedef volatile struct S1630 T1630;
 
 /* DS_ARRAYED_LIST [ET_ECF_TARGET] */
-typedef struct S1631 T1631;
+typedef volatile struct S1631 T1631;
 
 /* DS_ARRAYED_LIST [ET_ADAPTED_UNIVERSE] */
-typedef struct S1632 T1632;
+typedef volatile struct S1632 T1632;
 
 /* DS_ARRAYED_LIST [ET_ECF_TARGET_PARENT] */
-typedef struct S1634 T1634;
+typedef volatile struct S1634 T1634;
 
 /* DS_ARRAYED_LIST [ET_ECF_CLUSTER] */
-typedef struct S1635 T1635;
+typedef volatile struct S1635 T1635;
 
 /* DS_HASH_TABLE_CURSOR [ET_DYNAMIC_TYPE_SET, ET_DYNAMIC_TYPE] */
-typedef struct S1636 T1636;
+typedef volatile struct S1636 T1636;
 
 /* INTEGER_OVERFLOW_CHECKER */
-typedef struct S1643 T1643;
+typedef volatile struct S1643 T1643;
 
 /* CONSOLE */
-typedef struct S1644 T1644;
+typedef volatile struct S1644 T1644;
 
 /* C_DATE */
-typedef struct S1645 T1645;
+typedef volatile struct S1645 T1645;
 
 /* DS_HASH_TABLE_CURSOR [INTEGER_32, STRING_8] */
-typedef struct S1647 T1647;
+typedef volatile struct S1647 T1647;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_NOTE_ELEMENT] */
-typedef struct S1648 T1648;
+typedef volatile struct S1648 T1648;
 
 /* SPECIAL [ET_ECF_NOTE_ELEMENT] */
-typedef struct S1649 T1649;
+typedef volatile struct S1649 T1649;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_NOTE_ELEMENT] */
-typedef struct S1650 T1650;
+typedef volatile struct S1650 T1650;
 
 /* ET_DYNAMIC_TARGET_LIST */
-typedef struct S1652 T1652;
+typedef volatile struct S1652 T1652;
 
 /* DS_ARRAYED_STACK [YY_BUFFER] */
-typedef struct S1653 T1653;
+typedef volatile struct S1653 T1653;
 
 /* UT_SYNTAX_ERROR */
-typedef struct S1654 T1654;
+typedef volatile struct S1654 T1654;
 
 /* UT_TOO_MANY_INCLUDES_ERROR */
-typedef struct S1655 T1655;
+typedef volatile struct S1655 T1655;
 
 /* ARRAY [detachable STRING_8] */
-typedef struct S1656 T1656;
+typedef volatile struct S1656 T1656;
 
 /* SPECIAL [ET_ADAPTED_LIBRARY] */
-typedef struct S1658 T1658;
+typedef volatile struct S1658 T1658;
 
 /* KL_SPECIAL_ROUTINES [ET_ADAPTED_LIBRARY] */
-typedef struct S1659 T1659;
+typedef volatile struct S1659 T1659;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ADAPTED_LIBRARY] */
-typedef struct S1660 T1660;
+typedef volatile struct S1660 T1660;
 
 /* SPECIAL [ET_ADAPTED_DOTNET_ASSEMBLY] */
-typedef struct S1661 T1661;
+typedef volatile struct S1661 T1661;
 
 /* KL_SPECIAL_ROUTINES [ET_ADAPTED_DOTNET_ASSEMBLY] */
-typedef struct S1662 T1662;
+typedef volatile struct S1662 T1662;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ADAPTED_DOTNET_ASSEMBLY] */
-typedef struct S1663 T1663;
+typedef volatile struct S1663 T1663;
 
 /* SPECIAL [ET_TYPE_ITEM] */
-typedef struct S1664 T1664;
+typedef volatile struct S1664 T1664;
 
 /* KL_SPECIAL_ROUTINES [ET_TYPE_ITEM] */
-typedef struct S1665 T1665;
+typedef volatile struct S1665 T1665;
 
 /* DS_HASH_TABLE [INTEGER_32, ET_CLASS] */
-typedef struct S1666 T1666;
+typedef volatile struct S1666 T1666;
 
 /* DS_HASH_TABLE_CURSOR [ET_BASE_TYPE, ET_CLASS] */
-typedef struct S1667 T1667;
+typedef volatile struct S1667 T1667;
 
 /* DS_ARRAYED_LIST [ET_BASE_TYPE_CONSTRAINT] */
-typedef struct S1669 T1669;
+typedef volatile struct S1669 T1669;
 
 /* DS_ARRAYED_LIST [NATURAL_32] */
-typedef struct S1670 T1670;
+typedef volatile struct S1670 T1670;
 
 /* ET_BASE_TYPE_CONSTRAINT_LIST */
-typedef struct S1671 T1671;
+typedef volatile struct S1671 T1671;
 
 /* DS_HASH_TABLE_CURSOR [ET_FLATTENED_FEATURE, ET_FEATURE_NAME] */
-typedef struct S1672 T1672;
+typedef volatile struct S1672 T1672;
 
 /* SPECIAL [ET_FLATTENED_FEATURE] */
-typedef struct S1673 T1673;
+typedef volatile struct S1673 T1673;
 
 /* SPECIAL [ET_FEATURE_NAME] */
-typedef struct S1676 T1676;
+typedef volatile struct S1676 T1676;
 
 /* KL_SPECIAL_ROUTINES [ET_FLATTENED_FEATURE] */
-typedef struct S1677 T1677;
+typedef volatile struct S1677 T1677;
 
 /* KL_SPECIAL_ROUTINES [ET_FEATURE_NAME] */
-typedef struct S1678 T1678;
+typedef volatile struct S1678 T1678;
 
 /* DS_HASH_TABLE_CURSOR [ET_FLATTENED_FEATURE, ET_ALIAS_NAME] */
-typedef struct S1680 T1680;
+typedef volatile struct S1680 T1680;
 
 /* KL_SPECIAL_ROUTINES [ET_CLIENT_LIST] */
-typedef struct S1681 T1681;
+typedef volatile struct S1681 T1681;
 
 /* SPECIAL [ET_CLIENT_LIST] */
-typedef struct S1682 T1682;
+typedef volatile struct S1682 T1682;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_CLIENT_LIST] */
-typedef struct S1683 T1683;
+typedef volatile struct S1683 T1683;
 
 /* DS_HASH_TABLE_CURSOR [ET_CLIENT, ET_CLASS] */
-typedef struct S1685 T1685;
+typedef volatile struct S1685 T1685;
 
 /* KL_SPECIAL_ROUTINES [ET_CLIENT] */
-typedef struct S1686 T1686;
+typedef volatile struct S1686 T1686;
 
 /* SPECIAL [ET_CLIENT] */
-typedef struct S1687 T1687;
+typedef volatile struct S1687 T1687;
 
 /* DS_HASH_SET [ET_FEATURE_NAME] */
-typedef struct S1688 T1688;
+typedef volatile struct S1688 T1688;
 
 /* DS_HASH_TABLE [BOOLEAN, ET_FEATURE_NAME] */
-typedef struct S1689 T1689;
+typedef volatile struct S1689 T1689;
 
 /* DS_HASH_TABLE [ET_REPLICABLE_FEATURE, INTEGER_32] */
-typedef struct S1690 T1690;
+typedef volatile struct S1690 T1690;
 
 /* ET_REPLICATED_FEATURE */
-typedef struct S1692 T1692;
+typedef volatile struct S1692 T1692;
 
 /* DS_LINKED_LIST [ET_ADAPTED_FEATURE] */
-typedef struct S1693 T1693;
+typedef volatile struct S1693 T1693;
 
 /* DS_ARRAYED_LIST [ET_PARENT_FEATURE] */
-typedef struct S1694 T1694;
+typedef volatile struct S1694 T1694;
 
 /* ET_DOTNET_SIGNATURE_TESTER */
-typedef struct S1695 T1695;
+typedef volatile struct S1695 T1695;
 
 /* DS_HASH_SET [ET_DOTNET_FEATURE] */
-typedef struct S1696 T1696;
+typedef volatile struct S1696 T1696;
 
 /* DS_HASH_TABLE [DS_LINKED_LIST [ET_DOTNET_FEATURE], ET_DOTNET_FEATURE] */
-typedef struct S1698 T1698;
+typedef volatile struct S1698 T1698;
 
 /* DS_LINKED_LIST [ET_DOTNET_FEATURE] */
-typedef struct S1700 T1700;
+typedef volatile struct S1700 T1700;
 
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_LIKE_FEATURE] */
-typedef struct S1701 T1701;
+typedef volatile struct S1701 T1701;
 
 /* DS_ARRAYED_LIST [ET_LIKE_FEATURE] */
-typedef struct S1702 T1702;
+typedef volatile struct S1702 T1702;
 
 /* DS_LINKED_LIST_CURSOR [ET_PARENT_FEATURE] */
-typedef struct S1703 T1703;
+typedef volatile struct S1703 T1703;
 
 /* DS_LINKED_LIST [ET_PARENT_FEATURE] */
-typedef struct S1704 T1704;
+typedef volatile struct S1704 T1704;
 
 /* DS_HASH_TABLE [DS_HASH_TABLE [TUPLE [detachable ARRAY [ET_TYPE], detachable ET_TYPE, NATURAL_8], ET_FEATURE_NAME], NATURAL_8] */
-typedef struct S1705 T1705;
+typedef volatile struct S1705 T1705;
 
 /* DS_HASH_TABLE_CURSOR [ET_FEATURE, INTEGER_32] */
-typedef struct S1706 T1706;
+typedef volatile struct S1706 T1706;
 
 /* TYPE [ET_FEATURE] */
 #define T1707 EIF_TYPE_OBJ
 
 /* DS_HASH_SET_CURSOR [ET_CLASS] */
-typedef struct S1709 T1709;
+typedef volatile struct S1709 T1709;
 
 /* TYPE [ET_CLASS] */
 #define T1710 EIF_TYPE_OBJ
 
 /* DS_HASH_TABLE_CURSOR [ET_RENAME, ET_FEATURE_NAME] */
-typedef struct S1711 T1711;
+typedef volatile struct S1711 T1711;
 
 /* SPECIAL [ET_RENAME] */
-typedef struct S1712 T1712;
+typedef volatile struct S1712 T1712;
 
 /* KL_SPECIAL_ROUTINES [ET_RENAME] */
-typedef struct S1715 T1715;
+typedef volatile struct S1715 T1715;
 
 /* TYPE [ET_RENAME] */
 #define T1716 EIF_TYPE_OBJ
@@ -7013,151 +7023,151 @@ typedef struct S1715 T1715;
 #define T1717 EIF_TYPE_OBJ
 
 /* DS_HASH_TABLE_CURSOR [ET_RENAME, ET_ALIAS_NAME] */
-typedef struct S1719 T1719;
+typedef volatile struct S1719 T1719;
 
 /* DS_HASH_SET_CURSOR [ET_PROCEDURE] */
-typedef struct S1720 T1720;
+typedef volatile struct S1720 T1720;
 
 /* DS_HASH_SET_CURSOR [ET_QUERY] */
-typedef struct S1721 T1721;
+typedef volatile struct S1721 T1721;
 
 /* KL_SPECIAL_ROUTINES [NATURAL_8] */
-typedef struct S1724 T1724;
+typedef volatile struct S1724 T1724;
 
 /* DS_HASH_TABLE_CURSOR [NATURAL_8, ET_CLASS_NAME] */
-typedef struct S1725 T1725;
+typedef volatile struct S1725 T1725;
 
 /* XM_EIFFEL_CHARACTER_ENTITY */
-typedef struct S1726 T1726;
+typedef volatile struct S1726 T1726;
 
 /* DS_BILINKABLE [XM_POSITION] */
-typedef struct S1727 T1727;
+typedef volatile struct S1727 T1727;
 
 /* DS_BILINKED_LIST_CURSOR [XM_POSITION] */
-typedef struct S1728 T1728;
+typedef volatile struct S1728 T1728;
 
 /* DS_LINKABLE [XM_EIFFEL_SCANNER] */
-typedef struct S1729 T1729;
+typedef volatile struct S1729 T1729;
 
 /* SPECIAL [XM_EIFFEL_ENTITY_DEF] */
-typedef struct S1730 T1730;
+typedef volatile struct S1730 T1730;
 
 /* DS_HASH_TABLE_CURSOR [XM_EIFFEL_ENTITY_DEF, STRING_8] */
-typedef struct S1733 T1733;
+typedef volatile struct S1733 T1733;
 
 /* KL_SPECIAL_ROUTINES [XM_EIFFEL_ENTITY_DEF] */
-typedef struct S1734 T1734;
+typedef volatile struct S1734 T1734;
 
 /* KL_EQUALITY_TESTER [XM_EIFFEL_PARSER_NAME] */
-typedef struct S1737 T1737;
+typedef volatile struct S1737 T1737;
 
 /* DS_HASH_SET_CURSOR [XM_EIFFEL_PARSER_NAME] */
-typedef struct S1738 T1738;
+typedef volatile struct S1738 T1738;
 
 /* DS_BILINKED_LIST [XM_DTD_ELEMENT_CONTENT] */
-typedef struct S1739 T1739;
+typedef volatile struct S1739 T1739;
 
 /* DS_BILINKED_LIST_CURSOR [XM_DTD_ATTRIBUTE_CONTENT] */
-typedef struct S1740 T1740;
+typedef volatile struct S1740 T1740;
 
 /* DS_BILINKABLE [XM_DTD_ATTRIBUTE_CONTENT] */
-typedef struct S1741 T1741;
+typedef volatile struct S1741 T1741;
 
 /* DS_BILINKED_LIST_CURSOR [STRING_8] */
-typedef struct S1742 T1742;
+typedef volatile struct S1742 T1742;
 
 /* DS_BILINKABLE [STRING_8] */
-typedef struct S1743 T1743;
+typedef volatile struct S1743 T1743;
 
 /* XM_NAMESPACE_RESOLVER_CONTEXT */
-typedef struct S1744 T1744;
+typedef volatile struct S1744 T1744;
 
 /* DS_LINKED_QUEUE [detachable STRING_8] */
-typedef struct S1747 T1747;
+typedef volatile struct S1747 T1747;
 
 /* DS_LINKED_QUEUE [STRING_8] */
-typedef struct S1748 T1748;
+typedef volatile struct S1748 T1748;
 
 /* KL_EQUALITY_TESTER [XM_NAMESPACE] */
-typedef struct S1749 T1749;
+typedef volatile struct S1749 T1749;
 
 /* DS_HASH_SET_CURSOR [XM_NAMESPACE] */
-typedef struct S1750 T1750;
+typedef volatile struct S1750 T1750;
 
 /* KL_SPECIAL_ROUTINES [XM_NAMESPACE] */
-typedef struct S1751 T1751;
+typedef volatile struct S1751 T1751;
 
 /* SPECIAL [XM_NAMESPACE] */
-typedef struct S1752 T1752;
+typedef volatile struct S1752 T1752;
 
 /* DS_LINKABLE [XM_DOCUMENT_NODE] */
-typedef struct S1753 T1753;
+typedef volatile struct S1753 T1753;
 
 /* DS_ARRAYED_LIST [ET_DOTNET_ASSEMBLY] */
-typedef struct S1755 T1755;
+typedef volatile struct S1755 T1755;
 
 /* DS_HASH_TABLE_CURSOR [ET_DYNAMIC_FEATURE, INTEGER_32] */
-typedef struct S1756 T1756;
+typedef volatile struct S1756 T1756;
 
 /* SPECIAL [ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL] */
-typedef struct S1758 T1758;
+typedef volatile struct S1758 T1758;
 
 /* SPECIAL [ET_CALL_NAME] */
-typedef struct S1760 T1760;
+typedef volatile struct S1760 T1760;
 
 /* DS_HASH_TABLE_CURSOR [ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL, ET_CALL_NAME] */
-typedef struct S1762 T1762;
+typedef volatile struct S1762 T1762;
 
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL] */
-typedef struct S1763 T1763;
+typedef volatile struct S1763 T1763;
 
 /* KL_SPECIAL_ROUTINES [ET_CALL_NAME] */
-typedef struct S1764 T1764;
+typedef volatile struct S1764 T1764;
 
 /* SPECIAL [ET_DYNAMIC_QUALIFIED_QUERY_CALL] */
-typedef struct S1765 T1765;
+typedef volatile struct S1765 T1765;
 
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_QUALIFIED_QUERY_CALL] */
-typedef struct S1767 T1767;
+typedef volatile struct S1767 T1767;
 
 /* DS_HASH_TABLE_CURSOR [ET_DYNAMIC_QUALIFIED_QUERY_CALL, ET_CALL_NAME] */
-typedef struct S1768 T1768;
+typedef volatile struct S1768 T1768;
 
 /* SPECIAL [ET_SYSTEM_PROCESSOR] */
-typedef struct S1769 T1769;
+typedef volatile struct S1769 T1769;
 
 /* KL_SPECIAL_ROUTINES [ET_SYSTEM_PROCESSOR] */
-typedef struct S1770 T1770;
+typedef volatile struct S1770 T1770;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_SYSTEM_PROCESSOR] */
-typedef struct S1771 T1771;
+typedef volatile struct S1771 T1771;
 
 /* KL_SPECIAL_ROUTINES [ET_ADAPTED_CLASS] */
-typedef struct S1772 T1772;
+typedef volatile struct S1772 T1772;
 
 /* SPECIAL [ET_ADAPTED_CLASS] */
-typedef struct S1774 T1774;
+typedef volatile struct S1774 T1774;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ADAPTED_CLASS] */
-typedef struct S1775 T1775;
+typedef volatile struct S1775 T1775;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_NAMED_OBJECT_TEST] */
-typedef struct S1776 T1776;
+typedef volatile struct S1776 T1776;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ITERATION_COMPONENT] */
-typedef struct S1777 T1777;
+typedef volatile struct S1777 T1777;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_INLINE_SEPARATE_ARGUMENT] */
-typedef struct S1778 T1778;
+typedef volatile struct S1778 T1778;
 
 /* KL_SPECIAL_ROUTINES [RX_CHARACTER_SET] */
-typedef struct S1779 T1779;
+typedef volatile struct S1779 T1779;
 
 /* DS_ARRAYED_LIST_CURSOR [RX_CHARACTER_SET] */
-typedef struct S1780 T1780;
+typedef volatile struct S1780 T1780;
 
 /* KL_SPECIAL_ROUTINES [NATURAL_64] */
-typedef struct S1785 T1785;
+typedef volatile struct S1785 T1785;
 
 /* TYPE [NATURAL_64] */
 #define T1786 EIF_TYPE_OBJ
@@ -7166,130 +7176,130 @@ typedef struct S1785 T1785;
 #define T1787 EIF_TYPE_OBJ
 
 /* DS_HASH_TABLE_CURSOR [INTEGER_32, ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S1789 T1789;
+typedef volatile struct S1789 T1789;
 
 /* SPECIAL [detachable DS_LINKABLE [INTEGER_32]] */
-typedef struct S1790 T1790;
+typedef volatile struct S1790 T1790;
 
 /* KL_SPECIAL_ROUTINES [detachable DS_LINKABLE [INTEGER_32]] */
-typedef struct S1791 T1791;
+typedef volatile struct S1791 T1791;
 
 /* DS_ARRAYED_LIST_CURSOR [detachable DS_LINKABLE [INTEGER_32]] */
-typedef struct S1792 T1792;
+typedef volatile struct S1792 T1792;
 
 /* KL_STRING_INPUT_STREAM */
-typedef struct S1794 T1794;
+typedef volatile struct S1794 T1794;
 
 /* UT_TRISTATE */
-typedef struct S1796 T1796;
+typedef volatile struct S1796 T1796;
 
 /* KL_AGENT_ROUTINES [ANY] */
-typedef struct S1797 T1797;
+typedef volatile struct S1797 T1797;
 
 /* TUPLE [UT_TRISTATE] */
-typedef struct S1798 T1798;
+typedef volatile struct S1798 T1798;
 
 /* TUPLE [KL_AGENT_ROUTINES [ANY], PROCEDURE [TUPLE]] */
-typedef struct S1799 T1799;
+typedef volatile struct S1799 T1799;
 
 /* PREDICATE [TUPLE [ET_MASTER_CLASS]] */
-typedef struct S1800 T1800;
+typedef volatile struct S1800 T1800;
 
 /* PREDICATE [TUPLE] */
-typedef struct S1801 T1801;
+typedef volatile struct S1801 T1801;
 
 /* DS_HASH_TABLE [INTEGER_32, ET_UNIVERSE] */
-typedef struct S1803 T1803;
+typedef volatile struct S1803 T1803;
 
 /* DS_HASH_TABLE_CURSOR [INTEGER_32, ET_UNIVERSE] */
-typedef struct S1804 T1804;
+typedef volatile struct S1804 T1804;
 
 /* TUPLE [ET_ECF_SYSTEM, DS_HASH_TABLE [INTEGER_32, ET_UNIVERSE], INTEGER_32] */
-typedef struct S1805 T1805;
+typedef volatile struct S1805 T1805;
 
 /* KL_AGENT_ROUTINES [ET_UNIVERSE] */
-typedef struct S1806 T1806;
+typedef volatile struct S1806 T1806;
 
 /* PREDICATE [TUPLE [ET_UNIVERSE]] */
-typedef struct S1807 T1807;
+typedef volatile struct S1807 T1807;
 
 /* TUPLE [DS_HASH_TABLE [INTEGER_32, ET_UNIVERSE]] */
-typedef struct S1808 T1808;
+typedef volatile struct S1808 T1808;
 
 /* TUPLE [KL_AGENT_ROUTINES [ET_UNIVERSE], PREDICATE [TUPLE [ET_UNIVERSE]]] */
-typedef struct S1809 T1809;
+typedef volatile struct S1809 T1809;
 
 /* TUPLE [PROCEDURE [TUPLE [ET_MASTER_CLASS]], FUNCTION [TUPLE, BOOLEAN]] */
-typedef struct S1811 T1811;
+typedef volatile struct S1811 T1811;
 
 /* TUPLE [PROCEDURE [TUPLE [ET_MASTER_CLASS]], FUNCTION [TUPLE [ET_MASTER_CLASS], BOOLEAN]] */
-typedef struct S1812 T1812;
+typedef volatile struct S1812 T1812;
 
 /* TUPLE [PROCEDURE [TUPLE [ET_MASTER_CLASS]], FUNCTION [TUPLE [ET_MASTER_CLASS], BOOLEAN], FUNCTION [TUPLE, BOOLEAN]] */
-typedef struct S1813 T1813;
+typedef volatile struct S1813 T1813;
 
 /* ET_DYNAMIC_AGENT_OPERAND_PUSH_TYPE_SET */
-typedef struct S1814 T1814;
+typedef volatile struct S1814 T1814;
 
 /* TUPLE [ET_MASTER_CLASS, ET_SYSTEM_PROCESSOR] */
-typedef struct S1821 T1821;
+typedef volatile struct S1821 T1821;
 
 /* DS_CELL [detachable ET_CLASS] */
-typedef struct S1822 T1822;
+typedef volatile struct S1822 T1822;
 
 /* TUPLE [DS_CELL [detachable ET_CLASS]] */
-typedef struct S1823 T1823;
+typedef volatile struct S1823 T1823;
 
 /* TUPLE [ET_EIFFEL_PREPARSER, DS_ARRAYED_LIST [STRING_8]] */
-typedef struct S1825 T1825;
+typedef volatile struct S1825 T1825;
 
 /* ET_SEEDED_QUERY_COMPARATOR */
-typedef struct S1827 T1827;
+typedef volatile struct S1827 T1827;
 
 /* ET_SEEDED_PROCEDURE_COMPARATOR */
-typedef struct S1830 T1830;
+typedef volatile struct S1830 T1830;
 
 /* TUPLE [ET_CLIENT_LIST] */
-typedef struct S1834 T1834;
+typedef volatile struct S1834 T1834;
 
 /* ET_STANDARD_ONCE_KEYS */
-typedef struct S1838 T1838;
+typedef volatile struct S1838 T1838;
 
 /* XM_COMMENT */
-typedef struct S1840 T1840;
+typedef volatile struct S1840 T1840;
 
 /* XM_PROCESSING_INSTRUCTION */
-typedef struct S1841 T1841;
+typedef volatile struct S1841 T1841;
 
 /* XM_CHARACTER_DATA */
-typedef struct S1842 T1842;
+typedef volatile struct S1842 T1842;
 
 /* ET_LIKE_N */
-typedef struct S1844 T1844;
+typedef volatile struct S1844 T1844;
 
 /* ET_PARENTHESIS_SYMBOL */
-typedef struct S1859 T1859;
+typedef volatile struct S1859 T1859;
 
 /* ET_PARENTHESIS_INSTRUCTION */
-typedef struct S1862 T1862;
+typedef volatile struct S1862 T1862;
 
 /* ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST */
-typedef struct S1866 T1866;
+typedef volatile struct S1866 T1866;
 
 /* ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST */
-typedef struct S1867 T1867;
+typedef volatile struct S1867 T1867;
 
 /* ET_AGENT_IMPLICIT_OPEN_ARGUMENT */
-typedef struct S1868 T1868;
+typedef volatile struct S1868 T1868;
 
 /* ET_INFIX_CAST_EXPRESSION */
-typedef struct S1870 T1870;
+typedef volatile struct S1870 T1870;
 
 /* SPECIAL [ET_DYNAMIC_PRECURSOR] */
-typedef struct S1873 T1873;
+typedef volatile struct S1873 T1873;
 
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_PRECURSOR] */
-typedef struct S1874 T1874;
+typedef volatile struct S1874 T1874;
 
 /* TYPE [ET_NESTED_TYPE_CONTEXT] */
 #define T1876 EIF_TYPE_OBJ
@@ -7301,976 +7311,976 @@ typedef struct S1874 T1874;
 #define T1879 EIF_TYPE_OBJ
 
 /* DS_ARRAYED_LIST_CURSOR [ET_MASTER_CLASS] */
-typedef struct S1882 T1882;
+typedef volatile struct S1882 T1882;
 
 /* ET_BASE_TYPE_RENAME_CONSTRAINT */
-typedef struct S1884 T1884;
+typedef volatile struct S1884 T1884;
 
 /* DS_SPARSE_TABLE_KEYS [ET_CLIENT, ET_CLASS] */
-typedef struct S1887 T1887;
+typedef volatile struct S1887 T1887;
 
 /* SPECIAL [NATURAL_16] */
-typedef struct S1896 T1896;
+typedef volatile struct S1896 T1896;
 
 /* ARRAY [NATURAL_16] */
-typedef struct S1897 T1897;
+typedef volatile struct S1897 T1897;
 
 /* ARRAY [NATURAL_32] */
-typedef struct S1898 T1898;
+typedef volatile struct S1898 T1898;
 
 /* SPECIAL [detachable ET_FORMAL_PARAMETER_TYPE] */
-typedef struct S1899 T1899;
+typedef volatile struct S1899 T1899;
 
 /* KL_SPECIAL_ROUTINES [detachable ET_FORMAL_PARAMETER_TYPE] */
-typedef struct S1900 T1900;
+typedef volatile struct S1900 T1900;
 
 /* DS_ARRAYED_LIST_CURSOR [detachable ET_FORMAL_PARAMETER_TYPE] */
-typedef struct S1901 T1901;
+typedef volatile struct S1901 T1901;
 
 /* DS_ARRAYED_LIST [ET_ECF_ADAPTED_LIBRARY] */
-typedef struct S1902 T1902;
+typedef volatile struct S1902 T1902;
 
 /* DS_ARRAYED_LIST [ET_ECF_ADAPTED_DOTNET_ASSEMBLY] */
-typedef struct S1903 T1903;
+typedef volatile struct S1903 T1903;
 
 /* DS_ARRAYED_LIST [ET_ECF_FILE_RULE] */
-typedef struct S1904 T1904;
+typedef volatile struct S1904 T1904;
 
 /* DS_ARRAYED_LIST [ET_ECF_NAMESPACE] */
-typedef struct S1905 T1905;
+typedef volatile struct S1905 T1905;
 
 /* DS_ARRAYED_LIST [ET_ECF_EXTERNAL_CFLAG] */
-typedef struct S1906 T1906;
+typedef volatile struct S1906 T1906;
 
 /* DS_ARRAYED_LIST [ET_ECF_EXTERNAL_INCLUDE] */
-typedef struct S1907 T1907;
+typedef volatile struct S1907 T1907;
 
 /* DS_ARRAYED_LIST [ET_ECF_EXTERNAL_LIBRARY] */
-typedef struct S1908 T1908;
+typedef volatile struct S1908 T1908;
 
 /* DS_ARRAYED_LIST [ET_ECF_EXTERNAL_LINKER_FLAG] */
-typedef struct S1909 T1909;
+typedef volatile struct S1909 T1909;
 
 /* DS_ARRAYED_LIST [ET_ECF_EXTERNAL_MAKE] */
-typedef struct S1910 T1910;
+typedef volatile struct S1910 T1910;
 
 /* DS_ARRAYED_LIST [ET_ECF_EXTERNAL_OBJECT] */
-typedef struct S1911 T1911;
+typedef volatile struct S1911 T1911;
 
 /* DS_ARRAYED_LIST [ET_ECF_EXTERNAL_RESOURCE] */
-typedef struct S1912 T1912;
+typedef volatile struct S1912 T1912;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_ACTION] */
-typedef struct S1913 T1913;
+typedef volatile struct S1913 T1913;
 
 /* SPECIAL [ET_ECF_ACTION] */
-typedef struct S1914 T1914;
+typedef volatile struct S1914 T1914;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_ACTION] */
-typedef struct S1915 T1915;
+typedef volatile struct S1915 T1915;
 
 /* DS_ARRAYED_LIST [RX_PCRE_REGULAR_EXPRESSION] */
-typedef struct S1916 T1916;
+typedef volatile struct S1916 T1916;
 
 /* SPECIAL [ET_ECF_OPTIONS] */
-typedef struct S1917 T1917;
+typedef volatile struct S1917 T1917;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_OPTIONS] */
-typedef struct S1920 T1920;
+typedef volatile struct S1920 T1920;
 
 /* DS_HASH_TABLE_CURSOR [ET_ECF_OPTIONS, STRING_8] */
-typedef struct S1921 T1921;
+typedef volatile struct S1921 T1921;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_VISIBLE_CLASS] */
-typedef struct S1922 T1922;
+typedef volatile struct S1922 T1922;
 
 /* SPECIAL [ET_ECF_VISIBLE_CLASS] */
-typedef struct S1923 T1923;
+typedef volatile struct S1923 T1923;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_VISIBLE_CLASS] */
-typedef struct S1924 T1924;
+typedef volatile struct S1924 T1924;
 
 /* DS_ARRAYED_LIST [ET_ECF_ANDED_CONDITIONS] */
-typedef struct S1925 T1925;
+typedef volatile struct S1925 T1925;
 
 /* DS_ARRAYED_LIST [ET_ECF_CONDITION_ITEM] */
-typedef struct S1926 T1926;
+typedef volatile struct S1926 T1926;
 
 /* DS_HASH_SET_CURSOR [ET_DOTNET_ASSEMBLY] */
-typedef struct S1927 T1927;
+typedef volatile struct S1927 T1927;
 
 /* KL_SPECIAL_ROUTINES [ET_DOTNET_ASSEMBLY] */
-typedef struct S1928 T1928;
+typedef volatile struct S1928 T1928;
 
 /* SPECIAL [ET_DOTNET_ASSEMBLY] */
-typedef struct S1929 T1929;
+typedef volatile struct S1929 T1929;
 
 /* DS_HASH_SET_CURSOR [ET_INTERNAL_UNIVERSE] */
-typedef struct S1931 T1931;
+typedef volatile struct S1931 T1931;
 
 /* KL_SPECIAL_ROUTINES [ET_INTERNAL_UNIVERSE] */
-typedef struct S1933 T1933;
+typedef volatile struct S1933 T1933;
 
 /* SPECIAL [ET_INTERNAL_UNIVERSE] */
-typedef struct S1934 T1934;
+typedef volatile struct S1934 T1934;
 
 /* ET_CLASS_TYPE_STATUS_CHECKER1 */
-typedef struct S1935 T1935;
+typedef volatile struct S1935 T1935;
 
 /* ET_CLASS_TYPE_STATUS_CHECKER2 */
-typedef struct S1936 T1936;
+typedef volatile struct S1936 T1936;
 
 /* ET_QUALIFIED_ANCHORED_TYPE_STATUS_CHECKER */
-typedef struct S1937 T1937;
+typedef volatile struct S1937 T1937;
 
 /* ET_CLASS_TYPE_STATUS_CHECKER3 */
-typedef struct S1938 T1938;
+typedef volatile struct S1938 T1938;
 
 /* DS_HASH_SET_CURSOR [ET_LIBRARY] */
-typedef struct S1939 T1939;
+typedef volatile struct S1939 T1939;
 
 /* KL_SPECIAL_ROUTINES [ET_LIBRARY] */
-typedef struct S1940 T1940;
+typedef volatile struct S1940 T1940;
 
 /* SPECIAL [ET_LIBRARY] */
-typedef struct S1941 T1941;
+typedef volatile struct S1941 T1941;
 
 /* LX_DFA_WILDCARD */
-typedef struct S1942 T1942;
+typedef volatile struct S1942 T1942;
 
 /* DS_HASH_TABLE [LX_WILDCARD, STRING_8] */
-typedef struct S1943 T1943;
+typedef volatile struct S1943 T1943;
 
 /* DS_LINKED_QUEUE [CHARACTER_8] */
-typedef struct S1946 T1946;
+typedef volatile struct S1946 T1946;
 
 /* UC_UTF16_ROUTINES */
-typedef struct S1947 T1947;
+typedef volatile struct S1947 T1947;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_TARGET] */
-typedef struct S1948 T1948;
+typedef volatile struct S1948 T1948;
 
 /* SPECIAL [ET_ADAPTED_UNIVERSE] */
-typedef struct S1949 T1949;
+typedef volatile struct S1949 T1949;
 
 /* KL_SPECIAL_ROUTINES [ET_ADAPTED_UNIVERSE] */
-typedef struct S1950 T1950;
+typedef volatile struct S1950 T1950;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ADAPTED_UNIVERSE] */
-typedef struct S1951 T1951;
+typedef volatile struct S1951 T1951;
 
 /* SPECIAL [ET_ECF_TARGET_PARENT] */
-typedef struct S1952 T1952;
+typedef volatile struct S1952 T1952;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_TARGET_PARENT] */
-typedef struct S1953 T1953;
+typedef volatile struct S1953 T1953;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_TARGET_PARENT] */
-typedef struct S1954 T1954;
+typedef volatile struct S1954 T1954;
 
 /* SPECIAL [ET_ECF_CLUSTER] */
-typedef struct S1955 T1955;
+typedef volatile struct S1955 T1955;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_CLUSTER] */
-typedef struct S1956 T1956;
+typedef volatile struct S1956 T1956;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_CLUSTER] */
-typedef struct S1957 T1957;
+typedef volatile struct S1957 T1957;
 
 /* SPECIAL [ET_DYNAMIC_TARGET] */
-typedef struct S1958 T1958;
+typedef volatile struct S1958 T1958;
 
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_TARGET] */
-typedef struct S1959 T1959;
+typedef volatile struct S1959 T1959;
 
 /* SPECIAL [YY_BUFFER] */
-typedef struct S1960 T1960;
+typedef volatile struct S1960 T1960;
 
 /* KL_SPECIAL_ROUTINES [YY_BUFFER] */
-typedef struct S1961 T1961;
+typedef volatile struct S1961 T1961;
 
 /* TYPE [detachable STRING_8] */
 #define T1962 EIF_TYPE_OBJ
 
 /* DS_HASH_TABLE_CURSOR [INTEGER_32, ET_CLASS] */
-typedef struct S1963 T1963;
+typedef volatile struct S1963 T1963;
 
 /* SPECIAL [ET_BASE_TYPE_CONSTRAINT] */
-typedef struct S1964 T1964;
+typedef volatile struct S1964 T1964;
 
 /* KL_SPECIAL_ROUTINES [ET_BASE_TYPE_CONSTRAINT] */
-typedef struct S1965 T1965;
+typedef volatile struct S1965 T1965;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_BASE_TYPE_CONSTRAINT] */
-typedef struct S1966 T1966;
+typedef volatile struct S1966 T1966;
 
 /* DS_ARRAYED_LIST_CURSOR [NATURAL_32] */
-typedef struct S1967 T1967;
+typedef volatile struct S1967 T1967;
 
 /* DS_HASH_SET_CURSOR [ET_FEATURE_NAME] */
-typedef struct S1968 T1968;
+typedef volatile struct S1968 T1968;
 
 /* DS_HASH_TABLE_CURSOR [BOOLEAN, ET_FEATURE_NAME] */
-typedef struct S1969 T1969;
+typedef volatile struct S1969 T1969;
 
 /* DS_HASH_TABLE_CURSOR [ET_REPLICABLE_FEATURE, INTEGER_32] */
-typedef struct S1971 T1971;
+typedef volatile struct S1971 T1971;
 
 /* SPECIAL [ET_REPLICABLE_FEATURE] */
-typedef struct S1972 T1972;
+typedef volatile struct S1972 T1972;
 
 /* KL_SPECIAL_ROUTINES [ET_REPLICABLE_FEATURE] */
-typedef struct S1974 T1974;
+typedef volatile struct S1974 T1974;
 
 /* DS_LINKED_LIST_CURSOR [ET_ADAPTED_FEATURE] */
-typedef struct S1975 T1975;
+typedef volatile struct S1975 T1975;
 
 /* DS_LINKABLE [ET_ADAPTED_FEATURE] */
-typedef struct S1976 T1976;
+typedef volatile struct S1976 T1976;
 
 /* KL_SPECIAL_ROUTINES [ET_PARENT_FEATURE] */
-typedef struct S1977 T1977;
+typedef volatile struct S1977 T1977;
 
 /* SPECIAL [ET_PARENT_FEATURE] */
-typedef struct S1978 T1978;
+typedef volatile struct S1978 T1978;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_PARENT_FEATURE] */
-typedef struct S1979 T1979;
+typedef volatile struct S1979 T1979;
 
 /* SPECIAL [ET_DOTNET_FEATURE] */
-typedef struct S1980 T1980;
+typedef volatile struct S1980 T1980;
 
 /* DS_HASH_SET_CURSOR [ET_DOTNET_FEATURE] */
-typedef struct S1981 T1981;
+typedef volatile struct S1981 T1981;
 
 /* KL_SPECIAL_ROUTINES [ET_DOTNET_FEATURE] */
-typedef struct S1982 T1982;
+typedef volatile struct S1982 T1982;
 
 /* SPECIAL [DS_LINKED_LIST [ET_DOTNET_FEATURE]] */
-typedef struct S1983 T1983;
+typedef volatile struct S1983 T1983;
 
 /* DS_HASH_TABLE_CURSOR [DS_LINKED_LIST [ET_DOTNET_FEATURE], ET_DOTNET_FEATURE] */
-typedef struct S1986 T1986;
+typedef volatile struct S1986 T1986;
 
 /* KL_SPECIAL_ROUTINES [DS_LINKED_LIST [ET_DOTNET_FEATURE]] */
-typedef struct S1987 T1987;
+typedef volatile struct S1987 T1987;
 
 /* DS_LINKED_LIST_CURSOR [ET_DOTNET_FEATURE] */
-typedef struct S1988 T1988;
+typedef volatile struct S1988 T1988;
 
 /* DS_LINKABLE [ET_DOTNET_FEATURE] */
-typedef struct S1989 T1989;
+typedef volatile struct S1989 T1989;
 
 /* DS_HASH_TABLE [INTEGER_32, ET_LIKE_FEATURE] */
-typedef struct S1990 T1990;
+typedef volatile struct S1990 T1990;
 
 /* SPECIAL [ET_LIKE_FEATURE] */
-typedef struct S1991 T1991;
+typedef volatile struct S1991 T1991;
 
 /* KL_SPECIAL_ROUTINES [ET_LIKE_FEATURE] */
-typedef struct S1992 T1992;
+typedef volatile struct S1992 T1992;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_LIKE_FEATURE] */
-typedef struct S1993 T1993;
+typedef volatile struct S1993 T1993;
 
 /* DS_HASH_TABLE_CURSOR [DS_HASH_TABLE [TUPLE [detachable ARRAY [ET_TYPE], detachable ET_TYPE, NATURAL_8], ET_FEATURE_NAME], NATURAL_8] */
-typedef struct S1995 T1995;
+typedef volatile struct S1995 T1995;
 
 /* KL_SPECIAL_ROUTINES [DS_HASH_TABLE [TUPLE [detachable ARRAY [ET_TYPE], detachable ET_TYPE, NATURAL_8], ET_FEATURE_NAME]] */
-typedef struct S1996 T1996;
+typedef volatile struct S1996 T1996;
 
 /* DS_HASH_TABLE [TUPLE [detachable ARRAY [ET_TYPE], detachable ET_TYPE, NATURAL_8], ET_FEATURE_NAME] */
-typedef struct S1997 T1997;
+typedef volatile struct S1997 T1997;
 
 /* SPECIAL [DS_HASH_TABLE [TUPLE [detachable ARRAY [ET_TYPE], detachable ET_TYPE, NATURAL_8], ET_FEATURE_NAME]] */
-typedef struct S1998 T1998;
+typedef volatile struct S1998 T1998;
 
 /* DS_BILINKED_LIST_CURSOR [XM_DTD_ELEMENT_CONTENT] */
-typedef struct S1999 T1999;
+typedef volatile struct S1999 T1999;
 
 /* DS_BILINKABLE [XM_DTD_ELEMENT_CONTENT] */
-typedef struct S2000 T2000;
+typedef volatile struct S2000 T2000;
 
 /* DS_BILINKED_LIST [DS_HASH_TABLE [STRING_8, STRING_8]] */
-typedef struct S2002 T2002;
+typedef volatile struct S2002 T2002;
 
 /* DS_BILINKED_LIST_CURSOR [DS_HASH_TABLE [STRING_8, STRING_8]] */
-typedef struct S2003 T2003;
+typedef volatile struct S2003 T2003;
 
 /* DS_LINKABLE [detachable STRING_8] */
-typedef struct S2004 T2004;
+typedef volatile struct S2004 T2004;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_DOTNET_ASSEMBLY] */
-typedef struct S2005 T2005;
+typedef volatile struct S2005 T2005;
 
 /* ET_CLUSTER_ERROR */
-typedef struct S2006 T2006;
+typedef volatile struct S2006 T2006;
 
 /* TUPLE [ET_SYSTEM, DS_HASH_TABLE [INTEGER_32, ET_UNIVERSE], INTEGER_32] */
-typedef struct S2007 T2007;
+typedef volatile struct S2007 T2007;
 
 /* TUPLE [ET_ECF_CLUSTER] */
-typedef struct S2008 T2008;
+typedef volatile struct S2008 T2008;
 
 /* PROCEDURE [TUPLE [ET_ECF_CLUSTER]] */
-typedef struct S2009 T2009;
+typedef volatile struct S2009 T2009;
 
 /* TUPLE [ET_ECF_TARGET, STRING_8] */
-typedef struct S2010 T2010;
+typedef volatile struct S2010 T2010;
 
 /* TUPLE [ET_ECF_ADAPTED_LIBRARY] */
-typedef struct S2012 T2012;
+typedef volatile struct S2012 T2012;
 
 /* PROCEDURE [TUPLE [ET_ECF_ADAPTED_LIBRARY]] */
-typedef struct S2013 T2013;
+typedef volatile struct S2013 T2013;
 
 /* TUPLE [ET_ECF_ADAPTED_DOTNET_ASSEMBLY] */
-typedef struct S2014 T2014;
+typedef volatile struct S2014 T2014;
 
 /* PROCEDURE [TUPLE [ET_ECF_ADAPTED_DOTNET_ASSEMBLY]] */
-typedef struct S2015 T2015;
+typedef volatile struct S2015 T2015;
 
 /* PROCEDURE [TUPLE [STRING_8]] */
-typedef struct S2018 T2018;
+typedef volatile struct S2018 T2018;
 
 /* TUPLE [ET_ECF_OPTIONS, STRING_8] */
-typedef struct S2019 T2019;
+typedef volatile struct S2019 T2019;
 
 /* DS_HASH_TABLE [DS_HASH_TABLE [INTEGER_32, STRING_8], STRING_8] */
-typedef struct S2020 T2020;
+typedef volatile struct S2020 T2020;
 
 /* ET_DYNAMIC_EQUALITY_EXPRESSION */
-typedef struct S2023 T2023;
+typedef volatile struct S2023 T2023;
 
 /* ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION */
-typedef struct S2024 T2024;
+typedef volatile struct S2024 T2024;
 
 /* KL_CHARACTER_ROUTINES */
-typedef struct S2028 T2028;
+typedef volatile struct S2028 T2028;
 
 /* TUPLE [ET_C_GENERATOR, ET_SEPARATE_CALL, ET_DYNAMIC_FEATURE, ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S2029 T2029;
+typedef volatile struct S2029 T2029;
 
 /* TUPLE [ET_C_GENERATOR, ET_DYNAMIC_FEATURE, ET_DYNAMIC_PRIMARY_TYPE] */
-typedef struct S2030 T2030;
+typedef volatile struct S2030 T2030;
 
 /* TUPLE [ET_C_GENERATOR, INTEGER_32, ET_CURRENT, ET_DYNAMIC_TUPLE_TYPE, BOOLEAN] */
-typedef struct S2031 T2031;
+typedef volatile struct S2031 T2031;
 
 /* TYPE [detachable DEVELOPER_EXCEPTION] */
 #define T2032 EIF_TYPE_OBJ
 
 /* TUPLE [ET_GROUP] */
-typedef struct S2036 T2036;
+typedef volatile struct S2036 T2036;
 
 /* TUPLE [PROCEDURE [TUPLE [ET_CLASS]], PREDICATE [TUPLE [ET_CLASS]]] */
-typedef struct S2037 T2037;
+typedef volatile struct S2037 T2037;
 
 /* TUPLE [ET_ECF_LIBRARY, DS_HASH_TABLE [INTEGER_32, ET_UNIVERSE], INTEGER_32] */
-typedef struct S2038 T2038;
+typedef volatile struct S2038 T2038;
 
 /* ET_CONVERT_BUILTIN_EXPRESSION */
-typedef struct S2039 T2039;
+typedef volatile struct S2039 T2039;
 
 /* ET_CONVERT_FROM_EXPRESSION */
-typedef struct S2040 T2040;
+typedef volatile struct S2040 T2040;
 
 /* ET_CONVERT_TO_EXPRESSION */
-typedef struct S2041 T2041;
+typedef volatile struct S2041 T2041;
 
 /* DS_LINKABLE [XM_ELEMENT_NODE] */
-typedef struct S2051 T2051;
+typedef volatile struct S2051 T2051;
 
 /* TUPLE [detachable ARRAY [ET_TYPE], detachable ET_TYPE, NATURAL_8] */
-typedef struct S2052 T2052;
+typedef volatile struct S2052 T2052;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_FEATURE] */
-typedef struct S2055 T2055;
+typedef volatile struct S2055 T2055;
 
 /* TUPLE [ET_ECF_EXTERNAL_CFLAG] */
-typedef struct S2061 T2061;
+typedef volatile struct S2061 T2061;
 
 /* PROCEDURE [TUPLE [ET_ECF_EXTERNAL_CFLAG]] */
-typedef struct S2062 T2062;
+typedef volatile struct S2062 T2062;
 
 /* TUPLE [ET_ECF_TARGET, ET_ECF_STATE] */
-typedef struct S2063 T2063;
+typedef volatile struct S2063 T2063;
 
 /* TUPLE [ET_ECF_EXTERNAL_INCLUDE] */
-typedef struct S2064 T2064;
+typedef volatile struct S2064 T2064;
 
 /* PROCEDURE [TUPLE [ET_ECF_EXTERNAL_INCLUDE]] */
-typedef struct S2065 T2065;
+typedef volatile struct S2065 T2065;
 
 /* TUPLE [ET_ECF_EXTERNAL_LIBRARY] */
-typedef struct S2066 T2066;
+typedef volatile struct S2066 T2066;
 
 /* PROCEDURE [TUPLE [ET_ECF_EXTERNAL_LIBRARY]] */
-typedef struct S2067 T2067;
+typedef volatile struct S2067 T2067;
 
 /* TUPLE [ET_ECF_EXTERNAL_LINKER_FLAG] */
-typedef struct S2068 T2068;
+typedef volatile struct S2068 T2068;
 
 /* PROCEDURE [TUPLE [ET_ECF_EXTERNAL_LINKER_FLAG]] */
-typedef struct S2069 T2069;
+typedef volatile struct S2069 T2069;
 
 /* TUPLE [ET_ECF_EXTERNAL_MAKE] */
-typedef struct S2070 T2070;
+typedef volatile struct S2070 T2070;
 
 /* PROCEDURE [TUPLE [ET_ECF_EXTERNAL_MAKE]] */
-typedef struct S2071 T2071;
+typedef volatile struct S2071 T2071;
 
 /* TUPLE [ET_ECF_EXTERNAL_OBJECT] */
-typedef struct S2072 T2072;
+typedef volatile struct S2072 T2072;
 
 /* PROCEDURE [TUPLE [ET_ECF_EXTERNAL_OBJECT]] */
-typedef struct S2073 T2073;
+typedef volatile struct S2073 T2073;
 
 /* TUPLE [ET_ECF_EXTERNAL_RESOURCE] */
-typedef struct S2074 T2074;
+typedef volatile struct S2074 T2074;
 
 /* PROCEDURE [TUPLE [ET_ECF_EXTERNAL_RESOURCE]] */
-typedef struct S2075 T2075;
+typedef volatile struct S2075 T2075;
 
 /* TUPLE [LX_WILDCARD] */
-typedef struct S2078 T2078;
+typedef volatile struct S2078 T2078;
 
 /* PREDICATE [TUPLE [LX_WILDCARD]] */
-typedef struct S2079 T2079;
+typedef volatile struct S2079 T2079;
 
 /* TUPLE [ET_CLUSTER_DEPENDENCE_CONSTRAINT, ET_GROUP, STRING_8] */
-typedef struct S2080 T2080;
+typedef volatile struct S2080 T2080;
 
 /* PREDICATE [TUPLE [STRING_8]] */
-typedef struct S2082 T2082;
+typedef volatile struct S2082 T2082;
 
 /* TUPLE [KL_STRING_ROUTINES, STRING_8] */
-typedef struct S2083 T2083;
+typedef volatile struct S2083 T2083;
 
 /* DS_LINKABLE [DS_PAIR [XM_POSITION, XM_NODE]] */
-typedef struct S2085 T2085;
+typedef volatile struct S2085 T2085;
 
 /* SPECIAL [ET_AGENT_IMPLICIT_OPEN_ARGUMENT] */
-typedef struct S2087 T2087;
+typedef volatile struct S2087 T2087;
 
 /* KL_SPECIAL_ROUTINES [ET_AGENT_IMPLICIT_OPEN_ARGUMENT] */
-typedef struct S2088 T2088;
+typedef volatile struct S2088 T2088;
 
 /* DS_SPARSE_TABLE_KEYS_CURSOR [ET_CLIENT, ET_CLASS] */
-typedef struct S2089 T2089;
+typedef volatile struct S2089 T2089;
 
 /* SPECIAL [ET_ECF_ADAPTED_LIBRARY] */
-typedef struct S2091 T2091;
+typedef volatile struct S2091 T2091;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_ADAPTED_LIBRARY] */
-typedef struct S2092 T2092;
+typedef volatile struct S2092 T2092;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_ADAPTED_LIBRARY] */
-typedef struct S2093 T2093;
+typedef volatile struct S2093 T2093;
 
 /* SPECIAL [ET_ECF_ADAPTED_DOTNET_ASSEMBLY] */
-typedef struct S2094 T2094;
+typedef volatile struct S2094 T2094;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_ADAPTED_DOTNET_ASSEMBLY] */
-typedef struct S2095 T2095;
+typedef volatile struct S2095 T2095;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_ADAPTED_DOTNET_ASSEMBLY] */
-typedef struct S2096 T2096;
+typedef volatile struct S2096 T2096;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_FILE_RULE] */
-typedef struct S2097 T2097;
+typedef volatile struct S2097 T2097;
 
 /* SPECIAL [ET_ECF_FILE_RULE] */
-typedef struct S2098 T2098;
+typedef volatile struct S2098 T2098;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_FILE_RULE] */
-typedef struct S2099 T2099;
+typedef volatile struct S2099 T2099;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_NAMESPACE] */
-typedef struct S2100 T2100;
+typedef volatile struct S2100 T2100;
 
 /* SPECIAL [ET_ECF_NAMESPACE] */
-typedef struct S2101 T2101;
+typedef volatile struct S2101 T2101;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_NAMESPACE] */
-typedef struct S2102 T2102;
+typedef volatile struct S2102 T2102;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_EXTERNAL_CFLAG] */
-typedef struct S2103 T2103;
+typedef volatile struct S2103 T2103;
 
 /* SPECIAL [ET_ECF_EXTERNAL_CFLAG] */
-typedef struct S2104 T2104;
+typedef volatile struct S2104 T2104;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_EXTERNAL_CFLAG] */
-typedef struct S2105 T2105;
+typedef volatile struct S2105 T2105;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_EXTERNAL_INCLUDE] */
-typedef struct S2106 T2106;
+typedef volatile struct S2106 T2106;
 
 /* SPECIAL [ET_ECF_EXTERNAL_INCLUDE] */
-typedef struct S2107 T2107;
+typedef volatile struct S2107 T2107;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_EXTERNAL_INCLUDE] */
-typedef struct S2108 T2108;
+typedef volatile struct S2108 T2108;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_EXTERNAL_LIBRARY] */
-typedef struct S2109 T2109;
+typedef volatile struct S2109 T2109;
 
 /* SPECIAL [ET_ECF_EXTERNAL_LIBRARY] */
-typedef struct S2110 T2110;
+typedef volatile struct S2110 T2110;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_EXTERNAL_LIBRARY] */
-typedef struct S2111 T2111;
+typedef volatile struct S2111 T2111;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_EXTERNAL_LINKER_FLAG] */
-typedef struct S2112 T2112;
+typedef volatile struct S2112 T2112;
 
 /* SPECIAL [ET_ECF_EXTERNAL_LINKER_FLAG] */
-typedef struct S2113 T2113;
+typedef volatile struct S2113 T2113;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_EXTERNAL_LINKER_FLAG] */
-typedef struct S2114 T2114;
+typedef volatile struct S2114 T2114;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_EXTERNAL_MAKE] */
-typedef struct S2115 T2115;
+typedef volatile struct S2115 T2115;
 
 /* SPECIAL [ET_ECF_EXTERNAL_MAKE] */
-typedef struct S2116 T2116;
+typedef volatile struct S2116 T2116;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_EXTERNAL_MAKE] */
-typedef struct S2117 T2117;
+typedef volatile struct S2117 T2117;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_EXTERNAL_OBJECT] */
-typedef struct S2118 T2118;
+typedef volatile struct S2118 T2118;
 
 /* SPECIAL [ET_ECF_EXTERNAL_OBJECT] */
-typedef struct S2119 T2119;
+typedef volatile struct S2119 T2119;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_EXTERNAL_OBJECT] */
-typedef struct S2120 T2120;
+typedef volatile struct S2120 T2120;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_EXTERNAL_RESOURCE] */
-typedef struct S2121 T2121;
+typedef volatile struct S2121 T2121;
 
 /* SPECIAL [ET_ECF_EXTERNAL_RESOURCE] */
-typedef struct S2122 T2122;
+typedef volatile struct S2122 T2122;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_EXTERNAL_RESOURCE] */
-typedef struct S2123 T2123;
+typedef volatile struct S2123 T2123;
 
 /* KL_SPECIAL_ROUTINES [RX_PCRE_REGULAR_EXPRESSION] */
-typedef struct S2124 T2124;
+typedef volatile struct S2124 T2124;
 
 /* SPECIAL [RX_PCRE_REGULAR_EXPRESSION] */
-typedef struct S2125 T2125;
+typedef volatile struct S2125 T2125;
 
 /* DS_ARRAYED_LIST_CURSOR [RX_PCRE_REGULAR_EXPRESSION] */
-typedef struct S2126 T2126;
+typedef volatile struct S2126 T2126;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_ANDED_CONDITIONS] */
-typedef struct S2127 T2127;
+typedef volatile struct S2127 T2127;
 
 /* SPECIAL [ET_ECF_ANDED_CONDITIONS] */
-typedef struct S2128 T2128;
+typedef volatile struct S2128 T2128;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_ANDED_CONDITIONS] */
-typedef struct S2129 T2129;
+typedef volatile struct S2129 T2129;
 
 /* KL_SPECIAL_ROUTINES [ET_ECF_CONDITION_ITEM] */
-typedef struct S2130 T2130;
+typedef volatile struct S2130 T2130;
 
 /* SPECIAL [ET_ECF_CONDITION_ITEM] */
-typedef struct S2131 T2131;
+typedef volatile struct S2131 T2131;
 
 /* DS_ARRAYED_LIST_CURSOR [ET_ECF_CONDITION_ITEM] */
-typedef struct S2132 T2132;
+typedef volatile struct S2132 T2132;
 
 /* LX_WILDCARD_PARSER */
-typedef struct S2134 T2134;
+typedef volatile struct S2134 T2134;
 
 /* LX_DESCRIPTION */
-typedef struct S2135 T2135;
+typedef volatile struct S2135 T2135;
 
 /* LX_FULL_DFA */
-typedef struct S2136 T2136;
+typedef volatile struct S2136 T2136;
 
 /* SPECIAL [LX_WILDCARD] */
-typedef struct S2138 T2138;
+typedef volatile struct S2138 T2138;
 
 /* KL_SPECIAL_ROUTINES [LX_WILDCARD] */
-typedef struct S2141 T2141;
+typedef volatile struct S2141 T2141;
 
 /* DS_HASH_TABLE_CURSOR [LX_WILDCARD, STRING_8] */
-typedef struct S2142 T2142;
+typedef volatile struct S2142 T2142;
 
 /* DS_LINKABLE [CHARACTER_8] */
-typedef struct S2143 T2143;
+typedef volatile struct S2143 T2143;
 
 /* DS_HASH_TABLE_CURSOR [INTEGER_32, ET_LIKE_FEATURE] */
-typedef struct S2145 T2145;
+typedef volatile struct S2145 T2145;
 
 /* SPECIAL [TUPLE [detachable ARRAY [ET_TYPE], detachable ET_TYPE, NATURAL_8]] */
-typedef struct S2146 T2146;
+typedef volatile struct S2146 T2146;
 
 /* KL_SPECIAL_ROUTINES [TUPLE [detachable ARRAY [ET_TYPE], detachable ET_TYPE, NATURAL_8]] */
-typedef struct S2149 T2149;
+typedef volatile struct S2149 T2149;
 
 /* DS_HASH_TABLE_CURSOR [TUPLE [detachable ARRAY [ET_TYPE], detachable ET_TYPE, NATURAL_8], ET_FEATURE_NAME] */
-typedef struct S2150 T2150;
+typedef volatile struct S2150 T2150;
 
 /* DS_BILINKABLE [DS_HASH_TABLE [STRING_8, STRING_8]] */
-typedef struct S2151 T2151;
+typedef volatile struct S2151 T2151;
 
 /* ET_UNIVERSE_ERROR */
-typedef struct S2152 T2152;
+typedef volatile struct S2152 T2152;
 
 /* ET_DOTNET_ASSEMBLY_ERROR */
-typedef struct S2153 T2153;
+typedef volatile struct S2153 T2153;
 
 /* AP_OPTION_COMPARATOR */
-typedef struct S2154 T2154;
+typedef volatile struct S2154 T2154;
 
 /* DS_QUICK_SORTER [AP_OPTION] */
-typedef struct S2155 T2155;
+typedef volatile struct S2155 T2155;
 
 /* ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS */
-typedef struct S2158 T2158;
+typedef volatile struct S2158 T2158;
 
 /* ET_ACTUAL_PARAMETER_SUBLIST */
-typedef struct S2159 T2159;
+typedef volatile struct S2159 T2159;
 
 /* TUPLE [ET_ECF_FILE_RULE] */
-typedef struct S2162 T2162;
+typedef volatile struct S2162 T2162;
 
 /* PREDICATE [TUPLE [ET_ECF_FILE_RULE]] */
-typedef struct S2163 T2163;
+typedef volatile struct S2163 T2163;
 
 /* PROCEDURE [TUPLE [ET_ECF_FILE_RULE]] */
-typedef struct S2165 T2165;
+typedef volatile struct S2165 T2165;
 
 /* TUPLE [ET_ECF_FILE_RULES] */
-typedef struct S2166 T2166;
+typedef volatile struct S2166 T2166;
 
 /* TUPLE [ET_ECF_STATE] */
-typedef struct S2167 T2167;
+typedef volatile struct S2167 T2167;
 
 /* SPECIAL [DS_HASH_TABLE [INTEGER_32, STRING_8]] */
-typedef struct S2170 T2170;
+typedef volatile struct S2170 T2170;
 
 /* KL_SPECIAL_ROUTINES [DS_HASH_TABLE [INTEGER_32, STRING_8]] */
-typedef struct S2173 T2173;
+typedef volatile struct S2173 T2173;
 
 /* DS_HASH_TABLE_CURSOR [DS_HASH_TABLE [INTEGER_32, STRING_8], STRING_8] */
-typedef struct S2174 T2174;
+typedef volatile struct S2174 T2174;
 
 /* DS_ARRAYED_LIST [LX_RULE] */
-typedef struct S2175 T2175;
+typedef volatile struct S2175 T2175;
 
 /* LX_START_CONDITIONS */
-typedef struct S2176 T2176;
+typedef volatile struct S2176 T2176;
 
 /* LX_ACTION_FACTORY */
-typedef struct S2177 T2177;
+typedef volatile struct S2177 T2177;
 
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]], LX_SYMBOL_CLASS] */
-typedef struct S2178 T2178;
+typedef volatile struct S2178 T2178;
 
 /* LX_SYMBOL_CLASS */
-typedef struct S2179 T2179;
+typedef volatile struct S2179 T2179;
 
 /* DS_HASH_TABLE [STRING_32, STRING_8] */
-typedef struct S2180 T2180;
+typedef volatile struct S2180 T2180;
 
 /* DS_HASH_SET [LX_SYMBOL_CLASS] */
-typedef struct S2181 T2181;
+typedef volatile struct S2181 T2181;
 
 /* DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING_32] */
-typedef struct S2182 T2182;
+typedef volatile struct S2182 T2182;
 
 /* KL_EQUALITY_TESTER [STRING_32] */
-typedef struct S2183 T2183;
+typedef volatile struct S2183 T2183;
 
 /* DS_ARRAYED_STACK [BOOLEAN] */
-typedef struct S2184 T2184;
+typedef volatile struct S2184 T2184;
 
 /* KL_SPECIAL_ROUTINES [STRING_32] */
-typedef struct S2185 T2185;
+typedef volatile struct S2185 T2185;
 
 /* SPECIAL [STRING_32] */
-typedef struct S2186 T2186;
+typedef volatile struct S2186 T2186;
 
 /* KL_SPECIAL_ROUTINES [LX_SYMBOL_CLASS] */
-typedef struct S2187 T2187;
+typedef volatile struct S2187 T2187;
 
 /* SPECIAL [LX_SYMBOL_CLASS] */
-typedef struct S2188 T2188;
+typedef volatile struct S2188 T2188;
 
 /* KL_SPECIAL_ROUTINES [LX_NFA] */
-typedef struct S2189 T2189;
+typedef volatile struct S2189 T2189;
 
 /* LX_NFA */
-typedef struct S2190 T2190;
+typedef volatile struct S2190 T2190;
 
 /* SPECIAL [LX_NFA] */
-typedef struct S2191 T2191;
+typedef volatile struct S2191 T2191;
 
 /* LX_RULE */
-typedef struct S2192 T2192;
+typedef volatile struct S2192 T2192;
 
 /* DS_HASH_SET_CURSOR [LX_SYMBOL_CLASS] */
-typedef struct S2193 T2193;
+typedef volatile struct S2193 T2193;
 
 /* LX_EQUIVALENCE_CLASSES */
-typedef struct S2194 T2194;
+typedef volatile struct S2194 T2194;
 
 /* LX_UNRECOGNIZED_RULE_ERROR */
-typedef struct S2195 T2195;
+typedef volatile struct S2195 T2195;
 
 /* LX_INVALID_UNICODE_CHARACTER_ERROR */
-typedef struct S2196 T2196;
+typedef volatile struct S2196 T2196;
 
 /* LX_MISSING_QUOTE_ERROR */
-typedef struct S2197 T2197;
+typedef volatile struct S2197 T2197;
 
 /* LX_BAD_CHARACTER_CLASS_ERROR */
-typedef struct S2198 T2198;
+typedef volatile struct S2198 T2198;
 
 /* LX_BAD_CHARACTER_ERROR */
-typedef struct S2199 T2199;
+typedef volatile struct S2199 T2199;
 
 /* LX_FULL_AND_META_ERROR */
-typedef struct S2200 T2200;
+typedef volatile struct S2200 T2200;
 
 /* LX_FULL_AND_REJECT_ERROR */
-typedef struct S2201 T2201;
+typedef volatile struct S2201 T2201;
 
 /* LX_FULL_AND_VARIABLE_TRAILING_CONTEXT_ERROR */
-typedef struct S2202 T2202;
+typedef volatile struct S2202 T2202;
 
 /* LX_CHARACTER_OUT_OF_RANGE_ERROR */
-typedef struct S2203 T2203;
+typedef volatile struct S2203 T2203;
 
 /* ARRAY [LX_RULE] */
-typedef struct S2204 T2204;
+typedef volatile struct S2204 T2204;
 
 /* SPECIAL [LX_RULE] */
-typedef struct S2205 T2205;
+typedef volatile struct S2205 T2205;
 
 /* LX_DFA_STATE */
-typedef struct S2206 T2206;
+typedef volatile struct S2206 T2206;
 
 /* DS_ARRAYED_LIST [LX_NFA_STATE] */
-typedef struct S2207 T2207;
+typedef volatile struct S2207 T2207;
 
 /* DS_ARRAYED_LIST [LX_DFA_STATE] */
-typedef struct S2208 T2208;
+typedef volatile struct S2208 T2208;
 
 /* LX_SYMBOL_PARTITIONS */
-typedef struct S2209 T2209;
+typedef volatile struct S2209 T2209;
 
 /* KL_ARRAY_ROUTINES [LX_RULE] */
-typedef struct S2210 T2210;
+typedef volatile struct S2210 T2210;
 
 /* ARRAY [detachable LX_RULE] */
-typedef struct S2211 T2211;
+typedef volatile struct S2211 T2211;
 
 /* SPECIAL [detachable LX_RULE] */
-typedef struct S2212 T2212;
+typedef volatile struct S2212 T2212;
 
 /* LX_START_CONDITION */
-typedef struct S2213 T2213;
+typedef volatile struct S2213 T2213;
 
 /* LX_TRANSITION_TABLE [LX_DFA_STATE] */
-typedef struct S2214 T2214;
+typedef volatile struct S2214 T2214;
 
 /* DS_ARRAYED_LIST [LX_NFA] */
-typedef struct S2215 T2215;
+typedef volatile struct S2215 T2215;
 
 /* DS_HASH_TABLE [LX_NFA, INTEGER_32] */
-typedef struct S2216 T2216;
+typedef volatile struct S2216 T2216;
 
 /* LX_NFA_STATE */
-typedef struct S2217 T2217;
+typedef volatile struct S2217 T2217;
 
 /* TYPE [detachable RX_REGULAR_EXPRESSION] */
 #define T2221 EIF_TYPE_OBJ
 
 /* DS_SPARSE_TABLE_KEYS_CURSOR [detachable RX_REGULAR_EXPRESSION, STRING_8] */
-typedef struct S2223 T2223;
+typedef volatile struct S2223 T2223;
 
 /* TUPLE [RX_PCRE_REGULAR_EXPRESSION] */
-typedef struct S2224 T2224;
+typedef volatile struct S2224 T2224;
 
 /* PREDICATE [TUPLE [RX_PCRE_REGULAR_EXPRESSION]] */
-typedef struct S2225 T2225;
+typedef volatile struct S2225 T2225;
 
 /* TUPLE [DS_HASH_SET [STRING_8]] */
-typedef struct S2228 T2228;
+typedef volatile struct S2228 T2228;
 
 /* DS_LINKABLE [ET_PARENT_FEATURE] */
-typedef struct S2230 T2230;
+typedef volatile struct S2230 T2230;
 
 /* ARRAY [detachable LX_SYMBOL_CLASS] */
-typedef struct S2231 T2231;
+typedef volatile struct S2231 T2231;
 
 /* SPECIAL [detachable LX_SYMBOL_CLASS] */
-typedef struct S2232 T2232;
+typedef volatile struct S2232 T2232;
 
 /* ARRAY [detachable DS_HASH_SET [INTEGER_32]] */
-typedef struct S2233 T2233;
+typedef volatile struct S2233 T2233;
 
 /* SPECIAL [detachable DS_HASH_SET [INTEGER_32]] */
-typedef struct S2234 T2234;
+typedef volatile struct S2234 T2234;
 
 /* DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]] */
-typedef struct S2235 T2235;
+typedef volatile struct S2235 T2235;
 
 /* DS_ARRAYED_LIST [LX_SYMBOL_CLASS] */
-typedef struct S2236 T2236;
+typedef volatile struct S2236 T2236;
 
 /* LX_NEGATIVE_RANGE_IN_CHARACTER_CLASS_ERROR */
-typedef struct S2237 T2237;
+typedef volatile struct S2237 T2237;
 
 /* ET_AST_NULL_LEAF */
-typedef struct S2238 T2238;
+typedef volatile struct S2238 T2238;
 
 /* KL_SPECIAL_ROUTINES [LX_RULE] */
-typedef struct S2239 T2239;
+typedef volatile struct S2239 T2239;
 
 /* DS_ARRAYED_LIST_CURSOR [LX_RULE] */
-typedef struct S2240 T2240;
+typedef volatile struct S2240 T2240;
 
 /* KL_ARRAY_ROUTINES [STRING_8] */
-typedef struct S2241 T2241;
+typedef volatile struct S2241 T2241;
 
 /* SPECIAL [LX_START_CONDITION] */
-typedef struct S2242 T2242;
+typedef volatile struct S2242 T2242;
 
 /* KL_SPECIAL_ROUTINES [LX_START_CONDITION] */
-typedef struct S2243 T2243;
+typedef volatile struct S2243 T2243;
 
 /* DS_ARRAYED_LIST_CURSOR [LX_START_CONDITION] */
-typedef struct S2244 T2244;
+typedef volatile struct S2244 T2244;
 
 /* SPECIAL [DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]] */
-typedef struct S2245 T2245;
+typedef volatile struct S2245 T2245;
 
 /* KL_EQUALITY_TESTER [LX_SYMBOL_CLASS] */
-typedef struct S2246 T2246;
+typedef volatile struct S2246 T2246;
 
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]]] */
-typedef struct S2248 T2248;
+typedef volatile struct S2248 T2248;
 
 /* DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]], LX_SYMBOL_CLASS] */
-typedef struct S2249 T2249;
+typedef volatile struct S2249 T2249;
 
 /* SPECIAL [detachable SPECIAL [NATURAL_64]] */
-typedef struct S2250 T2250;
+typedef volatile struct S2250 T2250;
 
 /* DS_HASH_TABLE_CURSOR [STRING_32, STRING_8] */
-typedef struct S2252 T2252;
+typedef volatile struct S2252 T2252;
 
 /* DS_HASH_TABLE_CURSOR [LX_SYMBOL_CLASS, STRING_32] */
-typedef struct S2254 T2254;
+typedef volatile struct S2254 T2254;
 
 /* LX_EPSILON_TRANSITION [LX_NFA_STATE] */
-typedef struct S2255 T2255;
+typedef volatile struct S2255 T2255;
 
 /* LX_SYMBOL_CLASS_TRANSITION [LX_NFA_STATE] */
-typedef struct S2258 T2258;
+typedef volatile struct S2258 T2258;
 
 /* LX_SYMBOL_TRANSITION [LX_NFA_STATE] */
-typedef struct S2259 T2259;
+typedef volatile struct S2259 T2259;
 
 /* LX_ACTION */
-typedef struct S2261 T2261;
+typedef volatile struct S2261 T2261;
 
 /* ARRAY [DS_BILINKABLE [INTEGER_32]] */
-typedef struct S2262 T2262;
+typedef volatile struct S2262 T2262;
 
 /* DS_BILINKABLE [INTEGER_32] */
-typedef struct S2263 T2263;
+typedef volatile struct S2263 T2263;
 
 /* SPECIAL [DS_BILINKABLE [INTEGER_32]] */
-typedef struct S2264 T2264;
+typedef volatile struct S2264 T2264;
 
 /* DS_BUBBLE_SORTER [LX_NFA_STATE] */
-typedef struct S2265 T2265;
+typedef volatile struct S2265 T2265;
 
 /* DS_BUBBLE_SORTER [LX_RULE] */
-typedef struct S2267 T2267;
+typedef volatile struct S2267 T2267;
 
 /* SPECIAL [LX_NFA_STATE] */
-typedef struct S2269 T2269;
+typedef volatile struct S2269 T2269;
 
 /* KL_SPECIAL_ROUTINES [LX_NFA_STATE] */
-typedef struct S2271 T2271;
+typedef volatile struct S2271 T2271;
 
 /* DS_ARRAYED_LIST_CURSOR [LX_NFA_STATE] */
-typedef struct S2272 T2272;
+typedef volatile struct S2272 T2272;
 
 /* SPECIAL [LX_DFA_STATE] */
-typedef struct S2274 T2274;
+typedef volatile struct S2274 T2274;
 
 /* KL_SPECIAL_ROUTINES [LX_DFA_STATE] */
-typedef struct S2275 T2275;
+typedef volatile struct S2275 T2275;
 
 /* DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE] */
-typedef struct S2276 T2276;
+typedef volatile struct S2276 T2276;
 
 /* KL_ARRAY [LX_RULE] */
-typedef struct S2277 T2277;
+typedef volatile struct S2277 T2277;
 
 /* DS_HASH_TABLE [LX_DFA_STATE, INTEGER_32] */
-typedef struct S2278 T2278;
+typedef volatile struct S2278 T2278;
 
 /* DS_ARRAYED_LIST_CURSOR [LX_NFA] */
-typedef struct S2279 T2279;
+typedef volatile struct S2279 T2279;
 
 /* DS_HASH_TABLE_CURSOR [LX_NFA, INTEGER_32] */
-typedef struct S2281 T2281;
+typedef volatile struct S2281 T2281;
 
 /* TUPLE [ET_LIBRARY, DS_HASH_TABLE [INTEGER_32, ET_UNIVERSE], INTEGER_32] */
-typedef struct S2282 T2282;
+typedef volatile struct S2282 T2282;
 
 /* TUPLE [ET_DOTNET_ASSEMBLY, DS_HASH_TABLE [INTEGER_32, ET_UNIVERSE], INTEGER_32] */
-typedef struct S2283 T2283;
+typedef volatile struct S2283 T2283;
 
 /* TUPLE [ET_ECF_LIBRARY] */
-typedef struct S2284 T2284;
+typedef volatile struct S2284 T2284;
 
 /* TUPLE [ET_ECF_DOTNET_ASSEMBLY, DS_HASH_TABLE [INTEGER_32, ET_UNIVERSE], INTEGER_32] */
-typedef struct S2286 T2286;
+typedef volatile struct S2286 T2286;
 
 /* KL_COMPARABLE_COMPARATOR [LX_RULE] */
-typedef struct S2291 T2291;
+typedef volatile struct S2291 T2291;
 
 /* KL_COMPARABLE_COMPARATOR [LX_NFA_STATE] */
-typedef struct S2294 T2294;
+typedef volatile struct S2294 T2294;
 
 /* SPECIAL [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]] */
-typedef struct S2297 T2297;
+typedef volatile struct S2297 T2297;
 
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]] */
-typedef struct S2298 T2298;
+typedef volatile struct S2298 T2298;
 
 /* DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]] */
-typedef struct S2299 T2299;
+typedef volatile struct S2299 T2299;
 
 /* DS_ARRAYED_LIST_CURSOR [LX_SYMBOL_CLASS] */
-typedef struct S2300 T2300;
+typedef volatile struct S2300 T2300;
 
 /* KL_ARRAY [STRING_8] */
-typedef struct S2301 T2301;
+typedef volatile struct S2301 T2301;
 
 /* DS_HASH_TABLE_CURSOR [LX_DFA_STATE, INTEGER_32] */
-typedef struct S2303 T2303;
+typedef volatile struct S2303 T2303;
 
 /* Struct for boxed version of type BOOLEAN */
 struct Sb1 {
 	EIF_TYPE_INDEX id;
 	uint16_t flags;
-	T1* p1; /* pointer */
+	T1 volatile* p1; /* pointer */
 	T1 z1; /* item */
 };
 
@@ -8278,7 +8288,7 @@ struct Sb1 {
 struct Sb2 {
 	EIF_TYPE_INDEX id;
 	uint16_t flags;
-	T2* p1; /* pointer */
+	T2 volatile* p1; /* pointer */
 	T2 z1; /* item */
 };
 
@@ -8286,7 +8296,7 @@ struct Sb2 {
 struct Sb3 {
 	EIF_TYPE_INDEX id;
 	uint16_t flags;
-	T3* p1; /* pointer */
+	T3 volatile* p1; /* pointer */
 	T3 z1; /* item */
 };
 
@@ -8294,7 +8304,7 @@ struct Sb3 {
 struct Sb4 {
 	EIF_TYPE_INDEX id;
 	uint16_t flags;
-	T4* p1; /* pointer */
+	T4 volatile* p1; /* pointer */
 	T4 z1; /* item */
 };
 
@@ -8302,7 +8312,7 @@ struct Sb4 {
 struct Sb5 {
 	EIF_TYPE_INDEX id;
 	uint16_t flags;
-	T5* p1; /* pointer */
+	T5 volatile* p1; /* pointer */
 	T5 z1; /* item */
 };
 
@@ -8310,7 +8320,7 @@ struct Sb5 {
 struct Sb6 {
 	EIF_TYPE_INDEX id;
 	uint16_t flags;
-	T6* p1; /* pointer */
+	T6 volatile* p1; /* pointer */
 	T6 z1; /* item */
 };
 
@@ -8318,7 +8328,7 @@ struct Sb6 {
 struct Sb7 {
 	EIF_TYPE_INDEX id;
 	uint16_t flags;
-	T7* p1; /* pointer */
+	T7 volatile* p1; /* pointer */
 	T7 z1; /* item */
 };
 
@@ -8326,7 +8336,7 @@ struct Sb7 {
 struct Sb8 {
 	EIF_TYPE_INDEX id;
 	uint16_t flags;
-	T8* p1; /* pointer */
+	T8 volatile* p1; /* pointer */
 	T8 z1; /* item */
 };
 
@@ -8334,7 +8344,7 @@ struct Sb8 {
 struct Sb9 {
 	EIF_TYPE_INDEX id;
 	uint16_t flags;
-	T9* p1; /* pointer */
+	T9 volatile* p1; /* pointer */
 	T9 z1; /* item */
 };
 
@@ -8342,7 +8352,7 @@ struct Sb9 {
 struct Sb10 {
 	EIF_TYPE_INDEX id;
 	uint16_t flags;
-	T10* p1; /* pointer */
+	T10 volatile* p1; /* pointer */
 	T10 z1; /* item */
 };
 
@@ -8350,7 +8360,7 @@ struct Sb10 {
 struct Sb11 {
 	EIF_TYPE_INDEX id;
 	uint16_t flags;
-	T11* p1; /* pointer */
+	T11 volatile* p1; /* pointer */
 	T11 z1; /* item */
 };
 
@@ -8358,7 +8368,7 @@ struct Sb11 {
 struct Sb12 {
 	EIF_TYPE_INDEX id;
 	uint16_t flags;
-	T12* p1; /* pointer */
+	T12 volatile* p1; /* pointer */
 	T12 z1; /* item */
 };
 
@@ -8366,7 +8376,7 @@ struct Sb12 {
 struct Sb13 {
 	EIF_TYPE_INDEX id;
 	uint16_t flags;
-	T13* p1; /* pointer */
+	T13 volatile* p1; /* pointer */
 	T13 z1; /* item */
 };
 
@@ -8374,7 +8384,7 @@ struct Sb13 {
 struct Sb14 {
 	EIF_TYPE_INDEX id;
 	uint16_t flags;
-	T14* p1; /* pointer */
+	T14 volatile* p1; /* pointer */
 	T14 z1; /* item */
 };
 
@@ -8450,7 +8460,7 @@ struct S15 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T2 z2[1]; /* item */
+	T2 z2[]; /* item */
 };
 
 /* Struct for type SPECIAL [CHARACTER_32] */
@@ -8460,7 +8470,7 @@ struct S16 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T3 z2[1]; /* item */
+	T3 z2[]; /* item */
 };
 
 /* Struct for type STRING_8 */
@@ -8631,7 +8641,7 @@ struct S35 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_EXCEPTIONS */
@@ -10987,7 +10997,7 @@ struct S154 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T6 z2[1]; /* item */
+	T6 z2[]; /* item */
 };
 
 /* Struct for type SPECIAL [BOOLEAN] */
@@ -10997,7 +11007,7 @@ struct S155 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T1 z2[1]; /* item */
+	T1 z2[]; /* item */
 };
 
 /* Struct for type ARGUMENTS_32 */
@@ -12178,7 +12188,7 @@ struct S272 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_KEYWORD] */
@@ -12194,7 +12204,7 @@ struct S274 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_AGENT_KEYWORD] */
@@ -12219,7 +12229,7 @@ struct S277 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_PRECURSOR_KEYWORD] */
@@ -12245,7 +12255,7 @@ struct S280 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_SYMBOL] */
@@ -12270,7 +12280,7 @@ struct S283 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_POSITION] */
@@ -12286,7 +12296,7 @@ struct S286 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_BOOLEAN_CONSTANT] */
@@ -12302,7 +12312,7 @@ struct S289 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_BREAK] */
@@ -12318,7 +12328,7 @@ struct S292 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CHARACTER_CONSTANT] */
@@ -12334,7 +12344,7 @@ struct S295 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CURRENT] */
@@ -12360,7 +12370,7 @@ struct S298 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_FREE_OPERATOR] */
@@ -12388,7 +12398,7 @@ struct S301 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_IDENTIFIER] */
@@ -12416,7 +12426,7 @@ struct S304 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_INTEGER_CONSTANT] */
@@ -12432,7 +12442,7 @@ struct S307 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_KEYWORD_OPERATOR] */
@@ -12458,7 +12468,7 @@ struct S310 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_STRING] */
@@ -12474,7 +12484,7 @@ struct S313 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_REAL_CONSTANT] */
@@ -12490,7 +12500,7 @@ struct S316 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_RESULT] */
@@ -12516,7 +12526,7 @@ struct S319 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_RETRY_INSTRUCTION] */
@@ -12541,7 +12551,7 @@ struct S322 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_SYMBOL_OPERATOR] */
@@ -12567,7 +12577,7 @@ struct S325 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_VOID] */
@@ -12593,7 +12603,7 @@ struct S328 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_SEMICOLON_SYMBOL] */
@@ -12617,7 +12627,7 @@ struct S331 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_BRACKET_SYMBOL] */
@@ -12643,7 +12653,7 @@ struct S334 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_QUESTION_MARK_SYMBOL] */
@@ -12668,7 +12678,7 @@ struct S337 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_ACROSS_EXPRESSION] */
@@ -12707,7 +12717,7 @@ struct S340 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_ACROSS_INSTRUCTION] */
@@ -12745,7 +12755,7 @@ struct S343 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_ACTUAL_ARGUMENT_LIST] */
@@ -12771,7 +12781,7 @@ struct S346 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_ACTUAL_PARAMETER_ITEM] */
@@ -12787,7 +12797,7 @@ struct S348 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_ACTUAL_PARAMETER_LIST] */
@@ -12803,7 +12813,7 @@ struct S350 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_AGENT_ARGUMENT_OPERAND] */
@@ -12819,7 +12829,7 @@ struct S353 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_AGENT_ARGUMENT_OPERAND_ITEM] */
@@ -12835,7 +12845,7 @@ struct S356 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_AGENT_ARGUMENT_OPERAND_LIST] */
@@ -12861,7 +12871,7 @@ struct S359 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_AGENT_TARGET] */
@@ -12877,7 +12887,7 @@ struct S362 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_ALIAS_NAME] */
@@ -12904,7 +12914,7 @@ struct S365 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_ALIAS_NAME_LIST] */
@@ -12928,7 +12938,7 @@ struct S368 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_ASSIGNER] */
@@ -12944,7 +12954,7 @@ struct S371 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_BRACKET_EXPRESSION] */
@@ -12970,7 +12980,7 @@ struct S374 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CALL_AGENT] */
@@ -12998,7 +13008,7 @@ struct S377 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_QUALIFIED_CALL_EXPRESSION] */
@@ -13025,7 +13035,7 @@ struct S380 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CHECK_INSTRUCTION] */
@@ -13052,7 +13062,7 @@ struct S383 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CHOICE] */
@@ -13068,7 +13078,7 @@ struct S386 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CHOICE_CONSTANT] */
@@ -13084,7 +13094,7 @@ struct S389 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CHOICE_ITEM] */
@@ -13100,7 +13110,7 @@ struct S392 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CHOICE_LIST] */
@@ -13125,7 +13135,7 @@ struct S395 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CLASS] */
@@ -13141,7 +13151,7 @@ struct S397 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CLIENT_ITEM] */
@@ -13157,7 +13167,7 @@ struct S399 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CLIENTS] */
@@ -13173,7 +13183,7 @@ struct S401 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_COMPOUND] */
@@ -13198,7 +13208,7 @@ struct S404 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CONDITIONAL] */
@@ -13214,7 +13224,7 @@ struct S407 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CONSTANT] */
@@ -13230,7 +13240,7 @@ struct S410 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM] */
@@ -13246,7 +13256,7 @@ struct S413 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST] */
@@ -13272,7 +13282,7 @@ struct S416 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CONSTRAINT_CREATOR] */
@@ -13298,7 +13308,7 @@ struct S419 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CONSTRAINT_RENAME_LIST] */
@@ -13324,7 +13334,7 @@ struct S422 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CONSTRAINT_TYPE] */
@@ -13340,7 +13350,7 @@ struct S425 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CONVERT_FEATURE] */
@@ -13356,7 +13366,7 @@ struct S428 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CONVERT_FEATURE_ITEM] */
@@ -13372,7 +13382,7 @@ struct S431 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CONVERT_FEATURE_LIST] */
@@ -13397,7 +13407,7 @@ struct S434 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CREATE_EXPRESSION] */
@@ -13426,7 +13436,7 @@ struct S437 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CREATION_REGION] */
@@ -13451,7 +13461,7 @@ struct S440 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CREATOR] */
@@ -13467,7 +13477,7 @@ struct S442 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_CREATOR_LIST] */
@@ -13483,7 +13493,7 @@ struct S444 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_DEBUG_INSTRUCTION] */
@@ -13508,7 +13518,7 @@ struct S447 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_EXPRESSION] */
@@ -13533,7 +13543,7 @@ struct S450 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_EXPRESSION_LIST] */
@@ -13557,7 +13567,7 @@ struct S453 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_PART] */
@@ -13581,7 +13591,7 @@ struct S456 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_PART_LIST] */
@@ -13605,7 +13615,7 @@ struct S459 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_EXPORT] */
@@ -13621,7 +13631,7 @@ struct S462 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_EXPORT_LIST] */
@@ -13637,7 +13647,7 @@ struct S464 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_EXPRESSION] */
@@ -13653,7 +13663,7 @@ struct S467 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_EXPRESSION_ITEM] */
@@ -13669,7 +13679,7 @@ struct S470 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_EXTENDED_FEATURE_NAME] */
@@ -13685,7 +13695,7 @@ struct S473 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_EXTERNAL_ALIAS] */
@@ -13701,7 +13711,7 @@ struct S476 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_FEATURE_CLAUSE] */
@@ -13717,7 +13727,7 @@ struct S478 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_FEATURE_CLAUSE_LIST] */
@@ -13741,7 +13751,7 @@ struct S481 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_FEATURE_EXPORT] */
@@ -13766,7 +13776,7 @@ struct S484 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_FEATURE_NAME] */
@@ -13782,7 +13792,7 @@ struct S486 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_FEATURE_NAME_ITEM] */
@@ -13798,7 +13808,7 @@ struct S489 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_FORMAL_ARGUMENT] */
@@ -13825,7 +13835,7 @@ struct S492 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_FORMAL_ARGUMENT_ITEM] */
@@ -13841,7 +13851,7 @@ struct S495 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_FORMAL_ARGUMENT_LIST] */
@@ -13867,7 +13877,7 @@ struct S498 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_FORMAL_PARAMETER] */
@@ -13893,7 +13903,7 @@ struct S501 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_FORMAL_PARAMETER_ITEM] */
@@ -13909,7 +13919,7 @@ struct S504 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_FORMAL_PARAMETER_LIST] */
@@ -13935,7 +13945,7 @@ struct S507 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_IF_EXPRESSION] */
@@ -13965,7 +13975,7 @@ struct S510 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_IF_INSTRUCTION] */
@@ -13992,7 +14002,7 @@ struct S513 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_INLINE_AGENT] */
@@ -14008,7 +14018,7 @@ struct S516 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_ARGUMENT] */
@@ -14033,7 +14043,7 @@ struct S519 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_ARGUMENT_ITEM] */
@@ -14049,7 +14059,7 @@ struct S522 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_ARGUMENTS] */
@@ -14074,7 +14084,7 @@ struct S525 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_INSTRUCTION] */
@@ -14099,7 +14109,7 @@ struct S528 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_INSPECT_EXPRESSION] */
@@ -14126,7 +14136,7 @@ struct S531 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_INSPECT_INSTRUCTION] */
@@ -14152,7 +14162,7 @@ struct S534 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_INSTRUCTION] */
@@ -14168,7 +14178,7 @@ struct S537 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_INVARIANTS] */
@@ -14199,7 +14209,7 @@ struct S540 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_KEYWORD_FEATURE_NAME_LIST] */
@@ -14215,7 +14225,7 @@ struct S542 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_LIKE_TYPE] */
@@ -14231,7 +14241,7 @@ struct S545 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_LOCAL_VARIABLE] */
@@ -14258,7 +14268,7 @@ struct S548 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_LOCAL_VARIABLE_ITEM] */
@@ -14274,7 +14284,7 @@ struct S551 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_LOCAL_VARIABLE_LIST] */
@@ -14299,7 +14309,7 @@ struct S554 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_LOOP_INVARIANTS] */
@@ -14324,7 +14334,7 @@ struct S557 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_ARRAY] */
@@ -14352,7 +14362,7 @@ struct S560 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_STRING_ITEM] */
@@ -14368,7 +14378,7 @@ struct S563 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_STRING_LIST] */
@@ -14394,7 +14404,7 @@ struct S566 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_TUPLE] */
@@ -14421,7 +14431,7 @@ struct S569 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_NOTE_LIST] */
@@ -14446,7 +14456,7 @@ struct S572 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_NOTE_ITEM] */
@@ -14462,7 +14472,7 @@ struct S575 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_NOTE_TERM] */
@@ -14478,7 +14488,7 @@ struct S578 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_NOTE_TERM_ITEM] */
@@ -14494,7 +14504,7 @@ struct S581 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_NOTE_TERM_LIST] */
@@ -14518,7 +14528,7 @@ struct S584 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_OBSOLETE] */
@@ -14534,7 +14544,7 @@ struct S587 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_PARENTHESIZED_EXPRESSION] */
@@ -14560,7 +14570,7 @@ struct S590 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_PARENT] */
@@ -14576,7 +14586,7 @@ struct S592 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_PARENT_CLAUSE_LIST] */
@@ -14600,7 +14610,7 @@ struct S595 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_PARENT_ITEM] */
@@ -14616,7 +14626,7 @@ struct S597 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_PARENT_LIST] */
@@ -14632,7 +14642,7 @@ struct S599 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_POSTCONDITIONS] */
@@ -14660,7 +14670,7 @@ struct S602 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_PRECONDITIONS] */
@@ -14688,7 +14698,7 @@ struct S605 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_PROCEDURE] */
@@ -14704,7 +14714,7 @@ struct S608 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_QUALIFIED_LIKE_IDENTIFIER] */
@@ -14720,7 +14730,7 @@ struct S611 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_QUANTIFIER_EXPRESSION] */
@@ -14755,7 +14765,7 @@ struct S614 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_QUERY] */
@@ -14771,7 +14781,7 @@ struct S617 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_RENAME_ITEM] */
@@ -14787,7 +14797,7 @@ struct S620 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_RENAME_LIST] */
@@ -14803,7 +14813,7 @@ struct S622 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_REPEAT_INSTRUCTION] */
@@ -14837,7 +14847,7 @@ struct S625 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_STATIC_CALL_EXPRESSION] */
@@ -14865,7 +14875,7 @@ struct S628 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_STRIP_EXPRESSION] */
@@ -14893,7 +14903,7 @@ struct S631 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_TYPE] */
@@ -14909,7 +14919,7 @@ struct S633 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_TYPE_CONSTRAINT] */
@@ -14925,7 +14935,7 @@ struct S636 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_TYPE_CONSTRAINT_ITEM] */
@@ -14941,7 +14951,7 @@ struct S639 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_TYPE_CONSTRAINT_LIST] */
@@ -14967,7 +14977,7 @@ struct S642 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_TYPE_ITEM] */
@@ -14983,7 +14993,7 @@ struct S645 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_TYPE_LIST] */
@@ -14999,7 +15009,7 @@ struct S648 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_VARIANT] */
@@ -15024,7 +15034,7 @@ struct S651 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_WHEN_EXPRESSION] */
@@ -15049,7 +15059,7 @@ struct S654 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_WHEN_EXPRESSION_LIST] */
@@ -15073,7 +15083,7 @@ struct S657 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_WHEN_PART] */
@@ -15097,7 +15107,7 @@ struct S660 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_WHEN_PART_LIST] */
@@ -15121,7 +15131,7 @@ struct S663 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_WRITABLE] */
@@ -15137,7 +15147,7 @@ struct S666 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type ET_OBJECT_TEST_LIST */
@@ -16458,7 +16468,7 @@ struct S775 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_CLASS] */
@@ -17472,7 +17482,7 @@ struct S850 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type ET_SYSTEM_MULTIPROCESSOR */
@@ -18011,9 +18021,9 @@ struct S894 {
 	T0* a9; /* attached_separate_type */
 	T0* a10; /* attached_type */
 	T0* a11; /* conforming_ancestors */
-	T0* a12; /* queries_by_seed */
-	T0* a13; /* procedures_by_seed */
-	T0* a14; /* procedures */
+	T0* a12; /* procedures_by_seed */
+	T0* a13; /* procedures */
+	T0* a14; /* queries_by_seed */
 	T1 a15; /* has_redefined_copy_routine */
 	T0* a16; /* item_type_sets */
 	T1 a17; /* has_redefined_is_equal_routine */
@@ -18120,7 +18130,7 @@ struct S908 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type UC_STRING */
@@ -18874,9 +18884,9 @@ struct S966 {
 	T0* a9; /* attached_separate_type */
 	T0* a10; /* attached_type */
 	T0* a11; /* conforming_ancestors */
-	T0* a12; /* queries_by_seed */
-	T0* a13; /* procedures_by_seed */
-	T0* a14; /* procedures */
+	T0* a12; /* procedures_by_seed */
+	T0* a13; /* procedures */
+	T0* a14; /* queries_by_seed */
 	T0* a15; /* item_type_set */
 	T1 a16; /* has_redefined_copy_routine */
 	T1 a17; /* has_redefined_is_equal_routine */
@@ -19069,7 +19079,7 @@ struct S1006 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_DYNAMIC_PRIMARY_TYPE] */
@@ -19354,8 +19364,8 @@ struct S1048 {
 	T1 a21; /* has_static */
 	T0* a22; /* open_operand_type_sets */
 	T6 a23; /* hash_code */
-	T0* a24; /* queries_by_seed */
-	T0* a25; /* procedures_by_seed */
+	T0* a24; /* procedures_by_seed */
+	T0* a25; /* queries_by_seed */
 	T1 a26; /* has_reference_attributes */
 	T0* a27; /* equality_expressions */
 	T0* a28; /* object_equality_expressions */
@@ -19389,8 +19399,8 @@ struct S1049 {
 	T0* a22; /* open_operand_type_sets */
 	T0* a23; /* result_type_set */
 	T6 a24; /* hash_code */
-	T0* a25; /* queries_by_seed */
-	T0* a26; /* procedures_by_seed */
+	T0* a25; /* procedures_by_seed */
+	T0* a26; /* queries_by_seed */
 	T1 a27; /* has_reference_attributes */
 	T0* a28; /* equality_expressions */
 	T0* a29; /* object_equality_expressions */
@@ -19581,7 +19591,7 @@ struct S1063 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type SPECIAL [NATURAL_8] */
@@ -19591,7 +19601,7 @@ struct S1064 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T8 z2[1]; /* item */
+	T8 z2[]; /* item */
 };
 
 /* Struct for type UC_UTF8_STRING */
@@ -19645,7 +19655,7 @@ struct S1070 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_MASTER_CLASS] */
@@ -19667,7 +19677,7 @@ struct S1075 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME] */
@@ -19686,7 +19696,7 @@ struct S1078 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_PARENT_ITEM] */
@@ -19702,7 +19712,7 @@ struct S1080 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_CLIENT_ITEM] */
@@ -19718,7 +19728,7 @@ struct S1083 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ACTUAL_PARAMETER_ITEM] */
@@ -19759,7 +19769,7 @@ struct S1090 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST [ET_MASTER_CLASS] */
@@ -19809,7 +19819,7 @@ struct S1096 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [AP_OPTION] */
@@ -19834,7 +19844,7 @@ struct S1099 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [AP_ALTERNATIVE_OPTIONS_LIST] */
@@ -19850,7 +19860,7 @@ struct S1101 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable STRING_8] */
@@ -20418,7 +20428,7 @@ struct S1145 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_OBJECT_TEST_LIST] */
@@ -20434,7 +20444,7 @@ struct S1147 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_OBJECT_TEST_LIST] */
@@ -20450,7 +20460,7 @@ struct S1149 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_ITERATION_COMPONENT_LIST] */
@@ -20466,7 +20476,7 @@ struct S1151 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ITERATION_COMPONENT_LIST] */
@@ -20482,7 +20492,7 @@ struct S1153 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_ARGUMENT_LIST] */
@@ -20498,7 +20508,7 @@ struct S1155 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_INLINE_SEPARATE_ARGUMENT_LIST] */
@@ -20514,7 +20524,7 @@ struct S1157 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ASSERTION_ITEM] */
@@ -20539,7 +20549,7 @@ struct S1160 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_QUERY] */
@@ -20564,7 +20574,7 @@ struct S1163 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_PROCEDURE] */
@@ -20607,7 +20617,7 @@ struct S1168 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_NAMED_CLASS] */
@@ -20623,7 +20633,7 @@ struct S1171 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_EXPRESSION_ITEM] */
@@ -20639,7 +20649,7 @@ struct S1175 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_INSTRUCTION] */
@@ -20655,7 +20665,7 @@ struct S1178 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_INLINE_SEPARATE_ARGUMENT_ITEM] */
@@ -20671,7 +20681,7 @@ struct S1180 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_NAMED_OBJECT_TEST] */
@@ -20687,7 +20697,7 @@ struct S1182 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ITERATION_COMPONENT] */
@@ -20703,7 +20713,7 @@ struct S1184 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_INLINE_SEPARATE_ARGUMENT] */
@@ -20719,7 +20729,7 @@ struct S1186 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_BASE_TYPE] */
@@ -20770,7 +20780,7 @@ struct S1190 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ECF_LIBRARY] */
@@ -20786,7 +20796,7 @@ struct S1194 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_HASH_TABLE_CURSOR [ET_ECF_DOTNET_ASSEMBLY, STRING_8] */
@@ -20950,7 +20960,7 @@ struct S1212 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [DS_HASH_SET [XM_EIFFEL_PARSER_NAME]] */
@@ -20988,7 +20998,7 @@ struct S1215 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [XM_DTD_EXTERNAL_ID] */
@@ -21012,7 +21022,7 @@ struct S1218 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [XM_DTD_ELEMENT_CONTENT] */
@@ -21039,7 +21049,7 @@ struct S1221 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [DS_BILINKED_LIST [XM_DTD_ATTRIBUTE_CONTENT]] */
@@ -21065,7 +21075,7 @@ struct S1224 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [XM_DTD_ATTRIBUTE_CONTENT] */
@@ -21093,7 +21103,7 @@ struct S1227 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [DS_BILINKED_LIST [STRING_8]] */
@@ -21120,7 +21130,7 @@ struct S1230 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [BOOLEAN] */
@@ -21151,7 +21161,7 @@ struct S1234 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type XM_EIFFEL_ENTITY_DEF */
@@ -21348,7 +21358,7 @@ struct S1243 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_HASH_SET [XM_NAMESPACE] */
@@ -21390,7 +21400,7 @@ struct S1248 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ECF_SYSTEM_CONFIG] */
@@ -21423,7 +21433,7 @@ struct S1253 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ECF_TARGET] */
@@ -21454,7 +21464,7 @@ struct S1259 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type ET_DOTNET_ASSEMBLIES */
@@ -21477,7 +21487,7 @@ struct S1265 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_HASH_TABLE_CURSOR [ET_IDENTIFIER, STRING_8] */
@@ -21502,7 +21512,7 @@ struct S1268 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_CLUSTER] */
@@ -21553,7 +21563,7 @@ struct S1272 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_DYNAMIC_FEATURE] */
@@ -21652,7 +21662,7 @@ struct S1283 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_DYNAMIC_TYPE_SET] */
@@ -21683,7 +21693,7 @@ struct S1288 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_DYNAMIC_TYPE] */
@@ -21716,7 +21726,7 @@ struct S1292 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_INLINE_AGENT] */
@@ -21741,7 +21751,7 @@ struct S1295 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [ET_PROCEDURE]] */
@@ -21766,7 +21776,7 @@ struct S1298 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [ET_QUERY]] */
@@ -21803,7 +21813,7 @@ struct S1302 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [ET_FEATURE]] */
@@ -21837,7 +21847,7 @@ struct S1306 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [TUPLE [detachable ET_QUERY, ET_CLASS, ET_NESTED_TYPE_CONTEXT]] */
@@ -21856,7 +21866,7 @@ struct S1308 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_NESTED_TYPE_CONTEXT] */
@@ -21941,7 +21951,7 @@ struct S1322 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ATTACHMENT_SCOPE] */
@@ -21975,7 +21985,7 @@ struct S1326 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ASSERTIONS] */
@@ -21997,7 +22007,7 @@ struct S1331 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_NOTE_TERM] */
@@ -22013,7 +22023,7 @@ struct S1333 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_NOTE_TERM] */
@@ -22038,7 +22048,7 @@ struct S1336 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [ET_ADAPTED_CLASS]] */
@@ -22057,7 +22067,7 @@ struct S1338 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type SPECIAL [NATURAL_32] */
@@ -22067,7 +22077,7 @@ struct S1339 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T10 z2[1]; /* item */
+	T10 z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST [RX_CHARACTER_SET] */
@@ -22094,7 +22104,7 @@ struct S1342 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T11 z2[1]; /* item */
+	T11 z2[]; /* item */
 };
 
 /* Struct for type DS_HASH_TABLE [NATURAL_64, NATURAL_32] */
@@ -22139,7 +22149,7 @@ struct S1345 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type SPECIAL [SPECIAL [ARRAY [INTEGER_32]]] */
@@ -22149,7 +22159,7 @@ struct S1346 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_INTEGER_ROUTINES */
@@ -22182,7 +22192,7 @@ struct S1353 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_DYNAMIC_PRIMARY_TYPE] */
@@ -22222,7 +22232,7 @@ struct S1358 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_EQUALITY_EXPRESSION] */
@@ -22241,7 +22251,7 @@ struct S1360 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_DYNAMIC_EQUALITY_TYPES] */
@@ -22272,7 +22282,7 @@ struct S1364 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_DYNAMIC_OBJECT_EQUALITY_TYPES] */
@@ -22297,7 +22307,7 @@ struct S1367 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_UNQUALIFIED_CALL_EXPRESSION] */
@@ -22316,7 +22326,7 @@ struct S1369 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_QUALIFIED_CALL_EXPRESSION] */
@@ -22347,7 +22357,7 @@ struct S1373 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ACTUAL_ARGUMENT_LIST] */
@@ -22372,7 +22382,7 @@ struct S1376 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_RESULT] */
@@ -22391,7 +22401,7 @@ struct S1378 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_DYNAMIC_STANDALONE_TYPE_SET] */
@@ -22416,7 +22426,7 @@ struct S1381 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_EXPRESSION] */
@@ -22459,7 +22469,7 @@ struct S1387 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_OBJECT_TEST] */
@@ -22493,7 +22503,7 @@ struct S1393 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_AGENT] */
@@ -22527,7 +22537,7 @@ struct S1397 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_DYNAMIC_TUPLE_TYPE] */
@@ -22561,7 +22571,7 @@ struct S1401 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_CONSTANT] */
@@ -22586,7 +22596,7 @@ struct S1405 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_INLINE_CONSTANT] */
@@ -22602,7 +22612,7 @@ struct S1408 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_HASH_TABLE_CURSOR [detachable ET_DYNAMIC_FEATURE, ET_DYNAMIC_PRIMARY_TYPE] */
@@ -22627,7 +22637,7 @@ struct S1412 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_DYNAMIC_INLINED_EXPRESSION] */
@@ -22652,7 +22662,7 @@ struct S1415 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_DYNAMIC_CALL_CONTEXT] */
@@ -22704,7 +22714,7 @@ struct S1427 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [STRING_8]] */
@@ -22728,7 +22738,7 @@ struct S1430 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [TUPLE [STRING_8, detachable STRING_8]] */
@@ -22921,7 +22931,7 @@ struct S1454 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_CREATOR] */
@@ -22943,7 +22953,7 @@ struct S1457 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type ET_ECF_NOTE_ELEMENT */
@@ -23680,7 +23690,7 @@ struct S1552 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_RENAME_ITEM] */
@@ -23696,7 +23706,7 @@ struct S1555 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_EXPORT] */
@@ -23789,7 +23799,7 @@ struct S1576 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_AGENT_ARGUMENT_OPERAND_ITEM] */
@@ -23805,7 +23815,7 @@ struct S1578 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ALIAS_NAME] */
@@ -23829,7 +23839,7 @@ struct S1582 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_CHOICE_ITEM] */
@@ -23845,7 +23855,7 @@ struct S1584 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM] */
@@ -23861,7 +23871,7 @@ struct S1587 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_CONVERT_FEATURE_ITEM] */
@@ -23877,7 +23887,7 @@ struct S1590 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ELSEIF_EXPRESSION] */
@@ -23893,7 +23903,7 @@ struct S1592 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ELSEIF_PART] */
@@ -23909,7 +23919,7 @@ struct S1594 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_FEATURE_CLAUSE] */
@@ -23925,7 +23935,7 @@ struct S1596 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_FORMAL_ARGUMENT_ITEM] */
@@ -23941,7 +23951,7 @@ struct S1599 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_FORMAL_PARAMETER_ITEM] */
@@ -23957,7 +23967,7 @@ struct S1601 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_LOCAL_VARIABLE_ITEM] */
@@ -23973,7 +23983,7 @@ struct S1605 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_MANIFEST_STRING_ITEM] */
@@ -23989,7 +23999,7 @@ struct S1608 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_NOTE_ITEM] */
@@ -24005,7 +24015,7 @@ struct S1610 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_NOTE_TERM_ITEM] */
@@ -24021,7 +24031,7 @@ struct S1612 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_PARENT_LIST] */
@@ -24037,7 +24047,7 @@ struct S1615 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_TYPE_CONSTRAINT_ITEM] */
@@ -24053,7 +24063,7 @@ struct S1617 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_WHEN_EXPRESSION] */
@@ -24069,7 +24079,7 @@ struct S1619 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_WHEN_PART] */
@@ -24251,7 +24261,7 @@ struct S1649 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ECF_NOTE_ELEMENT] */
@@ -24310,7 +24320,7 @@ struct S1658 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ADAPTED_LIBRARY] */
@@ -24334,7 +24344,7 @@ struct S1661 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ADAPTED_DOTNET_ASSEMBLY] */
@@ -24358,7 +24368,7 @@ struct S1664 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_TYPE_ITEM] */
@@ -24449,7 +24459,7 @@ struct S1673 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type SPECIAL [ET_FEATURE_NAME] */
@@ -24459,7 +24469,7 @@ struct S1676 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_FLATTENED_FEATURE] */
@@ -24496,7 +24506,7 @@ struct S1682 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_CLIENT_LIST] */
@@ -24530,7 +24540,7 @@ struct S1687 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_HASH_SET [ET_FEATURE_NAME] */
@@ -24802,7 +24812,7 @@ struct S1712 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_RENAME] */
@@ -24891,7 +24901,7 @@ struct S1730 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_HASH_TABLE_CURSOR [XM_EIFFEL_ENTITY_DEF, STRING_8] */
@@ -25025,7 +25035,7 @@ struct S1752 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_LINKABLE [XM_DOCUMENT_NODE] */
@@ -25063,7 +25073,7 @@ struct S1758 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type SPECIAL [ET_CALL_NAME] */
@@ -25073,7 +25083,7 @@ struct S1760 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_HASH_TABLE_CURSOR [ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL, ET_CALL_NAME] */
@@ -25103,7 +25113,7 @@ struct S1765 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_DYNAMIC_QUALIFIED_QUERY_CALL] */
@@ -25127,7 +25137,7 @@ struct S1769 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_SYSTEM_PROCESSOR] */
@@ -25157,7 +25167,7 @@ struct S1774 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ADAPTED_CLASS] */
@@ -25232,7 +25242,7 @@ struct S1790 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable DS_LINKABLE [INTEGER_32]] */
@@ -25578,7 +25588,7 @@ struct S1873 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_DYNAMIC_PRECURSOR] */
@@ -25620,7 +25630,7 @@ struct S1896 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T9 z2[1]; /* item */
+	T9 z2[]; /* item */
 };
 
 /* Struct for type ARRAY [NATURAL_16] */
@@ -25648,7 +25658,7 @@ struct S1899 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [detachable ET_FORMAL_PARAMETER_TYPE] */
@@ -25799,7 +25809,7 @@ struct S1914 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ECF_ACTION] */
@@ -25828,7 +25838,7 @@ struct S1917 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ECF_OPTIONS] */
@@ -25858,7 +25868,7 @@ struct S1923 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ECF_VISIBLE_CLASS] */
@@ -25912,7 +25922,7 @@ struct S1929 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_HASH_SET_CURSOR [ET_INTERNAL_UNIVERSE] */
@@ -25936,7 +25946,7 @@ struct S1934 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type ET_CLASS_TYPE_STATUS_CHECKER1 */
@@ -25990,7 +26000,7 @@ struct S1941 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type LX_DFA_WILDCARD */
@@ -26069,7 +26079,7 @@ struct S1949 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ADAPTED_UNIVERSE] */
@@ -26094,7 +26104,7 @@ struct S1952 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ECF_TARGET_PARENT] */
@@ -26118,7 +26128,7 @@ struct S1955 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ECF_CLUSTER] */
@@ -26143,7 +26153,7 @@ struct S1958 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_DYNAMIC_TARGET] */
@@ -26159,7 +26169,7 @@ struct S1960 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [YY_BUFFER] */
@@ -26184,7 +26194,7 @@ struct S1964 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_BASE_TYPE_CONSTRAINT] */
@@ -26245,7 +26255,7 @@ struct S1972 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_REPLICABLE_FEATURE] */
@@ -26286,7 +26296,7 @@ struct S1978 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_PARENT_FEATURE] */
@@ -26305,7 +26315,7 @@ struct S1980 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_HASH_SET_CURSOR [ET_DOTNET_FEATURE] */
@@ -26330,7 +26340,7 @@ struct S1983 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_HASH_TABLE_CURSOR [DS_LINKED_LIST [ET_DOTNET_FEATURE], ET_DOTNET_FEATURE] */
@@ -26399,7 +26409,7 @@ struct S1991 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_LIKE_FEATURE] */
@@ -26464,7 +26474,7 @@ struct S1998 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_BILINKED_LIST_CURSOR [XM_DTD_ELEMENT_CONTENT] */
@@ -26996,7 +27006,7 @@ struct S2087 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_AGENT_IMPLICIT_OPEN_ARGUMENT] */
@@ -27020,7 +27030,7 @@ struct S2091 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ECF_ADAPTED_LIBRARY] */
@@ -27044,7 +27054,7 @@ struct S2094 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ET_ECF_ADAPTED_DOTNET_ASSEMBLY] */
@@ -27074,7 +27084,7 @@ struct S2098 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ECF_FILE_RULE] */
@@ -27098,7 +27108,7 @@ struct S2101 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ECF_NAMESPACE] */
@@ -27122,7 +27132,7 @@ struct S2104 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ECF_EXTERNAL_CFLAG] */
@@ -27146,7 +27156,7 @@ struct S2107 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ECF_EXTERNAL_INCLUDE] */
@@ -27170,7 +27180,7 @@ struct S2110 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ECF_EXTERNAL_LIBRARY] */
@@ -27194,7 +27204,7 @@ struct S2113 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ECF_EXTERNAL_LINKER_FLAG] */
@@ -27218,7 +27228,7 @@ struct S2116 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ECF_EXTERNAL_MAKE] */
@@ -27242,7 +27252,7 @@ struct S2119 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ECF_EXTERNAL_OBJECT] */
@@ -27266,7 +27276,7 @@ struct S2122 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ECF_EXTERNAL_RESOURCE] */
@@ -27290,7 +27300,7 @@ struct S2125 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [RX_PCRE_REGULAR_EXPRESSION] */
@@ -27314,7 +27324,7 @@ struct S2128 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ECF_ANDED_CONDITIONS] */
@@ -27338,7 +27348,7 @@ struct S2131 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [ET_ECF_CONDITION_ITEM] */
@@ -27550,7 +27560,7 @@ struct S2138 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [LX_WILDCARD] */
@@ -27592,7 +27602,7 @@ struct S2146 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [TUPLE [detachable ARRAY [ET_TYPE], detachable ET_TYPE, NATURAL_8]] */
@@ -27724,7 +27734,7 @@ struct S2170 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [DS_HASH_TABLE [INTEGER_32, STRING_8]] */
@@ -27909,7 +27919,7 @@ struct S2186 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [LX_SYMBOL_CLASS] */
@@ -27925,7 +27935,7 @@ struct S2188 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [LX_NFA] */
@@ -27949,7 +27959,7 @@ struct S2191 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type LX_RULE */
@@ -28064,7 +28074,7 @@ struct S2205 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type LX_DFA_STATE */
@@ -28133,7 +28143,7 @@ struct S2212 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type LX_START_CONDITION */
@@ -28264,7 +28274,7 @@ struct S2232 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type ARRAY [detachable DS_HASH_SET [INTEGER_32]] */
@@ -28283,7 +28293,7 @@ struct S2234 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]] */
@@ -28350,7 +28360,7 @@ struct S2242 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [LX_START_CONDITION] */
@@ -28375,7 +28385,7 @@ struct S2245 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_EQUALITY_TESTER [LX_SYMBOL_CLASS] */
@@ -28405,7 +28415,7 @@ struct S2250 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_HASH_TABLE_CURSOR [STRING_32, STRING_8] */
@@ -28479,7 +28489,7 @@ struct S2264 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type DS_BUBBLE_SORTER [LX_NFA_STATE] */
@@ -28503,7 +28513,7 @@ struct S2269 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [LX_NFA_STATE] */
@@ -28528,7 +28538,7 @@ struct S2274 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [LX_DFA_STATE] */
@@ -28648,7 +28658,7 @@ struct S2297 {
 	uint32_t offset;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
-	T0* z2[1]; /* item */
+	T0* z2[]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [LX_SYMBOL_CLASS]] */
@@ -34118,9 +34128,9 @@ extern void T15f14(TC* ac, T0* C, T2 a1, T6 a2, T6 a3);
 /* SPECIAL [CHARACTER_8].extend */
 extern void T15f18(TC* ac, T0* C, T2 a1);
 /* INTEGER_32.min */
-extern T6 T6f17(TC* ac, volatile T6* C, T6 a1);
+extern T6 T6f17(TC* ac, T6 volatile* C, T6 a1);
 /* INTEGER_32.is_less_equal */
-extern T1 T6f15(TC* ac, volatile T6* C, T6 a1);
+extern T1 T6f15(TC* ac, T6 volatile* C, T6 a1);
 /* SPECIAL [CHARACTER_8].aliased_resized_area */
 extern T0* T15f5(TC* ac, T0* C, T6 a1);
 /* STRING_8.capacity */
@@ -34134,9 +34144,9 @@ extern void T17f52(TC* ac, T0* C, T2 a1);
 /* STRING_8.additional_space */
 extern T6 T17f8(TC* ac, T0* C);
 /* INTEGER_32.max */
-extern T6 T6f16(TC* ac, volatile T6* C, T6 a1);
+extern T6 T6f16(TC* ac, T6 volatile* C, T6 a1);
 /* INTEGER_32.is_greater_equal */
-extern T1 T6f14(TC* ac, volatile T6* C, T6 a1);
+extern T1 T6f14(TC* ac, T6 volatile* C, T6 a1);
 /* DT_DATE_TIME_DURATION.append_date_to_string */
 extern void T1024f22(TC* ac, T0* C, T0* a1);
 /* STRING_8.make */
@@ -34243,11 +34253,11 @@ extern void T31f15(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* MANAGED_POINTER.put_natural_8 */
 extern void T162f16(TC* ac, T0* C, T8 a1, T6 a2);
 /* POINTER.memory_copy */
-extern void T14f19(TC* ac, volatile T14* C, T14 a1, T6 a2);
+extern void T14f19(TC* ac, T14 volatile* C, T14 a1, T6 a2);
 /* POINTER.c_memcpy */
 extern void T14s20(TC* ac, T14 a1, T14 a2, T6 a3);
 /* NATURAL_32.to_natural_8 */
-extern T8 T10f23(TC* ac, volatile T10* C);
+extern T8 T10f23(TC* ac, T10 volatile* C);
 /* UC_UTF8_STRING.code */
 extern T10 T1066f48(TC* ac, T0* C, T6 a1);
 /* UC_UTF8_STRING.code_at_byte_index */
@@ -34257,9 +34267,9 @@ extern T10 T167s24(TC* ac, T2 a1);
 /* UC_UTF8_ROUTINES.encoded_byte_count */
 extern T6 T167s2(TC* ac, T2 a1);
 /* CHARACTER_8.is_less_equal */
-extern T1 T2f10(TC* ac, volatile T2* C, T2 a1);
+extern T1 T2f10(TC* ac, T2 volatile* C, T2 a1);
 /* CHARACTER_8.is_less */
-extern T1 T2f15(TC* ac, volatile T2* C, T2 a1);
+extern T1 T2f15(TC* ac, T2 volatile* C, T2 a1);
 /* UC_UTF8_ROUTINES.natural_32_encoded_first_value */
 extern T10 T167s23(TC* ac, T2 a1);
 /* UC_UTF8_STRING.utf8 */
@@ -34269,9 +34279,9 @@ extern T0* T167c57(TC* ac);
 /* UC_UTF8_STRING.byte_index */
 extern T6 T1066f14(TC* ac, T0* C, T6 a1);
 /* CHARACTER_8.natural_32_code */
-extern T10 T2f7(TC* ac, volatile T2* C);
+extern T10 T2f7(TC* ac, T2 volatile* C);
 /* INTEGER_32.to_natural_32 */
-extern T10 T6f20(TC* ac, volatile T6* C);
+extern T10 T6f20(TC* ac, T6 volatile* C);
 /* UC_STRING.code */
 extern T10 T909f10(TC* ac, T0* C, T6 a1);
 /* UC_STRING.code_at_byte_index */
@@ -34297,7 +34307,7 @@ extern void T1056f2(TC* ac, T0* C, T6 a1);
 /* CELL [INTEGER_32].put */
 extern T0* T1056c2(TC* ac, T6 a1);
 /* NATURAL_32.is_less_equal */
-extern T1 T10f5(TC* ac, volatile T10* C, T10 a1);
+extern T1 T10f5(TC* ac, T10 volatile* C, T10 a1);
 /* UTF_CONVERTER.to_natural_32 */
 extern T10 T40s6(TC* ac, T0* a1);
 /* HEXADECIMAL_STRING_TO_INTEGER_CONVERTER.parsed_natural_32 */
@@ -34307,7 +34317,7 @@ extern void T1020f19(TC* ac, T0* C, T0* a1, T6 a2);
 extern T1 T1020f19ot1(TC* ac, T0* a1);
 extern T1 T1020f19ot2(TC* ac, T0* a1);
 /* NATURAL_32.is_valid_character_8_code */
-extern T1 T10f30(TC* ac, volatile T10* C);
+extern T1 T10f30(TC* ac, T10 volatile* C);
 /* IMMUTABLE_STRING_32.code */
 extern T10 T20f5(TC* ac, T0* C, T6 a1);
 /* STRING_32.count */
@@ -34315,7 +34325,7 @@ extern T6 T18f2(TC* ac, T0* C);
 /* IMMUTABLE_STRING_32.count */
 extern T6 T20f2(TC* ac, T0* C);
 /* CHARACTER_32.is_character_8 */
-extern T1 T3f12(TC* ac, volatile T3* C);
+extern T1 T3f12(TC* ac, T3 volatile* C);
 /* STRING_32.area_lower */
 extern T6 T18f8(TC* ac, T0* C);
 /* HEXADECIMAL_STRING_TO_INTEGER_CONVERTER.parse_character */
@@ -34325,25 +34335,25 @@ extern T1 T1020f16(TC* ac, T0* C);
 /* INTEGER_OVERFLOW_CHECKER.will_overflow */
 extern T1 T1643f7(TC* ac, T0* C, T11 a1, T11 a2, T6 a3, T6 a4);
 /* NATURAL_64.is_greater */
-extern T1 T11f20(TC* ac, volatile T11* C, T11 a1);
+extern T1 T11f20(TC* ac, T11 volatile* C, T11 a1);
 /* HEXADECIMAL_STRING_TO_INTEGER_CONVERTER.overflow_checker */
 extern T0* T1020f15(TC* ac, T0* C);
 /* INTEGER_OVERFLOW_CHECKER.make */
 extern T0* T1643c13(TC* ac);
 /* NATURAL_64.to_natural_64 */
-extern T11 T11f21(TC* ac, volatile T11* C);
+extern T11 T11f21(TC* ac, T11 volatile* C);
 /* NATURAL_32.to_natural_64 */
-extern T11 T10f28(TC* ac, volatile T10* C);
+extern T11 T10f28(TC* ac, T10 volatile* C);
 /* NATURAL_16.to_natural_64 */
-extern T11 T9f19(TC* ac, volatile T9* C);
+extern T11 T9f19(TC* ac, T9 volatile* C);
 /* INTEGER_64.to_natural_64 */
-extern T11 T7f22(TC* ac, volatile T7* C);
+extern T11 T7f22(TC* ac, T7 volatile* C);
 /* INTEGER_32.to_natural_64 */
-extern T11 T6f19(TC* ac, volatile T6* C);
+extern T11 T6f19(TC* ac, T6 volatile* C);
 /* INTEGER_16.to_natural_64 */
-extern T11 T5f6(TC* ac, volatile T5* C);
+extern T11 T5f6(TC* ac, T5 volatile* C);
 /* INTEGER_8.to_natural_64 */
-extern T11 T4f9(TC* ac, volatile T4* C);
+extern T11 T4f9(TC* ac, T4 volatile* C);
 /* SPECIAL [NATURAL_64].extend */
 extern void T1342f13(TC* ac, T0* C, T11 a1);
 /* SPECIAL [NATURAL_64].make_empty */
@@ -34353,21 +34363,21 @@ extern T0* T1342c11(TC* ac, T6 a1);
 /* STRING_8.has */
 extern T1 T17f16(TC* ac, T0* C, T2 a1);
 /* NATURAL_8.to_natural_64 */
-extern T11 T8f15(TC* ac, volatile T8* C);
+extern T11 T8f15(TC* ac, T8 volatile* C);
 /* CHARACTER_8.to_hexa_digit */
-extern T8 T2f29(TC* ac, volatile T2* C);
+extern T8 T2f29(TC* ac, T2 volatile* C);
 /* INTEGER_8.to_natural_8 */
-extern T8 T4f5(TC* ac, volatile T4* C);
+extern T8 T4f5(TC* ac, T4 volatile* C);
 /* NATURAL_8.to_integer_8 */
-extern T4 T8f17(TC* ac, volatile T8* C);
+extern T4 T8f17(TC* ac, T8 volatile* C);
 /* CHARACTER_8.is_hexa_digit */
-extern T1 T2f28(TC* ac, volatile T2* C);
+extern T1 T2f28(TC* ac, T2 volatile* C);
 /* NATURAL_8.is_greater */
-extern T1 T8f5(TC* ac, volatile T8* C, T8 a1);
+extern T1 T8f5(TC* ac, T8 volatile* C, T8 a1);
 /* CHARACTER_8.character_types */
-extern T8 T2f13(TC* ac, volatile T2* C, T6 a1);
+extern T8 T2f13(TC* ac, T2 volatile* C, T6 a1);
 /* CHARACTER_8.internal_character_types */
-extern T0* T2f16(TC* ac, volatile T2* C);
+extern T0* T2f16(TC* ac, T2 volatile* C);
 /* SPECIAL [NATURAL_8].extend */
 extern void T1064f7(TC* ac, T0* C, T8 a1);
 /* SPECIAL [NATURAL_8].make_empty */
@@ -34418,7 +34428,7 @@ extern T1 T1066f102ot1(TC* ac, T0* a1);
 extern T1 T1066f102ot2(TC* ac, T0* a1);
 extern T1 T1066f102ot3(TC* ac, T0* a1);
 /* NATURAL_32.to_integer_32 */
-extern T6 T10f11(TC* ac, volatile T10* C);
+extern T6 T10f11(TC* ac, T10 volatile* C);
 /* UC_STRING.next_byte_index */
 extern T6 T909f34(TC* ac, T0* C, T6 a1);
 /* UC_UTF8_STRING.next_byte_index */
@@ -34633,9 +34643,9 @@ extern void T40s17(TC* ac, T0* a1, T6 a2, T6 a3, T0* a4, T6 a5, T0* a6);
 /* MANAGED_POINTER.put_natural_16 */
 extern void T162f18(TC* ac, T0* C, T9 a1, T6 a2);
 /* NATURAL_32.to_natural_16 */
-extern T9 T10f24(TC* ac, volatile T10* C);
+extern T9 T10f24(TC* ac, T10 volatile* C);
 /* NATURAL_32.is_greater */
-extern T1 T10f12(TC* ac, volatile T10* C, T10 a1);
+extern T1 T10f12(TC* ac, T10 volatile* C, T10 a1);
 /* UTF_CONVERTER.utf_16_bytes_count */
 extern T6 T40s13(TC* ac, T0* a1, T6 a2, T6 a3);
 /* MANAGED_POINTER.make */
@@ -34673,7 +34683,7 @@ extern T1 T28f26(TC* ac, T0* C, T6 a1, T6 a2);
 /* HASH_TABLE [INTEGER_32, INTEGER_32].hash_code_of */
 extern T6 T28f25(TC* ac, T0* C, T6 a1);
 /* INTEGER_32.hash_code */
-extern T6 T6f27(TC* ac, volatile T6* C);
+extern T6 T6f27(TC* ac, T6 volatile* C);
 /* ISE_EXCEPTION_MANAGER.ignored_exceptions */
 extern T0* T21s3(TC* ac);
 /* HASH_TABLE [INTEGER_32, INTEGER_32].make */
@@ -34725,11 +34735,11 @@ extern T14 T14s8(TC* ac, T6 a1, T6 a2);
 /* MANAGED_POINTER.resize */
 extern void T162f11(TC* ac, T0* C, T6 a1);
 /* POINTER.memory_set */
-extern void T14f15(TC* ac, volatile T14* C, T6 a1, T6 a2);
+extern void T14f15(TC* ac, T14 volatile* C, T6 a1, T6 a2);
 /* POINTER.c_memset */
 extern void T14s18(TC* ac, T14 a1, T6 a2, T6 a3);
 /* POINTER.memory_realloc */
-extern T14 T14f6(TC* ac, volatile T14* C, T6 a1);
+extern T14 T14f6(TC* ac, T14 volatile* C, T6 a1);
 /* POINTER.c_realloc */
 extern T14 T14s9(TC* ac, T14 a1, T6 a2);
 /* CONSOLE.buffered_file_info */
@@ -34811,9 +34821,9 @@ extern T0* T97s21(TC* ac);
 /* DT_DATE_TIME.set_day */
 extern void T97f67(TC* ac, T0* C, T6 a1);
 /* INTEGER_64.to_integer */
-extern T6 T7f24(TC* ac, volatile T7* C);
+extern T6 T7f24(TC* ac, T7 volatile* C);
 /* INTEGER_32.to_integer_64 */
-extern T7 T6f21(TC* ac, volatile T6* C);
+extern T7 T6f21(TC* ac, T6 volatile* C);
 /* DT_DATE_TIME_DURATION.millisecond_count */
 extern T6 T1024f15(TC* ac, T0* C);
 /* DT_DATE_TIME.add_years_months_days */
@@ -34879,7 +34889,7 @@ extern T6 T1645s14(TC* ac, T14 a1);
 /* C_DATE.update */
 extern void T1645f23(TC* ac, T0* C);
 /* POINTER.memory_free */
-extern void T14f14(TC* ac, volatile T14* C);
+extern void T14f14(TC* ac, T14 volatile* C);
 /* POINTER.default_pointer */
 extern T14 T14s10(TC* ac);
 /* POINTER.c_free */
@@ -35210,17 +35220,17 @@ extern void T40s20(TC* ac, T0* a1, T0* a2);
 /* UTF_CONVERTER.escape_code_into */
 extern void T40s24(TC* ac, T0* a1, T9 a2);
 /* NATURAL_16.to_hex_string */
-extern T0* T9f12(TC* ac, volatile T9* C);
+extern T0* T9f12(TC* ac, T9 volatile* C);
 /* STRING_8.put */
 extern void T17f78(TC* ac, T0* C, T2 a1, T6 a2);
 /* NATURAL_16.to_hex_character */
-extern T2 T9f15(TC* ac, volatile T9* C);
+extern T2 T9f15(TC* ac, T9 volatile* C);
 /* CHARACTER_8.plus */
-extern T2 T2f33(TC* ac, volatile T2* C, T6 a1);
+extern T2 T2f33(TC* ac, T2 volatile* C, T6 a1);
 /* CHARACTER_8.minus */
-extern T2 T2f32(TC* ac, volatile T2* C, T6 a1);
+extern T2 T2f32(TC* ac, T2 volatile* C, T6 a1);
 /* NATURAL_16.to_integer_32 */
-extern T6 T9f5(TC* ac, volatile T9* C);
+extern T6 T9f5(TC* ac, T9 volatile* C);
 /* STRING_8.make_filled */
 extern T0* T17c60(TC* ac, T2 a1, T6 a2);
 /* STRING_8.fill_character */
@@ -35235,21 +35245,21 @@ extern void T18f30(TC* ac, T0* C, T0* a1);
 /* STRING_32.additional_space */
 extern T6 T18f6(TC* ac, T0* C);
 /* NATURAL_8.to_hex_string */
-extern T0* T8f14(TC* ac, volatile T8* C);
+extern T0* T8f14(TC* ac, T8 volatile* C);
 /* NATURAL_8.to_hex_character */
-extern T2 T8f21(TC* ac, volatile T8* C);
+extern T2 T8f21(TC* ac, T8 volatile* C);
 /* NATURAL_8.to_integer_32 */
-extern T6 T8f25(TC* ac, volatile T8* C);
+extern T6 T8f25(TC* ac, T8 volatile* C);
 /* NATURAL_16.is_less_equal */
-extern T1 T9f10(TC* ac, volatile T9* C, T9 a1);
+extern T1 T9f10(TC* ac, T9 volatile* C, T9 a1);
 /* STRING_32.append_character */
 extern void T18f25(TC* ac, T0* C, T3 a1);
 /* NATURAL_8.to_natural_16 */
-extern T9 T8f12(TC* ac, volatile T8* C);
+extern T9 T8f12(TC* ac, T8 volatile* C);
 /* STRING_32.extend */
 extern void T18f36(TC* ac, T0* C, T3 a1);
 /* NATURAL_8.is_less_equal */
-extern T1 T8f9(TC* ac, volatile T8* C, T8 a1);
+extern T1 T8f9(TC* ac, T8 volatile* C, T8 a1);
 /* STRING_32.grow */
 extern void T18f35(TC* ac, T0* C, T6 a1);
 /* IMMUTABLE_STRING_32.make_from_string */
@@ -35259,7 +35269,7 @@ extern T0* T40s11(TC* ac, T0* a1);
 /* UTF_CONVERTER.utf_16le_string_8_into_escaped_string_32 */
 extern void T40s23(TC* ac, T0* a1, T0* a2);
 /* NATURAL_32.is_greater_equal */
-extern T1 T10f14(TC* ac, volatile T10* C, T10 a1);
+extern T1 T10f14(TC* ac, T10 volatile* C, T10 a1);
 /* EXECUTION_ENVIRONMENT.current_working_path */
 extern T0* T105s7(TC* ac);
 /* PATH.make_from_pointer */
@@ -35281,11 +35291,11 @@ extern T6 T1014f12(TC* ac, T0* C);
 /* PATH.next_directory_separator */
 extern T6 T1014f16(TC* ac, T0* C, T6 a1);
 /* CHARACTER_8.is_greater_equal */
-extern T1 T2f12(TC* ac, volatile T2* C, T2 a1);
+extern T1 T2f12(TC* ac, T2 volatile* C, T2 a1);
 /* CHARACTER_8.as_lower */
-extern T2 T2f26(TC* ac, volatile T2* C);
+extern T2 T2f26(TC* ac, T2 volatile* C);
 /* CHARACTER_8.lower_value */
-extern T0* T2f30(TC* ac, volatile T2* C);
+extern T0* T2f30(TC* ac, T2 volatile* C);
 /* STRING_8.keep_head */
 extern void T17f73(TC* ac, T0* C, T6 a1);
 /* PATH.is_character */
@@ -35297,11 +35307,11 @@ extern T0* T31f3(TC* ac, T0* C, T6 a1, T6 a2);
 /* C_STRING.read_substring_into */
 extern void T31f14(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* NATURAL_8.to_natural_32 */
-extern T10 T8f8(TC* ac, volatile T8* C);
+extern T10 T8f8(TC* ac, T8 volatile* C);
 /* MANAGED_POINTER.read_natural_8 */
 extern T8 T162f5(TC* ac, T0* C, T6 a1);
 /* TYPED_POINTER [NATURAL_8].memory_copy */
-extern void T1545f4(TC* ac, volatile T1545* C, T14 a1, T6 a2);
+extern void T1545f4(TC* ac, T1545* C, T14 a1, T6 a2);
 /* TYPED_POINTER [NATURAL_8].c_memcpy */
 extern void T1545s6(TC* ac, T14 a1, T14 a2, T6 a3);
 /* PATH.unit_size */
@@ -35309,9 +35319,9 @@ extern T6 T1014f5(TC* ac, T0* C);
 /* PATH.pointer_length_in_bytes */
 extern T6 T1014f7(TC* ac, T0* C, T14 a1);
 /* NATURAL_64.to_integer_32 */
-extern T6 T11f16(TC* ac, volatile T11* C);
+extern T6 T11f16(TC* ac, T11 volatile* C);
 /* NATURAL_64.is_less_equal */
-extern T1 T11f8(TC* ac, volatile T11* C, T11 a1);
+extern T1 T11f8(TC* ac, T11 volatile* C, T11 a1);
 /* PATH.c_pointer_length_in_bytes */
 extern T11 T1014f15(TC* ac, T0* C, T14 a1);
 /* PATH.make_from_string */
@@ -35385,11 +35395,11 @@ extern void T40s21(TC* ac, T0* a1, T0* a2);
 /* UTF_CONVERTER.utf_16_0_subpointer_into_escaped_string_32 */
 extern void T40s25(TC* ac, T0* a1, T6 a2, T6 a3, T1 a4, T0* a5);
 /* NATURAL_16.to_natural_32 */
-extern T10 T9f13(TC* ac, volatile T9* C);
+extern T10 T9f13(TC* ac, T9 volatile* C);
 /* MANAGED_POINTER.read_natural_16 */
 extern T9 T162f6(TC* ac, T0* C, T6 a1);
 /* TYPED_POINTER [NATURAL_16].memory_copy */
-extern void T1546f4(TC* ac, volatile T1546* C, T14 a1, T6 a2);
+extern void T1546f4(TC* ac, T1546* C, T14 a1, T6 a2);
 /* TYPED_POINTER [NATURAL_16].c_memcpy */
 extern void T1546s6(TC* ac, T14 a1, T14 a2, T6 a3);
 /* NATIVE_STRING.make_from_pointer */
@@ -35586,7 +35596,7 @@ extern T1 T1015f15(TC* ac, T0* C);
 /* STRING_TO_INTEGER_CONVERTOR.overflow_checker */
 extern T0* T1015f14(TC* ac, T0* C);
 /* CHARACTER_8.is_digit */
-extern T1 T2f27(TC* ac, volatile T2* C);
+extern T1 T2f27(TC* ac, T2 volatile* C);
 /* STRING_TO_INTEGER_CONVERTOR.reset */
 extern void T1015f22(TC* ac, T0* C, T6 a1);
 /* UC_UTF8_STRING.ctoi_convertor */
@@ -35928,7 +35938,7 @@ extern void T17f69(TC* ac, T0* C);
 /* STRING_8.right_adjust */
 extern void T17f75(TC* ac, T0* C);
 /* CHARACTER_8.is_space */
-extern T1 T2f9(TC* ac, volatile T2* C);
+extern T1 T2f9(TC* ac, T2 volatile* C);
 /* STRING_8.left_adjust */
 extern void T17f74(TC* ac, T0* C);
 /* KL_TEXT_INPUT_FILE.read_line */
@@ -36062,7 +36072,7 @@ extern T1 T217f6(TC* ac, T0* C);
 /* AP_DISPLAY_HELP_FLAG.example */
 extern T0* T212f14(TC* ac, T0* C);
 /* CHARACTER_8.out */
-extern T0* T2f4(TC* ac, volatile T2* C);
+extern T0* T2f4(TC* ac, T2 volatile* C);
 /* AP_FLAG.example */
 extern T0* T46f11(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [AP_ALTERNATIVE_OPTIONS_LIST].item_for_iteration */
@@ -36414,7 +36424,7 @@ extern T1 T108s14(TC* ac, T0* a1, T0* a2);
 extern T1 T108s14ot1(TC* ac, T0* a1);
 extern T1 T108s14ot2(TC* ac, T0* a1);
 /* CHARACTER_32.lower */
-extern T3 T3f7(TC* ac, volatile T3* C);
+extern T3 T3f7(TC* ac, T3 volatile* C);
 /* CHARACTER_PROPERTY.to_lower */
 extern T3 T1441f1(TC* ac, T0* C, T3 a1);
 /* CHARACTER_PROPERTY.to_lower_table_16 */
@@ -36450,13 +36460,13 @@ extern T0* T1441f5(TC* ac, T0* C);
 /* CHARACTER_PROPERTY.to_lower_table_1 */
 extern T0* T1441f4(TC* ac, T0* C);
 /* CHARACTER_32.plus */
-extern T3 T3f6(TC* ac, volatile T3* C, T10 a1);
+extern T3 T3f6(TC* ac, T3 volatile* C, T10 a1);
 /* CHARACTER_32.is_less_equal */
-extern T1 T3f13(TC* ac, volatile T3* C, T3 a1);
+extern T1 T3f13(TC* ac, T3 volatile* C, T3 a1);
 /* CHARACTER_32.is_less */
-extern T1 T3f15(TC* ac, volatile T3* C, T3 a1);
+extern T1 T3f15(TC* ac, T3 volatile* C, T3 a1);
 /* CHARACTER_32.properties */
-extern T0* T3f10(TC* ac, volatile T3* C);
+extern T0* T3f10(TC* ac, T3 volatile* C);
 /* CHARACTER_PROPERTY.make */
 extern T0* T1441c37(TC* ac);
 /* UC_UNICODE_ROUTINES.lower_code */
@@ -36838,7 +36848,7 @@ extern T0* T160c7(TC* ac);
 /* UT_ERROR_HANDLER.std */
 extern T0* T160s4(TC* ac);
 /* INTEGER_32.out */
-extern T0* T6f7(TC* ac, volatile T6* C);
+extern T0* T6f7(TC* ac, T6 volatile* C);
 /* STRING_8.append_integer */
 extern void T17f51(TC* ac, T0* C, T6 a1);
 /* UT_GOBO_VARIABLES.executable_pathname */
@@ -37000,7 +37010,7 @@ extern void T17f79(TC* ac, T0* C);
 /* STRING_8.to_lower_area */
 extern void T17f82(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* CHARACTER_8.lower */
-extern T2 T2f24(TC* ac, volatile T2* C);
+extern T2 T2f24(TC* ac, T2 volatile* C);
 /* ET_CLASS_TYPE.base_class */
 extern T0* T102f11(TC* ac, T0* C);
 /* ET_CLASS.actual_class */
@@ -37018,9 +37028,9 @@ extern T0* T1049f18(TC* ac, T0* C);
 /* ET_DYNAMIC_PROCEDURE_TYPE.procedures */
 extern T0* T1048f18(TC* ac, T0* C);
 /* ET_DYNAMIC_TUPLE_TYPE.procedures */
-extern T0* T894f14(TC* ac, T0* C);
+extern T0* T894f13(TC* ac, T0* C);
 /* ET_DYNAMIC_SPECIAL_TYPE.procedures */
-extern T0* T966f14(TC* ac, T0* C);
+extern T0* T966f13(TC* ac, T0* C);
 /* ET_DYNAMIC_PRIMARY_TYPE.procedures */
 extern T0* T838f13(TC* ac, T0* C);
 /* ET_DYNAMIC_FUNCTION_TYPE.queries */
@@ -37064,7 +37074,7 @@ extern void T229f10(TC* ac, T0* C, T7 a1);
 /* KL_NULL_TEXT_OUTPUT_STREAM.put_character */
 extern void T229f8(TC* ac, T0* C, T2 a1);
 /* ET_C_GENERATOR.generate */
-extern void T114f663(TC* ac, T0* C, T0* a1);
+extern void T114f658(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TABLE [STRING_8, STRING_8].wipe_out */
 extern void T827f52(TC* ac, T0* C);
 /* DS_HASH_TABLE [STRING_8, STRING_8].slots_wipe_out */
@@ -37084,9 +37094,9 @@ extern void T951f15(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TABLE_CURSOR [STRING_8, STRING_8].set_after */
 extern void T951f14(TC* ac, T0* C);
 /* ET_C_GENERATOR.generate_compilation_script */
-extern void T114f670(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f665(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.report_cannot_write_error */
-extern void T114f673(TC* ac, T0* C, T0* a1);
+extern void T114f668(TC* ac, T0* C, T0* a1);
 /* ET_NULL_ERROR_HANDLER.report_error */
 extern void T63f194(TC* ac, T0* C, T0* a1);
 /* ET_NULL_ERROR_HANDLER.report_error_message */
@@ -37200,7 +37210,7 @@ extern T0* T114f190(TC* ac, T0* C);
 /* UT_CANNOT_WRITE_TO_FILE_ERROR.make */
 extern T0* T953c8(TC* ac, T0* a1);
 /* ET_C_GENERATOR.set_fatal_error */
-extern void T114f671(TC* ac, T0* C);
+extern void T114f666(TC* ac, T0* C);
 /* KL_TEXT_OUTPUT_FILE.change_mode */
 extern void T950f41(TC* ac, T0* C, T6 a1);
 /* KL_TEXT_OUTPUT_FILE.old_change_mode */
@@ -37387,7 +37397,7 @@ extern T6 T1343f29(TC* ac, T0* C, T6 a1);
 /* DS_HASH_TABLE [NATURAL_64, NATURAL_32].hash_position */
 extern T6 T1343f28(TC* ac, T0* C, T10 a1);
 /* NATURAL_32.hash_code */
-extern T6 T10f29(TC* ac, volatile T10* C);
+extern T6 T10f29(TC* ac, T10 volatile* C);
 /* DS_HASH_TABLE [NATURAL_64, NATURAL_32].resize */
 extern void T1343f75(TC* ac, T0* C, T6 a1);
 /* DS_HASH_TABLE [NATURAL_64, NATURAL_32].clashes_resize */
@@ -37511,13 +37521,13 @@ extern T0* T107s232(TC* ac);
 /* RX_CASE_MAPPING.flip_case */
 extern T10 T904f4(TC* ac, T0* C, T10 a1);
 /* NATURAL_32.to_integer_64 */
-extern T7 T10f15(TC* ac, volatile T10* C);
+extern T7 T10f15(TC* ac, T10 volatile* C);
 /* RX_CASE_MAPPING.to_lower */
 extern T10 T904f3(TC* ac, T0* C, T10 a1);
 /* INTEGER_64.to_natural_32 */
-extern T10 T7f6(TC* ac, volatile T7* C);
+extern T10 T7f6(TC* ac, T7 volatile* C);
 /* INTEGER_64.is_greater_equal */
-extern T1 T7f5(TC* ac, volatile T7* C, T7 a1);
+extern T1 T7f5(TC* ac, T7 volatile* C, T7 a1);
 /* RX_PCRE_REGULAR_EXPRESSION.set_subject */
 extern void T107f340(TC* ac, T0* C, T0* a1);
 /* RX_PCRE_REGULAR_EXPRESSION.append_replacement_to_string */
@@ -37533,7 +37543,7 @@ extern T1 T107f56(TC* ac, T0* C);
 /* RX_PCRE_REGULAR_EXPRESSION.string_ */
 extern T0* T107s249(TC* ac);
 /* ET_C_GENERATOR.execution_environment */
-extern T0* T114s338(TC* ac);
+extern T0* T114s330(TC* ac);
 /* ET_C_GENERATOR.string_ */
 extern T0* T114s269(TC* ac);
 /* RX_PCRE_REGULAR_EXPRESSION.match */
@@ -37691,11 +37701,11 @@ extern void T950f54(TC* ac, T0* C, T0* a1);
 /* KL_TEXT_OUTPUT_FILE.buffered_file_info */
 extern T0* T950f27(TC* ac, T0* C);
 /* ET_C_GENERATOR.file_system */
-extern T0* T114s214(TC* ac);
+extern T0* T114s211(TC* ac);
 /* ET_C_GENERATOR.unix_file_system */
-extern T0* T114s590(TC* ac);
+extern T0* T114s584(TC* ac);
 /* ET_C_GENERATOR.windows_file_system */
-extern T0* T114s589(TC* ac);
+extern T0* T114s583(TC* ac);
 /* RX_PCRE_REGULAR_EXPRESSION.compile */
 extern void T107f310(TC* ac, T0* C, T0* a1);
 /* RX_PCRE_REGULAR_EXPRESSION.compile */
@@ -37747,7 +37757,7 @@ extern T0* T1339f4(TC* ac, T0* C, T10 a1, T6 a2);
 /* RX_BYTE_CODE.special_natural_32_ */
 extern T0* T902s9(TC* ac);
 /* INTEGER_64.is_less_equal */
-extern T1 T7f10(TC* ac, volatile T7* C, T7 a1);
+extern T1 T7f10(TC* ac, T7 volatile* C, T7 a1);
 /* RX_PCRE_REGULAR_EXPRESSION.scan_escape */
 extern T7 T107f139(TC* ac, T0* C, T6 a1, T1 a2);
 /* RX_PCRE_REGULAR_EXPRESSION.scan_hex_number */
@@ -37757,11 +37767,11 @@ extern T0* T107s248(TC* ac);
 /* RX_PCRE_REGULAR_EXPRESSION.scan_octal_number */
 extern T10 T107f222(TC* ac, T0* C, T6 a1);
 /* INTEGER_64.to_integer_32 */
-extern T6 T7f19(TC* ac, volatile T7* C);
+extern T6 T7f19(TC* ac, T7 volatile* C);
 /* RX_PCRE_REGULAR_EXPRESSION.escape_character */
 extern T7 T107s217(TC* ac, T10 a1);
 /* INTEGER_64.is_greater */
-extern T1 T7f7(TC* ac, volatile T7* C, T7 a1);
+extern T1 T7f7(TC* ac, T7 volatile* C, T7 a1);
 /* RX_PCRE_REGULAR_EXPRESSION.to_option_ims */
 extern T10 T107s132(TC* ac, T10 a1);
 /* RX_PCRE_REGULAR_EXPRESSION.set_ichanged */
@@ -38091,7 +38101,7 @@ extern T0* T1779c3(TC* ac);
 /* ET_C_GENERATOR.operating_system */
 extern T0* T114s183(TC* ac);
 /* ET_C_GENERATOR.generate_c_code */
-extern void T114f669(TC* ac, T0* C, T0* a1);
+extern void T114f664(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.dummy_feature */
 extern T0* T114f165(TC* ac, T0* C);
 /* ET_DYNAMIC_FEATURE.make */
@@ -38139,9 +38149,9 @@ extern T0* T710s50(TC* ac);
 /* ET_TOKEN_CONSTANTS.default_create */
 extern T0* T81c1563(TC* ac);
 /* ET_DYNAMIC_FUNCTION_TYPE.dynamic_query */
-extern T0* T1049f31(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T1049f48(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_FUNCTION_TYPE.put_function */
-extern void T1049f91(TC* ac, T0* C, T0* a1);
+extern void T1049f92(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_FUNCTION_TYPE.is_basic */
 extern T1 T1049f33(TC* ac, T0* C);
 /* ET_CLASS.is_basic */
@@ -38237,7 +38247,7 @@ extern T6 T839f7(TC* ac, T0* C, T6 a1);
 /* ET_DYNAMIC_FEATURE_LIST.capacity */
 extern T6 T839f6(TC* ac, T0* C);
 /* ET_DYNAMIC_FUNCTION_TYPE.put_attribute */
-extern void T1049f90(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T1049f91(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_NULL_TYPE_SET_BUILDER.propagate_reference_field_dynamic_types */
 extern void T842f23(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.propagate_reference_field_dynamic_types */
@@ -38375,9 +38385,9 @@ extern T0* T769f7(TC* ac, T0* C, T6 a1);
 /* ET_DYNAMIC_PROCEDURE_TYPE.seeded_dynamic_query */
 extern T0* T1048f41(TC* ac, T0* C, T6 a1, T0* a2);
 /* ET_DYNAMIC_PROCEDURE_TYPE.put_function */
-extern void T1048f91(TC* ac, T0* C, T0* a1);
+extern void T1048f92(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_PROCEDURE_TYPE.put_attribute */
-extern void T1048f90(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T1048f91(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PROCEDURE_TYPE.register_feature_seeds */
 extern void T1048f89(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_IDS.item */
@@ -38457,21 +38467,21 @@ extern T6 T711f13(TC* ac, T0* C);
 /* ET_DEFERRED_PROCEDURE.first_seed */
 extern T6 T713f10(TC* ac, T0* C);
 /* ET_DYNAMIC_PROCEDURE_TYPE.new_dynamic_query */
-extern T0* T1048f55(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T1048f57(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_TUPLE_TYPE.seeded_dynamic_query */
 extern T0* T894f43(TC* ac, T0* C, T6 a1, T0* a2);
 /* ET_DYNAMIC_TUPLE_TYPE.put_function */
-extern void T894f80(TC* ac, T0* C, T0* a1);
+extern void T894f81(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_TUPLE_TYPE.put_attribute */
-extern void T894f79(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T894f80(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_TUPLE_TYPE.register_feature_seeds */
 extern void T894f78(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_TUPLE_TYPE.new_dynamic_query */
-extern T0* T894f68(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T894f29(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_NULL_TYPE_SET_BUILDER.build_tuple_reference_item */
-extern void T842f25(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T842f26(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.build_tuple_reference_item */
-extern void T100f129(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T100f130(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_SECONDARY_TYPE.is_basic */
 extern T1 T969f16(TC* ac, T0* C);
 /* ET_DYNAMIC_SECONDARY_TYPE.base_class */
@@ -38483,7 +38493,7 @@ extern T1 T303f47(TC* ac, T0* C, T0* a1);
 /* ET_IDENTIFIER.string_ */
 extern T0* T303s9(TC* ac);
 /* ET_TOKEN_CONSTANTS.reference_item_feature_name */
-extern T0* T81s624(TC* ac);
+extern T0* T81s625(TC* ac);
 /* ET_DYNAMIC_TUPLE_TYPE.tokens */
 extern T0* T894s30(TC* ac);
 /* ET_DYNAMIC_FEATURE.is_builtin */
@@ -38507,23 +38517,23 @@ extern T0* T703f48(TC* ac, T0* C);
 /* ET_ATTRIBUTE.name */
 extern T0* T702f33(TC* ac, T0* C);
 /* ET_DYNAMIC_TUPLE_TYPE.new_dynamic_query */
-extern T0* T894f68p1(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T894f29p1(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_SPECIAL_TYPE.seeded_dynamic_query */
 extern T0* T966f43(TC* ac, T0* C, T6 a1, T0* a2);
 /* ET_DYNAMIC_SPECIAL_TYPE.put_function */
-extern void T966f82(TC* ac, T0* C, T0* a1);
+extern void T966f83(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_SPECIAL_TYPE.put_attribute */
-extern void T966f81(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T966f82(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_SPECIAL_TYPE.register_feature_seeds */
 extern void T966f80(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_SPECIAL_TYPE.new_dynamic_query */
-extern T0* T966f27(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T966f30(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_FEATURE.set_result_type_set */
 extern void T845f60(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_FEATURE.is_builtin_special_item */
 extern T1 T845f24(TC* ac, T0* C);
 /* ET_DYNAMIC_SPECIAL_TYPE.new_dynamic_query */
-extern T0* T966f27p1(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T966f30p1(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PRIMARY_TYPE.seeded_dynamic_query */
 extern T0* T838f47(TC* ac, T0* C, T6 a1, T0* a2);
 /* ET_DYNAMIC_PRIMARY_TYPE.put_function */
@@ -39665,13 +39675,13 @@ extern T0* T889f7(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_FUNCTION_TYPE.seeded_dynamic_procedure */
 extern T0* T1049f43(TC* ac, T0* C, T6 a1, T0* a2);
 /* ET_DYNAMIC_FUNCTION_TYPE.put_procedure */
-extern void T1049f92(TC* ac, T0* C, T0* a1);
+extern void T1049f90(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_PRECURSOR.is_builtin_any_copy */
 extern T1 T860f32(TC* ac, T0* C);
 /* ET_DYNAMIC_FEATURE.is_builtin_any_copy */
 extern T1 T845f26(TC* ac, T0* C);
 /* ET_DYNAMIC_FUNCTION_TYPE.new_dynamic_procedure */
-extern T0* T1049f57(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T1049f55(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_CLASS.seeded_procedure */
 extern T0* T70f84(TC* ac, T0* C, T6 a1);
 /* ET_PROCEDURE_LIST.seeded_feature */
@@ -39679,9 +39689,9 @@ extern T0* T770f5(TC* ac, T0* C, T6 a1);
 /* ET_DYNAMIC_PROCEDURE_TYPE.seeded_dynamic_procedure */
 extern T0* T1048f43(TC* ac, T0* C, T6 a1, T0* a2);
 /* ET_DYNAMIC_PROCEDURE_TYPE.put_procedure */
-extern void T1048f92(TC* ac, T0* C, T0* a1);
+extern void T1048f90(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_PROCEDURE_TYPE.new_dynamic_procedure */
-extern T0* T1048f57(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T1048f55(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_NULL_TYPE_SET_BUILDER.build_agent_call */
 extern void T842f27(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.build_agent_call */
@@ -39699,19 +39709,19 @@ extern T1 T929f8(TC* ac, T0* C);
 /* ET_DYNAMIC_TYPE_SET_LIST.is_empty */
 extern T1 T858f8(TC* ac, T0* C);
 /* ET_DYNAMIC_PROCEDURE_TYPE.new_dynamic_procedure */
-extern T0* T1048f57p1(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T1048f55p1(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_TUPLE_TYPE.seeded_dynamic_procedure */
 extern T0* T894f47(TC* ac, T0* C, T6 a1, T0* a2);
 /* ET_DYNAMIC_TUPLE_TYPE.put_procedure */
-extern void T894f81(TC* ac, T0* C, T0* a1);
+extern void T894f79(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_TUPLE_TYPE.new_dynamic_procedure */
-extern T0* T894f29(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T894f27(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_NULL_TYPE_SET_BUILDER.build_tuple_put_reference */
-extern void T842f26(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T842f25(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.build_tuple_put_reference */
-extern void T100f130(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T100f129(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.put_reference_feature_name */
-extern T0* T81s625(TC* ac);
+extern T0* T81s624(TC* ac);
 /* ET_EXTERNAL_PROCEDURE.name */
 extern T0* T714f46(TC* ac, T0* C);
 /* ET_DEFERRED_PROCEDURE.name */
@@ -39721,19 +39731,19 @@ extern T0* T712f45(TC* ac, T0* C);
 /* ET_DO_PROCEDURE.name */
 extern T0* T711f51(TC* ac, T0* C);
 /* ET_DYNAMIC_TUPLE_TYPE.new_dynamic_procedure */
-extern T0* T894f29p1(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T894f27p1(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_SPECIAL_TYPE.seeded_dynamic_procedure */
 extern T0* T966f47(TC* ac, T0* C, T6 a1, T0* a2);
 /* ET_DYNAMIC_SPECIAL_TYPE.put_procedure */
-extern void T966f83(TC* ac, T0* C, T0* a1);
+extern void T966f81(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_SPECIAL_TYPE.new_dynamic_procedure */
-extern T0* T966f30(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T966f28(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_FEATURE.is_builtin_special_extend */
 extern T1 T845f38(TC* ac, T0* C);
 /* ET_DYNAMIC_FEATURE.is_builtin_special_put */
 extern T1 T845f37(TC* ac, T0* C);
 /* ET_DYNAMIC_SPECIAL_TYPE.new_dynamic_procedure */
-extern T0* T966f30p1(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T966f28p1(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PRIMARY_TYPE.seeded_dynamic_procedure */
 extern T0* T838f33(TC* ac, T0* C, T6 a1, T0* a2);
 /* ET_DYNAMIC_PRIMARY_TYPE.put_procedure */
@@ -39867,13 +39877,13 @@ extern void T838f82(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PRIMARY_TYPE.is_never_void */
 extern T1 T838f27(TC* ac, T0* C);
 /* ET_DYNAMIC_FUNCTION_TYPE.is_expanded */
-extern T1 T1049f71(TC* ac, T0* C);
+extern T1 T1049f31(TC* ac, T0* C);
 /* ET_DYNAMIC_PROCEDURE_TYPE.is_expanded */
-extern T1 T1048f29(TC* ac, T0* C);
+extern T1 T1048f31(TC* ac, T0* C);
 /* ET_DYNAMIC_TUPLE_TYPE.is_expanded */
-extern T1 T894f67(TC* ac, T0* C);
+extern T1 T894f68(TC* ac, T0* C);
 /* ET_DYNAMIC_SPECIAL_TYPE.is_expanded */
-extern T1 T966f70(TC* ac, T0* C);
+extern T1 T966f27(TC* ac, T0* C);
 /* ET_DYNAMIC_PRIMARY_TYPE.is_expanded */
 extern T1 T838f44(TC* ac, T0* C);
 /* ET_DYNAMIC_AGENT_OPERAND_PUSH_TYPE_SET.static_type */
@@ -39921,9 +39931,9 @@ extern T1 T845f36(TC* ac, T0* C);
 /* ET_DYNAMIC_FUNCTION_TYPE.register_feature_seeds */
 extern void T1049f89(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_FUNCTION_TYPE.new_dynamic_query */
-extern T0* T1049f55(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T1049f57(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_FUNCTION_TYPE.new_dynamic_query */
-extern T0* T1049f55p1(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T1049f57p1(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [ET_DYNAMIC_FEATURE, INTEGER_32].value */
 extern T0* T1270f22(TC* ac, T0* C, T6 a1);
 /* DS_HASH_TABLE [ET_DYNAMIC_FEATURE, INTEGER_32].item_storage_item */
@@ -39996,17 +40006,17 @@ extern T0* T769f9(TC* ac, T0* C, T6 a1);
 extern void T1048f85(TC* ac, T0* C, T0* a1);
 extern T1 T1048f85ot1(TC* ac, T0* a1);
 /* ET_DYNAMIC_PROCEDURE_TYPE.dynamic_query */
-extern T0* T1048f31(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T1048f48(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_TUPLE_TYPE.use_all_attributes */
 extern void T894f86(TC* ac, T0* C, T0* a1);
 extern T1 T894f86ot1(TC* ac, T0* a1);
 /* ET_DYNAMIC_TUPLE_TYPE.dynamic_query */
-extern T0* T894f27(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T894f53(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_SPECIAL_TYPE.use_all_attributes */
 extern void T966f88(TC* ac, T0* C, T0* a1);
 extern T1 T966f88ot1(TC* ac, T0* a1);
 /* ET_DYNAMIC_SPECIAL_TYPE.dynamic_query */
-extern T0* T966f28(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T966f56(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PRIMARY_TYPE.use_all_attributes */
 extern void T838f85(TC* ac, T0* C, T0* a1);
 extern T1 T838f85ot1(TC* ac, T0* a1);
@@ -41959,9 +41969,9 @@ extern void T17f80(TC* ac, T0* C);
 /* STRING_8.to_upper_area */
 extern void T17f83(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* CHARACTER_8.upper */
-extern T2 T2f25(TC* ac, volatile T2* C);
+extern T2 T2f25(TC* ac, T2 volatile* C);
 /* CHARACTER_8.upper_value */
-extern T0* T2f31(TC* ac, volatile T2* C);
+extern T0* T2f31(TC* ac, T2 volatile* C);
 /* ET_FORMAL_PARAMETER.append_to_string */
 extern void T500f87(TC* ac, T0* C, T0* a1);
 /* ET_FORMAL_PARAMETER.upper_name */
@@ -46921,7 +46931,7 @@ extern T0* T300c54(TC* ac, T0* a1);
 /* KL_STRING_ROUTINES.case_insensitive_hash_code */
 extern T6 T108s15(TC* ac, T0* a1);
 /* CHARACTER_32.upper */
-extern T3 T3f8(TC* ac, volatile T3* C);
+extern T3 T3f8(TC* ac, T3 volatile* C);
 /* CHARACTER_PROPERTY.to_upper */
 extern T3 T1441f2(TC* ac, T0* C, T3 a1);
 /* CHARACTER_PROPERTY.to_upper_table_17 */
@@ -46959,7 +46969,7 @@ extern T0* T1441f21(TC* ac, T0* C);
 /* CHARACTER_PROPERTY.to_upper_table_1 */
 extern T0* T1441f20(TC* ac, T0* C);
 /* CHARACTER_32.minus */
-extern T3 T3f14(TC* ac, volatile T3* C, T10 a1);
+extern T3 T3f14(TC* ac, T3 volatile* C, T10 a1);
 /* ET_FREE_OPERATOR.string_ */
 extern T0* T300s10(TC* ac);
 /* ET_FREE_OPERATOR.make_token */
@@ -51418,7 +51428,7 @@ extern void T769f12(TC* ac, T0* C, T6 a1);
 /* ET_REGULAR_INTEGER_CONSTANT.set_value */
 extern void T675f73(TC* ac, T0* C, T11 a1);
 /* NATURAL_64.out */
-extern T0* T11f19(TC* ac, volatile T11* C);
+extern T0* T11f19(TC* ac, T11 volatile* C);
 /* STRING_8.append_natural_64 */
 extern void T17f87(TC* ac, T0* C, T11 a1);
 /* ET_CLASS.register_feature */
@@ -53660,7 +53670,7 @@ extern T0* T673c48(TC* ac, T0* a1, T0* a2, T1 a3);
 /* ET_SPECIAL_MANIFEST_STRING.make_leaf */
 extern void T673f53(TC* ac, T0* C);
 /* NATURAL_64.to_natural_32 */
-extern T10 T11f9(TC* ac, volatile T11* C);
+extern T10 T11f9(TC* ac, T11 volatile* C);
 /* ET_AST_FACTORY.new_regular_manifest_string */
 extern T0* T65f4(TC* ac, T0* C, T0* a1);
 /* ET_REGULAR_MANIFEST_STRING.set_position */
@@ -54228,7 +54238,7 @@ extern T1 T167s22(TC* ac, T2 a1, T2 a2, T2 a3);
 /* UC_UTF8_ROUTINES.is_endian_detection_character_start */
 extern T1 T167s30(TC* ac, T2 a1, T2 a2);
 /* CHARACTER_8.to_character_8 */
-extern T2 T2f11(TC* ac, volatile T2* C);
+extern T2 T2f11(TC* ac, T2 volatile* C);
 /* KL_STRING_INPUT_STREAM.end_of_input */
 extern T1 T1794f1(TC* ac, T0* C);
 /* KL_STDIN_FILE.end_of_file */
@@ -55176,9 +55186,9 @@ extern void T100f351(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_inlined_expression */
 extern void T857f233(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_inlined_expression */
-extern void T114f906(TC* ac, T0* C, T0* a1);
+extern void T114f900(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_inlined_expression */
-extern void T114f969(TC* ac, T0* C, T0* a1);
+extern void T114f963(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_TYPE_SET_LIST.remove_last */
 extern void T858f13(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_TYPE_SET].keep_head */
@@ -55192,8 +55202,8 @@ extern T0* T858f5(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_TYPE_SET].default_create */
 extern T0* T1284c3(TC* ac);
 /* ET_C_GENERATOR.new_inlined_operand */
-extern T0* T114f353(TC* ac, T0* C, T0* a1, T0* a2);
-extern T1 T114f353ot1(TC* ac, T0* a1);
+extern T0* T114f347(TC* ac, T0* C, T0* a1, T0* a2);
+extern T1 T114f347ot1(TC* ac, T0* a1);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_INLINED_EXPRESSION].force_last */
 extern void T944f13(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_INLINED_EXPRESSION].force */
@@ -55239,8 +55249,8 @@ extern void T980f26(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_INLINED_EXPRESSION].is_empty */
 extern T1 T944f6(TC* ac, T0* C);
 /* ET_C_GENERATOR.dynamic_type_set */
-extern T0* T114f317(TC* ac, T0* C, T0* a1);
-extern T1 T114f317ot1(TC* ac, T0* a1);
+extern T0* T114f310(TC* ac, T0* C, T0* a1);
+extern T1 T114f310ot1(TC* ac, T0* a1);
 /* ET_DYNAMIC_STANDALONE_TYPE_SET_LIST.valid_index */
 extern T1 T929f3(TC* ac, T0* C, T6 a1);
 /* ET_PARENTHESIS_EXPRESSION.index */
@@ -56372,13 +56382,13 @@ extern void T845f63(TC* ac, T0* C, T1 a1);
 /* ET_DYNAMIC_FEATURE.has_separate_argument */
 extern T1 T845f34(TC* ac, T0* C);
 /* ET_DYNAMIC_FUNCTION_TYPE.dynamic_procedure */
-extern T0* T1049f48(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T1049f71(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PROCEDURE_TYPE.dynamic_procedure */
-extern T0* T1048f48(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T1048f29(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_TUPLE_TYPE.dynamic_procedure */
-extern T0* T894f53(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T894f67(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_SPECIAL_TYPE.dynamic_procedure */
-extern T0* T966f56(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T966f70(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PRIMARY_TYPE.dynamic_procedure */
 extern T0* T838f40(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_creation_vape_validity */
@@ -57741,7 +57751,7 @@ extern T0* T673s44(TC* ac);
 /* ET_C3_CHARACTER_CONSTANT.has_note_term_value */
 extern T1 T671f44(TC* ac, T0* C, T0* a1);
 /* CHARACTER_32.as_lower */
-extern T3 T3f16(TC* ac, volatile T3* C);
+extern T3 T3f16(TC* ac, T3 volatile* C);
 /* ET_CUSTOM_ATTRIBUTE.has_note_term_value */
 extern T1 T690f5(TC* ac, T0* C, T0* a1);
 /* ET_C2_CHARACTER_CONSTANT.has_note_term_value */
@@ -58394,34 +58404,34 @@ extern void T857f234(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_FEATURE_CHECKER.new_adapted_base_classes */
 extern T0* T857f53(TC* ac, T0* C);
 /* ET_C_GENERATOR.process_convert_to_expression */
-extern void T114f1639(TC* ac, T0* C, T0* a1);
+extern void T114f1633(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_convert_to_expression */
-extern void T114f1642(TC* ac, T0* C, T0* a1);
+extern void T114f1636(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_qualified_call_expression */
-extern void T114f889(TC* ac, T0* C, T0* a1);
-extern T1 T114f889ot1(TC* ac, T0* a1);
-extern T1 T114f889ot2(TC* ac, T0* a1);
+extern void T114f883(TC* ac, T0* C, T0* a1);
+extern T1 T114f883ot1(TC* ac, T0* a1);
+extern T1 T114f883ot2(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_separate_call_declaration */
-extern void T114f850(TC* ac, T0* C, T6 a1, T0* a2, T0* a3);
-extern T1 T114f850ot1(TC* ac, T0* a1);
-extern T1 T114f850ot2(TC* ac, T0* a1);
+extern void T114f843(TC* ac, T0* C, T6 a1, T0* a2, T0* a3);
+extern T1 T114f843ot1(TC* ac, T0* a1);
+extern T1 T114f843ot2(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_separate_call_object_declaration */
-extern void T114f893(TC* ac, T0* C, T6 a1, T0* a2);
-extern T1 T114f893ot1(TC* ac, T0* a1);
+extern void T114f887(TC* ac, T0* C, T6 a1, T0* a2);
+extern T1 T114f887ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_separate_call_function_name */
-extern void T114f924(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
+extern void T114f918(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
 /* ET_C_GENERATOR.print_separate_call_object_type_name */
-extern void T114f923(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
+extern void T114f917(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
 /* ET_C_GENERATOR.print_separate_call_function_declaration */
-extern void T114f892(TC* ac, T0* C, T6 a1, T0* a2);
-extern T1 T114f892ot1(TC* ac, T0* a1);
+extern void T114f886(TC* ac, T0* C, T6 a1, T0* a2);
+extern T1 T114f886ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_separate_call_object_type_declaration */
-extern void T114f891(TC* ac, T0* C, T6 a1, T0* a2);
-extern T1 T114f891ot1(TC* ac, T0* a1);
+extern void T114f885(TC* ac, T0* C, T6 a1, T0* a2);
+extern T1 T114f885ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_temporary_variable_declarations */
-extern void T114f763(TC* ac, T0* C);
+extern void T114f753(TC* ac, T0* C);
 /* ET_C_GENERATOR.reset_temp_variables */
-extern void T114f819(TC* ac, T0* C);
+extern void T114f809(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [BOOLEAN].wipe_out */
 extern void T915f11(TC* ac, T0* C);
 /* SPECIAL [BOOLEAN].keep_head */
@@ -58451,8 +58461,8 @@ extern T1 T915f6(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_LIST [detachable ET_DYNAMIC_PRIMARY_TYPE].item */
 extern T0* T914f9(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.print_qualified_call_instruction */
-extern void T114f890(TC* ac, T0* C, T0* a1);
-extern T1 T114f890ot1(TC* ac, T0* a1);
+extern void T114f884(TC* ac, T0* C, T0* a1);
+extern T1 T114f884ot1(TC* ac, T0* a1);
 /* ET_DYNAMIC_PRECURSOR.procedure_call */
 extern T0* T860f25(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TABLE [ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL, ET_CALL_NAME].value */
@@ -58464,25 +58474,25 @@ extern T6 T1276f25(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_FEATURE.procedure_call */
 extern T0* T845f30(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_named_procedure_call */
-extern void T114f837(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f829(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_procedure_call */
-extern void T114f873(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f867(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_non_inlined_procedure_call */
-extern void T114f903(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f897(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.argument_type_set_in_feature */
-extern T0* T114f347(TC* ac, T0* C, T6 a1, T0* a2);
+extern T0* T114f340(TC* ac, T0* C, T6 a1, T0* a2);
 /* ET_C_GENERATOR.print_inlined_procedure_call */
-extern void T114f902(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-extern T1 T114f902ot1(TC* ac, T0* a1);
+extern void T114f896(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern T1 T114f896ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.free_inlining_operands */
-extern void T114f949(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
-extern T1 T114f949ot1(TC* ac, T0* a1);
-extern T1 T114f949ot2(TC* ac, T0* a1);
+extern void T114f943(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern T1 T114f943ot1(TC* ac, T0* a1);
+extern T1 T114f943ot2(TC* ac, T0* a1);
 /* ET_C_GENERATOR.mark_call_operands_unfrozen */
-extern void T114f1178(TC* ac, T0* C);
-extern T1 T114f1178ot1(TC* ac, T0* a1);
+extern void T114f1172(TC* ac, T0* C);
+extern T1 T114f1172ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.is_temp_variable_frozen */
-extern T1 T114f346(TC* ac, T0* C, T0* a1);
+extern T1 T114f339(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_EXPRESSION].resize */
 extern void T927f16(TC* ac, T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [ET_EXPRESSION].aliased_resized_area */
@@ -58490,9 +58500,9 @@ extern T0* T1382s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [ET_EXPRESSION].aliased_resized_area */
 extern T0* T1381f4(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.print_compound */
-extern void T114f968(TC* ac, T0* C, T0* a1);
+extern void T114f962(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_instruction */
-extern void T114f1236(TC* ac, T0* C, T0* a1);
+extern void T114f1230(TC* ac, T0* C, T0* a1);
 /* ET_UNQUALIFIED_CALL_INSTRUCTION.process */
 extern void T1034f13(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_unqualified_call_instruction */
@@ -59297,10 +59307,10 @@ extern void T857f416(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.new_overloaded_procedures */
 extern T0* T857f70(TC* ac, T0* C);
 /* ET_C_GENERATOR.process_unqualified_call_instruction */
-extern void T114f1431(TC* ac, T0* C, T0* a1);
+extern void T114f1425(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_unqualified_call_instruction */
-extern void T114f1455(TC* ac, T0* C, T0* a1);
-extern T1 T114f1455ot1(TC* ac, T0* a1);
+extern void T114f1449(TC* ac, T0* C, T0* a1);
+extern T1 T114f1449ot1(TC* ac, T0* a1);
 /* ET_UNQUALIFIED_CALL_INSTRUCTION.is_call_agent */
 extern T1 T1034f11(TC* ac, T0* C);
 /* ET_UNQUALIFIED_CALL_INSTRUCTION.position */
@@ -59490,19 +59500,19 @@ extern void T857f435(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.report_inline_separate_argument_declaration */
 extern void T857f445(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_inline_separate_instruction */
-extern void T114f1407(TC* ac, T0* C, T0* a1);
+extern void T114f1401(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_inline_separate_instruction */
-extern void T114f1367(TC* ac, T0* C, T0* a1);
+extern void T114f1361(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_separate_argument_session_name */
-extern void T114f970(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f964(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_separate_argument_name */
-extern void T114f1237(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f1231(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_inline_separate_argument_name */
-extern void T114f909(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f903(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_assignment_operand */
-extern void T114f1370(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
+extern void T114f1364(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_C_GENERATOR.is_twin_needed_in_attachment */
-extern T1 T114f624(TC* ac, T0* C, T0* a1);
+extern T1 T114f618(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_AGENT_OPERAND_PUSH_TYPE_SET.has_expanded */
 extern T1 T1814f9(TC* ac, T0* C);
 /* ET_DYNAMIC_PUSH_TYPE_SET.has_expanded */
@@ -59970,15 +59980,15 @@ extern void T857f392(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_iteration_cursor_declaration */
 extern void T857f390(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_repeat_instruction */
-extern void T114f1409(TC* ac, T0* C, T0* a1);
+extern void T114f1403(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_repeat_instruction */
-extern void T114f1435(TC* ac, T0* C, T0* a1);
+extern void T114f1429(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_iteration_instruction */
-extern void T114f1456(TC* ac, T0* C, T0* a1);
+extern void T114f1450(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_operand */
-extern void T114f876(TC* ac, T0* C, T0* a1);
+extern void T114f870(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_iteration_cursor_name */
-extern void T114f908(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f902(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_ACROSS_INSTRUCTION.process */
 extern void T342f35(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_across_instruction */
@@ -60002,9 +60012,9 @@ extern void T857f449(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_across_instruction_validity */
 extern void T857f454(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_across_instruction */
-extern void T114f1630(TC* ac, T0* C, T0* a1);
+extern void T114f1624(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_across_instruction */
-extern void T114f1634(TC* ac, T0* C, T0* a1);
+extern void T114f1628(TC* ac, T0* C, T0* a1);
 /* ET_CHECK_INSTRUCTION.process */
 extern void T382f20(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_check_instruction */
@@ -60136,9 +60146,9 @@ extern void T857f450(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_check_instruction_validity */
 extern void T857f455(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_check_instruction */
-extern void T114f1631(TC* ac, T0* C, T0* a1);
+extern void T114f1625(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_check_instruction */
-extern void T114f1635(TC* ac, T0* C, T0* a1);
+extern void T114f1629(TC* ac, T0* C, T0* a1);
 /* ET_STATIC_CALL_INSTRUCTION.process */
 extern void T739f17(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_static_call_instruction */
@@ -60519,9 +60529,9 @@ extern void T857f432(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_FEATURE_CHECKER.check_type_validity */
 extern void T857f242(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_static_call_instruction */
-extern void T114f1430(TC* ac, T0* C, T0* a1);
+extern void T114f1424(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_static_call_instruction */
-extern void T114f1454(TC* ac, T0* C, T0* a1);
+extern void T114f1448(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_INSTRUCTION.process */
 extern void T737f17(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_precursor_instruction */
@@ -60861,9 +60871,9 @@ extern void T857f443(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_INVARIANTS.first_precursor */
 extern T0* T539f14(TC* ac, T0* C);
 /* ET_C_GENERATOR.process_precursor_instruction */
-extern void T114f1429(TC* ac, T0* C, T0* a1);
+extern void T114f1423(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_precursor_instruction */
-extern void T114f1453(TC* ac, T0* C, T0* a1);
+extern void T114f1447(TC* ac, T0* C, T0* a1);
 /* ET_DEBUG_INSTRUCTION.process */
 extern void T446f12(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_debug_instruction */
@@ -60879,9 +60889,9 @@ extern void T857f357(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_debug_instruction_validity */
 extern void T857f405(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_debug_instruction */
-extern void T114f1405(TC* ac, T0* C, T0* a1);
+extern void T114f1399(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_debug_instruction */
-extern void T114f1432(TC* ac, T0* C, T0* a1);
+extern void T114f1426(TC* ac, T0* C, T0* a1);
 /* ET_INSPECT_INSTRUCTION.process */
 extern void T533f15(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_inspect_instruction */
@@ -61151,15 +61161,15 @@ extern T0* T857f74(TC* ac, T0* C);
 /* ET_FEATURE_CHECKER.character_choice_constant */
 extern T0* T857f73(TC* ac, T0* C);
 /* ET_C_GENERATOR.process_inspect_instruction */
-extern void T114f1408(TC* ac, T0* C, T0* a1);
+extern void T114f1402(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_inspect_instruction */
-extern void T114f1434(TC* ac, T0* C, T0* a1);
-extern T1 T114f1434ot1(TC* ac, T0* a1);
-extern T1 T114f1434ot2(TC* ac, T0* a1);
-extern T1 T114f1434ot3(TC* ac, T0* a1);
-extern T1 T114f1434ot4(TC* ac, T0* a1);
-extern T1 T114f1434ot5(TC* ac, T0* a1);
-extern T1 T114f1434ot6(TC* ac, T0* a1);
+extern void T114f1428(TC* ac, T0* C, T0* a1);
+extern T1 T114f1428ot1(TC* ac, T0* a1);
+extern T1 T114f1428ot2(TC* ac, T0* a1);
+extern T1 T114f1428ot3(TC* ac, T0* a1);
+extern T1 T114f1428ot4(TC* ac, T0* a1);
+extern T1 T114f1428ot5(TC* ac, T0* a1);
+extern T1 T114f1428ot6(TC* ac, T0* a1);
 /* ET_BINARY_INTEGER_CONSTANT.value */
 extern T11 T679f4(TC* ac, T0* C);
 /* ET_OCTAL_INTEGER_CONSTANT.value */
@@ -61175,17 +61185,17 @@ extern void T63f244(TC* ac, T0* C, T0* a1);
 /* ET_ERROR_HANDLER.report_warning_message */
 extern void T42f244(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_escaped_character_8 */
-extern void T114f1264(TC* ac, T0* C, T2 a1);
+extern void T114f1258(TC* ac, T0* C, T2 a1);
 /* UT_INTEGER_FORMATTER.put_octal_integer */
 extern void T989s2(TC* ac, T0* a1, T6 a2);
 /* ET_C_GENERATOR.integer_formatter_ */
-extern T0* T114s335(TC* ac);
+extern T0* T114s327(TC* ac);
 /* UT_INTEGER_FORMATTER.default_create */
 extern T0* T989c1(TC* ac);
 /* ET_C_GENERATOR.print_type_cast */
-extern void T114f755(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f769(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_type_name */
-extern void T114f774(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f764(TC* ac, T0* C, T0* a1, T0* a2);
 /* KL_NULL_TEXT_OUTPUT_STREAM.put_natural_32 */
 extern void T229f11(TC* ac, T0* C, T10 a1);
 /* KL_NULL_TEXT_OUTPUT_STREAM.put_natural_64 */
@@ -61201,13 +61211,13 @@ extern T3 T686f2(TC* ac, T0* C);
 /* ET_C1_CHARACTER_CONSTANT.value */
 extern T3 T685f2(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_integer_value */
-extern void T114f1268(TC* ac, T0* C, T11 a1, T1 a2, T0* a3, T1 a4);
+extern void T114f1262(TC* ac, T0* C, T11 a1, T1 a2, T0* a3, T1 a4);
 /* ET_C_GENERATOR.current_universe_impl */
-extern T0* T114f325(TC* ac, T0* C);
+extern T0* T114f318(TC* ac, T0* C);
 /* INTEGER_32.abs */
-extern T6 T6f34(TC* ac, volatile T6* C);
+extern T6 T6f34(TC* ac, T6 volatile* C);
 /* INTEGER_32.abs_ref */
-extern T6 T6f35(TC* ac, volatile T6* C);
+extern T6 T6f35(TC* ac, T6 volatile* C);
 /* ET_BINARY_INTEGER_CONSTANT.to_integer_32 */
 extern T6 T679f42(TC* ac, T0* C);
 /* ET_OCTAL_INTEGER_CONSTANT.to_integer_32 */
@@ -61219,12 +61229,12 @@ extern T6 T676f42(TC* ac, T0* C);
 /* ET_REGULAR_INTEGER_CONSTANT.to_integer_32 */
 extern T6 T675f15(TC* ac, T0* C);
 /* ET_C_GENERATOR.choice_constant */
-extern T0* T114f613(TC* ac, T0* C, T0* a1);
-extern T1 T114f613ot1(TC* ac, T0* a1);
-extern T1 T114f613ot2(TC* ac, T0* a1);
-extern T1 T114f613ot3(TC* ac, T0* a1);
-extern T1 T114f613ot4(TC* ac, T0* a1);
-extern T1 T114f613ot5(TC* ac, T0* a1);
+extern T0* T114f607(TC* ac, T0* C, T0* a1);
+extern T1 T114f607ot1(TC* ac, T0* a1);
+extern T1 T114f607ot2(TC* ac, T0* a1);
+extern T1 T114f607ot3(TC* ac, T0* a1);
+extern T1 T114f607ot4(TC* ac, T0* a1);
+extern T1 T114f607ot5(TC* ac, T0* a1);
 /* ET_WHEN_PART.position */
 extern T0* T659f8(TC* ac, T0* C);
 /* ET_CHOICE_LIST.position */
@@ -61260,9 +61270,9 @@ extern void T857f355(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_if_instruction_validity */
 extern void T857f403(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_if_instruction */
-extern void T114f1406(TC* ac, T0* C, T0* a1);
+extern void T114f1400(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_if_instruction */
-extern void T114f1433(TC* ac, T0* C, T0* a1);
+extern void T114f1427(TC* ac, T0* C, T0* a1);
 /* ET_ELSEIF_PART.position */
 extern T0* T455f8(TC* ac, T0* C);
 /* ET_CREATE_INSTRUCTION.process */
@@ -61636,19 +61646,19 @@ extern void T857f439(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_result_assignment_target */
 extern void T857f438(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_create_instruction */
-extern void T114f1427(TC* ac, T0* C, T0* a1);
+extern void T114f1421(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_create_instruction */
-extern void T114f1452(TC* ac, T0* C, T0* a1);
+extern void T114f1446(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_creation_instruction */
-extern void T114f1463(TC* ac, T0* C, T0* a1);
+extern void T114f1457(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_assign_result_to_once_value */
-extern void T114f1378(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+extern void T114f1372(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* ET_C_GENERATOR.print_once_value */
-extern void T114f953(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+extern void T114f947(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* ET_C_GENERATOR.print_once_per_thread_value */
-extern void T114f1186(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+extern void T114f1180(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* ET_C_GENERATOR.once_prefixes */
-extern T0* T114f540(TC* ac, T0* C);
+extern T0* T114f534(TC* ac, T0* C);
 /* ET_DYNAMIC_PRECURSOR.is_once_per_thread */
 extern T1 T860f36(TC* ac, T0* C);
 /* ET_EXTERNAL_PROCEDURE.is_once_per_thread */
@@ -61682,7 +61692,7 @@ extern T1 T702f35(TC* ac, T0* C);
 /* ET_DYNAMIC_FEATURE.is_once_per_thread */
 extern T1 T845f22(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_once_per_process_value */
-extern void T114f1185(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+extern void T114f1179(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* ET_DYNAMIC_PRECURSOR.is_once_per_process */
 extern T1 T860f31(TC* ac, T0* C);
 /* ET_EXTERNAL_PROCEDURE.is_once_per_process */
@@ -61714,19 +61724,19 @@ extern T1 T702f34(TC* ac, T0* C);
 /* ET_DYNAMIC_FEATURE.is_once_per_process */
 extern T1 T845f51(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_once_per_object_value */
-extern void T114f1184(TC* ac, T0* C, T0* a1);
+extern void T114f1178(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_once_per_object_value_name */
-extern void T114f811(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f802(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_attribute_onces_access */
-extern void T114f1240(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1234(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_attribute_onces_name */
-extern void T114f807(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f798(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_non_void_expression */
-extern void T114f816(TC* ac, T0* C, T0* a1, T1 a2);
+extern void T114f808(TC* ac, T0* C, T0* a1, T1 a2);
 /* ET_C_GENERATOR.print_check_void_expression */
-extern void T114f853(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f846(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.check_for_void_target_mode */
-extern T1 T114f380(TC* ac, T0* C);
+extern T1 T114f374(TC* ac, T0* C);
 /* ET_CONVERT_TO_EXPRESSION.is_never_void */
 extern T1 T2041f9(TC* ac, T0* C);
 /* ET_CONVERT_FROM_EXPRESSION.is_never_void */
@@ -61866,7 +61876,7 @@ extern T1 T894f59(TC* ac, T0* C);
 /* ET_DYNAMIC_PRIMARY_TYPE.can_be_void */
 extern T1 T838f26(TC* ac, T0* C);
 /* ET_C_GENERATOR.once_kind */
-extern T6 T114f401(TC* ac, T0* C, T0* a1);
+extern T6 T114f395(TC* ac, T0* C, T0* a1);
 /* ET_CLASS.is_real_64_class */
 extern T1 T70f104(TC* ac, T0* C);
 /* ET_CLASS.is_real_32_class */
@@ -61942,27 +61952,27 @@ extern T1 T702f29(TC* ac, T0* C);
 /* ET_DYNAMIC_FEATURE.is_once */
 extern T1 T845f47(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_adapted_creation_procedure_call */
-extern void T114f1492(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f1486(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* Creation of agent #1 in feature ET_C_GENERATOR.print_adapted_creation_procedure_call */
-extern T0* T114f1492ac1(TC* ac, T0* a1, T0* a2, T0* a3);
+extern T0* T114f1486ac1(TC* ac, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_creation_procedure_call */
-extern void T114f848(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f841(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_creation_procedure_name */
-extern void T114f886(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f880(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_adapted_expression_with_agent */
-extern void T114f870(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
+extern void T114f864(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
 /* ET_C_GENERATOR.print_boxed_attribute_item_name */
-extern void T114f786(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f778(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_boxed_type_cast */
-extern void T114f851(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f844(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_boxed_type_name */
-extern void T114f785(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f777(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_adapted_separate_creation_procedure_call */
-extern void T114f1491(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
+extern void T114f1485(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* Creation of agent #1 in feature ET_C_GENERATOR.print_adapted_separate_creation_procedure_call */
-extern T0* T114f1491ac1(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4);
+extern T0* T114f1485ac1(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_C_GENERATOR.print_separate_creation_procedure_call */
-extern void T114f847(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f840(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_BANG_INSTRUCTION.process */
 extern void T731f23(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_bang_instruction */
@@ -61976,9 +61986,9 @@ extern void T857f353(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_bang_instruction_validity */
 extern void T857f401(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_bang_instruction */
-extern void T114f1426(TC* ac, T0* C, T0* a1);
+extern void T114f1420(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_bang_instruction */
-extern void T114f1451(TC* ac, T0* C, T0* a1);
+extern void T114f1445(TC* ac, T0* C, T0* a1);
 /* ET_LOOP_INSTRUCTION.process */
 extern void T729f20(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_loop_instruction */
@@ -61994,9 +62004,9 @@ extern void T857f352(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_loop_instruction_validity */
 extern void T857f400(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_loop_instruction */
-extern void T114f1425(TC* ac, T0* C, T0* a1);
+extern void T114f1419(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_loop_instruction */
-extern void T114f1450(TC* ac, T0* C, T0* a1);
+extern void T114f1444(TC* ac, T0* C, T0* a1);
 /* ET_ASSIGNMENT_ATTEMPT.process */
 extern void T728f12(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_assignment_attempt */
@@ -62038,9 +62048,9 @@ extern void T857f428(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.ise_5_7_0 */
 extern T0* T857s71(TC* ac);
 /* ET_C_GENERATOR.process_assignment_attempt */
-extern void T114f1424(TC* ac, T0* C, T0* a1);
+extern void T114f1418(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_assignment_attempt */
-extern void T114f1449(TC* ac, T0* C, T0* a1);
+extern void T114f1443(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_PRIMARY_TYPE_HASH_LIST.wipe_out */
 extern void T923f20(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_PRIMARY_TYPE].keep_head */
@@ -62050,7 +62060,7 @@ extern void T1006f6(TC* ac, T0* C, T6 a1);
 /* SPECIAL [ET_DYNAMIC_PRIMARY_TYPE].set_count */
 extern void T1006f9(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.free_standalone_type_set */
-extern void T114f827(TC* ac, T0* C, T0* a1);
+extern void T114f819(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_STANDALONE_TYPE_SET.reset */
 extern void T924f14(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_STANDALONE_TYPE_SET].force_last */
@@ -62080,7 +62090,7 @@ extern T1 T924f4(TC* ac, T0* C);
 /* ET_DYNAMIC_STANDALONE_TYPE_SET.reset_with_types */
 extern void T924f21(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.new_standalone_type_set */
-extern T0* T114f322(TC* ac, T0* C, T0* a1);
+extern T0* T114f315(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_STANDALONE_TYPE_SET].remove_last */
 extern void T925f13(TC* ac, T0* C);
 /* SPECIAL [ET_DYNAMIC_STANDALONE_TYPE_SET].keep_head */
@@ -62162,9 +62172,9 @@ extern T1 T857f398ot2(TC* ac, T0* a1);
 /* ET_FEATURE_CHECKER.report_assignment */
 extern void T857f427(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_assignment */
-extern void T114f1423(TC* ac, T0* C, T0* a1);
+extern void T114f1417(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_assignment */
-extern void T114f1368(TC* ac, T0* C, T0* a1);
+extern void T114f1362(TC* ac, T0* C, T0* a1);
 /* ET_ASSIGNER_INSTRUCTION.process */
 extern void T726f21(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_assigner_instruction */
@@ -62270,9 +62280,9 @@ extern void T857f275(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.new_call_info */
 extern T0* T857f57(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_assigner_instruction */
-extern void T114f1422(TC* ac, T0* C, T0* a1);
+extern void T114f1416(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_assigner_instruction */
-extern void T114f1448(TC* ac, T0* C, T0* a1);
+extern void T114f1442(TC* ac, T0* C, T0* a1);
 /* ET_RETRY_INSTRUCTION.process */
 extern void T321f22(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_retry_instruction */
@@ -62296,9 +62306,9 @@ extern void T857f448(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_retry_instruction_validity */
 extern void T857f453(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_retry_instruction */
-extern void T114f1629(TC* ac, T0* C, T0* a1);
+extern void T114f1623(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_retry_instruction */
-extern void T114f1633(TC* ac, T0* C, T0* a1);
+extern void T114f1627(TC* ac, T0* C, T0* a1);
 /* ET_QUALIFIED_CALL_INSTRUCTION.process */
 extern void T736f19(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_qualified_call_instruction */
@@ -62308,11 +62318,11 @@ extern void T100f179(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_qualified_call_instruction */
 extern void T857f348(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_qualified_call_instruction */
-extern void T114f1428(TC* ac, T0* C, T0* a1);
+extern void T114f1422(TC* ac, T0* C, T0* a1);
 /* ET_COMPOUND.item */
 extern T0* T403f12(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.fill_inlining_operands */
-extern void T114f948(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f942(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* DS_ARRAYED_LIST [ET_EXPRESSION].force_last */
 extern void T927f14(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_EXPRESSION].force */
@@ -62328,10 +62338,10 @@ extern T1 T927f8(TC* ac, T0* C, T6 a1);
 /* ET_DYNAMIC_CALL_CONTEXT.set_target */
 extern void T981f6(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.mark_call_operands_frozen */
-extern void T114f1177(TC* ac, T0* C);
-extern T1 T114f1177ot1(TC* ac, T0* a1);
+extern void T114f1171(TC* ac, T0* C);
+extern T1 T114f1171ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.new_call_context */
-extern T0* T114f352(TC* ac, T0* C, T0* a1);
+extern T0* T114f346(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_CALL_CONTEXT].force_last */
 extern void T945f13(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_CALL_CONTEXT].force */
@@ -62387,7 +62397,7 @@ extern T0* T1382c3(TC* ac);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_CALL_CONTEXT].is_empty */
 extern T1 T945f6(TC* ac, T0* C);
 /* ET_C_GENERATOR.register_inlined_feature */
-extern void T114f947(TC* ac, T0* C, T0* a1);
+extern void T114f941(TC* ac, T0* C, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_FEATURE].force */
 extern void T947f41(TC* ac, T0* C, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_FEATURE].slots_put */
@@ -62439,8 +62449,8 @@ extern void T845f57(TC* ac, T0* C, T1 a1);
 /* ET_COMPOUND.is_empty */
 extern T1 T403f11(TC* ac, T0* C);
 /* ET_C_GENERATOR.is_inlinable_procedure */
-extern T1 T114f388(TC* ac, T0* C, T0* a1, T0* a2);
-extern T1 T114f388ot1(TC* ac, T0* a1);
+extern T1 T114f382(TC* ac, T0* C, T0* a1, T0* a2);
+extern T1 T114f382ot1(TC* ac, T0* a1);
 /* ET_COMPOUND.has_inline_separate_instruction */
 extern T1 T403f10(TC* ac, T0* C);
 /* ET_UNQUALIFIED_CALL_INSTRUCTION.has_inline_separate_instruction */
@@ -63158,63 +63168,63 @@ extern T6 T321f9(TC* ac, T0* C);
 /* ET_QUALIFIED_CALL_INSTRUCTION.nested_instruction_count */
 extern T6 T736f8(TC* ac, T0* C);
 /* ET_C_GENERATOR.are_inlinable_call_operands */
-extern T1 T114f592(TC* ac, T0* C, T0* a1, T0* a2);
+extern T1 T114f586(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.is_inlinable_argument */
-extern T1 T114f594(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern T1 T114f588(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_builtin_procedure_call */
-extern void T114f901(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f895(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_tuple_procedure_call */
-extern void T114f967(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f961(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_tuple_set_object_comparison_call */
-extern void T114f1235(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1229(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_adapted_attribute_access */
-extern void T114f895(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
+extern void T114f889(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
 /* ET_C_GENERATOR.print_boxed_attribute_access */
-extern void T114f925(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
+extern void T114f919(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
 /* ET_C_GENERATOR.print_attribute_name */
-extern void T114f787(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f779(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_boxed_attribute_item_access */
-extern void T114f800(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f791(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_attribute_access */
-extern void T114f760(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
+extern void T114f750(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
 /* ET_C_GENERATOR.print_builtin_special_procedure_call */
-extern void T114f966(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f960(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_special_put_call */
-extern void T114f1234(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1228(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_attribute_special_item_access */
-extern void T114f777(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f768(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_attribute_special_item_name */
-extern void T114f788(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f780(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_real_n_ref_procedure_call */
-extern void T114f965(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f959(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_real_n_ref_set_item_call */
-extern void T114f1233(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1227(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_unboxed_expression */
-extern void T114f1180(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1174(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_boxed_attribute_pointer_access */
-extern void T114f799(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f790(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_boxed_attribute_pointer_name */
-extern void T114f809(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f800(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_procedure_procedure_call */
-extern void T114f964(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f958(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_procedure_fast_call_call */
-extern void T114f1232(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1226(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_procedure_call_call */
-extern void T114f1231(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1225(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_routine_call_call */
-extern void T114f1238(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-extern T1 T114f1238ot1(TC* ac, T0* a1);
-extern T1 T114f1238ot2(TC* ac, T0* a1);
-extern T1 T114f1238ot3(TC* ac, T0* a1);
-extern T1 T114f1238ot4(TC* ac, T0* a1);
-extern T1 T114f1238ot5(TC* ac, T0* a1);
-extern T1 T114f1238ot6(TC* ac, T0* a1);
+extern void T114f1232(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern T1 T114f1232ot1(TC* ac, T0* a1);
+extern T1 T114f1232ot2(TC* ac, T0* a1);
+extern T1 T114f1232ot3(TC* ac, T0* a1);
+extern T1 T114f1232ot4(TC* ac, T0* a1);
+extern T1 T114f1232ot5(TC* ac, T0* a1);
+extern T1 T114f1232ot6(TC* ac, T0* a1);
 /* ET_DYNAMIC_TYPE_SET_LIST.keep_first */
 extern void T858f14(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.free_tuple_label */
-extern void T114f1242(TC* ac, T0* C, T0* a1);
+extern void T114f1236(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.free_identifier */
-extern void T114f905(TC* ac, T0* C, T0* a1);
+extern void T114f899(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_IDENTIFIER].force_last */
 extern void T913f14(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_IDENTIFIER].force */
@@ -63234,7 +63244,7 @@ extern T6 T913f10(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_LIST [ET_IDENTIFIER].extendible */
 extern T1 T913f9(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.free_qualified_call_expression */
-extern void T114f877(TC* ac, T0* C, T0* a1);
+extern void T114f871(TC* ac, T0* C, T0* a1);
 /* ET_QUALIFIED_CALL_EXPRESSION.set_target */
 extern void T379f32(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_QUALIFIED_CALL_EXPRESSION].force_last */
@@ -63256,7 +63266,7 @@ extern T6 T920f9(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_LIST [ET_QUALIFIED_CALL_EXPRESSION].extendible */
 extern T1 T920f8(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.new_qualified_call_expression */
-extern T0* T114f350(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern T0* T114f344(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_QUALIFIED_CALL_EXPRESSION.set_name */
 extern void T379f34(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_QUALIFIED_CALL_EXPRESSION].remove_last */
@@ -63276,9 +63286,9 @@ extern T0* T920f6(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_QUALIFIED_CALL_EXPRESSION].is_empty */
 extern T1 T920f10(TC* ac, T0* C);
 /* ET_C_GENERATOR.new_tuple_label */
-extern T0* T114f583(TC* ac, T0* C, T6 a1);
+extern T0* T114f577(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.new_identifier */
-extern T0* T114f591(TC* ac, T0* C, T0* a1);
+extern T0* T114f585(TC* ac, T0* C, T0* a1);
 /* ET_IDENTIFIER.set_name */
 extern void T303f130(TC* ac, T0* C, T0* a1);
 /* ET_IDENTIFIER.new_hash_code */
@@ -63312,122 +63322,122 @@ extern T1 T860f33(TC* ac, T0* C);
 /* ET_DYNAMIC_FEATURE.is_procedure */
 extern T1 T845f33(TC* ac, T0* C);
 /* ET_C_GENERATOR.conforming_type_set */
-extern T0* T114f582(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T114f576(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_pointer_ref_procedure_call */
-extern void T114f963(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_pointer_ref_set_item_call */
-extern void T114f1230(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_memory_procedure_call */
-extern void T114f962(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_memory_free_call */
-extern void T114f1229(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_procedure_c_call */
-extern void T114f1241(TC* ac, T0* C, T0* a1, T0* a2, T1 a3, T0* a4, T1 a5);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_procedure_call */
-extern void T114f961(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_unmark_object_call */
-extern void T114f1228(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_unlock_marking_call */
-extern void T114f1227(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_reference_field_at_call */
-extern void T114f1226(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_reference_field_call */
-extern void T114f1225(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_real_64_field_at_call */
-extern void T114f1224(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_real_64_field_call */
-extern void T114f1223(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_real_32_field_at_call */
-extern void T114f1222(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_real_32_field_call */
-extern void T114f1221(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_pointer_field_at_call */
-extern void T114f1220(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_pointer_field_call */
-extern void T114f1219(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_64_field_at_call */
-extern void T114f1218(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_64_field_call */
-extern void T114f1217(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_32_field_at_call */
-extern void T114f1216(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_32_field_call */
-extern void T114f1215(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_16_field_at_call */
-extern void T114f1214(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_16_field_call */
-extern void T114f1213(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_8_field_at_call */
-extern void T114f1212(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_8_field_call */
-extern void T114f1211(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_64_field_at_call */
-extern void T114f1210(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_64_field_call */
-extern void T114f1209(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_32_field_at_call */
-extern void T114f1208(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_32_field_call */
-extern void T114f1207(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_16_field_at_call */
-extern void T114f1206(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_16_field_call */
-extern void T114f1205(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_8_field_at_call */
-extern void T114f1204(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_8_field_call */
-extern void T114f1203(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_character_32_field_at_call */
-extern void T114f1202(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_character_32_field_call */
-extern void T114f1201(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_character_8_field_at_call */
-extern void T114f1200(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_character_8_field_call */
-extern void T114f1199(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_boolean_field_at_call */
-extern void T114f1198(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_boolean_field_call */
-extern void T114f1197(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_mark_object_call */
-extern void T114f1196(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_lock_marking_call */
-extern void T114f1195(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_exception_manager_procedure_call */
-extern void T114f960(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_exception_manager_developer_raise_call */
-extern void T114f1194(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_ref_procedure_call */
-extern void T114f959(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_ref_set_item_call */
-extern void T114f1193(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_identified_routines_procedure_call */
-extern void T114f958(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_identified_routines_eif_object_id_free_call */
-extern void T114f1192(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_com_failure_procedure_call */
 extern void T114f957(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_com_failure_cwin_local_free_call */
-extern void T114f1191(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_character_n_ref_procedure_call */
+/* ET_C_GENERATOR.print_builtin_pointer_ref_set_item_call */
+extern void T114f1224(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_memory_procedure_call */
 extern void T114f956(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_character_n_ref_set_item_call */
-extern void T114f1190(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_boolean_ref_procedure_call */
+/* ET_C_GENERATOR.print_builtin_memory_free_call */
+extern void T114f1223(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_procedure_c_call */
+extern void T114f1235(TC* ac, T0* C, T0* a1, T0* a2, T1 a3, T0* a4, T1 a5);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_procedure_call */
 extern void T114f955(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_boolean_ref_set_item_call */
+/* ET_C_GENERATOR.print_builtin_ise_runtime_unmark_object_call */
+extern void T114f1222(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_unlock_marking_call */
+extern void T114f1221(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_reference_field_at_call */
+extern void T114f1220(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_reference_field_call */
+extern void T114f1219(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_real_64_field_at_call */
+extern void T114f1218(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_real_64_field_call */
+extern void T114f1217(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_real_32_field_at_call */
+extern void T114f1216(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_real_32_field_call */
+extern void T114f1215(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_pointer_field_at_call */
+extern void T114f1214(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_pointer_field_call */
+extern void T114f1213(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_64_field_at_call */
+extern void T114f1212(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_64_field_call */
+extern void T114f1211(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_32_field_at_call */
+extern void T114f1210(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_32_field_call */
+extern void T114f1209(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_16_field_at_call */
+extern void T114f1208(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_16_field_call */
+extern void T114f1207(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_8_field_at_call */
+extern void T114f1206(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_natural_8_field_call */
+extern void T114f1205(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_64_field_at_call */
+extern void T114f1204(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_64_field_call */
+extern void T114f1203(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_32_field_at_call */
+extern void T114f1202(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_32_field_call */
+extern void T114f1201(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_16_field_at_call */
+extern void T114f1200(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_16_field_call */
+extern void T114f1199(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_8_field_at_call */
+extern void T114f1198(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_integer_8_field_call */
+extern void T114f1197(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_character_32_field_at_call */
+extern void T114f1196(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_character_32_field_call */
+extern void T114f1195(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_character_8_field_at_call */
+extern void T114f1194(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_character_8_field_call */
+extern void T114f1193(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_boolean_field_at_call */
+extern void T114f1192(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_boolean_field_call */
+extern void T114f1191(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_mark_object_call */
+extern void T114f1190(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_lock_marking_call */
 extern void T114f1189(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_any_procedure_call */
+/* ET_C_GENERATOR.print_builtin_ise_exception_manager_procedure_call */
 extern void T114f954(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_any_standard_copy_call */
+/* ET_C_GENERATOR.print_builtin_ise_exception_manager_developer_raise_call */
 extern void T114f1188(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-extern T1 T114f1188ot1(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_builtin_integer_n_ref_procedure_call */
+extern void T114f953(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_ref_set_item_call */
+extern void T114f1187(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_identified_routines_procedure_call */
+extern void T114f952(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_identified_routines_eif_object_id_free_call */
+extern void T114f1186(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_com_failure_procedure_call */
+extern void T114f951(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_com_failure_cwin_local_free_call */
+extern void T114f1185(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_character_n_ref_procedure_call */
+extern void T114f950(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_character_n_ref_set_item_call */
+extern void T114f1184(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_boolean_ref_procedure_call */
+extern void T114f949(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_boolean_ref_set_item_call */
+extern void T114f1183(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_any_procedure_call */
+extern void T114f948(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_any_standard_copy_call */
+extern void T114f1182(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern T1 T114f1182ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_minus */
-extern void T114f1183(TC* ac, T0* C);
+extern void T114f1177(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_eif_any_type_name */
-extern void T114f717(TC* ac, T0* C, T0* a1);
+extern void T114f712(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_plus */
-extern void T114f1181(TC* ac, T0* C);
+extern void T114f1175(TC* ac, T0* C);
 /* ET_DYNAMIC_FUNCTION_TYPE.has_nested_custom_standard_copy_routine */
 extern T1 T1049f32(TC* ac, T0* C);
 /* ET_DYNAMIC_PROCEDURE_TYPE.has_nested_custom_standard_copy_routine */
@@ -63457,20 +63467,20 @@ extern T1 T838f41(TC* ac, T0* C);
 /* ET_CLASS.is_type_class */
 extern T1 T70f87(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_builtin_any_copy_call */
-extern void T114f1187(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1181(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_tuple_label_setter_call */
-extern void T114f872(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-extern T1 T114f872ot1(TC* ac, T0* a1);
+extern void T114f866(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern T1 T114f866ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_attribute_tuple_item_access */
-extern void T114f778(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T1 a4);
+extern void T114f770(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T1 a4);
 /* ET_C_GENERATOR.print_attribute_tuple_item_name */
-extern void T114f808(TC* ac, T0* C, T6 a1, T0* a2, T0* a3);
+extern void T114f799(TC* ac, T0* C, T6 a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_procedure_target_expression */
-extern void T114f922(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f916(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_separate_qualified_call_instruction */
-extern void T114f921(TC* ac, T0* C, T0* a1);
+extern void T114f915(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_procedure_target_operand */
-extern void T114f920(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f914(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_PARENTHESIS_INSTRUCTION.is_call_agent */
 extern T1 T1862f7(TC* ac, T0* C);
 /* ET_ASSIGNER_INSTRUCTION.is_call_agent */
@@ -63482,9 +63492,9 @@ extern T1 T935f6(TC* ac, T0* C);
 /* ET_GENERAL_QUALIFIED_FEATURE_CALL_INSTRUCTION.is_tuple_label */
 extern T1 T935f5(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_position */
-extern void T114f919(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f913(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_escaped_string */
-extern void T114f784(TC* ac, T0* C, T0* a1);
+extern void T114f776(TC* ac, T0* C, T0* a1);
 /* ET_PARENTHESIS_INSTRUCTION.position */
 extern T0* T1862f5(TC* ac, T0* C);
 /* ET_ASSIGNER_INSTRUCTION.position */
@@ -63494,7 +63504,7 @@ extern T0* T736f13(TC* ac, T0* C);
 /* ET_GENERAL_QUALIFIED_FEATURE_CALL_INSTRUCTION.position */
 extern T0* T935f4(TC* ac, T0* C);
 /* ET_C_GENERATOR.line_generation_mode */
-extern T1 T114f396(TC* ac, T0* C);
+extern T1 T114f390(TC* ac, T0* C);
 /* ET_GENERAL_QUALIFIED_FEATURE_CALL_INSTRUCTION.set_arguments */
 extern void T935f10(TC* ac, T0* C, T0* a1);
 /* ET_GENERAL_QUALIFIED_FEATURE_CALL_INSTRUCTION.set_name */
@@ -63526,20 +63536,20 @@ extern void T1171f6(TC* ac, T0* C, T6 a1);
 /* SPECIAL [ET_EXPRESSION_ITEM].set_count */
 extern void T1171f9(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.dedent */
-extern void T114f762(TC* ac, T0* C);
+extern void T114f752(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_separate_call_object_name */
-extern void T114f888(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
+extern void T114f882(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
 /* ET_C_GENERATOR.print_and_then */
-extern void T114f867(TC* ac, T0* C);
+extern void T114f861(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_attribute_region_access */
-extern void T114f757(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f811(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_attribute_region_name */
-extern void T114f806(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f797(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_current_name */
-extern void T114f834(TC* ac, T0* C, T0* a1);
+extern void T114f826(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_malloc_current */
-extern void T114f887(TC* ac, T0* C, T0* a1);
-extern T1 T114f887ot1(TC* ac, T0* a1);
+extern void T114f881(TC* ac, T0* C, T0* a1);
+extern T1 T114f881ot1(TC* ac, T0* a1);
 /* ET_CLASS.same_syntactical_type */
 extern T1 T70f248(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_CLASS.same_syntactical_type_with_type_marks */
@@ -63752,21 +63762,23 @@ extern T1 T724f58(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_LIKE_CURRENT.same_syntactical_type */
 extern T1 T199f57(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.current_universe */
-extern T0* T114f394(TC* ac, T0* C);
+extern T0* T114f388(TC* ac, T0* C);
+/* ET_C_GENERATOR.print_default_entity_value */
+extern void T114f830(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_default_name */
-extern void T114f756(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f805(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.mark_temp_variable_volatile */
-extern void T114f907(TC* ac, T0* C, T0* a1);
+extern void T114f901(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [BOOLEAN].replace */
 extern void T915f12(TC* ac, T0* C, T1 a1, T6 a2);
 /* ET_C_GENERATOR.print_comma */
-extern void T114f754(TC* ac, T0* C);
-/* ET_C_GENERATOR.print_result_name */
-extern void T114f751(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_assign_to */
-extern void T114f789(TC* ac, T0* C);
-/* ET_C_GENERATOR.indent */
 extern void T114f749(TC* ac, T0* C);
+/* ET_C_GENERATOR.print_result_name */
+extern void T114f746(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_assign_to */
+extern void T114f781(TC* ac, T0* C);
+/* ET_C_GENERATOR.indent */
+extern void T114f744(TC* ac, T0* C);
 /* ET_DYNAMIC_AGENT_OPERAND_PUSH_TYPE_SET.is_empty */
 extern T1 T1814f14(TC* ac, T0* C);
 /* ET_DYNAMIC_PUSH_TYPE_SET.is_empty */
@@ -63788,9 +63800,9 @@ extern T1 T838f28(TC* ac, T0* C);
 /* ET_GENERAL_QUALIFIED_FEATURE_CALL_INSTRUCTION.arguments */
 extern T0* T935f3(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_argument_name */
-extern void T114f826(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f818(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.formal_argument */
-extern T0* T114f320(TC* ac, T0* C, T6 a1);
+extern T0* T114f313(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_LIST [ET_IDENTIFIER].put_last */
 extern void T913f16(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_IDENTIFIER].item */
@@ -63920,13 +63932,13 @@ extern void T913f13(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_IDENTIFIER].move_all_cursors_after */
 extern void T913f19(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_context_type_declaration */
-extern void T114f752(TC* ac, T0* C, T0* a1);
+extern void T114f747(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_separate_call_name */
-extern void T114f884(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
+extern void T114f878(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
 /* ET_C_GENERATOR.print_type_declaration */
-extern void T114f748(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f743(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_call_name_in_comment */
-extern void T114f775(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f765(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* KL_STRING_ROUTINES.replaced_all_substrings */
 extern T0* T108s17(TC* ac, T0* a1, T0* a2, T0* a3);
 /* KL_STRING_ROUTINES.substring_index */
@@ -63969,25 +63981,25 @@ extern T1 T731f16(TC* ac, T0* C);
 /* ET_CREATE_EXPRESSION.is_scoop_region_passive */
 extern T1 T436f10(TC* ac, T0* C);
 /* ET_C_GENERATOR.current_closure */
-extern T0* T114f339(TC* ac, T0* C);
-extern T1 T114f339ot1(TC* ac, T0* a1);
+extern T0* T114f331(TC* ac, T0* C);
+extern T1 T114f331ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.mark_temp_variable_unfrozen */
-extern void T114f849(TC* ac, T0* C, T0* a1);
+extern void T114f842(TC* ac, T0* C, T0* a1);
 /* ET_MANIFEST_TUPLE.wipe_out */
 extern void T568f35(TC* ac, T0* C);
 /* ET_C_GENERATOR.mark_expressions_unfrozen */
-extern void T114f918(TC* ac, T0* C, T0* a1);
+extern void T114f912(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_semicolon_newline */
-extern void T114f790(TC* ac, T0* C);
+extern void T114f782(TC* ac, T0* C);
 /* KL_STRING_OUTPUT_STREAM.put_string */
 extern void T912f8(TC* ac, T0* C, T0* a1);
 /* KL_STRING_OUTPUT_STREAM.string_ */
 extern T0* T912s3(TC* ac);
 /* ET_C_GENERATOR.print_call_name */
-extern void T114f833(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4, T0* a5);
-extern T1 T114f833ot1(TC* ac, T0* a1);
+extern void T114f825(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4, T0* a5);
+extern T1 T114f825ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.dynamic_type_set_in_feature */
-extern T0* T114f328(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T114f321(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_AGENT_IMPLICIT_OPEN_ARGUMENT.is_current */
 extern T1 T1868f5(TC* ac, T0* C);
 /* ET_AGENT_TYPED_OPEN_ARGUMENT.is_current */
@@ -63997,7 +64009,7 @@ extern T1 T336f40(TC* ac, T0* C);
 /* ET_CALL_AGENT.is_call_agent */
 extern T1 T376s27(TC* ac);
 /* ET_C_GENERATOR.register_polymorphic_called_features */
-extern void T114f917(TC* ac, T0* C, T0* a1);
+extern void T114f911(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL.set_generated */
 extern void T889f19(TC* ac, T0* C, T1 a1);
 /* ET_DYNAMIC_QUALIFIED_QUERY_CALL.set_generated */
@@ -64019,26 +64031,26 @@ extern T6 T894f1(TC* ac, T0* C);
 /* ET_DYNAMIC_PRIMARY_TYPE.id */
 extern T6 T838f4(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_attribute_type_id_access */
-extern void T114f820(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f810(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_attribute_type_id_name */
-extern void T114f804(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f795(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_adapted_named_query_call */
-extern void T114f836(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
+extern void T114f828(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
 /* Creation of agent #1 in feature ET_C_GENERATOR.print_adapted_named_query_call */
-extern T0* T114f836ac1(TC* ac, T0* a1, T6 a2, T0* a3, T0* a4, T1 a5);
-extern T1 T114f836ot1(TC* ac, T0* a1);
+extern T0* T114f828ac1(TC* ac, T0* a1, T6 a2, T0* a3, T0* a4, T1 a5);
+extern T1 T114f828ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_typed_default_entity_value */
-extern void T114f916(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f910(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_expression */
-extern void T114f815(TC* ac, T0* C, T0* a1);
+extern void T114f807(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_target_expression */
-extern void T114f904(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f898(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_separate_qualified_call_expression */
-extern void T114f915(TC* ac, T0* C, T0* a1);
+extern void T114f909(TC* ac, T0* C, T0* a1);
 /* KL_STRING_OUTPUT_STREAM.put_character */
 extern void T912f7(TC* ac, T0* C, T2 a1);
 /* ET_C_GENERATOR.print_temp_name */
-extern void T114f753(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f748(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.new_temp_variable */
 extern T0* T114f203(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [BOOLEAN].force_last */
@@ -64078,34 +64090,34 @@ extern void T303f124(TC* ac, T0* C, T1 a1);
 /* DS_ARRAYED_LIST [detachable ET_DYNAMIC_PRIMARY_TYPE].replace */
 extern void T914f11(TC* ac, T0* C, T0* a1, T6 a2);
 /* ET_C_GENERATOR.same_declaration_types */
-extern T1 T114f588(TC* ac, T0* C, T0* a1, T0* a2);
+extern T1 T114f582(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_writable */
-extern void T114f845(TC* ac, T0* C, T0* a1);
-extern T1 T114f845ot1(TC* ac, T0* a1);
+extern void T114f838(TC* ac, T0* C, T0* a1);
+extern T1 T114f838ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_local_variable */
-extern void T114f883(TC* ac, T0* C, T0* a1);
+extern void T114f877(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_local_name */
-extern void T114f910(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f904(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_inline_separate_argument */
-extern void T114f882(TC* ac, T0* C, T0* a1);
+extern void T114f876(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_iteration_item */
-extern void T114f881(TC* ac, T0* C, T0* a1);
-extern T1 T114f881ot1(TC* ac, T0* a1);
+extern void T114f875(TC* ac, T0* C, T0* a1);
+extern T1 T114f875ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_temporary_variable */
-extern void T114f880(TC* ac, T0* C, T0* a1);
+extern void T114f874(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.temp_variable_type */
-extern T0* T114f391(TC* ac, T0* C, T0* a1);
+extern T0* T114f385(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.is_temp_variable_known */
-extern T1 T114f390(TC* ac, T0* C, T0* a1);
+extern T1 T114f384(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_formal_argument */
-extern void T114f879(TC* ac, T0* C, T0* a1);
-extern T1 T114f879ot1(TC* ac, T0* a1);
+extern void T114f873(TC* ac, T0* C, T0* a1);
+extern T1 T114f873ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_indentation */
-extern void T114f750(TC* ac, T0* C);
+extern void T114f745(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_attachment_expression */
-extern void T114f885(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f879(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_boxed_expression */
-extern void T114f911(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f905(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [STRING_8, STRING_8].force_last_new */
 extern void T827f56(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [STRING_8, STRING_8].key_storage_put */
@@ -64161,7 +64173,7 @@ extern T1 T1053f2(TC* ac, T0* C, T6 a1, T6 a2);
 /* KL_COMPARABLE_COMPARATOR [INTEGER_32].attached_less_than */
 extern T1 T1053f3(TC* ac, T0* C, T6 a1, T6 a2);
 /* ET_C_GENERATOR.dynamic_type_id_sorter */
-extern T0* T114f327(TC* ac, T0* C);
+extern T0* T114f320(TC* ac, T0* C);
 /* DS_QUICK_SORTER [INTEGER_32].make */
 extern T0* T982c2(TC* ac, T0* a1);
 /* KL_COMPARABLE_COMPARATOR [INTEGER_32].make */
@@ -64175,30 +64187,30 @@ extern T6 T926f9(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_STACK [ET_EXPRESSION].extendible */
 extern T1 T926f8(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.mark_temp_variable_frozen */
-extern void T114f846(TC* ac, T0* C, T0* a1);
+extern void T114f839(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.mark_temp_variable_used */
-extern void T114f914(TC* ac, T0* C, T0* a1);
+extern void T114f908(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.is_temp_variable_free */
-extern T1 T114f395(TC* ac, T0* C, T0* a1);
+extern T1 T114f389(TC* ac, T0* C, T0* a1);
 /* ET_IDENTIFIER.is_temporary */
 extern T1 T303f33(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_adapted_query_call */
-extern void T114f871(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
+extern void T114f865(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
 /* Creation of agent #1 in feature ET_C_GENERATOR.print_adapted_query_call */
-extern T0* T114f871ac1(TC* ac, T0* a1, T0* a2, T0* a3, T1 a4);
-extern T1 T114f871ot1(TC* ac, T0* a1);
-extern T1 T114f871ot2(TC* ac, T0* a1);
+extern T0* T114f865ac1(TC* ac, T0* a1, T0* a2, T0* a3, T1 a4);
+extern T1 T114f865ot1(TC* ac, T0* a1);
+extern T1 T114f865ot2(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_query_call */
-extern void T114f868(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-extern T1 T114f868ot1(TC* ac, T0* a1);
-extern T1 T114f868ot2(TC* ac, T0* a1);
-extern T1 T114f868ot3(TC* ac, T0* a1);
-extern T1 T114f868ot4(TC* ac, T0* a1);
+extern void T114f862(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern T1 T114f862ot1(TC* ac, T0* a1);
+extern T1 T114f862ot2(TC* ac, T0* a1);
+extern T1 T114f862ot3(TC* ac, T0* a1);
+extern T1 T114f862ot4(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_inlined_query_call */
-extern void T114f897(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-extern T1 T114f897ot1(TC* ac, T0* a1);
-extern T1 T114f897ot2(TC* ac, T0* a1);
-extern T1 T114f897ot3(TC* ac, T0* a1);
+extern void T114f891(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern T1 T114f891ot1(TC* ac, T0* a1);
+extern T1 T114f891ot2(TC* ac, T0* a1);
+extern T1 T114f891ot3(TC* ac, T0* a1);
 /* ET_DYNAMIC_FUNCTION_TYPE.is_character_n */
 extern T1 T1049f63(TC* ac, T0* C);
 /* ET_CLASS.is_character_n_class */
@@ -64248,21 +64260,21 @@ extern T1 T894f31(TC* ac, T0* C);
 /* ET_DYNAMIC_PRIMARY_TYPE.is_integer_n */
 extern T1 T838f50(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_builtin_query_call */
-extern void T114f896(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f890(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_type_query_call */
-extern void T114f946(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f940(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_type_runtime_name_call */
-extern void T114f1176(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1170(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_type_type_id_call */
-extern void T114f1175(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1169(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_type_is_expanded_call */
-extern void T114f1174(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1168(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_type_is_deferred_call */
-extern void T114f1173(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1167(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_type_is_attached_call */
-extern void T114f1172(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1166(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_type_has_default_call */
-extern void T114f1171(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1165(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_CONSTRAINED_FORMAL_PARAMETER.is_type_detachable */
 extern T1 T691f41(TC* ac, T0* C, T0* a1);
 /* ET_FORMAL_PARAMETER.is_type_detachable */
@@ -64270,83 +64282,83 @@ extern T1 T500f43(TC* ac, T0* C, T0* a1);
 /* ET_CLASS.is_type_detachable */
 extern T1 T70f177(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_type_generic_parameter_count_call */
-extern void T114f1170(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_type_default_call */
-extern void T114f1169(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_tuple_query_call */
-extern void T114f945(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_tuple_object_comparison_call */
-extern void T114f1168(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_tuple_count_call */
-extern void T114f1167(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-extern T1 T114f1167ot1(TC* ac, T0* a1);
-/* ET_C_GENERATOR.print_builtin_special_query_call */
-extern void T114f944(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_special_item_call */
-extern void T114f1166(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_special_element_size_call */
-extern void T114f1165(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-extern T1 T114f1165ot1(TC* ac, T0* a1);
-/* ET_C_GENERATOR.print_builtin_special_count_call */
 extern void T114f1164(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_attribute_special_count_access */
-extern void T114f759(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_attribute_special_count_name */
-extern void T114f818(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_builtin_special_capacity_call */
+/* ET_C_GENERATOR.print_builtin_type_default_call */
 extern void T114f1163(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_attribute_special_capacity_access */
-extern void T114f758(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_attribute_special_capacity_name */
-extern void T114f817(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_builtin_special_base_address_call */
+/* ET_C_GENERATOR.print_builtin_tuple_query_call */
+extern void T114f939(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_tuple_object_comparison_call */
 extern void T114f1162(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_ref_query_call */
-extern void T114f943(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_ref_positive_infinity_call */
+/* ET_C_GENERATOR.print_builtin_tuple_count_call */
 extern void T114f1161(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_ref_negative_infinity_call */
+extern T1 T114f1161ot1(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_builtin_special_query_call */
+extern void T114f938(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_special_item_call */
 extern void T114f1160(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_ref_nan_call */
+/* ET_C_GENERATOR.print_builtin_special_element_size_call */
 extern void T114f1159(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_ref_item_call */
+extern T1 T114f1159ot1(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_builtin_special_count_call */
 extern void T114f1158(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_query_call */
-extern void T114f942(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_truncated_to_real_call */
+/* ET_C_GENERATOR.print_attribute_special_count_access */
+extern void T114f767(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_attribute_special_count_name */
+extern void T114f832(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_builtin_special_capacity_call */
 extern void T114f1157(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_truncated_to_integer_64_call */
+/* ET_C_GENERATOR.print_attribute_special_capacity_access */
+extern void T114f812(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_attribute_special_capacity_name */
+extern void T114f847(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_builtin_special_base_address_call */
 extern void T114f1156(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_truncated_to_integer_call */
+/* ET_C_GENERATOR.print_builtin_real_n_ref_query_call */
+extern void T114f937(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_real_n_ref_positive_infinity_call */
 extern void T114f1155(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_to_double_call */
+/* ET_C_GENERATOR.print_builtin_real_n_ref_negative_infinity_call */
 extern void T114f1154(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_quotient_call */
+/* ET_C_GENERATOR.print_builtin_real_n_ref_nan_call */
 extern void T114f1153(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_product_call */
+/* ET_C_GENERATOR.print_builtin_real_n_ref_item_call */
 extern void T114f1152(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_power_call */
+/* ET_C_GENERATOR.print_builtin_real_n_query_call */
+extern void T114f936(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_real_n_truncated_to_real_call */
 extern void T114f1151(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_plus_call */
+/* ET_C_GENERATOR.print_builtin_real_n_truncated_to_integer_64_call */
 extern void T114f1150(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_opposite_call */
+/* ET_C_GENERATOR.print_builtin_real_n_truncated_to_integer_call */
 extern void T114f1149(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_minus_call */
+/* ET_C_GENERATOR.print_builtin_real_n_to_double_call */
 extern void T114f1148(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_is_positive_infinity_call */
+/* ET_C_GENERATOR.print_builtin_real_n_quotient_call */
 extern void T114f1147(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_is_negative_infinity_call */
+/* ET_C_GENERATOR.print_builtin_real_n_product_call */
 extern void T114f1146(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_is_nan_call */
+/* ET_C_GENERATOR.print_builtin_real_n_power_call */
 extern void T114f1145(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_is_less_call */
+/* ET_C_GENERATOR.print_builtin_real_n_plus_call */
 extern void T114f1144(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_real_n_opposite_call */
+extern void T114f1143(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_real_n_minus_call */
+extern void T114f1142(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_real_n_is_positive_infinity_call */
+extern void T114f1141(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_real_n_is_negative_infinity_call */
+extern void T114f1140(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_real_n_is_nan_call */
+extern void T114f1139(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_real_n_is_less_call */
+extern void T114f1138(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_query_c_call */
-extern void T114f1179(TC* ac, T0* C, T0* a1, T0* a2, T1 a3, T1 a4, T0* a5, T1 a6);
+extern void T114f1173(TC* ac, T0* C, T0* a1, T0* a2, T1 a3, T1 a4, T0* a5, T1 a6);
 /* ET_C_GENERATOR.print_declaration_type_cast_from_c */
-extern void T114f1239(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f1233(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_declaration_type_cast */
-extern void T114f860(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f854(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_FUNCTION_TYPE.is_boolean */
 extern T1 T1049f70(TC* ac, T0* C);
 /* ET_DYNAMIC_PROCEDURE_TYPE.is_boolean */
@@ -64358,43 +64370,43 @@ extern T1 T894f35(TC* ac, T0* C);
 /* ET_DYNAMIC_PRIMARY_TYPE.is_boolean */
 extern T1 T838f54(TC* ac, T0* C);
 /* ET_C_GENERATOR.total_order_on_reals_mode */
-extern T1 T114f403(TC* ac, T0* C);
+extern T1 T114f397(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_builtin_real_n_ieee_minimum_number_call */
-extern void T114f1143(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_ieee_maximum_number_call */
-extern void T114f1142(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_ieee_is_less_equal_call */
-extern void T114f1141(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_ieee_is_less_call */
-extern void T114f1140(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_ieee_is_greater_equal_call */
-extern void T114f1139(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_ieee_is_greater_call */
-extern void T114f1138(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_ieee_is_equal_call */
 extern void T114f1137(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_identity_call */
+/* ET_C_GENERATOR.print_builtin_real_n_ieee_maximum_number_call */
 extern void T114f1136(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_floor_real_64_call */
+/* ET_C_GENERATOR.print_builtin_real_n_ieee_is_less_equal_call */
 extern void T114f1135(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_floor_real_32_call */
+/* ET_C_GENERATOR.print_builtin_real_n_ieee_is_less_call */
 extern void T114f1134(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_ceiling_real_64_call */
+/* ET_C_GENERATOR.print_builtin_real_n_ieee_is_greater_equal_call */
 extern void T114f1133(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_real_n_ceiling_real_32_call */
+/* ET_C_GENERATOR.print_builtin_real_n_ieee_is_greater_call */
 extern void T114f1132(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_pointer_ref_query_call */
-extern void T114f941(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_pointer_ref_item_call */
+/* ET_C_GENERATOR.print_builtin_real_n_ieee_is_equal_call */
 extern void T114f1131(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_pointer_query_call */
-extern void T114f940(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_pointer_to_integer_32_call */
+/* ET_C_GENERATOR.print_builtin_real_n_identity_call */
 extern void T114f1130(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_pointer_plus_call */
+/* ET_C_GENERATOR.print_builtin_real_n_floor_real_64_call */
 extern void T114f1129(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_pointer_is_default_pointer_call */
+/* ET_C_GENERATOR.print_builtin_real_n_floor_real_32_call */
 extern void T114f1128(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_real_n_ceiling_real_64_call */
+extern void T114f1127(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_real_n_ceiling_real_32_call */
+extern void T114f1126(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_pointer_ref_query_call */
+extern void T114f935(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_pointer_ref_item_call */
+extern void T114f1125(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_pointer_query_call */
+extern void T114f934(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_pointer_to_integer_32_call */
+extern void T114f1124(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_pointer_plus_call */
+extern void T114f1123(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_pointer_is_default_pointer_call */
+extern void T114f1122(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_ECF_LIBRARY.pointer_type */
 extern T0* T802f68(TC* ac, T0* C);
 /* ET_ECF_SYSTEM.pointer_type */
@@ -64402,359 +64414,359 @@ extern T0* T87f71(TC* ac, T0* C);
 /* ET_SYSTEM.pointer_type */
 extern T0* T50f70(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_builtin_pointer_hash_code_call */
-extern void T114f1127(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_platform_query_call */
-extern void T114f939(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_platform_wide_character_bytes_call */
-extern void T114f1126(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_platform_real_bytes_call */
-extern void T114f1125(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_platform_pointer_bytes_call */
-extern void T114f1124(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_platform_is_windows_call */
-extern void T114f1123(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_platform_is_vxworks_call */
-extern void T114f1122(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_platform_is_vms_call */
 extern void T114f1121(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_platform_is_unix_call */
-extern void T114f1120(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_platform_is_thread_capable_call */
-extern void T114f1119(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.multithreaded_mode */
-extern T1 T114f502(TC* ac, T0* C);
-/* ET_C_GENERATOR.print_builtin_platform_is_scoop_capable_call */
-extern void T114f1118(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.scoop_mode */
-extern T1 T114f501(TC* ac, T0* C);
-/* ET_C_GENERATOR.print_builtin_platform_is_mac_call */
-extern void T114f1117(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_platform_is_dotnet_call */
-extern void T114f1116(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_platform_is_64_bits_call */
-extern void T114f1115(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_platform_integer_bytes_call */
-extern void T114f1114(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_platform_double_bytes_call */
-extern void T114f1113(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_platform_character_bytes_call */
-extern void T114f1112(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_platform_boolean_bytes_call */
-extern void T114f1111(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_memory_query_call */
-extern void T114f938(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_memory_find_referers_call */
-extern void T114f1110(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_query_call */
-extern void T114f937(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_type_id_from_name_call */
-extern void T114f1109(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_type_conforms_to_call */
-extern void T114f1108(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_storable_version_of_type_call */
-extern void T114f1107(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_reference_field_at_offset_call */
-extern void T114f1106(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_reference_field_at_call */
-extern void T114f1105(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_reference_field_call */
-extern void T114f1104(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_real_64_field_at_call */
-extern void T114f1103(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_real_64_field_call */
-extern void T114f1102(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_real_32_field_at_call */
-extern void T114f1101(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_real_32_field_call */
-extern void T114f1100(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_raw_reference_field_at_offset_call */
-extern void T114f1099(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_raw_reference_field_at_call */
-extern void T114f1098(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_pointer_field_at_call */
-extern void T114f1097(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_pointer_field_call */
-extern void T114f1096(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_persistent_field_count_of_type_call */
-extern void T114f1095(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_once_objects_call */
-extern void T114f1094(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_object_size_call */
-extern void T114f1093(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_new_type_instance_of_call */
-extern void T114f1092(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_new_tuple_instance_of_call */
-extern void T114f1091(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_new_special_of_reference_instance_of_call */
-extern void T114f1090(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_new_instance_of_call */
-extern void T114f1089(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_64_field_at_call */
-extern void T114f1088(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_64_field_call */
-extern void T114f1087(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_32_field_at_call */
-extern void T114f1086(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_32_field_call */
-extern void T114f1085(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_16_field_at_call */
-extern void T114f1084(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_16_field_call */
-extern void T114f1083(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_8_field_at_call */
-extern void T114f1082(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_8_field_call */
-extern void T114f1081(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_is_tuple_type_call */
-extern void T114f1080(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_is_tuple_call */
-extern void T114f1079(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_is_special_of_reference_type_call */
-extern void T114f1078(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_is_special_of_reference_or_basic_type_call */
-extern void T114f1077(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_is_special_of_reference_call */
-extern void T114f1076(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_is_special_of_expanded_call */
-extern void T114f1075(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_is_special_copy_semantics_item_call */
-extern void T114f1074(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_is_special_call */
-extern void T114f1073(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_is_object_marked_call */
-extern void T114f1072(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_is_field_transient_of_type_call */
-extern void T114f1071(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_is_field_expanded_of_type_call */
-extern void T114f1070(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_is_expanded_call */
-extern void T114f1069(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_is_copy_semantics_field_call */
-extern void T114f1068(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_is_attached_type_call */
-extern void T114f1067(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_64_field_at_call */
-extern void T114f1066(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_64_field_call */
-extern void T114f1065(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_32_field_at_call */
-extern void T114f1064(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_32_field_call */
-extern void T114f1063(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_16_field_at_call */
-extern void T114f1062(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_16_field_call */
-extern void T114f1061(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_8_field_at_call */
-extern void T114f1060(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_8_field_call */
-extern void T114f1059(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_generic_parameter_count_call */
-extern void T114f1058(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_generator_8_of_type_call */
-extern void T114f1057(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_generator_of_type_call */
-extern void T114f1056(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_generating_type_8_of_type_call */
-extern void T114f1055(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_generating_type_of_type_call */
-extern void T114f1054(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_field_type_of_type_call */
-extern void T114f1053(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_field_static_type_of_type_call */
-extern void T114f1052(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_field_offset_of_type_call */
-extern void T114f1051(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_field_name_of_type_call */
-extern void T114f1050(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_field_count_of_type_call */
-extern void T114f1049(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_eif_gen_param_id_call */
-extern void T114f1048(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_dynamic_type_at_offset_call */
-extern void T114f1047(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_dynamic_type_call */
-extern void T114f1046(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_detachable_type_call */
-extern void T114f1045(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_compiler_version_call */
-extern void T114f1044(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_check_assert_call */
-extern void T114f1043(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_character_32_field_at_call */
-extern void T114f1042(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_character_32_field_call */
-extern void T114f1041(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_character_8_field_at_call */
-extern void T114f1040(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_character_8_field_call */
-extern void T114f1039(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_boolean_field_at_call */
-extern void T114f1038(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_boolean_field_call */
-extern void T114f1037(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_attached_type_call */
-extern void T114f1036(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_ref_query_call */
-extern void T114f936(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_ref_item_call */
-extern void T114f1035(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_query_call */
-extern void T114f935(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_to_real_64_call */
-extern void T114f1034(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_to_real_32_call */
-extern void T114f1033(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_to_real_call */
-extern void T114f1032(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_to_double_call */
-extern void T114f1031(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_to_character_32_call */
-extern void T114f1030(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_to_character_8_call */
-extern void T114f1029(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_quotient_call */
-extern void T114f1028(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_product_call */
-extern void T114f1027(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_power_call */
-extern void T114f1026(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_plus_call */
-extern void T114f1025(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_opposite_call */
-extern void T114f1024(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_minus_call */
-extern void T114f1023(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_is_less_call */
-extern void T114f1022(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_integer_remainder_call */
-extern void T114f1021(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_integer_quotient_call */
-extern void T114f1020(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_identity_call */
-extern void T114f1019(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_bit_xor_call */
-extern void T114f1018(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_bit_shift_right_call */
-extern void T114f1017(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_bit_shift_left_call */
-extern void T114f1016(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_bit_or_call */
-extern void T114f1015(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_bit_not_call */
-extern void T114f1014(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_bit_and_call */
-extern void T114f1013(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_as_natural_64_call */
-extern void T114f1012(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_as_natural_32_call */
-extern void T114f1011(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_as_natural_16_call */
-extern void T114f1010(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_as_natural_8_call */
-extern void T114f1009(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_as_integer_64_call */
-extern void T114f1008(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_as_integer_32_call */
-extern void T114f1007(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_as_integer_16_call */
-extern void T114f1006(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_integer_n_as_integer_8_call */
-extern void T114f1005(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_identified_routines_query_call */
-extern void T114f934(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_identified_routines_eif_object_id_call */
-extern void T114f1004(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_identified_routines_eif_is_object_id_of_current_call */
-extern void T114f1003(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_identified_routines_eif_id_object_call */
-extern void T114f1002(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_identified_routines_eif_current_object_id_call */
-extern void T114f1001(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_function_query_call */
+/* ET_C_GENERATOR.print_builtin_platform_query_call */
 extern void T114f933(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_function_item_call */
-extern void T114f1000(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_function_fast_item_call */
-extern void T114f999(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_com_failure_query_call */
+/* ET_C_GENERATOR.print_builtin_platform_wide_character_bytes_call */
+extern void T114f1120(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_platform_real_bytes_call */
+extern void T114f1119(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_platform_pointer_bytes_call */
+extern void T114f1118(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_platform_is_windows_call */
+extern void T114f1117(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_platform_is_vxworks_call */
+extern void T114f1116(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_platform_is_vms_call */
+extern void T114f1115(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_platform_is_unix_call */
+extern void T114f1114(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_platform_is_thread_capable_call */
+extern void T114f1113(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.multithreaded_mode */
+extern T1 T114f496(TC* ac, T0* C);
+/* ET_C_GENERATOR.print_builtin_platform_is_scoop_capable_call */
+extern void T114f1112(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.scoop_mode */
+extern T1 T114f495(TC* ac, T0* C);
+/* ET_C_GENERATOR.print_builtin_platform_is_mac_call */
+extern void T114f1111(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_platform_is_dotnet_call */
+extern void T114f1110(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_platform_is_64_bits_call */
+extern void T114f1109(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_platform_integer_bytes_call */
+extern void T114f1108(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_platform_double_bytes_call */
+extern void T114f1107(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_platform_character_bytes_call */
+extern void T114f1106(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_platform_boolean_bytes_call */
+extern void T114f1105(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_memory_query_call */
 extern void T114f932(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_com_failure_cwin_error_text_call */
-extern void T114f998(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_com_failure_character_size_call */
-extern void T114f997(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_com_failure_ccom_hresult_facility_call */
-extern void T114f996(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_com_failure_ccom_hresult_code_call */
-extern void T114f995(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_com_failure_ccom_hresult_call */
-extern void T114f994(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_com_failure_c_strlen_call */
-extern void T114f993(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_character_n_ref_query_call */
+/* ET_C_GENERATOR.print_builtin_memory_find_referers_call */
+extern void T114f1104(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_query_call */
 extern void T114f931(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_character_n_ref_item_call */
-extern void T114f992(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_character_n_query_call */
+/* ET_C_GENERATOR.print_builtin_ise_runtime_type_id_from_name_call */
+extern void T114f1103(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_type_conforms_to_call */
+extern void T114f1102(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_storable_version_of_type_call */
+extern void T114f1101(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_reference_field_at_offset_call */
+extern void T114f1100(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_reference_field_at_call */
+extern void T114f1099(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_reference_field_call */
+extern void T114f1098(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_real_64_field_at_call */
+extern void T114f1097(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_real_64_field_call */
+extern void T114f1096(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_real_32_field_at_call */
+extern void T114f1095(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_real_32_field_call */
+extern void T114f1094(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_raw_reference_field_at_offset_call */
+extern void T114f1093(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_raw_reference_field_at_call */
+extern void T114f1092(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_pointer_field_at_call */
+extern void T114f1091(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_pointer_field_call */
+extern void T114f1090(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_persistent_field_count_of_type_call */
+extern void T114f1089(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_once_objects_call */
+extern void T114f1088(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_object_size_call */
+extern void T114f1087(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_new_type_instance_of_call */
+extern void T114f1086(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_new_tuple_instance_of_call */
+extern void T114f1085(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_new_special_of_reference_instance_of_call */
+extern void T114f1084(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_new_instance_of_call */
+extern void T114f1083(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_64_field_at_call */
+extern void T114f1082(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_64_field_call */
+extern void T114f1081(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_32_field_at_call */
+extern void T114f1080(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_32_field_call */
+extern void T114f1079(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_16_field_at_call */
+extern void T114f1078(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_16_field_call */
+extern void T114f1077(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_8_field_at_call */
+extern void T114f1076(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_natural_8_field_call */
+extern void T114f1075(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_is_tuple_type_call */
+extern void T114f1074(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_is_tuple_call */
+extern void T114f1073(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_is_special_of_reference_type_call */
+extern void T114f1072(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_is_special_of_reference_or_basic_type_call */
+extern void T114f1071(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_is_special_of_reference_call */
+extern void T114f1070(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_is_special_of_expanded_call */
+extern void T114f1069(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_is_special_copy_semantics_item_call */
+extern void T114f1068(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_is_special_call */
+extern void T114f1067(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_is_object_marked_call */
+extern void T114f1066(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_is_field_transient_of_type_call */
+extern void T114f1065(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_is_field_expanded_of_type_call */
+extern void T114f1064(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_is_expanded_call */
+extern void T114f1063(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_is_copy_semantics_field_call */
+extern void T114f1062(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_is_attached_type_call */
+extern void T114f1061(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_64_field_at_call */
+extern void T114f1060(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_64_field_call */
+extern void T114f1059(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_32_field_at_call */
+extern void T114f1058(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_32_field_call */
+extern void T114f1057(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_16_field_at_call */
+extern void T114f1056(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_16_field_call */
+extern void T114f1055(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_8_field_at_call */
+extern void T114f1054(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_integer_8_field_call */
+extern void T114f1053(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_generic_parameter_count_call */
+extern void T114f1052(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_generator_8_of_type_call */
+extern void T114f1051(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_generator_of_type_call */
+extern void T114f1050(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_generating_type_8_of_type_call */
+extern void T114f1049(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_generating_type_of_type_call */
+extern void T114f1048(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_field_type_of_type_call */
+extern void T114f1047(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_field_static_type_of_type_call */
+extern void T114f1046(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_field_offset_of_type_call */
+extern void T114f1045(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_field_name_of_type_call */
+extern void T114f1044(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_field_count_of_type_call */
+extern void T114f1043(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_eif_gen_param_id_call */
+extern void T114f1042(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_dynamic_type_at_offset_call */
+extern void T114f1041(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_dynamic_type_call */
+extern void T114f1040(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_detachable_type_call */
+extern void T114f1039(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_compiler_version_call */
+extern void T114f1038(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_check_assert_call */
+extern void T114f1037(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_character_32_field_at_call */
+extern void T114f1036(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_character_32_field_call */
+extern void T114f1035(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_character_8_field_at_call */
+extern void T114f1034(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_character_8_field_call */
+extern void T114f1033(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_boolean_field_at_call */
+extern void T114f1032(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_boolean_field_call */
+extern void T114f1031(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_attached_type_call */
+extern void T114f1030(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_ref_query_call */
 extern void T114f930(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_character_n_to_character_32_call */
-extern void T114f991(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_character_n_to_character_8_call */
-extern void T114f990(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_character_n_natural_32_code_call */
-extern void T114f989(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_character_n_code_call */
-extern void T114f988(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_boolean_ref_query_call */
+/* ET_C_GENERATOR.print_builtin_integer_n_ref_item_call */
+extern void T114f1029(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_query_call */
 extern void T114f929(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_boolean_ref_item_call */
-extern void T114f987(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_boolean_query_call */
+/* ET_C_GENERATOR.print_builtin_integer_n_to_real_64_call */
+extern void T114f1028(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_to_real_32_call */
+extern void T114f1027(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_to_real_call */
+extern void T114f1026(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_to_double_call */
+extern void T114f1025(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_to_character_32_call */
+extern void T114f1024(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_to_character_8_call */
+extern void T114f1023(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_quotient_call */
+extern void T114f1022(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_product_call */
+extern void T114f1021(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_power_call */
+extern void T114f1020(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_plus_call */
+extern void T114f1019(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_opposite_call */
+extern void T114f1018(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_minus_call */
+extern void T114f1017(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_is_less_call */
+extern void T114f1016(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_integer_remainder_call */
+extern void T114f1015(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_integer_quotient_call */
+extern void T114f1014(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_identity_call */
+extern void T114f1013(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_bit_xor_call */
+extern void T114f1012(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_bit_shift_right_call */
+extern void T114f1011(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_bit_shift_left_call */
+extern void T114f1010(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_bit_or_call */
+extern void T114f1009(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_bit_not_call */
+extern void T114f1008(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_bit_and_call */
+extern void T114f1007(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_as_natural_64_call */
+extern void T114f1006(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_as_natural_32_call */
+extern void T114f1005(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_as_natural_16_call */
+extern void T114f1004(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_as_natural_8_call */
+extern void T114f1003(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_as_integer_64_call */
+extern void T114f1002(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_as_integer_32_call */
+extern void T114f1001(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_as_integer_16_call */
+extern void T114f1000(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_integer_n_as_integer_8_call */
+extern void T114f999(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_identified_routines_query_call */
 extern void T114f928(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_boolean_xor_call */
-extern void T114f986(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_boolean_or_else_call */
-extern void T114f985(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_boolean_or_call */
-extern void T114f984(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_boolean_not_call */
-extern void T114f983(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_boolean_implies_call */
-extern void T114f982(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_boolean_and_then_call */
-extern void T114f981(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_boolean_and_call */
-extern void T114f980(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_arguments_32_query_call */
+/* ET_C_GENERATOR.print_builtin_identified_routines_eif_object_id_call */
+extern void T114f998(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_identified_routines_eif_is_object_id_of_current_call */
+extern void T114f997(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_identified_routines_eif_id_object_call */
+extern void T114f996(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_identified_routines_eif_current_object_id_call */
+extern void T114f995(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_function_query_call */
 extern void T114f927(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_arguments_32_i_th_argument_string_call */
-extern void T114f979(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_arguments_32_i_th_argument_pointer_call */
-extern void T114f978(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_arguments_32_argument_count_call */
-extern void T114f977(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_any_query_call */
+/* ET_C_GENERATOR.print_builtin_function_item_call */
+extern void T114f994(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_function_fast_item_call */
+extern void T114f993(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_com_failure_query_call */
 extern void T114f926(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_any_twin_call */
+/* ET_C_GENERATOR.print_builtin_com_failure_cwin_error_text_call */
+extern void T114f992(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_com_failure_character_size_call */
+extern void T114f991(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_com_failure_ccom_hresult_facility_call */
+extern void T114f990(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_com_failure_ccom_hresult_code_call */
+extern void T114f989(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_com_failure_ccom_hresult_call */
+extern void T114f988(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_com_failure_c_strlen_call */
+extern void T114f987(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_character_n_ref_query_call */
+extern void T114f925(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_character_n_ref_item_call */
+extern void T114f986(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_character_n_query_call */
+extern void T114f924(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_character_n_to_character_32_call */
+extern void T114f985(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_character_n_to_character_8_call */
+extern void T114f984(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_character_n_natural_32_code_call */
+extern void T114f983(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_character_n_code_call */
+extern void T114f982(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_boolean_ref_query_call */
+extern void T114f923(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_boolean_ref_item_call */
+extern void T114f981(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_boolean_query_call */
+extern void T114f922(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_boolean_xor_call */
+extern void T114f980(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_boolean_or_else_call */
+extern void T114f979(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_boolean_or_call */
+extern void T114f978(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_boolean_not_call */
+extern void T114f977(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_boolean_implies_call */
 extern void T114f976(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_builtin_any_standard_twin_call */
+/* ET_C_GENERATOR.print_builtin_boolean_and_then_call */
 extern void T114f975(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_boolean_and_call */
+extern void T114f974(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_arguments_32_query_call */
+extern void T114f921(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_arguments_32_i_th_argument_string_call */
+extern void T114f973(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_arguments_32_i_th_argument_pointer_call */
+extern void T114f972(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_arguments_32_argument_count_call */
+extern void T114f971(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_any_query_call */
+extern void T114f920(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_any_twin_call */
+extern void T114f970(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+/* ET_C_GENERATOR.print_builtin_any_standard_twin_call */
+extern void T114f969(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_any_standard_is_equal_call */
-extern void T114f898(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f892(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_any_standard_is_equal_call_with_reference */
-extern void T114f951(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T1 a6);
-extern T1 T114f951ot1(TC* ac, T0* a1);
-extern T1 T114f951ot2(TC* ac, T0* a1);
+extern void T114f945(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T1 a6);
+extern T1 T114f945ot1(TC* ac, T0* a1);
+extern T1 T114f945ot2(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_times */
-extern void T114f1182(TC* ac, T0* C);
+extern void T114f1176(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_attribute_special_offset_access */
-extern void T114f821(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f813(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_attribute_special_offset_name */
-extern void T114f854(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f848(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_any_standard_is_equal_call_with_expanded */
-extern void T114f950(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T1 a6);
+extern void T114f944(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T1 a6);
 /* ET_C_GENERATOR.print_equal_to */
-extern void T114f864(TC* ac, T0* C);
+extern void T114f858(TC* ac, T0* C);
 /* ET_DYNAMIC_FUNCTION_TYPE.has_redefined_is_equal_routine */
 extern T1 T1049f12(TC* ac, T0* C);
 /* ET_DYNAMIC_PROCEDURE_TYPE.has_redefined_is_equal_routine */
@@ -64790,15 +64802,15 @@ extern T6 T924f11(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_STANDALONE_TYPE_SET.index_of */
 extern T6 T924f11p1(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_same_type_call */
-extern void T114f974(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f968(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_any_is_equal_call */
-extern void T114f869(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f863(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_any_generator_call */
-extern void T114f973(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f967(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_any_generating_type_call */
-extern void T114f972(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f966(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_any_deep_twin_call */
-extern void T114f971(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f965(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* DS_HASH_SET [ET_DYNAMIC_PRIMARY_TYPE].force_last */
 extern void T930f41(TC* ac, T0* C, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_PRIMARY_TYPE].slots_put */
@@ -64826,7 +64838,7 @@ extern void T930f56(TC* ac, T0* C, T0* a1, T6 a2);
 /* DS_HASH_SET [ET_DYNAMIC_PRIMARY_TYPE].unset_found_item */
 extern void T930f47(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_non_inlined_query_call */
-extern void T114f894(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f888(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_DYNAMIC_PRECURSOR.is_attribute_with_self_initializing_code */
 extern T1 T860f41(TC* ac, T0* C);
 extern T1 T860f41ot1(TC* ac, T0* a1);
@@ -64848,7 +64860,7 @@ extern T1 T703f40(TC* ac, T0* C);
 extern T1 T845f41(TC* ac, T0* C);
 extern T1 T845f41ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_once_value_name */
-extern void T114f781(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f773(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE].force_last */
 extern void T941f43(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE].key_storage_put */
@@ -64898,7 +64910,7 @@ extern void T941f53(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE].unset_found_item */
 extern void T941f46(TC* ac, T0* C);
 /* ET_C_GENERATOR.gobo_version_string_constant */
-extern T0* T114f386(TC* ac, T0* C);
+extern T0* T114f380(TC* ac, T0* C);
 /* KL_UNIX_FILE_SYSTEM.file_first_line */
 extern T0* T152s19(TC* ac, T0* a1);
 /* KL_UNIX_INPUT_FILE.close */
@@ -65034,13 +65046,13 @@ extern void T1060f42(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_PRECURSOR.is_builtin_special_item */
 extern T1 T860f38(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_adapted_once_function_call */
-extern void T114f900(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
+extern void T114f894(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
 /* Creation of agent #1 in feature ET_C_GENERATOR.print_adapted_once_function_call */
-extern T0* T114f900ac1(TC* ac, T0* a1, T0* a2, T6 a3, T6 a4);
+extern T0* T114f894ac1(TC* ac, T0* a1, T0* a2, T6 a3, T6 a4);
 /* Creation of agent #2 in feature ET_C_GENERATOR.print_adapted_once_function_call */
-extern T0* T114f900ac2(TC* ac, T0* a1, T0* a2, T0* a3, T1 a4);
+extern T0* T114f894ac2(TC* ac, T0* a1, T0* a2, T0* a3, T1 a4);
 /* ET_C_GENERATOR.register_once_feature */
-extern void T114f952(TC* ac, T0* C, T0* a1);
+extern void T114f946(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TABLE [INTEGER_32, ET_FEATURE].force_last */
 extern void T939f39(TC* ac, T0* C, T6 a1, T0* a2);
 /* DS_HASH_TABLE [INTEGER_32, ET_FEATURE].key_storage_put */
@@ -65070,16 +65082,16 @@ extern void T939f48(TC* ac, T0* C, T6 a1, T6 a2);
 /* DS_HASH_TABLE [INTEGER_32, ET_FEATURE].unset_found_item */
 extern void T939f43(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_adapted_extended_attribute_call */
-extern void T114f899(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
+extern void T114f893(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
 /* Creation of agent #1 in feature ET_C_GENERATOR.print_adapted_extended_attribute_call */
-extern T0* T114f899ac1(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
+extern T0* T114f893ac1(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
 /* Creation of agent #2 in feature ET_C_GENERATOR.print_adapted_extended_attribute_call */
-extern T0* T114f899ac2(TC* ac, T0* a1, T0* a2, T0* a3, T1 a4);
+extern T0* T114f893ac2(TC* ac, T0* a1, T0* a2, T0* a3, T1 a4);
 /* ET_C_GENERATOR.is_inlinable_function */
-extern T1 T114f387(TC* ac, T0* C, T0* a1, T0* a2);
-extern T1 T114f387ot1(TC* ac, T0* a1);
-extern T1 T114f387ot2(TC* ac, T0* a1);
-extern T1 T114f387ot3(TC* ac, T0* a1);
+extern T1 T114f381(TC* ac, T0* C, T0* a1, T0* a2);
+extern T1 T114f381ot1(TC* ac, T0* a1);
+extern T1 T114f381ot2(TC* ac, T0* a1);
+extern T1 T114f381ot3(TC* ac, T0* a1);
 /* ET_INFIX_CAST_EXPRESSION.has_result */
 extern T1 T1870f4(TC* ac, T0* C);
 /* ET_DYNAMIC_INLINED_EXPRESSION.has_result */
@@ -65253,7 +65265,7 @@ extern void T1383f6(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_EXPRESSION].first */
 extern T0* T927f6(TC* ac, T0* C);
 /* ET_C_GENERATOR.mark_expressions_frozen */
-extern void T114f913(TC* ac, T0* C, T0* a1);
+extern void T114f907(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_EXPRESSION].item */
 extern T0* T927f10(TC* ac, T0* C, T6 a1);
 /* ET_MANIFEST_TUPLE.resize */
@@ -65261,29 +65273,29 @@ extern void T568f32(TC* ac, T0* C, T6 a1);
 /* ET_MANIFEST_TUPLE.capacity */
 extern T6 T568f11(TC* ac, T0* C);
 /* ET_C_GENERATOR.fill_call_operands */
-extern void T114f829(TC* ac, T0* C, T6 a1);
-extern T1 T114f829ot1(TC* ac, T0* a1);
+extern void T114f821(TC* ac, T0* C, T6 a1);
+extern T1 T114f821ot1(TC* ac, T0* a1);
 /* DS_ARRAYED_STACK [ET_EXPRESSION].prune */
 extern void T926f12(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.mark_temp_variable_free */
-extern void T114f761(TC* ac, T0* C, T0* a1);
+extern void T114f751(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_STACK [ET_EXPRESSION].i_th */
 extern T0* T926f5(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.print_attachment_operand */
-extern void T114f844(TC* ac, T0* C, T0* a1, T0* a2);
-extern T1 T114f844ot1(TC* ac, T0* a1);
+extern void T114f837(TC* ac, T0* C, T0* a1, T0* a2);
+extern T1 T114f837ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_boxed_attribute_type_id_access */
-extern void T114f796(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f788(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_boxed_type_declaration */
-extern void T114f794(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f786(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_STANDALONE_TYPE_SET.put_expanded_types */
 extern void T924f22(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.free_twin_feature_name */
-extern void T114f878(TC* ac, T0* C, T0* a1);
+extern void T114f872(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.new_twin_feature_name */
-extern T0* T114f349(TC* ac, T0* C);
+extern T0* T114f343(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_target_operand */
-extern void T114f912(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f906(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_CONVERT_TO_EXPRESSION.is_call_agent */
 extern T1 T2041f21(TC* ac, T0* C);
 /* ET_PARENTHESIS_EXPRESSION.is_call_agent */
@@ -65304,7 +65316,7 @@ extern T1 T937f6(TC* ac, T0* C);
 extern T1 T888f14(TC* ac, T0* C, T0* a1);
 extern T1 T888f14ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.in_call_target */
-extern T1 T114f348(TC* ac, T0* C);
+extern T1 T114f341(TC* ac, T0* C);
 /* ET_DYNAMIC_PRECURSOR.query_call */
 extern T0* T860f24(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TABLE [ET_DYNAMIC_QUALIFIED_QUERY_CALL, ET_CALL_NAME].value */
@@ -65368,11 +65380,11 @@ extern void T857f374(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4, T0* a5);
 extern T1 T857f374ot1(TC* ac, T0* a1);
 extern T1 T857f374ot2(TC* ac, T0* a1);
 /* ET_C_GENERATOR.process_convert_from_expression */
-extern void T114f1638(TC* ac, T0* C, T0* a1);
+extern void T114f1632(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_convert_from_expression */
-extern void T114f1641(TC* ac, T0* C, T0* a1);
+extern void T114f1635(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_creation_expression */
-extern void T114f792(TC* ac, T0* C, T0* a1);
+extern void T114f784(TC* ac, T0* C, T0* a1);
 /* ET_CONVERT_BUILTIN_EXPRESSION.process */
 extern void T2039f22(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_convert_builtin_expression */
@@ -65390,9 +65402,9 @@ extern void T857f465(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_convert_builtin_expression_validity */
 extern void T857f468(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_convert_builtin_expression */
-extern void T114f1637(TC* ac, T0* C, T0* a1);
+extern void T114f1631(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_convert_builtin_expression */
-extern void T114f1640(TC* ac, T0* C, T0* a1);
+extern void T114f1634(TC* ac, T0* C, T0* a1);
 /* ET_INFIX_CAST_EXPRESSION.process */
 extern void T1870f23(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_infix_cast_expression */
@@ -65410,9 +65422,9 @@ extern void T857f463(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_infix_cast_expression_validity */
 extern void T857f464(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_infix_cast_expression */
-extern void T114f1632(TC* ac, T0* C, T0* a1);
+extern void T114f1626(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_infix_cast_expression */
-extern void T114f1636(TC* ac, T0* C, T0* a1);
+extern void T114f1630(TC* ac, T0* C, T0* a1);
 /* ET_IDENTIFIER.process */
 extern void T303f122(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_identifier */
@@ -65426,35 +65438,35 @@ extern void T875f64(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_identifier */
 extern void T857f158(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_identifier */
-extern void T114f1243(TC* ac, T0* C, T0* a1);
+extern void T114f1237(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_agent_closed_operand */
-extern void T114f1253(TC* ac, T0* C, T0* a1);
+extern void T114f1247(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_agent_closed_operand_access */
-extern void T114f859(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f853(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_IDENTIFIER.is_agent_closed_operand */
 extern T1 T303f38(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_agent_open_operand */
-extern void T114f1252(TC* ac, T0* C, T0* a1);
+extern void T114f1246(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_agent_open_operand_access */
-extern void T114f856(TC* ac, T0* C, T0* a1);
+extern void T114f850(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_agent_open_target_operand */
-extern void T114f1261(TC* ac, T0* C, T0* a1);
-extern T1 T114f1261ot1(TC* ac, T0* a1);
-extern T1 T114f1261ot2(TC* ac, T0* a1);
+extern void T114f1255(TC* ac, T0* C, T0* a1);
+extern T1 T114f1255ot1(TC* ac, T0* a1);
+extern T1 T114f1255ot2(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_indentation_end_newline */
-extern void T114f866(TC* ac, T0* C);
+extern void T114f860(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_indentation_else_newline */
-extern void T114f1265(TC* ac, T0* C);
+extern void T114f1259(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_then_newline */
-extern void T114f865(TC* ac, T0* C);
+extern void T114f859(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_indentation_if */
-extern void T114f863(TC* ac, T0* C);
+extern void T114f857(TC* ac, T0* C);
 /* ET_IDENTIFIER.is_agent_open_operand */
 extern T1 T303f37(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_object_test_local */
-extern void T114f1251(TC* ac, T0* C, T0* a1);
+extern void T114f1245(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_object_test_local_name */
-extern void T114f1260(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f1254(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_ACROSS_EXPRESSION.process */
 extern void T339f50(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_across_expression */
@@ -65540,11 +65552,11 @@ extern void T857f232(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_iteration_expression */
 extern void T857f313(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_across_expression */
-extern void T114f1271(TC* ac, T0* C, T0* a1);
+extern void T114f1265(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_across_expression */
-extern void T114f1318(TC* ac, T0* C, T0* a1);
+extern void T114f1312(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_iteration_expression */
-extern void T114f1366(TC* ac, T0* C, T0* a1);
+extern void T114f1360(TC* ac, T0* C, T0* a1);
 /* ET_UNQUALIFIED_CALL_EXPRESSION.process */
 extern void T1033f32(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_unqualified_call_expression */
@@ -65610,13 +65622,13 @@ extern void T857f304(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_FEATURE_CHECKER.check_unqualified_formal_argument_call_expression_validity */
 extern void T857f303(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_unqualified_call_expression */
-extern void T114f1315(TC* ac, T0* C, T0* a1);
+extern void T114f1309(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_unqualified_call_expression */
-extern void T114f1365(TC* ac, T0* C, T0* a1);
+extern void T114f1359(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_unqualified_function_call_expression */
-extern void T114f1372(TC* ac, T0* C, T0* a1, T0* a2);
-extern T1 T114f1372ot1(TC* ac, T0* a1);
-extern T1 T114f1372ot2(TC* ac, T0* a1);
+extern void T114f1366(TC* ac, T0* C, T0* a1, T0* a2);
+extern T1 T114f1366ot1(TC* ac, T0* a1);
+extern T1 T114f1366ot2(TC* ac, T0* a1);
 /* ET_UNQUALIFIED_CALL_EXPRESSION.is_call_agent */
 extern T1 T1033f10(TC* ac, T0* C);
 /* ET_PRECURSOR_EXPRESSION.is_call_agent */
@@ -65624,7 +65636,7 @@ extern T1 T740f14(TC* ac, T0* C);
 /* ET_STATIC_CALL_EXPRESSION.is_call_agent */
 extern T1 T627f14(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_unqualified_constant_attribute_call_expression */
-extern void T114f1371(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f1365(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_ARRAYED_LIST [ET_EXPRESSION].replace */
 extern void T927f15(TC* ac, T0* C, T0* a1, T6 a2);
 /* DS_ARRAYED_LIST [ET_EXPRESSION].is_empty */
@@ -65638,7 +65650,7 @@ extern T1 T860f43(TC* ac, T0* C);
 /* ET_DYNAMIC_FEATURE.is_constant_attribute */
 extern T1 T845f45(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_unqualified_attribute_call_expression */
-extern void T114f1377(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f1371(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PRECURSOR.is_attribute_with_no_self_initializing_code */
 extern T1 T860f39(TC* ac, T0* C);
 extern T1 T860f39ot1(TC* ac, T0* a1);
@@ -66114,15 +66126,15 @@ extern void T857f376(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_FEATURE_CHECKER.report_unqualified_procedure_call_agent */
 extern void T857f417(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_C_GENERATOR.process_call_agent */
-extern void T114f1273(TC* ac, T0* C, T0* a1);
+extern void T114f1267(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_call_agent */
-extern void T114f1321(TC* ac, T0* C, T0* a1);
+extern void T114f1315(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_agent */
-extern void T114f1369(TC* ac, T0* C, T0* a1);
-extern T1 T114f1369ot1(TC* ac, T0* a1);
-extern T1 T114f1369ot2(TC* ac, T0* a1);
+extern void T114f1363(TC* ac, T0* C, T0* a1);
+extern T1 T114f1363ot1(TC* ac, T0* a1);
+extern T1 T114f1363ot2(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_agent_creation_name */
-extern void T114f858(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
+extern void T114f852(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
 /* DS_ARRAYED_LIST [ET_AGENT].force_last */
 extern void T934f14(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_AGENT].force */
@@ -66154,7 +66166,7 @@ extern T1 T760s25(TC* ac);
 /* ET_DO_FUNCTION_INLINE_AGENT.is_qualified_call */
 extern T1 T759s23(TC* ac);
 /* ET_C_GENERATOR.print_call_agent_body_declaration */
-extern void T114f1320(TC* ac, T0* C, T0* a1);
+extern void T114f1314(TC* ac, T0* C, T0* a1);
 /* ET_QUALIFIED_CALL_INSTRUCTION.set_target */
 extern void T736f18(TC* ac, T0* C, T0* a1);
 /* ET_QUALIFIED_CALL_INSTRUCTION.set_name */
@@ -66186,9 +66198,9 @@ extern void T857f154(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_bracket_expression_validity */
 extern void T857f220(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_bracket_expression */
-extern void T114f1272(TC* ac, T0* C, T0* a1);
+extern void T114f1266(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_bracket_expression */
-extern void T114f1319(TC* ac, T0* C, T0* a1);
+extern void T114f1313(TC* ac, T0* C, T0* a1);
 /* ET_QUALIFIED_CALL_EXPRESSION.process */
 extern void T379f31(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_qualified_call_expression */
@@ -66202,7 +66214,7 @@ extern void T875f59(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_qualified_call_expression */
 extern void T857f153(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_qualified_call_expression */
-extern void T114f1245(TC* ac, T0* C, T0* a1);
+extern void T114f1239(TC* ac, T0* C, T0* a1);
 /* ET_INSPECT_EXPRESSION.process */
 extern void T530f29(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_inspect_expression */
@@ -66264,15 +66276,15 @@ extern void T857f299(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_FEATURE_CHECKER.update_common_ancestor_type_list */
 extern void T857f296(TC* ac, T0* C, T0* a1, T0* a2, T6 a3);
 /* ET_C_GENERATOR.process_inspect_expression */
-extern void T114f1276(TC* ac, T0* C, T0* a1);
+extern void T114f1270(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_inspect_expression */
-extern void T114f1324(TC* ac, T0* C, T0* a1);
-extern T1 T114f1324ot1(TC* ac, T0* a1);
-extern T1 T114f1324ot2(TC* ac, T0* a1);
-extern T1 T114f1324ot3(TC* ac, T0* a1);
-extern T1 T114f1324ot4(TC* ac, T0* a1);
-extern T1 T114f1324ot5(TC* ac, T0* a1);
-extern T1 T114f1324ot6(TC* ac, T0* a1);
+extern void T114f1318(TC* ac, T0* C, T0* a1);
+extern T1 T114f1318ot1(TC* ac, T0* a1);
+extern T1 T114f1318ot2(TC* ac, T0* a1);
+extern T1 T114f1318ot3(TC* ac, T0* a1);
+extern T1 T114f1318ot4(TC* ac, T0* a1);
+extern T1 T114f1318ot5(TC* ac, T0* a1);
+extern T1 T114f1318ot6(TC* ac, T0* a1);
 /* ET_IF_EXPRESSION.process */
 extern void T509f32(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_if_expression */
@@ -66302,9 +66314,9 @@ extern void T857f218(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_if_expression */
 extern void T857f297(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_if_expression */
-extern void T114f1275(TC* ac, T0* C, T0* a1);
+extern void T114f1269(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_if_expression */
-extern void T114f1323(TC* ac, T0* C, T0* a1);
+extern void T114f1317(TC* ac, T0* C, T0* a1);
 /* ET_CREATE_EXPRESSION.process */
 extern void T436f40(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_create_expression */
@@ -66332,9 +66344,9 @@ extern void T857f150(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_create_expression_validity */
 extern void T857f217(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_create_expression */
-extern void T114f1274(TC* ac, T0* C, T0* a1);
+extern void T114f1268(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_create_expression */
-extern void T114f1322(TC* ac, T0* C, T0* a1);
+extern void T114f1316(TC* ac, T0* C, T0* a1);
 /* ET_CURRENT.process */
 extern void T297f37(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_current */
@@ -66362,10 +66374,10 @@ extern void T857f216(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_current */
 extern void T857f294(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_current */
-extern void T114f1269(TC* ac, T0* C, T0* a1);
+extern void T114f1263(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_current */
-extern void T114f1316(TC* ac, T0* C, T0* a1);
-extern T1 T114f1316ot1(TC* ac, T0* a1);
+extern void T114f1310(TC* ac, T0* C, T0* a1);
+extern T1 T114f1310ot1(TC* ac, T0* a1);
 /* ET_RESULT.process */
 extern void T318f39(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_result */
@@ -66405,9 +66417,9 @@ extern void T857f215(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_result */
 extern void T857f293(TC* ac, T0* C, T0* a1, T1 a2);
 /* ET_C_GENERATOR.process_result */
-extern void T114f1270(TC* ac, T0* C, T0* a1);
+extern void T114f1264(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_result */
-extern void T114f1317(TC* ac, T0* C, T0* a1);
+extern void T114f1311(TC* ac, T0* C, T0* a1);
 /* ET_VOID.process */
 extern void T327f34(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_void */
@@ -66429,9 +66441,9 @@ extern void T857f214(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_void_constant */
 extern void T857f292(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_void */
-extern void T114f1244(TC* ac, T0* C, T0* a1);
+extern void T114f1238(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_void */
-extern void T114f1254(TC* ac, T0* C, T0* a1);
+extern void T114f1248(TC* ac, T0* C, T0* a1);
 /* ET_EXTERNAL_PROCEDURE_INLINE_AGENT.process */
 extern void T764f51(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_external_procedure_inline_agent */
@@ -66608,11 +66620,11 @@ extern void T857f366(TC* ac, T0* C, T0* a1);
 extern void T857f284(TC* ac, T0* C, T0* a1);
 extern T1 T857f284ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.process_external_procedure_inline_agent */
-extern void T114f1314(TC* ac, T0* C, T0* a1);
+extern void T114f1308(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_procedure_inline_agent */
-extern void T114f1364(TC* ac, T0* C, T0* a1);
+extern void T114f1358(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_procedure_inline_agent_body_declaration */
-extern void T114f1363(TC* ac, T0* C, T0* a1);
+extern void T114f1357(TC* ac, T0* C, T0* a1);
 /* ET_ONCE_PROCEDURE_INLINE_AGENT.process */
 extern void T763f60(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_once_procedure_inline_agent */
@@ -66657,11 +66669,11 @@ extern T0* T690s8(TC* ac);
 /* ET_C2_CHARACTER_CONSTANT.note_term_value */
 extern T0* T686f47(TC* ac, T0* C);
 /* CHARACTER_32.out */
-extern T0* T3f17(TC* ac, volatile T3* C);
+extern T0* T3f17(TC* ac, T3 volatile* C);
 /* NATURAL_32.to_hex_string */
-extern T0* T10f31(TC* ac, volatile T10* C);
+extern T0* T10f31(TC* ac, T10 volatile* C);
 /* NATURAL_32.to_hex_character */
-extern T2 T10f34(TC* ac, volatile T10* C);
+extern T2 T10f34(TC* ac, T10 volatile* C);
 /* ET_C1_CHARACTER_CONSTANT.note_term_value */
 extern T0* T685f46(TC* ac, T0* C);
 /* ET_FALSE_CONSTANT.note_term_value */
@@ -66889,27 +66901,25 @@ extern void T857f368(TC* ac, T0* C, T0* a1);
 extern void T857f345(TC* ac, T0* C, T0* a1);
 extern T1 T857f345ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.process_once_procedure_inline_agent */
-extern void T114f1313(TC* ac, T0* C, T0* a1);
+extern void T114f1307(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_once_procedure_inline_agent */
-extern void T114f1362(TC* ac, T0* C, T0* a1);
+extern void T114f1356(TC* ac, T0* C, T0* a1);
 /* ET_ONCE_PROCEDURE_INLINE_AGENT.is_once_per_object */
 extern T1 T763f22(TC* ac, T0* C);
 /* ET_ONCE_PROCEDURE_INLINE_AGENT.standard_once_keys */
 extern T0* T763s33(TC* ac);
 /* ET_C_GENERATOR.print_once_procedure_inline_agent_body_declaration */
-extern void T114f1361(TC* ac, T0* C, T0* a1);
+extern void T114f1355(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_internal_routine_inline_agent_body_declaration */
-extern void T114f1376(TC* ac, T0* C, T0* a1);
+extern void T114f1370(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_internal_feature_body_declaration */
-extern void T114f1380(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f1374(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_inline_separate_argument_declarations */
-extern void T114f1391(TC* ac, T0* C, T0* a1);
+extern void T114f1385(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_iteration_cursor_declarations */
-extern void T114f1390(TC* ac, T0* C, T0* a1);
+extern void T114f1384(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_object_test_local_declarations */
-extern void T114f1389(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_default_entity_value */
-extern void T114f838(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f1383(TC* ac, T0* C, T0* a1);
 /* ET_ONCE_PROCEDURE.compound */
 extern T0* T712f6(TC* ac, T0* C);
 /* ET_DO_PROCEDURE.compound */
@@ -66929,45 +66939,45 @@ extern T0* T760f14(TC* ac, T0* C);
 /* ET_DO_FUNCTION_INLINE_AGENT.compound */
 extern T0* T759f13(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_once_mutex_unlock */
-extern void T114f1388(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+extern void T114f1382(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* ET_C_GENERATOR.print_once_mutex */
-extern void T114f1396(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+extern void T114f1390(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* ET_C_GENERATOR.print_once_per_process_mutex */
-extern void T114f1404(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_once_per_object_mutex */
-extern void T114f1403(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_once_per_object_mutex_name */
-extern void T114f813(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
-/* ET_C_GENERATOR.print_assign_completed_to_once_status */
-extern void T114f1387(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_once_status */
-extern void T114f1395(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_once_per_thread_status */
-extern void T114f1402(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_once_per_process_status */
-extern void T114f1401(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_once_per_object_status */
-extern void T114f1400(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_once_per_object_status_name */
-extern void T114f810(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
-/* ET_C_GENERATOR.print_assign_called_to_thread_safe_once_status */
-extern void T114f1386(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_thread_safe_once_per_process_status */
-extern void T114f1394(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_assign_once_exception_to_thread_safe_once_exception */
-extern void T114f1385(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_once_exception */
-extern void T114f1392(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_once_per_thread_exception */
-extern void T114f1399(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_once_per_process_exception */
 extern void T114f1398(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_once_per_object_exception */
+/* ET_C_GENERATOR.print_once_per_object_mutex */
 extern void T114f1397(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_once_per_object_exception_name */
-extern void T114f812(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
-/* ET_C_GENERATOR.print_thread_safe_once_per_process_exception */
+/* ET_C_GENERATOR.print_once_per_object_mutex_name */
+extern void T114f804(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+/* ET_C_GENERATOR.print_assign_completed_to_once_status */
+extern void T114f1381(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_once_status */
+extern void T114f1389(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_once_per_thread_status */
+extern void T114f1396(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_once_per_process_status */
+extern void T114f1395(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_once_per_object_status */
+extern void T114f1394(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_once_per_object_status_name */
+extern void T114f801(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+/* ET_C_GENERATOR.print_assign_called_to_thread_safe_once_status */
+extern void T114f1380(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_thread_safe_once_per_process_status */
+extern void T114f1388(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_assign_once_exception_to_thread_safe_once_exception */
+extern void T114f1379(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_once_exception */
+extern void T114f1386(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_once_per_thread_exception */
 extern void T114f1393(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_once_per_process_exception */
+extern void T114f1392(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_once_per_object_exception */
+extern void T114f1391(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_once_per_object_exception_name */
+extern void T114f803(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+/* ET_C_GENERATOR.print_thread_safe_once_per_process_exception */
+extern void T114f1387(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* ET_ONCE_PROCEDURE_INLINE_AGENT.is_once_per_process */
 extern T1 T763f27(TC* ac, T0* C);
 /* ET_DO_PROCEDURE_INLINE_AGENT.is_once_per_process */
@@ -66981,11 +66991,11 @@ extern T0* T760s34(TC* ac);
 /* ET_DO_FUNCTION_INLINE_AGENT.is_once_per_process */
 extern T1 T759f26(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_assign_last_exception_to_once_exception */
-extern void T114f1384(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+extern void T114f1378(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* ET_C_GENERATOR.reset_rescue_data */
-extern void T114f1383(TC* ac, T0* C);
+extern void T114f1377(TC* ac, T0* C);
 /* ET_C_GENERATOR.reset_volatile_data */
-extern void T114f1382(TC* ac, T0* C);
+extern void T114f1376(TC* ac, T0* C);
 /* ET_ONCE_PROCEDURE.rescue_clause */
 extern T0* T712f8(TC* ac, T0* C);
 /* ET_DO_PROCEDURE.rescue_clause */
@@ -67005,9 +67015,9 @@ extern T0* T760f16(TC* ac, T0* C);
 /* ET_DO_FUNCTION_INLINE_AGENT.rescue_clause */
 extern T0* T759f15(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_agent_trace_message_call */
-extern void T114f1379(TC* ac, T0* C, T0* a1, T1 a2);
+extern void T114f1373(TC* ac, T0* C, T0* a1, T1 a2);
 /* ET_C_GENERATOR.print_unindented_feature_info_message_call */
-extern void T114f1381(TC* ac, T0* C, T0* a1);
+extern void T114f1375(TC* ac, T0* C, T0* a1);
 /* KL_STRING_OUTPUT_STREAM.put_line */
 extern void T912f6(TC* ac, T0* C, T0* a1);
 /* ET_ONCE_PROCEDURE_INLINE_AGENT.is_inline_agent */
@@ -67036,11 +67046,11 @@ extern void T857f144(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_do_procedure_inline_agent_validity */
 extern void T857f211(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_do_procedure_inline_agent */
-extern void T114f1312(TC* ac, T0* C, T0* a1);
+extern void T114f1306(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_do_procedure_inline_agent */
-extern void T114f1360(TC* ac, T0* C, T0* a1);
+extern void T114f1354(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_do_procedure_inline_agent_body_declaration */
-extern void T114f1359(TC* ac, T0* C, T0* a1);
+extern void T114f1353(TC* ac, T0* C, T0* a1);
 /* ET_EXTERNAL_FUNCTION_INLINE_AGENT.process */
 extern void T761f52(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_external_function_inline_agent */
@@ -67101,11 +67111,11 @@ extern void T1141f10(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_FEATURE_CHECKER.report_inline_agent_result_declaration */
 extern void T857f285(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_external_function_inline_agent */
-extern void T114f1311(TC* ac, T0* C, T0* a1);
+extern void T114f1305(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_function_inline_agent */
-extern void T114f1358(TC* ac, T0* C, T0* a1);
+extern void T114f1352(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_function_inline_agent_body_declaration */
-extern void T114f1357(TC* ac, T0* C, T0* a1);
+extern void T114f1351(TC* ac, T0* C, T0* a1);
 /* ET_ONCE_FUNCTION_INLINE_AGENT.process */
 extern void T760f61(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_once_function_inline_agent */
@@ -67132,13 +67142,13 @@ extern void T857f142(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_once_function_inline_agent_validity */
 extern void T857f209(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_once_function_inline_agent */
-extern void T114f1310(TC* ac, T0* C, T0* a1);
+extern void T114f1304(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_once_function_inline_agent */
-extern void T114f1356(TC* ac, T0* C, T0* a1);
+extern void T114f1350(TC* ac, T0* C, T0* a1);
 /* ET_ONCE_FUNCTION_INLINE_AGENT.is_once_per_object */
 extern T1 T760f24(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_once_function_inline_agent_body_declaration */
-extern void T114f1355(TC* ac, T0* C, T0* a1);
+extern void T114f1349(TC* ac, T0* C, T0* a1);
 /* ET_DO_FUNCTION_INLINE_AGENT.process */
 extern void T759f56(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_do_function_inline_agent */
@@ -67157,11 +67167,11 @@ extern void T857f141(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_do_function_inline_agent_validity */
 extern void T857f208(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_do_function_inline_agent */
-extern void T114f1309(TC* ac, T0* C, T0* a1);
+extern void T114f1303(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_do_function_inline_agent */
-extern void T114f1354(TC* ac, T0* C, T0* a1);
+extern void T114f1348(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_do_function_inline_agent_body_declaration */
-extern void T114f1353(TC* ac, T0* C, T0* a1);
+extern void T114f1347(TC* ac, T0* C, T0* a1);
 /* ET_ITERATION_CURSOR.process */
 extern void T757f26(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_iteration_cursor */
@@ -67193,9 +67203,9 @@ extern void T857f207(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_iteration_cursor */
 extern void T857f282(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_iteration_cursor */
-extern void T114f1308(TC* ac, T0* C, T0* a1);
+extern void T114f1302(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_iteration_cursor */
-extern void T114f1352(TC* ac, T0* C, T0* a1);
+extern void T114f1346(TC* ac, T0* C, T0* a1);
 /* ET_ONCE_MANIFEST_STRING.process */
 extern void T756f30(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_once_manifest_string */
@@ -67213,11 +67223,11 @@ extern void T857f139(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_once_manifest_string_validity */
 extern void T857f206(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_once_manifest_string */
-extern void T114f1307(TC* ac, T0* C, T0* a1);
+extern void T114f1301(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_once_manifest_string */
-extern void T114f1351(TC* ac, T0* C, T0* a1);
+extern void T114f1345(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_inline_constant_name */
-extern void T114f782(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f774(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [ET_DYNAMIC_PRIMARY_TYPE, ET_INLINE_CONSTANT].force_last */
 extern void T942f60(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [ET_DYNAMIC_PRIMARY_TYPE, ET_INLINE_CONSTANT].key_storage_put */
@@ -67518,11 +67528,11 @@ extern void T857f279(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.ise_6_3_7_5660 */
 extern T0* T857s59(TC* ac);
 /* ET_C_GENERATOR.process_named_object_test */
-extern void T114f1306(TC* ac, T0* C, T0* a1);
+extern void T114f1300(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_object_test */
-extern void T114f1350(TC* ac, T0* C, T0* a1);
+extern void T114f1344(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_object_test_function_name */
-extern void T114f825(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
+extern void T114f817(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
 /* DS_ARRAYED_LIST [ET_OBJECT_TEST].force_last */
 extern void T932f14(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_OBJECT_TEST].force */
@@ -67570,7 +67580,7 @@ extern void T857f281(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.report_object_test_type */
 extern void T857f280(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_object_test */
-extern void T114f1305(TC* ac, T0* C, T0* a1);
+extern void T114f1299(TC* ac, T0* C, T0* a1);
 /* ET_OLD_OBJECT_TEST.process */
 extern void T753f34(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_old_object_test */
@@ -67584,7 +67594,7 @@ extern void T875f42(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_old_object_test */
 extern void T857f136(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_old_object_test */
-extern void T114f1304(TC* ac, T0* C, T0* a1);
+extern void T114f1298(TC* ac, T0* C, T0* a1);
 /* ET_OLD_EXPRESSION.process */
 extern void T752f26(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_old_expression */
@@ -67612,9 +67622,9 @@ extern void T857f135(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_old_expression_validity */
 extern void T857f203(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_old_expression */
-extern void T114f1303(TC* ac, T0* C, T0* a1);
+extern void T114f1297(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_old_expression */
-extern void T114f1349(TC* ac, T0* C, T0* a1);
+extern void T114f1343(TC* ac, T0* C, T0* a1);
 /* ET_PREFIX_EXPRESSION.process */
 extern void T751f30(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_prefix_expression */
@@ -67632,9 +67642,9 @@ extern void T857f134(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_prefix_expression_validity */
 extern void T857f202(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_prefix_expression */
-extern void T114f1302(TC* ac, T0* C, T0* a1);
+extern void T114f1296(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_prefix_expression */
-extern void T114f1348(TC* ac, T0* C, T0* a1);
+extern void T114f1342(TC* ac, T0* C, T0* a1);
 /* ET_MANIFEST_TYPE.process */
 extern void T750f26(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_manifest_type */
@@ -67662,9 +67672,9 @@ extern void T857f201(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_manifest_type */
 extern void T857f278(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_manifest_type */
-extern void T114f1301(TC* ac, T0* C, T0* a1);
+extern void T114f1295(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_manifest_type */
-extern void T114f1347(TC* ac, T0* C, T0* a1);
+extern void T114f1341(TC* ac, T0* C, T0* a1);
 /* ET_OBJECT_EQUALITY_EXPRESSION.process */
 extern void T749f27(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_object_equality_expression */
@@ -67724,11 +67734,11 @@ extern void T857f200(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_object_equality_expression */
 extern void T857f277(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_object_equality_expression */
-extern void T114f1300(TC* ac, T0* C, T0* a1);
+extern void T114f1294(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_object_equality_expression */
-extern void T114f1346(TC* ac, T0* C, T0* a1);
+extern void T114f1340(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.free_object_equality_types */
-extern void T114f770(TC* ac, T0* C, T0* a1);
+extern void T114f760(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_OBJECT_EQUALITY_TYPES.set_right */
 extern void T965f6(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_OBJECT_EQUALITY_TYPES.set_left */
@@ -67756,9 +67766,9 @@ extern T0* T917f11(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_EQUALITY_TYPES].is_empty */
 extern T1 T917f10(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_equality_call */
-extern void T114f1375(TC* ac, T0* C, T0* a1, T1 a2, T0* a3);
+extern void T114f1369(TC* ac, T0* C, T0* a1, T1 a2, T0* a3);
 /* ET_C_GENERATOR.print_equality_function_name */
-extern void T114f828(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
+extern void T114f820(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_EQUALITY_TYPES].force_last */
 extern void T917f14(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_DYNAMIC_EQUALITY_TYPES].force */
@@ -67778,9 +67788,9 @@ extern T6 T917f8(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_EQUALITY_TYPES].extendible */
 extern T1 T917f7(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.print_equality_call_with_one_object_equality */
-extern void T114f862(TC* ac, T0* C, T1 a1, T0* a2, T0* a3);
+extern void T114f856(TC* ac, T0* C, T1 a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_equality_call_with_zero_object_equality */
-extern void T114f861(TC* ac, T0* C, T1 a1, T0* a2, T0* a3);
+extern void T114f855(TC* ac, T0* C, T1 a1, T0* a2, T0* a3);
 /* ET_DYNAMIC_OBJECT_EQUALITY_TYPES.add_common_types_to_list */
 extern void T965f4(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_AGENT_OPERAND_PUSH_TYPE_SET.add_common_types_to_list */
@@ -67828,7 +67838,7 @@ extern T1 T333f89(TC* ac, T0* C);
 /* ET_SYMBOL.is_not_tilde */
 extern T1 T282f86(TC* ac, T0* C);
 /* ET_C_GENERATOR.new_object_equality_types */
-extern T0* T114f618(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T114f612(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_OBJECT_EQUALITY_TYPES].remove_last */
 extern void T918f15(TC* ac, T0* C);
 /* SPECIAL [ET_DYNAMIC_OBJECT_EQUALITY_TYPES].keep_head */
@@ -67918,11 +67928,11 @@ extern void T857f199(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_equality_expression */
 extern void T857f276(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_equality_expression */
-extern void T114f1299(TC* ac, T0* C, T0* a1);
+extern void T114f1293(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_equality_expression */
-extern void T114f1345(TC* ac, T0* C, T0* a1);
+extern void T114f1339(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.free_equality_types */
-extern void T114f771(TC* ac, T0* C, T0* a1);
+extern void T114f761(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_EQUALITY_TYPES.set_right */
 extern void T963f6(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_EQUALITY_TYPES.set_left */
@@ -67934,7 +67944,7 @@ extern T1 T333f88(TC* ac, T0* C);
 /* ET_SYMBOL.is_not_equal */
 extern T1 T282f85(TC* ac, T0* C);
 /* ET_C_GENERATOR.new_equality_types */
-extern T0* T114f617(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T114f611(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_EQUALITY_TYPES].remove_last */
 extern void T917f18(TC* ac, T0* C);
 /* SPECIAL [ET_DYNAMIC_EQUALITY_TYPES].keep_head */
@@ -67966,11 +67976,11 @@ extern void T857f130(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_infix_expression_validity */
 extern void T857f198(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_infix_expression */
-extern void T114f1298(TC* ac, T0* C, T0* a1);
+extern void T114f1292(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_infix_expression */
-extern void T114f1344(TC* ac, T0* C, T0* a1);
+extern void T114f1338(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_semistrict_infix_expression */
-extern void T114f1374(TC* ac, T0* C, T0* a1);
+extern void T114f1368(TC* ac, T0* C, T0* a1);
 /* ET_EXPRESSION_ADDRESS.process */
 extern void T744f26(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_expression_address */
@@ -68002,13 +68012,13 @@ extern void T857f266(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_typed_pointer_expression */
 extern void T857f265(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_expression_address */
-extern void T114f1297(TC* ac, T0* C, T0* a1);
+extern void T114f1291(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_expression_address */
-extern void T114f1343(TC* ac, T0* C, T0* a1);
+extern void T114f1337(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_feature_address */
-extern void T114f1340(TC* ac, T0* C, T0* a1);
+extern void T114f1334(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_address_routine_name */
-extern void T114f1373(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f1367(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_DYNAMIC_AGENT_OPERAND_PUSH_TYPE_SET.special_type */
 extern T0* T1814f10(TC* ac, T0* C);
 /* ET_DYNAMIC_PUSH_TYPE_SET.special_type */
@@ -68052,9 +68062,9 @@ extern void T857f128(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_result_address_validity */
 extern void T857f196(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_result_address */
-extern void T114f1296(TC* ac, T0* C, T0* a1);
+extern void T114f1290(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_result_address */
-extern void T114f1342(TC* ac, T0* C, T0* a1);
+extern void T114f1336(TC* ac, T0* C, T0* a1);
 /* ET_CURRENT_ADDRESS.process */
 extern void T742f26(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_current_address */
@@ -68078,10 +68088,10 @@ extern void T857f127(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_current_address_validity */
 extern void T857f195(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_current_address */
-extern void T114f1295(TC* ac, T0* C, T0* a1);
+extern void T114f1289(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_current_address */
-extern void T114f1341(TC* ac, T0* C, T0* a1);
-extern T1 T114f1341ot1(TC* ac, T0* a1);
+extern void T114f1335(TC* ac, T0* C, T0* a1);
+extern T1 T114f1335ot1(TC* ac, T0* a1);
 /* ET_FEATURE_ADDRESS.process */
 extern void T741f26(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_feature_address */
@@ -68161,7 +68171,7 @@ extern void T857f271(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_procedure_address */
 extern void T857f270(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_feature_address */
-extern void T114f1294(TC* ac, T0* C, T0* a1);
+extern void T114f1288(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_EXPRESSION.process */
 extern void T740f32(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_precursor_expression */
@@ -68186,9 +68196,9 @@ extern void T857f125(TC* ac, T0* C, T0* a1);
 extern void T857f193(TC* ac, T0* C, T0* a1, T0* a2);
 extern T1 T857f193ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.process_precursor_expression */
-extern void T114f1293(TC* ac, T0* C, T0* a1);
+extern void T114f1287(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_precursor_expression */
-extern void T114f1339(TC* ac, T0* C, T0* a1);
+extern void T114f1333(TC* ac, T0* C, T0* a1);
 /* ET_C2_CHARACTER_CONSTANT.process */
 extern void T686f51(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_c2_character_constant */
@@ -68256,9 +68266,9 @@ extern void T857f330(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_character_8_constant */
 extern void T857f329(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_c2_character_constant */
-extern void T114f1250(TC* ac, T0* C, T0* a1);
+extern void T114f1244(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_character_constant */
-extern void T114f1259(TC* ac, T0* C, T0* a1);
+extern void T114f1253(TC* ac, T0* C, T0* a1);
 /* ET_C1_CHARACTER_CONSTANT.process */
 extern void T685f51(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_c1_character_constant */
@@ -68276,7 +68286,7 @@ extern void T857f111(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_c1_character_constant_validity */
 extern void T857f179(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_c1_character_constant */
-extern void T114f1292(TC* ac, T0* C, T0* a1);
+extern void T114f1286(TC* ac, T0* C, T0* a1);
 /* ET_FALSE_CONSTANT.process */
 extern void T684f43(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_false_constant */
@@ -68298,9 +68308,9 @@ extern void T857f178(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_boolean_constant */
 extern void T857f251(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_false_constant */
-extern void T114f1249(TC* ac, T0* C, T0* a1);
+extern void T114f1243(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_false_constant */
-extern void T114f1258(TC* ac, T0* C, T0* a1);
+extern void T114f1252(TC* ac, T0* C, T0* a1);
 /* ET_TRUE_CONSTANT.process */
 extern void T683f45(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_true_constant */
@@ -68318,9 +68328,9 @@ extern void T857f109(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_true_constant_validity */
 extern void T857f177(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_true_constant */
-extern void T114f1291(TC* ac, T0* C, T0* a1);
+extern void T114f1285(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_true_constant */
-extern void T114f1338(TC* ac, T0* C, T0* a1);
+extern void T114f1332(TC* ac, T0* C, T0* a1);
 /* ET_UNDERSCORED_REAL_CONSTANT.process */
 extern void T681f47(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_underscored_real_constant */
@@ -68360,9 +68370,9 @@ extern void T857f344(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_real_32_constant */
 extern void T857f343(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_underscored_real_constant */
-extern void T114f1290(TC* ac, T0* C, T0* a1);
+extern void T114f1284(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_underscored_real_constant */
-extern void T114f1337(TC* ac, T0* C, T0* a1);
+extern void T114f1331(TC* ac, T0* C, T0* a1);
 /* ET_UNDERSCORED_REAL_CONSTANT.is_negative */
 extern T1 T681f13(TC* ac, T0* C);
 /* ET_REGULAR_REAL_CONSTANT.process */
@@ -68382,9 +68392,9 @@ extern void T857f107(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_regular_real_constant_validity */
 extern void T857f175(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_regular_real_constant */
-extern void T114f1248(TC* ac, T0* C, T0* a1);
+extern void T114f1242(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_regular_real_constant */
-extern void T114f1257(TC* ac, T0* C, T0* a1);
+extern void T114f1251(TC* ac, T0* C, T0* a1);
 /* ET_REGULAR_REAL_CONSTANT.is_negative */
 extern T1 T680f32(TC* ac, T0* C);
 /* ET_BINARY_INTEGER_CONSTANT.process */
@@ -68502,11 +68512,11 @@ extern void T857f336(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_integer_8_constant */
 extern void T857f335(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_binary_integer_constant */
-extern void T114f1289(TC* ac, T0* C, T0* a1);
+extern void T114f1283(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_binary_integer_constant */
-extern void T114f1336(TC* ac, T0* C, T0* a1);
+extern void T114f1330(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_integer_constant */
-extern void T114f1263(TC* ac, T0* C, T0* a1);
+extern void T114f1257(TC* ac, T0* C, T0* a1);
 /* ET_OCTAL_INTEGER_CONSTANT.process */
 extern void T678f69(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_octal_integer_constant */
@@ -68524,9 +68534,9 @@ extern void T857f105(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_octal_integer_constant_validity */
 extern void T857f173(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_octal_integer_constant */
-extern void T114f1288(TC* ac, T0* C, T0* a1);
+extern void T114f1282(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_octal_integer_constant */
-extern void T114f1335(TC* ac, T0* C, T0* a1);
+extern void T114f1329(TC* ac, T0* C, T0* a1);
 /* ET_HEXADECIMAL_INTEGER_CONSTANT.process */
 extern void T677f69(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_hexadecimal_integer_constant */
@@ -68544,9 +68554,9 @@ extern void T857f104(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_hexadecimal_integer_constant_validity */
 extern void T857f172(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_hexadecimal_integer_constant */
-extern void T114f1287(TC* ac, T0* C, T0* a1);
+extern void T114f1281(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_hexadecimal_integer_constant */
-extern void T114f1334(TC* ac, T0* C, T0* a1);
+extern void T114f1328(TC* ac, T0* C, T0* a1);
 /* ET_UNDERSCORED_INTEGER_CONSTANT.process */
 extern void T676f69(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_underscored_integer_constant */
@@ -68564,9 +68574,9 @@ extern void T857f103(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_underscored_integer_constant_validity */
 extern void T857f171(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_underscored_integer_constant */
-extern void T114f1286(TC* ac, T0* C, T0* a1);
+extern void T114f1280(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_underscored_integer_constant */
-extern void T114f1333(TC* ac, T0* C, T0* a1);
+extern void T114f1327(TC* ac, T0* C, T0* a1);
 /* ET_REGULAR_INTEGER_CONSTANT.process */
 extern void T675f67(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_regular_integer_constant */
@@ -68584,9 +68594,9 @@ extern void T857f102(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_regular_integer_constant_validity */
 extern void T857f170(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_regular_integer_constant */
-extern void T114f1247(TC* ac, T0* C, T0* a1);
+extern void T114f1241(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_regular_integer_constant */
-extern void T114f1256(TC* ac, T0* C, T0* a1);
+extern void T114f1250(TC* ac, T0* C, T0* a1);
 /* ET_VERBATIM_STRING.process */
 extern void T674f55(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_verbatim_string */
@@ -68670,17 +68680,17 @@ extern void T857f332(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_string_8_constant */
 extern void T857f331(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_verbatim_string */
-extern void T114f1285(TC* ac, T0* C, T0* a1);
+extern void T114f1279(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_verbatim_string */
-extern void T114f1332(TC* ac, T0* C, T0* a1);
+extern void T114f1326(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_manifest_string */
-extern void T114f1262(TC* ac, T0* C, T0* a1);
+extern void T114f1256(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_utf8_as_escaped_string_8 */
-extern void T114f1267(TC* ac, T0* C, T0* a1);
+extern void T114f1261(TC* ac, T0* C, T0* a1);
 /* UT_INTEGER_FORMATTER.put_octal_natural_32 */
 extern void T989s3(TC* ac, T0* a1, T10 a2);
 /* ET_C_GENERATOR.print_utf8_as_escaped_string_32 */
-extern void T114f1266(TC* ac, T0* C, T0* a1);
+extern void T114f1260(TC* ac, T0* C, T0* a1);
 /* ET_SPECIAL_MANIFEST_STRING.process */
 extern void T673f51(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_special_manifest_string */
@@ -68698,9 +68708,9 @@ extern void T857f100(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_special_manifest_string_validity */
 extern void T857f168(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_special_manifest_string */
-extern void T114f1284(TC* ac, T0* C, T0* a1);
+extern void T114f1278(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_special_manifest_string */
-extern void T114f1331(TC* ac, T0* C, T0* a1);
+extern void T114f1325(TC* ac, T0* C, T0* a1);
 /* ET_REGULAR_MANIFEST_STRING.process */
 extern void T672f49(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_regular_manifest_string */
@@ -68718,9 +68728,9 @@ extern void T857f99(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_regular_manifest_string_validity */
 extern void T857f167(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_regular_manifest_string */
-extern void T114f1246(TC* ac, T0* C, T0* a1);
+extern void T114f1240(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_regular_manifest_string */
-extern void T114f1255(TC* ac, T0* C, T0* a1);
+extern void T114f1249(TC* ac, T0* C, T0* a1);
 /* ET_C3_CHARACTER_CONSTANT.process */
 extern void T671f52(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_c3_character_constant */
@@ -68738,7 +68748,7 @@ extern void T857f98(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_c3_character_constant_validity */
 extern void T857f166(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_c3_character_constant */
-extern void T114f1283(TC* ac, T0* C, T0* a1);
+extern void T114f1277(TC* ac, T0* C, T0* a1);
 /* ET_STRIP_EXPRESSION.process */
 extern void T630f34(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_strip_expression */
@@ -68788,9 +68798,9 @@ extern void T857f165(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.report_strip_expression */
 extern void T857f246(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_strip_expression */
-extern void T114f1282(TC* ac, T0* C, T0* a1);
+extern void T114f1276(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_strip_expression */
-extern void T114f1330(TC* ac, T0* C, T0* a1);
+extern void T114f1324(TC* ac, T0* C, T0* a1);
 /* ET_STATIC_CALL_EXPRESSION.process */
 extern void T627f35(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_static_call_expression */
@@ -68812,9 +68822,9 @@ extern void T857f164(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FEATURE_CHECKER.check_static_dotnet_query_call_expression_validity */
 extern void T857f243(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_static_call_expression */
-extern void T114f1281(TC* ac, T0* C, T0* a1);
+extern void T114f1275(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_static_call_expression */
-extern void T114f1329(TC* ac, T0* C, T0* a1);
+extern void T114f1323(TC* ac, T0* C, T0* a1);
 /* ET_QUANTIFIER_EXPRESSION.process */
 extern void T613f42(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_quantifier_expression */
@@ -68832,9 +68842,9 @@ extern void T857f95(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_quantifier_expression_validity */
 extern void T857f162(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_quantifier_expression */
-extern void T114f1280(TC* ac, T0* C, T0* a1);
+extern void T114f1274(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_quantifier_expression */
-extern void T114f1328(TC* ac, T0* C, T0* a1);
+extern void T114f1322(TC* ac, T0* C, T0* a1);
 /* ET_PARENTHESIZED_EXPRESSION.process */
 extern void T589f27(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_parenthesized_expression */
@@ -68852,9 +68862,9 @@ extern void T857f94(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_parenthesized_expression_validity */
 extern void T857f161(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_parenthesized_expression */
-extern void T114f1279(TC* ac, T0* C, T0* a1);
+extern void T114f1273(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_parenthesized_expression */
-extern void T114f1327(TC* ac, T0* C, T0* a1);
+extern void T114f1321(TC* ac, T0* C, T0* a1);
 /* ET_MANIFEST_TUPLE.process */
 extern void T568f37(TC* ac, T0* C, T0* a1);
 /* ET_PRECURSOR_CHECKER.process_manifest_tuple */
@@ -68881,10 +68891,10 @@ extern T1 T857f160ot1(TC* ac, T0* a1);
 /* ET_FEATURE_CHECKER.report_manifest_tuple */
 extern void T857f231(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_manifest_tuple */
-extern void T114f1278(TC* ac, T0* C, T0* a1);
+extern void T114f1272(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_manifest_tuple */
-extern void T114f1326(TC* ac, T0* C, T0* a1);
-extern T1 T114f1326ot1(TC* ac, T0* a1);
+extern void T114f1320(TC* ac, T0* C, T0* a1);
+extern T1 T114f1320ot1(TC* ac, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE].force_last */
 extern void T938f54(TC* ac, T0* C, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE].slots_put */
@@ -69001,10 +69011,10 @@ extern void T857f309(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 extern void T857f229(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 extern T1 T857f229ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.process_manifest_array */
-extern void T114f1277(TC* ac, T0* C, T0* a1);
+extern void T114f1271(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_manifest_array */
-extern void T114f1325(TC* ac, T0* C, T0* a1);
-extern T1 T114f1325ot1(TC* ac, T0* a1);
+extern void T114f1319(TC* ac, T0* C, T0* a1);
+extern T1 T114f1319ot1(TC* ac, T0* a1);
 /* ET_FEATURE_CHECKER.current_system */
 extern T0* T857f51(TC* ac, T0* C);
 /* ET_OBJECT_TEST_SCOPE_BUILDER.build_scope */
@@ -69357,7 +69367,7 @@ extern T6 T1705f25(TC* ac, T0* C, T6 a1);
 /* DS_HASH_TABLE [DS_HASH_TABLE [TUPLE [detachable ARRAY [ET_TYPE], detachable ET_TYPE, NATURAL_8], ET_FEATURE_NAME], NATURAL_8].hash_position */
 extern T6 T1705f23(TC* ac, T0* C, T8 a1);
 /* NATURAL_8.hash_code */
-extern T6 T8f29(TC* ac, volatile T8* C);
+extern T6 T8f29(TC* ac, T8 volatile* C);
 /* DS_HASH_TABLE [DS_HASH_TABLE [TUPLE [detachable ARRAY [ET_TYPE], detachable ET_TYPE, NATURAL_8], ET_FEATURE_NAME], NATURAL_8].resize */
 extern void T1705f46(TC* ac, T0* C, T6 a1);
 /* DS_HASH_TABLE [DS_HASH_TABLE [TUPLE [detachable ARRAY [ET_TYPE], detachable ET_TYPE, NATURAL_8], ET_FEATURE_NAME], NATURAL_8].clashes_resize */
@@ -70176,19 +70186,19 @@ extern void T100f210(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.report_formal_argument_declaration */
 extern void T100f209(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_external_procedure */
-extern void T114f1421(TC* ac, T0* C, T0* a1);
+extern void T114f1415(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_procedure */
-extern void T114f1447(TC* ac, T0* C, T0* a1);
+extern void T114f1441(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_address_routine */
-extern void T114f1461(TC* ac, T0* C, T0* a1);
+extern void T114f1455(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.argument_type_set */
-extern T0* T114f640(TC* ac, T0* C, T6 a1);
+extern T0* T114f634(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.print_feature_name_comment */
-extern void T114f1464(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f1458(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_external_routine */
-extern void T114f1460(TC* ac, T0* C, T0* a1, T1 a2, T1 a3);
+extern void T114f1454(TC* ac, T0* C, T0* a1, T1 a2, T1 a3);
 /* ET_C_GENERATOR.flush_to_cpp_file */
-extern void T114f1490(TC* ac, T0* C);
+extern void T114f1484(TC* ac, T0* C);
 /* KL_TEXT_OUTPUT_FILE.open_append */
 extern void T950f42(TC* ac, T0* C);
 /* KL_TEXT_OUTPUT_FILE.old_open_append */
@@ -70198,11 +70208,11 @@ extern void T950f51p1(TC* ac, T0* C);
 /* DS_HASH_TABLE [STRING_8, STRING_8].force_last */
 extern void T827f51(TC* ac, T0* C, T0* a1, T0* a2);
 /* INTEGER_64.out */
-extern T0* T7f14(TC* ac, volatile T7* C);
+extern T0* T7f14(TC* ac, T7 volatile* C);
 /* STRING_8.append_integer_64 */
 extern void T17f67(TC* ac, T0* C, T7 a1);
 /* ET_C_GENERATOR.print_external_dllwin_body */
-extern void T114f1489(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7);
+extern void T114f1483(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7);
 /* DS_LINKED_LIST_CURSOR [STRING_8].forth */
 extern void T910f9(TC* ac, T0* C);
 /* DS_LINKED_LIST [STRING_8].cursor_forth */
@@ -70230,7 +70240,7 @@ extern T0* T220f9(TC* ac, T0* C);
 /* DS_LINKED_LIST_CURSOR [STRING_8].make */
 extern T0* T910c8(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_external_cpp_body */
-extern void T114f1488(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7);
+extern void T114f1482(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7);
 /* DS_LINKED_LIST [STRING_8].item */
 extern T0* T220f16(TC* ac, T0* C, T6 a1);
 /* ST_SPLITTER.split */
@@ -70298,7 +70308,7 @@ extern void T911f33(TC* ac, T0* C, T6 a1);
 /* DS_HASH_SET [NATURAL_32].make_item_storage */
 extern void T911f32(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.print_external_c_struct_body */
-extern void T114f1487(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5);
+extern void T114f1481(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5);
 /* UC_UTF8_STRING.remove_head */
 extern void T1066f110(TC* ac, T0* C, T6 a1);
 /* UC_UTF8_STRING.keep_tail */
@@ -70308,132 +70318,112 @@ extern void T909f109(TC* ac, T0* C, T6 a1);
 /* UC_STRING.keep_tail */
 extern void T909f111(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.print_external_c_body */
-extern void T114f1486(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T1 a7);
+extern void T114f1480(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T1 a7);
 /* ET_C_GENERATOR.print_external_c_prototype */
-extern void T114f1485(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6);
+extern void T114f1479(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6);
 /* ET_C_GENERATOR.print_external_builtin_body */
-extern void T114f1484(TC* ac, T0* C, T0* a1);
+extern void T114f1478(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_builtin_procedure_body */
-extern void T114f1497(TC* ac, T0* C, T0* a1);
+extern void T114f1491(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_builtin_tuple_procedure_body */
-extern void T114f1535(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.fill_call_formal_arguments */
-extern void T114f831(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_reference_body */
-extern void T114f1598(TC* ac, T0* C, T0* a1);
-extern T1 T114f1598ot1(TC* ac, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_real_64_body */
-extern void T114f1597(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_basic_expanded_item_body */
-extern void T114f1612(TC* ac, T0* C, T0* a1);
-extern T1 T114f1612ot1(TC* ac, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_real_32_body */
-extern void T114f1596(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_pointer_body */
-extern void T114f1595(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_natural_64_body */
-extern void T114f1594(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_natural_32_body */
-extern void T114f1593(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_natural_16_body */
-extern void T114f1592(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_natural_8_body */
-extern void T114f1591(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_integer_64_body */
-extern void T114f1590(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_integer_32_body */
-extern void T114f1589(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_integer_16_body */
-extern void T114f1588(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_integer_8_body */
-extern void T114f1587(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_character_32_body */
-extern void T114f1586(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_character_8_body */
-extern void T114f1585(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_put_boolean_body */
-extern void T114f1584(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_special_procedure_body */
-extern void T114f1534(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_special_set_count_body */
-extern void T114f1583(TC* ac, T0* C, T0* a1);
-extern T1 T114f1583ot1(TC* ac, T0* a1);
-/* ET_DYNAMIC_SPECIAL_TYPE.has_nested_reference_fields */
-extern T1 T966f61(TC* ac, T0* C);
-/* ET_DYNAMIC_FUNCTION_TYPE.has_nested_reference_fields */
-extern T1 T1049f49(TC* ac, T0* C);
-/* ET_DYNAMIC_FUNCTION_TYPE.has_reference_fields */
-extern T1 T1049f59(TC* ac, T0* C);
-/* ET_DYNAMIC_PROCEDURE_TYPE.has_nested_reference_fields */
-extern T1 T1048f49(TC* ac, T0* C);
-/* ET_DYNAMIC_PROCEDURE_TYPE.has_reference_fields */
-extern T1 T1048f59(TC* ac, T0* C);
-/* ET_DYNAMIC_TUPLE_TYPE.has_nested_reference_fields */
-extern T1 T894f60(TC* ac, T0* C);
-/* ET_DYNAMIC_TUPLE_TYPE.has_reference_fields */
-extern T1 T894f62(TC* ac, T0* C);
-/* ET_DYNAMIC_PRIMARY_TYPE.has_nested_reference_fields */
-extern T1 T838f58(TC* ac, T0* C);
-/* ET_DYNAMIC_PRIMARY_TYPE.has_reference_fields */
-extern T1 T838f61(TC* ac, T0* C);
-/* ET_DYNAMIC_SPECIAL_TYPE.has_reference_fields */
-extern T1 T966f64(TC* ac, T0* C);
-/* ET_C_GENERATOR.result_type_set_in_feature */
-extern T0* T114f303(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_special_extend_body */
-extern void T114f1582(TC* ac, T0* C, T0* a1);
-extern T1 T114f1582ot1(TC* ac, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_real_n_ref_procedure_body */
-extern void T114f1533(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_procedure_procedure_body */
-extern void T114f1532(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_procedure_call_body */
-extern void T114f1581(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_pointer_ref_procedure_body */
-extern void T114f1531(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_memory_procedure_body */
-extern void T114f1530(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_ise_runtime_procedure_body */
 extern void T114f1529(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_set_pre_ecma_mapping_body */
+/* ET_C_GENERATOR.fill_call_formal_arguments */
+extern void T114f823(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_put_reference_body */
+extern void T114f1592(TC* ac, T0* C, T0* a1);
+extern T1 T114f1592ot1(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_put_real_64_body */
+extern void T114f1591(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_put_basic_expanded_item_body */
+extern void T114f1606(TC* ac, T0* C, T0* a1);
+extern T1 T114f1606ot1(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_put_real_32_body */
+extern void T114f1590(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_put_pointer_body */
+extern void T114f1589(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_put_natural_64_body */
+extern void T114f1588(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_put_natural_32_body */
+extern void T114f1587(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_put_natural_16_body */
+extern void T114f1586(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_put_natural_8_body */
+extern void T114f1585(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_put_integer_64_body */
+extern void T114f1584(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_put_integer_32_body */
+extern void T114f1583(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_put_integer_16_body */
+extern void T114f1582(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_put_integer_8_body */
+extern void T114f1581(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_put_character_32_body */
 extern void T114f1580(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_ise_exception_manager_procedure_body */
-extern void T114f1528(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_integer_n_ref_procedure_body */
-extern void T114f1527(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_identified_routines_procedure_body */
-extern void T114f1526(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_exception_manager_procedure_body */
-extern void T114f1525(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_exception_manager_set_is_ignored_body */
+/* ET_C_GENERATOR.print_builtin_tuple_put_character_8_body */
 extern void T114f1579(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_exception_manager_raise_body */
+/* ET_C_GENERATOR.print_builtin_tuple_put_boolean_body */
 extern void T114f1578(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_exception_manager_ignore_body */
+/* ET_C_GENERATOR.print_external_builtin_special_procedure_body */
+extern void T114f1528(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_special_set_count_body */
 extern void T114f1577(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_exception_manager_catch_body */
+extern T1 T114f1577ot1(TC* ac, T0* a1);
+/* ET_C_GENERATOR.result_type_set_in_feature */
+extern T0* T114f301(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_special_extend_body */
 extern void T114f1576(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_com_failure_procedure_body */
-extern void T114f1524(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_character_n_ref_procedure_body */
-extern void T114f1523(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_boolean_ref_procedure_body */
-extern void T114f1522(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_any_procedure_body */
-extern void T114f1521(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_any_standard_copy_body */
+extern T1 T114f1576ot1(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_real_n_ref_procedure_body */
+extern void T114f1527(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_procedure_procedure_body */
+extern void T114f1526(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_procedure_call_body */
 extern void T114f1575(TC* ac, T0* C, T0* a1);
-extern T1 T114f1575ot1(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_pointer_ref_procedure_body */
+extern void T114f1525(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_memory_procedure_body */
+extern void T114f1524(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_ise_runtime_procedure_body */
+extern void T114f1523(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_set_pre_ecma_mapping_body */
+extern void T114f1574(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_ise_exception_manager_procedure_body */
+extern void T114f1522(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_integer_n_ref_procedure_body */
+extern void T114f1521(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_identified_routines_procedure_body */
+extern void T114f1520(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_exception_manager_procedure_body */
+extern void T114f1519(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_exception_manager_set_is_ignored_body */
+extern void T114f1573(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_exception_manager_raise_body */
+extern void T114f1572(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_exception_manager_ignore_body */
+extern void T114f1571(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_exception_manager_catch_body */
+extern void T114f1570(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_com_failure_procedure_body */
+extern void T114f1518(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_character_n_ref_procedure_body */
+extern void T114f1517(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_boolean_ref_procedure_body */
+extern void T114f1516(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_any_procedure_body */
+extern void T114f1515(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_any_standard_copy_body */
+extern void T114f1569(TC* ac, T0* C, T0* a1);
+extern T1 T114f1569ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_standard_copy_body_with_no_special */
-extern void T114f1611(TC* ac, T0* C, T0* a1, T0* a2);
-extern T1 T114f1611ot1(TC* ac, T0* a1);
-extern T1 T114f1611ot2(TC* ac, T0* a1);
+extern void T114f1605(TC* ac, T0* C, T0* a1, T0* a2);
+extern T1 T114f1605ot1(TC* ac, T0* a1);
+extern T1 T114f1605ot2(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_standard_copy_custom_tuple_items */
-extern void T114f1626(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f1620(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_builtin_any_standard_copy_custom_attributes */
-extern void T114f1624(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f1618(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_assign_temp_variable_to_onces_attribute */
-extern void T114f1621(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1615(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_DYNAMIC_FUNCTION_TYPE.has_once_per_object_routines */
 extern T1 T1049f17(TC* ac, T0* C);
 /* ET_DYNAMIC_PROCEDURE_TYPE.has_once_per_object_routines */
@@ -70445,23 +70435,23 @@ extern T1 T838f17(TC* ac, T0* C);
 /* ET_DYNAMIC_SPECIAL_TYPE.has_once_per_object_routines */
 extern T1 T966f18(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_assign_temp_variable_to_flags_attribute */
-extern void T114f1620(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1614(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_attribute_flags_access */
-extern void T114f1628(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1622(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_attribute_flags_name */
-extern void T114f805(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f796(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_assign_onces_attribute_to_temp_variable */
-extern void T114f1618(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1612(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_once_per_object_data_type_name */
-extern void T114f803(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f794(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_assign_flags_attribute_to_temp_variable */
-extern void T114f1617(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f1611(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_builtin_any_standard_copy_body_with_special */
-extern void T114f1608(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f1602(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_builtin_any_standard_copy_custom_special_items */
-extern void T114f1625(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
+extern void T114f1619(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_C_GENERATOR.free_actual_argument_list */
-extern void T114f1616(TC* ac, T0* C, T0* a1);
+extern void T114f1610(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_ACTUAL_ARGUMENT_LIST].force_last */
 extern void T921f13(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_ACTUAL_ARGUMENT_LIST].force */
@@ -70485,7 +70475,7 @@ extern void T345f26(TC* ac, T0* C, T0* a1);
 /* ET_ACTUAL_ARGUMENT_LIST.new_capacity */
 extern T6 T345f18(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.new_actual_argument_list */
-extern T0* T114f651(TC* ac, T0* C);
+extern T0* T114f646(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_ACTUAL_ARGUMENT_LIST].remove_last */
 extern void T921f15(TC* ac, T0* C);
 /* SPECIAL [ET_ACTUAL_ARGUMENT_LIST].keep_head */
@@ -70503,25 +70493,25 @@ extern T0* T921f10(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_ACTUAL_ARGUMENT_LIST].is_empty */
 extern T1 T921f9(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_greater_than_or_equal */
-extern void T114f1615(TC* ac, T0* C);
+extern void T114f1609(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_assign_temp_variable_to_special_capacity_attribute */
-extern void T114f1623(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
+extern void T114f1617(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
 /* ET_C_GENERATOR.print_assign_temp_variable_to_special_count_attribute */
-extern void T114f1622(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
+extern void T114f1616(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
 /* ET_C_GENERATOR.print_assign_special_capacity_attribute_to_temp_variable */
-extern void T114f1619(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
+extern void T114f1613(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
 /* ET_C_GENERATOR.print_greater_than */
-extern void T114f1607(TC* ac, T0* C);
+extern void T114f1601(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_assign_special_count_attribute_to_temp_variable */
-extern void T114f1614(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
+extern void T114f1608(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
 /* ET_C_GENERATOR.print_builtin_any_copy_body */
-extern void T114f1574(TC* ac, T0* C, T0* a1);
+extern void T114f1568(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_builtin_function_body */
-extern void T114f1496(TC* ac, T0* C, T0* a1);
+extern void T114f1490(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_builtin_type_function_body */
-extern void T114f1520(TC* ac, T0* C, T0* a1);
+extern void T114f1514(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_type_generic_parameter_type_body */
-extern void T114f1573(TC* ac, T0* C, T0* a1);
+extern void T114f1567(TC* ac, T0* C, T0* a1);
 /* ET_CONSTRAINED_FORMAL_PARAMETER.shallow_base_type */
 extern T0* T691f50(TC* ac, T0* C, T0* a1);
 /* ET_CONSTRAINED_FORMAL_PARAMETER.shallow_base_type_with_type_mark */
@@ -70568,55 +70558,55 @@ extern T0* T183f79(TC* ac, T0* C, T0* a1);
 /* ET_CLASS_TYPE.shallow_base_type */
 extern T0* T102f86(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_indentation_assign_to_result */
-extern void T114f795(TC* ac, T0* C);
+extern void T114f787(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_external_builtin_tuple_function_body */
-extern void T114f1519(TC* ac, T0* C, T0* a1);
+extern void T114f1513(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_tuple_reference_item_body */
-extern void T114f1572(TC* ac, T0* C, T0* a1);
-/* Creation of agent #1 in feature ET_C_GENERATOR.print_builtin_tuple_reference_item_body */
-extern T0* T114f1572ac1(TC* ac, T0* a1, T6 a2, T0* a3, T0* a4, T1 a5);
-extern T1 T114f1572ot1(TC* ac, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_real_64_item_body */
-extern void T114f1571(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_basic_expanded_item_body */
-extern void T114f1610(TC* ac, T0* C, T0* a1);
-extern T1 T114f1610ot1(TC* ac, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_real_32_item_body */
-extern void T114f1570(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_pointer_item_body */
-extern void T114f1569(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_natural_64_item_body */
-extern void T114f1568(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_natural_32_item_body */
-extern void T114f1567(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_natural_16_item_body */
 extern void T114f1566(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_natural_8_item_body */
+/* Creation of agent #1 in feature ET_C_GENERATOR.print_builtin_tuple_reference_item_body */
+extern T0* T114f1566ac1(TC* ac, T0* a1, T6 a2, T0* a3, T0* a4, T1 a5);
+extern T1 T114f1566ot1(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_real_64_item_body */
 extern void T114f1565(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_item_code_body */
+/* ET_C_GENERATOR.print_builtin_tuple_basic_expanded_item_body */
+extern void T114f1604(TC* ac, T0* C, T0* a1);
+extern T1 T114f1604ot1(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_real_32_item_body */
 extern void T114f1564(TC* ac, T0* C, T0* a1);
-extern T1 T114f1564ot1(TC* ac, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_integer_64_item_body */
+/* ET_C_GENERATOR.print_builtin_tuple_pointer_item_body */
 extern void T114f1563(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_integer_32_item_body */
+/* ET_C_GENERATOR.print_builtin_tuple_natural_64_item_body */
 extern void T114f1562(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_integer_16_item_body */
+/* ET_C_GENERATOR.print_builtin_tuple_natural_32_item_body */
 extern void T114f1561(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_integer_8_item_body */
+/* ET_C_GENERATOR.print_builtin_tuple_natural_16_item_body */
 extern void T114f1560(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_character_32_item_body */
+/* ET_C_GENERATOR.print_builtin_tuple_natural_8_item_body */
 extern void T114f1559(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_character_8_item_body */
+/* ET_C_GENERATOR.print_builtin_tuple_item_code_body */
 extern void T114f1558(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_tuple_boolean_item_body */
+extern T1 T114f1558ot1(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_integer_64_item_body */
 extern void T114f1557(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_special_function_body */
-extern void T114f1518(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_special_aliased_resized_area_body */
+/* ET_C_GENERATOR.print_builtin_tuple_integer_32_item_body */
 extern void T114f1556(TC* ac, T0* C, T0* a1);
-extern T1 T114f1556ot1(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_integer_16_item_body */
+extern void T114f1555(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_integer_8_item_body */
+extern void T114f1554(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_character_32_item_body */
+extern void T114f1553(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_character_8_item_body */
+extern void T114f1552(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_tuple_boolean_item_body */
+extern void T114f1551(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_special_function_body */
+extern void T114f1512(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_special_aliased_resized_area_body */
+extern void T114f1550(TC* ac, T0* C, T0* a1);
+extern T1 T114f1550ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.free_result_expression */
-extern void T114f1609(TC* ac, T0* C, T0* a1);
+extern void T114f1603(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_RESULT].force_last */
 extern void T922f13(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_RESULT].force */
@@ -70636,7 +70626,7 @@ extern T6 T922f8(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_LIST [ET_RESULT].extendible */
 extern T1 T922f6(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.new_result_expression */
-extern T0* T114f650(TC* ac, T0* C);
+extern T0* T114f644(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_RESULT].remove_last */
 extern void T922f15(TC* ac, T0* C);
 /* SPECIAL [ET_RESULT].keep_head */
@@ -70654,101 +70644,101 @@ extern T0* T922f10(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_RESULT].is_empty */
 extern T1 T922f9(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_external_builtin_real_n_ref_function_body */
-extern void T114f1517(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_real_n_function_body */
-extern void T114f1516(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_real_n_out_body */
-extern void T114f1555(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_pointer_ref_function_body */
-extern void T114f1515(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_pointer_function_body */
-extern void T114f1514(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_pointer_out_body */
-extern void T114f1554(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_platform_function_body */
-extern void T114f1513(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_memory_function_body */
-extern void T114f1512(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_ise_runtime_function_body */
 extern void T114f1511(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_pre_ecma_mapping_status_body */
-extern void T114f1553(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_ise_runtime_in_assertion_body */
-extern void T114f1552(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_integer_n_ref_function_body */
+/* ET_C_GENERATOR.print_external_builtin_real_n_function_body */
 extern void T114f1510(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_integer_n_function_body */
-extern void T114f1509(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_identified_routines_function_body */
-extern void T114f1508(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_function_function_body */
-extern void T114f1507(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_function_item_body */
-extern void T114f1551(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_exception_manager_factory_function_body */
-extern void T114f1506(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_exception_manager_factory_exception_manager_body */
-extern void T114f1550(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_exception_manager_function_body */
-extern void T114f1505(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_exception_manager_type_of_code_body */
+/* ET_C_GENERATOR.print_builtin_real_n_out_body */
 extern void T114f1549(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_exception_manager_last_exception_body */
+/* ET_C_GENERATOR.print_external_builtin_pointer_ref_function_body */
+extern void T114f1509(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_pointer_function_body */
+extern void T114f1508(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_pointer_out_body */
 extern void T114f1548(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_exception_manager_is_raisable_body */
+/* ET_C_GENERATOR.print_external_builtin_platform_function_body */
+extern void T114f1507(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_memory_function_body */
+extern void T114f1506(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_ise_runtime_function_body */
+extern void T114f1505(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_ise_runtime_pre_ecma_mapping_status_body */
 extern void T114f1547(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_exception_manager_is_ignored_body */
+/* ET_C_GENERATOR.print_builtin_ise_runtime_in_assertion_body */
 extern void T114f1546(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_exception_manager_is_ignorable_body */
-extern void T114f1545(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_exception_manager_is_caught_body */
-extern void T114f1544(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_exception_manager_exception_from_code_body */
-extern void T114f1543(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_com_failure_function_body */
+/* ET_C_GENERATOR.print_external_builtin_integer_n_ref_function_body */
 extern void T114f1504(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_character_n_ref_function_body */
+/* ET_C_GENERATOR.print_external_builtin_integer_n_function_body */
 extern void T114f1503(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_character_n_function_body */
+/* ET_C_GENERATOR.print_external_builtin_identified_routines_function_body */
 extern void T114f1502(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_boolean_ref_function_body */
+/* ET_C_GENERATOR.print_external_builtin_function_function_body */
 extern void T114f1501(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_boolean_function_body */
+/* ET_C_GENERATOR.print_builtin_function_item_body */
+extern void T114f1545(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_exception_manager_factory_function_body */
 extern void T114f1500(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_arguments_32_function_body */
+/* ET_C_GENERATOR.print_builtin_exception_manager_factory_exception_manager_body */
+extern void T114f1544(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_exception_manager_function_body */
 extern void T114f1499(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_external_builtin_any_function_body */
-extern void T114f1498(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_any_twin_body */
+/* ET_C_GENERATOR.print_builtin_exception_manager_type_of_code_body */
+extern void T114f1543(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_exception_manager_last_exception_body */
 extern void T114f1542(TC* ac, T0* C, T0* a1);
-extern T1 T114f1542ot1(TC* ac, T0* a1);
-/* ET_C_GENERATOR.print_builtin_any_twin_body_with_reference */
-extern void T114f1606(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_any_twin_body_with_expanded */
-extern void T114f1605(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_any_twin_body_with_special */
-extern void T114f1604(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_builtin_any_tagged_out_body */
+/* ET_C_GENERATOR.print_builtin_exception_manager_is_raisable_body */
 extern void T114f1541(TC* ac, T0* C, T0* a1);
-extern T1 T114f1541ot1(TC* ac, T0* a1);
-/* ET_C_GENERATOR.print_builtin_any_standard_twin_body */
+/* ET_C_GENERATOR.print_builtin_exception_manager_is_ignored_body */
 extern void T114f1540(TC* ac, T0* C, T0* a1);
-extern T1 T114f1540ot1(TC* ac, T0* a1);
-/* ET_C_GENERATOR.print_builtin_any_standard_twin_body_with_no_special */
-extern void T114f1603(TC* ac, T0* C);
-/* ET_C_GENERATOR.print_builtin_any_standard_twin_body_with_special */
-extern void T114f1602(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_builtin_any_standard_is_equal_body */
+/* ET_C_GENERATOR.print_builtin_exception_manager_is_ignorable_body */
 extern void T114f1539(TC* ac, T0* C, T0* a1);
-extern T1 T114f1539ot1(TC* ac, T0* a1);
-extern T1 T114f1539ot2(TC* ac, T0* a1);
-extern T1 T114f1539ot3(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_builtin_exception_manager_is_caught_body */
+extern void T114f1538(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_exception_manager_exception_from_code_body */
+extern void T114f1537(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_com_failure_function_body */
+extern void T114f1498(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_character_n_ref_function_body */
+extern void T114f1497(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_character_n_function_body */
+extern void T114f1496(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_boolean_ref_function_body */
+extern void T114f1495(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_boolean_function_body */
+extern void T114f1494(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_arguments_32_function_body */
+extern void T114f1493(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_external_builtin_any_function_body */
+extern void T114f1492(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_any_twin_body */
+extern void T114f1536(TC* ac, T0* C, T0* a1);
+extern T1 T114f1536ot1(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_builtin_any_twin_body_with_reference */
+extern void T114f1600(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_any_twin_body_with_expanded */
+extern void T114f1599(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_any_twin_body_with_special */
+extern void T114f1598(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_builtin_any_tagged_out_body */
+extern void T114f1535(TC* ac, T0* C, T0* a1);
+extern T1 T114f1535ot1(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_builtin_any_standard_twin_body */
+extern void T114f1534(TC* ac, T0* C, T0* a1);
+extern T1 T114f1534ot1(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_builtin_any_standard_twin_body_with_no_special */
+extern void T114f1597(TC* ac, T0* C);
+/* ET_C_GENERATOR.print_builtin_any_standard_twin_body_with_special */
+extern void T114f1596(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_builtin_any_standard_is_equal_body */
+extern void T114f1533(TC* ac, T0* C, T0* a1);
+extern T1 T114f1533ot1(TC* ac, T0* a1);
+extern T1 T114f1533ot2(TC* ac, T0* a1);
+extern T1 T114f1533ot3(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_standard_is_equal_tuple_items */
-extern void T114f1601(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f1595(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_builtin_any_standard_is_equal_field */
-extern void T114f1613(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f1607(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.free_equality_expression */
-extern void T114f1627(TC* ac, T0* C, T0* a1);
+extern void T114f1621(TC* ac, T0* C, T0* a1);
 /* ET_EQUALITY_EXPRESSION.set_operator */
 extern void T748f31(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_EQUALITY_EXPRESSION].force_last */
@@ -70770,7 +70760,7 @@ extern T6 T916f8(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_LIST [ET_EQUALITY_EXPRESSION].extendible */
 extern T1 T916f6(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.new_equality_expression */
-extern T0* T114f652(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern T0* T114f647(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* DS_ARRAYED_LIST [ET_EQUALITY_EXPRESSION].remove_last */
 extern void T916f15(TC* ac, T0* C);
 /* SPECIAL [ET_EQUALITY_EXPRESSION].keep_head */
@@ -70790,23 +70780,23 @@ extern T1 T916f9(TC* ac, T0* C);
 /* ET_TOKEN_CONSTANTS.equal_symbol */
 extern T0* T81s926(TC* ac);
 /* ET_C_GENERATOR.print_builtin_any_standard_is_equal_special_items */
-extern void T114f1600(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f1594(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_builtin_any_standard_is_equal_attributes */
-extern void T114f1599(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f1593(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_builtin_any_is_equal_body */
-extern void T114f1538(TC* ac, T0* C, T0* a1);
+extern void T114f1532(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_is_deep_equal_body */
-extern void T114f1537(TC* ac, T0* C, T0* a1);
+extern void T114f1531(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_builtin_any_conforms_to_body */
-extern void T114f1536(TC* ac, T0* C, T0* a1);
+extern void T114f1530(TC* ac, T0* C, T0* a1);
 /* ET_EXTERNAL_PROCEDURE.is_function */
 extern T1 T714f80(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_external_c_inline_body */
-extern void T114f1483(TC* ac, T0* C, T0* a1);
+extern void T114f1477(TC* ac, T0* C, T0* a1);
 /* KL_CHARACTER_ROUTINES.as_lower */
 extern T2 T2028f1(TC* ac, T0* C, T2 a1);
 /* ET_C_GENERATOR.character_ */
-extern T0* T114s645(TC* ac);
+extern T0* T114s639(TC* ac);
 /* KL_CHARACTER_ROUTINES.default_create */
 extern T0* T2028c2(TC* ac);
 /* UC_UTF8_STRING.has_substring */
@@ -70816,9 +70806,9 @@ extern T1 T909f71(TC* ac, T0* C, T0* a1);
 /* STRING_8.has_substring */
 extern T1 T17f23(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_c_includes */
-extern void T114f1482(TC* ac, T0* C, T0* a1);
+extern void T114f1476(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.include_header_filename */
-extern void T114f1495(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f1489(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_SET [STRING_8].force_last */
 extern void T99f44(TC* ac, T0* C, T0* a1);
 /* DS_HASH_SET [STRING_8].slots_put */
@@ -70886,20 +70876,20 @@ extern void T108s26(TC* ac, T0* a1);
 /* KL_STRING_ROUTINES.left_adjust */
 extern void T108s25(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_external_cpp_includes */
-extern void T114f1481(TC* ac, T0* C, T0* a1);
+extern void T114f1475(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.include_cpp_header_filename */
-extern void T114f1494(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f1488(TC* ac, T0* C, T0* a1, T0* a2);
 /* RX_PCRE_REGULAR_EXPRESSION.captured_substring */
 extern T0* T107f231(TC* ac, T0* C, T6 a1);
 /* RX_PCRE_REGULAR_EXPRESSION.captured_substring_count */
 extern T6 T107f307(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.print_feature_trace_message_call */
-extern void T114f1479(TC* ac, T0* C, T1 a1);
+extern void T114f1473(TC* ac, T0* C, T1 a1);
 /* RX_PCRE_REGULAR_EXPRESSION.recognizes */
 extern T1 T107f76(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_inline_routine_name */
-extern void T114f1480(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
-extern T1 T114f1480ot1(TC* ac, T0* a1);
+extern void T114f1474(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern T1 T114f1474ot1(TC* ac, T0* a1);
 /* ET_FEATURE_CHECKER.process_external_procedure */
 extern void T857f124(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_external_procedure_validity */
@@ -70927,9 +70917,9 @@ extern void T100f143(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_deferred_procedure_validity */
 extern void T100f155(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_deferred_procedure */
-extern void T114f1420(TC* ac, T0* C, T0* a1);
+extern void T114f1414(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_deferred_procedure */
-extern void T114f1446(TC* ac, T0* C, T0* a1);
+extern void T114f1440(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_deferred_procedure */
 extern void T857f123(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_deferred_procedure_validity */
@@ -70987,41 +70977,41 @@ extern void T42f436(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_ERROR_HANDLER.reportable_vreg_error */
 extern T1 T42f47(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_once_procedure */
-extern void T114f1419(TC* ac, T0* C, T0* a1);
+extern void T114f1413(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_once_procedure */
-extern void T114f1445(TC* ac, T0* C, T0* a1);
+extern void T114f1439(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_internal_procedure */
-extern void T114f1462(TC* ac, T0* C, T0* a1);
+extern void T114f1456(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_internal_feature */
-extern void T114f1458(TC* ac, T0* C, T0* a1, T1 a2);
+extern void T114f1452(TC* ac, T0* C, T0* a1, T1 a2);
 /* ET_C_GENERATOR.print_assign_called_to_once_status */
-extern void T114f1478(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_once_status_is_completed */
-extern void T114f1477(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_return_statement */
-extern void T114f1476(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.print_assign_result_to_thread_safe_once_value */
-extern void T114f1475(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_thread_safe_once_per_process_value */
-extern void T114f1493(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_assign_once_value_to_result */
-extern void T114f1474(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_once_mutex_lock */
-extern void T114f1473(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_once_mutex_try_lock */
 extern void T114f1472(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_return_thread_safe_once_value */
+/* ET_C_GENERATOR.print_once_status_is_completed */
 extern void T114f1471(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_raise_thread_safe_once_exception_if_any */
-extern void T114f1470(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_return_once_value */
+/* ET_C_GENERATOR.print_return_statement */
+extern void T114f1470(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.print_assign_result_to_thread_safe_once_value */
 extern void T114f1469(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
-/* ET_C_GENERATOR.print_raise_once_exception_if_any */
+/* ET_C_GENERATOR.print_thread_safe_once_per_process_value */
+extern void T114f1487(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_assign_once_value_to_result */
 extern void T114f1468(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_once_mutex_lock */
+extern void T114f1467(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_once_mutex_try_lock */
+extern void T114f1466(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_return_thread_safe_once_value */
+extern void T114f1465(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_raise_thread_safe_once_exception_if_any */
+extern void T114f1464(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_return_once_value */
+extern void T114f1463(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+/* ET_C_GENERATOR.print_raise_once_exception_if_any */
+extern void T114f1462(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* ET_C_GENERATOR.print_once_per_object_global_mutex_unlock */
-extern void T114f1467(TC* ac, T0* C);
+extern void T114f1461(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_once_per_object_global_mutex_lock */
-extern void T114f1466(TC* ac, T0* C);
+extern void T114f1460(TC* ac, T0* C);
 /* DS_HASH_TABLE [INTEGER_32, ET_FEATURE].value */
 extern T6 T939f34(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TABLE [INTEGER_32, ET_FEATURE].position_of_key */
@@ -71053,9 +71043,9 @@ extern void T100f171(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_do_procedure_validity */
 extern void T100f153p1(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_do_procedure */
-extern void T114f1418(TC* ac, T0* C, T0* a1);
+extern void T114f1412(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_do_procedure */
-extern void T114f1444(TC* ac, T0* C, T0* a1);
+extern void T114f1438(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_do_procedure */
 extern void T857f121(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_do_procedure_validity */
@@ -71149,9 +71139,9 @@ extern void T100f175(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_query_type_validity */
 extern void T100f157(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.process_external_function */
-extern void T114f1417(TC* ac, T0* C, T0* a1);
+extern void T114f1411(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_external_function */
-extern void T114f1443(TC* ac, T0* C, T0* a1);
+extern void T114f1437(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_external_function */
 extern void T857f120(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_external_function_validity */
@@ -71175,9 +71165,9 @@ extern void T100f139(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_deferred_function_validity */
 extern void T100f151(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_deferred_function */
-extern void T114f1416(TC* ac, T0* C, T0* a1);
+extern void T114f1410(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_deferred_function */
-extern void T114f1442(TC* ac, T0* C, T0* a1);
+extern void T114f1436(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_deferred_function */
 extern void T857f119(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_deferred_function_validity */
@@ -71209,11 +71199,11 @@ extern T0* T1445c1063(TC* ac, T0* a1, T0* a2, T0* a3);
 /* ET_ERROR_HANDLER.report_vevi0c_error */
 extern void T42f375(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_once_function */
-extern void T114f1415(TC* ac, T0* C, T0* a1);
+extern void T114f1409(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_once_function */
-extern void T114f1441(TC* ac, T0* C, T0* a1);
+extern void T114f1435(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_internal_function */
-extern void T114f1459(TC* ac, T0* C, T0* a1);
+extern void T114f1453(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_once_function */
 extern void T857f118(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_once_function_validity */
@@ -71229,9 +71219,9 @@ extern void T100f137(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_do_function_validity */
 extern void T100f149(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_do_function */
-extern void T114f1414(TC* ac, T0* C, T0* a1);
+extern void T114f1408(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_do_function */
-extern void T114f1440(TC* ac, T0* C, T0* a1);
+extern void T114f1434(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_do_function */
 extern void T857f117(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_do_function_validity */
@@ -71257,13 +71247,13 @@ extern void T42f374(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ERROR_HANDLER.reportable_vqui_error */
 extern T1 T42f85(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_unique_attribute */
-extern void T114f1413(TC* ac, T0* C, T0* a1);
+extern void T114f1407(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_unique_attribute */
-extern void T114f1439(TC* ac, T0* C, T0* a1);
+extern void T114f1433(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_attribute_wrapper */
-extern void T114f1457(TC* ac, T0* C, T0* a1);
+extern void T114f1451(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.free_unqualified_call_expression */
-extern void T114f1465(TC* ac, T0* C, T0* a1);
+extern void T114f1459(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_UNQUALIFIED_CALL_EXPRESSION].force_last */
 extern void T919f13(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_UNQUALIFIED_CALL_EXPRESSION].force */
@@ -71283,7 +71273,7 @@ extern T6 T919f8(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_LIST [ET_UNQUALIFIED_CALL_EXPRESSION].extendible */
 extern T1 T919f6(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.new_unqualified_call_expression */
-extern T0* T114f639(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T114f633(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_UNQUALIFIED_CALL_EXPRESSION.set_name */
 extern void T1033f39(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_UNQUALIFIED_CALL_EXPRESSION].remove_last */
@@ -71427,9 +71417,9 @@ extern T1 T680f26(TC* ac, T0* C);
 /* ET_REGULAR_MANIFEST_STRING.is_boolean_constant */
 extern T1 T672f25(TC* ac, T0* C);
 /* ET_C_GENERATOR.process_constant_attribute */
-extern void T114f1412(TC* ac, T0* C, T0* a1);
+extern void T114f1406(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_constant_attribute */
-extern void T114f1438(TC* ac, T0* C, T0* a1);
+extern void T114f1432(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_constant_attribute */
 extern void T857f115(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_constant_attribute_validity */
@@ -71541,11 +71531,11 @@ extern T0* T1445c1052(TC* ac, T0* a1, T0* a2, T0* a3);
 /* ET_ERROR_HANDLER.report_vevi0e_error */
 extern void T42f364(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.process_extended_attribute */
-extern void T114f1411(TC* ac, T0* C, T0* a1);
+extern void T114f1405(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_extended_attribute */
-extern void T114f1437(TC* ac, T0* C, T0* a1);
+extern void T114f1431(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_attribute */
-extern void T114f1436(TC* ac, T0* C, T0* a1);
+extern void T114f1430(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_extended_attribute */
 extern void T857f114(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_extended_attribute_validity */
@@ -71561,7 +71551,7 @@ extern void T100f133(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_PUSH_TYPE_SET_BUILDER.check_attribute_validity */
 extern void T100f145(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.process_attribute */
-extern void T114f1410(TC* ac, T0* C, T0* a1);
+extern void T114f1404(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.process_attribute */
 extern void T857f113(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_CHECKER.check_attribute_validity */
@@ -78372,9 +78362,9 @@ extern T0* T838f7(TC* ac, T0* C);
 /* ET_IDENTIFIER.make */
 extern T0* T303c118(TC* ac, T0* a1);
 /* ET_C_GENERATOR.close_cpp_file */
-extern void T114f713(TC* ac, T0* C);
+extern void T114f708(TC* ac, T0* C);
 /* ET_C_GENERATOR.close_c_file */
-extern void T114f712(TC* ac, T0* C);
+extern void T114f707(TC* ac, T0* C);
 /* KL_UNIX_FILE_SYSTEM.delete_file */
 extern void T152s38(TC* ac, T0* a1);
 /* KL_TEXT_INPUT_FILE.delete */
@@ -78386,9 +78376,9 @@ extern void T43s81(TC* ac, T14 a1);
 /* KL_WINDOWS_FILE_SYSTEM.delete_file */
 extern void T151s41(TC* ac, T0* a1);
 /* ET_C_GENERATOR.include_file */
-extern void T114f711(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f706(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.report_cannot_read_error */
-extern void T114f714(TC* ac, T0* C, T0* a1);
+extern void T114f709(TC* ac, T0* C, T0* a1);
 /* KL_NULL_TEXT_OUTPUT_STREAM.append */
 extern void T229f9(TC* ac, T0* C, T0* a1);
 /* KL_NULL_TEXT_OUTPUT_STREAM.append */
@@ -78564,7 +78554,7 @@ extern void T99f69(TC* ac, T0* C, T0* a1);
 /* DS_HASH_SET [STRING_8].remove_traversing_cursor */
 extern void T99f68(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.include_runtime_file */
-extern void T114f710(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f705(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_SET [STRING_8].item_for_iteration */
 extern T0* T99f20(TC* ac, T0* C);
 /* DS_HASH_SET [STRING_8].cursor_item */
@@ -78584,16 +78574,16 @@ extern T1 T99f32(TC* ac, T0* C, T0* a1);
 /* DS_HASH_SET_CURSOR [STRING_8].off */
 extern T1 T854f8(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_end_extern_c */
-extern void T114f709(TC* ac, T0* C, T0* a1);
+extern void T114f704(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_main_function */
-extern void T114f708(TC* ac, T0* C);
+extern void T114f703(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_show_console_call */
-extern void T114f791(TC* ac, T0* C);
+extern void T114f783(TC* ac, T0* C);
 /* ET_C_GENERATOR.temp_variable */
-extern T0* T114f217(TC* ac, T0* C);
+extern T0* T114f214(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_types_array */
-extern void T114f707(TC* ac, T0* C);
-extern T1 T114f707ot1(TC* ac, T0* a1);
+extern void T114f702(TC* ac, T0* C);
+extern T1 T114f702ot1(TC* ac, T0* a1);
 /* ET_DYNAMIC_SYSTEM.is_new_instance_type */
 extern T1 T95f62(TC* ac, T0* C, T0* a1);
 /* ET_TUPLE_TYPE.runtime_name_to_text */
@@ -78715,7 +78705,7 @@ extern T1 T930f21(TC* ac, T0* C);
 /* DS_QUICK_SORTER [ET_DYNAMIC_PRIMARY_TYPE].make */
 extern T0* T968c2(TC* ac, T0* a1);
 /* ET_C_GENERATOR.dynamic_primary_type_comparator */
-extern T0* T114s225(TC* ac);
+extern T0* T114s224(TC* ac);
 /* ET_DYNAMIC_PRIMARY_TYPE_COMPARATOR_BY_ID.make */
 extern T0* T970c2(TC* ac);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE].make */
@@ -78745,7 +78735,7 @@ extern T6 T943f24(TC* ac, T0* C, T6 a1);
 /* DS_HASH_TABLE [detachable ET_DYNAMIC_FEATURE, ET_DYNAMIC_PRIMARY_TYPE].slots_item */
 extern T6 T943f21(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.print_dynamic_type_id_set_constants */
-extern void T114f706(TC* ac, T0* C);
+extern void T114f701(TC* ac, T0* C);
 /* DS_HASH_TABLE [STRING_8, STRING_8].forth */
 extern void T827f54(TC* ac, T0* C);
 /* DS_HASH_TABLE [STRING_8, STRING_8].cursor_forth */
@@ -78775,7 +78765,7 @@ extern void T827f53(TC* ac, T0* C);
 /* DS_HASH_TABLE [STRING_8, STRING_8].cursor_start */
 extern void T827f70(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_init_const_function */
-extern void T114f705(TC* ac, T0* C);
+extern void T114f700(TC* ac, T0* C);
 /* DS_HASH_TABLE [ET_DYNAMIC_PRIMARY_TYPE, ET_INLINE_CONSTANT].forth */
 extern void T942f42(TC* ac, T0* C);
 /* DS_HASH_TABLE [ET_DYNAMIC_PRIMARY_TYPE, ET_INLINE_CONSTANT].cursor_forth */
@@ -78831,7 +78821,7 @@ extern T0* T941f32(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE].item_storage_item */
 extern T0* T941f20(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.print_once_status_name */
-extern void T114f783(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f775(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [INTEGER_32, ET_FEATURE].has */
 extern T1 T939f28(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE].key_for_iteration */
@@ -78855,9 +78845,9 @@ extern T1 T1400f7(TC* ac, T0* C);
 /* DS_HASH_TABLE [ET_CONSTANT, ET_FEATURE].is_empty */
 extern T1 T941f28(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_constants_declaration */
-extern void T114f704(TC* ac, T0* C);
+extern void T114f699(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_deep_twin_functions */
-extern void T114f703(TC* ac, T0* C);
+extern void T114f698(TC* ac, T0* C);
 /* DS_HASH_TABLE [ET_DYNAMIC_STANDALONE_TYPE_SET, ET_DYNAMIC_PRIMARY_TYPE].wipe_out */
 extern void T931f42(TC* ac, T0* C);
 /* DS_HASH_TABLE [ET_DYNAMIC_STANDALONE_TYPE_SET, ET_DYNAMIC_PRIMARY_TYPE].slots_wipe_out */
@@ -78889,7 +78879,7 @@ extern void T931f61(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TABLE [ET_DYNAMIC_STANDALONE_TYPE_SET, ET_DYNAMIC_PRIMARY_TYPE].clashes_item */
 extern T6 T931f24(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.print_deep_twin_polymorphic_call_function */
-extern void T114f780(TC* ac, T0* C, T0* a1);
+extern void T114f772(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TABLE [ET_DYNAMIC_PRIMARY_TYPE, INTEGER_32].wipe_out */
 extern void T928f35(TC* ac, T0* C);
 /* DS_HASH_TABLE [ET_DYNAMIC_PRIMARY_TYPE, INTEGER_32].slots_wipe_out */
@@ -78909,13 +78899,13 @@ extern void T1384f8(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TABLE_CURSOR [ET_DYNAMIC_PRIMARY_TYPE, INTEGER_32].set_after */
 extern void T1384f7(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_deep_twin_binary_search_polymorphic_call */
-extern void T114f843(TC* ac, T0* C, T0* a1, T6 a2, T6 a3, T0* a4, T0* a5);
+extern void T114f836(TC* ac, T0* C, T0* a1, T6 a2, T6 a3, T0* a4, T0* a5);
 /* ET_C_GENERATOR.print_adapted_deep_twin_call */
-extern void T114f842(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f835(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* Creation of agent #1 in feature ET_C_GENERATOR.print_adapted_deep_twin_call */
-extern T0* T114f842ac1(TC* ac, T0* a1, T0* a2, T0* a3);
+extern T0* T114f835ac1(TC* ac, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_deep_twin_call */
-extern void T114f875(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f869(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [ET_DYNAMIC_PRIMARY_TYPE, INTEGER_32].item */
 extern T0* T928f24(TC* ac, T0* C, T6 a1);
 /* DS_HASH_TABLE [ET_DYNAMIC_PRIMARY_TYPE, INTEGER_32].item_storage_item */
@@ -78979,39 +78969,39 @@ extern T1 T1385f7(TC* ac, T0* C);
 /* DS_HASH_TABLE [ET_DYNAMIC_STANDALONE_TYPE_SET, ET_DYNAMIC_PRIMARY_TYPE].is_empty */
 extern T1 T931f22(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_deep_twin_function */
-extern void T114f779(TC* ac, T0* C, T0* a1);
+extern void T114f771(TC* ac, T0* C, T0* a1);
 /* Creation of agent #1 in feature ET_C_GENERATOR.print_deep_twin_function */
-extern T0* T114f779ac1(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
+extern T0* T114f771ac1(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
 /* Creation of agent #2 in feature ET_C_GENERATOR.print_deep_twin_function */
-extern T0* T114f779ac2(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
+extern T0* T114f771ac2(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
 /* Creation of agent #3 in feature ET_C_GENERATOR.print_deep_twin_function */
-extern T0* T114f779ac3(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
+extern T0* T114f771ac3(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
 /* Creation of agent #4 in feature ET_C_GENERATOR.print_deep_twin_function */
-extern T0* T114f779ac4(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
+extern T0* T114f771ac4(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
 /* Creation of agent #5 in feature ET_C_GENERATOR.print_deep_twin_function */
-extern T0* T114f779ac5(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
+extern T0* T114f771ac5(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
 /* Creation of agent #6 in feature ET_C_GENERATOR.print_deep_twin_function */
-extern T0* T114f779ac6(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
+extern T0* T114f771ac6(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
 /* Creation of agent #7 in feature ET_C_GENERATOR.print_deep_twin_function */
-extern T0* T114f779ac7(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
+extern T0* T114f771ac7(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
 /* Creation of agent #8 in feature ET_C_GENERATOR.print_deep_twin_function */
-extern T0* T114f779ac8(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
+extern T0* T114f771ac8(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T1 a5);
 /* Creation of agent #9 in feature ET_C_GENERATOR.print_deep_twin_function */
-extern T0* T114f779ac9(TC* ac, T0* a1, T6 a2, T0* a3, T0* a4, T1 a5);
+extern T0* T114f771ac9(TC* ac, T0* a1, T6 a2, T0* a3, T0* a4, T1 a5);
 /* Creation of agent #10 in feature ET_C_GENERATOR.print_deep_twin_function */
-extern T0* T114f779ac10(TC* ac, T0* a1, T6 a2, T0* a3, T0* a4, T1 a5);
+extern T0* T114f771ac10(TC* ac, T0* a1, T6 a2, T0* a3, T0* a4, T1 a5);
 /* Creation of agent #11 in feature ET_C_GENERATOR.print_deep_twin_function */
-extern T0* T114f779ac11(TC* ac, T0* a1, T6 a2, T0* a3, T0* a4, T1 a5);
+extern T0* T114f771ac11(TC* ac, T0* a1, T6 a2, T0* a3, T0* a4, T1 a5);
 /* Creation of agent #12 in feature ET_C_GENERATOR.print_deep_twin_function */
-extern T0* T114f779ac12(TC* ac, T0* a1, T6 a2, T0* a3, T0* a4, T1 a5);
-extern T1 T114f779ot1(TC* ac, T0* a1);
-extern T1 T114f779ot2(TC* ac, T0* a1);
+extern T0* T114f771ac12(TC* ac, T0* a1, T6 a2, T0* a3, T0* a4, T1 a5);
+extern T1 T114f771ot1(TC* ac, T0* a1);
+extern T1 T114f771ot2(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_attribute_special_indexed_item_access */
-extern void T114f840(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
+extern void T114f833(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T1 a4);
 /* ET_C_GENERATOR.print_set_deep_twined_attribute */
-extern void T114f841(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f834(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_deep_twined_attribute */
-extern void T114f874(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f868(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [ET_DYNAMIC_STANDALONE_TYPE_SET, ET_DYNAMIC_PRIMARY_TYPE].force_last_new */
 extern void T931f44(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [ET_DYNAMIC_STANDALONE_TYPE_SET, ET_DYNAMIC_PRIMARY_TYPE].key_storage_put */
@@ -79105,7 +79095,7 @@ extern void T1396f11(TC* ac, T0* C, T6 a1);
 /* DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE].remove_traversing_cursor */
 extern void T938f52(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_manifest_tuple_function */
-extern void T114f702(TC* ac, T0* C, T0* a1);
+extern void T114f697(TC* ac, T0* C, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE].item_for_iteration */
 extern T0* T938f29(TC* ac, T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE].cursor_item */
@@ -79127,8 +79117,8 @@ extern T1 T1396f5(TC* ac, T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE].is_empty */
 extern T1 T938f21(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_big_manifest_array_function */
-extern void T114f701(TC* ac, T0* C, T0* a1);
-extern T1 T114f701ot1(TC* ac, T0* a1);
+extern void T114f696(TC* ac, T0* C, T0* a1);
+extern T1 T114f696ot1(TC* ac, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_PRIMARY_TYPE].wipe_out */
 extern void T930f40(TC* ac, T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_PRIMARY_TYPE].slots_wipe_out */
@@ -79144,8 +79134,8 @@ extern void T930f51(TC* ac, T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_PRIMARY_TYPE].forth */
 extern void T930f39(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_manifest_array_function */
-extern void T114f700(TC* ac, T0* C, T0* a1);
-extern T1 T114f700ot1(TC* ac, T0* a1);
+extern void T114f695(TC* ac, T0* C, T0* a1);
+extern T1 T114f695ot1(TC* ac, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_PRIMARY_TYPE].item_for_iteration */
 extern T0* T930f17(TC* ac, T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_PRIMARY_TYPE].after */
@@ -79155,17 +79145,17 @@ extern T1 T930f31(TC* ac, T0* C, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_PRIMARY_TYPE].start */
 extern void T930f38(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_polymorphic_procedure_call_functions */
-extern void T114f699(TC* ac, T0* C);
+extern void T114f694(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_polymorphic_call_function */
-extern void T114f776(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
-extern T1 T114f776ot1(TC* ac, T0* a1);
-extern T1 T114f776ot2(TC* ac, T0* a1);
+extern void T114f766(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern T1 T114f766ot1(TC* ac, T0* a1);
+extern T1 T114f766ot2(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_binary_search_polymorphic_calls */
-extern void T114f839(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T6 a4, T6 a5, T0* a6, T0* a7);
+extern void T114f831(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T6 a4, T6 a5, T0* a6, T0* a7);
 /* ET_C_GENERATOR.set_polymorphic_call_argument_type_sets */
-extern void T114f835(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
-extern T1 T114f835ot1(TC* ac, T0* a1);
-extern T1 T114f835ot2(TC* ac, T0* a1);
+extern void T114f827(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
+extern T1 T114f827ot1(TC* ac, T0* a1);
+extern T1 T114f827ot2(TC* ac, T0* a1);
 /* ET_DYNAMIC_STANDALONE_TYPE_SET.set_static_type */
 extern void T924f18(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_STANDALONE_TYPE_SET_LIST.put_last */
@@ -79177,8 +79167,8 @@ extern T1 T888f12(TC* ac, T0* C);
 /* ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL.force_result_boxing */
 extern T1 T889f12(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_call_name_comment */
-extern void T114f832(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
-extern T1 T114f832ot1(TC* ac, T0* a1);
+extern void T114f824(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
+extern T1 T114f824ot1(TC* ac, T0* a1);
 /* DS_HASH_TABLE [ET_DYNAMIC_PRIMARY_TYPE, INTEGER_32].force_last_new */
 extern void T928f34(TC* ac, T0* C, T0* a1, T6 a2);
 /* DS_HASH_TABLE [ET_DYNAMIC_PRIMARY_TYPE, INTEGER_32].has */
@@ -79196,10 +79186,10 @@ extern void T860f53(TC* ac, T0* C, T0* a1);
 /* ET_DYNAMIC_FEATURE.set_target_type */
 extern void T845f53(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.same_declared_signature */
-extern T1 T114f215(TC* ac, T0* C, T0* a1, T0* a2);
-extern T1 T114f215ot1(TC* ac, T0* a1);
-extern T1 T114f215ot2(TC* ac, T0* a1);
-extern T1 T114f215ot3(TC* ac, T0* a1);
+extern T1 T114f212(TC* ac, T0* C, T0* a1, T0* a2);
+extern T1 T114f212ot1(TC* ac, T0* a1);
+extern T1 T114f212ot2(TC* ac, T0* a1);
+extern T1 T114f212ot3(TC* ac, T0* a1);
 /* ET_DYNAMIC_FUNCTION_TYPE.procedure_calls */
 extern T0* T1049f20(TC* ac, T0* C);
 /* ET_DYNAMIC_PROCEDURE_TYPE.procedure_calls */
@@ -79211,10 +79201,10 @@ extern T0* T966f23(TC* ac, T0* C);
 /* ET_DYNAMIC_PRIMARY_TYPE.procedure_calls */
 extern T0* T838f22(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_polymorphic_tuple_label_call_functions */
-extern void T114f698(TC* ac, T0* C);
-extern T1 T114f698ot1(TC* ac, T0* a1);
+extern void T114f693(TC* ac, T0* C);
+extern T1 T114f693ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_polymorphic_query_call_functions */
-extern void T114f697(TC* ac, T0* C);
+extern void T114f692(TC* ac, T0* C);
 /* ET_DYNAMIC_FUNCTION_TYPE.query_calls */
 extern T0* T1049f19(TC* ac, T0* C);
 /* ET_DYNAMIC_PROCEDURE_TYPE.query_calls */
@@ -79256,10 +79246,10 @@ extern void T1419f11(TC* ac, T0* C, T6 a1);
 /* DS_HASH_SET [ET_DYNAMIC_FEATURE].remove_traversing_cursor */
 extern void T947f61(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_feature_name_in_comment */
-extern void T114f696(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern void T114f691(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_C_GENERATOR.print_routine_name */
-extern void T114f695(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
-extern T1 T114f695ot1(TC* ac, T0* a1);
+extern void T114f690(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern T1 T114f690ot1(TC* ac, T0* a1);
 /* DS_HASH_SET [ET_DYNAMIC_FEATURE].item_for_iteration */
 extern T0* T947f30(TC* ac, T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_FEATURE].cursor_item */
@@ -79281,10 +79271,10 @@ extern T1 T1419f7(TC* ac, T0* C);
 /* DS_HASH_SET [ET_DYNAMIC_FEATURE].is_empty */
 extern T1 T947f27(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_feature */
-extern void T114f694(TC* ac, T0* C, T0* a1);
-extern T1 T114f694ot1(TC* ac, T0* a1);
+extern void T114f689(TC* ac, T0* C, T0* a1);
+extern T1 T114f689ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.free_call_contexts */
-extern void T114f773(TC* ac, T0* C);
+extern void T114f763(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_CALL_CONTEXT].wipe_out */
 extern void T945f14(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_CALL_CONTEXT].move_all_cursors_after */
@@ -79292,7 +79282,7 @@ extern void T945f18(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_CALL_CONTEXT].item */
 extern T0* T945f11(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.free_inlined_operands */
-extern void T114f772(TC* ac, T0* C);
+extern void T114f762(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_INLINED_EXPRESSION].wipe_out */
 extern void T944f14(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_INLINED_EXPRESSION].move_all_cursors_after */
@@ -79304,9 +79294,9 @@ extern void T917f13(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_EQUALITY_TYPES].move_all_cursors_after */
 extern void T917f16(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_equality_function */
-extern void T114f769(TC* ac, T0* C, T6 a1, T0* a2);
+extern void T114f759(TC* ac, T0* C, T6 a1, T0* a2);
 /* ET_C_GENERATOR.print_equality_function_body */
-extern void T114f830(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f822(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_EQUALITY_TYPES].item */
 extern T0* T917f9(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_LIST [ET_OBJECT_TEST].wipe_out */
@@ -79322,7 +79312,7 @@ extern void T1389f7(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [ET_OBJECT_TEST].set_after */
 extern void T1389f6(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_object_test_function */
-extern void T114f768(TC* ac, T0* C, T6 a1, T0* a2);
+extern void T114f758(TC* ac, T0* C, T6 a1, T0* a2);
 /* DS_ARRAYED_LIST [ET_OBJECT_TEST].item */
 extern T0* T932f7(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_LIST [ET_AGENT].wipe_out */
@@ -79338,24 +79328,24 @@ extern void T1395f7(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [ET_AGENT].set_after */
 extern void T1395f6(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_agent_declaration */
-extern void T114f767(TC* ac, T0* C, T6 a1, T0* a2);
-extern T1 T114f767ot1(TC* ac, T0* a1);
+extern void T114f757(TC* ac, T0* C, T6 a1, T0* a2);
+extern T1 T114f757ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_agent_object_declaration */
-extern void T114f824(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T6 a4, T6 a5);
+extern void T114f816(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T6 a4, T6 a5);
 /* ET_C_GENERATOR.print_agent_function_name */
-extern void T114f855(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
+extern void T114f849(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T0* a4);
 /* ET_C_GENERATOR.print_agent_function_declaration */
-extern void T114f823(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T6 a4, T6 a5);
+extern void T114f815(TC* ac, T0* C, T6 a1, T0* a2, T0* a3, T6 a4, T6 a5);
 /* ET_C_GENERATOR.print_agent_body_declaration */
-extern void T114f857(TC* ac, T0* C, T0* a1);
+extern void T114f851(TC* ac, T0* C, T0* a1);
 /* ET_CALL_AGENT.implicit_result */
 extern T0* T376f6(TC* ac, T0* C);
 /* ET_C_GENERATOR.agent_closed_operand */
-extern T0* T114f319(TC* ac, T0* C, T6 a1);
+extern T0* T114f312(TC* ac, T0* C, T6 a1);
 /* ET_IDENTIFIER.set_agent_closed_operand */
 extern void T303f126(TC* ac, T0* C, T1 a1);
 /* ET_C_GENERATOR.agent_open_operand */
-extern T0* T114f318(TC* ac, T0* C, T6 a1);
+extern T0* T114f311(TC* ac, T0* C, T6 a1);
 /* ET_IDENTIFIER.set_agent_open_operand */
 extern void T303f125(TC* ac, T0* C, T1 a1);
 /* DS_ARRAYED_LIST [ET_AGENT].item */
@@ -79377,7 +79367,7 @@ extern T0* T946f6(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE].is_empty */
 extern T1 T946f10(TC* ac, T0* C);
 /* ET_C_GENERATOR.register_called_feature */
-extern void T114f693(TC* ac, T0* C, T0* a1);
+extern void T114f688(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE].force_last */
 extern void T946f13(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE].resize */
@@ -79405,21 +79395,21 @@ extern void T860f56(TC* ac, T0* C, T1 a1);
 /* ET_DYNAMIC_FEATURE.set_generated */
 extern void T845f56(TC* ac, T0* C, T1 a1);
 /* ET_C_GENERATOR.print_once_per_object_data_dispose_functions */
-extern void T114f692(TC* ac, T0* C);
+extern void T114f687(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_once_per_object_data_dispose_function */
-extern void T114f766(TC* ac, T0* C, T0* a1);
+extern void T114f756(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_once_per_object_data_allocation_functions */
-extern void T114f691(TC* ac, T0* C);
+extern void T114f686(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_once_per_object_data_allocation_function */
-extern void T114f765(TC* ac, T0* C, T0* a1);
+extern void T114f755(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_object_allocation_functions */
-extern void T114f690(TC* ac, T0* C);
+extern void T114f685(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_object_allocation_function */
-extern void T114f764(TC* ac, T0* C, T0* a1);
-extern T1 T114f764ot1(TC* ac, T0* a1);
+extern void T114f754(TC* ac, T0* C, T0* a1);
+extern T1 T114f754ot1(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_dispose_registration */
-extern void T114f822(TC* ac, T0* C, T0* a1, T0* a2);
-extern T1 T114f822ot1(TC* ac, T0* a1);
+extern void T114f814(TC* ac, T0* C, T0* a1, T0* a2);
+extern T1 T114f814ot1(TC* ac, T0* a1);
 /* DS_HASH_TABLE [detachable ET_DYNAMIC_FEATURE, ET_DYNAMIC_PRIMARY_TYPE].force_last_new */
 extern void T943f36(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [detachable ET_DYNAMIC_FEATURE, ET_DYNAMIC_PRIMARY_TYPE].key_storage_put */
@@ -79456,44 +79446,64 @@ extern void T943f51(TC* ac, T0* C, T6 a1);
 extern T6 T943f27(TC* ac, T0* C, T6 a1);
 /* DS_HASH_TABLE [detachable ET_DYNAMIC_FEATURE, ET_DYNAMIC_PRIMARY_TYPE].new_capacity */
 extern T6 T943f32(TC* ac, T0* C, T6 a1);
+/* ET_DYNAMIC_FUNCTION_TYPE.has_nested_reference_fields */
+extern T1 T1049f49(TC* ac, T0* C);
+/* ET_DYNAMIC_FUNCTION_TYPE.has_reference_fields */
+extern T1 T1049f59(TC* ac, T0* C);
+/* ET_DYNAMIC_PROCEDURE_TYPE.has_nested_reference_fields */
+extern T1 T1048f49(TC* ac, T0* C);
+/* ET_DYNAMIC_PROCEDURE_TYPE.has_reference_fields */
+extern T1 T1048f59(TC* ac, T0* C);
+/* ET_DYNAMIC_TUPLE_TYPE.has_nested_reference_fields */
+extern T1 T894f60(TC* ac, T0* C);
+/* ET_DYNAMIC_TUPLE_TYPE.has_reference_fields */
+extern T1 T894f62(TC* ac, T0* C);
+/* ET_DYNAMIC_SPECIAL_TYPE.has_nested_reference_fields */
+extern T1 T966f61(TC* ac, T0* C);
+/* ET_DYNAMIC_SPECIAL_TYPE.has_reference_fields */
+extern T1 T966f64(TC* ac, T0* C);
+/* ET_DYNAMIC_PRIMARY_TYPE.has_nested_reference_fields */
+extern T1 T838f58(TC* ac, T0* C);
+/* ET_DYNAMIC_PRIMARY_TYPE.has_reference_fields */
+extern T1 T838f61(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_new_immutable_string_32_function */
-extern void T114f689(TC* ac, T0* C);
+extern void T114f684(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_new_immutable_string_8_function */
-extern void T114f688(TC* ac, T0* C);
+extern void T114f683(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_new_string_32_function */
-extern void T114f687(TC* ac, T0* C);
+extern void T114f682(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_new_string_8_function */
-extern void T114f686(TC* ac, T0* C);
+extern void T114f681(TC* ac, T0* C);
 /* KL_STRING_OUTPUT_STREAM.put_new_line */
 extern void T912f5(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_default_declarations */
-extern void T114f685(TC* ac, T0* C);
+extern void T114f680(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_default_declaration */
-extern void T114f747(TC* ac, T0* C, T0* a1);
+extern void T114f742(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_default_object_value */
-extern void T114f814(TC* ac, T0* C, T0* a1, T0* a2);
-extern T1 T114f814ot1(TC* ac, T0* a1);
-extern T1 T114f814ot2(TC* ac, T0* a1);
+extern void T114f806(TC* ac, T0* C, T0* a1, T0* a2);
+extern T1 T114f806ot1(TC* ac, T0* a1);
+extern T1 T114f806ot2(TC* ac, T0* a1);
 /* ET_C_GENERATOR.print_default_attribute_value */
-extern void T114f852(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f845(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.flush_to_c_file */
-extern void T114f684(TC* ac, T0* C);
+extern void T114f679(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_types */
-extern void T114f683(TC* ac, T0* C, T0* a1);
+extern void T114f678(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_once_per_object_data_struct */
-extern void T114f746(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f741(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_once_per_object_data_struct_name */
-extern void T114f802(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_boxed_type_struct */
-extern void T114f745(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_boxed_struct_name */
-extern void T114f801(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_type_struct */
-extern void T114f744(TC* ac, T0* C, T0* a1, T0* a2);
-extern T1 T114f744ot1(TC* ac, T0* a1);
-extern T1 T114f744ot2(TC* ac, T0* a1);
-/* ET_C_GENERATOR.print_struct_name */
 extern void T114f793(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_boxed_type_struct */
+extern void T114f740(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_boxed_struct_name */
+extern void T114f792(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_type_struct */
+extern void T114f739(TC* ac, T0* C, T0* a1, T0* a2);
+extern T1 T114f739ot1(TC* ac, T0* a1);
+extern T1 T114f739ot2(TC* ac, T0* a1);
+/* ET_C_GENERATOR.print_struct_name */
+extern void T114f785(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_PRIMARY_TYPE].has_cycle */
 extern T1 T962f8(TC* ac, T0* C);
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_PRIMARY_TYPE].sort */
@@ -79503,19 +79513,17 @@ extern void T116f20(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_PRIMARY_TYPE].reset */
 extern void T962f20(TC* ac, T0* C);
 /* ET_C_GENERATOR.print_once_per_object_data_type_definition */
-extern void T114f743(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f738(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_boxed_type_definition */
-extern void T114f742(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f737(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_type_type_definition */
-extern void T114f741(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f736(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.print_boxed_pointer_function */
-extern void T114f740(TC* ac, T0* C, T0* a1);
+extern void T114f735(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.print_boxed_attribute_region_access */
-extern void T114f798(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
-/* ET_C_GENERATOR.print_boxed_attribute_flags_access */
-extern void T114f797(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
+extern void T114f789(TC* ac, T0* C, T0* a1, T0* a2, T1 a3);
 /* ET_C_GENERATOR.print_boxed_function */
-extern void T114f739(TC* ac, T0* C, T0* a1);
+extern void T114f734(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_PRIMARY_TYPE].force_relation */
 extern void T962f14(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_PRIMARY_TYPE].put_indexed_relation */
@@ -79543,35 +79551,35 @@ extern T6 T1434f24(TC* ac, T0* C, T6 a1);
 /* DS_HASH_TABLE [INTEGER_32, ET_DYNAMIC_PRIMARY_TYPE].slots_item */
 extern T6 T1434f29(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.print_type_definition */
-extern void T114f738(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_pointer_type_definition */
-extern void T114f737(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_real_64_type_definition */
-extern void T114f736(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_real_32_type_definition */
-extern void T114f735(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_natural_64_type_definition */
-extern void T114f734(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_natural_32_type_definition */
 extern void T114f733(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_natural_16_type_definition */
+/* ET_C_GENERATOR.print_pointer_type_definition */
 extern void T114f732(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_natural_8_type_definition */
+/* ET_C_GENERATOR.print_real_64_type_definition */
 extern void T114f731(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_integer_64_type_definition */
+/* ET_C_GENERATOR.print_real_32_type_definition */
 extern void T114f730(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_integer_32_type_definition */
+/* ET_C_GENERATOR.print_natural_64_type_definition */
 extern void T114f729(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_integer_16_type_definition */
+/* ET_C_GENERATOR.print_natural_32_type_definition */
 extern void T114f728(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_integer_8_type_definition */
+/* ET_C_GENERATOR.print_natural_16_type_definition */
 extern void T114f727(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_character_32_type_definition */
+/* ET_C_GENERATOR.print_natural_8_type_definition */
 extern void T114f726(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_character_8_type_definition */
+/* ET_C_GENERATOR.print_integer_64_type_definition */
 extern void T114f725(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_boolean_type_definition */
+/* ET_C_GENERATOR.print_integer_32_type_definition */
 extern void T114f724(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_integer_16_type_definition */
+extern void T114f723(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_integer_8_type_definition */
+extern void T114f722(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_character_32_type_definition */
+extern void T114f721(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_character_8_type_definition */
+extern void T114f720(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_boolean_type_definition */
+extern void T114f719(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_PRIMARY_TYPE].force */
 extern void T962f13(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_PRIMARY_TYPE].put */
@@ -79635,23 +79643,23 @@ extern void T1434f51(TC* ac, T0* C, T6 a1);
 /* DS_HASH_TABLE [INTEGER_32, ET_DYNAMIC_PRIMARY_TYPE].make_item_storage */
 extern void T1434f50(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.print_aliased_double_type_definition */
-extern void T114f723(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_aliased_real_type_definition */
-extern void T114f722(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_aliased_natural_type_definition */
-extern void T114f721(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_aliased_integer_type_definition */
-extern void T114f720(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_aliased_wide_character_type_definition */
-extern void T114f719(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_aliased_character_type_definition */
 extern void T114f718(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_C_GENERATOR.print_start_extern_c */
-extern void T114f682(TC* ac, T0* C, T0* a1);
-/* ET_C_GENERATOR.include_runtime_header_file */
-extern void T114f681(TC* ac, T0* C, T0* a1, T1 a2, T0* a3);
-/* ET_C_GENERATOR.include_runtime_c_file */
+/* ET_C_GENERATOR.print_aliased_real_type_definition */
+extern void T114f717(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_aliased_natural_type_definition */
 extern void T114f716(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_aliased_integer_type_definition */
+extern void T114f715(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_aliased_wide_character_type_definition */
+extern void T114f714(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_aliased_character_type_definition */
+extern void T114f713(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_C_GENERATOR.print_start_extern_c */
+extern void T114f677(TC* ac, T0* C, T0* a1);
+/* ET_C_GENERATOR.include_runtime_header_file */
+extern void T114f676(TC* ac, T0* C, T0* a1, T1 a2, T0* a3);
+/* ET_C_GENERATOR.include_runtime_c_file */
+extern void T114f711(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [BOOLEAN, STRING_8].force_last */
 extern void T948f48(TC* ac, T0* C, T1 a1, T0* a2);
 /* DS_HASH_TABLE [BOOLEAN, STRING_8].key_storage_put */
@@ -79711,11 +79719,11 @@ extern T0* T50f36(TC* ac, T0* C);
 /* ET_CLASS.universe */
 extern T0* T70f83(TC* ac, T0* C);
 /* ET_C_GENERATOR.use_scoop */
-extern T1 T114f629(TC* ac, T0* C);
+extern T1 T114f623(TC* ac, T0* C);
 /* ET_C_GENERATOR.use_threads */
-extern T1 T114f400(TC* ac, T0* C);
+extern T1 T114f394(TC* ac, T0* C);
 /* ET_C_GENERATOR.exception_trace_mode */
-extern T1 T114f356(TC* ac, T0* C);
+extern T1 T114f350(TC* ac, T0* C);
 /* KL_TEXT_OUTPUT_FILE.put_character */
 extern void T950f38(TC* ac, T0* C, T2 a1);
 /* KL_TEXT_OUTPUT_FILE.old_put_character */
@@ -79723,9 +79731,9 @@ extern void T950f48(TC* ac, T0* C, T2 a1);
 /* KL_TEXT_OUTPUT_FILE.file_pc */
 extern void T950s56(TC* ac, T14 a1, T2 a2);
 /* ET_C_GENERATOR.trace_mode */
-extern T1 T114f351(TC* ac, T0* C);
+extern T1 T114f345(TC* ac, T0* C);
 /* ET_C_GENERATOR.generate_ids */
-extern void T114f680(TC* ac, T0* C);
+extern void T114f675(TC* ac, T0* C);
 /* ET_DYNAMIC_PRECURSOR.set_id */
 extern void T860f58(TC* ac, T0* C, T6 a1);
 /* ET_DYNAMIC_FEATURE.set_id */
@@ -79751,23 +79759,23 @@ extern void T966f86(TC* ac, T0* C, T6 a1);
 /* ET_DYNAMIC_PRIMARY_TYPE.set_id */
 extern void T838f83(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.sort_types */
-extern void T114f715(TC* ac, T0* C);
+extern void T114f710(TC* ac, T0* C);
 /* DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_PRIMARY_TYPE].put_relation */
 extern void T962f17(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_SET [ET_DYNAMIC_PRIMARY_TYPE].new_iterator */
 extern T0* T930f34(TC* ac, T0* C);
 /* ET_C_GENERATOR.open_cpp_file */
-extern void T114f679(TC* ac, T0* C);
+extern void T114f674(TC* ac, T0* C);
 /* ET_C_GENERATOR.open_c_file */
-extern void T114f678(TC* ac, T0* C);
+extern void T114f673(TC* ac, T0* C);
 /* ET_C_GENERATOR.generate_external_configuration */
-extern void T114f668(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f663(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.add_to_library_paths */
-extern void T114f677(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f672(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_C_GENERATOR.add_windows_libs_to_library_paths */
-extern void T114f676(TC* ac, T0* C, T0* a1);
+extern void T114f671(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.generate_external_c_files */
-extern void T114f675(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f670(TC* ac, T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [TUPLE [STRING_8, detachable STRING_8], STRING_8].item */
 extern T0* T958f22(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TABLE [TUPLE [STRING_8, detachable STRING_8], STRING_8].item_storage_item */
@@ -79969,13 +79977,13 @@ extern T0* T1427c5(TC* ac, T6 a1);
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [STRING_8]].default_create */
 extern T0* T1428c3(TC* ac);
 /* ET_C_GENERATOR.add_to_include_paths */
-extern void T114f674(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T114f669(TC* ac, T0* C, T0* a1, T0* a2);
 /* RX_PCRE_REGULAR_EXPRESSION.set_case_insensitive */
 extern void T107f342(TC* ac, T0* C, T1 a1);
 /* ET_C_GENERATOR.generate_boehm_gc_c_files */
-extern void T114f667(TC* ac, T0* C, T0* a1);
+extern void T114f662(TC* ac, T0* C, T0* a1);
 /* ET_C_GENERATOR.report_undefined_environment_variable_error */
-extern void T114f672(TC* ac, T0* C, T0* a1);
+extern void T114f667(TC* ac, T0* C, T0* a1);
 /* UT_UNDEFINED_ENVIRONMENT_VARIABLE_ERROR.make */
 extern T0* T952c8(TC* ac, T0* a1);
 /* ET_C_GENERATOR.c_config */
@@ -80255,7 +80263,7 @@ extern void T1109f20(TC* ac, T0* C);
 /* YY_FILE_BUFFER.new_default_buffer */
 extern T0* T1109f13(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.console_application_mode */
-extern T1 T114f587(TC* ac, T0* C);
+extern T1 T114f581(TC* ac, T0* C);
 /* UT_CONFIG_PARSER.define_value */
 extern void T1052f184(TC* ac, T0* C, T0* a1, T0* a2);
 /* UT_CONFIG_PARSER.make */
@@ -80409,9 +80417,9 @@ extern T0* T114f172(TC* ac, T0* C);
 /* ET_C_GENERATOR.c_compiler_used */
 extern T0* T114f166(TC* ac, T0* C);
 /* ET_C_GENERATOR.set_split_threshold */
-extern void T114f662(TC* ac, T0* C, T6 a1);
+extern void T114f657(TC* ac, T0* C, T6 a1);
 /* ET_C_GENERATOR.set_split_mode */
-extern void T114f661(TC* ac, T0* C, T1 a1);
+extern void T114f656(TC* ac, T0* C, T1 a1);
 /* GEC.no_split */
 extern T1 T26f65(TC* ac, T0* C);
 /* AP_BOOLEAN_OPTION.parameter */
@@ -80421,25 +80429,25 @@ extern T1 T225f7(TC* ac, T0* C);
 /* DS_LINKED_LIST [BOOLEAN].is_empty */
 extern T1 T225f6(TC* ac, T0* C);
 /* ET_C_GENERATOR.set_finalize_mode */
-extern void T114f660(TC* ac, T0* C, T1 a1);
+extern void T114f655(TC* ac, T0* C, T1 a1);
 /* GEC.is_finalize */
 extern T1 T26f59(TC* ac, T0* C);
 /* ET_C_GENERATOR.set_scoop_exceptions_stop_when_dirty */
-extern void T114f659(TC* ac, T0* C, T1 a1);
+extern void T114f654(TC* ac, T0* C, T1 a1);
 /* GEC.scoop_exceptions_stop_when_dirty */
 extern T1 T26f64(TC* ac, T0* C);
 /* ET_C_GENERATOR.set_use_boehm_gc */
-extern void T114f658(TC* ac, T0* C, T1 a1);
+extern void T114f653(TC* ac, T0* C, T1 a1);
 /* GEC.use_boehm_gc */
 extern T1 T26f63(TC* ac, T0* C);
 /* ET_C_GENERATOR.make */
-extern T0* T114c657(TC* ac, T0* a1, T0* a2);
+extern T0* T114c652(TC* ac, T0* a1, T0* a2);
 /* ET_C_GENERATOR.make_external_regexps */
-extern void T114f666(TC* ac, T0* C);
+extern void T114f661(TC* ac, T0* C);
 /* ET_C_GENERATOR.make_volatile_data */
-extern void T114f665(TC* ac, T0* C);
+extern void T114f660(TC* ac, T0* C);
 /* ET_C_GENERATOR.make_rescue_data */
-extern void T114f664(TC* ac, T0* C);
+extern void T114f659(TC* ac, T0* C);
 /* DS_HASH_TABLE [BOOLEAN, STRING_8].set_key_equality_tester */
 extern void T948f43(TC* ac, T0* C, T0* a1);
 /* DS_HASH_TABLE [BOOLEAN, STRING_8].make */
@@ -85151,7 +85159,7 @@ extern T1 T26f51(TC* ac, T0* C);
 /* ET_DYNAMIC_SYSTEM.set_full_class_checking */
 extern void T95f85(TC* ac, T0* C, T1 a1);
 /* INTEGER_32.is_greater */
-extern T1 T6f4(TC* ac, volatile T6* C, T6 a1);
+extern T1 T6f4(TC* ac, T6 volatile* C, T6 a1);
 /* ET_DYNAMIC_SYSTEM.make */
 extern T0* T95c84(TC* ac, T0* a1, T0* a2);
 /* Creation of agent #1 in feature ET_DYNAMIC_SYSTEM.make */
@@ -94128,9 +94136,9 @@ extern void T131f17(TC* ac, T0* C, T0* a1);
 /* COM_FAILURE.ccom_hresult_to_string */
 extern T0* T131f12(TC* ac, T0* C, T6 a1);
 /* INTEGER_32.to_hex_string */
-extern T0* T6f32(TC* ac, volatile T6* C);
+extern T0* T6f32(TC* ac, T6 volatile* C);
 /* INTEGER_32.to_hex_character */
-extern T2 T6f33(TC* ac, volatile T6* C);
+extern T2 T6f33(TC* ac, T6 volatile* C);
 /* COM_FAILURE.set_hresult_code */
 extern void T131f16(TC* ac, T0* C, T6 a1);
 /* OPERATING_SYSTEM_FAILURE.set_error_code */
@@ -96836,15 +96844,15 @@ extern T0* ge334ov5472257;
 extern T0* ge334ov5472265;
 extern T0* ge334ov5472264;
 extern T0* ge746ov12222465;
-extern T0* ge1523ov24953484;
-extern T0* ge1523ov24953492;
+extern T0* ge1523ov24953480;
+extern T0* ge1523ov24953488;
 extern T0* ge1523ov24952904;
 extern T0* ge746ov12222471;
 extern T0* ge746ov12222469;
 extern T0* ge748ov12255239;
-extern T0* ge1523ov24953490;
-extern T0* ge1523ov24953489;
-extern T0* ge1523ov24953491;
+extern T0* ge1523ov24953486;
+extern T0* ge1523ov24953485;
+extern T0* ge1523ov24953487;
 extern T0* ge730ov11862020;
 extern T0* ge723ov11862020;
 extern T0* ge731ov11862020;
@@ -96884,29 +96892,29 @@ extern T0* ge789ov12926985;
 extern T0* ge789ov12926982;
 extern T0* ge789ov12926981;
 extern T0* ge785ov12861458;
-extern T0* ge1523ov24953488;
+extern T0* ge1523ov24953484;
 extern T0* ge1523ov24953070;
 extern T0* ge1523ov24953106;
 extern T0* ge1523ov24953079;
-extern T0* ge1523ov24953412;
-extern T0* ge1523ov24953415;
-extern T0* ge1523ov24953414;
-extern T0* ge1523ov24953331;
+extern T0* ge1523ov24953408;
+extern T0* ge1523ov24953411;
+extern T0* ge1523ov24953410;
+extern T0* ge1523ov24953327;
 extern T0* ge1523ov24953075;
 extern T0* ge1523ov24953077;
-extern T0* ge1523ov24953425;
+extern T0* ge1523ov24953421;
 extern T0* ge1523ov24953068;
-extern T0* ge1523ov24953429;
+extern T0* ge1523ov24953425;
 extern T0* ge1523ov24953114;
+extern T0* ge1523ov24953403;
 extern T0* ge1523ov24953407;
-extern T0* ge1523ov24953411;
-extern T0* ge1523ov24953408;
-extern T0* ge1523ov24953410;
-extern T0* ge1523ov24953409;
-extern T0* ge1523ov24953416;
-extern T0* ge1523ov24953418;
-extern T0* ge1523ov24953417;
-extern T0* ge1523ov24953419;
+extern T0* ge1523ov24953404;
+extern T0* ge1523ov24953406;
+extern T0* ge1523ov24953405;
+extern T0* ge1523ov24953412;
+extern T0* ge1523ov24953414;
+extern T0* ge1523ov24953413;
+extern T0* ge1523ov24953415;
 extern T0* ge1286ov21069835;
 extern T0* ge1517ov24854535;
 extern T0* ge1517ov24854532;
@@ -97584,45 +97592,45 @@ extern T0* ge1522ov24936951;
 extern T0* ge1522ov24936733;
 extern T0* ge1523ov24953057;
 extern T0* ge1523ov24953121;
-extern T0* ge1523ov24953480;
-extern T0* ge1523ov24953341;
-extern T0* ge1523ov24953461;
-extern T0* ge1523ov24953335;
-extern T0* ge1523ov24953464;
-extern T0* ge1523ov24953059;
-extern T0* ge1523ov24953457;
-extern T0* ge1523ov24953481;
-extern T0* ge1523ov24953326;
-extern T0* ge1523ov24953263;
-extern T0* ge1523ov24953339;
-extern T0* ge1523ov24953347;
-extern T0* ge1523ov24953382;
-extern T0* ge1523ov24953424;
-extern T0* ge1523ov24953063;
-extern T0* ge1523ov24953346;
-extern T0* ge1523ov24953437;
-extern T0* ge1523ov24953336;
-extern T0* ge1523ov24953342;
-extern T0* ge1523ov24953113;
-extern T0* ge1523ov24953343;
-extern T0* ge1523ov24953345;
-extern T0* ge1523ov24953338;
+extern T0* ge1523ov24953476;
 extern T0* ge1523ov24953337;
-extern T0* ge1523ov24953348;
-extern T0* ge1523ov24953340;
-extern T0* ge1523ov24953222;
-extern T0* ge1523ov24953455;
-extern T0* ge1523ov24953439;
-extern T0* ge1523ov24953458;
+extern T0* ge1523ov24953457;
+extern T0* ge1523ov24953331;
+extern T0* ge1523ov24953460;
+extern T0* ge1523ov24953059;
+extern T0* ge1523ov24953453;
+extern T0* ge1523ov24953477;
+extern T0* ge1523ov24953322;
+extern T0* ge1523ov24953259;
+extern T0* ge1523ov24953335;
+extern T0* ge1523ov24953343;
+extern T0* ge1523ov24953378;
+extern T0* ge1523ov24953420;
+extern T0* ge1523ov24953063;
+extern T0* ge1523ov24953342;
+extern T0* ge1523ov24953433;
+extern T0* ge1523ov24953332;
+extern T0* ge1523ov24953338;
+extern T0* ge1523ov24953113;
+extern T0* ge1523ov24953339;
+extern T0* ge1523ov24953341;
+extern T0* ge1523ov24953334;
+extern T0* ge1523ov24953333;
 extern T0* ge1523ov24953344;
-extern T0* ge1523ov24953328;
+extern T0* ge1523ov24953336;
+extern T0* ge1523ov24953221;
+extern T0* ge1523ov24953451;
+extern T0* ge1523ov24953435;
+extern T0* ge1523ov24953454;
+extern T0* ge1523ov24953340;
+extern T0* ge1523ov24953324;
 extern T0* ge1523ov24953066;
+extern T0* ge1523ov24953455;
+extern T0* ge1523ov24953257;
 extern T0* ge1523ov24953459;
-extern T0* ge1523ov24953261;
+extern T0* ge1523ov24953470;
 extern T0* ge1523ov24953463;
-extern T0* ge1523ov24953474;
-extern T0* ge1523ov24953467;
-extern T0* ge1523ov24953468;
+extern T0* ge1523ov24953464;
 extern T0* ge1523ov24953065;
 extern T0* ge1523ov24953061;
 extern T0* ge1522ov24937293;
@@ -97729,11 +97737,11 @@ extern T0* ge1522ov24936457;
 extern T0* ge1522ov24937012;
 extern T0* ge1522ov24936830;
 extern T0* ge1522ov24936464;
-extern T0* ge1523ov24953332;
-extern T0* ge1523ov24953460;
-extern T0* ge1523ov24953262;
-extern T0* ge1523ov24953330;
-extern T0* ge1523ov24953333;
+extern T0* ge1523ov24953328;
+extern T0* ge1523ov24953456;
+extern T0* ge1523ov24953258;
+extern T0* ge1523ov24953326;
+extern T0* ge1523ov24953329;
 extern T0* ge1522ov24937018;
 extern T0* ge1522ov24936834;
 extern T0* ge1522ov24936470;
@@ -97751,9 +97759,9 @@ extern T0* ge1522ov24936658;
 extern T0* ge1522ov24937208;
 extern T0* ge1522ov24936915;
 extern T0* ge1522ov24936657;
-extern T0* ge1523ov24953482;
-extern T0* ge1523ov24953284;
-extern T0* ge1523ov24953169;
+extern T0* ge1523ov24953478;
+extern T0* ge1523ov24953280;
+extern T0* ge1523ov24953168;
 extern T0* ge1522ov24937297;
 extern T0* ge1522ov24936955;
 extern T0* ge1522ov24936744;
@@ -97787,20 +97795,20 @@ extern T0* ge1522ov24936666;
 extern T0* ge1522ov24937215;
 extern T0* ge1522ov24936918;
 extern T0* ge1522ov24936664;
-extern T0* ge1523ov24953245;
+extern T0* ge1523ov24953240;
 extern T0* ge1523ov24953069;
-extern T0* ge1523ov24953173;
+extern T0* ge1523ov24953172;
+extern T0* ge1523ov24953192;
 extern T0* ge1523ov24953193;
+extern T0* ge1523ov24953227;
 extern T0* ge1523ov24953194;
-extern T0* ge1523ov24953232;
-extern T0* ge1523ov24953195;
 extern T0* ge1523ov24953138;
-extern T0* ge1523ov24953233;
-extern T0* ge1523ov24953196;
-extern T0* ge1523ov24953243;
-extern T0* ge1523ov24953244;
+extern T0* ge1523ov24953228;
+extern T0* ge1523ov24953195;
+extern T0* ge1523ov24953238;
+extern T0* ge1523ov24953239;
 extern T0* ge1523ov24953139;
-extern T0* ge1523ov24953246;
+extern T0* ge1523ov24953241;
 extern T0* ge1522ov24937194;
 extern T0* ge1522ov24936905;
 extern T0* ge1522ov24936643;
@@ -97839,17 +97847,17 @@ extern T0* ge1522ov24936521;
 extern T0* ge1522ov24937075;
 extern T0* ge1522ov24936527;
 extern T0* ge1523ov24953133;
-extern T0* ge1523ov24953471;
-extern T0* ge1523ov24953283;
-extern T0* ge1523ov24953479;
+extern T0* ge1523ov24953467;
+extern T0* ge1523ov24953279;
+extern T0* ge1523ov24953475;
 extern T0* ge1292ov21169215;
 extern T0* ge1292ov21169218;
 extern T0* ge1286ov21069833;
 extern T0* ge1292ov21169217;
 extern T0* ge1286ov21069834;
-extern T0* ge1523ov24953452;
-extern T0* ge1523ov24953420;
-extern T0* ge1523ov24953421;
+extern T0* ge1523ov24953448;
+extern T0* ge1523ov24953416;
+extern T0* ge1523ov24953417;
 extern T0* ge1523ov24953134;
 extern T0* ge1522ov24937187;
 extern T0* ge1522ov24936901;
@@ -97871,21 +97879,17 @@ extern T0* ge1522ov24936472;
 extern T0* ge1522ov24937333;
 extern T0* ge1522ov24936972;
 extern T0* ge1522ov24936780;
-extern T0* ge1523ov24953428;
-extern T0* ge1523ov24953472;
+extern T0* ge1523ov24953424;
+extern T0* ge1523ov24953468;
 extern T0* ge1523ov24953116;
 extern T0* ge1523ov24953119;
-extern T0* ge1523ov24953422;
-extern T0* ge1523ov24953327;
-extern T0* ge1523ov24953172;
+extern T0* ge1523ov24953418;
+extern T0* ge1523ov24953323;
+extern T0* ge1523ov24953171;
 extern T0* ge1523ov24952990;
 extern T0* ge1523ov24953092;
-extern T0* ge1523ov24953406;
-extern T0* ge1523ov24953405;
-extern T0* ge1523ov24953379;
-extern T0* ge1523ov24953378;
-extern T0* ge1523ov24953377;
-extern T0* ge1523ov24953376;
+extern T0* ge1523ov24953402;
+extern T0* ge1523ov24953401;
 extern T0* ge1523ov24953375;
 extern T0* ge1523ov24953374;
 extern T0* ge1523ov24953373;
@@ -97906,65 +97910,69 @@ extern T0* ge1523ov24953359;
 extern T0* ge1523ov24953358;
 extern T0* ge1523ov24953357;
 extern T0* ge1523ov24953356;
+extern T0* ge1523ov24953355;
 extern T0* ge1523ov24953354;
 extern T0* ge1523ov24953353;
 extern T0* ge1523ov24953352;
-extern T0* ge1523ov24953351;
 extern T0* ge1523ov24953350;
 extern T0* ge1523ov24953349;
-extern T0* ge1523ov24953231;
-extern T0* ge1523ov24953225;
-extern T0* ge1523ov24953163;
-extern T0* ge1523ov24953274;
+extern T0* ge1523ov24953348;
+extern T0* ge1523ov24953347;
+extern T0* ge1523ov24953346;
+extern T0* ge1523ov24953345;
+extern T0* ge1523ov24953226;
+extern T0* ge1523ov24953224;
+extern T0* ge1523ov24953162;
+extern T0* ge1523ov24953270;
 extern T0* ge1523ov24953146;
-extern T0* ge1523ov24953442;
-extern T0* ge1523ov24953440;
-extern T0* ge1523ov24953255;
+extern T0* ge1523ov24953438;
+extern T0* ge1523ov24953436;
+extern T0* ge1523ov24953250;
 extern T0* ge1523ov24953107;
 extern T0* ge1523ov24953161;
-extern T0* ge1523ov24953423;
-extern T0* ge1523ov24953165;
+extern T0* ge1523ov24953419;
+extern T0* ge1523ov24953164;
 extern T0* ge1523ov24953140;
-extern T0* ge1523ov24953180;
+extern T0* ge1523ov24953179;
 extern T0* ge1523ov24953108;
-extern T0* ge1523ov24953473;
+extern T0* ge1523ov24953469;
 extern T0* ge1523ov24953080;
-extern T0* ge1523ov24953209;
-extern T0* ge1523ov24953206;
-extern T0* ge1523ov24953306;
-extern T0* ge1523ov24953323;
-extern T0* ge1523ov24953305;
-extern T0* ge1523ov24953322;
-extern T0* ge1523ov24953304;
-extern T0* ge1523ov24953321;
-extern T0* ge1523ov24953281;
-extern T0* ge1523ov24953072;
-extern T0* ge1523ov24953303;
-extern T0* ge1523ov24953320;
+extern T0* ge1523ov24953208;
+extern T0* ge1523ov24953205;
 extern T0* ge1523ov24953302;
 extern T0* ge1523ov24953319;
 extern T0* ge1523ov24953301;
 extern T0* ge1523ov24953318;
 extern T0* ge1523ov24953300;
 extern T0* ge1523ov24953317;
-extern T0* ge1523ov24953105;
+extern T0* ge1523ov24953277;
+extern T0* ge1523ov24953072;
+extern T0* ge1523ov24953299;
+extern T0* ge1523ov24953316;
 extern T0* ge1523ov24953298;
 extern T0* ge1523ov24953315;
 extern T0* ge1523ov24953297;
 extern T0* ge1523ov24953314;
 extern T0* ge1523ov24953296;
 extern T0* ge1523ov24953313;
-extern T0* ge1523ov24953295;
-extern T0* ge1523ov24953312;
+extern T0* ge1523ov24953105;
 extern T0* ge1523ov24953294;
 extern T0* ge1523ov24953311;
 extern T0* ge1523ov24953293;
 extern T0* ge1523ov24953310;
 extern T0* ge1523ov24953292;
 extern T0* ge1523ov24953309;
-extern T0* ge1523ov24953179;
+extern T0* ge1523ov24953291;
+extern T0* ge1523ov24953308;
+extern T0* ge1523ov24953290;
+extern T0* ge1523ov24953307;
+extern T0* ge1523ov24953289;
+extern T0* ge1523ov24953306;
+extern T0* ge1523ov24953288;
+extern T0* ge1523ov24953305;
+extern T0* ge1523ov24953178;
 extern T0* ge1523ov24953148;
-extern T0* ge1523ov24953436;
+extern T0* ge1523ov24953432;
 extern T0* ge1523ov24953102;
 extern T0* ge1523ov24953100;
 extern T0* ge1523ov24953090;
@@ -97972,55 +97980,54 @@ extern T0* ge1523ov24953089;
 extern T0* ge1523ov24953088;
 extern T0* ge1523ov24953087;
 extern T0* ge1523ov24953086;
-extern T0* ge1523ov24953205;
+extern T0* ge1523ov24953204;
 extern T0* ge1523ov24953084;
 extern T0* ge1523ov24953103;
 extern T0* ge1523ov24953076;
 extern T0* ge1523ov24953074;
 extern T0* ge1523ov24953122;
-extern T0* ge1523ov24953167;
 extern T0* ge1523ov24953166;
-extern T0* ge1523ov24953381;
-extern T0* ge1523ov24953270;
-extern T0* ge1523ov24953325;
-extern T0* ge1523ov24953324;
-extern T0* ge1523ov24953308;
-extern T0* ge1523ov24953307;
-extern T0* ge1523ov24953291;
-extern T0* ge1523ov24953290;
-extern T0* ge1523ov24953286;
+extern T0* ge1523ov24953165;
+extern T0* ge1523ov24953377;
+extern T0* ge1523ov24953266;
+extern T0* ge1523ov24953321;
+extern T0* ge1523ov24953320;
+extern T0* ge1523ov24953304;
+extern T0* ge1523ov24953303;
 extern T0* ge1523ov24953287;
-extern T0* ge1523ov24953280;
-extern T0* ge1523ov24953279;
-extern T0* ge1523ov24953278;
-extern T0* ge1523ov24953451;
+extern T0* ge1523ov24953286;
+extern T0* ge1523ov24953282;
+extern T0* ge1523ov24953283;
+extern T0* ge1523ov24953276;
 extern T0* ge1523ov24953275;
-extern T0* ge1523ov24953268;
-extern T0* ge1523ov24953267;
+extern T0* ge1523ov24953274;
+extern T0* ge1523ov24953447;
+extern T0* ge1523ov24953271;
 extern T0* ge1523ov24953264;
-extern T0* ge1523ov24953257;
-extern T0* ge1523ov24953254;
+extern T0* ge1523ov24953263;
+extern T0* ge1523ov24953260;
 extern T0* ge1523ov24953253;
-extern T0* ge1523ov24953252;
-extern T0* ge1523ov24953251;
-extern T0* ge1523ov24953250;
 extern T0* ge1523ov24953249;
 extern T0* ge1523ov24953248;
 extern T0* ge1523ov24953247;
-extern T0* ge1523ov24953219;
-extern T0* ge1523ov24953220;
-extern T0* ge1523ov24953216;
+extern T0* ge1523ov24953246;
+extern T0* ge1523ov24953245;
+extern T0* ge1523ov24953244;
+extern T0* ge1523ov24953243;
+extern T0* ge1523ov24953242;
 extern T0* ge1523ov24953218;
-extern T0* ge1523ov24953217;
+extern T0* ge1523ov24953219;
 extern T0* ge1523ov24953215;
-extern T0* ge1523ov24953213;
+extern T0* ge1523ov24953217;
+extern T0* ge1523ov24953216;
 extern T0* ge1523ov24953214;
 extern T0* ge1523ov24953212;
+extern T0* ge1523ov24953213;
 extern T0* ge1523ov24953211;
 extern T0* ge1523ov24953210;
-extern T0* ge1523ov24953208;
+extern T0* ge1523ov24953209;
 extern T0* ge1523ov24953207;
-extern T0* ge1523ov24953204;
+extern T0* ge1523ov24953206;
 extern T0* ge1523ov24953203;
 extern T0* ge1523ov24953202;
 extern T0* ge1523ov24953201;
@@ -98028,19 +98035,20 @@ extern T0* ge1523ov24953200;
 extern T0* ge1523ov24953199;
 extern T0* ge1523ov24953198;
 extern T0* ge1523ov24953197;
-extern T0* ge1523ov24953185;
-extern T0* ge1523ov24953183;
+extern T0* ge1523ov24953196;
+extern T0* ge1523ov24953184;
 extern T0* ge1523ov24953182;
 extern T0* ge1523ov24953181;
-extern T0* ge1523ov24953178;
+extern T0* ge1523ov24953180;
 extern T0* ge1523ov24953177;
 extern T0* ge1523ov24953176;
 extern T0* ge1523ov24953175;
 extern T0* ge1523ov24953174;
-extern T0* ge1523ov24953184;
-extern T0* ge1523ov24953272;
-extern T0* ge1523ov24953271;
-extern T0* ge1523ov24953269;
+extern T0* ge1523ov24953173;
+extern T0* ge1523ov24953183;
+extern T0* ge1523ov24953268;
+extern T0* ge1523ov24953267;
+extern T0* ge1523ov24953265;
 extern T0* ge1523ov24953154;
 extern T0* ge1523ov24953153;
 extern T0* ge1523ov24953152;
@@ -98050,28 +98058,28 @@ extern T0* ge1523ov24953149;
 extern T0* ge1523ov24953132;
 extern T0* ge1523ov24953131;
 extern T0* ge1523ov24953129;
-extern T0* ge1523ov24953273;
-extern T0* ge1523ov24953186;
+extern T0* ge1523ov24953269;
+extern T0* ge1523ov24953185;
 extern T0* ge1523ov24953142;
 extern T0* ge1523ov24953141;
 extern T0* ge1523ov24953145;
 extern T0* ge1523ov24953144;
 extern T0* ge1523ov24953143;
 extern T0* ge1523ov24953147;
-extern T0* ge1523ov24953221;
+extern T0* ge1523ov24953220;
 extern T0* ge1523ov24953128;
 extern T0* ge1523ov24953127;
-extern T0* ge1523ov24953441;
-extern T0* ge1523ov24953449;
-extern T0* ge1523ov24953299;
-extern T0* ge1523ov24953316;
-extern T0* ge1523ov24953235;
-extern T0* ge1523ov24953234;
-extern T0* ge1523ov24953404;
+extern T0* ge1523ov24953437;
+extern T0* ge1523ov24953445;
+extern T0* ge1523ov24953295;
+extern T0* ge1523ov24953312;
+extern T0* ge1523ov24953230;
+extern T0* ge1523ov24953229;
+extern T0* ge1523ov24953400;
 extern T0* ge1523ov24953160;
-extern T0* ge1523ov24953403;
+extern T0* ge1523ov24953399;
 extern T0* ge1523ov24953123;
-extern T0* ge1523ov24953388;
+extern T0* ge1523ov24953384;
 extern T0* ge1522ov24937146;
 extern T0* ge1522ov24936596;
 extern T0* ge1522ov24937192;
@@ -98110,7 +98118,7 @@ extern T0* ge1522ov24937218;
 extern T0* ge1522ov24936667;
 extern T0* ge1522ov24937292;
 extern T0* ge1522ov24936739;
-extern T0* ge1523ov24953329;
+extern T0* ge1523ov24953325;
 extern T0* ge1522ov24937193;
 extern T0* ge1522ov24936904;
 extern T0* ge1522ov24936642;
@@ -98180,19 +98188,19 @@ extern T0* ge1522ov24936940;
 extern T0* ge1522ov24936710;
 extern T0* ge1522ov24937251;
 extern T0* ge1522ov24936700;
-extern T0* ge1523ov24953476;
+extern T0* ge1523ov24953472;
 extern T0* ge1523ov24953062;
-extern T0* ge1523ov24953470;
-extern T0* ge1523ov24953170;
-extern T0* ge1523ov24953242;
-extern T0* ge1523ov24953282;
-extern T0* ge1523ov24953444;
-extern T0* ge1523ov24953465;
-extern T0* ge1523ov24953456;
-extern T0* ge1523ov24953118;
-extern T0* ge1523ov24953224;
-extern T0* ge1523ov24953126;
 extern T0* ge1523ov24953466;
+extern T0* ge1523ov24953169;
+extern T0* ge1523ov24953237;
+extern T0* ge1523ov24953278;
+extern T0* ge1523ov24953440;
+extern T0* ge1523ov24953461;
+extern T0* ge1523ov24953452;
+extern T0* ge1523ov24953118;
+extern T0* ge1523ov24953223;
+extern T0* ge1523ov24953126;
+extern T0* ge1523ov24953462;
 extern T0* ge1522ov24937086;
 extern T0* ge1522ov24936538;
 extern T0* ge1522ov24937214;
@@ -98224,12 +98232,12 @@ extern T0* ge1522ov24936465;
 extern T0* ge1522ov24937323;
 extern T0* ge1522ov24936966;
 extern T0* ge1522ov24936770;
-extern T0* ge1523ov24953445;
-extern T0* ge1523ov24953446;
+extern T0* ge1523ov24953441;
+extern T0* ge1523ov24953442;
 extern T0* ge1523ov24953115;
 extern T0* ge1522ov24937322;
 extern T0* ge1522ov24936769;
-extern T0* ge1523ov24953438;
+extern T0* ge1523ov24953434;
 extern T0* ge1522ov24936526;
 extern T0* ge1522ov24937289;
 extern T0* ge1522ov24936736;
@@ -98256,24 +98264,24 @@ extern T0* ge1522ov24937378;
 extern T0* ge1522ov24936825;
 extern T0* ge1522ov24937329;
 extern T0* ge1522ov24936776;
-extern T0* ge1523ov24953236;
-extern T0* ge1523ov24953188;
+extern T0* ge1523ov24953231;
 extern T0* ge1523ov24953187;
+extern T0* ge1523ov24953186;
 extern T0* ge1522ov24937332;
 extern T0* ge1522ov24936971;
 extern T0* ge1522ov24936779;
 extern T0* ge1522ov24937330;
 extern T0* ge1522ov24936970;
 extern T0* ge1522ov24936777;
-extern T0* ge1523ov24953237;
+extern T0* ge1523ov24953232;
 extern T0* ge1522ov24937325;
 extern T0* ge1522ov24936968;
 extern T0* ge1522ov24936772;
 extern T0* ge1522ov24937324;
 extern T0* ge1522ov24936967;
 extern T0* ge1522ov24936771;
-extern T0* ge1523ov24953226;
-extern T0* ge1523ov24953431;
+extern T0* ge1523ov24953225;
+extern T0* ge1523ov24953427;
 extern T0* ge1523ov24953130;
 extern T0* ge1522ov24937320;
 extern T0* ge1522ov24936964;
@@ -98288,19 +98296,16 @@ extern T0* ge1522ov24937306;
 extern T0* ge1522ov24936753;
 extern T0* ge1523ov24953156;
 extern T0* ge1523ov24953135;
-extern T0* ge1523ov24953469;
-extern T0* ge1523ov24953448;
+extern T0* ge1523ov24953465;
+extern T0* ge1523ov24953444;
 extern T0* ge1523ov24953064;
-extern T0* ge1523ov24953487;
+extern T0* ge1523ov24953483;
 extern T0* ge1523ov24953093;
-extern T0* ge1523ov24953426;
-extern T0* ge1523ov24953229;
-extern T0* ge1523ov24953230;
-extern T0* ge1523ov24953443;
-extern T0* ge1523ov24953454;
-extern T0* ge1523ov24953475;
+extern T0* ge1523ov24953439;
+extern T0* ge1523ov24953450;
+extern T0* ge1523ov24953471;
 extern T0* ge1523ov24953125;
-extern T0* ge1523ov24953427;
+extern T0* ge1523ov24953423;
 extern T0* ge1523ov24953117;
 extern T0* ge1522ov24937284;
 extern T0* ge1522ov24936731;
@@ -98313,11 +98318,11 @@ extern T0* ge1522ov24936706;
 extern T0* ge1522ov24937253;
 extern T0* ge1522ov24936935;
 extern T0* ge1522ov24936702;
-extern T0* ge1523ov24953260;
-extern T0* ge1523ov24953240;
-extern T0* ge1523ov24953241;
-extern T0* ge1523ov24953285;
-extern T0* ge1523ov24953276;
+extern T0* ge1523ov24953256;
+extern T0* ge1523ov24953235;
+extern T0* ge1523ov24953236;
+extern T0* ge1523ov24953281;
+extern T0* ge1523ov24953272;
 extern T0* ge1522ov24937141;
 extern T0* ge1522ov24936880;
 extern T0* ge1522ov24936591;
@@ -98689,60 +98694,57 @@ extern T0* ge1522ov24937159;
 extern T0* ge1522ov24936609;
 extern T0* ge1522ov24937158;
 extern T0* ge1522ov24936608;
-extern T0* ge1523ov24953155;
-extern T0* ge1523ov24953162;
-extern T0* ge1523ov24953256;
+extern T0* ge1523ov24953251;
+extern T0* ge1523ov24953252;
+extern T0* ge1523ov24953190;
+extern T0* ge1523ov24953222;
+extern T0* ge1523ov24953273;
+extern T0* ge1523ov24953351;
+extern T0* ge1523ov24953233;
+extern T0* ge1523ov24953379;
 extern T0* ge1523ov24953191;
-extern T0* ge1523ov24953223;
-extern T0* ge1523ov24953277;
-extern T0* ge1523ov24953355;
-extern T0* ge1523ov24953238;
-extern T0* ge1523ov24953383;
-extern T0* ge1523ov24953192;
-extern T0* ge1523ov24953189;
+extern T0* ge1523ov24953188;
 extern T0* ge1523ov24953158;
-extern T0* ge1523ov24953334;
-extern T0* ge1523ov24953380;
-extern T0* ge1523ov24953450;
-extern T0* ge1523ov24953401;
-extern T0* ge1523ov24953402;
+extern T0* ge1523ov24953330;
+extern T0* ge1523ov24953376;
+extern T0* ge1523ov24953446;
 extern T0* ge1523ov24953397;
-extern T0* ge1523ov24953384;
+extern T0* ge1523ov24953398;
+extern T0* ge1523ov24953393;
+extern T0* ge1523ov24953380;
+extern T0* ge1523ov24953381;
+extern T0* ge1523ov24953382;
 extern T0* ge1523ov24953385;
 extern T0* ge1523ov24953386;
+extern T0* ge1523ov24953387;
+extern T0* ge1523ov24953388;
 extern T0* ge1523ov24953389;
 extern T0* ge1523ov24953390;
 extern T0* ge1523ov24953391;
 extern T0* ge1523ov24953392;
-extern T0* ge1523ov24953393;
 extern T0* ge1523ov24953394;
 extern T0* ge1523ov24953395;
 extern T0* ge1523ov24953396;
-extern T0* ge1523ov24953398;
-extern T0* ge1523ov24953399;
-extern T0* ge1523ov24953400;
-extern T0* ge1523ov24953387;
+extern T0* ge1523ov24953383;
 extern T0* ge1523ov24953109;
-extern T0* ge1523ov24953190;
+extern T0* ge1523ov24953189;
 extern T0* ge1523ov24953159;
-extern T0* ge1523ov24953164;
-extern T0* ge1523ov24953239;
-extern T0* ge1523ov24953227;
-extern T0* ge1523ov24953289;
-extern T0* ge1523ov24953430;
-extern T0* ge1523ov24953462;
+extern T0* ge1523ov24953163;
+extern T0* ge1523ov24953234;
 extern T0* ge1523ov24953136;
+extern T0* ge1523ov24953285;
+extern T0* ge1523ov24953426;
+extern T0* ge1523ov24953458;
 extern T0* ge1523ov24953137;
-extern T0* ge1523ov24953228;
-extern T0* ge1523ov24953288;
-extern T0* ge1523ov24953259;
-extern T0* ge1523ov24953258;
-extern T0* ge1523ov24953266;
-extern T0* ge1523ov24953265;
+extern T0* ge1523ov24953284;
+extern T0* ge1523ov24953255;
+extern T0* ge1523ov24953254;
+extern T0* ge1523ov24953262;
+extern T0* ge1523ov24953261;
 extern T0* ge414ov6307841;
-extern T0* ge1523ov24953485;
+extern T0* ge1523ov24953481;
 extern T0* ge1523ov24953073;
-extern T0* ge1523ov24953478;
+extern T0* ge1523ov24953474;
 extern T0* ge1523ov24953104;
 extern T0* ge1523ov24953098;
 extern T0* ge1523ov24953097;
@@ -98756,9 +98758,10 @@ extern T0* ge1523ov24953101;
 extern T0* ge1523ov24953094;
 extern T0* ge1523ov24953081;
 extern T0* ge1523ov24953111;
-extern T0* ge1523ov24953477;
+extern T0* ge1523ov24953473;
 extern T0* ge1523ov24953112;
-extern T0* ge1523ov24953486;
+extern T0* ge1523ov24953422;
+extern T0* ge1523ov24953482;
 extern T0* ge1523ov24953091;
 extern T0* ge411ov6193159;
 extern T0* ge1866ov30572599;
@@ -99218,7 +99221,7 @@ extern void ftime(struct timeb *); /* Needed for lcc-win32 */
 		"Part of ISE Eiffel runtime. Needed to compile the EiffelCOM library."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2010-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -99267,9 +99270,9 @@ extern EIF_TYPE_ID eif_type_id(char* type_string);
 extern EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * const ret);
 #define eif_string(s) RTMS(s)
 #define makestr(s,c) RTMS_EX((s),(c))
-#define eifaddr(object,name,ret) ((void *) ((char *) object + eifaddr_offset (object, name, ret)))
-#define eif_field(object,name,type) *(type *)(eifaddr(object,name, NULL)) /* Obsolete. Use "eif_attribute" instead. */
-#define eif_attribute(object,name,type,ret) *(type *)(eifaddr(object,name,ret)) /* Returns the attribute of an object. Return status in "ret".*/
+#define eifaddr(object,name,ret) ((void*) ((char*) object + eifaddr_offset (object, name, ret)))
+#define eif_field(object,name,type) *(type*)(eifaddr(object,name, NULL)) /* Obsolete. Use "eif_attribute" instead. */
+#define eif_attribute(object,name,type,ret) *(type*)(eifaddr(object,name,ret)) /* Returns the attribute of an object. Return status in "ret".*/
 
 /* Miscellaneous useful functions. */
 

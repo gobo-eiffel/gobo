@@ -186,7 +186,7 @@ typedef uint16_t EIF_TYPE_INDEX;
  * It is made of a compiler type-id,
  * and of some annotations (attached/detachable/separate/variant/frozen).
  */
-typedef struct eif_type {
+typedef volatile struct eif_type {
 	EIF_TYPE_INDEX id;
 	EIF_TYPE_INDEX annotations;
 } EIF_TYPE;

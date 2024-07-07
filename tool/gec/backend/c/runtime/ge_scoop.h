@@ -28,8 +28,8 @@ extern "C" {
 #endif
 
 /* Struct for separate calls. */
-typedef struct GE_scoop_call_struct GE_scoop_call;
-typedef struct GE_scoop_session_struct GE_scoop_session;
+typedef volatile struct GE_scoop_call_struct GE_scoop_call;
+typedef volatile struct GE_scoop_session_struct GE_scoop_session;
 struct GE_scoop_call_struct {
 	GE_scoop_region* caller; /* Region of the caller of the call. */
 	char is_synchronous; /* Should the caller wait for the call to be executed? */
@@ -74,7 +74,7 @@ struct GE_scoop_region_struct {
 };
 
 /* Struct for SCOOP processor availability condition. */
-typedef struct GE_scoop_condition_struct GE_scoop_condition;
+typedef volatile struct GE_scoop_condition_struct GE_scoop_condition;
 struct GE_scoop_condition_struct {
 	uint32_t wait_counter; /* Number of SCOOP processors which are not available yet. */
 	uint32_t trigger_counter; /* Number of condition calls currently using current condition. (Useful to free the condition when not used anymore). */
@@ -83,7 +83,7 @@ struct GE_scoop_condition_struct {
 };
 
 /* Struct for SCOOP call containing a condition. */
-typedef struct GE_scoop_condition_call_struct GE_scoop_condition_call;
+typedef volatile struct GE_scoop_condition_call_struct GE_scoop_condition_call;
 struct GE_scoop_condition_call_struct {
 	GE_scoop_region* caller; /* Region of the caller of the call. */
 	char is_synchronous; /* Should the caller wait for the call to be executed? */

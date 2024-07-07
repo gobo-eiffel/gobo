@@ -4,7 +4,7 @@
 		"C functions used to implement features 'deep_twin' and 'is_deep_equal' from class ANY"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -36,9 +36,9 @@ extern "C" {
 GE_deep* GE_deep_new(void)
 {
 	GE_deep* d;
-	d = (GE_deep*)GE_malloc_uncollectable(sizeof(GE_deep));
-	d->from = (void**)GE_calloc_uncollectable(GE_DEEP_CAPACITY + 1, sizeof(void*));
-	d->to = (void**)GE_calloc_uncollectable(GE_DEEP_CAPACITY + 1, sizeof(void*));
+	d = (GE_deep*)GE_malloc(sizeof(GE_deep));
+	d->from = (void**)GE_calloc(GE_DEEP_CAPACITY + 1, sizeof(void*));
+	d->to = (void**)GE_calloc(GE_DEEP_CAPACITY + 1, sizeof(void*));
 	d->top = 0;
 	return d;
 }
@@ -68,7 +68,7 @@ void GE_deep_free(GE_deep* d)
 /*
  * Eiffel object associated with `obj' in `d', if any.
  */
-T0* GE_deep_item(T0* obj, GE_deep* d)
+EIF_REFERENCE GE_deep_item(EIF_REFERENCE obj, GE_deep* d)
 {
 	int i = d->top;
 	void** p1 = d->from;
@@ -76,7 +76,7 @@ T0* GE_deep_item(T0* obj, GE_deep* d)
 	while (p1) {
 		while (i) {
 			if (p1[i] == obj) {
-				return ((T0*)p2[i]);
+				return ((EIF_REFERENCE)p2[i]);
 			}
 			i--;
 		}
@@ -90,15 +90,15 @@ T0* GE_deep_item(T0* obj, GE_deep* d)
 /*
  * Associated `obj1' with `obj2' in `d'.
  */
-void GE_deep_put(T0* obj1, T0* obj2, GE_deep* d)
+void GE_deep_put(EIF_REFERENCE obj1, EIF_REFERENCE obj2, GE_deep* d)
 {
 	int t = d->top + 1;
 	if (t > GE_DEEP_CAPACITY) {
 		void** p;
-		p = (void**)GE_calloc_uncollectable(GE_DEEP_CAPACITY + 1, sizeof(void*));
+		p = (void**)GE_calloc(GE_DEEP_CAPACITY + 1, sizeof(void*));
 		p[0] = d->from;
 		d->from = p;
-		p = (void**)GE_calloc_uncollectable(GE_DEEP_CAPACITY + 1, sizeof(void*));
+		p = (void**)GE_calloc(GE_DEEP_CAPACITY + 1, sizeof(void*));
 		p[0] = d->to;
 		d->to = p;
 		t = 1;

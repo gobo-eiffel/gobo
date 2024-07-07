@@ -692,9 +692,8 @@ static EIF_POINTER GE_unprotected_condition_variable_create(void)
 	EIF_SEM_TYPE* l_semaphore;
 	EIF_CS_TYPE* l_section;
 
-	l_condition_variable = (EIF_COND_TYPE*)GE_unprotected_malloc_atomic_uncollectable(sizeof(EIF_COND_TYPE));
+	l_condition_variable = (EIF_COND_TYPE*)GE_unprotected_calloc_atomic_uncollectable(1, sizeof(EIF_COND_TYPE));
 	if (l_condition_variable) {
-		memset(l_condition_variable, 0, sizeof(EIF_COND_TYPE));
 		l_semaphore = (EIF_SEM_TYPE*)GE_unprotected_semaphore_create(0);
 		if (l_semaphore) {
 			l_condition_variable->semaphore = l_semaphore;

@@ -53,7 +53,7 @@ extern "C" {
 #define EIF_MUTEX_TYPE          CRITICAL_SECTION
 #define EIF_SEM_TYPE            HANDLE
 
-typedef struct {
+typedef volatile struct {
 		/* Semaphore used to queue up threads waiting for the condition to become signaled. */
 	EIF_SEM_TYPE* semaphore;
 		/* Serialize access to fields of Current. */
@@ -67,7 +67,7 @@ typedef struct {
 	unsigned long generation;
 } EIF_COND_TYPE;
 
-typedef struct {
+typedef volatile struct {
 	EIF_MUTEX_TYPE* m; /* Internal monitor lock. */
 	int rwlock; /* >0 = # readers, <0 = writer, 0 = none */
 	EIF_COND_TYPE* readers_ok; /* Start waiting readers. */
@@ -77,13 +77,13 @@ typedef struct {
 
 #endif
 
-typedef struct {
+typedef volatile struct {
 	unsigned int priority;
 	unsigned int stack_size;
 } EIF_THR_ATTR_TYPE;
 
 /* Struct for thread context. */
-typedef struct GE_thread_context_struct GE_thread_context;
+typedef volatile struct GE_thread_context_struct GE_thread_context;
 struct GE_thread_context_struct {
 	EIF_THR_TYPE thread_id; /* Thread identifier for associated thread. */
 	EIF_REFERENCE current; /* Eiffel root object. */
@@ -91,12 +91,12 @@ struct GE_thread_context_struct {
 	void (*set_terminated)(EIF_REFERENCE, EIF_BOOLEAN); /* Eiffel routine to set {THREAD}.terminated. */
 	unsigned int initial_priority; /* Initial priority. */
 	EIF_THR_TYPE last_thread_id; /* Last thread created from current thread. */
-	volatile int n_children; /* Number of direct thread children. */
+	int n_children; /* Number of direct thread children. */
 	EIF_MUTEX_TYPE* children_mutex; /* Mutex to wait for thread children. */
 	EIF_COND_TYPE* children_cond; /* Condition variable to wait for thread children. */
 	GE_thread_context* parent_context;	/* Context of parent thread, NULL if main thread. */
 	int thread_exiting; /* Has current thread already called GE_thread_exit? */
-	volatile int is_alive; /* Is current thread still alive? */
+	int is_alive; /* Is current thread still alive? */
 	void* wel_per_thread_data; /* WEL private data */
 #ifdef GE_USE_SCOOP
 	int is_scoop_processor; /* Is current thread a SCOOP processor? */

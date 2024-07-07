@@ -26,7 +26,7 @@ extern "C" {
  * Struct to keep track of the call status
  * and results of once features.
  */
-typedef struct {
+typedef volatile struct {
 	EIF_BOOLEAN* boolean_value;
 	EIF_REFERENCE* boolean_exception;
 	unsigned char* boolean_status;

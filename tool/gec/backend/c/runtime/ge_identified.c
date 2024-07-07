@@ -32,7 +32,7 @@ extern "C" {
 /*
  * Weak pointer structure.
  */
-typedef struct GE_weak_pointer {
+typedef volatile struct GE_weak_pointer {
 	EIF_REFERENCE object;
 } GE_weak_pointer;
 
@@ -73,7 +73,7 @@ static EIF_REFERENCE GE_weak_pointer_object_without_lock(GE_weak_pointer* wp)
 #ifdef GE_USE_BOEHM_GC
 static EIF_REFERENCE GE_weak_pointer_object(GE_weak_pointer* wp)
 {
-	return (EIF_REFERENCE)GC_call_with_alloc_lock((GC_fn_type)GE_weak_pointer_object_without_lock, wp);
+	return (EIF_REFERENCE)GC_call_with_alloc_lock((GC_fn_type)GE_weak_pointer_object_without_lock, (void*)wp);
 }
 #else /* No GC */
 #define GE_weak_pointer_object(wp) GE_weak_pointer_object_without_lock(wp)
