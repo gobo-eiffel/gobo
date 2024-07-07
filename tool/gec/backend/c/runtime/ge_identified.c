@@ -139,7 +139,7 @@ EIF_INTEGER_32 GE_object_id(EIF_OBJECT object)
 		l_old_capacity = GE_id_objects_capacity;
 		GE_id_objects_capacity = GE_id_objects_capacity + GE_ID_OBJECT_CAPACITY_INCREMENT;
 		if (GE_id_objects == 0) {
-			GE_id_objects = GE_calloc_atomic_uncollectable(GE_id_objects_capacity, sizeof(GE_weak_pointer**));
+			GE_id_objects = GE_calloc_atomic(GE_id_objects_capacity, sizeof(GE_weak_pointer**));
 		} else {
 			GE_id_objects = GE_recalloc(GE_id_objects, l_old_capacity, GE_id_objects_capacity, sizeof(GE_weak_pointer**));
 		}

@@ -128,7 +128,7 @@ extern "C" {
 
 /*
  * Allocate memory that can contain pointers to collectable objects.
- * The allocated memory is not necessarily zeroed (unless `GE_malloc_cleared' is_defined).
+ * The allocated memory is not necessarily zeroed.
  * The allocated object is itself collectable.
  * Do not raise an exception when no-more-memory.
  */
@@ -140,7 +140,7 @@ extern "C" {
 
 /*
  * Allocate memory that can contain pointers to collectable objects.
- * The allocated memory is not necessarily zeroed (unless `GE_malloc_cleared' is_defined).
+ * The allocated memory is not necessarily zeroed.
  * The allocated object is itself collectable.
  * Raise an exception when no-more-memory.
  */
@@ -148,7 +148,7 @@ extern "C" {
 
 /*
  * Allocate memory that does not contain pointers to collectable objects.
- * The allocated memory is not necessarily zeroed (unless `GE_malloc_atomic_cleared' is_defined).
+ * The allocated memory is not necessarily zeroed.
  * The allocated object is itself collectable.
  * Do not raise an exception when no-more-memory.
  */
@@ -160,7 +160,7 @@ extern "C" {
 
 /*
  * Allocate memory that does not contain pointers to collectable objects.
- * The allocated memory is not necessarily zeroed (unless `GE_malloc_atomic_cleared' is_defined).
+ * The allocated memory is not necessarily zeroed.
  * The allocated object is itself collectable.
  * Raise an exception when no-more-memory.
  */
@@ -200,7 +200,7 @@ extern "C" {
 
 /*
  * Allocate memory that can contain pointers to collectable objects.
- * The allocated memory is not necessarily zeroed (unless `GE_malloc_cleared' is_defined).
+ * The allocated memory is not necessarily zeroed.
  * The allocated object is itself not collectable.
  * Do not raise an exception when no-more-memory.
  */
@@ -212,7 +212,7 @@ extern "C" {
 
 /*
  * Allocate memory that can contain pointers to collectable objects.
- * The allocated memory is not necessarily zeroed (unless `GE_malloc_cleared' is_defined).
+ * The allocated memory is not necessarily zeroed.
  * The allocated object is itself not collectable.
  * Raise an exception when no-more-memory.
  */
@@ -220,7 +220,7 @@ extern "C" {
 
 /*
  * Allocate memory that does not contain pointers to collectable objects.
- * The allocated memory is not necessarily zeroed (unless `GE_malloc_atomic_cleared' is_defined).
+ * The allocated memory is not necessarily zeroed.
  * The allocated object is itself not collectable.
  * Do not raise an exception when no-more-memory.
  */
@@ -232,7 +232,7 @@ extern "C" {
 
 /*
  * Allocate memory that does not contain pointers to collectable objects.
- * The allocated memory is not necessarily zeroed (unless `GE_malloc_atomic_cleared' is_defined).
+ * The allocated memory is not necessarily zeroed.
  * The allocated object is itself not collectable.
  * Raise an exception when no-more-memory.
  */
@@ -321,26 +321,6 @@ extern void* GE_unprotected_recalloc(void* p, size_t old_nelem, size_t new_nelem
 #define GE_free(p) GC_FREE((void*)(p))
 #else /* No GC */
 #define GE_free(p) free((void*)(p))
-#endif
-
-/*
- * When defined, `GE_malloc_cleared' means that `GE_malloc' and
- * `GE_malloc_uncollectable' make sure that the allocated memory
- * is zeroed.
- */
-#ifdef GE_USE_BOEHM_GC
-#define GE_malloc_cleared
-#else /* No GC */
-#endif
-
-/*
- * When defined, `GE_malloc_atomic_cleared' means that `GE_malloc_atomic'
- * and `GE_malloc_atomic_uncollectable' make sure that the allocated memory
- * is zeroed.
- */
-#ifdef GE_USE_BOEHM_GC
-/* #define GE_malloc_atomic_cleared */
-#else /* No GC */
 #endif
 
 /*

@@ -93,7 +93,7 @@ GE_once_mutexes* GE_new_once_mutexes(
 	GE_once_mutexes* l_once_mutexes;
 	unsigned int i;
 
-	l_once_mutexes = (GE_once_mutexes*)GE_calloc_atomic_uncollectable(1, sizeof(GE_once_mutexes));
+	l_once_mutexes = (GE_once_mutexes*)GE_calloc_atomic(1, sizeof(GE_once_mutexes));
 	if (a_boolean_count > 0) {
 		l_once_mutexes->boolean_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_boolean_count * sizeof(EIF_POINTER));
 		for (i = 0; i < a_boolean_count; i++) {
