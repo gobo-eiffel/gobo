@@ -285,9 +285,9 @@ extern void* GE_unprotected_calloc_atomic_uncollectable(size_t nelem, size_t els
  * Do not raise an exception when no-more-memory.
  */
 #ifdef GE_USE_BOEHM_GC
-#define GE_unprotected_realloc(p, size) GC_REALLOC((p), (size))
+#define GE_unprotected_realloc(p, size) GC_REALLOC((void*)(p), (size))
 #else /* No GC */
-#define GE_unprotected_realloc(p, size) realloc((p), (size))
+#define GE_unprotected_realloc(p, size) realloc((void*)(p), (size))
 #endif
 
 /*
@@ -296,7 +296,7 @@ extern void* GE_unprotected_calloc_atomic_uncollectable(size_t nelem, size_t els
  * The extra allocated memory is not necessarily zeroed.
  * Raise an exception when no-more-memory.
  */
-#define GE_realloc(p, size) GE_null(GE_unprotected_realloc((p), (size)))
+#define GE_realloc(p, size) GE_null(GE_unprotected_realloc((void*)(p), (size)))
 
 /*
  * Allocate more memory for the given pointer.
