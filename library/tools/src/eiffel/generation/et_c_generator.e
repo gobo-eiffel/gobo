@@ -39438,10 +39438,8 @@ feature {NONE} -- Default initialization values generation
 			nb := l_dynamic_types.count
 			from i := 1 until i > nb loop
 				l_type := l_dynamic_types.item (i)
-				if l_type.is_alive then
-					if not l_type.base_class.is_type_class then
-						print_default_declaration (l_type)
-					end
+				if l_type.is_alive and l_type.is_expanded and not l_type.is_basic and not l_type.base_class.is_type_class then
+					print_default_declaration (l_type)
 				end
 				i := i + 1
 			end
