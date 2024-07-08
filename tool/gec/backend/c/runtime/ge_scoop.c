@@ -639,6 +639,7 @@ static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_session* a_ses
 				l_caller_context = l_caller->context;
 				a_context->call = l_caller_context->call;
 			}
+			r.previous = a_context->last_rescue;
 			if (GE_setjmp(r.jb) != 0) {
 				if (l_is_synchronous) {
 					/* The exception will be propagated to the caller region. */
@@ -663,7 +664,6 @@ static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_session* a_ses
 				}
 				return;
 			}
-			r.previous = a_context->last_rescue;
 			a_context->last_rescue = &r;
 			a_call->execute(a_context, a_session, a_call);
 			*a_context = l_old_context;
