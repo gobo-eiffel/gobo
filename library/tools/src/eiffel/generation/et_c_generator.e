@@ -2970,6 +2970,18 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					print_semicolon_newline
 				end
 				print_indentation
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
@@ -3026,18 +3038,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				dedent
 				print_indentation
 				current_file.put_character ('}')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_character ('r')
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
 				current_file.put_string (c_ac)
@@ -7397,6 +7397,19 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			locals_read := locals_read_in_rescue
 			if l_has_separate_arguments then
 				print_indentation
+				current_file.put_character ('r')
+				current_file.put_character ('2')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
@@ -7480,19 +7493,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_character ('}')
 				current_file.put_new_line
 				print_indentation
-				current_file.put_character ('r')
-				current_file.put_character ('2')
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
 				current_file.put_string (c_last_rescue)
@@ -7506,6 +7506,18 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_new_line
 			end
 			if l_rescue /= Void or l_is_once then
+				print_indentation
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (';')
+				current_file.put_new_line
 				print_indentation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
@@ -7596,18 +7608,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_character (':')
 					current_file.put_new_line
 				end
-				print_indentation
-				current_file.put_character ('r')
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				current_file.put_character (';')
-				current_file.put_new_line
 				print_indentation
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
@@ -18937,6 +18937,18 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			current_file := current_function_body_buffer
 			if l_target_type_is_separate then
 				print_indentation
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
@@ -18981,18 +18993,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				dedent
 				print_indentation
 				current_file.put_character ('}')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_character ('r')
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
 				current_file.put_string (c_ac)
@@ -21750,6 +21750,18 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('}')
 					current_file.put_new_line
 					print_indentation
+					current_file.put_character ('r')
+					current_file.put_character ('.')
+					current_file.put_string (c_previous)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_last_rescue)
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
 					current_file.put_character ('(')
@@ -21814,18 +21826,6 @@ feature {NONE} -- Separate calls
 					dedent
 					print_indentation
 					current_file.put_character ('}')
-					current_file.put_new_line
-					print_indentation
-					current_file.put_character ('r')
-					current_file.put_character ('.')
-					current_file.put_string (c_previous)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_string (c_ac)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_last_rescue)
-					current_file.put_character (';')
 					current_file.put_new_line
 					print_indentation
 					current_file.put_string (c_ac)
