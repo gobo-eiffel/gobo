@@ -7312,6 +7312,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
+				current_file.put_string (c_volatile)
+				current_file.put_character (' ')
 				current_file.put_string (c_uint32_t)
 				current_file.put_character (' ')
 				current_file.put_string (c_tr)
