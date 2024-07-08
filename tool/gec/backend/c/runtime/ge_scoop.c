@@ -640,7 +640,9 @@ static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_session* a_ses
 				a_context->call = l_caller_context->call;
 			}
 			r.previous = a_context->last_rescue;
+			a_context->last_rescue = &r;
 			if (GE_setjmp(r.jb) != 0) {
+				a_context->last_rescue = &r;
 				if (l_is_synchronous) {
 					/* The exception will be propagated to the caller region. */
 					GE_append_to_exception_trace_buffer(&l_caller_context->last_exception_trace, a_context->last_exception_trace.area);
@@ -656,16 +658,18 @@ static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_session* a_ses
 				} else {
 					l_callee->is_dirty = '\1';
 #ifdef GE_SCOOP_EXCEPTIONS_STOP_WHEN_DIRTY
+					a_context->last_rescue = r.previous;
 					GE_jump_to_last_rescue(a_context);
 #endif
 					*a_context = l_old_context;
 					GE_wipe_out_exception_trace_buffer(&a_context->last_exception_trace);
 					GE_wipe_out_exception_trace_buffer(&a_context->exception_trace_buffer);
 				}
+				a_context->last_rescue = r.previous;
 				return;
 			}
-			a_context->last_rescue = &r;
 			a_call->execute(a_context, a_session, a_call);
+			a_context->last_rescue = r.previous;
 			*a_context = l_old_context;
 			if (l_is_synchronous) {
 				GE_scoop_region_release_locks(l_caller, l_callee);
