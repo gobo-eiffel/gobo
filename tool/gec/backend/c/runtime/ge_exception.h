@@ -38,11 +38,11 @@
 #if (defined(_SIGSET_H_types) && !defined(__STRICT_ANSI__))
 #define GE_jmp_buf sigjmp_buf
 #define GE_setjmp(x) sigsetjmp(*(GE_jmp_buf*)&(x),1)
-#define GE_longjmp(x,y) siglongjmp(*(GE_jmp_buf*)(x),(y))
+#define GE_longjmp(x,y) siglongjmp(*(GE_jmp_buf*)&(x),(y))
 #else
 #define GE_jmp_buf jmp_buf
-#define GE_setjmp(x) setjmp(*(GE_jmp_buf*)(x))
-#define GE_longjmp(x,y) longjmp(*(GE_jmp_buf*)(x),(y))
+#define GE_setjmp(x) setjmp(*(GE_jmp_buf*)&(x))
+#define GE_longjmp(x,y) longjmp(*(GE_jmp_buf*)&(x),(y))
 #endif
 
 #ifdef __cplusplus
