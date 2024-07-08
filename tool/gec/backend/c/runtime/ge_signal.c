@@ -20,6 +20,9 @@
 #ifndef GE_EXCEPTION_H
 #include "ge_exception.h"
 #endif
+#ifndef GE_CONSOLE_H
+#include "ge_console.h"
+#endif
 
 #include <signal.h>
 
@@ -87,6 +90,7 @@ extern void GE_handle_fpe_signal(int a_sig);
 static void GE_handle_general_signal(int a_sig, int is_fpe)
 {
 	if (!(GE_main_context && GE_main_context->exception_manager)) {
+		GE_show_console();
 		fprintf(stderr, "\nSignal caught %d while initializing Eiffel system.\n", a_sig);
 		exit(1);
 	}
@@ -115,6 +119,7 @@ static void GE_handle_general_signal(int a_sig, int is_fpe)
 		if (a_sig != SIGINT)
 #endif
 		{
+			GE_show_console();
 			fprintf(stderr, "\nSignal caught %d while in a non-Eiffel thread.\n", a_sig);
 		}
 		exit(1);
@@ -160,6 +165,7 @@ static void GE_handle_general_signal(int a_sig, int is_fpe)
 
 	l_context->signal_number = a_sig;
 	if (!l_context->exception_manager) {
+		GE_show_console();
 		fprintf(stderr, "\nSignal caught %d while initializing Eiffel thread.\n", a_sig);
 		exit(1);
 	}
