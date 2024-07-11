@@ -10,5 +10,6 @@ In writing specimens of any construct defined by a Repetition production specify
 
 ### Notes
 
-* The definition of the unfolded form does not indicate what to do in case of an *Iteration* of the form `across ... is ...`.
-* The definition of the unfolded form does not indicate what to do in case of an *Iteration* of the form `∀ ...`, `∃ ...` or `⟳ ... ⟲`.
+* ISE Eiffel (as of 24.05.10.7822 and after) erroneously reports a syntax error when there is a semicolon after the last field declaration of a labeled tupe (e.g. `TUPLE [a: INTEGER; b: INTEGER;]`).
+
+* Gobo Eiffel and ISE Eiffel (as of 24.05.10.7822 and after) both accept two or more semicolons between instructions or a semicolon before the first instruction in a compound. This is because there was the notion of null instruction in ETL2 (page 234).

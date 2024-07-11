@@ -8,4 +8,4 @@ In this test, we have two instructions with a semicolon before the first instruc
 
 ### Notes
 
-* Gobo Eiffel and ISE Eiffel (as of 24.05.10.7822 and after) both accept this code.
+* Gobo Eiffel and ISE Eiffel (as of 24.05.10.7822 and after) both accept this code because there was the notion of null instruction in ETL2 (page 234).
