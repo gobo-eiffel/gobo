@@ -33,9 +33,9 @@ extern "C" {
  * Indexes from 1 to capacity store actual Eiffel objects.
  */
 typedef volatile struct {
-	void** from;
-	void** to;
-	int top;
+	void** volatile from;
+	void** volatile to;
+	int volatile top;
 } GE_deep;
 
 /*

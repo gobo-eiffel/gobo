@@ -22622,35 +22622,22 @@ feature {NONE} -- Separate calls
 			header_file.put_character (' ')
 			header_file.put_string (c_struct)
 			header_file.put_character (' ')
-			print_separate_call_object_type_name (i, current_feature, current_type, header_file)
-			header_file.put_character ('_')
-			header_file.put_string (c_struct)
-			header_file.put_character (' ')
-			print_separate_call_object_type_name (i, current_feature, current_type, header_file)
-			header_file.put_character (';')
-			header_file.put_new_line
-			header_file.put_string (c_struct)
-			header_file.put_character (' ')
-			print_separate_call_object_type_name (i, current_feature, current_type, header_file)
-			header_file.put_character ('_')
-			header_file.put_string (c_struct)
-			header_file.put_character (' ')
 			header_file.put_character ('{')
 			header_file.put_new_line
 			header_file.put_character ('%T')
-			header_file.put_string ("GE_scoop_region* caller;")
+			header_file.put_string ("GE_scoop_region* volatile caller;")
 			header_file.put_new_line
 			header_file.put_character ('%T')
-			header_file.put_string ("char is_synchronous;")
+			header_file.put_string ("char volatile is_synchronous;")
 			header_file.put_new_line
 			header_file.put_character ('%T')
-			header_file.put_string ("char is_condition;")
+			header_file.put_string ("char volatile is_condition;")
 			header_file.put_new_line
 			header_file.put_character ('%T')
-			header_file.put_string ("void (*execute)(GE_context*, GE_scoop_session*, GE_scoop_call*);")
+			header_file.put_string ("void (*volatile execute)(GE_context*, GE_scoop_session*, GE_scoop_call*);")
 			header_file.put_new_line
 			header_file.put_character ('%T')
-			header_file.put_string ("GE_scoop_call* next;")
+			header_file.put_string ("GE_scoop_call* volatile next;")
 			header_file.put_new_line
 			if attached {ET_QUALIFIED_FEATURE_CALL_EXPRESSION} a_separate_call as l_call_expression then
 				l_result_type := dynamic_type_set (l_call_expression).static_type.primary_type
@@ -22663,6 +22650,8 @@ feature {NONE} -- Separate calls
 				end
 				header_file.put_character ('*')
 				header_file.put_character (' ')
+				header_file.put_string (c_volatile)
+				header_file.put_character (' ')
 				print_result_name (header_file)
 				header_file.put_character (';')
 				header_file.put_new_line
@@ -22673,6 +22662,11 @@ feature {NONE} -- Separate calls
 			l_operand.set_index (a_separate_call.target.index)
 			header_file.put_character ('%T')
 			print_type_declaration (l_target_type, header_file)
+			if not l_target_type.is_expanded or else l_target_type.is_basic then
+					-- Note that non-basic expanded types are already declared as volatile.
+				header_file.put_character (' ')
+				header_file.put_string (c_volatile)
+			end
 			header_file.put_character (' ')
 			print_argument_name (l_operand, header_file)
 			header_file.put_character (';')
@@ -22688,6 +22682,11 @@ feature {NONE} -- Separate calls
 					l_type := dynamic_type_set (l_operand).static_type.primary_type
 					header_file.put_character ('%T')
 					print_type_declaration (l_type, header_file)
+					if not l_type.is_expanded or else l_type.is_basic then
+							-- Note that non-basic expanded types are already declared as volatile.
+						header_file.put_character (' ')
+						header_file.put_string (c_volatile)
+					end
 					header_file.put_character (' ')
 					print_argument_name (l_operand, header_file)
 					header_file.put_character (';')
@@ -22696,6 +22695,8 @@ feature {NONE} -- Separate calls
 				end
 			end
 			header_file.put_character ('}')
+			header_file.put_character (' ')
+			print_separate_call_object_type_name (i, current_feature, current_type, header_file)
 			header_file.put_character (';')
 			header_file.put_new_line
 			header_file.put_new_line
@@ -38246,6 +38247,7 @@ feature {NONE} -- Type generation
 		local
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_attribute_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_query: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER
@@ -38275,11 +38277,15 @@ feature {NONE} -- Type generation
 					a_file.put_character ('%T')
 					a_file.put_string (c_eif_type_index)
 					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+					a_file.put_character (' ')
 					print_attribute_type_id_name (a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_new_line
 					a_file.put_character ('%T')
 					a_file.put_string (c_uint16_t)
+					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
 					a_file.put_character (' ')
 					print_attribute_flags_name (a_type, a_file)
 					a_file.put_character (';')
@@ -38288,6 +38294,8 @@ feature {NONE} -- Type generation
 						a_file.put_character ('%T')
 						a_file.put_string (c_ge_scoop_region)
 						a_file.put_character ('*')
+						a_file.put_character (' ')
+						a_file.put_string (c_volatile)
 						a_file.put_character (' ')
 						print_attribute_region_name (a_type, a_file)
 						a_file.put_character (';')
@@ -38299,6 +38307,8 @@ feature {NONE} -- Type generation
 						-- Offset (in bytes) of the first item.
 					a_file.put_character ('%T')
 					a_file.put_string (c_uint32_t)
+					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
 					a_file.put_character (' ')
 					a_file.put_string (c_offset)
 					a_file.put_character (';')
@@ -38315,7 +38325,13 @@ feature {NONE} -- Type generation
 						error_handler.report_giaac_error (generator, "print_type_struct", 1, "query with no type.")
 					else
 						a_file.put_character ('%T')
-						print_type_declaration (l_result_type_set.static_type.primary_type, a_file)
+						l_attribute_type := l_result_type_set.static_type.primary_type
+						print_type_declaration (l_attribute_type, a_file)
+						if not l_attribute_type.is_expanded or else l_attribute_type.is_basic then
+								-- Note that non-basic expanded types are already declared as volatile.
+							a_file.put_character (' ')
+							a_file.put_string (c_volatile)
+						end
 						a_file.put_character (' ')
 						print_attribute_name (l_query, a_type, a_file)
 						a_file.put_character (';')
@@ -38337,6 +38353,8 @@ feature {NONE} -- Type generation
 					print_once_per_object_data_type_name (a_type, a_file)
 					a_file.put_character ('*')
 					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+					a_file.put_character (' ')
 					print_attribute_onces_name (a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_new_line
@@ -38349,7 +38367,13 @@ feature {NONE} -- Type generation
 						-- See https://stackoverflow.com/questions/246977/is-using-flexible-array-members-in-c-bad-practice.
 					a_file.put_character ('%T')
 					l_item_type_set := l_special_type.item_type_set
-					print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
+					l_attribute_type := l_item_type_set.static_type.primary_type
+					print_type_declaration (l_attribute_type, a_file)
+					if not l_attribute_type.is_expanded or else l_attribute_type.is_basic then
+							-- Note that non-basic expanded types are already declared as volatile.
+						a_file.put_character (' ')
+						a_file.put_string (c_volatile)
+					end
 					a_file.put_character (' ')
 					print_attribute_special_item_name (l_special_type, a_file)
 					a_file.put_character ('[')
@@ -38373,7 +38397,13 @@ feature {NONE} -- Type generation
 					nb := l_item_type_sets.count
 					from i := 1 until i > nb loop
 						a_file.put_character ('%T')
-						print_type_declaration (l_item_type_sets.item (i).static_type.primary_type, a_file)
+						l_attribute_type := l_item_type_sets.item (i).static_type.primary_type
+						print_type_declaration (l_attribute_type, a_file)
+						if not l_attribute_type.is_expanded or else l_attribute_type.is_basic then
+								-- Note that non-basic expanded types are already declared as volatile.
+							a_file.put_character (' ')
+							a_file.put_string (c_volatile)
+						end
 						a_file.put_character (' ')
 						print_attribute_tuple_item_name (i, l_tuple_type, a_file)
 						a_file.put_character (';')
@@ -38386,6 +38416,8 @@ feature {NONE} -- Type generation
 						-- Add a dummy field so that the struct is not empty (not allowed in C99).
 					a_file.put_character ('%T')
 					a_file.put_string (c_char)
+					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
 					a_file.put_character (' ')
 					a_file.put_string ("dummy")
 					a_file.put_character (';')
@@ -38427,11 +38459,15 @@ feature {NONE} -- Type generation
 				a_file.put_character ('%T')
 				a_file.put_string (c_eif_type_index)
 				a_file.put_character (' ')
+				a_file.put_string (c_volatile)
+				a_file.put_character (' ')
 				print_attribute_type_id_name (a_type, a_file)
 				a_file.put_character (';')
 				a_file.put_new_line
 				a_file.put_character ('%T')
 				a_file.put_string (c_uint16_t)
+				a_file.put_character (' ')
+				a_file.put_string (c_volatile)
 				a_file.put_character (' ')
 				print_attribute_flags_name (a_type, a_file)
 				a_file.put_character (';')
@@ -38440,6 +38476,8 @@ feature {NONE} -- Type generation
 					a_file.put_character ('%T')
 					a_file.put_string (c_ge_scoop_region)
 					a_file.put_character ('*')
+					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
 					a_file.put_character (' ')
 					print_attribute_region_name (a_type, a_file)
 					a_file.put_character (';')
@@ -38453,6 +38491,8 @@ feature {NONE} -- Type generation
 					a_file.put_string (c_volatile)
 				end
 				a_file.put_character ('*')
+				a_file.put_character (' ')
+				a_file.put_string (c_volatile)
 				a_file.put_character (' ')
 				print_boxed_attribute_pointer_name (a_type, a_file)
 				a_file.put_character (';')
@@ -38473,6 +38513,11 @@ feature {NONE} -- Type generation
 				a_file.put_new_line
 				a_file.put_character ('%T')
 				print_type_declaration (a_type, a_file)
+				if a_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
+					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+				end
 				a_file.put_character (' ')
 				print_boxed_attribute_item_name (a_type, a_file)
 				a_file.put_character (';')
@@ -38509,6 +38554,7 @@ feature {NONE} -- Type generation
 		local
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_query: ET_DYNAMIC_FEATURE
+			l_query_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_procedures: ET_DYNAMIC_FEATURE_LIST
 			l_procedure: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER
@@ -38545,6 +38591,8 @@ feature {NONE} -- Type generation
 					a_file.put_character (' ')
 					a_file.put_string (c_char)
 					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+					a_file.put_character (' ')
 					print_once_per_object_status_name (l_query, a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_character (' ')
@@ -38557,7 +38605,13 @@ feature {NONE} -- Type generation
 					a_file.put_character ('/')
 					a_file.put_new_line
 					a_file.put_character ('%T')
-					print_type_declaration (l_result_type_set.static_type.primary_type, a_file)
+					l_query_type := l_result_type_set.static_type.primary_type
+					print_type_declaration (l_query_type, a_file)
+					if not l_query_type.is_expanded or else l_query_type.is_basic then
+							-- Note that non-basic expanded types are already declared as volatile.
+						a_file.put_character (' ')
+						a_file.put_string (c_volatile)
+					end
 					a_file.put_character (' ')
 					print_once_per_object_value_name (l_query, a_type, a_file)
 					a_file.put_character (';')
@@ -38565,12 +38619,16 @@ feature {NONE} -- Type generation
 					a_file.put_character ('%T')
 					a_file.put_string (c_eif_reference)
 					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+					a_file.put_character (' ')
 					print_once_per_object_exception_name (l_query, a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_new_line
 					if use_threads then
 						a_file.put_character ('%T')
 						a_file.put_string (c_eif_pointer)
+						a_file.put_character (' ')
+						a_file.put_string (c_volatile)
 						a_file.put_character (' ')
 						print_once_per_object_mutex_name (l_query, a_type, a_file)
 						a_file.put_character (';')
@@ -38589,6 +38647,8 @@ feature {NONE} -- Type generation
 					a_file.put_character (' ')
 					a_file.put_string (c_char)
 					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+					a_file.put_character (' ')
 					print_once_per_object_status_name (l_procedure, a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_character (' ')
@@ -38603,12 +38663,16 @@ feature {NONE} -- Type generation
 					a_file.put_character ('%T')
 					a_file.put_string (c_eif_reference)
 					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+					a_file.put_character (' ')
 					print_once_per_object_exception_name (l_procedure, a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_new_line
 					if use_threads then
 						a_file.put_character ('%T')
 						a_file.put_string (c_eif_pointer)
+						a_file.put_character (' ')
+						a_file.put_string (c_volatile)
 						a_file.put_character (' ')
 						print_once_per_object_mutex_name (l_procedure, a_type, a_file)
 						a_file.put_character (';')

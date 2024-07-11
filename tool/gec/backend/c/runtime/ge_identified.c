@@ -32,8 +32,8 @@ extern "C" {
 /*
  * Weak pointer structure.
  */
-typedef volatile struct GE_weak_pointer {
-	EIF_REFERENCE object;
+typedef volatile struct {
+	EIF_REFERENCE volatile object;
 } GE_weak_pointer;
 
 /*
