@@ -132,8 +132,8 @@ struct GE_context_struct {
 	char volatile exception_trace_enabled; /* Should exception trace be displayed? */
 	long volatile exception_code; /* Code of the exception currently being raised, 0 otherwise */
 	const char* volatile exception_tag; /* Tag of the exception currently being raised, NULL otherwise */
-	GE_exception_trace_buffer volatile exception_trace_buffer; /* String buffer used to build the exception trace */
-	GE_exception_trace_buffer volatile last_exception_trace; /* Last non-routine-failure exception trace */
+	GE_exception_trace_buffer exception_trace_buffer; /* String buffer used to build the exception trace */
+	GE_exception_trace_buffer last_exception_trace; /* Last non-routine-failure exception trace */
 	int volatile signal_number; /* Number of last signal received */
 	int volatile pre_ecma_mapping_status; /* Do we map old names to new name? (i.e. STRING to STRING_8, INTEGER to INTEGER_32, ...). */
 #ifdef GE_USE_THREADS
