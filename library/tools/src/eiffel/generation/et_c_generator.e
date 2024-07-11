@@ -38732,6 +38732,14 @@ feature {NONE} -- Type generation
 			current_file.put_integer (0)
 			current_file.put_character (',')
 			current_file.put_character (' ')
+			if use_scoop then
+				current_file.put_integer (0)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+			end
+			current_file.put_integer (0)
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			current_file.put_string (c_eif_false)
 			current_file.put_character (',')
 			current_file.put_character (' ')
@@ -38748,6 +38756,14 @@ feature {NONE} -- Type generation
 			current_file.put_integer (0)
 			current_file.put_character (',')
 			current_file.put_character (' ')
+			current_file.put_integer (0)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			if use_scoop then
+				current_file.put_integer (0)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+			end
 			current_file.put_integer (0)
 			current_file.put_character (',')
 			current_file.put_character (' ')
@@ -38779,6 +38795,16 @@ feature {NONE} -- Type generation
 				end
 				current_file.put_character (',')
 				current_file.put_character (' ')
+					-- Flags.
+				current_file.put_character ('0')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				if use_scoop then
+						-- SCOOP region.
+					current_file.put_character ('0')
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
 					-- type_id.
 				current_file.put_integer (l_type.id)
 				current_file.put_character (',')
@@ -38828,6 +38854,16 @@ feature {NONE} -- Type generation
 				end
 				current_file.put_character (',')
 				current_file.put_character (' ')
+					-- Flags.
+				current_file.put_character ('0')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				if use_scoop then
+						-- SCOOP region.
+					current_file.put_character ('0')
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
 					-- type_id.
 				current_file.put_integer ((1 |<< 16) | l_type.id)
 				current_file.put_character (',')

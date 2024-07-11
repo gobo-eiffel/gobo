@@ -151,6 +151,10 @@ typedef volatile struct {
 
 typedef volatile struct {
 	EIF_TYPE_INDEX volatile id; /* Type id of the "TYPE [X]" object */
+	uint16_t volatile flags; 
+#ifdef GE_USE_SCOOP
+	GE_scoop_region* volatile region;
+#endif
 	EIF_INTEGER volatile type_id; /* Type id of the type "X" */
 	EIF_BOOLEAN volatile is_special;
 	void (*volatile dispose)(GE_context*, EIF_REFERENCE);
