@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     480 tests
-    # FAILED:     154 tests
+    # Passed:     509 tests
+    # FAILED:     155 tests
     # Aborted:    0 test
-    # Total:      634 tests
+    # Total:      664 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo1/test\_bar\_2](definition/difo1/test\_bar\_2)\] test\_failed</br>
@@ -84,6 +84,7 @@ FAIL:  \[[semantics/muon1/test\_once\_per\_object\_6](semantics/muon1/test\_once
 FAIL:  \[[semantics/muon3/test\_once\_per\_object\_4](semantics/muon3/test\_once\_per\_object\_4)\] test\_failed</br>
 FAIL:  \[[semantics/muon4/test\_once\_per\_object\_2](semantics/muon4/test\_once\_per\_object\_2)\] test\_failed</br>
 FAIL:  \[[semantics/muon4/test\_once\_per\_object\_4](semantics/muon4/test\_once\_per\_object\_4)\] test\_failed</br>
+FAIL:  \[[syntax/s7sc/test\_labeled\_tuple\_3](syntax/s7sc/test\_labeled\_tuple\_3)\] test\_failed</br>
 FAIL:  \[[validity/gvncc4/test1](validity/gvncc4/test1)\] test\_failed</br>
 FAIL:  \[[validity/gvncc4/test2](validity/gvncc4/test2)\] test\_failed</br>
 FAIL:  \[[validity/v1ea1g/test\_generic\_attribute\_1](validity/v1ea1g/test\_generic\_attribute\_1)\] test\_failed</br>

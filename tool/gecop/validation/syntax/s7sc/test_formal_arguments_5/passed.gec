@@ -1,0 +1,6 @@
+Syntax error:
+line 15 column 3 in aa.e
+	f (
+		;
+		^
+		a: INTEGER;

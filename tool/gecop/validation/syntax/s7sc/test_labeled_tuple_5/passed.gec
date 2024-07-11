@@ -1,0 +1,6 @@
+Syntax error:
+line 12 column 5 in aa.e
+			t: TUPLE [
+				;
+				^
+				a: INTEGER;

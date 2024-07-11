@@ -959,6 +959,11 @@ Constraint_tuple_labeled_actual_parameter_list: Identifier ':' Constraint_type '
 			$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $4, counter_value + 1)
 			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3), $$)
 		}
+	| Identifier ':' Constraint_type ';' ']'
+		{
+			$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $5, counter_value + 1)
+			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_actual_parameter_semicolon (ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3), $4), $$)
+		}
 	| Constraint_tuple_labeled_actual_parameter_semicolon Constraint_tuple_labeled_actual_parameter_list
 		{
 			$$ := $2
@@ -2830,6 +2835,11 @@ Tuple_labeled_actual_parameter_list: Identifier ':' Type ']'
 		{
 			$$ := ast_factory.new_actual_parameters (last_symbol, $4, counter_value + 1)
 			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3)), $$)
+		}
+	|  Identifier ':' Type ';' ']'
+		{
+			$$ := ast_factory.new_actual_parameters (last_symbol, $5, counter_value + 1)
+			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3)), $4), $$)
 		}
 	| Tuple_labeled_actual_parameter_semicolon Tuple_labeled_actual_parameter_list
 		{

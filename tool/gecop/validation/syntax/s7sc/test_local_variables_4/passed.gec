@@ -1,0 +1,6 @@
+Syntax error:
+line 11 column 15 in aa.e
+		local
+			a: INTEGER;;
+			           ^
+			b: INTEGER
