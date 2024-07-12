@@ -155,13 +155,13 @@ void parsing_store_dispose()
 	GE_last_pstore_object_id = 0;
 }
 
-void ca_store(EIF_POINTER area, EIF_INTEGER siz, EIF_POINTER fil)
+void ca_store(EIF_POINTER area, EIF_INTEGER siz, EIF_POINTER file)
 {
-	if (fwrite((char *)area, sizeof(char), (size_t)siz, (FILE *)fil) != (size_t) siz)
+	if (fwrite((char*)area, sizeof(char), (size_t)siz, (FILE*)file) != (size_t) siz)
 		xraise(EN_IO);
 }
 
-void write_int(FILE *file, EIF_INTEGER_32 val)
+void write_int(FILE* file, EIF_INTEGER_32 val)
 {
 	fwrite(&val, sizeof(EIF_INTEGER_32), 1, file);
 }

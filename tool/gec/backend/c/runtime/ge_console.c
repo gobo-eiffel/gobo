@@ -4,7 +4,7 @@
 		"C functions used to implement class CONSOLE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -14,11 +14,11 @@
 #pragma once
 #endif
 
-#ifndef GE_CONSOLE_H
-#include "ge_console.h"
-#endif
 #ifndef GE_EIFFEL_H
 #include "ge_eiffel.h"
+#endif
+#ifndef GE_CONSOLE_H
+#include "ge_console.h"
 #endif
 #ifndef GE_EXCEPTION_H
 #include "ge_exception.h"
@@ -51,7 +51,7 @@ static EIF_POINTER GE_console_mutex = 0;
  * Initialize mutex to determine whether a new
  * console needs to be created.
  */
-void GE_init_console(void)
+void GE_init_console()
 {
 #ifdef GE_USE_THREADS
 	GE_console_mutex = GE_mutex_create();
@@ -61,7 +61,7 @@ void GE_init_console(void)
 /*
  * Create a new DOS console if needed (i.e. in case of a Windows application).
  */
-void GE_show_console(void)
+void GE_show_console()
 {
 #ifdef GE_USE_THREADS
 	if (GE_console_mutex) {

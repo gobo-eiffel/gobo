@@ -692,9 +692,8 @@ static EIF_POINTER GE_unprotected_condition_variable_create(void)
 	EIF_SEM_TYPE* l_semaphore;
 	EIF_CS_TYPE* l_section;
 
-	l_condition_variable = (EIF_COND_TYPE*)GE_unprotected_malloc_atomic_uncollectable(sizeof(EIF_COND_TYPE));
+	l_condition_variable = (EIF_COND_TYPE*)GE_unprotected_calloc_atomic_uncollectable(1, sizeof(EIF_COND_TYPE));
 	if (l_condition_variable) {
-		memset(l_condition_variable, 0, sizeof(EIF_COND_TYPE));
 		l_semaphore = (EIF_SEM_TYPE*)GE_unprotected_semaphore_create(0);
 		if (l_semaphore) {
 			l_condition_variable->semaphore = l_semaphore;
@@ -1415,15 +1414,11 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 	unsigned int l_attr_priority = GE_thread_default_priority();
 	int l_raise_error = 0;
 
-#ifdef GE_USE_SCOOP
 	/* We need to allocate with `_uncollectable' because there might be a lapse of
 	 * time between the end of the current function and when `l_thread_context'
 	 * is assigned in `GE_thread_routine'. During that time it will be only 
-	 * referenced by `l_context' which is allocted with `_atomic'. */
+	 * referenced by `l_context' which is allocted with `_atomic' in SCOOP mode. */
 	l_thread_context = (GE_thread_context*)GE_unprotected_calloc_uncollectable(1, sizeof(GE_thread_context));
-#else
-	l_thread_context = (GE_thread_context*)GE_unprotected_calloc(1, sizeof(GE_thread_context));
-#endif
 	if (!l_thread_context) {
 		GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
 	} else {
@@ -1496,7 +1491,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 				SIGBLOCK;
 				GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
 					/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
-				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, l_context) == 0) {
+				if (pthread_create(&l_thread_id, &l_attr, GE_thread_routine, (void*)l_context) == 0) {
 					l_thread_context->thread_id = l_thread_id;
 #ifdef GE_USE_SCOOP
 					if (!is_scoop_processor) {
@@ -1520,7 +1515,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 		SIGBLOCK;
 		GE_unprotected_mutex_lock((EIF_POINTER)l_current_thread_context->children_mutex);
 			/* Use the mutex even it case of success to force the thread being created to wait for its thread id to be set. */
-		l_thread_id = (EIF_THR_TYPE)_beginthreadex(NULL, (unsigned int)l_attr_stack_size, GE_thread_routine, l_context, 0, NULL);
+		l_thread_id = (EIF_THR_TYPE)_beginthreadex(NULL, (unsigned int)l_attr_stack_size, GE_thread_routine, (void*)l_context, 0, NULL);
 		if (l_thread_id == 0) {
 			l_raise_error = 1;
 		} else {

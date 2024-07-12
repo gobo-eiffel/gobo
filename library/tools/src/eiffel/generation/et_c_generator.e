@@ -2050,18 +2050,18 @@ feature {NONE} -- Feature generation
 			print_address_routine_name (current_feature, current_type, current_file)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
+			print_type_declaration (current_type, header_file)
+			print_type_declaration (current_type, current_file)
 			if current_type.is_expanded then
-				header_file.put_string (c_volatile)
-				header_file.put_character (' ')
-				print_type_declaration (current_type, header_file)
+				if current_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
+					header_file.put_character (' ')
+					header_file.put_string (c_volatile)
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
+				end
 				header_file.put_character ('*')
-				current_file.put_string (c_volatile)
-				current_file.put_character (' ')
-				print_type_declaration (current_type, current_file)
 				current_file.put_character ('*')
-			else
-				print_type_declaration (current_type, header_file)
-				print_type_declaration (current_type, current_file)
 			end
 			header_file.put_character (' ')
 			current_file.put_character (' ')
@@ -2368,18 +2368,18 @@ feature {NONE} -- Feature generation
 					header_file.put_character (' ')
 					current_file.put_character (',')
 					current_file.put_character (' ')
+					print_type_declaration (current_type, header_file)
+					print_type_declaration (current_type, current_file)
 					if current_type.is_expanded then
-						header_file.put_string (c_volatile)
-						header_file.put_character (' ')
-						print_type_declaration (current_type, header_file)
+						if current_type.is_basic then
+								-- Note that non-basic basic expanded types are already declared as volatile.
+							header_file.put_character (' ')
+							header_file.put_string (c_volatile)
+							current_file.put_character (' ')
+							current_file.put_string (c_volatile)
+						end
 						header_file.put_character ('*')
-						current_file.put_string (c_volatile)
-						current_file.put_character (' ')
-						print_type_declaration (current_type, current_file)
 						current_file.put_character ('*')
-					else
-						print_type_declaration (current_type, header_file)
-						print_type_declaration (current_type, current_file)
 					end
 					header_file.put_character (' ')
 					current_file.put_character (' ')
@@ -2481,7 +2481,7 @@ feature {NONE} -- Feature generation
 			current_file := current_function_body_buffer
 			if not a_inline then
 					-- Call stack.
-				if exception_trace_mode and not a_inline then
+				if exception_trace_mode then
 					print_indentation
 					current_file.put_string (c_ac)
 					current_file.put_string (c_arrow)
@@ -2970,6 +2970,29 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					print_semicolon_newline
 				end
 				print_indentation
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('&')
+				current_file.put_character ('r')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
@@ -2990,6 +3013,17 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_character ('{')
 				current_file.put_new_line
 				indent
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('&')
+				current_file.put_character ('r')
+				current_file.put_character (';')
+				current_file.put_new_line
 					-- Make sure to exit from the current SCOOP sessions
 					-- before propagating the exception.
 				check l_has_separate_arguments: l_arguments /= Void then end
@@ -3017,6 +3051,18 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					i := i + 1
 				end
 				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
 				current_file.put_string (c_ge_jump_to_last_rescue)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
@@ -3026,29 +3072,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				dedent
 				print_indentation
 				current_file.put_character ('}')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_character ('r')
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('&')
-				current_file.put_character ('r')
-				current_file.put_character (';')
 				current_file.put_new_line
 			end
 			if a_feature.is_function then
@@ -5669,6 +5692,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 								current_file.put_character (')')
 							end
 						else
+							if l_argument_type = current_dynamic_system.pointer_type then
+									-- Get rid of the volatile type marker.
+								current_file.put_character ('(')
+								current_file.put_string (c_void)
+								current_file.put_character ('*')
+								current_file.put_character (')')
+							end
 							print_argument_name (l_name, current_file)
 						end
 						i := i + 1
@@ -5809,6 +5839,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 							current_file.put_character (')')
 						end
 					else
+						if l_argument_type = current_dynamic_system.pointer_type then
+								-- Get rid of the volatile type marker.
+							current_file.put_character ('(')
+							current_file.put_string (c_void)
+							current_file.put_character ('*')
+							current_file.put_character (')')
+						end
 						print_argument_name (l_name, current_file)
 					end
 				end
@@ -5859,6 +5896,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 							current_file.put_character (')')
 						end
 					else
+						if l_argument_type = current_dynamic_system.pointer_type then
+								-- Get rid of the volatile type marker.
+							current_file.put_character ('(')
+							current_file.put_string (c_void)
+							current_file.put_character ('*')
+							current_file.put_character (')')
+						end
 						print_argument_name (l_name, current_file)
 					end
 				else
@@ -6029,6 +6073,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 												current_file.put_character (')')
 											end
 										else
+											if l_argument_type = current_dynamic_system.pointer_type then
+													-- Get rid of the volatile type marker.
+												current_file.put_character ('(')
+												current_file.put_string (c_void)
+												current_file.put_character ('*')
+												current_file.put_character (')')
+											end
 											print_argument_name (l_argument_name, current_file)
 										end
 										i := i + l_max
@@ -6164,6 +6215,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						current_file.put_character (')')
 					end
 				else
+					if l_argument_type = current_dynamic_system.pointer_type then
+							-- Get rid of the volatile type marker.
+						current_file.put_character ('(')
+						current_file.put_string (c_void)
+						current_file.put_character ('*')
+						current_file.put_character (')')
+					end
 					print_argument_name (l_name, current_file)
 				end
 				current_file.put_character (')')
@@ -6224,6 +6282,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 								current_file.put_character (')')
 							end
 						else
+							if l_argument_type = current_dynamic_system.pointer_type then
+									-- Get rid of the volatile type marker.
+								current_file.put_character ('(')
+								current_file.put_string (c_void)
+								current_file.put_character ('*')
+								current_file.put_character (')')
+							end
 							print_argument_name (l_name, current_file)
 						end
 						i := i + 1
@@ -6267,6 +6332,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 								current_file.put_character (')')
 							end
 						else
+							if l_argument_type = current_dynamic_system.pointer_type then
+									-- Get rid of the volatile type marker.
+								current_file.put_character ('(')
+								current_file.put_string (c_void)
+								current_file.put_character ('*')
+								current_file.put_character (')')
+							end
 							print_argument_name (l_name, current_file)
 						end
 						i := i + 1
@@ -6530,6 +6602,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 								current_file.put_character (')')
 							end
 						else
+							if l_argument_type = current_dynamic_system.pointer_type then
+									-- Get rid of the volatile type marker.
+								current_file.put_character ('(')
+								current_file.put_string (c_void)
+								current_file.put_character ('*')
+								current_file.put_character (')')
+							end
 							print_argument_name (l_name, current_file)
 						end
 						i := i + 1
@@ -6573,6 +6652,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 								current_file.put_character (')')
 							end
 						else
+							if l_argument_type = current_dynamic_system.pointer_type then
+									-- Get rid of the volatile type marker.
+								current_file.put_character ('(')
+								current_file.put_string (c_void)
+								current_file.put_character ('*')
+								current_file.put_character (')')
+							end
 							print_argument_name (l_name, current_file)
 						end
 						i := i + 1
@@ -6707,18 +6793,18 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					header_file.put_character (' ')
 					current_file.put_character (',')
 					current_file.put_character (' ')
+					print_type_declaration (current_type, header_file)
+					print_type_declaration (current_type, current_file)
 					if current_type.is_expanded then
-						header_file.put_string (c_volatile)
-						header_file.put_character (' ')
-						print_type_declaration (current_type, header_file)
+						if current_type.is_basic then
+								-- Note that non-basic expanded types are already declared as volatile.
+							header_file.put_character (' ')
+							header_file.put_string (c_volatile)
+							current_file.put_character (' ')
+							current_file.put_string (c_volatile)
+						end
 						header_file.put_character ('*')
-						current_file.put_string (c_volatile)
-						current_file.put_character (' ')
-						print_type_declaration (current_type, current_file)
 						current_file.put_character ('*')
-					else
-						print_type_declaration (current_type, header_file)
-						print_type_declaration (current_type, current_file)
 					end
 					header_file.put_character (' ')
 					current_file.put_character (' ')
@@ -7238,6 +7324,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
+				current_file.put_string (c_volatile)
+				current_file.put_character (' ')
 				current_file.put_string (c_uint32_t)
 				current_file.put_character (' ')
 				current_file.put_string (c_tr)
@@ -7334,6 +7422,31 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			locals_read := locals_read_in_rescue
 			if l_has_separate_arguments then
 				print_indentation
+				current_file.put_character ('r')
+				current_file.put_character ('2')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('&')
+				current_file.put_character ('r')
+				current_file.put_character ('2')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
@@ -7355,6 +7468,18 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_character ('{')
 				current_file.put_new_line
 				indent
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('&')
+				current_file.put_character ('r')
+				current_file.put_character ('2')
+				current_file.put_character (';')
+				current_file.put_new_line
 					-- Make sure to exit from the current SCOOP sessions
 					-- before propagating the exception.
 				if l_has_separate_formal_arguments then
@@ -7406,6 +7531,19 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					end
 				end
 				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character ('2')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
 				current_file.put_string (c_ge_jump_to_last_rescue)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
@@ -7416,9 +7554,10 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_indentation
 				current_file.put_character ('}')
 				current_file.put_new_line
+			end
+			if l_rescue /= Void or l_is_once then
 				print_indentation
 				current_file.put_character ('r')
-				current_file.put_character ('2')
 				current_file.put_character ('.')
 				current_file.put_string (c_previous)
 				current_file.put_character (' ')
@@ -7438,11 +7577,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_character (' ')
 				current_file.put_character ('&')
 				current_file.put_character ('r')
-				current_file.put_character ('2')
 				current_file.put_character (';')
 				current_file.put_new_line
-			end
-			if l_rescue /= Void or l_is_once then
 				print_indentation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
@@ -7479,6 +7615,17 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_indentation
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('&')
+				current_file.put_character ('r')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
 				current_file.put_string (c_in_rescue)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
@@ -7507,6 +7654,18 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						end
 					end
 				end
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (';')
+				current_file.put_new_line
 				if l_rescue /= Void then
 					print_indentation
 					current_file.put_string (c_ge_raise)
@@ -7533,29 +7692,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_character (':')
 					current_file.put_new_line
 				end
-				print_indentation
-				current_file.put_character ('r')
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('&')
-				current_file.put_character ('r')
-				current_file.put_character (';')
-				current_file.put_new_line
 			end
 			l_result_written_in_rescue := result_written
 			l_result_read_in_rescue := result_read
@@ -7633,11 +7769,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				-- Variable for 'Result' entity.
 			if a_result_type /= Void then
 				print_indentation
+				print_type_declaration (a_result_type, current_file)
 				if
-					volatile_result or
+					(not a_result_type.is_expanded or else a_result_type.is_basic) and
+					(volatile_result or
 					has_rescue and then
 						(l_result_written_in_body or l_result_written_in_rescue) and then
-						(has_retry or l_result_read_in_rescue)
+						(has_retry or l_result_read_in_rescue))
 				then
 						-- The implementation of the rescue mechanism in C uses 'setjmp'
 						-- and 'longjmp'. The use of these two C functions requires that
@@ -7650,17 +7788,10 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						-- sure that he C optimizer will not implement it with 'register'.
 						--
 						-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
-					if a_result_type.is_expanded then
-						current_file.put_string (c_volatile)
-						current_file.put_character (' ')
-						print_type_declaration (a_result_type, current_file)
-					else
-						print_type_declaration (a_result_type, current_file)
-						current_file.put_character (' ')
-						current_file.put_string (c_volatile)
-					end
-				else
-					print_type_declaration (a_result_type, current_file)
+						--
+						-- Note that non-basic expanded types are already declared as volatile.
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
 				end
 				current_file.put_character (' ')
 				print_result_name (current_file)
@@ -7679,11 +7810,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					l_local_type_set := dynamic_type_set (l_name)
 					l_local_type := l_local_type_set.static_type.primary_type
 					print_indentation
+					print_type_declaration (l_local_type, current_file)
 					if
-						volatile_locals.has (l_name.seed) or
+						(not l_local_type.is_expanded or else l_local_type.is_basic) and
+						(volatile_locals.has (l_name.seed) or
 						has_rescue and then
 							(locals_written_in_body.has (l_name.seed) or locals_written_in_rescue.has (l_name.seed)) and then
-							(has_retry or locals_read_in_rescue.has (l_name.seed))
+							(has_retry or locals_read_in_rescue.has (l_name.seed)))
 					then
 							-- The implementation of the rescue mechanism in C uses 'setjmp'
 							-- and 'longjmp'. The use of these two C functions requires that
@@ -7697,17 +7830,10 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 							-- with 'register'.
 							--
 							-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
-						if l_local_type.is_expanded then
-							current_file.put_string (c_volatile)
-							current_file.put_character (' ')
-							print_type_declaration (l_local_type, current_file)
-						else
-							print_type_declaration (l_local_type, current_file)
-							current_file.put_character (' ')
-							current_file.put_string (c_volatile)
-						end
-					else
-						print_type_declaration (l_local_type, current_file)
+							--
+							-- Note that non-basic expanded types are already declared as volatile.
+						current_file.put_character (' ')
+						current_file.put_string (c_volatile)
 					end
 					current_file.put_character (' ')
 					print_local_name (l_name, current_file)
@@ -7854,18 +7980,18 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					header_file.put_character (' ')
 					current_file.put_character (',')
 					current_file.put_character (' ')
+					print_type_declaration (current_type, header_file)
+					print_type_declaration (current_type, current_file)
 					if current_type.is_expanded then
-						header_file.put_string (c_volatile)
-						header_file.put_character (' ')
-						print_type_declaration (current_type, header_file)
+						if current_type.is_basic then
+								-- Note that non-basic expanded types are already declared as volatile.
+							header_file.put_character (' ')
+							header_file.put_string (c_volatile)
+							current_file.put_character (' ')
+							current_file.put_string (c_volatile)
+						end
 						header_file.put_character ('*')
-						current_file.put_string (c_volatile)
-						current_file.put_character (' ')
-						print_type_declaration (current_type, current_file)
 						current_file.put_character ('*')
-					else
-						print_type_declaration (current_type, header_file)
-						print_type_declaration (current_type, current_file)
 					end
 					header_file.put_character (' ')
 					current_file.put_character (' ')
@@ -8017,21 +8143,20 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				from i := 1 until i > nb loop
 					if attached l_object_tests.object_test (i).name as l_name then
 						if current_object_test_locals.has (l_name.seed) then
-								-- If the address of the iobject-test local is used, we have
-								-- to make sure that the C optimizer will not implement it
-								-- with 'register'.
-								--
-								-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
 							l_type := dynamic_type_set (l_name).static_type.primary_type
 							print_indentation
-							if not volatile_object_test_locals.has (l_name.seed) then
-								print_type_declaration (l_type, current_file)
-							elseif l_type.is_expanded then
-								current_file.put_string (c_volatile)
-								current_file.put_character (' ')
-								print_type_declaration (l_type, current_file)
-							else
-								print_type_declaration (l_type, current_file)
+							print_type_declaration (l_type, current_file)
+							if
+								(not l_type.is_expanded or else l_type.is_basic) and 
+								volatile_object_test_locals.has (l_name.seed)
+							then
+									-- If the address of the object-test local is used, we have
+									-- to make sure that the C optimizer will not implement it
+									-- with 'register'.
+									--
+									-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+									--
+									-- Note that non-basic expanded types are already declared as volatile.
 								current_file.put_character (' ')
 								current_file.put_string (c_volatile)
 							end
@@ -8062,21 +8187,20 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				from i := 1 until i > nb loop
 					if attached l_iteration_components.iteration_component (i).unfolded_cursor_name as l_name then
 						if current_iteration_cursors.has (l_name.seed) then
-								-- If the address of the iteration cursor is used, we have
-								-- to make sure that the C optimizer will not implement it
-								-- with 'register'.
-								--
-								-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
 							l_type := dynamic_type_set (l_name).static_type.primary_type
 							print_indentation
-							if not volatile_iteration_cursors.has (l_name.seed) then
-								print_type_declaration (l_type, current_file)
-							elseif l_type.is_expanded then
-								current_file.put_string (c_volatile)
-								current_file.put_character (' ')
-								print_type_declaration (l_type, current_file)
-							else
-								print_type_declaration (l_type, current_file)
+							print_type_declaration (l_type, current_file)
+							if
+								(not l_type.is_expanded or else l_type.is_basic) and
+								volatile_iteration_cursors.has (l_name.seed)
+							then
+									-- If the address of the iteration cursor is used, we have
+									-- to make sure that the C optimizer will not implement it
+									-- with 'register'.
+									--
+									-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+									--
+									-- Note that non-basic expanded types are already declared as volatile.
 								current_file.put_character (' ')
 								current_file.put_string (c_volatile)
 							end
@@ -8105,21 +8229,20 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				from i := 1 until i > nb loop
 					if attached l_inline_separate_arguments.argument (i).name as l_name then
 						if current_inline_separate_arguments.has (l_name.seed) then
-								-- If the address of the inline separate argument is used, we have
-								-- to make sure that the C optimizer will not implement it
-								-- with 'register'.
-								--
-								-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
 							l_type := dynamic_type_set (l_name).static_type.primary_type
 							print_indentation
-							if not volatile_inline_separate_arguments.has (l_name.seed) then
-								print_type_declaration (l_type, current_file)
-							elseif l_type.is_expanded then
-								current_file.put_string (c_volatile)
-								current_file.put_character (' ')
-								print_type_declaration (l_type, current_file)
-							else
-								print_type_declaration (l_type, current_file)
+							print_type_declaration (l_type, current_file)
+							if
+								(not l_type.is_expanded or else l_type.is_basic) and
+								volatile_inline_separate_arguments.has (l_name.seed)
+							then
+									-- If the address of the inline separate argument is used, we have
+									-- to make sure that the C optimizer will not implement it
+									-- with 'register'.
+									--
+									-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+									--
+									-- Note that non-basic expanded types are already declared as volatile.
 								current_file.put_character (' ')
 								current_file.put_string (c_volatile)
 							end
@@ -8151,20 +8274,19 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				end
 				if l_type /= Void then
 					l_name := temp_variables.item (i)
-						-- If the address of the temporary variable is used, we have
-						-- to make sure that the C optimizer will not implement it
-						-- with 'register'.
-						--
-						-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
 					print_indentation
-					if not volatile_temp_variables.item (i) then
-						print_type_declaration (l_type, current_file)
-					elseif l_type.is_expanded then
-						current_file.put_string (c_volatile)
-						current_file.put_character (' ')
-						print_type_declaration (l_type, current_file)
-					else
-						print_type_declaration (l_type, current_file)
+					print_type_declaration (l_type, current_file)
+					if
+						(not l_type.is_expanded or else l_type.is_basic) and
+						volatile_temp_variables.item (i)
+					then
+							-- If the address of the temporary variable is used, we have
+							-- to make sure that the C optimizer will not implement it
+							-- with 'register'.
+							--
+							-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+							--
+							-- Note that non-basic expanded types are already declared as volatile.
 						current_file.put_character (' ')
 						current_file.put_string (c_volatile)
 					end
@@ -18663,10 +18785,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			current_file.put_new_line
 			indent
 			print_indentation
-			if a_agent_type.is_expanded then
-				current_file.put_string (c_volatile)
-				current_file.put_character (' ')
-			end
 			print_type_declaration (a_agent_type, current_file)
 			current_file.put_character (' ')
 			print_result_name (current_file)
@@ -18892,52 +19010,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			current_file := current_function_body_buffer
 			if l_target_type_is_separate then
 				print_indentation
-				current_file.put_string (c_if)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				current_file.put_string (c_ge_setjmp)
-				current_file.put_character ('(')
-				current_file.put_character ('r')
-				current_file.put_character ('.')
-				current_file.put_character ('j')
-				current_file.put_character ('b')
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('!')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('0')
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				indent
-				print_indentation
-				current_file.put_string (c_if)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_separate_argument_session_name (agent_inline_separate_argument.name, current_file)
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_string (c_ge_scoop_session_close)
-				current_file.put_character ('(')
-				current_file.put_string (c_sr)
-				print_comma
-				print_separate_argument_session_name (agent_inline_separate_argument.name, current_file)
-				current_file.put_character (')')
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_ge_jump_to_last_rescue)
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-				dedent
-				print_indentation
-				current_file.put_character ('}')
-				current_file.put_new_line
-				print_indentation
 				current_file.put_character ('r')
 				current_file.put_character ('.')
 				current_file.put_string (c_previous)
@@ -18959,6 +19031,74 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_character ('&')
 				current_file.put_character ('r')
 				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_ge_setjmp)
+				current_file.put_character ('(')
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_character ('j')
+				current_file.put_character ('b')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('!')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('0')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('&')
+				current_file.put_character ('r')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_separate_argument_session_name (agent_inline_separate_argument.name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_string (c_ge_scoop_session_close)
+				current_file.put_character ('(')
+				current_file.put_string (c_sr)
+				print_comma
+				print_separate_argument_session_name (agent_inline_separate_argument.name, current_file)
+				current_file.put_character (')')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_ge_jump_to_last_rescue)
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
 				current_file.put_new_line
 			end
 			if l_result /= Void then
@@ -21297,17 +21437,15 @@ feature {NONE} -- Separate calls
 			print_semicolon_newline
 			if l_result_type /= Void then
 				print_indentation
-					-- Declare the 'Result' as 'volatile' because we will pass
-					-- its address during the separate call so that it is set
-					-- from the other SCOOP processor. This prevents the C optimizer
-					-- to implement it with 'register'.
-					-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
-				if l_result_type.is_expanded then
-					current_file.put_string (c_volatile)
-					current_file.put_character (' ')
-					print_type_declaration (l_result_type, current_file)
-				else
-					print_type_declaration (l_result_type, current_file)
+				print_type_declaration (l_result_type, current_file)
+				if not l_result_type.is_expanded or else l_result_type.is_basic then 
+						-- Declare the 'Result' as 'volatile' because we will pass
+						-- its address during the separate call so that it is set
+						-- from the other SCOOP processor. This prevents the C optimizer
+						-- to implement it with 'register'.
+						-- https://barrgroup.com/embedded-systems/how-to/c-volatile-keyword
+						--
+						-- Note that non-basic expanded types are already declared as volatile.
 					current_file.put_character (' ')
 					current_file.put_string (c_volatile)
 				end
@@ -21707,6 +21845,29 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('}')
 					current_file.put_new_line
 					print_indentation
+					current_file.put_character ('r')
+					current_file.put_character ('.')
+					current_file.put_string (c_previous)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_last_rescue)
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_last_rescue)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('&')
+					current_file.put_character ('r')
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
 					current_file.put_character ('(')
@@ -21727,6 +21888,17 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('{')
 					current_file.put_new_line
 					indent
+					print_indentation
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_last_rescue)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('&')
+					current_file.put_character ('r')
+					current_file.put_character (';')
+					current_file.put_new_line
 					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
@@ -21762,6 +21934,17 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('}')
 					current_file.put_new_line
 					print_indentation
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_last_rescue)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('r')
+					current_file.put_character ('.')
+					current_file.put_string (c_previous)
+					print_semicolon_newline
+					print_indentation
 					current_file.put_string (c_ge_jump_to_last_rescue)
 					current_file.put_character ('(')
 					current_file.put_string (c_ac)
@@ -21771,29 +21954,6 @@ feature {NONE} -- Separate calls
 					dedent
 					print_indentation
 					current_file.put_character ('}')
-					current_file.put_new_line
-					print_indentation
-					current_file.put_character ('r')
-					current_file.put_character ('.')
-					current_file.put_string (c_previous)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_string (c_ac)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_last_rescue)
-					current_file.put_character (';')
-					current_file.put_new_line
-					print_indentation
-					current_file.put_string (c_ac)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_last_rescue)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('&')
-					current_file.put_character ('r')
-					current_file.put_character (';')
 					current_file.put_new_line
 					separate_call_arguments.wipe_out
 					if nb_args > 0 then
@@ -22065,14 +22225,12 @@ feature {NONE} -- Separate calls
 				l_index := l_call_expression.index
 				l_result_type := dynamic_type_set (l_call_expression).static_type.primary_type
 				print_indentation
-				if l_result_type.is_expanded then
+				print_type_declaration (l_result_type, current_file)
+				current_file.put_character (' ')
+				if not l_result_type.is_expanded or else l_result_type.is_basic then 
+						-- Note that non-basic expanded types are already declared as volatile.
 					current_file.put_string (c_volatile)
 					current_file.put_character (' ')
-					print_type_declaration (l_result_type, current_file)
-				else
-					print_type_declaration (l_result_type, current_file)
-					current_file.put_character (' ')
-					current_file.put_string (c_volatile)
 				end
 				current_file.put_character ('*')
 				current_file.put_character (' ')
@@ -22251,18 +22409,12 @@ feature {NONE} -- Separate calls
 			current_file.put_character (' ')
 			if attached {ET_QUALIFIED_FEATURE_CALL_EXPRESSION} a_separate_call as l_call_expression then
 				l_result_type := dynamic_type_set (l_call_expression).static_type.primary_type
-				if l_result_type.is_expanded then
-					header_file.put_string (c_volatile)
-					header_file.put_character (' ')
-					print_type_declaration (l_result_type, header_file)
-					current_file.put_string (c_volatile)
-					current_file.put_character (' ')
-					print_type_declaration (l_result_type, current_file)
-				else
-					print_type_declaration (l_result_type, header_file)
+				print_type_declaration (l_result_type, header_file)
+				print_type_declaration (l_result_type, current_file)
+				if not l_result_type.is_expanded or else l_result_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
 					header_file.put_character (' ')
 					header_file.put_string (c_volatile)
-					print_type_declaration (l_result_type, current_file)
 					current_file.put_character (' ')
 					current_file.put_string (c_volatile)
 				end
@@ -22466,51 +22618,39 @@ feature {NONE} -- Separate calls
 			header_file.put_new_line
 			header_file.put_string (c_typedef)
 			header_file.put_character (' ')
-			header_file.put_string (c_struct)
+			header_file.put_string (c_volatile)
 			header_file.put_character (' ')
-			print_separate_call_object_type_name (i, current_feature, current_type, header_file)
-			header_file.put_character ('_')
-			header_file.put_string (c_struct)
-			header_file.put_character (' ')
-			print_separate_call_object_type_name (i, current_feature, current_type, header_file)
-			header_file.put_character (';')
-			header_file.put_new_line
-			header_file.put_string (c_struct)
-			header_file.put_character (' ')
-			print_separate_call_object_type_name (i, current_feature, current_type, header_file)
-			header_file.put_character ('_')
 			header_file.put_string (c_struct)
 			header_file.put_character (' ')
 			header_file.put_character ('{')
 			header_file.put_new_line
 			header_file.put_character ('%T')
-			header_file.put_string ("GE_scoop_region* caller;")
+			header_file.put_string ("GE_scoop_region* volatile caller;")
 			header_file.put_new_line
 			header_file.put_character ('%T')
-			header_file.put_string ("char is_synchronous;")
+			header_file.put_string ("char volatile is_synchronous;")
 			header_file.put_new_line
 			header_file.put_character ('%T')
-			header_file.put_string ("char is_condition;")
+			header_file.put_string ("char volatile is_condition;")
 			header_file.put_new_line
 			header_file.put_character ('%T')
-			header_file.put_string ("void (*execute)(GE_context*, GE_scoop_session*, GE_scoop_call*);")
+			header_file.put_string ("void (*volatile execute)(GE_context*, GE_scoop_session*, GE_scoop_call*);")
 			header_file.put_new_line
 			header_file.put_character ('%T')
-			header_file.put_string ("GE_scoop_call* next;")
+			header_file.put_string ("GE_scoop_call* volatile next;")
 			header_file.put_new_line
 			if attached {ET_QUALIFIED_FEATURE_CALL_EXPRESSION} a_separate_call as l_call_expression then
 				l_result_type := dynamic_type_set (l_call_expression).static_type.primary_type
 				header_file.put_character ('%T')
-				if l_result_type.is_expanded then
-					header_file.put_string (c_volatile)
-					header_file.put_character (' ')
-					print_type_declaration (l_result_type, header_file)
-				else
-					print_type_declaration (l_result_type, header_file)
+				print_type_declaration (l_result_type, header_file)
+				if not l_result_type.is_expanded or else l_result_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
 					header_file.put_character (' ')
 					header_file.put_string (c_volatile)
 				end
 				header_file.put_character ('*')
+				header_file.put_character (' ')
+				header_file.put_string (c_volatile)
 				header_file.put_character (' ')
 				print_result_name (header_file)
 				header_file.put_character (';')
@@ -22522,6 +22662,11 @@ feature {NONE} -- Separate calls
 			l_operand.set_index (a_separate_call.target.index)
 			header_file.put_character ('%T')
 			print_type_declaration (l_target_type, header_file)
+			if not l_target_type.is_expanded or else l_target_type.is_basic then
+					-- Note that non-basic expanded types are already declared as volatile.
+				header_file.put_character (' ')
+				header_file.put_string (c_volatile)
+			end
 			header_file.put_character (' ')
 			print_argument_name (l_operand, header_file)
 			header_file.put_character (';')
@@ -22537,6 +22682,11 @@ feature {NONE} -- Separate calls
 					l_type := dynamic_type_set (l_operand).static_type.primary_type
 					header_file.put_character ('%T')
 					print_type_declaration (l_type, header_file)
+					if not l_type.is_expanded or else l_type.is_basic then
+							-- Note that non-basic expanded types are already declared as volatile.
+						header_file.put_character (' ')
+						header_file.put_string (c_volatile)
+					end
 					header_file.put_character (' ')
 					print_argument_name (l_operand, header_file)
 					header_file.put_character (';')
@@ -22545,6 +22695,8 @@ feature {NONE} -- Separate calls
 				end
 			end
 			header_file.put_character ('}')
+			header_file.put_character (' ')
+			print_separate_call_object_type_name (i, current_feature, current_type, header_file)
 			header_file.put_character (';')
 			header_file.put_new_line
 			header_file.put_new_line
@@ -23870,9 +24022,23 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_indentation
 				current_file.put_string (c_memcpy)
 				current_file.put_character ('(')
+					-- Get rid of the volatile type marker.
+				current_file.put_character ('(')
+				current_file.put_string (c_void)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
 				print_procedure_target_expression (a_target, a_special_type, False)
+				current_file.put_character (')')
 				print_comma
+					-- Get rid of the volatile type marker.
+				current_file.put_character ('(')
+				current_file.put_string (c_void)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
 				print_attachment_expression (a_source, dynamic_type_set (a_source), a_special_type)
+				current_file.put_character (')')
 				print_comma
 				print_attribute_special_offset_access (a_target, a_special_type, False)
 				print_plus
@@ -34368,12 +34534,9 @@ feature {NONE} -- C function generation
 				print_type_declaration (l_integer_type, current_file)
 				current_file.put_line (" j = n;")
 				print_indentation
-				if l_item_type.is_expanded then
-					current_file.put_string (c_volatile)
-					current_file.put_character (' ')
-					print_type_declaration (l_item_type, current_file)
-				else
-					print_type_declaration (l_item_type, current_file)
+				print_type_declaration (l_item_type, current_file)
+				if not l_item_type.is_expanded or else l_item_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
 					current_file.put_character (' ')
 					current_file.put_string (c_volatile)
 				end
@@ -34579,12 +34742,9 @@ feature {NONE} -- C function generation
 				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
-				if l_item_type.is_expanded then
-					current_file.put_string (c_volatile)
-					current_file.put_character (' ')
-					print_type_declaration (l_item_type, current_file)
-				else
-					print_type_declaration (l_item_type, current_file)
+				print_type_declaration (l_item_type, current_file)
+				if not l_item_type.is_expanded or else l_item_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
 					current_file.put_character (' ')
 					current_file.put_string (c_volatile)
 				end
@@ -34904,12 +35064,15 @@ feature {NONE} -- C function generation
 			current_file.put_string (c_ac)
 			current_file.put_character (',')
 			current_file.put_character (' ')
-			header_file.put_string (c_volatile)
-			header_file.put_character (' ')
+			if a_type.is_basic then
+					-- Note that non-basic expanded types are already declared as volatile.
+				header_file.put_string (c_volatile)
+				header_file.put_character (' ')
+				current_file.put_string (c_volatile)
+				current_file.put_character (' ')
+			end
 			print_type_declaration (a_type, header_file)
 			header_file.put_character ('*')
-			current_file.put_string (c_volatile)
-			current_file.put_character (' ')
 			print_type_declaration (a_type, current_file)
 			current_file.put_character ('*')
 			header_file.put_character (' ')
@@ -35307,9 +35470,12 @@ feature {NONE} -- Memory allocation
 				l_temp := new_temp_variable (current_type)
 				mark_temp_variable_volatile (l_temp)
 				print_indentation
-				current_file.put_string (c_volatile)
-				current_file.put_character (' ')
 				print_type_declaration (current_type, current_file)
+				if current_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
+				end
 				current_file.put_character ('*')
 				current_file.put_character (' ')
 				print_current_name (current_file)
@@ -38017,6 +38183,8 @@ feature {NONE} -- Type generation
 			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string (c_typedef)
+			header_file.put_character (' ')
+			header_file.put_string (c_volatile)
 			a_file.put_character (' ')
 			a_file.put_string (c_struct)
 			a_file.put_character (' ')
@@ -38038,6 +38206,8 @@ feature {NONE} -- Type generation
 			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string (c_typedef)
+			header_file.put_character (' ')
+			header_file.put_string (c_volatile)
 			a_file.put_character (' ')
 			a_file.put_string (c_struct)
 			a_file.put_character (' ')
@@ -38056,6 +38226,8 @@ feature {NONE} -- Type generation
 			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string (c_typedef)
+			header_file.put_character (' ')
+			header_file.put_string (c_volatile)
 			a_file.put_character (' ')
 			a_file.put_string (c_struct)
 			a_file.put_character (' ')
@@ -38075,6 +38247,7 @@ feature {NONE} -- Type generation
 		local
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_attribute_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_query: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER
@@ -38104,11 +38277,15 @@ feature {NONE} -- Type generation
 					a_file.put_character ('%T')
 					a_file.put_string (c_eif_type_index)
 					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+					a_file.put_character (' ')
 					print_attribute_type_id_name (a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_new_line
 					a_file.put_character ('%T')
 					a_file.put_string (c_uint16_t)
+					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
 					a_file.put_character (' ')
 					print_attribute_flags_name (a_type, a_file)
 					a_file.put_character (';')
@@ -38117,6 +38294,8 @@ feature {NONE} -- Type generation
 						a_file.put_character ('%T')
 						a_file.put_string (c_ge_scoop_region)
 						a_file.put_character ('*')
+						a_file.put_character (' ')
+						a_file.put_string (c_volatile)
 						a_file.put_character (' ')
 						print_attribute_region_name (a_type, a_file)
 						a_file.put_character (';')
@@ -38128,6 +38307,8 @@ feature {NONE} -- Type generation
 						-- Offset (in bytes) of the first item.
 					a_file.put_character ('%T')
 					a_file.put_string (c_uint32_t)
+					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
 					a_file.put_character (' ')
 					a_file.put_string (c_offset)
 					a_file.put_character (';')
@@ -38144,7 +38325,13 @@ feature {NONE} -- Type generation
 						error_handler.report_giaac_error (generator, "print_type_struct", 1, "query with no type.")
 					else
 						a_file.put_character ('%T')
-						print_type_declaration (l_result_type_set.static_type.primary_type, a_file)
+						l_attribute_type := l_result_type_set.static_type.primary_type
+						print_type_declaration (l_attribute_type, a_file)
+						if not l_attribute_type.is_expanded or else l_attribute_type.is_basic then
+								-- Note that non-basic expanded types are already declared as volatile.
+							a_file.put_character (' ')
+							a_file.put_string (c_volatile)
+						end
 						a_file.put_character (' ')
 						print_attribute_name (l_query, a_type, a_file)
 						a_file.put_character (';')
@@ -38166,6 +38353,8 @@ feature {NONE} -- Type generation
 					print_once_per_object_data_type_name (a_type, a_file)
 					a_file.put_character ('*')
 					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+					a_file.put_character (' ')
 					print_attribute_onces_name (a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_new_line
@@ -38178,12 +38367,10 @@ feature {NONE} -- Type generation
 						-- See https://stackoverflow.com/questions/246977/is-using-flexible-array-members-in-c-bad-practice.
 					a_file.put_character ('%T')
 					l_item_type_set := l_special_type.item_type_set
-					if l_item_type_set.is_expanded then
-						a_file.put_string (c_volatile)
-						a_file.put_character (' ')
-						print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
-					else
-						print_type_declaration (l_item_type_set.static_type.primary_type, a_file)
+					l_attribute_type := l_item_type_set.static_type.primary_type
+					print_type_declaration (l_attribute_type, a_file)
+					if not l_attribute_type.is_expanded or else l_attribute_type.is_basic then
+							-- Note that non-basic expanded types are already declared as volatile.
 						a_file.put_character (' ')
 						a_file.put_string (c_volatile)
 					end
@@ -38210,7 +38397,13 @@ feature {NONE} -- Type generation
 					nb := l_item_type_sets.count
 					from i := 1 until i > nb loop
 						a_file.put_character ('%T')
-						print_type_declaration (l_item_type_sets.item (i).static_type.primary_type, a_file)
+						l_attribute_type := l_item_type_sets.item (i).static_type.primary_type
+						print_type_declaration (l_attribute_type, a_file)
+						if not l_attribute_type.is_expanded or else l_attribute_type.is_basic then
+								-- Note that non-basic expanded types are already declared as volatile.
+							a_file.put_character (' ')
+							a_file.put_string (c_volatile)
+						end
 						a_file.put_character (' ')
 						print_attribute_tuple_item_name (i, l_tuple_type, a_file)
 						a_file.put_character (';')
@@ -38223,6 +38416,8 @@ feature {NONE} -- Type generation
 						-- Add a dummy field so that the struct is not empty (not allowed in C99).
 					a_file.put_character ('%T')
 					a_file.put_string (c_char)
+					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
 					a_file.put_character (' ')
 					a_file.put_string ("dummy")
 					a_file.put_character (';')
@@ -38264,11 +38459,15 @@ feature {NONE} -- Type generation
 				a_file.put_character ('%T')
 				a_file.put_string (c_eif_type_index)
 				a_file.put_character (' ')
+				a_file.put_string (c_volatile)
+				a_file.put_character (' ')
 				print_attribute_type_id_name (a_type, a_file)
 				a_file.put_character (';')
 				a_file.put_new_line
 				a_file.put_character ('%T')
 				a_file.put_string (c_uint16_t)
+				a_file.put_character (' ')
+				a_file.put_string (c_volatile)
 				a_file.put_character (' ')
 				print_attribute_flags_name (a_type, a_file)
 				a_file.put_character (';')
@@ -38278,13 +38477,22 @@ feature {NONE} -- Type generation
 					a_file.put_string (c_ge_scoop_region)
 					a_file.put_character ('*')
 					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+					a_file.put_character (' ')
 					print_attribute_region_name (a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_new_line
 				end
 				a_file.put_character ('%T')
 				print_type_declaration (a_type, a_file)
+				if a_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
+					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+				end
 				a_file.put_character ('*')
+				a_file.put_character (' ')
+				a_file.put_string (c_volatile)
 				a_file.put_character (' ')
 				print_boxed_attribute_pointer_name (a_type, a_file)
 				a_file.put_character (';')
@@ -38305,6 +38513,11 @@ feature {NONE} -- Type generation
 				a_file.put_new_line
 				a_file.put_character ('%T')
 				print_type_declaration (a_type, a_file)
+				if a_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
+					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+				end
 				a_file.put_character (' ')
 				print_boxed_attribute_item_name (a_type, a_file)
 				a_file.put_character (';')
@@ -38341,6 +38554,7 @@ feature {NONE} -- Type generation
 		local
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_query: ET_DYNAMIC_FEATURE
+			l_query_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_procedures: ET_DYNAMIC_FEATURE_LIST
 			l_procedure: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER
@@ -38377,6 +38591,8 @@ feature {NONE} -- Type generation
 					a_file.put_character (' ')
 					a_file.put_string (c_char)
 					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+					a_file.put_character (' ')
 					print_once_per_object_status_name (l_query, a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_character (' ')
@@ -38389,7 +38605,13 @@ feature {NONE} -- Type generation
 					a_file.put_character ('/')
 					a_file.put_new_line
 					a_file.put_character ('%T')
-					print_type_declaration (l_result_type_set.static_type.primary_type, a_file)
+					l_query_type := l_result_type_set.static_type.primary_type
+					print_type_declaration (l_query_type, a_file)
+					if not l_query_type.is_expanded or else l_query_type.is_basic then
+							-- Note that non-basic expanded types are already declared as volatile.
+						a_file.put_character (' ')
+						a_file.put_string (c_volatile)
+					end
 					a_file.put_character (' ')
 					print_once_per_object_value_name (l_query, a_type, a_file)
 					a_file.put_character (';')
@@ -38397,12 +38619,16 @@ feature {NONE} -- Type generation
 					a_file.put_character ('%T')
 					a_file.put_string (c_eif_reference)
 					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+					a_file.put_character (' ')
 					print_once_per_object_exception_name (l_query, a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_new_line
 					if use_threads then
 						a_file.put_character ('%T')
 						a_file.put_string (c_eif_pointer)
+						a_file.put_character (' ')
+						a_file.put_string (c_volatile)
 						a_file.put_character (' ')
 						print_once_per_object_mutex_name (l_query, a_type, a_file)
 						a_file.put_character (';')
@@ -38421,6 +38647,8 @@ feature {NONE} -- Type generation
 					a_file.put_character (' ')
 					a_file.put_string (c_char)
 					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+					a_file.put_character (' ')
 					print_once_per_object_status_name (l_procedure, a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_character (' ')
@@ -38435,12 +38663,16 @@ feature {NONE} -- Type generation
 					a_file.put_character ('%T')
 					a_file.put_string (c_eif_reference)
 					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+					a_file.put_character (' ')
 					print_once_per_object_exception_name (l_procedure, a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_new_line
 					if use_threads then
 						a_file.put_character ('%T')
 						a_file.put_string (c_eif_pointer)
+						a_file.put_character (' ')
+						a_file.put_string (c_volatile)
 						a_file.put_character (' ')
 						print_once_per_object_mutex_name (l_procedure, a_type, a_file)
 						a_file.put_character (';')
@@ -38500,6 +38732,14 @@ feature {NONE} -- Type generation
 			current_file.put_integer (0)
 			current_file.put_character (',')
 			current_file.put_character (' ')
+			if use_scoop then
+				current_file.put_integer (0)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+			end
+			current_file.put_integer (0)
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			current_file.put_string (c_eif_false)
 			current_file.put_character (',')
 			current_file.put_character (' ')
@@ -38516,6 +38756,14 @@ feature {NONE} -- Type generation
 			current_file.put_integer (0)
 			current_file.put_character (',')
 			current_file.put_character (' ')
+			current_file.put_integer (0)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			if use_scoop then
+				current_file.put_integer (0)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+			end
 			current_file.put_integer (0)
 			current_file.put_character (',')
 			current_file.put_character (' ')
@@ -38547,6 +38795,16 @@ feature {NONE} -- Type generation
 				end
 				current_file.put_character (',')
 				current_file.put_character (' ')
+					-- Flags.
+				current_file.put_character ('0')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				if use_scoop then
+						-- SCOOP region.
+					current_file.put_character ('0')
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
 					-- type_id.
 				current_file.put_integer (l_type.id)
 				current_file.put_character (',')
@@ -38596,6 +38854,16 @@ feature {NONE} -- Type generation
 				end
 				current_file.put_character (',')
 				current_file.put_character (' ')
+					-- Flags.
+				current_file.put_character ('0')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				if use_scoop then
+						-- SCOOP region.
+					current_file.put_character ('0')
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
 					-- type_id.
 				current_file.put_integer ((1 |<< 16) | l_type.id)
 				current_file.put_character (',')
@@ -39387,10 +39655,8 @@ feature {NONE} -- Default initialization values generation
 			nb := l_dynamic_types.count
 			from i := 1 until i > nb loop
 				l_type := l_dynamic_types.item (i)
-				if l_type.is_alive then
-					if not l_type.base_class.is_type_class then
-						print_default_declaration (l_type)
-					end
+				if l_type.is_alive and l_type.is_expanded and not l_type.is_basic and not l_type.base_class.is_type_class then
+					print_default_declaration (l_type)
 				end
 				i := i + 1
 			end
@@ -41698,6 +41964,7 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("ge_signal.c") then
 					include_runtime_header_file ("ge_signal.h", False, a_header_file)
 					include_runtime_header_file ("ge_exception.h", False, a_header_file)
+					include_runtime_header_file ("ge_console.h", False, a_header_file)
 					if use_threads then
 						include_runtime_header_file ("ge_thread.h", False, a_header_file)
 					end

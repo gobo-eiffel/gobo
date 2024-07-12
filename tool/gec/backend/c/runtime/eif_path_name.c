@@ -4,7 +4,7 @@
 		"C functions used to implement class PATH_NAME"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -120,7 +120,7 @@ void eif_append_file_name(EIF_REFERENCE string, EIF_CHARACTER_8* p, EIF_CHARACTE
 			strcat((char*)p, "\\");
 #else
 		if (p[strlen((char*)p) - 1] != '/')
-			strcat((char *)p, "/");
+			strcat((char*)p, "/");
 #endif
 		strcat((char*)p, (char*)v);
 	}

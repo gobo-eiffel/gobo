@@ -4,7 +4,7 @@
 		"C functions used to implement features 'deep_twin' and 'is_deep_equal' from class ANY"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -32,10 +32,10 @@ extern "C" {
  * Other chunks (already filled) are linked together using index 0.
  * Indexes from 1 to capacity store actual Eiffel objects.
  */
-typedef struct {
-	void** from;
-	void** to;
-	int top;
+typedef volatile struct {
+	void** volatile from;
+	void** volatile to;
+	int volatile top;
 } GE_deep;
 
 /*
@@ -51,12 +51,12 @@ extern void GE_deep_free(GE_deep* d);
 /*
  *  Eiffel object associated with `obj' in `d', if any.
  */
-extern T0* GE_deep_item(T0* obj, GE_deep* d);
+extern EIF_REFERENCE GE_deep_item(EIF_REFERENCE obj, GE_deep* d);
 
 /*
  *  Associated `obj1' with `obj2' in `d'.
  */
-extern void GE_deep_put(T0* obj1, T0* obj2, GE_deep* d);
+extern void GE_deep_put(EIF_REFERENCE obj1, EIF_REFERENCE obj2, GE_deep* d);
 
 #ifdef __cplusplus
 }

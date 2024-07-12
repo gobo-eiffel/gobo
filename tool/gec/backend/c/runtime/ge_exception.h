@@ -37,12 +37,12 @@
  */
 #if (defined(_SIGSET_H_types) && !defined(__STRICT_ANSI__))
 #define GE_jmp_buf sigjmp_buf
-#define GE_setjmp(x) sigsetjmp((x),1)
-#define GE_longjmp(x,y) siglongjmp((x),(y))
+#define GE_setjmp(x) sigsetjmp(*(GE_jmp_buf*)&(x),1)
+#define GE_longjmp(x,y) siglongjmp(*(GE_jmp_buf*)&(x),(y))
 #else
 #define GE_jmp_buf jmp_buf
-#define GE_setjmp(x) setjmp((x))
-#define GE_longjmp(x,y) longjmp((x),(y))
+#define GE_setjmp(x) setjmp(*(GE_jmp_buf*)&(x))
+#define GE_longjmp(x,y) longjmp(*(GE_jmp_buf*)&(x),(y))
 #endif
 
 #ifdef __cplusplus
@@ -89,17 +89,16 @@ extern "C" {
 /*
  * String buffer used to build the exception trace.
  */
-typedef struct GE_exception_trace_buffer_struct GE_exception_trace_buffer;
-struct GE_exception_trace_buffer_struct {
+typedef volatile struct {
 	char* volatile area;
-	uint32_t count;
-	uint32_t capacity;
-};
+	uint32_t volatile count;
+	uint32_t volatile capacity;
+} GE_exception_trace_buffer;
 
 /*
  * Information about the feature being executed.
  */
-typedef struct GE_call_struct GE_call;
+typedef volatile struct GE_call_struct GE_call;
 struct GE_call_struct {
 #ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
 	void* volatile object; /* Current object */
@@ -112,47 +111,42 @@ struct GE_call_struct {
 /*
  * Context of features containing a rescue clause.
  */
-typedef struct GE_rescue_struct GE_rescue;
+typedef volatile struct GE_rescue_struct GE_rescue;
 struct GE_rescue_struct {
 	GE_jmp_buf jb;
-	GE_rescue* previous; /* previous context in the call chain */
+	GE_rescue* volatile previous; /* previous context in the call chain */
 };
 
 /*
  * Information about the execution context.
  * One such struct per thread.
  */
-typedef struct GE_context_struct GE_context;
+typedef volatile struct GE_context_struct GE_context;
 struct GE_context_struct {
-	GE_call* call; /* Call stack */
-	uint32_t in_assertion; /* Is an assertion evaluated? */
-	GE_rescue* last_rescue; /* Context of last feature entered containing a rescue clause */
-	uint32_t in_rescue; /* Number of rescue clauses currently being executed */
-	EIF_REFERENCE exception_manager; /* Exception manager */
-	char raising_exception; /* Is an exception currently being raised? */
-	char exception_trace_enabled; /* Should exception trace be displayed? */
-	long exception_code; /* Code of the exception currently being raised, 0 otherwise */
-	const char* exception_tag; /* Tag of the exception currently being raised, NULL otherwise */
+	GE_call* volatile call; /* Call stack */
+	uint32_t volatile in_assertion; /* Is an assertion evaluated? */
+	GE_rescue* volatile last_rescue; /* Context of last feature entered containing a rescue clause */
+	uint32_t volatile in_rescue; /* Number of rescue clauses currently being executed */
+	EIF_REFERENCE volatile exception_manager; /* Exception manager */
+	char volatile raising_exception; /* Is an exception currently being raised? */
+	char volatile exception_trace_enabled; /* Should exception trace be displayed? */
+	long volatile exception_code; /* Code of the exception currently being raised, 0 otherwise */
+	const char* volatile exception_tag; /* Tag of the exception currently being raised, NULL otherwise */
 	GE_exception_trace_buffer exception_trace_buffer; /* String buffer used to build the exception trace */
 	GE_exception_trace_buffer last_exception_trace; /* Last non-routine-failure exception trace */
-	int signal_number; /* Number of last signal received */
-	int pre_ecma_mapping_status; /* Do we map old names to new name? (i.e. STRING to STRING_8, INTEGER to INTEGER_32, ...). */
+	int volatile signal_number; /* Number of last signal received */
+	int volatile pre_ecma_mapping_status; /* Do we map old names to new name? (i.e. STRING to STRING_8, INTEGER to INTEGER_32, ...). */
 #ifdef GE_USE_THREADS
-	GE_thread_context* thread; /* Thread context */
-	GE_onces* process_onces; /* Cache for status and results of onces-per-process */
-	GE_onces* thread_onces; /* Status and results of onces-per-thread */
+	GE_thread_context* volatile thread; /* Thread context */
+	GE_onces* volatile process_onces; /* Cache for status and results of onces-per-process */
+	GE_onces* volatile thread_onces; /* Status and results of onces-per-thread */
 #endif
 #ifdef GE_USE_SCOOP
-	GE_scoop_region* region; /* SCOOP region whose processor is executing the current code */
-	volatile char is_region_alive;
+	GE_scoop_region* volatile region; /* SCOOP region whose processor is executing the current code */
+	char volatile is_region_alive;
 #endif
 };
 #define TC GE_context
-
-/*
- * Default initialization for `GE_context'.
- */
-extern GE_context GE_default_context;
 
 /*
  * New execution context.
@@ -234,7 +228,7 @@ extern void GE_raise_with_message(long a_code, const char* msg);
 /*
  * Raise an exception from EXCEPTION_MANAGER.
  */
-extern void GE_developer_raise(long a_code, char* a_meaning, char* a_message);
+extern void GE_developer_raise(long a_code, EIF_POINTER a_meaning, EIF_POINTER a_message);
 
 /*
  * Raise exception which was raised the first time a once routine

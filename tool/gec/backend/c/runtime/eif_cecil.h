@@ -4,7 +4,7 @@
 		"Part of ISE Eiffel runtime. Needed to compile the EiffelCOM library."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2010-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -53,9 +53,9 @@ extern EIF_TYPE_ID eif_type_id(char* type_string);
 extern EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * const ret);
 #define eif_string(s) RTMS(s)
 #define makestr(s,c) RTMS_EX((s),(c))
-#define eifaddr(object,name,ret) ((void *) ((char *) object + eifaddr_offset (object, name, ret)))
-#define eif_field(object,name,type) *(type *)(eifaddr(object,name, NULL)) /* Obsolete. Use "eif_attribute" instead. */
-#define eif_attribute(object,name,type,ret) *(type *)(eifaddr(object,name,ret)) /* Returns the attribute of an object. Return status in "ret".*/
+#define eifaddr(object,name,ret) ((void*) ((char*) object + eifaddr_offset (object, name, ret)))
+#define eif_field(object,name,type) *(type*)(eifaddr(object,name, NULL)) /* Obsolete. Use "eif_attribute" instead. */
+#define eif_attribute(object,name,type,ret) *(type*)(eifaddr(object,name,ret)) /* Returns the attribute of an object. Return status in "ret".*/
 
 /* Miscellaneous useful functions. */
 

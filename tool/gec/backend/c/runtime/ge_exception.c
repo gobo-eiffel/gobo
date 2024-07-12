@@ -51,7 +51,7 @@ extern "C" {
  * Pre-defined exception tags. No restriction on size.
  */
 static char* GE_exception_tags[] = {
-	(char *) 0,							/* Nothing */
+	(char*) 0,							/* Nothing */
 	"Feature call on void target.",		/* GE_EX_VOID */
 	"No more memory.",					/* GE_EX_MEM */
 	"Precondition violated.",			/* GE_EX_PRE */
@@ -107,11 +107,7 @@ static void GE_init_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
 {
 	a_trace->count = 0;
 	a_trace->capacity = 0;
-#ifdef GE_USE_SCOOP
 	a_trace->area = (char*)GE_malloc_atomic_uncollectable(4096);
-#else
-	a_trace->area = (char*)GE_malloc_atomic(4096);
-#endif
 	a_trace->area[0] = '\0';
 	a_trace->capacity = 4096;
 }
@@ -422,18 +418,6 @@ static void GE_print_exception_trace(GE_context* a_context, long a_code, const c
 }
 
 /*
- * Default initialization for `GE_context'.
- */
-GE_context GE_default_context = {0, 0, 0, 0, 0, 0, '\1', 0, 0, {0, 0, 0}, {0, 0, 0}, 0, 1
-#ifdef GE_USE_THREADS
-	, 0, 0, 0
-#endif
-#ifdef GE_USE_SCOOP
-	, 0, 0
-#endif
-	};
-
-/*
  * New execution context.
  */
 GE_context* GE_new_context(int is_scoop_processor)
@@ -706,9 +690,9 @@ void GE_raise_with_message(long a_code, const char* msg)
 /*
  * Raise an exception from EXCEPTION_MANAGER.
  */
-void GE_developer_raise(long a_code, char* a_meaning, char* a_message)
+void GE_developer_raise(long a_code, EIF_POINTER a_meaning, EIF_POINTER a_message)
 {
-	GE_raise_exception(a_code, 0, -1, -1, a_message, NULL, NULL, NULL, NULL, NULL, -1, 0);
+	GE_raise_exception(a_code, 0, -1, -1, (char*)a_message, NULL, NULL, NULL, NULL, NULL, -1, 0);
 }
 
 /*

@@ -44,7 +44,7 @@ EIF_ENCODED_TYPE GE_encoded_type(EIF_TYPE a_type)
 		/* This code below is just optimized as one move by cl on x86 platforms.
 		 * The else-part below generates non-optimal code with cl.
 		 */
-	memcpy(&l_result, &a_type, sizeof(EIF_ENCODED_TYPE));
+	memcpy((void*)&l_result, (void*)&a_type, sizeof(EIF_ENCODED_TYPE));
 #else
 		/* This code below is just optimized as one move by gcc/clang on x86 platforms. */
 	l_result = a_type.annotations;
@@ -66,7 +66,7 @@ EIF_TYPE GE_decoded_type(EIF_ENCODED_TYPE a_type)
 		/* This code below is just optimized as one move by cl on x86 platforms.
 		 * The else-part below generates non-optimal code with cl.
 		 */
-	memcpy(&l_result, &a_type, sizeof(EIF_TYPE));
+	memcpy((void*)&l_result, (void*)&a_type, sizeof(EIF_TYPE));
 #else
 		/* This code below is just optimized as one move by gcc/clang on x86 platforms. */
 	l_result.id = a_type & 0x0000FFFF;

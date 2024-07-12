@@ -32,8 +32,8 @@ extern "C" {
 /*
  * Weak pointer structure.
  */
-typedef struct GE_weak_pointer {
-	EIF_REFERENCE object;
+typedef volatile struct {
+	EIF_REFERENCE volatile object;
 } GE_weak_pointer;
 
 /*
@@ -49,7 +49,7 @@ static GE_weak_pointer* GE_new_weak_pointer(EIF_REFERENCE object)
 		wp = (GE_weak_pointer*)GE_malloc_atomic(sizeof(GE_weak_pointer));
 		wp->object = object;
 #ifdef GE_USE_BOEHM_GC
-		GC_GENERAL_REGISTER_DISAPPEARING_LINK((void**)(&wp->object), GC_base(object));
+		GC_GENERAL_REGISTER_DISAPPEARING_LINK((void**)(&wp->object), GC_base((void*)object));
 #endif
 		return wp;
 	}
@@ -73,7 +73,7 @@ static EIF_REFERENCE GE_weak_pointer_object_without_lock(GE_weak_pointer* wp)
 #ifdef GE_USE_BOEHM_GC
 static EIF_REFERENCE GE_weak_pointer_object(GE_weak_pointer* wp)
 {
-	return (EIF_REFERENCE)GC_call_with_alloc_lock((GC_fn_type)GE_weak_pointer_object_without_lock, wp);
+	return (EIF_REFERENCE)GC_call_with_alloc_lock((GC_fn_type)GE_weak_pointer_object_without_lock, (void*)wp);
 }
 #else /* No GC */
 #define GE_weak_pointer_object(wp) GE_weak_pointer_object_without_lock(wp)
@@ -139,7 +139,7 @@ EIF_INTEGER_32 GE_object_id(EIF_OBJECT object)
 		l_old_capacity = GE_id_objects_capacity;
 		GE_id_objects_capacity = GE_id_objects_capacity + GE_ID_OBJECT_CAPACITY_INCREMENT;
 		if (GE_id_objects == 0) {
-			GE_id_objects = GE_calloc_atomic_uncollectable(GE_id_objects_capacity, sizeof(GE_weak_pointer**));
+			GE_id_objects = GE_calloc_atomic(GE_id_objects_capacity, sizeof(GE_weak_pointer**));
 		} else {
 			GE_id_objects = GE_recalloc(GE_id_objects, l_old_capacity, GE_id_objects_capacity, sizeof(GE_weak_pointer**));
 		}

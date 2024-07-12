@@ -28,70 +28,68 @@ extern "C" {
 #endif
 
 /* Struct for separate calls. */
-typedef struct GE_scoop_call_struct GE_scoop_call;
-typedef struct GE_scoop_session_struct GE_scoop_session;
+typedef volatile struct GE_scoop_call_struct GE_scoop_call;
+typedef volatile struct GE_scoop_session_struct GE_scoop_session;
 struct GE_scoop_call_struct {
-	GE_scoop_region* caller; /* Region of the caller of the call. */
-	char is_synchronous; /* Should the caller wait for the call to be executed? */
-	char is_condition; /* Is the current call as condition call? */
-	void (*execute)(GE_context*, GE_scoop_session*, GE_scoop_call*);
-	GE_scoop_call* next; /* Protected by `mutex' of enclosing session. */
+	GE_scoop_region* volatile caller; /* Region of the caller of the call. */
+	char volatile is_synchronous; /* Should the caller wait for the call to be executed? */
+	char volatile is_condition; /* Is the current call as condition call? */
+	void (*volatile execute)(GE_context*, GE_scoop_session*, GE_scoop_call*);
+	GE_scoop_call* volatile next; /* Protected by `mutex' of enclosing session. */
 };
 
 /* Struct for separate sessions (i.e. separate call queues). */
 struct GE_scoop_session_struct {
-	GE_scoop_region* callee; /* Region of the targets of the calls. */
-	uint32_t is_synchronized; /* Did `callee' synchronously trigger directly (=1) or indirectly (>1) the calls of this session? Needed in case of callbacks. Not protected by a mutex. */
-	uint32_t is_open; /* Number of times this session is being open. When 0, no more calls will be added. Protected by `mutex'. */
-	char is_submitted; /* Has this sesssion been submitted for execution to the processor of its callee's region? Protected by `mutex'. */
-	GE_scoop_session* next_locked_session; /* Not protected by a mutex. */
-	GE_scoop_session* previous; /* Protected by `mutex' of enclosing region. */
-	GE_scoop_session* next; /* Protected by `mutex' of enclosing region. */
-	GE_scoop_call* first_call; /* Protected by `mutex'. */
-	GE_scoop_call* last_call; /* Protected by `mutex'. */
-	EIF_MUTEX_TYPE* mutex; /* To add, remove and access SCOOP calls, and to update `is_open' and `is_submitted'. */
-	EIF_COND_TYPE* condition_variable; /* To add, remove and access SCOOP calls, and to update `is_open' and `is_submitted'. */
+	GE_scoop_region* volatile callee; /* Region of the targets of the calls. */
+	uint32_t volatile is_synchronized; /* Did `callee' synchronously trigger directly (=1) or indirectly (>1) the calls of this session? Needed in case of callbacks. Not protected by a mutex. */
+	uint32_t volatile is_open; /* Number of times this session is being open. When 0, no more calls will be added. Protected by `mutex'. */
+	char volatile is_submitted; /* Has this sesssion been submitted for execution to the processor of its callee's region? Protected by `mutex'. */
+	GE_scoop_session* volatile next_locked_session; /* Not protected by a mutex. */
+	GE_scoop_session* volatile previous; /* Protected by `mutex' of enclosing region. */
+	GE_scoop_session* volatile next; /* Protected by `mutex' of enclosing region. */
+	GE_scoop_call* volatile first_call; /* Protected by `mutex'. */
+	GE_scoop_call* volatile last_call; /* Protected by `mutex'. */
+	EIF_MUTEX_TYPE* volatile mutex; /* To add, remove and access SCOOP calls, and to update `is_open' and `is_submitted'. */
+	EIF_COND_TYPE* volatile condition_variable; /* To add, remove and access SCOOP calls, and to update `is_open' and `is_submitted'. */
 };
 
 /* Struct for a SCOOP region and its processor if any. */
 struct GE_scoop_region_struct {
-	GE_context* context; /* May be null in case of a passive region not currently handled by the caller's prpcessor. */
-	char is_passive; /* Is it a passive region (with no associated processor)? */
-	EIF_REFERENCE exception_manager; /* Exception manager */
-	GE_onces* process_onces; /* Cache for status and results of onces-per-process */
-	GE_onces* thread_onces; /* Status and results of onces-per-thread */
-	GE_scoop_session* first_locked_session; /* Not protected by a mutex. */
-	char is_impersonation_allowed; /* Protected by `mutex'. */
-	char is_dirty; /* Has an unhandled exception been raised? */
-	char progagate_exception; /* Should an exception be propagated to the caller region? */
-	GE_scoop_session* first_session; /* Protected by `mutex'. */
-	GE_scoop_session* last_session; /* Protected by `mutex'. */
-	GE_scoop_session** last_session_keep_alive; /* To keep alive the last submitted session not executed yet, and hence its region. Protected by `mutex'. */
-	EIF_MUTEX_TYPE* mutex; /* To add, remove and access SCOOP sessions, and to access `is_impersonation_allowed'. */
-	EIF_COND_TYPE* condition_variable; /* To add, remove and access SCOOP sessions, and to access `is_impersonation_allowed'. */
-	EIF_MUTEX_TYPE* sync_mutex; /* For synchronization in case of synchronous calls. */
-	EIF_COND_TYPE* sync_condition_variable; /* For synchronization in case of synchronous calls. */
+	GE_context* volatile context; /* May be null in case of a passive region not currently handled by the caller's prpcessor. */
+	char volatile is_passive; /* Is it a passive region (with no associated processor)? */
+	EIF_REFERENCE volatile exception_manager; /* Exception manager */
+	GE_onces* volatile process_onces; /* Cache for status and results of onces-per-process */
+	GE_onces* volatile thread_onces; /* Status and results of onces-per-thread */
+	GE_scoop_session* volatile first_locked_session; /* Not protected by a mutex. */
+	char volatile is_impersonation_allowed; /* Protected by `mutex'. */
+	char volatile is_dirty; /* Has an unhandled exception been raised? */
+	char volatile progagate_exception; /* Should an exception be propagated to the caller region? */
+	GE_scoop_session* volatile first_session; /* Protected by `mutex'. */
+	GE_scoop_session* volatile last_session; /* Protected by `mutex'. */
+	GE_scoop_session** volatile last_session_keep_alive; /* To keep alive the last submitted session not executed yet, and hence its region. Protected by `mutex'. */
+	EIF_MUTEX_TYPE* volatile mutex; /* To add, remove and access SCOOP sessions, and to access `is_impersonation_allowed'. */
+	EIF_COND_TYPE* volatile condition_variable; /* To add, remove and access SCOOP sessions, and to access `is_impersonation_allowed'. */
+	EIF_MUTEX_TYPE* volatile sync_mutex; /* For synchronization in case of synchronous calls. */
+	EIF_COND_TYPE* volatile sync_condition_variable; /* For synchronization in case of synchronous calls. */
 };
 
 /* Struct for SCOOP processor availability condition. */
-typedef struct GE_scoop_condition_struct GE_scoop_condition;
-struct GE_scoop_condition_struct {
-	uint32_t wait_counter; /* Number of SCOOP processors which are not available yet. */
-	uint32_t trigger_counter; /* Number of condition calls currently using current condition. (Useful to free the condition when not used anymore). */
-	EIF_MUTEX_TYPE* mutex; /* To access `counter'. */
-	EIF_COND_TYPE* condition_variable; /* To access `counter'. */
-};
+typedef volatile struct {
+	uint32_t volatile wait_counter; /* Number of SCOOP processors which are not available yet. */
+	uint32_t volatile trigger_counter; /* Number of condition calls currently using current condition. (Useful to free the condition when not used anymore). */
+	EIF_MUTEX_TYPE* volatile mutex; /* To access `counter'. */
+	EIF_COND_TYPE* volatile condition_variable; /* To access `counter'. */
+} GE_scoop_condition;
 
 /* Struct for SCOOP call containing a condition. */
-typedef struct GE_scoop_condition_call_struct GE_scoop_condition_call;
-struct GE_scoop_condition_call_struct {
-	GE_scoop_region* caller; /* Region of the caller of the call. */
-	char is_synchronous; /* Should the caller wait for the call to be executed? */
-	char is_condition; /* Is the current call as condition call? */
-	void (*execute)(GE_context*, GE_scoop_session*, GE_scoop_call*);
-	GE_scoop_call* next; /* Protected by `mutex' of enclosing session. */
-	GE_scoop_condition* condition;
-};
+typedef volatile struct {
+	GE_scoop_region* volatile caller; /* Region of the caller of the call. */
+	char volatile is_synchronous; /* Should the caller wait for the call to be executed? */
+	char volatile is_condition; /* Is the current call as condition call? */
+	void (*volatile execute)(GE_context*, GE_scoop_session*, GE_scoop_call*);
+	GE_scoop_call* volatile next; /* Protected by `mutex' of enclosing session. */
+	GE_scoop_condition* volatile condition;
+} GE_scoop_condition_call;
 
 /*
  * Increment number SCOOP sessions.

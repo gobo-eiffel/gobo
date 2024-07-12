@@ -73,23 +73,23 @@ extern "C" {
 /*
  * Mutexes used to protect the calls to once-per-process features.
  */
-typedef struct {
-	EIF_POINTER* boolean_mutex;
-	EIF_POINTER* character_8_mutex;
-	EIF_POINTER* character_32_mutex;
-	EIF_POINTER* integer_8_mutex;
-	EIF_POINTER* integer_16_mutex;
-	EIF_POINTER* integer_32_mutex;
-	EIF_POINTER* integer_64_mutex;
-	EIF_POINTER* natural_8_mutex;
-	EIF_POINTER* natural_16_mutex;
-	EIF_POINTER* natural_32_mutex;
-	EIF_POINTER* natural_64_mutex;
-	EIF_POINTER* pointer_mutex;
-	EIF_POINTER* real_32_mutex;
-	EIF_POINTER* real_64_mutex;
-	EIF_POINTER* reference_mutex;
-	EIF_POINTER* procedure_mutex;
+typedef volatile struct {
+	EIF_POINTER* volatile boolean_mutex;
+	EIF_POINTER* volatile character_8_mutex;
+	EIF_POINTER* volatile character_32_mutex;
+	EIF_POINTER* volatile integer_8_mutex;
+	EIF_POINTER* volatile integer_16_mutex;
+	EIF_POINTER* volatile integer_32_mutex;
+	EIF_POINTER* volatile integer_64_mutex;
+	EIF_POINTER* volatile natural_8_mutex;
+	EIF_POINTER* volatile natural_16_mutex;
+	EIF_POINTER* volatile natural_32_mutex;
+	EIF_POINTER* volatile natural_64_mutex;
+	EIF_POINTER* volatile pointer_mutex;
+	EIF_POINTER* volatile real_32_mutex;
+	EIF_POINTER* volatile real_64_mutex;
+	EIF_POINTER* volatile reference_mutex;
+	EIF_POINTER* volatile procedure_mutex;
 } GE_once_mutexes;
 
 /*

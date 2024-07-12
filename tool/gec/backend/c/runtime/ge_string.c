@@ -326,9 +326,7 @@ EIF_REFERENCE GE_ms8(const char* s, EIF_INTEGER c)
 	l_area = (EIF_SPECIAL*)(l_string->area);
 	l_area_base_address = (EIF_CHARACTER_8*)((char*)l_area + l_area->offset);
 	memcpy((char*)l_area_base_address, s, c);
-#ifndef GE_alloc_atomic_cleared
-	*(l_area_base_address + c) = (EIF_CHARACTER_8)'\0';
-#endif
+	/* Note that the area was calloc-ed, so not need to add a trailing null character. */
 	l_area->count = (c + 1);
 	l_string->count = c;
 	return (EIF_REFERENCE)l_string;
@@ -357,9 +355,7 @@ EIF_REFERENCE GE_ims8(const char* s, EIF_INTEGER c)
 	l_area = (EIF_SPECIAL*)(l_string->area);
 	l_area_base_address = (EIF_CHARACTER_8*)((char*)l_area + l_area->offset);
 	memcpy((char*)l_area_base_address, s, c);
-#ifndef GE_alloc_atomic_cleared
-	*(l_area_base_address + c) = (EIF_CHARACTER_8)'\0';
-#endif
+	/* Note that the area was calloc-ed, so not need to add a trailing null character. */
 	l_area->count = (c + 1);
 	l_string->count = c;
 	return (EIF_REFERENCE)l_string;
@@ -379,9 +375,7 @@ EIF_REFERENCE GE_ms32(const char* s, EIF_INTEGER c)
 	l_area = (EIF_SPECIAL*)(l_string->area);
 	l_area_base_address = (EIF_CHARACTER_32*)((char*)l_area + l_area->offset);
 	GE_str8_to_str32(s, l_area_base_address, c);
-#ifndef GE_alloc_atomic_cleared
-	*(l_area_base_address + c) = (EIF_CHARACTER_32)'\0';
-#endif
+	/* Note that the area was calloc-ed, so not need to add a trailing null character. */
 	l_area->count = (c + 1);
 	l_string->count = c;
 	return (EIF_REFERENCE)l_string;
@@ -419,9 +413,7 @@ EIF_REFERENCE GE_ms32_from_utf32le(const char* s, EIF_INTEGER c)
 		}
 	}
 #endif
-#ifndef GE_alloc_atomic_cleared
-	*(l_area_base_address + c) = (EIF_CHARACTER_32)'\0';
-#endif
+	/* Note that the area was calloc-ed, so not need to add a trailing null character. */
 	l_area->count = (c + 1);
 	l_string->count = c;
 	return (EIF_REFERENCE)l_string;
@@ -450,9 +442,7 @@ EIF_REFERENCE GE_ims32(const char* s, EIF_INTEGER c)
 	l_area = (EIF_SPECIAL*)(l_string->area);
 	l_area_base_address = (EIF_CHARACTER_32*)((char*)l_area + l_area->offset);
 	GE_str8_to_str32(s, l_area_base_address, c);
-#ifndef GE_alloc_atomic_cleared
-	*(l_area_base_address + c) = (EIF_CHARACTER_32)'\0';
-#endif
+	/* Note that the area was calloc-ed, so not need to add a trailing null character. */
 	l_area->count = (c + 1);
 	l_string->count = c;
 	return (EIF_REFERENCE)l_string;
@@ -490,9 +480,7 @@ EIF_REFERENCE GE_ims32_from_utf32le(const char* s, EIF_INTEGER c)
 		}
 	}
 #endif
-#ifndef GE_alloc_atomic_cleared
-	*(l_area_base_address + c) = (EIF_CHARACTER_32)'\0';
-#endif
+	/* Note that the area was calloc-ed, so not need to add a trailing null character. */
 	l_area->count = (c + 1);
 	l_string->count = c;
 	return (EIF_REFERENCE)l_string;
@@ -524,9 +512,7 @@ EIF_REFERENCE GE_ims32_from_nstr(EIF_NATIVE_CHAR* s, EIF_INTEGER n)
 	l_area = (EIF_SPECIAL*)(l_string->area);
 	l_area_base_address = (EIF_CHARACTER_32*)((char*)l_area + l_area->offset);
 	GE_nstr_to_str32(s, l_area_base_address, n);
-#ifndef GE_alloc_atomic_cleared
-	*(l_area_base_address + c) = (EIF_CHARACTER_32)'\0';
-#endif
+	/* Note that the area was calloc-ed, so not need to add a trailing null character. */
 	l_area->count = (c + 1);
 	l_string->count = c;
 	return (EIF_REFERENCE)l_string;

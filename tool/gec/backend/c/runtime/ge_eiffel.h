@@ -186,9 +186,9 @@ typedef uint16_t EIF_TYPE_INDEX;
  * It is made of a compiler type-id,
  * and of some annotations (attached/detachable/separate/variant/frozen).
  */
-typedef struct eif_type {
-	EIF_TYPE_INDEX id;
-	EIF_TYPE_INDEX annotations;
+typedef volatile struct {
+	EIF_TYPE_INDEX volatile id;
+	EIF_TYPE_INDEX volatile annotations;
 } EIF_TYPE;
 
 /*
@@ -218,20 +218,36 @@ typedef uint8_t EIF_NATURAL_8;
 typedef uint16_t EIF_NATURAL_16;
 typedef uint32_t EIF_NATURAL_32;
 typedef uint64_t EIF_NATURAL_64;
-typedef void* EIF_POINTER;
+typedef volatile void* EIF_POINTER;
 typedef float EIF_REAL_32;
 typedef double EIF_REAL_64;
+typedef volatile struct {
+	EIF_TYPE_INDEX volatile id;
+	uint16_t volatile flags;
 #ifdef GE_USE_SCOOP
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; GE_scoop_region* region;} EIF_ANY;
-typedef EIF_ANY* EIF_REFERENCE;
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; GE_scoop_region* region; EIF_REFERENCE area; EIF_INTEGER count;} EIF_STRING;
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; GE_scoop_region* region; uint32_t offset; EIF_INTEGER count; EIF_INTEGER capacity;} EIF_SPECIAL;
-#else
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags;} EIF_ANY;
-typedef EIF_ANY* EIF_REFERENCE;
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; EIF_REFERENCE area; EIF_INTEGER count;} EIF_STRING;
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; uint32_t offset; EIF_INTEGER count; EIF_INTEGER capacity;} EIF_SPECIAL;
+	GE_scoop_region* volatile region;
 #endif
+} EIF_ANY;
+typedef EIF_ANY* EIF_REFERENCE;
+typedef volatile struct {
+	EIF_TYPE_INDEX volatile id;
+	uint16_t volatile flags;
+#ifdef GE_USE_SCOOP
+	GE_scoop_region* volatile region;
+#endif
+	EIF_REFERENCE volatile area;
+	EIF_INTEGER volatile count;
+} EIF_STRING;
+typedef volatile struct {
+	EIF_TYPE_INDEX volatile id;
+	uint16_t volatile flags;
+#ifdef GE_USE_SCOOP
+	GE_scoop_region* volatile region;
+#endif
+	uint32_t volatile offset;
+	EIF_INTEGER volatile count;
+	EIF_INTEGER volatile capacity;
+} EIF_SPECIAL;
 
 /* SCOOP */
 typedef uint16_t EIF_SCP_PID; /* Processor ID */

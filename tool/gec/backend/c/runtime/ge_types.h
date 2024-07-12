@@ -94,10 +94,10 @@ extern "C" {
  * Ancestor relationship between two types X and Y.
  */
 #ifdef GE_USE_ANCESTORS
-typedef struct {
-	EIF_TYPE_INDEX type_id; /* Type id of Y */
-	EIF_BOOLEAN conforms; /* Does X conform to Y? */
-	void (**qualified_calls)(); /* Function pointers, indexed by call id, when the static type of the target is Y and the dynamic type is X */
+typedef volatile struct {
+	EIF_TYPE_INDEX volatile type_id; /* Type id of Y */
+	EIF_BOOLEAN volatile conforms; /* Does X conform to Y? */
+	void (**volatile qualified_calls)(); /* Function pointers, indexed by call id, when the static type of the target is Y and the dynamic type is X */
 } GE_ancestor;
 #endif
 
@@ -105,15 +105,15 @@ typedef struct {
  * Attribute.
  */
 #ifdef GE_USE_ATTRIBUTES
-typedef struct {
+typedef volatile struct {
 #ifdef GE_USE_ATTRIBUTE_NAME
-	const char* name; /* Attribute name */
+	const char* volatile name; /* Attribute name */
 #endif
 #ifdef GE_USE_ATTRIBUTE_TYPE_ID
-	EIF_ENCODED_TYPE type_id; /* Static type id */
+	EIF_ENCODED_TYPE volatile type_id; /* Static type id */
 #endif
 #ifdef GE_USE_ATTRIBUTE_OFFSET
-	uint32_t offset; /* Address offset in object */
+	uint32_t volatile offset; /* Address offset in object */
 #endif
 } GE_attribute;
 #endif
@@ -121,41 +121,45 @@ typedef struct {
 /*
  * Type information.
  */
-typedef struct {
-	EIF_TYPE_INDEX type_id;
-	uint16_t flags;
+typedef volatile struct {
+	EIF_TYPE_INDEX volatile type_id;
+	uint16_t volatile flags;
 #ifdef GE_USE_TYPE_GENERATOR
-	const char* generator; /* Generator class name */
+	const char* volatile generator; /* Generator class name */
 #endif
 #ifdef GE_USE_TYPE_NAME
-	const char* name; /* Full type name */
+	const char* volatile name; /* Full type name */
 #endif
 #ifdef GE_USE_TYPE_GENERIC_PARAMETERS
-	EIF_ENCODED_TYPE* generic_parameters;
-	uint32_t generic_parameter_count;
+	EIF_ENCODED_TYPE* volatile generic_parameters;
+	uint32_t volatile generic_parameter_count;
 #endif
 #ifdef GE_USE_ANCESTORS
-	GE_ancestor** ancestors;
-	uint32_t ancestor_count;
+	GE_ancestor** volatile ancestors;
+	uint32_t volatile ancestor_count;
 #endif
 #ifdef GE_USE_ATTRIBUTES
-	GE_attribute** attributes;
-	uint32_t attribute_count;
+	GE_attribute** volatile attributes;
+	uint32_t volatile attribute_count;
 #endif
 #ifdef GE_USE_TYPE_OBJECT_SIZE
-	uint64_t object_size;
+	uint64_t volatile object_size;
 #endif
 	EIF_REFERENCE (*new_instance)();
-	void (*dispose)(GE_context*, EIF_REFERENCE);
+	void (*volatile dispose)(GE_context*, EIF_REFERENCE);
 } GE_type_info;
 
-typedef struct {
-	EIF_TYPE_INDEX id; /* Type id of the "TYPE [X]" object */
-	EIF_INTEGER type_id; /* Type id of the type "X" */
-	EIF_BOOLEAN is_special;
-	void (*dispose)(GE_context*, EIF_REFERENCE);
-	EIF_REFERENCE a1; /* internal_name */
-	EIF_REFERENCE a2; /* internal_name_32 */
+typedef volatile struct {
+	EIF_TYPE_INDEX volatile id; /* Type id of the "TYPE [X]" object */
+	uint16_t volatile flags; 
+#ifdef GE_USE_SCOOP
+	GE_scoop_region* volatile region;
+#endif
+	EIF_INTEGER volatile type_id; /* Type id of the type "X" */
+	EIF_BOOLEAN volatile is_special;
+	void (*volatile dispose)(GE_context*, EIF_REFERENCE);
+	EIF_REFERENCE volatile a1; /* internal_name */
+	EIF_REFERENCE volatile a2; /* internal_name_32 */
 } EIF_TYPE_OBJ;
 
 /*
