@@ -1,0 +1,6 @@
+Syntax error:
+line 16 column 4 in aa.e
+		require
+			;
+			^
+			tag1: g;
