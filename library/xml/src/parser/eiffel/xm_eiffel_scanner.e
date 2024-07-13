@@ -90,7 +90,7 @@ end
 			last_value := text
 		
 when 4 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 145 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -134,7 +134,7 @@ end
 			last_value := text
 		
 when 8 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 171 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -145,7 +145,7 @@ end
 			push_start_condition (xmldeclaration)
 		
 when 9 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 176 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -288,7 +288,7 @@ end
 			set_last_token (QUOT)
 		
 when 22 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 246 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -335,7 +335,7 @@ end
 			last_value := text
 		
 when 26 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 271 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -405,7 +405,7 @@ end
 			end
 		
 when 32 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 307 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -766,7 +766,7 @@ end
 			set_last_token (CHARDATA)
 		
 when 65 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + 1
 --|#line 467 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -854,7 +854,7 @@ end
 			last_value := text
 		
 when 73 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 514 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -864,7 +864,7 @@ end
 			set_last_token (SPACE)
 		
 when 74 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 531 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -875,7 +875,7 @@ end
 			last_value := system_literal_text
 		
 when 75 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 536 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -886,7 +886,7 @@ end
 			last_value := system_literal_text
 		
 when 76 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 541 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -898,7 +898,7 @@ end
 			push_start_condition (public_system)
 		
 when 77 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 550 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -914,7 +914,7 @@ end
 				end
 			
 when 78 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 560 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -930,7 +930,7 @@ end
 				end
 			
 when 79 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 574 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -1164,7 +1164,7 @@ end
 	push_start_condition (tag)
 
 when 101 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 684 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -1179,7 +1179,7 @@ end
 			end
 		
 when 102 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 693 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -1248,7 +1248,7 @@ end
 			last_value := text
 		
 when 108 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 722 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -1258,7 +1258,7 @@ end
 			set_last_token (SPACE) 
 		
 when 109 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 725 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -1450,7 +1450,7 @@ end
 			end
 		
 when 126 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + 1
 --|#line 823 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -1535,7 +1535,7 @@ end
 			last_value := text
 		
 when 132 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 877 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -1547,7 +1547,7 @@ end
 			last_value := normalized_newline
 		
 when 133 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line 882 "xm_eiffel_scanner.l"
 debug ("GELEX")
@@ -1737,7 +1737,7 @@ end
 	last_value := text
 
 when 149 then
-yy_set_line_column
+	yy_set_line_column
 	yy_position := yy_position + 1
 --|#line 0 "xm_eiffel_scanner.l"
 debug ("GELEX")
