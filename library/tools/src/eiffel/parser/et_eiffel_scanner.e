@@ -57,7 +57,7 @@ end
 				process_one_char_symbol (unicode_text_item (1))
 			
 when 2 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 40 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 40")
@@ -69,7 +69,7 @@ end
 				process_one_char_symbol (unicode_text_item (1))
 			
 when 3 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 46 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 46")
@@ -102,7 +102,7 @@ end
 				end
 			
 when 5 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 67 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 67")
@@ -124,7 +124,7 @@ end
 				end
 			
 when 6 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 83 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 83")
@@ -146,7 +146,7 @@ end
 				end
 			
 when 7 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 99 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 99")
@@ -169,7 +169,7 @@ end
 				process_two_char_symbol (unicode_text_item (1), unicode_text_item (2))
 			
 when 9 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 110 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 110")
@@ -181,7 +181,7 @@ end
 				process_two_char_symbol (unicode_text_item (1), unicode_text_item (2))
 			
 when 10 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 116 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 116")
@@ -209,7 +209,7 @@ end
 			
 when 12 then
 	yy_end := yy_end - 1
-yy_set_line_column
+	yy_set_line_column
 --|#line 164 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 164")
@@ -225,7 +225,7 @@ end
 			
 when 13 then
 	yy_end := yy_end - 1
-yy_set_line_column
+	yy_set_line_column
 --|#line 173 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 173")
@@ -446,7 +446,7 @@ end
 				process_c1_character_constant (unicode_text_item (2))
 			
 when 29 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 258 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 258")
@@ -458,7 +458,7 @@ end
 				process_c1_character_constant (unicode_text_item (2))
 			
 when 30 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 264 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 264")
@@ -481,7 +481,7 @@ end
 				process_c2_character_constant (text_item (3))
 			
 when 32 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 275 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 275")
@@ -493,7 +493,7 @@ end
 				process_c2_character_constant (text_item (3))
 			
 when 33 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 281 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 281")
@@ -1779,7 +1779,7 @@ end
 				last_detachable_et_real_constant_value := ast_factory.new_underscored_real_constant (Current)
 			
 when 117 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 1055 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1055")
@@ -1794,7 +1794,7 @@ end
 				last_token := E_BREAK
 			
 when 118 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 1065 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1065")
@@ -1809,7 +1809,7 @@ end
 				last_token := E_BREAK
 			
 when 119 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 1076 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1076")
@@ -1821,7 +1821,7 @@ end
 				set_start_condition (INITIAL)
 			
 when 120 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 1082 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 1082")
@@ -1857,7 +1857,7 @@ end
 				last_detachable_et_position_value := current_position
 			
 when 123 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 0 "et_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_scanner.l' at line 0")

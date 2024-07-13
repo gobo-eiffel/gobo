@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 35 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 35")
@@ -1340,7 +1340,7 @@ end
 				last_token := E_UNKNOWN
 			
 when 128 then
-yy_set_line_column
+	yy_set_line_column
 --|#line 0 "et_eiffel_preparser.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'et_eiffel_preparser.l' at line 0")

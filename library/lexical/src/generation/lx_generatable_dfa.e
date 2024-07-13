@@ -5,7 +5,7 @@
 		"DFA equipped with lexical analyzer generator"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class LX_GENERATABLE_DFA
@@ -487,17 +487,17 @@ feature {NONE} -- Generation
 						a_file.put_integer (column_count)
 						a_file.put_string (" + 1%N")
 					else
-						a_file.put_string ("yy_set_column (")
+						a_file.put_string ("%Tyy_set_column (")
 						a_file.put_integer (line_count)
 						a_file.put_string (")%N")
 					end
 				else
 					if column_count >= 0 then
-						a_file.put_string ("yy_set_line (")
+						a_file.put_string ("%Tyy_set_line (")
 						a_file.put_integer (column_count)
 						a_file.put_string (")%N")
 					else
-						a_file.put_string ("yy_set_line_column%N")
+						a_file.put_string ("%Tyy_set_line_column%N")
 					end
 				end
 			end
