@@ -19,7 +19,7 @@ A *Free\_binary* is a free operator that is distinct from all *standard binary o
 
 ### Notes
 
-* If we want to allow `∀∀` as free operator (but not `∀`), I think that we need add `∀`, `∃`, `⟳`, `⟲` and `¦` (symbols used in symbolic forms of *across loops*) to:
+* If we want to allow `∀∀` as free operator (but not `∀`), I think that we need to add `∀`, `∃`, `⟳`, `⟲` and `¦` (symbols used in symbolic forms of *across loops*) to:
   * DISP: Special symbol
   * DIPO: Predefined operator
   * DIOS: Operator symbol, clause `3`
