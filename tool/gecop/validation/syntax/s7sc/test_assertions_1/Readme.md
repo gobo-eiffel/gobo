@@ -1,6 +1,6 @@
-# Semantics S7SC
+# Syntax S7SC
 
-This [test](.) is exercising the semantics rule [S7SC](../Readme.md).
+This [test](.) is exercising the syntax rule [S7SC](../Readme.md).
 
 ### Description
 

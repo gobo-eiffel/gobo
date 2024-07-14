@@ -20,7 +20,7 @@ An export-valid *Call* of target type `ST` and feature `sf` is argument-valid if
 2. Every actual argument of the call is compatible with the corresponding formal argument of `sf`.
 3. If compatibility in clause `2` does not involve conversion, the call is conforming-argument-valid.
 
-##  Notes
+### Notes
 
 * Gobo Eiffel checks validity rules on the flat version of each class by default. Therefore the condition `3` above is redundant with the condition `2` checked on the flat version of the class.
 

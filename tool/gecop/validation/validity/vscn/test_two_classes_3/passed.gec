@@ -1,0 +1,2 @@
+[VSCN] system aa: class BB name clash between class BB in cluster 'aa/cluster2' (in file 'C:\DriveE\gobo\gobo2\tool\gecop\validation\validity\vscn\test_two_classes_3\cluster2\bb.e') and class BB in cluster 'aa/cluster1' (in file 'C:\DriveE\gobo\gobo2\tool\gecop\validation\validity\vscn\test_two_classes_3\cluster1\bb.e').
+----

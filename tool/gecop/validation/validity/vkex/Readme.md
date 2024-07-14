@@ -17,7 +17,7 @@ A *Creation_expression* of creation type `CT`, appearing in a class `C`, is vali
 
 Same as above.
 
-##  Notes
+### Notes
 
 * The code of this validity rule was `VGCE` in ECMA 367-2.
 

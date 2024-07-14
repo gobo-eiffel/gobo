@@ -1,7 +1,7 @@
-# Semantics S7SC
+# Syntax S7SC
 
-This [test](.) is exercising the semantics rule [S7SC](../Readme.md).
+This [test](.) is exercising the syntax rule [S7SC](../Readme.md).
 
 ### Description
 
-In this test, feature `make` has three local variable declarations with a semicolon after the first local variable declaration but not after the second. This is valid according to the Semicolon Optionality rule `S7SC`.
+In this test, feature `make` has three local variable declarations with a semicolon after the first local variable declaration but not after the second. This is valid according to the *Semicolon Optionality rule* `S7SC`.
