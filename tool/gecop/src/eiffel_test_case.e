@@ -180,7 +180,7 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			a_regexp5.compile (a_pattern5)
 			assert ("cannot compile regexp '" + a_pattern5 + "'", a_regexp5.is_compiled)
 			a_regexp5.optimize
-			a_pattern6 := "(\[VSCN\] system aa: class BB name clash between class BB in cluster \'aa/cluster2\')( \(in file [^)]+\))( and class BB in cluster \'aa/cluster1\')( \(in file [^)]+\))(\.)"
+			a_pattern6 := "(\[VSCN\] system aa: class BB name clash between class BB in cluster \'aa/cluster[12]\')( \(in file [^)]+\))( and class BB in cluster \'aa/cluster[12]\')( \(in file [^)]+\))(\.)"
 			create a_regexp6.make
 			a_regexp6.compile (a_pattern6)
 			assert ("cannot compile regexp '" + a_pattern6 + "'", a_regexp6.is_compiled)
@@ -321,7 +321,7 @@ feature {NONE} -- Test gelint
 			a_regexp3.compile (a_pattern3)
 			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
 			a_regexp3.optimize
-			a_pattern4 := "(\[VSCN\] system aa: class BB name clash between class BB in cluster \'aa/cluster2\')( \(in file [^)]+\))( and class BB in cluster \'aa/cluster1\')( \(in file [^)]+\))(\.)"
+			a_pattern4 := "(\[VSCN\] system aa: class BB name clash between class BB in cluster \'aa/cluster[12]\')( \(in file [^)]+\))( and class BB in cluster \'aa/cluster[12]\')( \(in file [^)]+\))(\.)"
 			create a_regexp4.make
 			a_regexp4.compile (a_pattern4)
 			assert ("cannot compile regexp '" + a_pattern4 + "'", a_regexp4.is_compiled)
