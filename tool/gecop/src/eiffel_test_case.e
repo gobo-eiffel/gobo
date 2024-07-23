@@ -149,8 +149,8 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5: STRING
-			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5, a_pattern6: STRING
+			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5, a_regexp6: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 			l_first_line: BOOLEAN
 		do
@@ -180,6 +180,11 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			a_regexp5.compile (a_pattern5)
 			assert ("cannot compile regexp '" + a_pattern5 + "'", a_regexp5.is_compiled)
 			a_regexp5.optimize
+			a_pattern6 := "(\[VSCN\] system aa: class BB name clash between class BB in cluster \'aa/cluster[12]\')( \(in file [^)]+\))( and class BB in cluster \'aa/cluster[12]\')( \(in file [^)]+\))(\.)"
+			create a_regexp6.make
+			a_regexp6.compile (a_pattern6)
+			assert ("cannot compile regexp '" + a_pattern6 + "'", a_regexp6.is_compiled)
+			a_regexp6.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -218,6 +223,8 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 							end
 							if a_regexp5.recognizes (a_line) then
 								out_file.put_line (a_regexp5.captured_substring (1) + a_regexp5.captured_substring (3))
+							elseif a_regexp6.recognizes (a_line) then
+								out_file.put_line (a_regexp6.captured_substring (1) + a_regexp6.captured_substring (3) + a_regexp6.captured_substring (5))
 							else
 								out_file.put_line (a_line)
 							end
@@ -293,8 +300,8 @@ feature {NONE} -- Test gelint
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1, a_pattern2, a_pattern3: STRING
-			a_regexp1, a_regexp2, a_regexp3: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2, a_pattern3, a_pattern4: STRING
+			a_regexp1, a_regexp2, a_regexp3, a_regexp4: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 			l_first_line: BOOLEAN
 		do
@@ -314,6 +321,11 @@ feature {NONE} -- Test gelint
 			a_regexp3.compile (a_pattern3)
 			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
 			a_regexp3.optimize
+			a_pattern4 := "(\[VSCN\] system aa: class BB name clash between class BB in cluster \'aa/cluster[12]\')( \(in file [^)]+\))( and class BB in cluster \'aa/cluster[12]\')( \(in file [^)]+\))(\.)"
+			create a_regexp4.make
+			a_regexp4.compile (a_pattern4)
+			assert ("cannot compile regexp '" + a_pattern4 + "'", a_regexp4.is_compiled)
+			a_regexp4.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -346,6 +358,8 @@ feature {NONE} -- Test gelint
 							end
 							if a_regexp3.recognizes (a_line) then
 								out_file.put_line (a_regexp3.captured_substring (1) + a_regexp3.captured_substring (3))
+							elseif a_regexp4.recognizes (a_line) then
+								out_file.put_line (a_regexp4.captured_substring (1) + a_regexp4.captured_substring (3) + a_regexp4.captured_substring (5))
 							else
 								out_file.put_line (a_line)
 							end

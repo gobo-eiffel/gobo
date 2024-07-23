@@ -1,10 +1,10 @@
-# Semantics S7SC
+# Syntax S7SC
 
-This [test](.) is exercising the semantics rule [S7SC](../Readme.md).
+This [test](.) is exercising the syntax rule [S7SC](../Readme.md).
 
 ### Description
 
-In this test, feature `make` has a labeled tuple with two field declarations with a semicolon after the last field declaration. This is valid according to the Semicolon Optionality rule `S7SC`.
+In this test, feature `make` has a labeled tuple with two field declarations with a semicolon after the last field declaration. This is valid according to the *Semicolon Optionality rule* `S7SC`.
 
 ### Notes
 

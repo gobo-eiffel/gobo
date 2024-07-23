@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+
+Error code: VD71
+
+Configuration error
+
+Duplicate class: BB
+c:\drivee\gobo\gobo2\tool\gecop\validation\validity\vscn\test_two_classes_2\cluster1\bb.e
+c:\drivee\gobo\gobo2\tool\gecop\validation\validity\vscn\test_two_classes_2\cluster2\bb.e
+Configuration: C:\DriveE\gobo\ise\Tvalidation\validity\vscn\test_two_classes_2\compile_ise.ecf
+
+-------------------------------------------------------------------------------

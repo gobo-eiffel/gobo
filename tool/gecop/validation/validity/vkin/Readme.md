@@ -23,7 +23,7 @@ A *Creation_instruction* of creation type `CT`, appearing in a class `C`, is val
 3. That *Creation_call* is argument-valid.
 4. `CT` is generic-creation-ready.
 
-##  Notes
+### Notes
 
 * The code of this validity rule was `VGCI` in ECMA 367-2.
 

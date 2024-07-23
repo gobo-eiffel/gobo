@@ -33,7 +33,7 @@ conditions for every declaration of a feature `f` in its unfolded form:
 9. If a *Variance_mark* is present, the *Declaration_body* describes a variable attribute whose type is a *Class_type*.
 10. If an *Emergence_mark* is present, the *Declaration_body* describes a variable attribute.
 
-##  Notes
+### Notes
 
 * Another condition is needed in the context of SCOOP, the Eiffel concurrency mechanism:
 

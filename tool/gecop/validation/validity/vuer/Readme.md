@@ -16,7 +16,7 @@ t.label
 ```
 where the type of `t` is `separate TUPLE [...; label: X; ...]`. If the type `X` is expanded, it should not contain (directly or indirectly) attributes of reference type which is not separate.
 
-##  Notes
+### Notes
 
 * This validity rule still fails to catch cases where an object of expanded type with non-separate reference attributes is assigned to a `Result` of a reference type. This is resulting in a type issue where an object from another SCOOP region is not flagged as separate. ISE Eiffel (as of 23.09.10.7341 and after) fails to report this issue.
 

@@ -1,10 +1,10 @@
-# Semantics S7SC
+# Syntax S7SC
 
 This [test](.) is exercising the syntax rule [S7SC](../Readme.md).
 
 ### Description
 
-In this test, we have two instructions with a semicolon before the first instruction. This is not valid according to the specification of the construct `Compound` (see syntax rule `SRIN`) and to the Semicolon Optionality rule `S7SC`.
+In this test, we have two instructions with a semicolon before the first instruction. This is not valid according to the specification of the construct `Compound` (see syntax rule `SRIN`) and to the *Semicolon Optionality rule* `S7SC`.
 
 ### Notes
 

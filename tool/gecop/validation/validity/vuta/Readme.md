@@ -20,7 +20,7 @@ An *Object\_call* is target-valid if and only if it satisfies one of the followi
 2. It is an *Object\_call* without a *Target*.
 3. It is an *Object\_call* with a *Target* which is an attached expression.
 
-##  Notes
+### Notes
 
 * Another condition is needed in the context of SCOOP, the Eiffel concurrency mechanism:
 
