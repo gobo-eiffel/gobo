@@ -38,8 +38,8 @@ if ($LastExitCode -ne 0) {
 	exit $LastExitCode
 }
 
-$GOBO_CI_ISE_VERSION = "23.09"
-$GOBO_CI_ISE_REVISION = "rev_107341"
+$GOBO_CI_ISE_VERSION = "24.05"
+$GOBO_CI_ISE_REVISION = "rev_107822"
 
 switch ($GOBO_CI_OS) {
 	"linux" {
@@ -75,7 +75,7 @@ switch ($GOBO_CI_OS) {
 
 $GOBO_CI_ISE_ARCHIVE_FILENAME = "Eiffel_${GOBO_CI_ISE_VERSION}_${GOBO_CI_ISE_REVISION}-$env:ISE_PLATFORM$GOBO_CI_ISE_ARCHIVE_EXTENSION"
 
-Invoke-RestMethod -Method Get -Uri "https://ftp.eiffel.com/pub/beta/nightly/$GOBO_CI_ISE_ARCHIVE_FILENAME" -OutFile "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME"
+Invoke-RestMethod -Method Get -Uri "https://ftp.eiffel.com/pub/beta/$GOBO_CI_ISE_VERSION/$GOBO_CI_ISE_ARCHIVE_FILENAME" -OutFile "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME"
 if ($GOBO_CI_OS -eq "windows") {
 	Install-Module -Name 7Zip4PowerShell -Force
 	Expand-7Zip -ArchiveFileName "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME" -TargetPath "$env:GOBO"
