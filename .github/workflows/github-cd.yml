@@ -190,7 +190,7 @@ jobs:
           name: gobo_delivery_windows
           path: .
       - name: publish
-        uses: pyTooling/Actions/releaser/composite@main
+        uses: pyTooling/Actions/releaser/composite@v1.0.5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: gobo-*
