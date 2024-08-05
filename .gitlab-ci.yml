@@ -16,7 +16,7 @@ build_ge:
 linux_gcc_build_ge:
   stage: build_ge
   tags:
-    - linux
+    - saas-linux-small-amd64
   image:
 # See: https://stackoverflow.com/questions/44319313/how-do-i-use-powershell-with-gitlab-ci-in-gitlab-pages
     name: "mcr.microsoft.com/powershell:latest"
@@ -40,9 +40,7 @@ linux_gcc_build_ge:
 windows_msc_build_ge:
   stage: build_ge
   tags:
-    - shared-windows
-    - windows
-    - windows-1809
+    - saas-windows-medium-amd64
   dependencies: []
   script:
     - . "$GOBO/.cicd/build_ge.ps1" gitlab msc
@@ -75,7 +73,7 @@ test_ge:
 library_linux_gcc_test_ge:
   stage: test_ge
   tags:
-    - linux
+    - saas-linux-small-amd64
   image:
 # See: https://stackoverflow.com/questions/44319313/how-do-i-use-powershell-with-gitlab-ci-in-gitlab-pages
     name: "mcr.microsoft.com/powershell:latest"
@@ -94,7 +92,7 @@ library_linux_gcc_test_ge:
 tool_linux_gcc_test_ge:
   stage: test_ge
   tags:
-    - linux
+    - saas-linux-small-amd64
   image:
 # See: https://stackoverflow.com/questions/44319313/how-do-i-use-powershell-with-gitlab-ci-in-gitlab-pages
     name: "mcr.microsoft.com/powershell:latest"
@@ -113,9 +111,7 @@ tool_linux_gcc_test_ge:
 library_windows_msc_test_ge:
   stage: test_ge
   tags:
-    - shared-windows
-    - windows
-    - windows-1809
+    - saas-windows-medium-amd64
   dependencies:
     - windows_msc_build_ge
   script:
@@ -138,9 +134,7 @@ library_windows_msc_test_ge:
 tool_no_gec_windows_test_ge:
   stage: test_ge
   tags:
-    - shared-windows
-    - windows
-    - windows-1809
+    - saas-windows-medium-amd64
   dependencies:
     - windows_msc_build_ge
   script:
@@ -157,9 +151,7 @@ tool_no_gec_windows_test_ge:
 tool_gec_windows_msc_test_ge:
   stage: test_ge
   tags:
-    - shared-windows
-    - windows
-    - windows-1809
+    - saas-windows-medium-amd64
   dependencies:
     - windows_msc_build_ge
   script:
@@ -179,7 +171,7 @@ tool_gec_windows_msc_test_ge:
 library_linux_gcc_test_ise:
   stage: test_ge
   tags:
-    - linux
+    - saas-linux-small-amd64
   image:
 # See: https://stackoverflow.com/questions/44319313/how-do-i-use-powershell-with-gitlab-ci-in-gitlab-pages
     name: "mcr.microsoft.com/powershell:latest"
@@ -199,7 +191,7 @@ library_linux_gcc_test_ise:
 tool_linux_gcc_test_ise:
   stage: test_ge
   tags:
-    - linux
+    - saas-linux-small-amd64
   image:
 # See: https://stackoverflow.com/questions/44319313/how-do-i-use-powershell-with-gitlab-ci-in-gitlab-pages
     name: "mcr.microsoft.com/powershell:latest"
@@ -224,9 +216,7 @@ tool_linux_gcc_test_ise:
 library_no_xslt_windows_msc_test_ise:
   stage: test_ge
   tags:
-    - shared-windows
-    - windows
-    - windows-1809
+    - saas-windows-medium-amd64
   dependencies:
     - windows_msc_build_ge
   script:
@@ -247,9 +237,7 @@ library_no_xslt_windows_msc_test_ise:
 library_xslt_windows_msc_test_ise:
   stage: test_ge
   tags:
-    - shared-windows
-    - windows
-    - windows-1809
+    - saas-windows-medium-amd64
   dependencies:
     - windows_msc_build_ge
   script:
@@ -269,9 +257,7 @@ library_xslt_windows_msc_test_ise:
 tool_windows_msc_test_ise:
   stage: test_ge
   tags:
-    - shared-windows
-    - windows
-    - windows-1809
+    - saas-windows-medium-amd64
   dependencies:
     - windows_msc_build_ge
   script:
