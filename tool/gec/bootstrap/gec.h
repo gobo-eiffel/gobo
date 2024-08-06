@@ -73,6 +73,10 @@
 #define EIF_VXWORKS 1
 #endif
 
+#if defined(__OpenBSD__)
+#define GE_OPENBSD
+#endif
+
 #define BYTEORDER 0x1234
 
 #include <stdlib.h>
@@ -548,7 +552,7 @@ typedef volatile struct {
 	uint32_t volatile natural_32_count;
 	EIF_NATURAL_64* volatile natural_64_value;
 	EIF_REFERENCE* volatile natural_64_exception;
-	unsigned char* natural_64_status;
+	unsigned char* volatile natural_64_status;
 	uint32_t volatile natural_64_count;
 	EIF_POINTER* volatile pointer_value;
 	EIF_REFERENCE* volatile pointer_exception;
@@ -765,8 +769,8 @@ struct GE_context_struct {
 	char volatile exception_trace_enabled; /* Should exception trace be displayed? */
 	long volatile exception_code; /* Code of the exception currently being raised, 0 otherwise */
 	const char* volatile exception_tag; /* Tag of the exception currently being raised, NULL otherwise */
-	GE_exception_trace_buffer volatile exception_trace_buffer; /* String buffer used to build the exception trace */
-	GE_exception_trace_buffer volatile last_exception_trace; /* Last non-routine-failure exception trace */
+	GE_exception_trace_buffer exception_trace_buffer; /* String buffer used to build the exception trace */
+	GE_exception_trace_buffer last_exception_trace; /* Last non-routine-failure exception trace */
 	int volatile signal_number; /* Number of last signal received */
 	int volatile pre_ecma_mapping_status; /* Do we map old names to new name? (i.e. STRING to STRING_8, INTEGER to INTEGER_32, ...). */
 #ifdef GE_USE_THREADS
@@ -2306,7 +2310,11 @@ extern int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lp
 #	if defined(GE_MACOS)
 #		define HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID
 #	elif !defined(GE_WINDOWS)
-#		define HAVE_PTHREAD_SETNAME_NP_WITH_TID
+#		if defined(GE_OPENBSD)
+#			define HAVE_PTHREAD_SET_NAME_NP
+#		else
+#			define HAVE_PTHREAD_SETNAME_NP_WITH_TID
+#		endif
 #		define HAVE_PTHREAD_SIGMASK
 #		define NO_GETCONTEXT
 #	endif
@@ -42806,9 +42814,9 @@ extern void T1129f11(TC* ac, T0* C, T0* a1);
 /* ET_FORMAL_PARAMETER_CHECKER1.process_class */
 extern void T1113f31(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.process_class */
-extern void T68f2304(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.internal_process_class */
 extern void T68f2306(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.internal_process_class */
+extern void T68f2308(TC* ac, T0* C, T0* a1);
 /* ET_SYSTEM_MULTIPROCESSOR.report_class_processed */
 extern void T853f74(TC* ac, T0* C, T0* a1);
 /* ET_SYSTEM_PROCESSOR.report_class_processed */
@@ -44078,10 +44086,10 @@ extern T0* T272f4(TC* ac, T0* C, T6 a1);
 extern void T68f1080(TC* ac, T0* C, T6 a1);
 /* ET_EIFFEL_PARSER.yy_do_action_801_1000 */
 extern void T68f1110(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_954 */
-extern void T68f2081(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_956 */
+extern void T68f2083(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.add_counter */
-extern void T68f2090(TC* ac, T0* C);
+extern void T68f2092(TC* ac, T0* C);
 /* DS_ARRAYED_STACK [INTEGER_32].force */
 extern void T245f11(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_STACK [INTEGER_32].resize */
@@ -44090,20 +44098,20 @@ extern void T245f13(TC* ac, T0* C, T6 a1);
 extern T6 T245f7(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_STACK [INTEGER_32].extendible */
 extern T1 T245f6(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_953 */
-extern void T68f2080(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_955 */
+extern void T68f2082(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_IDENTIFIER].force */
 extern void T302s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_IDENTIFIER].fill_with */
 extern void T304f8(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* SPECIAL [detachable ET_IDENTIFIER].extend */
 extern void T304f10(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_954 */
+extern void T68f2081(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_953 */
+extern void T68f2080(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_952 */
 extern void T68f2079(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_951 */
-extern void T68f2078(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_950 */
-extern void T68f2077(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_REAL_CONSTANT].force */
 extern void T314s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_REAL_CONSTANT].fill_with */
@@ -44118,12 +44126,16 @@ extern void T680f48(TC* ac, T0* C, T0* a1);
 extern T0* T65f264(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_EIFFEL_PARSER.ast_factory */
 extern T0* T68f762(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_949 */
-extern void T68f2076(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_951 */
+extern void T68f2078(TC* ac, T0* C);
 /* ET_UNDERSCORED_REAL_CONSTANT.set_sign */
 extern void T681f44(TC* ac, T0* C, T0* a1);
 /* ET_REGULAR_REAL_CONSTANT.set_sign */
 extern void T680f47(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_950 */
+extern void T68f2077(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_949 */
+extern void T68f2076(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_948 */
 extern void T68f2075(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_947 */
@@ -44132,10 +44144,6 @@ extern void T68f2074(TC* ac, T0* C);
 extern void T68f2073(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_945 */
 extern void T68f2072(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_944 */
-extern void T68f2071(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_943 */
-extern void T68f2070(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_INTEGER_CONSTANT].force */
 extern void T305s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_INTEGER_CONSTANT].fill_with */
@@ -44152,8 +44160,8 @@ extern void T677f67(TC* ac, T0* C, T0* a1);
 extern void T676f67(TC* ac, T0* C, T0* a1);
 /* ET_REGULAR_INTEGER_CONSTANT.set_cast_type */
 extern void T675f70(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_942 */
-extern void T68f2069(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_944 */
+extern void T68f2071(TC* ac, T0* C);
 /* ET_BINARY_INTEGER_CONSTANT.set_sign */
 extern void T679f66(TC* ac, T0* C, T0* a1);
 /* ET_OCTAL_INTEGER_CONSTANT.set_sign */
@@ -44164,6 +44172,10 @@ extern void T677f66(TC* ac, T0* C, T0* a1);
 extern void T676f66(TC* ac, T0* C, T0* a1);
 /* ET_REGULAR_INTEGER_CONSTANT.set_sign */
 extern void T675f69(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_943 */
+extern void T68f2070(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_942 */
+extern void T68f2069(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_941 */
 extern void T68f2068(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_940 */
@@ -44172,20 +44184,16 @@ extern void T68f2067(TC* ac, T0* C);
 extern void T68f2066(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_938 */
 extern void T68f2065(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_937 */
-extern void T68f2064(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_936 */
-extern void T68f2063(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_BOOLEAN_CONSTANT].force */
 extern void T287s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_BOOLEAN_CONSTANT].fill_with */
 extern void T289f8(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* SPECIAL [detachable ET_BOOLEAN_CONSTANT].extend */
 extern void T289f10(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_935 */
-extern void T68f2062(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_934 */
-extern void T68f2061(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_937 */
+extern void T68f2064(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_936 */
+extern void T68f2063(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CHARACTER_CONSTANT].force */
 extern void T293s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CHARACTER_CONSTANT].fill_with */
@@ -44198,20 +44206,20 @@ extern void T671f50(TC* ac, T0* C, T0* a1);
 extern void T686f53(TC* ac, T0* C, T0* a1);
 /* ET_C1_CHARACTER_CONSTANT.set_cast_type */
 extern void T685f49(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_933 */
-extern void T68f2060(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_935 */
+extern void T68f2062(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CHARACTER_CONSTANT].aliased_resized_area */
 extern T0* T293s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_CHARACTER_CONSTANT].aliased_resized_area */
 extern T0* T295f4(TC* ac, T0* C, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_934 */
+extern void T68f2061(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_933 */
+extern void T68f2060(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_932 */
 extern void T68f2059(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_931 */
 extern void T68f2058(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_930 */
-extern void T68f2057(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_929 */
-extern void T68f2056(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_STRING].force */
 extern void T311s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_MANIFEST_STRING].fill_with */
@@ -44224,12 +44232,16 @@ extern void T674f53(TC* ac, T0* C, T0* a1);
 extern void T673f49(TC* ac, T0* C, T0* a1);
 /* ET_REGULAR_MANIFEST_STRING.set_cast_type */
 extern void T672f51(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_928 */
-extern void T68f2055(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_930 */
+extern void T68f2057(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_STRING].aliased_resized_area */
 extern T0* T311s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_MANIFEST_STRING].aliased_resized_area */
 extern T0* T313f4(TC* ac, T0* C, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_929 */
+extern void T68f2056(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_928 */
+extern void T68f2055(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_927 */
 extern void T68f2054(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_926 */
@@ -44292,10 +44304,6 @@ extern void T68f2026(TC* ac, T0* C);
 extern void T68f2025(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_897 */
 extern void T68f2024(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_896 */
-extern void T68f2023(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_895 */
-extern void T68f2022(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_AGENT_ARGUMENT_OPERAND].force */
 extern void T351s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_AGENT_ARGUMENT_OPERAND].fill_with */
@@ -44318,12 +44326,12 @@ extern T0* T336c46(TC* ac);
 extern void T336f49(TC* ac, T0* C);
 /* ET_AGENT_TYPED_OPEN_ARGUMENT.tokens */
 extern T0* T766s8(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_896 */
+extern void T68f2023(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_895 */
+extern void T68f2022(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_894 */
 extern void T68f2021(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_893 */
-extern void T68f2020(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_892 */
-extern void T68f2019(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_AGENT_ARGUMENT_OPERAND_ITEM].force */
 extern void T354s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_AGENT_ARGUMENT_OPERAND_ITEM].fill_with */
@@ -44335,15 +44343,15 @@ extern T0* T354s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_AGENT_ARGUMENT_OPERAND_ITEM].aliased_resized_area */
 extern T0* T356f4(TC* ac, T0* C, T6 a1);
 /* ET_EIFFEL_PARSER.increment_counter */
-extern void T68f2091(TC* ac, T0* C);
+extern void T68f2093(TC* ac, T0* C);
 /* DS_ARRAYED_STACK [INTEGER_32].replace */
 extern void T245f12(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_STACK [INTEGER_32].item */
 extern T6 T245f5(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_agent_argument_operand_comma */
 extern T0* T65f332(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_891 */
-extern void T68f2018(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_893 */
+extern void T68f2020(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_AGENT_ARGUMENT_OPERAND_LIST].force */
 extern void T357s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_AGENT_ARGUMENT_OPERAND_LIST].fill_with */
@@ -44362,8 +44370,8 @@ extern void T1576f7(TC* ac, T0* C, T0* a1);
 extern T0* T358f6(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_AGENT_ARGUMENT_OPERAND_ITEM].default_create */
 extern T0* T1577c2(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_890 */
-extern void T68f2017(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_892 */
+extern void T68f2019(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_AGENT_ARGUMENT_OPERAND_LIST].aliased_resized_area */
 extern T0* T357s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_AGENT_ARGUMENT_OPERAND_LIST].aliased_resized_area */
@@ -44394,12 +44402,12 @@ extern T6 T68f962(TC* ac, T0* C);
 extern T0* T68f964(TC* ac, T0* C);
 /* DS_ARRAYED_STACK [detachable ET_SYMBOL].item */
 extern T0* T249f5(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_889 */
-extern void T68f2016(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_888 */
-extern void T68f2015(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_891 */
+extern void T68f2018(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_890 */
+extern void T68f2017(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.add_symbol */
-extern void T68f2094(TC* ac, T0* C, T0* a1);
+extern void T68f2096(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_STACK [detachable ET_SYMBOL].force */
 extern void T249f11(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [detachable ET_SYMBOL].force */
@@ -44418,10 +44426,10 @@ extern T0* T283f4(TC* ac, T0* C, T6 a1);
 extern T6 T249f7(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_STACK [detachable ET_SYMBOL].extendible */
 extern T1 T249f6(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_887 */
-extern void T68f2014(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_889 */
+extern void T68f2016(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.remove_counter */
-extern void T68f2088(TC* ac, T0* C);
+extern void T68f2090(TC* ac, T0* C);
 /* DS_ARRAYED_STACK [INTEGER_32].remove */
 extern void T245f10(TC* ac, T0* C);
 /* SPECIAL [INTEGER_32].keep_head */
@@ -44429,19 +44437,19 @@ extern void T154f14(TC* ac, T0* C, T6 a1);
 /* SPECIAL [INTEGER_32].set_count */
 extern void T154f15(TC* ac, T0* C, T6 a1);
 /* ET_EIFFEL_PARSER.remove_symbol */
-extern void T68f2093(TC* ac, T0* C);
+extern void T68f2095(TC* ac, T0* C);
 /* DS_ARRAYED_STACK [detachable ET_SYMBOL].remove */
 extern void T249f10(TC* ac, T0* C);
 /* SPECIAL [detachable ET_SYMBOL].keep_head */
 extern void T283f6(TC* ac, T0* C, T6 a1);
 /* SPECIAL [detachable ET_SYMBOL].set_count */
 extern void T283f9(TC* ac, T0* C, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_888 */
+extern void T68f2015(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_887 */
+extern void T68f2014(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_886 */
 extern void T68f2013(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_885 */
-extern void T68f2012(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_884 */
-extern void T68f2011(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_AGENT_TARGET].force */
 extern void T360s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_AGENT_TARGET].fill_with */
@@ -44458,14 +44466,14 @@ extern T0* T65f330(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 extern T0* T765c12(TC* ac, T0* a1);
 /* ET_AGENT_OPEN_TARGET.tokens */
 extern T0* T765s6(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_885 */
+extern void T68f2012(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_884 */
+extern void T68f2011(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_883 */
 extern void T68f2010(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_882 */
 extern void T68f2009(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_881 */
-extern void T68f2008(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_880 */
-extern void T68f2007(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_agent_identifier_target */
 extern T0* T68f1016(TC* ac, T0* C, T0* a1);
 /* ET_AST_FACTORY.new_unqualified_call_expression */
@@ -44522,10 +44530,10 @@ extern T0* T547f8(TC* ac, T0* C);
 extern void T1446f12(TC* ac, T0* C, T1 a1);
 /* ET_FORMAL_ARGUMENT.set_used */
 extern void T491f11(TC* ac, T0* C, T1 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_879 */
-extern void T68f2006(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_881 */
+extern void T68f2008(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.set_start_closure */
-extern void T68f2102(TC* ac, T0* C, T0* a1);
+extern void T68f2104(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_STACK [detachable ET_INLINE_SEPARATE_ARGUMENT_LIST].force */
 extern void T254f12(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_ARGUMENT_LIST].force */
@@ -44616,10 +44624,10 @@ extern T0* T498f4(TC* ac, T0* C, T6 a1);
 extern T6 T246f8(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_STACK [detachable ET_FORMAL_ARGUMENT_LIST].extendible */
 extern T1 T246f7(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_878 */
-extern void T68f2005(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_877 */
-extern void T68f2004(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_880 */
+extern void T68f2007(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_879 */
+extern void T68f2006(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_INLINE_AGENT].force */
 extern void T514s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_INLINE_AGENT].fill_with */
@@ -44631,9 +44639,9 @@ extern T0* T514s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_INLINE_AGENT].aliased_resized_area */
 extern T0* T516f4(TC* ac, T0* C, T6 a1);
 /* ET_EIFFEL_PARSER.register_inline_agent */
-extern void T68f2113(TC* ac, T0* C, T0* a1);
+extern void T68f2115(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.set_end_closure */
-extern void T68f2117(TC* ac, T0* C);
+extern void T68f2119(TC* ac, T0* C);
 /* DS_ARRAYED_STACK [detachable ET_INLINE_SEPARATE_ARGUMENT_LIST].remove */
 extern void T254f13(TC* ac, T0* C);
 /* SPECIAL [detachable ET_INLINE_SEPARATE_ARGUMENT_LIST].keep_head */
@@ -44890,10 +44898,10 @@ extern T0* T276s7(TC* ac);
 extern T0* T764s35(TC* ac);
 /* ET_AST_FACTORY.new_external_language */
 extern T0* T65f190(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_876 */
-extern void T68f2003(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_875 */
-extern void T68f2002(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_878 */
+extern void T68f2005(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_877 */
+extern void T68f2004(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_once_procedure_inline_agent */
 extern T0* T65f328(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9, T0* a10);
 /* ET_ONCE_PROCEDURE_INLINE_AGENT.set_rescue_clause */
@@ -44926,10 +44934,10 @@ extern T0* T81s682(TC* ac);
 extern T0* T191c50(TC* ac);
 /* ET_AST_FACTORY.tokens */
 extern T0* T65s371(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_874 */
-extern void T68f2001(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_873 */
-extern void T68f2000(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_876 */
+extern void T68f2003(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_875 */
+extern void T68f2002(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_do_procedure_inline_agent */
 extern T0* T65f327(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9);
 /* ET_DO_PROCEDURE_INLINE_AGENT.set_rescue_clause */
@@ -44950,10 +44958,10 @@ extern T0* T762c44(TC* ac, T0* a1, T0* a2);
 extern void T762f57(TC* ac, T0* C, T0* a1);
 /* ET_DO_PROCEDURE_INLINE_AGENT.tokens */
 extern T0* T762s36(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_872 */
-extern void T68f1999(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_871 */
-extern void T68f1998(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_874 */
+extern void T68f2001(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_873 */
+extern void T68f2000(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_external_function_inline_agent */
 extern T0* T65f326(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9);
 /* ET_EXTERNAL_FUNCTION_INLINE_AGENT.set_postconditions */
@@ -44984,10 +44992,10 @@ extern T0* T318s6(TC* ac);
 extern T0* T761s35(TC* ac);
 /* ET_AST_FACTORY.new_colon_type */
 extern T0* T65f181(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_870 */
-extern void T68f1997(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_869 */
-extern void T68f1996(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_872 */
+extern void T68f1999(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_871 */
+extern void T68f1998(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_once_function_inline_agent */
 extern T0* T65f325(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9, T0* a10, T0* a11);
 /* ET_ONCE_FUNCTION_INLINE_AGENT.set_rescue_clause */
@@ -45010,10 +45018,10 @@ extern T0* T760c49(TC* ac, T0* a1, T0* a2, T0* a3);
 extern void T760f63(TC* ac, T0* C, T0* a1);
 /* ET_ONCE_FUNCTION_INLINE_AGENT.tokens */
 extern T0* T760s42(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_868 */
-extern void T68f1995(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_867 */
-extern void T68f1994(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_870 */
+extern void T68f1997(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_869 */
+extern void T68f1996(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_do_function_inline_agent */
 extern T0* T65f324(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9, T0* a10);
 /* ET_DO_FUNCTION_INLINE_AGENT.set_rescue_clause */
@@ -45034,12 +45042,12 @@ extern T0* T759c45(TC* ac, T0* a1, T0* a2, T0* a3);
 extern void T759f58(TC* ac, T0* C, T0* a1);
 /* ET_DO_FUNCTION_INLINE_AGENT.tokens */
 extern T0* T759s19(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_866 */
-extern void T68f1993(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_865 */
-extern void T68f1992(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_868 */
+extern void T68f1995(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_867 */
+extern void T68f1994(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.set_inline_agent_actual_arguments */
-extern void T68f2112(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T68f2114(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_EXTERNAL_PROCEDURE_INLINE_AGENT.set_actual_arguments */
 extern void T764f46(TC* ac, T0* C, T0* a1);
 /* ET_ONCE_PROCEDURE_INLINE_AGENT.set_actual_arguments */
@@ -45052,8 +45060,8 @@ extern void T761f47(TC* ac, T0* C, T0* a1);
 extern void T760f53(TC* ac, T0* C, T0* a1);
 /* ET_DO_FUNCTION_INLINE_AGENT.set_actual_arguments */
 extern void T759f49(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_864 */
-extern void T68f1991(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_866 */
+extern void T68f1993(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CALL_AGENT].force */
 extern void T375s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CALL_AGENT].fill_with */
@@ -45076,10 +45084,10 @@ extern T0* T376s10(TC* ac);
 extern T0* T376c33(TC* ac, T0* a1, T0* a2);
 /* ET_AST_FACTORY.new_dot_feature_name */
 extern T0* T65f323(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_863 */
-extern void T68f1990(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_862 */
-extern void T68f1989(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_865 */
+extern void T68f1992(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_864 */
+extern void T68f1991(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_EXPRESSION].force */
 extern void T465s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_EXPRESSION].fill_with */
@@ -45214,8 +45222,8 @@ extern T0* T89f4(TC* ac, T0* C);
 extern T0* T198f2(TC* ac, T0* C);
 /* ET_CLUSTER.universe */
 extern T0* T67f4(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_861 */
-extern void T68f1988(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_863 */
+extern void T68f1990(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_QUANTIFIER_EXPRESSION].force */
 extern void T612s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_QUANTIFIER_EXPRESSION].fill_with */
@@ -45292,22 +45300,22 @@ extern void T683f43(TC* ac, T0* C);
 extern T0* T683s6(TC* ac);
 /* ET_EIFFEL_PARSER.tokens */
 extern T0* T68s709(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_860 */
-extern void T68f1987(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_862 */
+extern void T68f1989(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_for_all_quantifier_expression_header */
 extern T0* T68f1013(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5);
 /* ET_AST_FACTORY.new_for_all_quantifier_expression */
 extern T0* T65f368(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6);
 /* ET_QUANTIFIER_EXPRESSION.make_for_all */
 extern T0* T613c39(TC* ac, T0* a1, T0* a2, T0* a3);
-/* ET_EIFFEL_PARSER.yy_do_action_859 */
-extern void T68f1986(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_861 */
+extern void T68f1988(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_quantifier_expression */
 extern T0* T68f1012(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_QUANTIFIER_EXPRESSION.set_iteration_expression */
 extern void T613f40(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_858 */
-extern void T68f1985(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_860 */
+extern void T68f1987(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ACROSS_EXPRESSION].force */
 extern void T338s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_ACROSS_EXPRESSION].fill_with */
@@ -45352,10 +45360,10 @@ extern T0* T81s661(TC* ac);
 extern T0* T191c80(TC* ac);
 /* ET_ACROSS_EXPRESSION.tokens */
 extern T0* T339s19(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_857 */
-extern void T68f1984(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_856 */
-extern void T68f1983(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_859 */
+extern void T68f1986(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_858 */
+extern void T68f1985(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_across_all_expression */
 extern T0* T68f1010(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6);
 /* ET_ACROSS_EXPRESSION.set_end_keyword */
@@ -45374,14 +45382,14 @@ extern T0* T1450c4(TC* ac, T0* a1, T0* a2);
 extern T1 T191f23(TC* ac, T0* C);
 /* ET_KEYWORD.is_if */
 extern T1 T191f22(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_855 */
-extern void T68f1982(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_857 */
+extern void T68f1984(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_across_some_expression */
 extern T0* T68f1009(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6);
 /* ET_ACROSS_EXPRESSION.set_some */
 extern void T339f43(TC* ac, T0* C, T1 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_854 */
-extern void T68f1981(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_856 */
+extern void T68f1983(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CONSTANT].force */
 extern void T408s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CONSTANT].fill_with */
@@ -45392,16 +45400,16 @@ extern void T410f10(TC* ac, T0* C, T0* a1);
 extern T0* T408s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_CONSTANT].aliased_resized_area */
 extern T0* T410f4(TC* ac, T0* C, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_855 */
+extern void T68f1982(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_854 */
+extern void T68f1981(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_853 */
 extern void T68f1980(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_852 */
 extern void T68f1979(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_851 */
 extern void T68f1978(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_850 */
-extern void T68f1977(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_849 */
-extern void T68f1976(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_STRIP_EXPRESSION].force */
 extern void T629s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_STRIP_EXPRESSION].fill_with */
@@ -45420,8 +45428,8 @@ extern void T1457f7(TC* ac, T0* C, T0* a1);
 extern T0* T630f10(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_FEATURE_NAME_ITEM].default_create */
 extern T0* T1456c2(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_848 */
-extern void T68f1975(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_850 */
+extern void T68f1977(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_STRIP_EXPRESSION].aliased_resized_area */
 extern T0* T629s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_STRIP_EXPRESSION].aliased_resized_area */
@@ -45448,12 +45456,12 @@ extern T0* T630s8(TC* ac);
 extern T0* T68f961(TC* ac, T0* C);
 /* DS_ARRAYED_STACK [detachable ET_KEYWORD].item */
 extern T0* T248f5(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_847 */
-extern void T68f1974(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_846 */
-extern void T68f1973(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_849 */
+extern void T68f1976(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_848 */
+extern void T68f1975(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.add_keyword */
-extern void T68f2089(TC* ac, T0* C, T0* a1);
+extern void T68f2091(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_STACK [detachable ET_KEYWORD].force */
 extern void T248f11(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [detachable ET_KEYWORD].force */
@@ -45472,20 +45480,20 @@ extern T0* T274f4(TC* ac, T0* C, T6 a1);
 extern T6 T248f7(TC* ac, T0* C, T6 a1);
 /* DS_ARRAYED_STACK [detachable ET_KEYWORD].extendible */
 extern T1 T248f6(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_845 */
-extern void T68f1972(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_847 */
+extern void T68f1974(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.remove_keyword */
-extern void T68f2087(TC* ac, T0* C);
+extern void T68f2089(TC* ac, T0* C);
 /* DS_ARRAYED_STACK [detachable ET_KEYWORD].remove */
 extern void T248f10(TC* ac, T0* C);
 /* SPECIAL [detachable ET_KEYWORD].keep_head */
 extern void T274f6(TC* ac, T0* C, T6 a1);
 /* SPECIAL [detachable ET_KEYWORD].set_count */
 extern void T274f9(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_844 */
-extern void T68f1971(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_843 */
-extern void T68f1970(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_846 */
+extern void T68f1973(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_845 */
+extern void T68f1972(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_TUPLE].force */
 extern void T567s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_MANIFEST_TUPLE].fill_with */
@@ -45504,8 +45512,8 @@ extern void T1171f10(TC* ac, T0* C, T0* a1);
 extern T0* T568f10(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_EXPRESSION_ITEM].default_create */
 extern T0* T1173c3(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_842 */
-extern void T68f1969(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_844 */
+extern void T68f1971(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_TUPLE].aliased_resized_area */
 extern T0* T567s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_MANIFEST_TUPLE].aliased_resized_area */
@@ -45524,16 +45532,16 @@ extern T0* T1173s1(TC* ac, T6 a1);
 extern T0* T1171c5(TC* ac, T6 a1);
 /* ET_MANIFEST_TUPLE.tokens */
 extern T0* T568s8(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_843 */
+extern void T68f1970(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_842 */
+extern void T68f1969(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_841 */
 extern void T68f1968(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_840 */
 extern void T68f1967(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_839 */
 extern void T68f1966(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_838 */
-extern void T68f1965(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_837 */
-extern void T68f1964(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_ARRAY].force */
 extern void T558s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_MANIFEST_ARRAY].fill_with */
@@ -45544,8 +45552,8 @@ extern void T560f10(TC* ac, T0* C, T0* a1);
 extern void T559f33(TC* ac, T0* C, T0* a1);
 /* ET_MANIFEST_ARRAY.fixed_array */
 extern T0* T559f9(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_836 */
-extern void T68f1963(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_838 */
+extern void T68f1965(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_ARRAY].aliased_resized_area */
 extern T0* T558s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_MANIFEST_ARRAY].aliased_resized_area */
@@ -45568,20 +45576,20 @@ extern T0* T81s897(TC* ac);
 extern T0* T282c101(TC* ac);
 /* ET_MANIFEST_ARRAY.tokens */
 extern T0* T559s8(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_837 */
+extern void T68f1964(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_836 */
+extern void T68f1963(TC* ac, T0* C);
+/* ET_MANIFEST_ARRAY.set_cast_type */
+extern void T559f32(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_do_action_835 */
 extern void T68f1962(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_834 */
 extern void T68f1961(TC* ac, T0* C);
-/* ET_MANIFEST_ARRAY.set_cast_type */
-extern void T559f32(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_do_action_833 */
 extern void T68f1960(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_832 */
 extern void T68f1959(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_831 */
-extern void T68f1958(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_830 */
-extern void T68f1957(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_PARENTHESIZED_EXPRESSION].force */
 extern void T588s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_PARENTHESIZED_EXPRESSION].fill_with */
@@ -45600,8 +45608,8 @@ extern void T589f26(TC* ac, T0* C, T0* a1);
 extern T0* T589c25(TC* ac, T0* a1);
 /* ET_PARENTHESIZED_EXPRESSION.tokens */
 extern T0* T589s6(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_829 */
-extern void T68f1956(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_831 */
+extern void T68f1958(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ACTUAL_ARGUMENT_LIST].force */
 extern void T344s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_ACTUAL_ARGUMENT_LIST].fill_with */
@@ -45612,8 +45620,8 @@ extern void T346f10(TC* ac, T0* C, T0* a1);
 extern void T345f22(TC* ac, T0* C, T0* a1);
 /* ET_ACTUAL_ARGUMENT_LIST.fixed_array */
 extern T0* T345f9(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_828 */
-extern void T68f1955(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_830 */
+extern void T68f1957(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ACTUAL_ARGUMENT_LIST].aliased_resized_area */
 extern T0* T344s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_ACTUAL_ARGUMENT_LIST].aliased_resized_area */
@@ -45630,10 +45638,10 @@ extern void T345f19(TC* ac, T0* C, T6 a1);
 extern T0* T345c19(TC* ac, T6 a1);
 /* ET_ACTUAL_ARGUMENT_LIST.make_with_capacity */
 extern void T345f19p1(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_827 */
-extern void T68f1954(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_826 */
-extern void T68f1953(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_829 */
+extern void T68f1956(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_828 */
+extern void T68f1955(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_BRACKET_EXPRESSION].force */
 extern void T372s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_BRACKET_EXPRESSION].fill_with */
@@ -45644,12 +45652,16 @@ extern void T374f10(TC* ac, T0* C, T0* a1);
 extern T0* T372s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_BRACKET_EXPRESSION].aliased_resized_area */
 extern T0* T374f4(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_825 */
-extern void T68f1952(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_827 */
+extern void T68f1954(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_bracket_expression */
 extern T0* T65f315(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_BRACKET_EXPRESSION.make */
 extern T0* T373c28(TC* ac, T0* a1, T0* a2, T0* a3);
+/* ET_EIFFEL_PARSER.yy_do_action_826 */
+extern void T68f1953(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_825 */
+extern void T68f1952(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_824 */
 extern void T68f1951(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_823 */
@@ -45666,12 +45678,8 @@ extern void T68f1946(TC* ac, T0* C);
 extern void T68f1945(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_817 */
 extern void T68f1944(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_816 */
-extern void T68f1943(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_815 */
-extern void T68f1942(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.raise_error */
-extern void T68f2084(TC* ac, T0* C);
+extern void T68f2086(TC* ac, T0* C);
 /* ET_SYSTEM_MULTIPROCESSOR.older_ise_version */
 extern T1 T853f41(TC* ac, T0* C, T0* a1);
 /* UT_VERSION.is_less */
@@ -45698,6 +45706,10 @@ extern T1 T66f45(TC* ac, T0* C, T0* a1);
 extern T0* T68s1008(TC* ac);
 /* UT_VERSION.make */
 extern T0* T56c19(TC* ac, T6 a1, T6 a2, T6 a3, T6 a4);
+/* ET_EIFFEL_PARSER.yy_do_action_816 */
+extern void T68f1943(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_815 */
+extern void T68f1942(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_814 */
 extern void T68f1941(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_813 */
@@ -45706,10 +45718,6 @@ extern void T68f1940(TC* ac, T0* C);
 extern void T68f1939(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_811 */
 extern void T68f1938(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_810 */
-extern void T68f1937(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_809 */
-extern void T68f1936(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_once_manifest_string */
 extern T0* T68f1007(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_CLASS.register_inline_constant */
@@ -45724,6 +45732,10 @@ extern void T756f29(TC* ac, T0* C, T0* a1);
 extern T0* T756c27(TC* ac, T0* a1);
 /* ET_ONCE_MANIFEST_STRING.tokens */
 extern T0* T756s5(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_810 */
+extern void T68f1937(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_809 */
+extern void T68f1936(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_808 */
 extern void T68f1935(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_807 */
@@ -45750,10 +45762,6 @@ extern void T68f1926(TC* ac, T0* C);
 extern void T68f1925(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_797 */
 extern void T68f1924(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_796 */
-extern void T68f1923(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_795 */
-extern void T68f1922(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_named_object_test */
 extern T0* T68f1006(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5);
 /* ET_OBJECT_TEST_LIST.force_last */
@@ -45790,10 +45798,10 @@ extern T0* T755c29(TC* ac, T0* a1, T0* a2, T0* a3);
 extern void T755f33(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_NAMED_OBJECT_TEST.tokens */
 extern T0* T755s9(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_794 */
-extern void T68f1921(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_793 */
-extern void T68f1920(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_796 */
+extern void T68f1923(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_795 */
+extern void T68f1922(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_object_test */
 extern T0* T65f314(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_OBJECT_TEST.set_attached_keyword */
@@ -45802,10 +45810,10 @@ extern void T754f28(TC* ac, T0* C, T0* a1);
 extern T0* T754c27(TC* ac, T0* a1, T0* a2);
 /* ET_OBJECT_TEST.tokens */
 extern T0* T754s5(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_792 */
-extern void T68f1919(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_791 */
-extern void T68f1918(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_794 */
+extern void T68f1921(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_793 */
+extern void T68f1920(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_old_object_test */
 extern T0* T68f1005(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6);
 /* ET_AST_FACTORY.new_old_object_test */
@@ -45818,8 +45826,8 @@ extern T0* T753c32(TC* ac, T0* a1, T0* a2, T0* a3);
 extern T0* T753s12(TC* ac);
 /* ET_EIFFEL_PARSER.ise_6_1_0 */
 extern T0* T68s989(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_790 */
-extern void T68f1917(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_792 */
+extern void T68f1919(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_old_expression */
 extern T0* T65f313(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_OLD_EXPRESSION.set_old_keyword */
@@ -45832,18 +45840,18 @@ extern T0* T81s913(TC* ac);
 extern T0* T191c53(TC* ac);
 /* ET_OLD_EXPRESSION.tokens */
 extern T0* T752s5(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_789 */
-extern void T68f1916(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_791 */
+extern void T68f1918(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_prefix_free_operator */
 extern T0* T65f312(TC* ac, T0* C, T0* a1);
 /* ET_FREE_OPERATOR.set_prefix */
 extern void T300f59(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_790 */
+extern void T68f1917(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_789 */
+extern void T68f1916(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_788 */
 extern void T68f1915(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_787 */
-extern void T68f1914(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_786 */
-extern void T68f1913(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_prefix_minus_expression */
 extern T0* T68f1004(TC* ac, T0* C, T0* a1, T0* a2);
 extern T1 T68f1004ot1(TC* ac, T0* a1);
@@ -45862,8 +45870,8 @@ extern T0* T677f1(TC* ac, T0* C);
 extern T0* T676f1(TC* ac, T0* C);
 /* ET_REGULAR_INTEGER_CONSTANT.sign */
 extern T0* T675f6(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_785 */
-extern void T68f1912(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_787 */
+extern void T68f1914(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_prefix_plus_expression */
 extern T0* T68f1003(TC* ac, T0* C, T0* a1, T0* a2);
 extern T1 T68f1003ot1(TC* ac, T0* a1);
@@ -45872,6 +45880,10 @@ extern T1 T68f1003ot2(TC* ac, T0* a1);
 extern T0* T65f362(TC* ac, T0* C, T0* a1);
 /* ET_SYMBOL_OPERATOR.set_prefix_plus */
 extern void T324f153(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_786 */
+extern void T68f1913(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_785 */
+extern void T68f1912(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_784 */
 extern void T68f1911(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_783 */
@@ -45892,16 +45904,16 @@ extern void T68f1904(TC* ac, T0* C);
 extern void T68f1903(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_775 */
 extern void T68f1902(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_774 */
-extern void T68f1901(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_773 */
-extern void T68f1900(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_manifest_type */
 extern T0* T65f310(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_MANIFEST_TYPE.make */
 extern T0* T750c25(TC* ac, T0* a1);
 /* ET_MANIFEST_TYPE.tokens */
 extern T0* T750s6(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_774 */
+extern void T68f1901(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_773 */
+extern void T68f1900(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_772 */
 extern void T68f1899(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_771 */
@@ -45910,36 +45922,32 @@ extern void T68f1898(TC* ac, T0* C);
 extern void T68f1897(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_769 */
 extern void T68f1896(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_768 */
-extern void T68f1895(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_767 */
-extern void T68f1894(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_object_equality_expression */
 extern T0* T65f309(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_OBJECT_EQUALITY_EXPRESSION.make */
 extern T0* T749c26(TC* ac, T0* a1, T0* a2, T0* a3);
-/* ET_EIFFEL_PARSER.yy_do_action_766 */
-extern void T68f1893(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_765 */
-extern void T68f1892(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_768 */
+extern void T68f1895(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_767 */
+extern void T68f1894(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_equality_expression */
 extern T0* T65f308(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_EQUALITY_EXPRESSION.make */
 extern T0* T748c24(TC* ac, T0* a1, T0* a2, T0* a3);
-/* ET_EIFFEL_PARSER.yy_do_action_764 */
-extern void T68f1891(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_763 */
-extern void T68f1890(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_766 */
+extern void T68f1893(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_765 */
+extern void T68f1892(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_infix_expression */
 extern T0* T65f302(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_INFIX_EXPRESSION.make */
 extern T0* T745c29(TC* ac, T0* a1, T0* a2, T0* a3);
+/* ET_EIFFEL_PARSER.yy_do_action_764 */
+extern void T68f1891(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_763 */
+extern void T68f1890(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_762 */
 extern void T68f1889(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_761 */
-extern void T68f1888(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_760 */
-extern void T68f1887(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_infix_or_else_operator */
 extern T0* T65f307(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_INFIX_OR_ELSE_OPERATOR.set_or_keyword */
@@ -45960,10 +45968,10 @@ extern T0* T309c55(TC* ac);
 extern void T309f61(TC* ac, T0* C, T0* a1);
 /* ET_KEYWORD_OPERATOR.make_leaf */
 extern void T309f62(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_759 */
-extern void T68f1886(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_758 */
-extern void T68f1885(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_761 */
+extern void T68f1888(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_760 */
+extern void T68f1887(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_infix_and_then_operator */
 extern T0* T65f306(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_INFIX_AND_THEN_OPERATOR.set_and_keyword */
@@ -45978,6 +45986,10 @@ extern T0* T191c73(TC* ac);
 extern T0* T81s909(TC* ac);
 /* ET_KEYWORD_OPERATOR.make_and */
 extern T0* T309c57(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_759 */
+extern void T68f1886(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_758 */
+extern void T68f1885(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_757 */
 extern void T68f1884(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_756 */
@@ -46006,38 +46018,34 @@ extern void T68f1873(TC* ac, T0* C);
 extern void T68f1872(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_744 */
 extern void T68f1871(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_743 */
-extern void T68f1870(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_742 */
-extern void T68f1869(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_infix_minus_operator */
 extern T0* T65f305(TC* ac, T0* C, T0* a1);
 /* ET_SYMBOL_OPERATOR.set_infix_minus */
 extern void T324f152(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_741 */
-extern void T68f1868(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_743 */
+extern void T68f1870(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_infix_plus_operator */
 extern T0* T65f304(TC* ac, T0* C, T0* a1);
 /* ET_SYMBOL_OPERATOR.set_infix_plus */
 extern void T324f151(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_740 */
-extern void T68f1867(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_742 */
+extern void T68f1869(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_infix_free_operator_from_symbol */
 extern T0* T65f303(TC* ac, T0* C, T0* a1);
 /* ET_FREE_OPERATOR.make_infix */
 extern T0* T300c57(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_739 */
-extern void T68f1866(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_741 */
+extern void T68f1868(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_infix_free_operator */
 extern T0* T65f301(TC* ac, T0* C, T0* a1);
 /* ET_FREE_OPERATOR.set_infix */
 extern void T300f56(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_740 */
+extern void T68f1867(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_739 */
+extern void T68f1866(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_738 */
 extern void T68f1865(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_737 */
-extern void T68f1864(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_736 */
-extern void T68f1863(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_WRITABLE].force */
 extern void T664s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_WRITABLE].fill_with */
@@ -46048,12 +46056,12 @@ extern void T666f10(TC* ac, T0* C, T0* a1);
 extern T0* T664s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_WRITABLE].aliased_resized_area */
 extern T0* T666f4(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_735 */
-extern void T68f1862(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_737 */
+extern void T68f1864(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_writable */
 extern T0* T68f1002(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_734 */
-extern void T68f1861(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_736 */
+extern void T68f1863(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_expression_address */
 extern T0* T65f300(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_EXPRESSION_ADDRESS.set_dollar */
@@ -46066,8 +46074,8 @@ extern T0* T81s908(TC* ac);
 extern T0* T282c96(TC* ac);
 /* ET_EXPRESSION_ADDRESS.tokens */
 extern T0* T744s5(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_733 */
-extern void T68f1860(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_735 */
+extern void T68f1862(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_result_address */
 extern T0* T65f299(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_RESULT_ADDRESS.set_dollar */
@@ -46078,8 +46086,8 @@ extern T0* T743c24(TC* ac);
 extern T0* T81s604(TC* ac);
 /* ET_RESULT_ADDRESS.tokens */
 extern T0* T743s5(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_732 */
-extern void T68f1859(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_734 */
+extern void T68f1861(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_current_address */
 extern T0* T65f298(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_CURRENT_ADDRESS.set_dollar */
@@ -46088,8 +46096,8 @@ extern void T742f25(TC* ac, T0* C, T0* a1);
 extern T0* T742c24(TC* ac);
 /* ET_CURRENT_ADDRESS.tokens */
 extern T0* T742s5(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_731 */
-extern void T68f1858(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_733 */
+extern void T68f1860(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_feature_address */
 extern T0* T68f1001(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_AST_FACTORY.new_feature_address */
@@ -46100,8 +46108,8 @@ extern void T741f25(TC* ac, T0* C, T0* a1);
 extern T0* T741c24(TC* ac, T0* a1);
 /* ET_FEATURE_ADDRESS.tokens */
 extern T0* T741s5(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_730 */
-extern void T68f1857(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_732 */
+extern void T68f1859(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_EXPRESSION_ITEM].force */
 extern void T468s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_EXPRESSION_ITEM].fill_with */
@@ -46114,12 +46122,16 @@ extern T0* T468s2(TC* ac, T0* a1, T6 a2);
 extern T0* T470f4(TC* ac, T0* C, T6 a1);
 /* ET_AST_FACTORY.new_expression_comma */
 extern T0* T65f297(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_EIFFEL_PARSER.yy_do_action_731 */
+extern void T68f1858(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_730 */
+extern void T68f1857(TC* ac, T0* C);
+/* ET_AST_FACTORY.new_actual_arguments */
+extern T0* T65f296(TC* ac, T0* C, T0* a1, T0* a2, T6 a3);
 /* ET_EIFFEL_PARSER.yy_do_action_729 */
 extern void T68f1856(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_728 */
 extern void T68f1855(TC* ac, T0* C);
-/* ET_AST_FACTORY.new_actual_arguments */
-extern T0* T65f296(TC* ac, T0* C, T0* a1, T0* a2, T6 a3);
 /* ET_EIFFEL_PARSER.yy_do_action_727 */
 extern void T68f1854(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_726 */
@@ -46128,18 +46140,18 @@ extern void T68f1853(TC* ac, T0* C);
 extern void T68f1852(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_724 */
 extern void T68f1851(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_723 */
-extern void T68f1850(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_722 */
-extern void T68f1849(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_qualified_call_expression */
 extern T0* T65f293(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_EIFFEL_PARSER.new_dot_feature_name */
 extern T0* T68f988(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_721 */
-extern void T68f1848(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_723 */
+extern void T68f1850(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.ise_5_7_59914 */
 extern T0* T68s973(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_722 */
+extern void T68f1849(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_721 */
+extern void T68f1848(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_720 */
 extern void T68f1847(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_719 */
@@ -46154,14 +46166,10 @@ extern void T68f1843(TC* ac, T0* C);
 extern void T68f1842(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_714 */
 extern void T68f1841(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_713 */
-extern void T68f1840(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_712 */
-extern void T68f1839(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_unqualified_call_expression */
 extern T0* T68f1000(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_711 */
-extern void T68f1838(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_713 */
+extern void T68f1840(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_precursor_expression */
 extern T0* T65f295(TC* ac, T0* C, T1 a1, T0* a2, T0* a3, T0* a4);
 /* ET_PRECURSOR_EXPRESSION.set_precursor_keyword */
@@ -46184,10 +46192,10 @@ extern T0* T279s7(TC* ac);
 extern T0* T740s11(TC* ac);
 /* ET_AST_FACTORY.new_precursor_class_name */
 extern T0* T65f291(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
-/* ET_EIFFEL_PARSER.yy_do_action_710 */
-extern void T68f1837(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_709 */
-extern void T68f1836(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_712 */
+extern void T68f1839(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_711 */
+extern void T68f1838(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_STATIC_CALL_EXPRESSION].force */
 extern void T626s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_STATIC_CALL_EXPRESSION].fill_with */
@@ -46206,10 +46214,10 @@ extern void T627f34(TC* ac, T0* C, T0* a1);
 extern T0* T627c33(TC* ac, T0* a1, T0* a2, T0* a3);
 /* ET_STATIC_CALL_EXPRESSION.make_qualified_call */
 extern void T627f37(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_708 */
-extern void T68f1835(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_707 */
-extern void T68f1834(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_710 */
+extern void T68f1837(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_709 */
+extern void T68f1836(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_QUALIFIED_CALL_EXPRESSION].force */
 extern void T378s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_QUALIFIED_CALL_EXPRESSION].fill_with */
@@ -46220,16 +46228,16 @@ extern void T380f10(TC* ac, T0* C, T0* a1);
 extern T0* T378s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_QUALIFIED_CALL_EXPRESSION].aliased_resized_area */
 extern T0* T380f4(TC* ac, T0* C, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_708 */
+extern void T68f1835(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_707 */
+extern void T68f1834(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_706 */
 extern void T68f1833(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_705 */
 extern void T68f1832(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_704 */
 extern void T68f1831(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_703 */
-extern void T68f1830(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_702 */
-extern void T68f1829(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_INSTRUCTION].force */
 extern void T535s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_INSTRUCTION].fill_with */
@@ -46248,10 +46256,10 @@ extern void T739f15(TC* ac, T0* C, T0* a1);
 extern T0* T739c14(TC* ac, T0* a1, T0* a2, T0* a3);
 /* ET_STATIC_CALL_INSTRUCTION.make_qualified_call */
 extern void T739f16(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_701 */
-extern void T68f1828(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_700 */
-extern void T68f1827(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_703 */
+extern void T68f1830(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_702 */
+extern void T68f1829(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_precursor_instruction */
 extern T0* T65f290(TC* ac, T0* C, T1 a1, T0* a2, T0* a3, T0* a4);
 /* ET_PRECURSOR_INSTRUCTION.set_precursor_keyword */
@@ -46262,24 +46270,24 @@ extern void T737f15(TC* ac, T0* C, T1 a1);
 extern T0* T737c14(TC* ac, T0* a1, T0* a2);
 /* ET_PRECURSOR_INSTRUCTION.tokens */
 extern T0* T737s11(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_701 */
+extern void T68f1828(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_700 */
+extern void T68f1827(TC* ac, T0* C);
+/* ET_AST_FACTORY.new_qualified_call_instruction */
+extern T0* T65f289(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_EIFFEL_PARSER.yy_do_action_699 */
 extern void T68f1826(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_698 */
 extern void T68f1825(TC* ac, T0* C);
-/* ET_AST_FACTORY.new_qualified_call_instruction */
-extern T0* T65f289(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
-/* ET_EIFFEL_PARSER.yy_do_action_697 */
-extern void T68f1824(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_696 */
-extern void T68f1823(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_unqualified_call_instruction */
 extern T0* T68f999(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_AST_FACTORY.new_unqualified_call_instruction */
 extern T0* T65f360(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_UNQUALIFIED_CALL_INSTRUCTION.make */
 extern T0* T1034c12(TC* ac, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_695 */
-extern void T68f1822(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_697 */
+extern void T68f1824(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_ARGUMENT_ITEM].force */
 extern void T520s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_INLINE_SEPARATE_ARGUMENT_ITEM].fill_with */
@@ -46292,8 +46300,8 @@ extern T0* T520s2(TC* ac, T0* a1, T6 a2);
 extern T0* T522f4(TC* ac, T0* C, T6 a1);
 /* ET_AST_FACTORY.new_inline_separate_argument_comma */
 extern T0* T65f288(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_694 */
-extern void T68f1821(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_696 */
+extern void T68f1823(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_ARGUMENT].force */
 extern void T517s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_INLINE_SEPARATE_ARGUMENT].fill_with */
@@ -46336,8 +46344,8 @@ extern T0* T65f359(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 extern T0* T518c11(TC* ac, T0* a1, T0* a2);
 /* ET_INLINE_SEPARATE_ARGUMENT.tokens */
 extern T0* T518s4(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_693 */
-extern void T68f1820(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_695 */
+extern void T68f1822(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_ARGUMENTS].force */
 extern void T523s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_INLINE_SEPARATE_ARGUMENTS].fill_with */
@@ -46356,8 +46364,8 @@ extern void T1178f7(TC* ac, T0* C, T0* a1);
 extern T0* T524f5(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_INLINE_SEPARATE_ARGUMENT_ITEM].default_create */
 extern T0* T1179c2(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_692 */
-extern void T68f1819(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_694 */
+extern void T68f1821(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_ARGUMENTS].aliased_resized_area */
 extern T0* T523s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_INLINE_SEPARATE_ARGUMENTS].aliased_resized_area */
@@ -46376,12 +46384,12 @@ extern T0* T1179s1(TC* ac, T6 a1);
 extern T0* T1178c4(TC* ac, T6 a1);
 /* ET_INLINE_SEPARATE_ARGUMENTS.tokens */
 extern T0* T524s4(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_693 */
+extern void T68f1820(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_692 */
+extern void T68f1819(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_691 */
 extern void T68f1818(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_690 */
-extern void T68f1817(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_689 */
-extern void T68f1816(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_INLINE_SEPARATE_INSTRUCTION].force */
 extern void T526s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_INLINE_SEPARATE_INSTRUCTION].fill_with */
@@ -46406,8 +46414,8 @@ extern T0* T65f358(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 extern T0* T527c11(TC* ac, T0* a1, T0* a2);
 /* ET_INLINE_SEPARATE_INSTRUCTION.tokens */
 extern T0* T527s4(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_688 */
-extern void T68f1815(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_690 */
+extern void T68f1817(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_STRING_ITEM].force */
 extern void T561s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_MANIFEST_STRING_ITEM].fill_with */
@@ -46420,8 +46428,8 @@ extern T0* T561s2(TC* ac, T0* a1, T6 a2);
 extern T0* T563f4(TC* ac, T0* C, T6 a1);
 /* ET_AST_FACTORY.new_manifest_string_comma */
 extern T0* T65f286(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_687 */
-extern void T68f1814(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_689 */
+extern void T68f1816(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_STRING_LIST].force */
 extern void T564s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_MANIFEST_STRING_LIST].fill_with */
@@ -46440,8 +46448,8 @@ extern void T1605f7(TC* ac, T0* C, T0* a1);
 extern T0* T565f6(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_MANIFEST_STRING_ITEM].default_create */
 extern T0* T1606c2(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_686 */
-extern void T68f1813(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_688 */
+extern void T68f1815(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_MANIFEST_STRING_LIST].aliased_resized_area */
 extern T0* T564s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_MANIFEST_STRING_LIST].aliased_resized_area */
@@ -46458,16 +46466,16 @@ extern void T565f11p1(TC* ac, T0* C, T6 a1);
 extern T0* T1606s1(TC* ac, T6 a1);
 /* SPECIAL [ET_MANIFEST_STRING_ITEM].make_empty */
 extern T0* T1605c4(TC* ac, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_687 */
+extern void T68f1814(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_686 */
+extern void T68f1813(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_685 */
 extern void T68f1812(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_684 */
 extern void T68f1811(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_683 */
 extern void T68f1810(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_682 */
-extern void T68f1809(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_681 */
-extern void T68f1808(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_DEBUG_INSTRUCTION].force */
 extern void T445s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_DEBUG_INSTRUCTION].fill_with */
@@ -46508,8 +46516,8 @@ extern T0* T81s646(TC* ac);
 extern T0* T191c65(TC* ac);
 /* ET_COMPOUND.tokens */
 extern T0* T403s4(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_680 */
-extern void T68f1807(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_682 */
+extern void T68f1809(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CONDITIONAL].force */
 extern void T405s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CONDITIONAL].fill_with */
@@ -46520,10 +46528,10 @@ extern void T407f10(TC* ac, T0* C, T0* a1);
 extern T0* T405s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_CONDITIONAL].aliased_resized_area */
 extern T0* T407f4(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_679 */
-extern void T68f1806(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_678 */
-extern void T68f1805(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_681 */
+extern void T68f1808(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_680 */
+extern void T68f1807(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_REPEAT_INSTRUCTION].force */
 extern void T623s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_REPEAT_INSTRUCTION].fill_with */
@@ -46552,8 +46560,8 @@ extern T0* T81s638(TC* ac);
 extern T0* T282c113(TC* ac);
 /* ET_REPEAT_INSTRUCTION.tokens */
 extern T0* T624s13(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_677 */
-extern void T68f1804(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_679 */
+extern void T68f1806(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ACROSS_INSTRUCTION].force */
 extern void T341s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_ACROSS_INSTRUCTION].fill_with */
@@ -46582,10 +46590,10 @@ extern T0* T342c25(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5);
 extern void T342f34(TC* ac, T0* C);
 /* ET_ACROSS_INSTRUCTION.tokens */
 extern T0* T342s17(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_676 */
-extern void T68f1803(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_675 */
-extern void T68f1802(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_678 */
+extern void T68f1805(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_677 */
+extern void T68f1804(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_WHEN_EXPRESSION].force */
 extern void T652s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_WHEN_EXPRESSION].fill_with */
@@ -46602,8 +46610,8 @@ extern T0* T65f282(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 extern T0* T653c10(TC* ac, T0* a1, T0* a2);
 /* ET_WHEN_EXPRESSION.tokens */
 extern T0* T653s4(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_674 */
-extern void T68f1801(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_676 */
+extern void T68f1803(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_WHEN_EXPRESSION_LIST].force */
 extern void T655s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_WHEN_EXPRESSION_LIST].fill_with */
@@ -46622,8 +46630,8 @@ extern void T1617f7(TC* ac, T0* C, T0* a1);
 extern T0* T656f4(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_WHEN_EXPRESSION].default_create */
 extern T0* T1618c2(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_673 */
-extern void T68f1800(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_675 */
+extern void T68f1802(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_WHEN_EXPRESSION_LIST].aliased_resized_area */
 extern T0* T655s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_WHEN_EXPRESSION_LIST].aliased_resized_area */
@@ -46636,12 +46644,12 @@ extern T0* T656c10(TC* ac, T6 a1);
 extern T0* T1618s1(TC* ac, T6 a1);
 /* SPECIAL [ET_WHEN_EXPRESSION].make_empty */
 extern T0* T1617c4(TC* ac, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_674 */
+extern void T68f1801(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_673 */
+extern void T68f1800(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_672 */
 extern void T68f1799(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_671 */
-extern void T68f1798(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_670 */
-extern void T68f1797(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_INSPECT_EXPRESSION].force */
 extern void T529s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_INSPECT_EXPRESSION].fill_with */
@@ -46660,10 +46668,10 @@ extern void T530f28(TC* ac, T0* C, T0* a1);
 extern T0* T530c27(TC* ac, T0* a1, T0* a2);
 /* ET_INSPECT_EXPRESSION.tokens */
 extern T0* T530s6(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_669 */
-extern void T68f1796(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_668 */
-extern void T68f1795(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_671 */
+extern void T68f1798(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_670 */
+extern void T68f1797(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CHOICE_CONSTANT].force */
 extern void T387s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CHOICE_CONSTANT].fill_with */
@@ -46674,16 +46682,16 @@ extern void T389f10(TC* ac, T0* C, T0* a1);
 extern T0* T387s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_CHOICE_CONSTANT].aliased_resized_area */
 extern T0* T389f4(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_667 */
-extern void T68f1794(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_669 */
+extern void T68f1796(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_choice_attribute_constant */
 extern T0* T68f994(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_668 */
+extern void T68f1795(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_667 */
+extern void T68f1794(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_666 */
 extern void T68f1793(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_665 */
-extern void T68f1792(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_664 */
-extern void T68f1791(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CHOICE].force */
 extern void T384s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CHOICE].fill_with */
@@ -46704,10 +46712,10 @@ extern T0* T81s642(TC* ac);
 extern T0* T282c117(TC* ac);
 /* ET_CHOICE_RANGE.tokens */
 extern T0* T735s4(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_663 */
-extern void T68f1790(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_662 */
-extern void T68f1789(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_665 */
+extern void T68f1792(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_664 */
+extern void T68f1791(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CHOICE_ITEM].force */
 extern void T390s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CHOICE_ITEM].fill_with */
@@ -46720,8 +46728,8 @@ extern T0* T390s2(TC* ac, T0* a1, T6 a2);
 extern T0* T392f4(TC* ac, T0* C, T6 a1);
 /* ET_AST_FACTORY.new_choice_comma */
 extern T0* T65f278(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_661 */
-extern void T68f1788(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_663 */
+extern void T68f1790(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CHOICE_LIST].force */
 extern void T393s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CHOICE_LIST].fill_with */
@@ -46740,8 +46748,8 @@ extern void T1582f7(TC* ac, T0* C, T0* a1);
 extern T0* T394f5(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_CHOICE_ITEM].default_create */
 extern T0* T1583c2(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_660 */
-extern void T68f1787(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_662 */
+extern void T68f1789(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CHOICE_LIST].aliased_resized_area */
 extern T0* T393s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_CHOICE_LIST].aliased_resized_area */
@@ -46764,16 +46772,16 @@ extern T0* T81s655(TC* ac);
 extern T0* T191c74(TC* ac);
 /* ET_CHOICE_LIST.tokens */
 extern T0* T394s4(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_661 */
+extern void T68f1788(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_660 */
+extern void T68f1787(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_659 */
 extern void T68f1786(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_658 */
 extern void T68f1785(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_657 */
 extern void T68f1784(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_656 */
-extern void T68f1783(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_655 */
-extern void T68f1782(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_WHEN_PART].force */
 extern void T658s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_WHEN_PART].fill_with */
@@ -46788,8 +46796,8 @@ extern T0* T660f4(TC* ac, T0* C, T6 a1);
 extern T0* T65f276(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_WHEN_PART.make */
 extern T0* T659c9(TC* ac, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_654 */
-extern void T68f1781(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_656 */
+extern void T68f1783(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_WHEN_PART_LIST].force */
 extern void T661s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_WHEN_PART_LIST].fill_with */
@@ -46808,8 +46816,8 @@ extern void T1619f7(TC* ac, T0* C, T0* a1);
 extern T0* T662f3(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_WHEN_PART].default_create */
 extern T0* T1620c2(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_653 */
-extern void T68f1780(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_655 */
+extern void T68f1782(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_WHEN_PART_LIST].aliased_resized_area */
 extern T0* T661s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_WHEN_PART_LIST].aliased_resized_area */
@@ -46822,12 +46830,12 @@ extern T0* T662c10(TC* ac, T6 a1);
 extern T0* T1620s1(TC* ac, T6 a1);
 /* SPECIAL [ET_WHEN_PART].make_empty */
 extern T0* T1619c4(TC* ac, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_654 */
+extern void T68f1781(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_653 */
+extern void T68f1780(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_652 */
 extern void T68f1779(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_651 */
-extern void T68f1778(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_650 */
-extern void T68f1777(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_INSPECT_INSTRUCTION].force */
 extern void T532s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_INSPECT_INSTRUCTION].fill_with */
@@ -46846,10 +46854,10 @@ extern void T533f14(TC* ac, T0* C, T0* a1);
 extern T0* T533c13(TC* ac, T0* a1, T0* a2);
 /* ET_INSPECT_INSTRUCTION.tokens */
 extern T0* T533s5(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_649 */
-extern void T68f1776(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_648 */
-extern void T68f1775(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_651 */
+extern void T68f1778(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_650 */
+extern void T68f1777(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_EXPRESSION].force */
 extern void T448s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_ELSEIF_EXPRESSION].fill_with */
@@ -46866,8 +46874,8 @@ extern T0* T65f273(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 extern T0* T449c11(TC* ac, T0* a1, T0* a2);
 /* ET_ELSEIF_EXPRESSION.tokens */
 extern T0* T449s4(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_647 */
-extern void T68f1774(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_649 */
+extern void T68f1776(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_EXPRESSION_LIST].force */
 extern void T451s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_ELSEIF_EXPRESSION_LIST].fill_with */
@@ -46886,8 +46894,8 @@ extern void T1590f7(TC* ac, T0* C, T0* a1);
 extern T0* T452f3(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_ELSEIF_EXPRESSION].default_create */
 extern T0* T1591c2(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_646 */
-extern void T68f1773(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_648 */
+extern void T68f1775(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_EXPRESSION_LIST].aliased_resized_area */
 extern T0* T451s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_ELSEIF_EXPRESSION_LIST].aliased_resized_area */
@@ -46900,10 +46908,10 @@ extern T0* T452c10(TC* ac, T6 a1);
 extern T0* T1591s1(TC* ac, T6 a1);
 /* SPECIAL [ET_ELSEIF_EXPRESSION].make_empty */
 extern T0* T1590c4(TC* ac, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_645 */
-extern void T68f1772(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_644 */
-extern void T68f1771(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_647 */
+extern void T68f1774(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_646 */
+extern void T68f1773(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_IF_EXPRESSION].force */
 extern void T508s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_IF_EXPRESSION].fill_with */
@@ -46922,10 +46930,10 @@ extern void T509f31(TC* ac, T0* C, T0* a1);
 extern T0* T509c30(TC* ac, T0* a1, T0* a2, T0* a3);
 /* ET_IF_EXPRESSION.tokens */
 extern T0* T509s9(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_643 */
-extern void T68f1770(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_642 */
-extern void T68f1769(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_645 */
+extern void T68f1772(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_644 */
+extern void T68f1771(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_PART].force */
 extern void T454s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_ELSEIF_PART].fill_with */
@@ -46940,8 +46948,8 @@ extern T0* T456f4(TC* ac, T0* C, T6 a1);
 extern T0* T65f270(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_ELSEIF_PART.make */
 extern T0* T455c10(TC* ac, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_641 */
-extern void T68f1768(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_643 */
+extern void T68f1770(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_PART_LIST].force */
 extern void T457s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_ELSEIF_PART_LIST].fill_with */
@@ -46960,8 +46968,8 @@ extern void T1592f7(TC* ac, T0* C, T0* a1);
 extern T0* T458f3(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_ELSEIF_PART].default_create */
 extern T0* T1593c2(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_640 */
-extern void T68f1767(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_642 */
+extern void T68f1769(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_PART_LIST].aliased_resized_area */
 extern T0* T457s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_ELSEIF_PART_LIST].aliased_resized_area */
@@ -46974,10 +46982,10 @@ extern T0* T458c10(TC* ac, T6 a1);
 extern T0* T1593s1(TC* ac, T6 a1);
 /* SPECIAL [ET_ELSEIF_PART].make_empty */
 extern T0* T1592c4(TC* ac, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_639 */
-extern void T68f1766(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_638 */
-extern void T68f1765(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_641 */
+extern void T68f1768(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_640 */
+extern void T68f1767(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_IF_INSTRUCTION].force */
 extern void T511s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_IF_INSTRUCTION].fill_with */
@@ -46998,14 +47006,14 @@ extern void T512f15(TC* ac, T0* C, T0* a1);
 extern T0* T512c14(TC* ac, T0* a1, T0* a2);
 /* ET_IF_INSTRUCTION.tokens */
 extern T0* T512s6(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_639 */
+extern void T68f1766(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_638 */
+extern void T68f1765(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_637 */
 extern void T68f1764(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_636 */
 extern void T68f1763(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_635 */
-extern void T68f1762(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_634 */
-extern void T68f1761(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CREATION_REGION].force */
 extern void T438s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CREATION_REGION].fill_with */
@@ -47036,10 +47044,10 @@ extern T0* T81s895(TC* ac);
 extern T0* T324c139(TC* ac);
 /* ET_CREATION_REGION.tokens */
 extern T0* T439s4(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_633 */
-extern void T68f1760(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_632 */
-extern void T68f1759(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_635 */
+extern void T68f1762(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_634 */
+extern void T68f1761(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CREATE_EXPRESSION].force */
 extern void T435s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CREATE_EXPRESSION].fill_with */
@@ -47068,10 +47076,10 @@ extern T0* T436s9(TC* ac);
 extern T0* T65f263(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_QUALIFIED_CALL.make */
 extern T0* T732c5(TC* ac, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_631 */
-extern void T68f1758(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_630 */
-extern void T68f1757(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_633 */
+extern void T68f1760(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_632 */
+extern void T68f1759(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_create_instruction */
 extern T0* T65f265(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5);
 /* ET_CREATE_INSTRUCTION.set_creation_region */
@@ -47082,14 +47090,14 @@ extern void T734f23(TC* ac, T0* C, T0* a1);
 extern T0* T734c22(TC* ac, T0* a1, T0* a2, T0* a3);
 /* ET_CREATE_INSTRUCTION.tokens */
 extern T0* T734s18(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_631 */
+extern void T68f1758(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_630 */
+extern void T68f1757(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_629 */
 extern void T68f1756(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_628 */
 extern void T68f1755(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_627 */
-extern void T68f1754(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_626 */
-extern void T68f1753(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_bang_instruction */
 extern T0* T65f262(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5);
 /* ET_BANG_INSTRUCTION.set_left_bang */
@@ -47102,14 +47110,14 @@ extern T0* T81s906(TC* ac);
 extern T0* T282c95(TC* ac);
 /* ET_BANG_INSTRUCTION.tokens */
 extern T0* T731s17(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_627 */
+extern void T68f1754(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_626 */
+extern void T68f1753(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_625 */
 extern void T68f1752(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_624 */
 extern void T68f1751(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_623 */
-extern void T68f1750(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_622 */
-extern void T68f1749(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CHECK_INSTRUCTION].force */
 extern void T381s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CHECK_INSTRUCTION].fill_with */
@@ -47180,40 +47188,40 @@ extern void T1142f6(TC* ac, T0* C);
 extern T6 T239f12(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [INTEGER_32].is_empty */
 extern T1 T239f6(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_623 */
+extern void T68f1750(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_622 */
+extern void T68f1749(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_621 */
 extern void T68f1748(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_620 */
 extern void T68f1747(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.start_check_instruction */
+extern void T68f2113(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.start_assertions */
+extern void T68f2118(TC* ac, T0* C, T6 a1);
 /* ET_EIFFEL_PARSER.yy_do_action_619 */
 extern void T68f1746(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_618 */
-extern void T68f1745(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.start_check_instruction */
-extern void T68f2111(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.start_assertions */
-extern void T68f2116(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_617 */
-extern void T68f1744(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_null_instruction */
 extern T0* T65f261(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_618 */
+extern void T68f1745(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_617 */
+extern void T68f1744(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_616 */
 extern void T68f1743(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_615 */
 extern void T68f1742(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_614 */
 extern void T68f1741(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_613 */
-extern void T68f1740(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_612 */
-extern void T68f1739(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_repeat_instruction */
 extern T0* T68f992(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_REPEAT_INSTRUCTION.set_close_repeat_symbol */
 extern void T624f28(TC* ac, T0* C, T0* a1);
 /* ET_REPEAT_INSTRUCTION.set_loop_compound */
 extern void T624f27(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_611 */
-extern void T68f1738(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_613 */
+extern void T68f1740(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_across_instruction */
 extern T0* T68f991(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7);
 /* ET_ACROSS_INSTRUCTION.set_end_keyword */
@@ -47224,8 +47232,8 @@ extern void T342f28(TC* ac, T0* C, T0* a1);
 extern void T342f27(TC* ac, T0* C, T0* a1);
 /* ET_ACROSS_INSTRUCTION.set_from_compound */
 extern void T342f26(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_610 */
-extern void T68f1737(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_612 */
+extern void T68f1739(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_loop_instruction */
 extern T0* T65f260(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6);
 /* ET_LOOP_INSTRUCTION.set_has_old_variant_syntax */
@@ -47240,18 +47248,18 @@ extern T0* T729c16(TC* ac, T0* a1, T0* a2, T0* a3);
 extern T0* T729s8(TC* ac);
 /* ET_EIFFEL_PARSER.ise_6_3_7_4554 */
 extern T0* T68s990(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_609 */
-extern void T68f1736(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_611 */
+extern void T68f1738(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_loop_instruction_old_syntax */
 extern T0* T65f259(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6);
+/* ET_EIFFEL_PARSER.yy_do_action_610 */
+extern void T68f1737(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_609 */
+extern void T68f1736(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_608 */
 extern void T68f1735(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_607 */
 extern void T68f1734(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_606 */
-extern void T68f1733(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_605 */
-extern void T68f1732(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_assignment_attempt */
 extern T0* T65f257(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ASSIGNMENT_ATTEMPT.make */
@@ -47262,8 +47270,8 @@ extern T0* T81s644(TC* ac);
 extern T0* T282c119(TC* ac);
 /* ET_ASSIGNMENT_ATTEMPT.tokens */
 extern T0* T728s4(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_604 */
-extern void T68f1731(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_606 */
+extern void T68f1733(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_assignment */
 extern T0* T65f256(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ASSIGNMENT.make */
@@ -47274,8 +47282,8 @@ extern T0* T81s643(TC* ac);
 extern T0* T282c118(TC* ac);
 /* ET_ASSIGNMENT.tokens */
 extern T0* T727s6(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_603 */
-extern void T68f1730(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_605 */
+extern void T68f1732(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_assigner_instruction */
 extern T0* T65f255(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ASSIGNER_INSTRUCTION.make */
@@ -47284,6 +47292,10 @@ extern T0* T726c20(TC* ac, T0* a1, T0* a2);
 extern T0* T726f6(TC* ac, T0* C);
 /* ET_ASSIGNER_INSTRUCTION.tokens */
 extern T0* T726s5(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_604 */
+extern void T68f1731(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_603 */
+extern void T68f1730(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_602 */
 extern void T68f1729(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_601 */
@@ -47292,10 +47304,6 @@ extern void T68f1728(TC* ac, T0* C);
 extern void T68f1108(TC* ac, T0* C, T6 a1);
 /* ET_EIFFEL_PARSER.yy_do_action_600 */
 extern void T68f1727(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_599 */
-extern void T68f1726(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_598 */
-extern void T68f1725(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_COMPOUND].force */
 extern void T402s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_COMPOUND].fill_with */
@@ -47306,8 +47314,8 @@ extern void T404f10(TC* ac, T0* C, T0* a1);
 extern T0* T402s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_COMPOUND].aliased_resized_area */
 extern T0* T404f4(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_597 */
-extern void T68f1724(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_599 */
+extern void T68f1726(TC* ac, T0* C);
 /* ET_COMPOUND.put_first */
 extern void T403f17(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_INSTRUCTION].force */
@@ -47316,80 +47324,80 @@ extern void T1176s3(TC* ac, T0* a1, T0* a2, T6 a3);
 extern void T1175f6(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* SPECIAL [ET_INSTRUCTION].extend */
 extern void T1175f7(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_596 */
-extern void T68f1723(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_598 */
+extern void T68f1725(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_compound */
 extern T0* T65f254(TC* ac, T0* C, T6 a1);
 /* ET_COMPOUND.make_with_capacity */
 extern T0* T403c16(TC* ac, T6 a1);
 /* ET_COMPOUND.make_with_capacity */
 extern void T403f16p1(TC* ac, T0* C, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_597 */
+extern void T68f1724(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_596 */
+extern void T68f1723(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_595 */
 extern void T68f1722(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_594 */
 extern void T68f1721(TC* ac, T0* C);
+/* ET_AST_FACTORY.new_empty_compound */
+extern T0* T65f253(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_593 */
 extern void T68f1720(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_592 */
 extern void T68f1719(TC* ac, T0* C);
-/* ET_AST_FACTORY.new_empty_compound */
-extern T0* T65f253(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_591 */
-extern void T68f1718(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_590 */
-extern void T68f1717(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_loop_compound */
 extern T0* T65f252(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.loop_keyword */
 extern T0* T81s651(TC* ac);
 /* ET_KEYWORD.make_loop */
 extern T0* T191c70(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_591 */
+extern void T68f1718(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_590 */
+extern void T68f1717(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_589 */
 extern void T68f1716(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_588 */
-extern void T68f1715(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_587 */
-extern void T68f1714(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_from_compound */
 extern T0* T65f251(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.from_keyword */
 extern T0* T81s650(TC* ac);
 /* ET_KEYWORD.make_from */
 extern T0* T191c69(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_586 */
-extern void T68f1713(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_588 */
+extern void T68f1715(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_rescue_compound */
 extern T0* T65f250(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.rescue_keyword */
 extern T0* T81s666(TC* ac);
 /* ET_KEYWORD.make_rescue */
 extern T0* T191c85(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_585 */
-extern void T68f1712(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_587 */
+extern void T68f1714(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_else_compound */
 extern T0* T65f249(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_EIFFEL_PARSER.yy_do_action_586 */
+extern void T68f1713(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_585 */
+extern void T68f1712(TC* ac, T0* C);
+/* ET_AST_FACTORY.new_then_compound */
+extern T0* T65f248(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_EIFFEL_PARSER.yy_do_action_584 */
 extern void T68f1711(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_583 */
 extern void T68f1710(TC* ac, T0* C);
-/* ET_AST_FACTORY.new_then_compound */
-extern T0* T65f248(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_582 */
-extern void T68f1709(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_581 */
-extern void T68f1708(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_attribute_compound */
 extern T0* T65f247(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_TOKEN_CONSTANTS.attribute_keyword */
 extern T0* T81s680(TC* ac);
 /* ET_KEYWORD.make_attribute */
 extern T0* T191c99(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_580 */
-extern void T68f1707(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_582 */
+extern void T68f1709(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_do_compound */
 extern T0* T65f246(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_579 */
-extern void T68f1706(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_581 */
+extern void T68f1708(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_QUALIFIED_LIKE_IDENTIFIER].force */
 extern void T609s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_QUALIFIED_LIKE_IDENTIFIER].fill_with */
@@ -47406,6 +47414,10 @@ extern T0* T65f245(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 extern T0* T725c88(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_AST_FACTORY.new_attachment_mark_separate_keyword */
 extern T0* T65f149(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_EIFFEL_PARSER.yy_do_action_580 */
+extern void T68f1707(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_579 */
+extern void T68f1706(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_578 */
 extern void T68f1705(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_577 */
@@ -47420,16 +47432,16 @@ extern void T68f1701(TC* ac, T0* C);
 extern void T68f1700(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_572 */
 extern void T68f1699(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_571 */
-extern void T68f1698(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_570 */
-extern void T68f1697(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_qualified_like_braced_type */
 extern T0* T65f244(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7);
 /* ET_QUALIFIED_LIKE_BRACED_TYPE.set_like_keyword */
 extern void T724f92(TC* ac, T0* C, T0* a1);
 /* ET_QUALIFIED_LIKE_BRACED_TYPE.make */
 extern T0* T724c91(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4);
+/* ET_EIFFEL_PARSER.yy_do_action_571 */
+extern void T68f1698(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_570 */
+extern void T68f1697(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_569 */
 extern void T68f1696(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_568 */
@@ -47450,10 +47462,6 @@ extern void T68f1689(TC* ac, T0* C);
 extern void T68f1688(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_560 */
 extern void T68f1687(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_559 */
-extern void T68f1686(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_558 */
-extern void T68f1685(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_LIKE_TYPE].force */
 extern void T543s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_LIKE_TYPE].fill_with */
@@ -47464,12 +47472,16 @@ extern void T545f10(TC* ac, T0* C, T0* a1);
 extern T0* T543s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_LIKE_TYPE].aliased_resized_area */
 extern T0* T545f4(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_557 */
-extern void T68f1684(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_559 */
+extern void T68f1686(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_like_current */
 extern T0* T65f243(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_LIKE_CURRENT.set_like_keyword */
 extern void T199f86(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_558 */
+extern void T68f1685(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_557 */
+extern void T68f1684(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_556 */
 extern void T68f1683(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_555 */
@@ -47486,10 +47498,6 @@ extern void T68f1678(TC* ac, T0* C);
 extern void T68f1677(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_549 */
 extern void T68f1676(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_548 */
-extern void T68f1675(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_547 */
-extern void T68f1674(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_like_feature */
 extern T0* T68f987(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_AST_FACTORY.new_like_feature */
@@ -47498,6 +47506,10 @@ extern T0* T65f353(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 extern void T722f92(TC* ac, T0* C, T0* a1);
 /* ET_LIKE_FEATURE.make */
 extern T0* T722c91(TC* ac, T0* a1, T0* a2);
+/* ET_EIFFEL_PARSER.yy_do_action_548 */
+extern void T68f1675(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_547 */
+extern void T68f1674(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_546 */
 extern void T68f1673(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_545 */
@@ -47520,10 +47532,6 @@ extern void T68f1665(TC* ac, T0* C);
 extern void T68f1664(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_536 */
 extern void T68f1663(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_535 */
-extern void T68f1662(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_534 */
-extern void T68f1661(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ACTUAL_PARAMETER_ITEM].force */
 extern void T347s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_ACTUAL_PARAMETER_ITEM].fill_with */
@@ -47535,15 +47543,15 @@ extern T0* T347s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_ACTUAL_PARAMETER_ITEM].aliased_resized_area */
 extern T0* T348f4(TC* ac, T0* C, T6 a1);
 /* ET_AST_FACTORY.new_labeled_actual_parameter_semicolon */
-extern T0* T65f242(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T65f240(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_AST_FACTORY.new_labeled_actual_parameter */
 extern T0* T65f239(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_LABELED_ACTUAL_PARAMETER.make */
 extern T0* T720c12(TC* ac, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_533 */
-extern void T68f1660(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_532 */
-extern void T68f1659(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_535 */
+extern void T68f1662(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_534 */
+extern void T68f1661(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ACTUAL_PARAMETER_LIST].force */
 extern void T349s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_ACTUAL_PARAMETER_LIST].fill_with */
@@ -47551,25 +47559,25 @@ extern void T350f8(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* SPECIAL [detachable ET_ACTUAL_PARAMETER_LIST].extend */
 extern void T350f10(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.add_to_actual_parameter_list */
-extern void T68f2110(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T68f2112(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_AST_FACTORY.new_labeled_comma_actual_parameter */
-extern T0* T65f241(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T65f242(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_LABELED_COMMA_ACTUAL_PARAMETER.make */
 extern T0* T1448c12(TC* ac, T0* a1, T0* a2);
 /* ET_ACTUAL_PARAMETER_LIST.first */
 extern T0* T185f12(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_label_comma */
-extern T0* T65f240(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T65f241(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_EIFFEL_PARSER.yy_do_action_533 */
+extern void T68f1660(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_532 */
+extern void T68f1659(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_531 */
 extern void T68f1658(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_530 */
 extern void T68f1657(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_529 */
 extern void T68f1656(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_528 */
-extern void T68f1655(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_527 */
-extern void T68f1654(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ACTUAL_PARAMETER_LIST].aliased_resized_area */
 extern T0* T349s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_ACTUAL_PARAMETER_LIST].aliased_resized_area */
@@ -47578,6 +47586,10 @@ extern T0* T350f4(TC* ac, T0* C, T6 a1);
 extern T0* T65f237(TC* ac, T0* C, T0* a1, T0* a2, T6 a3);
 /* ET_ACTUAL_PARAMETER_LIST.set_left_bracket */
 extern void T185f31(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_528 */
+extern void T68f1655(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_527 */
+extern void T68f1654(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_526 */
 extern void T68f1653(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_525 */
@@ -47588,14 +47600,12 @@ extern void T68f1651(TC* ac, T0* C);
 extern void T68f1650(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_522 */
 extern void T68f1649(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_521 */
-extern void T68f1648(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_actual_parameter_comma */
 extern T0* T65f238(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_EIFFEL_PARSER.yy_do_action_521 */
+extern void T68f1648(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_520 */
 extern void T68f1647(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_519 */
-extern void T68f1646(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_tuple_type */
 extern T0* T68f986(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 extern T1 T68f986ot1(TC* ac, T0* a1);
@@ -47607,8 +47617,8 @@ extern T1 T68f1017(TC* ac, T0* C);
 extern T0* T802f115(TC* ac, T0* C, T0* a1);
 /* ET_ECF_SYSTEM.master_class */
 extern T0* T87f144(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_518 */
-extern void T68f1645(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_519 */
+extern void T68f1646(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_named_type */
 extern T0* T68f985(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 extern T1 T68f985ot1(TC* ac, T0* a1);
@@ -47622,6 +47632,8 @@ extern T0* T65f351(TC* ac, T0* C, T0* a1, T0* a2, T6 a3, T0* a4);
 extern T0* T70f58(TC* ac, T0* C, T0* a1);
 /* ET_FORMAL_PARAMETER_LIST.formal_parameter_by_name */
 extern T0* T506f14(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_518 */
+extern void T68f1645(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_517 */
 extern void T68f1644(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_516 */
@@ -47642,8 +47654,6 @@ extern void T68f1637(TC* ac, T0* C);
 extern void T68f1636(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_508 */
 extern void T68f1635(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_507 */
-extern void T68f1634(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_TYPE].force */
 extern void T632s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_TYPE].fill_with */
@@ -47654,6 +47664,8 @@ extern void T633f10(TC* ac, T0* C, T0* a1);
 extern T0* T632s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_TYPE].aliased_resized_area */
 extern T0* T633f4(TC* ac, T0* C, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_507 */
+extern void T68f1634(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_506 */
 extern void T68f1633(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_505 */
@@ -47794,22 +47806,20 @@ extern void T68f1566(TC* ac, T0* C);
 extern void T68f1565(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_437 */
 extern void T68f1564(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_436 */
-extern void T68f1563(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_VARIANT].force */
 extern void T649s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_VARIANT].fill_with */
 extern void T651f8(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* SPECIAL [detachable ET_VARIANT].extend */
 extern void T651f10(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_435 */
-extern void T68f1562(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_436 */
+extern void T68f1563(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_VARIANT].aliased_resized_area */
 extern T0* T649s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_VARIANT].aliased_resized_area */
 extern T0* T651f4(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_434 */
-extern void T68f1561(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_435 */
+extern void T68f1562(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_variant */
 extern T0* T65f236(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_VARIANT.set_variant_keyword */
@@ -47824,10 +47834,10 @@ extern T0* T191c91(TC* ac);
 extern T0* T650s4(TC* ac);
 /* ET_AST_FACTORY.new_tag */
 extern T0* T65f133(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_EIFFEL_PARSER.yy_do_action_434 */
+extern void T68f1561(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_433 */
 extern void T68f1560(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_432 */
-extern void T68f1559(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_LOOP_INVARIANTS].force */
 extern void T555s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_LOOP_INVARIANTS].fill_with */
@@ -47858,20 +47868,20 @@ extern T0* T81s681(TC* ac);
 extern T0* T191c100(TC* ac);
 /* ET_LOOP_INVARIANTS.tokens */
 extern T0* T556s4(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_432 */
+extern void T68f1559(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_431 */
 extern void T68f1558(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_430 */
 extern void T68f1557(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_429 */
 extern void T68f1556(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.start_loop_invariant */
+extern void T68f2111(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_428 */
 extern void T68f1555(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.start_loop_invariant */
-extern void T68f2109(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_427 */
 extern void T68f1554(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_426 */
-extern void T68f1553(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_INVARIANTS].force */
 extern void T538s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_INVARIANTS].fill_with */
@@ -47930,18 +47940,18 @@ extern T0* T539c26(TC* ac, T0* a1, T6 a2);
 extern void T539f33(TC* ac, T0* C, T6 a1);
 /* ET_INVARIANTS.tokens */
 extern T0* T539s11(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_426 */
+extern void T68f1553(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_425 */
 extern void T68f1552(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_424 */
 extern void T68f1551(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_423 */
 extern void T68f1550(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.start_invariant */
+extern void T68f2110(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_422 */
 extern void T68f1549(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.start_invariant */
-extern void T68f2108(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_421 */
-extern void T68f1548(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_POSTCONDITIONS].force */
 extern void T600s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_POSTCONDITIONS].fill_with */
@@ -47974,6 +47984,8 @@ extern T0* T81s898(TC* ac);
 extern T0* T191c56(TC* ac);
 /* ET_POSTCONDITIONS.tokens */
 extern T0* T601s9(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_421 */
+extern void T68f1548(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_420 */
 extern void T68f1547(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_419 */
@@ -47982,12 +47994,10 @@ extern void T68f1546(TC* ac, T0* C);
 extern void T68f1545(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_417 */
 extern void T68f1544(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.start_postcondition */
+extern void T68f2109(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_416 */
 extern void T68f1543(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.start_postcondition */
-extern void T68f2107(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_415 */
-extern void T68f1542(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_PRECONDITIONS].force */
 extern void T603s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_PRECONDITIONS].fill_with */
@@ -48020,6 +48030,8 @@ extern T0* T81s899(TC* ac);
 extern T0* T191c59(TC* ac);
 /* ET_PRECONDITIONS.tokens */
 extern T0* T604s8(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_415 */
+extern void T68f1542(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_414 */
 extern void T68f1541(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_413 */
@@ -48028,17 +48040,15 @@ extern void T68f1540(TC* ac, T0* C);
 extern void T68f1539(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_411 */
 extern void T68f1538(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.start_precondition */
+extern void T68f2108(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_410 */
 extern void T68f1537(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.start_precondition */
-extern void T68f2106(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_409 */
-extern void T68f1536(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.add_class_assertion */
-extern void T68f2105(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T68f2107(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_EIFFEL_PARSER.add_untagged_assertion */
-extern void T68f2115(TC* ac, T0* C, T0* a1, T0* a2);
-extern T1 T68f2115ot1(TC* ac, T0* a1);
+extern void T68f2117(TC* ac, T0* C, T0* a1, T0* a2);
+extern T1 T68f2117ot1(TC* ac, T0* a1);
 /* DS_ARRAYED_LIST [ET_ASSERTION_ITEM].force_last */
 extern void T256f13(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_ASSERTION_ITEM].resize */
@@ -48067,13 +48077,13 @@ extern void T719f8(TC* ac, T0* C, T0* a1);
 extern T0* T719c7(TC* ac);
 /* ET_CLASS_ASSERTION.tokens */
 extern T0* T719s2(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_409 */
+extern void T68f1536(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_408 */
 extern void T68f1535(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_407 */
-extern void T68f1534(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.add_tagged_assertion */
-extern void T68f2104(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
-extern T1 T68f2104ot1(TC* ac, T0* a1);
+extern void T68f2106(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern T1 T68f2106ot1(TC* ac, T0* a1);
 /* ET_AST_FACTORY.new_tagged_assertion */
 extern T0* T65f334(TC* ac, T0* C, T0* a1);
 /* ET_TAGGED_ASSERTION.make */
@@ -48216,12 +48226,14 @@ extern T6 T774f6(TC* ac, T0* C);
 extern T1 T774f5(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.current_position */
 extern T0* T68f750(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_407 */
+extern void T68f1534(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_406 */
 extern void T68f1533(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.add_expression_assertion */
+extern void T68f2105(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_EIFFEL_PARSER.yy_do_action_405 */
 extern void T68f1532(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.add_expression_assertion */
-extern void T68f2103(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_EIFFEL_PARSER.yy_do_action_404 */
 extern void T68f1531(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_403 */
@@ -48238,8 +48250,6 @@ extern void T68f1527(TC* ac, T0* C);
 extern void T68f1526(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_398 */
 extern void T68f1525(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_397 */
-extern void T68f1524(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_LOCAL_VARIABLE_ITEM].force */
 extern void T549s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_LOCAL_VARIABLE_ITEM].fill_with */
@@ -48256,10 +48266,10 @@ extern T0* T65f234(TC* ac, T0* C, T0* a1, T0* a2);
 extern T0* T65f233(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_LOCAL_VARIABLE.make */
 extern T0* T547c9(TC* ac, T0* a1, T0* a2);
+/* ET_EIFFEL_PARSER.yy_do_action_397 */
+extern void T68f1524(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_396 */
 extern void T68f1523(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_395 */
-extern void T68f1522(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_LOCAL_VARIABLE].force */
 extern void T546s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_LOCAL_VARIABLE].fill_with */
@@ -48276,12 +48286,12 @@ extern T0* T65f232(TC* ac, T0* C, T0* a1, T0* a2);
 extern T0* T1447c9(TC* ac, T0* a1, T0* a2);
 /* ET_EIFFEL_PARSER.dummy_type */
 extern T0* T68f978(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_394 */
-extern void T68f1521(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_395 */
+extern void T68f1522(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_local_name_comma */
 extern T0* T65f231(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_393 */
-extern void T68f1520(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_394 */
+extern void T68f1521(TC* ac, T0* C);
 /* ET_LOCAL_VARIABLE_LIST.put_first */
 extern void T553f12(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_LOCAL_VARIABLE_ITEM].force */
@@ -48294,10 +48304,10 @@ extern void T1601f7(TC* ac, T0* C, T0* a1);
 extern T0* T553f10(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_LOCAL_VARIABLE_ITEM].default_create */
 extern T0* T1603c2(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_393 */
+extern void T68f1520(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_392 */
 extern void T68f1519(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_391 */
-extern void T68f1518(TC* ac, T0* C);
 /* ET_LOCAL_COMMA_VARIABLE.set_declared_type */
 extern void T1447f10(TC* ac, T0* C, T0* a1);
 /* ET_LOCAL_VARIABLE.type */
@@ -48308,10 +48318,10 @@ extern T0* T1447f6(TC* ac, T0* C);
 extern T0* T553f6(TC* ac, T0* C);
 /* ET_LOCAL_VARIABLE_LIST.is_empty */
 extern T1 T553f5(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_391 */
+extern void T68f1518(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_390 */
 extern void T68f1517(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_389 */
-extern void T68f1516(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_local_variables */
 extern T0* T68f979(TC* ac, T0* C, T0* a1, T6 a2);
 /* ET_AST_FACTORY.new_local_variables */
@@ -48332,6 +48342,8 @@ extern T0* T81s659(TC* ac);
 extern T0* T191c78(TC* ac);
 /* ET_LOCAL_VARIABLE_LIST.tokens */
 extern T0* T553s9(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_389 */
+extern void T68f1516(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_388 */
 extern void T68f1515(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_387 */
@@ -48342,8 +48354,6 @@ extern void T68f1513(TC* ac, T0* C);
 extern void T68f1512(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_384 */
 extern void T68f1511(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_383 */
-extern void T68f1510(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_FORMAL_ARGUMENT_ITEM].force */
 extern void T493s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_FORMAL_ARGUMENT_ITEM].fill_with */
@@ -48360,10 +48370,10 @@ extern T0* T65f230(TC* ac, T0* C, T0* a1, T0* a2);
 extern T0* T65f229(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FORMAL_ARGUMENT.make */
 extern T0* T491c9(TC* ac, T0* a1, T0* a2);
+/* ET_EIFFEL_PARSER.yy_do_action_383 */
+extern void T68f1510(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_382 */
 extern void T68f1509(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_381 */
-extern void T68f1508(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_FORMAL_ARGUMENT].force */
 extern void T490s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_FORMAL_ARGUMENT].fill_with */
@@ -48378,12 +48388,12 @@ extern T0* T492f4(TC* ac, T0* C, T6 a1);
 extern T0* T65f228(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_FORMAL_COMMA_ARGUMENT.make */
 extern T0* T1446c9(TC* ac, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_380 */
-extern void T68f1507(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_381 */
+extern void T68f1508(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_argument_name_comma */
 extern T0* T65f227(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_379 */
-extern void T68f1506(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_380 */
+extern void T68f1507(TC* ac, T0* C);
 /* ET_FORMAL_ARGUMENT_LIST.put_first */
 extern void T497f13(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_FORMAL_ARGUMENT_ITEM].force */
@@ -48396,20 +48406,20 @@ extern void T1596f7(TC* ac, T0* C, T0* a1);
 extern T0* T497f11(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_FORMAL_ARGUMENT_ITEM].default_create */
 extern T0* T1598c2(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_379 */
+extern void T68f1506(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_378 */
 extern void T68f1505(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_377 */
-extern void T68f1504(TC* ac, T0* C);
 /* ET_FORMAL_COMMA_ARGUMENT.set_declared_type */
 extern void T1446f10(TC* ac, T0* C, T0* a1);
 /* ET_FORMAL_ARGUMENT_LIST.first */
 extern T0* T497f5(TC* ac, T0* C);
 /* ET_FORMAL_ARGUMENT_LIST.is_empty */
 extern T1 T497f7(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_377 */
+extern void T68f1504(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_376 */
 extern void T68f1503(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_375 */
-extern void T68f1502(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.new_formal_arguments */
 extern T0* T68f977(TC* ac, T0* C, T0* a1, T0* a2, T6 a3);
 /* ET_AST_FACTORY.new_formal_arguments */
@@ -48424,6 +48434,8 @@ extern T0* T1598s1(TC* ac, T6 a1);
 extern T0* T1596c4(TC* ac, T6 a1);
 /* ET_FORMAL_ARGUMENT_LIST.tokens */
 extern T0* T497s9(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_375 */
+extern void T68f1502(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_374 */
 extern void T68f1501(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_373 */
@@ -48438,8 +48450,6 @@ extern void T68f1497(TC* ac, T0* C);
 extern void T68f1496(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_368 */
 extern void T68f1495(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_367 */
-extern void T68f1494(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ALIAS_NAME].force */
 extern void T363s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_ALIAS_NAME].fill_with */
@@ -48468,8 +48478,8 @@ extern T0* T716f53(TC* ac, T0* C);
 extern T0* T81s656(TC* ac);
 /* ET_KEYWORD.make_alias */
 extern T0* T191c75(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_366 */
-extern void T68f1493(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_367 */
+extern void T68f1494(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_parenthesis_name */
 extern T0* T65f226(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.set_convert_keyword */
@@ -48480,172 +48490,172 @@ extern void T364f81(TC* ac, T0* C, T0* a1);
 extern T0* T364c109(TC* ac, T0* a1);
 /* ET_ALIAS_NAME.default_keyword */
 extern T0* T364f6(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_365 */
-extern void T68f1492(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_366 */
+extern void T68f1493(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_bracket_name */
 extern T0* T65f225(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_bracket */
 extern T0* T364c108(TC* ac, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_365 */
+extern void T68f1492(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_364 */
 extern void T68f1491(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_363 */
-extern void T68f1490(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_dotdot_name */
 extern T0* T65f223(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_dotdot */
 extern T0* T364c107(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_362 */
-extern void T68f1489(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_363 */
+extern void T68f1490(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_xor_symbol_name */
 extern T0* T65f222(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_xor_symbol */
 extern T0* T364c106(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_361 */
-extern void T68f1488(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_362 */
+extern void T68f1489(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_xor_name */
 extern T0* T65f221(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_xor */
 extern T0* T364c105(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_360 */
-extern void T68f1487(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_361 */
+extern void T68f1488(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_implies_symbol_name */
 extern T0* T65f220(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_implies_symbol */
 extern T0* T364c104(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_359 */
-extern void T68f1486(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_360 */
+extern void T68f1487(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_implies_name */
 extern T0* T65f219(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_implies */
 extern T0* T364c103(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_358 */
-extern void T68f1485(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_359 */
+extern void T68f1486(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_or_else_symbol_name */
 extern T0* T65f218(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_or_else_symbol */
 extern T0* T364c102(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_357 */
-extern void T68f1484(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_358 */
+extern void T68f1485(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_or_else_name */
 extern T0* T65f217(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_or_else */
 extern T0* T364c101(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_356 */
-extern void T68f1483(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_357 */
+extern void T68f1484(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_or_symbol_name */
 extern T0* T65f216(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_or_symbol */
 extern T0* T364c100(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_355 */
-extern void T68f1482(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_356 */
+extern void T68f1483(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_or_name */
 extern T0* T65f215(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_or */
 extern T0* T364c99(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_354 */
-extern void T68f1481(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_355 */
+extern void T68f1482(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_and_then_symbol_name */
 extern T0* T65f214(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_and_then_symbol */
 extern T0* T364c98(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_353 */
-extern void T68f1480(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_354 */
+extern void T68f1481(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_and_then_name */
 extern T0* T65f213(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_and_then */
 extern T0* T364c97(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_352 */
-extern void T68f1479(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_353 */
+extern void T68f1480(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_and_symbol_name */
 extern T0* T65f212(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_and_symbol */
 extern T0* T364c96(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_351 */
-extern void T68f1478(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_352 */
+extern void T68f1479(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_and_name */
 extern T0* T65f211(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_and */
 extern T0* T364c95(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_350 */
-extern void T68f1477(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_351 */
+extern void T68f1478(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_ge_name */
 extern T0* T65f210(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_ge */
 extern T0* T364c94(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_349 */
-extern void T68f1476(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_350 */
+extern void T68f1477(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_gt_name */
 extern T0* T65f209(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_gt */
 extern T0* T364c93(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_348 */
-extern void T68f1475(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_349 */
+extern void T68f1476(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_le_name */
 extern T0* T65f208(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_le */
 extern T0* T364c92(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_347 */
-extern void T68f1474(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_348 */
+extern void T68f1475(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_lt_name */
 extern T0* T65f207(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_lt */
 extern T0* T364c91(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_346 */
-extern void T68f1473(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_347 */
+extern void T68f1474(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_power_name */
 extern T0* T65f206(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_power */
 extern T0* T364c90(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_345 */
-extern void T68f1472(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_346 */
+extern void T68f1473(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_mod_name */
 extern T0* T65f205(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_mod */
 extern T0* T364c89(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_344 */
-extern void T68f1471(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_345 */
+extern void T68f1472(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_div_name */
 extern T0* T65f204(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_div */
 extern T0* T364c88(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_343 */
-extern void T68f1470(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_344 */
+extern void T68f1471(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_divide_name */
 extern T0* T65f203(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_divide */
 extern T0* T364c87(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_342 */
-extern void T68f1469(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_343 */
+extern void T68f1470(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_times_name */
 extern T0* T65f202(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_times */
 extern T0* T364c86(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_341 */
-extern void T68f1468(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_342 */
+extern void T68f1469(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_minus_name */
 extern T0* T65f201(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_minus */
 extern T0* T364c85(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_340 */
-extern void T68f1467(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_341 */
+extern void T68f1468(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_plus_name */
 extern T0* T65f200(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_plus */
 extern T0* T364c84(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_339 */
-extern void T68f1466(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_340 */
+extern void T68f1467(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_not_symbol_name */
 extern T0* T65f199(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_not_symbol */
 extern T0* T364c83(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_338 */
-extern void T68f1465(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_339 */
+extern void T68f1466(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_not_name */
 extern T0* T65f198(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_ALIAS_NAME.make_not */
 extern T0* T364c80(TC* ac, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_337 */
-extern void T68f1464(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_338 */
+extern void T68f1465(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ALIAS_NAME_LIST].force */
 extern void T366s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_ALIAS_NAME_LIST].fill_with */
@@ -48656,8 +48666,8 @@ extern void T368f10(TC* ac, T0* C, T0* a1);
 extern T0* T366s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_ALIAS_NAME_LIST].aliased_resized_area */
 extern T0* T368f4(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_336 */
-extern void T68f1463(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_337 */
+extern void T68f1464(TC* ac, T0* C);
 /* ET_ALIAS_NAME_LIST.put_first */
 extern void T367f12(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_ALIAS_NAME].force */
@@ -48670,8 +48680,8 @@ extern void T1578f10(TC* ac, T0* C, T0* a1);
 extern T0* T367f3(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_ALIAS_NAME].default_create */
 extern T0* T1579c3(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_335 */
-extern void T68f1462(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_336 */
+extern void T68f1463(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_alias_name_list */
 extern T0* T65f197(TC* ac, T0* C, T6 a1);
 /* ET_ALIAS_NAME_LIST.make_with_capacity */
@@ -48680,8 +48690,8 @@ extern T0* T367c11(TC* ac, T6 a1);
 extern T0* T1579s2(TC* ac, T6 a1);
 /* SPECIAL [ET_ALIAS_NAME].make_empty */
 extern T0* T1578c5(TC* ac, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_334 */
-extern void T68f1461(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_335 */
+extern void T68f1462(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_EXTENDED_FEATURE_NAME].force */
 extern void T471s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_EXTENDED_FEATURE_NAME].fill_with */
@@ -48696,10 +48706,10 @@ extern T0* T473f4(TC* ac, T0* C, T6 a1);
 extern T0* T65f196(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_ALIASED_FEATURE_NAME.make */
 extern T0* T715c6(TC* ac, T0* a1, T0* a2);
+/* ET_EIFFEL_PARSER.yy_do_action_334 */
+extern void T68f1461(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_333 */
 extern void T68f1460(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_332 */
-extern void T68f1459(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_FEATURE_NAME].force */
 extern void T485s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_FEATURE_NAME].fill_with */
@@ -48710,8 +48720,8 @@ extern void T486f10(TC* ac, T0* C, T0* a1);
 extern T0* T485s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_FEATURE_NAME].aliased_resized_area */
 extern T0* T486f4(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_331 */
-extern void T68f1458(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_332 */
+extern void T68f1459(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_ASSIGNER].force */
 extern void T369s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_ASSIGNER].fill_with */
@@ -48724,10 +48734,10 @@ extern T0* T369s2(TC* ac, T0* a1, T6 a2);
 extern T0* T371f4(TC* ac, T0* C, T6 a1);
 /* ET_AST_FACTORY.new_assigner */
 extern T0* T65f195(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_EIFFEL_PARSER.yy_do_action_331 */
+extern void T68f1458(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_330 */
 extern void T68f1457(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_329 */
-extern void T68f1456(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_EXTERNAL_ALIAS].force */
 extern void T474s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_EXTERNAL_ALIAS].fill_with */
@@ -48740,28 +48750,28 @@ extern T0* T474s2(TC* ac, T0* a1, T6 a2);
 extern T0* T476f4(TC* ac, T0* C, T6 a1);
 /* ET_AST_FACTORY.new_external_alias */
 extern T0* T65f194(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_EIFFEL_PARSER.yy_do_action_329 */
+extern void T68f1456(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_328 */
 extern void T68f1455(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_327 */
-extern void T68f1454(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_SEMICOLON_SYMBOL].force */
 extern void T329s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_SEMICOLON_SYMBOL].fill_with */
 extern void T331f8(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* SPECIAL [detachable ET_SEMICOLON_SYMBOL].extend */
 extern void T331f10(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_326 */
-extern void T68f1453(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_327 */
+extern void T68f1454(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_SEMICOLON_SYMBOL].aliased_resized_area */
 extern T0* T329s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_SEMICOLON_SYMBOL].aliased_resized_area */
 extern T0* T331f4(TC* ac, T0* C, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_326 */
+extern void T68f1453(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_325 */
 extern void T68f1452(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_324 */
 extern void T68f1451(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_323 */
-extern void T68f1450(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_PROCEDURE].force */
 extern void T606s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_PROCEDURE].fill_with */
@@ -48794,10 +48804,10 @@ extern void T714f94(TC* ac, T0* C, T0* a1);
 extern T0* T714c89(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_EXTERNAL_PROCEDURE.tokens */
 extern T0* T714s45(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_323 */
+extern void T68f1450(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_322 */
 extern void T68f1449(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_321 */
-extern void T68f1448(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_deferred_procedure */
 extern T0* T65f193(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9, T0* a10, T0* a11, T0* a12, T0* a13);
 /* ET_DEFERRED_PROCEDURE.set_first_note */
@@ -48822,10 +48832,10 @@ extern T0* T81s674(TC* ac);
 extern T0* T191c93(TC* ac);
 /* ET_DEFERRED_PROCEDURE.tokens */
 extern T0* T713s29(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_321 */
+extern void T68f1448(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_320 */
 extern void T68f1447(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_319 */
-extern void T68f1446(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_once_procedure */
 extern T0* T65f192(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9, T0* a10, T0* a11, T0* a12, T0* a13, T0* a14, T0* a15, T0* a16);
 /* ET_ONCE_PROCEDURE.set_first_note */
@@ -48852,10 +48862,10 @@ extern void T712f88(TC* ac, T0* C, T0* a1);
 extern T0* T712c83(TC* ac, T0* a1, T0* a2, T0* a3);
 /* ET_ONCE_PROCEDURE.tokens */
 extern T0* T712s47(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_319 */
+extern void T68f1446(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_318 */
 extern void T68f1445(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_317 */
-extern void T68f1444(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_do_procedure */
 extern T0* T65f191(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9, T0* a10, T0* a11, T0* a12, T0* a13, T0* a14, T0* a15);
 /* ET_DO_PROCEDURE.set_first_note */
@@ -48876,10 +48886,10 @@ extern void T711f88(TC* ac, T0* C, T0* a1);
 extern void T711f87(TC* ac, T0* C, T0* a1);
 /* ET_DO_PROCEDURE.set_is_keyword */
 extern void T711f86(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_317 */
+extern void T68f1444(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_316 */
 extern void T68f1443(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_315 */
-extern void T68f1442(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_QUERY].force */
 extern void T615s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_QUERY].fill_with */
@@ -48912,14 +48922,14 @@ extern void T710f97(TC* ac, T0* C, T0* a1);
 extern void T710f96(TC* ac, T0* C, T0* a1);
 /* ET_EXTERNAL_FUNCTION.make */
 extern T0* T710c91(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5);
+/* ET_EIFFEL_PARSER.yy_do_action_315 */
+extern void T68f1442(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_314 */
 extern void T68f1441(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_313 */
 extern void T68f1440(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_312 */
 extern void T68f1439(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_311 */
-extern void T68f1438(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_deferred_function */
 extern T0* T65f189(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9, T0* a10, T0* a11, T0* a12, T0* a13, T0* a14, T0* a15);
 /* ET_DEFERRED_FUNCTION.set_first_note */
@@ -48942,14 +48952,14 @@ extern T0* T708c82(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4);
 extern void T708f82p1(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_DEFERRED_FUNCTION.tokens */
 extern T0* T708s39(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_311 */
+extern void T68f1438(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_310 */
 extern void T68f1437(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_309 */
 extern void T68f1436(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_308 */
 extern void T68f1435(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_307 */
-extern void T68f1434(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_once_function */
 extern T0* T65f188(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9, T0* a10, T0* a11, T0* a12, T0* a13, T0* a14, T0* a15, T0* a16, T0* a17, T0* a18);
 /* ET_ONCE_FUNCTION.set_first_note */
@@ -48978,14 +48988,14 @@ extern void T707f90(TC* ac, T0* C, T0* a1);
 extern T0* T707c85(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_ONCE_FUNCTION.tokens */
 extern T0* T707s42(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_307 */
+extern void T68f1434(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_306 */
 extern void T68f1433(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_305 */
 extern void T68f1432(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_304 */
 extern void T68f1431(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_303 */
-extern void T68f1430(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_do_function */
 extern T0* T65f186(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9, T0* a10, T0* a11, T0* a12, T0* a13, T0* a14, T0* a15, T0* a16, T0* a17);
 /* ET_DO_FUNCTION.set_first_note */
@@ -49012,14 +49022,14 @@ extern void T706f88(TC* ac, T0* C, T0* a1);
 extern T0* T706c83(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_DO_FUNCTION.tokens */
 extern T0* T706s48(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_303 */
+extern void T68f1430(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_302 */
 extern void T68f1429(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_301 */
 extern void T68f1428(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_300 */
 extern void T68f1427(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_299 */
-extern void T68f1426(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_unique_attribute */
 extern T0* T65f185(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9);
 /* ET_UNIQUE_ATTRIBUTE.set_clients */
@@ -49042,10 +49052,10 @@ extern T0* T81s648(TC* ac);
 extern T0* T191c67(TC* ac);
 /* ET_UNIQUE_ATTRIBUTE.tokens */
 extern T0* T705s37(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_299 */
+extern void T68f1426(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_298 */
 extern void T68f1425(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_297 */
-extern void T68f1424(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_constant_attribute */
 extern T0* T65f184(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9);
 /* ET_CONSTANT_ATTRIBUTE.set_clients */
@@ -49056,10 +49066,10 @@ extern void T704f87(TC* ac, T0* C, T0* a1);
 extern T0* T704c82(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4);
 /* ET_CONSTANT_ATTRIBUTE.tokens */
 extern T0* T704s44(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_297 */
+extern void T68f1424(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_296 */
 extern void T68f1423(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_295 */
-extern void T68f1422(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_extended_attribute */
 extern T0* T65f183(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9, T0* a10, T0* a11, T0* a12, T0* a13, T0* a14, T0* a15);
 /* ET_EXTENDED_ATTRIBUTE.set_first_note */
@@ -49086,8 +49096,8 @@ extern T0* T703c84(TC* ac, T0* a1, T0* a2, T0* a3);
 extern void T703f84p1(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_EXTENDED_ATTRIBUTE.tokens */
 extern T0* T703s41(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_294 */
-extern void T68f1421(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_295 */
+extern void T68f1422(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_attribute */
 extern T0* T65f182(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7);
 /* ET_ATTRIBUTE.set_clients */
@@ -49098,12 +49108,12 @@ extern void T702f84(TC* ac, T0* C, T0* a1);
 extern T0* T702c79(TC* ac, T0* a1, T0* a2, T0* a3);
 /* ET_ATTRIBUTE.tokens */
 extern T0* T702s42(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_294 */
+extern void T68f1421(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_293 */
 extern void T68f1420(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_292 */
-extern void T68f1419(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.register_procedure_synonym */
-extern void T68f2101(TC* ac, T0* C, T0* a1);
+extern void T68f2103(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_PROCEDURE].back */
 extern void T258f21(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_PROCEDURE].cursor_back */
@@ -49238,18 +49248,18 @@ extern void T711f97(TC* ac, T0* C, T0* a1);
 extern void T711f96(TC* ac, T0* C, T0* a1);
 /* ET_DO_PROCEDURE.set_end_keyword */
 extern void T711f95(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_291 */
-extern void T68f1418(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_292 */
+extern void T68f1419(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_extended_feature_name_comma */
 extern T0* T65f180(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_EIFFEL_PARSER.yy_do_action_291 */
+extern void T68f1418(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_290 */
 extern void T68f1417(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_289 */
 extern void T68f1416(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_288 */
-extern void T68f1415(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.register_procedure */
-extern void T68f2100(TC* ac, T0* C, T0* a1);
+extern void T68f2102(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_PROCEDURE].finish */
 extern void T258f18(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_PROCEDURE].cursor_finish */
@@ -49260,12 +49270,12 @@ extern T1 T1164f5(TC* ac, T0* C);
 extern T1 T1164f7(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_PROCEDURE].force_last */
 extern void T258f17(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_288 */
+extern void T68f1415(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_287 */
 extern void T68f1414(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_286 */
-extern void T68f1413(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.register_query_synonym */
-extern void T68f2099(TC* ac, T0* C, T0* a1);
+extern void T68f2101(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_QUERY].back */
 extern void T257f21(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_QUERY].cursor_back */
@@ -49478,16 +49488,16 @@ extern void T702f88(TC* ac, T0* C, T0* a1);
 extern void T702f87(TC* ac, T0* C, T0* a1);
 /* ET_ATTRIBUTE.set_semicolon */
 extern void T702f86(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_286 */
+extern void T68f1413(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_285 */
 extern void T68f1412(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_284 */
 extern void T68f1411(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_283 */
 extern void T68f1410(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_282 */
-extern void T68f1409(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.register_query */
-extern void T68f2098(TC* ac, T0* C, T0* a1);
+extern void T68f2100(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_QUERY].finish */
 extern void T257f18(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_QUERY].cursor_finish */
@@ -49498,6 +49508,8 @@ extern T1 T1161f5(TC* ac, T0* C);
 extern T1 T1161f7(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [ET_QUERY].force_last */
 extern void T257f17(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_282 */
+extern void T68f1409(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_281 */
 extern void T68f1408(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_280 */
@@ -49508,8 +49520,6 @@ extern void T68f1406(TC* ac, T0* C);
 extern void T68f1405(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_277 */
 extern void T68f1404(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_276 */
-extern void T68f1403(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_FEATURE_CLAUSE].force */
 extern void T477s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_FEATURE_CLAUSE].fill_with */
@@ -49538,14 +49548,14 @@ extern T0* T68f968(TC* ac, T0* C, T0* a1);
 extern T0* T65f341(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_EIFFEL_PARSER.current_system */
 extern T0* T68f1031(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_276 */
+extern void T68f1403(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_275 */
 extern void T68f1402(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_274 */
 extern void T68f1401(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_273 */
 extern void T68f1400(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_272 */
-extern void T68f1399(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_FEATURE_CLAUSE_LIST].force */
 extern void T479s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_FEATURE_CLAUSE_LIST].fill_with */
@@ -49564,8 +49574,8 @@ extern void T1594f7(TC* ac, T0* C, T0* a1);
 extern T0* T480f3(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_FEATURE_CLAUSE].default_create */
 extern T0* T1595c2(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_271 */
-extern void T68f1398(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_272 */
+extern void T68f1399(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_FEATURE_CLAUSE_LIST].aliased_resized_area */
 extern T0* T479s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_FEATURE_CLAUSE_LIST].aliased_resized_area */
@@ -49578,11 +49588,11 @@ extern T0* T480c4(TC* ac, T6 a1);
 extern T0* T1595s1(TC* ac, T6 a1);
 /* SPECIAL [ET_FEATURE_CLAUSE].make_empty */
 extern T0* T1594c4(TC* ac, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_270 */
-extern void T68f1397(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_271 */
+extern void T68f1398(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.set_class_features */
-extern void T68f2097(TC* ac, T0* C);
-extern T1 T68f2097ot1(TC* ac, T0* a1);
+extern void T68f2099(TC* ac, T0* C);
+extern T1 T68f2099ot1(TC* ac, T0* a1);
 /* DS_ARRAYED_LIST [ET_PROCEDURE].wipe_out */
 extern void T258f16(TC* ac, T0* C);
 /* SPECIAL [ET_PROCEDURE].keep_head */
@@ -49703,12 +49713,12 @@ extern void T702f95(TC* ac, T0* C, T6 a1);
 extern void T769f11(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [ET_QUERY].item */
 extern T0* T257f7(TC* ac, T0* C, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_270 */
+extern void T68f1397(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_269 */
 extern void T68f1396(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_268 */
 extern void T68f1395(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_267 */
-extern void T68f1394(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_TYPE_ITEM].force */
 extern void T643s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_TYPE_ITEM].fill_with */
@@ -49721,8 +49731,8 @@ extern T0* T643s2(TC* ac, T0* a1, T6 a2);
 extern T0* T645f4(TC* ac, T0* C, T6 a1);
 /* ET_AST_FACTORY.new_type_comma */
 extern T0* T65f177(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_266 */
-extern void T68f1393(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_267 */
+extern void T68f1394(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_TYPE_LIST].force */
 extern void T646s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_TYPE_LIST].fill_with */
@@ -49737,8 +49747,8 @@ extern void T1665s3(TC* ac, T0* a1, T0* a2, T6 a3);
 extern void T1664f6(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* SPECIAL [ET_TYPE_ITEM].extend */
 extern void T1664f7(TC* ac, T0* C, T0* a1);
-/* ET_EIFFEL_PARSER.yy_do_action_265 */
-extern void T68f1392(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_266 */
+extern void T68f1393(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_TYPE_LIST].aliased_resized_area */
 extern T0* T646s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_TYPE_LIST].aliased_resized_area */
@@ -49751,14 +49761,14 @@ extern void T1086f11(TC* ac, T0* C, T0* a1);
 extern T0* T1086c9(TC* ac, T6 a1);
 /* ET_BRACED_TYPE_LIST.make_with_capacity */
 extern void T1086f9p1(TC* ac, T0* C, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_265 */
+extern void T68f1392(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_264 */
 extern void T68f1391(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_263 */
 extern void T68f1390(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_262 */
 extern void T68f1389(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_261 */
-extern void T68f1388(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CONVERT_FEATURE].force */
 extern void T426s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CONVERT_FEATURE].fill_with */
@@ -49775,16 +49785,16 @@ extern T0* T65f175(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 extern T0* T700c9(TC* ac, T0* a1, T0* a2);
 /* ET_CONVERT_PROCEDURE.tokens */
 extern T0* T700s5(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_260 */
-extern void T68f1387(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_261 */
+extern void T68f1388(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_convert_function */
 extern T0* T65f174(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_CONVERT_FUNCTION.make */
 extern T0* T699c8(TC* ac, T0* a1, T0* a2);
 /* ET_CONVERT_FUNCTION.tokens */
 extern T0* T699s4(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_259 */
-extern void T68f1386(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_260 */
+extern void T68f1387(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CONVERT_FEATURE_ITEM].force */
 extern void T429s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CONVERT_FEATURE_ITEM].fill_with */
@@ -49797,8 +49807,8 @@ extern T0* T429s2(TC* ac, T0* a1, T6 a2);
 extern T0* T431f4(TC* ac, T0* C, T6 a1);
 /* ET_AST_FACTORY.new_convert_feature_comma */
 extern T0* T65f173(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_258 */
-extern void T68f1385(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_259 */
+extern void T68f1386(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CONVERT_FEATURE_LIST].force */
 extern void T432s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CONVERT_FEATURE_LIST].fill_with */
@@ -49817,8 +49827,8 @@ extern void T1587f7(TC* ac, T0* C, T0* a1);
 extern T0* T433f7(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_CONVERT_FEATURE_ITEM].default_create */
 extern T0* T1589c2(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_257 */
-extern void T68f1384(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_258 */
+extern void T68f1385(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CONVERT_FEATURE_LIST].aliased_resized_area */
 extern T0* T432s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_CONVERT_FEATURE_LIST].aliased_resized_area */
@@ -49839,6 +49849,8 @@ extern T0* T81s668(TC* ac);
 extern T0* T191c87(TC* ac);
 /* ET_CONVERT_FEATURE_LIST.tokens */
 extern T0* T433s6(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_257 */
+extern void T68f1384(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_256 */
 extern void T68f1383(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_255 */
@@ -49849,8 +49861,6 @@ extern void T68f1381(TC* ac, T0* C);
 extern void T68f1380(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_252 */
 extern void T68f1379(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_251 */
-extern void T68f1378(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_FEATURE_NAME_ITEM].force */
 extern void T487s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_FEATURE_NAME_ITEM].fill_with */
@@ -49863,8 +49873,8 @@ extern T0* T487s2(TC* ac, T0* a1, T6 a2);
 extern T0* T489f4(TC* ac, T0* C, T6 a1);
 /* ET_AST_FACTORY.new_feature_name_comma */
 extern T0* T65f169(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_250 */
-extern void T68f1377(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_251 */
+extern void T68f1378(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CREATOR].force */
 extern void T441s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CREATOR].fill_with */
@@ -49875,8 +49885,8 @@ extern void T442f10(TC* ac, T0* C, T0* a1);
 extern void T82f17(TC* ac, T0* C, T0* a1);
 /* ET_CREATOR.fixed_array */
 extern T0* T82f6(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_249 */
-extern void T68f1376(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_250 */
+extern void T68f1377(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CREATOR].aliased_resized_area */
 extern T0* T441s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_CREATOR].aliased_resized_area */
@@ -49889,6 +49899,8 @@ extern T0* T82c16(TC* ac, T0* a1, T6 a2);
 extern void T82f18(TC* ac, T0* C, T6 a1);
 /* ET_CREATOR.tokens */
 extern T0* T82s5(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_249 */
+extern void T68f1376(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_248 */
 extern void T68f1375(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_247 */
@@ -49915,8 +49927,6 @@ extern void T68f1365(TC* ac, T0* C);
 extern void T68f1364(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_236 */
 extern void T68f1363(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_235 */
-extern void T68f1362(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CREATOR_LIST].force */
 extern void T443s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CREATOR_LIST].fill_with */
@@ -49927,8 +49937,8 @@ extern void T444f10(TC* ac, T0* C, T0* a1);
 extern T0* T443s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_CREATOR_LIST].aliased_resized_area */
 extern T0* T444f4(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_234 */
-extern void T68f1361(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_235 */
+extern void T68f1362(TC* ac, T0* C);
 /* ET_CREATOR_LIST.put_first */
 extern void T80f10(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_CREATOR].force */
@@ -49941,8 +49951,8 @@ extern void T1454f7(TC* ac, T0* C, T0* a1);
 extern T0* T80f5(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_CREATOR].default_create */
 extern T0* T1455c2(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_233 */
-extern void T68f1360(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_234 */
+extern void T68f1361(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_creators */
 extern T0* T65f170(TC* ac, T0* C, T6 a1);
 /* ET_CREATOR_LIST.make_with_capacity */
@@ -49951,14 +49961,14 @@ extern T0* T80c9(TC* ac, T6 a1);
 extern T0* T1455s1(TC* ac, T6 a1);
 /* SPECIAL [ET_CREATOR].make_empty */
 extern T0* T1454c4(TC* ac, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_233 */
+extern void T68f1360(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_232 */
 extern void T68f1359(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_231 */
 extern void T68f1358(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_230 */
 extern void T68f1357(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_229 */
-extern void T68f1356(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_KEYWORD_FEATURE_NAME_LIST].force */
 extern void T541s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_KEYWORD_FEATURE_NAME_LIST].fill_with */
@@ -49969,8 +49979,8 @@ extern void T542f10(TC* ac, T0* C, T0* a1);
 extern void T195f9(TC* ac, T0* C, T0* a1);
 /* ET_KEYWORD_FEATURE_NAME_LIST.fixed_array */
 extern T0* T195f5(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_228 */
-extern void T68f1355(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_229 */
+extern void T68f1356(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_KEYWORD_FEATURE_NAME_LIST].aliased_resized_area */
 extern T0* T541s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_KEYWORD_FEATURE_NAME_LIST].aliased_resized_area */
@@ -49987,6 +49997,8 @@ extern T0* T81s678(TC* ac);
 extern T0* T191c97(TC* ac);
 /* ET_KEYWORD_FEATURE_NAME_LIST.tokens */
 extern T0* T195s4(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_228 */
+extern void T68f1355(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_227 */
 extern void T68f1354(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_226 */
@@ -50019,8 +50031,6 @@ extern void T68f1341(TC* ac, T0* C);
 extern void T68f1340(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_212 */
 extern void T68f1339(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_211 */
-extern void T68f1338(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CLIENTS].force */
 extern void T400s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CLIENTS].fill_with */
@@ -50045,12 +50055,12 @@ extern T0* T267c20(TC* ac, T6 a1);
 extern void T267f20p1(TC* ac, T0* C, T6 a1);
 /* ET_CLIENTS.tokens */
 extern T0* T267s5(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_211 */
+extern void T68f1338(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_210 */
 extern void T68f1337(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_209 */
 extern void T68f1336(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_208 */
-extern void T68f1335(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CLIENT_ITEM].force */
 extern void T398s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CLIENT_ITEM].fill_with */
@@ -50065,6 +50075,8 @@ extern T0* T399f4(TC* ac, T0* C, T6 a1);
 extern T0* T68f969(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_AST_FACTORY.new_client_comma */
 extern T0* T65f342(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+/* ET_EIFFEL_PARSER.yy_do_action_208 */
+extern void T68f1335(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_207 */
 extern void T68f1334(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_206 */
@@ -50075,22 +50087,20 @@ extern void T68f1332(TC* ac, T0* C);
 extern void T68f1331(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_203 */
 extern void T68f1330(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_202 */
-extern void T68f1329(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_none_clients */
 extern T0* T65f166(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_CLIENTS.make */
 extern T0* T267c17(TC* ac);
 /* ET_CLIENTS.make */
 extern void T267f17p1(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_202 */
+extern void T68f1329(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_201 */
 extern void T68f1328(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_1_200 */
 extern void T68f1106(TC* ac, T0* C, T6 a1);
 /* ET_EIFFEL_PARSER.yy_do_action_200 */
 extern void T68f1327(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_199 */
-extern void T68f1326(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_FEATURE_EXPORT].force */
 extern void T482s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_FEATURE_EXPORT].fill_with */
@@ -50101,8 +50111,8 @@ extern void T484f10(TC* ac, T0* C, T0* a1);
 extern void T483f11(TC* ac, T0* C, T0* a1);
 /* ET_FEATURE_EXPORT.fixed_array */
 extern T0* T483f4(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_198 */
-extern void T68f1325(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_199 */
+extern void T68f1326(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_FEATURE_EXPORT].aliased_resized_area */
 extern T0* T482s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_FEATURE_EXPORT].aliased_resized_area */
@@ -50113,10 +50123,10 @@ extern T0* T65f164(TC* ac, T0* C, T0* a1, T6 a2);
 extern T0* T483c10(TC* ac, T0* a1, T6 a2);
 /* ET_FEATURE_EXPORT.make_feature_name_list_with_capacity */
 extern void T483f12(TC* ac, T0* C, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_198 */
+extern void T68f1325(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_197 */
 extern void T68f1324(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_196 */
-extern void T68f1323(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_EXPORT].force */
 extern void T460s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_EXPORT].fill_with */
@@ -50129,14 +50139,14 @@ extern T0* T460s2(TC* ac, T0* a1, T6 a2);
 extern T0* T462f4(TC* ac, T0* C, T6 a1);
 /* ET_AST_FACTORY.new_null_export */
 extern T0* T65f165(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_196 */
+extern void T68f1323(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_195 */
 extern void T68f1322(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_194 */
 extern void T68f1321(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_193 */
 extern void T68f1320(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_192 */
-extern void T68f1319(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_all_export */
 extern T0* T65f163(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_ALL_EXPORT.make */
@@ -50147,8 +50157,8 @@ extern T0* T81s901(TC* ac);
 extern T0* T191c52(TC* ac);
 /* ET_ALL_EXPORT.tokens */
 extern T0* T697s3(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_191 */
-extern void T68f1318(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_192 */
+extern void T68f1319(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_EXPORT_LIST].force */
 extern void T463s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_EXPORT_LIST].fill_with */
@@ -50159,8 +50169,8 @@ extern void T464f10(TC* ac, T0* C, T0* a1);
 extern T0* T463s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_EXPORT_LIST].aliased_resized_area */
 extern T0* T464f4(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_190 */
-extern void T68f1317(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_191 */
+extern void T68f1318(TC* ac, T0* C);
 /* ET_EXPORT_LIST.put_first */
 extern void T194f8(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_EXPORT].force */
@@ -50173,8 +50183,8 @@ extern void T1555f7(TC* ac, T0* C, T0* a1);
 extern T0* T194f5(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_EXPORT].default_create */
 extern T0* T1556c2(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_189 */
-extern void T68f1316(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_190 */
+extern void T68f1317(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_exports */
 extern T0* T65f162(TC* ac, T0* C, T0* a1, T6 a2);
 /* ET_EXPORT_LIST.make_with_capacity */
@@ -50191,6 +50201,8 @@ extern T0* T81s664(TC* ac);
 extern T0* T191c83(TC* ac);
 /* ET_EXPORT_LIST.tokens */
 extern T0* T194s4(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_189 */
+extern void T68f1316(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_188 */
 extern void T68f1315(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_187 */
@@ -50201,8 +50213,6 @@ extern void T68f1313(TC* ac, T0* C);
 extern void T68f1312(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_184 */
 extern void T68f1311(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_183 */
-extern void T68f1310(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_RENAME_ITEM].force */
 extern void T618s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_RENAME_ITEM].fill_with */
@@ -50219,12 +50229,12 @@ extern T0* T65f161(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4);
 extern T0* T696c6(TC* ac, T0* a1, T0* a2);
 /* ET_RENAME.tokens */
 extern T0* T696s4(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_182 */
-extern void T68f1309(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_183 */
+extern void T68f1310(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_rename */
 extern T0* T65f160(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
-/* ET_EIFFEL_PARSER.yy_do_action_181 */
-extern void T68f1308(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_182 */
+extern void T68f1309(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_RENAME_LIST].force */
 extern void T621s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_RENAME_LIST].fill_with */
@@ -50243,8 +50253,8 @@ extern void T1552f7(TC* ac, T0* C, T0* a1);
 extern T0* T193f5(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_RENAME_ITEM].default_create */
 extern T0* T1553c2(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_180 */
-extern void T68f1307(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_181 */
+extern void T68f1308(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_RENAME_LIST].aliased_resized_area */
 extern T0* T621s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_RENAME_LIST].aliased_resized_area */
@@ -50265,6 +50275,8 @@ extern T0* T81s665(TC* ac);
 extern T0* T191c84(TC* ac);
 /* ET_RENAME_LIST.tokens */
 extern T0* T193s4(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_180 */
+extern void T68f1307(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_179 */
 extern void T68f1306(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_178 */
@@ -50273,8 +50285,6 @@ extern void T68f1305(TC* ac, T0* C);
 extern void T68f1304(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_176 */
 extern void T68f1303(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_175 */
-extern void T68f1302(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_PARENT_ITEM].force */
 extern void T596s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_PARENT_ITEM].fill_with */
@@ -50287,28 +50297,28 @@ extern T0* T596s2(TC* ac, T0* a1, T6 a2);
 extern T0* T597f4(TC* ac, T0* C, T6 a1);
 /* ET_AST_FACTORY.new_parent_semicolon */
 extern T0* T65f158(TC* ac, T0* C, T0* a1, T0* a2);
-/* ET_EIFFEL_PARSER.yy_do_action_174 */
-extern void T68f1301(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_175 */
+extern void T68f1302(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_PARENT_LIST].force */
 extern void T598s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_PARENT_LIST].fill_with */
 extern void T599f8(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* SPECIAL [detachable ET_PARENT_LIST].extend */
 extern void T599f10(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_174 */
+extern void T68f1301(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_173 */
 extern void T68f1300(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_172 */
-extern void T68f1299(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_PARENT_LIST].aliased_resized_area */
 extern T0* T598s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_PARENT_LIST].aliased_resized_area */
 extern T0* T599f4(TC* ac, T0* C, T6 a1);
 /* ET_AST_FACTORY.new_parents */
 extern T0* T65f157(TC* ac, T0* C, T0* a1, T6 a2);
+/* ET_EIFFEL_PARSER.yy_do_action_172 */
+extern void T68f1299(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_171 */
 extern void T68f1298(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_170 */
-extern void T68f1297(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_PARENT].force */
 extern void T591s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_PARENT].fill_with */
@@ -50327,6 +50337,8 @@ extern T0* T65f340(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6
 extern T1 T70f57(TC* ac, T0* C, T0* a1);
 /* ET_FORMAL_PARAMETER_LIST.has_formal_parameter */
 extern T1 T506f13(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_170 */
+extern void T68f1297(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_169 */
 extern void T68f1296(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_168 */
@@ -50339,14 +50351,12 @@ extern void T68f1293(TC* ac, T0* C);
 extern void T68f1292(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_164 */
 extern void T68f1291(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_163 */
-extern void T68f1290(TC* ac, T0* C);
 /* ET_PARENT_LIST.set_clients_clause */
 extern void T181f13(TC* ac, T0* C, T0* a1);
+/* ET_EIFFEL_PARSER.yy_do_action_163 */
+extern void T68f1290(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_162 */
 extern void T68f1289(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_161 */
-extern void T68f1288(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_PARENT_CLAUSE_LIST].force */
 extern void T593s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_PARENT_CLAUSE_LIST].fill_with */
@@ -50357,8 +50367,8 @@ extern void T595f10(TC* ac, T0* C, T0* a1);
 extern T0* T593s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_PARENT_CLAUSE_LIST].aliased_resized_area */
 extern T0* T595f4(TC* ac, T0* C, T6 a1);
-/* ET_EIFFEL_PARSER.yy_do_action_160 */
-extern void T68f1287(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_161 */
+extern void T68f1288(TC* ac, T0* C);
 /* ET_PARENT_CLAUSE_LIST.put_first */
 extern void T594f7(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_PARENT_LIST].force */
@@ -50371,8 +50381,8 @@ extern void T1612f7(TC* ac, T0* C, T0* a1);
 extern T0* T594f4(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_PARENT_LIST].default_create */
 extern T0* T1613c2(TC* ac);
-/* ET_EIFFEL_PARSER.yy_do_action_159 */
-extern void T68f1286(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_160 */
+extern void T68f1287(TC* ac, T0* C);
 /* ET_AST_FACTORY.new_parent_clauses */
 extern T0* T65f156(TC* ac, T0* C, T6 a1);
 /* ET_PARENT_CLAUSE_LIST.make_with_capacity */
@@ -50381,12 +50391,12 @@ extern T0* T594c6(TC* ac, T6 a1);
 extern T0* T1613s1(TC* ac, T6 a1);
 /* SPECIAL [ET_PARENT_LIST].make_empty */
 extern T0* T1612c4(TC* ac, T6 a1);
+/* ET_EIFFEL_PARSER.yy_do_action_159 */
+extern void T68f1286(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_158 */
 extern void T68f1285(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_157 */
 extern void T68f1284(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_156 */
-extern void T68f1283(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_OBSOLETE].force */
 extern void T585s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_OBSOLETE].fill_with */
@@ -50399,10 +50409,10 @@ extern T0* T585s2(TC* ac, T0* a1, T6 a2);
 extern T0* T587f4(TC* ac, T0* C, T6 a1);
 /* ET_AST_FACTORY.new_obsolete_message */
 extern T0* T65f155(TC* ac, T0* C, T0* a1, T0* a2);
+/* ET_EIFFEL_PARSER.yy_do_action_156 */
+extern void T68f1283(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_155 */
 extern void T68f1282(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_154 */
-extern void T68f1281(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM].force */
 extern void T411s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM].fill_with */
@@ -50414,15 +50424,15 @@ extern T0* T411s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM].aliased_resized_area */
 extern T0* T413f4(TC* ac, T0* C, T6 a1);
 /* ET_AST_FACTORY.new_constraint_labeled_actual_parameter_semicolon */
-extern T0* T65f154(TC* ac, T0* C, T0* a1, T0* a2);
+extern T0* T65f153(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_AST_FACTORY.new_constraint_labeled_actual_parameter */
 extern T0* T65f152(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER.make */
 extern T0* T694c6(TC* ac, T0* a1, T0* a2, T0* a3);
+/* ET_EIFFEL_PARSER.yy_do_action_154 */
+extern void T68f1281(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_153 */
 extern void T68f1280(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_152 */
-extern void T68f1279(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST].force */
 extern void T414s4(TC* ac, T0* a1, T0* a2, T6 a3);
 /* SPECIAL [detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST].fill_with */
@@ -50430,7 +50440,7 @@ extern void T416f8(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* SPECIAL [detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST].extend */
 extern void T416f10(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.add_to_constraint_actual_parameter_list */
-extern void T68f2096(TC* ac, T0* C, T0* a1, T0* a2);
+extern void T68f2098(TC* ac, T0* C, T0* a1, T0* a2);
 /* ET_CONSTRAINT_ACTUAL_PARAMETER_LIST.put_first */
 extern void T415f13(TC* ac, T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM].force */
@@ -50444,7 +50454,7 @@ extern T0* T415f8(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM].default_create */
 extern T0* T1586c2(TC* ac);
 /* ET_AST_FACTORY.new_constraint_labeled_comma_actual_parameter */
-extern T0* T65f153(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
+extern T0* T65f154(TC* ac, T0* C, T0* a1, T0* a2, T0* a3);
 /* ET_CONSTRAINT_LABELED_COMMA_ACTUAL_PARAMETER.make */
 extern T0* T695c6(TC* ac, T0* a1, T0* a2, T0* a3);
 /* ET_CONSTRAINT_NAMED_TYPE.type */
@@ -50459,12 +50469,12 @@ extern T0* T694f3(TC* ac, T0* C);
 extern T0* T415f7(TC* ac, T0* C);
 /* ET_CONSTRAINT_ACTUAL_PARAMETER_LIST.is_empty */
 extern T1 T415f5(TC* ac, T0* C);
+/* ET_EIFFEL_PARSER.yy_do_action_152 */
+extern void T68f1279(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_151 */
 extern void T68f1278(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_150 */
 extern void T68f1277(TC* ac, T0* C);
-/* ET_EIFFEL_PARSER.yy_do_action_149 */
-extern void T68f1276(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST].aliased_resized_area */
 extern T0* T414s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST].aliased_resized_area */
@@ -50483,6 +50493,8 @@ extern T0* T1586s1(TC* ac, T6 a1);
 extern T0* T1584c4(TC* ac, T6 a1);
 /* ET_CONSTRAINT_ACTUAL_PARAMETER_LIST.tokens */
 extern T0* T415s6(TC* ac);
+/* ET_EIFFEL_PARSER.yy_do_action_149 */
+extern void T68f1276(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_148 */
 extern void T68f1275(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_147 */
@@ -50764,7 +50776,7 @@ extern T0* T634s2(TC* ac, T0* a1, T6 a2);
 /* SPECIAL [detachable ET_TYPE_CONSTRAINT].aliased_resized_area */
 extern T0* T636f4(TC* ac, T0* C, T6 a1);
 /* ET_EIFFEL_PARSER.register_constraint */
-extern void T68f2095(TC* ac, T0* C, T0* a1);
+extern void T68f2097(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [detachable ET_CONSTRAINT_TYPE].force_last */
 extern void T259f12(TC* ac, T0* C, T0* a1);
 /* DS_ARRAYED_LIST [detachable ET_CONSTRAINT_TYPE].resize */
@@ -50894,12 +50906,12 @@ extern void T68f1185(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_57 */
 extern void T68f1184(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.set_formal_parameters */
-extern void T68f2092(TC* ac, T0* C, T0* a1);
-extern T1 T68f2092ot1(TC* ac, T0* a1);
-extern T1 T68f2092ot2(TC* ac, T0* a1);
-extern T1 T68f2092ot3(TC* ac, T0* a1);
-extern T1 T68f2092ot4(TC* ac, T0* a1);
-extern T1 T68f2092ot5(TC* ac, T0* a1);
+extern void T68f2094(TC* ac, T0* C, T0* a1);
+extern T1 T68f2094ot1(TC* ac, T0* a1);
+extern T1 T68f2094ot2(TC* ac, T0* a1);
+extern T1 T68f2094ot3(TC* ac, T0* a1);
+extern T1 T68f2094ot4(TC* ac, T0* a1);
+extern T1 T68f2094ot5(TC* ac, T0* a1);
 /* DS_ARRAYED_LIST [detachable ET_CONSTRAINT_TYPE].wipe_out */
 extern void T259f11(TC* ac, T0* C);
 /* SPECIAL [detachable ET_CONSTRAINT_TYPE].keep_head */
@@ -51316,7 +51328,7 @@ extern void T68f1136(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_do_action_8 */
 extern void T68f1135(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.set_class_providers */
-extern void T68f2086(TC* ac, T0* C);
+extern void T68f2088(TC* ac, T0* C);
 /* DS_HASH_SET [ET_NAMED_CLASS].wipe_out */
 extern void T260f37(TC* ac, T0* C);
 /* DS_HASH_SET [ET_NAMED_CLASS].slots_wipe_out */
@@ -51406,7 +51418,7 @@ extern T0* T1169c3(TC* ac);
 /* ET_EIFFEL_PARSER.yy_do_action_7 */
 extern void T68f1134(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.set_class_to_end */
-extern void T68f2085(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9);
+extern void T68f2087(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9);
 /* ET_CLASS.set_parsed */
 extern void T70f307(TC* ac, T0* C);
 /* ET_CLASS.set_end_keyword */
@@ -51716,7 +51728,7 @@ extern void T1029f55(TC* ac, T0* C, T6 a1);
 /* DS_HASH_TABLE [INTEGER_32, STRING_8].make_item_storage */
 extern void T1029f54(TC* ac, T0* C, T6 a1);
 /* ET_EIFFEL_PARSER.append_text_substring_to_string */
-extern void T68f2303(TC* ac, T0* C, T6 a1, T6 a2, T0* a3);
+extern void T68f2305(TC* ac, T0* C, T6 a1, T6 a2, T0* a3);
 /* KL_CHARACTER_BUFFER.append_substring_to_string */
 extern void T1574f15(TC* ac, T0* C, T6 a1, T6 a2, T0* a3);
 /* KL_UNICODE_CHARACTER_BUFFER.append_substring_to_string */
@@ -51748,7 +51760,7 @@ extern T0* T679c65(TC* ac, T0* a1, T11 a2, T1 a3);
 /* ET_BINARY_INTEGER_CONSTANT.make_leaf */
 extern void T679f71(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.compute_natural_64_value */
-extern void T68f2302(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
+extern void T68f2304(TC* ac, T0* C, T0* a1, T6 a2, T6 a3);
 /* ET_AST_FACTORY.new_octal_integer_constant */
 extern T0* T65f10(TC* ac, T0* C, T0* a1);
 /* ET_OCTAL_INTEGER_CONSTANT.set_position */
@@ -51844,7 +51856,7 @@ extern T10 T167s3(TC* ac, T2 a1, T2 a2);
 /* ET_EIFFEL_PARSER.utf8_text */
 extern T0* T68f779(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.append_utf8_text_to_string */
-extern void T68f2248(TC* ac, T0* C, T0* a1);
+extern void T68f2250(TC* ac, T0* C, T0* a1);
 /* KL_CHARACTER_BUFFER.append_utf8_substring_to_string */
 extern void T1574f14(TC* ac, T0* C, T6 a1, T6 a2, T0* a3);
 /* KL_UNICODE_CHARACTER_BUFFER.append_utf8_substring_to_string */
@@ -51852,7 +51864,7 @@ extern void T265f16(TC* ac, T0* C, T6 a1, T6 a2, T0* a3);
 /* ET_EIFFEL_PARSER.utf8_text_substring */
 extern T0* T68f776(TC* ac, T0* C, T6 a1, T6 a2);
 /* ET_EIFFEL_PARSER.append_utf8_text_substring_to_string */
-extern void T68f2247(TC* ac, T0* C, T6 a1, T6 a2, T0* a3);
+extern void T68f2249(TC* ac, T0* C, T6 a1, T6 a2, T0* a3);
 /* ET_AST_FACTORY.new_special_manifest_string */
 extern T0* T65f5(TC* ac, T0* C, T0* a1);
 /* ET_SPECIAL_MANIFEST_STRING.set_position */
@@ -52536,9 +52548,9 @@ extern void T68f1083(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.clear_all */
 extern void T68f1111(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.clear_stacks */
-extern void T68f2082(TC* ac, T0* C);
+extern void T68f2084(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_clear_value_stacks */
-extern void T68f2114(TC* ac, T0* C);
+extern void T68f2116(TC* ac, T0* C);
 /* SPECIAL [detachable ET_WRITABLE].keep_head */
 extern void T666f6(TC* ac, T0* C, T6 a1);
 /* SPECIAL [detachable ET_WRITABLE].set_count */
@@ -53132,9 +53144,9 @@ extern T1 T159s3(TC* ac, T14 a1);
 /* ET_EIFFEL_PARSER.error_handler */
 extern T0* T68f754(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.set_fatal_error */
-extern void T68f2083(TC* ac, T0* C, T0* a1);
+extern void T68f2085(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.process_none_class */
-extern void T68f2305(TC* ac, T0* C, T0* a1);
+extern void T68f2307(TC* ac, T0* C, T0* a1);
 /* ET_IMPLEMENTATION_CHECKER.process_class */
 extern void T237f22(TC* ac, T0* C, T0* a1);
 /* ET_IMPLEMENTATION_CHECKER.internal_process_class */
@@ -83485,285 +83497,285 @@ extern T0* T68f732(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yyfixed_array */
 extern T0* T68f1022(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_44 */
-extern void T68f2246(TC* ac, T0* C, T0* a1);
+extern void T68f2248(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yyarray_subcopy */
-extern void T68f2300(TC* ac, T0* C, T0* a1, T0* a2, T6 a3, T6 a4, T6 a5);
+extern void T68f2302(TC* ac, T0* C, T0* a1, T0* a2, T6 a3, T6 a4, T6 a5);
 /* ET_EIFFEL_PARSER.integer_array_ */
 extern T0* T68s1040(TC* ac);
 /* ET_EIFFEL_PARSER.yycheck_template_43 */
-extern void T68f2245(TC* ac, T0* C, T0* a1);
+extern void T68f2247(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_42 */
-extern void T68f2244(TC* ac, T0* C, T0* a1);
+extern void T68f2246(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_41 */
-extern void T68f2243(TC* ac, T0* C, T0* a1);
+extern void T68f2245(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_40 */
-extern void T68f2242(TC* ac, T0* C, T0* a1);
+extern void T68f2244(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_39 */
-extern void T68f2241(TC* ac, T0* C, T0* a1);
+extern void T68f2243(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_38 */
-extern void T68f2240(TC* ac, T0* C, T0* a1);
+extern void T68f2242(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_37 */
-extern void T68f2239(TC* ac, T0* C, T0* a1);
+extern void T68f2241(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_36 */
-extern void T68f2238(TC* ac, T0* C, T0* a1);
+extern void T68f2240(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_35 */
-extern void T68f2237(TC* ac, T0* C, T0* a1);
+extern void T68f2239(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_34 */
-extern void T68f2236(TC* ac, T0* C, T0* a1);
+extern void T68f2238(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_33 */
-extern void T68f2235(TC* ac, T0* C, T0* a1);
+extern void T68f2237(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_32 */
-extern void T68f2234(TC* ac, T0* C, T0* a1);
+extern void T68f2236(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_31 */
-extern void T68f2233(TC* ac, T0* C, T0* a1);
+extern void T68f2235(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_30 */
-extern void T68f2232(TC* ac, T0* C, T0* a1);
+extern void T68f2234(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_29 */
-extern void T68f2231(TC* ac, T0* C, T0* a1);
+extern void T68f2233(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_28 */
-extern void T68f2230(TC* ac, T0* C, T0* a1);
+extern void T68f2232(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_27 */
-extern void T68f2229(TC* ac, T0* C, T0* a1);
+extern void T68f2231(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_26 */
-extern void T68f2228(TC* ac, T0* C, T0* a1);
+extern void T68f2230(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_25 */
-extern void T68f2227(TC* ac, T0* C, T0* a1);
+extern void T68f2229(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_24 */
-extern void T68f2226(TC* ac, T0* C, T0* a1);
+extern void T68f2228(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_23 */
-extern void T68f2225(TC* ac, T0* C, T0* a1);
+extern void T68f2227(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_22 */
-extern void T68f2224(TC* ac, T0* C, T0* a1);
+extern void T68f2226(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_21 */
-extern void T68f2223(TC* ac, T0* C, T0* a1);
+extern void T68f2225(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_20 */
-extern void T68f2222(TC* ac, T0* C, T0* a1);
+extern void T68f2224(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_19 */
-extern void T68f2221(TC* ac, T0* C, T0* a1);
+extern void T68f2223(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_18 */
-extern void T68f2220(TC* ac, T0* C, T0* a1);
+extern void T68f2222(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_17 */
-extern void T68f2219(TC* ac, T0* C, T0* a1);
+extern void T68f2221(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_16 */
-extern void T68f2218(TC* ac, T0* C, T0* a1);
+extern void T68f2220(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_15 */
-extern void T68f2217(TC* ac, T0* C, T0* a1);
+extern void T68f2219(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_14 */
-extern void T68f2216(TC* ac, T0* C, T0* a1);
+extern void T68f2218(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_13 */
-extern void T68f2215(TC* ac, T0* C, T0* a1);
+extern void T68f2217(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_12 */
-extern void T68f2214(TC* ac, T0* C, T0* a1);
+extern void T68f2216(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_11 */
-extern void T68f2213(TC* ac, T0* C, T0* a1);
+extern void T68f2215(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_10 */
-extern void T68f2212(TC* ac, T0* C, T0* a1);
+extern void T68f2214(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_9 */
-extern void T68f2211(TC* ac, T0* C, T0* a1);
+extern void T68f2213(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_8 */
-extern void T68f2210(TC* ac, T0* C, T0* a1);
+extern void T68f2212(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_7 */
-extern void T68f2209(TC* ac, T0* C, T0* a1);
+extern void T68f2211(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_6 */
-extern void T68f2208(TC* ac, T0* C, T0* a1);
+extern void T68f2210(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_5 */
-extern void T68f2207(TC* ac, T0* C, T0* a1);
+extern void T68f2209(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_4 */
-extern void T68f2206(TC* ac, T0* C, T0* a1);
+extern void T68f2208(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_3 */
-extern void T68f2205(TC* ac, T0* C, T0* a1);
+extern void T68f2207(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_2 */
-extern void T68f2204(TC* ac, T0* C, T0* a1);
+extern void T68f2206(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yycheck_template_1 */
-extern void T68f2203(TC* ac, T0* C, T0* a1);
+extern void T68f2205(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template */
 extern T0* T68f731(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yytable_template_44 */
-extern void T68f2202(TC* ac, T0* C, T0* a1);
+extern void T68f2204(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_43 */
-extern void T68f2201(TC* ac, T0* C, T0* a1);
+extern void T68f2203(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_42 */
-extern void T68f2200(TC* ac, T0* C, T0* a1);
+extern void T68f2202(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_41 */
-extern void T68f2199(TC* ac, T0* C, T0* a1);
+extern void T68f2201(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_40 */
-extern void T68f2198(TC* ac, T0* C, T0* a1);
+extern void T68f2200(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_39 */
-extern void T68f2197(TC* ac, T0* C, T0* a1);
+extern void T68f2199(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_38 */
-extern void T68f2196(TC* ac, T0* C, T0* a1);
+extern void T68f2198(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_37 */
-extern void T68f2195(TC* ac, T0* C, T0* a1);
+extern void T68f2197(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_36 */
-extern void T68f2194(TC* ac, T0* C, T0* a1);
+extern void T68f2196(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_35 */
-extern void T68f2193(TC* ac, T0* C, T0* a1);
+extern void T68f2195(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_34 */
-extern void T68f2192(TC* ac, T0* C, T0* a1);
+extern void T68f2194(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_33 */
-extern void T68f2191(TC* ac, T0* C, T0* a1);
+extern void T68f2193(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_32 */
-extern void T68f2190(TC* ac, T0* C, T0* a1);
+extern void T68f2192(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_31 */
-extern void T68f2189(TC* ac, T0* C, T0* a1);
+extern void T68f2191(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_30 */
-extern void T68f2188(TC* ac, T0* C, T0* a1);
+extern void T68f2190(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_29 */
-extern void T68f2187(TC* ac, T0* C, T0* a1);
+extern void T68f2189(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_28 */
-extern void T68f2186(TC* ac, T0* C, T0* a1);
+extern void T68f2188(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_27 */
-extern void T68f2185(TC* ac, T0* C, T0* a1);
+extern void T68f2187(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_26 */
-extern void T68f2184(TC* ac, T0* C, T0* a1);
+extern void T68f2186(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_25 */
-extern void T68f2183(TC* ac, T0* C, T0* a1);
+extern void T68f2185(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_24 */
-extern void T68f2182(TC* ac, T0* C, T0* a1);
+extern void T68f2184(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_23 */
-extern void T68f2181(TC* ac, T0* C, T0* a1);
+extern void T68f2183(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_22 */
-extern void T68f2180(TC* ac, T0* C, T0* a1);
+extern void T68f2182(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_21 */
-extern void T68f2179(TC* ac, T0* C, T0* a1);
+extern void T68f2181(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_20 */
-extern void T68f2178(TC* ac, T0* C, T0* a1);
+extern void T68f2180(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_19 */
-extern void T68f2177(TC* ac, T0* C, T0* a1);
+extern void T68f2179(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_18 */
-extern void T68f2176(TC* ac, T0* C, T0* a1);
+extern void T68f2178(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_17 */
-extern void T68f2175(TC* ac, T0* C, T0* a1);
+extern void T68f2177(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_16 */
-extern void T68f2174(TC* ac, T0* C, T0* a1);
+extern void T68f2176(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_15 */
-extern void T68f2173(TC* ac, T0* C, T0* a1);
+extern void T68f2175(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_14 */
-extern void T68f2172(TC* ac, T0* C, T0* a1);
+extern void T68f2174(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_13 */
-extern void T68f2171(TC* ac, T0* C, T0* a1);
+extern void T68f2173(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_12 */
-extern void T68f2170(TC* ac, T0* C, T0* a1);
+extern void T68f2172(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_11 */
-extern void T68f2169(TC* ac, T0* C, T0* a1);
+extern void T68f2171(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_10 */
-extern void T68f2168(TC* ac, T0* C, T0* a1);
+extern void T68f2170(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_9 */
-extern void T68f2167(TC* ac, T0* C, T0* a1);
+extern void T68f2169(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_8 */
-extern void T68f2166(TC* ac, T0* C, T0* a1);
+extern void T68f2168(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_7 */
-extern void T68f2165(TC* ac, T0* C, T0* a1);
+extern void T68f2167(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_6 */
-extern void T68f2164(TC* ac, T0* C, T0* a1);
+extern void T68f2166(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_5 */
-extern void T68f2163(TC* ac, T0* C, T0* a1);
+extern void T68f2165(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_4 */
-extern void T68f2162(TC* ac, T0* C, T0* a1);
+extern void T68f2164(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_3 */
-extern void T68f2161(TC* ac, T0* C, T0* a1);
+extern void T68f2163(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_2 */
-extern void T68f2160(TC* ac, T0* C, T0* a1);
+extern void T68f2162(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytable_template_1 */
-extern void T68f2159(TC* ac, T0* C, T0* a1);
+extern void T68f2161(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yypgoto_template */
 extern T0* T68f730(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yypgoto_template_2 */
-extern void T68f2158(TC* ac, T0* C, T0* a1);
+extern void T68f2160(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yypgoto_template_1 */
-extern void T68f2157(TC* ac, T0* C, T0* a1);
+extern void T68f2159(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yypact_template */
 extern T0* T68f729(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yypact_template_10 */
-extern void T68f2156(TC* ac, T0* C, T0* a1);
+extern void T68f2158(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yypact_template_9 */
-extern void T68f2155(TC* ac, T0* C, T0* a1);
+extern void T68f2157(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yypact_template_8 */
-extern void T68f2154(TC* ac, T0* C, T0* a1);
+extern void T68f2156(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yypact_template_7 */
-extern void T68f2153(TC* ac, T0* C, T0* a1);
+extern void T68f2155(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yypact_template_6 */
-extern void T68f2152(TC* ac, T0* C, T0* a1);
+extern void T68f2154(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yypact_template_5 */
-extern void T68f2151(TC* ac, T0* C, T0* a1);
+extern void T68f2153(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yypact_template_4 */
-extern void T68f2150(TC* ac, T0* C, T0* a1);
+extern void T68f2152(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yypact_template_3 */
-extern void T68f2149(TC* ac, T0* C, T0* a1);
+extern void T68f2151(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yypact_template_2 */
-extern void T68f2148(TC* ac, T0* C, T0* a1);
+extern void T68f2150(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yypact_template_1 */
-extern void T68f2147(TC* ac, T0* C, T0* a1);
+extern void T68f2149(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yydefgoto_template */
 extern T0* T68f728(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yydefgoto_template_2 */
-extern void T68f2146(TC* ac, T0* C, T0* a1);
+extern void T68f2148(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yydefgoto_template_1 */
-extern void T68f2145(TC* ac, T0* C, T0* a1);
+extern void T68f2147(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yydefact_template */
 extern T0* T68f727(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yydefact_template_10 */
-extern void T68f2144(TC* ac, T0* C, T0* a1);
+extern void T68f2146(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yydefact_template_9 */
-extern void T68f2143(TC* ac, T0* C, T0* a1);
+extern void T68f2145(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yydefact_template_8 */
-extern void T68f2142(TC* ac, T0* C, T0* a1);
+extern void T68f2144(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yydefact_template_7 */
-extern void T68f2141(TC* ac, T0* C, T0* a1);
+extern void T68f2143(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yydefact_template_6 */
-extern void T68f2140(TC* ac, T0* C, T0* a1);
+extern void T68f2142(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yydefact_template_5 */
-extern void T68f2139(TC* ac, T0* C, T0* a1);
+extern void T68f2141(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yydefact_template_4 */
-extern void T68f2138(TC* ac, T0* C, T0* a1);
+extern void T68f2140(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yydefact_template_3 */
-extern void T68f2137(TC* ac, T0* C, T0* a1);
+extern void T68f2139(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yydefact_template_2 */
-extern void T68f2136(TC* ac, T0* C, T0* a1);
+extern void T68f2138(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yydefact_template_1 */
-extern void T68f2135(TC* ac, T0* C, T0* a1);
+extern void T68f2137(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytypes2_template */
 extern T0* T68f726(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yytypes1_template */
 extern T0* T68f724(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yytypes1_template_10 */
-extern void T68f2134(TC* ac, T0* C, T0* a1);
+extern void T68f2136(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytypes1_template_9 */
-extern void T68f2133(TC* ac, T0* C, T0* a1);
+extern void T68f2135(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytypes1_template_8 */
-extern void T68f2132(TC* ac, T0* C, T0* a1);
+extern void T68f2134(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytypes1_template_7 */
-extern void T68f2131(TC* ac, T0* C, T0* a1);
+extern void T68f2133(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytypes1_template_6 */
-extern void T68f2130(TC* ac, T0* C, T0* a1);
+extern void T68f2132(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytypes1_template_5 */
-extern void T68f2129(TC* ac, T0* C, T0* a1);
+extern void T68f2131(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytypes1_template_4 */
-extern void T68f2128(TC* ac, T0* C, T0* a1);
+extern void T68f2130(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytypes1_template_3 */
-extern void T68f2127(TC* ac, T0* C, T0* a1);
+extern void T68f2129(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytypes1_template_2 */
-extern void T68f2126(TC* ac, T0* C, T0* a1);
+extern void T68f2128(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytypes1_template_1 */
-extern void T68f2125(TC* ac, T0* C, T0* a1);
+extern void T68f2127(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yyr1_template */
 extern T0* T68f722(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yyr1_template_5 */
-extern void T68f2124(TC* ac, T0* C, T0* a1);
+extern void T68f2126(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yyr1_template_4 */
-extern void T68f2123(TC* ac, T0* C, T0* a1);
+extern void T68f2125(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yyr1_template_3 */
-extern void T68f2122(TC* ac, T0* C, T0* a1);
+extern void T68f2124(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yyr1_template_2 */
-extern void T68f2121(TC* ac, T0* C, T0* a1);
+extern void T68f2123(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yyr1_template_1 */
-extern void T68f2120(TC* ac, T0* C, T0* a1);
+extern void T68f2122(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytranslate_template */
 extern T0* T68f712(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yytranslate_template_2 */
-extern void T68f2119(TC* ac, T0* C, T0* a1);
+extern void T68f2121(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yytranslate_template_1 */
-extern void T68f2118(TC* ac, T0* C, T0* a1);
+extern void T68f2120(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_create_value_stacks */
 extern void T68f1071(TC* ac, T0* C);
 /* KL_SPECIAL_ROUTINES [detachable ET_WRITABLE].make */
@@ -84603,123 +84615,123 @@ extern T0* T68f807(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_fixed_array */
 extern T0* T68f1028(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_acclist_template_5 */
-extern void T68f2299(TC* ac, T0* C, T0* a1);
+extern void T68f2301(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_array_subcopy */
-extern void T68f2301(TC* ac, T0* C, T0* a1, T0* a2, T6 a3, T6 a4, T6 a5);
+extern void T68f2303(TC* ac, T0* C, T0* a1, T0* a2, T6 a3, T6 a4, T6 a5);
 /* ET_EIFFEL_PARSER.yy_acclist_template_4 */
-extern void T68f2298(TC* ac, T0* C, T0* a1);
+extern void T68f2300(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_acclist_template_3 */
-extern void T68f2297(TC* ac, T0* C, T0* a1);
+extern void T68f2299(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_acclist_template_2 */
-extern void T68f2296(TC* ac, T0* C, T0* a1);
+extern void T68f2298(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_acclist_template_1 */
-extern void T68f2295(TC* ac, T0* C, T0* a1);
+extern void T68f2297(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_accept_template */
 extern T0* T68f806(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_accept_template_3 */
-extern void T68f2294(TC* ac, T0* C, T0* a1);
+extern void T68f2296(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_accept_template_2 */
-extern void T68f2293(TC* ac, T0* C, T0* a1);
+extern void T68f2295(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_accept_template_1 */
-extern void T68f2292(TC* ac, T0* C, T0* a1);
+extern void T68f2294(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_meta_template */
 extern T0* T68f805(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_ec_template */
 extern T0* T68f804(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_ec_template_6 */
-extern void T68f2291(TC* ac, T0* C, T0* a1);
+extern void T68f2293(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_ec_template_5 */
-extern void T68f2290(TC* ac, T0* C, T0* a1);
+extern void T68f2292(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_ec_template_4 */
-extern void T68f2289(TC* ac, T0* C, T0* a1);
+extern void T68f2291(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_ec_template_3 */
-extern void T68f2288(TC* ac, T0* C, T0* a1);
+extern void T68f2290(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_ec_template_2 */
-extern void T68f2287(TC* ac, T0* C, T0* a1);
+extern void T68f2289(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_ec_template_1 */
-extern void T68f2286(TC* ac, T0* C, T0* a1);
+extern void T68f2288(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_def_template */
 extern T0* T68f803(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_def_template_3 */
-extern void T68f2285(TC* ac, T0* C, T0* a1);
+extern void T68f2287(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_def_template_2 */
-extern void T68f2284(TC* ac, T0* C, T0* a1);
+extern void T68f2286(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_def_template_1 */
-extern void T68f2283(TC* ac, T0* C, T0* a1);
+extern void T68f2285(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_base_template */
 extern T0* T68f802(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_base_template_3 */
-extern void T68f2282(TC* ac, T0* C, T0* a1);
+extern void T68f2284(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_base_template_2 */
-extern void T68f2281(TC* ac, T0* C, T0* a1);
+extern void T68f2283(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_base_template_1 */
-extern void T68f2280(TC* ac, T0* C, T0* a1);
+extern void T68f2282(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template */
 extern T0* T68f801(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_chk_template_17 */
-extern void T68f2279(TC* ac, T0* C, T0* a1);
+extern void T68f2281(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_16 */
-extern void T68f2278(TC* ac, T0* C, T0* a1);
+extern void T68f2280(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_15 */
-extern void T68f2277(TC* ac, T0* C, T0* a1);
+extern void T68f2279(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_14 */
-extern void T68f2276(TC* ac, T0* C, T0* a1);
+extern void T68f2278(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_13 */
-extern void T68f2275(TC* ac, T0* C, T0* a1);
+extern void T68f2277(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_12 */
-extern void T68f2274(TC* ac, T0* C, T0* a1);
+extern void T68f2276(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_11 */
-extern void T68f2273(TC* ac, T0* C, T0* a1);
+extern void T68f2275(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_10 */
-extern void T68f2272(TC* ac, T0* C, T0* a1);
+extern void T68f2274(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_9 */
-extern void T68f2271(TC* ac, T0* C, T0* a1);
+extern void T68f2273(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_8 */
-extern void T68f2270(TC* ac, T0* C, T0* a1);
+extern void T68f2272(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_7 */
-extern void T68f2269(TC* ac, T0* C, T0* a1);
+extern void T68f2271(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_6 */
-extern void T68f2268(TC* ac, T0* C, T0* a1);
+extern void T68f2270(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_5 */
-extern void T68f2267(TC* ac, T0* C, T0* a1);
+extern void T68f2269(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_4 */
-extern void T68f2266(TC* ac, T0* C, T0* a1);
+extern void T68f2268(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_3 */
-extern void T68f2265(TC* ac, T0* C, T0* a1);
+extern void T68f2267(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_2 */
-extern void T68f2264(TC* ac, T0* C, T0* a1);
+extern void T68f2266(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_chk_template_1 */
-extern void T68f2263(TC* ac, T0* C, T0* a1);
+extern void T68f2265(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_nxt_template */
 extern T0* T68f800(TC* ac, T0* C);
 /* ET_EIFFEL_PARSER.yy_nxt_template_14 */
-extern void T68f2262(TC* ac, T0* C, T0* a1);
+extern void T68f2264(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_nxt_template_13 */
-extern void T68f2261(TC* ac, T0* C, T0* a1);
+extern void T68f2263(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_nxt_template_12 */
-extern void T68f2260(TC* ac, T0* C, T0* a1);
+extern void T68f2262(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_nxt_template_11 */
-extern void T68f2259(TC* ac, T0* C, T0* a1);
+extern void T68f2261(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_nxt_template_10 */
-extern void T68f2258(TC* ac, T0* C, T0* a1);
+extern void T68f2260(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_nxt_template_9 */
-extern void T68f2257(TC* ac, T0* C, T0* a1);
+extern void T68f2259(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_nxt_template_8 */
-extern void T68f2256(TC* ac, T0* C, T0* a1);
+extern void T68f2258(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_nxt_template_7 */
-extern void T68f2255(TC* ac, T0* C, T0* a1);
+extern void T68f2257(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_nxt_template_6 */
-extern void T68f2254(TC* ac, T0* C, T0* a1);
+extern void T68f2256(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_nxt_template_5 */
-extern void T68f2253(TC* ac, T0* C, T0* a1);
+extern void T68f2255(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_nxt_template_4 */
-extern void T68f2252(TC* ac, T0* C, T0* a1);
+extern void T68f2254(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_nxt_template_3 */
-extern void T68f2251(TC* ac, T0* C, T0* a1);
+extern void T68f2253(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_nxt_template_2 */
-extern void T68f2250(TC* ac, T0* C, T0* a1);
+extern void T68f2252(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.yy_nxt_template_1 */
-extern void T68f2249(TC* ac, T0* C, T0* a1);
+extern void T68f2251(TC* ac, T0* C, T0* a1);
 /* ET_EIFFEL_PARSER.empty_buffer */
 extern T0* T68f740(TC* ac, T0* C);
 /* DS_ARRAYED_LIST [detachable ET_CONSTRAINT_TYPE].make */

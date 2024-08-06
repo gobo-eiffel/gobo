@@ -28985,18 +28985,18 @@ void T1113f31(TC* ac, T0* C, T0* a1)
 }
 
 /* ET_EIFFEL_PARSER.process_class */
-void T68f2304(TC* ac, T0* C, T0* a1)
+void T68f2306(TC* ac, T0* C, T0* a1)
 {
 	T1 t1;
 	T0* t2;
 	t1 = (T70f82(ac, a1));
 	if (t1) {
-		T68f2305(ac, C, a1);
+		T68f2307(ac, C, a1);
 	} else {
 		t1 = (T70f65(ac, ((T68*)(C))->a22));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
-			T68f2083(ac, C, a1);
+			T68f2085(ac, C, a1);
 			t2 = (T68f754(ac, C));
 			if (((T0*)(t2))->id==42) {
 				T42f202(ac, t2);
@@ -29007,16 +29007,16 @@ void T68f2304(TC* ac, T0* C, T0* a1)
 			t1 = (T70f125(ac, a1));
 			t1 = ((T1)(!(t1)));
 			if (t1) {
-				T68f2083(ac, C, a1);
+				T68f2085(ac, C, a1);
 			} else {
-				T68f2306(ac, C, a1);
+				T68f2308(ac, C, a1);
 			}
 		}
 	}
 }
 
 /* ET_EIFFEL_PARSER.internal_process_class */
-void T68f2306(TC* ac, T0* C, T0* a1)
+void T68f2308(TC* ac, T0* C, T0* a1)
 {
 	T6 l1 = 0;
 	T0* l2 = 0;
@@ -29078,7 +29078,7 @@ void T68f2306(TC* ac, T0* C, T0* a1)
 							t1 = (((((T0*)(((T68*)(C))->a23))->id==66)?((T66*)(((T68*)(C))->a23))->a17:((T853*)(((T68*)(C))->a23))->a12));
 						}
 						if (t1) {
-							T68f2083(ac, C, ((T68*)(C))->a22);
+							T68f2085(ac, C, ((T68*)(C))->a22);
 							t3 = (T68f754(ac, C));
 							if (((T0*)(t3))->id==42) {
 								T42f242(ac, t3, ((T68*)(C))->a22, m1);
@@ -29090,7 +29090,7 @@ void T68f2306(TC* ac, T0* C, T0* a1)
 				} else {
 					T70f284(ac, ((T68*)(C))->a22, m1);
 					T70f266(ac, ((T68*)(C))->a22, l2);
-					T68f2083(ac, C, ((T68*)(C))->a22);
+					T68f2085(ac, C, ((T68*)(C))->a22);
 					t3 = (T68f754(ac, C));
 					if (((T0*)(t3))->id==42) {
 						T42f243(ac, t3, l2, m1);
@@ -29152,7 +29152,7 @@ void T68f2306(TC* ac, T0* C, T0* a1)
 								t1 = (((((T0*)(((T68*)(C))->a23))->id==66)?((T66*)(((T68*)(C))->a23))->a17:((T853*)(((T68*)(C))->a23))->a12));
 							}
 							if (t1) {
-								T68f2083(ac, C, ((T68*)(C))->a22);
+								T68f2085(ac, C, ((T68*)(C))->a22);
 								t3 = (T68f754(ac, C));
 								if (((T0*)(t3))->id==42) {
 									T42f242(ac, t3, ((T68*)(C))->a22, l7);
@@ -29167,7 +29167,7 @@ void T68f2306(TC* ac, T0* C, T0* a1)
 			t1 = (T70f56(ac, ((T68*)(C))->a22));
 			t1 = ((T1)(!(t1)));
 			if (t1) {
-				T68f2083(ac, C, ((T68*)(C))->a22);
+				T68f2085(ac, C, ((T68*)(C))->a22);
 			}
 			if (((T0*)(((T68*)(C))->a23))->id==66) {
 				T66f108(ac, ((T68*)(C))->a23, ((T68*)(C))->a22);
@@ -40954,7 +40954,7 @@ GE_retry:
 			l2 = ((T6)((t2)+(l6)));
 			t3 = (T6f14(ac, (&l2), (T6)(GE_int32(0))));
 			if (t3) {
-				t1 = (T6f15(ac, (&l2), (T6)(GE_int32(8618))));
+				t1 = (T6f15(ac, (&l2), (T6)(GE_int32(8744))));
 			} else {
 				t1 = EIF_FALSE;
 			}
@@ -41026,7 +41026,7 @@ GE_retry:
 				}
 				t3 = ((T1)((l3)<((T6)(GE_int32(0)))));
 				if (!(t3)) {
-					t1 = (T6f4(ac, (&l3), (T6)(GE_int32(8618))));
+					t1 = (T6f4(ac, (&l3), (T6)(GE_int32(8744))));
 				} else {
 					t1 = EIF_TRUE;
 				}
@@ -41052,7 +41052,7 @@ GE_retry:
 						if (t1) {
 							l7 = (T6)(GE_int32(4));
 						} else {
-							t1 = (T1)((l3) == ((T6)(GE_int32(1831))));
+							t1 = (T1)((l3) == ((T6)(GE_int32(1833))));
 							if (t1) {
 								T68f1078(ac, C);
 							} else {
@@ -41092,7 +41092,7 @@ GE_retry:
 				l2 = ((T6)((t2)+(l6)));
 				t3 = (T6f14(ac, (&l2), (T6)(GE_int32(0))));
 				if (t3) {
-					t1 = (T6f15(ac, (&l2), (T6)(GE_int32(8618))));
+					t1 = (T6f15(ac, (&l2), (T6)(GE_int32(8744))));
 				} else {
 					t1 = EIF_FALSE;
 				}
@@ -41153,7 +41153,7 @@ GE_retry:
 				l3 = ((T6)((l3)+((T6)(GE_int32(1)))));
 				t3 = ((T1)((l3)<((T6)(GE_int32(0)))));
 				if (!(t3)) {
-					t1 = (T6f4(ac, (&l3), (T6)(GE_int32(8618))));
+					t1 = (T6f4(ac, (&l3), (T6)(GE_int32(8744))));
 				} else {
 					t1 = EIF_TRUE;
 				}
@@ -41179,7 +41179,7 @@ GE_retry:
 						if (t1) {
 							l7 = (T6)(GE_int32(6));
 						} else {
-							t1 = (T1)((l3) == ((T6)(GE_int32(1831))));
+							t1 = (T1)((l3) == ((T6)(GE_int32(1833))));
 							if (t1) {
 								T68f1078(ac, C);
 							} else {
@@ -42264,18 +42264,24 @@ void T68f1110(TC* ac, T0* C, T6 a1)
 	case GE_int32(954):
 		T68f2081(ac, C);
 		break;
+	case GE_int32(955):
+		T68f2082(ac, C);
+		break;
+	case GE_int32(956):
+		T68f2083(ac, C);
+		break;
 	default:
 		T68f1077(ac, C);
 		break;
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_954 */
-void T68f2081(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_956 */
+void T68f2083(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
-	T68f2090(ac, C);
+	T68f2092(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -42290,7 +42296,7 @@ void T68f2081(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.add_counter */
-void T68f2090(TC* ac, T0* C)
+void T68f2092(TC* ac, T0* C)
 {
 	T245f11(ac, ((T68*)(C))->a3, (T6)(GE_int32(0)));
 }
@@ -42339,8 +42345,8 @@ T1 T245f6(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_953 */
-void T68f2080(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_955 */
+void T68f2082(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -42410,34 +42416,34 @@ void T304f10(TC* ac, T0* C, T0* a1)
 	}
 }
 
+/* ET_EIFFEL_PARSER.yy_do_action_954 */
+void T68f2081(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T302s4(ac, ((T68*)(C))->a117, l1, ((T68*)(C))->a513);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_953 */
+void T68f2080(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T302s4(ac, ((T68*)(C))->a117, l1, ((T68*)(C))->a513);
+	}
+}
+
 /* ET_EIFFEL_PARSER.yy_do_action_952 */
 void T68f2079(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T302s4(ac, ((T68*)(C))->a117, l1, ((T68*)(C))->a513);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_951 */
-void T68f2078(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T302s4(ac, ((T68*)(C))->a117, l1, ((T68*)(C))->a513);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_950 */
-void T68f2077(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -42556,8 +42562,8 @@ T0* T68f762(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_949 */
-void T68f2076(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_951 */
+void T68f2078(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -42592,8 +42598,8 @@ void T680f47(TC* ac, T0* C, T0* a1)
 	((T680*)(C))->a4 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_948 */
-void T68f2075(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_950 */
+void T68f2077(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -42612,6 +42618,32 @@ void T68f2075(TC* ac, T0* C)
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
 		((T68*)(C))->a520 = ((T6)((((T68*)(C))->a520)-((T6)(GE_int32(1)))));
+		T314s4(ac, ((T68*)(C))->a129, l1, ((T68*)(C))->a517);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_949 */
+void T68f2076(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T316*)(((T68*)(C))->a129))->z2[((T68*)(C))->a517]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T314s4(ac, ((T68*)(C))->a129, l1, ((T68*)(C))->a517);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_948 */
+void T68f2075(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T316*)(((T68*)(C))->a129))->z2[((T68*)(C))->a517]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
 		T314s4(ac, ((T68*)(C))->a129, l1, ((T68*)(C))->a517);
 	}
 }
@@ -42644,32 +42676,6 @@ void T68f2073(TC* ac, T0* C)
 
 /* ET_EIFFEL_PARSER.yy_do_action_945 */
 void T68f2072(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T316*)(((T68*)(C))->a129))->z2[((T68*)(C))->a517]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T314s4(ac, ((T68*)(C))->a129, l1, ((T68*)(C))->a517);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_944 */
-void T68f2071(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T316*)(((T68*)(C))->a129))->z2[((T68*)(C))->a517]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T314s4(ac, ((T68*)(C))->a129, l1, ((T68*)(C))->a517);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_943 */
-void T68f2070(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -42786,8 +42792,8 @@ void T675f70(TC* ac, T0* C, T0* a1)
 	((T675*)(C))->a7 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_942 */
-void T68f2069(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_944 */
+void T68f2071(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -42836,8 +42842,8 @@ void T675f69(TC* ac, T0* C, T0* a1)
 	((T675*)(C))->a6 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_941 */
-void T68f2068(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_943 */
+void T68f2070(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -42852,6 +42858,32 @@ void T68f2068(TC* ac, T0* C)
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
 		((T68*)(C))->a520 = ((T6)((((T68*)(C))->a520)-((T6)(GE_int32(1)))));
+		T305s4(ac, ((T68*)(C))->a120, l1, ((T68*)(C))->a514);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_942 */
+void T68f2069(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T307*)(((T68*)(C))->a120))->z2[((T68*)(C))->a514]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T305s4(ac, ((T68*)(C))->a120, l1, ((T68*)(C))->a514);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_941 */
+void T68f2068(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T307*)(((T68*)(C))->a120))->z2[((T68*)(C))->a514]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
 		T305s4(ac, ((T68*)(C))->a120, l1, ((T68*)(C))->a514);
 	}
 }
@@ -42884,32 +42916,6 @@ void T68f2066(TC* ac, T0* C)
 
 /* ET_EIFFEL_PARSER.yy_do_action_938 */
 void T68f2065(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T307*)(((T68*)(C))->a120))->z2[((T68*)(C))->a514]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T305s4(ac, ((T68*)(C))->a120, l1, ((T68*)(C))->a514);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_937 */
-void T68f2064(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T307*)(((T68*)(C))->a120))->z2[((T68*)(C))->a514]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T305s4(ac, ((T68*)(C))->a120, l1, ((T68*)(C))->a514);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_936 */
-void T68f2063(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -42979,8 +42985,8 @@ void T289f10(TC* ac, T0* C, T0* a1)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_935 */
-void T68f2062(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_937 */
+void T68f2064(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -42992,8 +42998,8 @@ void T68f2062(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_934 */
-void T68f2061(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_936 */
+void T68f2063(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -43098,8 +43104,8 @@ void T685f49(TC* ac, T0* C, T0* a1)
 	((T685*)(C))->a3 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_933 */
-void T68f2060(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_935 */
+void T68f2062(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -43171,6 +43177,32 @@ T0* T295f4(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
+/* ET_EIFFEL_PARSER.yy_do_action_934 */
+void T68f2061(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T295*)(((T68*)(C))->a108))->z2[((T68*)(C))->a510]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T293s4(ac, ((T68*)(C))->a108, l1, ((T68*)(C))->a510);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_933 */
+void T68f2060(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T295*)(((T68*)(C))->a108))->z2[((T68*)(C))->a510]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T293s4(ac, ((T68*)(C))->a108, l1, ((T68*)(C))->a510);
+	}
+}
+
 /* ET_EIFFEL_PARSER.yy_do_action_932 */
 void T68f2059(TC* ac, T0* C)
 {
@@ -43186,32 +43218,6 @@ void T68f2059(TC* ac, T0* C)
 
 /* ET_EIFFEL_PARSER.yy_do_action_931 */
 void T68f2058(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T295*)(((T68*)(C))->a108))->z2[((T68*)(C))->a510]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T293s4(ac, ((T68*)(C))->a108, l1, ((T68*)(C))->a510);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_930 */
-void T68f2057(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T295*)(((T68*)(C))->a108))->z2[((T68*)(C))->a510]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T293s4(ac, ((T68*)(C))->a108, l1, ((T68*)(C))->a510);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_929 */
-void T68f2056(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -43316,8 +43322,8 @@ void T672f51(TC* ac, T0* C, T0* a1)
 	((T672*)(C))->a4 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_928 */
-void T68f2055(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_930 */
+void T68f2057(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -43387,6 +43393,32 @@ T0* T313f4(TC* ac, T0* C, T6 a1)
 	((T313*)(R))->a2 = a1;
 	}
 	return R;
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_929 */
+void T68f2056(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T313*)(((T68*)(C))->a126))->z2[((T68*)(C))->a516]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T311s4(ac, ((T68*)(C))->a126, l1, ((T68*)(C))->a516);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_928 */
+void T68f2055(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T313*)(((T68*)(C))->a126))->z2[((T68*)(C))->a516]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T311s4(ac, ((T68*)(C))->a126, l1, ((T68*)(C))->a516);
+	}
 }
 
 /* ET_EIFFEL_PARSER.yy_do_action_927 */
@@ -43783,32 +43815,6 @@ void T68f2025(TC* ac, T0* C)
 void T68f2024(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T313*)(((T68*)(C))->a126))->z2[((T68*)(C))->a516]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T311s4(ac, ((T68*)(C))->a126, l1, ((T68*)(C))->a516);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_896 */
-void T68f2023(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T313*)(((T68*)(C))->a126))->z2[((T68*)(C))->a516]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T311s4(ac, ((T68*)(C))->a126, l1, ((T68*)(C))->a516);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_895 */
-void T68f2022(TC* ac, T0* C)
-{
-	T0* l1 = 0;
 	T0* t1;
 	T6 t2;
 	T0* t3;
@@ -44056,8 +44062,8 @@ T0* T766s8(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_894 */
-void T68f2021(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_896 */
+void T68f2023(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -44076,8 +44082,8 @@ void T68f2021(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_893 */
-void T68f2020(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_895 */
+void T68f2022(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -44096,8 +44102,8 @@ void T68f2020(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_892 */
-void T68f2019(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_894 */
+void T68f2021(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -44110,7 +44116,7 @@ void T68f2019(TC* ac, T0* C)
 	l1 = (T65f332(ac, t1, t2, t3));
 	t4 = (T1)(l1!=EIF_VOID);
 	if (t4) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
@@ -44239,7 +44245,7 @@ T0* T356f4(TC* ac, T0* C, T6 a1)
 }
 
 /* ET_EIFFEL_PARSER.increment_counter */
-void T68f2091(TC* ac, T0* C)
+void T68f2093(TC* ac, T0* C)
 {
 	T6 l1 = 0;
 	T6 t1;
@@ -44274,8 +44280,8 @@ T0* T65f332(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_891 */
-void T68f2018(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_893 */
+void T68f2020(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -44461,8 +44467,8 @@ T0* T1577c2(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_890 */
-void T68f2017(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_892 */
+void T68f2019(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -44745,8 +44751,8 @@ T0* T249f5(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_889 */
-void T68f2016(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_891 */
+void T68f2018(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -44790,15 +44796,15 @@ void T68f2016(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_888 */
-void T68f2015(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_890 */
+void T68f2017(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	T68f2094(ac, C, t1);
-	T68f2090(ac, C);
+	T68f2096(ac, C, t1);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -44813,7 +44819,7 @@ void T68f2015(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.add_symbol */
-void T68f2094(TC* ac, T0* C, T0* a1)
+void T68f2096(TC* ac, T0* C, T0* a1)
 {
 	T249f11(ac, ((T68*)(C))->a7, a1);
 }
@@ -44973,14 +44979,14 @@ T1 T249f6(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_887 */
-void T68f2014(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_889 */
+void T68f2016(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T359*)(((T68*)(C))->a174))->z2[((T68*)(C))->a532]);
-	T68f2093(ac, C);
-	T68f2088(ac, C);
+	T68f2095(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -44991,7 +44997,7 @@ void T68f2014(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.remove_counter */
-void T68f2088(TC* ac, T0* C)
+void T68f2090(TC* ac, T0* C)
 {
 	T245f10(ac, ((T68*)(C))->a3);
 }
@@ -45023,7 +45029,7 @@ void T154f15(TC* ac, T0* C, T6 a1)
 }
 
 /* ET_EIFFEL_PARSER.remove_symbol */
-void T68f2093(TC* ac, T0* C)
+void T68f2095(TC* ac, T0* C)
 {
 	T249f10(ac, ((T68*)(C))->a7);
 }
@@ -45054,8 +45060,8 @@ void T283f9(TC* ac, T0* C, T6 a1)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_886 */
-void T68f2013(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_888 */
+void T68f2015(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -45082,8 +45088,8 @@ void T68f2013(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_885 */
-void T68f2012(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_887 */
+void T68f2014(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -45100,8 +45106,8 @@ void T68f2012(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_884 */
-void T68f2011(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_886 */
+void T68f2013(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -45298,8 +45304,8 @@ T0* T765s6(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_883 */
-void T68f2010(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_885 */
+void T68f2012(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -45318,8 +45324,8 @@ void T68f2010(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_882 */
-void T68f2009(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_884 */
+void T68f2011(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -45338,8 +45344,8 @@ void T68f2009(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_881 */
-void T68f2008(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_883 */
+void T68f2010(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -45358,8 +45364,8 @@ void T68f2008(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_880 */
-void T68f2007(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_882 */
+void T68f2009(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -45787,12 +45793,12 @@ void T491f11(TC* ac, T0* C, T1 a1)
 	((T491*)(C))->a5 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_879 */
-void T68f2006(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_881 */
+void T68f2008(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
-	T68f2102(ac, C, EIF_VOID);
+	T68f2104(ac, C, EIF_VOID);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -45807,7 +45813,7 @@ void T68f2006(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.set_start_closure */
-void T68f2102(TC* ac, T0* C, T0* a1)
+void T68f2104(TC* ac, T0* C, T0* a1)
 {
 	T246f11(ac, ((T68*)(C))->a4, ((T68*)(C))->a671);
 	((T68*)(C))->a671 = a1;
@@ -46596,13 +46602,13 @@ T1 T246f7(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_878 */
-void T68f2005(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_880 */
+void T68f2007(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T498*)(((T68*)(C))->a321))->z2[((T68*)(C))->a581]);
-	T68f2102(ac, C, l1);
+	T68f2104(ac, C, l1);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
@@ -46610,8 +46616,8 @@ void T68f2005(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_877 */
-void T68f2004(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_879 */
+void T68f2006(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -46637,7 +46643,7 @@ void T68f2004(TC* ac, T0* C)
 	t8 = (((T602*)(((T68*)(C))->a429))->z2[((T68*)(C))->a617]);
 	t9 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 	l1 = (T65f329(ac, t1, t2, t3, t4, t5, t7, t8, t9, EIF_VOID));
-	T68f2113(ac, C, l1);
+	T68f2115(ac, C, l1);
 	t10 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t10) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(8)))));
@@ -46770,7 +46776,7 @@ T0* T516f4(TC* ac, T0* C, T6 a1)
 }
 
 /* ET_EIFFEL_PARSER.register_inline_agent */
-void T68f2113(TC* ac, T0* C, T0* a1)
+void T68f2115(TC* ac, T0* C, T0* a1)
 {
 	T0* m1 = 0;
 	T0* m2 = 0;
@@ -46794,12 +46800,12 @@ void T68f2113(TC* ac, T0* C, T0* a1)
 			t2 = (T670f3(ac, m3));
 			T515x17989647T0(ac, a1, t2);
 		}
-		T68f2117(ac, C);
+		T68f2119(ac, C);
 	}
 }
 
 /* ET_EIFFEL_PARSER.set_end_closure */
-void T68f2117(TC* ac, T0* C)
+void T68f2119(TC* ac, T0* C)
 {
 	T0* m1 = 0;
 	T0* m2 = 0;
@@ -48480,8 +48486,8 @@ T0* T65f190(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_876 */
-void T68f2003(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_878 */
+void T68f2005(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -48505,7 +48511,7 @@ void T68f2003(TC* ac, T0* C)
 	t7 = (((T602*)(((T68*)(C))->a429))->z2[((T68*)(C))->a617]);
 	t8 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 	l1 = (T65f329(ac, t1, t2, EIF_VOID, t3, t4, t6, t7, t8, EIF_VOID));
-	T68f2113(ac, C, l1);
+	T68f2115(ac, C, l1);
 	t9 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t9) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(8)))));
@@ -48526,8 +48532,8 @@ void T68f2003(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_875 */
-void T68f2002(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_877 */
+void T68f2004(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -48789,8 +48795,8 @@ T0* T65s371(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_874 */
-void T68f2001(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_876 */
+void T68f2003(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -48819,7 +48825,7 @@ void T68f2001(TC* ac, T0* C)
 	t9 = (((T404*)(((T68*)(C))->a222))->z2[((T68*)(C))->a548]);
 	t10 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 	l1 = (T65f328(ac, t1, t2, EIF_VOID, t3, t4, t5, t6, t8, t9, t10, EIF_VOID));
-	T68f2113(ac, C, l1);
+	T68f2115(ac, C, l1);
 	t11 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t11) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(10)))));
@@ -48841,8 +48847,8 @@ void T68f2001(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_873 */
-void T68f2000(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_875 */
+void T68f2002(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -48867,7 +48873,7 @@ void T68f2000(TC* ac, T0* C)
 	t9 = (((T404*)(((T68*)(C))->a222))->z2[((T68*)(C))->a548]);
 	t10 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 	l1 = (T65f327(ac, t1, t2, t3, t4, t5, t7, t8, t9, t10, EIF_VOID));
-	T68f2113(ac, C, l1);
+	T68f2115(ac, C, l1);
 	t11 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t11) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(8)))));
@@ -48995,8 +49001,8 @@ T0* T762s36(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_872 */
-void T68f1999(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_874 */
+void T68f2001(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -49019,7 +49025,7 @@ void T68f1999(TC* ac, T0* C)
 	t8 = (((T404*)(((T68*)(C))->a222))->z2[((T68*)(C))->a548]);
 	t9 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 	l1 = (T65f327(ac, t1, t2, EIF_VOID, t3, t4, t6, t7, t8, t9, EIF_VOID));
-	T68f2113(ac, C, l1);
+	T68f2115(ac, C, l1);
 	t10 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t10) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(8)))));
@@ -49040,8 +49046,8 @@ void T68f1999(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_871 */
-void T68f1998(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_873 */
+void T68f2000(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -49072,7 +49078,7 @@ void T68f1998(TC* ac, T0* C)
 	t9 = (((T602*)(((T68*)(C))->a429))->z2[((T68*)(C))->a617]);
 	t10 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 	l1 = (T65f326(ac, t1, t2, t3, t4, t5, t6, t8, t9, t10, EIF_VOID));
-	T68f2113(ac, C, l1);
+	T68f2115(ac, C, l1);
 	t11 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t11) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(10)))));
@@ -49299,8 +49305,8 @@ T0* T65f181(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_870 */
-void T68f1997(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_872 */
+void T68f1999(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -49329,7 +49335,7 @@ void T68f1997(TC* ac, T0* C)
 	t8 = (((T602*)(((T68*)(C))->a429))->z2[((T68*)(C))->a617]);
 	t9 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 	l1 = (T65f326(ac, t1, t2, EIF_VOID, t3, t4, t5, t7, t8, t9, EIF_VOID));
-	T68f2113(ac, C, l1);
+	T68f2115(ac, C, l1);
 	t10 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t10) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(10)))));
@@ -49352,8 +49358,8 @@ void T68f1997(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_869 */
-void T68f1996(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_871 */
+void T68f1998(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -49389,7 +49395,7 @@ void T68f1996(TC* ac, T0* C)
 	t11 = (((T404*)(((T68*)(C))->a222))->z2[((T68*)(C))->a548]);
 	t12 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 	l1 = (T65f325(ac, t1, t2, t3, t4, t5, t6, t7, t8, t10, t11, t12, EIF_VOID));
-	T68f2113(ac, C, l1);
+	T68f2115(ac, C, l1);
 	t13 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t13) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(12)))));
@@ -49539,8 +49545,8 @@ T0* T760s42(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_868 */
-void T68f1995(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_870 */
+void T68f1997(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -49574,7 +49580,7 @@ void T68f1995(TC* ac, T0* C)
 	t10 = (((T404*)(((T68*)(C))->a222))->z2[((T68*)(C))->a548]);
 	t11 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 	l1 = (T65f325(ac, t1, t2, EIF_VOID, t3, t4, t5, t6, t7, t9, t10, t11, EIF_VOID));
-	T68f2113(ac, C, l1);
+	T68f2115(ac, C, l1);
 	t12 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t12) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(12)))));
@@ -49598,8 +49604,8 @@ void T68f1995(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_867 */
-void T68f1994(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_869 */
+void T68f1996(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -49629,7 +49635,7 @@ void T68f1994(TC* ac, T0* C)
 	t10 = (((T404*)(((T68*)(C))->a222))->z2[((T68*)(C))->a548]);
 	t11 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 	l1 = (T65f324(ac, t1, t2, t3, t4, t5, t6, t8, t9, t10, t11, EIF_VOID));
-	T68f2113(ac, C, l1);
+	T68f2115(ac, C, l1);
 	t12 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t12) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(10)))));
@@ -49771,8 +49777,8 @@ T0* T759s19(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_866 */
-void T68f1993(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_868 */
+void T68f1995(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -49800,7 +49806,7 @@ void T68f1993(TC* ac, T0* C)
 	t9 = (((T404*)(((T68*)(C))->a222))->z2[((T68*)(C))->a548]);
 	t10 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 	l1 = (T65f324(ac, t1, t2, EIF_VOID, t3, t4, t5, t7, t8, t9, t10, EIF_VOID));
-	T68f2113(ac, C, l1);
+	T68f2115(ac, C, l1);
 	t11 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t11) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(10)))));
@@ -49823,8 +49829,8 @@ void T68f1993(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_865 */
-void T68f1992(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_867 */
+void T68f1994(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -49832,7 +49838,7 @@ void T68f1992(TC* ac, T0* C)
 	T1 t3;
 	t1 = (((T516*)(((T68*)(C))->a339))->z2[((T68*)(C))->a587]);
 	t2 = (((T359*)(((T68*)(C))->a174))->z2[((T68*)(C))->a532]);
-	T68f2112(ac, C, t1, t2);
+	T68f2114(ac, C, t1, t2);
 	l1 = (((T516*)(((T68*)(C))->a339))->z2[((T68*)(C))->a587]);
 	t3 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t3) {
@@ -49843,7 +49849,7 @@ void T68f1992(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.set_inline_agent_actual_arguments */
-void T68f2112(TC* ac, T0* C, T0* a1, T0* a2)
+void T68f2114(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T1 t1;
 	t1 = (T1)(a1!=EIF_VOID);
@@ -49891,8 +49897,8 @@ void T759f49(TC* ac, T0* C, T0* a1)
 	((T759*)(C))->a9 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_864 */
-void T68f1991(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_866 */
+void T68f1993(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -50133,8 +50139,8 @@ T0* T65f323(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_863 */
-void T68f1990(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_865 */
+void T68f1992(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -50163,8 +50169,8 @@ void T68f1990(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_862 */
-void T68f1989(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_864 */
+void T68f1991(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -55536,8 +55542,8 @@ T0* T67f4(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_861 */
-void T68f1988(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_863 */
+void T68f1990(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -56278,8 +56284,8 @@ T0* T68s709(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_860 */
-void T68f1987(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_862 */
+void T68f1989(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -56389,8 +56395,8 @@ T0* T613c39(TC* ac, T0* a1, T0* a2, T0* a3)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_859 */
-void T68f1986(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_861 */
+void T68f1988(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -56432,8 +56438,8 @@ void T613f40(TC* ac, T0* C, T0* a1)
 	((T613*)(C))->a8 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_858 */
-void T68f1985(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_860 */
+void T68f1987(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -56886,8 +56892,8 @@ T0* T339s19(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_857 */
-void T68f1984(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_859 */
+void T68f1986(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -56918,8 +56924,8 @@ void T68f1984(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_856 */
-void T68f1983(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_858 */
+void T68f1985(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -57070,8 +57076,8 @@ T1 T191f22(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_855 */
-void T68f1982(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_857 */
+void T68f1984(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -57138,8 +57144,8 @@ void T339f43(TC* ac, T0* C, T1 a1)
 	((T339*)(C))->a10 = ((T1)(!(a1)));
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_854 */
-void T68f1981(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_856 */
+void T68f1983(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -57269,8 +57275,8 @@ T0* T410f4(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_853 */
-void T68f1980(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_855 */
+void T68f1982(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -57289,8 +57295,8 @@ void T68f1980(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_852 */
-void T68f1979(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_854 */
+void T68f1981(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -57309,8 +57315,8 @@ void T68f1979(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_851 */
-void T68f1978(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_853 */
+void T68f1980(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -57329,8 +57335,8 @@ void T68f1978(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_850 */
-void T68f1977(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_852 */
+void T68f1979(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -57349,8 +57355,8 @@ void T68f1977(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_849 */
-void T68f1976(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_851 */
+void T68f1978(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -57536,8 +57542,8 @@ T0* T1456c2(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_848 */
-void T68f1975(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_850 */
+void T68f1977(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -57790,8 +57796,8 @@ T0* T248f5(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_847 */
-void T68f1974(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_849 */
+void T68f1976(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -57838,17 +57844,17 @@ void T68f1974(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_846 */
-void T68f1973(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_848 */
+void T68f1975(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	T68f2089(ac, C, t1);
+	T68f2091(ac, C, t1);
 	t1 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	T68f2094(ac, C, t1);
-	T68f2090(ac, C);
+	T68f2096(ac, C, t1);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -57863,7 +57869,7 @@ void T68f1973(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.add_keyword */
-void T68f2089(TC* ac, T0* C, T0* a1)
+void T68f2091(TC* ac, T0* C, T0* a1)
 {
 	T248f11(ac, ((T68*)(C))->a6, a1);
 }
@@ -58023,15 +58029,15 @@ T1 T248f6(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_845 */
-void T68f1972(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_847 */
+void T68f1974(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T631*)(((T68*)(C))->a459))->z2[((T68*)(C))->a627]);
-	T68f2087(ac, C);
-	T68f2093(ac, C);
-	T68f2088(ac, C);
+	T68f2089(ac, C);
+	T68f2095(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
@@ -58043,7 +58049,7 @@ void T68f1972(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.remove_keyword */
-void T68f2087(TC* ac, T0* C)
+void T68f2089(TC* ac, T0* C)
 {
 	T248f10(ac, ((T68*)(C))->a6);
 }
@@ -58074,8 +58080,8 @@ void T274f9(TC* ac, T0* C, T6 a1)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_844 */
-void T68f1971(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_846 */
+void T68f1973(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -58105,8 +58111,8 @@ void T68f1971(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_843 */
-void T68f1970(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_845 */
+void T68f1972(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -58292,8 +58298,8 @@ T0* T1173c3(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_842 */
-void T68f1969(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_844 */
+void T68f1971(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -58480,8 +58486,8 @@ T0* T568s8(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_841 */
-void T68f1968(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_843 */
+void T68f1970(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -58525,15 +58531,15 @@ void T68f1968(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_840 */
-void T68f1967(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_842 */
+void T68f1969(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T334*)(((T68*)(C))->a147))->z2[((T68*)(C))->a523]);
-	T68f2094(ac, C, t1);
-	T68f2090(ac, C);
+	T68f2096(ac, C, t1);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -58547,14 +58553,14 @@ void T68f1967(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_839 */
-void T68f1966(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_841 */
+void T68f1968(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T569*)(((T68*)(C))->a393))->z2[((T68*)(C))->a605]);
-	T68f2093(ac, C);
-	T68f2088(ac, C);
+	T68f2095(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -58564,8 +58570,8 @@ void T68f1966(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_838 */
-void T68f1965(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_840 */
+void T68f1967(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -58591,8 +58597,8 @@ void T68f1965(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_837 */
-void T68f1964(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_839 */
+void T68f1966(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -58712,8 +58718,8 @@ T0* T559f9(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_836 */
-void T68f1963(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_838 */
+void T68f1965(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -58966,8 +58972,8 @@ T0* T559s8(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_835 */
-void T68f1962(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_837 */
+void T68f1964(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -59011,8 +59017,8 @@ void T68f1962(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_834 */
-void T68f1961(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_836 */
+void T68f1963(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -59047,15 +59053,15 @@ void T559f32(TC* ac, T0* C, T0* a1)
 	((T559*)(C))->a6 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_833 */
-void T68f1960(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_835 */
+void T68f1962(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	T68f2094(ac, C, t1);
-	T68f2090(ac, C);
+	T68f2096(ac, C, t1);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -59069,14 +59075,14 @@ void T68f1960(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_832 */
-void T68f1959(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_834 */
+void T68f1961(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T560*)(((T68*)(C))->a384))->z2[((T68*)(C))->a602]);
-	T68f2093(ac, C);
-	T68f2088(ac, C);
+	T68f2095(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -59086,8 +59092,8 @@ void T68f1959(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_831 */
-void T68f1958(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_833 */
+void T68f1960(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -59114,8 +59120,8 @@ void T68f1958(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_830 */
-void T68f1957(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_832 */
+void T68f1959(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -59124,8 +59130,8 @@ void T68f1957(TC* ac, T0* C)
 	T0* t4;
 	T0* t5;
 	T1 t6;
-	T68f2093(ac, C);
-	T68f2088(ac, C);
+	T68f2095(ac, C);
+	T68f2090(ac, C);
 	t1 = (T68f762(ac, C));
 	t2 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
 	t3 = (((T283*)(((T68*)(C))->a96))->z2[t2]);
@@ -59331,8 +59337,8 @@ T0* T589s6(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_829 */
-void T68f1956(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_831 */
+void T68f1958(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -59452,8 +59458,8 @@ T0* T345f9(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_828 */
-void T68f1955(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_830 */
+void T68f1957(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -59633,8 +59639,8 @@ void T345f19p1(TC* ac, T0* C, T6 a1)
 	((T345*)(C))->a2 = (T1173s1(ac, a1));
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_827 */
-void T68f1954(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_829 */
+void T68f1956(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -59678,15 +59684,15 @@ void T68f1954(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_826 */
-void T68f1953(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_828 */
+void T68f1955(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T334*)(((T68*)(C))->a147))->z2[((T68*)(C))->a523]);
-	T68f2094(ac, C, t1);
-	T68f2090(ac, C);
+	T68f2096(ac, C, t1);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -59811,8 +59817,8 @@ T0* T374f4(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_825 */
-void T68f1952(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_827 */
+void T68f1954(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -59827,8 +59833,8 @@ void T68f1952(TC* ac, T0* C)
 	t4 = (((T334*)(((T68*)(C))->a147))->z2[((T68*)(C))->a523]);
 	t5 = (((T346*)(((T68*)(C))->a159))->z2[((T68*)(C))->a527]);
 	l1 = (T65f315(ac, t1, t3, t4, t5));
-	T68f2093(ac, C);
-	T68f2088(ac, C);
+	T68f2095(ac, C);
+	T68f2090(ac, C);
 	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t6) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
@@ -59865,6 +59871,54 @@ T0* T373c28(TC* ac, T0* a1, T0* a2, T0* a3)
 	return C;
 }
 
+/* ET_EIFFEL_PARSER.yy_do_action_826 */
+void T68f1953(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T1 t2;
+	t1 = (((T334*)(((T68*)(C))->a147))->z2[((T68*)(C))->a523]);
+	T68f2096(ac, C, t1);
+	T68f2092(ac, C);
+	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t2) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
+		((T68*)(C))->a537 = ((T6)((((T68*)(C))->a537)+((T6)(GE_int32(1)))));
+		t2 = (T6f14(ac, &(((T68*)(C))->a537), ((T68*)(C))->a188));
+		if (t2) {
+			((T68*)(C))->a188 = ((T6)((((T68*)(C))->a188)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a189 = (T372s2(ac, ((T68*)(C))->a189, ((T68*)(C))->a188));
+		}
+		T372s4(ac, ((T68*)(C))->a189, l1, ((T68*)(C))->a537);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_825 */
+void T68f1952(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T0* t3;
+	T0* t4;
+	T1 t5;
+	t1 = (T68f762(ac, C));
+	t2 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
+	t3 = (((T334*)(((T68*)(C))->a147))->z2[((T68*)(C))->a523]);
+	t4 = (((T346*)(((T68*)(C))->a159))->z2[((T68*)(C))->a527]);
+	l1 = (T65f315(ac, t1, t2, t3, t4));
+	T68f2095(ac, C);
+	T68f2090(ac, C);
+	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t5) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
+		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a523 = ((T6)((((T68*)(C))->a523)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a527 = ((T6)((((T68*)(C))->a527)-((T6)(GE_int32(1)))));
+		T372s4(ac, ((T68*)(C))->a189, l1, ((T68*)(C))->a537);
+	}
+}
+
 /* ET_EIFFEL_PARSER.yy_do_action_824 */
 void T68f1951(TC* ac, T0* C)
 {
@@ -59872,8 +59926,8 @@ void T68f1951(TC* ac, T0* C)
 	T0* t1;
 	T1 t2;
 	t1 = (((T334*)(((T68*)(C))->a147))->z2[((T68*)(C))->a523]);
-	T68f2094(ac, C, t1);
-	T68f2090(ac, C);
+	T68f2096(ac, C, t1);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -59892,21 +59946,23 @@ void T68f1950(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
-	T0* t2;
+	T6 t2;
 	T0* t3;
 	T0* t4;
-	T1 t5;
+	T0* t5;
+	T1 t6;
 	t1 = (T68f762(ac, C));
-	t2 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
-	t3 = (((T334*)(((T68*)(C))->a147))->z2[((T68*)(C))->a523]);
-	t4 = (((T346*)(((T68*)(C))->a159))->z2[((T68*)(C))->a527]);
-	l1 = (T65f315(ac, t1, t2, t3, t4));
-	T68f2093(ac, C);
-	T68f2088(ac, C);
-	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t5) {
+	t2 = ((T6)((((T68*)(C))->a537)-((T6)(GE_int32(1)))));
+	t3 = (((T374*)(((T68*)(C))->a189))->z2[t2]);
+	t4 = (((T334*)(((T68*)(C))->a147))->z2[((T68*)(C))->a523]);
+	t5 = (((T346*)(((T68*)(C))->a159))->z2[((T68*)(C))->a527]);
+	l1 = (T65f315(ac, t1, t3, t4, t5));
+	T68f2095(ac, C);
+	T68f2090(ac, C);
+	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t6) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
-		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a537 = ((T6)((((T68*)(C))->a537)-((T6)(GE_int32(1)))));
 		((T68*)(C))->a523 = ((T6)((((T68*)(C))->a523)-((T6)(GE_int32(1)))));
 		((T68*)(C))->a527 = ((T6)((((T68*)(C))->a527)-((T6)(GE_int32(1)))));
 		T372s4(ac, ((T68*)(C))->a189, l1, ((T68*)(C))->a537);
@@ -59920,8 +59976,8 @@ void T68f1949(TC* ac, T0* C)
 	T0* t1;
 	T1 t2;
 	t1 = (((T334*)(((T68*)(C))->a147))->z2[((T68*)(C))->a523]);
-	T68f2094(ac, C, t1);
-	T68f2090(ac, C);
+	T68f2096(ac, C, t1);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -59940,56 +59996,6 @@ void T68f1948(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
-	T6 t2;
-	T0* t3;
-	T0* t4;
-	T0* t5;
-	T1 t6;
-	t1 = (T68f762(ac, C));
-	t2 = ((T6)((((T68*)(C))->a537)-((T6)(GE_int32(1)))));
-	t3 = (((T374*)(((T68*)(C))->a189))->z2[t2]);
-	t4 = (((T334*)(((T68*)(C))->a147))->z2[((T68*)(C))->a523]);
-	t5 = (((T346*)(((T68*)(C))->a159))->z2[((T68*)(C))->a527]);
-	l1 = (T65f315(ac, t1, t3, t4, t5));
-	T68f2093(ac, C);
-	T68f2088(ac, C);
-	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t6) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
-		((T68*)(C))->a537 = ((T6)((((T68*)(C))->a537)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a523 = ((T6)((((T68*)(C))->a523)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a527 = ((T6)((((T68*)(C))->a527)-((T6)(GE_int32(1)))));
-		T372s4(ac, ((T68*)(C))->a189, l1, ((T68*)(C))->a537);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_820 */
-void T68f1947(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T1 t2;
-	t1 = (((T334*)(((T68*)(C))->a147))->z2[((T68*)(C))->a523]);
-	T68f2094(ac, C, t1);
-	T68f2090(ac, C);
-	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t2) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
-		((T68*)(C))->a537 = ((T6)((((T68*)(C))->a537)+((T6)(GE_int32(1)))));
-		t2 = (T6f14(ac, &(((T68*)(C))->a537), ((T68*)(C))->a188));
-		if (t2) {
-			((T68*)(C))->a188 = ((T6)((((T68*)(C))->a188)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a189 = (T372s2(ac, ((T68*)(C))->a189, ((T68*)(C))->a188));
-		}
-		T372s4(ac, ((T68*)(C))->a189, l1, ((T68*)(C))->a537);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_819 */
-void T68f1946(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
 	T0* t2;
 	T0* t3;
 	T0* t4;
@@ -59999,8 +60005,8 @@ void T68f1946(TC* ac, T0* C)
 	t3 = (((T334*)(((T68*)(C))->a147))->z2[((T68*)(C))->a523]);
 	t4 = (((T346*)(((T68*)(C))->a159))->z2[((T68*)(C))->a527]);
 	l1 = (T65f315(ac, t1, t2, t3, t4));
-	T68f2093(ac, C);
-	T68f2088(ac, C);
+	T68f2095(ac, C);
+	T68f2090(ac, C);
 	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t5) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
@@ -60011,34 +60017,34 @@ void T68f1946(TC* ac, T0* C)
 	}
 }
 
+/* ET_EIFFEL_PARSER.yy_do_action_820 */
+void T68f1947(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T374*)(((T68*)(C))->a189))->z2[((T68*)(C))->a537]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T372s4(ac, ((T68*)(C))->a189, l1, ((T68*)(C))->a537);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_819 */
+void T68f1946(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T374*)(((T68*)(C))->a189))->z2[((T68*)(C))->a537]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T372s4(ac, ((T68*)(C))->a189, l1, ((T68*)(C))->a537);
+	}
+}
+
 /* ET_EIFFEL_PARSER.yy_do_action_818 */
 void T68f1945(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T374*)(((T68*)(C))->a189))->z2[((T68*)(C))->a537]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T372s4(ac, ((T68*)(C))->a189, l1, ((T68*)(C))->a537);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_817 */
-void T68f1944(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T374*)(((T68*)(C))->a189))->z2[((T68*)(C))->a537]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T372s4(ac, ((T68*)(C))->a189, l1, ((T68*)(C))->a537);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_816 */
-void T68f1943(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -60057,8 +60063,8 @@ void T68f1943(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_815 */
-void T68f1942(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_817 */
+void T68f1944(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -60066,7 +60072,7 @@ void T68f1942(TC* ac, T0* C)
 	t1 = (T68s1008(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		l1 = (((T560*)(((T68*)(C))->a384))->z2[((T68*)(C))->a602]);
 	}
@@ -60085,7 +60091,7 @@ void T68f1942(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.raise_error */
-void T68f2084(TC* ac, T0* C)
+void T68f2086(TC* ac, T0* C)
 {
 	((T68*)(C))->a1 = (T6)(GE_int32(103));
 }
@@ -60319,8 +60325,8 @@ T0* T56c19(TC* ac, T6 a1, T6 a2, T6 a3, T6 a4)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_814 */
-void T68f1941(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_816 */
+void T68f1943(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -60339,34 +60345,34 @@ void T68f1941(TC* ac, T0* C)
 	}
 }
 
+/* ET_EIFFEL_PARSER.yy_do_action_815 */
+void T68f1942(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_814 */
+void T68f1941(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
+	}
+}
+
 /* ET_EIFFEL_PARSER.yy_do_action_813 */
 void T68f1940(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_812 */
-void T68f1939(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_811 */
-void T68f1938(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -60385,8 +60391,8 @@ void T68f1938(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_810 */
-void T68f1937(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_812 */
+void T68f1939(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -60405,8 +60411,8 @@ void T68f1937(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_809 */
-void T68f1936(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_811 */
+void T68f1938(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -60532,8 +60538,8 @@ T0* T756s5(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_808 */
-void T68f1935(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_810 */
+void T68f1937(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -60552,8 +60558,8 @@ void T68f1935(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_807 */
-void T68f1934(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_809 */
+void T68f1936(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -60572,8 +60578,8 @@ void T68f1934(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_806 */
-void T68f1933(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_808 */
+void T68f1935(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -60585,8 +60591,8 @@ void T68f1933(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_805 */
-void T68f1932(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_807 */
+void T68f1934(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -60605,8 +60611,8 @@ void T68f1932(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_804 */
-void T68f1931(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_806 */
+void T68f1933(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -60625,8 +60631,8 @@ void T68f1931(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_803 */
-void T68f1930(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_805 */
+void T68f1932(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -60645,8 +60651,8 @@ void T68f1930(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_802 */
-void T68f1929(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_804 */
+void T68f1931(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -60665,8 +60671,8 @@ void T68f1929(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_801 */
-void T68f1928(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_803 */
+void T68f1930(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -60676,6 +60682,46 @@ void T68f1928(TC* ac, T0* C)
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
 		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)+((T6)(GE_int32(1)))));
 		((T68*)(C))->a612 = ((T6)((((T68*)(C))->a612)-((T6)(GE_int32(1)))));
+		t1 = (T6f14(ac, &(((T68*)(C))->a570), ((T68*)(C))->a287));
+		if (t1) {
+			((T68*)(C))->a287 = ((T6)((((T68*)(C))->a287)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a288 = (T465s2(ac, ((T68*)(C))->a288, ((T68*)(C))->a287));
+		}
+		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_802 */
+void T68f1929(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T298*)(((T68*)(C))->a111))->z2[((T68*)(C))->a511]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a511 = ((T6)((((T68*)(C))->a511)-((T6)(GE_int32(1)))));
+		t1 = (T6f14(ac, &(((T68*)(C))->a570), ((T68*)(C))->a287));
+		if (t1) {
+			((T68*)(C))->a287 = ((T6)((((T68*)(C))->a287)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a288 = (T465s2(ac, ((T68*)(C))->a288, ((T68*)(C))->a287));
+		}
+		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_801 */
+void T68f1928(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T319*)(((T68*)(C))->a132))->z2[((T68*)(C))->a518]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a518 = ((T6)((((T68*)(C))->a518)-((T6)(GE_int32(1)))));
 		t1 = (T6f14(ac, &(((T68*)(C))->a570), ((T68*)(C))->a287));
 		if (t1) {
 			((T68*)(C))->a287 = ((T6)((((T68*)(C))->a287)+((T6)(GE_int32(10)))));
@@ -61300,17 +61346,10 @@ void T68f1927(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
-	l1 = (((T298*)(((T68*)(C))->a111))->z2[((T68*)(C))->a511]);
+	l1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a511 = ((T6)((((T68*)(C))->a511)-((T6)(GE_int32(1)))));
-		t1 = (T6f14(ac, &(((T68*)(C))->a570), ((T68*)(C))->a287));
-		if (t1) {
-			((T68*)(C))->a287 = ((T6)((((T68*)(C))->a287)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a288 = (T465s2(ac, ((T68*)(C))->a288, ((T68*)(C))->a287));
-		}
 		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
 	}
 }
@@ -61320,12 +61359,12 @@ void T68f1926(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
-	l1 = (((T319*)(((T68*)(C))->a132))->z2[((T68*)(C))->a518]);
+	l1 = (((T628*)(((T68*)(C))->a456))->z2[((T68*)(C))->a626]);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
 		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a518 = ((T6)((((T68*)(C))->a518)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a626 = ((T6)((((T68*)(C))->a626)-((T6)(GE_int32(1)))));
 		t1 = (T6f14(ac, &(((T68*)(C))->a570), ((T68*)(C))->a287));
 		if (t1) {
 			((T68*)(C))->a287 = ((T6)((((T68*)(C))->a287)+((T6)(GE_int32(10)))));
@@ -61350,39 +61389,6 @@ void T68f1925(TC* ac, T0* C)
 
 /* ET_EIFFEL_PARSER.yy_do_action_797 */
 void T68f1924(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T628*)(((T68*)(C))->a456))->z2[((T68*)(C))->a626]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a626 = ((T6)((((T68*)(C))->a626)-((T6)(GE_int32(1)))));
-		t1 = (T6f14(ac, &(((T68*)(C))->a570), ((T68*)(C))->a287));
-		if (t1) {
-			((T68*)(C))->a287 = ((T6)((((T68*)(C))->a287)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a288 = (T465s2(ac, ((T68*)(C))->a288, ((T68*)(C))->a287));
-		}
-		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_796 */
-void T68f1923(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_795 */
-void T68f1922(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -61700,8 +61706,8 @@ T0* T755s9(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_794 */
-void T68f1921(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_796 */
+void T68f1923(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -61725,8 +61731,8 @@ void T68f1921(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_793 */
-void T68f1920(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_795 */
+void T68f1922(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -61829,8 +61835,8 @@ T0* T754s5(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_792 */
-void T68f1919(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_794 */
+void T68f1921(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -61849,8 +61855,8 @@ void T68f1919(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_791 */
-void T68f1918(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_793 */
+void T68f1920(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -61864,7 +61870,7 @@ void T68f1918(TC* ac, T0* C)
 	t1 = (T68s989(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t3 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(2)))));
 		t1 = (((T283*)(((T68*)(C))->a96))->z2[t3]);
@@ -62033,8 +62039,8 @@ T0* T68s989(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_790 */
-void T68f1917(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_792 */
+void T68f1919(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -62168,8 +62174,8 @@ T0* T752s5(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_789 */
-void T68f1916(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_791 */
+void T68f1918(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -62211,8 +62217,8 @@ void T300f59(TC* ac, T0* C)
 	((T300*)(C))->a1 = ((T2)('\207'));
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_788 */
-void T68f1915(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_790 */
+void T68f1917(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -62231,8 +62237,8 @@ void T68f1915(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_787 */
-void T68f1914(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_789 */
+void T68f1916(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -62251,8 +62257,8 @@ void T68f1914(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_786 */
-void T68f1913(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_788 */
+void T68f1915(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -62403,8 +62409,8 @@ T0* T675f6(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_785 */
-void T68f1912(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_787 */
+void T68f1914(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -62515,8 +62521,8 @@ void T324f153(TC* ac, T0* C)
 	((T324*)(C))->a2 = ((T2)('\206'));
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_784 */
-void T68f1911(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_786 */
+void T68f1913(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -62535,8 +62541,8 @@ void T68f1911(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_783 */
-void T68f1910(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_785 */
+void T68f1912(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -62555,8 +62561,8 @@ void T68f1910(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_782 */
-void T68f1909(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_784 */
+void T68f1911(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -62575,8 +62581,8 @@ void T68f1909(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_781 */
-void T68f1908(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_783 */
+void T68f1910(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -62595,8 +62601,8 @@ void T68f1908(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_780 */
-void T68f1907(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_782 */
+void T68f1909(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -62615,8 +62621,8 @@ void T68f1907(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_779 */
-void T68f1906(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_781 */
+void T68f1908(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -62635,48 +62641,48 @@ void T68f1906(TC* ac, T0* C)
 	}
 }
 
+/* ET_EIFFEL_PARSER.yy_do_action_780 */
+void T68f1907(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T340*)(((T68*)(C))->a153))->z2[((T68*)(C))->a525]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a525 = ((T6)((((T68*)(C))->a525)-((T6)(GE_int32(1)))));
+		t1 = (T6f14(ac, &(((T68*)(C))->a570), ((T68*)(C))->a287));
+		if (t1) {
+			((T68*)(C))->a287 = ((T6)((((T68*)(C))->a287)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a288 = (T465s2(ac, ((T68*)(C))->a288, ((T68*)(C))->a287));
+		}
+		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_779 */
+void T68f1906(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T340*)(((T68*)(C))->a153))->z2[((T68*)(C))->a525]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a525 = ((T6)((((T68*)(C))->a525)-((T6)(GE_int32(1)))));
+		t1 = (T6f14(ac, &(((T68*)(C))->a570), ((T68*)(C))->a287));
+		if (t1) {
+			((T68*)(C))->a287 = ((T6)((((T68*)(C))->a287)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a288 = (T465s2(ac, ((T68*)(C))->a288, ((T68*)(C))->a287));
+		}
+		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
+	}
+}
+
 /* ET_EIFFEL_PARSER.yy_do_action_778 */
 void T68f1905(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T340*)(((T68*)(C))->a153))->z2[((T68*)(C))->a525]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a525 = ((T6)((((T68*)(C))->a525)-((T6)(GE_int32(1)))));
-		t1 = (T6f14(ac, &(((T68*)(C))->a570), ((T68*)(C))->a287));
-		if (t1) {
-			((T68*)(C))->a287 = ((T6)((((T68*)(C))->a287)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a288 = (T465s2(ac, ((T68*)(C))->a288, ((T68*)(C))->a287));
-		}
-		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_777 */
-void T68f1904(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T340*)(((T68*)(C))->a153))->z2[((T68*)(C))->a525]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a525 = ((T6)((((T68*)(C))->a525)-((T6)(GE_int32(1)))));
-		t1 = (T6f14(ac, &(((T68*)(C))->a570), ((T68*)(C))->a287));
-		if (t1) {
-			((T68*)(C))->a287 = ((T6)((((T68*)(C))->a287)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a288 = (T465s2(ac, ((T68*)(C))->a288, ((T68*)(C))->a287));
-		}
-		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_776 */
-void T68f1903(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -62695,8 +62701,8 @@ void T68f1903(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_775 */
-void T68f1902(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_777 */
+void T68f1904(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -62715,8 +62721,8 @@ void T68f1902(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_774 */
-void T68f1901(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_776 */
+void T68f1903(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -62728,8 +62734,8 @@ void T68f1901(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_773 */
-void T68f1900(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_775 */
+void T68f1902(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -62815,8 +62821,8 @@ T0* T750s6(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_772 */
-void T68f1899(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_774 */
+void T68f1901(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -62835,8 +62841,8 @@ void T68f1899(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_771 */
-void T68f1898(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_773 */
+void T68f1900(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -62848,8 +62854,8 @@ void T68f1898(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_770 */
-void T68f1897(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_772 */
+void T68f1899(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -62868,8 +62874,8 @@ void T68f1897(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_769 */
-void T68f1896(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_771 */
+void T68f1898(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -62888,8 +62894,8 @@ void T68f1896(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_768 */
-void T68f1895(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_770 */
+void T68f1897(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -62901,8 +62907,8 @@ void T68f1895(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_767 */
-void T68f1894(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_769 */
+void T68f1896(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -62958,8 +62964,8 @@ T0* T749c26(TC* ac, T0* a1, T0* a2, T0* a3)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_766 */
-void T68f1893(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_768 */
+void T68f1895(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -62983,8 +62989,8 @@ void T68f1893(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_765 */
-void T68f1892(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_767 */
+void T68f1894(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -63040,8 +63046,8 @@ T0* T748c24(TC* ac, T0* a1, T0* a2, T0* a3)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_764 */
-void T68f1891(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_766 */
+void T68f1893(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -63065,8 +63071,8 @@ void T68f1891(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_763 */
-void T68f1890(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_765 */
+void T68f1892(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -63122,8 +63128,8 @@ T0* T745c29(TC* ac, T0* a1, T0* a2, T0* a3)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_762 */
-void T68f1889(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_764 */
+void T68f1891(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -63147,8 +63153,8 @@ void T68f1889(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_761 */
-void T68f1888(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_763 */
+void T68f1890(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -63172,8 +63178,8 @@ void T68f1888(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_760 */
-void T68f1887(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_762 */
+void T68f1889(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -63352,8 +63358,8 @@ void T309f62(TC* ac, T0* C)
 	((T309*)(C))->a1 = (T6)(GE_int32(0));
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_759 */
-void T68f1886(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_761 */
+void T68f1888(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -63377,8 +63383,8 @@ void T68f1886(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_758 */
-void T68f1885(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_760 */
+void T68f1887(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -63534,6 +63540,56 @@ T0* T309c57(TC* ac)
 	return C;
 }
 
+/* ET_EIFFEL_PARSER.yy_do_action_759 */
+void T68f1886(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T6 t2;
+	T0* t3;
+	T0* t4;
+	T0* t5;
+	T1 t6;
+	t1 = (T68f762(ac, C));
+	t2 = ((T6)((((T68*)(C))->a570)-((T6)(GE_int32(1)))));
+	t3 = (((T467*)(((T68*)(C))->a288))->z2[t2]);
+	t4 = (((T325*)(((T68*)(C))->a138))->z2[((T68*)(C))->a520]);
+	t5 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
+	l1 = (T65f302(ac, t1, t3, t4, t5));
+	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t6) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a520 = ((T6)((((T68*)(C))->a520)-((T6)(GE_int32(1)))));
+		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_758 */
+void T68f1885(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T6 t2;
+	T0* t3;
+	T0* t4;
+	T0* t5;
+	T1 t6;
+	t1 = (T68f762(ac, C));
+	t2 = ((T6)((((T68*)(C))->a570)-((T6)(GE_int32(1)))));
+	t3 = (((T467*)(((T68*)(C))->a288))->z2[t2]);
+	t4 = (((T310*)(((T68*)(C))->a123))->z2[((T68*)(C))->a515]);
+	t5 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
+	l1 = (T65f302(ac, t1, t3, t4, t5));
+	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t6) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a515 = ((T6)((((T68*)(C))->a515)-((T6)(GE_int32(1)))));
+		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
+	}
+}
+
 /* ET_EIFFEL_PARSER.yy_do_action_757 */
 void T68f1884(TC* ac, T0* C)
 {
@@ -63672,14 +63728,14 @@ void T68f1879(TC* ac, T0* C)
 	t1 = (T68f762(ac, C));
 	t2 = ((T6)((((T68*)(C))->a570)-((T6)(GE_int32(1)))));
 	t3 = (((T467*)(((T68*)(C))->a288))->z2[t2]);
-	t4 = (((T310*)(((T68*)(C))->a123))->z2[((T68*)(C))->a515]);
+	t4 = (((T325*)(((T68*)(C))->a138))->z2[((T68*)(C))->a520]);
 	t5 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
 	l1 = (T65f302(ac, t1, t3, t4, t5));
 	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t6) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
 		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a515 = ((T6)((((T68*)(C))->a515)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a520 = ((T6)((((T68*)(C))->a520)-((T6)(GE_int32(1)))));
 		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
 	}
 }
@@ -63872,56 +63928,6 @@ void T68f1871(TC* ac, T0* C)
 	t1 = (T68f762(ac, C));
 	t2 = ((T6)((((T68*)(C))->a570)-((T6)(GE_int32(1)))));
 	t3 = (((T467*)(((T68*)(C))->a288))->z2[t2]);
-	t4 = (((T325*)(((T68*)(C))->a138))->z2[((T68*)(C))->a520]);
-	t5 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
-	l1 = (T65f302(ac, t1, t3, t4, t5));
-	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t6) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
-		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a520 = ((T6)((((T68*)(C))->a520)-((T6)(GE_int32(1)))));
-		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_743 */
-void T68f1870(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T6 t2;
-	T0* t3;
-	T0* t4;
-	T0* t5;
-	T1 t6;
-	t1 = (T68f762(ac, C));
-	t2 = ((T6)((((T68*)(C))->a570)-((T6)(GE_int32(1)))));
-	t3 = (((T467*)(((T68*)(C))->a288))->z2[t2]);
-	t4 = (((T325*)(((T68*)(C))->a138))->z2[((T68*)(C))->a520]);
-	t5 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
-	l1 = (T65f302(ac, t1, t3, t4, t5));
-	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t6) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
-		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a520 = ((T6)((((T68*)(C))->a520)-((T6)(GE_int32(1)))));
-		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_742 */
-void T68f1869(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T6 t2;
-	T0* t3;
-	T0* t4;
-	T0* t5;
-	T1 t6;
-	t1 = (T68f762(ac, C));
-	t2 = ((T6)((((T68*)(C))->a570)-((T6)(GE_int32(1)))));
-	t3 = (((T467*)(((T68*)(C))->a288))->z2[t2]);
 	t4 = (T68f762(ac, C));
 	t5 = (((T325*)(((T68*)(C))->a138))->z2[((T68*)(C))->a520]);
 	t4 = (T65f305(ac, t4, t5));
@@ -63957,8 +63963,8 @@ void T324f152(TC* ac, T0* C)
 	((T324*)(C))->a2 = ((T2)('k'));
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_741 */
-void T68f1868(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_743 */
+void T68f1870(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -64005,8 +64011,8 @@ void T324f151(TC* ac, T0* C)
 	((T324*)(C))->a2 = ((T2)('m'));
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_740 */
-void T68f1867(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_742 */
+void T68f1869(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -64067,8 +64073,8 @@ T0* T300c57(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_739 */
-void T68f1866(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_741 */
+void T68f1868(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -64115,34 +64121,34 @@ void T300f56(TC* ac, T0* C)
 	((T300*)(C))->a1 = ((T2)('p'));
 }
 
+/* ET_EIFFEL_PARSER.yy_do_action_740 */
+void T68f1867(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_739 */
+void T68f1866(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
+	}
+}
+
 /* ET_EIFFEL_PARSER.yy_do_action_738 */
 void T68f1865(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_737 */
-void T68f1864(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_736 */
-void T68f1863(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -64272,8 +64278,8 @@ T0* T666f4(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_735 */
-void T68f1862(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_737 */
+void T68f1864(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -64383,8 +64389,8 @@ T0* T68f1002(TC* ac, T0* C, T0* a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_734 */
-void T68f1861(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_736 */
+void T68f1863(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -64523,8 +64529,8 @@ T0* T744s5(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_733 */
-void T68f1860(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_735 */
+void T68f1862(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -64649,8 +64655,8 @@ T0* T743s5(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_732 */
-void T68f1859(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_734 */
+void T68f1861(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -64745,8 +64751,8 @@ T0* T742s5(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_731 */
-void T68f1858(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_733 */
+void T68f1860(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -64932,8 +64938,8 @@ T0* T741s5(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_730 */
-void T68f1857(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_732 */
+void T68f1859(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -64946,7 +64952,7 @@ void T68f1857(TC* ac, T0* C)
 	l1 = (T65f297(ac, t1, t2, t3));
 	t4 = (T1)(l1!=EIF_VOID);
 	if (t4) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
@@ -65082,8 +65088,8 @@ T0* T65f297(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_729 */
-void T68f1856(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_731 */
+void T68f1858(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -65106,8 +65112,8 @@ void T68f1856(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_728 */
-void T68f1855(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_730 */
+void T68f1857(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -65152,8 +65158,8 @@ T0* T65f296(TC* ac, T0* C, T0* a1, T0* a2, T6 a3)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_727 */
-void T68f1854(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_729 */
+void T68f1856(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -65197,15 +65203,15 @@ void T68f1854(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_726 */
-void T68f1853(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_728 */
+void T68f1855(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	T68f2094(ac, C, t1);
-	T68f2090(ac, C);
+	T68f2096(ac, C, t1);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -65219,14 +65225,14 @@ void T68f1853(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_725 */
-void T68f1852(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_727 */
+void T68f1854(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T346*)(((T68*)(C))->a159))->z2[((T68*)(C))->a527]);
-	T68f2093(ac, C);
-	T68f2088(ac, C);
+	T68f2095(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -65236,8 +65242,8 @@ void T68f1852(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_724 */
-void T68f1851(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_726 */
+void T68f1853(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -65264,8 +65270,8 @@ void T68f1851(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_723 */
-void T68f1850(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_725 */
+void T68f1852(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -65282,8 +65288,8 @@ void T68f1850(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_722 */
-void T68f1849(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_724 */
+void T68f1851(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -65338,8 +65344,8 @@ T0* T68f988(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_721 */
-void T68f1848(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_723 */
+void T68f1850(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -65347,7 +65353,7 @@ void T68f1848(TC* ac, T0* C)
 	t1 = (T68s973(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		l1 = (((T374*)(((T68*)(C))->a189))->z2[((T68*)(C))->a537]);
 	}
@@ -65395,8 +65401,8 @@ T0* T68s973(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_720 */
-void T68f1847(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_722 */
+void T68f1849(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -65421,8 +65427,8 @@ void T68f1847(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_719 */
-void T68f1846(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_721 */
+void T68f1848(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -65441,8 +65447,8 @@ void T68f1846(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_718 */
-void T68f1845(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_720 */
+void T68f1847(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -65450,7 +65456,7 @@ void T68f1845(TC* ac, T0* C)
 	t1 = (T68s973(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		l1 = (((T374*)(((T68*)(C))->a189))->z2[((T68*)(C))->a537]);
 	}
@@ -65468,34 +65474,34 @@ void T68f1845(TC* ac, T0* C)
 	}
 }
 
+/* ET_EIFFEL_PARSER.yy_do_action_719 */
+void T68f1846(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_718 */
+void T68f1845(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
+	}
+}
+
 /* ET_EIFFEL_PARSER.yy_do_action_717 */
 void T68f1844(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_716 */
-void T68f1843(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_715 */
-void T68f1842(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -65514,8 +65520,8 @@ void T68f1842(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_714 */
-void T68f1841(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_716 */
+void T68f1843(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -65534,8 +65540,8 @@ void T68f1841(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_713 */
-void T68f1840(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_715 */
+void T68f1842(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -65554,8 +65560,8 @@ void T68f1840(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_712 */
-void T68f1839(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_714 */
+void T68f1841(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -65677,8 +65683,8 @@ T0* T68f1000(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_711 */
-void T68f1838(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_713 */
+void T68f1840(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -65880,8 +65886,8 @@ T0* T65f291(TC* ac, T0* C, T0* a1, T0* a2, T0* a3)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_710 */
-void T68f1837(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_712 */
+void T68f1839(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -65907,8 +65913,8 @@ void T68f1837(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_709 */
-void T68f1836(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_711 */
+void T68f1838(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -66108,8 +66114,8 @@ void T627f37(TC* ac, T0* C, T0* a1, T0* a2)
 	((T627*)(C))->a5 = a2;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_708 */
-void T68f1835(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_710 */
+void T68f1837(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -66152,8 +66158,8 @@ void T68f1835(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_707 */
-void T68f1834(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_709 */
+void T68f1836(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -66296,8 +66302,8 @@ T0* T380f4(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_706 */
-void T68f1833(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_708 */
+void T68f1835(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -66329,60 +66335,60 @@ void T68f1833(TC* ac, T0* C)
 	}
 }
 
+/* ET_EIFFEL_PARSER.yy_do_action_707 */
+void T68f1834(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T0* t3;
+	T0* t4;
+	T1 t5;
+	t1 = (T68f762(ac, C));
+	t2 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
+	t3 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
+	t4 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t3 = (T68f988(ac, C, t3, t4));
+	t4 = (((T346*)(((T68*)(C))->a159))->z2[((T68*)(C))->a527]);
+	l1 = (T65f293(ac, t1, t2, t3, t4));
+	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t5) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
+		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a527 = ((T6)((((T68*)(C))->a527)-((T6)(GE_int32(1)))));
+		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_706 */
+void T68f1833(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T0* t3;
+	T0* t4;
+	T1 t5;
+	t1 = (T68f762(ac, C));
+	t2 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
+	t3 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
+	t4 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t3 = (T68f988(ac, C, t3, t4));
+	t4 = (((T346*)(((T68*)(C))->a159))->z2[((T68*)(C))->a527]);
+	l1 = (T65f293(ac, t1, t2, t3, t4));
+	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t5) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
+		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a527 = ((T6)((((T68*)(C))->a527)-((T6)(GE_int32(1)))));
+		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
+	}
+}
+
 /* ET_EIFFEL_PARSER.yy_do_action_705 */
 void T68f1832(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T0* t2;
-	T0* t3;
-	T0* t4;
-	T1 t5;
-	t1 = (T68f762(ac, C));
-	t2 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
-	t3 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	t4 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t3 = (T68f988(ac, C, t3, t4));
-	t4 = (((T346*)(((T68*)(C))->a159))->z2[((T68*)(C))->a527]);
-	l1 = (T65f293(ac, t1, t2, t3, t4));
-	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t5) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
-		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a527 = ((T6)((((T68*)(C))->a527)-((T6)(GE_int32(1)))));
-		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_704 */
-void T68f1831(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T0* t2;
-	T0* t3;
-	T0* t4;
-	T1 t5;
-	t1 = (T68f762(ac, C));
-	t2 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
-	t3 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	t4 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t3 = (T68f988(ac, C, t3, t4));
-	t4 = (((T346*)(((T68*)(C))->a159))->z2[((T68*)(C))->a527]);
-	l1 = (T65f293(ac, t1, t2, t3, t4));
-	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t5) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
-		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a527 = ((T6)((((T68*)(C))->a527)-((T6)(GE_int32(1)))));
-		T465s4(ac, ((T68*)(C))->a288, l1, ((T68*)(C))->a570);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_703 */
-void T68f1830(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -66406,8 +66412,8 @@ void T68f1830(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_702 */
-void T68f1829(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_704 */
+void T68f1831(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -66607,8 +66613,8 @@ void T739f16(TC* ac, T0* C, T0* a1, T0* a2)
 	((T739*)(C))->a4 = a2;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_701 */
-void T68f1828(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_703 */
+void T68f1830(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -66651,8 +66657,8 @@ void T68f1828(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_700 */
-void T68f1827(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_702 */
+void T68f1829(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -66759,8 +66765,8 @@ T0* T737s11(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_699 */
-void T68f1826(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_701 */
+void T68f1828(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -66786,8 +66792,8 @@ void T68f1826(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_698 */
-void T68f1825(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_700 */
+void T68f1827(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -66834,8 +66840,8 @@ T0* T65f289(TC* ac, T0* C, T0* a1, T0* a2, T0* a3)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_697 */
-void T68f1824(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_699 */
+void T68f1826(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -66867,8 +66873,8 @@ void T68f1824(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_696 */
-void T68f1823(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_698 */
+void T68f1825(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -67004,8 +67010,8 @@ T0* T1034c12(TC* ac, T0* a1, T0* a2)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_695 */
-void T68f1822(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_697 */
+void T68f1824(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -67018,7 +67024,7 @@ void T68f1822(TC* ac, T0* C)
 	l1 = (T65f288(ac, t1, t2, t3));
 	t4 = (T1)(l1!=EIF_VOID);
 	if (t4) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
@@ -67154,8 +67160,8 @@ T0* T65f288(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_694 */
-void T68f1821(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_696 */
+void T68f1823(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -67550,8 +67556,8 @@ T0* T518s4(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_693 */
-void T68f1820(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_695 */
+void T68f1822(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -67737,8 +67743,8 @@ T0* T1179c2(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_692 */
-void T68f1819(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_694 */
+void T68f1821(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -67922,15 +67928,15 @@ T0* T524s4(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_691 */
-void T68f1818(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_693 */
+void T68f1820(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	T68f2089(ac, C, t1);
-	T68f2090(ac, C);
+	T68f2091(ac, C, t1);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -67944,14 +67950,14 @@ void T68f1818(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_690 */
-void T68f1817(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_692 */
+void T68f1819(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T525*)(((T68*)(C))->a348))->z2[((T68*)(C))->a590]);
-	T68f2087(ac, C);
-	T68f2088(ac, C);
+	T68f2089(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -67961,8 +67967,8 @@ void T68f1817(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_689 */
-void T68f1816(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_691 */
+void T68f1818(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -68213,8 +68219,8 @@ T0* T527s4(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_688 */
-void T68f1815(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_690 */
+void T68f1817(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -68227,7 +68233,7 @@ void T68f1815(TC* ac, T0* C)
 	l1 = (T65f286(ac, t1, t2, t3));
 	t4 = (T1)(l1!=EIF_VOID);
 	if (t4) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
@@ -68363,8 +68369,8 @@ T0* T65f286(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_687 */
-void T68f1814(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_689 */
+void T68f1816(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -68550,8 +68556,8 @@ T0* T1606c2(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_686 */
-void T68f1813(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_688 */
+void T68f1815(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -68731,15 +68737,15 @@ T0* T1605c4(TC* ac, T6 a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_685 */
-void T68f1812(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_687 */
+void T68f1814(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	T68f2094(ac, C, t1);
-	T68f2090(ac, C);
+	T68f2096(ac, C, t1);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -68753,14 +68759,14 @@ void T68f1812(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_684 */
-void T68f1811(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_686 */
+void T68f1813(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T566*)(((T68*)(C))->a390))->z2[((T68*)(C))->a604]);
-	T68f2093(ac, C);
-	T68f2088(ac, C);
+	T68f2095(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -68770,8 +68776,8 @@ void T68f1811(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_683 */
-void T68f1810(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_685 */
+void T68f1812(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -68798,8 +68804,8 @@ void T68f1810(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_682 */
-void T68f1809(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_684 */
+void T68f1811(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -68816,8 +68822,8 @@ void T68f1809(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_681 */
-void T68f1808(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_683 */
+void T68f1810(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -69242,8 +69248,8 @@ T0* T403s4(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_680 */
-void T68f1807(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_682 */
+void T68f1809(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -69380,8 +69386,8 @@ T0* T407f4(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_679 */
-void T68f1806(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_681 */
+void T68f1808(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -69398,8 +69404,8 @@ void T68f1806(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_678 */
-void T68f1805(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_680 */
+void T68f1807(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -69768,8 +69774,8 @@ T0* T624s13(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_677 */
-void T68f1804(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_679 */
+void T68f1806(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -70089,8 +70095,8 @@ T0* T342s17(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_676 */
-void T68f1803(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_678 */
+void T68f1805(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -70121,8 +70127,8 @@ void T68f1803(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_675 */
-void T68f1802(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_677 */
+void T68f1804(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -70137,7 +70143,7 @@ void T68f1802(TC* ac, T0* C)
 	l1 = (T65f282(ac, t1, t2, t3, t4));
 	t5 = (T1)(l1!=EIF_VOID);
 	if (t5) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t5) {
@@ -70324,8 +70330,8 @@ T0* T653s4(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_674 */
-void T68f1801(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_676 */
+void T68f1803(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -70511,8 +70517,8 @@ T0* T1618c2(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_673 */
-void T68f1800(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_675 */
+void T68f1802(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -70639,13 +70645,13 @@ T0* T1617c4(TC* ac, T6 a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_672 */
-void T68f1799(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_674 */
+void T68f1801(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T657*)(((T68*)(C))->a486))->z2[((T68*)(C))->a636]);
-	T68f2088(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
@@ -70654,8 +70660,8 @@ void T68f1799(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_671 */
-void T68f1798(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_673 */
+void T68f1800(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -70672,8 +70678,8 @@ void T68f1798(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_670 */
-void T68f1797(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_672 */
+void T68f1799(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -70880,8 +70886,8 @@ T0* T530s6(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_669 */
-void T68f1796(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_671 */
+void T68f1798(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -70923,8 +70929,8 @@ void T68f1796(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_668 */
-void T68f1795(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_670 */
+void T68f1797(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -71054,8 +71060,8 @@ T0* T389f4(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_667 */
-void T68f1794(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_669 */
+void T68f1796(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -71168,8 +71174,8 @@ T0* T68f994(TC* ac, T0* C, T0* a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_666 */
-void T68f1793(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_668 */
+void T68f1795(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -71188,8 +71194,8 @@ void T68f1793(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_665 */
-void T68f1792(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_667 */
+void T68f1794(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -71208,8 +71214,8 @@ void T68f1792(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_664 */
-void T68f1791(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_666 */
+void T68f1793(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -71450,8 +71456,8 @@ T0* T735s4(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_663 */
-void T68f1790(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_665 */
+void T68f1792(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -71470,8 +71476,8 @@ void T68f1790(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_662 */
-void T68f1789(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_664 */
+void T68f1791(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -71484,7 +71490,7 @@ void T68f1789(TC* ac, T0* C)
 	l1 = (T65f278(ac, t1, t2, t3));
 	t4 = (T1)(l1!=EIF_VOID);
 	if (t4) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
@@ -71620,8 +71626,8 @@ T0* T65f278(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_661 */
-void T68f1788(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_663 */
+void T68f1790(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -71807,8 +71813,8 @@ T0* T1583c2(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_660 */
-void T68f1787(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_662 */
+void T68f1789(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -72030,8 +72036,8 @@ T0* T394s4(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_659 */
-void T68f1786(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_661 */
+void T68f1788(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -72071,15 +72077,15 @@ void T68f1786(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_658 */
-void T68f1785(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_660 */
+void T68f1787(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	T68f2089(ac, C, t1);
-	T68f2090(ac, C);
+	T68f2091(ac, C, t1);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -72093,14 +72099,14 @@ void T68f1785(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_657 */
-void T68f1784(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_659 */
+void T68f1786(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T395*)(((T68*)(C))->a210))->z2[((T68*)(C))->a544]);
-	T68f2087(ac, C);
-	T68f2088(ac, C);
+	T68f2089(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -72110,8 +72116,8 @@ void T68f1784(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_656 */
-void T68f1783(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_658 */
+void T68f1785(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -72134,8 +72140,8 @@ void T68f1783(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_655 */
-void T68f1782(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_657 */
+void T68f1784(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -72148,7 +72154,7 @@ void T68f1782(TC* ac, T0* C)
 	l1 = (T65f276(ac, t1, t2, t3));
 	t4 = (T1)(l1!=EIF_VOID);
 	if (t4) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
@@ -72298,8 +72304,8 @@ T0* T659c9(TC* ac, T0* a1, T0* a2)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_654 */
-void T68f1781(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_656 */
+void T68f1783(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -72485,8 +72491,8 @@ T0* T1620c2(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_653 */
-void T68f1780(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_655 */
+void T68f1782(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -72613,13 +72619,13 @@ T0* T1619c4(TC* ac, T6 a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_652 */
-void T68f1779(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_654 */
+void T68f1781(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T663*)(((T68*)(C))->a492))->z2[((T68*)(C))->a638]);
-	T68f2088(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
@@ -72628,8 +72634,8 @@ void T68f1779(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_651 */
-void T68f1778(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_653 */
+void T68f1780(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -72646,8 +72652,8 @@ void T68f1778(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_650 */
-void T68f1777(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_652 */
+void T68f1779(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -72854,8 +72860,8 @@ T0* T533s5(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_649 */
-void T68f1776(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_651 */
+void T68f1778(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -72892,8 +72898,8 @@ void T68f1776(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_648 */
-void T68f1775(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_650 */
+void T68f1777(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -72914,7 +72920,7 @@ void T68f1775(TC* ac, T0* C)
 	l1 = (T65f273(ac, t1, t2, t4, t5));
 	t6 = (T1)(l1!=EIF_VOID);
 	if (t6) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t6) {
@@ -73100,8 +73106,8 @@ T0* T449s4(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_647 */
-void T68f1774(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_649 */
+void T68f1776(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -73287,8 +73293,8 @@ T0* T1591c2(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_646 */
-void T68f1773(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_648 */
+void T68f1775(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -73415,13 +73421,13 @@ T0* T1590c4(TC* ac, T6 a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_645 */
-void T68f1772(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_647 */
+void T68f1774(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T453*)(((T68*)(C))->a273))->z2[((T68*)(C))->a565]);
-	T68f2088(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
@@ -73430,8 +73436,8 @@ void T68f1772(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_644 */
-void T68f1771(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_646 */
+void T68f1773(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -73664,8 +73670,8 @@ T0* T509s9(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_643 */
-void T68f1770(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_645 */
+void T68f1772(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -73708,8 +73714,8 @@ void T68f1770(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_642 */
-void T68f1769(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_644 */
+void T68f1771(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -73726,7 +73732,7 @@ void T68f1769(TC* ac, T0* C)
 	l1 = (T65f270(ac, t1, t2, t3));
 	t5 = (T1)(l1!=EIF_VOID);
 	if (t5) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t5) {
@@ -73877,8 +73883,8 @@ T0* T455c10(TC* ac, T0* a1, T0* a2)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_641 */
-void T68f1768(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_643 */
+void T68f1770(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -74064,8 +74070,8 @@ T0* T1593c2(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_640 */
-void T68f1767(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_642 */
+void T68f1769(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -74192,13 +74198,13 @@ T0* T1592c4(TC* ac, T6 a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_639 */
-void T68f1766(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_641 */
+void T68f1768(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T459*)(((T68*)(C))->a279))->z2[((T68*)(C))->a567]);
-	T68f2088(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
@@ -74207,8 +74213,8 @@ void T68f1766(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_638 */
-void T68f1765(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_640 */
+void T68f1767(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -74428,8 +74434,8 @@ T0* T512s6(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_637 */
-void T68f1764(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_639 */
+void T68f1766(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -74466,8 +74472,8 @@ void T68f1764(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_636 */
-void T68f1763(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_638 */
+void T68f1765(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -74504,8 +74510,8 @@ void T68f1763(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_635 */
-void T68f1762(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_637 */
+void T68f1764(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -74539,8 +74545,8 @@ void T68f1762(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_634 */
-void T68f1761(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_636 */
+void T68f1763(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -74847,8 +74853,8 @@ T0* T439s4(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_633 */
-void T68f1760(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_635 */
+void T68f1762(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -74865,8 +74871,8 @@ void T68f1760(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_632 */
-void T68f1759(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_634 */
+void T68f1761(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -75173,8 +75179,8 @@ T0* T732c5(TC* ac, T0* a1, T0* a2)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_631 */
-void T68f1758(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_633 */
+void T68f1760(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -75213,8 +75219,8 @@ void T68f1758(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_630 */
-void T68f1757(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_632 */
+void T68f1759(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -75338,8 +75344,8 @@ T0* T734s18(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_629 */
-void T68f1756(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_631 */
+void T68f1758(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -75368,8 +75374,8 @@ void T68f1756(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_628 */
-void T68f1755(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_630 */
+void T68f1757(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -75420,8 +75426,8 @@ void T68f1755(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_627 */
-void T68f1754(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_629 */
+void T68f1756(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -75462,8 +75468,8 @@ void T68f1754(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_626 */
-void T68f1753(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_628 */
+void T68f1755(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -75622,8 +75628,8 @@ T0* T731s17(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_625 */
-void T68f1752(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_627 */
+void T68f1754(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -75653,8 +75659,8 @@ void T68f1752(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_624 */
-void T68f1751(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_626 */
+void T68f1753(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -75699,8 +75705,8 @@ void T68f1751(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_623 */
-void T68f1750(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_625 */
+void T68f1752(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -75733,8 +75739,8 @@ void T68f1750(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_622 */
-void T68f1749(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_624 */
+void T68f1751(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -76351,8 +76357,8 @@ T1 T239f6(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_621 */
-void T68f1748(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_623 */
+void T68f1750(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -76381,8 +76387,8 @@ void T68f1748(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_620 */
-void T68f1747(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_622 */
+void T68f1749(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -76408,8 +76414,8 @@ void T68f1747(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_619 */
-void T68f1746(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_621 */
+void T68f1748(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -76435,12 +76441,12 @@ void T68f1746(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_618 */
-void T68f1745(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_620 */
+void T68f1747(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
-	T68f2111(ac, C);
+	T68f2113(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -76455,13 +76461,13 @@ void T68f1745(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.start_check_instruction */
-void T68f2111(TC* ac, T0* C)
+void T68f2113(TC* ac, T0* C)
 {
-	T68f2116(ac, C, (T6)(GE_int32(4)));
+	T68f2118(ac, C, (T6)(GE_int32(4)));
 }
 
 /* ET_EIFFEL_PARSER.start_assertions */
-void T68f2116(TC* ac, T0* C, T6 a1)
+void T68f2118(TC* ac, T0* C, T6 a1)
 {
 	T6 t1;
 	t1 = (((T256*)(((T68*)(C))->a14))->a1);
@@ -76470,8 +76476,8 @@ void T68f2116(TC* ac, T0* C, T6 a1)
 	((T68*)(C))->a17 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_617 */
-void T68f1744(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_619 */
+void T68f1746(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -76501,8 +76507,8 @@ T0* T65f261(TC* ac, T0* C, T0* a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_616 */
-void T68f1743(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_618 */
+void T68f1745(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -76521,8 +76527,8 @@ void T68f1743(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_615 */
-void T68f1742(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_617 */
+void T68f1744(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -76541,8 +76547,8 @@ void T68f1742(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_614 */
-void T68f1741(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_616 */
+void T68f1743(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -76561,8 +76567,8 @@ void T68f1741(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_613 */
-void T68f1740(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_615 */
+void T68f1742(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -76581,8 +76587,8 @@ void T68f1740(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_612 */
-void T68f1739(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_614 */
+void T68f1741(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -76641,8 +76647,8 @@ void T624f27(TC* ac, T0* C, T0* a1)
 	((T624*)(C))->a7 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_611 */
-void T68f1738(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_613 */
+void T68f1740(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -76730,8 +76736,8 @@ void T342f26(TC* ac, T0* C, T0* a1)
 	((T342*)(C))->a6 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_610 */
-void T68f1737(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_612 */
+void T68f1739(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -76746,7 +76752,7 @@ void T68f1737(TC* ac, T0* C)
 	t1 = (T68s990(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t1 = (T68f762(ac, C));
 		t3 = ((T6)((((T68*)(C))->a548)-((T6)(GE_int32(1)))));
@@ -76887,8 +76893,8 @@ T0* T68s990(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_609 */
-void T68f1736(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_611 */
+void T68f1738(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -76960,8 +76966,8 @@ T0* T65f259(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_608 */
-void T68f1735(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_610 */
+void T68f1737(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -77004,8 +77010,8 @@ void T68f1735(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_607 */
-void T68f1734(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_609 */
+void T68f1736(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -77024,8 +77030,8 @@ void T68f1734(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_606 */
-void T68f1733(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_608 */
+void T68f1735(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -77044,8 +77050,8 @@ void T68f1733(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_605 */
-void T68f1732(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_607 */
+void T68f1734(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -77174,8 +77180,8 @@ T0* T728s4(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_604 */
-void T68f1731(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_606 */
+void T68f1733(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -77304,8 +77310,8 @@ T0* T727s6(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_603 */
-void T68f1730(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_605 */
+void T68f1732(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -77423,8 +77429,8 @@ T0* T726s5(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_602 */
-void T68f1729(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_604 */
+void T68f1731(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -77449,6 +77455,32 @@ void T68f1729(TC* ac, T0* C)
 			((T68*)(C))->a359 = ((T6)((((T68*)(C))->a359)+((T6)(GE_int32(10)))));
 			((T68*)(C))->a360 = (T535s2(ac, ((T68*)(C))->a360, ((T68*)(C))->a359));
 		}
+		T535s4(ac, ((T68*)(C))->a360, l1, ((T68*)(C))->a594);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_603 */
+void T68f1730(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T537*)(((T68*)(C))->a360))->z2[((T68*)(C))->a594]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T535s4(ac, ((T68*)(C))->a360, l1, ((T68*)(C))->a594);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_602 */
+void T68f1729(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T537*)(((T68*)(C))->a360))->z2[((T68*)(C))->a594]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
 		T535s4(ac, ((T68*)(C))->a360, l1, ((T68*)(C))->a594);
 	}
 }
@@ -78080,38 +78112,12 @@ void T68f1108(TC* ac, T0* C, T6 a1)
 void T68f1727(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T537*)(((T68*)(C))->a360))->z2[((T68*)(C))->a594]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T535s4(ac, ((T68*)(C))->a360, l1, ((T68*)(C))->a594);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_599 */
-void T68f1726(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T537*)(((T68*)(C))->a360))->z2[((T68*)(C))->a594]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T535s4(ac, ((T68*)(C))->a360, l1, ((T68*)(C))->a594);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_598 */
-void T68f1725(TC* ac, T0* C)
-{
-	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T537*)(((T68*)(C))->a360))->z2[((T68*)(C))->a594]);
 	t2 = (T1)(t1!=EIF_VOID);
 	if (t2) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
@@ -78237,8 +78243,8 @@ T0* T404f4(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_597 */
-void T68f1724(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_599 */
+void T68f1726(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -78329,8 +78335,8 @@ void T1175f7(TC* ac, T0* C, T0* a1)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_596 */
-void T68f1723(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_598 */
+void T68f1725(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -78396,8 +78402,8 @@ void T403f16p1(TC* ac, T0* C, T6 a1)
 	((T403*)(C))->a3 = (T1176s1(ac, a1));
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_595 */
-void T68f1722(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_597 */
+void T68f1724(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -78409,8 +78415,8 @@ void T68f1722(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_594 */
-void T68f1721(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_596 */
+void T68f1723(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -78430,8 +78436,8 @@ void T68f1721(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_593 */
-void T68f1720(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_595 */
+void T68f1722(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -78443,8 +78449,8 @@ void T68f1720(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_592 */
-void T68f1719(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_594 */
+void T68f1721(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -78472,13 +78478,13 @@ T0* T65f253(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_591 */
-void T68f1718(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_593 */
+void T68f1720(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T404*)(((T68*)(C))->a222))->z2[((T68*)(C))->a548]);
-	T68f2088(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
@@ -78487,8 +78493,8 @@ void T68f1718(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_590 */
-void T68f1717(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_592 */
+void T68f1719(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -78567,8 +78573,8 @@ T0* T191c70(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_589 */
-void T68f1716(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_591 */
+void T68f1718(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -78580,8 +78586,8 @@ void T68f1716(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_588 */
-void T68f1715(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_590 */
+void T68f1717(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -78598,8 +78604,8 @@ void T68f1715(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_587 */
-void T68f1714(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_589 */
+void T68f1716(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -78695,8 +78701,8 @@ T0* T191c69(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_586 */
-void T68f1713(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_588 */
+void T68f1715(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -78775,8 +78781,8 @@ T0* T191c85(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_585 */
-void T68f1712(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_587 */
+void T68f1714(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -78811,8 +78817,8 @@ T0* T65f249(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_584 */
-void T68f1711(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_586 */
+void T68f1713(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -78831,8 +78837,8 @@ void T68f1711(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_583 */
-void T68f1710(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_585 */
+void T68f1712(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -78867,8 +78873,8 @@ T0* T65f248(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_582 */
-void T68f1709(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_584 */
+void T68f1711(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -78887,8 +78893,8 @@ void T68f1709(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_581 */
-void T68f1708(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_583 */
+void T68f1710(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -78967,8 +78973,8 @@ T0* T191c99(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_580 */
-void T68f1707(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_582 */
+void T68f1709(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -79003,8 +79009,8 @@ T0* T65f246(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_579 */
-void T68f1706(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_581 */
+void T68f1708(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -79200,8 +79206,8 @@ T0* T65f149(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_578 */
-void T68f1705(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_580 */
+void T68f1707(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -79234,8 +79240,8 @@ void T68f1705(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_577 */
-void T68f1704(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_579 */
+void T68f1706(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -79273,8 +79279,8 @@ void T68f1704(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_576 */
-void T68f1703(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_578 */
+void T68f1705(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -79301,6 +79307,79 @@ void T68f1703(TC* ac, T0* C)
 		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
 		t7 = (T6f14(ac, &(((T68*)(C))->a620), ((T68*)(C))->a437));
 		if (t7) {
+			((T68*)(C))->a437 = ((T6)((((T68*)(C))->a437)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a438 = (T609s2(ac, ((T68*)(C))->a438, ((T68*)(C))->a437));
+		}
+		T609s4(ac, ((T68*)(C))->a438, l1, ((T68*)(C))->a620);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_577 */
+void T68f1704(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T6 t3;
+	T0* t4;
+	T0* t5;
+	T0* t6;
+	T1 t7;
+	t1 = (T68f762(ac, C));
+	t2 = (T68f762(ac, C));
+	t3 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+	t4 = (((T274*)(((T68*)(C))->a87))->z2[t3]);
+	t5 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+	t2 = (T65f149(ac, t2, t4, t5));
+	t4 = (((T545*)(((T68*)(C))->a369))->z2[((T68*)(C))->a597]);
+	t5 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
+	t6 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t5 = (T68f988(ac, C, t5, t6));
+	l1 = (T65f245(ac, t1, t2, t4, t5, ((T68*)(C))->a28));
+	t7 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t7) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(5)))));
+		((T68*)(C))->a620 = ((T6)((((T68*)(C))->a620)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a597 = ((T6)((((T68*)(C))->a597)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		t7 = (T6f14(ac, &(((T68*)(C))->a620), ((T68*)(C))->a437));
+		if (t7) {
+			((T68*)(C))->a437 = ((T6)((((T68*)(C))->a437)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a438 = (T609s2(ac, ((T68*)(C))->a438, ((T68*)(C))->a437));
+		}
+		T609s4(ac, ((T68*)(C))->a438, l1, ((T68*)(C))->a620);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_576 */
+void T68f1703(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T0* t3;
+	T0* t4;
+	T0* t5;
+	T1 t6;
+	t1 = (T68f762(ac, C));
+	t2 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+	t3 = (((T545*)(((T68*)(C))->a369))->z2[((T68*)(C))->a597]);
+	t4 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
+	t5 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t4 = (T68f988(ac, C, t4, t5));
+	l1 = (T65f245(ac, t1, t2, t3, t4, ((T68*)(C))->a28));
+	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t6) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
+		((T68*)(C))->a620 = ((T6)((((T68*)(C))->a620)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a597 = ((T6)((((T68*)(C))->a597)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		t6 = (T6f14(ac, &(((T68*)(C))->a620), ((T68*)(C))->a437));
+		if (t6) {
 			((T68*)(C))->a437 = ((T6)((((T68*)(C))->a437)+((T6)(GE_int32(10)))));
 			((T68*)(C))->a438 = (T609s2(ac, ((T68*)(C))->a438, ((T68*)(C))->a437));
 		}
@@ -79387,32 +79466,27 @@ void T68f1700(TC* ac, T0* C)
 	T0* l1 = 0;
 	T0* t1;
 	T0* t2;
-	T6 t3;
+	T0* t3;
 	T0* t4;
 	T0* t5;
-	T0* t6;
-	T1 t7;
+	T1 t6;
 	t1 = (T68f762(ac, C));
-	t2 = (T68f762(ac, C));
-	t3 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-	t4 = (((T274*)(((T68*)(C))->a87))->z2[t3]);
-	t5 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t2 = (T65f149(ac, t2, t4, t5));
-	t4 = (((T545*)(((T68*)(C))->a369))->z2[((T68*)(C))->a597]);
-	t5 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	t6 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t5 = (T68f988(ac, C, t5, t6));
-	l1 = (T65f245(ac, t1, t2, t4, t5, ((T68*)(C))->a28));
-	t7 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t7) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(5)))));
+	t2 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+	t3 = (((T545*)(((T68*)(C))->a369))->z2[((T68*)(C))->a597]);
+	t4 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
+	t5 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t4 = (T68f988(ac, C, t4, t5));
+	l1 = (T65f245(ac, t1, t2, t3, t4, ((T68*)(C))->a28));
+	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t6) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
 		((T68*)(C))->a620 = ((T6)((((T68*)(C))->a620)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
 		((T68*)(C))->a597 = ((T6)((((T68*)(C))->a597)-((T6)(GE_int32(1)))));
 		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
 		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		t7 = (T6f14(ac, &(((T68*)(C))->a620), ((T68*)(C))->a437));
-		if (t7) {
+		t6 = (T6f14(ac, &(((T68*)(C))->a620), ((T68*)(C))->a437));
+		if (t6) {
 			((T68*)(C))->a437 = ((T6)((((T68*)(C))->a437)+((T6)(GE_int32(10)))));
 			((T68*)(C))->a438 = (T609s2(ac, ((T68*)(C))->a438, ((T68*)(C))->a437));
 		}
@@ -79422,74 +79496,6 @@ void T68f1700(TC* ac, T0* C)
 
 /* ET_EIFFEL_PARSER.yy_do_action_572 */
 void T68f1699(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T0* t2;
-	T0* t3;
-	T0* t4;
-	T0* t5;
-	T1 t6;
-	t1 = (T68f762(ac, C));
-	t2 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t3 = (((T545*)(((T68*)(C))->a369))->z2[((T68*)(C))->a597]);
-	t4 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	t5 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t4 = (T68f988(ac, C, t4, t5));
-	l1 = (T65f245(ac, t1, t2, t3, t4, ((T68*)(C))->a28));
-	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t6) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
-		((T68*)(C))->a620 = ((T6)((((T68*)(C))->a620)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a597 = ((T6)((((T68*)(C))->a597)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		t6 = (T6f14(ac, &(((T68*)(C))->a620), ((T68*)(C))->a437));
-		if (t6) {
-			((T68*)(C))->a437 = ((T6)((((T68*)(C))->a437)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a438 = (T609s2(ac, ((T68*)(C))->a438, ((T68*)(C))->a437));
-		}
-		T609s4(ac, ((T68*)(C))->a438, l1, ((T68*)(C))->a620);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_571 */
-void T68f1698(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T0* t2;
-	T0* t3;
-	T0* t4;
-	T0* t5;
-	T1 t6;
-	t1 = (T68f762(ac, C));
-	t2 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t3 = (((T545*)(((T68*)(C))->a369))->z2[((T68*)(C))->a597]);
-	t4 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	t5 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t4 = (T68f988(ac, C, t4, t5));
-	l1 = (T65f245(ac, t1, t2, t3, t4, ((T68*)(C))->a28));
-	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t6) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
-		((T68*)(C))->a620 = ((T6)((((T68*)(C))->a620)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a597 = ((T6)((((T68*)(C))->a597)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		t6 = (T6f14(ac, &(((T68*)(C))->a620), ((T68*)(C))->a437));
-		if (t6) {
-			((T68*)(C))->a437 = ((T6)((((T68*)(C))->a437)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a438 = (T609s2(ac, ((T68*)(C))->a438, ((T68*)(C))->a437));
-		}
-		T609s4(ac, ((T68*)(C))->a438, l1, ((T68*)(C))->a620);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_570 */
-void T68f1697(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -79505,7 +79511,7 @@ void T68f1697(TC* ac, T0* C)
 	t1 = (T68s989(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t1 = (T68f762(ac, C));
 		t3 = (T68f762(ac, C));
@@ -79598,8 +79604,8 @@ T0* T724c91(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_569 */
-void T68f1696(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_571 */
+void T68f1698(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -79615,7 +79621,7 @@ void T68f1696(TC* ac, T0* C)
 	t1 = (T68s989(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t1 = (T68f762(ac, C));
 		t3 = (((T337*)(((T68*)(C))->a150))->z2[((T68*)(C))->a524]);
@@ -79648,8 +79654,8 @@ void T68f1696(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_568 */
-void T68f1695(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_570 */
+void T68f1697(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -79665,7 +79671,7 @@ void T68f1695(TC* ac, T0* C)
 	t1 = (T68s989(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t1 = (T68f762(ac, C));
 		t3 = (T68f762(ac, C));
@@ -79702,8 +79708,8 @@ void T68f1695(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_567 */
-void T68f1694(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_569 */
+void T68f1696(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -79719,7 +79725,7 @@ void T68f1694(TC* ac, T0* C)
 	t1 = (T68s989(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t1 = (T68f762(ac, C));
 		t3 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(3)))));
@@ -79745,6 +79751,98 @@ void T68f1694(TC* ac, T0* C)
 		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
 		t2 = (T6f14(ac, &(((T68*)(C))->a620), ((T68*)(C))->a437));
 		if (t2) {
+			((T68*)(C))->a437 = ((T6)((((T68*)(C))->a437)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a438 = (T609s2(ac, ((T68*)(C))->a438, ((T68*)(C))->a437));
+		}
+		T609s4(ac, ((T68*)(C))->a438, l1, ((T68*)(C))->a620);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_568 */
+void T68f1695(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T6 t3;
+	T0* t4;
+	T0* t5;
+	T0* t6;
+	T0* t7;
+	T0* t8;
+	T0* t9;
+	T1 t10;
+	t1 = (T68f762(ac, C));
+	t2 = (T68f762(ac, C));
+	t3 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
+	t4 = (((T274*)(((T68*)(C))->a87))->z2[t3]);
+	t3 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+	t5 = (((T274*)(((T68*)(C))->a87))->z2[t3]);
+	t2 = (T65f149(ac, t2, t4, t5));
+	t4 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+	t3 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(2)))));
+	t5 = (((T283*)(((T68*)(C))->a96))->z2[t3]);
+	t6 = (((T633*)(((T68*)(C))->a462))->z2[((T68*)(C))->a628]);
+	t3 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
+	t7 = (((T283*)(((T68*)(C))->a96))->z2[t3]);
+	t8 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
+	t9 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t8 = (T68f988(ac, C, t8, t9));
+	l1 = (T65f244(ac, t1, t2, t4, t5, t6, t7, t8, ((T68*)(C))->a28));
+	t10 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t10) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(8)))));
+		((T68*)(C))->a620 = ((T6)((((T68*)(C))->a620)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		t10 = (T6f14(ac, &(((T68*)(C))->a620), ((T68*)(C))->a437));
+		if (t10) {
+			((T68*)(C))->a437 = ((T6)((((T68*)(C))->a437)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a438 = (T609s2(ac, ((T68*)(C))->a438, ((T68*)(C))->a437));
+		}
+		T609s4(ac, ((T68*)(C))->a438, l1, ((T68*)(C))->a620);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_567 */
+void T68f1694(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T6 t2;
+	T0* t3;
+	T0* t4;
+	T0* t5;
+	T0* t6;
+	T0* t7;
+	T0* t8;
+	T0* t9;
+	T1 t10;
+	t1 = (T68f762(ac, C));
+	t2 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+	t3 = (((T274*)(((T68*)(C))->a87))->z2[t2]);
+	t4 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+	t2 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(2)))));
+	t5 = (((T283*)(((T68*)(C))->a96))->z2[t2]);
+	t6 = (((T633*)(((T68*)(C))->a462))->z2[((T68*)(C))->a628]);
+	t2 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
+	t7 = (((T283*)(((T68*)(C))->a96))->z2[t2]);
+	t8 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
+	t9 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t8 = (T68f988(ac, C, t8, t9));
+	l1 = (T65f244(ac, t1, t3, t4, t5, t6, t7, t8, ((T68*)(C))->a28));
+	t10 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t10) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(7)))));
+		((T68*)(C))->a620 = ((T6)((((T68*)(C))->a620)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		t10 = (T6f14(ac, &(((T68*)(C))->a620), ((T68*)(C))->a437));
+		if (t10) {
 			((T68*)(C))->a437 = ((T6)((((T68*)(C))->a437)+((T6)(GE_int32(10)))));
 			((T68*)(C))->a438 = (T609s2(ac, ((T68*)(C))->a438, ((T68*)(C))->a437));
 		}
@@ -79849,8 +79947,8 @@ void T68f1691(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
-	T0* t2;
-	T6 t3;
+	T6 t2;
+	T0* t3;
 	T0* t4;
 	T0* t5;
 	T0* t6;
@@ -79859,27 +79957,23 @@ void T68f1691(TC* ac, T0* C)
 	T0* t9;
 	T1 t10;
 	t1 = (T68f762(ac, C));
-	t2 = (T68f762(ac, C));
-	t3 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
-	t4 = (((T274*)(((T68*)(C))->a87))->z2[t3]);
-	t3 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-	t5 = (((T274*)(((T68*)(C))->a87))->z2[t3]);
-	t2 = (T65f149(ac, t2, t4, t5));
+	t2 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+	t3 = (((T274*)(((T68*)(C))->a87))->z2[t2]);
 	t4 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t3 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(2)))));
-	t5 = (((T283*)(((T68*)(C))->a96))->z2[t3]);
+	t2 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(2)))));
+	t5 = (((T283*)(((T68*)(C))->a96))->z2[t2]);
 	t6 = (((T633*)(((T68*)(C))->a462))->z2[((T68*)(C))->a628]);
-	t3 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
-	t7 = (((T283*)(((T68*)(C))->a96))->z2[t3]);
+	t2 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
+	t7 = (((T283*)(((T68*)(C))->a96))->z2[t2]);
 	t8 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
 	t9 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 	t8 = (T68f988(ac, C, t8, t9));
-	l1 = (T65f244(ac, t1, t2, t4, t5, t6, t7, t8, ((T68*)(C))->a28));
+	l1 = (T65f244(ac, t1, t3, t4, t5, t6, t7, t8, ((T68*)(C))->a28));
 	t10 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t10) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(8)))));
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(7)))));
 		((T68*)(C))->a620 = ((T6)((((T68*)(C))->a620)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
 		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(3)))));
 		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)-((T6)(GE_int32(1)))));
 		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
@@ -79896,94 +79990,6 @@ void T68f1691(TC* ac, T0* C)
 void T68f1690(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* t1;
-	T6 t2;
-	T0* t3;
-	T0* t4;
-	T0* t5;
-	T0* t6;
-	T0* t7;
-	T0* t8;
-	T0* t9;
-	T1 t10;
-	t1 = (T68f762(ac, C));
-	t2 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-	t3 = (((T274*)(((T68*)(C))->a87))->z2[t2]);
-	t4 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t2 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(2)))));
-	t5 = (((T283*)(((T68*)(C))->a96))->z2[t2]);
-	t6 = (((T633*)(((T68*)(C))->a462))->z2[((T68*)(C))->a628]);
-	t2 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
-	t7 = (((T283*)(((T68*)(C))->a96))->z2[t2]);
-	t8 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	t9 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t8 = (T68f988(ac, C, t8, t9));
-	l1 = (T65f244(ac, t1, t3, t4, t5, t6, t7, t8, ((T68*)(C))->a28));
-	t10 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t10) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(7)))));
-		((T68*)(C))->a620 = ((T6)((((T68*)(C))->a620)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
-		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(3)))));
-		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		t10 = (T6f14(ac, &(((T68*)(C))->a620), ((T68*)(C))->a437));
-		if (t10) {
-			((T68*)(C))->a437 = ((T6)((((T68*)(C))->a437)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a438 = (T609s2(ac, ((T68*)(C))->a438, ((T68*)(C))->a437));
-		}
-		T609s4(ac, ((T68*)(C))->a438, l1, ((T68*)(C))->a620);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_562 */
-void T68f1689(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T6 t2;
-	T0* t3;
-	T0* t4;
-	T0* t5;
-	T0* t6;
-	T0* t7;
-	T0* t8;
-	T0* t9;
-	T1 t10;
-	t1 = (T68f762(ac, C));
-	t2 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-	t3 = (((T274*)(((T68*)(C))->a87))->z2[t2]);
-	t4 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t2 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(2)))));
-	t5 = (((T283*)(((T68*)(C))->a96))->z2[t2]);
-	t6 = (((T633*)(((T68*)(C))->a462))->z2[((T68*)(C))->a628]);
-	t2 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
-	t7 = (((T283*)(((T68*)(C))->a96))->z2[t2]);
-	t8 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	t9 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t8 = (T68f988(ac, C, t8, t9));
-	l1 = (T65f244(ac, t1, t3, t4, t5, t6, t7, t8, ((T68*)(C))->a28));
-	t10 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t10) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(7)))));
-		((T68*)(C))->a620 = ((T6)((((T68*)(C))->a620)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
-		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(3)))));
-		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		t10 = (T6f14(ac, &(((T68*)(C))->a620), ((T68*)(C))->a437));
-		if (t10) {
-			((T68*)(C))->a437 = ((T6)((((T68*)(C))->a437)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a438 = (T609s2(ac, ((T68*)(C))->a438, ((T68*)(C))->a437));
-		}
-		T609s4(ac, ((T68*)(C))->a438, l1, ((T68*)(C))->a620);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_561 */
-void T68f1688(TC* ac, T0* C)
-{
-	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T611*)(((T68*)(C))->a438))->z2[((T68*)(C))->a620]);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
@@ -79993,8 +79999,8 @@ void T68f1688(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_560 */
-void T68f1687(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_562 */
+void T68f1689(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -80024,8 +80030,8 @@ void T68f1687(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_559 */
-void T68f1686(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_561 */
+void T68f1688(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -80065,8 +80071,8 @@ void T68f1686(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_558 */
-void T68f1685(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_560 */
+void T68f1687(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -80196,8 +80202,8 @@ T0* T545f4(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_557 */
-void T68f1684(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_559 */
+void T68f1686(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -80257,8 +80263,8 @@ void T199f86(TC* ac, T0* C, T0* a1)
 	((T199*)(C))->a2 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_556 */
-void T68f1683(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_558 */
+void T68f1685(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -80287,8 +80293,8 @@ void T68f1683(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_555 */
-void T68f1682(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_557 */
+void T68f1684(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -80322,8 +80328,8 @@ void T68f1682(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_554 */
-void T68f1681(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_556 */
+void T68f1683(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -80345,6 +80351,72 @@ void T68f1681(TC* ac, T0* C)
 		((T68*)(C))->a511 = ((T6)((((T68*)(C))->a511)-((T6)(GE_int32(1)))));
 		t5 = (T6f14(ac, &(((T68*)(C))->a597), ((T68*)(C))->a368));
 		if (t5) {
+			((T68*)(C))->a368 = ((T6)((((T68*)(C))->a368)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a369 = (T543s2(ac, ((T68*)(C))->a369, ((T68*)(C))->a368));
+		}
+		T543s4(ac, ((T68*)(C))->a369, l1, ((T68*)(C))->a597);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_555 */
+void T68f1682(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T6 t3;
+	T0* t4;
+	T0* t5;
+	T1 t6;
+	t1 = (T68f762(ac, C));
+	t2 = (T68f762(ac, C));
+	t3 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
+	t4 = (((T274*)(((T68*)(C))->a87))->z2[t3]);
+	t3 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+	t5 = (((T274*)(((T68*)(C))->a87))->z2[t3]);
+	t2 = (T65f149(ac, t2, t4, t5));
+	t4 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+	t5 = (((T298*)(((T68*)(C))->a111))->z2[((T68*)(C))->a511]);
+	l1 = (T65f243(ac, t1, t2, t4, t5));
+	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t6) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
+		((T68*)(C))->a597 = ((T6)((((T68*)(C))->a597)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a511 = ((T6)((((T68*)(C))->a511)-((T6)(GE_int32(1)))));
+		t6 = (T6f14(ac, &(((T68*)(C))->a597), ((T68*)(C))->a368));
+		if (t6) {
+			((T68*)(C))->a368 = ((T6)((((T68*)(C))->a368)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a369 = (T543s2(ac, ((T68*)(C))->a369, ((T68*)(C))->a368));
+		}
+		T543s4(ac, ((T68*)(C))->a369, l1, ((T68*)(C))->a597);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_554 */
+void T68f1681(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T6 t2;
+	T0* t3;
+	T0* t4;
+	T0* t5;
+	T1 t6;
+	t1 = (T68f762(ac, C));
+	t2 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+	t3 = (((T274*)(((T68*)(C))->a87))->z2[t2]);
+	t4 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+	t5 = (((T298*)(((T68*)(C))->a111))->z2[((T68*)(C))->a511]);
+	l1 = (T65f243(ac, t1, t3, t4, t5));
+	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t6) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a597 = ((T6)((((T68*)(C))->a597)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a511 = ((T6)((((T68*)(C))->a511)-((T6)(GE_int32(1)))));
+		t6 = (T6f14(ac, &(((T68*)(C))->a597), ((T68*)(C))->a368));
+		if (t6) {
 			((T68*)(C))->a368 = ((T6)((((T68*)(C))->a368)+((T6)(GE_int32(10)))));
 			((T68*)(C))->a369 = (T543s2(ac, ((T68*)(C))->a369, ((T68*)(C))->a368));
 		}
@@ -80424,72 +80496,6 @@ void T68f1678(TC* ac, T0* C)
 	T0* l1 = 0;
 	T0* t1;
 	T0* t2;
-	T6 t3;
-	T0* t4;
-	T0* t5;
-	T1 t6;
-	t1 = (T68f762(ac, C));
-	t2 = (T68f762(ac, C));
-	t3 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
-	t4 = (((T274*)(((T68*)(C))->a87))->z2[t3]);
-	t3 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-	t5 = (((T274*)(((T68*)(C))->a87))->z2[t3]);
-	t2 = (T65f149(ac, t2, t4, t5));
-	t4 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t5 = (((T298*)(((T68*)(C))->a111))->z2[((T68*)(C))->a511]);
-	l1 = (T65f243(ac, t1, t2, t4, t5));
-	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t6) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
-		((T68*)(C))->a597 = ((T6)((((T68*)(C))->a597)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(3)))));
-		((T68*)(C))->a511 = ((T6)((((T68*)(C))->a511)-((T6)(GE_int32(1)))));
-		t6 = (T6f14(ac, &(((T68*)(C))->a597), ((T68*)(C))->a368));
-		if (t6) {
-			((T68*)(C))->a368 = ((T6)((((T68*)(C))->a368)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a369 = (T543s2(ac, ((T68*)(C))->a369, ((T68*)(C))->a368));
-		}
-		T543s4(ac, ((T68*)(C))->a369, l1, ((T68*)(C))->a597);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_550 */
-void T68f1677(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T6 t2;
-	T0* t3;
-	T0* t4;
-	T0* t5;
-	T1 t6;
-	t1 = (T68f762(ac, C));
-	t2 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-	t3 = (((T274*)(((T68*)(C))->a87))->z2[t2]);
-	t4 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t5 = (((T298*)(((T68*)(C))->a111))->z2[((T68*)(C))->a511]);
-	l1 = (T65f243(ac, t1, t3, t4, t5));
-	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t6) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
-		((T68*)(C))->a597 = ((T6)((((T68*)(C))->a597)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
-		((T68*)(C))->a511 = ((T6)((((T68*)(C))->a511)-((T6)(GE_int32(1)))));
-		t6 = (T6f14(ac, &(((T68*)(C))->a597), ((T68*)(C))->a368));
-		if (t6) {
-			((T68*)(C))->a368 = ((T6)((((T68*)(C))->a368)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a369 = (T543s2(ac, ((T68*)(C))->a369, ((T68*)(C))->a368));
-		}
-		T543s4(ac, ((T68*)(C))->a369, l1, ((T68*)(C))->a597);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_549 */
-void T68f1676(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T0* t2;
 	T0* t3;
 	T6 t4;
 	T0* t5;
@@ -80519,8 +80525,8 @@ void T68f1676(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_548 */
-void T68f1675(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_550 */
+void T68f1677(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -80549,8 +80555,8 @@ void T68f1675(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_547 */
-void T68f1674(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_549 */
+void T68f1676(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -80639,8 +80645,8 @@ T0* T722c91(TC* ac, T0* a1, T0* a2)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_546 */
-void T68f1673(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_548 */
+void T68f1675(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -80667,8 +80673,8 @@ void T68f1673(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_545 */
-void T68f1672(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_547 */
+void T68f1674(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -80700,8 +80706,8 @@ void T68f1672(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_544 */
-void T68f1671(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_546 */
+void T68f1673(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -80721,6 +80727,68 @@ void T68f1671(TC* ac, T0* C)
 		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
 		t4 = (T6f14(ac, &(((T68*)(C))->a597), ((T68*)(C))->a368));
 		if (t4) {
+			((T68*)(C))->a368 = ((T6)((((T68*)(C))->a368)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a369 = (T543s2(ac, ((T68*)(C))->a369, ((T68*)(C))->a368));
+		}
+		T543s4(ac, ((T68*)(C))->a369, l1, ((T68*)(C))->a597);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_545 */
+void T68f1672(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T6 t2;
+	T0* t3;
+	T0* t4;
+	T1 t5;
+	t1 = (T68f762(ac, C));
+	t2 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
+	t3 = (((T274*)(((T68*)(C))->a87))->z2[t2]);
+	t2 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+	t4 = (((T274*)(((T68*)(C))->a87))->z2[t2]);
+	t1 = (T65f149(ac, t1, t3, t4));
+	t3 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+	t4 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	l1 = (T68f987(ac, C, t1, t3, t4));
+	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t5) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
+		((T68*)(C))->a597 = ((T6)((((T68*)(C))->a597)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		t5 = (T6f14(ac, &(((T68*)(C))->a597), ((T68*)(C))->a368));
+		if (t5) {
+			((T68*)(C))->a368 = ((T6)((((T68*)(C))->a368)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a369 = (T543s2(ac, ((T68*)(C))->a369, ((T68*)(C))->a368));
+		}
+		T543s4(ac, ((T68*)(C))->a369, l1, ((T68*)(C))->a597);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_544 */
+void T68f1671(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T6 t1;
+	T0* t2;
+	T0* t3;
+	T0* t4;
+	T1 t5;
+	t1 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+	t2 = (((T274*)(((T68*)(C))->a87))->z2[t1]);
+	t3 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+	t4 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	l1 = (T68f987(ac, C, t2, t3, t4));
+	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t5) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a597 = ((T6)((((T68*)(C))->a597)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		t5 = (T6f14(ac, &(((T68*)(C))->a597), ((T68*)(C))->a368));
+		if (t5) {
 			((T68*)(C))->a368 = ((T6)((((T68*)(C))->a368)+((T6)(GE_int32(10)))));
 			((T68*)(C))->a369 = (T543s2(ac, ((T68*)(C))->a369, ((T68*)(C))->a368));
 		}
@@ -80794,25 +80862,21 @@ void T68f1669(TC* ac, T0* C)
 void T68f1668(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* t1;
-	T6 t2;
+	T6 t1;
+	T0* t2;
 	T0* t3;
 	T0* t4;
 	T1 t5;
-	t1 = (T68f762(ac, C));
-	t2 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
-	t3 = (((T274*)(((T68*)(C))->a87))->z2[t2]);
-	t2 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-	t4 = (((T274*)(((T68*)(C))->a87))->z2[t2]);
-	t1 = (T65f149(ac, t1, t3, t4));
+	t1 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+	t2 = (((T274*)(((T68*)(C))->a87))->z2[t1]);
 	t3 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 	t4 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	l1 = (T68f987(ac, C, t1, t3, t4));
+	l1 = (T68f987(ac, C, t2, t3, t4));
 	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t5) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
 		((T68*)(C))->a597 = ((T6)((((T68*)(C))->a597)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
 		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
 		t5 = (T6f14(ac, &(((T68*)(C))->a597), ((T68*)(C))->a368));
 		if (t5) {
@@ -80825,64 +80889,6 @@ void T68f1668(TC* ac, T0* C)
 
 /* ET_EIFFEL_PARSER.yy_do_action_540 */
 void T68f1667(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T6 t1;
-	T0* t2;
-	T0* t3;
-	T0* t4;
-	T1 t5;
-	t1 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-	t2 = (((T274*)(((T68*)(C))->a87))->z2[t1]);
-	t3 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t4 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	l1 = (T68f987(ac, C, t2, t3, t4));
-	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t5) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
-		((T68*)(C))->a597 = ((T6)((((T68*)(C))->a597)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
-		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		t5 = (T6f14(ac, &(((T68*)(C))->a597), ((T68*)(C))->a368));
-		if (t5) {
-			((T68*)(C))->a368 = ((T6)((((T68*)(C))->a368)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a369 = (T543s2(ac, ((T68*)(C))->a369, ((T68*)(C))->a368));
-		}
-		T543s4(ac, ((T68*)(C))->a369, l1, ((T68*)(C))->a597);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_539 */
-void T68f1666(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T6 t1;
-	T0* t2;
-	T0* t3;
-	T0* t4;
-	T1 t5;
-	t1 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-	t2 = (((T274*)(((T68*)(C))->a87))->z2[t1]);
-	t3 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t4 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	l1 = (T68f987(ac, C, t2, t3, t4));
-	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t5) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
-		((T68*)(C))->a597 = ((T6)((((T68*)(C))->a597)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(2)))));
-		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		t5 = (T6f14(ac, &(((T68*)(C))->a597), ((T68*)(C))->a368));
-		if (t5) {
-			((T68*)(C))->a368 = ((T6)((((T68*)(C))->a368)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a369 = (T543s2(ac, ((T68*)(C))->a369, ((T68*)(C))->a368));
-		}
-		T543s4(ac, ((T68*)(C))->a369, l1, ((T68*)(C))->a597);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_538 */
-void T68f1665(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -80906,8 +80912,8 @@ void T68f1665(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_537 */
-void T68f1664(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_539 */
+void T68f1666(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -80926,8 +80932,8 @@ void T68f1664(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_536 */
-void T68f1663(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_538 */
+void T68f1665(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -80956,8 +80962,8 @@ void T68f1663(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_535 */
-void T68f1662(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_537 */
+void T68f1664(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -80981,8 +80987,8 @@ void T68f1662(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_534 */
-void T68f1661(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_536 */
+void T68f1663(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -81001,10 +81007,10 @@ void T68f1661(TC* ac, T0* C)
 	t4 = (T65f181(ac, t4, t5, t6));
 	t2 = (T65f239(ac, t2, t3, t4));
 	t3 = (((T331*)(((T68*)(C))->a144))->z2[((T68*)(C))->a522]);
-	l1 = (T65f242(ac, t1, t2, t3));
+	l1 = (T65f240(ac, t1, t2, t3));
 	t7 = (T1)(l1!=EIF_VOID);
 	if (t7) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t7 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t7) {
@@ -81135,7 +81141,7 @@ T0* T348f4(TC* ac, T0* C, T6 a1)
 }
 
 /* ET_AST_FACTORY.new_labeled_actual_parameter_semicolon */
-T0* T65f242(TC* ac, T0* C, T0* a1, T0* a2)
+T0* T65f240(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T0* R = 0;
 	R = a1;
@@ -81167,8 +81173,8 @@ T0* T720c12(TC* ac, T0* a1, T0* a2)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_533 */
-void T68f1660(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_535 */
+void T68f1662(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -81186,7 +81192,7 @@ void T68f1660(TC* ac, T0* C)
 	l1 = (T65f239(ac, t1, t2, t3));
 	t6 = (T1)(l1!=EIF_VOID);
 	if (t6) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t6) {
@@ -81204,8 +81210,8 @@ void T68f1660(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_532 */
-void T68f1659(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_534 */
+void T68f1661(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -81223,19 +81229,19 @@ void T68f1659(TC* ac, T0* C)
 			t3 = (T68f762(ac, C));
 			t4 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 			t5 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-			t3 = (T65f240(ac, t3, t4, t5));
+			t3 = (T65f241(ac, t3, t4, t5));
 			t4 = (T185f12(ac, l1));
 			t4 = (T200x22151170(ac, t4));
-			t2 = (T65f241(ac, t2, t3, t4));
-			T68f2110(ac, C, t2, l1);
+			t2 = (T65f242(ac, t2, t3, t4));
+			T68f2112(ac, C, t2, l1);
 		} else {
 			t2 = (T68f762(ac, C));
 			t3 = (T68f762(ac, C));
 			t4 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 			t5 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-			t3 = (T65f240(ac, t3, t4, t5));
-			t2 = (T65f241(ac, t2, t3, EIF_VOID));
-			T68f2110(ac, C, t2, l1);
+			t3 = (T65f241(ac, t3, t4, t5));
+			t2 = (T65f242(ac, t2, t3, EIF_VOID));
+			T68f2112(ac, C, t2, l1);
 		}
 	}
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
@@ -81307,7 +81313,7 @@ void T350f10(TC* ac, T0* C, T0* a1)
 }
 
 /* ET_EIFFEL_PARSER.add_to_actual_parameter_list */
-void T68f2110(TC* ac, T0* C, T0* a1, T0* a2)
+void T68f2112(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T1 t1;
 	t1 = (T1)(a2!=EIF_VOID);
@@ -81320,7 +81326,7 @@ void T68f2110(TC* ac, T0* C, T0* a1, T0* a2)
 }
 
 /* ET_AST_FACTORY.new_labeled_comma_actual_parameter */
-T0* T65f241(TC* ac, T0* C, T0* a1, T0* a2)
+T0* T65f242(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T0* R = 0;
 	T1 t1;
@@ -81355,15 +81361,15 @@ T0* T185f12(TC* ac, T0* C)
 }
 
 /* ET_AST_FACTORY.new_label_comma */
-T0* T65f240(TC* ac, T0* C, T0* a1, T0* a2)
+T0* T65f241(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T0* R = 0;
 	R = a1;
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_531 */
-void T68f1658(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_533 */
+void T68f1660(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -81381,19 +81387,19 @@ void T68f1658(TC* ac, T0* C)
 			t3 = (T68f762(ac, C));
 			t4 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 			t5 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-			t3 = (T65f240(ac, t3, t4, t5));
+			t3 = (T65f241(ac, t3, t4, t5));
 			t4 = (T185f12(ac, l1));
 			t4 = (T200x22151170(ac, t4));
-			t2 = (T65f241(ac, t2, t3, t4));
-			T68f2110(ac, C, t2, l1);
+			t2 = (T65f242(ac, t2, t3, t4));
+			T68f2112(ac, C, t2, l1);
 		} else {
 			t2 = (T68f762(ac, C));
 			t3 = (T68f762(ac, C));
 			t4 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 			t5 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-			t3 = (T65f240(ac, t3, t4, t5));
-			t2 = (T65f241(ac, t2, t3, EIF_VOID));
-			T68f2110(ac, C, t2, l1);
+			t3 = (T65f241(ac, t3, t4, t5));
+			t2 = (T65f242(ac, t2, t3, EIF_VOID));
+			T68f2112(ac, C, t2, l1);
 		}
 	}
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
@@ -81406,8 +81412,8 @@ void T68f1658(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_530 */
-void T68f1657(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_532 */
+void T68f1659(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -81425,19 +81431,19 @@ void T68f1657(TC* ac, T0* C)
 			t3 = (T68f762(ac, C));
 			t4 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 			t5 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-			t3 = (T65f240(ac, t3, t4, t5));
+			t3 = (T65f241(ac, t3, t4, t5));
 			t4 = (T185f12(ac, l1));
 			t4 = (T200x22151170(ac, t4));
-			t2 = (T65f241(ac, t2, t3, t4));
-			T68f2110(ac, C, t2, l1);
+			t2 = (T65f242(ac, t2, t3, t4));
+			T68f2112(ac, C, t2, l1);
 		} else {
 			t2 = (T68f762(ac, C));
 			t3 = (T68f762(ac, C));
 			t4 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 			t5 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-			t3 = (T65f240(ac, t3, t4, t5));
-			t2 = (T65f241(ac, t2, t3, EIF_VOID));
-			T68f2110(ac, C, t2, l1);
+			t3 = (T65f241(ac, t3, t4, t5));
+			t2 = (T65f242(ac, t2, t3, EIF_VOID));
+			T68f2112(ac, C, t2, l1);
 		}
 	}
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
@@ -81446,6 +81452,44 @@ void T68f1657(TC* ac, T0* C)
 		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
 		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
 		((T68*)(C))->a502 = ((T6)((((T68*)(C))->a502)-((T6)(GE_int32(1)))));
+		T349s4(ac, ((T68*)(C))->a165, l1, ((T68*)(C))->a529);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_531 */
+void T68f1658(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T1 t3;
+	l1 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
+	t1 = (((T348*)(((T68*)(C))->a162))->z2[((T68*)(C))->a528]);
+	t2 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
+	T68f2112(ac, C, t1, t2);
+	t3 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t3) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a528 = ((T6)((((T68*)(C))->a528)-((T6)(GE_int32(1)))));
+		T349s4(ac, ((T68*)(C))->a165, l1, ((T68*)(C))->a529);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_530 */
+void T68f1657(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T1 t3;
+	l1 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
+	t1 = (((T348*)(((T68*)(C))->a162))->z2[((T68*)(C))->a528]);
+	t2 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
+	T68f2112(ac, C, t1, t2);
+	t3 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t3) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a528 = ((T6)((((T68*)(C))->a528)-((T6)(GE_int32(1)))));
 		T349s4(ac, ((T68*)(C))->a165, l1, ((T68*)(C))->a529);
 	}
 }
@@ -81456,49 +81500,12 @@ void T68f1656(TC* ac, T0* C)
 	T0* l1 = 0;
 	T0* t1;
 	T0* t2;
-	T1 t3;
-	l1 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
-	t1 = (((T348*)(((T68*)(C))->a162))->z2[((T68*)(C))->a528]);
-	t2 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
-	T68f2110(ac, C, t1, t2);
-	t3 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t3) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
-		((T68*)(C))->a528 = ((T6)((((T68*)(C))->a528)-((T6)(GE_int32(1)))));
-		T349s4(ac, ((T68*)(C))->a165, l1, ((T68*)(C))->a529);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_528 */
-void T68f1655(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T0* t2;
-	T1 t3;
-	l1 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
-	t1 = (((T348*)(((T68*)(C))->a162))->z2[((T68*)(C))->a528]);
-	t2 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
-	T68f2110(ac, C, t1, t2);
-	t3 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t3) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
-		((T68*)(C))->a528 = ((T6)((((T68*)(C))->a528)-((T6)(GE_int32(1)))));
-		T349s4(ac, ((T68*)(C))->a165, l1, ((T68*)(C))->a529);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_527 */
-void T68f1654(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T0* t2;
 	T0* t3;
 	T6 t4;
 	T0* t5;
 	T0* t6;
-	T1 t7;
+	T0* t7;
+	T1 t8;
 	t1 = (T68f762(ac, C));
 	t2 = (T68f964(ac, C));
 	t3 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
@@ -81506,23 +81513,27 @@ void T68f1654(TC* ac, T0* C)
 	t4 = ((T6)((t4)+((T6)(GE_int32(1)))));
 	l1 = (T65f237(ac, t1, t2, t3, t4));
 	t1 = (T68f762(ac, C));
-	t2 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t3 = (T68f762(ac, C));
+	t2 = (T68f762(ac, C));
+	t3 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t5 = (T68f762(ac, C));
 	t4 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
-	t5 = (((T283*)(((T68*)(C))->a96))->z2[t4]);
-	t6 = (((T633*)(((T68*)(C))->a462))->z2[((T68*)(C))->a628]);
-	t3 = (T65f181(ac, t3, t5, t6));
-	t1 = (T65f239(ac, t1, t2, t3));
-	T68f2110(ac, C, t1, l1);
-	t7 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t7) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
+	t6 = (((T283*)(((T68*)(C))->a96))->z2[t4]);
+	t7 = (((T633*)(((T68*)(C))->a462))->z2[((T68*)(C))->a628]);
+	t5 = (T65f181(ac, t5, t6, t7));
+	t2 = (T65f239(ac, t2, t3, t5));
+	t3 = (((T331*)(((T68*)(C))->a144))->z2[((T68*)(C))->a522]);
+	t1 = (T65f240(ac, t1, t2, t3));
+	T68f2112(ac, C, t1, l1);
+	t8 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t8) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(5)))));
 		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)+((T6)(GE_int32(1)))));
 		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
 		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(2)))));
 		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)-((T6)(GE_int32(1)))));
-		t7 = (T6f14(ac, &(((T68*)(C))->a529), ((T68*)(C))->a164));
-		if (t7) {
+		((T68*)(C))->a522 = ((T6)((((T68*)(C))->a522)-((T6)(GE_int32(1)))));
+		t8 = (T6f14(ac, &(((T68*)(C))->a529), ((T68*)(C))->a164));
+		if (t8) {
 			((T68*)(C))->a164 = ((T6)((((T68*)(C))->a164)+((T6)(GE_int32(10)))));
 			((T68*)(C))->a165 = (T349s2(ac, ((T68*)(C))->a165, ((T68*)(C))->a164));
 		}
@@ -81612,14 +81623,72 @@ void T185f31(TC* ac, T0* C, T0* a1)
 	((T185*)(C))->a3 = a1;
 }
 
+/* ET_EIFFEL_PARSER.yy_do_action_528 */
+void T68f1655(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T0* t3;
+	T6 t4;
+	T0* t5;
+	T0* t6;
+	T1 t7;
+	t1 = (T68f762(ac, C));
+	t2 = (T68f964(ac, C));
+	t3 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
+	t4 = (T68f962(ac, C));
+	t4 = ((T6)((t4)+((T6)(GE_int32(1)))));
+	l1 = (T65f237(ac, t1, t2, t3, t4));
+	t1 = (T68f762(ac, C));
+	t2 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t3 = (T68f762(ac, C));
+	t4 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
+	t5 = (((T283*)(((T68*)(C))->a96))->z2[t4]);
+	t6 = (((T633*)(((T68*)(C))->a462))->z2[((T68*)(C))->a628]);
+	t3 = (T65f181(ac, t3, t5, t6));
+	t1 = (T65f239(ac, t1, t2, t3));
+	T68f2112(ac, C, t1, l1);
+	t7 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t7) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
+		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)-((T6)(GE_int32(1)))));
+		t7 = (T6f14(ac, &(((T68*)(C))->a529), ((T68*)(C))->a164));
+		if (t7) {
+			((T68*)(C))->a164 = ((T6)((((T68*)(C))->a164)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a165 = (T349s2(ac, ((T68*)(C))->a165, ((T68*)(C))->a164));
+		}
+		T349s4(ac, ((T68*)(C))->a165, l1, ((T68*)(C))->a529);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_527 */
+void T68f1654(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
+	T68f2095(ac, C);
+	T68f2090(ac, C);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a502 = ((T6)((((T68*)(C))->a502)-((T6)(GE_int32(1)))));
+		T349s4(ac, ((T68*)(C))->a165, l1, ((T68*)(C))->a529);
+	}
+}
+
 /* ET_EIFFEL_PARSER.yy_do_action_526 */
 void T68f1653(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
-	T68f2093(ac, C);
-	T68f2088(ac, C);
+	T68f2095(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
@@ -81630,22 +81699,6 @@ void T68f1653(TC* ac, T0* C)
 
 /* ET_EIFFEL_PARSER.yy_do_action_525 */
 void T68f1652(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
-	T68f2093(ac, C);
-	T68f2088(ac, C);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
-		((T68*)(C))->a502 = ((T6)((((T68*)(C))->a502)-((T6)(GE_int32(1)))));
-		T349s4(ac, ((T68*)(C))->a165, l1, ((T68*)(C))->a529);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_524 */
-void T68f1651(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -81671,8 +81724,8 @@ void T68f1651(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_523 */
-void T68f1650(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_524 */
+void T68f1651(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -81684,8 +81737,8 @@ void T68f1650(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_522 */
-void T68f1649(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_523 */
+void T68f1650(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -81702,8 +81755,8 @@ void T68f1649(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_521 */
-void T68f1648(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_522 */
+void T68f1649(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -81716,7 +81769,7 @@ void T68f1648(TC* ac, T0* C)
 	l1 = (T65f238(ac, t1, t2, t3));
 	t4 = (T1)(l1!=EIF_VOID);
 	if (t4) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
@@ -81741,12 +81794,12 @@ T0* T65f238(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_520 */
-void T68f1647(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_521 */
+void T68f1648(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
-	T68f2091(ac, C);
+	T68f2093(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -81760,8 +81813,8 @@ void T68f1647(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_519 */
-void T68f1646(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_520 */
+void T68f1647(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -81774,7 +81827,7 @@ void T68f1646(TC* ac, T0* C)
 	t2 = (T68f986(ac, C, EIF_VOID, t2, EIF_VOID));
 	t3 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
 	t1 = (T65f238(ac, t1, t2, t3));
-	T68f2110(ac, C, t1, l1);
+	T68f2112(ac, C, t1, l1);
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
@@ -81904,8 +81957,8 @@ T0* T87f144(TC* ac, T0* C, T0* a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_518 */
-void T68f1645(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_519 */
+void T68f1646(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -81918,7 +81971,7 @@ void T68f1645(TC* ac, T0* C)
 	t2 = (T68f985(ac, C, EIF_VOID, t2, EIF_VOID));
 	t3 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
 	t1 = (T65f238(ac, t1, t2, t3));
-	T68f2110(ac, C, t1, l1);
+	T68f2112(ac, C, t1, l1);
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
@@ -82113,8 +82166,8 @@ T0* T506f14(TC* ac, T0* C, T0* a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_517 */
-void T68f1644(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_518 */
+void T68f1645(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82127,7 +82180,7 @@ void T68f1644(TC* ac, T0* C)
 	t2 = (T68f985(ac, C, EIF_VOID, t2, EIF_VOID));
 	t3 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
 	t1 = (T65f238(ac, t1, t2, t3));
-	T68f2110(ac, C, t1, l1);
+	T68f2112(ac, C, t1, l1);
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
@@ -82138,15 +82191,15 @@ void T68f1644(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_516 */
-void T68f1643(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_517 */
+void T68f1644(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	l1 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
 	t1 = (((T348*)(((T68*)(C))->a162))->z2[((T68*)(C))->a528]);
-	T68f2110(ac, C, t1, l1);
+	T68f2112(ac, C, t1, l1);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
@@ -82155,8 +82208,8 @@ void T68f1643(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_515 */
-void T68f1642(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_516 */
+void T68f1643(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -82200,15 +82253,15 @@ void T68f1642(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_514 */
-void T68f1641(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_515 */
+void T68f1642(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T334*)(((T68*)(C))->a147))->z2[((T68*)(C))->a523]);
-	T68f2094(ac, C, t1);
-	T68f2090(ac, C);
+	T68f2096(ac, C, t1);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
@@ -82223,14 +82276,14 @@ void T68f1641(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_513 */
-void T68f1640(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_514 */
+void T68f1641(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
-	T68f2093(ac, C);
-	T68f2088(ac, C);
+	T68f2095(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
@@ -82239,8 +82292,8 @@ void T68f1640(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_512 */
-void T68f1639(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_513 */
+void T68f1640(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82266,8 +82319,8 @@ void T68f1639(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_511 */
-void T68f1638(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_512 */
+void T68f1639(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -82279,8 +82332,8 @@ void T68f1638(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_510 */
-void T68f1637(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_511 */
+void T68f1638(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -82294,6 +82347,19 @@ void T68f1637(TC* ac, T0* C)
 			((T68*)(C))->a165 = (T349s2(ac, ((T68*)(C))->a165, ((T68*)(C))->a164));
 		}
 		T349s4(ac, ((T68*)(C))->a165, l1, ((T68*)(C))->a529);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_510 */
+void T68f1637(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T302s4(ac, ((T68*)(C))->a117, l1, ((T68*)(C))->a513);
 	}
 }
 
@@ -82312,19 +82378,6 @@ void T68f1636(TC* ac, T0* C)
 
 /* ET_EIFFEL_PARSER.yy_do_action_508 */
 void T68f1635(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		T302s4(ac, ((T68*)(C))->a117, l1, ((T68*)(C))->a513);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_507 */
-void T68f1634(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82466,8 +82519,8 @@ T0* T633f4(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_506 */
-void T68f1633(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_507 */
+void T68f1634(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82494,8 +82547,8 @@ void T68f1633(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_505 */
-void T68f1632(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_506 */
+void T68f1633(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82526,8 +82579,8 @@ void T68f1632(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_504 */
-void T68f1631(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_505 */
+void T68f1632(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82554,8 +82607,8 @@ void T68f1631(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_503 */
-void T68f1630(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_504 */
+void T68f1631(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82587,8 +82640,8 @@ void T68f1630(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_502 */
-void T68f1629(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_503 */
+void T68f1630(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82615,8 +82668,8 @@ void T68f1629(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_501 */
-void T68f1628(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_502 */
+void T68f1629(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82641,6 +82694,34 @@ void T68f1628(TC* ac, T0* C)
 		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
 		t5 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
 		if (t5) {
+			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
+		}
+		T632s4(ac, ((T68*)(C))->a462, l1, ((T68*)(C))->a628);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_501 */
+void T68f1628(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T0* t3;
+	T1 t4;
+	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+	t2 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t3 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
+	l1 = (T68f986(ac, C, t1, t2, t3));
+	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t4) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
+		t4 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
+		if (t4) {
 			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
 			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
 		}
@@ -82682,34 +82763,6 @@ void T68f1626(TC* ac, T0* C)
 	T0* l1 = 0;
 	T0* t1;
 	T0* t2;
-	T0* t3;
-	T1 t4;
-	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t2 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t3 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
-	l1 = (T68f986(ac, C, t1, t2, t3));
-	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t4) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
-		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
-		t4 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
-		if (t4) {
-			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
-		}
-		T632s4(ac, ((T68*)(C))->a462, l1, ((T68*)(C))->a628);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_498 */
-void T68f1625(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T0* t2;
 	T1 t3;
 	t1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 	t2 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
@@ -82729,8 +82782,8 @@ void T68f1625(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_497 */
-void T68f1624(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_498 */
+void T68f1625(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -82749,8 +82802,8 @@ void T68f1624(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_496 */
-void T68f1623(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_497 */
+void T68f1624(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82781,8 +82834,8 @@ void T68f1623(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_495 */
-void T68f1622(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_496 */
+void T68f1623(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82809,8 +82862,8 @@ void T68f1622(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_494 */
-void T68f1621(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_495 */
+void T68f1622(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82841,8 +82894,8 @@ void T68f1621(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_493 */
-void T68f1620(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_494 */
+void T68f1621(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82869,8 +82922,8 @@ void T68f1620(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_492 */
-void T68f1619(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_493 */
+void T68f1620(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82902,8 +82955,8 @@ void T68f1619(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_491 */
-void T68f1618(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_492 */
+void T68f1619(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82930,8 +82983,8 @@ void T68f1618(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_490 */
-void T68f1617(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_491 */
+void T68f1618(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -82956,6 +83009,34 @@ void T68f1617(TC* ac, T0* C)
 		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
 		t5 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
 		if (t5) {
+			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
+		}
+		T632s4(ac, ((T68*)(C))->a462, l1, ((T68*)(C))->a628);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_490 */
+void T68f1617(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T0* t3;
+	T1 t4;
+	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+	t2 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t3 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
+	l1 = (T68f985(ac, C, t1, t2, t3));
+	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t4) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
+		t4 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
+		if (t4) {
 			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
 			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
 		}
@@ -83025,34 +83106,6 @@ void T68f1614(TC* ac, T0* C)
 	T0* l1 = 0;
 	T0* t1;
 	T0* t2;
-	T0* t3;
-	T1 t4;
-	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t2 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t3 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
-	l1 = (T68f985(ac, C, t1, t2, t3));
-	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t4) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
-		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
-		t4 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
-		if (t4) {
-			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
-		}
-		T632s4(ac, ((T68*)(C))->a462, l1, ((T68*)(C))->a628);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_486 */
-void T68f1613(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T0* t2;
 	T1 t3;
 	t1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 	t2 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
@@ -83072,8 +83125,8 @@ void T68f1613(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_485 */
-void T68f1612(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_486 */
+void T68f1613(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83094,8 +83147,8 @@ void T68f1612(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_484 */
-void T68f1611(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_485 */
+void T68f1612(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83126,8 +83179,8 @@ void T68f1611(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_483 */
-void T68f1610(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_484 */
+void T68f1611(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83154,8 +83207,8 @@ void T68f1610(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_482 */
-void T68f1609(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_483 */
+void T68f1610(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83186,8 +83239,8 @@ void T68f1609(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_481 */
-void T68f1608(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_482 */
+void T68f1609(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83214,8 +83267,8 @@ void T68f1608(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_480 */
-void T68f1607(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_481 */
+void T68f1608(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83247,8 +83300,8 @@ void T68f1607(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_479 */
-void T68f1606(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_480 */
+void T68f1607(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83275,8 +83328,8 @@ void T68f1606(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_478 */
-void T68f1605(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_479 */
+void T68f1606(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83301,6 +83354,34 @@ void T68f1605(TC* ac, T0* C)
 		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
 		t5 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
 		if (t5) {
+			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
+		}
+		T632s4(ac, ((T68*)(C))->a462, l1, ((T68*)(C))->a628);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_478 */
+void T68f1605(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T0* t3;
+	T1 t4;
+	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+	t2 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t3 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
+	l1 = (T68f986(ac, C, t1, t2, t3));
+	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t4) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
+		t4 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
+		if (t4) {
 			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
 			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
 		}
@@ -83342,34 +83423,6 @@ void T68f1603(TC* ac, T0* C)
 	T0* l1 = 0;
 	T0* t1;
 	T0* t2;
-	T0* t3;
-	T1 t4;
-	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t2 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t3 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
-	l1 = (T68f986(ac, C, t1, t2, t3));
-	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t4) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
-		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
-		t4 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
-		if (t4) {
-			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
-		}
-		T632s4(ac, ((T68*)(C))->a462, l1, ((T68*)(C))->a628);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_475 */
-void T68f1602(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T0* t2;
 	T1 t3;
 	t1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 	t2 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
@@ -83389,8 +83442,8 @@ void T68f1602(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_474 */
-void T68f1601(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_475 */
+void T68f1602(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -83409,8 +83462,8 @@ void T68f1601(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_473 */
-void T68f1600(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_474 */
+void T68f1601(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83441,8 +83494,8 @@ void T68f1600(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_472 */
-void T68f1599(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_473 */
+void T68f1600(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83469,8 +83522,8 @@ void T68f1599(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_471 */
-void T68f1598(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_472 */
+void T68f1599(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83501,8 +83554,8 @@ void T68f1598(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_470 */
-void T68f1597(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_471 */
+void T68f1598(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83529,8 +83582,8 @@ void T68f1597(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_469 */
-void T68f1596(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_470 */
+void T68f1597(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83562,8 +83615,8 @@ void T68f1596(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_468 */
-void T68f1595(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_469 */
+void T68f1596(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83590,8 +83643,8 @@ void T68f1595(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_467 */
-void T68f1594(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_468 */
+void T68f1595(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83616,6 +83669,34 @@ void T68f1594(TC* ac, T0* C)
 		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
 		t5 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
 		if (t5) {
+			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
+		}
+		T632s4(ac, ((T68*)(C))->a462, l1, ((T68*)(C))->a628);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_467 */
+void T68f1594(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T0* t3;
+	T1 t4;
+	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+	t2 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t3 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
+	l1 = (T68f985(ac, C, t1, t2, t3));
+	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t4) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
+		t4 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
+		if (t4) {
 			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
 			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
 		}
@@ -83685,34 +83766,6 @@ void T68f1591(TC* ac, T0* C)
 	T0* l1 = 0;
 	T0* t1;
 	T0* t2;
-	T0* t3;
-	T1 t4;
-	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t2 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t3 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
-	l1 = (T68f985(ac, C, t1, t2, t3));
-	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t4) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
-		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
-		t4 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
-		if (t4) {
-			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
-		}
-		T632s4(ac, ((T68*)(C))->a462, l1, ((T68*)(C))->a628);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_463 */
-void T68f1590(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T0* t2;
 	T1 t3;
 	t1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 	t2 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
@@ -83732,8 +83785,8 @@ void T68f1590(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_462 */
-void T68f1589(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_463 */
+void T68f1590(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83764,8 +83817,8 @@ void T68f1589(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_461 */
-void T68f1588(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_462 */
+void T68f1589(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83792,8 +83845,8 @@ void T68f1588(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_460 */
-void T68f1587(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_461 */
+void T68f1588(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83824,8 +83877,8 @@ void T68f1587(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_459 */
-void T68f1586(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_460 */
+void T68f1587(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83852,8 +83905,8 @@ void T68f1586(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_458 */
-void T68f1585(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_459 */
+void T68f1586(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83885,8 +83938,8 @@ void T68f1585(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_457 */
-void T68f1584(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_458 */
+void T68f1585(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83913,8 +83966,8 @@ void T68f1584(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_456 */
-void T68f1583(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_457 */
+void T68f1584(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -83939,6 +83992,34 @@ void T68f1583(TC* ac, T0* C)
 		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
 		t5 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
 		if (t5) {
+			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
+		}
+		T632s4(ac, ((T68*)(C))->a462, l1, ((T68*)(C))->a628);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_456 */
+void T68f1583(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T0* t3;
+	T1 t4;
+	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+	t2 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t3 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
+	l1 = (T68f986(ac, C, t1, t2, t3));
+	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t4) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
+		t4 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
+		if (t4) {
 			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
 			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
 		}
@@ -83980,34 +84061,6 @@ void T68f1581(TC* ac, T0* C)
 	T0* l1 = 0;
 	T0* t1;
 	T0* t2;
-	T0* t3;
-	T1 t4;
-	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t2 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t3 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
-	l1 = (T68f986(ac, C, t1, t2, t3));
-	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t4) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
-		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
-		t4 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
-		if (t4) {
-			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
-		}
-		T632s4(ac, ((T68*)(C))->a462, l1, ((T68*)(C))->a628);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_453 */
-void T68f1580(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T0* t2;
 	T1 t3;
 	t1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 	t2 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
@@ -84027,8 +84080,8 @@ void T68f1580(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_452 */
-void T68f1579(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_453 */
+void T68f1580(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -84047,8 +84100,8 @@ void T68f1579(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_451 */
-void T68f1578(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_452 */
+void T68f1579(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -84079,8 +84132,8 @@ void T68f1578(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_450 */
-void T68f1577(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_451 */
+void T68f1578(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -84107,8 +84160,8 @@ void T68f1577(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_449 */
-void T68f1576(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_450 */
+void T68f1577(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -84139,8 +84192,8 @@ void T68f1576(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_448 */
-void T68f1575(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_449 */
+void T68f1576(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -84167,8 +84220,8 @@ void T68f1575(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_447 */
-void T68f1574(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_448 */
+void T68f1575(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -84200,8 +84253,8 @@ void T68f1574(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_446 */
-void T68f1573(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_447 */
+void T68f1574(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -84228,8 +84281,8 @@ void T68f1573(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_445 */
-void T68f1572(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_446 */
+void T68f1573(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -84254,6 +84307,34 @@ void T68f1572(TC* ac, T0* C)
 		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
 		t5 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
 		if (t5) {
+			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
+		}
+		T632s4(ac, ((T68*)(C))->a462, l1, ((T68*)(C))->a628);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_445 */
+void T68f1572(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T0* t3;
+	T1 t4;
+	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+	t2 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t3 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
+	l1 = (T68f985(ac, C, t1, t2, t3));
+	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t4) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
+		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
+		t4 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
+		if (t4) {
 			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
 			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
 		}
@@ -84323,34 +84404,6 @@ void T68f1569(TC* ac, T0* C)
 	T0* l1 = 0;
 	T0* t1;
 	T0* t2;
-	T0* t3;
-	T1 t4;
-	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t2 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t3 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
-	l1 = (T68f985(ac, C, t1, t2, t3));
-	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t4) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
-		((T68*)(C))->a628 = ((T6)((((T68*)(C))->a628)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a529 = ((T6)((((T68*)(C))->a529)-((T6)(GE_int32(1)))));
-		t4 = (T6f14(ac, &(((T68*)(C))->a628), ((T68*)(C))->a461));
-		if (t4) {
-			((T68*)(C))->a461 = ((T6)((((T68*)(C))->a461)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a462 = (T632s2(ac, ((T68*)(C))->a462, ((T68*)(C))->a461));
-		}
-		T632s4(ac, ((T68*)(C))->a462, l1, ((T68*)(C))->a628);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_441 */
-void T68f1568(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T0* t2;
 	T1 t3;
 	t1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 	t2 = (((T350*)(((T68*)(C))->a165))->z2[((T68*)(C))->a529]);
@@ -84370,8 +84423,8 @@ void T68f1568(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_440 */
-void T68f1567(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_441 */
+void T68f1568(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -84383,8 +84436,8 @@ void T68f1567(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_439 */
-void T68f1566(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_440 */
+void T68f1567(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -84405,8 +84458,8 @@ void T68f1566(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_438 */
-void T68f1565(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_439 */
+void T68f1566(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -84418,8 +84471,8 @@ void T68f1565(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_437 */
-void T68f1564(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_438 */
+void T68f1565(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -84436,8 +84489,8 @@ void T68f1564(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_436 */
-void T68f1563(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_437 */
+void T68f1564(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -84507,8 +84560,8 @@ void T651f10(TC* ac, T0* C, T0* a1)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_435 */
-void T68f1562(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_436 */
+void T68f1563(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -84578,8 +84631,8 @@ T0* T651f4(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_434 */
-void T68f1561(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_435 */
+void T68f1562(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -84737,8 +84790,8 @@ T0* T65f133(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_433 */
-void T68f1560(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_434 */
+void T68f1561(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -84764,8 +84817,8 @@ void T68f1560(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_432 */
-void T68f1559(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_433 */
+void T68f1560(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -85119,8 +85172,8 @@ T0* T556s4(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_431 */
-void T68f1558(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_432 */
+void T68f1559(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -85142,8 +85195,8 @@ void T68f1558(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_430 */
-void T68f1557(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_431 */
+void T68f1558(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -85155,8 +85208,8 @@ void T68f1557(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_429 */
-void T68f1556(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_430 */
+void T68f1557(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -85173,12 +85226,12 @@ void T68f1556(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_428 */
-void T68f1555(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_429 */
+void T68f1556(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
-	T68f2109(ac, C);
+	T68f2111(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -85193,17 +85246,17 @@ void T68f1555(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.start_loop_invariant */
-void T68f2109(TC* ac, T0* C)
+void T68f2111(TC* ac, T0* C)
 {
-	T68f2116(ac, C, (T6)(GE_int32(5)));
+	T68f2118(ac, C, (T6)(GE_int32(5)));
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_427 */
-void T68f1554(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_428 */
+void T68f1555(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
-	T68f2102(ac, C, EIF_VOID);
+	T68f2104(ac, C, EIF_VOID);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -85217,8 +85270,8 @@ void T68f1554(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_426 */
-void T68f1553(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_427 */
+void T68f1554(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -85751,8 +85804,8 @@ T0* T539s11(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_425 */
-void T68f1552(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_426 */
+void T68f1553(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -85774,8 +85827,8 @@ void T68f1552(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_424 */
-void T68f1551(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_425 */
+void T68f1552(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -85787,8 +85840,8 @@ void T68f1551(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_423 */
-void T68f1550(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_424 */
+void T68f1551(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -85805,12 +85858,12 @@ void T68f1550(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_422 */
-void T68f1549(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_423 */
+void T68f1550(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
-	T68f2108(ac, C);
+	T68f2110(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -85825,13 +85878,13 @@ void T68f1549(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.start_invariant */
-void T68f2108(TC* ac, T0* C)
+void T68f2110(TC* ac, T0* C)
 {
-	T68f2116(ac, C, (T6)(GE_int32(3)));
+	T68f2118(ac, C, (T6)(GE_int32(3)));
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_421 */
-void T68f1548(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_422 */
+void T68f1549(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -86199,8 +86252,8 @@ T0* T601s9(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_420 */
-void T68f1547(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_421 */
+void T68f1548(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -86222,8 +86275,8 @@ void T68f1547(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_419 */
-void T68f1546(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_420 */
+void T68f1547(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -86249,8 +86302,8 @@ void T68f1546(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_418 */
-void T68f1545(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_419 */
+void T68f1546(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -86272,8 +86325,8 @@ void T68f1545(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_417 */
-void T68f1544(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_418 */
+void T68f1545(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -86290,12 +86343,12 @@ void T68f1544(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_416 */
-void T68f1543(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_417 */
+void T68f1544(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
-	T68f2107(ac, C);
+	T68f2109(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -86310,13 +86363,13 @@ void T68f1543(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.start_postcondition */
-void T68f2107(TC* ac, T0* C)
+void T68f2109(TC* ac, T0* C)
 {
-	T68f2116(ac, C, (T6)(GE_int32(2)));
+	T68f2118(ac, C, (T6)(GE_int32(2)));
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_415 */
-void T68f1542(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_416 */
+void T68f1543(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -86684,8 +86737,8 @@ T0* T604s8(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_414 */
-void T68f1541(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_415 */
+void T68f1542(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -86707,8 +86760,8 @@ void T68f1541(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_413 */
-void T68f1540(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_414 */
+void T68f1541(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -86734,8 +86787,8 @@ void T68f1540(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_412 */
-void T68f1539(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_413 */
+void T68f1540(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -86757,8 +86810,8 @@ void T68f1539(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_411 */
-void T68f1538(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_412 */
+void T68f1539(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -86775,12 +86828,12 @@ void T68f1538(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_410 */
-void T68f1537(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_411 */
+void T68f1538(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
-	T68f2106(ac, C);
+	T68f2108(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -86795,13 +86848,13 @@ void T68f1537(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.start_precondition */
-void T68f2106(TC* ac, T0* C)
+void T68f2108(TC* ac, T0* C)
 {
-	T68f2116(ac, C, (T6)(GE_int32(1)));
+	T68f2118(ac, C, (T6)(GE_int32(1)));
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_409 */
-void T68f1536(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_410 */
+void T68f1537(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -86813,9 +86866,9 @@ void T68f1536(TC* ac, T0* C)
 		t3 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 		t2 = (T65f235(ac, t2, t3));
 		t3 = (((T331*)(((T68*)(C))->a144))->z2[((T68*)(C))->a522]);
-		T68f2105(ac, C, t2, t3);
+		T68f2107(ac, C, t2, t3);
 	} else {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	}
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
@@ -86827,13 +86880,13 @@ void T68f1536(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.add_class_assertion */
-void T68f2105(TC* ac, T0* C, T0* a1, T0* a2)
+void T68f2107(TC* ac, T0* C, T0* a1, T0* a2)
 {
-	T68f2115(ac, C, a1, a2);
+	T68f2117(ac, C, a1, a2);
 }
 
 /* ET_EIFFEL_PARSER.add_untagged_assertion */
-void T68f2115(TC* ac, T0* C, T0* a1, T0* a2)
+void T68f2117(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T6 l1 = 0;
 	T0* l2 = 0;
@@ -86852,7 +86905,7 @@ void T68f2115(TC* ac, T0* C, T0* a1, T0* a2)
 	t1 = (T6f4(ac, &t2, l1));
 	if (t1) {
 		t3 = (T256f6(ac, ((T68*)(C))->a14));
-		t1 = (t3?((m1 = t3, T68f2115ot1(ac, t3))):EIF_FALSE);
+		t1 = (t3?((m1 = t3, T68f2117ot1(ac, t3))):EIF_FALSE);
 		if (t1) {
 			t3 = (((T772*)(m1))->a2);
 			t1 = (T1)(t3==EIF_VOID);
@@ -86895,7 +86948,7 @@ void T68f2115(TC* ac, T0* C, T0* a1, T0* a2)
 	}
 }
 
-T1 T68f2115ot1(TC* ac, T0* a1)
+T1 T68f2117ot1(TC* ac, T0* a1)
 {
 	switch (((T0*)(a1))->id) {
 	case 772:
@@ -87094,8 +87147,8 @@ T0* T719s2(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_408 */
-void T68f1535(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_409 */
+void T68f1536(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -87106,9 +87159,9 @@ void T68f1535(TC* ac, T0* C)
 		t2 = (T68f762(ac, C));
 		t3 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 		t2 = (T65f235(ac, t2, t3));
-		T68f2105(ac, C, t2, EIF_VOID);
+		T68f2107(ac, C, t2, EIF_VOID);
 	} else {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	}
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
@@ -87118,8 +87171,8 @@ void T68f1535(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_407 */
-void T68f1534(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_408 */
+void T68f1535(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -87129,7 +87182,7 @@ void T68f1534(TC* ac, T0* C)
 	t1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 	t2 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
 	t3 = (((T331*)(((T68*)(C))->a144))->z2[((T68*)(C))->a522]);
-	T68f2104(ac, C, t1, t2, t3);
+	T68f2106(ac, C, t1, t2, t3);
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
@@ -87141,7 +87194,7 @@ void T68f1534(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.add_tagged_assertion */
-void T68f2104(TC* ac, T0* C, T0* a1, T0* a2, T0* a3)
+void T68f2106(TC* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	T0* l1 = 0;
 	T0* l2 = 0;
@@ -87166,7 +87219,7 @@ void T68f2104(TC* ac, T0* C, T0* a1, T0* a2, T0* a3)
 		t1 = (T6f4(ac, &t2, l5));
 		if (t1) {
 			t3 = (T256f6(ac, ((T68*)(C))->a14));
-			t1 = (t3?((m1 = t3, T68f2104ot1(ac, t3))):EIF_FALSE);
+			t1 = (t3?((m1 = t3, T68f2106ot1(ac, t3))):EIF_FALSE);
 			if (t1) {
 				t3 = (((T772*)(m1))->a2);
 				t1 = (T1)(t3==EIF_VOID);
@@ -87209,7 +87262,7 @@ void T68f2104(TC* ac, T0* C, T0* a1, T0* a2, T0* a3)
 	}
 }
 
-T1 T68f2104ot1(TC* ac, T0* a1)
+T1 T68f2106ot1(TC* ac, T0* a1)
 {
 	switch (((T0*)(a1))->id) {
 	case 772:
@@ -88400,7 +88453,7 @@ void T68f1117(TC* ac, T0* C)
 	T1 t1;
 	t1 = (((T68*)(C))->a28?((m1 = ((T68*)(C))->a28, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
-		T68f2083(ac, C, m1);
+		T68f2085(ac, C, m1);
 	}
 }
 
@@ -88478,8 +88531,8 @@ T0* T68f750(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_406 */
-void T68f1533(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_407 */
+void T68f1534(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -88487,7 +88540,7 @@ void T68f1533(TC* ac, T0* C)
 	T1 t3;
 	t1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 	t2 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	T68f2104(ac, C, t1, t2, EIF_VOID);
+	T68f2106(ac, C, t1, t2, EIF_VOID);
 	t3 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t3) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -88497,8 +88550,8 @@ void T68f1533(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_405 */
-void T68f1532(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_406 */
+void T68f1533(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -88506,7 +88559,7 @@ void T68f1532(TC* ac, T0* C)
 	T1 t3;
 	t1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
 	t2 = (((T331*)(((T68*)(C))->a144))->z2[((T68*)(C))->a522]);
-	T68f2103(ac, C, t1, t2);
+	T68f2105(ac, C, t1, t2);
 	t3 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t3) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -88517,23 +88570,55 @@ void T68f1532(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.add_expression_assertion */
-void T68f2103(TC* ac, T0* C, T0* a1, T0* a2)
+void T68f2105(TC* ac, T0* C, T0* a1, T0* a2)
 {
-	T68f2115(ac, C, a1, a2);
+	T68f2117(ac, C, a1, a2);
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_405 */
+void T68f1532(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T1 t2;
+	t1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
+	T68f2105(ac, C, t1, EIF_VOID);
+	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t2) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)-((T6)(GE_int32(1)))));
+		T271s4(ac, ((T68*)(C))->a84, l1, ((T68*)(C))->a502);
+	}
 }
 
 /* ET_EIFFEL_PARSER.yy_do_action_404 */
 void T68f1531(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* t1;
-	T1 t2;
-	t1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
-	T68f2103(ac, C, t1, EIF_VOID);
-	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t2) {
+	T1 t1;
+	T0* t2;
+	T0* t3;
+	t1 = (T1)((((T68*)(C))->a17) == ((T6)(GE_int32(2))));
+	if (t1) {
+		t2 = (T68f762(ac, C));
+		t3 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
+		t2 = (T65f235(ac, t2, t3));
+		t3 = (((T331*)(((T68*)(C))->a144))->z2[((T68*)(C))->a522]);
+		T68f2107(ac, C, t2, t3);
+	} else {
+		T68f2086(ac, C);
+	}
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
-		((T68*)(C))->a570 = ((T6)((((T68*)(C))->a570)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a502 = ((T6)((((T68*)(C))->a502)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a522 = ((T6)((((T68*)(C))->a522)-((T6)(GE_int32(1)))));
+		t1 = (T6f14(ac, &(((T68*)(C))->a502), ((T68*)(C))->a83));
+		if (t1) {
+			((T68*)(C))->a83 = ((T6)((((T68*)(C))->a83)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a84 = (T271s2(ac, ((T68*)(C))->a84, ((T68*)(C))->a83));
+		}
 		T271s4(ac, ((T68*)(C))->a84, l1, ((T68*)(C))->a502);
 	}
 }
@@ -88550,41 +88635,9 @@ void T68f1530(TC* ac, T0* C)
 		t2 = (T68f762(ac, C));
 		t3 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 		t2 = (T65f235(ac, t2, t3));
-		t3 = (((T331*)(((T68*)(C))->a144))->z2[((T68*)(C))->a522]);
-		T68f2105(ac, C, t2, t3);
+		T68f2107(ac, C, t2, EIF_VOID);
 	} else {
-		T68f2084(ac, C);
-	}
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
-		((T68*)(C))->a502 = ((T6)((((T68*)(C))->a502)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a522 = ((T6)((((T68*)(C))->a522)-((T6)(GE_int32(1)))));
-		t1 = (T6f14(ac, &(((T68*)(C))->a502), ((T68*)(C))->a83));
-		if (t1) {
-			((T68*)(C))->a83 = ((T6)((((T68*)(C))->a83)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a84 = (T271s2(ac, ((T68*)(C))->a84, ((T68*)(C))->a83));
-		}
-		T271s4(ac, ((T68*)(C))->a84, l1, ((T68*)(C))->a502);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_402 */
-void T68f1529(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	T0* t2;
-	T0* t3;
-	t1 = (T1)((((T68*)(C))->a17) == ((T6)(GE_int32(2))));
-	if (t1) {
-		t2 = (T68f762(ac, C));
-		t3 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-		t2 = (T65f235(ac, t2, t3));
-		T68f2105(ac, C, t2, EIF_VOID);
-	} else {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	}
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
@@ -88600,8 +88653,8 @@ void T68f1529(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_401 */
-void T68f1528(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_402 */
+void T68f1529(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -88611,7 +88664,7 @@ void T68f1528(TC* ac, T0* C)
 	t1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
 	t2 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
 	t3 = (((T331*)(((T68*)(C))->a144))->z2[((T68*)(C))->a522]);
-	T68f2104(ac, C, t1, t2, t3);
+	T68f2106(ac, C, t1, t2, t3);
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -88621,6 +88674,31 @@ void T68f1528(TC* ac, T0* C)
 		((T68*)(C))->a522 = ((T6)((((T68*)(C))->a522)-((T6)(GE_int32(1)))));
 		t4 = (T6f14(ac, &(((T68*)(C))->a502), ((T68*)(C))->a83));
 		if (t4) {
+			((T68*)(C))->a83 = ((T6)((((T68*)(C))->a83)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a84 = (T271s2(ac, ((T68*)(C))->a84, ((T68*)(C))->a83));
+		}
+		T271s4(ac, ((T68*)(C))->a84, l1, ((T68*)(C))->a502);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_401 */
+void T68f1528(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T1 t3;
+	t1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
+	t2 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
+	T68f2106(ac, C, t1, t2, EIF_VOID);
+	t3 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t3) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a502 = ((T6)((((T68*)(C))->a502)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
+		t3 = (T6f14(ac, &(((T68*)(C))->a502), ((T68*)(C))->a83));
+		if (t3) {
 			((T68*)(C))->a83 = ((T6)((((T68*)(C))->a83)+((T6)(GE_int32(10)))));
 			((T68*)(C))->a84 = (T271s2(ac, ((T68*)(C))->a84, ((T68*)(C))->a83));
 		}
@@ -89245,34 +89323,9 @@ void T68f1527(TC* ac, T0* C)
 	T0* t1;
 	T0* t2;
 	T1 t3;
-	t1 = (((T304*)(((T68*)(C))->a117))->z2[((T68*)(C))->a513]);
-	t2 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	T68f2104(ac, C, t1, t2, EIF_VOID);
-	t3 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t3) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
-		((T68*)(C))->a502 = ((T6)((((T68*)(C))->a502)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a513 = ((T6)((((T68*)(C))->a513)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
-		t3 = (T6f14(ac, &(((T68*)(C))->a502), ((T68*)(C))->a83));
-		if (t3) {
-			((T68*)(C))->a83 = ((T6)((((T68*)(C))->a83)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a84 = (T271s2(ac, ((T68*)(C))->a84, ((T68*)(C))->a83));
-		}
-		T271s4(ac, ((T68*)(C))->a84, l1, ((T68*)(C))->a502);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_399 */
-void T68f1526(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T0* t2;
-	T1 t3;
 	t1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
 	t2 = (((T331*)(((T68*)(C))->a144))->z2[((T68*)(C))->a522]);
-	T68f2103(ac, C, t1, t2);
+	T68f2105(ac, C, t1, t2);
 	t3 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t3) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
@@ -89288,14 +89341,14 @@ void T68f1526(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_398 */
-void T68f1525(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_399 */
+void T68f1526(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T467*)(((T68*)(C))->a288))->z2[((T68*)(C))->a570]);
-	T68f2103(ac, C, t1, EIF_VOID);
+	T68f2105(ac, C, t1, EIF_VOID);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
@@ -89310,8 +89363,8 @@ void T68f1525(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_397 */
-void T68f1524(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_398 */
+void T68f1525(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -89333,7 +89386,7 @@ void T68f1524(TC* ac, T0* C)
 	l1 = (T65f234(ac, t1, t2, t3));
 	t7 = (T1)(l1!=EIF_VOID);
 	if (t7) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t7 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t7) {
@@ -89496,8 +89549,8 @@ T0* T547c9(TC* ac, T0* a1, T0* a2)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_396 */
-void T68f1523(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_397 */
+void T68f1524(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -89515,7 +89568,7 @@ void T68f1523(TC* ac, T0* C)
 	l1 = (T65f233(ac, t1, t2, t3));
 	t6 = (T1)(l1!=EIF_VOID);
 	if (t6) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t6) {
@@ -89533,8 +89586,8 @@ void T68f1523(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_395 */
-void T68f1522(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_396 */
+void T68f1523(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -89547,7 +89600,7 @@ void T68f1522(TC* ac, T0* C)
 	l1 = (T65f232(ac, t1, t2, t3));
 	t4 = (T1)(l1!=EIF_VOID);
 	if (t4) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
@@ -89731,8 +89784,8 @@ T0* T68f978(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_394 */
-void T68f1521(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_395 */
+void T68f1522(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -89749,7 +89802,7 @@ void T68f1521(TC* ac, T0* C)
 	l1 = (T65f232(ac, t1, t2, t3));
 	t5 = (T1)(l1!=EIF_VOID);
 	if (t5) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t5) {
@@ -89774,8 +89827,8 @@ T0* T65f231(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_393 */
-void T68f1520(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_394 */
+void T68f1521(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -89903,8 +89956,8 @@ T0* T1603c2(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_392 */
-void T68f1519(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_393 */
+void T68f1520(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -89927,8 +89980,8 @@ void T68f1519(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_391 */
-void T68f1518(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_392 */
+void T68f1519(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -89998,8 +90051,8 @@ T1 T553f5(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_390 */
-void T68f1517(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_391 */
+void T68f1518(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -90029,8 +90082,8 @@ void T68f1517(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_389 */
-void T68f1516(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_390 */
+void T68f1517(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -90208,8 +90261,8 @@ T0* T553s9(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_388 */
-void T68f1515(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_389 */
+void T68f1516(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -90241,15 +90294,15 @@ void T68f1515(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_387 */
-void T68f1514(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_388 */
+void T68f1515(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	T68f2089(ac, C, t1);
-	T68f2090(ac, C);
+	T68f2091(ac, C, t1);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -90263,14 +90316,14 @@ void T68f1514(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_386 */
-void T68f1513(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_387 */
+void T68f1514(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T554*)(((T68*)(C))->a378))->z2[((T68*)(C))->a600]);
-	T68f2087(ac, C);
-	T68f2088(ac, C);
+	T68f2089(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -90280,8 +90333,8 @@ void T68f1513(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_385 */
-void T68f1512(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_386 */
+void T68f1513(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -90302,8 +90355,8 @@ void T68f1512(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_384 */
-void T68f1511(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_385 */
+void T68f1512(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -90321,8 +90374,8 @@ void T68f1511(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_383 */
-void T68f1510(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_384 */
+void T68f1511(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -90344,7 +90397,7 @@ void T68f1510(TC* ac, T0* C)
 	l1 = (T65f230(ac, t1, t2, t3));
 	t7 = (T1)(l1!=EIF_VOID);
 	if (t7) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t7 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t7) {
@@ -90507,8 +90560,8 @@ T0* T491c9(TC* ac, T0* a1, T0* a2)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_382 */
-void T68f1509(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_383 */
+void T68f1510(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -90526,7 +90579,7 @@ void T68f1509(TC* ac, T0* C)
 	l1 = (T65f229(ac, t1, t2, t3));
 	t6 = (T1)(l1!=EIF_VOID);
 	if (t6) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t6) {
@@ -90544,8 +90597,8 @@ void T68f1509(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_381 */
-void T68f1508(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_382 */
+void T68f1509(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -90558,7 +90611,7 @@ void T68f1508(TC* ac, T0* C)
 	l1 = (T65f228(ac, t1, t2, t3));
 	t4 = (T1)(l1!=EIF_VOID);
 	if (t4) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
@@ -90710,8 +90763,8 @@ T0* T1446c9(TC* ac, T0* a1, T0* a2)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_380 */
-void T68f1507(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_381 */
+void T68f1508(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -90728,7 +90781,7 @@ void T68f1507(TC* ac, T0* C)
 	l1 = (T65f228(ac, t1, t2, t3));
 	t5 = (T1)(l1!=EIF_VOID);
 	if (t5) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t5 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t5) {
@@ -90753,8 +90806,8 @@ T0* T65f227(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_379 */
-void T68f1506(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_380 */
+void T68f1507(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -90882,8 +90935,8 @@ T0* T1598c2(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_378 */
-void T68f1505(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_379 */
+void T68f1506(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -90906,8 +90959,8 @@ void T68f1505(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_377 */
-void T68f1504(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_378 */
+void T68f1505(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -90961,8 +91014,8 @@ T1 T497f7(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_376 */
-void T68f1503(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_377 */
+void T68f1504(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -90992,8 +91045,8 @@ void T68f1503(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_375 */
-void T68f1502(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_376 */
+void T68f1503(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -91117,8 +91170,8 @@ T0* T497s9(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_374 */
-void T68f1501(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_375 */
+void T68f1502(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -91153,14 +91206,14 @@ void T68f1501(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_373 */
-void T68f1500(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_374 */
+void T68f1501(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	T68f2094(ac, C, l1);
-	T68f2090(ac, C);
+	T68f2096(ac, C, l1);
+	T68f2092(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
@@ -91168,14 +91221,14 @@ void T68f1500(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_372 */
-void T68f1499(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_373 */
+void T68f1500(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T498*)(((T68*)(C))->a321))->z2[((T68*)(C))->a581]);
-	T68f2093(ac, C);
-	T68f2088(ac, C);
+	T68f2095(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
@@ -91184,8 +91237,8 @@ void T68f1499(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_371 */
-void T68f1498(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_372 */
+void T68f1499(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -91210,13 +91263,13 @@ void T68f1498(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_370 */
-void T68f1497(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_371 */
+void T68f1498(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T498*)(((T68*)(C))->a321))->z2[((T68*)(C))->a581]);
-	T68f2102(ac, C, l1);
+	T68f2104(ac, C, l1);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
@@ -91224,8 +91277,8 @@ void T68f1497(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_369 */
-void T68f1496(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_370 */
+void T68f1497(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -91237,8 +91290,8 @@ void T68f1496(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_368 */
-void T68f1495(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_369 */
+void T68f1496(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -91256,8 +91309,8 @@ void T68f1495(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_367 */
-void T68f1494(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_368 */
+void T68f1495(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T6 t1;
@@ -91580,8 +91633,8 @@ T0* T191c75(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_366 */
-void T68f1493(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_367 */
+void T68f1494(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -91695,8 +91748,8 @@ T0* T364f6(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_365 */
-void T68f1492(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_366 */
+void T68f1493(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -91766,8 +91819,8 @@ T0* T364c108(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_364 */
-void T68f1491(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_365 */
+void T68f1492(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -91797,8 +91850,8 @@ void T68f1491(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_363 */
-void T68f1490(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_364 */
+void T68f1491(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -91868,8 +91921,8 @@ T0* T364c107(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_362 */
-void T68f1489(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_363 */
+void T68f1490(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -91939,8 +91992,8 @@ T0* T364c106(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_361 */
-void T68f1488(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_362 */
+void T68f1489(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -92010,8 +92063,8 @@ T0* T364c105(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_360 */
-void T68f1487(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_361 */
+void T68f1488(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -92081,8 +92134,8 @@ T0* T364c104(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_359 */
-void T68f1486(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_360 */
+void T68f1487(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -92152,8 +92205,8 @@ T0* T364c103(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_358 */
-void T68f1485(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_359 */
+void T68f1486(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -92223,8 +92276,8 @@ T0* T364c102(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_357 */
-void T68f1484(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_358 */
+void T68f1485(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -92294,8 +92347,8 @@ T0* T364c101(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_356 */
-void T68f1483(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_357 */
+void T68f1484(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -92365,8 +92418,8 @@ T0* T364c100(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_355 */
-void T68f1482(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_356 */
+void T68f1483(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -92436,8 +92489,8 @@ T0* T364c99(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_354 */
-void T68f1481(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_355 */
+void T68f1482(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -92507,8 +92560,8 @@ T0* T364c98(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_353 */
-void T68f1480(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_354 */
+void T68f1481(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -92578,8 +92631,8 @@ T0* T364c97(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_352 */
-void T68f1479(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_353 */
+void T68f1480(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -92649,8 +92702,8 @@ T0* T364c96(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_351 */
-void T68f1478(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_352 */
+void T68f1479(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -92720,8 +92773,8 @@ T0* T364c95(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_350 */
-void T68f1477(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_351 */
+void T68f1478(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -92791,8 +92844,8 @@ T0* T364c94(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_349 */
-void T68f1476(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_350 */
+void T68f1477(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -92862,8 +92915,8 @@ T0* T364c93(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_348 */
-void T68f1475(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_349 */
+void T68f1476(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -92933,8 +92986,8 @@ T0* T364c92(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_347 */
-void T68f1474(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_348 */
+void T68f1475(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -93004,8 +93057,8 @@ T0* T364c91(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_346 */
-void T68f1473(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_347 */
+void T68f1474(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -93075,8 +93128,8 @@ T0* T364c90(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_345 */
-void T68f1472(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_346 */
+void T68f1473(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -93146,8 +93199,8 @@ T0* T364c89(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_344 */
-void T68f1471(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_345 */
+void T68f1472(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -93217,8 +93270,8 @@ T0* T364c88(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_343 */
-void T68f1470(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_344 */
+void T68f1471(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -93288,8 +93341,8 @@ T0* T364c87(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_342 */
-void T68f1469(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_343 */
+void T68f1470(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -93359,8 +93412,8 @@ T0* T364c86(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_341 */
-void T68f1468(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_342 */
+void T68f1469(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -93430,8 +93483,8 @@ T0* T364c85(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_340 */
-void T68f1467(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_341 */
+void T68f1468(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -93501,8 +93554,8 @@ T0* T364c84(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_339 */
-void T68f1466(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_340 */
+void T68f1467(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -93572,8 +93625,8 @@ T0* T364c83(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_338 */
-void T68f1465(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_339 */
+void T68f1466(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -93643,8 +93696,8 @@ T0* T364c80(TC* ac, T0* a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_337 */
-void T68f1464(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_338 */
+void T68f1465(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -93652,7 +93705,7 @@ void T68f1464(TC* ac, T0* C)
 	t1 = (((T365*)(((T68*)(C))->a180))->z2[((T68*)(C))->a534]);
 	t2 = (T1)(t1!=EIF_VOID);
 	if (t2) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
@@ -93778,8 +93831,8 @@ T0* T368f4(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_336 */
-void T68f1463(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_337 */
+void T68f1464(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -93908,8 +93961,8 @@ T0* T1579c3(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_335 */
-void T68f1462(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_336 */
+void T68f1463(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -93984,8 +94037,8 @@ T0* T1578c5(TC* ac, T6 a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_334 */
-void T68f1461(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_335 */
+void T68f1462(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -94004,7 +94057,7 @@ void T68f1461(TC* ac, T0* C)
 		t3 = (((T368*)(((T68*)(C))->a183))->z2[((T68*)(C))->a535]);
 		l1 = (T65f196(ac, t1, EIF_VOID, t3));
 	}
-	T68f2088(ac, C);
+	T68f2090(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -94157,8 +94210,8 @@ T0* T715c6(TC* ac, T0* a1, T0* a2)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_333 */
-void T68f1460(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_334 */
+void T68f1461(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -94177,8 +94230,8 @@ void T68f1460(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_332 */
-void T68f1459(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_333 */
+void T68f1460(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -94315,8 +94368,8 @@ T0* T486f4(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_331 */
-void T68f1458(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_332 */
+void T68f1459(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -94461,8 +94514,8 @@ T0* T65f195(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_330 */
-void T68f1457(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_331 */
+void T68f1458(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -94479,8 +94532,8 @@ void T68f1457(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_329 */
-void T68f1456(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_330 */
+void T68f1457(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -94625,8 +94678,8 @@ T0* T65f194(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_328 */
-void T68f1455(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_329 */
+void T68f1456(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -94643,8 +94696,8 @@ void T68f1455(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_327 */
-void T68f1454(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_328 */
+void T68f1455(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -94714,8 +94767,8 @@ void T331f10(TC* ac, T0* C, T0* a1)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_326 */
-void T68f1453(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_327 */
+void T68f1454(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -94785,8 +94838,8 @@ T0* T331f4(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_325 */
-void T68f1452(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_326 */
+void T68f1453(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -94798,8 +94851,8 @@ void T68f1452(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_324 */
-void T68f1451(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_325 */
+void T68f1452(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -94807,7 +94860,7 @@ void T68f1451(TC* ac, T0* C)
 	t1 = (T68s973(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		l1 = EIF_VOID;
 	}
@@ -94824,8 +94877,8 @@ void T68f1451(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_323 */
-void T68f1450(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_324 */
+void T68f1451(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -95132,8 +95185,8 @@ T0* T714s45(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_322 */
-void T68f1449(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_323 */
+void T68f1450(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -95186,8 +95239,8 @@ void T68f1449(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_321 */
-void T68f1448(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_322 */
+void T68f1449(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -95406,8 +95459,8 @@ T0* T713s29(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_320 */
-void T68f1447(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_321 */
+void T68f1448(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -95455,8 +95508,8 @@ void T68f1447(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_319 */
-void T68f1446(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_320 */
+void T68f1447(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -95663,8 +95716,8 @@ T0* T712s47(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_318 */
-void T68f1445(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_319 */
+void T68f1446(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -95725,8 +95778,8 @@ void T68f1445(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_317 */
-void T68f1444(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_318 */
+void T68f1445(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -95870,8 +95923,8 @@ void T711f86(TC* ac, T0* C, T0* a1)
 	((T711*)(C))->a18 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_316 */
-void T68f1443(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_317 */
+void T68f1444(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -95925,8 +95978,8 @@ void T68f1443(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_315 */
-void T68f1442(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_316 */
+void T68f1443(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -95946,7 +95999,7 @@ void T68f1442(TC* ac, T0* C)
 	t1 = (T68s973(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t1 = (((T473*)(((T68*)(C))->a294))->z2[((T68*)(C))->a572]);
 		t3 = (((T498*)(((T68*)(C))->a321))->z2[((T68*)(C))->a581]);
@@ -96230,8 +96283,8 @@ T0* T710c91(TC* ac, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_314 */
-void T68f1441(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_315 */
+void T68f1442(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -96297,8 +96350,8 @@ void T68f1441(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_313 */
-void T68f1440(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_314 */
+void T68f1441(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -96317,7 +96370,7 @@ void T68f1440(TC* ac, T0* C)
 	t1 = (T68s973(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t1 = (((T473*)(((T68*)(C))->a294))->z2[((T68*)(C))->a572]);
 		t3 = (T68f762(ac, C));
@@ -96364,8 +96417,8 @@ void T68f1440(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_312 */
-void T68f1439(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_313 */
+void T68f1440(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -96428,8 +96481,8 @@ void T68f1439(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_311 */
-void T68f1438(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_312 */
+void T68f1439(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -96449,7 +96502,7 @@ void T68f1438(TC* ac, T0* C)
 	t1 = (T68s973(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t1 = (T68f762(ac, C));
 		t3 = (((T473*)(((T68*)(C))->a294))->z2[((T68*)(C))->a572]);
@@ -96628,8 +96681,8 @@ T0* T708s39(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_310 */
-void T68f1437(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_311 */
+void T68f1438(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -96690,8 +96743,8 @@ void T68f1437(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_309 */
-void T68f1436(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_310 */
+void T68f1437(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -96710,7 +96763,7 @@ void T68f1436(TC* ac, T0* C)
 	t1 = (T68s973(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t1 = (T68f762(ac, C));
 		t3 = (((T473*)(((T68*)(C))->a294))->z2[((T68*)(C))->a572]);
@@ -96752,8 +96805,8 @@ void T68f1436(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_308 */
-void T68f1435(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_309 */
+void T68f1436(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -96811,8 +96864,8 @@ void T68f1435(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_307 */
-void T68f1434(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_308 */
+void T68f1435(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -96835,7 +96888,7 @@ void T68f1434(TC* ac, T0* C)
 	t1 = (T68s973(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t1 = (T68f762(ac, C));
 		t3 = (((T473*)(((T68*)(C))->a294))->z2[((T68*)(C))->a572]);
@@ -97043,8 +97096,8 @@ T0* T707s42(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_306 */
-void T68f1433(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_307 */
+void T68f1434(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -97118,8 +97171,8 @@ void T68f1433(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_305 */
-void T68f1432(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_306 */
+void T68f1433(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -97141,7 +97194,7 @@ void T68f1432(TC* ac, T0* C)
 	t1 = (T68s973(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t1 = (T68f762(ac, C));
 		t3 = (((T473*)(((T68*)(C))->a294))->z2[((T68*)(C))->a572]);
@@ -97193,8 +97246,8 @@ void T68f1432(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_304 */
-void T68f1431(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_305 */
+void T68f1432(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -97265,8 +97318,8 @@ void T68f1431(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_303 */
-void T68f1430(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_304 */
+void T68f1431(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -97288,7 +97341,7 @@ void T68f1430(TC* ac, T0* C)
 	t1 = (T68s973(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t1 = (T68f762(ac, C));
 		t3 = (((T473*)(((T68*)(C))->a294))->z2[((T68*)(C))->a572]);
@@ -97483,8 +97536,8 @@ T0* T706s48(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_302 */
-void T68f1429(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_303 */
+void T68f1430(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -97551,8 +97604,8 @@ void T68f1429(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_301 */
-void T68f1428(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_302 */
+void T68f1429(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -97573,7 +97626,7 @@ void T68f1428(TC* ac, T0* C)
 	t1 = (T68s973(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t1 = (T68f762(ac, C));
 		t3 = (((T473*)(((T68*)(C))->a294))->z2[((T68*)(C))->a572]);
@@ -97619,8 +97672,8 @@ void T68f1428(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_300 */
-void T68f1427(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_301 */
+void T68f1428(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -97684,8 +97737,8 @@ void T68f1427(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_299 */
-void T68f1426(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_300 */
+void T68f1427(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -97700,7 +97753,7 @@ void T68f1426(TC* ac, T0* C)
 	t1 = (T68s973(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t1 = (T68f762(ac, C));
 		t3 = (((T473*)(((T68*)(C))->a294))->z2[((T68*)(C))->a572]);
@@ -97930,8 +97983,8 @@ T0* T705s37(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_298 */
-void T68f1425(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_299 */
+void T68f1426(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -97974,8 +98027,8 @@ void T68f1425(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_297 */
-void T68f1424(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_298 */
+void T68f1425(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -97990,7 +98043,7 @@ void T68f1424(TC* ac, T0* C)
 	t1 = (T68s973(ac));
 	t2 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f45(ac, ((T68*)(C))->a23, t1):T853f41(ac, ((T68*)(C))->a23, t1)));
 	if (t2) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t1 = (T68f762(ac, C));
 		t3 = (((T473*)(((T68*)(C))->a294))->z2[((T68*)(C))->a572]);
@@ -98118,8 +98171,8 @@ T0* T704s44(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_296 */
-void T68f1423(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_297 */
+void T68f1424(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -98161,8 +98214,8 @@ void T68f1423(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_295 */
-void T68f1422(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_296 */
+void T68f1423(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -98366,8 +98419,8 @@ T0* T703s41(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_294 */
-void T68f1421(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_295 */
+void T68f1422(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -98488,8 +98541,8 @@ T0* T702s42(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_293 */
-void T68f1420(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_294 */
+void T68f1421(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -98523,8 +98576,8 @@ void T68f1420(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_292 */
-void T68f1419(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_293 */
+void T68f1420(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -98537,7 +98590,7 @@ void T68f1419(TC* ac, T0* C)
 	if (t3) {
 		t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 		T607x18399305T0(ac, l1, t1);
-		T68f2101(ac, C, l1);
+		T68f2103(ac, C, l1);
 	}
 	t3 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t3) {
@@ -98549,7 +98602,7 @@ void T68f1419(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.register_procedure_synonym */
-void T68f2101(TC* ac, T0* C, T0* a1)
+void T68f2103(TC* ac, T0* C, T0* a1)
 {
 	T1 t1;
 	t1 = (T1)(a1!=EIF_VOID);
@@ -99330,8 +99383,8 @@ void T711f95(TC* ac, T0* C, T0* a1)
 	((T711*)(C))->a4 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_291 */
-void T68f1418(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_292 */
+void T68f1419(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -99348,7 +99401,7 @@ void T68f1418(TC* ac, T0* C)
 	if (t4) {
 		t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 		T607x18399305T0(ac, l1, t1);
-		T68f2101(ac, C, l1);
+		T68f2103(ac, C, l1);
 	}
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
@@ -99368,8 +99421,8 @@ T0* T65f180(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_290 */
-void T68f1417(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_291 */
+void T68f1418(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -99378,7 +99431,7 @@ void T68f1417(TC* ac, T0* C)
 	t1 = (((T473*)(((T68*)(C))->a294))->z2[((T68*)(C))->a572]);
 	t2 = (((T608*)(((T68*)(C))->a435))->z2[((T68*)(C))->a619]);
 	l1 = (T68f972(ac, C, t1, t2));
-	T68f2101(ac, C, l1);
+	T68f2103(ac, C, l1);
 	t3 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t3) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
@@ -99387,8 +99440,8 @@ void T68f1417(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_289 */
-void T68f1416(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_290 */
+void T68f1417(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -99401,7 +99454,7 @@ void T68f1416(TC* ac, T0* C)
 	t1 = (T65f180(ac, t1, t2, t3));
 	t2 = (((T608*)(((T68*)(C))->a435))->z2[((T68*)(C))->a619]);
 	l1 = (T68f972(ac, C, t1, t2));
-	T68f2101(ac, C, l1);
+	T68f2103(ac, C, l1);
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -99411,8 +99464,8 @@ void T68f1416(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_288 */
-void T68f1415(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_289 */
+void T68f1416(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -99422,7 +99475,7 @@ void T68f1415(TC* ac, T0* C)
 	if (t1) {
 		t2 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 		T607x18399305T0(ac, l1, t2);
-		T68f2100(ac, C, l1);
+		T68f2102(ac, C, l1);
 	}
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
@@ -99433,7 +99486,7 @@ void T68f1415(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.register_procedure */
-void T68f2100(TC* ac, T0* C, T0* a1)
+void T68f2102(TC* ac, T0* C, T0* a1)
 {
 	T0* m1 = 0;
 	T0* m2 = 0;
@@ -99529,13 +99582,13 @@ void T258f17(TC* ac, T0* C, T0* a1)
 	((T258*)(C))->a1 = ((T6)((((T258*)(C))->a1)+((T6)(GE_int32(1)))));
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_287 */
-void T68f1414(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_288 */
+void T68f1415(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T608*)(((T68*)(C))->a435))->z2[((T68*)(C))->a619]);
-	T68f2100(ac, C, l1);
+	T68f2102(ac, C, l1);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
@@ -99543,8 +99596,8 @@ void T68f1414(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_286 */
-void T68f1413(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_287 */
+void T68f1414(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -99557,7 +99610,7 @@ void T68f1413(TC* ac, T0* C)
 	if (t3) {
 		t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 		T616x18399305T0(ac, l1, t1);
-		T68f2099(ac, C, l1);
+		T68f2101(ac, C, l1);
 	}
 	t3 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t3) {
@@ -99569,7 +99622,7 @@ void T68f1413(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.register_query_synonym */
-void T68f2099(TC* ac, T0* C, T0* a1)
+void T68f2101(TC* ac, T0* C, T0* a1)
 {
 	T1 t1;
 	t1 = (T1)(a1!=EIF_VOID);
@@ -100637,8 +100690,8 @@ void T702f86(TC* ac, T0* C, T0* a1)
 	((T702*)(C))->a5 = a1;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_285 */
-void T68f1412(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_286 */
+void T68f1413(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -100655,7 +100708,7 @@ void T68f1412(TC* ac, T0* C)
 	if (t4) {
 		t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 		T616x18399305T0(ac, l1, t1);
-		T68f2099(ac, C, l1);
+		T68f2101(ac, C, l1);
 	}
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
@@ -100667,8 +100720,8 @@ void T68f1412(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_284 */
-void T68f1411(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_285 */
+void T68f1412(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -100677,7 +100730,7 @@ void T68f1411(TC* ac, T0* C)
 	t1 = (((T473*)(((T68*)(C))->a294))->z2[((T68*)(C))->a572]);
 	t2 = (((T617*)(((T68*)(C))->a444))->z2[((T68*)(C))->a622]);
 	l1 = (T68f971(ac, C, t1, t2));
-	T68f2099(ac, C, l1);
+	T68f2101(ac, C, l1);
 	t3 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t3) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
@@ -100686,8 +100739,8 @@ void T68f1411(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_283 */
-void T68f1410(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_284 */
+void T68f1411(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -100700,7 +100753,7 @@ void T68f1410(TC* ac, T0* C)
 	t1 = (T65f180(ac, t1, t2, t3));
 	t2 = (((T617*)(((T68*)(C))->a444))->z2[((T68*)(C))->a622]);
 	l1 = (T68f971(ac, C, t1, t2));
-	T68f2099(ac, C, l1);
+	T68f2101(ac, C, l1);
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -100710,8 +100763,8 @@ void T68f1410(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_282 */
-void T68f1409(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_283 */
+void T68f1410(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -100721,7 +100774,7 @@ void T68f1409(TC* ac, T0* C)
 	if (t1) {
 		t2 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
 		T616x18399305T0(ac, l1, t2);
-		T68f2098(ac, C, l1);
+		T68f2100(ac, C, l1);
 	}
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
@@ -100732,7 +100785,7 @@ void T68f1409(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.register_query */
-void T68f2098(TC* ac, T0* C, T0* a1)
+void T68f2100(TC* ac, T0* C, T0* a1)
 {
 	T0* m1 = 0;
 	T0* m2 = 0;
@@ -100828,13 +100881,13 @@ void T257f17(TC* ac, T0* C, T0* a1)
 	((T257*)(C))->a1 = ((T6)((((T257*)(C))->a1)+((T6)(GE_int32(1)))));
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_281 */
-void T68f1408(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_282 */
+void T68f1409(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T617*)(((T68*)(C))->a444))->z2[((T68*)(C))->a622]);
-	T68f2098(ac, C, l1);
+	T68f2100(ac, C, l1);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
@@ -100842,8 +100895,8 @@ void T68f1408(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_280 */
-void T68f1407(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_281 */
+void T68f1408(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -100855,8 +100908,8 @@ void T68f1407(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_279 */
-void T68f1406(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_280 */
+void T68f1407(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -100864,6 +100917,25 @@ void T68f1406(TC* ac, T0* C)
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
 		((T68*)(C))->a622 = ((T6)((((T68*)(C))->a622)-((T6)(GE_int32(1)))));
+		T271s4(ac, ((T68*)(C))->a84, l1, ((T68*)(C))->a502);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_279 */
+void T68f1406(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a502 = ((T6)((((T68*)(C))->a502)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a619 = ((T6)((((T68*)(C))->a619)-((T6)(GE_int32(1)))));
+		t1 = (T6f14(ac, &(((T68*)(C))->a502), ((T68*)(C))->a83));
+		if (t1) {
+			((T68*)(C))->a83 = ((T6)((((T68*)(C))->a83)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a84 = (T271s2(ac, ((T68*)(C))->a84, ((T68*)(C))->a83));
+		}
 		T271s4(ac, ((T68*)(C))->a84, l1, ((T68*)(C))->a502);
 	}
 }
@@ -100877,7 +100949,7 @@ void T68f1405(TC* ac, T0* C)
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
 		((T68*)(C))->a502 = ((T6)((((T68*)(C))->a502)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a619 = ((T6)((((T68*)(C))->a619)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a622 = ((T6)((((T68*)(C))->a622)-((T6)(GE_int32(1)))));
 		t1 = (T6f14(ac, &(((T68*)(C))->a502), ((T68*)(C))->a83));
 		if (t1) {
 			((T68*)(C))->a83 = ((T6)((((T68*)(C))->a83)+((T6)(GE_int32(10)))));
@@ -100889,25 +100961,6 @@ void T68f1405(TC* ac, T0* C)
 
 /* ET_EIFFEL_PARSER.yy_do_action_277 */
 void T68f1404(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a502 = ((T6)((((T68*)(C))->a502)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a622 = ((T6)((((T68*)(C))->a622)-((T6)(GE_int32(1)))));
-		t1 = (T6f14(ac, &(((T68*)(C))->a502), ((T68*)(C))->a83));
-		if (t1) {
-			((T68*)(C))->a83 = ((T6)((((T68*)(C))->a83)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a84 = (T271s2(ac, ((T68*)(C))->a84, ((T68*)(C))->a83));
-		}
-		T271s4(ac, ((T68*)(C))->a84, l1, ((T68*)(C))->a502);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_276 */
-void T68f1403(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -101219,8 +101272,8 @@ T0* T68f1031(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_275 */
-void T68f1402(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_276 */
+void T68f1403(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -101245,15 +101298,15 @@ void T68f1402(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_274 */
-void T68f1401(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_275 */
+void T68f1402(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = ((T68*)(C))->a63;
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
@@ -101263,15 +101316,15 @@ void T68f1401(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_273 */
-void T68f1400(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_274 */
+void T68f1401(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = ((T68*)(C))->a63;
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
@@ -101280,8 +101333,8 @@ void T68f1400(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_272 */
-void T68f1399(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_273 */
+void T68f1400(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -101467,8 +101520,8 @@ T0* T1595c2(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_271 */
-void T68f1398(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_272 */
+void T68f1399(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -101591,14 +101644,14 @@ T0* T1594c4(TC* ac, T6 a1)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_270 */
-void T68f1397(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_271 */
+void T68f1398(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T481*)(((T68*)(C))->a303))->z2[((T68*)(C))->a575]);
-	T68f2097(ac, C);
-	T68f2088(ac, C);
+	T68f2099(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
@@ -101608,7 +101661,7 @@ void T68f1397(TC* ac, T0* C)
 }
 
 /* ET_EIFFEL_PARSER.set_class_features */
-void T68f2097(TC* ac, T0* C)
+void T68f2099(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* l2 = 0;
@@ -101646,7 +101699,7 @@ void T68f2097(TC* ac, T0* C)
 			}
 			l3 = (T257f7(ac, ((T68*)(C))->a18, l6));
 			T70f280(ac, l1, l3);
-			t1 = (l3?((m1 = l3, T68f2097ot1(ac, l3))):EIF_FALSE);
+			t1 = (l3?((m1 = l3, T68f2099ot1(ac, l3))):EIF_FALSE);
 			if (t1) {
 				t2 = (((T705*)(m1))->a13);
 				t3 = (((T705*)(m1))->a19);
@@ -101683,7 +101736,7 @@ void T68f2097(TC* ac, T0* C)
 	T258f16(ac, ((T68*)(C))->a19);
 }
 
-T1 T68f2097ot1(TC* ac, T0* a1)
+T1 T68f2099ot1(TC* ac, T0* a1)
 {
 	switch (((T0*)(a1))->id) {
 	case 705:
@@ -102269,8 +102322,8 @@ T0* T257f7(TC* ac, T0* C, T6 a1)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_269 */
-void T68f1396(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_270 */
+void T68f1397(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -102282,12 +102335,12 @@ void T68f1396(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_268 */
-void T68f1395(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_269 */
+void T68f1396(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
-	T68f2097(ac, C);
+	T68f2099(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -102301,8 +102354,8 @@ void T68f1395(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_267 */
-void T68f1394(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_268 */
+void T68f1395(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -102315,7 +102368,7 @@ void T68f1394(TC* ac, T0* C)
 	l1 = (T65f177(ac, t1, t2, t3));
 	t4 = (T1)(l1!=EIF_VOID);
 	if (t4) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
@@ -102451,8 +102504,8 @@ T0* T65f177(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_266 */
-void T68f1393(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_267 */
+void T68f1394(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -102600,8 +102653,8 @@ void T1664f7(TC* ac, T0* C, T0* a1)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_265 */
-void T68f1392(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_266 */
+void T68f1393(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -102752,15 +102805,15 @@ void T1086f9p1(TC* ac, T0* C, T6 a1)
 	((T1086*)(C))->a4 = (T1665s1(ac, a1));
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_264 */
-void T68f1391(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_265 */
+void T68f1392(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T283*)(((T68*)(C))->a96))->z2[((T68*)(C))->a506]);
-	T68f2094(ac, C, t1);
-	T68f2090(ac, C);
+	T68f2096(ac, C, t1);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -102774,14 +102827,14 @@ void T68f1391(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_263 */
-void T68f1390(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_264 */
+void T68f1391(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T648*)(((T68*)(C))->a477))->z2[((T68*)(C))->a633]);
-	T68f2093(ac, C);
-	T68f2088(ac, C);
+	T68f2095(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -102791,8 +102844,8 @@ void T68f1390(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_262 */
-void T68f1389(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_263 */
+void T68f1390(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -102810,8 +102863,8 @@ void T68f1389(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_261 */
-void T68f1388(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_262 */
+void T68f1389(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -103015,8 +103068,8 @@ T0* T700s5(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_260 */
-void T68f1387(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_261 */
+void T68f1388(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -103103,8 +103156,8 @@ T0* T699s4(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_259 */
-void T68f1386(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_260 */
+void T68f1387(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -103117,7 +103170,7 @@ void T68f1386(TC* ac, T0* C)
 	l1 = (T65f173(ac, t1, t2, t3));
 	t4 = (T1)(l1!=EIF_VOID);
 	if (t4) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t4) {
@@ -103253,8 +103306,8 @@ T0* T65f173(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_258 */
-void T68f1385(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_259 */
+void T68f1386(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -103440,8 +103493,8 @@ T0* T1589c2(TC* ac)
 	return C;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_257 */
-void T68f1384(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_258 */
+void T68f1385(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -103649,8 +103702,8 @@ T0* T433s6(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_256 */
-void T68f1383(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_257 */
+void T68f1384(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -103685,15 +103738,15 @@ void T68f1383(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_255 */
-void T68f1382(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_256 */
+void T68f1383(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	T68f2089(ac, C, t1);
-	T68f2090(ac, C);
+	T68f2091(ac, C, t1);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -103707,14 +103760,14 @@ void T68f1382(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_254 */
-void T68f1381(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_255 */
+void T68f1382(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T434*)(((T68*)(C))->a252))->z2[((T68*)(C))->a558]);
-	T68f2087(ac, C);
-	T68f2088(ac, C);
+	T68f2089(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -103724,8 +103777,8 @@ void T68f1381(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_253 */
-void T68f1380(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_254 */
+void T68f1381(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -103737,8 +103790,8 @@ void T68f1380(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_252 */
-void T68f1379(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_253 */
+void T68f1380(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
@@ -103755,8 +103808,8 @@ void T68f1379(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_251 */
-void T68f1378(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_252 */
+void T68f1379(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -103777,7 +103830,7 @@ void T68f1378(TC* ac, T0* C)
 	}
 	t2 = (T1)(l1!=EIF_VOID);
 	if (t2) {
-		T68f2091(ac, C);
+		T68f2093(ac, C);
 	}
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
@@ -103913,8 +103966,8 @@ T0* T65f169(TC* ac, T0* C, T0* a1, T0* a2)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_250 */
-void T68f1377(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_251 */
+void T68f1378(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -104034,8 +104087,8 @@ T0* T82f6(TC* ac, T0* C)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_249 */
-void T68f1376(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_250 */
+void T68f1377(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -104045,7 +104098,7 @@ void T68f1376(TC* ac, T0* C)
 	T6 t4;
 	t1 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f44(ac, ((T68*)(C))->a23):T853f46(ac, ((T68*)(C))->a23)));
 	if (t1) {
-		T68f2084(ac, C);
+		T68f2086(ac, C);
 	} else {
 		t2 = (T68f762(ac, C));
 		t3 = (T68f961(ac, C));
@@ -104191,8 +104244,8 @@ T0* T82s5(TC* ac)
 	return R;
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_248 */
-void T68f1375(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_249 */
+void T68f1376(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* m1 = 0;
@@ -104233,17 +104286,17 @@ void T68f1375(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_247 */
-void T68f1374(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_248 */
+void T68f1375(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	T68f2089(ac, C, t1);
+	T68f2091(ac, C, t1);
 	t1 = (T68f961(ac, C));
 	((T68*)(C))->a61 = (T68f970(ac, C, t1));
-	T68f2090(ac, C);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -104257,14 +104310,14 @@ void T68f1374(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_246 */
-void T68f1373(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_247 */
+void T68f1374(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T442*)(((T68*)(C))->a261))->z2[((T68*)(C))->a561]);
-	T68f2087(ac, C);
-	T68f2088(ac, C);
+	T68f2089(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -104274,16 +104327,16 @@ void T68f1373(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_245 */
-void T68f1372(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_246 */
+void T68f1373(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	T68f2089(ac, C, t1);
+	T68f2091(ac, C, t1);
 	((T68*)(C))->a61 = (((T401*)(((T68*)(C))->a219))->z2[((T68*)(C))->a547]);
-	T68f2090(ac, C);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -104297,14 +104350,14 @@ void T68f1372(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_244 */
-void T68f1371(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_245 */
+void T68f1372(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T442*)(((T68*)(C))->a261))->z2[((T68*)(C))->a561]);
-	T68f2087(ac, C);
-	T68f2088(ac, C);
+	T68f2089(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
@@ -104315,8 +104368,8 @@ void T68f1371(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_243 */
-void T68f1370(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_244 */
+void T68f1371(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -104342,8 +104395,8 @@ void T68f1370(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_242 */
-void T68f1369(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_243 */
+void T68f1370(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
@@ -104369,17 +104422,17 @@ void T68f1369(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_241 */
-void T68f1368(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_242 */
+void T68f1369(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	T68f2089(ac, C, t1);
+	T68f2091(ac, C, t1);
 	t1 = (T68f961(ac, C));
 	((T68*)(C))->a61 = (T68f970(ac, C, t1));
-	T68f2090(ac, C);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
@@ -104393,14 +104446,14 @@ void T68f1368(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_240 */
-void T68f1367(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_241 */
+void T68f1368(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T1 t1;
 	l1 = (((T442*)(((T68*)(C))->a261))->z2[((T68*)(C))->a561]);
-	T68f2087(ac, C);
-	T68f2088(ac, C);
+	T68f2089(ac, C);
+	T68f2090(ac, C);
 	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t1) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(3)))));
@@ -104410,67 +104463,22 @@ void T68f1367(TC* ac, T0* C)
 	}
 }
 
-/* ET_EIFFEL_PARSER.yy_do_action_239 */
-void T68f1366(TC* ac, T0* C)
+/* ET_EIFFEL_PARSER.yy_do_action_240 */
+void T68f1367(TC* ac, T0* C)
 {
 	T0* l1 = 0;
 	T0* t1;
 	T1 t2;
 	t1 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	T68f2089(ac, C, t1);
+	T68f2091(ac, C, t1);
 	((T68*)(C))->a61 = (((T401*)(((T68*)(C))->a219))->z2[((T68*)(C))->a547]);
-	T68f2090(ac, C);
+	T68f2092(ac, C);
 	t2 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
 	if (t2) {
 		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(0)))));
 		((T68*)(C))->a561 = ((T6)((((T68*)(C))->a561)+((T6)(GE_int32(1)))));
 		t2 = (T6f14(ac, &(((T68*)(C))->a561), ((T68*)(C))->a260));
 		if (t2) {
-			((T68*)(C))->a260 = ((T6)((((T68*)(C))->a260)+((T6)(GE_int32(10)))));
-			((T68*)(C))->a261 = (T441s2(ac, ((T68*)(C))->a261, ((T68*)(C))->a260));
-		}
-		T441s4(ac, ((T68*)(C))->a261, l1, ((T68*)(C))->a561);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_238 */
-void T68f1365(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T1 t1;
-	l1 = (((T442*)(((T68*)(C))->a261))->z2[((T68*)(C))->a561]);
-	T68f2087(ac, C);
-	T68f2088(ac, C);
-	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t1) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
-		((T68*)(C))->a561 = ((T6)((((T68*)(C))->a561)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a547 = ((T6)((((T68*)(C))->a547)-((T6)(GE_int32(1)))));
-		T441s4(ac, ((T68*)(C))->a261, l1, ((T68*)(C))->a561);
-	}
-}
-
-/* ET_EIFFEL_PARSER.yy_do_action_237 */
-void T68f1364(TC* ac, T0* C)
-{
-	T0* l1 = 0;
-	T0* t1;
-	T0* t2;
-	T0* t3;
-	T1 t4;
-	t1 = (T68f762(ac, C));
-	t2 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t3 = (((T274*)(((T68*)(C))->a87))->z2[((T68*)(C))->a503]);
-	t3 = (T68f970(ac, C, t3));
-	l1 = (T65f171(ac, t1, t2, t3, (T6)(GE_int32(0))));
-	t4 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
-	if (t4) {
-		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
-		((T68*)(C))->a561 = ((T6)((((T68*)(C))->a561)+((T6)(GE_int32(1)))));
-		((T68*)(C))->a503 = ((T6)((((T68*)(C))->a503)-((T6)(GE_int32(1)))));
-		t4 = (T6f14(ac, &(((T68*)(C))->a561), ((T68*)(C))->a260));
-		if (t4) {
 			((T68*)(C))->a260 = ((T6)((((T68*)(C))->a260)+((T6)(GE_int32(10)))));
 			((T68*)(C))->a261 = (T441s2(ac, ((T68*)(C))->a261, ((T68*)(C))->a260));
 		}
