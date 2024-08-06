@@ -71,6 +71,10 @@
 #define EIF_VXWORKS 1
 #endif
 
+#if defined(__OpenBSD__)
+#define GE_OPENBSD
+#endif
+
 #define BYTEORDER 0x1234
 
 #include <stdlib.h>

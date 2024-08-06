@@ -1195,6 +1195,8 @@ feature {NONE} -- Generate external C files
 #	define GE_WINDOWS
 #elif defined(macintosh) || defined(Macintosh) || defined(__APPLE__) || defined(__MACH__)
 #	define GE_MACOS
+#elif defined(__OpenBSD__)
+#	define GE_OPENBSD
 #endif
 
 #define GC_IGNORE_WARN
@@ -1241,7 +1243,11 @@ feature {NONE} -- Generate external C files
 #	if defined(GE_MACOS)
 #		define HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID
 #	elif !defined(GE_WINDOWS)
-#		define HAVE_PTHREAD_SETNAME_NP_WITH_TID
+#		if defined(GE_OPENBSD)
+#			define HAVE_PTHREAD_SET_NAME_NP
+#		else
+#			define HAVE_PTHREAD_SETNAME_NP_WITH_TID
+#		endif
 #		define HAVE_PTHREAD_SIGMASK
 #		define NO_GETCONTEXT
 #	endif

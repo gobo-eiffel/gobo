@@ -86,7 +86,11 @@
 #	if defined(GE_MACOS)
 #		define HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID
 #	elif !defined(GE_WINDOWS)
-#		define HAVE_PTHREAD_SETNAME_NP_WITH_TID
+#		if defined(GE_OPENBSD)
+#			define HAVE_PTHREAD_SET_NAME_NP
+#		else
+#			define HAVE_PTHREAD_SETNAME_NP_WITH_TID
+#		endif
 #		define HAVE_PTHREAD_SIGMASK
 #		define NO_GETCONTEXT
 #	endif
