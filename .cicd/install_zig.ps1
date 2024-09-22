@@ -33,6 +33,8 @@ if ($LastExitCode -ne 0) {
 }
 
 $GOBO_CI_ZIG_VERSION = "0.13.0"
+$GOBO_CI_ZIG_PATH = "https://ziglang.org/download/$GOBO_CI_ZIG_VERSION"
+# $GOBO_CI_ZIG_PATH = "https://ziglang.org/builds"
 
 switch ($GOBO_CI_OS) {
 	"linux" {
@@ -56,7 +58,7 @@ switch ($GOBO_CI_OS) {
 $GOBO_CI_ZIG_ARCHIVE_BASENAME = "zig-${GOBO_CI_ZIG_PLATFORM}-${GOBO_CI_ZIG_VERSION}"
 $GOBO_CI_ZIG_ARCHIVE_FILENAME = "${GOBO_CI_ZIG_ARCHIVE_BASENAME}${GOBO_CI_ZIG_ARCHIVE_EXTENSION}"
 
-Invoke-RestMethod -Method Get -Uri "https://ziglang.org/builds/$GOBO_CI_ZIG_ARCHIVE_FILENAME" -OutFile "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME"
+Invoke-RestMethod -Method Get -Uri "$GOBO_CI_ZIG_PATH/$GOBO_CI_ZIG_ARCHIVE_FILENAME" -OutFile "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME"
 if ($GOBO_CI_OS -eq "windows") {
 	Install-Module -Name 7Zip4PowerShell -Force
 	Expand-7Zip -ArchiveFileName "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME" -TargetPath "$env:GOBO"
