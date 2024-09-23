@@ -622,7 +622,7 @@ feature {NONE} -- Implementation
 	Wchar_length: INTEGER
 			-- Length of wchar_t.
 		external
-			"C inline use <windows.h>"
+			"C inline use %"eif_eiffel.h%""
 		alias
 			"return sizeof(wchar_t);"
 		end
