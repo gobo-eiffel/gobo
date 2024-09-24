@@ -193,11 +193,13 @@ feature -- Setting
 		local
 			l_pathname: STRING
 			l_filename: STRING
+			l_dir: KL_DIRECTORY
 		do
 			if not attached zig_value as l_zig_value or else l_zig_value.is_empty then
 				l_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "zig">>)
 				l_pathname := Execution_environment.interpreted_string (l_pathname)
-				if file_system.directory_exists (l_pathname) then
+				create l_dir.make (l_pathname)
+				if l_dir.exists then
 					l_filename := file_system.pathname (l_pathname, "zig")
 					Execution_environment.set_variable_value (zig_variable, l_filename)
 				else
