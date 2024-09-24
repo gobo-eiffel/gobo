@@ -180,7 +180,7 @@ feature -- Setting
 				l_pathname := Execution_environment.interpreted_string (l_pathname)
 				l_filename := file_system.nested_pathname (l_pathname, <<"include", "gc.h">>)
 				create l_file.make (l_filename)
-				if l_file_exists then
+				if l_file.exists then
 					Execution_environment.set_variable_value (boehm_gc_variable, l_pathname)
 				end
 			end
