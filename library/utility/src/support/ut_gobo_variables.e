@@ -173,12 +173,14 @@ feature -- Setting
 		local
 			l_pathname: STRING
 			l_filename: STRING
+			l_file: KL_TEXT_INPUT_FILE
 		do
 			if not attached boehm_gc_value as l_boehm_gc_value or else l_boehm_gc_value.is_empty then
 				l_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "boehm_gc">>)
 				l_pathname := Execution_environment.interpreted_string (l_pathname)
 				l_filename := file_system.nested_pathname (l_pathname, <<"include", "gc.h">>)
-				if file_system.file_exists (l_filename) then
+				create l_file.make (l_filename)
+				if l_file_exists then
 					Execution_environment.set_variable_value (boehm_gc_variable, l_pathname)
 				end
 			end
