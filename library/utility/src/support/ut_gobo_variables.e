@@ -173,12 +173,14 @@ feature -- Setting
 		local
 			l_pathname: STRING
 			l_filename: STRING
+			l_file: KL_TEXT_INPUT_FILE
 		do
 			if not attached boehm_gc_value as l_boehm_gc_value or else l_boehm_gc_value.is_empty then
 				l_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "boehm_gc">>)
 				l_pathname := Execution_environment.interpreted_string (l_pathname)
 				l_filename := file_system.nested_pathname (l_pathname, <<"include", "gc.h">>)
-				if file_system.file_exists (l_filename) then
+				create l_file.make (l_filename)
+				if l_file.exists then
 					Execution_environment.set_variable_value (boehm_gc_variable, l_pathname)
 				end
 			end
@@ -191,11 +193,13 @@ feature -- Setting
 		local
 			l_pathname: STRING
 			l_filename: STRING
+			l_dir: KL_DIRECTORY
 		do
 			if not attached zig_value as l_zig_value or else l_zig_value.is_empty then
 				l_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "zig">>)
 				l_pathname := Execution_environment.interpreted_string (l_pathname)
-				if file_system.directory_exists (l_pathname) then
+				create l_dir.make (l_pathname)
+				if l_dir.exists then
 					l_filename := file_system.pathname (l_pathname, "zig")
 					Execution_environment.set_variable_value (zig_variable, l_filename)
 				else
