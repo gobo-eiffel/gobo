@@ -103,8 +103,8 @@ void GE_deep_put(EIF_REFERENCE obj1, EIF_REFERENCE obj2, GE_deep* d)
 		d->to = p;
 		t = 1;
 	}
-	d->from[t] = obj1;
-	d->to[t] = obj2;
+	d->from[t] = (void*)obj1;
+	d->to[t] = (void*)obj2;
 	d->top = t;
 }
 
