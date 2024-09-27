@@ -20287,6 +20287,13 @@ feature {NONE} -- Deep features generation
 			print_type_declaration (current_type, header_file)
 			print_type_declaration (current_type, current_file)
 			if current_type.is_expanded then
+				if current_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
+					header_file.put_character (' ')
+					header_file.put_string (c_volatile)
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
+				end
 				header_file.put_character ('*')
 				current_file.put_character ('*')
 			end
@@ -20397,9 +20404,21 @@ feature {NONE} -- Deep features generation
 						print_indentation
 						current_file.put_string (c_memcpy)
 						current_file.put_character ('(')
+						current_file.put_character ('(')
+						current_file.put_string (c_void)
+						current_file.put_character ('*')
+						current_file.put_character (')')
+						current_file.put_character ('(')
 						print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
+						current_file.put_character (')')
 						current_file.put_character (',')
+						current_file.put_character ('(')
+						current_file.put_string (c_void)
+						current_file.put_character ('*')
+						current_file.put_character (')')
+						current_file.put_character ('(')
 						print_attribute_special_item_access (tokens.current_keyword, l_special_type, False)
+						current_file.put_character (')')
 						current_file.put_character (',')
 						print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
 						current_file.put_character ('*')
