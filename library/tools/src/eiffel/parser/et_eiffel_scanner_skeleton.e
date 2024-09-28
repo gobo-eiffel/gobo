@@ -830,7 +830,7 @@ feature {NONE} -- Integer values
 			a_string_not_void: a_string /= Void
 			a_start_valid: a_string.valid_index (a_start)
 			a_end_valid: a_string.valid_index (a_end)
-			valid_literal: {RX_PCRE_ROUTINES}.regexp ("[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*").recognizes (a_string.substring (a_start, a_end))
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("0([xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|[cC][0-7](_*[0-7]+)*|[bB][0-1](_*[0-1]+)*|(_*[0-9]+)*)|[1-9](_*[0-9]+)*").recognizes (a_string.substring (a_start, a_end))
 		local
 			i, nb: INTEGER
 			c: CHARACTER_8

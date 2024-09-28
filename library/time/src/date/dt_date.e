@@ -6,7 +6,7 @@
 
 	remark: "year 0 means 1 BCE, year -1 means 2 BCE, etc."
 	library: "Gobo Eiffel Time Library"
-	copyright: "Copyright (c) 2000-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class DT_DATE
@@ -89,20 +89,16 @@ feature -- Access
 			-- Year
 		do
 			if storage < 0 then
-				Result := -((-storage) // Year_shift)
+				Result := -((-(storage & Year_mask)) |>> Year_shift)
 			else
-				Result := storage // Year_shift
+				Result := (storage & Year_mask) |>> Year_shift
 			end
 		end
 
 	month: INTEGER
 			-- Month
 		do
-			if storage < 0 then
-				Result := Year_shift // Month_shift - (((-storage) \\ Year_shift) // Month_shift)
-			else
-				Result := (storage \\ Year_shift) // Month_shift
-			end
+			Result := (storage & Month_mask) |>> Month_shift
 		ensure then
 			month_large_enough: Result >= January
 			month_small_enough: Result <= December
@@ -111,11 +107,7 @@ feature -- Access
 	day: INTEGER
 			-- Day
 		do
-			if storage < 0 then
-				Result := Month_shift - ((-storage) \\ Month_shift)
-			else
-				Result := storage \\ Month_shift
-			end
+			Result := storage & Day_mask
 		ensure then
 			day_large_enough: Result >= 1
 			day_small_enough: Result <= days_in_month (month, year)
@@ -264,9 +256,9 @@ feature -- Setting
 			d_small_enough: d <= days_in_month (m, y)
 		do
 			if y < 0 then
-				storage := -((-y) * Year_shift + Year_shift - m * Month_shift + Month_shift - d)
+				storage := (-((-y) |<< Year_shift)) | (m |<< Month_shift) | d
 			else
-				storage := y * Year_shift + m * Month_shift + d
+				storage := (y |<< Year_shift) | (m |<< Month_shift) | d
 			end
 		ensure
 			year_set: year = y
@@ -278,28 +270,11 @@ feature -- Setting
 			-- Set `year' to `y'.
 		require
 			leap_year_aware: day <= days_in_month (month, y)
-		local
-			st: INTEGER
-			mm, dd: INTEGER
 		do
-			if storage < 0 then
-				if y < 0 then
-					storage := y * Year_shift - ((-storage) \\ Year_shift)
-				else
-					st := -storage
-					mm := Year_shift // Month_shift - ((st \\ Year_shift) // Month_shift)
-					dd := Month_shift - (st \\ Month_shift)
-					storage := y * Year_shift + mm * Month_shift + dd
-				end
+			if y < 0 then
+				storage := (-((-y) |<< Year_shift)) | (storage & (Month_mask | Day_mask))
 			else
-				if y < 0 then
-					st := storage
-					mm := (st \\ Year_shift) // Month_shift
-					dd := st \\ Month_shift
-					storage := -((-y) * Year_shift + Year_shift - mm * Month_shift + Month_shift - dd)
-				else
-					storage := y * Year_shift + storage \\ Year_shift
-				end
+				storage := (y |<< Year_shift) | (storage & (Month_mask | Day_mask))
 			end
 		ensure
 			year_set: year = y
@@ -313,16 +288,8 @@ feature -- Setting
 			m_large_enough: m >= January
 			m_small_enough: m <= December
 			leap_year_aware: day <= days_in_month (m, year)
-		local
-			st: INTEGER
 		do
-			st := storage
-			if st < 0 then
-				st := -st
-				storage := -((st // Year_shift) * Year_shift + Year_shift - m * Month_shift + st \\ Month_shift)
-			else
-				storage := (st // Year_shift) * Year_shift + m * Month_shift + st \\ Month_shift
-			end
+			storage := (m |<< Month_shift) | (storage & (Year_mask | Day_mask))
 		ensure
 			month_set: month = m
 			same_year: year = old year
@@ -335,11 +302,7 @@ feature -- Setting
 			d_large_enough: d >= 1
 			d_small_enough: d <= days_in_month (month, year)
 		do
-			if storage < 0 then
-				storage := -(((-storage) // Month_shift) * Month_shift + Month_shift - d)
-			else
-				storage := (storage // Month_shift) * Month_shift + d
-			end
+			storage := d | (storage & (Year_mask | Month_mask))
 		ensure
 			day_set: day = d
 			same_year: year = old year
@@ -635,10 +598,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Month_shift: INTEGER = 32
-			-- 2^5
+	Day_mask: INTEGER = 0x1F
+			-- Mask to extract the day part
 
-	Year_shift: INTEGER = 512
-			-- 2^9 (= 16*32)
+	Month_mask: INTEGER = 0x1E0
+			-- Mask to extract the month part
+
+	Month_shift: INTEGER = 5
+			-- Bit shift to get the month part
+
+	Year_mask: INTEGER = 0xFFFFFE00
+			-- Mask to extract the year part
+
+	Year_shift: INTEGER = 9
+			-- Bit shift to get the year part
 
 end
