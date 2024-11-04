@@ -41,8 +41,8 @@ feature {NONE} -- Initialization
 			set_mapped_filename_variable_name ("fs.mapped_filename")
 			force := True
 		ensure
-			filename_variable_name_set: filename_variable_name.is_equal ("fs.filename")
-			mapped_filename_variable_name_set: mapped_filename_variable_name.is_equal ("fs.mapped_filename")
+			filename_variable_name_set: filename_variable_name.same_string ("fs.filename")
+			mapped_filename_variable_name_set: mapped_filename_variable_name.same_string ("fs.mapped_filename")
 			force_is_true: force = True
 		end
 

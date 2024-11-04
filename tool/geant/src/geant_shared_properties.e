@@ -5,7 +5,7 @@
 		"Common properties for GEANT"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2018, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2024, Sven Ehrke and others"
 	license: "MIT License"
 
 class GEANT_SHARED_PROPERTIES
@@ -392,8 +392,8 @@ feature -- Processing
 			end
 		ensure
 			has_star: (a_star_string.index_of ('*', 1) > 0) implies
-				Result.is_equal (a_star_string.substring (1, a_star_string.index_of ('*', 1) - 1))
-			not_has_star: (a_star_string.index_of ('*', 1) = 0) implies Result.is_equal (a_star_string)
+				Result.same_string (a_star_string.substring (1, a_star_string.index_of ('*', 1) - 1))
+			not_has_star: (a_star_string.index_of ('*', 1) = 0) implies Result.same_string (a_star_string)
 		end
 
 	glob_postfix (a_star_string: STRING): STRING
@@ -417,8 +417,8 @@ feature -- Processing
 			end
 		ensure
 			has_star: (a_star_string.index_of ('*', 1) > 0) implies
-				Result.is_equal (a_star_string.substring (a_star_string.index_of ('*', 1) + 1, a_star_string.count))
-			not_has_start: (a_star_string.index_of ('*', 1) = 0) implies Result.is_equal (a_star_string)
+				Result.same_string (a_star_string.substring (a_star_string.index_of ('*', 1) + 1, a_star_string.count))
+			not_has_start: (a_star_string.index_of ('*', 1) = 0) implies Result.same_string (a_star_string)
 		end
 
 	removed_indentation (a_string: STRING): STRING
