@@ -19,7 +19,8 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 	ET_SEPARATE_CALL
@@ -28,7 +29,8 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		redefine
 			target
 		end
@@ -77,6 +79,18 @@ feature -- Status report
 		do
 			Result := target.has_typed_object_test or
 				attached arguments as l_arguments and then l_arguments.has_typed_object_test
+		end
+
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current call
+			-- and (recursively) in its subexpressions.
+		do
+			target.add_old_expressions (a_list)
+			if attached arguments as l_arguments then
+				l_arguments.add_old_expressions (a_list)
+			end
 		end
 
 invariant

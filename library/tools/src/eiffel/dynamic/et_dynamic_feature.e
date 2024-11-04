@@ -47,6 +47,9 @@ feature {NONE} -- Initialization
 			target_type := a_target_type
 			is_static := a_feature.is_static
 			dynamic_type_sets := empty_dynamic_type_sets
+			current_index := 2 * a_feature.arguments_count + 1 + if a_feature.type /= Void then 2 else 0 end
+			create preconditions.make (50)
+			create postconditions.make (50)
 			create query_calls.make_map (10)
 			create procedure_calls.make_map (10)
 			if attached {ET_EXTERNAL_ROUTINE} a_feature as l_external_routine then
@@ -186,23 +189,34 @@ feature -- Access
 			end
 		end
 
-	dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			-- Dynamic type sets of expressions within current feature;
-			-- Dynamic type sets for arguments are stored first
-
-	dynamic_type_set (an_operand: ET_OPERAND): detachable ET_DYNAMIC_TYPE_SET
-			-- Dynamic type set associated with `an_operand';
+	local_type_set (a_local: ET_LOCAL_VARIABLE): detachable ET_DYNAMIC_TYPE_SET
+			-- Dynamic type set associated with `a_local';
 			-- Void if unknown yet
 		require
-			an_operand_not_void: an_operand /= Void
+			a_local_not_void: a_local /= Void
 		local
 			i: INTEGER
 		do
-			i := an_operand.index
+			i := a_local.name.index
 			if i >= 1 and i <= dynamic_type_sets.count then
 				Result := dynamic_type_sets.item (i)
 			end
 		end
+
+	dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			-- Dynamic type sets of expressions within current feature;
+			-- Dynamic type sets for arguments are stored first
+
+	current_index: INTEGER
+			-- Index of dynamic type set of 'Current' in `dynamic_type_sets'
+
+	preconditions: DS_ARRAYED_LIST_2 [ET_PRECONDITIONS, INTEGER]
+			-- Preconditions of current feature (even inherited from precursors),
+			-- and their index offset when accessing dynamic type sets
+
+	postconditions: DS_ARRAYED_LIST_2 [ET_POSTCONDITIONS, INTEGER]
+			-- Postconditions of current feature (even inherited from precursors),
+			-- and their index offset when accessing dynamic type sets
 
 	first_precursor: detachable ET_DYNAMIC_PRECURSOR
 			-- First precursor called from current feature;
@@ -1042,6 +1056,10 @@ invariant
 	static_feature_not_void: static_feature /= Void
 	target_type_not_void: target_type /= Void
 	dynamic_type_sets_not_void: dynamic_type_sets /= Void
+	preconditions_not_void: preconditions /= Void
+	no_void_precondition_not_void: not preconditions.has_void_1
+	postconditions_not_void: postconditions /= Void
+	no_void_postecondition_not_void: not postconditions.has_void_1
 	query_calls_not_void: query_calls /= Void
 	no_void_query_call: not query_calls.has_void
 	procedure_calls_not_void: procedure_calls /= Void

@@ -25,7 +25,8 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 feature -- Access
@@ -75,6 +76,18 @@ feature -- Status report
 			-- or (recursively) in one of its subexpressions?
 		do
 			Result := attached target as l_target and then l_target.has_typed_object_test or precursor
+		end
+
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current expression
+			-- and (recursively) in its subexpressions.
+		do
+			if attached target as l_target then
+				l_target.add_old_expressions (a_list)
+			end
+			precursor (a_list)
 		end
 
 end

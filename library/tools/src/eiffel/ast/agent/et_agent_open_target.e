@@ -5,7 +5,7 @@
 		"Eiffel agent open targets for the form '{TYPE}'"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_AGENT_OPEN_TARGET
@@ -13,20 +13,29 @@ class ET_AGENT_OPEN_TARGET
 inherit
 
 	ET_AGENT_TARGET
-		undefine
-			reset
 		redefine
+			reset,
 			is_open_operand
 		end
 
 	ET_BRACED_TYPE
 		redefine
+			reset,
 			process
 		end
 
 create
 
 	make
+
+feature -- Initialization
+
+	reset
+			-- Reset operand as it was when it was last parsed.
+		do
+			precursor {ET_AGENT_TARGET}
+			precursor {ET_BRACED_TYPE}
+		end
 
 feature -- Status report
 

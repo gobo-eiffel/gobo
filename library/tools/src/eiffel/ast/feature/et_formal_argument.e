@@ -5,7 +5,7 @@
 		"Eiffel formal arguments"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_FORMAL_ARGUMENT
@@ -38,6 +38,8 @@ feature -- Initialization
 	reset
 			-- Reset formal argument as it was when it was last parsed.
 		do
+			index := 0
+			attached_index := 0
 			name.reset
 			type.reset
 		end

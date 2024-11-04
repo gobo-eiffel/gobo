@@ -5,7 +5,7 @@
 		"Eiffel static feature calls"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_STATIC_FEATURE_CALL
@@ -42,7 +42,7 @@ feature -- Initialization
 	reset
 			-- Reset call as it was when it was last parsed.
 		do
-			Precursor
+			precursor
 			type.reset
 			parenthesis_call := Void
 		end

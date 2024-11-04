@@ -43,6 +43,7 @@ feature -- Initialization
 	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
+			precursor
 			type.reset
 			if attached creation_call as l_creation_call then
 				l_creation_call.reset

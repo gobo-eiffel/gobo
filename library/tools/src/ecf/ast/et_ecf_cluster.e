@@ -5,7 +5,7 @@
 		"ECF Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ECF_CLUSTER
@@ -16,7 +16,8 @@ inherit
 		rename
 			make as make_cluster
 		undefine
-			lower_name
+			lower_name,
+			fill_options
 		redefine
 			parent,
 			subclusters,
@@ -55,6 +56,8 @@ feature {NONE} -- Initialization
 			is_relative := a_pathname.count > 2 and then a_pathname.item (1) = '$' and then (once "|/\").has (a_pathname.item (2))
 			universe := a_universe
 			target := a_target
+			create options.make
+			options.set_secondary_options (a_target.options)
 			set_scm_mapping_constraint_enabled (True)
 			if attached universe.ecf_version as l_ecf_version and then l_ecf_version <= ecf_1_4_0 then
 				set_use_obsolete_syntax (True)
@@ -69,19 +72,20 @@ feature {NONE} -- Initialization
 			scm_mapping_constraint_enabled: scm_mapping_constraint_enabled
 		end
 
-	make_relative (a_name: like name; a_universe: like universe; a_target: like target)
-			-- Create a new cluster whose pathname is its name relative to its parent cluster if any.		
+	make_relative (a_name: like name; a_parent: ET_ECF_CLUSTER)
+			-- Create a new cluster whose pathname is its name relative to its parent cluster.		
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
-			a_universe_not_void: a_universe /= Void
-			a_target_not_void: a_target /= Void
+			a_parent_not_void: a_parent /= Void
 		do
 			name := a_name
 			pathname := a_name
 			is_relative := True
-			universe := a_universe
-			target := a_target
+			universe := a_parent.universe
+			target := a_parent.target
+			options := a_parent.options
+			class_options := a_parent.class_options
 			set_scm_mapping_constraint_enabled (True)
 			if attached universe.ecf_version as l_ecf_version and then l_ecf_version <= ecf_1_4_0 then
 				set_use_obsolete_syntax (True)
@@ -89,8 +93,10 @@ feature {NONE} -- Initialization
 		ensure
 			name_set: name = a_name
 			pathname_set: pathname = a_name
-			universe_set: universe = a_universe
-			target_set: target = a_target
+			universe_set: universe = a_parent.universe
+			target_set: target = a_parent.target
+			options_set: options = a_parent.options
+			class_options_set: class_options = a_parent.class_options
 			prefixed_name_set: prefixed_name = a_name
 			is_relative: is_relative
 			scm_mapping_constraint_enabled: scm_mapping_constraint_enabled
@@ -427,7 +433,7 @@ feature {NONE} -- Implementation
 	new_recursive_cluster (a_name: STRING): like Current
 			-- New recursive cluster
 		do
-			create Result.make_relative (a_name, universe, target)
+			create Result.make_relative (a_name, Current)
 			Result.set_parent (Current)
 			Result.set_file_rules (file_rules)
 			Result.set_recursive (True)
@@ -439,8 +445,6 @@ feature {NONE} -- Implementation
 			Result.set_classname_prefix (classname_prefix)
 			Result.set_class_renamings (class_renamings)
 			Result.set_class_mappings (class_mappings)
-			Result.set_options (options)
-			Result.set_class_options (class_options)
 			Result.set_visible_classes (visible_classes)
 			Result.set_provider_groups (provider_groups)
 			Result.set_overridden_group (overridden_group)

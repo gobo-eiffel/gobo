@@ -5,7 +5,7 @@
 		"ECF options"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ECF_OPTIONS
@@ -162,6 +162,18 @@ feature -- Access
 
 	description: detachable STRING
 			-- Description
+
+feature -- Status report
+
+	is_empty: BOOLEAN
+			-- Are current options empty?
+		do
+			Result := primary_options.is_empty and
+				primary_debugs.is_empty and
+				primary_assertions.is_empty and
+				primary_warnings.is_empty and
+				description = Void
+		end
 
 feature -- Setting
 

@@ -72,6 +72,14 @@ feature -- Status report
 			-- Result := False
 		end
 
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current expression
+			-- and (recursively) in its subexpressions.
+		do
+		end
+
 feature {NONE} -- Implementation
 
 	fixed_array: KL_SPECIAL_ROUTINES [ET_AGENT_IMPLICIT_OPEN_ARGUMENT]

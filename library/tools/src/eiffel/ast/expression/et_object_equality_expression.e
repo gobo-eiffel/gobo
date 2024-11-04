@@ -29,7 +29,8 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 create
@@ -59,6 +60,7 @@ feature -- Initialization
 	reset
 			-- Reset object expression as it was just after it was last parsed.
 		do
+			precursor {ET_BINARY_EXPRESSION}
 			if attached {ET_CONVERT_EXPRESSION} left as l_convert then
 				left := l_convert.expression
 			end

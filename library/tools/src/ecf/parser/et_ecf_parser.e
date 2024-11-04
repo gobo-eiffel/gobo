@@ -5,7 +5,7 @@
 		"ECF parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_ECF_PARSER
@@ -587,6 +587,9 @@ feature {NONE} -- Implementation
 					l_message := "XML syntax error"
 				end
 				error_handler.report_syntax_error (l_message, l_position, l_unknown_universe)
+			end
+			if tree_pipe.tree.is_position_table_enabled then
+				tree_pipe.tree.enable_position_table (xml_parser)
 			end
 		end
 

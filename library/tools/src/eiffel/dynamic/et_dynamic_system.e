@@ -2312,7 +2312,6 @@ feature {NONE} -- Compilation
 			if not system_processor.stop_requested then
 				l_builder := dynamic_type_set_builder
 				l_builder.set_no_debug (True)
-				l_builder.set_no_assertion (True)
 				l_builder.set_catcall_error_mode (catcall_error_mode)
 				l_builder.set_catcall_warning_mode (catcall_warning_mode)
 				l_builder.build_dynamic_type_sets

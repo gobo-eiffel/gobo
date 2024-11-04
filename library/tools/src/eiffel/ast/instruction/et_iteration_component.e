@@ -25,6 +25,7 @@ feature -- Initialization
 			-- Reset component as it was just after it was last parsed.
 		do
 			iterable_expression.reset
+			item_name.reset
 			if attached invariant_part as l_invariant_part then
 				l_invariant_part.reset
 			end
@@ -98,7 +99,7 @@ feature -- Status report
 			-- or (recursively) in one of its subexpressions?
 		do
 			Result := iterable_expression.has_address_expression or
-				attached until_conditional as l_until_conditional and then  l_until_conditional.expression.has_address_expression or
+				attached until_conditional as l_until_conditional and then l_until_conditional.expression.has_address_expression or
 				attached invariant_part as l_invariant_part and then l_invariant_part.has_address_expression or
 				attached variant_part as l_variant_part and then l_variant_part.expression.has_address_expression
 		end
@@ -108,7 +109,7 @@ feature -- Status report
 			-- or (recursively) in one of its subexpressions?
 		do
 			Result := iterable_expression.has_agent or
-				attached until_conditional as l_until_conditional and then  l_until_conditional.expression.has_agent or
+				attached until_conditional as l_until_conditional and then l_until_conditional.expression.has_agent or
 				attached invariant_part as l_invariant_part and then l_invariant_part.has_agent or
 				attached variant_part as l_variant_part and then l_variant_part.expression.has_agent
 		end
@@ -118,7 +119,7 @@ feature -- Status report
 			-- or (recursively) in one of its subexpressions?
 		do
 			Result := iterable_expression.has_typed_object_test or
-				attached until_conditional as l_until_conditional and then  l_until_conditional.expression.has_typed_object_test or
+				attached until_conditional as l_until_conditional and then l_until_conditional.expression.has_typed_object_test or
 				attached invariant_part as l_invariant_part and then l_invariant_part.has_typed_object_test or
 				attached variant_part as l_variant_part and then l_variant_part.expression.has_typed_object_test
 		end

@@ -19,7 +19,8 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 create
@@ -46,6 +47,7 @@ feature -- Initialization
 	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
+			precursor
 			if attached type as l_type then
 				l_type.reset
 			end
@@ -154,6 +156,15 @@ feature -- Setting
 			attached_keyword := a_attached
 		ensure
 			attached_keyword_set: attached_keyword = a_attached
+		end
+
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current expression
+			-- and (recursively) in its subexpressions.
+		do
+			expression.add_old_expressions (a_list)
 		end
 
 feature -- Processing

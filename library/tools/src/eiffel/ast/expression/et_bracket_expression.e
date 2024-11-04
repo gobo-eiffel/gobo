@@ -26,6 +26,7 @@ inherit
 			has_typed_object_test,
 			is_instance_free,
 			reset,
+			add_old_expressions,
 			add_separate_arguments
 		end
 
@@ -55,6 +56,7 @@ feature -- Initialization
 	reset
 			-- Reset call as it was just after it was last parsed.
 		do
+			precursor {ET_QUALIFIED_FEATURE_CALL_EXPRESSION}
 			target.reset
 			name.reset
 			reset_arguments

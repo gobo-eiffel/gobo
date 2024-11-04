@@ -27,7 +27,8 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		redefine
 			reset,
 			is_instance_free
@@ -38,6 +39,7 @@ feature -- Initialization
 	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
+			precursor {ET_EXPRESSION}
 			iteration_expression.reset
 			precursor {ET_ITERATION_COMPONENT}
 		end
@@ -102,6 +104,25 @@ feature -- Access
 	iteration_expression: ET_EXPRESSION
 			-- Some or all expression
 		deferred
+		end
+
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current expression
+			-- and (recursively) in its subexpressions.
+		do
+			iteration_expression.add_old_expressions (a_list)
+			iterable_expression.add_old_expressions (a_list)
+			if attached until_conditional as l_until_conditional then
+				l_until_conditional.expression.add_old_expressions (a_list)
+			end
+			if attached invariant_part as l_invariant_part then
+				l_invariant_part.add_old_expressions (a_list)
+			end
+			if attached variant_part as l_variant_part then
+				l_variant_part.expression.add_old_expressions (a_list)
+			end
 		end
 
 invariant

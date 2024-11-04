@@ -187,6 +187,26 @@ feature -- Setting
 			right_symbol_set: right_symbol = r
 		end
 
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current expressions
+			-- and (recursively) in its subexpressions.
+		require
+			a_list_not_void: a_list /= Void
+			no_void_item: not a_list.has_void
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				expression (i).add_old_expressions (a_list)
+				i := i + 1
+			end
+		ensure
+			no_void_item: not a_list.has_void
+		end
+
 feature {NONE} -- Implementation
 
 	fixed_array: KL_SPECIAL_ROUTINES [ET_EXPRESSION_ITEM]

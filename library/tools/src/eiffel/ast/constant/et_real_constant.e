@@ -44,6 +44,7 @@ feature -- Initialization
 	reset
 			-- Reset constant as it was just after it was last parsed.
 		do
+			precursor
 			type := Void
 			if attached cast_type as l_cast_type then
 				l_cast_type.type.reset
@@ -144,7 +145,7 @@ feature -- Status report
 			instance_free: class
 			definition: Result = {RX_PCRE_ROUTINES}.regexp (literal_regexp).recognizes (a_literal)
 		end
-		
+
 feature -- Setting
 
 	set_sign (a_sign: like sign)

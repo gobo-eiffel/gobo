@@ -18,7 +18,8 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 	ET_QUALIFIED_FEATURE_CALL
@@ -35,7 +36,8 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		redefine
 			reset,
 			position,
@@ -63,7 +65,7 @@ feature -- Initialization
 	reset
 			-- Reset call as it was when it was last parsed.
 		do
-			Precursor
+			precursor
 			target.reset
 		end
 

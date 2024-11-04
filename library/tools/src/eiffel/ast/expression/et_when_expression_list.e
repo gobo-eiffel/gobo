@@ -159,6 +159,26 @@ feature -- Status report
 			end
 		end
 
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current when parts
+			-- and (recursively) in their subexpressions.
+		require
+			a_list_not_void: a_list /= Void
+			no_void_item: not a_list.has_void
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				item (i).add_old_expressions (a_list)
+				i := i + 1
+			end
+		ensure
+			no_void_item: not a_list.has_void
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR)

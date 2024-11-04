@@ -901,6 +901,7 @@ feature -- Preparsing
 			a_group_not_void: a_group /= Void
 		do
 			group := a_group
+			a_group.fill_options (Current)
 		ensure
 			group_set: group = a_group
 		end
@@ -1070,7 +1071,7 @@ feature -- Preparsing status
 			-- Set `is_preparsed' to False.
 		do
 			filename := Void
-			group := tokens.unknown_group
+			set_group (tokens.unknown_group)
 			time_stamp := no_time_stamp
 			is_interface := False
 			has_utf8_bom := False
@@ -1190,6 +1191,74 @@ feature -- Encoding
 			has_utf8_bom := b
 		ensure
 			has_utf8_bom_set: has_utf8_bom = b
+		end
+
+feature -- Assertions
+
+	preconditions_enabled: BOOLEAN
+			-- Are preconditions monitored?
+
+	supplier_preconditions_enabled: BOOLEAN
+			-- Are supplier preconditions (preconditions in qualified calls) monitored?
+
+	postconditions_enabled: BOOLEAN
+			-- Are postconditions monitored?
+
+	invariants_enabled: BOOLEAN
+			-- Are invariants monitored?
+
+	check_assertions_enabled: BOOLEAN
+			-- Are check assertions monitored?
+
+	loop_assertions_enabled: BOOLEAN
+			-- Are loop assertions monitored?
+
+	set_preconditions_enabled (b: BOOLEAN)
+			-- Set `preconditions_enabled' to `b'.
+		do
+			preconditions_enabled := b
+		ensure
+			preconditions_enabled_set: preconditions_enabled = b
+		end
+
+	set_supplier_preconditions_enabled (b: BOOLEAN)
+			-- Set `supplier_preconditions_enabled' to `b'.
+		do
+			supplier_preconditions_enabled := b
+		ensure
+			supplier_preconditions_enabled_set: supplier_preconditions_enabled = b
+		end
+
+	set_postconditions_enabled (b: BOOLEAN)
+			-- Set `postconditions_enabled' to `b'.
+		do
+			postconditions_enabled := b
+		ensure
+			postconditions_enabled_set: postconditions_enabled = b
+		end
+
+	set_invariants_enabled (b: BOOLEAN)
+			-- Set `invariants_enabled' to `b'.
+		do
+			invariants_enabled := b
+		ensure
+			invariants_enabled_set: invariants_enabled = b
+		end
+
+	set_check_assertions_enabled (b: BOOLEAN)
+			-- Set `check_assertions_enabled' to `b'.
+		do
+			check_assertions_enabled := b
+		ensure
+			check_assertions_enabled_set: check_assertions_enabled = b
+		end
+
+	set_loop_assertions_enabled (b: BOOLEAN)
+			-- Set `loop_assertions_enabled' to `b'.
+		do
+			loop_assertions_enabled := b
+		ensure
+			loop_assertions_enabled_set: loop_assertions_enabled = b
 		end
 
 feature -- Class header
@@ -2812,7 +2881,7 @@ feature -- Duplication
 				copy (other)
 				name := l_name
 				filename := l_filename
-				group := l_group
+				set_group (l_group)
 				time_stamp := l_time_stamp
 				id := l_id
 				is_ignored := l_is_ignored

@@ -20,6 +20,7 @@ inherit
 			has_address_expression,
 			has_agent,
 			has_typed_object_test,
+			add_old_expressions,
 			add_separate_arguments
 		end
 
@@ -47,6 +48,7 @@ feature -- Initialization
 	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
+			precursor
 			expression.reset
 			if attached when_parts as l_when_parts then
 				l_when_parts.reset
@@ -165,6 +167,21 @@ feature -- Setting
 			end_keyword := an_end
 		ensure
 			end_keyword_set: end_keyword = an_end
+		end
+
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current expression
+			-- and (recursively) in its subexpressions.
+		do
+			expression.add_old_expressions (a_list)
+			if attached when_parts as l_when_parts then
+				l_when_parts.add_old_expressions (a_list)
+			end
+			if attached else_part as l_else_part then
+				l_else_part.expression.add_old_expressions (a_list)
+			end
 		end
 
 feature -- SCOOP

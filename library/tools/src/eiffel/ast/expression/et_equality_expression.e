@@ -44,6 +44,7 @@ feature -- Initialization
 	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
+			precursor
 			if attached {ET_CONVERT_EXPRESSION} left as l_convert then
 				left := l_convert.expression
 			end

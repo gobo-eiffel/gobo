@@ -5,7 +5,7 @@
 		"ECF Groups of Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_ECF_GROUP
@@ -65,13 +65,29 @@ feature -- Access
 			pathname_not_void: Result /= Void
 		end
 
-	options: detachable ET_ECF_OPTIONS
+	options: ET_ECF_OPTIONS
 			-- Options
-			-- (may be Void)
 
 	class_options: detachable DS_HASH_TABLE [ET_ECF_OPTIONS, STRING]
-			-- Class options, indexed by old class names in upper-case
+			-- Class options, indexed by class names in upper-case
 			-- (may be Void)
+
+	options_for_class (a_class: ET_CLASS): ET_ECF_OPTIONS
+			-- Options applicable to `a_class'
+		local
+			l_upper_name: STRING
+		do
+			Result := options
+			if attached class_options as l_class_options then
+				l_upper_name := a_class.upper_name
+				l_class_options.search (l_upper_name)
+				if l_class_options.found then
+					Result := l_class_options.found_item
+				end
+			end
+		ensure
+			options_for_class_not_void: Result /= Void
+		end
 
 	classname_prefix: detachable STRING
 			-- Prefix for class names when using classes of current group
@@ -104,14 +120,6 @@ feature -- Access
 
 feature -- Setting
 
-	set_options (a_options: like options)
-			-- Set `options' to `a_options'.
-		do
-			options := a_options
-		ensure
-			options_set: options = a_options
-		end
-
 	set_class_options (a_class_options: like class_options)
 			-- Set `options' to `a_class_options'.
 		require
@@ -119,6 +127,11 @@ feature -- Setting
 			no_void_class_option: a_class_options /= Void implies not a_class_options.has_void_item
 		do
 			class_options := a_class_options
+			if a_class_options /= Void then
+				across a_class_options as l_options loop
+					l_options.set_secondary_options (options)
+				end
+			end
 		ensure
 			class_options_set: class_options = a_class_options
 		end
@@ -141,6 +154,41 @@ feature -- Setting
 			notes_set: notes = a_notes
 		end
 
+	fill_options (a_class: ET_CLASS)
+			-- Fill `a_class' with option information.
+		require
+			a_class_not_vod: a_class /= Void
+		local
+			l_options: ET_ECF_OPTIONS
+			l_value: detachable STRING
+		do
+			l_options := options_for_class (a_class)
+			l_value := l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_precondition_option_name)
+			if l_value /= Void and then l_value.is_boolean then
+				a_class.set_preconditions_enabled (l_value.to_boolean)
+			end
+			l_value := l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_supplier_precondition_option_name)
+			if l_value /= Void and then l_value.is_boolean then
+				a_class.set_supplier_preconditions_enabled (l_value.to_boolean)
+			end
+			l_value := l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_postcondition_option_name)
+			if l_value /= Void and then l_value.is_boolean then
+				a_class.set_postconditions_enabled (l_value.to_boolean)
+			end
+			l_value := l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_invariant_option_name)
+			if l_value /= Void and then l_value.is_boolean then
+				a_class.set_invariants_enabled (l_value.to_boolean)
+			end
+			l_value := l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_check_option_name)
+			if l_value /= Void and then l_value.is_boolean then
+				a_class.set_check_assertions_enabled (l_value.to_boolean)
+			end
+			l_value := l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_loop_option_name)
+			if l_value /= Void and then l_value.is_boolean then
+				a_class.set_loop_assertions_enabled (l_value.to_boolean)
+			end
+		end
+
 invariant
 
 	no_void_old_class_renamings: attached class_renamings as l_class_renamings implies not l_class_renamings.has_void
@@ -149,5 +197,6 @@ invariant
 	no_void_class_option: attached class_options as l_class_options implies not l_class_options.has_void_item
 	no_void_note: attached notes as l_notes implies not l_notes.has_void
 	target_not_void: target /= Void
+	options_not_void: options /= Void
 
 end

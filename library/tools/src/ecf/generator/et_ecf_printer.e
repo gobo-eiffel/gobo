@@ -259,7 +259,7 @@ feature -- Output
 			if
 				a_assembly.description /= Void or
 				(attached a_assembly.notes as l_notes and then not l_notes.is_empty) or
-				a_assembly.options /= Void or
+				not a_assembly.options.is_empty or
 				a_assembly.class_renamings /= Void or
 				(attached a_assembly.class_options as l_class_options and then not l_class_options.is_empty) or
 				a_assembly.conditions /= Void
@@ -444,7 +444,7 @@ feature -- Output
 				a_cluster.description /= Void or
 				(attached a_cluster.notes as l_notes and then not l_notes.is_empty) or
 				a_cluster.conditioned_file_rules /= Void or
-				a_cluster.options /= Void or
+				not a_cluster.options.is_empty or
 				a_cluster.class_mappings /= Void or
 				a_cluster.class_renamings /= Void or
 				(attached a_cluster.class_options as l_class_options and then not l_class_options.is_empty) or
@@ -887,7 +887,7 @@ feature -- Output
 			if
 				a_library.description /= Void or
 				(attached a_library.notes as l_notes and then not l_notes.is_empty) or
-				a_library.options /= Void or
+				not a_library.options.is_empty or
 				a_library.class_renamings /= Void or
 				(attached a_library.class_options as l_class_options and then not l_class_options.is_empty) or
 				a_library.visible_classes /= Void or
@@ -1353,7 +1353,7 @@ feature -- Output
 			if
 				a_precompiled_library.description /= Void or
 				(attached a_precompiled_library.notes as l_notes and then not l_notes.is_empty) or
-				a_precompiled_library.options /= Void or
+				not a_precompiled_library.options.is_empty or
 				a_precompiled_library.class_renamings /= Void or
 				(attached a_precompiled_library.class_options as l_class_options and then not l_class_options.is_empty) or
 				a_precompiled_library.visible_classes /= Void or

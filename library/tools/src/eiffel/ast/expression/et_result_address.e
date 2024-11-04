@@ -14,6 +14,7 @@ inherit
 
 	ET_ADDRESS_EXPRESSION
 		redefine
+			reset,
 			has_result
 		end
 
@@ -28,6 +29,15 @@ feature {NONE} -- Initialization
 		do
 			dollar := tokens.dollar_symbol
 			result_keyword := tokens.result_keyword
+		end
+
+feature -- Initialization
+
+	reset
+			-- Reset expression as it was just after it was last parsed.
+		do
+			precursor
+			result_keyword.reset
 		end
 
 feature -- Access

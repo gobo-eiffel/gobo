@@ -40,7 +40,8 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 	ET_ARGUMENT_OPERAND
@@ -48,37 +49,41 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 	ET_AGENT_ARGUMENT_OPERAND
 		undefine
-			reset, set_index
+			reset
 		redefine
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 	ET_TARGET_OPERAND
 		undefine
-			reset, set_index
+			reset
 		redefine
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 	ET_AGENT_TARGET
 		undefine
-			reset, set_index
+			reset
 		redefine
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 feature -- Access
@@ -184,6 +189,14 @@ feature -- Type conversion
 			-- Result := Void
 		end
 
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current expression
+			-- and (recursively) in its subexpressions.
+		do
+		end
+
 feature -- SCOOP
 
 	add_separate_arguments (a_list: DS_ARRAYED_LIST [ET_IDENTIFIER]; a_closure: ET_CLOSURE)
@@ -197,10 +210,12 @@ feature -- SCOOP
 			-- a separate call to another SCOOP processor.)
 		require
 			a_list_not_void: a_list /= Void
+			no_void_item: not a_list.has_void
 			a_closure_not_void: a_closure /= Void
 			valid_items: across a_list as l_item all l_item.is_argument or l_item.is_inline_separate_argument end
 		do
 		ensure
+			no_void_item: not a_list.has_void
 			valid_items: across a_list as l_item all l_item.is_argument or l_item.is_inline_separate_argument end
 		end
 

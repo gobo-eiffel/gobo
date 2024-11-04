@@ -18,7 +18,8 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 feature -- Access
@@ -60,8 +61,6 @@ feature -- Status report
 			Result := expression.is_instance_free
 		end
 
-feature -- Status report
-
 	has_result: BOOLEAN
 			-- Does the entity 'Result' appear in current expression
 			-- or (recursively) in one of its subexpressions?
@@ -88,6 +87,15 @@ feature -- Status report
 			-- or (recursively) in one of its subexpressions?
 		do
 			Result := expression.has_typed_object_test
+		end
+
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current expression
+			-- and (recursively) in its subexpressions.
+		do
+			expression.add_old_expressions (a_list)
 		end
 
 invariant

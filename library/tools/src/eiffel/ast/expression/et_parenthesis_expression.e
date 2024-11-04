@@ -15,10 +15,12 @@ inherit
 	ET_PARENTHESIS_CALL
 		undefine
 			parenthesis_call
+		redefine
+			reset
 		end
 
 	ET_QUALIFIED_FEATURE_CALL_EXPRESSION
-		undefine
+		redefine
 			reset
 		end
 
@@ -31,12 +33,22 @@ inherit
 			has_typed_object_test,
 			is_instance_free,
 			reset,
+			add_old_expressions,
 			add_separate_arguments
 		end
 
 create
 
 	make
+
+feature -- Initialization
+
+	reset
+			-- Reset call as it was just after it was last parsed.
+		do
+			precursor {ET_QUALIFIED_FEATURE_CALL_EXPRESSION}
+			precursor {ET_PARENTHESIS_CALL}
+		end
 
 feature -- Processing
 

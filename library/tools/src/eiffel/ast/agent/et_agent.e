@@ -18,7 +18,8 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 feature -- Access
@@ -119,6 +120,20 @@ feature -- Setting
 			arguments := an_arguments
 		ensure
 			argumnts_set: arguments = an_arguments
+		end
+
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current expression
+			-- and (recursively) in its subexpressions.
+			-- Do not take into account the code inside inline agent,
+			-- just the target and arguments of the agent.
+		do
+			target.add_old_expressions (a_list)
+			if attached arguments as l_arguments then
+				l_arguments.add_old_expressions (a_list)
+			end
 		end
 
 feature {ET_AGENT_IMPLICIT_CURRENT_TARGET} -- Implicit node positions

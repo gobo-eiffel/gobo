@@ -27,13 +27,15 @@ inherit
 
 	ET_CALL_EXPRESSION
 		undefine
-			reset,
 			is_qualified_call,
 			has_result,
 			has_address_expression,
 			has_agent,
 			has_typed_object_test,
+			add_old_expressions,
 			add_separate_arguments
+		redefine
+			reset
 		end
 
 create
@@ -45,7 +47,8 @@ feature -- Initialization
 	reset
 			-- Reset call as it was when it was last parsed.
 		do
-			Precursor {ET_QUALIFIED_REGULAR_FEATURE_CALL}
+			precursor {ET_CALL_EXPRESSION}
+			precursor {ET_QUALIFIED_REGULAR_FEATURE_CALL}
 			parenthesis_call := Void
 		end
 

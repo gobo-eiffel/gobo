@@ -31,7 +31,8 @@ inherit
 			has_address_expression,
 			has_agent,
 			has_typed_object_test,
-			is_instance_free
+			is_instance_free,
+			add_old_expressions
 		end
 
 	ET_CHOICE_CONSTANT
@@ -41,7 +42,8 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 feature -- Access

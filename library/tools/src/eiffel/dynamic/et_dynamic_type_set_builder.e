@@ -5,7 +5,7 @@
 		"Eiffel dynamic type set builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_DYNAMIC_TYPE_SET_BUILDER
@@ -40,9 +40,6 @@ feature -- Status report
 	no_debug: BOOLEAN
 			-- Should debug instructions be ignored?
 
-	no_assertion: BOOLEAN
-			-- Should assertions be ignored?
-
 feature -- Status setting
 
 	set_fatal_error
@@ -75,14 +72,6 @@ feature -- Status setting
 			no_debug := b
 		ensure
 			no_debug_set: no_debug = b
-		end
-
-	set_no_assertion (b: BOOLEAN)
-			-- Set `no_assertion' to `b'.
-		do
-			no_assertion := b
-		ensure
-			no_assertion_set: no_assertion = b
 		end
 
 feature -- Factory

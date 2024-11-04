@@ -5,7 +5,7 @@
 		"Eiffel once manifest strings"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ONCE_MANIFEST_STRING
@@ -13,6 +13,9 @@ class ET_ONCE_MANIFEST_STRING
 inherit
 
 	ET_INLINE_CONSTANT
+		redefine
+			reset
+		end
 
 create
 
@@ -29,6 +32,15 @@ feature {NONE} -- Initialization
 			manifest_string := a_string
 		ensure
 			manifest_string_set: manifest_string = a_string
+		end
+
+feature -- Initialization
+
+	reset
+			-- Reset expression as it was when it was last parsed.
+		do
+			precursor
+			manifest_string.reset
 		end
 
 feature -- Access

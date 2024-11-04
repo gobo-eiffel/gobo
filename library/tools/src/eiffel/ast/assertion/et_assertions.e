@@ -32,6 +32,24 @@ feature -- Initialization
 
 feature -- Status report
 
+	has_false: BOOLEAN
+			-- Is there at least one assertion expression which is the 'False' entity (possibly parenthesized)?
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if attached assertion (i).expression as l_expression then
+					if l_expression.is_false then
+						Result := True
+							-- Jump out of the loop.
+						i := nb
+					end
+				end
+				i := i + 1
+			end
+		end
+
 	are_all_true: BOOLEAN
 			-- Are all assertion expressions, if any, the 'True' entity (possibly parenthesized)?
 		local
@@ -178,6 +196,28 @@ feature -- Access
 			Result := item (i).assertion
 		ensure
 			assertion_not_void: Result /= Void
+		end
+
+feature -- Element change
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current assertions
+			-- and (recursively) in their subexpressions.
+		require
+			a_list_not_void: a_list /= Void
+			no_void_item: not a_list.has_void
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if attached assertion (i).expression as l_expression then
+					l_expression.add_old_expressions (a_list)
+				end
+				i := i + 1
+			end
+		ensure
+			no_void_item: not a_list.has_void
 		end
 
 feature {NONE} -- Implementation

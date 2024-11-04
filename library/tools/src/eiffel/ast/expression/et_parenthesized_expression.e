@@ -22,18 +22,20 @@ inherit
 			has_address_expression,
 			has_agent,
 			has_typed_object_test,
+			add_old_expressions,
 			add_separate_arguments
 		end
 
 	ET_AGENT_TARGET
 		undefine
-			reset, set_index
+			reset
 		redefine
 			is_instance_free,
 			has_result,
 			has_address_expression,
 			has_agent,
 			has_typed_object_test,
+			add_old_expressions,
 			is_current
 		end
 
@@ -60,6 +62,7 @@ feature -- Initialization
 	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
+			precursor {ET_EXPRESSION}
 			expression.reset
 		end
 
@@ -180,6 +183,15 @@ feature -- Setting
 			right_parenthesis := r
 		ensure
 			right_parenthesis_set: right_parenthesis = r
+		end
+
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current expression
+			-- and (recursively) in its subexpressions.
+		do
+			expression.add_old_expressions (a_list)
 		end
 
 feature -- SCOOP

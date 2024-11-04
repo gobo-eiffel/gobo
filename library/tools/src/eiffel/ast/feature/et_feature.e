@@ -921,6 +921,38 @@ feature -- Conversion
 			Result := Current
 		end
 
+feature -- Element change
+
+	add_precursors (a_precursors: DS_HASH_SET [ET_FEATURE])
+			-- Add (recursively) all precursors of current feature to `a_precursors'
+			-- the oldest precursors first.
+		require
+			a_precursors_not_void: a_precursors /= Void
+			no_void_precursor: not a_precursors.has_void
+		local
+			i, nb: INTEGER
+			l_precursor: ET_FEATURE
+		do
+			if attached first_precursor as l_first_precursor then
+				if not a_precursors.has (l_first_precursor) then
+					l_first_precursor.add_precursors (a_precursors)
+					a_precursors.force_last (l_first_precursor)
+				end
+				if attached other_precursors as l_other_precursors then
+					nb := l_other_precursors.count
+					from i := 1 until i > nb loop
+						l_precursor := l_other_precursors.item (i)
+						if not a_precursors.has (l_precursor) then
+							l_precursor.add_precursors (a_precursors)
+							a_precursors.force_last (l_precursor)
+						end
+						i := i + 1
+					end
+				end
+			end
+		ensure
+			no_void_precursor: not a_precursors.has_void
+		end
 feature -- Output
 
 	debug_output: STRING

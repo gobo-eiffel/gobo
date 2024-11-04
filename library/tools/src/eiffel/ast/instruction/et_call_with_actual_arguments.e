@@ -78,4 +78,20 @@ feature -- Measurement
 			with_arguments: attached arguments as l_arguments implies Result = l_arguments.count
 		end
 
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current actual
+			-- arguments and (recursively) in their subexpressions.
+		require
+			a_list_not_void: a_list /= Void
+			no_void_item: not a_list.has_void
+		do
+			if attached arguments as l_arguments then
+				l_arguments.add_old_expressions (a_list)
+			end
+		ensure
+			no_void_item: not a_list.has_void
+		end
+
 end
