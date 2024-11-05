@@ -705,6 +705,15 @@ void GE_raise_once_exception(GE_context* a_context, EIF_REFERENCE a_exception)
 }
 
 /*
+ * Raise exception which was raised when an old expression was evaluated.
+ */
+int GE_raise_old_exception(GE_context* a_context, EIF_REFERENCE a_exception)
+{
+	GE_raise(GE_EX_OLD);
+	return 0;
+}
+
+/*
  * Exception, if any, which was last raised in `a_context'.
  */
 EIF_REFERENCE GE_last_exception_raised(GE_context* a_context)

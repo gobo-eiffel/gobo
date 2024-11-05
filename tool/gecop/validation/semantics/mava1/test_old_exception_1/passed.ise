@@ -1,0 +1,44 @@
+In h
+In f
+In g
+
+aa: system execution failed.
+Following is the set of recorded exceptions:
+
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+ISE_EXCEPTION_MANAGER
+                    developer_raise @N    h:
+<XXXXXXXXXXXXXXXX>                         Developer exception.          Fail
+-------------------------------------------------------------------------------
+ISE_EXCEPTION_MANAGER
+                    developer_raise        
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+ISE_EXCEPTION_MANAGER
+                    raise @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+DEVELOPER_EXCEPTION raise @N
+<XXXXXXXXXXXXXXXX>  (From EXCEPTION)       Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  h @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  f @N
+<XXXXXXXXXXXXXXXX>                         Old expression evaluation failed.
+                                                                         Fail
+-------------------------------------------------------------------------------
+AA                  f @N                   post_2:
+<XXXXXXXXXXXXXXXX>                         Postcondition violated.       Fail
+-------------------------------------------------------------------------------
+AA                  f @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  make @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  root's creation                                     
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Exit
+-------------------------------------------------------------------------------

@@ -8283,6 +8283,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			l_postconditions: ET_POSTCONDITIONS
 			i, nb: INTEGER
 			l_old_expression_temp_variables: like old_expression_temp_variables
+			l_old_expression_exception_temp_variables: like old_expression_exception_temp_variables
 			l_temp: ET_IDENTIFIER
 			l_old_index_offset: INTEGER
 		do
@@ -8317,6 +8318,14 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				l_old_expression_temp_variables.forth
 			end
 			l_old_expression_temp_variables.wipe_out
+			l_old_expression_exception_temp_variables := old_expression_exception_temp_variables
+			from l_old_expression_exception_temp_variables.start until l_old_expression_exception_temp_variables.after loop
+				l_temp := l_old_expression_exception_temp_variables.item_for_iteration
+				mark_temp_variable_unfrozen (l_temp)
+				mark_temp_variable_free (l_temp)
+				l_old_expression_exception_temp_variables.forth
+			end
+			l_old_expression_exception_temp_variables.wipe_out
 		end
 
 	print_all_old_expression_declarations (a_feature: ET_CLOSURE)
@@ -8335,6 +8344,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			l_old_expressions := old_expressions
 			l_old_expressions.wipe_out
 			old_expression_temp_variables.wipe_out
+			old_expression_exception_temp_variables.wipe_out
 			if attached {ET_FEATURE} a_feature as l_feature then
 				l_old_index_offset := index_offset
 				l_all_postconditions := current_feature.postconditions
@@ -8365,19 +8375,30 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			i, nb: INTEGER
 			l_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_temp: ET_IDENTIFIER
+			l_exception_temp: ET_IDENTIFIER
 			l_old_expression: ET_OLD_EXPRESSION
 			l_old_expression_temp_variables: like old_expression_temp_variables
+			l_old_expression_exception_temp_variables: like old_expression_exception_temp_variables
 		do
 			l_old_expression_temp_variables := old_expression_temp_variables
+			l_old_expression_exception_temp_variables := old_expression_exception_temp_variables
 			nb := a_old_expressions.count
 			from i := 1 until i > nb loop
-				print_before_assertions
 				l_old_expression := a_old_expressions.item (i)
 				l_type := dynamic_type_set (l_old_expression).static_type.primary_type
 				l_temp := new_temp_variable (l_type)
 				l_temp.set_index (l_old_expression.index)
 				mark_temp_variable_frozen (l_temp)
 				l_old_expression_temp_variables.force_last (l_temp, l_old_expression)
+				l_exception_temp := new_temp_variable (current_dynamic_system.any_type)
+				mark_temp_variable_frozen (l_exception_temp)
+				l_old_expression_exception_temp_variables.force_last (l_exception_temp, l_old_expression)
+				print_before_old_expression (l_old_expression)
+				print_indentation
+				print_temp_name (l_exception_temp, current_file)
+				print_assign_to
+				current_file.put_character ('0')
+				print_semicolon_newline
 				assignment_target := l_temp
 				print_operand (l_old_expression.expression)
 				assignment_target := Void
@@ -8390,7 +8411,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					print_semicolon_newline
 				end
 				call_operands.wipe_out
-				print_after_assertions
+				print_after_old_expression
 				i := i + 1
 			end
 		end
@@ -14781,15 +14802,45 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
+		local
+			l_temp: ET_IDENTIFIER
+			l_exception_temp: ET_IDENTIFIER
 		do
-			old_expression_temp_variables.search (an_expression)
-			if old_expression_temp_variables.found then
-				print_temporary_variable (old_expression_temp_variables.found_item)
+			if in_operand then
+				operand_stack.force (an_expression)
 			else
-					-- Internal error: the value of the old expression should have been
-					-- computed at this stage.
-				set_fatal_error
-				error_handler.report_giaac_error (generator, "print_old_expression", 1, "no value computed for old expression.")
+				old_expression_temp_variables.search (an_expression)
+				old_expression_exception_temp_variables.search (an_expression)
+				if not old_expression_temp_variables.found then
+						-- Internal error: the value of the old expression should have been
+						-- computed at this stage.
+					set_fatal_error
+					error_handler.report_giaac_error (generator, "print_old_expression", 1, "no value computed for old expression.")
+				elseif not old_expression_exception_temp_variables.found then
+						-- Internal error: the exception marker of the old expression should have been
+						-- set at this stage.
+					set_fatal_error
+					error_handler.report_giaac_error (generator, "print_old_expression", 2, "no exception marker for old expression.")
+				else
+					l_temp := old_expression_temp_variables.found_item
+					l_exception_temp := old_expression_exception_temp_variables.found_item
+					current_file.put_character ('(')
+					print_temp_name (l_exception_temp, current_file)
+					current_file.put_character ('?')
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_raise_old_exception)
+					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					print_comma
+					print_temp_name (l_exception_temp, current_file)
+					current_file.put_character (')')
+					current_file.put_character (',')
+					print_temp_name (l_temp, current_file)
+					current_file.put_character (')')
+					current_file.put_character (':')
+					print_temp_name (l_temp, current_file)
+					current_file.put_character (')')
+				end
 			end
 		end
 
@@ -45215,6 +45266,87 @@ feature {NONE} -- Assertions
 			current_file.put_new_line
 			indent
 			print_indentation
+			current_file.put_string (c_ge_rescue)
+			current_file.put_character (' ')
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			current_file.put_character (';')
+			current_file.put_new_line
+			print_indentation
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			current_file.put_character ('.')
+			current_file.put_string (c_previous)
+			print_assign_to
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_assign_to
+			current_file.put_character ('&')
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_setjmp)
+			current_file.put_character ('(')
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			current_file.put_character ('.')
+			current_file.put_character ('j')
+			current_file.put_character ('b')
+			current_file.put_character (')')
+			print_not_equal_to
+			current_file.put_character ('0')
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_assign_to
+			current_file.put_character ('&')
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_in_assertion)
+			print_assign_to
+			current_file.put_character ('0')
+			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_assign_to
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			current_file.put_character ('.')
+			current_file.put_string (c_previous)
+			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_ge_jump_to_last_rescue)
+			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			current_file.put_character (')')
+			print_semicolon_newline
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+			print_indentation
 			current_file.put_string (c_ac)
 			current_file.put_string (c_arrow)
 			current_file.put_string (c_in_assertion)
@@ -45233,10 +45365,200 @@ feature {NONE} -- Assertions
 			print_assign_to
 			current_file.put_character ('0')
 			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_assign_to
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			current_file.put_character ('.')
+			current_file.put_string (c_previous)
+			print_semicolon_newline
 			dedent
 			print_indentation
 			current_file.put_character ('}')
+			current_file.put_new_line
+		end
+
+	print_before_old_expression (a_old_expression: ET_OLD_EXPRESSION)
+			-- Print code before evaluating `a_old_expression', to `current_file'.
+			-- Checks whether we are already checking assertions, and
+			-- catch and keep track of possible exceptions.
+		require
+			a_old_expression_not_void: a_old_expression /= Void
+		local
+			l_temp: ET_IDENTIFIER
+			l_exception_temp: ET_IDENTIFIER
+		do
+			old_expression_temp_variables.search (a_old_expression)
+			old_expression_exception_temp_variables.search (a_old_expression)
+			if not old_expression_temp_variables.found then
+					-- Internal error: the value of the old expression should have been
+					-- computed at this stage.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_before_old_expression", 1, "no value computed for old expression.")
+			elseif not old_expression_exception_temp_variables.found then
+					-- Internal error: the exception marker of the old expression should have been
+					-- set at this stage.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_before_old_expression", 2, "no exception marker for old expression.")
+			else
+				l_temp := old_expression_temp_variables.found_item
+				l_exception_temp := old_expression_exception_temp_variables.found_item
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_character ('!')
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_in_assertion)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string (c_ge_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character ('a')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_character ('r')
+				current_file.put_character ('a')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				print_assign_to
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				print_assign_to
+				current_file.put_character ('&')
+				current_file.put_character ('r')
+				current_file.put_character ('a')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_ge_setjmp)
+				current_file.put_character ('(')
+				current_file.put_character ('r')
+				current_file.put_character ('a')
+				current_file.put_character ('.')
+				current_file.put_character ('j')
+				current_file.put_character ('b')
+				current_file.put_character (')')
+				print_not_equal_to
+				current_file.put_character ('0')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				print_assign_to
+				current_file.put_character ('&')
+				current_file.put_character ('r')
+				current_file.put_character ('a')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_in_assertion)
+				print_assign_to
+				current_file.put_character ('0')
+				print_semicolon_newline
+				print_indentation
+				print_temp_name (l_exception_temp, current_file)
+				print_assign_to
+				current_file.put_string (c_ge_last_exception_raised)
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				current_file.put_character (')')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				print_assign_to
+				current_file.put_character ('r')
+				current_file.put_character ('a')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				print_semicolon_newline
+				if exception_trace_mode then
+					print_indentation
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_call)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_tc_address)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_character (' ')
+				current_file.put_string (c_else)
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_in_assertion)
+				print_assign_to
+				current_file.put_character ('1')
+				print_semicolon_newline
+			end
+		end
+
+	print_after_old_expression
+			-- Print code after evaluating an old expression, to `current_file'.
+		do
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_in_assertion)
+			print_assign_to
+			current_file.put_character ('0')
 			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_assign_to
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			current_file.put_character ('.')
+			current_file.put_string (c_previous)
+			print_semicolon_newline
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
 		end
 
 	assertion_tag (a_assertion: ET_ASSERTION): STRING
@@ -45792,6 +46114,7 @@ feature {NONE} -- Constants
 	c_ge_process_once_mutexes: STRING = "GE_process_once_mutexes"
 	c_ge_process_onces: STRING = "GE_process_onces"
 	c_ge_raise: STRING = "GE_raise"
+	c_ge_raise_old_exception: STRING = "GE_raise_old_exception"
 	c_ge_raise_once_exception: STRING = "GE_raise_once_exception"
 	c_ge_raise_with_message: STRING = "GE_raise_with_message"
 	c_ge_raw_object_at_offset: STRING = "GE_raw_object_at_offset"
