@@ -752,16 +752,8 @@ feature {NONE} -- Implementation
 		require
 			a_group_not_void: a_group /= Void
 			a_value_not_void: a_value /= Void
-		local
-			l_options: ET_ECF_OPTIONS
 		do
-			if attached a_group.options as l_group_options then
-				override_all_assertions_in_option (l_group_options, a_value)
-			else
-				create l_options.make
-				a_group.set_options (l_options)
-				override_all_assertions_in_option (l_options, a_value)
-			end
+			override_all_assertions_in_option (a_group.options, a_value)
 			if attached a_group.class_options as l_class_options then
 				l_class_options.do_all (agent override_all_assertions_in_option (?, a_value))
 			end

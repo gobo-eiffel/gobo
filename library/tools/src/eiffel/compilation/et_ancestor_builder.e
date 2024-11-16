@@ -378,7 +378,8 @@ feature {NONE} -- Ancestors
 		end
 
 	add_parent_to_ancestors (a_parent: ET_PARENT; a_is_conforming: BOOLEAN)
-			-- Add `a_parent' and its ancestors to `ancestors'.
+			-- Add `a_parent' and its ancestors to the end of `ancestors'
+			-- in reverse topological order (parent, then grand-parents, etc.).
 			-- `a_parent' is a parent of `current_class'.
 			-- `a_is_conforming' means that `a_parent' is a conforming parent.
 		require
@@ -406,7 +407,7 @@ feature {NONE} -- Ancestors
 				end
 			else
 				l_ancestor_type := a_parent_type
-				ancestors.force_new (l_ancestor_type, a_parent_class)
+				ancestors.force_last_new (l_ancestor_type, a_parent_class)
 					-- Add proper ancestors of current parent
 					-- to the ancestors of `current_class'.
 				a_parameters := a_parent.type.actual_parameters
@@ -435,7 +436,7 @@ feature {NONE} -- Ancestors
 						if a_parameters /= Void then
 							a_type := a_type.resolved_formal_parameters (a_parameters)
 						end
-						ancestors.force_new (a_type, a_class)
+						ancestors.force_last_new (a_type, a_class)
 					end
 					i := i + 1
 				end
@@ -443,7 +444,7 @@ feature {NONE} -- Ancestors
 			if a_is_conforming then
 				conforming_ancestors.search (a_parent_class)
 				if not conforming_ancestors.found then
-					conforming_ancestors.force_new (l_ancestor_type, a_parent_class)
+					conforming_ancestors.force_last_new (l_ancestor_type, a_parent_class)
 					anc := a_parent_class.conforming_ancestors
 					nb := anc.count
 					from i := 1 until i > nb loop
@@ -458,7 +459,7 @@ feature {NONE} -- Ancestors
 								error_handler.report_giaaa_error
 							else
 								l_parent_ancestor_type := ancestors.found_item
-								conforming_ancestors.force_new (l_parent_ancestor_type, a_class)
+								conforming_ancestors.force_last_new (l_parent_ancestor_type, a_class)
 							end
 						end
 						i := i + 1

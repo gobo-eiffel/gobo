@@ -5,7 +5,7 @@
 		"Eiffel inline agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_INLINE_AGENT
@@ -44,6 +44,9 @@ feature -- Initialization
 	reset
 			-- Reset inline agent as it was just after it was last parsed.
 		do
+			precursor
+			result_index := 0
+			attached_result_index := 0
 			target.reset
 			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} actual_arguments as l_actuals then
 				l_actuals.reset

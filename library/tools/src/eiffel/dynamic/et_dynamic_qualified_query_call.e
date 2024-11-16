@@ -5,7 +5,7 @@
 		"Eiffel qualified query calls at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_DYNAMIC_QUALIFIED_QUERY_CALL
@@ -26,7 +26,8 @@ create
 feature {NONE} -- Initialization
 
 	make (a_call: like static_call; a_target_type_set: like target_type_set; a_result_type_set: like result_type_set;
-		a_current_feature: like current_feature; a_current_type: like current_type)
+		a_current_feature: like current_feature; a_current_feature_impl: like current_feature_impl;
+		a_current_type: like current_type; a_current_index, a_index_offset: INTEGER)
 			-- Create a new dynamic query call.
 		require
 			a_call_not_void: a_call /= Void
@@ -34,19 +35,26 @@ feature {NONE} -- Initialization
 			a_target_type_set_not_void: a_target_type_set /= Void
 			a_result_type_set_not_void: a_result_type_set /= Void
 			a_current_feature_not_void: a_current_feature /= Void
+			a_current_feature_impl_not_void: a_current_feature_impl /= Void
 			a_current_type_not_void: a_current_type /= Void
 		do
 			static_call := a_call
 			target_type_set := a_target_type_set
 			result_type_set := a_result_type_set
 			current_feature := a_current_feature
+			current_feature_impl := a_current_feature_impl
 			current_type := a_current_type
+			current_index := a_current_index
+			index_offset := a_index_offset
 		ensure
 			static_call_set: static_call = a_call
 			target_type_set_set: target_type_set = a_target_type_set
 			result_type_set_set: result_type_set = a_result_type_set
 			current_feature_set: current_feature = a_current_feature
+			current_feature_impl_set: current_feature_impl = a_current_feature_impl
 			current_type_set: current_type = a_current_type
+			current_index_set: current_index = a_current_index
+			index_offset_set: index_offset = a_index_offset
 		end
 
 feature -- Access

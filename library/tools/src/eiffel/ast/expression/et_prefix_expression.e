@@ -22,7 +22,8 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 	ET_UNARY_EXPRESSION
@@ -57,6 +58,7 @@ feature -- Initialization
 	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
+			precursor {ET_UNARY_EXPRESSION}
 			name.reset
 			expression.reset
 			is_boolean_operator := False

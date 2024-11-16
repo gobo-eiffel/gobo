@@ -18,7 +18,8 @@ inherit
 			is_instance_free,
 			has_result,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 create
@@ -43,6 +44,7 @@ feature -- Initialization
 	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
+			precursor
 			expression.reset
 		end
 
@@ -88,6 +90,15 @@ feature -- Status report
 			-- or (recursively) in one of its subexpressions?
 		do
 			Result := expression.has_typed_object_test
+		end
+
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current expression
+			-- and (recursively) in its subexpressions.
+		do
+			expression.add_old_expressions (a_list)
 		end
 
 feature -- Processing

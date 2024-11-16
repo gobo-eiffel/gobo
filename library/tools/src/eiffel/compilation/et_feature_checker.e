@@ -323,7 +323,9 @@ feature -- Validity checking
 					end
 					old_in_static_feature := in_static_feature
 					in_static_feature := a_feature.is_static
+					initialize_indexes (a_feature)
 					a_feature.process (Current)
+					reset_indexes
 					in_static_feature := old_in_static_feature
 					if current_type = current_class_impl then
 						a_feature.set_validity_checked
@@ -455,6 +457,7 @@ feature -- Validity checking
 					boolean_type := current_universe_impl.boolean_type
 					l_assertion_context := new_context (current_type)
 					l_old_object_test_scope := current_object_test_scope.count
+					initialize_indexes (a_current_feature)
 					nb := a_preconditions.count
 					from i := 1 until i > nb loop
 						if attached a_preconditions.assertion (i).expression as l_expression then
@@ -479,6 +482,7 @@ feature -- Validity checking
 						end
 						i := i + 1
 					end
+					reset_indexes
 					current_object_test_scope.keep_object_tests (l_old_object_test_scope)
 					free_context (l_assertion_context)
 					has_fatal_error := has_fatal_error or had_error
@@ -610,6 +614,7 @@ feature -- Validity checking
 					boolean_type := current_universe_impl.boolean_type
 					l_assertion_context := new_context (current_type)
 					l_old_object_test_scope := current_object_test_scope.count
+					initialize_indexes (a_current_feature)
 					nb := a_postconditions.count
 					from i := 1 until i > nb loop
 						if attached a_postconditions.assertion (i).expression as l_expression then
@@ -634,6 +639,7 @@ feature -- Validity checking
 						end
 						i := i + 1
 					end
+					reset_indexes
 					current_object_test_scope.keep_object_tests (l_old_object_test_scope)
 					free_context (l_assertion_context)
 					has_fatal_error := has_fatal_error or had_error
@@ -740,6 +746,7 @@ feature -- Validity checking
 						-- The error should have already been reported.
 					set_fatal_error
 				else
+					initialize_indexes (an_invariants)
 					boolean_type := current_universe_impl.boolean_type
 					l_assertion_context := new_context (current_type)
 					l_old_object_test_scope := current_object_test_scope.count
@@ -767,6 +774,7 @@ feature -- Validity checking
 						end
 						i := i + 1
 					end
+					reset_indexes
 					current_object_test_scope.keep_object_tests (l_old_object_test_scope)
 					free_context (l_assertion_context)
 					has_fatal_error := has_fatal_error or had_error
@@ -909,6 +917,7 @@ feature {NONE} -- Feature validity
 			l_type := a_feature.type
 			check_query_type_validity (l_type, a_feature)
 			if not has_fatal_error then
+				report_result_declaration (l_type)
 				if in_precursor then
 -- TODO: when processing a precursor, its signature should be resolved to the
 -- context of `current_class', but it is currently seen in the context of its parent class.
@@ -1848,6 +1857,7 @@ feature {NONE} -- Feature validity
 			l_type := a_feature.type
 			check_query_type_validity (l_type, a_feature)
 			if not has_fatal_error then
+				report_result_declaration (l_type)
 				if in_precursor then
 -- TODO: when processing a precursor, its signature should be resolved to the
 -- context of `current_class', but it is currently seen in the context of its parent class.
@@ -1944,6 +1954,9 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 						had_error := had_error or has_fatal_error
 						check_signature_type_validity (l_formals_impl.formal_argument (i).type)
 						if not has_fatal_error then
+							l_formal.set_index (i)
+							l_formal.name.set_index (i)
+							l_formal.set_attached_index (i + nb)
 							report_formal_argument_declaration (l_formal)
 							if in_precursor then
 -- TODO: when processing a precursor, its signature should be resolved to the
@@ -1984,6 +1997,12 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 					l_name := l_formal.name
 					l_name.set_argument (True)
 					l_name.set_seed (i)
+					if l_formal.index = 0 then
+						l_formal.set_index (index_count + 1)
+						index_count := index_count + 2
+						l_formal.set_attached_index (index_count)
+						l_name.set_index (l_formal.index)
+					end
 					from j := 1 until j >= i loop
 						other_formal := an_arguments.formal_argument (j)
 						if other_formal.name.same_identifier (l_name) then
@@ -2074,6 +2093,12 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 				nb := an_arguments.count
 				from i := 1 until i > nb loop
 					l_formal := an_arguments.formal_argument (i)
+					if l_formal.index = 0 then
+						l_formal.set_index (index_count + 1)
+						index_count := index_count + 2
+						l_formal.set_attached_index (index_count)
+						l_formal.name.set_index (l_formal.index)
+					end
 					l_type := l_formal.type
 					had_error := had_error or has_fatal_error
 					check_signature_type_validity (l_type)
@@ -2110,6 +2135,12 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 					l_name := l_local.name
 					l_name.set_local (True)
 					l_name.set_seed (i)
+					if l_local.index = 0 then
+						l_local.set_index (index_count + 1)
+						index_count := index_count + 2
+						l_local.set_attached_index (index_count)
+						l_name.set_index (l_local.index)
+					end
 					from j := 1 until j >= i loop
 						other_local := a_locals.local_variable (j)
 						if other_local.name.same_identifier (l_name) then
@@ -2147,6 +2178,12 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 				nb := a_locals.count
 				from i := 1 until i > nb loop
 					l_local := a_locals.local_variable (i)
+					if l_local.index = 0 then
+						l_local.set_index (index_count + 1)
+						index_count := index_count + 2
+						l_local.set_attached_index (index_count)
+						l_local.name.set_index (l_local.index)
+					end
 					l_type := l_local.type
 					had_error := had_error or has_fatal_error
 					check_local_type_validity (l_type)
@@ -2185,6 +2222,12 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 					l_name := l_local.name
 					l_name.set_local (True)
 					l_name.set_seed (i)
+					if l_local.index = 0 then
+						l_local.set_index (index_count + 1)
+						index_count := index_count + 2
+						l_local.set_attached_index (index_count)
+						l_name.set_index (l_local.index)
+					end
 					from j := 1 until j >= i loop
 						other_local := a_locals.local_variable (j)
 						if other_local.name.same_identifier (l_name) then
@@ -2284,6 +2327,12 @@ feature {NONE} -- Locals/Formal arguments/query type validity
 				nb := a_locals.count
 				from i := 1 until i > nb loop
 					l_local := a_locals.local_variable (i)
+					if l_local.index = 0 then
+						l_local.set_index (index_count + 1)
+						index_count := index_count + 2
+						l_local.set_attached_index (index_count)
+						l_local.name.set_index (l_local.index)
+					end
 					l_type := l_local.type
 					had_error := had_error or has_fatal_error
 					check_local_type_validity (l_type)
@@ -3570,6 +3619,9 @@ feature {NONE} -- Instruction validity
 						-- the object created is attached.
 					l_creation_named_type := l_creation_named_type.type_with_type_mark (tokens.implicit_attached_type_mark)
 				end
+				if current_system.scoop_mode and not a_creation_context.is_type_non_separate then
+					set_index (a_instruction.separate_target)
+				end
 				report_creation_instruction (a_instruction, l_creation_named_type, a_procedure)
 			end
 		end
@@ -3929,8 +3981,6 @@ feature {NONE} -- Instruction validity
 			l_choice_named_type: ET_NAMED_TYPE
 			j, nb2: INTEGER
 			l_constant: detachable ET_CONSTANT
-			l_cast_type: detachable ET_TARGET_TYPE
-			l_index: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_inspect_attachment_scope: detachable like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
@@ -3993,45 +4043,9 @@ feature {NONE} -- Instruction validity
 							elseif not had_value_error then
 								if l_choice_context.same_named_type (l_value_type, l_value_context) then
 									-- OK.
-								elseif attached {ET_INTEGER_CONSTANT} l_constant as l_integer_constant then
-										-- If we use the same object for the constant attribute
-										-- when analyzing different client features, each feature
-										-- will assign its own index to this object. That's why
-										-- we need to reset the index so that the index does not
-										-- get corrupted.
-									l_index := l_integer_constant.index
-									l_integer_constant.set_index (0)
-									l_cast_type := l_integer_constant.cast_type
-									l_integer_constant.set_cast_type (Void)
+								elseif l_constant.is_integer_constant or l_constant.is_character_constant then
 									l_choice_context.wipe_out
-									check_expression_validity (l_integer_constant, l_choice_context, l_value_context)
-									l_integer_constant.set_cast_type (l_cast_type)
-									l_integer_constant.set_index (l_index)
-									if has_fatal_error then
-										had_error := True
-									elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
-										-- OK.
-									else
-										had_error := True
-										set_fatal_error
-										l_value_named_type := l_value_context.named_type
-										l_choice_named_type := l_choice_context.named_type
-										error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
-									end
-								elseif attached {ET_CHARACTER_CONSTANT} l_constant as l_character_constant then
-										-- If we use the same object for the constant attribute
-										-- when analyzing different client features, each feature
-										-- will assign its own index to this object. That's why
-										-- we need to reset the index so that the index does not
-										-- get corrupted.
-									l_index := l_character_constant.index
-									l_character_constant.set_index (0)
-									l_cast_type := l_character_constant.cast_type
-									l_character_constant.set_cast_type (Void)
-									l_choice_context.wipe_out
-									check_expression_validity (l_character_constant, l_choice_context, l_value_context)
-									l_character_constant.set_cast_type (l_cast_type)
-									l_character_constant.set_index (l_index)
+									check_expression_validity (l_constant, l_choice_context, l_value_context)
 									if has_fatal_error then
 										had_error := True
 									elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
@@ -4067,45 +4081,9 @@ feature {NONE} -- Instruction validity
 								elseif not had_value_error then
 									if l_choice_context.same_named_type (l_value_type, l_value_context) then
 										-- OK.
-									elseif attached {ET_INTEGER_CONSTANT} l_constant as l_integer_constant2 then
-											-- If we use the same object for the constant attribute
-											-- when analyzing different client features, each feature
-											-- will assign its own index to this object. That's why
-											-- we need to reset the index so that the index does not
-											-- get corrupted.
-										l_index := l_integer_constant2.index
-										l_integer_constant2.set_index (0)
-										l_cast_type := l_integer_constant2.cast_type
-										l_integer_constant2.set_cast_type (Void)
+									elseif l_constant.is_integer_constant or l_constant.is_character_constant then
 										l_choice_context.wipe_out
-										check_expression_validity (l_integer_constant2, l_choice_context, l_value_context)
-										l_integer_constant2.set_cast_type (l_cast_type)
-										l_integer_constant2.set_index (l_index)
-										if has_fatal_error then
-											had_error := True
-										elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
-											-- OK.
-										else
-											had_error := True
-											set_fatal_error
-											l_value_named_type := l_value_context.named_type
-											l_choice_named_type := l_choice_context.named_type
-											error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
-										end
-									elseif attached {ET_CHARACTER_CONSTANT} l_constant as l_character_constant2 then
-											-- If we use the same object for the constant attribute
-											-- when analyzing different client features, each feature
-											-- will assign its own index to this object. That's why
-											-- we need to reset the index so that the index does not
-											-- get corrupted.
-										l_index := l_character_constant2.index
-										l_character_constant2.set_index (0)
-										l_cast_type := l_character_constant2.cast_type
-										l_character_constant2.set_cast_type (Void)
-										l_choice_context.wipe_out
-										check_expression_validity (l_character_constant2, l_choice_context, l_value_context)
-										l_character_constant2.set_cast_type (l_cast_type)
-										l_character_constant2.set_index (l_index)
+										check_expression_validity (l_constant, l_choice_context, l_value_context)
 										if has_fatal_error then
 											had_error := True
 										elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
@@ -4257,14 +4235,18 @@ feature {NONE} -- Instruction validity
 				if l_query /= Void then
 					if attached {ET_CONSTANT_ATTRIBUTE} l_query as l_constant_attribute then
 						Result := l_constant_attribute.constant
-						if Result.is_character_constant then
-							Result := character_choice_constant
-						elseif Result.is_integer_constant then
-							Result := integer_choice_constant
-						end
 					elseif attached {ET_UNIQUE_ATTRIBUTE} l_query as l_unique_attribute then
 						Result := integer_choice_constant
 					end
+				end
+			end
+			if Result /= Void then
+				if Result.is_character_constant then
+					Result := character_choice_constant
+					Result.set_index (0)
+				elseif Result.is_integer_constant then
+					Result := integer_choice_constant
+					Result.set_index (0)
 				end
 			end
 			has_fatal_error := l_old_has_fatal_error
@@ -4290,7 +4272,7 @@ feature {NONE} -- Instruction validity
 					had_error := True
 				end
 			end
-			check_loop_component_no_from_validity (an_instruction)
+			check_repetition_instruction_no_from_validity (an_instruction)
 			current_iteration_item_scope.remove_iteration_components (1)
 			current_iteration_item_types.search (an_instruction)
 			if current_iteration_item_types.found then
@@ -4326,13 +4308,13 @@ feature {NONE} -- Instruction validity
 					had_error := True
 				end
 			end
-			check_loop_component_no_from_validity (an_instruction)
+			check_repetition_instruction_no_from_validity (an_instruction)
 			if had_error then
 				set_fatal_error
 			end
 		end
 
-	check_loop_component_no_from_validity (an_instruction: ET_LOOP_COMPONENT)
+	check_repetition_instruction_no_from_validity (an_instruction: ET_REPETITION_INSTRUCTION)
 			-- Check validity of `an_instruction' except for the from-part.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4414,7 +4396,7 @@ feature {NONE} -- Instruction validity
 							-- condition and loop body have been detached in the loop body.
 							-- We need to check whether subsequent iterations will still work
 							-- without any attachment problems.
-						check_loop_component_no_from_validity (an_instruction)
+						check_repetition_instruction_no_from_validity (an_instruction)
 					end
 				end
 			end
@@ -5784,6 +5766,7 @@ feature {NONE} -- Expression validity
 				-- Do nothing
 			elseif current_universe_impl.character_8_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
 				if a_constant.is_character_8 then
+					set_character_8_index (a_constant)
 					l_type := current_universe_impl.character_8_type
 					report_character_8_constant (a_constant, l_type)
 				else
@@ -5792,6 +5775,7 @@ feature {NONE} -- Expression validity
 				end
 			elseif current_universe_impl.character_32_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
 				if a_constant.is_character_32 then
+					set_character_32_index (a_constant)
 					l_type := current_universe_impl.character_32_type
 					report_character_32_constant (a_constant, l_type)
 				else
@@ -5809,6 +5793,7 @@ feature {NONE} -- Expression validity
 				error_handler.report_vwmq0c_error (current_class, current_class_impl, a_constant)
 			elseif current_universe_impl.character_type.same_named_type_with_type_marks (current_universe.character_32_type, tokens.implicit_attached_type_mark, current_class_impl, tokens.implicit_attached_type_mark, current_class_impl) then
 				if a_constant.is_character_32 then
+					set_character_32_index (a_constant)
 					l_type := current_universe_impl.character_32_type
 					report_character_32_constant (a_constant, l_type)
 				else
@@ -5816,9 +5801,11 @@ feature {NONE} -- Expression validity
 					error_handler.report_gvwmc2b_error (current_class, current_class_impl, a_constant, current_universe_impl.character_32_type)
 				end
 			elseif a_constant.is_character_8 then
+				set_character_8_index (a_constant)
 				l_type := current_universe_impl.character_8_type
 				report_character_8_constant (a_constant, l_type)
 			elseif a_constant.is_character_32 then
+				set_character_32_index (a_constant)
 				l_type := current_universe_impl.character_32_type
 				report_character_32_constant (a_constant, l_type)
 			else
@@ -5845,6 +5832,7 @@ feature {NONE} -- Expression validity
 			check_expression_validity (an_expression.expression, a_context, current_target_type)
 			if not has_fatal_error then
 				l_target_type := an_expression.type
+				set_index (an_expression)
 				report_builtin_conversion (an_expression, l_target_type)
 				a_context.reset (current_type)
 				a_context.force_last (l_target_type)
@@ -5925,7 +5913,7 @@ feature {NONE} -- Expression validity
 			elseif attached convert_expression (l_left_expression, a_left_context, a_right_context) as l_convert_expression and then not has_fatal_error then
 					-- Insert the conversion feature call in the AST.
 				create l_cast_expression.make (l_convert_expression, a_right_context.named_type)
-				l_cast_expression.set_index (l_convert_expression.index)
+				set_index_to (l_cast_expression, l_convert_expression.index)
 				l_formal := l_formal_arguments.formal_argument (1)
 				l_new_query := l_query
 			elseif has_fatal_error then
@@ -5934,7 +5922,7 @@ feature {NONE} -- Expression validity
 					-- The left-hand-side does not convert to the type
 					-- of the right-hand-side, but it conforms to it!
 				create l_cast_expression.make (l_left_expression, a_right_context.named_type)
-				l_cast_expression.set_index (l_left_expression.index)
+				set_index_to (l_cast_expression, l_left_expression.index)
 				l_new_query := l_query
 				l_formal := l_formal_arguments.formal_argument (1)
 			end
@@ -6251,6 +6239,10 @@ feature {NONE} -- Expression validity
 						l_creation_named_type := l_creation_named_type.type_with_type_mark (tokens.implicit_attached_type_mark)
 					end
 				end
+				set_index (a_expression)
+				if current_system.scoop_mode and not a_context.is_type_non_separate then
+					set_index (a_expression.separate_target)
+				end
 				report_creation_expression (a_expression, l_creation_named_type, a_procedure)
 			end
 		end
@@ -6273,6 +6265,7 @@ feature {NONE} -- Expression validity
 				if not a_context.is_type_attached then
 					a_context.force_last (tokens.attached_like_current)
 				end
+				set_index_to (an_expression, current_index)
 				report_current (an_expression)
 			end
 		end
@@ -6304,10 +6297,12 @@ feature {NONE} -- Expression validity
 					if not a_context.is_type_attached then
 						a_context.force_last (tokens.attached_like_current)
 					end
+					set_index (an_expression)
 					report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 					a_context.force_last (l_typed_pointer_type)
 				else
 						-- Use the ETL2 implementation: the type of '$Current' is POINTER.
+					set_pointer_index (an_expression)
 					l_pointer_type := current_universe_impl.pointer_type
 					a_context.force_last (l_pointer_type)
 					report_pointer_expression (an_expression, l_pointer_type)
@@ -6383,6 +6378,7 @@ feature {NONE} -- Expression validity
 					end
 					if not has_fatal_error then
 						a_context.force_last (current_universe_impl.boolean_type)
+						set_boolean_index (an_expression)
 						report_equality_expression (an_expression)
 					end
 				end
@@ -6420,6 +6416,7 @@ feature {NONE} -- Expression validity
 					-- Use ISE's implementation: the type of '$(expr)' is 'TYPED_POINTER [<type-of-expr>]'.
 				check_expression_validity (an_expression.expression, a_context, l_detachable_separate_any_type)
 				if not has_fatal_error then
+					set_index (an_expression)
 					report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 					a_context.force_last (l_typed_pointer_type)
 				end
@@ -6432,6 +6429,7 @@ feature {NONE} -- Expression validity
 				check_expression_validity (an_expression.expression, l_expression_context, l_detachable_separate_any_type)
 				free_context (l_expression_context)
 				if not has_fatal_error then
+					set_pointer_index (an_expression)
 					l_pointer_type := current_universe_impl.pointer_type
 					a_context.force_last (l_pointer_type)
 					report_pointer_expression (an_expression, l_pointer_type)
@@ -6453,6 +6451,7 @@ feature {NONE} -- Expression validity
 			has_fatal_error := False
 			l_type := current_universe_impl.boolean_type
 			a_context.force_last (l_type)
+			set_boolean_index (a_constant)
 			report_boolean_constant (a_constant, l_type)
 		end
 
@@ -6528,6 +6527,7 @@ feature {NONE} -- Expression validity
 									error_handler.report_veen8b_error (current_class, l_identifier)
 								end
 							else
+								set_index_to (l_identifier, l_object_test.name.index)
 								report_object_test_local (l_identifier, l_object_test)
 								l_seed := l_object_test.name.seed
 								l_identifier.set_seed (l_seed)
@@ -6548,11 +6548,13 @@ feature {NONE} -- Expression validity
 										set_fatal_error
 									else
 										a_context.copy_type_context (current_object_test_types.found_item)
+										set_index (an_expression)
 										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 										a_context.force_last (l_typed_pointer_type)
 									end
 								else
 										-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
+									set_pointer_index (an_expression)
 									l_pointer_type := current_universe_impl.pointer_type
 									a_context.force_last (l_pointer_type)
 									report_pointer_expression (an_expression, l_pointer_type)
@@ -6582,6 +6584,9 @@ feature {NONE} -- Expression validity
 									error_handler.report_veen9b_error (current_class, l_identifier)
 								end
 							else
+								if l_identifier /= l_iteration_component.unfolded_cursor_name then
+									set_index_to (l_identifier, l_iteration_component.item_name.index)
+								end
 								report_iteration_item (l_identifier, l_iteration_component)
 								l_seed := l_iteration_component.item_name.seed
 								l_identifier.set_seed (l_seed)
@@ -6602,11 +6607,13 @@ feature {NONE} -- Expression validity
 										set_fatal_error
 									else
 										a_context.copy_type_context (current_iteration_item_types.found_item)
+										set_index (an_expression)
 										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 										a_context.force_last (l_typed_pointer_type)
 									end
 								else
 										-- Use the ETL2 implementation: the type of '$iteration_item' is POINTER.
+									set_pointer_index (an_expression)
 									l_pointer_type := current_universe_impl.pointer_type
 									a_context.force_last (l_pointer_type)
 									report_pointer_expression (an_expression, l_pointer_type)
@@ -6635,6 +6642,7 @@ feature {NONE} -- Expression validity
 									error_handler.report_veen10b_error (current_class, l_identifier)
 								end
 							else
+								set_index_to (l_identifier, l_inline_separate_argument.name.index)
 								report_inline_separate_argument (l_identifier, l_inline_separate_argument)
 								l_seed := l_inline_separate_argument.name.seed
 								l_identifier.set_seed (l_seed)
@@ -6656,11 +6664,13 @@ feature {NONE} -- Expression validity
 										set_fatal_error
 									else
 										a_context.copy_type_context (current_inline_separate_argument_types.found_item)
+										set_index (an_expression)
 										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 										a_context.force_last (l_typed_pointer_type)
 									end
 								else
 										-- Use the ETL2 implementation: the type of '$inline_separate_argument' is POINTER.
+									set_pointer_index (an_expression)
 									l_pointer_type := current_universe_impl.pointer_type
 									a_context.force_last (l_pointer_type)
 									report_pointer_expression (an_expression, l_pointer_type)
@@ -6678,6 +6688,7 @@ feature {NONE} -- Expression validity
 						report_procedure_address (an_expression, l_procedure)
 							-- $feature_name is of type POINTER, even
 							-- in ISE and its TYPED_POINTER support.
+						set_pointer_index (an_expression)
 						l_pointer_type := current_universe_impl.pointer_type
 						a_context.force_last (l_pointer_type)
 						report_pointer_expression (an_expression, l_pointer_type)
@@ -6703,6 +6714,7 @@ feature {NONE} -- Expression validity
 									l_type := l_query.type
 									if l_type.is_base_type or current_class = current_type then
 										a_context.force_last (l_type)
+										set_index (an_expression)
 										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 										a_context.force_last (l_typed_pointer_type)
 											-- No need to check validity in the context of `current_type' again.
@@ -6710,6 +6722,7 @@ feature {NONE} -- Expression validity
 									end
 								else
 										-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
+									set_pointer_index (an_expression)
 									l_pointer_type := current_universe_impl.pointer_type
 									a_context.force_last (l_pointer_type)
 									report_pointer_expression (an_expression, l_pointer_type)
@@ -6721,6 +6734,7 @@ feature {NONE} -- Expression validity
 							report_function_address (an_expression, l_query)
 								-- $feature_name is of type POINTER, even
 								-- in ISE and its TYPED_POINTER support.
+							set_pointer_index (an_expression)
 							l_pointer_type := current_universe_impl.pointer_type
 							a_context.force_last (l_pointer_type)
 							report_pointer_expression (an_expression, l_pointer_type)
@@ -6781,6 +6795,7 @@ feature {NONE} -- Expression validity
 						else
 							l_argument := l_arguments.formal_argument (l_seed)
 							l_identifier := l_name.argument_name.identifier
+							set_index_to (l_identifier, l_argument.index)
 							report_formal_argument (l_identifier, False, l_argument)
 							l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 							l_typed_pointer_class := l_typed_pointer_type.named_base_class
@@ -6789,10 +6804,12 @@ feature {NONE} -- Expression validity
 									-- Use ISE's implementation: the type of '$argument' is 'TYPED_POINTER [<type-of-argument>]'.
 								l_type := l_argument.type
 								a_context.force_last (l_type)
+								set_index (an_expression)
 								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 								a_context.force_last (l_typed_pointer_type)
 							else
 									-- Use the ETL2 implementation: the type of '$argument' is POINTER.
+								set_pointer_index (an_expression)
 								l_pointer_type := current_universe_impl.pointer_type
 								a_context.force_last (l_pointer_type)
 								report_pointer_expression (an_expression, l_pointer_type)
@@ -6839,6 +6856,7 @@ feature {NONE} -- Expression validity
 						else
 							l_local := l_locals.local_variable (l_seed)
 							l_identifier := l_name.local_name.identifier
+							set_index_to (l_identifier, l_local.index)
 							report_local_variable (l_identifier, False, l_local)
 							l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 							l_typed_pointer_class := l_typed_pointer_type.named_base_class
@@ -6847,10 +6865,12 @@ feature {NONE} -- Expression validity
 									-- Use ISE's implementation: the type of '$local' is 'TYPED_POINTER [<type-of-local>]'.
 								l_type := l_local.type
 								a_context.force_last (l_type)
+								set_index (an_expression)
 								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 								a_context.force_last (l_typed_pointer_type)
 							else
 									-- Use the ETL2 implementation: the type of '$local' is POINTER.
+								set_pointer_index (an_expression)
 								l_pointer_type := current_universe_impl.pointer_type
 								a_context.force_last (l_pointer_type)
 								report_pointer_expression (an_expression, l_pointer_type)
@@ -6870,6 +6890,7 @@ feature {NONE} -- Expression validity
 					else
 						l_object_test := l_object_tests.object_test (l_seed)
 						l_identifier := l_name.object_test_local_name.identifier
+						set_index_to (l_identifier, l_object_test.name.index)
 						report_object_test_local (l_identifier, l_object_test)
 						l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 						l_typed_pointer_class := l_typed_pointer_type.named_base_class
@@ -6887,11 +6908,13 @@ feature {NONE} -- Expression validity
 								error_handler.report_giaaa_error
 							else
 								a_context.copy_type_context (current_object_test_types.found_item)
+								set_index (an_expression)
 								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 								a_context.force_last (l_typed_pointer_type)
 							end
 						else
 								-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
+							set_pointer_index (an_expression)
 							l_pointer_type := current_universe_impl.pointer_type
 							a_context.force_last (l_pointer_type)
 							report_pointer_expression (an_expression, l_pointer_type)
@@ -6910,6 +6933,9 @@ feature {NONE} -- Expression validity
 					else
 						l_iteration_component := l_iteration_components.iteration_component (l_seed)
 						l_identifier := l_name.iteration_item_name
+						if l_identifier /= l_iteration_component.unfolded_cursor_name then
+							set_index_to (l_identifier, l_iteration_component.item_name.index)
+						end
 						report_iteration_item (l_identifier, l_iteration_component)
 						l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 						l_typed_pointer_class := l_typed_pointer_type.named_base_class
@@ -6928,11 +6954,13 @@ feature {NONE} -- Expression validity
 								error_handler.report_giaaa_error
 							else
 								a_context.copy_type_context (current_iteration_item_types.found_item)
+								set_index (an_expression)
 								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 								a_context.force_last (l_typed_pointer_type)
 							end
 						else
 								-- Use the ETL2 implementation: the type of '$iteration_item' is POINTER.
+							set_pointer_index (an_expression)
 							l_pointer_type := current_universe_impl.pointer_type
 							a_context.force_last (l_pointer_type)
 							report_pointer_expression (an_expression, l_pointer_type)
@@ -6946,6 +6974,7 @@ feature {NONE} -- Expression validity
 					report_procedure_address (an_expression, l_procedure)
 						-- $feature_name is of type POINTER, even
 						-- in ISE and its TYPED_POINTER support.
+					set_pointer_index (an_expression)
 					l_pointer_type := current_universe_impl.pointer_type
 					a_context.force_last (l_pointer_type)
 					report_pointer_expression (an_expression, l_pointer_type)
@@ -6966,10 +6995,12 @@ feature {NONE} -- Expression validity
 									-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
 								l_type := l_query.type
 								a_context.force_last (l_type)
+								set_index (an_expression)
 								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 								a_context.force_last (l_typed_pointer_type)
 							else
 									-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
+								set_pointer_index (an_expression)
 								l_pointer_type := current_universe_impl.pointer_type
 								a_context.force_last (l_pointer_type)
 								report_pointer_expression (an_expression, l_pointer_type)
@@ -6979,6 +7010,7 @@ feature {NONE} -- Expression validity
 						report_function_address (an_expression, l_query)
 							-- $feature_name is of type POINTER, even
 							-- in ISE and its TYPED_POINTER support.
+						set_pointer_index (an_expression)
 						l_pointer_type := current_universe_impl.pointer_type
 						a_context.force_last (l_pointer_type)
 						report_pointer_expression (an_expression, l_pointer_type)
@@ -7066,6 +7098,22 @@ feature {NONE} -- Expression validity
 						if not a_context.is_type_non_separate then
 							a_context.force_last (tokens.controlled_type_modifier)
 						end
+					end
+					if a_name.index /= 0 then
+							-- Already set.
+							-- Make sure that `l_is_attached' is consistent with the index.
+							-- This is needed when the type of the formal argument is a
+							-- formal generic parameter and the actual generic parameter
+							-- is attached. In that case the index was set to `attached_index'
+							-- when processing with the formal generic parameter (because
+							-- `l_is_attached' was True at that time). But because the actual
+							-- generic parameter is attached then `l_is_attached' is False.
+							-- So we need to force it to True.
+						l_is_attached := (a_name.index = l_formal.attached_index)
+					elseif l_is_attached then
+						a_name.set_index (l_formal.attached_index)
+					else
+						a_name.set_index (l_formal.index)
 					end
 					report_formal_argument (a_name, l_is_attached, l_formal)
 				end
@@ -7263,6 +7311,7 @@ feature {NONE} -- Expression validity
 						a_context.force_last (tokens.controlled_type_modifier)
 					end
 				end
+				set_index (a_expression)
 				report_if_expression (a_expression, tokens.identity_type, a_context)
 			end
 			free_common_ancestor_types (l_result_context_list, l_old_result_context_list_count)
@@ -7281,7 +7330,7 @@ feature {NONE} -- Expression validity
 		do
 			check_expression_validity (an_expression.expression, a_context, current_target_type)
 			if not has_fatal_error then
-				an_expression.set_index (an_expression.expression.index)
+				set_index_to (an_expression, an_expression.expression.index)
 				l_target_type := an_expression.type
 				a_context.reset (current_type)
 				a_context.force_last (l_target_type)
@@ -7362,6 +7411,7 @@ feature {NONE} -- Expression validity
 									a_context.force_last (tokens.controlled_type_modifier)
 								end
 							end
+							set_index_to (a_name, l_inline_separate_argument.name.index)
 							report_inline_separate_argument (a_name, l_inline_separate_argument)
 						end
 					end
@@ -7393,6 +7443,7 @@ feature {NONE} -- Expression validity
 								a_context.force_last (tokens.controlled_type_modifier)
 							end
 						end
+						set_index_to (a_name, l_inline_separate_argument.name.index)
 						report_inline_separate_argument (a_name, l_inline_separate_argument)
 					end
 				end
@@ -7510,6 +7561,7 @@ feature {NONE} -- Expression validity
 					end
 				end
 				if not has_fatal_error then
+					set_index (l_argument.name)
 					current_inline_separate_argument_types.force_last (l_expression_context, l_argument)
 					report_inline_separate_argument_declaration (l_argument, l_expression_context)
 				else
@@ -7588,6 +7640,7 @@ feature {NONE} -- Expression validity
 				-- Do nothing.
 			elseif current_universe_impl.integer_8_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
 				if a_constant.is_integer_8 then
+					set_integer_8_index (a_constant)
 					l_type := current_universe_impl.integer_8_type
 					report_integer_8_constant (a_constant, l_type)
 				elseif l_explicit_type /= Void then
@@ -7596,6 +7649,7 @@ feature {NONE} -- Expression validity
 				end
 			elseif current_universe_impl.integer_16_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
 				if a_constant.is_integer_16 then
+					set_integer_16_index (a_constant)
 					l_type := current_universe_impl.integer_16_type
 					report_integer_16_constant (a_constant, l_type)
 				elseif l_explicit_type /= Void then
@@ -7604,6 +7658,7 @@ feature {NONE} -- Expression validity
 				end
 			elseif current_universe_impl.integer_32_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
 				if a_constant.is_integer_32 then
+					set_integer_32_index (a_constant)
 					l_type := current_universe_impl.integer_32_type
 					report_integer_32_constant (a_constant, l_type)
 				elseif l_explicit_type /= Void then
@@ -7612,6 +7667,7 @@ feature {NONE} -- Expression validity
 				end
 			elseif current_universe_impl.integer_64_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
 				if a_constant.is_integer_64 then
+					set_integer_64_index (a_constant)
 					l_type := current_universe_impl.integer_64_type
 					report_integer_64_constant (a_constant, l_type)
 				elseif l_explicit_type /= Void then
@@ -7620,6 +7676,7 @@ feature {NONE} -- Expression validity
 				end
 			elseif current_universe_impl.natural_8_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
 				if a_constant.is_natural_8 then
+					set_natural_8_index (a_constant)
 					l_type := current_universe_impl.natural_8_type
 					report_natural_8_constant (a_constant, l_type)
 				elseif l_explicit_type /= Void then
@@ -7628,6 +7685,7 @@ feature {NONE} -- Expression validity
 				end
 			elseif current_universe_impl.natural_16_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
 				if a_constant.is_natural_16 then
+					set_natural_16_index (a_constant)
 					l_type := current_universe_impl.natural_16_type
 					report_natural_16_constant (a_constant, l_type)
 				elseif l_explicit_type /= Void then
@@ -7636,6 +7694,7 @@ feature {NONE} -- Expression validity
 				end
 			elseif current_universe_impl.natural_32_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
 				if a_constant.is_natural_32 then
+					set_natural_32_index (a_constant)
 					l_type := current_universe_impl.natural_32_type
 					report_natural_32_constant (a_constant, l_type)
 				elseif l_explicit_type /= Void then
@@ -7644,6 +7703,7 @@ feature {NONE} -- Expression validity
 				end
 			elseif current_universe_impl.natural_64_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
 				if a_constant.is_natural_64 then
+					set_natural_64_index (a_constant)
 					l_type := current_universe_impl.natural_64_type
 					report_natural_64_constant (a_constant, l_type)
 				elseif l_explicit_type /= Void then
@@ -7668,9 +7728,11 @@ feature {NONE} -- Expression validity
 						--   i := 0xFFFFFFFF
 						-- as valid (and mean -1), when appearing without an integer type
 						-- context, then its type is INTEGER_64 and its value is 4294967295.
+					set_integer_64_index (a_constant)
 					l_type := current_universe_impl.integer_64_type
 					report_integer_64_constant (a_constant, l_type)
 				else
+					set_integer_32_index (a_constant)
 					l_type := current_universe_impl.integer_32_type
 					report_integer_32_constant (a_constant, l_type)
 				end
@@ -7683,13 +7745,16 @@ feature {NONE} -- Expression validity
 						--   i := 0xFFFFFFFFFFFFFFFF
 						-- as valid (and mean -1), when appearing without an integer type
 						-- context, then its type is NATURAL_64 and its value is 18446744073709551615.
+					set_natural_64_index (a_constant)
 					l_type := current_universe_impl.natural_64_type
 					report_natural_64_constant (a_constant, l_type)
 				else
+					set_integer_64_index (a_constant)
 					l_type := current_universe_impl.integer_64_type
 					report_integer_64_constant (a_constant, l_type)
 				end
 			elseif a_constant.is_natural_64 then
+				set_natural_64_index (a_constant)
 				l_type := current_universe_impl.natural_64_type
 				report_natural_64_constant (a_constant, l_type)
 			else
@@ -7732,8 +7797,6 @@ feature {NONE} -- Expression validity
 			l_choice_named_type: ET_NAMED_TYPE
 			j, nb2: INTEGER
 			l_constant: detachable ET_CONSTANT
-			l_cast_type: detachable ET_TARGET_TYPE
-			l_index: INTEGER
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_result_context_list: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
 			l_old_result_context_list_count: INTEGER
@@ -7799,45 +7862,9 @@ feature {NONE} -- Expression validity
 							elseif not had_value_error then
 								if l_choice_context.same_named_type (l_value_type, l_value_context) then
 									-- OK.
-								elseif attached {ET_INTEGER_CONSTANT} l_constant as l_integer_constant then
-										-- If we use the same object for the constant attribute
-										-- when analyzing different client features, each feature
-										-- will assign its own index to this object. That's why
-										-- we need to reset the index so that the index does not
-										-- get corrupted.
-									l_index := l_integer_constant.index
-									l_integer_constant.set_index (0)
-									l_cast_type := l_integer_constant.cast_type
-									l_integer_constant.set_cast_type (Void)
+								elseif l_constant.is_integer_constant or l_constant.is_character_constant then
 									l_choice_context.wipe_out
-									check_expression_validity (l_integer_constant, l_choice_context, l_value_context)
-									l_integer_constant.set_cast_type (l_cast_type)
-									l_integer_constant.set_index (l_index)
-									if has_fatal_error then
-										had_error := True
-									elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
-										-- OK.
-									else
-										had_error := True
-										set_fatal_error
-										l_value_named_type := l_value_context.named_type
-										l_choice_named_type := l_choice_context.named_type
-										error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
-									end
-								elseif attached {ET_CHARACTER_CONSTANT} l_constant as l_character_constant then
-										-- If we use the same object for the constant attribute
-										-- when analyzing different client features, each feature
-										-- will assign its own index to this object. That's why
-										-- we need to reset the index so that the index does not
-										-- get corrupted.
-									l_index := l_character_constant.index
-									l_character_constant.set_index (0)
-									l_cast_type := l_character_constant.cast_type
-									l_character_constant.set_cast_type (Void)
-									l_choice_context.wipe_out
-									check_expression_validity (l_character_constant, l_choice_context, l_value_context)
-									l_character_constant.set_cast_type (l_cast_type)
-									l_character_constant.set_index (l_index)
+									check_expression_validity (l_constant, l_choice_context, l_value_context)
 									if has_fatal_error then
 										had_error := True
 									elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
@@ -7873,45 +7900,9 @@ feature {NONE} -- Expression validity
 								elseif not had_value_error then
 									if l_choice_context.same_named_type (l_value_type, l_value_context) then
 										-- OK.
-									elseif attached {ET_INTEGER_CONSTANT} l_constant as l_integer_constant2 then
-											-- If we use the same object for the constant attribute
-											-- when analyzing different client features, each feature
-											-- will assign its own index to this object. That's why
-											-- we need to reset the index so that the index does not
-											-- get corrupted.
-										l_index := l_integer_constant2.index
-										l_integer_constant2.set_index (0)
-										l_cast_type := l_integer_constant2.cast_type
-										l_integer_constant2.set_cast_type (Void)
+									elseif l_constant.is_integer_constant or l_constant.is_character_constant then
 										l_choice_context.wipe_out
-										check_expression_validity (l_integer_constant2, l_choice_context, l_value_context)
-										l_integer_constant2.set_cast_type (l_cast_type)
-										l_integer_constant2.set_index (l_index)
-										if has_fatal_error then
-											had_error := True
-										elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
-											-- OK.
-										else
-											had_error := True
-											set_fatal_error
-											l_value_named_type := l_value_context.named_type
-											l_choice_named_type := l_choice_context.named_type
-											error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
-										end
-									elseif attached {ET_CHARACTER_CONSTANT} l_constant as l_character_constant2 then
-											-- If we use the same object for the constant attribute
-											-- when analyzing different client features, each feature
-											-- will assign its own index to this object. That's why
-											-- we need to reset the index so that the index does not
-											-- get corrupted.
-										l_index := l_character_constant2.index
-										l_character_constant2.set_index (0)
-										l_cast_type := l_character_constant2.cast_type
-										l_character_constant2.set_cast_type (Void)
-										l_choice_context.wipe_out
-										check_expression_validity (l_character_constant2, l_choice_context, l_value_context)
-										l_character_constant2.set_cast_type (l_cast_type)
-										l_character_constant2.set_index (l_index)
+										check_expression_validity (l_constant, l_choice_context, l_value_context)
 										if has_fatal_error then
 											had_error := True
 										elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
@@ -8011,6 +8002,7 @@ feature {NONE} -- Expression validity
 						a_context.force_last (tokens.controlled_type_modifier)
 					end
 				end
+				set_index (a_expression)
 				report_inspect_expression (a_expression, tokens.identity_type, a_context)
 			end
 			free_common_ancestor_types (l_result_context_list, l_old_result_context_list_count)
@@ -8151,6 +8143,7 @@ feature {NONE} -- Expression validity
 					l_had_error := True
 					free_context (l_expression_context)
 				else
+					set_index_to (a_iteration_component.unfolded_cursor_name, a_iteration_component.new_cursor_expression.index)
 					report_iteration_cursor_declaration (a_iteration_component.unfolded_cursor_name, a_iteration_component)
 					current_iteration_cursor_types.force_last (l_expression_context, a_iteration_component)
 						-- Record the type of the iteration cursor in `current_iteration_item_types' even
@@ -8195,6 +8188,9 @@ feature {NONE} -- Expression validity
 							-- From now on, use the correct type of the iteration item (and not the
 							-- type of the iteration cursor as explained above).
 						current_iteration_item_types.force_last (l_item_context, a_iteration_component)
+						set_index_to (l_item_name, a_iteration_component.cursor_item_expression.index)
+					else
+						set_index_to (l_item_name, a_iteration_component.new_cursor_expression.index)
 					end
 					report_iteration_item_declaration (l_item_name, a_iteration_component)
 					current_iteration_item_scope.remove_iteration_components (1)
@@ -8263,6 +8259,7 @@ feature {NONE} -- Expression validity
 							set_fatal_error
 						else
 							a_context.copy_type_context (current_iteration_cursor_types.found_item)
+							set_index_to (a_iteration_cursor, l_iteration_component.unfolded_cursor_name.index)
 							report_iteration_cursor (a_iteration_cursor, l_iteration_component)
 						end
 					end
@@ -8288,6 +8285,7 @@ feature {NONE} -- Expression validity
 						error_handler.report_giaaa_error
 					else
 						a_context.copy_type_context (current_iteration_cursor_types.found_item)
+						set_index_to (a_iteration_cursor, l_iteration_component.unfolded_cursor_name.index)
 						report_iteration_cursor (a_iteration_cursor, l_iteration_component)
 					end
 				end
@@ -8343,6 +8341,9 @@ feature {NONE} -- Expression validity
 							set_fatal_error
 						else
 							a_context.copy_type_context (current_iteration_item_types.found_item)
+							if a_name /= l_iteration_component.unfolded_cursor_name then
+								set_index_to (a_name, l_iteration_component.item_name.index)
+							end
 							report_iteration_item (a_name, l_iteration_component)
 						end
 					end
@@ -8368,6 +8369,9 @@ feature {NONE} -- Expression validity
 						error_handler.report_giaaa_error
 					else
 						a_context.copy_type_context (current_iteration_item_types.found_item)
+						if a_name /= l_iteration_component.unfolded_cursor_name then
+							set_index_to (a_name, l_iteration_component.item_name.index)
+						end
 						report_iteration_item (a_name, l_iteration_component)
 					end
 				end
@@ -8489,6 +8493,7 @@ feature {NONE} -- Expression validity
 			end
 			if not has_fatal_error then
 				a_context.force_last (l_boolean_type)
+				set_boolean_index (an_expression)
 				report_iteration_expression (an_expression)
 			end
 		end
@@ -8574,6 +8579,22 @@ feature {NONE} -- Expression validity
 								error_handler.report_vevi0a_error (current_class, current_class_impl, a_name, l_local)
 							end
 						end
+					end
+					if a_name.index /= 0 then
+							-- Already set.
+							-- Make sure that `l_is_attached' is consistent with the index.
+							-- This is needed when the type of the local variable is a
+							-- formal generic parameter and the actual generic parameter
+							-- is attached. In that case the index was set to `attached_index'
+							-- when processing with the formal generic parameter (because
+							-- `l_is_attached' was True at that time). But because the actual
+							-- generic parameter is attached then `l_is_attached' is False.
+							-- So we need to force it to True.
+						l_is_attached := (a_name.index = l_local.attached_index)
+					elseif l_is_attached then
+						a_name.set_index (l_local.attached_index)
+					else
+						a_name.set_index (l_local.index)
 					end
 					report_local_variable (a_name, l_is_attached, l_local)
 				end
@@ -8685,6 +8706,7 @@ feature {NONE} -- Expression validity
 				if l_had_error then
 					set_fatal_error
 				else
+					set_index (a_expression)
 					a_context.force_last (l_type)
 					report_manifest_array (a_expression, tokens.attached_like_current, a_context)
 					a_context.force_last (tokens.attached_like_current)
@@ -8776,6 +8798,7 @@ feature {NONE} -- Expression validity
 						-- Its type is 'ARRAY [NONE]'.
 					a_context.force_last (current_system.none_type)
 				end
+				set_index (a_expression)
 				l_array_type := current_system.array_identity_type
 				report_manifest_array (a_expression, l_array_type, a_context)
 				a_context.force_last (l_array_type)
@@ -8877,6 +8900,7 @@ feature {NONE} -- Expression validity
 						update_common_ancestor_type_list (l_item_context, l_result_context_list, l_old_result_context_list_count)
 						a_context.copy_type_context (l_result_context_list.last)
 					end
+					set_index (a_expression)
 					l_array_type := current_system.array_identity_type
 					report_manifest_array (a_expression, l_array_type, a_context)
 					a_context.force_last (l_array_type)
@@ -8952,6 +8976,7 @@ feature {NONE} -- Expression validity
 				-- Do nothing.
 			elseif current_universe_impl.string_8_type.same_named_type_with_type_marks (l_expected_type, tokens.implicit_attached_type_mark, l_expected_type_context, tokens.implicit_attached_type_mark, current_class_impl) then
 				if a_string.is_string_8 then
+					set_string_8_index (a_string)
 					l_type := current_universe_impl.string_8_type
 					report_string_8_constant (a_string, l_type)
 				else
@@ -8960,6 +8985,7 @@ feature {NONE} -- Expression validity
 				end
 			elseif current_universe_impl.immutable_string_8_type.same_named_type_with_type_marks (l_expected_type, tokens.implicit_attached_type_mark, l_expected_type_context, tokens.implicit_attached_type_mark, current_class_impl) then
 				if a_string.is_string_8 then
+					set_immutable_string_8_index (a_string)
 					l_type := current_universe_impl.immutable_string_8_type
 					report_immutable_string_8_constant (a_string, l_type)
 				else
@@ -8968,6 +8994,7 @@ feature {NONE} -- Expression validity
 				end
 			elseif current_universe_impl.string_32_type.same_named_type_with_type_marks (l_expected_type, tokens.implicit_attached_type_mark, l_expected_type_context, tokens.implicit_attached_type_mark, current_class_impl) then
 				if a_string.is_string_32 then
+					set_string_32_index (a_string)
 					l_type := current_universe_impl.string_32_type
 					report_string_32_constant (a_string, l_type)
 				else
@@ -8976,6 +9003,7 @@ feature {NONE} -- Expression validity
 				end
 			elseif current_universe_impl.immutable_string_32_type.same_named_type_with_type_marks (l_expected_type, tokens.implicit_attached_type_mark, l_expected_type_context, tokens.implicit_attached_type_mark, current_class_impl) then
 				if a_string.is_string_32 then
+					set_immutable_string_32_index (a_string)
 					l_type := current_universe_impl.string_32_type
 					report_immutable_string_32_constant (a_string, l_type)
 				else
@@ -8992,9 +9020,11 @@ feature {NONE} -- Expression validity
 				set_fatal_error
 				error_handler.report_vwmq0d_error (current_class, current_class_impl, a_string)
 			elseif a_string.is_string_8 then
+				set_string_8_index (a_string)
 				l_type := current_universe_impl.string_8_type
 				report_string_8_constant (a_string, l_type)
 			elseif a_string.is_string_32 then
+				set_string_32_index (a_string)
 				l_type := current_universe_impl.string_32_type
 				report_string_32_constant (a_string, l_type)
 			else
@@ -9044,6 +9074,7 @@ feature {NONE} -- Expression validity
 			l_detachable_separate_any_type := current_system.detachable_separate_any_type
 			nb := an_expression.count
 			if nb = 0 then
+				set_index (an_expression)
 				l_tuple_type := current_universe_impl.tuple_type
 				report_manifest_tuple (an_expression, l_tuple_type, a_context)
 				a_context.force_last (l_tuple_type)
@@ -9071,6 +9102,7 @@ feature {NONE} -- Expression validity
 							a_context.remove_last
 						end
 					end
+					set_index (an_expression)
 					l_tuple_type := current_universe_impl.tuple_identity_type
 					report_manifest_tuple (an_expression, l_tuple_type, a_context)
 					a_context.force_last (l_tuple_type)
@@ -9117,6 +9149,7 @@ feature {NONE} -- Expression validity
 				if had_error then
 					set_fatal_error
 				else
+					set_index (an_expression)
 					create l_tuple_type.make (tokens.implicit_attached_type_mark, l_actuals, current_universe_impl.tuple_type.named_base_class)
 					report_manifest_tuple (an_expression, l_tuple_type, a_context)
 					a_context.force_last (l_tuple_type)
@@ -9140,6 +9173,7 @@ feature {NONE} -- Expression validity
 			l_type := an_expression.type
 			check_type_validity (l_type)
 			if not has_fatal_error then
+				set_index (an_expression)
 				a_context.force_last (l_type)
 				l_type_type := current_universe_impl.type_identity_type
 				report_manifest_type (an_expression, l_type_type, a_context)
@@ -9295,6 +9329,8 @@ feature {NONE} -- Expression validity
 				-- of an infix or prefix boolean operator.
 			a_context.force_last (current_universe_impl.boolean_type)
 			if not has_fatal_error then
+				set_boolean_index (an_expression)
+				set_index (an_expression.name)
 				report_named_object_test (an_expression, l_expression_context)
 			end
 			if not l_type_kept then
@@ -9374,6 +9410,7 @@ feature {NONE} -- Expression validity
 					end
 					if not has_fatal_error then
 						a_context.force_last (current_universe_impl.boolean_type)
+						set_boolean_index (an_expression)
 						report_object_equality_expression (an_expression, l_target_type_context)
 					end
 				end
@@ -9421,6 +9458,7 @@ feature {NONE} -- Expression validity
 			free_context (l_expression_context)
 			if not has_fatal_error then
 				a_context.force_last (current_universe_impl.boolean_type)
+				set_boolean_index (an_expression)
 				report_object_test (an_expression)
 			end
 		end
@@ -9474,6 +9512,7 @@ feature {NONE} -- Expression validity
 							set_fatal_error
 						else
 							a_context.copy_type_context (current_object_test_types.found_item)
+							set_index_to (a_name, l_object_test.name.index)
 							report_object_test_local (a_name, l_object_test)
 						end
 					end
@@ -9500,6 +9539,7 @@ feature {NONE} -- Expression validity
 						set_fatal_error
 					else
 						a_context.copy_type_context (current_object_test_types.found_item)
+						set_index_to (a_name, l_object_test.name.index)
 						report_object_test_local (a_name, l_object_test)
 					end
 				end
@@ -9532,7 +9572,7 @@ feature {NONE} -- Expression validity
 				-- Check VAOL-2 (ETL2 p.124).
 			l_expression := an_expression.expression
 			check_expression_validity (l_expression, a_context, current_target_type)
-			an_expression.set_index (l_expression.index)
+			set_index_to (an_expression, l_expression.index)
 			if not in_postcondition then
 					-- Check VAOL-1 (ETL2 p.124).
 				set_fatal_error
@@ -9561,7 +9601,7 @@ feature {NONE} -- Expression validity
 		do
 			l_string := an_expression.manifest_string
 			check_expression_validity (l_string, a_context, current_target_type)
-			an_expression.set_index (l_string.index)
+			set_index_to (an_expression, l_string.index)
 		end
 
 	check_parenthesized_expression_validity (an_expression: ET_PARENTHESIZED_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -9577,7 +9617,7 @@ feature {NONE} -- Expression validity
 		do
 			l_expression := an_expression.expression
 			check_expression_validity (l_expression, a_context, current_target_type)
-			an_expression.set_index (l_expression.index)
+			set_index_to (an_expression, l_expression.index)
 		end
 
 	check_precursor_expression_validity (an_expression: ET_PRECURSOR_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -9674,7 +9714,7 @@ feature {NONE} -- Expression validity
 						if current_class = current_class_impl then
 							check_precursor_parenthesis_call_validity (an_expression, l_query, l_class, l_parent_type, a_context)
 							if not has_fatal_error and then attached an_expression.parenthesis_call as l_parenthesis_call then
-								an_expression.set_index (l_parenthesis_call.index)
+								set_index_to (an_expression, l_parenthesis_call.index)
 								l_has_parenthesis_call := True
 							end
 						end
@@ -9729,6 +9769,7 @@ feature {NONE} -- Expression validity
 -- TODO: like argument.
 				l_type := a_parent_query.type
 				a_context.force_last (l_type)
+				set_index (an_expression)
 				report_precursor_expression (an_expression, a_parent_type, a_parent_query)
 				if attached precursor_queries as l_precursor_queries then
 					l_precursor_queries.force_last (a_parent_query)
@@ -9832,7 +9873,7 @@ feature {NONE} -- Expression validity
 					if has_fatal_error then
 						-- Do nothing.
 					elseif attached a_call.parenthesis_call as l_parenthesis_call then
-						a_call.set_index (l_parenthesis_call.index)
+						set_index_to (a_call, l_parenthesis_call.index)
 					else
 						check_qualified_query_call_expression_validity (a_call, l_query, l_class, a_context, a_call_info)
 					end
@@ -9853,7 +9894,7 @@ feature {NONE} -- Expression validity
 							if has_fatal_error then
 								-- Do nothing.
 							elseif attached a_call.parenthesis_call as l_parenthesis_call then
-								a_call.set_index (l_parenthesis_call.index)
+								set_index_to (a_call, l_parenthesis_call.index)
 							else
 								check_qualified_tuple_label_call_expression_validity (a_call, l_class, a_context, a_call_info)
 							end
@@ -9990,7 +10031,7 @@ feature {NONE} -- Expression validity
 					if has_fatal_error then
 						-- Do nothing.
 					elseif attached a_call.parenthesis_call as l_parenthesis_call then
-						a_call.set_index (l_parenthesis_call.index)
+						set_index_to (a_call, l_parenthesis_call.index)
 					else
 						check_qualified_query_call_expression_validity (a_call, l_query, l_class, a_context, a_call_info)
 					end
@@ -10138,6 +10179,7 @@ feature {NONE} -- Expression validity
 					l_query := l_call_query
 					a_context.copy_type_context (a_call_info.target_context)
 				end
+				set_index (a_call)
 				report_qualified_call_expression (a_call, a_context, l_query)
 				l_had_error := has_fatal_error
 					-- Update `a_context' so that it represents the type of `a_call'.
@@ -10214,6 +10256,7 @@ feature {NONE} -- Expression validity
 				error_handler.report_giaaa_error
 			elseif not has_fatal_error then
 				l_type := a_class.formal_parameter_type (l_seed)
+				set_index (a_call)
 				report_tuple_label_expression (a_call, a_context)
 				if current_system.scoop_mode then
 					if a_call.target /= Void then
@@ -10350,10 +10393,12 @@ feature {NONE} -- Expression validity
 				-- Do nothing.
 			elseif current_universe_impl.real_32_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
 -- TODO: check that the value is representable as a "REAL_32".
+				set_real_32_index (a_constant)
 				l_type := current_universe_impl.real_32_type
 				report_real_32_constant (a_constant, l_type)
 			elseif current_universe_impl.real_64_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
 -- TODO: check that the value is representable as a "REAL_64".
+				set_real_64_index (a_constant)
 				l_type := current_universe_impl.real_64_type
 				report_real_64_constant (a_constant, l_type)
 			end
@@ -10368,6 +10413,7 @@ feature {NONE} -- Expression validity
 			else
 -- TODO: according to ECMA it should be of type REAL, but ISE
 -- treats it as being REAL_64.
+				set_real_64_index (a_constant)
 				l_type := current_universe_impl.real_64_type
 				report_real_64_constant (a_constant, l_type)
 			end
@@ -10424,6 +10470,8 @@ feature {NONE} -- Expression validity
 		local
 			l_type: detachable ET_TYPE
 			l_is_attached: BOOLEAN
+			l_result_index: INTEGER
+			l_attached_result_index: INTEGER
 		do
 			has_fatal_error := False
 			if current_inline_agent = Void and in_precondition then
@@ -10530,6 +10578,29 @@ feature {NONE} -- Expression validity
 							end
 						end
 					end
+					if attached current_inline_agent as l_current_inline_agent then
+						l_result_index := l_current_inline_agent.result_index
+						l_attached_result_index := l_current_inline_agent.attached_result_index
+					else
+						l_result_index := result_index
+						l_attached_result_index := attached_result_index
+					end
+					if an_expression.index /= 0 then
+							-- Already set.
+							-- Make sure that `l_is_attached' is consistent with the index.
+							-- This is needed when the type of the Result is a
+							-- formal generic parameter and the actual generic parameter
+							-- is attached. In that case the index was set to `attached_index'
+							-- when processing with the formal generic parameter (because
+							-- `l_is_attached' was True at that time). But because the actual
+							-- generic parameter is attached then `l_is_attached' is False.
+							-- So we need to force it to True.
+						l_is_attached := (an_expression.index = l_attached_result_index)
+					elseif l_is_attached then
+						an_expression.set_index (l_attached_result_index)
+					else
+						an_expression.set_index (l_result_index)
+					end
 					report_result (an_expression, l_is_attached)
 				end
 			end
@@ -10633,10 +10704,12 @@ feature {NONE} -- Expression validity
 							-- Class TYPED_POINTER has been found in the universe.
 							-- Use ISE's implementation: the type of '$Result' is 'TYPED_POINTER [<type-of-result>]'.
 						a_context.force_last (l_type)
+						set_index (an_expression)
 						report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 						a_context.force_last (l_typed_pointer_type)
 					else
 							-- Use the ETL2 implementation: the type of '$argument' is POINTER.
+						set_pointer_index (an_expression)
 						l_pointer_type := current_universe_impl.pointer_type
 						a_context.force_last (l_pointer_type)
 						report_pointer_expression (an_expression, l_pointer_type)
@@ -10722,7 +10795,7 @@ feature {NONE} -- Expression validity
 					if has_fatal_error then
 						-- Do nothing.
 					elseif attached an_expression.parenthesis_call as l_parenthesis_call then
-						an_expression.set_index (l_parenthesis_call.index)
+						set_index_to (an_expression, l_parenthesis_call.index)
 					else
 						check_static_query_call_expression_validity (an_expression, l_query, l_class, a_context)
 					end
@@ -10836,7 +10909,7 @@ feature {NONE} -- Expression validity
 					if has_fatal_error then
 						-- Do nothing.
 					elseif attached a_call.parenthesis_call as l_parenthesis_call then
-						a_call.set_index (l_parenthesis_call.index)
+						set_index_to (a_call, l_parenthesis_call.index)
 					else
 						check_static_query_call_expression_validity (a_call, l_query, l_class, a_context)
 					end
@@ -10906,6 +10979,7 @@ feature {NONE} -- Expression validity
 -- TODO: like argument.
 				l_result_type := a_query.type
 				a_context.force_last (l_result_type)
+				set_index (a_call)
 				report_static_call_expression (a_call, l_type, a_query)
 			end
 		end
@@ -11048,6 +11122,7 @@ feature {NONE} -- Expression validity
 				i := i + 1
 			end
 			if not has_fatal_error then
+				set_index (an_expression)
 				report_strip_expression (an_expression, current_system.array_detachable_any_type, a_context)
 				a_context.force_last (current_system.array_detachable_any_type)
 			end
@@ -11067,6 +11142,7 @@ feature {NONE} -- Expression validity
 			has_fatal_error := False
 			l_type := current_universe_impl.boolean_type
 			a_context.force_last (l_type)
+			set_boolean_index (a_constant)
 			report_boolean_constant (a_constant, l_type)
 		end
 
@@ -11151,7 +11227,7 @@ feature {NONE} -- Expression validity
 					if has_fatal_error then
 						-- Do nothing.
 					elseif attached a_call.parenthesis_call as l_parenthesis_call then
-						a_call.set_index (l_parenthesis_call.index)
+						set_index_to (a_call, l_parenthesis_call.index)
 					else
 						check_unqualified_query_call_expression_validity (a_call, l_query, a_context)
 					end
@@ -11210,7 +11286,7 @@ feature {NONE} -- Expression validity
 				if has_fatal_error then
 					-- Do nothing.
 				elseif attached a_call.parenthesis_call as l_parenthesis_call then
-					a_call.set_index (l_parenthesis_call.index)
+					set_index_to (a_call, l_parenthesis_call.index)
 				else
 						-- Syntax error: a formal argument cannot have arguments.
 					set_fatal_error
@@ -11255,7 +11331,7 @@ feature {NONE} -- Expression validity
 				if has_fatal_error then
 					-- Do nothing.
 				elseif attached a_call.parenthesis_call as l_parenthesis_call then
-					a_call.set_index (l_parenthesis_call.index)
+					set_index_to (a_call, l_parenthesis_call.index)
 				else
 						-- Syntax error: an inline separate argument cannot have arguments.
 					set_fatal_error
@@ -11301,7 +11377,7 @@ feature {NONE} -- Expression validity
 				if has_fatal_error then
 					-- Do nothing.
 				elseif attached a_call.parenthesis_call as l_parenthesis_call then
-					a_call.set_index (l_parenthesis_call.index)
+					set_index_to (a_call, l_parenthesis_call.index)
 				else
 						-- Syntax error: an iteration item cannot have arguments.
 					set_fatal_error
@@ -11347,7 +11423,7 @@ feature {NONE} -- Expression validity
 				if has_fatal_error then
 					-- Do nothing.
 				elseif attached a_call.parenthesis_call as l_parenthesis_call then
-					a_call.set_index (l_parenthesis_call.index)
+					set_index_to (a_call, l_parenthesis_call.index)
 				else
 						-- Syntax error: a local variable cannot have arguments.
 					set_fatal_error
@@ -11392,7 +11468,7 @@ feature {NONE} -- Expression validity
 				if has_fatal_error then
 					-- Do nothing.
 				elseif attached a_call.parenthesis_call as l_parenthesis_call then
-					a_call.set_index (l_parenthesis_call.index)
+					set_index_to (a_call, l_parenthesis_call.index)
 				else
 						-- Syntax error: an object-test local cannot have arguments.
 					set_fatal_error
@@ -11440,6 +11516,7 @@ feature {NONE} -- Expression validity
 			check_actual_arguments_validity (a_call, a_context, a_query, Void, Void)
 			reset_fatal_error (l_had_error or has_fatal_error)
 			if not has_fatal_error then
+				set_index (a_call)
 				report_unqualified_call_expression (a_call, a_query)
 				l_had_error := has_fatal_error
 					-- Update `a_context' so that it represents the type of `a_call'.
@@ -11480,6 +11557,7 @@ feature {NONE} -- Expression validity
 		do
 			has_fatal_error := False
 			a_context.force_last (current_system.detachable_none_type)
+			set_void_index (an_expression)
 			report_void_constant (an_expression)
 		end
 
@@ -11531,6 +11609,13 @@ feature {NONE} -- Expression validity
 							end
 						end
 					end
+					if l_result.index /= 0 then
+						-- Already set.
+					elseif attached current_inline_agent as l_current_inline_agent then
+						l_result.set_index (l_current_inline_agent.result_index)
+					else
+						l_result.set_index (result_index)
+					end
 					report_result_assignment_target (l_result)
 				end
 			elseif attached {ET_IDENTIFIER} a_writable as l_identifier then
@@ -11557,6 +11642,7 @@ feature {NONE} -- Expression validity
 								end
 							end
 						end
+						set_index_to (l_identifier, l_local.index)
 						report_local_assignment_target (l_identifier, l_local)
 					end
 				elseif l_identifier.is_argument then
@@ -11604,6 +11690,7 @@ feature {NONE} -- Expression validity
 							set_fatal_error
 							error_handler.report_vucr0c_error (current_class, current_class_impl, l_identifier, l_attribute)
 						else
+							set_index (a_writable)
 							report_attribute_assignment_target (a_writable, l_attribute)
 						end
 					end
@@ -11630,6 +11717,7 @@ feature {NONE} -- Expression validity
 								set_fatal_error
 								error_handler.report_vucr0c_error (current_class, current_class_impl, l_identifier, l_attribute)
 							else
+								set_index (a_writable)
 								report_attribute_assignment_target (a_writable, l_attribute)
 							end
 						else
@@ -13004,6 +13092,7 @@ feature {NONE} -- Agent validity
 					a_parameters.put_first (a_tuple_type)
 					create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 				end
+				set_call_agent_indexes (an_expression)
 				report_unqualified_query_call_agent (an_expression, a_query, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
@@ -13050,6 +13139,7 @@ feature {NONE} -- Agent validity
 				end
 				a_context.force_last (a_tuple_type)
 				an_agent_type := current_universe_impl.procedure_identity_type
+				set_call_agent_indexes (an_expression)
 				report_unqualified_procedure_call_agent (an_expression, a_procedure, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
@@ -13310,6 +13400,7 @@ feature {NONE} -- Agent validity
 					a_parameters.put_first (a_tuple_type)
 					create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 				end
+				set_call_agent_indexes (an_expression)
 				report_qualified_query_call_agent (an_expression, a_query, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
@@ -13377,6 +13468,7 @@ feature {NONE} -- Agent validity
 				end
 				a_context.force_last (a_tuple_type)
 				an_agent_type := current_universe_impl.procedure_identity_type
+				set_call_agent_indexes (an_expression)
 				report_qualified_procedure_call_agent (an_expression, a_procedure, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
@@ -13448,6 +13540,7 @@ feature {NONE} -- Agent validity
 					l_parameters.put_first (current_universe_impl.tuple_type)
 					create l_agent_type.make_generic (tokens.implicit_attached_type_mark, l_agent_class.name, l_parameters, l_agent_class)
 				end
+				set_call_agent_indexes (an_expression)
 				report_tuple_label_call_agent (an_expression, l_agent_type, a_context)
 				a_context.force_last (l_agent_type)
 			end
@@ -13700,6 +13793,7 @@ feature {NONE} -- Agent validity
 					a_parameters.put_first (a_tuple_type)
 					create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 				end
+				set_call_agent_indexes (an_expression)
 				report_qualified_query_call_agent (an_expression, a_query, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
@@ -13756,6 +13850,7 @@ feature {NONE} -- Agent validity
 				end
 				a_context.force_last (a_tuple_type)
 				an_agent_type := current_universe_impl.procedure_identity_type
+				set_call_agent_indexes (an_expression)
 				report_qualified_procedure_call_agent (an_expression, a_procedure, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
@@ -13816,6 +13911,7 @@ feature {NONE} -- Agent validity
 					l_parameters.put_first (l_tuple_type)
 					create l_agent_type.make_generic (tokens.implicit_attached_type_mark, l_agent_class.name, l_parameters, l_agent_class)
 				end
+				set_call_agent_indexes (an_expression)
 				report_tuple_label_call_agent (an_expression, l_agent_type, a_context)
 				a_context.force_last (l_agent_type)
 			end
@@ -13880,6 +13976,7 @@ feature {NONE} -- Agent validity
 			l_type := an_expression.type
 			check_signature_type_validity (l_type)
 			if not has_fatal_error then
+				set_inline_agent_result_indexes (an_expression)
 				report_inline_agent_result_declaration (l_type)
 				report_inline_agent_result_supplier (l_type, current_class, current_feature)
 			end
@@ -14164,6 +14261,7 @@ feature {NONE} -- Agent validity
 			l_type := an_expression.type
 			check_signature_type_validity (l_type)
 			if not has_fatal_error then
+				set_inline_agent_result_indexes (an_expression)
 				report_inline_agent_result_declaration (l_type)
 				report_inline_agent_result_supplier (l_type, current_class, current_feature)
 			end
@@ -14357,6 +14455,7 @@ feature {NONE} -- Agent validity
 			l_type := an_expression.type
 			check_signature_type_validity (l_type)
 			if not has_fatal_error then
+				set_inline_agent_result_indexes (an_expression)
 				report_inline_agent_result_declaration (l_type)
 				report_inline_agent_result_supplier (l_type, current_class, current_feature)
 			end
@@ -14645,6 +14744,7 @@ feature {NONE} -- Agent validity
 						a_parameters.put_first (a_tuple_type)
 						create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 					end
+					set_inline_agent_indexes (an_expression)
 					report_query_inline_agent (an_expression, an_agent_type, a_context)
 					a_context.force_last (an_agent_type)
 				end
@@ -14682,6 +14782,7 @@ feature {NONE} -- Agent validity
 				end
 				a_context.force_last (a_tuple_type)
 				an_agent_type := current_universe_impl.procedure_identity_type
+				set_inline_agent_indexes (an_expression)
 				report_procedure_inline_agent (an_expression, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
@@ -15047,6 +15148,10 @@ feature {NONE} -- Conversion
 									-- or features with statically satisfied preconditions (see VYEC, ECMA-367, 3-36,
 									-- section 8.15.14, page 91).
 								if not has_fatal_error then
+									set_index (l_convert_from_expression)
+									if current_system.scoop_mode and not a_target_type.is_type_non_separate then
+										set_index (l_convert_from_expression.separate_target)
+									end
 									report_creation_expression (l_convert_from_expression, l_convert_from_expression.type, l_conversion_procedure)
 									Result := l_convert_from_expression
 								end
@@ -15083,6 +15188,7 @@ feature {NONE} -- Conversion
 									-- or features with statically satisfied preconditions (see VYEC, ECMA-367, 3-36,
 									-- section 8.15.14, page 91).
 								if not has_fatal_error then
+									set_index (l_convert_to_expression)
 									report_qualified_call_expression (l_convert_to_expression, a_source_type, l_conversion_query)
 									Result := l_convert_to_expression
 								end
@@ -15097,6 +15203,7 @@ feature {NONE} -- Conversion
 							-- Built-in conversion.
 						l_target_named_type := a_target_type.named_type
 						create l_convert_builtin_expression.make (l_target_named_type, l_convert_feature, a_source)
+						set_index (l_convert_builtin_expression)
 						report_builtin_conversion (l_convert_builtin_expression, l_target_named_type)
 						Result := l_convert_builtin_expression
 					end
@@ -16590,7 +16697,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if attached an_expression.parenthesis_call as l_parenthesis_call then
 				check_qualified_call_expression_validity (l_parenthesis_call, current_context, Void)
-				an_expression.set_index (l_parenthesis_call.index)
+				set_index_to (an_expression, l_parenthesis_call.index)
 			else
 				check_precursor_expression_validity (an_expression, current_context)
 			end
@@ -16617,7 +16724,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if attached an_expression.parenthesis_call as l_parenthesis_call then
 				check_qualified_call_expression_validity (l_parenthesis_call, current_context, Void)
-				an_expression.set_index (l_parenthesis_call.index)
+				set_index_to (an_expression, l_parenthesis_call.index)
 			else
 				check_qualified_call_expression_validity (an_expression, current_context, Void)
 			end
@@ -16698,7 +16805,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if attached an_expression.parenthesis_call as l_parenthesis_call then
 				check_qualified_call_expression_validity (l_parenthesis_call, current_context, Void)
-				an_expression.set_index (l_parenthesis_call.index)
+				set_index_to (an_expression, l_parenthesis_call.index)
 			else
 				check_static_call_expression_validity (an_expression, current_context)
 			end
@@ -16749,7 +16856,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if attached an_expression.parenthesis_call as l_parenthesis_call then
 				check_qualified_call_expression_validity (l_parenthesis_call, current_context, Void)
-				an_expression.set_index (l_parenthesis_call.index)
+				set_index_to (an_expression, l_parenthesis_call.index)
 			else
 				check_unqualified_call_expression_validity (an_expression, current_context)
 			end
@@ -17745,6 +17852,634 @@ feature {NONE} -- Common ancestor type
 			--
 			-- Note: For more details about Common Ancestor Type, see:
 			-- https://www.eiffel.org/doc/version/trunk/eiffel/Types#Common_ancestor_types
+
+feature {NONE} -- Indexes
+
+	index_count: INTEGER
+			-- Number of indexes of dynamic type sets used so far
+
+	current_index: INTEGER
+			-- Index of dynamic type set of 'Current'
+
+	result_index: INTEGER
+			-- Index of dynamic type set of 'Result'
+
+	attached_result_index: INTEGER
+			-- Index of attached version (with a CAP, Certified Attachment Pattern)
+			-- of 'Result'
+
+	void_index: INTEGER
+			-- Index of dynamic type set of 'Void' expressions
+
+	boolean_index: INTEGER
+			-- Index of dynamic type set of expressions of type "BOOLEAN"
+
+	character_8_index: INTEGER
+			-- Index of dynamic type set of expressions of type "CHARACTER_8"
+
+	character_32_index: INTEGER
+			-- Index of dynamic type set of expressions of type "CHARACTER_32"
+
+	integer_8_index: INTEGER
+			-- Index of dynamic type set of expressions of type "INTEGER_8"
+
+	integer_16_index: INTEGER
+			-- Index of dynamic type set of expressions of type "INTEGER_16"
+
+	integer_32_index: INTEGER
+			-- Index of dynamic type set of expressions of type "INTEGER_32"
+
+	integer_64_index: INTEGER
+			-- Index of dynamic type set of expressions of type "INTEGER_64"
+
+	natural_8_index: INTEGER
+			-- Index of dynamic type set of expressions of type "NATURAL_8"
+
+	natural_16_index: INTEGER
+			-- Index of dynamic type set of expressions of type "NATURAL_16"
+
+	natural_32_index: INTEGER
+			-- Index of dynamic type set of expressions of type "NATURAL_32"
+
+	natural_64_index: INTEGER
+			-- Index of dynamic type set of expressions of type "NATURAL_64"
+
+	pointer_index: INTEGER
+			-- Index of dynamic type set of expressions of type "POINTER"
+
+	real_32_index: INTEGER
+			-- Index of dynamic type set of expressions of type "REAL_32"
+
+	real_64_index: INTEGER
+			-- Index of dynamic type set of expressions of type "REAL_64"
+
+	string_8_index: INTEGER
+			-- Index of dynamic type set of expressions of type "STRING_8"
+
+	string_32_index: INTEGER
+			-- Index of dynamic type set of expressions of type "STRING_32"
+
+	immutable_string_8_index: INTEGER
+			-- Index of dynamic type set of expressions of type "IMMUTABLE_STRING_8"
+
+	immutable_string_32_index: INTEGER
+			-- Index of dynamic type set of expressions of type "IMMUTABLE_STRING_32"
+
+	initialize_indexes (a_feature: ET_STANDALONE_CLOSURE)
+			-- Initialize indexes for `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			index_count := 2 * a_feature.arguments_count
+			if a_feature.type /= Void then
+				result_index := index_count + 1
+				attached_result_index := result_index + 1
+				index_count := attached_result_index
+			end
+			current_index := index_count + 2
+			index_count := current_index
+			boolean_index := 0
+			character_8_index := 0
+			character_32_index := 0
+			integer_8_index := 0
+			integer_16_index := 0
+			integer_32_index := 0
+			integer_64_index := 0
+			natural_8_index := 0
+			natural_16_index := 0
+			natural_32_index := 0
+			natural_64_index := 0
+			pointer_index := 0
+			real_32_index := 0
+			real_64_index := 0
+			string_8_index := 0
+			string_32_index := 0
+			immutable_string_8_index := 0
+			immutable_string_32_index := 0
+			void_index := 0
+		ensure
+			boolean_index_reset: boolean_index = 0
+			character_8_index_reset: character_8_index = 0
+			character_32_index_reset: character_32_index = 0
+			integer_8_index_reset: integer_8_index = 0
+			integer_16_index_reset: integer_16_index = 0
+			integer_32_index_reset: integer_32_index = 0
+			integer_64_index_reset: integer_64_index = 0
+			natural_8_index_reset: natural_8_index = 0
+			natural_16_index_reset: natural_16_index = 0
+			natural_32_index_reset: natural_32_index = 0
+			natural_64_index_reset: natural_64_index = 0
+			pointer_index_reset: pointer_index = 0
+			real_32_index_reset: real_32_index = 0
+			real_64_index_reset: real_64_index = 0
+			string_8_index_reset: string_8_index = 0
+			string_32_index_reset: string_32_index = 0
+			immutable_string_8_index_reset: immutable_string_8_index = 0
+			immutable_string_32_index_reset: immutable_string_32_index = 0
+			void_index_reset: void_index = 0
+		end
+
+	reset_indexes
+			-- Reset all indexes to 0.
+		do
+			index_count := 0
+			result_index := 0
+			attached_result_index := 0
+			current_index := 0
+			boolean_index := 0
+			character_8_index := 0
+			character_32_index := 0
+			integer_8_index := 0
+			integer_16_index := 0
+			integer_32_index := 0
+			integer_64_index := 0
+			natural_8_index := 0
+			natural_16_index := 0
+			natural_32_index := 0
+			natural_64_index := 0
+			pointer_index := 0
+			real_32_index := 0
+			real_64_index := 0
+			string_8_index := 0
+			string_32_index := 0
+			immutable_string_8_index := 0
+			immutable_string_32_index := 0
+			void_index := 0
+		ensure
+			index_count_reset: index_count = 0
+			result_index_reset: result_index = 0
+			attached_result_index_reset: attached_result_index = 0
+			current_index_reset: current_index = 0
+			boolean_index_reset: boolean_index = 0
+			character_8_index_reset: character_8_index = 0
+			character_32_index_reset: character_32_index = 0
+			integer_8_index_reset: integer_8_index = 0
+			integer_16_index_reset: integer_16_index = 0
+			integer_32_index_reset: integer_32_index = 0
+			integer_64_index_reset: integer_64_index = 0
+			natural_8_index_reset: natural_8_index = 0
+			natural_16_index_reset: natural_16_index = 0
+			natural_32_index_reset: natural_32_index = 0
+			natural_64_index_reset: natural_64_index = 0
+			pointer_index_reset: pointer_index = 0
+			real_32_index_reset: real_32_index = 0
+			real_64_index_reset: real_64_index = 0
+			string_8_index_reset: string_8_index = 0
+			string_32_index_reset: string_32_index = 0
+			immutable_string_8_index_reset: immutable_string_8_index = 0
+			immutable_string_32_index_reset: immutable_string_32_index = 0
+			void_index_reset: void_index = 0
+		end
+
+	set_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to the next available index
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				index_count := index_count + 1
+				a_operand.set_index (index_count)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies index_count = old index_count + 1 and a_operand.index = index_count
+			not_set: old (a_operand.index) /= 0 implies index_count = old index_count and a_operand.index = old (a_operand.index)
+		end
+
+	set_index_to (a_operand: ET_OPERAND; a_index: INTEGER)
+			-- Set index of `a_operand' to `a_index'.
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				a_operand.set_index (a_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies a_operand.index = a_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_boolean_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `boolean_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if boolean_index = 0 then
+					index_count := index_count + 1
+					boolean_index := index_count
+				end
+				a_operand.set_index (boolean_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies boolean_index /= 0 and a_operand.index = boolean_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_character_8_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `character_8_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if character_8_index = 0 then
+					index_count := index_count + 1
+					character_8_index := index_count
+				end
+				a_operand.set_index (character_8_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies character_8_index /= 0 and a_operand.index = character_8_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_character_32_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `character_32_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if character_32_index = 0 then
+					index_count := index_count + 1
+					character_32_index := index_count
+				end
+				a_operand.set_index (character_32_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies character_32_index /= 0 and a_operand.index = character_32_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_integer_8_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `integer_8_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if integer_8_index = 0 then
+					index_count := index_count + 1
+					integer_8_index := index_count
+				end
+				a_operand.set_index (integer_8_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies integer_8_index /= 0 and a_operand.index = integer_8_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_integer_16_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `integer_16_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if integer_16_index = 0 then
+					index_count := index_count + 1
+					integer_16_index := index_count
+				end
+				a_operand.set_index (integer_16_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies integer_16_index /= 0 and a_operand.index = integer_16_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_integer_32_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `integer_32_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if integer_32_index = 0 then
+					index_count := index_count + 1
+					integer_32_index := index_count
+				end
+				a_operand.set_index (integer_32_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies integer_32_index /= 0 and a_operand.index = integer_32_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_integer_64_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `integer_64_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if integer_64_index = 0 then
+					index_count := index_count + 1
+					integer_64_index := index_count
+				end
+				a_operand.set_index (integer_64_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies integer_64_index /= 0 and a_operand.index = integer_64_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_natural_8_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `natural_8_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if natural_8_index = 0 then
+					index_count := index_count + 1
+					natural_8_index := index_count
+				end
+				a_operand.set_index (natural_8_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies natural_8_index /= 0 and a_operand.index = natural_8_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_natural_16_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `natural_16_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if natural_16_index = 0 then
+					index_count := index_count + 1
+					natural_16_index := index_count
+				end
+				a_operand.set_index (natural_16_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies natural_16_index /= 0 and a_operand.index = natural_16_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_natural_32_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `natural_32_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if natural_32_index = 0 then
+					index_count := index_count + 1
+					natural_32_index := index_count
+				end
+				a_operand.set_index (natural_32_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies natural_32_index /= 0 and a_operand.index = natural_32_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_natural_64_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `natural_64_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if natural_64_index = 0 then
+					index_count := index_count + 1
+					natural_64_index := index_count
+				end
+				a_operand.set_index (natural_64_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies natural_64_index /= 0 and a_operand.index = natural_64_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_real_32_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `real_32_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if real_32_index = 0 then
+					index_count := index_count + 1
+					real_32_index := index_count
+				end
+				a_operand.set_index (real_32_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies real_32_index /= 0 and a_operand.index = real_32_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_real_64_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `real_64_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if real_64_index = 0 then
+					index_count := index_count + 1
+					real_64_index := index_count
+				end
+				a_operand.set_index (real_64_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies real_64_index /= 0 and a_operand.index = real_64_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_string_8_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `string_8_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if string_8_index = 0 then
+					index_count := index_count + 1
+					string_8_index := index_count
+				end
+				a_operand.set_index (string_8_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies string_8_index /= 0 and a_operand.index = string_8_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_string_32_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `string_32_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if string_32_index = 0 then
+					index_count := index_count + 1
+					string_32_index := index_count
+				end
+				a_operand.set_index (string_32_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies string_32_index /= 0 and a_operand.index = string_32_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_immutable_string_8_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `immutable_string_8_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if immutable_string_8_index = 0 then
+					index_count := index_count + 1
+					immutable_string_8_index := index_count
+				end
+				a_operand.set_index (immutable_string_8_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies immutable_string_8_index /= 0 and a_operand.index = immutable_string_8_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_immutable_string_32_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `immutable_string_32_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if immutable_string_32_index = 0 then
+					index_count := index_count + 1
+					immutable_string_32_index := index_count
+				end
+				a_operand.set_index (immutable_string_32_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies immutable_string_32_index /= 0 and a_operand.index = immutable_string_32_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_pointer_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `pointer_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if pointer_index = 0 then
+					index_count := index_count + 1
+					pointer_index := index_count
+				end
+				a_operand.set_index (pointer_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies pointer_index /= 0 and a_operand.index = pointer_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_void_index (a_operand: ET_OPERAND)
+			-- Set index of `a_operand' to `void_index'
+			-- if not set yet. Do nothing if already set.
+		require
+			a_operand_not_void: a_operand /= Void
+		do
+			if a_operand.index = 0 then
+				if void_index = 0 then
+					index_count := index_count + 1
+					void_index := index_count
+				end
+				a_operand.set_index (void_index)
+			end
+		ensure
+			set: old (a_operand.index) = 0 implies void_index /= 0 and a_operand.index = void_index
+			not_set: old (a_operand.index) /= 0 implies a_operand.index = old (a_operand.index)
+		end
+
+	set_inline_agent_indexes (a_expression: ET_INLINE_AGENT)
+			-- Set indexes of `a_expression' to the next available indexes
+			-- if not set yet. Do nothing if already set.
+		require
+			a_expression_not_void: a_expression /= Void
+		local
+			l_actuals: detachable ET_AGENT_ARGUMENT_OPERANDS
+			l_actual: ET_AGENT_ARGUMENT_OPERAND
+			i, nb: INTEGER
+		do
+			set_index (a_expression)
+			set_index_to (a_expression.target, current_index)
+			l_actuals := a_expression.actual_arguments
+			if l_actuals /= Void then
+				nb := l_actuals.count
+				from i := 1 until i > nb loop
+					l_actual := l_actuals.actual_argument (i)
+					if not attached {ET_EXPRESSION} l_actual then
+						set_index (l_actual)
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	set_inline_agent_result_indexes (a_expression: ET_INLINE_AGENT)
+			-- Set indexes of result of `a_expression' to the next available indexes
+			-- if not set yet. Do nothing if already set.
+		require
+			a_expression_not_void: a_expression /= Void
+		local
+			l_index: INTEGER
+		do
+			if attached a_expression.implicit_result as l_implicit_result then
+				if l_implicit_result.index = 0 then
+					l_index := index_count + 1
+					l_implicit_result.set_index (l_index)
+					a_expression.set_result_index (l_index)
+					l_index := l_index + 1
+					a_expression.set_attached_result_index (l_index)
+					index_count := l_index
+				end
+			end
+		end
+
+	set_call_agent_indexes (a_expression: ET_CALL_AGENT)
+			-- Set indexes of `a_expression' to the next available indexes
+			-- if not set yet. Do nothing if already set.
+		require
+			a_expression_not_void: a_expression /= Void
+		local
+			l_target: ET_AGENT_TARGET
+			l_actuals: detachable ET_AGENT_ARGUMENT_OPERANDS
+			l_actual: ET_AGENT_ARGUMENT_OPERAND
+			i, nb: INTEGER
+		do
+			set_index (a_expression)
+			l_target := a_expression.target
+			if not a_expression.is_qualified_call then
+				set_index_to (l_target, current_index)
+			elseif not attached {ET_EXPRESSION} l_target then
+				set_index (l_target)
+			end
+			l_actuals := a_expression.arguments
+			if l_actuals /= Void then
+				nb := l_actuals.count
+				from i := 1 until i > nb loop
+					l_actual := l_actuals.actual_argument (i)
+					if not attached {ET_EXPRESSION} l_actual then
+						set_index (l_actual)
+					end
+					i := i + 1
+				end
+			end
+			if attached a_expression.implicit_result as l_implicit_result then
+				set_index (l_implicit_result)
+			end
+		end
 
 feature {NONE} -- Feature checker
 

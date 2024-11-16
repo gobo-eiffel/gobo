@@ -18,7 +18,8 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 feature -- Access
@@ -108,6 +109,16 @@ feature -- Setting
 			right := a_right
 		ensure
 			right_set: right = a_right
+		end
+
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current expression
+			-- and (recursively) in its subexpressions.
+		do
+			left.add_old_expressions (a_list)
+			right.add_old_expressions (a_list)
 		end
 
 invariant

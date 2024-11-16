@@ -127,6 +127,7 @@ struct GE_context_struct {
 	uint32_t volatile in_assertion; /* Is an assertion evaluated? */
 	GE_rescue* volatile last_rescue; /* Context of last feature entered containing a rescue clause */
 	uint32_t volatile in_rescue; /* Number of rescue clauses currently being executed */
+	uint32_t volatile in_qualified_call; /* Is the current call a qualified call? 1 means that it is a regular call, 2 means that it is a creation call. */
 	EIF_REFERENCE volatile exception_manager; /* Exception manager */
 	char volatile raising_exception; /* Is an exception currently being raised? */
 	char volatile exception_trace_enabled; /* Should exception trace be displayed? */
@@ -237,6 +238,11 @@ extern void GE_developer_raise(long a_code, EIF_POINTER a_meaning, EIF_POINTER a
 extern void GE_raise_once_exception(GE_context* a_context, EIF_REFERENCE a_exception);
 
 /*
+ * Raise exception which was raised when an old expression was evaluated.
+ */
+extern int GE_raise_old_exception(GE_context* a_context, EIF_REFERENCE a_exception);
+
+/*
  * Exception, if any, which was last raised in `a_context'.
  */
 extern EIF_REFERENCE GE_last_exception_raised(GE_context* a_context);
@@ -286,6 +292,13 @@ extern EIF_REFERENCE GE_check_void2(EIF_REFERENCE obj, EIF_INTEGER i);
  */
 #define GE_null(ptr) GE_check_null(ptr)
 extern void* GE_check_null(void* ptr);
+
+/* Make a qualified call to `call'. */
+#define GE_qualified(ac, call) (((ac)->in_qualified_call = 1), (call))
+/* Make an unqualified call to `call'. */
+#define GE_unqualified(ac, call) (((ac)->in_qualified_call = 0), (call))
+/* Make a creation call to `call'. */
+#define GE_creation(ac, call) (((ac)->in_qualified_call = 2), (call))
 
 #ifdef EIF_WINDOWS
 /*

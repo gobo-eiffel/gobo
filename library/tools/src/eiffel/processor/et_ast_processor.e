@@ -993,6 +993,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_invariant_keyword (a_keyword: ET_INVARIANT_KEYWORD)
+			-- Process `a_keyword'.
+		require
+			a_keyword_not_void: a_keyword /= Void
+		deferred
+		end
+
 	process_invariants (a_list: ET_INVARIANTS)
 			-- Process `a_list'.
 		require

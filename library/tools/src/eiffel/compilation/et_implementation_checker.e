@@ -5,7 +5,7 @@
 		"Eiffel implementation checkers for features and invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_IMPLEMENTATION_CHECKER
@@ -638,10 +638,8 @@ feature {NONE} -- Assertion validity
 			a_feature_impl_not_void: a_feature_impl /= Void
 			a_feature_not_void: a_feature /= Void
 		local
-			a_class_impl: ET_CLASS
 			i, nb: INTEGER
 		do
-			a_class_impl := a_feature_impl.implementation_class
 			if attached a_feature_impl.preconditions as a_preconditions then
 				feature_checker.check_preconditions_validity (a_preconditions, a_feature_impl, a_feature, current_class)
 				if feature_checker.has_fatal_error then

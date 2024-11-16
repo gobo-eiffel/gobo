@@ -22,7 +22,8 @@ inherit
 			has_result,
 			has_address_expression,
 			has_agent,
-			has_typed_object_test
+			has_typed_object_test,
+			add_old_expressions
 		end
 
 	ET_BINARY_EXPRESSION
@@ -59,6 +60,7 @@ feature -- Initialization
 	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
+			precursor {ET_BINARY_EXPRESSION}
 			name.reset
 			is_boolean_operator := False
 			if attached {ET_INFIX_CAST_EXPRESSION} left as l_cast then

@@ -23,7 +23,8 @@ inherit
 			has_address_expression,
 			has_agent,
 			has_typed_object_test,
-			is_instance_free
+			is_instance_free,
+			add_old_expressions
 		redefine
 			reset, make, make_with_capacity
 		end

@@ -18,6 +18,7 @@ inherit
 		redefine
 			name,
 			last_leaf,
+			reset,
 			process
 		end
 
@@ -43,6 +44,15 @@ feature {NONE} -- Initialization
 			name_set: name = a_name
 			declared_type_set: declared_type = a_type
 			expression_set: expression = a_expression
+		end
+
+feature -- Initialization
+
+	reset
+			-- Reset expression as it was just after it was last parsed.
+		do
+			precursor
+			name.reset
 		end
 
 feature -- Access

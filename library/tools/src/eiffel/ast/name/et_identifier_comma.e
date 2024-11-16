@@ -5,7 +5,7 @@
 		"Eiffel identifiers followed by a comma"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_IDENTIFIER_COMMA
@@ -14,16 +14,19 @@ inherit
 
 	ET_LOCAL_NAME
 		redefine
+			reset,
 			is_instance_free
 		end
 
 	ET_ARGUMENT_NAME
 		redefine
+			reset,
 			is_instance_free
 		end
 
 	ET_OBJECT_TEST_LOCAL_NAME
 		redefine
+			reset,
 			is_instance_free
 		end
 
@@ -46,6 +49,15 @@ feature {NONE} -- Initialization
 		ensure
 			identifier_set: identifier = a_name
 			comma_set: comma = a_comma
+		end
+
+feature -- Initialization
+
+	reset
+			-- Reset expression as it was just after it was last parsed.
+		do
+			precursor
+			identifier.reset
 		end
 
 feature -- Access

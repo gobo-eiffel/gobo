@@ -215,6 +215,25 @@ feature -- Setting
 			right_parenthesis_set: right_parenthesis = r
 		end
 
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current operands
+			-- and (recursively) in its subexpressions.
+		local
+			l_actual: ET_AGENT_ARGUMENT_OPERAND_ITEM
+			l_operand: ET_AGENT_ARGUMENT_OPERAND
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				l_actual := storage.item (i)
+				l_operand := l_actual.agent_actual_argument
+				l_operand.add_old_expressions (a_list)
+				i := i + 1
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	fixed_array: KL_SPECIAL_ROUTINES [ET_AGENT_ARGUMENT_OPERAND_ITEM]

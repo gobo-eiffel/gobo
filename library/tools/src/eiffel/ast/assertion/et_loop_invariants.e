@@ -5,7 +5,7 @@
 		"Eiffel loop invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_LOOP_INVARIANTS
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	invariant_keyword: ET_KEYWORD
+	invariant_keyword: ET_INVARIANT_KEYWORD
 			-- 'invariant' keyword
 
 	position: ET_POSITION

@@ -710,10 +710,10 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_invariant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
+	new_invariant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_INVARIANT_KEYWORD
 			-- New 'invariant' keyword
 		do
-			create Result.make_invariant
+			create Result.make
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -3301,7 +3301,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_invariants (an_invariant: detachable ET_KEYWORD; a_class: detachable ET_CLASS; nb: INTEGER): detachable ET_INVARIANTS
+	new_invariants (an_invariant: detachable ET_INVARIANT_KEYWORD; a_class: detachable ET_CLASS; nb: INTEGER): detachable ET_INVARIANTS
 			-- New class invariants with given capacity
 		do
 			if a_class /= Void then
@@ -3454,7 +3454,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_loop_invariants (an_invariant: detachable ET_KEYWORD; nb: INTEGER): detachable ET_LOOP_INVARIANTS
+	new_loop_invariants (an_invariant: detachable ET_INVARIANT_KEYWORD; nb: INTEGER): detachable ET_LOOP_INVARIANTS
 			-- New loop invariants with given capacity
 		do
 			create Result.make_with_capacity (nb)

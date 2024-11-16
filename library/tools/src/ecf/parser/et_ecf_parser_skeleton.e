@@ -192,7 +192,6 @@ feature {NONE} -- AST factory
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_conditions: detachable ET_ECF_CONDITIONS
 			l_renamings: detachable DS_HASH_TABLE [STRING, STRING]
-			l_options: detachable ET_ECF_OPTIONS
 			l_class_options: detachable DS_HASH_TABLE [ET_ECF_OPTIONS, STRING]
 			l_notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
 			l_value: STRING
@@ -221,7 +220,7 @@ feature {NONE} -- AST factory
 						elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
 							l_notes := new_notes (l_notes, l_child, a_position_table, a_target.system_config)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
-							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_target)
+							add_options (Result.options, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_renaming) then
 							l_renamings := new_renamings (l_renamings, l_child, a_position_table, a_target)
 						end
@@ -249,10 +248,7 @@ feature {NONE} -- AST factory
 					end
 					l_cursor.forth
 				end
-				if l_options /= Void then
-					adapt_options (l_options)
-					Result.set_options (l_options)
-				end
+				adapt_options (Result.options)
 				if l_class_options /= Void then
 					l_class_options.do_all (agent adapt_options)
 					Result.set_class_options (l_class_options)
@@ -294,7 +290,6 @@ feature {NONE} -- AST factory
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_conditions: detachable ET_ECF_CONDITIONS
 			l_renamings: detachable DS_HASH_TABLE [STRING, STRING]
-			l_options: detachable ET_ECF_OPTIONS
 			l_class_options: detachable DS_HASH_TABLE [ET_ECF_OPTIONS, STRING]
 			l_visible_classes: detachable DS_ARRAYED_LIST [ET_ECF_VISIBLE_CLASS]
 			l_notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
@@ -324,7 +319,7 @@ feature {NONE} -- AST factory
 						elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
 							l_notes := new_notes (l_notes, l_child, a_position_table, a_target.system_config)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
-							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_target)
+							add_options (Result.options, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_renaming) then
 							l_renamings := new_renamings (l_renamings, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_visible) then
@@ -355,10 +350,7 @@ feature {NONE} -- AST factory
 					end
 					l_cursor.forth
 				end
-				if l_options /= Void then
-					adapt_options (l_options)
-					Result.set_options (l_options)
-				end
+				adapt_options (Result.options)
 				if l_class_options /= Void then
 					l_class_options.do_all (agent adapt_options)
 					Result.set_class_options (l_class_options)
@@ -401,7 +393,6 @@ feature {NONE} -- AST factory
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_conditions: detachable ET_ECF_CONDITIONS
 			l_renamings: detachable DS_HASH_TABLE [STRING, STRING]
-			l_options: detachable ET_ECF_OPTIONS
 			l_class_options: detachable DS_HASH_TABLE [ET_ECF_OPTIONS, STRING]
 			l_visible_classes: detachable DS_ARRAYED_LIST [ET_ECF_VISIBLE_CLASS]
 			l_notes: detachable DS_ARRAYED_LIST [ET_ECF_NOTE_ELEMENT]
@@ -431,7 +422,7 @@ feature {NONE} -- AST factory
 						elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
 							l_notes := new_notes (l_notes, l_child, a_position_table, a_target.system_config)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
-							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_target)
+							add_options (Result.options, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_renaming) then
 							l_renamings := new_renamings (l_renamings, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_visible) then
@@ -464,10 +455,7 @@ feature {NONE} -- AST factory
 					end
 					l_cursor.forth
 				end
-				if l_options /= Void then
-					adapt_options (l_options)
-					Result.set_options (l_options)
-				end
+				adapt_options (Result.options)
 				if l_class_options /= Void then
 					l_class_options.do_all (agent adapt_options)
 					Result.set_class_options (l_class_options)
@@ -548,7 +536,6 @@ feature {NONE} -- AST factory
 			l_conditions: detachable ET_ECF_CONDITIONS
 			l_renamings: detachable DS_HASH_TABLE [STRING, STRING]
 			l_mappings: detachable DS_HASH_TABLE [STRING, STRING]
-			l_options: detachable ET_ECF_OPTIONS
 			l_class_options: detachable DS_HASH_TABLE [ET_ECF_OPTIONS, STRING]
 			l_visible_classes: detachable DS_ARRAYED_LIST [ET_ECF_VISIBLE_CLASS]
 			l_provider_groups: detachable DS_ARRAYED_LIST [STRING]
@@ -585,7 +572,7 @@ feature {NONE} -- AST factory
 						elseif STRING_.same_case_insensitive (l_child.name, xml_note) then
 							l_notes := new_notes (l_notes, l_child, a_position_table, a_target.system_config)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
-							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_target)
+							add_options (Result.options, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_renaming) then
 							l_renamings := new_renamings (l_renamings, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_uses) then
@@ -629,10 +616,7 @@ feature {NONE} -- AST factory
 				end
 				Result.set_conditioned_subclusters (l_subclusters)
 				Result.set_conditioned_file_rules (l_file_rules)
-				if l_options /= Void then
-					adapt_options (l_options)
-					Result.set_options (l_options)
-				end
+				adapt_options (Result.options)
 				if l_class_options /= Void then
 					l_class_options.do_all (agent adapt_options)
 					Result.set_class_options (l_class_options)
@@ -1469,23 +1453,6 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_options (a_options: detachable ET_ECF_OPTIONS; a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE;
-		a_default_options: ET_ECF_OPTIONS; a_target: ET_ECF_TARGET): detachable ET_ECF_OPTIONS
-			-- New options (or `a_options' if not Void) built from `a_element'
-		require
-			a_element_not_void: a_element /= Void
-			is_option: STRING_.same_case_insensitive (a_element.name, xml_option)
-			a_default_options_not_void: a_default_options /= Void
-			a_target_not_void: a_target /= Void
-		do
-			if a_options /= Void then
-				Result := a_options
-			else
-				Result := ast_factory.new_options
-			end
-			add_options (Result, a_element, a_position_table, a_default_options, a_target)
-		end
-
 	new_overridden_group (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_target: ET_ECF_TARGET): detachable STRING
 			-- New overridden group built from `a_element'
 		require
@@ -1517,7 +1484,6 @@ feature {NONE} -- AST factory
 			l_conditions: detachable ET_ECF_CONDITIONS
 			l_renamings: detachable DS_HASH_TABLE [STRING, STRING]
 			l_mappings: detachable DS_HASH_TABLE [STRING, STRING]
-			l_options: detachable ET_ECF_OPTIONS
 			l_class_options: detachable DS_HASH_TABLE [ET_ECF_OPTIONS, STRING]
 			l_visible_classes: detachable DS_ARRAYED_LIST [ET_ECF_VISIBLE_CLASS]
 			l_provider_groups: detachable DS_ARRAYED_LIST [STRING]
@@ -1550,7 +1516,7 @@ feature {NONE} -- AST factory
 						elseif STRING_.same_case_insensitive (l_child.name, xml_mapping) then
 							l_mappings := new_mappings (l_mappings, l_child, a_position_table, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_option) then
-							l_options := new_options (l_options, l_child, a_position_table, a_default_options, a_target)
+							add_options (Result.options, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_override) then
 							l_subclusters := new_override_clusters (l_subclusters, l_child, a_position_table, a_default_options, a_target)
 						elseif STRING_.same_case_insensitive (l_child.name, xml_overrides) then
@@ -1600,10 +1566,7 @@ feature {NONE} -- AST factory
 				end
 				Result.set_conditioned_subclusters (l_subclusters)
 				Result.set_conditioned_file_rules (l_file_rules)
-				if l_options /= Void then
-					adapt_options (l_options)
-					Result.set_options (l_options)
-				end
+				adapt_options (Result.options)
 				if l_class_options /= Void then
 					l_class_options.do_all (agent adapt_options)
 					Result.set_class_options (l_class_options)

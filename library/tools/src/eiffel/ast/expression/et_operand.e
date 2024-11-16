@@ -19,6 +19,9 @@ feature -- Initialization
 	reset
 			-- Reset operand as it was just after it was last parsed.
 		do
+			index := 0
+		ensure
+			reset: index = 0
 		end
 
 feature -- Status setting
@@ -89,6 +92,19 @@ feature -- Setting
 			index := i
 		ensure
 			index_set: index = i
+		end
+
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current expression
+			-- and (recursively) in its subexpressions.
+		require
+			a_list_not_void: a_list /= Void
+			no_void_item: not a_list.has_void
+		do
+		ensure
+			no_void_item: not a_list.has_void
 		end
 
 end

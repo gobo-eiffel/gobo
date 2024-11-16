@@ -8,7 +8,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2021-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ITERATION_CURSOR
@@ -17,6 +17,7 @@ inherit
 
 	ET_EXPRESSION
 		redefine
+			reset,
 			is_never_void,
 			is_instance_free
 		end
@@ -36,6 +37,15 @@ feature {NONE} -- Initialization
 			item_name := a_item_name
 		ensure
 			item_name_set: item_name = a_item_name
+		end
+
+feature -- Initialization
+
+	reset
+			-- Reset expression as it was just after it was last parsed.
+		do
+			precursor
+			item_name.reset
 		end
 
 feature -- Access

@@ -5,7 +5,7 @@
 		"Eiffel dynamic type set builders where types are pulled from subsets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_DYNAMIC_PULL_TYPE_SET_BUILDER
@@ -192,6 +192,13 @@ feature -- Generation
 						end
 						j := j + 1
 					end
+						-- Process dynamic invariants.
+					if attached l_type.invariants as l_invariants then
+						if not l_invariants.is_built then
+							is_built := False
+							build_feature_dynamic_type_sets (l_invariants, l_type)
+						end
+					end
 						-- Process dynamic qualified query calls.
 					from
 						l_query_call := l_type.query_calls
@@ -326,13 +333,19 @@ feature {ET_DYNAMIC_ROUTINE_TYPE} -- Generation
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_call_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_agent_type_set: ET_DYNAMIC_AGENT_OPERAND_PULL_TYPE_SET
+			i, nb: INTEGER
 		do
 			l_call_dynamic_type_sets := a_call_feature.dynamic_type_sets
 			if not l_call_dynamic_type_sets.is_empty then
 				create l_agent_type_set.make (l_call_dynamic_type_sets.item (1).static_type, an_agent_type)
 				l_agent_type_set.set_never_void
-				create l_dynamic_type_sets.make_with_capacity (1)
+				nb := l_call_dynamic_type_sets.count
+				create l_dynamic_type_sets.make_with_capacity (nb)
 				l_dynamic_type_sets.put_last (l_agent_type_set)
+				from i := 2 until i > nb loop
+					l_dynamic_type_sets.put_last (l_call_dynamic_type_sets.item (i))
+					i := i + 1
+				end
 				a_call_feature.set_dynamic_type_sets (l_dynamic_type_sets)
 			end
 		end
@@ -404,7 +417,7 @@ feature {NONE} -- Generation
 			if l_locals /= Void then
 				nb := l_locals.count
 				from i := 1 until i > nb loop
-					l_target := a_feature.dynamic_type_set (l_locals.local_variable (i).name)
+					l_target := a_feature.local_type_set (l_locals.local_variable (i))
 					if l_target = Void then
 							-- Internal error: the dynamic type sets of the local
 							-- variables should be known at this stage.
@@ -730,12 +743,12 @@ feature {NONE} -- Event handling
 			l_result_type_set := a_result_type_set
 			if not l_result_type_set.is_expanded then
 				l_result_type_set := new_dynamic_type_set (l_result_type_set.static_type)
-				create l_dynamic_query_call.make (an_expression, a_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
+				create l_dynamic_query_call.make (an_expression, a_target_type_set, l_result_type_set, current_dynamic_feature, current_feature_impl, current_dynamic_type, current_index, index_offset)
 				a_target_type_set.static_type.primary_type.put_query_call (l_dynamic_query_call)
 				create l_result_attachment.make (a_result_type_set, an_expression, current_dynamic_feature, current_dynamic_type)
 				l_result_type_set.put_source (l_result_attachment, current_dynamic_system)
 			else
-				create l_dynamic_query_call.make (an_expression, a_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
+				create l_dynamic_query_call.make (an_expression, a_target_type_set, l_result_type_set, current_dynamic_feature, current_feature_impl, current_dynamic_type, current_index, index_offset)
 				a_target_type_set.static_type.primary_type.put_query_call (l_dynamic_query_call)
 			end
 		end
@@ -1343,14 +1356,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_tuple_label_argument_dynamic_types (a_label_type_set: ET_DYNAMIC_TYPE_SET; a_assigner: ET_ASSIGNER_INSTRUCTION)
+	propagate_tuple_label_argument_dynamic_types (a_label_type_set: ET_DYNAMIC_TYPE_SET; a_assigner: ET_ASSIGNER_INSTRUCTION; a_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL)
 			-- Propagate dynamic types of the source of tuple label setter `a_assigner'
 			-- to the dynamic type set `a_label_type_set' of the corresponding tuple label.
 		local
 			l_source_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_TUPLE_LABEL_SETTER
 		do
-			l_source_type_set := current_dynamic_feature.dynamic_type_set (a_assigner.source)
+			l_source_type_set := a_call.dynamic_type_set (a_assigner.source)
 			if l_source_type_set = Void then
 					-- Internal error: the dynamic type set of the source
 					-- of the label setter should be known at this stage.

@@ -354,13 +354,14 @@ feature -- Eiffel keywords
 			Result := tokens.inspect_keyword
 		end
 
-	new_invariant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
+	new_invariant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_INVARIANT_KEYWORD
 			-- New 'invariant' keyword
 		require
 			a_scanner_not_void: a_scanner /= Void
 			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(?i)invariant").recognizes (a_scanner.last_unicode_literal)
 		do
-			Result := tokens.invariant_keyword
+			create Result.make
+			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
 	new_is_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
@@ -2992,7 +2993,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_invariants (an_invariant: detachable ET_KEYWORD; a_class: detachable ET_CLASS; nb: INTEGER): detachable ET_INVARIANTS
+	new_invariants (an_invariant: detachable ET_INVARIANT_KEYWORD; a_class: detachable ET_CLASS; nb: INTEGER): detachable ET_INVARIANTS
 			-- New class invariants with given capacity
 		require
 			nb_positive: nb >= 0
@@ -3150,7 +3151,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_loop_invariants (an_invariant: detachable ET_KEYWORD; nb: INTEGER): detachable ET_LOOP_INVARIANTS
+	new_loop_invariants (an_invariant: detachable ET_INVARIANT_KEYWORD; nb: INTEGER): detachable ET_LOOP_INVARIANTS
 			-- New loop invariants with given capacity
 		require
 			nb_positive: nb >= 0

@@ -97,10 +97,23 @@ feature -- Access
 feature -- Measurement
 
 	count: INTEGER
-			-- Number of actual arguments
+			-- Number of operands
 		deferred
 		ensure
 			count_non_negative: Result >= 0
+		end
+
+feature -- Assertions
+
+	add_old_expressions (a_list: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Add to `a_list' all old expressions appearing in current operands
+			-- and (recursively) in its subexpressions.
+		require
+			a_list_not_void: a_list /= Void
+			no_void_item: not a_list.has_void
+		deferred
+		ensure
+			no_void_item: not a_list.has_void
 		end
 
 end

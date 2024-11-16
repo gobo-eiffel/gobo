@@ -454,6 +454,9 @@ feature -- Features
 	procedures: ET_DYNAMIC_FEATURE_LIST
 			-- Procedures executed at run-time, if any
 
+	invariants: detachable ET_DYNAMIC_FEATURE
+			-- Invariants executed at run-time, if any
+
 	dynamic_query (a_query: ET_QUERY; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
 			-- Run-time query associated with `a_query'
 		require
@@ -520,6 +523,23 @@ feature -- Features
 		ensure
 			dynamic_procedure_not_void: Result /= Void
 			is_procedure: Result.is_procedure
+		end
+
+	dynamic_invariants (a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
+			-- Run-time invariants for current type
+		do
+			if attached invariants as l_invariants then
+				Result := l_invariants
+			else
+				if attached base_class.invariants as l_static_invariant then
+					create Result.make (l_static_invariant, Current, a_system)
+				else
+					create Result.make (create {ET_INVARIANTS}.make_with_capacity (base_class, 0), Current, a_system)
+				end
+				invariants := Result
+			end
+		ensure
+			dynamic_invariant_not_void: Result /= Void
 		end
 
 	seeded_dynamic_query (a_seed: INTEGER; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
@@ -636,7 +656,7 @@ feature -- Features
 			end
 		end
 
-	is_builtin_attribute (a_feature: ET_FEATURE; a_builtin_class_code, a_builtin_feature_code: NATURAL_8): BOOLEAN
+	is_builtin_attribute (a_feature: ET_STANDALONE_CLOSURE; a_builtin_class_code, a_builtin_feature_code: NATURAL_8): BOOLEAN
 			-- Is built-in feature `a_feature' with code `a_built_class_code'
 			-- and `a_builtin_feature_code' considered as an attribute or not
 			-- in the current type?

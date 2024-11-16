@@ -5,7 +5,7 @@
 		"Groups of Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_GROUP
@@ -559,6 +559,13 @@ feature -- Setting
 			data := a_data
 		ensure
 			data_set: data = a_data
+		end
+
+	fill_options (a_class: ET_CLASS)
+			-- Fill `a_class' with option information.
+		require
+			a_class_not_void: a_class /= Void
+		do
 		end
 
 feature -- Iteration

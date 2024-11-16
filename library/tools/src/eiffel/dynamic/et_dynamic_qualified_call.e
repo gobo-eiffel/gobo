@@ -5,7 +5,7 @@
 		"Eiffel qualified calls at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_DYNAMIC_QUALIFIED_CALL
@@ -45,8 +45,39 @@ feature -- Access
 	current_feature: ET_DYNAMIC_FEATURE
 			-- Feature where the call appears
 
+	current_feature_impl: ET_STANDALONE_CLOSURE
+			-- Feature where the code of the call has been written
+			-- (may be different from `current_feature.static_feature',
+			-- for example when the code is written in an inherited
+			-- precondition or postcondition)
+
 	current_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type to which `current_feature' belongs
+
+	dynamic_type_set (a_operand: ET_OPERAND): detachable ET_DYNAMIC_TYPE_SET
+			-- Dynamic type set associated with `a_operand' in the context of the call;
+			-- Void if unknown
+		require
+			a_operand_not_void: a_operand /= Void
+		local
+			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			i: INTEGER
+		do
+			l_dynamic_type_sets := current_feature.dynamic_type_sets
+			i := a_operand.index
+			if i > current_index then
+				i := i + index_offset
+			end
+			if i >= 1 and i <= l_dynamic_type_sets.count then
+				Result := l_dynamic_type_sets.item (i)
+			end
+		end
+
+	current_index: INTEGER
+			-- Index of dynamic type set of 'Current' in `current_feature'
+
+	index_offset: INTEGER
+			-- Offset for operand indexes in `current_feature'
 
 	position: ET_POSITION
 			-- Position of call
@@ -239,7 +270,7 @@ feature {NONE} -- Implementation
 										nb := l_manifest_tuple.count
 									end
 									from i := 1 until i > nb loop
-										l_source_argument_type_set := current_feature.dynamic_type_set (l_manifest_tuple.expression (i))
+										l_source_argument_type_set := dynamic_type_set (l_manifest_tuple.expression (i))
 										if l_source_argument_type_set = Void then
 												-- Internal error: the dynamic type sets of the actual
 												-- arguments should be known at this stage.
@@ -252,7 +283,7 @@ feature {NONE} -- Implementation
 										i := i + 1
 									end
 								end
-								l_source_argument_type_set := current_feature.dynamic_type_set (l_actual)
+								l_source_argument_type_set := dynamic_type_set (l_actual)
 								l_target_argument_type_set := a_feature.argument_type_set (1)
 								if l_source_argument_type_set = Void then
 										-- Internal error: the dynamic type sets of the actual
@@ -281,7 +312,7 @@ feature {NONE} -- Implementation
 						end
 					else
 						from i := 1 until i > nb loop
-							l_source_argument_type_set := current_feature.dynamic_type_set (l_actuals.actual_argument (i))
+							l_source_argument_type_set := dynamic_type_set (l_actuals.actual_argument (i))
 							l_target_argument_type_set := a_feature.argument_type_set (i)
 							if l_source_argument_type_set = Void then
 									-- Internal error: the dynamic type sets of the actual
@@ -359,7 +390,7 @@ feature {NONE} -- Implementation
 										l_target_argument_type_set := l_open_operand_type_sets.item (i)
 										if not l_target_argument_type_set.is_expanded then
 											l_actual := l_manifest_tuple.expression (i)
-											l_source_argument_type_set := current_feature.dynamic_type_set (l_actual)
+											l_source_argument_type_set := dynamic_type_set (l_actual)
 											if l_source_argument_type_set = Void then
 													-- Internal error: the dynamic type sets of the actual
 													-- arguments should be known at this stage.
@@ -381,7 +412,7 @@ feature {NONE} -- Implementation
 									a_builder.set_fatal_error
 									a_builder.error_handler.report_giaaa_error
 								elseif not l_target_argument_type_set.is_expanded then
-									l_source_argument_type_set := current_feature.dynamic_type_set (l_actual)
+									l_source_argument_type_set := dynamic_type_set (l_actual)
 									if l_source_argument_type_set = Void then
 											-- Internal error: the dynamic type sets of the actual
 											-- arguments should be known at this stage.
@@ -413,7 +444,7 @@ feature {NONE} -- Implementation
 								a_builder.error_handler.report_giaaa_error
 							elseif not l_target_argument_type_set.is_expanded then
 								l_actual := l_actuals.actual_argument (i)
-								l_source_argument_type_set := current_feature.dynamic_type_set (l_actual)
+								l_source_argument_type_set := dynamic_type_set (l_actual)
 								if l_source_argument_type_set = Void then
 										-- Internal error: the dynamic type sets of the actual
 										-- arguments should be known at this stage.
@@ -461,6 +492,7 @@ invariant
 	static_call_is_qualified: static_call.is_qualified_call
 	target_type_set_not_void: target_type_set /= Void
 	current_feature_not_void: current_feature /= Void
+	current_feature_impl_not_void: current_feature_impl /= Void
 	current_type_not_void: current_type /= Void
 
 end

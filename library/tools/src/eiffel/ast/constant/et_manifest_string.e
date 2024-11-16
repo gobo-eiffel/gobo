@@ -68,6 +68,7 @@ feature -- Initialization
 	reset
 			-- Reset constant as it was just after it was last parsed.
 		do
+			precursor {ET_CONSTANT}
 			type := Void
 			if attached cast_type as l_cast_type then
 				l_cast_type.type.reset

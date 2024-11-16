@@ -85,8 +85,8 @@ feature -- Access
 
 feature -- Status report
 
-	no_target_twin: BOOLEAN
-			-- Should the target object not be cloned even when needed
+	no_source_twin: BOOLEAN
+			-- Should the source object not be cloned even when needed
 			-- (e.g. when its type is expanded)?
 
 	has_result: BOOLEAN
@@ -119,12 +119,12 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_no_target_twin (b: BOOLEAN)
-			-- Set `no_target_twin' to `b'.
+	set_no_source_twin (b: BOOLEAN)
+			-- Set `no_source_twin' to `b'.
 		do
-			no_target_twin := b
+			no_source_twin := b
 		ensure
-			no_target_twin_set: no_target_twin = b
+			no_source_twin_set: no_source_twin = b
 		end
 
 feature -- Setting

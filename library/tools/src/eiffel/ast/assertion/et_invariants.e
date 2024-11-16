@@ -5,7 +5,7 @@
 		"Eiffel class invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_INVARIANTS
@@ -21,6 +21,8 @@ inherit
 		end
 
 	ET_STANDALONE_CLOSURE
+		rename
+			name as invariant_keyword
 		redefine
 			is_invariants,
 			as_invariants
@@ -84,7 +86,7 @@ feature -- Access
 			Result := tokens.invariant_keyword_name
 		end
 
-	invariant_keyword: ET_KEYWORD
+	invariant_keyword: ET_INVARIANT_KEYWORD
 			-- 'invariant' keyword
 
 	first_precursor: detachable ET_INVARIANTS

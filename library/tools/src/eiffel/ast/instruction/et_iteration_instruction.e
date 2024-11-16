@@ -22,21 +22,13 @@ inherit
 			reset
 		end
 
-	ET_INSTRUCTION
+	ET_REPETITION_INSTRUCTION
 		redefine
 			has_result,
 			has_address_expression,
 			has_agent,
 			has_typed_object_test,
 			reset
-		end
-
-	ET_LOOP_COMPONENT
-		redefine
-			has_result,
-			has_address_expression,
-			has_agent,
-			has_typed_object_test
 		end
 
 feature -- Initialization
@@ -60,7 +52,7 @@ feature -- Status report
 			-- or (recursively) in one of its subexpressions?
 		do
 			Result := iterable_expression.has_result or
-				precursor {ET_LOOP_COMPONENT}
+				precursor {ET_REPETITION_INSTRUCTION}
 		end
 
 	has_address_expression: BOOLEAN
@@ -68,7 +60,7 @@ feature -- Status report
 			-- or (recursively) in one of its subexpressions?
 		do
 			Result := iterable_expression.has_address_expression or
-				precursor {ET_LOOP_COMPONENT}
+				precursor {ET_REPETITION_INSTRUCTION}
 		end
 
 	has_agent: BOOLEAN
@@ -76,7 +68,7 @@ feature -- Status report
 			-- or (recursively) in one of its subexpressions?
 		do
 			Result := iterable_expression.has_agent or
-				precursor {ET_LOOP_COMPONENT}
+				precursor {ET_REPETITION_INSTRUCTION}
 		end
 
 	has_typed_object_test: BOOLEAN
@@ -84,7 +76,7 @@ feature -- Status report
 			-- or (recursively) in one of its subexpressions?
 		do
 			Result := iterable_expression.has_typed_object_test or
-				precursor {ET_LOOP_COMPONENT}
+				precursor {ET_REPETITION_INSTRUCTION}
 		end
 
 end
