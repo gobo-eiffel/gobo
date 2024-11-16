@@ -710,6 +710,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_invariant_keyword (a_keyword: ET_INVARIANT_KEYWORD)
+			-- Process `a_keyword'.
+		do
+		end
+
 	process_invariants (a_list: ET_INVARIANTS)
 			-- Process `a_list'.
 		do

@@ -4666,10 +4666,10 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	invariant_keyword: ET_KEYWORD
+	invariant_keyword: ET_INVARIANT_KEYWORD
 			-- 'invariant' keyword
 		once
-			create Result.make_invariant
+			create Result.make
 		ensure
 			instance_free: class
 			keyword_not_void: Result /= Void

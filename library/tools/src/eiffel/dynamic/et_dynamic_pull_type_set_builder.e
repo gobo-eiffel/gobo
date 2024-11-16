@@ -192,6 +192,13 @@ feature -- Generation
 						end
 						j := j + 1
 					end
+						-- Process dynamic invariants.
+					if attached l_type.invariants as l_invariants then
+						if not l_invariants.is_built then
+							is_built := False
+							build_feature_dynamic_type_sets (l_invariants, l_type)
+						end
+					end
 						-- Process dynamic qualified query calls.
 					from
 						l_query_call := l_type.query_calls

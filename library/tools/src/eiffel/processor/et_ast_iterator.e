@@ -1718,6 +1718,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Implicit type marks are ignored.
 		end
 
+	process_invariant_keyword (a_keyword: ET_INVARIANT_KEYWORD)
+			-- Process `a_keyword'.
+		do
+			process_keyword (a_keyword)
+		end
+
 	process_note (a_note: ET_NOTE)
 			-- Process `a_note'.
 		do

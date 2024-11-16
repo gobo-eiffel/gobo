@@ -48,6 +48,7 @@ inherit
 		undefine
 			arguments,
 			first_note,
+			is_static,
 			implementation_feature
 		end
 

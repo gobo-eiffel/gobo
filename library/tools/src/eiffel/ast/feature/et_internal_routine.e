@@ -30,6 +30,7 @@ inherit
 			implementation_closure as implementation_feature
 		undefine
 			first_note,
+			is_static,
 			implementation_feature
 		end
 

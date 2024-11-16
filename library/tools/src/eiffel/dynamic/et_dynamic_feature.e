@@ -50,6 +50,9 @@ feature {NONE} -- Initialization
 			current_index := 2 * a_feature.arguments_count + 1 + if a_feature.type /= Void then 2 else 0 end
 			create preconditions.make (50)
 			create postconditions.make (50)
+			if a_feature.is_invariants then
+				create invariants.make (50)
+			end
 			create query_calls.make_map (10)
 			create procedure_calls.make_map (10)
 			if attached {ET_EXTERNAL_ROUTINE} a_feature as l_external_routine then
@@ -218,6 +221,11 @@ feature -- Access
 			-- Postconditions of current feature (even inherited from precursors),
 			-- and their index offset when accessing dynamic type sets
 
+	invariants: detachable DS_ARRAYED_LIST_2 [ET_INVARIANTS, INTEGER]
+			-- Invariants corresponding to `static_feature' when it is an invariant
+			-- (even those from ancestors), and their index offset when accessing dynamic
+			-- type sets
+
 	first_precursor: detachable ET_DYNAMIC_PRECURSOR
 			-- First precursor called from current feature;
 			-- May be void if no precursor called
@@ -277,7 +285,7 @@ feature -- Access
 			dynamic_precursor_not_void: Result /= Void
 		end
 
-	static_feature: ET_FEATURE
+	static_feature: ET_STANDALONE_CLOSURE
 			-- Feature at compilation time
 
 	id: INTEGER
@@ -1059,7 +1067,8 @@ invariant
 	preconditions_not_void: preconditions /= Void
 	no_void_precondition_not_void: not preconditions.has_void_1
 	postconditions_not_void: postconditions /= Void
-	no_void_postecondition_not_void: not postconditions.has_void_1
+	no_void_postcondition_not_void: not postconditions.has_void_1
+	no_void_invariant_not_void: attached invariants as l_invariants implies not l_invariants.has_void_1
 	query_calls_not_void: query_calls /= Void
 	no_void_query_call: not query_calls.has_void
 	procedure_calls_not_void: procedure_calls /= Void

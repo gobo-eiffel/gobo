@@ -12,8 +12,6 @@ deferred class ET_FEATURE
 
 inherit
 
-	ET_AST_NODE
-
 	ET_FLATTENED_FEATURE
 		rename
 			is_immediate as is_flattened_immediate,
@@ -30,13 +28,16 @@ inherit
 		end
 
 	ET_STANDALONE_CLOSURE
+		undefine
+			first_seed,
+			other_seeds,
+			has_seed
 		redefine
 			is_feature,
 			as_feature,
-			first_note
+			first_note,
+			is_static
 		end
-
-	DEBUG_OUTPUT
 
 feature -- Initialization
 
@@ -280,59 +281,6 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_function: BOOLEAN
-			-- Is feature a function?
-		do
-			-- Result := False
-		ensure
-			query: Result implies is_query
-			routine: Result implies is_routine
-		end
-
-	is_attribute: BOOLEAN
-			-- Is feature an attribute?
-		do
-			-- Result := False
-		ensure
-			query: Result implies is_query
-			not_routine: Result implies not is_routine
-		end
-
-	is_constant_attribute: BOOLEAN
-			-- Is feature a constant attribute?
-		do
-			-- Result := False
-		ensure
-			query: Result implies is_query
-			not_routine: Result implies not is_routine
-		end
-
-	is_unique_attribute: BOOLEAN
-			-- Is feature a unique attribute?
-		do
-			-- Result := False
-		ensure
-			query: Result implies is_query
-			not_routine: Result implies not is_routine
-		end
-
-	is_query: BOOLEAN
-			-- Is current feature a query?
-		do
-			Result := (type /= Void)
-		ensure
-			definition: Result = (type /= Void)
-		end
-
-	is_procedure: BOOLEAN
-			-- Is current feature a procedure?
-		do
-			Result := (type = Void)
-		ensure
-			definition: Result = (type = Void)
-			routine: Result implies is_routine
-		end
-
 	is_creation_procedure (a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Is current feature a creation procedure in `a_class'?
 			-- (Note: Use `a_system_processor.feature_flattener' on `a_class' if needed
@@ -350,12 +298,6 @@ feature -- Status report
 			else
 				Result := l_creators.has_feature_name (name)
 			end
-		end
-
-	is_routine: BOOLEAN
-			-- Is feature a routine?
-		do
-			-- Result := False
 		end
 
 	is_static: BOOLEAN
@@ -580,25 +522,6 @@ feature -- Status report
 
 	is_feature: BOOLEAN = True
 			-- Is `Current' a feature?
-
-	is_used: BOOLEAN
-			-- Is current feature used in the system?
-			-- For example, is it reachable from the root creation
-			-- procedure through the transitive closure.
-
-feature -- Measurement
-
-	arguments_count: INTEGER
-			-- Number of formal arguments
-		do
-			if attached arguments as l_arguments then
-				Result := l_arguments.count
-			end
-		ensure
-			arguments_count_not_negative: Result >= 0
-			no_argument: arguments = Void implies Result = 0
-			with_arguments: attached arguments as l_arguments implies Result = l_arguments.count
-		end
 
 feature -- Export status
 
@@ -848,16 +771,6 @@ feature -- Setting
 			postconditions_reset: postconditions = Void
 		end
 
-feature -- Status setting
-
-	set_used (b: BOOLEAN)
-			-- Set `is_used' to `b'.
-		do
-			is_used := b
-		ensure
-			used_set: is_used = b
-		end
-
 feature -- Duplication
 
 	new_synonym (a_name: like extended_name): like Current
@@ -952,13 +865,6 @@ feature -- Element change
 			end
 		ensure
 			no_void_precursor: not a_precursors.has_void
-		end
-feature -- Output
-
-	debug_output: STRING
-			-- String that should be displayed in debugger to represent `Current'
-		do
-			Result := name.name
 		end
 
 invariant

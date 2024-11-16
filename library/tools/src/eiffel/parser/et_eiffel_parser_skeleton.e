@@ -1748,7 +1748,7 @@ feature {NONE} -- AST factory
 			Result := new_alias_free_name (an_alias, a_string, a_convert)
 		end
 
-	new_invariants (an_invariant: detachable ET_KEYWORD): detachable ET_INVARIANTS
+	new_invariants (an_invariant: detachable ET_INVARIANT_KEYWORD): detachable ET_INVARIANTS
 			-- New class invariants
 		local
 			i, nb: INTEGER
@@ -1842,7 +1842,7 @@ feature {NONE} -- AST factory
 			last_local_variables := Result
 		end
 
-	new_loop_invariants (an_invariant: detachable ET_KEYWORD): detachable ET_LOOP_INVARIANTS
+	new_loop_invariants (an_invariant: detachable ET_INVARIANT_KEYWORD): detachable ET_LOOP_INVARIANTS
 			-- New loop invariants
 		local
 			i, nb: INTEGER

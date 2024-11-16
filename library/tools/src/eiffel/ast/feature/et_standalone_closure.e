@@ -5,7 +5,7 @@
 		"Eiffel standalone closures, e.g. features or invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_STANDALONE_CLOSURE
@@ -22,6 +22,8 @@ inherit
 		end
 
 	HASHABLE
+
+	DEBUG_OUTPUT
 
 	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
@@ -40,7 +42,90 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_function: BOOLEAN
+			-- Is `Current' a function?
+		do
+			-- Result := False
+		ensure
+			query: Result implies is_query
+			routine: Result implies is_routine
+		end
+
+	is_query: BOOLEAN
+			-- Is `Current' a query?
+		do
+			Result := (type /= Void)
+		ensure
+			definition: Result = (type /= Void)
+		end
+
+	is_procedure: BOOLEAN
+			-- Is `Current' a procedure?
+		do
+			Result := (type = Void)
+		ensure
+			definition: Result = (type = Void)
+			routine: Result implies is_routine
+		end
+
+	is_routine: BOOLEAN
+			-- Is `Current' a routine?
+		do
+			-- Result := False
+		end
+
+	is_attribute: BOOLEAN
+			-- Is `Current' an attribute?
+		do
+			-- Result := False
+		ensure
+			query: Result implies is_query
+			not_routine: Result implies not is_routine
+		end
+
+	is_constant_attribute: BOOLEAN
+			-- Is `Current' a constant attribute?
+		do
+			-- Result := False
+		ensure
+			query: Result implies is_query
+			not_routine: Result implies not is_routine
+		end
+
+	is_unique_attribute: BOOLEAN
+			-- Is `Current' a unique attribute?
+		do
+			-- Result := False
+		ensure
+			query: Result implies is_query
+			not_routine: Result implies not is_routine
+		end
+
+	is_used: BOOLEAN
+			-- Is `Current' used in the system?
+			-- For example, is it reachable from the root creation
+			-- procedure through the transitive closure.
+
+	has_seed (a_seed: INTEGER): BOOLEAN
+			-- Does current feature have `a_seed'?
+		do
+			if first_seed = a_seed then
+				Result := True
+			elseif attached other_seeds as l_other_seeds then
+				Result := l_other_seeds.has (a_seed)
+			end
+		ensure
+			definition: Result = (first_seed = a_seed or (attached other_seeds as l_other_seeds and then l_other_seeds.has (a_seed)))
+		end
+
 feature -- Access
+
+	name: ET_FEATURE_NAME
+			-- Name of closure
+		deferred
+		ensure
+			name_not_void: Result /= Void
+		end
 
 	lower_name: STRING
 			-- Lower-name of closure
@@ -80,6 +165,30 @@ feature -- Access
 			-- Note that the signature has already been resolved
 			-- in the context of the current class.
 		deferred
+		end
+
+	first_seed: INTEGER
+			-- First seed
+		do
+		end
+
+	other_seeds: detachable ET_FEATURE_IDS
+			-- Other seeds (feature IDs of first declarations
+			-- of current feature); May be Void if there
+			-- is only one seed (which is then accessible
+			-- through `first_seed')
+		do
+		end
+
+
+feature -- Status setting
+
+	set_used (b: BOOLEAN)
+			-- Set `is_used' to `b'.
+		do
+			is_used := b
+		ensure
+			used_set: is_used = b
 		end
 
 feature -- Export status
@@ -149,13 +258,12 @@ feature -- Conversion
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-feature -- Processing
+feature -- Output
 
-	process (a_processor: ET_AST_PROCESSOR)
-			-- Process current node.
-		require
-			a_processor_not_void: a_processor /= Void
-		deferred
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'
+		do
+			Result := name.name
 		end
 
 end

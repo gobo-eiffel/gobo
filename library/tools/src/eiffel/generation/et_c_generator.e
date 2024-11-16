@@ -66,6 +66,7 @@ inherit
 			process_inlined_expression,
 			process_inspect_expression,
 			process_inspect_instruction,
+			process_invariants,
 			process_iteration_cursor,
 			process_loop_instruction,
 			process_manifest_array,
@@ -1961,6 +1962,9 @@ feature {NONE} -- Feature generation
 				print_feature (l_features.item (i))
 				i := i + 1
 			end
+			if attached a_type.invariants as l_invariants then
+				print_feature (l_invariants)
+			end
 			current_type := old_type
 		end
 
@@ -2038,7 +2042,7 @@ feature {NONE} -- Feature generation
 		end
 
 	print_address_routine (a_feature: ET_ROUTINE)
-			-- Print wrapper of `a_feature' used to pass its address to `current_file' and its signature to `header_file'.
+			-- Print wrapper of `a_feature' used to pass its address, to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
@@ -2131,24 +2135,31 @@ feature {NONE} -- Feature generation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
 			end
+			if current_type.base_class.invariants_enabled then
+				current_file.put_string (c_ge_unqualified)
+				current_file.put_character ('(')
+				current_file.put_string (c_ge_current_context)
+				current_file.put_character ('(')
+				current_file.put_character (')')
+				print_comma
+			end
 			print_routine_name (current_feature, current_type, current_file)
 			current_file.put_character ('(')
 			current_file.put_string (c_ge_current_context)
 			current_file.put_character ('(')
 			current_file.put_character (')')
-			current_file.put_character (',')
-			current_file.put_character (' ')
+			print_comma
 			print_current_name (current_file)
 			if l_arguments /= Void and then nb_args > 0 then
 				from i := 1 until i > nb_args loop
-					current_file.put_character (',')
-					current_file.put_character (' ')
+					print_comma
 					l_name := l_arguments.formal_argument (i).name
 					print_argument_name (l_name, current_file)
 					i := i + 1
 				end
 			end
 			current_file.put_character (')')
+			print_after_call (current_type)
 			current_file.put_character (';')
 			current_file.put_new_line
 			dedent
@@ -2462,6 +2473,21 @@ feature {NONE} -- Feature generation
 				--
 				-- Declaration of variables.
 				--
+			if current_type.base_class.invariants_enabled and not current_feature.is_static then
+			print_indentation
+				current_file.put_string (c_uint32_t)
+				current_file.put_character (' ')
+				current_file.put_string (c_in_qualified_call)
+				print_assign_to
+				if a_creation then
+					current_file.put_character ('1')
+				else
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_in_qualified_call)
+				end
+				print_semicolon_newline
+			end
 				-- Variable for exception trace.
 			if exception_trace_mode and not a_inline then
 				print_indentation
@@ -2523,6 +2549,9 @@ feature {NONE} -- Feature generation
 					current_file.put_new_line
 				end
 				print_feature_trace_message_call (True)
+			end
+			if current_type.base_class.invariants_enabled and not current_feature.is_static and not a_creation then
+				print_invariants_call
 			end
 			if current_type.base_class.preconditions_enabled then
 				print_all_preconditions (a_feature)
@@ -2807,6 +2836,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			print_indentation
 			current_file.put_character ('}')
 			current_file.put_new_line
+			if current_type.base_class.invariants_enabled and not current_feature.is_static then
+				print_invariants_call
+			end
 			if current_type.base_class.postconditions_enabled then
 				print_all_postconditions (a_feature)
 			end
@@ -6880,6 +6912,21 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
+			if current_type.base_class.invariants_enabled and not current_feature.is_static then
+				print_indentation
+				current_file.put_string (c_uint32_t)
+				current_file.put_character (' ')
+				current_file.put_string (c_in_qualified_call)
+				print_assign_to
+				if a_creation then
+					current_file.put_character ('1')
+				else
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_in_qualified_call)
+				end
+				print_semicolon_newline
+			end
 				-- Call stack.
 			if exception_trace_mode then
 				l_is_empty := not a_creation and then (not attached a_feature.compound as l_compound or else l_compound.is_empty) and then a_feature.rescue_clause = Void
@@ -7160,7 +7207,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_new_line
 				end
 			end
-			print_internal_feature_body_declaration (a_feature, l_result_type)
+			print_internal_feature_body_declaration (a_feature, l_result_type, a_creation)
 			print_feature_trace_message_call (False)
 				-- Call stack.
 			if exception_trace_mode and then not l_is_empty then
@@ -7244,7 +7291,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			current_file := old_file
 		end
 
-	print_internal_feature_body_declaration (a_feature: ET_INTERNAL_FEATURE_CLOSURE; a_result_type: detachable ET_DYNAMIC_PRIMARY_TYPE)
+	print_internal_feature_body_declaration (a_feature: ET_INTERNAL_FEATURE_CLOSURE; a_result_type: detachable ET_DYNAMIC_PRIMARY_TYPE; a_creation: BOOLEAN)
 			-- Print the local variable declarations, the compound and the
 			-- rescue clause of `a_feature' to `current_file'.
 		require
@@ -7389,6 +7436,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				-- Instructions.
 				--
 			current_file := current_function_body_buffer
+			if current_type.base_class.invariants_enabled and not current_closure.is_static and not a_creation then
+				print_invariants_call
+			end
 			if current_type.base_class.preconditions_enabled then
 				print_all_preconditions (a_feature)
 			end
@@ -7744,6 +7794,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if attached a_feature.compound as l_compound then
 				print_compound (l_compound)
 			end
+			if current_type.base_class.invariants_enabled and not current_closure.is_static then
+				print_invariants_call
+			end
 			if current_type.base_class.postconditions_enabled then
 				print_all_postconditions (a_feature)
 			end
@@ -7893,8 +7946,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					i := i + 1
 				end
 			end
-			print_object_test_local_declarations (a_feature)
-			print_iteration_cursor_declarations (a_feature)
+			print_object_test_local_declarations
+			print_iteration_cursor_declarations
 			print_inline_separate_argument_declarations (a_feature)
 				-- Clean up.
 			reset_volatile_data
@@ -7939,7 +7992,12 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			if a_feature.has_self_initializing_code then
+			if
+				a_feature.has_self_initializing_code or
+				(current_type.base_class.preconditions_enabled and then not current_feature.preconditions.is_empty) or
+				(current_type.base_class.postconditions_enabled and then not current_feature.postconditions.is_empty) or
+				current_type.base_class.invariants_enabled
+			then
 				print_internal_feature (a_feature, False)
 			else
 				print_attribute (a_feature)
@@ -8059,6 +8117,17 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					--
 					-- Declaration of variables.
 					--
+				if current_type.base_class.invariants_enabled then
+					print_indentation
+					current_file.put_string (c_uint32_t)
+					current_file.put_character (' ')
+					current_file.put_string (c_in_qualified_call)
+					print_assign_to
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_in_qualified_call)
+					print_semicolon_newline
+				end
 					-- Variable for exception trace.
 				if exception_trace_mode then
 					print_indentation
@@ -8142,6 +8211,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_character (';')
 					current_file.put_new_line
 				end
+				if current_type.base_class.invariants_enabled and not current_feature.is_static then
+					print_invariants_call
+				end
 				if current_type.base_class.postconditions_enabled then
 					print_all_postconditions (a_feature)
 				end
@@ -8185,6 +8257,136 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				-- Clean up.
 				--
 			current_file := old_file
+		end
+
+	print_invariants_wrapper
+			-- Print procedure which checks all invariants (even those inherited
+			-- from ancestors) of `current_type' to `current_file'.
+		local
+			old_file: KI_TEXT_OUTPUT_STREAM
+			l_old_index_offset: INTEGER
+			l_invariants: ET_INVARIANTS
+			i, nb: INTEGER
+		do
+			old_file := current_file
+			current_file := current_function_header_buffer
+				--
+				-- Print signature to `header_file' and `current_file'.
+				--
+			print_feature_name_comment (current_feature, current_type, header_file)
+			print_feature_name_comment (current_feature, current_type, current_file)
+			header_file.put_string (c_extern)
+			header_file.put_character (' ')
+			header_file.put_string (c_void)
+			header_file.put_character (' ')
+			current_file.put_string (c_void)
+			current_file.put_character (' ')
+			print_invariants_name (current_type, header_file)
+			print_invariants_name (current_type, current_file)
+			header_file.put_character ('(')
+			current_file.put_character ('(')
+			print_context_type_declaration (header_file)
+			header_file.put_character (' ')
+			header_file.put_string (c_ac)
+			print_context_type_declaration (current_file)
+			current_file.put_character (' ')
+			current_file.put_string (c_ac)
+			header_file.put_character (',')
+			header_file.put_character (' ')
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			print_type_declaration (current_type, header_file)
+			print_type_declaration (current_type, current_file)
+			if current_type.is_expanded then
+				if current_type.is_basic then
+						-- Note that non-basic expanded types are already declared as volatile.
+					header_file.put_character (' ')
+					header_file.put_string (c_volatile)
+					current_file.put_character (' ')
+					current_file.put_string (c_volatile)
+				end
+				header_file.put_character ('*')
+				current_file.put_character ('*')
+			end
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			print_current_name (header_file)
+			print_current_name (current_file)
+			header_file.put_character (')')
+			current_file.put_character (')')
+			header_file.put_character (';')
+			header_file.put_new_line
+			current_file.put_new_line
+				--
+				-- Print body to `current_file'.
+				--
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			current_file := current_function_body_buffer
+			l_old_index_offset := index_offset
+			if attached current_feature.invariants as l_all_invariants then
+				nb := l_all_invariants.count
+				if nb > 0 then
+					print_before_assertions
+					from i := 1 until i > nb loop
+						index_offset := l_all_invariants.item_2 (i)
+						l_invariants := l_all_invariants.item_1 (i)
+						print_assertions (l_invariants, c_ge_ex_cinv)
+						i := i + 1
+					end
+					print_after_assertions
+				end
+				index_offset := l_old_index_offset
+			end
+			dedent
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file.put_new_line
+				-- Declarations of temporary variables.
+			current_file := current_function_header_buffer
+			print_temporary_variable_declarations
+			print_object_test_local_declarations
+			print_iteration_cursor_declarations
+				-- Flush to file.
+			flush_to_c_file
+				--
+				-- Clean up.
+				--
+			reset_volatile_data
+			reset_rescue_data
+			current_file := old_file
+		end
+
+	print_invariants_call
+			-- Print to `current_file' a call to procedure which checks all invariants
+			-- (even those inherited from ancestors) of `current_type'.
+		do
+			if attached current_type.invariants as l_invariants then
+				register_called_feature (l_invariants)
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_in_qualified_call)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				print_invariants_name (current_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
+				print_target_expression (tokens.current_keyword, current_type, False)
+				current_file.put_character (')')
+				print_semicolon_newline
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+			end
 		end
 
 	print_all_preconditions (a_feature: ET_CLOSURE)
@@ -8416,11 +8618,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			end
 		end
 
-	print_object_test_local_declarations (a_feature: ET_CLOSURE)
-			-- Print the object-test local declarations of
-			-- `a_feature' to `current_file'.
-		require
-			a_feature_not_void: a_feature /= Void
+	print_object_test_local_declarations
+			-- Print the object-test local declarations  used in the
+			-- generated C function to `current_file'.
 		local
 			i, nb: INTEGER
 			l_type: ET_DYNAMIC_PRIMARY_TYPE
@@ -8456,11 +8656,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			current_object_test_local_types.wipe_out
 		end
 
-	print_iteration_cursor_declarations (a_feature: ET_CLOSURE)
-			-- Print the iteration cursor declarations of
-			-- `a_feature' to `current_file'.
-		require
-			a_feature_not_void: a_feature /= Void
+	print_iteration_cursor_declarations
+			-- Print the iteration cursor declarations used in the
+			-- generated C function to `current_file'.
 		local
 			i, nb: INTEGER
 			l_type: ET_DYNAMIC_PRIMARY_TYPE
@@ -8626,7 +8824,7 @@ feature {NONE} -- Instruction generation
 				print_indentation
 				print_writable (l_target)
 				print_assign_to
-				if an_instruction.no_target_twin then
+				if an_instruction.no_source_twin then
 					print_expression (call_operands.first)
 				else
 					print_attachment_expression (call_operands.first, l_source_type_set, l_target_type)
@@ -10007,10 +10205,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_actual: ET_EXPRESSION
 			had_error: BOOLEAN
+			l_old_in_qualified_call: BOOLEAN
 		do
 			if line_generation_mode then
 				print_position (an_instruction.position, current_feature.static_feature.implementation_class)
 			end
+			l_old_in_qualified_call := in_qualified_call
+			in_qualified_call := False
 			l_parent_type := an_instruction.parent_type
 			if l_parent_type = Void then
 					-- Internal error: the Precursor construct should already
@@ -10076,6 +10277,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 					end
 				end
 			end
+			in_qualified_call := l_old_in_qualified_call
 		end
 
 	print_qualified_call_instruction (a_call: ET_QUALIFIED_FEATURE_CALL_INSTRUCTION)
@@ -10100,10 +10302,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			l_switch: BOOLEAN
 			l_printed: BOOLEAN
 			l_is_separate_call: BOOLEAN
+			l_old_in_qualified_call: BOOLEAN
 		do
 			if line_generation_mode then
 				print_position (a_call.position, current_feature.static_feature.implementation_class)
 			end
+			l_old_in_qualified_call := in_qualified_call
+			in_qualified_call := True
 			l_target := a_call.target
 			l_target_type_set := dynamic_type_set (l_target)
 			l_target_type := l_target_type_set.static_type
@@ -10317,6 +10522,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 				l_manifest_tuple_operand.wipe_out
 			end
 			call_operands.wipe_out
+			in_qualified_call := l_old_in_qualified_call
 			if l_is_separate_call then
 					-- Print the separate call declaration now, otherwise some
 					-- temporary data (temporary dynamic type sets, reused calls,
@@ -10456,10 +10662,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			l_actuals: detachable ET_ACTUAL_ARGUMENTS
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_actual: ET_EXPRESSION
+			l_old_in_qualified_call: BOOLEAN
 		do
 			if line_generation_mode then
 				print_position (a_instruction.position, current_feature.static_feature.implementation_class)
 			end
+			l_old_in_qualified_call := in_qualified_call
+			in_qualified_call := True
 				-- Add dummy target (which will not be used).
 			operand_stack.force (tokens.current_keyword)
 			l_actuals := a_instruction.arguments
@@ -10476,6 +10685,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			l_target_type := current_dynamic_system.dynamic_primary_type (a_instruction.type, current_type.base_type)
 			print_named_procedure_call (a_instruction.name, l_target_type, False)
 			call_operands.wipe_out
+			in_qualified_call := l_old_in_qualified_call
 		end
 
 	print_unqualified_call_instruction (a_call: ET_UNQUALIFIED_FEATURE_CALL_INSTRUCTION)
@@ -10490,10 +10700,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			l_target_operand: ET_EXPRESSION
 			l_seed: INTEGER
 			i, nb: INTEGER
+			l_old_in_qualified_call: BOOLEAN
 		do
 			if line_generation_mode then
 				print_position (a_call.position, current_feature.static_feature.implementation_class)
 			end
+			l_old_in_qualified_call := in_qualified_call
+			in_qualified_call := False
 			if not attached current_type.seeded_dynamic_procedure (a_call.name.seed, current_dynamic_system) as l_dynamic_feature then
 					-- Internal error: there should be a procedure for that seed.
 				set_fatal_error
@@ -10554,6 +10767,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 					l_manifest_tuple_operand.wipe_out
 				end
 			end
+			in_qualified_call := l_old_in_qualified_call
 		end
 
 feature {NONE} -- Procedure call generation
@@ -10773,6 +10987,7 @@ feature {NONE} -- Procedure call generation
 		do
 			register_called_feature (a_feature)
 			print_indentation
+			print_before_call (a_target_type, in_qualified_call)
 			print_routine_name (a_feature, a_target_type, current_file)
 			current_file.put_character ('(')
 			current_file.put_string (c_ac)
@@ -10789,6 +11004,7 @@ feature {NONE} -- Procedure call generation
 				i := i + 1
 			end
 			current_file.put_character (')')
+			print_after_call (a_target_type)
 			print_semicolon_newline
 		end
 
@@ -14903,7 +15119,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			l_dynamic_precursor: ET_DYNAMIC_PRECURSOR
 			l_parent_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			had_error: BOOLEAN
+			l_old_in_qualified_call: BOOLEAN
 		do
+			l_old_in_qualified_call := in_qualified_call
+			in_qualified_call := False
 			l_parent_type := an_expression.parent_type
 			if l_parent_type = Void then
 					-- Internal error: the Precursor construct should already
@@ -14961,6 +15180,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					end
 				end
 			end
+			in_qualified_call := l_old_in_qualified_call
 		end
 
 	print_prefix_expression (an_expression: ET_PREFIX_EXPRESSION)
@@ -15053,7 +15273,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			l_old_max_nested_inlining_count: INTEGER
 			l_inlined_call: BOOLEAN
 			l_is_basic_attribute: BOOLEAN
+			l_old_in_qualified_call: BOOLEAN
 		do
+			l_old_in_qualified_call := in_qualified_call
+			in_qualified_call := True
 			l_assignment_target := assignment_target
 			assignment_target := Void
 			l_target := a_call.target
@@ -15328,6 +15551,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					l_temp.set_index (l_temp_index)
 				end
 			end
+			in_qualified_call := l_old_in_qualified_call
 			if l_is_separate_call then
 					-- Print the separate call declaration now, otherwise some
 					-- temporary data (temporary dynamic type sets, reused calls,
@@ -15719,7 +15943,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 		local
 			l_target_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_old_in_qualified_call: BOOLEAN
 		do
+			l_old_in_qualified_call := in_qualified_call
+			in_qualified_call := True
 			l_target_type := current_dynamic_system.dynamic_primary_type (a_expression.type, current_type.base_type)
 			if not attached l_target_type.base_class.seeded_query (a_expression.name.seed) as l_query then
 					-- Internal error: there should be a query with `l_seed'.
@@ -15739,6 +15966,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				l_dynamic_feature := l_target_type.dynamic_query (l_query, current_dynamic_system)
 				print_unqualified_function_call_expression (a_expression, l_dynamic_feature)
 			end
+			in_qualified_call := l_old_in_qualified_call
 		end
 
 	print_strip_expression (an_expression: ET_STRIP_EXPRESSION)
@@ -15963,7 +16191,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			-- Print unqualified call expression.
 		require
 			a_call_not_void: a_call /= Void
+		local
+			l_old_in_qualified_call: BOOLEAN
 		do
+			l_old_in_qualified_call := in_qualified_call
+			in_qualified_call := False
 			if not attached current_type.seeded_dynamic_query (a_call.name.seed, current_dynamic_system) as l_dynamic_feature then
 					-- Internal error: there should be a query for that seed.
 				set_fatal_error
@@ -15975,6 +16207,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			else
 				print_unqualified_function_call_expression (a_call, l_dynamic_feature)
 			end
+			in_qualified_call := l_old_in_qualified_call
 		end
 
 	print_unqualified_attribute_call_expression (a_call: ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION; a_feature: ET_DYNAMIC_FEATURE)
@@ -16125,6 +16358,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 			l_force_result_boxing: BOOLEAN
 			l_inlined_call: BOOLEAN
 			l_printed: BOOLEAN
+			l_standard_is_equal: BOOLEAN
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -16182,6 +16416,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 				end
 			end
 			if l_manifest_tuple_operand = Void then
+				l_standard_is_equal := a_feature.is_builtin_any_class and a_feature.builtin_feature_code = {ET_TOKEN_CODES}.builtin_any_standard_is_equal
 				operand_stack.force (tokens.current_keyword)
 				nb := 0
 				if l_actuals /= Void then
@@ -16189,7 +16424,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_strip_expression")
 					from i := 1 until i > nb loop
 						l_actual := l_actuals.actual_argument (i)
 						l_actual_type_set := dynamic_type_set (l_actual)
-						print_attachment_operand (l_actual, l_actual_type_set)
+						if l_standard_is_equal then
+								-- Do not clone expanded arguments of 'ANY.standard_is_equal'
+								-- otherwise this might violate the invariant
+								-- 'reflexive_equality: standard_is_equal (Current)'.
+							print_operand (l_actual)
+						else
+							print_attachment_operand (l_actual, l_actual_type_set)
+						end
 						i := i + 1
 					end
 				end
@@ -16574,8 +16816,10 @@ feature {NONE} -- Equality generation
 			l_equal: STRING
 			l_index: INTEGER
 			l_old_index: INTEGER
+			l_both_multi_types: BOOLEAN
 			l_boolean_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_old_max_nested_inlining_count: INTEGER
+			l_old_in_qualified_call: BOOLEAN
 		do
 			if a_negated then
 				l_eif_true := c_eif_false
@@ -16632,41 +16876,44 @@ feature {NONE} -- Equality generation
 					current_file.put_string (l_eif_false)
 					current_file.put_character (':')
 				end
-					-- Check that both operands are of the same type.
-				if l_left_type_set.count > 1 and l_right_type_set.count > 1 then
-						-- Both operands can have several types in their type set.
-						-- Check that they have the same type.
+					-- Check that both operands are of the same type.	
+				if l_left_type_set.count > 1 or l_right_type_set.count > 1 then
+						-- At least one of the operands can have several types in their type set.
+						-- Check that they are of the expected type.
 					l_parenthese_count := l_parenthese_count + 1
 					current_file.put_character ('(')
-					current_file.put_character ('(')
-					print_attribute_type_id_access (l_left_operand, l_left_static_type, False)
-					print_equal_to
-					print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
-					current_file.put_character (')')
-					current_file.put_character ('?')
-				elseif l_left_type_set.count > 1 then
-						-- We know that the type set of the right operand contains
-						-- only one type, which is `l_dynamic_type'. So we just have
-						-- to check that the left operand is of that type.
-					l_parenthese_count := l_parenthese_count + 1
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					print_attribute_type_id_access (l_left_operand, l_left_static_type, False)
-					print_equal_to
-					current_file.put_integer (l_dynamic_type.id)
-					current_file.put_character (')')
-					current_file.put_character ('?')
-				elseif l_right_type_set.count > 1 then
-						-- We know that the type set of the left operand contains
-						-- only one type, which is `l_dynamic_type'. So we just have
-						-- to check that the right operand is of that type.
-					l_parenthese_count := l_parenthese_count + 1
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
-					print_equal_to
-					current_file.put_integer (l_dynamic_type.id)
-					current_file.put_character (')')
+					if a_common_reference_equality_types.is_empty then
+						current_file.put_character ('(')
+						print_attribute_type_id_access (l_left_operand, l_left_static_type, False)
+						print_equal_to
+						print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
+						current_file.put_character (')')
+					else
+						l_both_multi_types := l_left_type_set.count > 1 and l_right_type_set.count > 1
+						if l_both_multi_types then
+							current_file.put_character ('(')
+						end
+						if l_left_type_set.count > 1 then
+							current_file.put_character ('(')
+							print_attribute_type_id_access (l_left_operand, l_left_static_type, False)
+							print_equal_to
+							current_file.put_integer (l_dynamic_type.id)
+							current_file.put_character (')')
+						end
+						if l_both_multi_types then
+							print_and_then
+						end
+						if l_right_type_set.count > 1 then
+							current_file.put_character ('(')
+							print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
+							print_equal_to
+							current_file.put_integer (l_dynamic_type.id)
+							current_file.put_character (')')
+						end
+						if l_both_multi_types then
+							current_file.put_character (')')
+						end
+					end
 					current_file.put_character ('?')
 				else
 						-- The type sets of both operands contain only one type,
@@ -16711,7 +16958,10 @@ feature {NONE} -- Equality generation
 							-- No inlining.
 						l_old_max_nested_inlining_count := max_nested_inlining_count
 						max_nested_inlining_count := 0
+						l_old_in_qualified_call := in_qualified_call
+						in_qualified_call := True
 						print_query_call (l_is_equal_feature, l_dynamic_type, False)
+						in_qualified_call := l_old_in_qualified_call
 						max_nested_inlining_count := l_old_max_nested_inlining_count
 					else
 							-- Make sure to call the built-in version, even for types
@@ -16883,6 +17133,7 @@ feature {NONE} -- Equality generation
 			l_old_index: INTEGER
 			l_boolean_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_old_max_nested_inlining_count: INTEGER
+			l_old_in_qualified_call: BOOLEAN
 		do
 			if a_common_object_equality_types.is_empty then
 				print_indentation
@@ -17013,7 +17264,10 @@ feature {NONE} -- Equality generation
 									-- No inlining.
 								l_old_max_nested_inlining_count := max_nested_inlining_count
 								max_nested_inlining_count := 0
+								l_old_in_qualified_call := in_qualified_call
+								in_qualified_call := True
 								print_query_call (l_is_equal_feature, l_dynamic_type, False)
+								in_qualified_call := l_old_in_qualified_call
 								max_nested_inlining_count := l_old_max_nested_inlining_count
 							else
 									-- Make sure to call the built-in version, even for types
@@ -17350,7 +17604,7 @@ feature {NONE} -- Query call generation
 			a_result_type_not_void: a_result_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		local
-			l_static_query: ET_FEATURE
+			l_static_query: ET_STANDALONE_CLOSURE
 			l_use_boxed_pointer: BOOLEAN
 		do
 			l_static_query := a_feature.static_feature
@@ -17475,7 +17729,7 @@ feature {NONE} -- Query call generation
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		local
-			l_static_query: ET_FEATURE
+			l_static_query: ET_STANDALONE_CLOSURE
 			l_once_feature: ET_FEATURE
 			l_target: ET_EXPRESSION
 			old_index: INTEGER
@@ -17564,6 +17818,7 @@ feature {NONE} -- Query call generation
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			register_called_feature (a_feature)
+			print_before_call (a_target_type, in_qualified_call)
 			print_routine_name (a_feature, a_target_type, current_file)
 			current_file.put_character ('(')
 			current_file.put_string (c_ac)
@@ -17580,6 +17835,7 @@ feature {NONE} -- Query call generation
 				i := i + 1
 			end
 			current_file.put_character (')')
+			print_after_call (a_target_type)
 		end
 
 	print_inlined_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -19228,6 +19484,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				--
 				-- Declaration of variables.
 				--
+			if a_agent.is_inline_agent and current_type.base_class.invariants_enabled then
+				print_indentation
+				current_file.put_string (c_uint32_t)
+				current_file.put_character (' ')
+				current_file.put_string (c_in_qualified_call)
+				print_assign_to
+				current_file.put_character ('1')
+				print_semicolon_newline
+			end
 				-- Variable for exception trace.
 			if exception_trace_mode then
 				print_indentation
@@ -19428,14 +19693,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			print_type_declaration (a_agent_type, current_file)
 			current_file.put_character (' ')
 			print_result_name (current_file)
-			current_file.put_character (';')
-			current_file.put_new_line
+			print_semicolon_newline
 			print_indentation
 			print_type_declaration (agent_closed_operands_type, current_file)
 			current_file.put_character (' ')
 			print_temp_name (temp_variable, current_file)
-			current_file.put_character (';')
-			current_file.put_new_line
+			print_semicolon_newline
 			extra_dynamic_type_sets.force_last (agent_closed_operands_type)
 			temp_variable.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
 				-- Create agent object.
@@ -19451,8 +19714,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			print_comma
 			current_file.put_string (c_eif_true)
 			current_file.put_character (')')
-			current_file.put_character (';')
-			current_file.put_new_line
+			print_semicolon_newline
 				-- Build 'closed_operands'.
 			print_indentation
 			print_temp_name (temp_variable, current_file)
@@ -19466,8 +19728,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			print_comma
 			current_file.put_string (c_eif_true)
 			current_file.put_character (')')
-			current_file.put_character (';')
-			current_file.put_new_line
+			print_semicolon_newline
 			from j := 1 until j > nb_closed_operands loop
 				print_indentation
 				print_agent_closed_operand_access (agent_closed_operands.item (j), temp_variable)
@@ -19476,8 +19737,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_character (' ')
 				current_file.put_character ('a')
 				current_file.put_integer (j)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				j := j + 1
 			end
 				-- Call 'set_rout_disp_final'.
@@ -19493,40 +19753,35 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			else
 				register_called_feature (l_set_rout_disp_final_feature)
 				print_indentation
+				print_before_call (a_agent_type, False)
 				print_routine_name (l_set_rout_disp_final_feature, a_agent_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 				if a_agent_type.is_expanded then
 					current_file.put_character ('&')
 					print_result_name (current_file)
 				else
 					print_result_name (current_file)
 				end
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 					-- 'a_rout_disp'.
 				print_declaration_type_cast (current_dynamic_system.pointer_type, current_file)
 				current_file.put_character ('&')
 				print_agent_function_name (i, current_feature, current_type, current_file)
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 					-- 'a_encaps_rout_disp'.
 				print_declaration_type_cast (current_dynamic_system.pointer_type, current_file)
 				current_file.put_character ('&')
 				print_agent_function_name (i, current_feature, current_type, current_file)
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 					-- 'a_calc_rout_addr'.
 				print_declaration_type_cast (current_dynamic_system.pointer_type, current_file)
 				current_file.put_character ('0')
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 					-- 'a_closed_operands'.
 				print_temp_name (temp_variable, current_file)
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 					-- 'a_is_target_closed'.
 				l_target := a_agent.target
 				if l_target.is_open_operand then
@@ -19534,13 +19789,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				else
 					current_file.put_string (c_eif_true)
 				end
-				current_file.put_character (',')
-				current_file.put_character (' ')
+				print_comma
 					-- 'a_open_count'.
 				current_file.put_integer (nb_open_operands)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_after_call (a_agent_type)
+				print_semicolon_newline
 			end
 			extra_dynamic_type_sets.remove_last
 				-- Return the agent object.
@@ -19548,8 +19802,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			current_file.put_string (c_return)
 			current_file.put_character (' ')
 			print_result_name (current_file)
-			current_file.put_character (';')
-			current_file.put_new_line
+			print_semicolon_newline
 			dedent
 			current_file.put_character ('}')
 			current_file.put_new_line
@@ -19749,8 +20002,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 					-- (e.g. `agent a.some_function_with_expanded_result`).
 					-- This will be done later if the result is assigned to
 					-- some entity (e.g. `x := my_agent.item ([])`).
-					-- Hence setting 'no_target_twin'.
-				agent_expression_assignment.set_no_target_twin (True)
+					-- Hence setting 'no_source_twin'.
+				agent_expression_assignment.set_no_source_twin (True)
 				agent_expression_assignment.target.set_index (l_result.index)
 				agent_expression.set_index (l_result.index)
 				agent_expression.set_name (l_name)
@@ -19873,7 +20126,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				l_result_type_set := dynamic_type_set (l_result)
 				l_result_type := l_result_type_set.static_type.primary_type
 			end
-			print_internal_feature_body_declaration (an_agent, l_result_type)
+			print_internal_feature_body_declaration (an_agent, l_result_type, False)
 			print_agent_trace_message_call (an_agent, False)
 		end
 
@@ -20241,9 +20494,12 @@ feature {NONE} -- Polymorphic call functions generation
 			l_force_result_boxing: BOOLEAN
 			l_old_current_index: INTEGER
 			l_old_index_offset: INTEGER
+			l_old_in_qualified_call: BOOLEAN
 		do
 			l_old_call_target_type := call_target_type
 			call_target_type := Void
+			l_old_in_qualified_call := in_qualified_call
+			in_qualified_call := True
 			old_type := current_type
 			current_type := a_target_type
 			old_feature := current_feature
@@ -20539,6 +20795,7 @@ feature {NONE} -- Polymorphic call functions generation
 			index_offset := l_old_index_offset
 			current_feature := old_feature
 			current_type := old_type
+			in_qualified_call := l_old_in_qualified_call
 			call_target_type := l_old_call_target_type
 		end
 
@@ -24003,6 +24260,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_index: INTEGER
 			l_boolean_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_old_max_nested_inlining_count: INTEGER
+			l_old_in_qualified_call: BOOLEAN
 		do
 				-- No inlining.
 			l_old_max_nested_inlining_count := max_nested_inlining_count
@@ -24026,7 +24284,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_result_name (current_file)
 					print_and_then
 					if l_field_type.has_redefined_is_equal_routine then
+						l_old_in_qualified_call := in_qualified_call
+						in_qualified_call := True
 						print_query_call (l_is_equal_feature, l_field_type, False)
+						in_qualified_call := l_old_in_qualified_call
 					else
 							-- Make sure to call the built-in version, even for types
 							-- such as INTEGER_32, etc. where 'is_equal' is redefined
@@ -24244,9 +24505,21 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character ('!')
 					current_file.put_string (c_memcmp)
 					current_file.put_character ('(')
+					current_file.put_character ('(')
+					current_file.put_string (c_void)
+					current_file.put_character ('*')
+					current_file.put_character (')')
+					current_file.put_character ('(')
 					print_attribute_special_item_access (a_target, a_special_type, False)
+					current_file.put_character (')')
 					print_comma
+					current_file.put_character ('(')
+					current_file.put_string (c_void)
+					current_file.put_character ('*')
+					current_file.put_character (')')
+					current_file.put_character ('(')
 					print_attribute_special_item_access (a_source, a_special_type, False)
+					current_file.put_character (')')
 					print_comma
 					print_temp_name (l_count_temp, current_file)
 					print_times
@@ -24356,6 +24629,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_string (c_eif_false)
 				elseif a_target_type.has_nested_custom_standard_is_equal_routine or l_argument_type_set.count /= 1 then
 					register_called_feature (a_feature)
+					print_before_call (a_target_type, in_qualified_call)
 					print_routine_name (a_feature, a_target_type, current_file)
 					current_file.put_character ('(')
 					current_file.put_string (c_ac)
@@ -24364,6 +24638,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_comma
 					print_attachment_expression (l_argument, l_argument_type_set, l_formal_type)
 					current_file.put_character (')')
+					print_after_call (a_target_type)
 				elseif a_target_type.is_expanded then
 					print_builtin_any_standard_is_equal_call_with_expanded (a_feature, a_target_type, l_formal_type, l_argument_type_set, l_result_type, a_check_void_target)
 				else
@@ -24436,14 +24711,26 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character ('!')
 				current_file.put_string (c_memcmp)
 				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_string (c_void)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
 				current_file.put_character ('&')
 				current_file.put_character ('(')
 				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
+				current_file.put_character (')')
 				print_comma
+				current_file.put_character ('(')
+				current_file.put_string (c_void)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
 				current_file.put_character ('&')
 				current_file.put_character ('(')
 				print_attachment_expression (l_argument, a_argument_type_set, a_argument_formal_type)
+				current_file.put_character (')')
 				current_file.put_character (')')
 				print_comma
 				current_file.put_string (c_sizeof)
@@ -25031,6 +25318,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				if a_target_type.is_special or a_target_type.has_nested_custom_standard_copy_routine then
 					register_called_feature (a_feature)
 					print_indentation
+					print_before_call (a_target_type, in_qualified_call)
 					print_routine_name (a_feature, a_target_type, current_file)
 					current_file.put_character ('(')
 					current_file.put_string (c_ac)
@@ -25039,6 +25327,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_comma
 					print_attachment_expression (l_argument, l_argument_type_set, l_formal_type)
 					current_file.put_character (')')
+					print_after_call (a_target_type)
 					print_semicolon_newline
 				elseif
 					not a_target_type.is_basic and then
@@ -25236,12 +25525,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_target_expression (l_target, a_target_type, a_check_void_target)
 				else
 					register_called_feature (a_feature)
+					print_before_call (a_target_type, in_qualified_call)
 					print_routine_name (a_feature, a_target_type, current_file)
 					current_file.put_character ('(')
 					current_file.put_string (c_ac)
 					print_comma
 					print_target_expression (l_target, a_target_type, a_check_void_target)
 					current_file.put_character (')')
+					print_after_call (a_target_type)
 				end
 			end
 		end
@@ -25329,6 +25620,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Call 'copy'.
 				register_called_feature (a_copy_feature)
 				print_indentation
+					-- Make as if it was an unqualified call so that invariants don't get checked.
+				print_before_call (current_type, False)
 				print_routine_name (a_copy_feature, current_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
@@ -25343,6 +25636,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character ('*')
 				print_current_name (current_file)
 				current_file.put_character (')')
+				print_after_call (current_type)
 				print_semicolon_newline
 			end
 		end
@@ -25374,6 +25668,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Call 'copy'.
 				register_called_feature (a_copy_feature)
 				print_indentation
+					-- Make as if it was an unqualified call so that invariants don't get checked.
+				print_before_call (current_type, False)
 				print_routine_name (a_copy_feature, current_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
@@ -25386,6 +25682,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_comma
 				print_current_name (current_file)
 				current_file.put_character (')')
+				print_after_call (current_type)
 				print_semicolon_newline
 			end
 		end
@@ -25451,6 +25748,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- Call 'copy'.
 				register_called_feature (a_copy_feature)
 				print_indentation
+					-- Make as if it was an unqualified call so that invariants don't get checked.
+				print_before_call (current_type, False)
 				print_routine_name (a_copy_feature, current_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
@@ -25463,6 +25762,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- same argument.
 				print_current_name (current_file)
 				current_file.put_character (')')
+				print_after_call (current_type)
 				print_semicolon_newline
 			end
 		end
@@ -25496,6 +25796,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_target_expression (l_target, a_target_type, a_check_void_target)
 			else
 				register_called_feature (a_feature)
+				print_before_call (a_target_type, in_qualified_call)
 				print_routine_name (a_feature, a_target_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
@@ -25503,6 +25804,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_target := call_operands.first
 				print_target_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
+				print_after_call (a_target_type)
 			end
 		end
 
@@ -26542,12 +26844,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			else
 				print_indentation
 				register_called_feature (l_ise_exception_manager_feature)
+				print_before_call (current_dynamic_system.ise_exception_manager_type, False)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
 				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
+				print_after_call (current_dynamic_system.ise_exception_manager_type)
 				print_semicolon_newline
 			end
 		end
@@ -26583,12 +26887,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_result_name (current_file)
 				print_assign_to
 				register_called_feature (l_ise_exception_manager_feature)
+				print_before_call (current_dynamic_system.ise_exception_manager_type, False)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
 				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
+				print_after_call (current_dynamic_system.ise_exception_manager_type)
 				print_semicolon_newline
 			end
 		end
@@ -26622,12 +26928,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			else
 				print_indentation
 				register_called_feature (l_ise_exception_manager_feature)
+				print_before_call (current_dynamic_system.ise_exception_manager_type, False)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
 				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
+				print_after_call (current_dynamic_system.ise_exception_manager_type)
 				print_semicolon_newline
 			end
 		end
@@ -26665,12 +26973,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character ('=')
 				current_file.put_character (' ')
 				register_called_feature (l_ise_exception_manager_feature)
+				print_before_call (current_dynamic_system.ise_exception_manager_type, False)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
 				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
+				print_after_call (current_dynamic_system.ise_exception_manager_type)
 				print_semicolon_newline
 			end
 		end
@@ -26706,12 +27016,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_result_name (current_file)
 				print_assign_to
 				register_called_feature (l_ise_exception_manager_feature)
+				print_before_call (current_dynamic_system.ise_exception_manager_type, False)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
 				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
+				print_after_call (current_dynamic_system.ise_exception_manager_type)
 				print_semicolon_newline
 			end
 		end
@@ -26747,12 +27059,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_result_name (current_file)
 				print_assign_to
 				register_called_feature (l_ise_exception_manager_feature)
+				print_before_call (current_dynamic_system.ise_exception_manager_type, False)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
 				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
+				print_after_call (current_dynamic_system.ise_exception_manager_type)
 				print_semicolon_newline
 			end
 		end
@@ -26788,12 +27102,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_result_name (current_file)
 				print_assign_to
 				register_called_feature (l_ise_exception_manager_feature)
+				print_before_call (current_dynamic_system.ise_exception_manager_type, False)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
 				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
+				print_after_call (current_dynamic_system.ise_exception_manager_type)
 				print_semicolon_newline
 			end
 		end
@@ -26822,10 +27138,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_result_name (current_file)
 				print_assign_to
 				register_called_feature (l_ise_exception_manager_feature)
+				print_before_call (current_dynamic_system.ise_exception_manager_type, False)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
 				current_file.put_character (')')
+				print_after_call (current_dynamic_system.ise_exception_manager_type)
 				print_semicolon_newline
 			end
 		end
@@ -26859,12 +27177,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			else
 				print_indentation
 				register_called_feature (l_ise_exception_manager_feature)
+				print_before_call (current_dynamic_system.ise_exception_manager_type, False)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
 				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
+				print_after_call (current_dynamic_system.ise_exception_manager_type)
 				print_semicolon_newline
 			end
 		end
@@ -26898,6 +27218,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			else
 				print_indentation
 				register_called_feature (l_ise_exception_manager_feature)
+				print_before_call (current_dynamic_system.ise_exception_manager_type, False)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
@@ -26906,6 +27227,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_comma
 				print_argument_name (l_arguments.formal_argument (2).name, current_file)
 				current_file.put_character (')')
+				print_after_call (current_dynamic_system.ise_exception_manager_type)
 				print_semicolon_newline
 			end
 		end
@@ -26941,12 +27263,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_result_name (current_file)
 				print_assign_to
 				register_called_feature (l_ise_exception_manager_feature)
+				print_before_call (current_dynamic_system.ise_exception_manager_type, False)
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
 				print_comma
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (')')
+				print_after_call (current_dynamic_system.ise_exception_manager_type)
 				print_semicolon_newline
 			end
 		end
@@ -36135,7 +36459,7 @@ feature {NONE} -- C function generation
 
 feature {NONE} -- Memory allocation
 
-	print_malloc_current (a_feature: ET_FEATURE)
+	print_malloc_current (a_feature: ET_STANDALONE_CLOSURE)
 			-- Print memory allocation of 'Current' with `a_feature' as creation procedure.
 			-- Do not call the creation procedure.
 		require
@@ -37946,6 +38270,17 @@ feature {NONE} -- Inlining
 			if exception_trace_mode then
 					-- Exception trace mode makes the code too big to inline.
 				Result := False
+			elseif a_feature.target_type.base_class.preconditions_enabled and then not a_feature.preconditions.is_empty then
+				Result := False
+			elseif a_feature.target_type.base_class.postconditions_enabled and then not a_feature.postconditions.is_empty then
+				Result := False
+			elseif
+				a_feature.target_type.base_class.invariants_enabled and then
+				attached a_feature.target_type.invariants as l_invariants and then
+				attached l_invariants.invariants as l_all_invariants and then
+				not l_all_invariants.is_empty
+			then
+				Result := False
 			elseif nested_inlining_count >= max_nested_inlining_count then
 				Result := False
 			elseif not are_inlinable_call_operands (a_feature, a_target_type) then
@@ -37992,6 +38327,17 @@ feature {NONE} -- Inlining
 		do
 			if exception_trace_mode then
 					-- Exception trace mode makes the code too big to inline.
+				Result := False
+			elseif a_feature.target_type.base_class.preconditions_enabled and then not a_feature.preconditions.is_empty then
+				Result := False
+			elseif a_feature.target_type.base_class.postconditions_enabled and then not a_feature.postconditions.is_empty then
+				Result := False
+			elseif
+				a_feature.target_type.base_class.invariants_enabled and then
+				attached a_feature.target_type.invariants as l_invariants and then
+				attached l_invariants.invariants as l_all_invariants and then
+				not l_all_invariants.is_empty
+			then
 				Result := False
 			elseif nested_inlining_count >= max_nested_inlining_count then
 				Result := False
@@ -40607,6 +40953,26 @@ feature {NONE} -- Feature name generation
 -- TODO: long names
 				short_names := True
 				print_creation_procedure_name (a_procedure, a_type, a_file)
+				short_names := False
+			end
+		end
+
+	print_invariants_name (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print name of invariants of `a_type' to `a_file'.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				print_type_name (a_type, a_file)
+				a_file.put_character ('i')
+				a_file.put_character ('n')
+				a_file.put_character ('v')
+			else
+-- TODO: long names
+				short_names := True
+				print_invariants_name (a_type, a_file)
 				short_names := False
 			end
 		end
@@ -43249,6 +43615,12 @@ feature {ET_AST_NODE} -- Processing
 			print_inspect_instruction (an_instruction)
 		end
 
+	process_invariants (a_invariants: ET_INVARIANTS)
+			-- Process `a_invariants'.
+		do
+			print_invariants_wrapper
+		end
+
 	process_iteration_cursor (a_iteration_cursor: ET_ITERATION_CURSOR)
 			-- Process `a_iteration_cursor'.
 		do
@@ -43710,7 +44082,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Once features
 
-	once_features: DS_HASH_TABLE [INTEGER, ET_FEATURE]
+	once_features: DS_HASH_TABLE [INTEGER, ET_STANDALONE_CLOSURE]
 			-- Once-per-process or once-per-thread features already generated,
 			-- with their indexes in 'GE_onces' C struct's arrays.
 			-- The key is the implementation feature of the once feature.
@@ -43722,7 +44094,7 @@ feature {NONE} -- Once features
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_once: a_feature.is_once
 		local
-			l_once_feature: ET_FEATURE
+			l_once_feature: ET_STANDALONE_CLOSURE
 			l_is_once_per_process: BOOLEAN
 			l_is_once_per_thread: BOOLEAN
 			l_once_kind: INTEGER
@@ -44676,6 +45048,38 @@ feature {NONE} -- Qualified call expressions (Implementation)
 
 	unused_qualified_call_expressions: DS_ARRAYED_LIST [ET_QUALIFIED_CALL_EXPRESSION]
 			-- Qualified call expressions that are not currently used
+
+feature {NONE} -- Qualified/unqualified calls
+
+	in_qualified_call: BOOLEAN
+			-- Is a qualified call being processed?
+
+	print_before_call (a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_qualified_call: BOOLEAN)
+			-- Print some code before a call.
+		require
+			a_target_type_not_void: a_target_type /= Void
+		do
+			if a_target_type.base_class.invariants_enabled then
+				if a_qualified_call then
+					current_file.put_string (c_ge_qualified)
+				else
+					current_file.put_string (c_ge_unqualified)
+				end
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
+			end
+		end
+
+	print_after_call (a_target_type: ET_DYNAMIC_PRIMARY_TYPE)
+			-- Print some code after a call.
+		require
+			a_target_type_not_void: a_target_type /= Void
+		do
+			if a_target_type.base_class.invariants_enabled then
+				current_file.put_character (')')
+			end
+		end
 
 feature {NONE} -- Tuple labels
 
@@ -45996,6 +46400,7 @@ feature {NONE} -- Constants
 	c_ge_encoded_type_conforms_to: STRING = "GE_encoded_type_conforms_to"
 	c_ge_encoded_type_from_name: STRING = "GE_encoded_type_from_name"
 	c_ge_ex_cdef: STRING = "GE_EX_CDEF"
+	c_ge_ex_cinv: STRING = "GE_EX_CINV"
 	c_ge_ex_check: STRING = "GE_EX_CHECK"
 	c_ge_ex_fail: STRING = "GE_EX_FAIL"
 	c_ge_ex_fatal: STRING = "GE_EX_FATAL"
@@ -46113,6 +46518,7 @@ feature {NONE} -- Constants
 	c_ge_pre: STRING = "GE_pre"
 	c_ge_process_once_mutexes: STRING = "GE_process_once_mutexes"
 	c_ge_process_onces: STRING = "GE_process_onces"
+	c_ge_qualified: STRING = "GE_qualified"
 	c_ge_raise: STRING = "GE_raise"
 	c_ge_raise_old_exception: STRING = "GE_raise_old_exception"
 	c_ge_raise_once_exception: STRING = "GE_raise_once_exception"
@@ -46238,6 +46644,7 @@ feature {NONE} -- Constants
 	c_ge_types: STRING = "GE_types"
 	c_ge_unlock_marking: STRING = "GE_unlock_marking"
 	c_ge_unmark_object: STRING = "GE_unmark_object"
+	c_ge_unqualified: STRING = "GE_unqualified"
 	c_ge_use_ancestors: STRING = "GE_USE_ANCESTORS"
 	c_ge_use_attribute_name: STRING = "GE_USE_ATTRIBUTE_NAME"
 	c_ge_use_attribute_offset: STRING = "GE_USE_ATTRIBUTE_OFFSET"
@@ -46259,6 +46666,7 @@ feature {NONE} -- Constants
 	c_ifdef: STRING = "#ifdef"
 	c_ifndef: STRING = "#ifndef"
 	c_in_assertion: STRING = "in_assertion"
+	c_in_qualified_call: STRING = "in_qualified_call"
 	c_in_rescue: STRING = "in_rescue"
 	c_include: STRING = "#include"
 	c_initialize: STRING = "initialize"

@@ -300,6 +300,16 @@ feature -- Generation
 						end
 						j := j + 1
 					end
+						-- Process dynamic invariants.
+					if attached l_type.invariants as l_invariants then
+						if not l_invariants.is_built then
+							is_built := False
+							build_feature_dynamic_type_sets (l_invariants, l_type)
+								-- `build_feature_dynamic_type_sets' may have
+								-- added other types to the list.
+							nb := l_dynamic_types.count
+						end
+					end
 						-- Process dynamic qualified query calls.
 					from
 						l_call := l_type.query_calls
@@ -590,8 +600,9 @@ feature {NONE} -- Generation
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
-			l_static_feature: ET_FEATURE
+			l_static_closure: ET_STANDALONE_CLOSURE
 			l_current_type: ET_BASE_TYPE
+			l_invariants: ET_DYNAMIC_FEATURE
 			had_error: BOOLEAN
 		do
 			old_feature := current_dynamic_feature
@@ -617,18 +628,30 @@ feature {NONE} -- Generation
 				end
 			end
 			had_error := has_fatal_error
-			l_static_feature := a_feature.static_feature
+			l_static_closure := a_feature.static_feature
 			l_current_type := a_current_dynamic_type.base_type
-			if a_feature.is_precursor then
-				check_precursor_feature_validity (l_static_feature, l_current_type)
+			if attached {ET_FEATURE} l_static_closure as l_static_feature then
+				if a_feature.is_precursor then
+					check_precursor_feature_validity (l_static_feature, l_current_type)
+				else
+					check_feature_validity (l_static_feature, l_current_type)
+				end
+				if l_current_type.base_class.preconditions_enabled then
+					check_all_preconditions_validity (l_static_feature, l_current_type)
+				end
+				if l_current_type.base_class.postconditions_enabled then
+					check_all_postconditions_validity (l_static_feature, l_current_type)
+				end
+				if
+					l_current_type.base_class.invariants_enabled and
+					not l_static_feature.is_static and
+					(l_static_feature.is_routine or attached {ET_EXTENDED_ATTRIBUTE} l_static_feature)
+				then
+						-- Make sure that the invariant will be generated.
+					l_invariants := a_current_dynamic_type.dynamic_invariants (current_dynamic_system)
+				end
 			else
-				check_feature_validity (l_static_feature, l_current_type)
-			end
-			if l_current_type.base_class.preconditions_enabled then
-				check_all_preconditions_validity (l_static_feature, l_current_type)
-			end
-			if l_current_type.base_class.postconditions_enabled then
-				check_all_postconditions_validity (l_static_feature, l_current_type)
+				check_all_invariants_validity (l_current_type)
 			end
 			if had_error then
 				set_fatal_error
@@ -972,6 +995,37 @@ feature -- Validity checking
 				l_precursors.forth
 			end
 			l_precursors.wipe_out
+		end
+
+	check_all_invariants_validity (a_current_type: ET_BASE_TYPE)
+			-- Check validity of all invariants of `a_current_type' ,
+			-- even those which are inherited from ancestors.
+		require
+			a_current_type_not_void: a_current_type /= Void
+		local
+			l_ancestors: ET_BASE_TYPE_LIST
+			l_current_index: INTEGER
+			i: INTEGER
+		do
+			if attached current_dynamic_feature.invariants as l_all_invariants then
+				l_ancestors := a_current_type.base_class.ancestors
+				l_current_index := current_dynamic_feature.current_index
+				from i := l_ancestors.count until i = 0 loop
+					if attached l_ancestors.item (i).base_class.invariants as l_invariants and then not l_invariants.are_all_true then
+						index_offset := dynamic_type_sets.count.max (l_current_index) - l_current_index
+						l_all_invariants.force_last (l_invariants, index_offset)
+						check_invariants_validity (l_invariants, a_current_type)
+						index_offset := 0
+					end
+					i := i - 1
+				end
+				if attached a_current_type.base_class.invariants as l_invariants and then not l_invariants.are_all_true then
+					index_offset := dynamic_type_sets.count.max (l_current_index) - l_current_index
+					l_all_invariants.force_last (l_invariants, index_offset)
+					check_invariants_validity (l_invariants, a_current_type)
+					index_offset := 0
+				end
+			end
 		end
 
 feature {NONE} -- Feature validity

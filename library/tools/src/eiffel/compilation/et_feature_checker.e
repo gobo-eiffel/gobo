@@ -746,6 +746,7 @@ feature -- Validity checking
 						-- The error should have already been reported.
 					set_fatal_error
 				else
+					initialize_indexes (an_invariants)
 					boolean_type := current_universe_impl.boolean_type
 					l_assertion_context := new_context (current_type)
 					l_old_object_test_scope := current_object_test_scope.count
@@ -773,6 +774,7 @@ feature -- Validity checking
 						end
 						i := i + 1
 					end
+					reset_indexes
 					current_object_test_scope.keep_object_tests (l_old_object_test_scope)
 					free_context (l_assertion_context)
 					has_fatal_error := has_fatal_error or had_error
@@ -17923,7 +17925,7 @@ feature {NONE} -- Indexes
 	immutable_string_32_index: INTEGER
 			-- Index of dynamic type set of expressions of type "IMMUTABLE_STRING_32"
 
-	initialize_indexes (a_feature: ET_FEATURE)
+	initialize_indexes (a_feature: ET_STANDALONE_CLOSURE)
 			-- Initialize indexes for `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void

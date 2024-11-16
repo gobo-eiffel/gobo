@@ -1680,10 +1680,12 @@ feature -- Ancestors
 		end
 
 	ancestors: ET_BASE_TYPE_LIST
-			-- Proper ancestors
+			-- Proper ancestors in reverse topological order
+			-- (parents, then grand-parents, etc.)
 
 	conforming_ancestors: ET_BASE_TYPE_LIST
-			-- Proper conforming ancestors
+			-- Proper conforming ancestors in reverse topological order
+			-- (parents, then grand-parents, etc.)
 
 	set_ancestors (some_ancestors: like ancestors)
 			-- Set `ancestors' to `some_ancestors'.

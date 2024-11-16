@@ -12,7 +12,7 @@ deferred class ET_CLOSURE
 
 inherit
 
-	ANY
+	ET_AST_NODE
 
 feature -- Status report
 
@@ -44,6 +44,12 @@ feature -- Status report
 			-- Result := False
 		ensure
 			is_once: Result implies is_once
+		end
+
+	is_static: BOOLEAN
+			-- Can `Current' be used as a static feature (i.e. in a call of the form {A}.f)?
+		do
+			-- Result := False
 		end
 
 feature -- Access
@@ -104,6 +110,20 @@ feature -- Access
 			Result := Current
 		ensure
 			implementation_closure_not_void: Result /= Void
+		end
+
+feature -- Measurement
+
+	arguments_count: INTEGER
+			-- Number of formal arguments
+		do
+			if attached arguments as l_arguments then
+				Result := l_arguments.count
+			end
+		ensure
+			arguments_count_not_negative: Result >= 0
+			no_argument: arguments = Void implies Result = 0
+			with_arguments: attached arguments as l_arguments implies Result = l_arguments.count
 		end
 
 feature -- Setting

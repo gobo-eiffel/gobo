@@ -3216,7 +3216,7 @@ feature {NONE} -- Processing
 												inspect text_item (9)
 												when 't', 'T' then
 													last_token := E_INVARIANT
-													last_detachable_et_keyword_value := ast_factory.new_invariant_keyword (Current)
+													last_detachable_et_invariant_keyword_value := ast_factory.new_invariant_keyword (Current)
 												else
 													-- Do nothing.
 												end
