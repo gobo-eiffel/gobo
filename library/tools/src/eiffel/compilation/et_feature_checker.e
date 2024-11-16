@@ -4272,7 +4272,7 @@ feature {NONE} -- Instruction validity
 					had_error := True
 				end
 			end
-			check_loop_component_no_from_validity (an_instruction)
+			check_repetition_instruction_no_from_validity (an_instruction)
 			current_iteration_item_scope.remove_iteration_components (1)
 			current_iteration_item_types.search (an_instruction)
 			if current_iteration_item_types.found then
@@ -4308,13 +4308,13 @@ feature {NONE} -- Instruction validity
 					had_error := True
 				end
 			end
-			check_loop_component_no_from_validity (an_instruction)
+			check_repetition_instruction_no_from_validity (an_instruction)
 			if had_error then
 				set_fatal_error
 			end
 		end
 
-	check_loop_component_no_from_validity (an_instruction: ET_LOOP_COMPONENT)
+	check_repetition_instruction_no_from_validity (an_instruction: ET_REPETITION_INSTRUCTION)
 			-- Check validity of `an_instruction' except for the from-part.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -4396,7 +4396,7 @@ feature {NONE} -- Instruction validity
 							-- condition and loop body have been detached in the loop body.
 							-- We need to check whether subsequent iterations will still work
 							-- without any attachment problems.
-						check_loop_component_no_from_validity (an_instruction)
+						check_repetition_instruction_no_from_validity (an_instruction)
 					end
 				end
 			end

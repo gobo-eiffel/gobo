@@ -12,19 +12,12 @@ class ET_LOOP_INSTRUCTION
 
 inherit
 
-	ET_INSTRUCTION
-		undefine
-			has_result,
-			has_address_expression,
-			has_agent,
-			has_typed_object_test
+	ET_REPETITION_INSTRUCTION
 		redefine
 			reset,
 			has_inline_separate_instruction,
 			nested_instruction_count
 		end
-
-	ET_LOOP_COMPONENT
 
 create
 

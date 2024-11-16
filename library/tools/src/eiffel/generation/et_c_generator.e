@@ -2551,7 +2551,7 @@ feature {NONE} -- Feature generation
 				print_feature_trace_message_call (True)
 			end
 			if current_type.base_class.invariants_enabled and not current_feature.is_static and not a_creation then
-				print_invariants_call (True)
+				print_all_invariants (True)
 			end
 			if current_type.base_class.preconditions_enabled then
 				print_all_preconditions (a_feature)
@@ -2837,7 +2837,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			current_file.put_character ('}')
 			current_file.put_new_line
 			if current_type.base_class.invariants_enabled and not current_feature.is_static then
-				print_invariants_call (False)
+				print_all_invariants (False)
 			end
 			if current_type.base_class.postconditions_enabled then
 				print_all_postconditions (a_feature)
@@ -7437,7 +7437,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				--
 			current_file := current_function_body_buffer
 			if current_type.base_class.invariants_enabled and not current_closure.is_static and not a_creation then
-				print_invariants_call (True)
+				print_all_invariants (True)
 			end
 			if current_type.base_class.preconditions_enabled then
 				print_all_preconditions (a_feature)
@@ -7795,7 +7795,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_compound (l_compound)
 			end
 			if current_type.base_class.invariants_enabled and not current_closure.is_static then
-				print_invariants_call (False)
+				print_all_invariants (False)
 			end
 			if current_type.base_class.postconditions_enabled then
 				print_all_postconditions (a_feature)
@@ -8212,7 +8212,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_new_line
 				end
 				if current_type.base_class.invariants_enabled and not current_feature.is_static then
-					print_invariants_call (False)
+					print_all_invariants (False)
 				end
 				if current_type.base_class.postconditions_enabled then
 					print_all_postconditions (a_feature)
@@ -8356,272 +8356,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			reset_volatile_data
 			reset_rescue_data
 			current_file := old_file
-		end
-
-	print_invariants_call (a_on_entry: BOOLEAN)
-			-- Print to `current_file' a call to procedure which checks all invariants
-			-- (even those inherited from ancestors) of `current_type'.
-			-- `a_on_entry' means that the check of invariants occurs on entry
-			-- of the routine call (before checking the preconditions if any).
-		do
-			if attached current_type.invariants as l_invariants then
-				register_called_feature (l_invariants)
-				print_indentation
-				current_file.put_string (c_if)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				current_file.put_string (c_in_qualified_call)
-				if a_on_entry then
-					print_equal_to
-					current_file.put_character ('1')
-				end
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				indent
-				print_indentation
-				print_invariants_name (current_type, current_file)
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				print_comma
-				print_target_expression (tokens.current_keyword, current_type, False)
-				current_file.put_character (')')
-				print_semicolon_newline
-				dedent
-				print_indentation
-				current_file.put_character ('}')
-				current_file.put_new_line
-			end
-		end
-
-	print_all_preconditions (a_feature: ET_CLOSURE)
-			-- Print all preconditions (even those inherited from precursors) of `a_feature' to `current_file'.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			l_all_preconditions: DS_ARRAYED_LIST_2 [ET_PRECONDITIONS, INTEGER]
-			l_preconditions: ET_PRECONDITIONS
-			i, nb: INTEGER
-			j, k, l_count: INTEGER
-			l_assertion: ET_ASSERTION
-			l_old_index_offset: INTEGER
-		do
-			if attached {ET_FEATURE} a_feature as l_feature then
-				l_old_index_offset := index_offset
-				l_all_preconditions := current_feature.preconditions
-				l_count := l_all_preconditions.count
-				if l_count > 0 then
-					print_before_assertions
-					from k := 1 until k > l_count loop
-						index_offset := l_all_preconditions.item_2 (k)
-						l_preconditions := l_all_preconditions.item_1 (k)
-						if k = l_count then
-							print_assertions (l_preconditions, c_ge_ex_pre)
-						else
-							j := j + 1
-							nb := l_preconditions.count
-							from i := 1 until i > nb loop
-								l_assertion := l_preconditions.assertion (i)
-								if attached l_assertion.expression as l_expression then
-									print_operand (l_expression)
-									fill_call_operands (1)
-									print_indentation
-									current_file.put_string (c_if)
-									current_file.put_character (' ')
-									current_file.put_character ('(')
-									current_file.put_character ('!')
-									current_file.put_character ('(')
-									print_expression (call_operands.first)
-									call_operands.wipe_out
-									current_file.put_character (')')
-									current_file.put_character (')')
-									current_file.put_character (' ')
-									current_file.put_character ('{')
-									current_file.put_new_line
-									indent
-									print_indentation
-									current_file.put_string (c_goto)
-									current_file.put_character (' ')
-									current_file.put_string (c_ge_pre)
-									current_file.put_integer (j)
-									print_semicolon_newline
-									dedent
-									print_indentation
-									current_file.put_character ('}')
-									current_file.put_new_line
-								end
-								i := i + 1
-							end
-							print_indentation
-							current_file.put_string (c_goto)
-							current_file.put_character (' ')
-							current_file.put_string (c_ge_pre)
-							current_file.put_integer (l_count)
-							print_semicolon_newline
-							current_file.put_string (c_ge_pre)
-							current_file.put_integer (j)
-							current_file.put_character (':')
-							current_file.put_new_line
-						end
-						k := k + 1
-					end
-					if j > 0 then
-						current_file.put_string (c_ge_pre)
-						current_file.put_integer (l_count)
-						current_file.put_character (':')
-						current_file.put_new_line
-					end
-					print_after_assertions
-				end
-				index_offset := l_old_index_offset
-			elseif attached a_feature.preconditions as l_preconditions_impl and then not l_preconditions_impl.are_all_true then
-				print_before_assertions
-				print_assertions (l_preconditions_impl, c_ge_ex_pre)
-				print_after_assertions
-			end
-		end
-
-	print_all_postconditions (a_feature: ET_CLOSURE)
-			-- Print all postconditions (even those inherited from precursors) of `a_feature' to `current_file'.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			l_all_postconditions: DS_ARRAYED_LIST_2 [ET_POSTCONDITIONS, INTEGER]
-			l_postconditions: ET_POSTCONDITIONS
-			i, nb: INTEGER
-			l_old_expression_temp_variables: like old_expression_temp_variables
-			l_old_expression_exception_temp_variables: like old_expression_exception_temp_variables
-			l_temp: ET_IDENTIFIER
-			l_old_index_offset: INTEGER
-		do
-			if attached {ET_FEATURE} a_feature as l_feature then
-				l_old_index_offset := index_offset
-				l_all_postconditions := current_feature.postconditions
-				nb := l_all_postconditions.count
-				if nb > 0 then
-					print_before_assertions
-					from i := 1 until i > nb loop
-						index_offset := l_all_postconditions.item_2 (i)
-						l_postconditions := l_all_postconditions.item_1 (i)
-						print_assertions (l_postconditions, c_ge_ex_post)
-						i := i + 1
-					end
-					print_after_assertions
-				end
-				index_offset := l_old_index_offset
-			elseif attached a_feature.postconditions as l_postconditions_impl and then not l_postconditions_impl.are_all_true then
-				print_before_assertions
-				print_assertions (l_postconditions_impl, c_ge_ex_post)
-				print_after_assertions
-			end
-				--
-				-- Clean up.
-				--
-			l_old_expression_temp_variables := old_expression_temp_variables
-			from l_old_expression_temp_variables.start until l_old_expression_temp_variables.after loop
-				l_temp := l_old_expression_temp_variables.item_for_iteration
-				mark_temp_variable_unfrozen (l_temp)
-				mark_temp_variable_free (l_temp)
-				l_old_expression_temp_variables.forth
-			end
-			l_old_expression_temp_variables.wipe_out
-			l_old_expression_exception_temp_variables := old_expression_exception_temp_variables
-			from l_old_expression_exception_temp_variables.start until l_old_expression_exception_temp_variables.after loop
-				l_temp := l_old_expression_exception_temp_variables.item_for_iteration
-				mark_temp_variable_unfrozen (l_temp)
-				mark_temp_variable_free (l_temp)
-				l_old_expression_exception_temp_variables.forth
-			end
-			l_old_expression_exception_temp_variables.wipe_out
-		end
-
-	print_all_old_expression_declarations (a_feature: ET_CLOSURE)
-			-- Print computation of the values of the old expressions appearing
-			-- in all postconditions (even those inherited from precursors) of
-			-- `a_feature' to `current_file'.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			l_all_postconditions: DS_ARRAYED_LIST_2 [ET_POSTCONDITIONS, INTEGER]
-			l_postconditions: ET_POSTCONDITIONS
-			i, nb: INTEGER
-			l_old_expressions: like old_expressions
-			l_old_index_offset: INTEGER
-		do
-			l_old_expressions := old_expressions
-			l_old_expressions.wipe_out
-			old_expression_temp_variables.wipe_out
-			old_expression_exception_temp_variables.wipe_out
-			if attached {ET_FEATURE} a_feature as l_feature then
-				l_old_index_offset := index_offset
-				l_all_postconditions := current_feature.postconditions
-				nb := l_all_postconditions.count
-				from i := 1 until i > nb loop
-					index_offset := l_all_postconditions.item_2 (i)
-					l_postconditions := l_all_postconditions.item_1 (i)
-					l_postconditions.add_old_expressions (l_old_expressions)
-					print_old_expression_declarations (l_old_expressions)
-					l_old_expressions.wipe_out
-					i := i + 1
-				end
-				index_offset := l_old_index_offset
-			elseif attached a_feature.postconditions as l_postconditions_impl and then not l_postconditions_impl.are_all_true then
-				l_postconditions_impl.add_old_expressions (l_old_expressions)
-				print_old_expression_declarations (l_old_expressions)
-				l_old_expressions.wipe_out
-			end
-		end
-
-	print_old_expression_declarations (a_old_expressions: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
-			-- Print computation of the values of the old expressions
-			-- `a_old_expressions' to `current_file'.
-		require
-			a_old_expressions_not_void: a_old_expressions /= Void
-			no_void_old_expression: not a_old_expressions.has_void
-		local
-			i, nb: INTEGER
-			l_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_temp: ET_IDENTIFIER
-			l_exception_temp: ET_IDENTIFIER
-			l_old_expression: ET_OLD_EXPRESSION
-			l_old_expression_temp_variables: like old_expression_temp_variables
-			l_old_expression_exception_temp_variables: like old_expression_exception_temp_variables
-		do
-			l_old_expression_temp_variables := old_expression_temp_variables
-			l_old_expression_exception_temp_variables := old_expression_exception_temp_variables
-			nb := a_old_expressions.count
-			from i := 1 until i > nb loop
-				l_old_expression := a_old_expressions.item (i)
-				l_type := dynamic_type_set (l_old_expression).static_type.primary_type
-				l_temp := new_temp_variable (l_type)
-				l_temp.set_index (l_old_expression.index)
-				mark_temp_variable_frozen (l_temp)
-				l_old_expression_temp_variables.force_last (l_temp, l_old_expression)
-				l_exception_temp := new_temp_variable (current_dynamic_system.any_type)
-				mark_temp_variable_frozen (l_exception_temp)
-				l_old_expression_exception_temp_variables.force_last (l_exception_temp, l_old_expression)
-				print_before_old_expression (l_old_expression)
-				print_indentation
-				print_temp_name (l_exception_temp, current_file)
-				print_assign_to
-				current_file.put_character ('0')
-				print_semicolon_newline
-				assignment_target := l_temp
-				print_operand (l_old_expression.expression)
-				assignment_target := Void
-				fill_call_operands (1)
-				if call_operands.first /= l_temp then
-					print_indentation
-					print_temp_name (l_temp, current_file)
-					print_assign_to
-					print_expression (call_operands.first)
-					print_semicolon_newline
-				end
-				call_operands.wipe_out
-				print_after_old_expression
-				i := i + 1
-			end
 		end
 
 	print_object_test_local_declarations
@@ -9916,80 +9650,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			current_file.put_new_line
 			indent
 			if current_type.base_class.loop_assertions_enabled then
-				if attached an_instruction.invariant_part as l_invariant_part then
-					print_assertions (l_invariant_part, c_ge_ex_linv)
-				end
-				if attached an_instruction.variant_part as l_variant_part and l_temp_var /= Void and l_temp_old_var /= Void then
-					print_operand (l_variant_part.expression)
-					fill_call_operands (1)
-					print_indentation
-					print_temp_name (l_temp_var, current_file)
-					print_assign_to
-					print_expression (call_operands.first)
-					print_semicolon_newline
-					print_indentation
-					current_file.put_string (c_if)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_temp_name (l_temp_var, current_file)
-					print_less_than
-					current_file.put_character ('0')
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
-					print_indentation
-					current_file.put_string (c_ge_raise_with_message)
-					current_file.put_character ('(')
-					current_file.put_string (c_ge_ex_var)
-					print_comma
-					print_escaped_string (variant_tag (l_variant_part))
-					current_file.put_character (')')
-					print_semicolon_newline
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_character (' ')
-					current_file.put_string (c_else)
-					current_file.put_character (' ')
-					current_file.put_string (c_if)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					print_temp_name (l_temp_old_var, current_file)
-					print_not_equal_to
-					current_file.put_integer (-1)
-					current_file.put_character (')')
-					print_and_then
-					current_file.put_character ('(')
-					print_temp_name (l_temp_old_var, current_file)
-					print_less_than_or_equal
-					print_temp_name (l_temp_var, current_file)
-					current_file.put_character (')')
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
-					print_indentation
-					current_file.put_string (c_ge_raise_with_message)
-					current_file.put_character ('(')
-					current_file.put_string (c_ge_ex_var)
-					print_comma
-					print_escaped_string (variant_tag (l_variant_part))
-					current_file.put_character (')')
-					print_semicolon_newline
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_new_line
-					print_indentation
-					print_temp_name (l_temp_var, current_file)
-					print_assign_to
-					print_temp_name (l_temp_old_var, current_file)
-					print_semicolon_newline
-				end
+				print_loop_assertions_and_while_header (an_instruction, l_temp_var, l_temp_old_var)
 			end
 			print_operand (an_instruction.cursor_after_expression)
 			if attached an_instruction.until_conditional as l_until_conditional then
@@ -10079,80 +9740,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_instruction 
 			current_file.put_new_line
 			indent
 			if current_type.base_class.loop_assertions_enabled then
-				if attached an_instruction.invariant_part as l_invariant_part then
-					print_assertions (l_invariant_part, c_ge_ex_linv)
-				end
-				if attached an_instruction.variant_part as l_variant_part and l_temp_var /= Void and l_temp_old_var /= Void then
-					print_operand (l_variant_part.expression)
-					fill_call_operands (1)
-					print_indentation
-					print_temp_name (l_temp_var, current_file)
-					print_assign_to
-					print_expression (call_operands.first)
-					print_semicolon_newline
-					print_indentation
-					current_file.put_string (c_if)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_temp_name (l_temp_var, current_file)
-					print_less_than
-					current_file.put_character ('0')
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
-					print_indentation
-					current_file.put_string (c_ge_raise_with_message)
-					current_file.put_character ('(')
-					current_file.put_string (c_ge_ex_var)
-					print_comma
-					print_escaped_string (variant_tag (l_variant_part))
-					current_file.put_character (')')
-					print_semicolon_newline
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_character (' ')
-					current_file.put_string (c_else)
-					current_file.put_character (' ')
-					current_file.put_string (c_if)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					print_temp_name (l_temp_old_var, current_file)
-					print_not_equal_to
-					current_file.put_integer (-1)
-					current_file.put_character (')')
-					print_and_then
-					current_file.put_character ('(')
-					print_temp_name (l_temp_old_var, current_file)
-					print_less_than_or_equal
-					print_temp_name (l_temp_var, current_file)
-					current_file.put_character (')')
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
-					print_indentation
-					current_file.put_string (c_ge_raise_with_message)
-					current_file.put_character ('(')
-					current_file.put_string (c_ge_ex_var)
-					print_comma
-					print_escaped_string (variant_tag (l_variant_part))
-					current_file.put_character (')')
-					print_semicolon_newline
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_new_line
-					print_indentation
-					print_temp_name (l_temp_var, current_file)
-					print_assign_to
-					print_temp_name (l_temp_old_var, current_file)
-					print_semicolon_newline
-				end
+				print_loop_assertions_and_while_header (an_instruction, l_temp_var, l_temp_old_var)
 			end
 			l_expression := an_instruction.until_expression
 			if line_generation_mode then
@@ -11683,54 +11271,6 @@ feature {NONE} -- Expression generation
 						-- expanded types, there will be no copy or clone
 						-- at this stage.
 					a_print_expression.call ([])
-				end
-			end
-		end
-
-	print_assertions (a_assertions: ET_ASSERTIONS; a_exception_code: STRING)
-			-- Print `a_assertions'.
-		require
-			a_assertions_not_void: a_assertions /= Void
-			a_exception_code_not_void: a_exception_code /= Void
-		local
-			i, nb: INTEGER
-			l_assertion: ET_ASSERTION
-		do
-			if not a_assertions.are_all_true then
-				nb := a_assertions.count
-				from i := 1 until i > nb loop
-					l_assertion := a_assertions.assertion (i)
-					if attached l_assertion.expression as l_expression then
-						print_operand (l_expression)
-						fill_call_operands (1)
-						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						current_file.put_character ('!')
-						current_file.put_character ('(')
-						print_expression (call_operands.first)
-						call_operands.wipe_out
-						current_file.put_character (')')
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-						print_indentation
-						current_file.put_string (c_ge_raise_with_message)
-						current_file.put_character ('(')
-						current_file.put_string (a_exception_code)
-						print_comma
-						print_escaped_string (assertion_tag (l_assertion))
-						current_file.put_character (')')
-						print_semicolon_newline
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-						current_file.put_new_line
-					end
-					i := i + 1
 				end
 			end
 		end
@@ -14118,12 +13658,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			if call_operands.first /= l_cursor_name then
 				print_indentation
 				print_iteration_cursor_name (l_cursor_name, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				print_attachment_expression (call_operands.first, l_cursor_type_set, l_cursor_type)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 			call_operands.wipe_out
 				-- Declaration of temporary result.
@@ -14136,16 +13673,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			operand_stack.force (l_temp)
 			print_indentation
 			print_temp_name (l_temp, current_file)
-			current_file.put_character (' ')
-			current_file.put_character ('=')
-			current_file.put_character (' ')
+			print_assign_to
 			if an_expression.is_all then
 				current_file.put_string (c_eif_true)
 			else
 				current_file.put_string (c_eif_false)
 			end
-			current_file.put_character (';')
-			current_file.put_new_line
+			print_semicolon_newline
 			if current_type.base_class.loop_assertions_enabled and attached an_expression.variant_part as l_variant_part then
 				l_var_type := dynamic_type_set (l_variant_part.expression).static_type.primary_type
 				l_temp_var := new_temp_variable (l_var_type)
@@ -14167,80 +13701,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			current_file.put_new_line
 			indent
 			if current_type.base_class.loop_assertions_enabled then
-				if attached an_expression.invariant_part as l_invariant_part then
-					print_assertions (l_invariant_part, c_ge_ex_linv)
-				end
-				if attached an_expression.variant_part as l_variant_part and l_temp_var /= Void and l_temp_old_var /= Void then
-					print_operand (l_variant_part.expression)
-					fill_call_operands (1)
-					print_indentation
-					print_temp_name (l_temp_var, current_file)
-					print_assign_to
-					print_expression (call_operands.first)
-					print_semicolon_newline
-					print_indentation
-					current_file.put_string (c_if)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_temp_name (l_temp_var, current_file)
-					print_less_than
-					current_file.put_character ('0')
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
-					print_indentation
-					current_file.put_string (c_ge_raise_with_message)
-					current_file.put_character ('(')
-					current_file.put_string (c_ge_ex_var)
-					print_comma
-					print_escaped_string (variant_tag (l_variant_part))
-					current_file.put_character (')')
-					print_semicolon_newline
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_character (' ')
-					current_file.put_string (c_else)
-					current_file.put_character (' ')
-					current_file.put_string (c_if)
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					print_temp_name (l_temp_old_var, current_file)
-					print_not_equal_to
-					current_file.put_integer (-1)
-					current_file.put_character (')')
-					print_and_then
-					current_file.put_character ('(')
-					print_temp_name (l_temp_old_var, current_file)
-					print_less_than_or_equal
-					print_temp_name (l_temp_var, current_file)
-					current_file.put_character (')')
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
-					print_indentation
-					current_file.put_string (c_ge_raise_with_message)
-					current_file.put_character ('(')
-					current_file.put_string (c_ge_ex_var)
-					print_comma
-					print_escaped_string (variant_tag (l_variant_part))
-					current_file.put_character (')')
-					print_semicolon_newline
-					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_new_line
-					print_indentation
-					print_temp_name (l_temp_var, current_file)
-					print_assign_to
-					print_temp_name (l_temp_old_var, current_file)
-					print_semicolon_newline
-				end
+				print_loop_assertions_and_while_header (an_expression, l_temp_var, l_temp_old_var)
 			end
 			print_operand (an_expression.cursor_after_expression)
 			if attached an_expression.until_conditional as l_until_conditional then
@@ -14280,8 +13741,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			indent
 			print_indentation
 			current_file.put_string (c_break)
-			current_file.put_character (';')
-			current_file.put_new_line
+			print_semicolon_newline
 			dedent
 			print_indentation
 			current_file.put_character ('}')
@@ -14294,12 +13754,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 			if call_operands.first /= l_temp then
 				print_indentation
 				print_temp_name (l_temp, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				print_attachment_expression (call_operands.first, l_expression_dynamic_type_set, l_boolean_type)
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 			end
 			call_operands.wipe_out
 				-- Call to `forth'.
@@ -38185,6 +37642,725 @@ feature {NONE} -- Once feature generation
 			current_file.put_new_line
 		end
 
+feature {NONE} -- Assertion generation
+
+	print_all_invariants (a_on_entry: BOOLEAN)
+			-- Print to `current_file' a call to procedure which checks all invariants
+			-- (even those inherited from ancestors) of `current_type'.
+			-- `a_on_entry' means that the check of invariants occurs on entry
+			-- of the routine call (before checking the preconditions if any).
+		do
+			if attached current_type.invariants as l_invariants then
+				register_called_feature (l_invariants)
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_in_qualified_call)
+				if a_on_entry then
+					print_equal_to
+					current_file.put_character ('1')
+				end
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				print_invariants_name (current_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				print_comma
+				print_target_expression (tokens.current_keyword, current_type, False)
+				current_file.put_character (')')
+				print_semicolon_newline
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+			end
+		end
+
+	print_all_preconditions (a_feature: ET_CLOSURE)
+			-- Print all preconditions (even those inherited from precursors) of `a_feature' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_all_preconditions: DS_ARRAYED_LIST_2 [ET_PRECONDITIONS, INTEGER]
+			l_preconditions: ET_PRECONDITIONS
+			i, nb: INTEGER
+			j, k, l_count: INTEGER
+			l_assertion: ET_ASSERTION
+			l_old_index_offset: INTEGER
+		do
+			if attached {ET_FEATURE} a_feature as l_feature then
+				l_old_index_offset := index_offset
+				l_all_preconditions := current_feature.preconditions
+				l_count := l_all_preconditions.count
+				if l_count > 0 then
+					print_before_assertions
+					from k := 1 until k > l_count loop
+						index_offset := l_all_preconditions.item_2 (k)
+						l_preconditions := l_all_preconditions.item_1 (k)
+						if k = l_count then
+							print_assertions (l_preconditions, c_ge_ex_pre)
+						else
+							j := j + 1
+							nb := l_preconditions.count
+							from i := 1 until i > nb loop
+								l_assertion := l_preconditions.assertion (i)
+								if attached l_assertion.expression as l_expression then
+									print_operand (l_expression)
+									fill_call_operands (1)
+									print_indentation
+									current_file.put_string (c_if)
+									current_file.put_character (' ')
+									current_file.put_character ('(')
+									current_file.put_character ('!')
+									current_file.put_character ('(')
+									print_expression (call_operands.first)
+									call_operands.wipe_out
+									current_file.put_character (')')
+									current_file.put_character (')')
+									current_file.put_character (' ')
+									current_file.put_character ('{')
+									current_file.put_new_line
+									indent
+									print_indentation
+									current_file.put_string (c_goto)
+									current_file.put_character (' ')
+									current_file.put_string (c_ge_pre)
+									current_file.put_integer (j)
+									print_semicolon_newline
+									dedent
+									print_indentation
+									current_file.put_character ('}')
+									current_file.put_new_line
+								end
+								i := i + 1
+							end
+							print_indentation
+							current_file.put_string (c_goto)
+							current_file.put_character (' ')
+							current_file.put_string (c_ge_pre)
+							current_file.put_integer (l_count)
+							print_semicolon_newline
+							current_file.put_string (c_ge_pre)
+							current_file.put_integer (j)
+							current_file.put_character (':')
+							current_file.put_new_line
+						end
+						k := k + 1
+					end
+					if j > 0 then
+						current_file.put_string (c_ge_pre)
+						current_file.put_integer (l_count)
+						current_file.put_character (':')
+						current_file.put_new_line
+					end
+					print_after_assertions
+				end
+				index_offset := l_old_index_offset
+			elseif attached a_feature.preconditions as l_preconditions_impl and then not l_preconditions_impl.are_all_true then
+				print_before_assertions
+				print_assertions (l_preconditions_impl, c_ge_ex_pre)
+				print_after_assertions
+			end
+		end
+
+	print_all_postconditions (a_feature: ET_CLOSURE)
+			-- Print all postconditions (even those inherited from precursors) of `a_feature' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_all_postconditions: DS_ARRAYED_LIST_2 [ET_POSTCONDITIONS, INTEGER]
+			l_postconditions: ET_POSTCONDITIONS
+			i, nb: INTEGER
+			l_old_expression_temp_variables: like old_expression_temp_variables
+			l_old_expression_exception_temp_variables: like old_expression_exception_temp_variables
+			l_temp: ET_IDENTIFIER
+			l_old_index_offset: INTEGER
+		do
+			if attached {ET_FEATURE} a_feature as l_feature then
+				l_old_index_offset := index_offset
+				l_all_postconditions := current_feature.postconditions
+				nb := l_all_postconditions.count
+				if nb > 0 then
+					print_before_assertions
+					from i := 1 until i > nb loop
+						index_offset := l_all_postconditions.item_2 (i)
+						l_postconditions := l_all_postconditions.item_1 (i)
+						print_assertions (l_postconditions, c_ge_ex_post)
+						i := i + 1
+					end
+					print_after_assertions
+				end
+				index_offset := l_old_index_offset
+			elseif attached a_feature.postconditions as l_postconditions_impl and then not l_postconditions_impl.are_all_true then
+				print_before_assertions
+				print_assertions (l_postconditions_impl, c_ge_ex_post)
+				print_after_assertions
+			end
+				--
+				-- Clean up.
+				--
+			l_old_expression_temp_variables := old_expression_temp_variables
+			from l_old_expression_temp_variables.start until l_old_expression_temp_variables.after loop
+				l_temp := l_old_expression_temp_variables.item_for_iteration
+				mark_temp_variable_unfrozen (l_temp)
+				mark_temp_variable_free (l_temp)
+				l_old_expression_temp_variables.forth
+			end
+			l_old_expression_temp_variables.wipe_out
+			l_old_expression_exception_temp_variables := old_expression_exception_temp_variables
+			from l_old_expression_exception_temp_variables.start until l_old_expression_exception_temp_variables.after loop
+				l_temp := l_old_expression_exception_temp_variables.item_for_iteration
+				mark_temp_variable_unfrozen (l_temp)
+				mark_temp_variable_free (l_temp)
+				l_old_expression_exception_temp_variables.forth
+			end
+			l_old_expression_exception_temp_variables.wipe_out
+		end
+
+	print_all_old_expression_declarations (a_feature: ET_CLOSURE)
+			-- Print computation of the values of the old expressions appearing
+			-- in all postconditions (even those inherited from precursors) of
+			-- `a_feature' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_all_postconditions: DS_ARRAYED_LIST_2 [ET_POSTCONDITIONS, INTEGER]
+			l_postconditions: ET_POSTCONDITIONS
+			i, nb: INTEGER
+			l_old_expressions: like old_expressions
+			l_old_index_offset: INTEGER
+		do
+			l_old_expressions := old_expressions
+			l_old_expressions.wipe_out
+			old_expression_temp_variables.wipe_out
+			old_expression_exception_temp_variables.wipe_out
+			if attached {ET_FEATURE} a_feature as l_feature then
+				l_old_index_offset := index_offset
+				l_all_postconditions := current_feature.postconditions
+				nb := l_all_postconditions.count
+				from i := 1 until i > nb loop
+					index_offset := l_all_postconditions.item_2 (i)
+					l_postconditions := l_all_postconditions.item_1 (i)
+					l_postconditions.add_old_expressions (l_old_expressions)
+					print_old_expression_declarations (l_old_expressions)
+					l_old_expressions.wipe_out
+					i := i + 1
+				end
+				index_offset := l_old_index_offset
+			elseif attached a_feature.postconditions as l_postconditions_impl and then not l_postconditions_impl.are_all_true then
+				l_postconditions_impl.add_old_expressions (l_old_expressions)
+				print_old_expression_declarations (l_old_expressions)
+				l_old_expressions.wipe_out
+			end
+		end
+
+	print_old_expression_declarations (a_old_expressions: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
+			-- Print computation of the values of the old expressions
+			-- `a_old_expressions' to `current_file'.
+		require
+			a_old_expressions_not_void: a_old_expressions /= Void
+			no_void_old_expression: not a_old_expressions.has_void
+		local
+			i, nb: INTEGER
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_temp: ET_IDENTIFIER
+			l_exception_temp: ET_IDENTIFIER
+			l_old_expression: ET_OLD_EXPRESSION
+			l_old_expression_temp_variables: like old_expression_temp_variables
+			l_old_expression_exception_temp_variables: like old_expression_exception_temp_variables
+		do
+			l_old_expression_temp_variables := old_expression_temp_variables
+			l_old_expression_exception_temp_variables := old_expression_exception_temp_variables
+			nb := a_old_expressions.count
+			from i := 1 until i > nb loop
+				l_old_expression := a_old_expressions.item (i)
+				l_type := dynamic_type_set (l_old_expression).static_type.primary_type
+				l_temp := new_temp_variable (l_type)
+				l_temp.set_index (l_old_expression.index)
+				mark_temp_variable_frozen (l_temp)
+				l_old_expression_temp_variables.force_last (l_temp, l_old_expression)
+				l_exception_temp := new_temp_variable (current_dynamic_system.any_type)
+				mark_temp_variable_frozen (l_exception_temp)
+				l_old_expression_exception_temp_variables.force_last (l_exception_temp, l_old_expression)
+				print_before_old_expression (l_old_expression)
+				print_indentation
+				print_temp_name (l_exception_temp, current_file)
+				print_assign_to
+				current_file.put_character ('0')
+				print_semicolon_newline
+				assignment_target := l_temp
+				print_operand (l_old_expression.expression)
+				assignment_target := Void
+				fill_call_operands (1)
+				if call_operands.first /= l_temp then
+					print_indentation
+					print_temp_name (l_temp, current_file)
+					print_assign_to
+					print_expression (call_operands.first)
+					print_semicolon_newline
+				end
+				call_operands.wipe_out
+				print_after_old_expression
+				i := i + 1
+			end
+		end
+
+	print_loop_assertions_and_while_header (a_repetition_component: ET_REPETITION_COMPONENT; a_temp_var, a_temp_old_var: detachable ET_IDENTIFIER)
+			-- Print to `current_file' the loop invariant and variant of `a_repetition_component'.
+			-- `a_temp_var', `a_temp_old_var' are temporary variables used to checked the loop variant.
+		require
+			a_repetition_component_not_void: a_repetition_component /= Void
+		do
+			if a_repetition_component.invariant_part /= Void or a_repetition_component.variant_part /= Void then
+				print_before_assertions
+			end
+			if attached a_repetition_component.invariant_part as l_invariant_part then
+				print_assertions (l_invariant_part, c_ge_ex_linv)
+			end
+			if attached a_repetition_component.variant_part as l_variant_part and a_temp_var /= Void and a_temp_old_var /= Void then
+				print_operand (l_variant_part.expression)
+				fill_call_operands (1)
+				print_indentation
+				print_temp_name (a_temp_var, current_file)
+				print_assign_to
+				print_expression (call_operands.first)
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_temp_name (a_temp_var, current_file)
+				print_less_than
+				current_file.put_character ('0')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string (c_ge_raise_with_message)
+				current_file.put_character ('(')
+				current_file.put_string (c_ge_ex_var)
+				print_comma
+				print_escaped_string (variant_tag (l_variant_part))
+				current_file.put_character (')')
+				print_semicolon_newline
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_character (' ')
+				current_file.put_string (c_else)
+				current_file.put_character (' ')
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				print_temp_name (a_temp_old_var, current_file)
+				print_not_equal_to
+				current_file.put_integer (-1)
+				current_file.put_character (')')
+				print_and_then
+				current_file.put_character ('(')
+				print_temp_name (a_temp_old_var, current_file)
+				print_less_than_or_equal
+				print_temp_name (a_temp_var, current_file)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string (c_ge_raise_with_message)
+				current_file.put_character ('(')
+				current_file.put_string (c_ge_ex_var)
+				print_comma
+				print_escaped_string (variant_tag (l_variant_part))
+				current_file.put_character (')')
+				print_semicolon_newline
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+				print_indentation
+				print_temp_name (a_temp_var, current_file)
+				print_assign_to
+				print_temp_name (a_temp_old_var, current_file)
+				print_semicolon_newline
+			end
+			if a_repetition_component.invariant_part /= Void or a_repetition_component.variant_part /= Void then
+				print_after_assertions
+			end
+		end
+
+	print_assertions (a_assertions: ET_ASSERTIONS; a_exception_code: STRING)
+			-- Print `a_assertions'.
+		require
+			a_assertions_not_void: a_assertions /= Void
+			a_exception_code_not_void: a_exception_code /= Void
+		local
+			i, nb: INTEGER
+			l_assertion: ET_ASSERTION
+		do
+			if not a_assertions.are_all_true then
+				nb := a_assertions.count
+				from i := 1 until i > nb loop
+					l_assertion := a_assertions.assertion (i)
+					if attached l_assertion.expression as l_expression then
+						print_operand (l_expression)
+						fill_call_operands (1)
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						current_file.put_character ('!')
+						current_file.put_character ('(')
+						print_expression (call_operands.first)
+						call_operands.wipe_out
+						current_file.put_character (')')
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+						print_indentation
+						current_file.put_string (c_ge_raise_with_message)
+						current_file.put_character ('(')
+						current_file.put_string (a_exception_code)
+						print_comma
+						print_escaped_string (assertion_tag (l_assertion))
+						current_file.put_character (')')
+						print_semicolon_newline
+						dedent
+						print_indentation
+						current_file.put_character ('}')
+						current_file.put_new_line
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	print_before_assertions
+			-- Print code before assertions to `current_file'.
+			-- Checks whether we are already checking assertions.
+		do
+			print_indentation
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_character ('!')
+			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_in_assertion)
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			current_file.put_string (c_ge_rescue)
+			current_file.put_character (' ')
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			current_file.put_character (';')
+			current_file.put_new_line
+			print_indentation
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			current_file.put_character ('.')
+			current_file.put_string (c_previous)
+			print_assign_to
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_assign_to
+			current_file.put_character ('&')
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_setjmp)
+			current_file.put_character ('(')
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			current_file.put_character ('.')
+			current_file.put_character ('j')
+			current_file.put_character ('b')
+			current_file.put_character (')')
+			print_not_equal_to
+			current_file.put_character ('0')
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_assign_to
+			current_file.put_character ('&')
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_in_assertion)
+			print_assign_to
+			current_file.put_character ('0')
+			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_assign_to
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			current_file.put_character ('.')
+			current_file.put_string (c_previous)
+			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_ge_jump_to_last_rescue)
+			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			current_file.put_character (')')
+			print_semicolon_newline
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_in_assertion)
+			print_assign_to
+			current_file.put_character ('1')
+			print_semicolon_newline
+		end
+
+	print_after_assertions
+			-- Print code after assertions to `current_file'.
+		do
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_in_assertion)
+			print_assign_to
+			current_file.put_character ('0')
+			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_assign_to
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			current_file.put_character ('.')
+			current_file.put_string (c_previous)
+			print_semicolon_newline
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+		end
+
+	print_before_old_expression (a_old_expression: ET_OLD_EXPRESSION)
+			-- Print code before evaluating `a_old_expression', to `current_file'.
+			-- Checks whether we are already checking assertions, and
+			-- catch and keep track of possible exceptions.
+		require
+			a_old_expression_not_void: a_old_expression /= Void
+		local
+			l_temp: ET_IDENTIFIER
+			l_exception_temp: ET_IDENTIFIER
+		do
+			old_expression_temp_variables.search (a_old_expression)
+			old_expression_exception_temp_variables.search (a_old_expression)
+			if not old_expression_temp_variables.found then
+					-- Internal error: the value of the old expression should have been
+					-- computed at this stage.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_before_old_expression", 1, "no value computed for old expression.")
+			elseif not old_expression_exception_temp_variables.found then
+					-- Internal error: the exception marker of the old expression should have been
+					-- set at this stage.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_before_old_expression", 2, "no exception marker for old expression.")
+			else
+				l_temp := old_expression_temp_variables.found_item
+				l_exception_temp := old_expression_exception_temp_variables.found_item
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_character ('!')
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_in_assertion)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string (c_ge_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character ('a')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_character ('r')
+				current_file.put_character ('a')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				print_assign_to
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				print_assign_to
+				current_file.put_character ('&')
+				current_file.put_character ('r')
+				current_file.put_character ('a')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_ge_setjmp)
+				current_file.put_character ('(')
+				current_file.put_character ('r')
+				current_file.put_character ('a')
+				current_file.put_character ('.')
+				current_file.put_character ('j')
+				current_file.put_character ('b')
+				current_file.put_character (')')
+				print_not_equal_to
+				current_file.put_character ('0')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				print_assign_to
+				current_file.put_character ('&')
+				current_file.put_character ('r')
+				current_file.put_character ('a')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_in_assertion)
+				print_assign_to
+				current_file.put_character ('0')
+				print_semicolon_newline
+				print_indentation
+				print_temp_name (l_exception_temp, current_file)
+				print_assign_to
+				current_file.put_string (c_ge_last_exception_raised)
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				current_file.put_character (')')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				print_assign_to
+				current_file.put_character ('r')
+				current_file.put_character ('a')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				print_semicolon_newline
+				if exception_trace_mode then
+					print_indentation
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_call)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_tc_address)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_character (' ')
+				current_file.put_string (c_else)
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_in_assertion)
+				print_assign_to
+				current_file.put_character ('1')
+				print_semicolon_newline
+			end
+		end
+
+	print_after_old_expression
+			-- Print code after evaluating an old expression, to `current_file'.
+		do
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_in_assertion)
+			print_assign_to
+			current_file.put_character ('0')
+			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_assign_to
+			current_file.put_character ('r')
+			current_file.put_character ('a')
+			current_file.put_character ('.')
+			current_file.put_string (c_previous)
+			print_semicolon_newline
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+		end
+
 feature {NONE} -- Inlining
 
 	nested_inlining_count: INTEGER
@@ -44228,6 +44404,74 @@ feature {NONE} -- Once features
 			upper: Result.upper = once_kind_count
 		end
 
+feature {NONE} -- Assertions
+
+	assertion_tag (a_assertion: ET_ASSERTION): STRING
+			-- Tag of `a_assertion', or the text of its expression
+			-- if it has no tag
+		require
+			a_assertion_not_void: a_assertion /= Void
+		do
+			if attached {ET_TAGGED_ASSERTION} a_assertion as l_tagged_assertion then
+				Result := l_tagged_assertion.tag.identifier.name
+			elseif attached a_assertion.expression as l_expression then
+				Result := expression_text (l_expression)
+				if Result.has ('%N') then
+					Result.replace_substring_all ("%N", " ")
+				end
+			else
+				Result := ""
+			end
+		ensure
+			assertion_tag_not_void: Result /= Void
+		end
+
+	variant_tag (a_variant: ET_VARIANT): STRING
+			-- Tag of `a_variant', or the text of its expression
+			-- if it has no tag
+		require
+			a_variant_not_void: a_variant /= Void
+		do
+			if attached a_variant.tag as l_tag then
+				Result := l_tag.identifier.name
+			elseif attached a_variant.expression as l_expression then
+				Result := expression_text (l_expression)
+				if Result.has ('%N') then
+					Result.replace_substring_all ("%N", " ")
+				end
+			else
+				Result := ""
+			end
+		ensure
+			variant_tag_not_void: Result /= Void
+		end
+
+	expression_text (a_expression: ET_EXPRESSION): STRING
+			-- Textual version of `a_expression'
+		require
+			a_expression_not_void: a_expression /= Void
+		local
+			l_buffer: KL_STRING_OUTPUT_STREAM
+			l_printer: ET_AST_PRETTY_PRINTER
+		do
+			create l_buffer.make_empty
+			create l_printer.make (l_buffer)
+			a_expression.process (l_printer)
+			Result := l_buffer.string
+		ensure
+			expression_text_not_void: Result /= Void
+		end
+
+	old_expressions: DS_ARRAYED_LIST [ET_OLD_EXPRESSION]
+			-- Old expressions appearing in the postconditions of the
+			-- feature or inline agent being processed
+
+	old_expression_temp_variables: DS_HASH_TABLE [ET_IDENTIFIER, ET_OLD_EXPRESSION]
+			-- Temporary variables for the values of old expressions
+
+	old_expression_exception_temp_variables: DS_HASH_TABLE [ET_IDENTIFIER, ET_OLD_EXPRESSION]
+			-- Temporary variables for the exceptions of old expressions
+
 feature {NONE} -- Dynamic type sets
 
 	dynamic_type_set (an_operand: ET_OPERAND): ET_DYNAMIC_TYPE_SET
@@ -45662,389 +45906,6 @@ feature {NONE} -- Volatile variables
 			volatile_inline_separate_arguments.wipe_out
 			volatile_result := False
 		end
-
-feature {NONE} -- Assertions
-
-	print_before_assertions
-			-- Print code before assertions to `current_file'.
-			-- Checks whether we are already checking assertions.
-		do
-			print_indentation
-			current_file.put_string (c_if)
-			current_file.put_character (' ')
-			current_file.put_character ('(')
-			current_file.put_character ('!')
-			current_file.put_character ('(')
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_in_assertion)
-			current_file.put_character (')')
-			current_file.put_character (')')
-			current_file.put_character (' ')
-			current_file.put_character ('{')
-			current_file.put_new_line
-			indent
-			print_indentation
-			current_file.put_string (c_ge_rescue)
-			current_file.put_character (' ')
-			current_file.put_character ('r')
-			current_file.put_character ('a')
-			current_file.put_character (';')
-			current_file.put_new_line
-			print_indentation
-			current_file.put_character ('r')
-			current_file.put_character ('a')
-			current_file.put_character ('.')
-			current_file.put_string (c_previous)
-			print_assign_to
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_last_rescue)
-			print_semicolon_newline
-			print_indentation
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_last_rescue)
-			print_assign_to
-			current_file.put_character ('&')
-			current_file.put_character ('r')
-			current_file.put_character ('a')
-			print_semicolon_newline
-			print_indentation
-			current_file.put_string (c_if)
-			current_file.put_character (' ')
-			current_file.put_character ('(')
-			current_file.put_string (c_ge_setjmp)
-			current_file.put_character ('(')
-			current_file.put_character ('r')
-			current_file.put_character ('a')
-			current_file.put_character ('.')
-			current_file.put_character ('j')
-			current_file.put_character ('b')
-			current_file.put_character (')')
-			print_not_equal_to
-			current_file.put_character ('0')
-			current_file.put_character (')')
-			current_file.put_character (' ')
-			current_file.put_character ('{')
-			current_file.put_new_line
-			indent
-			print_indentation
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_last_rescue)
-			print_assign_to
-			current_file.put_character ('&')
-			current_file.put_character ('r')
-			current_file.put_character ('a')
-			print_semicolon_newline
-			print_indentation
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_in_assertion)
-			print_assign_to
-			current_file.put_character ('0')
-			print_semicolon_newline
-			print_indentation
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_last_rescue)
-			print_assign_to
-			current_file.put_character ('r')
-			current_file.put_character ('a')
-			current_file.put_character ('.')
-			current_file.put_string (c_previous)
-			print_semicolon_newline
-			print_indentation
-			current_file.put_string (c_ge_jump_to_last_rescue)
-			current_file.put_character ('(')
-			current_file.put_string (c_ac)
-			current_file.put_character (')')
-			print_semicolon_newline
-			dedent
-			print_indentation
-			current_file.put_character ('}')
-			current_file.put_new_line
-			print_indentation
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_in_assertion)
-			print_assign_to
-			current_file.put_character ('1')
-			print_semicolon_newline
-		end
-
-	print_after_assertions
-			-- Print code after assertions to `current_file'.
-		do
-			print_indentation
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_in_assertion)
-			print_assign_to
-			current_file.put_character ('0')
-			print_semicolon_newline
-			print_indentation
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_last_rescue)
-			print_assign_to
-			current_file.put_character ('r')
-			current_file.put_character ('a')
-			current_file.put_character ('.')
-			current_file.put_string (c_previous)
-			print_semicolon_newline
-			dedent
-			print_indentation
-			current_file.put_character ('}')
-			current_file.put_new_line
-		end
-
-	print_before_old_expression (a_old_expression: ET_OLD_EXPRESSION)
-			-- Print code before evaluating `a_old_expression', to `current_file'.
-			-- Checks whether we are already checking assertions, and
-			-- catch and keep track of possible exceptions.
-		require
-			a_old_expression_not_void: a_old_expression /= Void
-		local
-			l_temp: ET_IDENTIFIER
-			l_exception_temp: ET_IDENTIFIER
-		do
-			old_expression_temp_variables.search (a_old_expression)
-			old_expression_exception_temp_variables.search (a_old_expression)
-			if not old_expression_temp_variables.found then
-					-- Internal error: the value of the old expression should have been
-					-- computed at this stage.
-				set_fatal_error
-				error_handler.report_giaac_error (generator, "print_before_old_expression", 1, "no value computed for old expression.")
-			elseif not old_expression_exception_temp_variables.found then
-					-- Internal error: the exception marker of the old expression should have been
-					-- set at this stage.
-				set_fatal_error
-				error_handler.report_giaac_error (generator, "print_before_old_expression", 2, "no exception marker for old expression.")
-			else
-				l_temp := old_expression_temp_variables.found_item
-				l_exception_temp := old_expression_exception_temp_variables.found_item
-				print_indentation
-				current_file.put_string (c_if)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				current_file.put_character ('!')
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_in_assertion)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				indent
-				print_indentation
-				current_file.put_string (c_ge_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('r')
-				current_file.put_character ('a')
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_character ('r')
-				current_file.put_character ('a')
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				print_assign_to
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				print_assign_to
-				current_file.put_character ('&')
-				current_file.put_character ('r')
-				current_file.put_character ('a')
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_if)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				current_file.put_string (c_ge_setjmp)
-				current_file.put_character ('(')
-				current_file.put_character ('r')
-				current_file.put_character ('a')
-				current_file.put_character ('.')
-				current_file.put_character ('j')
-				current_file.put_character ('b')
-				current_file.put_character (')')
-				print_not_equal_to
-				current_file.put_character ('0')
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				indent
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				print_assign_to
-				current_file.put_character ('&')
-				current_file.put_character ('r')
-				current_file.put_character ('a')
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_in_assertion)
-				print_assign_to
-				current_file.put_character ('0')
-				print_semicolon_newline
-				print_indentation
-				print_temp_name (l_exception_temp, current_file)
-				print_assign_to
-				current_file.put_string (c_ge_last_exception_raised)
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				current_file.put_character (')')
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				print_assign_to
-				current_file.put_character ('r')
-				current_file.put_character ('a')
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				print_semicolon_newline
-				if exception_trace_mode then
-					print_indentation
-					current_file.put_string (c_ac)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_call)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_string (c_tc_address)
-					current_file.put_character (';')
-					current_file.put_new_line
-				end
-				dedent
-				print_indentation
-				current_file.put_character ('}')
-				current_file.put_character (' ')
-				current_file.put_string (c_else)
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				indent
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_in_assertion)
-				print_assign_to
-				current_file.put_character ('1')
-				print_semicolon_newline
-			end
-		end
-
-	print_after_old_expression
-			-- Print code after evaluating an old expression, to `current_file'.
-		do
-			print_indentation
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_in_assertion)
-			print_assign_to
-			current_file.put_character ('0')
-			print_semicolon_newline
-			print_indentation
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_last_rescue)
-			print_assign_to
-			current_file.put_character ('r')
-			current_file.put_character ('a')
-			current_file.put_character ('.')
-			current_file.put_string (c_previous)
-			print_semicolon_newline
-			dedent
-			print_indentation
-			current_file.put_character ('}')
-			current_file.put_new_line
-			dedent
-			print_indentation
-			current_file.put_character ('}')
-			current_file.put_new_line
-		end
-
-	assertion_tag (a_assertion: ET_ASSERTION): STRING
-			-- Tag of `a_assertion', or the text of its expression
-			-- if it has no tag
-		require
-			a_assertion_not_void: a_assertion /= Void
-		do
-			if attached {ET_TAGGED_ASSERTION} a_assertion as l_tagged_assertion then
-				Result := l_tagged_assertion.tag.identifier.name
-			elseif attached a_assertion.expression as l_expression then
-				Result := expression_text (l_expression)
-				if Result.has ('%N') then
-					Result.replace_substring_all ("%N", " ")
-				end
-			else
-				Result := ""
-			end
-		ensure
-			assertion_tag_not_void: Result /= Void
-		end
-
-	variant_tag (a_variant: ET_VARIANT): STRING
-			-- Tag of `a_variant', or the text of its expression
-			-- if it has no tag
-		require
-			a_variant_not_void: a_variant /= Void
-		do
-			if attached a_variant.tag as l_tag then
-				Result := l_tag.identifier.name
-			elseif attached a_variant.expression as l_expression then
-				Result := expression_text (l_expression)
-				if Result.has ('%N') then
-					Result.replace_substring_all ("%N", " ")
-				end
-			else
-				Result := ""
-			end
-		ensure
-			variant_tag_not_void: Result /= Void
-		end
-
-	expression_text (a_expression: ET_EXPRESSION): STRING
-			-- Textual version of `a_expression'
-		require
-			a_expression_not_void: a_expression /= Void
-		local
-			l_buffer: KL_STRING_OUTPUT_STREAM
-			l_printer: ET_AST_PRETTY_PRINTER
-		do
-			create l_buffer.make_empty
-			create l_printer.make (l_buffer)
-			a_expression.process (l_printer)
-			Result := l_buffer.string
-		ensure
-			expression_text_not_void: Result /= Void
-		end
-
-	old_expressions: DS_ARRAYED_LIST [ET_OLD_EXPRESSION]
-			-- Old expressions appearing in the postconditions of the
-			-- feature or inline agent being processed
-
-	old_expression_temp_variables: DS_HASH_TABLE [ET_IDENTIFIER, ET_OLD_EXPRESSION]
-			-- Temporary variables for the values of old expressions
-
-	old_expression_exception_temp_variables: DS_HASH_TABLE [ET_IDENTIFIER, ET_OLD_EXPRESSION]
-			-- Temporary variables for the exceptions of old expressions
 
 feature {NONE} -- Implementation
 
