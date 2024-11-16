@@ -2480,7 +2480,7 @@ feature {NONE} -- Feature generation
 				current_file.put_string (c_in_qualified_call)
 				print_assign_to
 				if a_creation then
-					current_file.put_character ('1')
+					current_file.put_character ('2')
 				else
 					current_file.put_string (c_ac)
 					current_file.put_string (c_arrow)
@@ -2551,7 +2551,7 @@ feature {NONE} -- Feature generation
 				print_feature_trace_message_call (True)
 			end
 			if current_type.base_class.invariants_enabled and not current_feature.is_static and not a_creation then
-				print_invariants_call
+				print_invariants_call (True)
 			end
 			if current_type.base_class.preconditions_enabled then
 				print_all_preconditions (a_feature)
@@ -2837,7 +2837,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			current_file.put_character ('}')
 			current_file.put_new_line
 			if current_type.base_class.invariants_enabled and not current_feature.is_static then
-				print_invariants_call
+				print_invariants_call (False)
 			end
 			if current_type.base_class.postconditions_enabled then
 				print_all_postconditions (a_feature)
@@ -6919,7 +6919,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_string (c_in_qualified_call)
 				print_assign_to
 				if a_creation then
-					current_file.put_character ('1')
+					current_file.put_character ('2')
 				else
 					current_file.put_string (c_ac)
 					current_file.put_string (c_arrow)
@@ -7437,7 +7437,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				--
 			current_file := current_function_body_buffer
 			if current_type.base_class.invariants_enabled and not current_closure.is_static and not a_creation then
-				print_invariants_call
+				print_invariants_call (True)
 			end
 			if current_type.base_class.preconditions_enabled then
 				print_all_preconditions (a_feature)
@@ -7795,7 +7795,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_compound (l_compound)
 			end
 			if current_type.base_class.invariants_enabled and not current_closure.is_static then
-				print_invariants_call
+				print_invariants_call (False)
 			end
 			if current_type.base_class.postconditions_enabled then
 				print_all_postconditions (a_feature)
@@ -8212,7 +8212,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_new_line
 				end
 				if current_type.base_class.invariants_enabled and not current_feature.is_static then
-					print_invariants_call
+					print_invariants_call (False)
 				end
 				if current_type.base_class.postconditions_enabled then
 					print_all_postconditions (a_feature)
@@ -8358,9 +8358,11 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			current_file := old_file
 		end
 
-	print_invariants_call
+	print_invariants_call (a_on_entry: BOOLEAN)
 			-- Print to `current_file' a call to procedure which checks all invariants
 			-- (even those inherited from ancestors) of `current_type'.
+			-- `a_on_entry' means that the check of invariants occurs on entry
+			-- of the routine call (before checking the preconditions if any).
 		do
 			if attached current_type.invariants as l_invariants then
 				register_called_feature (l_invariants)
@@ -8369,6 +8371,10 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_character (' ')
 				current_file.put_character ('(')
 				current_file.put_string (c_in_qualified_call)
+				if a_on_entry then
+					print_equal_to
+					current_file.put_character ('1')
+				end
 				current_file.put_character (')')
 				current_file.put_character (' ')
 				current_file.put_character ('{')
@@ -23040,6 +23046,7 @@ feature {NONE} -- Separate calls
 			nb_operands: INTEGER
 			l_separate_call_arguments: like separate_call_arguments
 			l_old_max_nested_inlining_count: INTEGER
+			l_old_in_separate_creation_call: BOOLEAN
 			old_file: KI_TEXT_OUTPUT_STREAM
 		do
 			old_file := current_file
@@ -23230,7 +23237,10 @@ feature {NONE} -- Separate calls
 				separate_call_instruction.set_target (formal_argument (1))
 				separate_call_instruction.set_name (a_separate_call.name)
 				separate_call_instruction.set_arguments (l_separate_call_arguments)
+				l_old_in_separate_creation_call := in_separate_creation_call
+				in_separate_creation_call := attached {ET_CREATION_COMPONENT} a_separate_call
 				print_qualified_call_instruction (separate_call_instruction)
+				in_separate_creation_call := l_old_in_separate_creation_call
 			end
 			max_nested_inlining_count := l_old_max_nested_inlining_count
 			dedent
@@ -23641,6 +23651,9 @@ feature {NONE} -- Separate calls
 			-- that the target of the current separate call is also controlled.
 			-- (Used when determining the SCOOP sessions to be used when recording
 			-- a separate call to another SCOOP region.)
+
+	in_separate_creation_call: BOOLEAN
+			-- Is `separate_call_instruction' a creation of a separate object?
 
 feature {NONE} -- Built-in feature generation
 
@@ -45060,7 +45073,9 @@ feature {NONE} -- Qualified/unqualified calls
 			a_target_type_not_void: a_target_type /= Void
 		do
 			if a_target_type.base_class.invariants_enabled then
-				if a_qualified_call then
+				if in_separate_creation_call then
+					current_file.put_string (c_ge_creation)
+				elseif a_qualified_call then
 					current_file.put_string (c_ge_qualified)
 				else
 					current_file.put_string (c_ge_unqualified)
@@ -46388,6 +46403,7 @@ feature {NONE} -- Constants
 	c_ge_check_assert: STRING = "GE_check_assert"
 	c_ge_compiler_version: STRING = "GE_compiler_version"
 	c_ge_context: STRING = "GE_context"
+	c_ge_creation: STRING = "GE_creation"
 	c_ge_current_context: STRING = "GE_current_context"
 	c_ge_decoded_type: STRING = "GE_decoded_type"
 	c_ge_decrement_scoop_sessions_count: STRING = "GE_decrement_scoop_sessions_count"

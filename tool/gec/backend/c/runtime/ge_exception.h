@@ -127,7 +127,7 @@ struct GE_context_struct {
 	uint32_t volatile in_assertion; /* Is an assertion evaluated? */
 	GE_rescue* volatile last_rescue; /* Context of last feature entered containing a rescue clause */
 	uint32_t volatile in_rescue; /* Number of rescue clauses currently being executed */
-	uint32_t volatile in_qualified_call; /* Is the current call a qualified call? */
+	uint32_t volatile in_qualified_call; /* Is the current call a qualified call? 1 means that it is a regular call, 2 means that it is a creation call. */
 	EIF_REFERENCE volatile exception_manager; /* Exception manager */
 	char volatile raising_exception; /* Is an exception currently being raised? */
 	char volatile exception_trace_enabled; /* Should exception trace be displayed? */
@@ -297,6 +297,8 @@ extern void* GE_check_null(void* ptr);
 #define GE_qualified(ac, call) (((ac)->in_qualified_call = 1), (call))
 /* Make an unqualified call to `call'. */
 #define GE_unqualified(ac, call) (((ac)->in_qualified_call = 0), (call))
+/* Make a creation call to `call'. */
+#define GE_creation(ac, call) (((ac)->in_qualified_call = 2), (call))
 
 #ifdef EIF_WINDOWS
 /*
