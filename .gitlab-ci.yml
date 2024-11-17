@@ -131,7 +131,7 @@ library_windows_msc_test_ge:
 # 1 hour to run this job and the job timeout on GitLab runners for Windows 
 # is set to 1 hour (even though it is set to 2 hours for the project).
 
-tool_no_gec_windows_test_ge:
+tool_no_gec_windows_msc_test_ge:
   stage: test_ge
   tags:
     - saas-windows-medium-amd64
