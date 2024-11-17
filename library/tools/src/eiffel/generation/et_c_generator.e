@@ -1637,6 +1637,8 @@ feature {NONE} -- C code Generation
 				print_new_string_32_function
 				print_new_immutable_string_8_function
 				print_new_immutable_string_32_function
+				print_special_character_8_base_address_function
+				print_special_character_32_base_address_function
 					-- Print object allocation functions.
 				print_object_allocation_functions
 				print_once_per_object_data_allocation_functions
@@ -11654,30 +11656,6 @@ feature {NONE} -- Expression generation
 				current_file.put_string (c_arrow)
 			end
 			print_attribute_special_count_name (a_target_type, current_file)
-		end
-
-	print_attribute_special_offset_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
-			-- Print access to 'offset' pseudo attribute of class SPECIAL applied to object `a_target' of type `a_target_type'.
-			-- `a_check_void_target' means that we need to check whether the target is Void or not.
-		require
-			a_target_not_void: a_target /= Void
-			a_target_type_not_void: a_target_type /= Void
-		do
-			if a_target_type.is_expanded then
-				current_file.put_character ('(')
-				print_expression (a_target)
-				current_file.put_character (')')
-				current_file.put_character ('.')
-			else
-				current_file.put_character ('(')
-				print_type_cast (a_target_type, current_file)
-				current_file.put_character ('(')
-				print_non_void_expression (a_target, a_check_void_target)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_string (c_arrow)
-			end
-			print_attribute_special_offset_name (a_target_type, current_file)
 		end
 
 	print_attribute_special_item_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -24287,7 +24265,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character (')')
 				print_comma
 				if attached {ET_DYNAMIC_SPECIAL_TYPE} a_target_type as l_special_type then
-					print_attribute_special_offset_access (l_target, l_special_type, False)
+						-- Note: if `offsetof' is not supported, then we can use: ((int)&(((T317*) 0)->a2))
+						-- See: http://stackoverflow.com/questions/142016/c-c-structure-offset
+					current_file.put_string (c_offsetof)
+					current_file.put_character ('(')
+					print_type_name (l_special_type, current_file)
+					print_comma
+					print_attribute_special_item_name (l_special_type, current_file)
+					current_file.put_character (')')
 					print_plus
 					print_attribute_special_count_access (l_target, l_special_type, False)
 					print_times
@@ -34852,6 +34837,144 @@ feature {NONE} -- C function generation
 			end
 		end
 
+	print_special_character_8_base_address_function
+			-- Print 'GE_sp8_base_address' function to `current_file' and its signature to `header_file'.
+			-- 'GE_sp8_base_address' returns the base address of its argument of type "SPECIAL [CHARACTER_8]".
+		local
+			l_special_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_arg: ET_IDENTIFIER
+			l_index: INTEGER
+			old_file: KI_TEXT_OUTPUT_STREAM
+		do
+			l_special_type := current_dynamic_system.special_character_8_type
+				-- Print signature to `header_file' and `current_file'.
+			old_file := current_file
+			current_file := current_function_header_buffer
+			header_file.put_string (c_extern)
+			header_file.put_character (' ')
+			print_type_declaration (current_dynamic_system.pointer_type, header_file)
+			print_type_declaration (current_dynamic_system.pointer_type, current_file)
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			header_file.put_string (c_ge_sp8_base_address)
+			current_file.put_string (c_ge_sp8_base_address)
+			header_file.put_character ('(')
+			current_file.put_character ('(')
+			print_type_declaration (l_special_type, header_file)
+			print_type_declaration (l_special_type, current_file)
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			l_arg := formal_argument (1)
+			extra_dynamic_type_sets.force_last (l_special_type)
+			l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+			l_arg.set_index (l_index)
+			print_argument_name (l_arg, header_file)
+			print_argument_name (l_arg, current_file)
+			header_file.put_character (')')
+			current_file.put_character (')')
+			header_file.put_character (';')
+			header_file.put_new_line
+			current_file.put_new_line
+				-- Print body to `current_file'.
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			current_file := current_function_body_buffer
+			print_indentation
+			current_file.put_string (c_return)
+			current_file.put_character (' ')
+			if l_special_type.is_alive then
+				print_type_cast (current_dynamic_system.pointer_type, current_file)
+				current_file.put_character ('(')
+				print_attribute_special_item_access (l_arg, l_special_type, True)
+				current_file.put_character (')')
+			else
+				current_file.put_character ('0')
+			end
+			print_semicolon_newline
+			dedent
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file.put_new_line
+				-- Flush to file.
+			flush_to_c_file
+				--
+				-- Clean up.
+				--
+			l_arg.set_index (1)
+			extra_dynamic_type_sets.remove_last
+			current_file := old_file
+		end
+
+	print_special_character_32_base_address_function
+			-- Print 'GE_sp32_base_address' function to `current_file' and its signature to `header_file'.
+			-- 'GE_sp8_base_address' returns the base address of its argument of type "SPECIAL [CHARACTER_32]".
+		local
+			l_special_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_arg: ET_IDENTIFIER
+			l_index: INTEGER
+			old_file: KI_TEXT_OUTPUT_STREAM
+		do
+			l_special_type := current_dynamic_system.special_character_32_type
+				-- Print signature to `header_file' and `current_file'.
+			old_file := current_file
+			current_file := current_function_header_buffer
+			header_file.put_string (c_extern)
+			header_file.put_character (' ')
+			print_type_declaration (current_dynamic_system.pointer_type, header_file)
+			print_type_declaration (current_dynamic_system.pointer_type, current_file)
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			header_file.put_string (c_ge_sp32_base_address)
+			current_file.put_string (c_ge_sp32_base_address)
+			header_file.put_character ('(')
+			current_file.put_character ('(')
+			print_type_declaration (l_special_type, header_file)
+			print_type_declaration (l_special_type, current_file)
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			l_arg := formal_argument (1)
+			extra_dynamic_type_sets.force_last (l_special_type)
+			l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+			l_arg.set_index (l_index)
+			print_argument_name (l_arg, header_file)
+			print_argument_name (l_arg, current_file)
+			header_file.put_character (')')
+			current_file.put_character (')')
+			header_file.put_character (';')
+			header_file.put_new_line
+			current_file.put_new_line
+				-- Print body to `current_file'.
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			current_file := current_function_body_buffer
+			print_indentation
+			current_file.put_string (c_return)
+			current_file.put_character (' ')
+			if l_special_type.is_alive then
+				print_type_cast (current_dynamic_system.pointer_type, current_file)
+				current_file.put_character ('(')
+				print_attribute_special_item_access (l_arg, l_special_type, True)
+				current_file.put_character (')')
+			else
+				current_file.put_character ('0')
+			end
+			print_semicolon_newline
+			dedent
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file.put_new_line
+				-- Flush to file.
+			flush_to_c_file
+				--
+				-- Clean up.
+				--
+			l_arg.set_index (1)
+			extra_dynamic_type_sets.remove_last
+			current_file := old_file
+		end
+
 	print_manifest_array_function (an_array_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- Print 'GE_ma' function to `current_file' and its signature to `header_file'.
 			-- 'GE_ma<type-id>' is used to create manifest arrays of type 'type-id'.
@@ -36176,17 +36299,6 @@ feature {NONE} -- Memory allocation
 				current_file.put_character ('1')
 				print_semicolon_newline
 					-- Note that 'count' is already set to zero.
-					-- Set offset.
-				print_indentation
-				print_attribute_special_offset_access (tokens.result_keyword, l_special_type, False)
-				print_assign_to
-				current_file.put_string (c_offsetof)
-				current_file.put_character ('(')
-				print_type_name (l_special_type, current_file)
-				print_comma
-				print_attribute_special_item_name (l_special_type, current_file)
-				current_file.put_character (')')
-				print_semicolon_newline
 			end
 			dedent
 			print_indentation
@@ -39487,18 +39599,6 @@ feature {NONE} -- Type generation
 					end
 					l_empty_struct := False
 				end
-				if a_type.is_special then
-						-- Offset (in bytes) of the first item.
-					a_file.put_character ('%T')
-					a_file.put_string (c_uint32_t)
-					a_file.put_character (' ')
-					a_file.put_string (c_volatile)
-					a_file.put_character (' ')
-					a_file.put_string (c_offset)
-					a_file.put_character (';')
-					a_file.put_new_line
-					l_empty_struct := False
-				end
 				l_queries := a_type.queries
 				nb := a_type.attribute_count
 				from i := 1 until i > nb loop
@@ -40923,22 +41023,6 @@ feature {NONE} -- Default initialization values generation
 					end
 					l_empty_struct := False
 				end
-				if a_type.is_special then
-						-- Offset (in bytes) to the first item.
-					if not l_empty_struct then
-						a_file.put_character (',')
-					end
-						-- Note: if `offsetof' is not supported, then we can use: ((int)&(((T317*) 0)->a2))
-						-- See: http://stackoverflow.com/questions/142016/c-c-structure-offset
-					a_file.put_string (c_offsetof)
-					a_file.put_character ('(')
-					print_type_name (a_type, current_file)
-					a_file.put_character (',')
-					a_file.put_character (' ')
-					print_attribute_special_item_name (a_type, current_file)
-					a_file.put_character (')')
-					l_empty_struct := False
-				end
 					-- Attributes.
 				l_queries := a_type.queries
 				nb := a_type.attribute_count
@@ -41327,23 +41411,6 @@ feature {NONE} -- Feature name generation
 -- TODO: long names
 				short_names := True
 				print_attribute_special_count_name (a_type, a_file)
-				short_names := False
-			end
-		end
-
-	print_attribute_special_offset_name (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
-			-- Print to `a_file' the name of the 'offset' pseudo attribute for 'SPECIAL' objects of type `a_type'.
-		require
-			a_type_not_void: a_type /= Void
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		do
-			if short_names then
-				a_file.put_string (c_offset)
-			else
--- TODO: long names
-				short_names := True
-				print_attribute_special_offset_name (a_type, a_file)
 				short_names := False
 			end
 		end
@@ -46460,6 +46527,8 @@ feature {NONE} -- Constants
 	c_ge_set_reference_field: STRING = "GE_set_reference_field"
 	c_ge_set_reference_field_at: STRING = "GE_set_reference_field_at"
 	c_ge_show_console: STRING = "GE_show_console"
+	c_ge_sp8_base_address: STRING = "GE_sp8_base_address"
+	c_ge_sp32_base_address: STRING = "GE_sp32_base_address"
 	c_ge_storable_version_of_encoded_type: STRING = "GE_storable_version_of_encoded_type"
 	c_ge_thread_create_with_attr: STRING = "GE_thread_create_with_attr"
 	c_ge_thread_onces_set_counts: STRING = "GE_thread_onces_set_counts"
@@ -46530,7 +46599,6 @@ feature {NONE} -- Constants
 	c_not_equal: STRING = "!="
 	c_not_not: STRING = ""
 	c_object: STRING = "object"
-	c_offset: STRING = "offset"
 	c_offsetof: STRING = "offsetof"
 	c_once_objects: STRING = "once_objects"
 	c_onces: STRING = "onces"

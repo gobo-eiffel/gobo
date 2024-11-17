@@ -63,6 +63,7 @@ c_compilation() {
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gec (bootstrap 0)..."
 	fi
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec9.c"
 	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec8.c"
 	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec7.c"
 	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec6.c"
