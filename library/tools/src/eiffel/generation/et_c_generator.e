@@ -24406,11 +24406,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_special_type: a_special_type = current_type
 		local
 			l_count_temp: ET_IDENTIFIER
-			l_capacity_temp: ET_IDENTIFIER
 			l_other_count_temp: ET_IDENTIFIER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_count_type: ET_DYNAMIC_PRIMARY_TYPE
-			l_capacity_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
@@ -24429,10 +24427,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				mark_temp_variable_frozen (l_count_temp)
 				l_other_count_temp := new_temp_variable (l_count_type)
 				mark_temp_variable_frozen (l_other_count_temp)
-				l_dynamic_type_set := result_type_set_in_feature (a_special_type.queries.item (2))
-				l_capacity_type := l_dynamic_type_set.static_type.primary_type
-				l_capacity_temp := new_temp_variable (l_capacity_type)
-				mark_temp_variable_frozen (l_capacity_temp)
 				print_assign_special_count_attribute_to_temp_variable (l_other_count_temp, a_source, a_special_type, True)
 				print_assign_special_count_attribute_to_temp_variable (l_count_temp, a_target, a_special_type, False)
 				print_indentation_if
@@ -24454,9 +24448,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character ('0')
 				print_then_newline
 				indent
-				print_assign_flags_attribute_to_temp_variable (a_target, a_special_type, False)
-				print_assign_onces_attribute_to_temp_variable (a_target, a_special_type, False)
-				print_assign_special_capacity_attribute_to_temp_variable (l_capacity_temp, a_target, a_special_type, False)
 					-- Do not use "*(T123*)(C) = *(T123*)(a1);" because we might overwrite
 					-- some items due to struct padding (unused bytes added at the end of
 					-- the struct for memory alignment).
@@ -24469,7 +24460,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character ('*')
 				current_file.put_character (')')
 				current_file.put_character ('(')
-				print_procedure_target_expression (a_target, a_special_type, False)
+				print_attribute_special_item_access (a_target, a_special_type, False)
 				current_file.put_character (')')
 				print_comma
 					-- Get rid of the volatile type marker.
@@ -24478,11 +24469,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character ('*')
 				current_file.put_character (')')
 				current_file.put_character ('(')
-				print_attachment_expression (a_source, dynamic_type_set (a_source), a_special_type)
+				print_attribute_special_item_access (a_source, a_special_type, False)
 				current_file.put_character (')')
 				print_comma
-				print_attribute_special_offset_access (a_target, a_special_type, False)
-				print_plus
 				print_temp_name (l_other_count_temp, current_file)
 				print_times
 				current_file.put_string (c_sizeof)
@@ -24491,18 +24480,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character (')')
 				current_file.put_character (')')
 				print_semicolon_newline
-				print_assign_temp_variable_to_flags_attribute (a_target, a_special_type, False)
-				print_assign_temp_variable_to_onces_attribute (a_target, a_special_type, False)
-				print_assign_temp_variable_to_special_count_attribute (l_count_temp, a_target, a_special_type, False)
-				print_assign_temp_variable_to_special_capacity_attribute (l_capacity_temp, a_target, a_special_type, False)
 				print_builtin_any_standard_copy_custom_attributes (a_source, a_target)
 				print_builtin_any_standard_copy_custom_special_items (a_source, a_target, a_special_type, l_other_count_temp)
 				mark_temp_variable_unfrozen (l_count_temp)
 				mark_temp_variable_free (l_count_temp)
 				mark_temp_variable_unfrozen (l_other_count_temp)
 				mark_temp_variable_free (l_other_count_temp)
-				mark_temp_variable_unfrozen (l_capacity_temp)
-				mark_temp_variable_free (l_capacity_temp)
 				dedent
 				print_indentation_end_newline
 			end
@@ -32253,17 +32236,20 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_capacity_type := l_dynamic_type_set.static_type.primary_type
 				l_temp := new_temp_variable (l_capacity_type)
 				l_item_type := l_special_type.item_type_set.static_type.primary_type
-				print_indentation
-				print_temp_name (l_temp, current_file)
-				print_assign_to
-				print_attribute_special_capacity_access (tokens.current_keyword, l_special_type, False)
-				print_semicolon_newline
+				print_assign_special_capacity_attribute_to_temp_variable (l_temp, tokens.current_keyword, l_special_type, False)
 				print_indentation_if
 				l_argument_name := l_arguments.formal_argument (1).name
 				print_argument_name (l_argument_name, current_file)
-				print_greater_than
+				print_equal_to
 				print_temp_name (l_temp, current_file)
 				print_then_newline
+				indent
+					-- Keep the same object.
+				print_indentation_assign_to_result
+				print_current_name (current_file)
+				print_semicolon_newline
+				dedent
+				print_indentation_else_newline
 				indent
 					-- Need to allocate a new object.
 				l_result := new_result_expression
@@ -32280,52 +32266,31 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_string (c_eif_true)
 				current_file.put_character (')')
 				print_semicolon_newline
-				mark_temp_variable_free (l_temp)
 					-- Set count.
+				print_assign_special_count_attribute_to_temp_variable (l_temp, tokens.current_keyword, l_special_type, False)
 				print_indentation
 				print_attribute_special_count_access (tokens.result_keyword, l_special_type, False)
 				print_assign_to
-				print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				print_temp_name (l_temp, current_file)
+				print_less_than
+				print_argument_name (l_argument_name, current_file)
+				current_file.put_character (')')
+				current_file.put_character ('?')
+				print_temp_name (l_temp, current_file)
+				current_file.put_character (':')
+				print_argument_name (l_argument_name, current_file)
+				current_file.put_character (')')
 				print_semicolon_newline
+				mark_temp_variable_free (l_temp)
 					-- Copy items.
 				print_builtin_any_standard_copy_body_with_special (tokens.current_keyword, l_result, l_special_type)
 					-- Clean up.
 				free_result_expression (l_result)
 				extra_dynamic_type_sets.remove_last
 				dedent
-				print_indentation_else_newline
-				indent
-					-- Keep the same object.
-				print_indentation_assign_to_result
-				print_current_name (current_file)
-				print_semicolon_newline
-					-- Set new count if needed.
-				print_indentation
-				print_temp_name (l_temp, current_file)
-				print_assign_to
-				print_attribute_special_count_access (tokens.result_keyword, l_special_type, False)
-				print_semicolon_newline
-				print_indentation_if
-				print_temp_name (l_temp, current_file)
-				print_greater_than
-				print_argument_name (l_argument_name, current_file)
-				print_then_newline
-				indent
-				print_indentation
-				print_attribute_special_count_access (tokens.result_keyword, l_special_type, False)
-				print_assign_to
-				print_argument_name (l_argument_name, current_file)
-				print_semicolon_newline
-				dedent
 				print_indentation_end_newline
-				dedent
-				print_indentation_end_newline
-					-- Set new capacity.
-				print_indentation
-				print_attribute_special_capacity_access (tokens.result_keyword, l_special_type, False)
-				print_assign_to
-				print_argument_name (l_argument_name, current_file)
-				print_semicolon_newline
 			end
 		end
 
