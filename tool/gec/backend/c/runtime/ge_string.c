@@ -4,7 +4,7 @@
 		"C functions used to manipulate strings"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -324,7 +324,7 @@ EIF_REFERENCE GE_ms8(const char* s, EIF_INTEGER c)
 
 	l_string = (EIF_STRING*)GE_new_str8(c);
 	l_area = (EIF_SPECIAL*)(l_string->area);
-	l_area_base_address = (EIF_CHARACTER_8*)((char*)l_area + l_area->offset);
+	l_area_base_address = (EIF_CHARACTER_8*)GE_sp8_base_address((EIF_REFERENCE)l_area);
 	memcpy((char*)l_area_base_address, s, c);
 	/* Note that the area was calloc-ed, so not need to add a trailing null character. */
 	l_area->count = (c + 1);
@@ -353,7 +353,7 @@ EIF_REFERENCE GE_ims8(const char* s, EIF_INTEGER c)
 
 	l_string = (EIF_STRING*)GE_new_istr8(c);
 	l_area = (EIF_SPECIAL*)(l_string->area);
-	l_area_base_address = (EIF_CHARACTER_8*)((char*)l_area + l_area->offset);
+	l_area_base_address = (EIF_CHARACTER_8*)GE_sp8_base_address((EIF_REFERENCE)l_area);
 	memcpy((char*)l_area_base_address, s, c);
 	/* Note that the area was calloc-ed, so not need to add a trailing null character. */
 	l_area->count = (c + 1);
@@ -373,7 +373,7 @@ EIF_REFERENCE GE_ms32(const char* s, EIF_INTEGER c)
 
 	l_string = (EIF_STRING*)GE_new_str32(c);
 	l_area = (EIF_SPECIAL*)(l_string->area);
-	l_area_base_address = (EIF_CHARACTER_32*)((char*)l_area + l_area->offset);
+	l_area_base_address = (EIF_CHARACTER_32*)GE_sp32_base_address((EIF_REFERENCE)l_area);
 	GE_str8_to_str32(s, l_area_base_address, c);
 	/* Note that the area was calloc-ed, so not need to add a trailing null character. */
 	l_area->count = (c + 1);
@@ -394,7 +394,7 @@ EIF_REFERENCE GE_ms32_from_utf32le(const char* s, EIF_INTEGER c)
 
 	l_string = (EIF_STRING*)GE_new_str32(c);
 	l_area = (EIF_SPECIAL*)(l_string->area);
-	l_area_base_address = (EIF_CHARACTER_32*)((char*)l_area + l_area->offset);
+	l_area_base_address = (EIF_CHARACTER_32*)GE_sp32_base_address((EIF_REFERENCE)l_area);
 #if BYTEORDER == 0x1234
 	memcpy((EIF_CHARACTER_32*)l_area_base_address, s, c * 4);
 #else
@@ -440,7 +440,7 @@ EIF_REFERENCE GE_ims32(const char* s, EIF_INTEGER c)
 
 	l_string = (EIF_STRING*)GE_new_istr32(c);
 	l_area = (EIF_SPECIAL*)(l_string->area);
-	l_area_base_address = (EIF_CHARACTER_32*)((char*)l_area + l_area->offset);
+	l_area_base_address = (EIF_CHARACTER_32*)GE_sp32_base_address((EIF_REFERENCE)l_area);
 	GE_str8_to_str32(s, l_area_base_address, c);
 	/* Note that the area was calloc-ed, so not need to add a trailing null character. */
 	l_area->count = (c + 1);
@@ -461,7 +461,7 @@ EIF_REFERENCE GE_ims32_from_utf32le(const char* s, EIF_INTEGER c)
 
 	l_string = (EIF_STRING*)GE_new_istr32(c);
 	l_area = (EIF_SPECIAL*)(l_string->area);
-	l_area_base_address = (EIF_CHARACTER_32*)((char*)l_area + l_area->offset);
+	l_area_base_address = (EIF_CHARACTER_32*)GE_sp32_base_address((EIF_REFERENCE)l_area);
 #if BYTEORDER == 0x1234
 	memcpy((EIF_CHARACTER_32*)l_area_base_address, s, c * 4);
 #else
@@ -510,7 +510,7 @@ EIF_REFERENCE GE_ims32_from_nstr(EIF_NATIVE_CHAR* s, EIF_INTEGER n)
 	c = GE_nstr_str32len(s, n);
 	l_string = (EIF_STRING*)GE_new_istr32(c);
 	l_area = (EIF_SPECIAL*)(l_string->area);
-	l_area_base_address = (EIF_CHARACTER_32*)((char*)l_area + l_area->offset);
+	l_area_base_address = (EIF_CHARACTER_32*)GE_sp32_base_address((EIF_REFERENCE)l_area);
 	GE_nstr_to_str32(s, l_area_base_address, n);
 	/* Note that the area was calloc-ed, so not need to add a trailing null character. */
 	l_area->count = (c + 1);

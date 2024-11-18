@@ -215,6 +215,7 @@ goto exit
 
 :c_compilation
 	if not .%VERBOSE%. == .-s. echo Compiling gec (bootstrap 0)...
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec9.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec8.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec7.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec6.c
@@ -223,7 +224,7 @@ goto exit
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec3.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec2.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec1.c
-	%LD% %LFLAGS% %LFLAG_OUT%gec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% %LLIBS%
+	%LD% %LFLAGS% %LFLAG_OUT%gec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% %LLIBS%
 	%RM% gec*%OBJ%
 	if ".%CC%." == ".bcc32." %RM% gec.tds
 	goto install

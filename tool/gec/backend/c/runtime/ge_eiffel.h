@@ -248,7 +248,6 @@ typedef volatile struct {
 #ifdef GE_USE_SCOOP
 	GE_scoop_region* volatile region;
 #endif
-	uint32_t volatile offset;
 	EIF_INTEGER volatile count;
 	EIF_INTEGER volatile capacity;
 } EIF_SPECIAL;

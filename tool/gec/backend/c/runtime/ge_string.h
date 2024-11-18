@@ -4,7 +4,7 @@
 		"C functions used to manipulate strings"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -129,6 +129,22 @@ extern EIF_REFERENCE GE_istr32_from_nstr(EIF_NATIVE_CHAR* s);
  * characters found in the null-terminated ISO 8859-1 string `s'
  */
 extern EIF_REFERENCE GE_str(const char* s);
+
+/*
+ * Base address of `o' of type "SPECIAL [CHARACTER_8].
+ * The base address is the addresss of the first character in `o'.
+ * Note: The implementation of this function is generated
+ * by the Eiffel compiler.
+ */
+extern EIF_POINTER GE_sp8_base_address(EIF_REFERENCE o);
+
+/*
+ * Base address of `o' of type "SPECIAL [CHARACTER_832.
+ * The base address is the addresss of the first character in `o'.
+ * Note: The implementation of this function is generated
+ * by the Eiffel compiler.
+ */
+extern EIF_POINTER GE_sp32_base_address(EIF_REFERENCE o);
 
 #ifdef __cplusplus
 }
