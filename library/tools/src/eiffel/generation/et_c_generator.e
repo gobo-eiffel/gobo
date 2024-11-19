@@ -20707,30 +20707,15 @@ feature {NONE} -- Deep features generation
 					print_attribute_special_capacity_access (tokens.current_keyword, l_special_type, False)
 					current_file.put_character (',')
 					current_file.put_character (' ')
-					current_file.put_string (c_eif_false)
+					current_file.put_string (c_eif_true)
 					current_file.put_character (')')
 					current_file.put_character (';')
 					current_file.put_new_line
 					print_indentation
-					if not l_special_type.is_expanded then
-						current_file.put_character ('*')
-					end
-					print_type_cast (l_special_type, current_file)
-					current_file.put_character ('(')
-					print_result_name (current_file)
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					if not l_special_type.is_expanded then
-						current_file.put_character ('*')
-					end
-					print_type_cast (l_special_type, current_file)
-					current_file.put_character ('(')
-					print_current_name (current_file)
-					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_attribute_special_count_access (tokens.result_keyword, l_special_type, False)
+					print_assign_to
+					print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+					print_semicolon_newline
 					if not l_has_nested_reference_attributes then
 							-- Copy items if they are not reference objects or expanded
 							-- objects containing (recursively) reference attributes.
@@ -20763,7 +20748,7 @@ feature {NONE} -- Deep features generation
 						current_file.put_character (';')
 						current_file.put_new_line
 					end
-				elseif a_type.is_expanded then
+				elseif a_type.is_expanded and not a_type.has_once_per_object_routines then
 					print_indentation
 					print_result_name (current_file)
 					current_file.put_character (' ')
@@ -20774,36 +20759,101 @@ feature {NONE} -- Deep features generation
 					current_file.put_character (';')
 					current_file.put_new_line
 				else
-					print_indentation
-					print_result_name (current_file)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_string (c_ge_new)
-					current_file.put_integer (a_type.id)
-					current_file.put_character ('(')
-					current_file.put_string (c_ac)
-					print_comma
-					current_file.put_string (c_eif_false)
-					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
-					print_indentation
-					current_file.put_character ('*')
-					print_type_cast (a_type, current_file)
-					current_file.put_character ('(')
-					print_result_name (current_file)
-					current_file.put_character (')')
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('*')
-					print_type_cast (a_type, current_file)
-					current_file.put_character ('(')
-					print_current_name (current_file)
-					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
+					if not a_type.is_expanded then
+						print_indentation
+						print_result_name (current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_string (c_ge_new)
+						current_file.put_integer (a_type.id)
+						current_file.put_character ('(')
+						current_file.put_string (c_ac)
+						print_comma
+						current_file.put_string (c_eif_true)
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+						-- Note: do not copy the flag, SCOOP region, nor once-per-object.
+					if
+						a_type.attribute_count > 0 or
+						attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty
+					then
+						print_indentation
+						current_file.put_string (c_memcpy)
+						current_file.put_character ('(')
+						current_file.put_character ('(')
+						current_file.put_character ('(')
+						current_file.put_string (c_char)
+						current_file.put_character ('*')
+						current_file.put_character (')')
+						if a_type.is_expanded then
+							current_file.put_character ('&')
+						end
+						print_result_name (current_file)
+						current_file.put_character (')')
+						print_plus
+						current_file.put_string (c_offsetof)
+						current_file.put_character ('(')
+						print_type_name (a_type, current_file)
+						print_comma
+						if a_type.attribute_count > 0 then
+							print_attribute_name (a_type.queries.first, a_type, current_file)
+						elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
+							print_attribute_tuple_item_name (1, l_tuple_type, current_file)
+						end
+						current_file.put_character (')')
+						print_comma
+						current_file.put_character ('(')
+						current_file.put_character ('(')
+						current_file.put_string (c_char)
+						current_file.put_character ('*')
+						current_file.put_character (')')
+						if a_type.is_expanded then
+							current_file.put_character ('&')
+						end
+						print_current_name (current_file)
+						current_file.put_character (')')
+						print_plus
+						current_file.put_string (c_offsetof)
+						current_file.put_character ('(')
+						print_type_name (a_type, current_file)
+						print_comma
+						if a_type.attribute_count > 0 then
+							print_attribute_name (a_type.queries.first, a_type, current_file)
+						elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
+							print_attribute_tuple_item_name (1, l_tuple_type, current_file)
+						end
+						current_file.put_character (')')
+						print_comma
+						current_file.put_string (c_sizeof)
+						current_file.put_character ('(')
+						print_type_name (a_type, current_file)
+						current_file.put_character (')')
+						print_minus
+						current_file.put_string (c_offsetof)
+						current_file.put_character ('(')
+						print_type_name (a_type, current_file)
+						print_comma
+						if a_type.attribute_count > 0 then
+							print_attribute_name (a_type.queries.first, a_type, current_file)
+						elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
+							print_attribute_tuple_item_name (1, l_tuple_type, current_file)
+						end
+						current_file.put_character (')')
+						if a_type.has_once_per_object_routines then
+							print_minus
+							current_file.put_string (c_offsetof)
+							current_file.put_character ('(')
+							print_type_name (a_type, current_file)
+							print_comma
+							current_file.put_string (c_onces)
+							current_file.put_character (')')
+						end
+						current_file.put_character (')')
+						print_semicolon_newline
+					end
 				end
 				if l_has_nested_reference_attributes then
 						-- Allocate a 'GE_deep' struct to keep track of already twined
@@ -24195,7 +24245,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		a_result_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'ANY.standard_is_equal'.
-			-- `The target and the argument are expected to have the same dynamic type.
+			-- The target and the argument are expected to have the same dynamic type at runtime.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_argument_formal_type' is the formal type of the argument.
 			-- `a_argument_type_set' is the dynamic type set of the argument.
@@ -24209,6 +24259,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			a_argument_formal_type_not_void: a_argument_formal_type /= Void
 			a_argument_type_set_not_void: a_argument_type_set /= Void
 			a_argument_type_set_has_target_type: a_argument_type_set.has_type (a_target_type)
+			-- same_dynamic_type: The target and the argument have the same dynamic type at runtime.
 			a_result_type_not_void: a_result_type /= Void
 			two_operands: call_operands.count = 2
 		local
@@ -24226,7 +24277,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- No field to compare with.
 				current_file.put_string (c_eif_true)
 			else
-					-- Note: do not compare the flags.
+					-- Note: do not copy the flag, SCOOP region, nor once-per-object.
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
 				print_declaration_type_cast (a_result_type, current_file)
@@ -24244,9 +24295,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character (')')
 				current_file.put_character (')')
 				print_plus
-				current_file.put_string (c_sizeof)
+				current_file.put_string (c_offsetof)
 				current_file.put_character ('(')
-				print_eif_any_type_name (current_file)
+				print_type_name (a_target_type, current_file)
+				print_comma
+				if a_target_type.attribute_count > 0 then
+					print_attribute_name (a_target_type.queries.first, a_target_type, current_file)
+				elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
+					print_attribute_tuple_item_name (1, l_tuple_type, current_file)
+				end
 				current_file.put_character (')')
 				print_comma
 				current_file.put_character ('(')
@@ -24259,9 +24316,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character (')')
 				current_file.put_character (')')
 				print_plus
-				current_file.put_string (c_sizeof)
+				current_file.put_string (c_offsetof)
 				current_file.put_character ('(')
-				print_eif_any_type_name (current_file)
+				print_type_name (a_target_type, current_file)
+				print_comma
+				if a_target_type.attribute_count > 0 then
+					print_attribute_name (a_target_type.queries.first, a_target_type, current_file)
+				elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
+					print_attribute_tuple_item_name (1, l_tuple_type, current_file)
+				end
 				current_file.put_character (')')
 				print_comma
 				if attached {ET_DYNAMIC_SPECIAL_TYPE} a_target_type as l_special_type then
@@ -24287,9 +24350,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character (')')
 				end
 				print_minus
-				current_file.put_string (c_sizeof)
+				current_file.put_string (c_offsetof)
 				current_file.put_character ('(')
-				print_eif_any_type_name (current_file)
+				print_type_name (a_target_type, current_file)
+				print_comma
+				if a_target_type.attribute_count > 0 then
+					print_attribute_name (a_target_type.queries.first, a_target_type, current_file)
+				elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
+					print_attribute_tuple_item_name (1, l_tuple_type, current_file)
+				end
 				current_file.put_character (')')
 				current_file.put_character (')')
 				current_file.put_character (')')
@@ -24337,32 +24406,113 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				(not attached {ET_DYNAMIC_TUPLE_TYPE} current_type as l_tuple_type or else l_tuple_type.item_type_sets.is_empty)
 			then
 				-- Nothing to be copied.
-			else
-				print_assign_flags_attribute_to_temp_variable (a_target, current_type, False)
-				print_assign_onces_attribute_to_temp_variable (a_target, current_type, False)
+			elseif current_type.is_basic then
 				print_indentation
+				print_unboxed_expression (a_target, current_type, False)
+				print_assign_to
+				current_file.put_character ('(')
+				print_attachment_expression (a_source, dynamic_type_set (a_source), current_type)
+				current_file.put_character (')')
+				print_semicolon_newline
+			elseif current_type.is_expanded and not current_type.has_once_per_object_routines then
+				print_indentation
+				print_unboxed_expression (a_target, current_type, False)
+				print_assign_to
+				current_file.put_character ('(')
+				print_attachment_expression (a_source, dynamic_type_set (a_source), current_type)
+				current_file.put_character (')')
+				print_semicolon_newline
+				print_builtin_any_standard_copy_custom_attributes (a_source, a_target)
+				if attached {ET_DYNAMIC_TUPLE_TYPE} current_type as l_tuple_type then
+					print_builtin_any_standard_copy_custom_tuple_items (a_source, a_target, l_tuple_type)
+				end
+			else
+					-- Note: do not copy the flag, SCOOP region, nor once-per-object.
+				print_indentation
+				current_file.put_string (c_memcpy)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_string (c_char)
+				current_file.put_character ('*')
+				current_file.put_character (')')
 				if current_type.is_expanded then
+					current_file.put_character ('&')
+					current_file.put_character ('(')
 					print_unboxed_expression (a_target, current_type, False)
+					current_file.put_character (')')
 				else
-					current_file.put_character ('*')
-					print_type_cast (current_type, current_file)
 					current_file.put_character ('(')
 					print_procedure_target_expression (a_target, current_type, False)
 					current_file.put_character (')')
 				end
-				print_assign_to
+				current_file.put_character (')')
+				print_plus
+				current_file.put_string (c_offsetof)
+				current_file.put_character ('(')
+				print_type_name (current_type, current_file)
+				print_comma
+				if current_type.attribute_count > 0 then
+					print_attribute_name (current_type.queries.first, current_type, current_file)
+				elseif attached {ET_DYNAMIC_TUPLE_TYPE} current_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
+					print_attribute_tuple_item_name (1, l_tuple_type, current_file)
+				end
+				current_file.put_character (')')
+				print_comma
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_string (c_char)
+				current_file.put_character ('*')
+				current_file.put_character (')')
 				if current_type.is_expanded then
+					current_file.put_character ('&')
+					current_file.put_character ('(')
 					print_attachment_expression (a_source, dynamic_type_set (a_source), current_type)
+					current_file.put_character (')')
 				else
-					current_file.put_character ('*')
-					print_type_cast (current_type, current_file)
 					current_file.put_character ('(')
 					print_attachment_expression (a_source, dynamic_type_set (a_source), current_type)
 					current_file.put_character (')')
 				end
+				current_file.put_character (')')
+				print_plus
+				current_file.put_string (c_offsetof)
+				current_file.put_character ('(')
+				print_type_name (current_type, current_file)
+				print_comma
+				if current_type.attribute_count > 0 then
+					print_attribute_name (current_type.queries.first, current_type, current_file)
+				elseif attached {ET_DYNAMIC_TUPLE_TYPE} current_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
+					print_attribute_tuple_item_name (1, l_tuple_type, current_file)
+				end
+				current_file.put_character (')')
+				print_comma
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_name (current_type, current_file)
+				current_file.put_character (')')
+				print_minus
+				current_file.put_string (c_offsetof)
+				current_file.put_character ('(')
+				print_type_name (current_type, current_file)
+				print_comma
+				if current_type.attribute_count > 0 then
+					print_attribute_name (current_type.queries.first, current_type, current_file)
+				elseif attached {ET_DYNAMIC_TUPLE_TYPE} current_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
+					print_attribute_tuple_item_name (1, l_tuple_type, current_file)
+				end
+				current_file.put_character (')')
+				if current_type.has_once_per_object_routines then
+					print_minus
+					current_file.put_string (c_offsetof)
+					current_file.put_character ('(')
+					print_type_name (current_type, current_file)
+					print_comma
+					current_file.put_string (c_onces)
+					current_file.put_character (')')
+				end
+				current_file.put_character (')')
 				print_semicolon_newline
-				print_assign_temp_variable_to_flags_attribute (a_target, current_type, False)
-				print_assign_temp_variable_to_onces_attribute (a_target, current_type, False)
 				print_builtin_any_standard_copy_custom_attributes (a_source, a_target)
 				if attached {ET_DYNAMIC_TUPLE_TYPE} current_type as l_tuple_type then
 					print_builtin_any_standard_copy_custom_tuple_items (a_source, a_target, l_tuple_type)
@@ -24782,7 +24932,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character (')')
 					print_semicolon_newline
 				else
-						-- Note: do not copy the flags.
+						-- Note: do not copy the flag, SCOOP region, nor once-per-object.
 					print_indentation
 					current_file.put_string (c_memcpy)
 					current_file.put_character ('(')
@@ -24796,9 +24946,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character (')')
 					current_file.put_character (')')
 					print_plus
-					current_file.put_string (c_sizeof)
+					current_file.put_string (c_offsetof)
 					current_file.put_character ('(')
-					print_eif_any_type_name (current_file)
+					print_type_name (a_target_type, current_file)
+					print_comma
+					if a_target_type.attribute_count > 0 then
+						print_attribute_name (a_target_type.queries.first, a_target_type, current_file)
+					elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
+						print_attribute_tuple_item_name (1, l_tuple_type, current_file)
+					end
 					current_file.put_character (')')
 					print_comma
 					current_file.put_character ('(')
@@ -24811,9 +24967,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character (')')
 					current_file.put_character (')')
 					print_plus
-					current_file.put_string (c_sizeof)
+					current_file.put_string (c_offsetof)
 					current_file.put_character ('(')
-					print_eif_any_type_name (current_file)
+					print_type_name (a_target_type, current_file)
+					print_comma
+					if a_target_type.attribute_count > 0 then
+						print_attribute_name (a_target_type.queries.first, a_target_type, current_file)
+					elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
+						print_attribute_tuple_item_name (1, l_tuple_type, current_file)
+					end
 					current_file.put_character (')')
 					print_comma
 					current_file.put_string (c_sizeof)
@@ -24821,10 +24983,25 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_type_name (a_target_type, current_file)
 					current_file.put_character (')')
 					print_minus
-					current_file.put_string (c_sizeof)
+					current_file.put_string (c_offsetof)
 					current_file.put_character ('(')
-					print_eif_any_type_name (current_file)
+					print_type_name (a_target_type, current_file)
+					print_comma
+					if a_target_type.attribute_count > 0 then
+						print_attribute_name (a_target_type.queries.first, a_target_type, current_file)
+					elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
+						print_attribute_tuple_item_name (1, l_tuple_type, current_file)
+					end
 					current_file.put_character (')')
+					if a_target_type.has_once_per_object_routines then
+						print_minus
+						current_file.put_string (c_offsetof)
+						current_file.put_character ('(')
+						print_type_name (a_target_type, current_file)
+						print_comma
+						current_file.put_string (c_onces)
+						current_file.put_character (')')
+					end
 					current_file.put_character (')')
 					print_semicolon_newline
 				end
