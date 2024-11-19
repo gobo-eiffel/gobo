@@ -20842,6 +20842,15 @@ feature {NONE} -- Deep features generation
 							print_attribute_tuple_item_name (1, l_tuple_type, current_file)
 						end
 						current_file.put_character (')')
+						if a_type.has_once_per_object_routines then
+							print_minus
+							current_file.put_string (c_offsetof)
+							current_file.put_character ('(')
+							print_type_name (a_type, current_file)
+							print_comma
+							current_file.put_string (c_onces)
+							current_file.put_character (')')
+						end
 						current_file.put_character (')')
 						print_semicolon_newline
 					end
@@ -24493,6 +24502,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_attribute_tuple_item_name (1, l_tuple_type, current_file)
 				end
 				current_file.put_character (')')
+				if current_type.has_once_per_object_routines then
+					print_minus
+					current_file.put_string (c_offsetof)
+					current_file.put_character ('(')
+					print_type_name (current_type, current_file)
+					print_comma
+					current_file.put_string (c_onces)
+					current_file.put_character (')')
+				end
 				current_file.put_character (')')
 				print_semicolon_newline
 				print_builtin_any_standard_copy_custom_attributes (a_source, a_target)
@@ -24975,6 +24993,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						print_attribute_tuple_item_name (1, l_tuple_type, current_file)
 					end
 					current_file.put_character (')')
+					if a_target_type.has_once_per_object_routines then
+						print_minus
+						current_file.put_string (c_offsetof)
+						current_file.put_character ('(')
+						print_type_name (a_target_type, current_file)
+						print_comma
+						current_file.put_string (c_onces)
+						current_file.put_character (')')
+					end
 					current_file.put_character (')')
 					print_semicolon_newline
 				end
