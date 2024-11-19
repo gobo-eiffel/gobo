@@ -34883,14 +34883,16 @@ feature {NONE} -- C function generation
 			print_indentation
 			current_file.put_string (c_return)
 			current_file.put_character (' ')
+			print_type_cast (current_dynamic_system.pointer_type, current_file)
+			current_file.put_character ('(')
 			if l_special_type.is_alive then
-				print_type_cast (current_dynamic_system.pointer_type, current_file)
-				current_file.put_character ('(')
 				print_attribute_special_item_access (l_arg, l_special_type, True)
-				current_file.put_character (')')
 			else
-				current_file.put_character ('0')
+					-- Do not return a null pointer, otherwise
+					-- 'gcc' emits a compilation warning.
+				print_argument_name (l_arg, current_file)
 			end
+			current_file.put_character (')')
 			print_semicolon_newline
 			dedent
 			current_file.put_character ('}')
@@ -34952,14 +34954,16 @@ feature {NONE} -- C function generation
 			print_indentation
 			current_file.put_string (c_return)
 			current_file.put_character (' ')
+			print_type_cast (current_dynamic_system.pointer_type, current_file)
+			current_file.put_character ('(')
 			if l_special_type.is_alive then
-				print_type_cast (current_dynamic_system.pointer_type, current_file)
-				current_file.put_character ('(')
 				print_attribute_special_item_access (l_arg, l_special_type, True)
-				current_file.put_character (')')
 			else
-				current_file.put_character ('0')
+					-- Do not return a null pointer, otherwise
+					-- 'gcc' emits a compilation warning.
+				print_argument_name (l_arg, current_file)
 			end
+			current_file.put_character (')')
 			print_semicolon_newline
 			dedent
 			current_file.put_character ('}')
