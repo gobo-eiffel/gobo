@@ -4,6 +4,476 @@
 extern "C" {
 #endif
 
+/* KL_SPECIAL_ROUTINES [detachable ET_INSPECT_INSTRUCTION].force */
+void T536s4(TC* ac, T0* a1, T0* a2, T6 a3)
+{
+	T6 t1;
+	T1 t2;
+	t1 = (((T538*)(a1))->a1);
+	t2 = ((T1)((a3)<(t1)));
+	if (t2) {
+		((T538*)(a1))->z2[a3] = (a2);
+	} else {
+		t1 = (((T538*)(a1))->a1);
+		T538f8(ac, a1, a2, t1, a3);
+	}
+}
+
+/* SPECIAL [detachable ET_INSPECT_INSTRUCTION].fill_with */
+void T538f8(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
+{
+	T6 l1 = 0;
+	T6 l2 = 0;
+	T6 l3 = 0;
+	T6 t1;
+	T1 t2;
+	l1 = a2;
+	t1 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	l3 = (T6f17(ac, &(((T538*)(C))->a1), t1));
+	l2 = l3;
+	while (1) {
+		t2 = (T1)((l1) == (l2));
+		if (t2) {
+			break;
+		}
+		((T538*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	l1 = l3;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t2 = (T1)((l1) == (l2));
+		if (t2) {
+			break;
+		}
+		T538f10(ac, C, a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+}
+
+/* SPECIAL [detachable ET_INSPECT_INSTRUCTION].extend */
+void T538f10(TC* ac, T0* C, T0* a1)
+{
+	T6 t1;
+	{
+	t1 = ((T538*)(C))->a1;
+	((T538*)(C))->a1 = t1 + 1 ;
+	((T538*)(C))->z2[t1] = a1;
+	}
+}
+
+/* KL_SPECIAL_ROUTINES [detachable ET_INSPECT_INSTRUCTION].aliased_resized_area */
+T0* T536s2(TC* ac, T0* a1, T6 a2)
+{
+	T0* R = 0;
+	T6 t1;
+	T1 t2;
+	t1 = (((T538*)(a1))->a2);
+	t2 = (T6f4(ac, &a2, t1));
+	if (t2) {
+		R = (T538f4(ac, a1, a2));
+	} else {
+		R = a1;
+	}
+	return R;
+}
+
+/* SPECIAL [detachable ET_INSPECT_INSTRUCTION].aliased_resized_area */
+T0* T538f4(TC* ac, T0* C, T6 a1)
+{
+	T0* R = 0;
+	T6 t1;
+	T6 t2;
+	{
+	t1 = ((T538*)(C))->a2;
+	if (a1 == t1) {
+		R = C;
+	} else {
+		R = GE_new538(ac, a1, EIF_TRUE);
+		t1 = ((T538*)(C))->a1;
+		((T538*)(R))->a1 = ((t1 < a1)?t1:a1);
+		t2 = ((T538*)(C))->a1;
+		t1 = ((T538*)(R))->a1;
+		if (t2 > t1) {
+			t2 = t1;
+		}
+		if (t2 > 0) {
+			memcpy((void*)(((T538*)(R))->z2), (void*)(((T538*)(C))->z2), t2 * sizeof(T0*));
+		}
+	}
+	}
+	return R;
+}
+
+/* ET_AST_FACTORY.new_inspect_instruction */
+T0* T65f274(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+{
+	T0* R = 0;
+	T1 t1;
+	t1 = (T1)(a1!=EIF_VOID);
+	if (t1) {
+		R = T537c16(ac, a1, a2);
+		T537f17(ac, R, a3);
+	}
+	return R;
+}
+
+/* ET_INSPECT_INSTRUCTION.set_else_compound */
+void T537f17(TC* ac, T0* C, T0* a1)
+{
+	((T537*)(C))->a4 = a1;
+}
+
+/* ET_INSPECT_INSTRUCTION.make */
+T0* T537c16(TC* ac, T0* a1, T0* a2)
+{
+	T0* C;
+	T0* t1;
+	C = GE_new537(ac, EIF_TRUE);
+	((T537*)(C))->a1 = a1;
+	((T537*)(C))->a2 = a2;
+	t1 = (T537s5(ac));
+	((T537*)(C))->a3 = (T81s575(ac));
+	return C;
+}
+
+/* ET_INSPECT_INSTRUCTION.tokens */
+T0* T537s5(TC* ac)
+{
+	GE_rescue r;
+	volatile uint32_t tr = ac->in_rescue;
+	T0* R = 0;
+	if (ac->thread_onces->reference_status[113]) {
+		if (ac->thread_onces->reference_exception[113]) {
+			GE_raise_once_exception(ac, ac->thread_onces->reference_exception[113]);
+		}
+		return ac->thread_onces->reference_value[113];
+	} else {
+		ac->thread_onces->reference_status[113] = '\1';
+		ac->thread_onces->reference_value[113] = R;
+	}
+	r.previous = ac->last_rescue;
+	ac->last_rescue = &r;
+	if (GE_setjmp(r.jb) != 0) {
+		ac->last_rescue = &r;
+		ac->in_rescue = tr + 1;
+		ac->thread_onces->reference_exception[113] = GE_last_exception_raised(ac);
+		ac->last_rescue = r.previous;
+		GE_jump_to_last_rescue(ac);
+	}
+	R = T81c1566(ac);
+	ac->thread_onces->reference_value[113] = R;
+	ac->last_rescue = r.previous;
+	return R;
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_651 */
+void T68f1783(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T6 t3;
+	T0* t4;
+	T0* t5;
+	T0* t6;
+	T1 t7;
+	t1 = (T68f767(ac, C));
+	t2 = (T68f767(ac, C));
+	t3 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
+	t4 = (((T275*)(((T68*)(C))->a87))->z2[t3]);
+	t5 = (((T471*)(((T68*)(C))->a291))->z2[((T68*)(C))->a574]);
+	t2 = (T65f258(ac, t2, t4, t5));
+	t4 = (((T667*)(((T68*)(C))->a495))->z2[((T68*)(C))->a642]);
+	t5 = (((T408*)(((T68*)(C))->a225))->z2[((T68*)(C))->a552]);
+	t6 = (((T275*)(((T68*)(C))->a87))->z2[((T68*)(C))->a506]);
+	l1 = (T65f274(ac, t1, t2, t4, t5, t6));
+	t7 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t7) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(5)))));
+		((T68*)(C))->a597 = ((T6)((((T68*)(C))->a597)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a574 = ((T6)((((T68*)(C))->a574)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a642 = ((T6)((((T68*)(C))->a642)-((T6)(GE_int32(1)))));
+		((T68*)(C))->a552 = ((T6)((((T68*)(C))->a552)-((T6)(GE_int32(1)))));
+		t7 = (T6f14(ac, &(((T68*)(C))->a597), ((T68*)(C))->a359));
+		if (t7) {
+			((T68*)(C))->a359 = ((T6)((((T68*)(C))->a359)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a360 = (T536s2(ac, ((T68*)(C))->a360, ((T68*)(C))->a359));
+		}
+		T536s4(ac, ((T68*)(C))->a360, l1, ((T68*)(C))->a597);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_650 */
+void T68f1782(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* t1;
+	T0* t2;
+	T6 t3;
+	T0* t4;
+	T0* t5;
+	T1 t6;
+	t1 = (T68f767(ac, C));
+	t2 = (T68f767(ac, C));
+	t3 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(1)))));
+	t4 = (((T275*)(((T68*)(C))->a87))->z2[t3]);
+	t3 = ((T6)((((T68*)(C))->a574)-((T6)(GE_int32(1)))));
+	t5 = (((T471*)(((T68*)(C))->a291))->z2[t3]);
+	t2 = (T65f258(ac, t2, t4, t5));
+	t4 = (((T275*)(((T68*)(C))->a87))->z2[((T68*)(C))->a506]);
+	t5 = (((T471*)(((T68*)(C))->a291))->z2[((T68*)(C))->a574]);
+	l1 = (T65f273(ac, t1, t2, t4, t5));
+	t6 = (T1)(l1!=EIF_VOID);
+	if (t6) {
+		T68f2098(ac, C);
+	}
+	t6 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t6) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(4)))));
+		((T68*)(C))->a568 = ((T6)((((T68*)(C))->a568)+((T6)(GE_int32(1)))));
+		((T68*)(C))->a506 = ((T6)((((T68*)(C))->a506)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a574 = ((T6)((((T68*)(C))->a574)-((T6)(GE_int32(2)))));
+		t6 = (T6f14(ac, &(((T68*)(C))->a568), ((T68*)(C))->a272));
+		if (t6) {
+			((T68*)(C))->a272 = ((T6)((((T68*)(C))->a272)+((T6)(GE_int32(10)))));
+			((T68*)(C))->a273 = (T452s2(ac, ((T68*)(C))->a273, ((T68*)(C))->a272));
+		}
+		T452s4(ac, ((T68*)(C))->a273, l1, ((T68*)(C))->a568);
+	}
+}
+
+/* KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_EXPRESSION].force */
+void T452s4(TC* ac, T0* a1, T0* a2, T6 a3)
+{
+	T6 t1;
+	T1 t2;
+	t1 = (((T454*)(a1))->a1);
+	t2 = ((T1)((a3)<(t1)));
+	if (t2) {
+		((T454*)(a1))->z2[a3] = (a2);
+	} else {
+		t1 = (((T454*)(a1))->a1);
+		T454f8(ac, a1, a2, t1, a3);
+	}
+}
+
+/* SPECIAL [detachable ET_ELSEIF_EXPRESSION].fill_with */
+void T454f8(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
+{
+	T6 l1 = 0;
+	T6 l2 = 0;
+	T6 l3 = 0;
+	T6 t1;
+	T1 t2;
+	l1 = a2;
+	t1 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	l3 = (T6f17(ac, &(((T454*)(C))->a1), t1));
+	l2 = l3;
+	while (1) {
+		t2 = (T1)((l1) == (l2));
+		if (t2) {
+			break;
+		}
+		((T454*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	l1 = l3;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t2 = (T1)((l1) == (l2));
+		if (t2) {
+			break;
+		}
+		T454f10(ac, C, a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+}
+
+/* SPECIAL [detachable ET_ELSEIF_EXPRESSION].extend */
+void T454f10(TC* ac, T0* C, T0* a1)
+{
+	T6 t1;
+	{
+	t1 = ((T454*)(C))->a1;
+	((T454*)(C))->a1 = t1 + 1 ;
+	((T454*)(C))->z2[t1] = a1;
+	}
+}
+
+/* KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_EXPRESSION].aliased_resized_area */
+T0* T452s2(TC* ac, T0* a1, T6 a2)
+{
+	T0* R = 0;
+	T6 t1;
+	T1 t2;
+	t1 = (((T454*)(a1))->a2);
+	t2 = (T6f4(ac, &a2, t1));
+	if (t2) {
+		R = (T454f4(ac, a1, a2));
+	} else {
+		R = a1;
+	}
+	return R;
+}
+
+/* SPECIAL [detachable ET_ELSEIF_EXPRESSION].aliased_resized_area */
+T0* T454f4(TC* ac, T0* C, T6 a1)
+{
+	T0* R = 0;
+	T6 t1;
+	T6 t2;
+	{
+	t1 = ((T454*)(C))->a2;
+	if (a1 == t1) {
+		R = C;
+	} else {
+		R = GE_new454(ac, a1, EIF_TRUE);
+		t1 = ((T454*)(C))->a1;
+		((T454*)(R))->a1 = ((t1 < a1)?t1:a1);
+		t2 = ((T454*)(C))->a1;
+		t1 = ((T454*)(R))->a1;
+		if (t2 > t1) {
+			t2 = t1;
+		}
+		if (t2 > 0) {
+			memcpy((void*)(((T454*)(R))->z2), (void*)(((T454*)(C))->z2), t2 * sizeof(T0*));
+		}
+	}
+	}
+	return R;
+}
+
+/* ET_AST_FACTORY.new_elseif_expression */
+T0* T65f273(TC* ac, T0* C, T0* a1, T0* a2, T0* a3)
+{
+	T0* R = 0;
+	T1 t1;
+	t1 = (T1)(a1!=EIF_VOID);
+	if (t1) {
+		t1 = (T1)(a3!=EIF_VOID);
+	}
+	if (t1) {
+		R = T453c11(ac, a1, a3);
+	}
+	return R;
+}
+
+/* ET_ELSEIF_EXPRESSION.make */
+T0* T453c11(TC* ac, T0* a1, T0* a2)
+{
+	T0* C;
+	T0* t1;
+	C = GE_new453(ac, EIF_TRUE);
+	((T453*)(C))->a1 = a1;
+	t1 = (T453s4(ac));
+	((T453*)(C))->a2 = (T81s655(ac));
+	((T453*)(C))->a3 = a2;
+	return C;
+}
+
+/* ET_ELSEIF_EXPRESSION.tokens */
+T0* T453s4(TC* ac)
+{
+	GE_rescue r;
+	volatile uint32_t tr = ac->in_rescue;
+	T0* R = 0;
+	if (ac->thread_onces->reference_status[113]) {
+		if (ac->thread_onces->reference_exception[113]) {
+			GE_raise_once_exception(ac, ac->thread_onces->reference_exception[113]);
+		}
+		return ac->thread_onces->reference_value[113];
+	} else {
+		ac->thread_onces->reference_status[113] = '\1';
+		ac->thread_onces->reference_value[113] = R;
+	}
+	r.previous = ac->last_rescue;
+	ac->last_rescue = &r;
+	if (GE_setjmp(r.jb) != 0) {
+		ac->last_rescue = &r;
+		ac->in_rescue = tr + 1;
+		ac->thread_onces->reference_exception[113] = GE_last_exception_raised(ac);
+		ac->last_rescue = r.previous;
+		GE_jump_to_last_rescue(ac);
+	}
+	R = T81c1566(ac);
+	ac->thread_onces->reference_value[113] = R;
+	ac->last_rescue = r.previous;
+	return R;
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_649 */
+void T68f1781(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T0* m1 = 0;
+	T1 t1;
+	T0* t2;
+	l1 = (((T457*)(((T68*)(C))->a276))->z2[((T68*)(C))->a569]);
+	t1 = (T1)(l1!=EIF_VOID);
+	if (t1) {
+		t2 = (((T454*)(((T68*)(C))->a273))->z2[((T68*)(C))->a568]);
+		t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
+	}
+	if (t1) {
+		T456f11(ac, l1, m1);
+	}
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a568 = ((T6)((((T68*)(C))->a568)-((T6)(GE_int32(1)))));
+		T455s4(ac, ((T68*)(C))->a276, l1, ((T68*)(C))->a569);
+	}
+}
+
+/* KL_SPECIAL_ROUTINES [detachable ET_ELSEIF_EXPRESSION_LIST].force */
+void T455s4(TC* ac, T0* a1, T0* a2, T6 a3)
+{
+	T6 t1;
+	T1 t2;
+	t1 = (((T457*)(a1))->a1);
+	t2 = ((T1)((a3)<(t1)));
+	if (t2) {
+		((T457*)(a1))->z2[a3] = (a2);
+	} else {
+		t1 = (((T457*)(a1))->a1);
+		T457f8(ac, a1, a2, t1, a3);
+	}
+}
+
+/* SPECIAL [detachable ET_ELSEIF_EXPRESSION_LIST].fill_with */
+void T457f8(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
+{
+	T6 l1 = 0;
+	T6 l2 = 0;
+	T6 l3 = 0;
+	T6 t1;
+	T1 t2;
+	l1 = a2;
+	t1 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	l3 = (T6f17(ac, &(((T457*)(C))->a1), t1));
+	l2 = l3;
+	while (1) {
+		t2 = (T1)((l1) == (l2));
+		if (t2) {
+			break;
+		}
+		((T457*)(C))->z2[l1] = (a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	l1 = l3;
+	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
+	while (1) {
+		t2 = (T1)((l1) == (l2));
+		if (t2) {
+			break;
+		}
+		T457f10(ac, C, a1);
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+}
+
 /* SPECIAL [detachable ET_ELSEIF_EXPRESSION_LIST].extend */
 void T457f10(TC* ac, T0* C, T0* a1)
 {
@@ -21390,7 +21860,7 @@ void T717f82p1(TC* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	T0* t1;
 	((T717*)(C))->a3 = a1;
-	t1 = (T717f29(ac, C));
+	t1 = (T717f50(ac, C));
 	((T717*)(C))->a4 = (((T307*)(t1))->a4);
 	((T717*)(C))->a5 = a2;
 	t1 = (T717s30(ac));
@@ -21870,7 +22340,7 @@ void T715f95(TC* ac, T0* C, T0* a1)
 /* ET_DO_PROCEDURE.set_rescue_clause */
 void T715f94(TC* ac, T0* C, T0* a1)
 {
-	((T715*)(C))->a9 = a1;
+	((T715*)(C))->a10 = a1;
 }
 
 /* ET_DO_PROCEDURE.set_postconditions */
@@ -21882,13 +22352,13 @@ void T715f93(TC* ac, T0* C, T0* a1)
 /* ET_DO_PROCEDURE.set_compound */
 void T715f92(TC* ac, T0* C, T0* a1)
 {
-	((T715*)(C))->a12 = a1;
+	((T715*)(C))->a13 = a1;
 }
 
 /* ET_DO_PROCEDURE.set_locals */
 void T715f91(TC* ac, T0* C, T0* a1)
 {
-	((T715*)(C))->a10 = a1;
+	((T715*)(C))->a11 = a1;
 }
 
 /* ET_DO_PROCEDURE.set_preconditions */
@@ -24934,17 +25404,17 @@ T0* T715f52(TC* ac, T0* C, T0* a1)
 	R = T715c83(ac, a1, ((T715*)(C))->a3, ((T715*)(C))->a6);
 	T715f89(ac, R, ((T715*)(C))->a15);
 	T715f90(ac, R, ((T715*)(C))->a16);
-	T715f91(ac, R, ((T715*)(C))->a10);
-	T715f92(ac, R, ((T715*)(C))->a12);
+	T715f91(ac, R, ((T715*)(C))->a11);
+	T715f92(ac, R, ((T715*)(C))->a13);
 	T715f93(ac, R, ((T715*)(C))->a17);
-	T715f94(ac, R, ((T715*)(C))->a9);
+	T715f94(ac, R, ((T715*)(C))->a10);
 	T715f95(ac, R, ((T715*)(C))->a5);
 	T715f88(ac, R, ((T715*)(C))->a18);
 	T715f97(ac, R, ((T715*)(C))->a4);
 	T715f98(ac, R, ((T715*)(C))->a19);
 	T715f99(ac, R, ((T715*)(C))->a20);
 	T715f96(ac, R, ((T715*)(C))->a21);
-	T715f84(ac, R, ((T715*)(C))->a11);
+	T715f84(ac, R, ((T715*)(C))->a12);
 	T715f85(ac, R, ((T715*)(C))->a8);
 	T715f86(ac, R, ((T715*)(C))->a22);
 	T715f100(ac, R, C);
@@ -24972,7 +25442,7 @@ void T715f85(TC* ac, T0* C, T0* a1)
 /* ET_DO_PROCEDURE.set_object_tests */
 void T715f84(TC* ac, T0* C, T0* a1)
 {
-	((T715*)(C))->a11 = a1;
+	((T715*)(C))->a12 = a1;
 }
 
 /* ET_DO_PROCEDURE.set_feature_clause */
@@ -27204,12 +27674,12 @@ T0* T11f19(TC* ac, T11 volatile* C)
 {
 	T0* R = 0;
 	R = T17c49(ac, (T6)(GE_int32(20)));
-	T17f87(ac, R, *C);
+	T17f86(ac, R, *C);
 	return R;
 }
 
 /* STRING_8.append_natural_64 */
-void T17f87(TC* ac, T0* C, T11 a1)
+void T17f86(TC* ac, T0* C, T11 a1)
 {
 	T11 l1 = 0;
 	T6 volatile l2 = 0;
@@ -27351,7 +27821,7 @@ void T715f105(TC* ac, T0* C, T6 a1)
 {
 	T1 t1;
 	((T715*)(C))->a29 = a1;
-	t1 = (T1)((((T715*)(C))->a13) == ((T6)(GE_int32(0))));
+	t1 = (T1)((((T715*)(C))->a9) == ((T6)(GE_int32(0))));
 	if (t1) {
 		T715f107(ac, C, a1);
 	}
@@ -27370,7 +27840,7 @@ void T715f108(TC* ac, T0* C, T6 a1)
 /* ET_DO_PROCEDURE.set_first_seed */
 void T715f107(TC* ac, T0* C, T6 a1)
 {
-	((T715*)(C))->a13 = a1;
+	((T715*)(C))->a9 = a1;
 }
 
 /* ET_EXTERNAL_FUNCTION.set_id */
@@ -62314,7 +62784,7 @@ T6 T266f8(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 			t2 = (T266f6(ac, C));
 			T17f54(ac, l1, t2);
 			t2 = (T266f6(ac, C));
-			T17f68(ac, l1, t2);
+			T17f67(ac, l1, t2);
 		}
 	}
 	R = (T51x6078465T0T6T6(ac, a1, l1, (T6)(GE_int32(1)), a3));
@@ -62380,7 +62850,7 @@ T6 T1819f7(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 		T1819f10(ac, C);
 		t2 = ((T1)(!(((T1819*)(C))->a1)));
 		if (t2) {
-			T17f78(ac, a1, ((T1819*)(C))->a2, l1);
+			T17f77(ac, a1, ((T1819*)(C))->a2, l1);
 			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		} else {
 			t1 = ((T6)((l1)-(a2)));
@@ -62435,7 +62905,7 @@ T6 T245f11(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 		}
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 		t2 = ((l7, (T2)0));
-		T17f78(ac, a1, t2, l2);
+		T17f77(ac, a1, t2, l2);
 		l7 = ((l7, (T0*)0));
 		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 	}
@@ -62458,7 +62928,7 @@ T6 T245f11(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 				t1 = ((T1)(!(t1)));
 				if (t1) {
 					t4 = (((T17*)(l5))->a2);
-					T17f84(ac, a1, l5, (T6)(GE_int32(1)), t4, l2);
+					T17f83(ac, a1, l5, (T6)(GE_int32(1)), t4, l2);
 					T17f55(ac, a1);
 				}
 				t4 = (((T17*)(l5))->a2);
@@ -62466,7 +62936,7 @@ T6 T245f11(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 			} else {
 				l4 = ((T6)((a3)-(l1)));
 				l6 = T17c49(ac, l4);
-				T17f68(ac, l6, l4);
+				T17f67(ac, l6, l4);
 				t3 = (T245s5(ac));
 				T1669f26(ac, t3, l4);
 				t3 = (T245s5(ac));
@@ -62475,7 +62945,7 @@ T6 T245f11(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 				t1 = ((T1)(!(t1)));
 				if (t1) {
 					t4 = (((T17*)(l5))->a2);
-					T17f84(ac, l6, l5, (T6)(GE_int32(1)), t4, (T6)(GE_int32(1)));
+					T17f83(ac, l6, l5, (T6)(GE_int32(1)), t4, (T6)(GE_int32(1)));
 					T17f55(ac, l6);
 				}
 				l4 = (((T17*)(l5))->a2);
@@ -62486,7 +62956,7 @@ T6 T245f11(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 						break;
 					}
 					t2 = (T17f24(ac, l6, l3));
-					T17f78(ac, a1, t2, l2);
+					T17f77(ac, a1, t2, l2);
 					l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
 					l3 = ((T6)((l3)+((T6)(GE_int32(1)))));
 				}
@@ -62504,7 +62974,7 @@ T6 T245f11(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 }
 
 /* STRING_8.subcopy */
-void T17f84(TC* ac, T0* C, T0* a1, T6 a2, T6 a3, T6 a4)
+void T17f83(TC* ac, T0* C, T0* a1, T6 a2, T6 a3, T6 a4)
 {
 	T0* l1 = 0;
 	T0* l2 = 0;
@@ -62554,7 +63024,7 @@ void T1669f32(TC* ac, T0* C, T6 a1)
 	l1 = (T1669s13(ac, ((T1669*)(C))->a2, t1, a1));
 	T31f8(ac, l2, l1);
 	T17f56(ac, l3, l1);
-	T17f68(ac, l3, l1);
+	T17f67(ac, l3, l1);
 	T31f18(ac, l2, l3);
 }
 
@@ -62789,7 +63259,7 @@ T6 T43f41(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 		}
 		l5 = ((T6)((l5)+((T6)(GE_int32(1)))));
 		t2 = (((T164*)(l6))->a1);
-		T17f78(ac, a1, t2, l1);
+		T17f77(ac, a1, t2, l1);
 		l6 = (((T164*)(l6))->a2);
 		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 	}
@@ -62818,7 +63288,7 @@ T6 T43f41(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 				} else {
 					l4 = ((T6)((a3)-(l5)));
 					l2 = T17c49(ac, l4);
-					T17f68(ac, l2, l4);
+					T17f67(ac, l2, l4);
 					l4 = (T43f40(ac, C, l2, (T6)(GE_int32(1)), l4));
 					T17f55(ac, l2);
 					l3 = (T6)(GE_int32(1));
@@ -62828,7 +63298,7 @@ T6 T43f41(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 							break;
 						}
 						t2 = (T17f24(ac, l2, l3));
-						T17f78(ac, a1, t2, l1);
+						T17f77(ac, a1, t2, l1);
 						l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
 						l3 = ((T6)((l3)+((T6)(GE_int32(1)))));
 					}
@@ -62978,7 +63448,7 @@ T6 T266f7(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 			t2 = (T266f6(ac, C));
 			T17f54(ac, l1, t2);
 			t2 = (T266f6(ac, C));
-			T17f68(ac, l1, t2);
+			T17f67(ac, l1, t2);
 		}
 	}
 	l4 = (T51x6078465T0T6T6(ac, a1, l1, (T6)(GE_int32(1)), a3));
@@ -63021,7 +63491,7 @@ T6 T266f7(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 						t1 = ((T1)((t4)<(l10)));
 						if (t1) {
 							T17f54(ac, l1, l10);
-							T17f68(ac, l1, l10);
+							T17f67(ac, l1, l10);
 							l2 = (((T17*)(l1))->a1);
 						}
 						l11 = (T51x6078465T0T6T6(ac, a1, l1, (T6)(GE_int32(1)), l10));
@@ -63065,7 +63535,7 @@ T6 T266f7(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 						t7 = ((T6)((l3)+((T6)(GE_int32(2)))));
 						t8 = ((T6)((l3)+((T6)(GE_int32(1)))));
 						t8 = ((T6)((t8)+(l10)));
-						T17f84(ac, l1, l1, t7, t8, (T6)(GE_int32(1)));
+						T17f83(ac, l1, l1, t7, t8, (T6)(GE_int32(1)));
 					}
 					l3 = (T6)(GE_int32(0));
 					l4 = ((T6)((l10)-((T6)(GE_int32(1)))));
@@ -63075,7 +63545,7 @@ T6 T266f7(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 					t1 = ((T1)((t7)<(l10)));
 					if (t1) {
 						T17f54(ac, l1, l10);
-						T17f68(ac, l1, l10);
+						T17f67(ac, l1, l10);
 						l2 = (((T17*)(l1))->a1);
 					}
 					while (1) {
@@ -63134,7 +63604,7 @@ T6 T266f7(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 						t10 = ((T6)((l3)+((T6)(GE_int32(2)))));
 						t11 = ((T6)((l3)+((T6)(GE_int32(1)))));
 						t11 = ((T6)((t11)+(l10)));
-						T17f84(ac, l1, l1, t10, t11, (T6)(GE_int32(1)));
+						T17f83(ac, l1, l1, t10, t11, (T6)(GE_int32(1)));
 					}
 					l3 = (T6)(GE_int32(0));
 					l4 = ((T6)((l10)-((T6)(GE_int32(1)))));
@@ -63144,7 +63614,7 @@ T6 T266f7(TC* ac, T0* C, T0* a1, T6 a2, T6 a3)
 					t1 = ((T1)((t10)<(l10)));
 					if (t1) {
 						T17f54(ac, l1, l10);
-						T17f68(ac, l1, l10);
+						T17f67(ac, l1, l10);
 						l2 = (((T17*)(l1))->a1);
 					}
 					while (1) {
@@ -78983,7 +79453,7 @@ T0* T1282f3(TC* ac, T0* C)
 void T1282f12(TC* ac, T0* C, T0* a1)
 {
 	T0* t1;
-	memcpy(((char*)(C)) + sizeof(T0), ((char*)(a1)) + sizeof(T0), sizeof(T1282) - sizeof(T0));
+	memcpy(((char*)(C)) + offsetof(T1282, a1), ((char*)(a1)) + offsetof(T1282, a1), sizeof(T1282) - offsetof(T1282, a1));
 	t1 = (T1282s5(ac));
 	((T1282*)(C))->a2 = (T1047s1(ac, ((T1282*)(C))->a2));
 }
@@ -79014,7 +79484,7 @@ void T953f19(TC* ac, T0* C, T0* a1)
 	T0* t2;
 	t1 = (T1)(a1!=C);
 	if (t1) {
-		memcpy(((char*)(C)) + sizeof(T0), ((char*)(a1)) + sizeof(T0), sizeof(T953) - sizeof(T0));
+		memcpy(((char*)(C)) + offsetof(T953, a1), ((char*)(a1)) + offsetof(T953, a1), sizeof(T953) - offsetof(T953, a1));
 		t2 = (((T953*)(a1))->a1);
 		t2 = (T154f7(ac, t2));
 		T953f16(ac, C, t2);
@@ -91235,7 +91705,7 @@ void T236f46(TC* ac, T0* C)
 					T63f202(ac, t2);
 				}
 			} else {
-				t2 = (T70f85(ac, ((T236*)(C))->a18, l13));
+				t2 = (T70f86(ac, ((T236*)(C))->a18, l13));
 				t1 = (t2?((m4 = t2, EIF_TRUE)):EIF_FALSE);
 				t1 = ((T1)(!(t1)));
 				if (t1) {
@@ -94127,7 +94597,7 @@ T0* T1466c1244(TC* ac, T0* a1, T0* a2)
 		T17f50(ac, l3, t3);
 	} else {
 		t2 = (((T726*)(l2))->a4);
-		t3 = (T70f86(ac, a1, t2));
+		t3 = (T70f85(ac, a1, t2));
 		t1 = (t3?((m2 = t3, EIF_TRUE)):EIF_FALSE);
 		if (t1) {
 			t3 = (T620x19152909(ac, m2));
@@ -94153,7 +94623,7 @@ T0* T1466c1244(TC* ac, T0* a1, T0* a2)
 			T17f50(ac, l3, t3);
 		} else {
 			t2 = (((T726*)(l2))->a4);
-			t3 = (T70f86(ac, a1, t2));
+			t3 = (T70f85(ac, a1, t2));
 			t1 = (t3?((m3 = t3, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
 				t3 = (T620x19152909(ac, m3));
@@ -94683,7 +95153,7 @@ void T1456f16(TC* ac, T0* C, T0* a1)
 	if (t1) {
 		l1 = ((T1456*)(C))->a5;
 		T1456f18(ac, C);
-		memcpy(((char*)(C)) + sizeof(T0), ((char*)(a1)) + sizeof(T0), sizeof(T1456) - sizeof(T0));
+		memcpy(((char*)(C)) + offsetof(T1456, a1), ((char*)(a1)) + offsetof(T1456, a1), sizeof(T1456) - offsetof(T1456, a1));
 		t1 = (T1)(l1!=EIF_VOID);
 		if (t1) {
 			t1 = (T1456f10(ac, C, l1));
@@ -94928,7 +95398,7 @@ void T240f29(TC* ac, T0* C, T0* a1)
 	if (t1) {
 		l1 = ((T240*)(C))->a5;
 		T240f26(ac, C);
-		memcpy(((char*)(C)) + sizeof(T0), ((char*)(a1)) + sizeof(T0), sizeof(T240) - sizeof(T0));
+		memcpy(((char*)(C)) + offsetof(T240, a1), ((char*)(a1)) + offsetof(T240, a1), sizeof(T240) - offsetof(T240, a1));
 		t1 = (T1)(l1!=EIF_VOID);
 		if (t1) {
 			t1 = (T240f15(ac, C, l1));
@@ -98935,10 +99405,10 @@ T0* T715f74(TC* ac, T0* C, T0* a1)
 	R = T715c83(ac, a1, ((T715*)(C))->a3, ((T715*)(C))->a6);
 	T715f89(ac, R, ((T715*)(C))->a15);
 	T715f90(ac, R, ((T715*)(C))->a16);
-	T715f91(ac, R, ((T715*)(C))->a10);
-	T715f92(ac, R, ((T715*)(C))->a12);
+	T715f91(ac, R, ((T715*)(C))->a11);
+	T715f92(ac, R, ((T715*)(C))->a13);
 	T715f93(ac, R, ((T715*)(C))->a17);
-	T715f94(ac, R, ((T715*)(C))->a9);
+	T715f94(ac, R, ((T715*)(C))->a10);
 	T715f95(ac, R, ((T715*)(C))->a5);
 	T715f115(ac, R, ((T715*)(C))->a7);
 	T715f117(ac, R, ((T715*)(C))->a23);
@@ -98950,10 +99420,10 @@ T0* T715f74(TC* ac, T0* C, T0* a1)
 	T715f98(ac, R, ((T715*)(C))->a19);
 	T715f99(ac, R, ((T715*)(C))->a20);
 	T715f96(ac, R, ((T715*)(C))->a21);
-	T715f84(ac, R, ((T715*)(C))->a11);
+	T715f84(ac, R, ((T715*)(C))->a12);
 	T715f85(ac, R, ((T715*)(C))->a8);
 	T715f86(ac, R, ((T715*)(C))->a22);
-	T715f107(ac, R, ((T715*)(C))->a13);
+	T715f107(ac, R, ((T715*)(C))->a9);
 	T715f119(ac, R, ((T715*)(C))->a14);
 	return R;
 }
@@ -99711,10 +100181,10 @@ T0* T715f73(TC* ac, T0* C, T0* a1)
 	T717f95(ac, R, ((T715*)(C))->a19);
 	T717f96(ac, R, ((T715*)(C))->a20);
 	T717f92(ac, R, ((T715*)(C))->a21);
-	T717f83(ac, R, ((T715*)(C))->a11);
+	T717f83(ac, R, ((T715*)(C))->a12);
 	T717f84(ac, R, ((T715*)(C))->a8);
 	T717f85(ac, R, ((T715*)(C))->a22);
-	T717f104(ac, R, ((T715*)(C))->a13);
+	T717f104(ac, R, ((T715*)(C))->a9);
 	T717f116(ac, R, ((T715*)(C))->a14);
 	return R;
 }
@@ -102901,571 +103371,6 @@ void T1132f62(TC* ac, T0* C)
 		T1710f14(ac, l1, EIF_VOID);
 		l1 = l2;
 	}
-}
-
-/* DS_HASH_TABLE_CURSOR [ET_CLIENT, ET_CLASS].set_next_cursor */
-void T1710f14(TC* ac, T0* C, T0* a1)
-{
-	((T1710*)(C))->a2 = a1;
-}
-
-/* DS_HASH_TABLE_CURSOR [ET_CLIENT, ET_CLASS].set_after */
-void T1710f13(TC* ac, T0* C)
-{
-	((T1710*)(C))->a1 = (T6)(GE_int32(-3));
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].back */
-void T1132f52(TC* ac, T0* C)
-{
-	T1132f61(ac, C, ((T1132*)(C))->a15);
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].cursor_back */
-void T1132f61(TC* ac, T0* C, T0* a1)
-{
-	T6 l1 = 0;
-	T1 l2 = 0;
-	T6 l3 = 0;
-	T6 volatile t1;
-	T1 t2;
-	l3 = (((T1710*)(a1))->a1);
-	t1 = ((T6)(GE_int32(-3)));
-	t2 = (T1)((l3) == (t1));
-	if (t2) {
-		l2 = EIF_TRUE;
-		l1 = ((T1132*)(C))->a5;
-	} else {
-		l2 = EIF_FALSE;
-		l1 = ((T6)((l3)-((T6)(GE_int32(1)))));
-	}
-	while (1) {
-		t2 = ((T1)((l1)<((T6)(GE_int32(0)))));
-		if (!(t2)) {
-			t1 = (T1132f31(ac, C, l1));
-			t2 = (T6f4(ac, &t1, (T6)(GE_int32(-2))));
-		}
-		if (t2) {
-			break;
-		}
-		l1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-	}
-	t2 = ((T1)((l1)<((T6)(GE_int32(0)))));
-	if (t2) {
-		T1710f11(ac, a1);
-		t2 = ((T1)(!(l2)));
-		if (t2) {
-			T1132f71(ac, C, a1);
-		}
-	} else {
-		T1710f12(ac, a1, l1);
-		if (l2) {
-			T1132f72(ac, C, a1);
-		}
-	}
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].add_traversing_cursor */
-void T1132f72(TC* ac, T0* C, T0* a1)
-{
-	T1 t1;
-	T0* t2;
-	t1 = (T1)(a1!=((T1132*)(C))->a15);
-	if (t1) {
-		t2 = (((T1710*)(((T1132*)(C))->a15))->a2);
-		T1710f14(ac, a1, t2);
-		T1710f14(ac, ((T1132*)(C))->a15, a1);
-	}
-}
-
-/* DS_HASH_TABLE_CURSOR [ET_CLIENT, ET_CLASS].set_position */
-void T1710f12(TC* ac, T0* C, T6 a1)
-{
-	((T1710*)(C))->a1 = a1;
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].remove_traversing_cursor */
-void T1132f71(TC* ac, T0* C, T0* a1)
-{
-	T0* l1 = 0;
-	T0* l2 = 0;
-	T1 t1;
-	T0* t2;
-	t1 = (T1)(a1!=((T1132*)(C))->a15);
-	if (t1) {
-		l2 = ((T1132*)(C))->a15;
-		l1 = (((T1710*)(l2))->a2);
-		while (1) {
-			t1 = (T1)(l1==a1);
-			if (!(t1)) {
-				t1 = (T1)(l1==EIF_VOID);
-			}
-			if (t1) {
-				break;
-			}
-			l2 = l1;
-			l1 = (((T1710*)(l1))->a2);
-		}
-		t1 = (T1)(l1==a1);
-		if (t1) {
-			t2 = (((T1710*)(a1))->a2);
-			T1710f14(ac, l2, t2);
-			T1710f14(ac, a1, EIF_VOID);
-		}
-	}
-}
-
-/* DS_HASH_TABLE_CURSOR [ET_CLIENT, ET_CLASS].set_before */
-void T1710f11(TC* ac, T0* C)
-{
-	((T1710*)(C))->a1 = (T6)(GE_int32(-2));
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].clashes_item */
-T6 T1132f31(TC* ac, T0* C, T6 a1)
-{
-	T6 R = 0;
-	R = (((T154*)(((T1132*)(C))->a12))->z2[a1]);
-	return R;
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].item_for_iteration */
-T0* T1132f22(TC* ac, T0* C)
-{
-	T0* R = 0;
-	R = (T1132f25(ac, C, ((T1132*)(C))->a15));
-	return R;
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].cursor_item */
-T0* T1132f25(TC* ac, T0* C, T0* a1)
-{
-	T0* R = 0;
-	T6 t1;
-	t1 = (((T1710*)(a1))->a1);
-	R = (T1132f26(ac, C, t1));
-	return R;
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].item_storage_item */
-T0* T1132f26(TC* ac, T0* C, T6 a1)
-{
-	T0* R = 0;
-	R = (((T1712*)(((T1132*)(C))->a9))->z2[a1]);
-	return R;
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].before */
-T1 T1132f21(TC* ac, T0* C)
-{
-	T1 R = 0;
-	R = (T1132f24(ac, C, ((T1132*)(C))->a15));
-	return R;
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].cursor_before */
-T1 T1132f24(TC* ac, T0* C, T0* a1)
-{
-	T1 R = 0;
-	R = (T1710f4(ac, a1));
-	return R;
-}
-
-/* DS_HASH_TABLE_CURSOR [ET_CLIENT, ET_CLASS].before */
-T1 T1710f4(TC* ac, T0* C)
-{
-	T1 R = 0;
-	R = (T1)((((T1710*)(C))->a1) == ((T6)(GE_int32(-2))));
-	return R;
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].finish */
-void T1132f51(TC* ac, T0* C)
-{
-	T1132f60(ac, C, ((T1132*)(C))->a15);
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].cursor_finish */
-void T1132f60(TC* ac, T0* C, T0* a1)
-{
-	T6 l1 = 0;
-	T1 l2 = 0;
-	T1 t1;
-	T6 volatile t2;
-	t1 = (T1132f36(ac, C));
-	if (t1) {
-		T1710f11(ac, a1);
-	} else {
-		l2 = (T1132f37(ac, C, a1));
-		l1 = ((T1132*)(C))->a5;
-		while (1) {
-			t1 = ((T1)((l1)<((T6)(GE_int32(0)))));
-			if (!(t1)) {
-				t2 = (T1132f31(ac, C, l1));
-				t1 = (T6f4(ac, &t2, (T6)(GE_int32(-2))));
-			}
-			if (t1) {
-				break;
-			}
-			l1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-		}
-		t1 = ((T1)((l1)<((T6)(GE_int32(0)))));
-		if (t1) {
-			T1710f11(ac, a1);
-			t1 = ((T1)(!(l2)));
-			if (t1) {
-				T1132f71(ac, C, a1);
-			}
-		} else {
-			T1710f12(ac, a1, l1);
-			if (l2) {
-				T1132f72(ac, C, a1);
-			}
-		}
-	}
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].cursor_off */
-T1 T1132f37(TC* ac, T0* C, T0* a1)
-{
-	T1 R = 0;
-	R = (T1710f7(ac, a1));
-	return R;
-}
-
-/* DS_HASH_TABLE_CURSOR [ET_CLIENT, ET_CLASS].off */
-T1 T1710f7(TC* ac, T0* C)
-{
-	T1 R = 0;
-	R = ((T1)((((T1710*)(C))->a1)<((T6)(GE_int32(0)))));
-	return R;
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].is_empty */
-T1 T1132f36(TC* ac, T0* C)
-{
-	T1 R = 0;
-	R = (T1)((((T1132*)(C))->a16) == ((T6)(GE_int32(0))));
-	return R;
-}
-
-/* DS_SPARSE_TABLE_KEYS [ET_CLIENT, ET_CLASS].for_all */
-T1 T1913f6(TC* ac, T0* C, T0* a1)
-{
-	T1 R = 0;
-	T0* l1 = 0;
-	T1 t1;
-	T0* t2;
-	R = EIF_TRUE;
-	l1 = (T1913f4(ac, C));
-	T2120f6(ac, l1);
-	while (1) {
-		t1 = (T2120f3(ac, l1));
-		if (t1) {
-			break;
-		}
-		t2 = (T2120f4(ac, l1));
-		t1 = (((T1 (*)(TC*, T0*, T0*, T0*))(((T78*)(a1))->a1))(ac, ((T78*)(a1))->a2, 0, t2));
-		t1 = ((T1)(!(t1)));
-		if (t1) {
-			R = EIF_FALSE;
-			T2120f7(ac, l1);
-		} else {
-			T2120f8(ac, l1);
-		}
-	}
-	return R;
-}
-
-/* DS_SPARSE_TABLE_KEYS_CURSOR [ET_CLIENT, ET_CLASS].forth */
-void T2120f8(TC* ac, T0* C)
-{
-	T1913f12(ac, ((T2120*)(C))->a2, C);
-}
-
-/* DS_SPARSE_TABLE_KEYS [ET_CLIENT, ET_CLASS].cursor_forth */
-void T1913f12(TC* ac, T0* C, T0* a1)
-{
-	T0* t1;
-	t1 = (((T2120*)(a1))->a1);
-	T1710f17(ac, t1);
-}
-
-/* DS_HASH_TABLE_CURSOR [ET_CLIENT, ET_CLASS].forth */
-void T1710f17(TC* ac, T0* C)
-{
-	T1132f75(ac, ((T1710*)(C))->a3, C);
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].cursor_forth */
-void T1132f75(TC* ac, T0* C, T0* a1)
-{
-	T6 volatile l1 = 0;
-	T6 l2 = 0;
-	T1 l3 = 0;
-	T6 l4 = 0;
-	T6 volatile t1;
-	T1 t2;
-	l4 = (((T1710*)(a1))->a1);
-	t1 = ((T6)(GE_int32(-2)));
-	t2 = (T1)((l4) == (t1));
-	if (t2) {
-		l3 = EIF_TRUE;
-		l1 = (T6)(GE_int32(0));
-	} else {
-		l3 = EIF_FALSE;
-		l1 = ((T6)((l4)+((T6)(GE_int32(1)))));
-	}
-	l2 = ((T1132*)(C))->a5;
-	while (1) {
-		t2 = (T6f4(ac, (&l1), l2));
-		if (!(t2)) {
-			t1 = (T1132f31(ac, C, l1));
-			t2 = (T6f4(ac, &t1, (T6)(GE_int32(-2))));
-		}
-		if (t2) {
-			break;
-		}
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-	}
-	t2 = (T6f4(ac, (&l1), l2));
-	if (t2) {
-		T1710f13(ac, a1);
-		t2 = ((T1)(!(l3)));
-		if (t2) {
-			T1132f71(ac, C, a1);
-		}
-	} else {
-		T1710f12(ac, a1, l1);
-		if (l3) {
-			T1132f72(ac, C, a1);
-		}
-	}
-}
-
-/* DS_SPARSE_TABLE_KEYS_CURSOR [ET_CLIENT, ET_CLASS].go_after */
-void T2120f7(TC* ac, T0* C)
-{
-	T1913f11(ac, ((T2120*)(C))->a2, C);
-}
-
-/* DS_SPARSE_TABLE_KEYS [ET_CLIENT, ET_CLASS].cursor_go_after */
-void T1913f11(TC* ac, T0* C, T0* a1)
-{
-	T0* t1;
-	t1 = (((T2120*)(a1))->a1);
-	T1710f16(ac, t1);
-}
-
-/* DS_HASH_TABLE_CURSOR [ET_CLIENT, ET_CLASS].go_after */
-void T1710f16(TC* ac, T0* C)
-{
-	T1132f74(ac, ((T1710*)(C))->a3, C);
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].cursor_go_after */
-void T1132f74(TC* ac, T0* C, T0* a1)
-{
-	T1 l1 = 0;
-	T1 t1;
-	l1 = (T1132f37(ac, C, a1));
-	T1710f13(ac, a1);
-	t1 = ((T1)(!(l1)));
-	if (t1) {
-		T1132f71(ac, C, a1);
-	}
-}
-
-/* DS_SPARSE_TABLE_KEYS_CURSOR [ET_CLIENT, ET_CLASS].item */
-T0* T2120f4(TC* ac, T0* C)
-{
-	T0* R = 0;
-	R = (T1913f7(ac, ((T2120*)(C))->a2, C));
-	return R;
-}
-
-/* DS_SPARSE_TABLE_KEYS [ET_CLIENT, ET_CLASS].cursor_item */
-T0* T1913f7(TC* ac, T0* C, T0* a1)
-{
-	T0* R = 0;
-	T0* t1;
-	t1 = (((T2120*)(a1))->a1);
-	R = (T1710f9(ac, t1));
-	return R;
-}
-
-/* DS_HASH_TABLE_CURSOR [ET_CLIENT, ET_CLASS].key */
-T0* T1710f9(TC* ac, T0* C)
-{
-	T0* R = 0;
-	R = (T1132f40(ac, ((T1710*)(C))->a3, C));
-	return R;
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].cursor_key */
-T0* T1132f40(TC* ac, T0* C, T0* a1)
-{
-	T0* R = 0;
-	T6 t1;
-	t1 = (((T1710*)(a1))->a1);
-	R = (T1132f35(ac, C, t1));
-	return R;
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].key_storage_item */
-T0* T1132f35(TC* ac, T0* C, T6 a1)
-{
-	T0* R = 0;
-	R = (((T779*)(((T1132*)(C))->a11))->z2[a1]);
-	return R;
-}
-
-/* DS_SPARSE_TABLE_KEYS_CURSOR [ET_CLIENT, ET_CLASS].after */
-T1 T2120f3(TC* ac, T0* C)
-{
-	T1 R = 0;
-	R = (T1710f8(ac, ((T2120*)(C))->a1));
-	return R;
-}
-
-/* DS_HASH_TABLE_CURSOR [ET_CLIENT, ET_CLASS].after */
-T1 T1710f8(TC* ac, T0* C)
-{
-	T1 R = 0;
-	R = (T1)((((T1710*)(C))->a1) == ((T6)(GE_int32(-3))));
-	return R;
-}
-
-/* DS_SPARSE_TABLE_KEYS_CURSOR [ET_CLIENT, ET_CLASS].start */
-void T2120f6(TC* ac, T0* C)
-{
-	T1913f10(ac, ((T2120*)(C))->a2, C);
-}
-
-/* DS_SPARSE_TABLE_KEYS [ET_CLIENT, ET_CLASS].cursor_start */
-void T1913f10(TC* ac, T0* C, T0* a1)
-{
-	T0* t1;
-	t1 = (((T2120*)(a1))->a1);
-	T1710f15(ac, t1);
-}
-
-/* DS_HASH_TABLE_CURSOR [ET_CLIENT, ET_CLASS].start */
-void T1710f15(TC* ac, T0* C)
-{
-	T1132f73(ac, ((T1710*)(C))->a3, C);
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].cursor_start */
-void T1132f73(TC* ac, T0* C, T0* a1)
-{
-	T6 volatile l1 = 0;
-	T6 l2 = 0;
-	T1 l3 = 0;
-	T1 t1;
-	T6 volatile t2;
-	t1 = (T1132f36(ac, C));
-	if (t1) {
-		T1710f13(ac, a1);
-	} else {
-		l3 = (T1132f37(ac, C, a1));
-		l1 = (T6)(GE_int32(0));
-		l2 = ((T1132*)(C))->a5;
-		while (1) {
-			t1 = (T6f4(ac, (&l1), l2));
-			if (!(t1)) {
-				t2 = (T1132f31(ac, C, l1));
-				t1 = (T6f4(ac, &t2, (T6)(GE_int32(-2))));
-			}
-			if (t1) {
-				break;
-			}
-			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-		}
-		t1 = (T6f4(ac, (&l1), l2));
-		if (t1) {
-			T1710f13(ac, a1);
-			t1 = ((T1)(!(l3)));
-			if (t1) {
-				T1132f71(ac, C, a1);
-			}
-		} else {
-			T1710f12(ac, a1, l1);
-			if (l3) {
-				T1132f72(ac, C, a1);
-			}
-		}
-	}
-}
-
-/* DS_SPARSE_TABLE_KEYS [ET_CLIENT, ET_CLASS].new_cursor */
-T0* T1913f4(TC* ac, T0* C)
-{
-	T0* R = 0;
-	R = T2120c5(ac, C);
-	return R;
-}
-
-/* DS_SPARSE_TABLE_KEYS_CURSOR [ET_CLIENT, ET_CLASS].make */
-T0* T2120c5(TC* ac, T0* a1)
-{
-	T0* C;
-	T0* t1;
-	C = GE_new2120(ac, EIF_TRUE);
-	((T2120*)(C))->a2 = a1;
-	t1 = (((T1913*)(((T2120*)(C))->a2))->a1);
-	((T2120*)(C))->a1 = (T1132f33(ac, t1));
-	return C;
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].new_cursor */
-T0* T1132f33(TC* ac, T0* C)
-{
-	T0* R = 0;
-	R = T1710c10(ac, C);
-	return R;
-}
-
-/* DS_HASH_TABLE_CURSOR [ET_CLIENT, ET_CLASS].make */
-T0* T1710c10(TC* ac, T0* a1)
-{
-	T0* C;
-	C = GE_new1710(ac, EIF_TRUE);
-	((T1710*)(C))->a3 = a1;
-	((T1710*)(C))->a1 = (T6)(GE_int32(-2));
-	return C;
-}
-
-/* DS_HASH_TABLE [ET_CLIENT, ET_CLASS].keys */
-T0* T1132f39(TC* ac, T0* C)
-{
-	T0* R = 0;
-	T0* l1 = 0;
-	T0* m1 = 0;
-	T1 t1;
-	t1 = (((T1132*)(C))->a17?((m1 = ((T1132*)(C))->a17, EIF_TRUE)):EIF_FALSE);
-	if (t1) {
-		R = m1;
-	} else {
-		l1 = T1913c8(ac, C);
-		((T1132*)(C))->a17 = l1;
-		R = l1;
-	}
-	return R;
-}
-
-/* DS_SPARSE_TABLE_KEYS [ET_CLIENT, ET_CLASS].make */
-T0* T1913c8(TC* ac, T0* a1)
-{
-	T0* C;
-	T0* t1;
-	C = GE_new1913(ac, EIF_TRUE);
-	((T1913*)(C))->a1 = a1;
-	((T1913*)(C))->a2 = (((T1132*)(a1))->a2);
-	t1 = (T1132f33(ac, a1));
-	t1 = (T1913f5(ac, C, t1));
-	T1913f9(ac, C, t1);
-	return C;
 }
 
 

@@ -4,84 +4,194 @@
 extern "C" {
 #endif
 
+void GE_init_const19()
+{
+	ge1525ov24986001 = (GE_ms8("VDRD-3", 6));
+	ge1525ov24985650 = (GE_ms8("feature `$7\' is redeclared but its postconditions do not begin with \'ensure then\'.", 82));
+	ge1525ov24986197 = (GE_ms8("vdrd3a", 6));
+	ge1525ov24985649 = (GE_ms8("feature `$7\' is redeclared but its preconditions do not begin with \'require else\'.", 82));
+	ge1525ov24986203 = (GE_ms8("vdrd6a", 6));
+	ge1525ov24985655 = (GE_ms8("attribute `$7\' inherited from $8 is not redeclared into an attribute.", 69));
+	ge1525ov24986200 = (GE_ms8("vdrd4b", 6));
+	ge1525ov24986002 = (GE_ms8("VDRD-4", 6));
+	ge1525ov24985652 = (GE_ms8("effective feature `$7\' inherited from $8 is redefined but is not listed in the Redefine subclause.", 98));
+	ge1525ov24986201 = (GE_ms8("vdrd4c", 6));
+	ge1525ov24985653 = (GE_ms8("effective feature `$8\' inherited from $9 is redefined into a deferred one but is not listed in the Undefine and Redefine subclauses.", 132));
+	ge1525ov24986351 = (GE_ms8("vmfn0b", 6));
+	ge1525ov24985800 = (GE_ms8("two features with the same name `$7\' in current class and `$8\' inherited from $9.", 81));
+	ge1525ov24986199 = (GE_ms8("vdrd4a", 6));
+	ge1525ov24985651 = (GE_ms8("deferred feature `$7\' inherited from $8 is redefined but is not listed in the Redefine subclause.", 97));
+	ge1525ov24986213 = (GE_ms8("vdrs4b", 6));
+	ge1525ov24985665 = (GE_ms8("redeclaration of feature `$7\' from $8 is an effecting and should not appear in the Redefine subclause.", 102));
+	ge1525ov24986202 = (GE_ms8("vdrd5a", 6));
+	ge1525ov24986003 = (GE_ms8("VDRD-5", 6));
+	ge1525ov24985654 = (GE_ms8("effective feature `$7\' inherited from $8 is redefined into a deferred one.", 74));
+	ge1525ov24986207 = (GE_ms8("vdrd7c", 6));
+	ge1525ov24986005 = (GE_ms8("VDRD-7", 6));
+	ge1525ov24985659 = (GE_ms8("feature `$7\' inherited from $9 has an alias `$8\' but its redeclared version has a different one `$11\'.", 102));
+	ge1525ov24986205 = (GE_ms8("vdrd7a", 6));
+	ge1525ov24985657 = (GE_ms8("feature `$7\' inherited from $8 has no alias but its redeclared version has one `$10\'.", 85));
+	ge1525ov24986206 = (GE_ms8("vdrd7b", 6));
+	ge1525ov24985658 = (GE_ms8("feature `$7\' inherited from $9 has an alias `$8\' but its redeclared version has none.", 85));
+	ge1525ov24986359 = (GE_ms8("vmss3a", 6));
+	ge1525ov24986066 = (GE_ms8("VMSS-3", 6));
+	ge1525ov24985808 = (GE_ms8("feature name `$7\' appears in the Select subclause of parent $8 but is not replicated.", 85));
+	ge1525ov24986328 = (GE_ms8("vhpr1a", 6));
+	ge1525ov24986033 = (GE_ms8("VHPR-1", 6));
+	ge1525ov24985777 = (GE_ms8("inheritance cycle $7.", 21));
+	ge1525ov24986177 = (GE_ms8("vcfg2a", 6));
+	ge1525ov24985992 = (GE_ms8("VCFG-2", 6));
+	ge1525ov24985629 = (GE_ms8("formal generic parameters #$8 and #$9 have the same name \'$7\'.", 62));
+	ge1525ov24986176 = (GE_ms8("vcfg1a", 6));
+	ge1525ov24985991 = (GE_ms8("VCFG-1", 6));
+	ge1525ov24985628 = (GE_ms8("formal generic parameter \'$7\' has the same name as a class in the surrounding universe.", 87));
+	ge1525ov24986486 = (GE_ms8("gvagp0a", 7));
+	ge1525ov24986125 = (GE_ms8("GVAGP", 5));
+	ge1525ov24985933 = (GE_ms8("ancestors with generic parameter mismatch: \'$7\' and \'$8\'.", 57));
+	ge1525ov24986330 = (GE_ms8("vhpr2a", 6));
+	ge1525ov24986034 = (GE_ms8("VHPR-2", 6));
+	ge1525ov24985779 = (GE_ms8("conforming inheritance from frozen class $7.", 44));
+	ge1525ov24986489 = (GE_ms8("gvhso2a", 7));
+	ge1525ov24986129 = (GE_ms8("GVHSO-2", 7));
+	ge1525ov24985936 = (GE_ms8("implicitly inherits from class SYSTEM_OBJECT but SYSTEM_OBJECT is not a .NET class.", 83));
+	ge1525ov24986488 = (GE_ms8("gvhso1a", 7));
+	ge1525ov24986128 = (GE_ms8("GVHSO-1", 7));
+	ge1525ov24985935 = (GE_ms8("implicitly inherits from unknown class SYSTEM_OBJECT.", 53));
+	ge1525ov24986327 = (GE_ms8("vhay0a", 6));
+	ge1525ov24986047 = (GE_ms8("VHAY", 4));
+	ge1525ov24985776 = (GE_ms8("implicitly inherits from unknown class ANY.", 43));
+	ge1525ov24986329 = (GE_ms8("vhpr1b", 6));
+	ge1525ov24985778 = (GE_ms8("inheritance cycle when inheriting from $7.", 42));
+	ge1515ov24821774 = (GE_ms8("gcdep", 5));
+	ge1515ov24821769 = (GE_ms8("GCDEP", 5));
+	ge1515ov24821764 = (GE_ms8("[$1] cluster $2: class $3 (from cluster $4) is a provider of class $5 (from cluster $6) which is not contained in any of the clusters $7.", 137));
+	ge1515ov24821775 = (GE_ms8("gcpro", 5));
+	ge1515ov24821770 = (GE_ms8("GCPRO", 5));
+	ge1515ov24821765 = (GE_ms8("[$1] cluster $2: class $3 (from cluster $4) depends on class $5 (from cluster $6) which is not contained in any of the clusters $7.", 131));
+	ge865ov14172185 = (GE_ms8("library_root", 12));
+	ge1525ov24986317 = (GE_ms8("vggc3b", 6));
+	ge1525ov24986045 = (GE_ms8("VGGC-3", 6));
+	ge1525ov24985766 = (GE_ms8("`$7\' is not the final name of a procedure in the base class of any of generic constraints $8.", 93));
+	ge1525ov24986316 = (GE_ms8("vggc3a", 6));
+	ge1525ov24985765 = (GE_ms8("`$7\' is not the final name of a procedure in generic constraint\'s base class $8.", 80));
+	ge1525ov24986318 = (GE_ms8("vggc3c", 6));
+	ge1525ov24985767 = (GE_ms8("feature `$9\' in $8 appearing as creator `$7\' in the generic constraint is not a procedure.", 90));
+	ge1525ov24986319 = (GE_ms8("vggc3d", 6));
+	ge1525ov24985768 = (GE_ms8("features `$9\' in \'$8\' and `$11\' in \'$10\' appear both as creator `$7\' in the generic constraint.", 95));
+	ge1525ov24986307 = (GE_ms8("vgcp3c", 6));
+	ge1525ov24985757 = (GE_ms8("procedure name `$7\' appears twice in creation clause of generic constraint.", 75));
+	ge1525ov24986260 = (GE_ms8("vfav1t", 6));
+	ge1525ov24985712 = (GE_ms8("`$7\' is already the binary Operator alias of feature `$8\' in generic constraint $9.", 83));
+	ge1525ov24986259 = (GE_ms8("vfav1s", 6));
+	ge1525ov24985711 = (GE_ms8("`$7\' is already the unary Operator alias of feature `$8\' in generic constraint $9.", 82));
+	ge1525ov24986274 = (GE_ms8("vfav3g", 6));
+	ge1525ov24985726 = (GE_ms8("`$7\' is already the Parenthesis alias of feature `$8\' in generic constraint $9.", 79));
+	ge1525ov24986267 = (GE_ms8("vfav2g", 6));
+	ge1525ov24985719 = (GE_ms8("`$7\' is already the Bracket alias of feature `$8\' in generic constraint $9.", 75));
+	ge1525ov24986314 = (GE_ms8("vggc2f", 6));
+	ge1525ov24986044 = (GE_ms8("VGGC-2", 6));
+	ge1525ov24985764 = (GE_ms8("`$7\' is already the final name of a feature in generic constraint $8.", 69));
+	ge1525ov24986313 = (GE_ms8("vggc2e", 6));
+	ge1525ov24985763 = (GE_ms8("feature name `$7\' appears on the right-hand-side of more than once rename pair in generic constraint $8.", 104));
+	ge1525ov24986258 = (GE_ms8("vfav1r", 6));
+	ge1525ov24985710 = (GE_ms8("binary Operator alias `$7\' appears on the right-hand-side of more than once rename pair in generic constraint $8.", 113));
+	ge1525ov24986286 = (GE_ms8("vfav4l", 6));
+	ge1525ov24985738 = (GE_ms8("binary Operator alias `$7\' appears more than once on the right-hand-side of the rename pair in generic constraint $8.", 117));
+	ge1525ov24986257 = (GE_ms8("vfav1q", 6));
+	ge1525ov24985709 = (GE_ms8("unary Operator alias `$7\' appears on the right-hand-side of more than once rename pair in generic constraint $8.", 112));
+	ge1525ov24986285 = (GE_ms8("vfav4k", 6));
+	ge1525ov24985737 = (GE_ms8("unary Operator alias `$7\' appears more than once on the right-hand-side of the rename pair in generic constraint $8.", 116));
+	ge1525ov24986273 = (GE_ms8("vfav3f", 6));
+	ge1525ov24985725 = (GE_ms8("Parenthesis alias `$7\' appears on the right-hand-side of more than once rename pair in generic constraint $8.", 109));
+	ge1525ov24986284 = (GE_ms8("vfav4j", 6));
+	ge1525ov24985736 = (GE_ms8("Parenthesis alias `$7\' appears more than once on the right-hand-side of the rename pair in generic constraint $8.", 113));
+	ge1525ov24986266 = (GE_ms8("vfav2f", 6));
+	ge1525ov24985718 = (GE_ms8("Bracket alias `$7\' appears on the right-hand-side of more than once rename pair in generic constraint $8.", 105));
+}
+
 void GE_init_const20()
 {
+	ge1525ov24986283 = (GE_ms8("vfav4i", 6));
+	ge1525ov24985735 = (GE_ms8("Bracket alias `$7\' appears more than once on the right-hand-side of the rename pair in generic constraint $8.", 109));
+	ge1525ov24986309 = (GE_ms8("vggc2a", 6));
+	ge1525ov24985759 = (GE_ms8("`$7\' is not the final name of a feature in generic constraint $8.", 65));
 	ge1525ov24986312 = (GE_ms8("vggc2d", 6));
 	ge1525ov24985762 = (GE_ms8("feature name `$7\' appears on the left-hand-side of more than once rename pair in generic constraint $8.", 103));
 	ge1525ov24986311 = (GE_ms8("vggc2c", 6));
 	ge1525ov24985761 = (GE_ms8("generic constraint $7 cannot have a rename clause.", 50));
 	ge1525ov24986310 = (GE_ms8("vggc2b", 6));
 	ge1525ov24985760 = (GE_ms8("generic constraint $7 is a formal generic parameter and therefore cannot have a rename clause.", 94));
-	ge1526ov25002423 = (GE_ms8("GE_new_context", 14));
-	ge1526ov25002424 = (GE_ms8("GE_new_exception_manager", 24));
-	ge1526ov25002362 = (GE_ms8("GE_init_exception_manager", 25));
-	ge1526ov25002394 = (GE_ms8("GE_last_exception", 17));
-	ge1526ov25002445 = (GE_ms8("GE_once_raise", 13));
-	ge1526ov25002527 = (GE_ms8("GE_set_exception_data", 21));
-	ge1526ov25002405 = (GE_ms8("GE_mutex_create", 15));
-	ge1526ov25002557 = (GE_ms8("GE_thread_onces_set_counts", 26));
-	ge1526ov25002363 = (GE_ms8("GE_init_scoop", 13));
-	ge1526ov25002360 = (GE_ms8("GE_increment_scoop_sessions_count", 33));
-	ge1526ov25002325 = (GE_ms8("GE_decrement_scoop_sessions_count", 33));
-	ge1526ov25002506 = (GE_ms8("GE_scoop_processor_run", 22));
-	ge1526ov25002552 = (GE_ms8("GE_show_console", 15));
-	ge1526ov25002575 = (GE_ms8("GE_TYPE_FLAG_SPECIAL", 20));
-	ge1526ov25002576 = (GE_ms8("GE_TYPE_FLAG_TUPLE", 18));
-	ge1526ov25002571 = (GE_ms8("GE_TYPE_FLAG_NONE", 17));
-	ge1526ov25002558 = (GE_ms8("GE_TYPE_FLAG_BOOLEAN", 20));
-	ge1526ov25002559 = (GE_ms8("GE_TYPE_FLAG_CHARACTER_8", 24));
-	ge1526ov25002560 = (GE_ms8("GE_TYPE_FLAG_CHARACTER_32", 25));
-	ge1526ov25002563 = (GE_ms8("GE_TYPE_FLAG_INTEGER_8", 22));
-	ge1526ov25002564 = (GE_ms8("GE_TYPE_FLAG_INTEGER_16", 23));
-	ge1526ov25002565 = (GE_ms8("GE_TYPE_FLAG_INTEGER_32", 23));
-	ge1526ov25002566 = (GE_ms8("GE_TYPE_FLAG_INTEGER_64", 23));
-	ge1526ov25002567 = (GE_ms8("GE_TYPE_FLAG_NATURAL_8", 22));
-	ge1526ov25002568 = (GE_ms8("GE_TYPE_FLAG_NATURAL_16", 23));
-	ge1526ov25002569 = (GE_ms8("GE_TYPE_FLAG_NATURAL_32", 23));
-	ge1526ov25002570 = (GE_ms8("GE_TYPE_FLAG_NATURAL_64", 23));
-	ge1526ov25002572 = (GE_ms8("GE_TYPE_FLAG_POINTER", 20));
-	ge1526ov25002573 = (GE_ms8("GE_TYPE_FLAG_REAL_32", 20));
-	ge1526ov25002574 = (GE_ms8("GE_TYPE_FLAG_REAL_64", 20));
-	ge1526ov25002561 = (GE_ms8("GE_TYPE_FLAG_DEFERRED", 21));
-	ge1526ov25002275 = (GE_ms8("EIF_TYPE_INDEX", 14));
-	ge1526ov25002361 = (GE_ms8("GE_init_const", 13));
-	ge1526ov25002326 = (GE_ms8("GE_deep", 7));
-	ge1526ov25002330 = (GE_ms8("GE_dispose_once_per_object_data", 31));
-	ge1526ov25002406 = (GE_ms8("GE_mutex_destroy", 16));
-	ge1526ov25002302 = (GE_ms8("GE_calloc", 9));
-	ge1526ov25002461 = (GE_ms8("GE_register_dispose_once_per_object_data", 40));
-	ge1526ov25002606 = (GE_ms8("initialize", 10));
-	ge1526ov25002637 = (GE_ms8("size_t", 6));
-	ge1526ov25002303 = (GE_ms8("GE_calloc_atomic", 16));
-	ge1526ov25002460 = (GE_ms8("GE_register_dispose", 19));
-	ge1526ov25002554 = (GE_ms8("GE_sp32_base_address", 20));
-	ge1526ov25002553 = (GE_ms8("GE_sp8_base_address", 19));
-	ge1526ov25002427 = (GE_ms8("GE_new_istr32", 13));
-	ge1526ov25002426 = (GE_ms8("GE_new_istr8", 12));
-	ge1526ov25002434 = (GE_ms8("GE_new_str32", 12));
-	ge1526ov25002433 = (GE_ms8("GE_new_str8", 11));
+	ge1526ov25002427 = (GE_ms8("GE_new_context", 14));
+	ge1526ov25002428 = (GE_ms8("GE_new_exception_manager", 24));
+	ge1526ov25002366 = (GE_ms8("GE_init_exception_manager", 25));
+	ge1526ov25002398 = (GE_ms8("GE_last_exception", 17));
+	ge1526ov25002449 = (GE_ms8("GE_once_raise", 13));
+	ge1526ov25002531 = (GE_ms8("GE_set_exception_data", 21));
+	ge1526ov25002409 = (GE_ms8("GE_mutex_create", 15));
+	ge1526ov25002561 = (GE_ms8("GE_thread_onces_set_counts", 26));
+	ge1526ov25002367 = (GE_ms8("GE_init_scoop", 13));
+	ge1526ov25002364 = (GE_ms8("GE_increment_scoop_sessions_count", 33));
+	ge1526ov25002324 = (GE_ms8("GE_decrement_scoop_sessions_count", 33));
+	ge1526ov25002510 = (GE_ms8("GE_scoop_processor_run", 22));
+	ge1526ov25002556 = (GE_ms8("GE_show_console", 15));
+	ge1526ov25002579 = (GE_ms8("GE_TYPE_FLAG_SPECIAL", 20));
+	ge1526ov25002580 = (GE_ms8("GE_TYPE_FLAG_TUPLE", 18));
+	ge1526ov25002575 = (GE_ms8("GE_TYPE_FLAG_NONE", 17));
+	ge1526ov25002562 = (GE_ms8("GE_TYPE_FLAG_BOOLEAN", 20));
+	ge1526ov25002563 = (GE_ms8("GE_TYPE_FLAG_CHARACTER_8", 24));
+	ge1526ov25002564 = (GE_ms8("GE_TYPE_FLAG_CHARACTER_32", 25));
+	ge1526ov25002567 = (GE_ms8("GE_TYPE_FLAG_INTEGER_8", 22));
+	ge1526ov25002568 = (GE_ms8("GE_TYPE_FLAG_INTEGER_16", 23));
+	ge1526ov25002569 = (GE_ms8("GE_TYPE_FLAG_INTEGER_32", 23));
+	ge1526ov25002570 = (GE_ms8("GE_TYPE_FLAG_INTEGER_64", 23));
+	ge1526ov25002571 = (GE_ms8("GE_TYPE_FLAG_NATURAL_8", 22));
+	ge1526ov25002572 = (GE_ms8("GE_TYPE_FLAG_NATURAL_16", 23));
+	ge1526ov25002573 = (GE_ms8("GE_TYPE_FLAG_NATURAL_32", 23));
+	ge1526ov25002574 = (GE_ms8("GE_TYPE_FLAG_NATURAL_64", 23));
+	ge1526ov25002576 = (GE_ms8("GE_TYPE_FLAG_POINTER", 20));
+	ge1526ov25002577 = (GE_ms8("GE_TYPE_FLAG_REAL_32", 20));
+	ge1526ov25002578 = (GE_ms8("GE_TYPE_FLAG_REAL_64", 20));
+	ge1526ov25002565 = (GE_ms8("GE_TYPE_FLAG_DEFERRED", 21));
+	ge1526ov25002274 = (GE_ms8("EIF_TYPE_INDEX", 14));
+	ge1526ov25002365 = (GE_ms8("GE_init_const", 13));
+	ge1526ov25002325 = (GE_ms8("GE_deep", 7));
+	ge1526ov25002329 = (GE_ms8("GE_dispose_once_per_object_data", 31));
+	ge1526ov25002410 = (GE_ms8("GE_mutex_destroy", 16));
+	ge1526ov25002301 = (GE_ms8("GE_calloc", 9));
+	ge1526ov25002465 = (GE_ms8("GE_register_dispose_once_per_object_data", 40));
+	ge1526ov25002610 = (GE_ms8("initialize", 10));
+	ge1526ov25002641 = (GE_ms8("size_t", 6));
+	ge1526ov25002302 = (GE_ms8("GE_calloc_atomic", 16));
+	ge1526ov25002464 = (GE_ms8("GE_register_dispose", 19));
+	ge1526ov25002558 = (GE_ms8("GE_sp32_base_address", 20));
+	ge1526ov25002557 = (GE_ms8("GE_sp8_base_address", 19));
+	ge1526ov25002431 = (GE_ms8("GE_new_istr32", 13));
+	ge1526ov25002430 = (GE_ms8("GE_new_istr8", 12));
+	ge1526ov25002438 = (GE_ms8("GE_new_str32", 12));
+	ge1526ov25002437 = (GE_ms8("GE_new_str8", 11));
 	ge414ov6307841 = (GE_ms8("\n", 1));
-	ge1526ov25002660 = (GE_ms8(".c", 2));
-	ge1526ov25002239 = (GE_ms8("EIF_ANY", 7));
-	ge1526ov25002653 = (GE_ms8("unsigned", 8));
-	ge1526ov25002270 = (GE_ms8("EIF_REFERENCE", 13));
-	ge1526ov25002264 = (GE_ms8("EIF_NATURAL_64", 14));
-	ge1526ov25002263 = (GE_ms8("EIF_NATURAL_32", 14));
-	ge1526ov25002262 = (GE_ms8("EIF_NATURAL_16", 14));
-	ge1526ov25002261 = (GE_ms8("EIF_NATURAL_8", 13));
-	ge1526ov25002251 = (GE_ms8("EIF_INTEGER_64", 14));
-	ge1526ov25002249 = (GE_ms8("EIF_INTEGER_16", 14));
-	ge1526ov25002248 = (GE_ms8("EIF_INTEGER_8", 13));
-	ge1526ov25002244 = (GE_ms8("EIF_DOUBLE", 10));
-	ge1526ov25002267 = (GE_ms8("EIF_REAL", 8));
-	ge1526ov25002260 = (GE_ms8("EIF_NATURAL", 11));
-	ge1526ov25002247 = (GE_ms8("EIF_INTEGER", 11));
-	ge1526ov25002277 = (GE_ms8("EIF_WIDE_CHAR", 13));
-	ge1526ov25002652 = (GE_ms8("#undef", 6));
-	ge1526ov25002278 = (GE_ms8("EIF_WINDOWS", 11));
-	ge1526ov25002601 = (GE_ms8("#ifndef", 7));
-	ge1526ov25002661 = (GE_ms8(".cfg", 4));
-	ge1526ov25002257 = (GE_ms8("EIF_LINUX", 9));
+	ge1526ov25002664 = (GE_ms8(".c", 2));
+	ge1526ov25002238 = (GE_ms8("EIF_ANY", 7));
+	ge1526ov25002657 = (GE_ms8("unsigned", 8));
+	ge1526ov25002269 = (GE_ms8("EIF_REFERENCE", 13));
+	ge1526ov25002654 = (GE_ms8("uint16_t", 8));
+	ge1526ov25002263 = (GE_ms8("EIF_NATURAL_64", 14));
+	ge1526ov25002262 = (GE_ms8("EIF_NATURAL_32", 14));
+	ge1526ov25002261 = (GE_ms8("EIF_NATURAL_16", 14));
+	ge1526ov25002260 = (GE_ms8("EIF_NATURAL_8", 13));
+	ge1526ov25002250 = (GE_ms8("EIF_INTEGER_64", 14));
+	ge1526ov25002248 = (GE_ms8("EIF_INTEGER_16", 14));
+	ge1526ov25002247 = (GE_ms8("EIF_INTEGER_8", 13));
+	ge1526ov25002243 = (GE_ms8("EIF_DOUBLE", 10));
+	ge1526ov25002266 = (GE_ms8("EIF_REAL", 8));
+	ge1526ov25002259 = (GE_ms8("EIF_NATURAL", 11));
+	ge1526ov25002246 = (GE_ms8("EIF_INTEGER", 11));
+	ge1526ov25002276 = (GE_ms8("EIF_WIDE_CHAR", 13));
+	ge1526ov25002656 = (GE_ms8("#undef", 6));
+	ge1526ov25002277 = (GE_ms8("EIF_WINDOWS", 11));
+	ge1526ov25002605 = (GE_ms8("#ifndef", 7));
+	ge1526ov25002665 = (GE_ms8(".cfg", 4));
+	ge1526ov25002256 = (GE_ms8("EIF_LINUX", 9));
 	ge411ov6193159 = (GE_ms8("stdin", 5));
 	ge1869ov30621751 = (GE_ms8("GOBO_CLI_GC", 11));
 	ge1869ov30621752 = (GE_ms8("GOBO_DEFAULT_GC", 15));
@@ -102,15 +212,15 @@ void GE_init_const20()
 	ge1523ov24952835 = (GE_ms8("[$1] missing root class.", 24));
 	ge1525ov24986497 = (GE_ms8("gvkfe6a", 7));
 	ge1525ov24986137 = (GE_ms8("GVKFE-6", 7));
+}
+
+void GE_init_const21()
+{
 	ge1525ov24985944 = (GE_ms8("routine `$7\' in kernel class $5 has not the expected signature \'$8\'.", 68));
 	ge1525ov24986494 = (GE_ms8("gvkfe3a", 7));
 	ge1525ov24986134 = (GE_ms8("GVKFE-3", 7));
 	ge1525ov24985941 = (GE_ms8("attribute `$7\' in kernel class $5 has not the expected type \'$8\'.", 65));
 	ge1525ov24986493 = (GE_ms8("gvkfe2a", 7));
-}
-
-void GE_init_const21()
-{
 	ge1525ov24986133 = (GE_ms8("GVKFE-2", 7));
 	ge1525ov24985940 = (GE_ms8("feature `$7\' in kernel class $5 is not an attribute.", 52));
 	ge1523ov24952846 = (GE_ms8("gvknl1a", 7));
@@ -207,15 +317,15 @@ void GE_init_const21()
 	ge810ov13271041 = (GE_ms8("catcall_detection", 17));
 	ge865ov14172169 = (GE_ms8("concurrency", 11));
 	ge865ov14172197 = (GE_ms8("multithreaded", 13));
+}
+
+void GE_init_const22()
+{
 	ge884ov14483504 = (GE_ms8("major", 5));
 	ge884ov14483510 = (GE_ms8("minor", 5));
 	ge884ov14483530 = (GE_ms8("release", 7));
 	ge884ov14483465 = (GE_ms8("build", 5));
 	ge884ov14483526 = (GE_ms8("product", 7));
-}
-
-void GE_init_const22()
-{
 	ge884ov14483472 = (GE_ms8("company", 7));
 	ge884ov14483476 = (GE_ms8("copyright", 9));
 	ge884ov14483538 = (GE_ms8("trademark", 9));
@@ -312,15 +422,15 @@ void GE_init_const22()
 	ge856ov14024730 = (GE_ms8("obsolete_class", 14));
 	ge856ov14024732 = (GE_ms8("old_verbatim_strings", 20));
 	ge856ov14024733 = (GE_ms8("once_in_generic", 15));
+}
+
+void GE_init_const23()
+{
 	ge856ov14024734 = (GE_ms8("option_unknown_class", 20));
 	ge856ov14024735 = (GE_ms8("renaming_unknown_class", 22));
 	ge856ov14024736 = (GE_ms8("same_uuid", 9));
 	ge856ov14024737 = (GE_ms8("syntax", 6));
 	ge856ov14024738 = (GE_ms8("unused_local", 12));
-}
-
-void GE_init_const23()
-{
 	ge856ov14024739 = (GE_ms8("vjrv", 4));
 	ge856ov14024740 = (GE_ms8("vwab", 4));
 	ge856ov14024741 = (GE_ms8("vweq", 4));
@@ -417,15 +527,15 @@ void GE_init_const23()
 	ge1792ov29360151 = (GE_ms8("Attribute declared twice", 24));
 	ge1792ov29360150 = (GE_ms8("Misformed attribute in tag", 26));
 	ge1792ov29360152 = (GE_ms8("Error in end tag", 16));
+}
+
+void GE_init_const24()
+{
 	ge1792ov29360129 = (GE_ms8("]]> not allowed in content", 26));
 	ge1792ov29360155 = (GE_ms8("Error in XML declaration", 24));
 	ge1792ov29360164 = (GE_ms8("Misformed element type declaration", 34));
 	ge1795ov29409307 = (GE_ms8("*", 1));
 	ge1795ov29409305 = (GE_ms8("+", 1));
-}
-
-void GE_init_const24()
-{
 	ge1795ov29409306 = (GE_ms8("\?", 1));
 	ge1792ov29360165 = (GE_ms8("Misformed attribute list declaration", 36));
 	ge1792ov29360166 = (GE_ms8("Misformed attribute definition declaration", 42));
@@ -5562,11 +5672,11 @@ static void GE_str8_to_str32(const char* s, EIF_CHARACTER_32* a_buffer, EIF_INTE
  */
 EIF_REFERENCE GE_ms8(const char* s, EIF_INTEGER c)
 {
-	EIF_STRING* l_string;
+	EIF_STRING_8* l_string;
 	EIF_SPECIAL* l_area;
 	EIF_CHARACTER_8* l_area_base_address;
 
-	l_string = (EIF_STRING*)GE_new_str8(c);
+	l_string = (EIF_STRING_8*)GE_new_str8(c);
 	l_area = (EIF_SPECIAL*)(l_string->area);
 	l_area_base_address = (EIF_CHARACTER_8*)GE_sp8_base_address((EIF_REFERENCE)l_area);
 	memcpy((char*)l_area_base_address, s, c);
@@ -5591,11 +5701,11 @@ EIF_REFERENCE GE_str8(const char* s)
  */
 EIF_REFERENCE GE_ims8(const char* s, EIF_INTEGER c)
 {
-	EIF_STRING* l_string;
+	EIF_IMMUTABLE_STRING_8* l_string;
 	EIF_SPECIAL* l_area;
 	EIF_CHARACTER_8* l_area_base_address;
 
-	l_string = (EIF_STRING*)GE_new_istr8(c);
+	l_string = (EIF_IMMUTABLE_STRING_8*)GE_new_istr8(c);
 	l_area = (EIF_SPECIAL*)(l_string->area);
 	l_area_base_address = (EIF_CHARACTER_8*)GE_sp8_base_address((EIF_REFERENCE)l_area);
 	memcpy((char*)l_area_base_address, s, c);
@@ -5611,11 +5721,11 @@ EIF_REFERENCE GE_ims8(const char* s, EIF_INTEGER c)
  */
 EIF_REFERENCE GE_ms32(const char* s, EIF_INTEGER c)
 {
-	EIF_STRING* l_string;
+	EIF_STRING_32* l_string;
 	EIF_SPECIAL* l_area;
 	EIF_CHARACTER_32* l_area_base_address;
 
-	l_string = (EIF_STRING*)GE_new_str32(c);
+	l_string = (EIF_STRING_32*)GE_new_str32(c);
 	l_area = (EIF_SPECIAL*)(l_string->area);
 	l_area_base_address = (EIF_CHARACTER_32*)GE_sp32_base_address((EIF_REFERENCE)l_area);
 	GE_str8_to_str32(s, l_area_base_address, c);
@@ -5632,11 +5742,11 @@ EIF_REFERENCE GE_ms32(const char* s, EIF_INTEGER c)
  */
 EIF_REFERENCE GE_ms32_from_utf32le(const char* s, EIF_INTEGER c)
 {
-	EIF_STRING* l_string;
+	EIF_STRING_32* l_string;
 	EIF_SPECIAL* l_area;
 	EIF_CHARACTER_32* l_area_base_address;
 
-	l_string = (EIF_STRING*)GE_new_str32(c);
+	l_string = (EIF_STRING_32*)GE_new_str32(c);
 	l_area = (EIF_SPECIAL*)(l_string->area);
 	l_area_base_address = (EIF_CHARACTER_32*)GE_sp32_base_address((EIF_REFERENCE)l_area);
 #if BYTEORDER == 0x1234
@@ -5678,11 +5788,11 @@ EIF_REFERENCE GE_str32(const char* s)
  */
 EIF_REFERENCE GE_ims32(const char* s, EIF_INTEGER c)
 {
-	EIF_STRING* l_string;
+	EIF_IMMUTABLE_STRING_32* l_string;
 	EIF_SPECIAL* l_area;
 	EIF_CHARACTER_32* l_area_base_address;
 
-	l_string = (EIF_STRING*)GE_new_istr32(c);
+	l_string = (EIF_IMMUTABLE_STRING_32*)GE_new_istr32(c);
 	l_area = (EIF_SPECIAL*)(l_string->area);
 	l_area_base_address = (EIF_CHARACTER_32*)GE_sp32_base_address((EIF_REFERENCE)l_area);
 	GE_str8_to_str32(s, l_area_base_address, c);
@@ -5699,11 +5809,11 @@ EIF_REFERENCE GE_ims32(const char* s, EIF_INTEGER c)
  */
 EIF_REFERENCE GE_ims32_from_utf32le(const char* s, EIF_INTEGER c)
 {
-	EIF_STRING* l_string;
+	EIF_IMMUTABLE_STRING_32* l_string;
 	EIF_SPECIAL* l_area;
 	EIF_CHARACTER_32* l_area_base_address;
 
-	l_string = (EIF_STRING*)GE_new_istr32(c);
+	l_string = (EIF_IMMUTABLE_STRING_32*)GE_new_istr32(c);
 	l_area = (EIF_SPECIAL*)(l_string->area);
 	l_area_base_address = (EIF_CHARACTER_32*)GE_sp32_base_address((EIF_REFERENCE)l_area);
 #if BYTEORDER == 0x1234
@@ -5746,13 +5856,13 @@ EIF_REFERENCE GE_istr32(const char* s)
  */
 EIF_REFERENCE GE_ims32_from_nstr(EIF_NATIVE_CHAR* s, EIF_INTEGER n)
 {
-	EIF_STRING* l_string;
+	EIF_IMMUTABLE_STRING_32* l_string;
 	EIF_SPECIAL* l_area;
 	EIF_CHARACTER_32* l_area_base_address;
 	EIF_INTEGER c;
 
 	c = GE_nstr_str32len(s, n);
-	l_string = (EIF_STRING*)GE_new_istr32(c);
+	l_string = (EIF_IMMUTABLE_STRING_32*)GE_new_istr32(c);
 	l_area = (EIF_SPECIAL*)(l_string->area);
 	l_area_base_address = (EIF_CHARACTER_32*)GE_sp32_base_address((EIF_REFERENCE)l_area);
 	GE_nstr_to_str32(s, l_area_base_address, n);

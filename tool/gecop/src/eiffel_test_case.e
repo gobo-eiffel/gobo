@@ -120,7 +120,7 @@ feature -- Test Gobo Eiffel Compiler
 			a_geant_filename := geant_filename
 			l_geant_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("geant")
 				-- Compile program.
-			execute_shell_with_timeout (l_geant_pathname + " -b %"" + a_geant_filename + "%"" + l_executable + l_thread_option + " -Dgelint_option=true compile_" + a_debug + "ge", output1_log, three_minutes_in_milliseconds)
+			execute_shell_with_timeout (l_geant_pathname + " -b %"" + a_geant_filename + "%"" + l_executable + l_thread_option + " -Dgelint_option=true -Dexecutable_name=" + program_name + " compile_" + a_debug + "ge", output1_log, three_minutes_in_milliseconds)
 			concat_output1 (agent filter_output_gec)
 				-- Execute program.
 			if file_system.file_exists (file_system.pathname (testrun_dirname, program_exe)) then
@@ -160,7 +160,7 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
 			a_regexp1.optimize
-			a_pattern2 := "(aa[0-9]+|boehm_gc)\.c"
+			a_pattern2 := "(" + program_name + "_?[0-9]+|boehm_gc)\.c"
 			create a_regexp2.make
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
@@ -744,8 +744,8 @@ feature {NONE} -- Directory and file names
 
 	program_name: STRING
 			-- Program name
-		once
-			Result := "aa"
+		do
+			Result := "aa" + program_dirname.hash_code.out
 		ensure
 			program_name_not_void: Result /= Void
 			program_name_not_empty: Result.count > 0
@@ -958,10 +958,12 @@ feature {NONE} -- Output logs
 			a_pattern2: STRING
 			a_pattern3: STRING
 			a_pattern4: STRING
+			a_pattern5: STRING
 			a_regexp1: RX_PCRE_REGULAR_EXPRESSION
 			a_regexp2: RX_PCRE_REGULAR_EXPRESSION
 			a_regexp3: RX_PCRE_REGULAR_EXPRESSION
 			a_regexp4: RX_PCRE_REGULAR_EXPRESSION
+			a_regexp5: RX_PCRE_REGULAR_EXPRESSION
 			l_input_filename: STRING
 			l_output2_log_filename: STRING
 			l_first_line: BOOLEAN
@@ -987,6 +989,11 @@ feature {NONE} -- Output logs
 			a_regexp4.compile (a_pattern4)
 			assert ("cannot compile regexp '" + a_pattern4 + "'", a_regexp4.is_compiled)
 			a_regexp4.optimize
+			a_pattern5 := program_name + ":(.*)"
+			create a_regexp5.make
+			a_regexp5.compile (a_pattern5)
+			assert ("cannot compile regexp '" + a_pattern5 + "'", a_regexp5.is_compiled)
+			a_regexp5.optimize
 				-- Copy files.
 			create out_file.make (output_log_filename)
 			out_file.open_append
@@ -1036,6 +1043,9 @@ feature {NONE} -- Output logs
 								out_file.put_string (a_regexp4.captured_substring (1))
 								out_file.put_string ("0xXXXXXXXX")
 								out_file.put_line (a_regexp4.captured_substring (3))
+							elseif a_regexp5.recognizes (a_line) then
+								out_file.put_string ("aa:")
+								out_file.put_line (a_regexp5.captured_substring (1))
 							else
 								out_file.put_line (a_line)
 							end
