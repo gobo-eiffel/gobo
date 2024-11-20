@@ -512,15 +512,6 @@ feature -- Generation
 			l_variables: like c_config
 		do
 			has_fatal_error := False
-			if c_compiler_used.same_string ("zig") then
-					-- When compiling with 'zig', we make sure that different systems
-					-- with the same system name don't get the same generated C filenames,
-					-- otherwise it slows down zig cache mechanism (as of zig < 0.12).
-				if attached {ET_ECF_SYSTEM} current_system as l_ecf_system then
-					c_filenames_counter_offset := l_ecf_system.filename.hash_code
-					c_filenames_counter_offset := c_filenames_counter_offset * 100
-				end
-			end
 			l_variables := c_config
 			if use_boehm_gc then
 				generate_boehm_gc_c_files (a_system_name)
@@ -529,7 +520,6 @@ feature -- Generation
 			generate_c_code (a_system_name)
 			generate_compilation_script (a_system_name, l_variables)
 			c_filenames.wipe_out
-			c_filenames_counter_offset := 0
 		end
 
 feature {NONE} -- Compilation script generation
@@ -1191,7 +1181,7 @@ feature {NONE} -- Generate external C files
 				set_fatal_error
 				report_undefined_environment_variable_error (gobo_variables.boehm_gc_variable)
 			else
-				l_basename := a_system_name + (c_filenames.count + c_filenames_counter_offset + 1).out
+				l_basename := a_system_name + "_" + (c_filenames.count + 1).out
 				l_c_filename := l_basename + c_file_extension
 				create l_c_file.make (file_system.pathname (c_folder, l_c_filename))
 				l_c_file.recursive_open_write
@@ -1398,7 +1388,7 @@ feature {NONE} -- Generate external C files
 				else
 					l_extension := cpp_file_extension
 				end
-				l_basename := system_name + (c_filenames.count + c_filenames_counter_offset + 1).out
+				l_basename := system_name + "_" + (c_filenames.count + 1).out
 				l_external_filename := file_system.pathname (c_folder, l_basename + l_extension)
 				create l_external_file.make (l_external_filename)
 				l_external_file.recursive_open_write
@@ -43420,12 +43410,6 @@ feature {NONE} -- Output files/buffers
 			-- The key is the filename without the extension,
 			-- the item is the file extension
 
-	c_filenames_counter_offset: INTEGER_64
-			-- Offset (if any) to be added to the postfix number of the generated C files
-			-- (Useful when compiling with 'zig' so that different systems with the same
-			-- system name don't get the same generated C filenames, which otherwise slows
-			-- down zig cache mechanism, as of zig < 0.12.)
-
 	c_folder: STRING = ".gobo"
 			-- Folder where to generate the C files
 
@@ -43448,7 +43432,7 @@ feature {NONE} -- Output files/buffers
 			if l_c_file = Void then
 				c_file_size := 0
 				l_header_filename := system_name + h_file_extension
-				l_filename := system_name + (c_filenames.count + c_filenames_counter_offset + 1).out
+				l_filename := system_name + "_" + (c_filenames.count + 1).out
 				c_filenames.force_last (c_file_extension, l_filename)
 				create l_c_file.make (file_system.pathname (c_folder, l_filename + c_file_extension))
 				l_c_file.recursive_open_write
@@ -43528,7 +43512,7 @@ feature {NONE} -- Output files/buffers
 			if l_cpp_file = Void then
 				cpp_file_size := 0
 				l_header_filename := system_name + h_file_extension
-				l_filename := system_name + (c_filenames.count + c_filenames_counter_offset + 1).out
+				l_filename := system_name + "_" + (c_filenames.count + 1).out
 				c_filenames.force_last (cpp_file_extension, l_filename)
 				create l_cpp_file.make (file_system.pathname (c_folder, l_filename + cpp_file_extension))
 				l_cpp_file.recursive_open_write

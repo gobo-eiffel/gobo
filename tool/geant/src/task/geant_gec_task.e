@@ -5,7 +5,7 @@
 		"Gec tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2005-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class GEANT_GEC_TASK
@@ -66,6 +66,13 @@ feature {NONE} -- Initialization
 				a_value := attribute_value_or_default (Target_attribute_name, "")
 				if a_value.count > 0 then
 					command.set_target_name (a_value)
+				end
+			end
+				-- executable_name:
+			if has_attribute (Executable_name_attribute_name) then
+				a_value := attribute_value_or_default (Executable_name_attribute_name, "")
+				if a_value.count > 0 then
+					command.set_executable_name (a_value)
 				end
 			end
 				-- c_compile.
@@ -198,6 +205,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for "target"
 		once
 			Result := "target"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Executable_name_attribute_name: STRING
+			-- Name of xml attribute for "executable_name"
+		once
+			Result := "executable_name"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

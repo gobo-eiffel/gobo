@@ -63,16 +63,16 @@ c_compilation() {
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gec (bootstrap 0)..."
 	fi
-	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec9.c"
-	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec8.c"
-	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec7.c"
-	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec6.c"
-	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec5.c"
-	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec4.c"
-	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec3.c"
-	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec2.c"
-	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec1.c"
-	$LD $LFLAGS ${LFLAG_OUT}gec$EXE gec*$OBJ $LLIBS
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec_9.c"
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec_8.c"
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec_7.c"
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec_6.c"
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec_5.c"
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec_4.c"
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec_3.c"
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec_2.c"
+	$CC $CFLAGS -c "$BOOTSTRAP_DIR/gec_1.c"
+	$LD $LFLAGS ${LFLAG_OUT}gec0$EXE gec*$OBJ $LLIBS
 	$RM gec*$OBJ
 }
 
@@ -229,13 +229,11 @@ if [ "$EIF" = "ge" ]; then
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gec (bootstrap 1)..."
 	fi
-	$MV "$BIN_DIR/gec$EXE" "$BIN_DIR/gec1$EXE"
-	"$BIN_DIR/gec1$EXE" --finalize $THREAD_OPTION "$GOBO/tool/gec/src/system.ecf"
-	$RM "$BIN_DIR/gec1$EXE"
+	"$BIN_DIR/gec0$EXE" --finalize --setting=executable_name=gec1 $THREAD_OPTION "$GOBO/tool/gec/src/system.ecf"
+	$RM "$BIN_DIR/gec0$EXE"
 	if [ "$VERBOSE" != "-s" ]; then
 		echo "Compiling gec (bootstrap 2)..."
 	fi
-	$MV "$BIN_DIR/gec$EXE" "$BIN_DIR/gec1$EXE"
 	"$BIN_DIR/gec1$EXE" --finalize $THREAD_OPTION "$GOBO/tool/gec/src/system.ecf"
 	$RM "$BIN_DIR/gec1$EXE"
 	$STRIP gec$EXE

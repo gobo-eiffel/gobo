@@ -74,6 +74,9 @@ feature -- Access
 			-- Name of target to be used in ECF file.
 			-- Use last target in ECF file if not specified.
 
+	executable_name: detachable STRING
+			-- Name of executable to be compiled
+
 	c_compile: detachable STRING
 			-- Should the back-end C compiler be invoked on the generated C code, and if yes with what method?
 			-- (default: gecc)
@@ -160,6 +163,14 @@ feature -- Setting
 			target_name := a_target_name
 		ensure
 			target_name_set: target_name = a_target_name
+		end
+
+	set_executable_name (a_executable_name: like executable_name)
+			-- Set `executable_name' to `a_executable_name'.
+		do
+			executable_name := a_executable_name
+		ensure
+			executable_name_set: executable_name = a_executable_name
 		end
 
 	set_c_compile (a_c_compile: like c_compile)
@@ -322,7 +333,7 @@ feature -- Execution
 				l_dir.open_read
 				if l_dir.is_open_read then
 					create l_regexp.make
-					l_regexp.compile (l_clean + "[0-9]*\.(c(pp)?|h|o(bj)?|tds|pdb|ilk|suo|exe\.manifest|gc\.log|res|bat|sh|make)")
+					l_regexp.compile (l_clean + "(_?[0-9]+)?\.(c(pp)?|h|o(bj)?|tds|pdb|ilk|suo|exe\.manifest|gc\.log|res|bat|sh|make)")
 					from
 						l_dir.read_entry
 					until
@@ -377,6 +388,11 @@ feature -- Command-line
 			if attached target_name as l_target_name and then not l_target_name.is_empty then
 				Result.append_string ("--target=")
 				Result.append_string (l_target_name)
+				Result.append_character (' ')
+			end
+			if attached executable_name as l_executable_name and then not l_executable_name.is_empty then
+				Result.append_string ("--setting=executable_name=")
+				Result.append_string (l_executable_name)
 				Result.append_character (' ')
 			end
 			if finalize then

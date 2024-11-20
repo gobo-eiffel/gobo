@@ -215,18 +215,19 @@ goto exit
 
 :c_compilation
 	if not .%VERBOSE%. == .-s. echo Compiling gec (bootstrap 0)...
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec9.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec8.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec7.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec6.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec5.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec4.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec3.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec2.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec1.c
-	%LD% %LFLAGS% %LFLAG_OUT%gec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% %LLIBS%
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec_9.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec_8.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec_7.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec_6.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec_5.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec_4.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec_3.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec_2.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec_1.c
+	%LD% %LFLAGS% %LFLAG_OUT%gec0%EXE% gec_1%OBJ% gec_2%OBJ% gec_3%OBJ% gec_4%OBJ% gec_5%OBJ% gec_6%OBJ% gec_7%OBJ% gec_8%OBJ% gec_9%OBJ% %LLIBS%
 	%RM% gec*%OBJ%
-	if ".%CC%." == ".bcc32." %RM% gec.tds
+	if exist gec0.tds %RM% gec0.tds
+	if exist gec0.pdb %RM% gec0.pdb
 	goto install
 
 :install
@@ -238,11 +239,9 @@ goto exit
 	cd "%BIN_DIR%"
 	rem Compile gec twice to get a bootstrap effect.
 	if not .%VERBOSE%. == .-s. echo Compiling gec (bootstrap 1)...
-	%MV% "%BIN_DIR%\gec%EXE%" gec1%EXE%
-	"%BIN_DIR%\gec1%EXE%" --finalize "%GOBO%\tool\gec\src\system.ecf"
-	%RM% "%BIN_DIR%\gec1%EXE%"
+	"%BIN_DIR%\gec0%EXE%" --finalize --setting=executable_name=gec1 "%GOBO%\tool\gec\src\system.ecf"
+	%RM% "%BIN_DIR%\gec0%EXE%"
 	if not .%VERBOSE%. == .-s. echo Compiling gec (bootstrap 2)...
-	%MV% "%BIN_DIR%\gec%EXE%" gec1%EXE%
 	"%BIN_DIR%\gec1%EXE%" --finalize "%GOBO%\tool\gec\src\system.ecf"
 	%RM% "%BIN_DIR%\gec1%EXE%"
 	%RMDIR% .gobo
