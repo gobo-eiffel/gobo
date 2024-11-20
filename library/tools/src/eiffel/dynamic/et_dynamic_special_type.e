@@ -5,7 +5,7 @@
 		"Eiffel dynamic SPECIAL types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_DYNAMIC_SPECIAL_TYPE
@@ -194,6 +194,9 @@ feature {NONE} -- Implementation
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			Result := precursor (a_query, a_system)
+			if Result.is_once_per_object then
+				a_system.set_has_special_once_per_object_routines (True)
+			end
 			if Result.is_builtin_special_item then
 				l_result_type_set := Result.result_type_set
 				if l_result_type_set /= Void and then l_result_type_set.static_type = item_type_set.static_type then
@@ -211,6 +214,9 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 		do
 			Result := precursor (a_procedure, a_system)
+			if Result.is_once_per_object then
+				a_system.set_has_special_once_per_object_routines (True)
+			end
 			if Result.is_builtin_special_put or Result.is_builtin_special_extend then
 				l_procedure_type_sets := Result.dynamic_type_sets
 				nb := l_procedure_type_sets.count
