@@ -225,6 +225,7 @@ typedef uint64_t EIF_NATURAL_64;
 typedef volatile void* EIF_POINTER;
 typedef float EIF_REAL_32;
 typedef double EIF_REAL_64;
+
 typedef volatile struct {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
@@ -233,20 +234,67 @@ typedef volatile struct {
 #endif
 } EIF_ANY;
 typedef EIF_ANY* EIF_REFERENCE;
+
 typedef volatile struct {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
 #ifdef GE_USE_SCOOP
 	GE_scoop_region* volatile region;
 #endif
+#ifdef GE_HAS_STRING_8_ONCE_PER_OBJECT
+	void* volatile onces;
+#endif
 	EIF_REFERENCE volatile area;
 	EIF_INTEGER volatile count;
-} EIF_STRING;
+} EIF_STRING_8;
+
 typedef volatile struct {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
 #ifdef GE_USE_SCOOP
 	GE_scoop_region* volatile region;
+#endif
+#ifdef GE_HAS_STRING_32_ONCE_PER_OBJECT
+	void* volatile onces;
+#endif
+	EIF_REFERENCE volatile area;
+	EIF_INTEGER volatile count;
+} EIF_STRING_32;
+
+typedef volatile struct {
+	EIF_TYPE_INDEX volatile id;
+	uint16_t volatile flags;
+#ifdef GE_USE_SCOOP
+	GE_scoop_region* volatile region;
+#endif
+#ifdef GE_HAS_IMMUTABLE_STRING_8_ONCE_PER_OBJECT
+	void* volatile onces;
+#endif
+	EIF_REFERENCE volatile area;
+	EIF_INTEGER volatile count;
+} EIF_IMMUTABLE_STRING_8;
+
+typedef volatile struct {
+	EIF_TYPE_INDEX volatile id;
+	uint16_t volatile flags;
+#ifdef GE_USE_SCOOP
+	GE_scoop_region* volatile region;
+#endif
+#ifdef GE_HAS_IMMUTABLE_STRING_32_ONCE_PER_OBJECT
+	void* volatile onces;
+#endif
+	EIF_REFERENCE volatile area;
+	EIF_INTEGER volatile count;
+} EIF_IMMUTABLE_STRING_32;
+
+typedef volatile struct {
+	EIF_TYPE_INDEX volatile id;
+	uint16_t volatile flags;
+#ifdef GE_USE_SCOOP
+	GE_scoop_region* volatile region;
+#endif
+#ifdef GE_HAS_SPECIAL_ONCE_PER_OBJECT
+	void* volatile onces;
 #endif
 	EIF_INTEGER volatile count;
 	EIF_INTEGER volatile capacity;

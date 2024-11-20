@@ -1607,7 +1607,6 @@ feature {NONE} -- C code Generation
 				header_file.put_new_line
 				include_runtime_header_file ("ge_arguments.h", True, header_file)
 				header_file.put_new_line
-
 				include_runtime_header_file ("ge_types.h", True, header_file)
 				header_file.put_new_line
 				include_runtime_header_file ("ge_string.h", True, header_file)
@@ -1779,6 +1778,11 @@ feature {NONE} -- C code Generation
 				dynamic_type_id_set_names.wipe_out
 				l_header_file.close
 				if
+					current_dynamic_system.string_8_type.has_once_per_object_routines or
+					current_dynamic_system.string_32_type.has_once_per_object_routines or
+					current_dynamic_system.immutable_string_8_type.has_once_per_object_routines or
+					current_dynamic_system.immutable_string_32_type.has_once_per_object_routines or
+					current_dynamic_system.has_special_once_per_object_routines or
 					type_info_ancestors_used or
 					type_info_attributes_used or
 					type_info_attribute_name_used or
@@ -1795,6 +1799,31 @@ feature {NONE} -- C code Generation
 						set_fatal_error
 						report_cannot_write_error (l_header_filename)
 					else
+						if current_dynamic_system.string_8_type.has_once_per_object_routines then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_has_string_8_once_per_object)
+						end
+						if current_dynamic_system.string_32_type.has_once_per_object_routines then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_has_string_32_once_per_object)
+						end
+						if current_dynamic_system.immutable_string_8_type.has_once_per_object_routines then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_has_immutable_string_8_once_per_object)
+						end
+						if current_dynamic_system.immutable_string_32_type.has_once_per_object_routines then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_has_immutable_string_32_once_per_object)
+						end
+						if current_dynamic_system.has_special_once_per_object_routines then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_has_special_once_per_object)
+						end
 						if type_info_ancestors_used then
 							header_file.put_string (c_define)
 							header_file.put_character (' ')
@@ -20842,15 +20871,6 @@ feature {NONE} -- Deep features generation
 							print_attribute_tuple_item_name (1, l_tuple_type, current_file)
 						end
 						current_file.put_character (')')
-						if a_type.has_once_per_object_routines then
-							print_minus
-							current_file.put_string (c_offsetof)
-							current_file.put_character ('(')
-							print_type_name (a_type, current_file)
-							print_comma
-							current_file.put_string (c_onces)
-							current_file.put_character (')')
-						end
 						current_file.put_character (')')
 						print_semicolon_newline
 					end
@@ -24502,15 +24522,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_attribute_tuple_item_name (1, l_tuple_type, current_file)
 				end
 				current_file.put_character (')')
-				if current_type.has_once_per_object_routines then
-					print_minus
-					current_file.put_string (c_offsetof)
-					current_file.put_character ('(')
-					print_type_name (current_type, current_file)
-					print_comma
-					current_file.put_string (c_onces)
-					current_file.put_character (')')
-				end
 				current_file.put_character (')')
 				print_semicolon_newline
 				print_builtin_any_standard_copy_custom_attributes (a_source, a_target)
@@ -24993,15 +25004,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						print_attribute_tuple_item_name (1, l_tuple_type, current_file)
 					end
 					current_file.put_character (')')
-					if a_target_type.has_once_per_object_routines then
-						print_minus
-						current_file.put_string (c_offsetof)
-						current_file.put_character ('(')
-						print_type_name (a_target_type, current_file)
-						print_comma
-						current_file.put_string (c_onces)
-						current_file.put_character (')')
-					end
 					current_file.put_character (')')
 					print_semicolon_newline
 				end
@@ -39780,6 +39782,27 @@ feature {NONE} -- Type generation
 					end
 					l_empty_struct := False
 				end
+				if a_type.has_once_per_object_routines then
+					a_file.put_character ('%T')
+					print_once_per_object_data_type_name (a_type, a_file)
+					a_file.put_character ('*')
+					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+					a_file.put_character (' ')
+					print_attribute_onces_name (a_type, a_file)
+					a_file.put_character (';')
+					a_file.put_new_line
+				elseif a_type.is_special and current_dynamic_system.has_special_once_per_object_routines then
+					a_file.put_character ('%T')
+					a_file.put_string (c_void)
+					a_file.put_character ('*')
+					a_file.put_character (' ')
+					a_file.put_string (c_volatile)
+					a_file.put_character (' ')
+					print_attribute_onces_name (a_type, a_file)
+					a_file.put_character (';')
+					a_file.put_new_line
+				end
 				l_queries := a_type.queries
 				nb := a_type.attribute_count
 				from i := 1 until i > nb loop
@@ -39812,17 +39835,6 @@ feature {NONE} -- Type generation
 						l_empty_struct := False
 					end
 					i := i + 1
-				end
-				if a_type.has_once_per_object_routines then
-					a_file.put_character ('%T')
-					print_once_per_object_data_type_name (a_type, a_file)
-					a_file.put_character ('*')
-					a_file.put_character (' ')
-					a_file.put_string (c_volatile)
-					a_file.put_character (' ')
-					print_attribute_onces_name (a_type, a_file)
-					a_file.put_character (';')
-					a_file.put_new_line
 				end
 				if attached {ET_DYNAMIC_SPECIAL_TYPE} a_type as l_special_type then
 						-- We use "flexible array member" (defined in ISO C 99)
@@ -41204,6 +41216,14 @@ feature {NONE} -- Default initialization values generation
 					end
 					l_empty_struct := False
 				end
+					-- Once-per-object routines.
+				if a_type.has_once_per_object_routines or current_dynamic_system.has_special_once_per_object_routines then
+					if not l_empty_struct then
+						a_file.put_character (',')
+					end
+					a_file.put_character ('0')
+					l_empty_struct := False
+				end
 					-- Attributes.
 				l_queries := a_type.queries
 				nb := a_type.attribute_count
@@ -41221,16 +41241,6 @@ feature {NONE} -- Default initialization values generation
 						l_empty_struct := False
 					end
 					i := i + 1
-				end
-				if a_type.has_once_per_object_routines then
-						-- We put the 'onces' pseudo attributes after the attributes so that
-						-- types such as "STRING" and "SPECIAL" can get some attributes
-						-- such as 'count' and 'capacity' at the expected positions.
-					if not l_empty_struct then
-						a_file.put_character (',')
-					end
-					a_file.put_character ('0')
-					l_empty_struct := False
 				end
 				if attached {ET_DYNAMIC_SPECIAL_TYPE} a_type as l_special_type then
 						-- Items.
@@ -42724,83 +42734,6 @@ feature {NONE} -- Misc C code
 			print_assign_to
 			print_attribute_special_capacity_access (a_target, a_target_type, a_check_void_target)
 			print_semicolon_newline
-		end
-
-	print_assign_flags_attribute_to_temp_variable (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
-			-- Print C code to assign the 'flags' pseudo attribute of
-			-- object `a_target' of type `a_target_type', if any, to a temporary variable.
-			-- `a_check_void_target` means that we need to check whether the target is Void or not.
-		require
-			a_target_not_void: a_target /= Void
-			a_target_type_not_void: a_target_type /= Void
-		do
-			if not a_target_type.is_expanded then
-				print_indentation
-				current_file.put_string (c_uint16_t)
-				current_file.put_character (' ')
-				current_file.put_character ('f')
-				current_file.put_character ('1')
-				print_assign_to
-				print_attribute_flags_access (a_target, current_type, a_check_void_target)
-				print_semicolon_newline
-			end
-		end
-
-	print_assign_temp_variable_to_flags_attribute (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
-			-- Print C code to assign a temporary variable to the 'flags'
-			-- pseudo attribute of object `a_target' of type `a_target_type', if any.
-			-- `a_check_void_target` means that we need to check whether the target is Void or not.
-		require
-			a_target_not_void: a_target /= Void
-			a_target_type_not_void: a_target_type /= Void
-		do
-			if not a_target_type.is_expanded then
-				print_indentation
-				print_attribute_flags_access (a_target, a_target_type, a_check_void_target)
-				print_assign_to
-				current_file.put_character ('f')
-				current_file.put_character ('1')
-				print_semicolon_newline
-			end
-		end
-
-	print_assign_onces_attribute_to_temp_variable (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
-			-- Print C code to assign the 'onces' pseudo attribute of
-			-- object `a_target' of type `a_target_type', if any, to a temporary variable.
-			-- `a_check_void_target` means that we need to check whether the target is Void or not.
-		require
-			a_target_not_void: a_target /= Void
-			a_target_type_not_void: a_target_type /= Void
-		do
-			if a_target_type.has_once_per_object_routines then
-				print_indentation
-				print_once_per_object_data_type_name (a_target_type, current_file)
-				current_file.put_character ('*')
-				current_file.put_character (' ')
-				current_file.put_character ('o')
-				current_file.put_character ('1')
-				print_assign_to
-				print_attribute_onces_access (a_target, a_target_type, a_check_void_target)
-				print_semicolon_newline
-			end
-		end
-
-	print_assign_temp_variable_to_onces_attribute (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
-			-- Print C code to assign a temporary variable to the 'onces'
-			-- pseudo attribute of object `a_target' of type `a_target_type', if any.
-			-- `a_check_void_target` means that we need to check whether the target is Void or not.
-		require
-			a_target_not_void: a_target /= Void
-			a_target_type_not_void: a_target_type /= Void
-		do
-			if a_target_type.has_once_per_object_routines then
-				print_indentation
-				print_attribute_onces_access (a_target, a_target_type, a_check_void_target)
-				print_assign_to
-				current_file.put_character ('o')
-				current_file.put_character ('1')
-				print_semicolon_newline
-			end
 		end
 
 	print_indentation_assign_to_result
@@ -46512,7 +46445,12 @@ feature {NONE} -- Constants
 	c_ge_generator_8_of_encoded_type: STRING = "GE_generator_8_of_encoded_type"
 	c_ge_generic_parameter_of_encoded_type: STRING = "GE_generic_parameter_of_encoded_type"
 	c_ge_generic_parameter_count_of_encoded_type: STRING = "GE_generic_parameter_count_of_encoded_type"
+	c_ge_has_special_once_per_object: STRING = "GE_HAS_SPECIAL_ONCE_PER_OBJECT"
+	c_ge_has_string_8_once_per_object: STRING = "GE_HAS_STRING_8_ONCE_PER_OBJECT"
+	c_ge_has_string_32_once_per_object: STRING = "GE_HAS_STRING_32_ONCE_PER_OBJECT"
 	c_ge_id_object: STRING = "GE_id_object"
+	c_ge_has_immutable_string_8_once_per_object: STRING = "GE_HAS_IMMUTABLE_STRING_8_ONCE_PER_OBJECT"
+	c_ge_has_immutable_string_32_once_per_object: STRING = "GE_HAS_IMMUTABLE_STRING_32_ONCE_PER_OBJECT"
 	c_ge_ims8: STRING = "GE_ims8"
 	c_ge_ims32_from_utf32le: STRING = "GE_ims32_from_utf32le"
 	c_ge_increment_scoop_sessions_count: STRING = "GE_increment_scoop_sessions_count"

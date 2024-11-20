@@ -140,6 +140,10 @@ feature -- Status report
 	has_separate_creation: BOOLEAN
 			-- Is there some separate creations in the current system?
 
+	has_special_once_per_object_routines: BOOLEAN
+			-- Is there at least one "SPECIAL" type with at least one
+			-- once-per-object routine?
+
 	all_attributes_used: BOOLEAN
 			-- Should all attributes of all types are marked as used
 			-- and hence included in the generated run-time instances?
@@ -176,6 +180,14 @@ feature -- Status setting
 			has_separate_creation := b
 		ensure
 			has_separate_creation_set: has_separate_creation = b
+		end
+
+	set_has_special_once_per_object_routines (b: BOOLEAN)
+			-- Set `has_special_once_per_object_routines' to `b'.
+		do
+			has_special_once_per_object_routines := b
+		ensure
+			has_special_once_per_object_routines_set: has_special_once_per_object_routines = b
 		end
 
 	use_all_attributes
