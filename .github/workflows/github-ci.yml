@@ -134,6 +134,10 @@ jobs:
             eiffel_compiler: ise
           - os: macos-14
             eiffel_compiler: debug_ise
+          - os: macos-15
+            eiffel_compiler: ise
+          - os: macos-15
+            eiffel_compiler: debug_ise
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
