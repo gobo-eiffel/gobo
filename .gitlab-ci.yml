@@ -1,3 +1,5 @@
+# For available runners, see https://docs.gitlab.com/ee/ci/runners/
+
 variables:
   GOBO: '$CI_PROJECT_DIR'
 
@@ -29,6 +31,30 @@ linux_gcc_build_ge:
     - if: $CI_MERGE_REQUEST_ID
       when: never
     - if: $GOBO_CUSTOM_PIPELINE == null || $GOBO_CUSTOM_PIPELINE == "linux_test_ise"
+      when: on_success
+  artifacts:
+    when: always
+    expire_in: 3 hours
+    paths:
+      - $GOBO/bin/
+      - $GOBO/tool/gec/backend/c/config/default.cfg
+
+macos_clang_build_ge:
+  stage: build_ge
+  tags:
+    - saas-macos-medium-m1
+  image:
+# See: https://stackoverflow.com/questions/44319313/how-do-i-use-powershell-with-gitlab-ci-in-gitlab-pages
+    name: "mcr.microsoft.com/powershell:latest"
+  dependencies: []
+  script:
+    - pwsh -f "$GOBO/.cicd/build_ge.ps1" gitlab clang
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $GOBO_CUSTOM_PIPELINE == null || $GOBO_CUSTOM_PIPELINE == "macos_test_ise"
       when: on_success
   artifacts:
     when: always
@@ -100,6 +126,44 @@ tool_linux_gcc_test_ge:
     - linux_gcc_build_ge
   script:
     - pwsh -f "$GOBO/.cicd/test_ge.ps1" gitlab gcc ge tool
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $GOBO_CUSTOM_PIPELINE == null
+      when: on_success
+
+library_macos_clang_test_ge:
+  stage: test_ge
+  tags:
+    - saas-macos-medium-m1
+  image:
+# See: https://stackoverflow.com/questions/44319313/how-do-i-use-powershell-with-gitlab-ci-in-gitlab-pages
+    name: "mcr.microsoft.com/powershell:latest"
+  dependencies:
+    - macos_clang_build_ge
+  script:
+    - pwsh -f "$GOBO/.cicd/test_ge.ps1" gitlab clang ge library
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $GOBO_CUSTOM_PIPELINE == null
+      when: on_success
+
+tool_macos_clang_test_ge:
+  stage: test_ge
+  tags:
+    - saas-macos-medium-m1
+  image:
+# See: https://stackoverflow.com/questions/44319313/how-do-i-use-powershell-with-gitlab-ci-in-gitlab-pages
+    name: "mcr.microsoft.com/powershell:latest"
+  dependencies:
+    - macos_clang_build_ge
+  script:
+    - pwsh -f "$GOBO/.cicd/test_ge.ps1" gitlab clang ge tool
   rules:
     - if: $CI_COMMIT_TAG
       when: never
@@ -205,6 +269,46 @@ tool_linux_gcc_test_ise:
     - if: $CI_MERGE_REQUEST_ID
       when: never
     - if: $GOBO_CUSTOM_PIPELINE == "linux_gcc_test_ise"
+      when: on_success
+  timeout: 3 hours
+
+library_macos_clang_test_ise:
+  stage: test_ge
+  tags:
+    - saas-macos-medium-m1
+  image:
+# See: https://stackoverflow.com/questions/44319313/how-do-i-use-powershell-with-gitlab-ci-in-gitlab-pages
+    name: "mcr.microsoft.com/powershell:latest"
+  dependencies:
+    - macos_clang_build_ge
+  script:
+    - pwsh -f "$GOBO/.cicd/test_ge.ps1" gitlab clang debug_ise library
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $GOBO_CUSTOM_PIPELINE == "macos_clang_test_ise"
+      when: on_success
+  timeout: 3 hours
+
+tool_macos_clang_test_ise:
+  stage: test_ge
+  tags:
+    - saas-macos-medium-m1
+  image:
+# See: https://stackoverflow.com/questions/44319313/how-do-i-use-powershell-with-gitlab-ci-in-gitlab-pages
+    name: "mcr.microsoft.com/powershell:latest"
+  dependencies:
+    - macos_clang_build_ge
+  script:
+    - pwsh -f "$GOBO/.cicd/test_ge.ps1" gitlab clang debug_ise tool
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $GOBO_CUSTOM_PIPELINE == "macos_clang_test_ise"
       when: on_success
   timeout: 3 hours
 
