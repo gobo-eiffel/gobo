@@ -296,8 +296,8 @@ typedef volatile struct {
 #ifdef GE_HAS_SPECIAL_ONCE_PER_OBJECT
 	void* volatile onces;
 #endif
-	EIF_INTEGER volatile count;
 	EIF_INTEGER volatile capacity;
+	EIF_INTEGER volatile count;
 } EIF_SPECIAL;
 
 /* SCOOP */

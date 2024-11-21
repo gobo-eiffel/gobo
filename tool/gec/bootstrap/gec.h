@@ -298,8 +298,8 @@ typedef volatile struct {
 #ifdef GE_HAS_SPECIAL_ONCE_PER_OBJECT
 	void* volatile onces;
 #endif
-	EIF_INTEGER volatile count;
 	EIF_INTEGER volatile capacity;
+	EIF_INTEGER volatile count;
 } EIF_SPECIAL;
 
 /* SCOOP */
@@ -8640,8 +8640,8 @@ struct Sb1076 {
 struct S15 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T2 volatile z2[]; /* item */
 };
 
@@ -8649,8 +8649,8 @@ struct S15 {
 struct S16 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T3 volatile z2[]; /* item */
 };
 
@@ -8819,8 +8819,8 @@ struct S34 {
 struct S35 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -11216,8 +11216,8 @@ struct S153 {
 struct S154 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T6 volatile z2[]; /* item */
 };
 
@@ -11225,8 +11225,8 @@ struct S154 {
 struct S155 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T1 volatile z2[]; /* item */
 };
 
@@ -12424,8 +12424,8 @@ struct S272 {
 struct S273 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12439,8 +12439,8 @@ struct S274 {
 struct S275 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12464,8 +12464,8 @@ struct S277 {
 struct S278 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12490,8 +12490,8 @@ struct S280 {
 struct S281 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12516,8 +12516,8 @@ struct S283 {
 struct S284 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12540,8 +12540,8 @@ struct S286 {
 struct S287 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12555,8 +12555,8 @@ struct S288 {
 struct S290 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12570,8 +12570,8 @@ struct S291 {
 struct S293 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12585,8 +12585,8 @@ struct S294 {
 struct S296 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12600,8 +12600,8 @@ struct S297 {
 struct S299 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12626,8 +12626,8 @@ struct S301 {
 struct S302 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12653,8 +12653,8 @@ struct S304 {
 struct S305 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12681,8 +12681,8 @@ struct S307 {
 struct S308 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12696,8 +12696,8 @@ struct S309 {
 struct S311 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12722,8 +12722,8 @@ struct S313 {
 struct S314 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12737,8 +12737,8 @@ struct S315 {
 struct S317 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12752,8 +12752,8 @@ struct S318 {
 struct S320 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12778,8 +12778,8 @@ struct S322 {
 struct S323 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12803,8 +12803,8 @@ struct S325 {
 struct S326 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12828,8 +12828,8 @@ struct S328 {
 struct S329 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12854,8 +12854,8 @@ struct S331 {
 struct S332 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12878,8 +12878,8 @@ struct S334 {
 struct S335 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12903,8 +12903,8 @@ struct S337 {
 struct S338 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12928,8 +12928,8 @@ struct S340 {
 struct S341 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -12966,8 +12966,8 @@ struct S343 {
 struct S344 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13003,8 +13003,8 @@ struct S346 {
 struct S347 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13028,8 +13028,8 @@ struct S349 {
 struct S350 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13043,8 +13043,8 @@ struct S351 {
 struct S352 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13058,8 +13058,8 @@ struct S353 {
 struct S354 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13073,8 +13073,8 @@ struct S355 {
 struct S357 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13088,8 +13088,8 @@ struct S358 {
 struct S360 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13113,8 +13113,8 @@ struct S362 {
 struct S363 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13128,8 +13128,8 @@ struct S364 {
 struct S366 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13154,8 +13154,8 @@ struct S368 {
 struct S369 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13177,8 +13177,8 @@ struct S371 {
 struct S372 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13192,8 +13192,8 @@ struct S373 {
 struct S375 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13217,8 +13217,8 @@ struct S377 {
 struct S378 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13244,8 +13244,8 @@ struct S380 {
 struct S381 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13270,8 +13270,8 @@ struct S383 {
 struct S384 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13296,8 +13296,8 @@ struct S386 {
 struct S387 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13311,8 +13311,8 @@ struct S388 {
 struct S390 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13326,8 +13326,8 @@ struct S391 {
 struct S393 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13341,8 +13341,8 @@ struct S394 {
 struct S396 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13365,8 +13365,8 @@ struct S398 {
 struct S399 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13380,8 +13380,8 @@ struct S400 {
 struct S401 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13395,8 +13395,8 @@ struct S402 {
 struct S403 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13410,8 +13410,8 @@ struct S404 {
 struct S405 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13434,8 +13434,8 @@ struct S407 {
 struct S408 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13449,8 +13449,8 @@ struct S409 {
 struct S411 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13464,8 +13464,8 @@ struct S412 {
 struct S414 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13479,8 +13479,8 @@ struct S415 {
 struct S417 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13504,8 +13504,8 @@ struct S419 {
 struct S420 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13529,8 +13529,8 @@ struct S422 {
 struct S423 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13554,8 +13554,8 @@ struct S425 {
 struct S426 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13569,8 +13569,8 @@ struct S427 {
 struct S429 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13584,8 +13584,8 @@ struct S430 {
 struct S432 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13599,8 +13599,8 @@ struct S433 {
 struct S435 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13623,8 +13623,8 @@ struct S437 {
 struct S438 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13651,8 +13651,8 @@ struct S440 {
 struct S441 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13675,8 +13675,8 @@ struct S443 {
 struct S444 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13690,8 +13690,8 @@ struct S445 {
 struct S446 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13705,8 +13705,8 @@ struct S447 {
 struct S448 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13729,8 +13729,8 @@ struct S450 {
 struct S451 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13753,8 +13753,8 @@ struct S453 {
 struct S454 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13776,8 +13776,8 @@ struct S456 {
 struct S457 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13799,8 +13799,8 @@ struct S459 {
 struct S460 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13822,8 +13822,8 @@ struct S462 {
 struct S463 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13837,8 +13837,8 @@ struct S464 {
 struct S466 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13852,8 +13852,8 @@ struct S467 {
 struct S468 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13867,8 +13867,8 @@ struct S469 {
 struct S471 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13882,8 +13882,8 @@ struct S472 {
 struct S474 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13897,8 +13897,8 @@ struct S475 {
 struct S477 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13912,8 +13912,8 @@ struct S478 {
 struct S480 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13927,8 +13927,8 @@ struct S481 {
 struct S482 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13950,8 +13950,8 @@ struct S484 {
 struct S485 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13974,8 +13974,8 @@ struct S487 {
 struct S488 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -13989,8 +13989,8 @@ struct S489 {
 struct S490 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14004,8 +14004,8 @@ struct S491 {
 struct S493 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14030,8 +14030,8 @@ struct S495 {
 struct S496 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14045,8 +14045,8 @@ struct S497 {
 struct S499 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14070,8 +14070,8 @@ struct S501 {
 struct S502 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14095,8 +14095,8 @@ struct S504 {
 struct S505 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14110,8 +14110,8 @@ struct S506 {
 struct S508 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14135,8 +14135,8 @@ struct S510 {
 struct S511 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14164,8 +14164,8 @@ struct S513 {
 struct S514 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14190,8 +14190,8 @@ struct S516 {
 struct S517 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14205,8 +14205,8 @@ struct S518 {
 struct S520 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14229,8 +14229,8 @@ struct S522 {
 struct S523 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14244,8 +14244,8 @@ struct S524 {
 struct S526 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14268,8 +14268,8 @@ struct S528 {
 struct S529 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14292,8 +14292,8 @@ struct S531 {
 struct S532 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14318,8 +14318,8 @@ struct S534 {
 struct S535 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14343,8 +14343,8 @@ struct S537 {
 struct S538 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14358,8 +14358,8 @@ struct S539 {
 struct S541 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14388,8 +14388,8 @@ struct S543 {
 struct S544 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14403,8 +14403,8 @@ struct S545 {
 struct S546 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14418,8 +14418,8 @@ struct S547 {
 struct S549 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14444,8 +14444,8 @@ struct S551 {
 struct S552 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14459,8 +14459,8 @@ struct S553 {
 struct S555 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14483,8 +14483,8 @@ struct S557 {
 struct S558 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14507,8 +14507,8 @@ struct S560 {
 struct S561 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14534,8 +14534,8 @@ struct S563 {
 struct S564 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14549,8 +14549,8 @@ struct S565 {
 struct S567 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14574,8 +14574,8 @@ struct S569 {
 struct S570 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14600,8 +14600,8 @@ struct S572 {
 struct S573 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14624,8 +14624,8 @@ struct S575 {
 struct S576 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14639,8 +14639,8 @@ struct S577 {
 struct S579 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14654,8 +14654,8 @@ struct S580 {
 struct S582 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14669,8 +14669,8 @@ struct S583 {
 struct S585 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14692,8 +14692,8 @@ struct S587 {
 struct S588 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14707,8 +14707,8 @@ struct S589 {
 struct S591 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14732,8 +14732,8 @@ struct S593 {
 struct S594 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14747,8 +14747,8 @@ struct S595 {
 struct S596 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14770,8 +14770,8 @@ struct S598 {
 struct S599 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14785,8 +14785,8 @@ struct S600 {
 struct S601 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14800,8 +14800,8 @@ struct S602 {
 struct S603 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14827,8 +14827,8 @@ struct S605 {
 struct S606 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14854,8 +14854,8 @@ struct S608 {
 struct S609 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14869,8 +14869,8 @@ struct S610 {
 struct S612 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14884,8 +14884,8 @@ struct S613 {
 struct S615 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14918,8 +14918,8 @@ struct S617 {
 struct S618 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14933,8 +14933,8 @@ struct S619 {
 struct S621 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14948,8 +14948,8 @@ struct S622 {
 struct S624 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14963,8 +14963,8 @@ struct S625 {
 struct S626 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -14996,8 +14996,8 @@ struct S628 {
 struct S629 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -15023,8 +15023,8 @@ struct S631 {
 struct S632 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -15050,8 +15050,8 @@ struct S634 {
 struct S635 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -15065,8 +15065,8 @@ struct S636 {
 struct S637 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -15080,8 +15080,8 @@ struct S638 {
 struct S640 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -15095,8 +15095,8 @@ struct S641 {
 struct S643 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -15120,8 +15120,8 @@ struct S645 {
 struct S646 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -15135,8 +15135,8 @@ struct S647 {
 struct S649 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -15150,8 +15150,8 @@ struct S650 {
 struct S652 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -15174,8 +15174,8 @@ struct S654 {
 struct S655 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -15198,8 +15198,8 @@ struct S657 {
 struct S658 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -15221,8 +15221,8 @@ struct S660 {
 struct S661 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -15244,8 +15244,8 @@ struct S663 {
 struct S664 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -15267,8 +15267,8 @@ struct S666 {
 struct S667 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -15282,8 +15282,8 @@ struct S668 {
 struct S670 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -16624,8 +16624,8 @@ struct S778 {
 struct S779 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -17653,8 +17653,8 @@ struct S854 {
 struct S855 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -18367,8 +18367,8 @@ struct S917 {
 struct S918 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -19361,8 +19361,8 @@ struct S1017 {
 struct S1018 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -19862,8 +19862,8 @@ struct S1073 {
 struct S1074 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -19871,8 +19871,8 @@ struct S1074 {
 struct S1075 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T8 volatile z2[]; /* item */
 };
 
@@ -19924,8 +19924,8 @@ struct S1081 {
 struct S1082 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -19945,8 +19945,8 @@ struct S1086 {
 struct S1087 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -19963,8 +19963,8 @@ struct S1088 {
 struct S1090 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -19978,8 +19978,8 @@ struct S1091 {
 struct S1092 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -19993,8 +19993,8 @@ struct S1093 {
 struct S1094 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20033,8 +20033,8 @@ struct S1100 {
 struct S1101 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20082,8 +20082,8 @@ struct S1105 {
 struct S1107 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20106,8 +20106,8 @@ struct S1109 {
 struct S1110 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20121,8 +20121,8 @@ struct S1111 {
 struct S1112 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20688,8 +20688,8 @@ struct S1155 {
 struct S1156 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20703,8 +20703,8 @@ struct S1157 {
 struct S1158 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20718,8 +20718,8 @@ struct S1159 {
 struct S1160 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20733,8 +20733,8 @@ struct S1161 {
 struct S1162 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20748,8 +20748,8 @@ struct S1163 {
 struct S1164 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20763,8 +20763,8 @@ struct S1165 {
 struct S1166 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20778,8 +20778,8 @@ struct S1167 {
 struct S1168 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20802,8 +20802,8 @@ struct S1170 {
 struct S1171 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20826,8 +20826,8 @@ struct S1173 {
 struct S1174 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20868,8 +20868,8 @@ struct S1178 {
 struct S1179 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20883,8 +20883,8 @@ struct S1180 {
 struct S1182 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20898,8 +20898,8 @@ struct S1184 {
 struct S1186 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20913,8 +20913,8 @@ struct S1187 {
 struct S1189 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20928,8 +20928,8 @@ struct S1190 {
 struct S1191 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20943,8 +20943,8 @@ struct S1192 {
 struct S1193 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20958,8 +20958,8 @@ struct S1194 {
 struct S1195 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -20973,8 +20973,8 @@ struct S1196 {
 struct S1197 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21023,8 +21023,8 @@ struct S1200 {
 struct S1201 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21038,8 +21038,8 @@ struct S1204 {
 struct S1205 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21201,8 +21201,8 @@ struct S1222 {
 struct S1223 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21238,8 +21238,8 @@ struct S1225 {
 struct S1226 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21261,8 +21261,8 @@ struct S1228 {
 struct S1229 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21287,8 +21287,8 @@ struct S1231 {
 struct S1232 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21312,8 +21312,8 @@ struct S1234 {
 struct S1235 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21339,8 +21339,8 @@ struct S1237 {
 struct S1238 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21365,8 +21365,8 @@ struct S1240 {
 struct S1241 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21395,8 +21395,8 @@ struct S1244 {
 struct S1245 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21591,8 +21591,8 @@ struct S1253 {
 struct S1254 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21632,8 +21632,8 @@ struct S1256 {
 struct S1259 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21664,8 +21664,8 @@ struct S1263 {
 struct S1264 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21694,8 +21694,8 @@ struct S1269 {
 struct S1270 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21716,8 +21716,8 @@ struct S1275 {
 struct S1276 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21740,8 +21740,8 @@ struct S1278 {
 struct S1279 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21790,8 +21790,8 @@ struct S1282 {
 struct S1283 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21898,8 +21898,8 @@ struct S1293 {
 struct S1294 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21922,8 +21922,8 @@ struct S1296 {
 struct S1297 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21954,8 +21954,8 @@ struct S1301 {
 struct S1302 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -21978,8 +21978,8 @@ struct S1304 {
 struct S1305 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22002,8 +22002,8 @@ struct S1307 {
 struct S1308 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22038,8 +22038,8 @@ struct S1311 {
 struct S1312 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22071,8 +22071,8 @@ struct S1315 {
 struct S1316 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22089,8 +22089,8 @@ struct S1317 {
 struct S1318 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22173,8 +22173,8 @@ struct S1330 {
 struct S1332 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22206,8 +22206,8 @@ struct S1335 {
 struct S1336 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22227,8 +22227,8 @@ struct S1339 {
 struct S1340 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22251,8 +22251,8 @@ struct S1342 {
 struct S1343 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22275,8 +22275,8 @@ struct S1345 {
 struct S1346 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22290,8 +22290,8 @@ struct S1347 {
 struct S1348 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22305,8 +22305,8 @@ struct S1349 {
 struct S1350 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22314,8 +22314,8 @@ struct S1350 {
 struct S1351 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22323,8 +22323,8 @@ struct S1351 {
 struct S1352 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T10 volatile z2[]; /* item */
 };
 
@@ -22349,8 +22349,8 @@ struct S1354 {
 struct S1355 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T11 volatile z2[]; /* item */
 };
 
@@ -22393,8 +22393,8 @@ struct S1357 {
 struct S1358 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22402,8 +22402,8 @@ struct S1358 {
 struct S1359 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22431,8 +22431,8 @@ struct S1365 {
 struct S1366 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22467,8 +22467,8 @@ struct S1370 {
 struct S1371 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22506,8 +22506,8 @@ struct S1375 {
 struct S1376 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22524,8 +22524,8 @@ struct S1377 {
 struct S1378 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22554,8 +22554,8 @@ struct S1381 {
 struct S1382 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22578,8 +22578,8 @@ struct S1384 {
 struct S1385 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22596,8 +22596,8 @@ struct S1386 {
 struct S1387 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22626,8 +22626,8 @@ struct S1390 {
 struct S1391 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22650,8 +22650,8 @@ struct S1393 {
 struct S1394 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22668,8 +22668,8 @@ struct S1395 {
 struct S1396 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22692,8 +22692,8 @@ struct S1398 {
 struct S1399 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22740,8 +22740,8 @@ struct S1404 {
 struct S1406 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22773,8 +22773,8 @@ struct S1410 {
 struct S1413 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22797,8 +22797,8 @@ struct S1415 {
 struct S1416 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22821,8 +22821,8 @@ struct S1419 {
 struct S1420 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22845,8 +22845,8 @@ struct S1422 {
 struct S1423 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22869,8 +22869,8 @@ struct S1426 {
 struct S1427 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22884,8 +22884,8 @@ struct S1429 {
 struct S1430 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22908,8 +22908,8 @@ struct S1433 {
 struct S1434 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22932,8 +22932,8 @@ struct S1436 {
 struct S1437 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -22983,8 +22983,8 @@ struct S1444 {
 struct S1448 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -23006,8 +23006,8 @@ struct S1450 {
 struct S1451 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -23198,8 +23198,8 @@ struct S1474 {
 struct S1475 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -23219,8 +23219,8 @@ struct S1477 {
 struct S1478 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -23955,8 +23955,8 @@ struct S1569 {
 struct S1573 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -23970,8 +23970,8 @@ struct S1574 {
 struct S1576 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24062,8 +24062,8 @@ struct S1595 {
 struct S1597 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24077,8 +24077,8 @@ struct S1598 {
 struct S1599 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24100,8 +24100,8 @@ struct S1601 {
 struct S1603 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24115,8 +24115,8 @@ struct S1604 {
 struct S1605 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24130,8 +24130,8 @@ struct S1607 {
 struct S1608 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24145,8 +24145,8 @@ struct S1610 {
 struct S1611 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24160,8 +24160,8 @@ struct S1612 {
 struct S1613 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24175,8 +24175,8 @@ struct S1614 {
 struct S1615 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24190,8 +24190,8 @@ struct S1616 {
 struct S1617 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24205,8 +24205,8 @@ struct S1619 {
 struct S1620 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24220,8 +24220,8 @@ struct S1621 {
 struct S1622 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24235,8 +24235,8 @@ struct S1624 {
 struct S1626 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24250,8 +24250,8 @@ struct S1627 {
 struct S1629 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24265,8 +24265,8 @@ struct S1630 {
 struct S1631 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24280,8 +24280,8 @@ struct S1632 {
 struct S1633 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24295,8 +24295,8 @@ struct S1634 {
 struct S1636 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24310,8 +24310,8 @@ struct S1637 {
 struct S1638 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24325,8 +24325,8 @@ struct S1639 {
 struct S1640 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24474,8 +24474,8 @@ struct S1662 {
 struct S1663 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24530,8 +24530,8 @@ struct S1673 {
 struct S1674 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24588,8 +24588,8 @@ struct S1681 {
 struct S1683 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24611,8 +24611,8 @@ struct S1685 {
 struct S1686 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24634,8 +24634,8 @@ struct S1688 {
 struct S1689 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24724,8 +24724,8 @@ struct S1697 {
 struct S1698 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24733,8 +24733,8 @@ struct S1698 {
 struct S1701 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24769,8 +24769,8 @@ struct S1706 {
 struct S1707 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -24802,8 +24802,8 @@ struct S1711 {
 struct S1712 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -25073,8 +25073,8 @@ struct S1736 {
 struct S1737 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -25161,8 +25161,8 @@ struct S1754 {
 struct S1755 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -25294,8 +25294,8 @@ struct S1776 {
 struct S1777 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -25331,8 +25331,8 @@ struct S1781 {
 struct S1783 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -25340,8 +25340,8 @@ struct S1783 {
 struct S1785 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -25369,8 +25369,8 @@ struct S1789 {
 struct S1790 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -25392,8 +25392,8 @@ struct S1793 {
 struct S1794 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -25421,8 +25421,8 @@ struct S1797 {
 struct S1799 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -25495,8 +25495,8 @@ struct S1814 {
 struct S1815 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -25830,8 +25830,8 @@ struct S1896 {
 struct S1899 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -25871,8 +25871,8 @@ struct S1913 {
 struct S1922 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T9 volatile z2[]; /* item */
 };
 
@@ -25898,8 +25898,8 @@ struct S1924 {
 struct S1925 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26048,8 +26048,8 @@ struct S1939 {
 struct S1940 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26076,8 +26076,8 @@ struct S1942 {
 struct S1943 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26097,8 +26097,8 @@ struct S1947 {
 struct S1948 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26150,8 +26150,8 @@ struct S1953 {
 struct S1954 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26173,8 +26173,8 @@ struct S1958 {
 struct S1959 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26226,8 +26226,8 @@ struct S1965 {
 struct S1966 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26304,8 +26304,8 @@ struct S1973 {
 struct S1974 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26328,8 +26328,8 @@ struct S1976 {
 struct S1977 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26351,8 +26351,8 @@ struct S1979 {
 struct S1980 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26375,8 +26375,8 @@ struct S1982 {
 struct S1983 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26390,8 +26390,8 @@ struct S1984 {
 struct S1985 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26414,8 +26414,8 @@ struct S1988 {
 struct S1989 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26474,8 +26474,8 @@ struct S1996 {
 struct S1997 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26514,8 +26514,8 @@ struct S2002 {
 struct S2003 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26532,8 +26532,8 @@ struct S2004 {
 struct S2005 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26556,8 +26556,8 @@ struct S2007 {
 struct S2008 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26624,8 +26624,8 @@ struct S2015 {
 struct S2016 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -26688,8 +26688,8 @@ struct S2022 {
 struct S2023 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27236,8 +27236,8 @@ struct S2116 {
 struct S2118 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27259,8 +27259,8 @@ struct S2120 {
 struct S2122 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27282,8 +27282,8 @@ struct S2124 {
 struct S2125 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27311,8 +27311,8 @@ struct S2128 {
 struct S2129 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27334,8 +27334,8 @@ struct S2131 {
 struct S2132 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27357,8 +27357,8 @@ struct S2134 {
 struct S2135 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27380,8 +27380,8 @@ struct S2137 {
 struct S2138 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27403,8 +27403,8 @@ struct S2140 {
 struct S2141 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27426,8 +27426,8 @@ struct S2143 {
 struct S2144 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27449,8 +27449,8 @@ struct S2146 {
 struct S2147 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27472,8 +27472,8 @@ struct S2149 {
 struct S2150 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27495,8 +27495,8 @@ struct S2152 {
 struct S2153 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27518,8 +27518,8 @@ struct S2155 {
 struct S2156 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27541,8 +27541,8 @@ struct S2158 {
 struct S2159 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27564,8 +27564,8 @@ struct S2161 {
 struct S2162 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27775,8 +27775,8 @@ struct S2167 {
 struct S2169 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27816,8 +27816,8 @@ struct S2176 {
 struct S2177 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -27955,8 +27955,8 @@ struct S2199 {
 struct S2202 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28185,8 +28185,8 @@ struct S2223 {
 struct S2224 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28200,8 +28200,8 @@ struct S2225 {
 struct S2226 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28223,8 +28223,8 @@ struct S2228 {
 struct S2229 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28337,8 +28337,8 @@ struct S2242 {
 struct S2243 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28405,8 +28405,8 @@ struct S2249 {
 struct S2250 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28535,8 +28535,8 @@ struct S2269 {
 struct S2270 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28553,8 +28553,8 @@ struct S2271 {
 struct S2272 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28611,8 +28611,8 @@ struct S2277 {
 struct S2279 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28656,8 +28656,8 @@ struct S2284 {
 struct S2285 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28680,8 +28680,8 @@ struct S2287 {
 struct S2288 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28709,8 +28709,8 @@ struct S2292 {
 struct S2293 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28782,8 +28782,8 @@ struct S2306 {
 struct S2307 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28805,8 +28805,8 @@ struct S2310 {
 struct S2312 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28829,8 +28829,8 @@ struct S2315 {
 struct S2317 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28948,8 +28948,8 @@ struct S2337 {
 struct S2340 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
@@ -28979,8 +28979,8 @@ struct S2343 {
 struct S2345 {
 	EIF_TYPE_INDEX volatile id;
 	uint16_t volatile flags;
-	T6 volatile a1; /* count */
-	T6 volatile a2; /* capacity */
+	T6 volatile a1; /* capacity */
+	T6 volatile a2; /* count */
 	T0* volatile z2[]; /* item */
 };
 
