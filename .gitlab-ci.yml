@@ -54,7 +54,7 @@ macos_clang_build_ge:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == null || $GOBO_CUSTOM_PIPELINE == "macos_test_ise"
+    - if: $GOBO_CUSTOM_PIPELINE == "not_available_for_free" || $GOBO_CUSTOM_PIPELINE == "macos_test_ise"
       when: on_success
   artifacts:
     when: always
@@ -150,7 +150,7 @@ library_macos_clang_test_ge:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == null
+    - if: $GOBO_CUSTOM_PIPELINE == "not_available_for_free"
       when: on_success
 
 tool_macos_clang_test_ge:
@@ -169,7 +169,7 @@ tool_macos_clang_test_ge:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == null
+    - if: $GOBO_CUSTOM_PIPELINE == "not_available_for_free"
       when: on_success
 
 library_windows_msc_test_ge:
