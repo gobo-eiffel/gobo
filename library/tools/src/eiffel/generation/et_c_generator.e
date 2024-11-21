@@ -20730,42 +20730,95 @@ feature {NONE} -- Deep features generation
 					current_file.put_character (')')
 					current_file.put_character (';')
 					current_file.put_new_line
-					print_indentation
-					print_attribute_special_count_access (tokens.result_keyword, l_special_type, False)
-					print_assign_to
-					print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
-					print_semicolon_newline
-					if not l_has_nested_reference_attributes then
-							-- Copy items if they are not reference objects or expanded
-							-- objects containing (recursively) reference attributes.
+					if l_special_type.attribute_count > 2 then
 						print_indentation
 						current_file.put_string (c_memcpy)
 						current_file.put_character ('(')
 						current_file.put_character ('(')
-						current_file.put_string (c_void)
+						current_file.put_character ('(')
+						current_file.put_string (c_char)
 						current_file.put_character ('*')
 						current_file.put_character (')')
-						current_file.put_character ('(')
-						print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
+						if current_type.is_expanded then
+							current_file.put_character ('&')
+						end
+						print_result_name (current_file)
 						current_file.put_character (')')
-						current_file.put_character (',')
+						print_plus
+						print_attribute_offset (l_special_type, current_file)
+						print_comma
 						current_file.put_character ('(')
-						current_file.put_string (c_void)
+						current_file.put_character ('(')
+						current_file.put_string (c_char)
 						current_file.put_character ('*')
 						current_file.put_character (')')
-						current_file.put_character ('(')
-						print_attribute_special_item_access (tokens.current_keyword, l_special_type, False)
+						if current_type.is_expanded then
+							current_file.put_character ('&')
+						end
+						print_current_name (current_file)
 						current_file.put_character (')')
-						current_file.put_character (',')
+						print_plus
+						print_attribute_offset (l_special_type, current_file)
+						print_comma
+						current_file.put_string (c_offsetof)
+						current_file.put_character ('(')
+						print_type_name (current_type, current_file)
+						print_comma
+						print_attribute_special_item_name (current_type, current_file)
+						current_file.put_character (')')
+						if not l_has_nested_reference_attributes then
+								-- Copy items if they are not reference objects or expanded
+								-- objects containing (recursively) reference attributes.
+							print_plus
+							print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+							print_times
+							current_file.put_string (c_sizeof)
+							current_file.put_character ('(')
+							print_type_declaration (l_attribute_type, current_file)
+							current_file.put_character (')')
+						end
+						print_minus
+						print_attribute_offset (l_special_type, current_file)
+						current_file.put_character (')')
+						print_semicolon_newline
+					else
+						print_indentation
+						print_attribute_special_count_access (tokens.result_keyword, l_special_type, False)
+						print_assign_to
 						print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
-						current_file.put_character ('*')
-						current_file.put_string (c_sizeof)
-						current_file.put_character ('(')
-						print_type_declaration (l_attribute_type, current_file)
-						current_file.put_character (')')
-						current_file.put_character (')')
-						current_file.put_character (';')
-						current_file.put_new_line
+						print_semicolon_newline
+						if not l_has_nested_reference_attributes then
+								-- Copy items if they are not reference objects or expanded
+								-- objects containing (recursively) reference attributes.
+							print_indentation
+							current_file.put_string (c_memcpy)
+							current_file.put_character ('(')
+							current_file.put_character ('(')
+							current_file.put_string (c_void)
+							current_file.put_character ('*')
+							current_file.put_character (')')
+							current_file.put_character ('(')
+							print_attribute_special_item_access (tokens.result_keyword, l_special_type, False)
+							current_file.put_character (')')
+							current_file.put_character (',')
+							current_file.put_character ('(')
+							current_file.put_string (c_void)
+							current_file.put_character ('*')
+							current_file.put_character (')')
+							current_file.put_character ('(')
+							print_attribute_special_item_access (tokens.current_keyword, l_special_type, False)
+							current_file.put_character (')')
+							current_file.put_character (',')
+							print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+							current_file.put_character ('*')
+							current_file.put_string (c_sizeof)
+							current_file.put_character ('(')
+							print_type_declaration (l_attribute_type, current_file)
+							current_file.put_character (')')
+							current_file.put_character (')')
+							current_file.put_character (';')
+							current_file.put_new_line
+						end
 					end
 				elseif a_type.is_expanded and not a_type.has_once_per_object_routines then
 					print_indentation
@@ -20813,16 +20866,7 @@ feature {NONE} -- Deep features generation
 						print_result_name (current_file)
 						current_file.put_character (')')
 						print_plus
-						current_file.put_string (c_offsetof)
-						current_file.put_character ('(')
-						print_type_name (a_type, current_file)
-						print_comma
-						if a_type.attribute_count > 0 then
-							print_attribute_name (a_type.queries.first, a_type, current_file)
-						elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
-							print_attribute_tuple_item_name (1, l_tuple_type, current_file)
-						end
-						current_file.put_character (')')
+						print_attribute_offset (a_type, current_file)
 						print_comma
 						current_file.put_character ('(')
 						current_file.put_character ('(')
@@ -20835,32 +20879,14 @@ feature {NONE} -- Deep features generation
 						print_current_name (current_file)
 						current_file.put_character (')')
 						print_plus
-						current_file.put_string (c_offsetof)
-						current_file.put_character ('(')
-						print_type_name (a_type, current_file)
-						print_comma
-						if a_type.attribute_count > 0 then
-							print_attribute_name (a_type.queries.first, a_type, current_file)
-						elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
-							print_attribute_tuple_item_name (1, l_tuple_type, current_file)
-						end
-						current_file.put_character (')')
+						print_attribute_offset (a_type, current_file)
 						print_comma
 						current_file.put_string (c_sizeof)
 						current_file.put_character ('(')
 						print_type_name (a_type, current_file)
 						current_file.put_character (')')
 						print_minus
-						current_file.put_string (c_offsetof)
-						current_file.put_character ('(')
-						print_type_name (a_type, current_file)
-						print_comma
-						if a_type.attribute_count > 0 then
-							print_attribute_name (a_type.queries.first, a_type, current_file)
-						elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
-							print_attribute_tuple_item_name (1, l_tuple_type, current_file)
-						end
-						current_file.put_character (')')
+						print_attribute_offset (a_type, current_file)
 						current_file.put_character (')')
 						print_semicolon_newline
 					end
@@ -20913,12 +20939,12 @@ feature {NONE} -- Deep features generation
 							-- Twin items.
 						if l_special_type.attribute_count < 2 then
 								-- Internal error: class "SPECIAL" should have at least the
-								-- features 'count' and 'capacity' as first features.
+								-- features 'capacity' and 'count' as first features.
 								-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 							set_fatal_error
 							error_handler.report_giaac_error (generator, "print_deep_twin_function", 1, "missing attributes in 'SPECIAL'.")
 						else
-							l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.item (2))
+							l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.first)
 							l_capacity_type := l_dynamic_type_set.static_type.primary_type
 							if l_attribute_type_set.is_empty then
 									-- If the dynamic type set of the items is empty,
@@ -23735,7 +23761,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						end
 					elseif
 						current_type.attribute_count > 0 or else
-						current_type.is_special or else
 						(attached {ET_DYNAMIC_TUPLE_TYPE} current_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty) or else
 						not current_type.base_class.is_type_class
 					then
@@ -23920,7 +23945,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			if a_special_type.attribute_count < 2 then
 					-- Internal error: class "SPECIAL" should have at least the
-					-- features 'count' and 'capacity' as first features.
+					-- features 'capacity' and 'count' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_any_standard_is_equal_special_items", 1, "missing attributes in 'SPECIAL'.")
@@ -23935,7 +23960,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				error_handler.report_giaac_error (generator, "print_builtin_any_standard_is_equal_special_items", 3, "featute `item' with no type in 'SPECIAL'.")
 			else
 				l_item_type := l_item_type_set.static_type.primary_type
-				l_dynamic_type_set := result_type_set_in_feature (a_special_type.queries.first)
+				l_dynamic_type_set := result_type_set_in_feature (a_special_type.queries.item (2))
 				l_count_type := l_dynamic_type_set.static_type.primary_type
 				l_count_temp := new_temp_variable (l_count_type)
 				mark_temp_variable_frozen (l_count_temp)
@@ -24281,13 +24306,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_string (c_eif_true)
 			elseif
 				a_target_type.attribute_count = 0 and then
-				not a_target_type.is_special and then
 				(not attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type or else l_tuple_type.item_type_sets.is_empty)
 			then
 					-- No field to compare with.
 				current_file.put_string (c_eif_true)
 			else
-					-- Note: do not copy the flag, SCOOP region, nor once-per-object.
+					-- Note: do not compare the flag, SCOOP region, nor once-per-object.
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
 				print_declaration_type_cast (a_result_type, current_file)
@@ -24305,16 +24329,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character (')')
 				current_file.put_character (')')
 				print_plus
-				current_file.put_string (c_offsetof)
-				current_file.put_character ('(')
-				print_type_name (a_target_type, current_file)
-				print_comma
-				if a_target_type.attribute_count > 0 then
-					print_attribute_name (a_target_type.queries.first, a_target_type, current_file)
-				elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
-					print_attribute_tuple_item_name (1, l_tuple_type, current_file)
-				end
-				current_file.put_character (')')
+				print_attribute_offset (a_target_type, current_file)
 				print_comma
 				current_file.put_character ('(')
 				current_file.put_character ('(')
@@ -24326,16 +24341,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character (')')
 				current_file.put_character (')')
 				print_plus
-				current_file.put_string (c_offsetof)
-				current_file.put_character ('(')
-				print_type_name (a_target_type, current_file)
-				print_comma
-				if a_target_type.attribute_count > 0 then
-					print_attribute_name (a_target_type.queries.first, a_target_type, current_file)
-				elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
-					print_attribute_tuple_item_name (1, l_tuple_type, current_file)
-				end
-				current_file.put_character (')')
+				print_attribute_offset (a_target_type, current_file)
 				print_comma
 				if attached {ET_DYNAMIC_SPECIAL_TYPE} a_target_type as l_special_type then
 						-- Note: if `offsetof' is not supported, then we can use: ((int)&(((T317*) 0)->a2))
@@ -24360,16 +24366,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character (')')
 				end
 				print_minus
-				current_file.put_string (c_offsetof)
-				current_file.put_character ('(')
-				print_type_name (a_target_type, current_file)
-				print_comma
-				if a_target_type.attribute_count > 0 then
-					print_attribute_name (a_target_type.queries.first, a_target_type, current_file)
-				elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
-					print_attribute_tuple_item_name (1, l_tuple_type, current_file)
-				end
-				current_file.put_character (')')
+				print_attribute_offset (a_target_type, current_file)
 				current_file.put_character (')')
 				current_file.put_character (')')
 			end
@@ -24458,16 +24455,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				end
 				current_file.put_character (')')
 				print_plus
-				current_file.put_string (c_offsetof)
-				current_file.put_character ('(')
-				print_type_name (current_type, current_file)
-				print_comma
-				if current_type.attribute_count > 0 then
-					print_attribute_name (current_type.queries.first, current_type, current_file)
-				elseif attached {ET_DYNAMIC_TUPLE_TYPE} current_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
-					print_attribute_tuple_item_name (1, l_tuple_type, current_file)
-				end
-				current_file.put_character (')')
+				print_attribute_offset (current_type, current_file)
 				print_comma
 				current_file.put_character ('(')
 				current_file.put_character ('(')
@@ -24486,32 +24474,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				end
 				current_file.put_character (')')
 				print_plus
-				current_file.put_string (c_offsetof)
-				current_file.put_character ('(')
-				print_type_name (current_type, current_file)
-				print_comma
-				if current_type.attribute_count > 0 then
-					print_attribute_name (current_type.queries.first, current_type, current_file)
-				elseif attached {ET_DYNAMIC_TUPLE_TYPE} current_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
-					print_attribute_tuple_item_name (1, l_tuple_type, current_file)
-				end
-				current_file.put_character (')')
+				print_attribute_offset (current_type, current_file)
 				print_comma
 				current_file.put_string (c_sizeof)
 				current_file.put_character ('(')
 				print_type_name (current_type, current_file)
 				current_file.put_character (')')
 				print_minus
-				current_file.put_string (c_offsetof)
-				current_file.put_character ('(')
-				print_type_name (current_type, current_file)
-				print_comma
-				if current_type.attribute_count > 0 then
-					print_attribute_name (current_type.queries.first, current_type, current_file)
-				elseif attached {ET_DYNAMIC_TUPLE_TYPE} current_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
-					print_attribute_tuple_item_name (1, l_tuple_type, current_file)
-				end
-				current_file.put_character (')')
+				print_attribute_offset (current_type, current_file)
 				current_file.put_character (')')
 				print_semicolon_newline
 				print_builtin_any_standard_copy_custom_attributes (a_source, a_target)
@@ -24550,14 +24520,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			if a_special_type.attribute_count < 2 then
 					-- Internal error: class "SPECIAL" should have at least the
-					-- features 'count' and 'capacity' as first features.
+					-- features 'capacity' and 'count' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_any_standard_copy_body_with_special", 1, "missing attributes in 'SPECIAL'.")
 			else
 				l_item_type_set := a_special_type.item_type_set
 				l_item_type := l_item_type_set.static_type.primary_type
-				l_dynamic_type_set := result_type_set_in_feature (a_special_type.queries.first)
+				l_dynamic_type_set := result_type_set_in_feature (a_special_type.queries.item (2))
 				l_count_type := l_dynamic_type_set.static_type.primary_type
 				l_count_temp := new_temp_variable (l_count_type)
 				mark_temp_variable_frozen (l_count_temp)
@@ -24584,38 +24554,98 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character ('0')
 				print_then_newline
 				indent
-					-- Do not use "*(T123*)(C) = *(T123*)(a1);" because we might overwrite
-					-- some items due to struct padding (unused bytes added at the end of
-					-- the struct for memory alignment).
-				print_indentation
-				current_file.put_string (c_memcpy)
-				current_file.put_character ('(')
-					-- Get rid of the volatile type marker.
-				current_file.put_character ('(')
-				current_file.put_string (c_void)
-				current_file.put_character ('*')
-				current_file.put_character (')')
-				current_file.put_character ('(')
-				print_attribute_special_item_access (a_target, a_special_type, False)
-				current_file.put_character (')')
-				print_comma
-					-- Get rid of the volatile type marker.
-				current_file.put_character ('(')
-				current_file.put_string (c_void)
-				current_file.put_character ('*')
-				current_file.put_character (')')
-				current_file.put_character ('(')
-				print_attribute_special_item_access (a_source, a_special_type, False)
-				current_file.put_character (')')
-				print_comma
-				print_temp_name (l_other_count_temp, current_file)
-				print_times
-				current_file.put_string (c_sizeof)
-				current_file.put_character ('(')
-				print_type_declaration (l_item_type, current_file)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				print_semicolon_newline
+						-- Note: do not copy the flag, SCOOP region, once-per-object
+						-- nor 'capacity' and 'count'.
+				if a_special_type.attribute_count > 2 then
+					print_indentation
+					current_file.put_string (c_memcpy)
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					current_file.put_string (c_char)
+					current_file.put_character ('*')
+					current_file.put_character (')')
+					if current_type.is_expanded then
+						current_file.put_character ('&')
+						current_file.put_character ('(')
+						print_unboxed_expression (a_target, current_type, False)
+						current_file.put_character (')')
+					else
+						current_file.put_character ('(')
+						print_procedure_target_expression (a_target, current_type, False)
+						current_file.put_character (')')
+					end
+					current_file.put_character (')')
+					print_plus
+					print_special_attribute_offset (a_special_type, current_file)
+					print_comma
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					current_file.put_string (c_char)
+					current_file.put_character ('*')
+					current_file.put_character (')')
+					if current_type.is_expanded then
+						current_file.put_character ('&')
+						current_file.put_character ('(')
+						print_attachment_expression (a_source, dynamic_type_set (a_source), current_type)
+						current_file.put_character (')')
+					else
+						current_file.put_character ('(')
+						print_attachment_expression (a_source, dynamic_type_set (a_source), current_type)
+						current_file.put_character (')')
+					end
+					current_file.put_character (')')
+					print_plus
+					print_special_attribute_offset (a_special_type, current_file)
+					print_comma
+					current_file.put_string (c_offsetof)
+					current_file.put_character ('(')
+					print_type_name (current_type, current_file)
+					print_comma
+					print_attribute_special_item_name (current_type, current_file)
+					current_file.put_character (')')
+					print_plus
+					print_temp_name (l_other_count_temp, current_file)
+					print_times
+					current_file.put_string (c_sizeof)
+					current_file.put_character ('(')
+					print_type_declaration (l_item_type, current_file)
+					current_file.put_character (')')
+					print_minus
+					print_special_attribute_offset (a_special_type, current_file)
+					current_file.put_character (')')
+					print_semicolon_newline
+				else
+					print_indentation
+					current_file.put_string (c_memcpy)
+					current_file.put_character ('(')
+						-- Get rid of the volatile type marker.
+					current_file.put_character ('(')
+					current_file.put_string (c_void)
+					current_file.put_character ('*')
+					current_file.put_character (')')
+					current_file.put_character ('(')
+					print_attribute_special_item_access (a_target, a_special_type, False)
+					current_file.put_character (')')
+					print_comma
+						-- Get rid of the volatile type marker.
+					current_file.put_character ('(')
+					current_file.put_string (c_void)
+					current_file.put_character ('*')
+					current_file.put_character (')')
+					current_file.put_character ('(')
+					print_attribute_special_item_access (a_source, a_special_type, False)
+					current_file.put_character (')')
+					print_comma
+					print_temp_name (l_other_count_temp, current_file)
+					print_times
+					current_file.put_string (c_sizeof)
+					current_file.put_character ('(')
+					print_type_declaration (l_item_type, current_file)
+					current_file.put_character (')')
+					current_file.put_character (')')
+					print_semicolon_newline
+				end
 				print_builtin_any_standard_copy_custom_attributes (a_source, a_target)
 				print_builtin_any_standard_copy_custom_special_items (a_source, a_target, a_special_type, l_other_count_temp)
 				mark_temp_variable_unfrozen (l_count_temp)
@@ -24947,16 +24977,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character (')')
 					current_file.put_character (')')
 					print_plus
-					current_file.put_string (c_offsetof)
-					current_file.put_character ('(')
-					print_type_name (a_target_type, current_file)
-					print_comma
-					if a_target_type.attribute_count > 0 then
-						print_attribute_name (a_target_type.queries.first, a_target_type, current_file)
-					elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
-						print_attribute_tuple_item_name (1, l_tuple_type, current_file)
-					end
-					current_file.put_character (')')
+					print_attribute_offset (a_target_type, current_file)
 					print_comma
 					current_file.put_character ('(')
 					current_file.put_character ('(')
@@ -24968,32 +24989,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character (')')
 					current_file.put_character (')')
 					print_plus
-					current_file.put_string (c_offsetof)
-					current_file.put_character ('(')
-					print_type_name (a_target_type, current_file)
-					print_comma
-					if a_target_type.attribute_count > 0 then
-						print_attribute_name (a_target_type.queries.first, a_target_type, current_file)
-					elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
-						print_attribute_tuple_item_name (1, l_tuple_type, current_file)
-					end
-					current_file.put_character (')')
+					print_attribute_offset (a_target_type, current_file)
 					print_comma
 					current_file.put_string (c_sizeof)
 					current_file.put_character ('(')
 					print_type_name (a_target_type, current_file)
 					current_file.put_character (')')
 					print_minus
-					current_file.put_string (c_offsetof)
-					current_file.put_character ('(')
-					print_type_name (a_target_type, current_file)
-					print_comma
-					if a_target_type.attribute_count > 0 then
-						print_attribute_name (a_target_type.queries.first, a_target_type, current_file)
-					elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_target_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
-						print_attribute_tuple_item_name (1, l_tuple_type, current_file)
-					end
-					current_file.put_character (')')
+					print_attribute_offset (a_target_type, current_file)
 					current_file.put_character (')')
 					print_semicolon_newline
 				end
@@ -25064,7 +25067,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			if a_special_type.attribute_count < 2 then
 					-- Internal error: class "SPECIAL" should have at least the
-					-- features 'count' and 'capacity' as first features.
+					-- features 'capacity' and 'count' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_any_standard_twin_body_with_special", 1, "missing attributes in 'SPECIAL'.")
@@ -25072,7 +25075,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_result := new_result_expression
 				extra_dynamic_type_sets.force_last (a_special_type)
 				l_result.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
-				l_dynamic_type_set := result_type_set_in_feature (a_special_type.queries.first)
+				l_dynamic_type_set := result_type_set_in_feature (a_special_type.queries.item (2))
 				l_count_type := l_dynamic_type_set.static_type.primary_type
 				l_count_temp := new_temp_variable (l_count_type)
 				mark_temp_variable_frozen (l_count_temp)
@@ -25314,7 +25317,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			if a_special_type.attribute_count < 2 then
 					-- Internal error: class "SPECIAL" should have at least the
-					-- features 'count' and 'capacity' as first features.
+					-- features 'capacity' and 'count' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_any_twin_body_with_special", 1, "missing attributes in 'SPECIAL'.")
@@ -25327,7 +25330,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				l_result := new_result_expression
 				extra_dynamic_type_sets.force_last (a_special_type)
 				l_result.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
-				l_dynamic_type_set := result_type_set_in_feature (a_special_type.queries.first)
+				l_dynamic_type_set := result_type_set_in_feature (a_special_type.queries.item (2))
 				l_count_type := l_dynamic_type_set.static_type.primary_type
 				l_count_temp := new_temp_variable (l_count_type)
 				mark_temp_variable_frozen (l_count_temp)
@@ -32381,12 +32384,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				error_handler.report_giaac_error (generator, "print_builtin_special_aliased_resized_area_body", 2, "wrong number of arguments.")
 			elseif l_special_type.attribute_count < 2 then
 					-- Internal error: class "SPECIAL" should have at least the
-					-- features 'count' and 'capacity' as first features.
+					-- features 'capacity' and 'count' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_special_aliased_resized_area_body", 3, "missing attributes in 'SPECIAL'.")
 			else
-				l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.item (2))
+				l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.first)
 				l_capacity_type := l_dynamic_type_set.static_type.primary_type
 				l_temp := new_temp_variable (l_capacity_type)
 				l_item_type := l_special_type.item_type_set.static_type.primary_type
@@ -32547,12 +32550,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				error_handler.report_giaac_error (generator, "print_builtin_special_extend_body", 2, "wrong number of arguments.")
 			elseif l_special_type.attribute_count < 2 then
 					-- Internal error: class "SPECIAL" should have at least the
-					-- features 'count' and 'capacity' as first features.
+					-- features 'capacity' and 'count' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_special_extend_body", 3, "missing attributes in 'SPECIAL'.")
 			else
-				l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.first)
+				l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.item (2))
 				l_count_type := l_dynamic_type_set.static_type.primary_type
 				l_temp := new_temp_variable (l_count_type)
 					-- Increment 'count'.
@@ -32687,12 +32690,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				error_handler.report_giaac_error (generator, "print_builtin_special_set_count_body", 2, "wrong number of arguments.")
 			elseif l_special_type.attribute_count < 2 then
 					-- Internal error: class "SPECIAL" should have at least the
-					-- features 'count' and 'capacity' as first features.
+					-- features 'capacity' and 'count' as first features.
 					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_builtin_special_set_count_body", 3, "missing attributes in 'SPECIAL'.")
 			else
-				l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.first)
+				l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.item (2))
 				l_count_type := l_dynamic_type_set.static_type.primary_type
 				l_temp := new_temp_variable (l_count_type)
 					-- Set new 'count'.
@@ -36351,12 +36354,12 @@ feature {NONE} -- Memory allocation
 			if l_special_type /= Void then
 				if l_special_type.attribute_count < 2 then
 						-- Internal error: class "SPECIAL" should have at least the
-						-- features 'count' and 'capacity' as first features.
+						-- features 'capacity' and 'count' as first features.
 						-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
 					error_handler.report_giaac_error (generator, "print_object_allocation_function", 1, "missing attributes in 'SPECIAL'.")
 				else
-					l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.item (2))
+					l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.first)
 					l_integer_type := l_dynamic_type_set.static_type.primary_type
 					print_type_declaration (l_integer_type, header_file)
 					print_type_declaration (l_integer_type, current_file)
@@ -41108,6 +41111,46 @@ feature {NONE} -- Type generation
 			end
 		end
 
+	print_attribute_offset (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print offset of first attribute of `a_type' to `a_file'.
+		require
+			a_type_not_void: a_type /= Void
+			has_attribute: a_type.attribute_count > 0 or attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_offsetof)
+			a_file.put_character ('(')
+			print_type_name (a_type, a_file)
+			a_file.put_character (',')
+			if a_type.attribute_count > 0 then
+				print_attribute_name (a_type.queries.first, a_type, a_file)
+			elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type and then not l_tuple_type.item_type_sets.is_empty then
+				print_attribute_tuple_item_name (1, l_tuple_type, a_file)
+			end
+			a_file.put_character (')')
+		end
+
+	print_special_attribute_offset (a_type: ET_DYNAMIC_SPECIAL_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print offset of first attribute (other than 'capacity' and 'count') of `a_type' to `a_file'.
+		require
+			a_type_not_void: a_type /= Void
+			has_capacity_and_count: a_type.attribute_count >= 2
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_offsetof)
+			a_file.put_character ('(')
+			print_type_name (a_type, a_file)
+			a_file.put_character (',')
+			if a_type.attribute_count > 2 then
+				print_attribute_name (a_type.queries.item (3), a_type, a_file)
+			else
+				print_attribute_special_item_name (a_type, a_file)
+			end
+			a_file.put_character (')')
+		end
+
 feature {NONE} -- Default initialization values generation
 
 	print_default_declarations
@@ -41554,14 +41597,14 @@ feature {NONE} -- Feature name generation
 			a_file_open_write: a_file.is_open_write
 		do
 			if short_names then
-				if a_type.attribute_count < 2 then
+				if a_type.attribute_count < 1 then
 						-- Internal error: class "SPECIAL" should have at least the
-						-- feature 'capacity' as second feature.
+						-- feature 'copacity' as first feature.
 						-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
 					error_handler.report_giaac_error (generator, "print_attribute_special_capacity_name", 1, "missing attributes in 'SPECIAL'.")
 				else
-					print_attribute_name (a_type.queries.item (2), a_type, a_file)
+					print_attribute_name (a_type.queries.first, a_type, a_file)
 				end
 			else
 -- TODO: long names
@@ -41579,14 +41622,14 @@ feature {NONE} -- Feature name generation
 			a_file_open_write: a_file.is_open_write
 		do
 			if short_names then
-				if a_type.attribute_count < 1 then
+				if a_type.attribute_count < 2 then
 						-- Internal error: class "SPECIAL" should have at least the
-						-- feature 'count' as first feature.
+						-- feature 'caunt' as second feature.
 						-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
 					error_handler.report_giaac_error (generator, "print_attribute_special_count_name", 1, "missing attributes in 'SPECIAL'.")
 				else
-					print_attribute_name (a_type.queries.first, a_type, a_file)
+					print_attribute_name (a_type.queries.item (2), a_type, a_file)
 				end
 			else
 -- TODO: long names

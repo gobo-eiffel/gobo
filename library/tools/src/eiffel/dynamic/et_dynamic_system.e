@@ -942,13 +942,13 @@ feature {NONE} -- Types
 		local
 			l_feature: ET_DYNAMIC_FEATURE
 		do
-				-- Make attributes 'count' and 'capacity' alive at the first two
+				-- Make attributes 'capacity' and 'count' alive at the first two
 				-- positions in the attribute list of the "SPECIAL" type.
-			if attached special_count_feature as l_special_count_feature then
-				a_type.set_attribute_position (a_type.dynamic_query (l_special_count_feature, Current), 1)
-			end
 			if attached special_capacity_feature as l_special_capacity_feature then
-				a_type.set_attribute_position (a_type.dynamic_query (l_special_capacity_feature, Current), 2)
+				a_type.set_attribute_position (a_type.dynamic_query (l_special_capacity_feature, Current), 1)
+			end
+			if attached special_count_feature as l_special_count_feature then
+				a_type.set_attribute_position (a_type.dynamic_query (l_special_count_feature, Current), 2)
 			end
 			if attached special_item_feature as l_special_item_feature then
 				l_feature := a_type.dynamic_query (l_special_item_feature, Current)
