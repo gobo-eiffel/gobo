@@ -327,6 +327,15 @@ extern void* GE_unprotected_recalloc(void* p, size_t old_nelem, size_t new_nelem
 #define GE_free(p) free((void*)(p))
 #endif
 
+#if defined(GE_WINDOWS) && defined(__clang__)
+/*
+ * Memory setting.
+ * Workaround for crashes (illegal instruction signal) when calling 
+ * `memset` in Azure Devops pipelines under Windows.
+ */
+extern void* GE_memset(void* str, int c, size_t n);
+#endif
+
 /*
  * Dispose
  */

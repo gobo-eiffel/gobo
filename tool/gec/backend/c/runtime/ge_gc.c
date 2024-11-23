@@ -60,6 +60,24 @@ void* GE_unprotected_recalloc(void* p, size_t old_nelem, size_t new_nelem, size_
 	return new_p;
 }
 
+#if defined(GE_WINDOWS) && defined(__clang__)
+/*
+ * Memory setting.
+ * Workaround for crashes (illegal instruction signal) when calling 
+ * `memset` in Azure Devops pipelines under Windows.
+ */
+void* GE_memset(void* str, int c, size_t n)
+{
+	size_t i;
+	char volatile* s = (char*)str;
+
+	for (i = 0; i < n; i++) {
+		s[i] = (char)c;
+	}
+	return str;
+}
+#endif
+
 #ifdef GE_USE_BOEHM_GC
 /*
  * Call dispose routine on object `C'.
