@@ -197,7 +197,7 @@ extern "C" {
  * Raise an exception when no-more-memory.
  */
 #ifdef GE_USE_BOEHM_GC
-#define GE_calloc_atomic(nelem, elsize) memset(GE_null(GC_MALLOC_ATOMIC((nelem) * (elsize))), 0, (nelem) * (elsize))
+#define GE_calloc_atomic(nelem, elsize) GE_memset(GE_null(GC_MALLOC_ATOMIC((nelem) * (elsize))), 0, (nelem) * (elsize))
 #else /* No GC */
 #define GE_calloc_atomic(nelem, elsize) GE_calloc((nelem), (elsize))
 #endif
