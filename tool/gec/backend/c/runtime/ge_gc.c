@@ -38,7 +38,7 @@ void* GE_unprotected_calloc_atomic_uncollectable(size_t nelem, size_t elsize)
 
 	new_p = GC_malloc_atomic_uncollectable(nelem * elsize);
 	if (new_p) {
-		memset(new_p, 0, nelem * elsize);
+		GE_memset(new_p, 0, nelem * elsize);
 	}
 	return new_p;
 }
@@ -55,10 +55,28 @@ void* GE_unprotected_recalloc(void* p, size_t old_nelem, size_t new_nelem, size_
 	void* new_p;
 	new_p = GE_unprotected_realloc(p, new_nelem * elsize);
 	if (new_p) {
-		memset(((char*)new_p) + (old_nelem * elsize), 0, (new_nelem - old_nelem) * elsize);
+		GE_memset(((char*)new_p) + (old_nelem * elsize), 0, (new_nelem - old_nelem) * elsize);
 	}
 	return new_p;
 }
+
+#if defined(GE_WINDOWS) && defined(__clang__)
+/*
+ * Memory setting.
+ * Workaround for crashes (illegal instruction signal) when calling 
+ * `memset` in Azure Devops pipelines under Windows.
+ */
+void* GE_memset(void* str, int c, size_t n)
+{
+	size_t i;
+	char volatile* s = (char*)str;
+
+	for (i = 0; i < n; i++) {
+		s[i] = (char)c;
+	}
+	return str;
+}
+#endif
 
 #ifdef GE_USE_BOEHM_GC
 /*

@@ -197,7 +197,7 @@ extern "C" {
  * Raise an exception when no-more-memory.
  */
 #ifdef GE_USE_BOEHM_GC
-#define GE_calloc_atomic(nelem, elsize) memset(GE_null(GC_MALLOC_ATOMIC((nelem) * (elsize))), 0, (nelem) * (elsize))
+#define GE_calloc_atomic(nelem, elsize) GE_memset(GE_null(GC_MALLOC_ATOMIC((nelem) * (elsize))), 0, (nelem) * (elsize))
 #else /* No GC */
 #define GE_calloc_atomic(nelem, elsize) GE_calloc((nelem), (elsize))
 #endif
@@ -325,6 +325,15 @@ extern void* GE_unprotected_recalloc(void* p, size_t old_nelem, size_t new_nelem
 #define GE_free(p) GC_FREE((void*)(p))
 #else /* No GC */
 #define GE_free(p) free((void*)(p))
+#endif
+
+#if defined(GE_WINDOWS) && defined(__clang__)
+/*
+ * Memory setting.
+ * Workaround for crashes (illegal instruction signal) when calling 
+ * `memset` in Azure Devops pipelines under Windows.
+ */
+extern void* GE_memset(void* str, int c, size_t n);
 #endif
 
 /*

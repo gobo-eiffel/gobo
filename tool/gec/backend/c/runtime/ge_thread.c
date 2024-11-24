@@ -1299,7 +1299,7 @@ static void GE_thread_set_priority(EIF_THR_TYPE a_thread_id, unsigned int a_prio
 {
 #ifdef GE_USE_POSIX_THREADS
 	struct sched_param l_param;
-	memset(&l_param, 0, sizeof(struct sched_param));
+	GE_memset(&l_param, 0, sizeof(struct sched_param));
 	l_param.sched_priority = a_priority;
 	pthread_setschedparam(a_thread_id, SCHED_OTHER, &l_param);
 #elif defined(EIF_WINDOWS)
@@ -1481,7 +1481,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 				}
 				if (l_attr_priority != EIF_DEFAULT_THR_PRIORITY) {
 					struct sched_param l_param;
-					memset(&l_param, 0, sizeof(struct sched_param));
+					GE_memset(&l_param, 0, sizeof(struct sched_param));
 					l_param.sched_priority = l_attr_priority;
 					pthread_attr_setschedpolicy(&l_attr, SCHED_OTHER);
 					pthread_attr_setschedparam(&l_attr, &l_param);

@@ -369,6 +369,16 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #define GE_IS_64_BITS EIF_TEST(sizeof(void*)==8)
 #endif
 
+/*
+ * Workaround for crashes (illegal instruction signal) when calling 
+ * `memset` in Azure Devops pipelines under Windows.
+ */
+#if defined(GE_WINDOWS) && defined(__clang__)
+#define memset(x, y, z) GE_memset((x), (y), (z))
+#else
+#define GE_memset(x, y, z) memset((x), (y), (z))
+#endif
+
 /* Posix threads */
 #if !defined(EIF_WINDOWS)
 #define GE_USE_POSIX_THREADS

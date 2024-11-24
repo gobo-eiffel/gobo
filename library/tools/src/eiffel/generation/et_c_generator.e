@@ -911,7 +911,7 @@ feature {NONE} -- Generate external C files
 			create l_includes.make (256)
 			l_external_include_pathnames := current_system.external_include_pathnames
 			nb := l_external_include_pathnames.count
-			if nb > 1 then
+			if nb >= 1 then
 					-- Add '$GOBO/backend/c/runtime' to the list of include paths if at least
 					-- one include path has been specified in the ECF file. That way if one such
 					-- include file tries to include one of the runtime 'eif_*.h' file, it can
@@ -1199,6 +1199,16 @@ feature {NONE} -- Generate external C files
 #	define GE_MACOS
 #elif defined(__OpenBSD__)
 #	define GE_OPENBSD
+#endif
+
+/*
+ * Workaround for crashes (illegal instruction signal) when calling
+ * `memset` in Azure Devops pipelines under Windows.
+ */
+#if defined(GE_WINDOWS) && defined(__clang__)
+#include <string.h>
+extern void* GE_memset(void* str, int c, size_t n);
+#define memset(x, y, z) GE_memset((x), (y), (z))
 #endif
 
 #define GC_IGNORE_WARN
@@ -32673,7 +32683,6 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			l_argument_name: ET_IDENTIFIER
 			l_old_count_temp: ET_IDENTIFIER
-			l_i_temp: ET_IDENTIFIER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_count_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
@@ -32717,38 +32726,35 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				print_argument_name (l_argument_name, current_file)
 				print_semicolon_newline
 					-- Clear discarded item slots.
-				l_i_temp := new_temp_variable (l_count_type)
 				print_indentation
-				current_file.put_string (c_for)
-				current_file.put_character (' ')
+				current_file.put_string (c_ge_memset)
 				current_file.put_character ('(')
-				print_temp_name (l_i_temp, current_file)
-				print_assign_to
-				print_argument_name (l_argument_name, current_file)
-				current_file.put_character (';')
-				current_file.put_character (' ')
-				print_temp_name (l_i_temp, current_file)
-				print_less_than
-				print_temp_name (l_old_count_temp, current_file)
-				current_file.put_character (';')
-				current_file.put_character (' ')
-				print_temp_name (l_i_temp, current_file)
-				current_file.put_character ('+')
-				current_file.put_character ('+')
+				current_file.put_character ('(')
+				current_file.put_string (c_char)
+				current_file.put_character ('*')
 				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				print_indentation
-				print_attribute_special_indexed_item_access (l_i_temp, tokens.current_keyword, l_special_type, False)
-				print_assign_to
+				current_file.put_character ('(')
+				print_attribute_special_item_access (tokens.current_keyword, l_special_type, False)
+				print_plus
+				print_argument_name (l_argument_name, current_file)
+				current_file.put_character (')')
+				print_comma
+				current_file.put_character ('0')
+				print_comma
+				current_file.put_character ('(')
+				print_temp_name (l_old_count_temp, current_file)
+				print_minus
+				print_argument_name (l_argument_name, current_file)
+				current_file.put_character (')')
+				current_file.put_character ('*')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
 				l_item_type := l_special_type.item_type_set.static_type.primary_type
-				print_default_entity_value (l_item_type, current_file)
+				print_type_declaration (l_item_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character (')')
 				print_semicolon_newline
 				dedent
-				print_indentation
-				current_file.put_character ('}')
-				current_file.put_new_line
 				print_indentation_end_newline
 			end
 		end
@@ -46505,6 +46511,7 @@ feature {NONE} -- Constants
 	c_ge_lock_marking: STRING = "GE_lock_marking"
 	c_ge_ma: STRING = "GE_ma"
 	c_ge_mark_object: STRING = "GE_mark_object"
+	c_ge_memset: STRING = "GE_memset"
 	c_ge_min_int32: STRING = "GE_min_int32"
 	c_ge_min_int64: STRING = "GE_min_int64"
 	c_ge_ms8: STRING = "GE_ms8"
@@ -46725,7 +46732,6 @@ feature {NONE} -- Constants
 	c_line: STRING = "#line"
 	c_memcmp: STRING = "memcmp"
 	c_memcpy: STRING = "memcpy"
-	c_memset: STRING = "memset"
 	c_mutex_suffix: STRING = "_mutex"
 	c_not: STRING = "!"
 	c_not_equal: STRING = "!="

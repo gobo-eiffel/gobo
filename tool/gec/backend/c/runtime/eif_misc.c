@@ -4,7 +4,7 @@
 		"C functions used to implement class EXECUTION_ENVIRONMENT"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -51,7 +51,7 @@ void eif_system_asynchronous(EIF_NATIVE_CHAR* cmd)
 	EIF_INTEGER result;
 
 	current_dir = (wchar_t*)_wgetcwd(NULL, PATH_MAX);
-	memset(&siStartInfo, 0, sizeof(siStartInfo));
+	GE_memset(&siStartInfo, 0, sizeof(siStartInfo));
 	siStartInfo.cb = sizeof(STARTUPINFO);
 	siStartInfo.lpTitle = NULL;
 	siStartInfo.lpReserved = NULL;
