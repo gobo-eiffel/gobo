@@ -221,7 +221,7 @@ EIF_INTEGER eif_home_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INTEGER a_cou
 	if (!l_env_value) {
 		l_env_value = l_home;
 	}
-	_nbytes = (strlen(l_env_value) + 1) * sizeof(char);
+	l_nbytes = (strlen(l_env_value) + 1) * sizeof(char);
 	if (a_buffer && (a_count >= l_nbytes)) {
 		memcpy(a_buffer, l_env_value, l_nbytes);
 	}
