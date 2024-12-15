@@ -864,6 +864,8 @@ feature {NONE} -- Generate external C files
 			l_cflag: STRING
 			l_lflag: STRING
 			l_pathname: STRING
+			l_runtime_included: BOOLEAN
+			l_include_runtime: BOOLEAN
 			old_system_name: STRING
 		do
 			old_system_name := system_name
@@ -912,13 +914,8 @@ feature {NONE} -- Generate external C files
 			l_external_include_pathnames := current_system.external_include_pathnames
 			nb := l_external_include_pathnames.count
 			if nb >= 1 then
-					-- Add '$GOBO/backend/c/runtime' to the list of include paths if at least
-					-- one include path has been specified in the ECF file. That way if one such
-					-- include file tries to include one of the runtime 'eif_*.h' file, it can
-					-- be found by the C compiler.
-				l_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "runtime">>)
-				l_pathname := Execution_environment.interpreted_string (l_pathname)
-				add_to_include_paths (l_pathname, l_includes)
+				add_runtime_to_include_paths (l_includes)
+				l_runtime_included := True
 			end
 			from i := 1 until i > nb loop
 				l_pathname := l_external_include_pathnames.item (i)
@@ -974,26 +971,35 @@ feature {NONE} -- Generate external C files
 				l_lflag := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
 				if l_com_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("com", l_com_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 				elseif l_com_runtime_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime")
+					l_include_runtime := True
 				elseif l_curl_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 				elseif l_libpng_regexp.recognizes (l_lflag) then
 					add_to_include_paths (l_libpng_regexp.captured_substring (1), l_includes)
 					generate_external_c_files ("libpng", l_libpng_regexp.captured_substring (1))
+					l_include_runtime := True
 				elseif l_net_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("net", l_net_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 				elseif l_vision2_gtk3_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("vision2_gtk3", l_vision2_gtk3_regexp.captured_substring (1))
+					l_include_runtime := True
 				elseif l_vision2_windows_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("vision2_windows", l_vision2_windows_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 				elseif l_wel_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 					if c_compiler_used.same_string ("zig") then
 						add_windows_libs_to_library_paths (l_libs)
 					end
 				elseif l_zlib_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("zlib", l_zlib_regexp.captured_substring (1))
+					l_include_runtime := True
 				else
 					if not l_lflags.is_empty then
 						l_lflags.append_character (' ')
@@ -1014,26 +1020,35 @@ feature {NONE} -- Generate external C files
 				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
 				if l_com_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("com", l_com_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 				elseif l_com_runtime_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime")
+					l_include_runtime := True
 				elseif l_curl_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 				elseif l_libpng_regexp.recognizes (l_pathname) then
 					add_to_include_paths (l_libpng_regexp.captured_substring (1), l_includes)
 					generate_external_c_files ("libpng", l_libpng_regexp.captured_substring (1))
+					l_include_runtime := True
 				elseif l_net_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("net", l_net_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 				elseif l_vision2_gtk3_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("vision2_gtk3", l_vision2_gtk3_regexp.captured_substring (1))
+					l_include_runtime := True
 				elseif l_vision2_windows_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("vision2_windows", l_vision2_windows_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 				elseif l_wel_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 					if c_compiler_used.same_string ("zig") then
 						add_windows_libs_to_library_paths (l_libs)
 					end
 				elseif l_zlib_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("zlib", l_zlib_regexp.captured_substring (1))
+					l_include_runtime := True
 				else
 					add_to_library_paths (l_pathname, l_libs)
 				end
@@ -1055,30 +1070,40 @@ feature {NONE} -- Generate external C files
 				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
 				if l_com_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("com", l_com_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 				elseif l_com_runtime_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime")
+					l_include_runtime := True
 				elseif l_curl_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 				elseif l_libpng_regexp.recognizes (l_pathname) then
 					add_to_include_paths (l_libpng_regexp.captured_substring (1), l_includes)
 					generate_external_c_files ("libpng", l_libpng_regexp.captured_substring (1))
+					l_include_runtime := True
 				elseif l_net_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("net", l_net_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 				elseif l_vision2_gtk3_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("vision2_gtk3", l_vision2_gtk3_regexp.captured_substring (1))
+					l_include_runtime := True
 				elseif l_vision2_windows_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("vision2_windows", l_vision2_windows_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 				elseif l_wel_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 					if c_compiler_used.same_string ("zig") then
 						add_windows_libs_to_library_paths (l_libs)
 					end
 				elseif l_zlib_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("zlib", l_zlib_regexp.captured_substring (1))
+					l_include_runtime := True
 				elseif l_ise_compiler_bench_regexp.recognizes (l_pathname) then
 					-- Ignore. Use Gobo Eiffel runtime instead of ISE Eiffel runtime.
 				elseif l_ise_compiler_cli_writer_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("cli_writer", l_ise_compiler_cli_writer_regexp.captured_substring (1) + "Clib")
+					l_include_runtime := True
 				elseif l_ise_compiler_platform_regexp.recognizes (l_pathname) then
 					-- Ignore. Use Gobo Eiffel runtime instead of ISE Eiffel runtime.
 				else
@@ -1094,6 +1119,9 @@ feature {NONE} -- Generate external C files
 					end
 				end
 				i := i + 1
+			end
+			if l_include_runtime and not l_runtime_included then
+				add_runtime_to_include_paths (l_includes)
 			end
 			if not l_external_obj_filenames.is_empty then
 				l_obj_filenames.append_character (' ')
@@ -1122,6 +1150,21 @@ feature {NONE} -- Generate external C files
 				a_include_paths.append_string (a_pathname)
 				a_include_paths.append_character ('%"')
 			end
+		end
+
+	add_runtime_to_include_paths (a_include_paths: STRING)
+			-- Add '$GOBO/backend/c/runtime' to the list of include paths `a_include_paths'.
+			-- Needed when at least one include path has been specified in the ECF file.
+			-- That way if one such include file tries to include one of the runtime
+			-- 'eif_*.h' file, it can  be found by the C compiler.
+		require
+			a_include_paths_not_void: a_include_paths /= Void
+		local
+			l_pathname: STRING
+		do
+			l_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "runtime">>)
+			l_pathname := Execution_environment.interpreted_string (l_pathname)
+			add_to_include_paths (l_pathname, a_include_paths)
 		end
 
 	add_to_library_paths (a_pathname: STRING; a_library_paths: STRING)
@@ -11419,6 +11462,11 @@ feature {NONE} -- Expression generation
 			if l_has_non_conforming_types then
 				current_file.put_string (c_ge_catcall)
 				current_file.put_character ('(')
+				current_file.put_character ('(')
+				print_eif_any_type_name (current_file)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
 			end
 			if l_target_primary_type.is_expanded then
 				if l_source_primary_type.is_expanded then
@@ -11448,6 +11496,7 @@ feature {NONE} -- Expression generation
 				end
 			end
 			if l_has_non_conforming_types and l_dts_name /= Void then
+				current_file.put_character (')')
 				current_file.put_character (',')
 				current_file.put_string (l_dts_name)
 				current_file.put_character (',')
