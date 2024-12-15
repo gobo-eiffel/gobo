@@ -11295,8 +11295,8 @@ feature {NONE} -- Expression generation
 								current_file.put_string (c_ge_void2)
 							end
 							current_file.put_character ('(')
+							l_do_check_void := True
 						end
-						l_do_check_void := True
 					else
 						never_void_target_count := never_void_target_count + 1
 					end
