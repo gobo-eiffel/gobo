@@ -4243,10 +4243,10 @@ feature {NONE} -- Instruction validity
 			if Result /= Void then
 				if Result.is_character_constant then
 					Result := character_choice_constant
-					Result.set_index (0)
+					Result.set_index (a_choice_constant.index)
 				elseif Result.is_integer_constant then
 					Result := integer_choice_constant
-					Result.set_index (0)
+					Result.set_index (a_choice_constant.index)
 				end
 			end
 			has_fatal_error := l_old_has_fatal_error
@@ -17936,7 +17936,7 @@ feature {NONE} -- Indexes
 				attached_result_index := result_index + 1
 				index_count := attached_result_index
 			end
-			current_index := index_count + 2
+			current_index := index_count + 1
 			index_count := current_index
 			boolean_index := 0
 			character_8_index := 0
