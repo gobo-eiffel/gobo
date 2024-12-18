@@ -374,6 +374,7 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
  * `memset` in Azure Devops pipelines under Windows.
  */
 #if defined(GE_WINDOWS) && defined(__clang__)
+extern void* GE_memset(void* str, int c, size_t n);
 #define memset(x, y, z) GE_memset((x), (y), (z))
 #else
 #define GE_memset(x, y, z) memset((x), (y), (z))

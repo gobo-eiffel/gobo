@@ -866,6 +866,7 @@ feature {NONE} -- Generate external C files
 			l_pathname: STRING
 			l_runtime_included: BOOLEAN
 			l_external_c_files_generated: BOOLEAN
+			l_windows_libs_added_to_library_paths: BOOLEAN
 			old_system_name: STRING
 		do
 			old_system_name := system_name
@@ -961,6 +962,15 @@ feature {NONE} -- Generate external C files
 			if a_variables.found then
 				l_lflags.append_string (a_variables.found_item)
 			end
+			if c_compiler_used.same_string ("zig") and operating_system.is_windows then
+				if
+					not current_system.external_linker_flags.is_empty or
+					not current_system.external_library_pathnames.is_empty or
+					not current_system.external_object_pathnames.is_empty
+				then
+					add_windows_lib_to_linker_flags (l_lflags)
+				end
+			end
 			l_external_linker_flags := current_system.external_linker_flags
 			nb := l_external_linker_flags.count
 			from i := 1 until i > nb loop
@@ -985,6 +995,10 @@ feature {NONE} -- Generate external C files
 				elseif l_net_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("net", l_net_regexp.captured_substring (1) + "Clib")
 					l_external_c_files_generated := True
+					if not l_windows_libs_added_to_library_paths and c_compiler_used.same_string ("zig") and operating_system.is_windows then
+						add_windows_libs_to_library_paths (l_libs)
+						l_windows_libs_added_to_library_paths := True
+					end
 				elseif l_vision2_gtk3_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("vision2_gtk3", l_vision2_gtk3_regexp.captured_substring (1))
 					l_external_c_files_generated := True
@@ -994,17 +1008,15 @@ feature {NONE} -- Generate external C files
 				elseif l_wel_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib")
 					l_external_c_files_generated := True
-					if c_compiler_used.same_string ("zig") then
+					if not l_windows_libs_added_to_library_paths and c_compiler_used.same_string ("zig") then
 						add_windows_libs_to_library_paths (l_libs)
+						l_windows_libs_added_to_library_paths := True
 					end
 				elseif l_zlib_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("zlib", l_zlib_regexp.captured_substring (1))
 					l_external_c_files_generated := True
 				else
-					if not l_lflags.is_empty then
-						l_lflags.append_character (' ')
-					end
-					l_lflags.append_string (l_lflag)
+					add_to_linker_flags (l_lflag, l_lflags)
 				end
 				i := i + 1
 			end
@@ -1034,6 +1046,10 @@ feature {NONE} -- Generate external C files
 				elseif l_net_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("net", l_net_regexp.captured_substring (1) + "Clib")
 					l_external_c_files_generated := True
+					if not l_windows_libs_added_to_library_paths and c_compiler_used.same_string ("zig") and operating_system.is_windows then
+						add_windows_libs_to_library_paths (l_libs)
+						l_windows_libs_added_to_library_paths := True
+					end
 				elseif l_vision2_gtk3_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("vision2_gtk3", l_vision2_gtk3_regexp.captured_substring (1))
 					l_external_c_files_generated := True
@@ -1043,8 +1059,9 @@ feature {NONE} -- Generate external C files
 				elseif l_wel_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib")
 					l_external_c_files_generated := True
-					if c_compiler_used.same_string ("zig") then
+					if not l_windows_libs_added_to_library_paths and c_compiler_used.same_string ("zig") then
 						add_windows_libs_to_library_paths (l_libs)
+						l_windows_libs_added_to_library_paths := True
 					end
 				elseif l_zlib_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("zlib", l_zlib_regexp.captured_substring (1))
@@ -1084,6 +1101,10 @@ feature {NONE} -- Generate external C files
 				elseif l_net_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("net", l_net_regexp.captured_substring (1) + "Clib")
 					l_external_c_files_generated := True
+					if not l_windows_libs_added_to_library_paths and c_compiler_used.same_string ("zig") and operating_system.is_windows then
+						add_windows_libs_to_library_paths (l_libs)
+						l_windows_libs_added_to_library_paths := True
+					end
 				elseif l_vision2_gtk3_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("vision2_gtk3", l_vision2_gtk3_regexp.captured_substring (1))
 					l_external_c_files_generated := True
@@ -1093,8 +1114,9 @@ feature {NONE} -- Generate external C files
 				elseif l_wel_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib")
 					l_external_c_files_generated := True
-					if c_compiler_used.same_string ("zig") then
+					if not l_windows_libs_added_to_library_paths and c_compiler_used.same_string ("zig") then
 						add_windows_libs_to_library_paths (l_libs)
+						l_windows_libs_added_to_library_paths := True
 					end
 				elseif l_zlib_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("zlib", l_zlib_regexp.captured_substring (1))
@@ -1222,6 +1244,33 @@ feature {NONE} -- Generate external C files
 			add_to_library_paths ("MPR.LIB", a_library_paths)
 			add_to_library_paths ("SHLWAPI.LIB", a_library_paths)
 			add_to_library_paths ("WINSPOOL.LIB", a_library_paths)
+		end
+
+	add_to_linker_flags (a_lflag: STRING; a_lflags: STRING)
+			-- Add `a_lflag' to the list of linker flags `a_lflags'.
+		require
+			a_lflag_not_void: a_lflag /= Void
+			a_lflags_not_void: a_lflags /= Void
+		do
+			if not a_lflags.is_empty then
+				a_lflags.append_character (' ')
+			end
+			a_lflags.append_string (a_lflag)
+		end
+
+	add_windows_lib_to_linker_flags (a_lflags: STRING)
+			-- Add Windows standard library search paths to the list of linker flags `a_lflags'.
+		require
+			a_lflags_not_void: a_lflags /= Void
+		local
+			l_splitter: ST_SPLITTER
+		do
+			if attached Execution_environment.variable_value ("LIB") as l_lib and then not l_lib.is_empty then
+				create l_splitter.make_with_separators (";")
+				across l_splitter.split (l_lib) as l_pathname loop
+					add_to_linker_flags ("-L%"" + l_pathname + "%"", a_lflags)
+				end
+			end
 		end
 
 	generate_boehm_gc_c_files (a_system_name: STRING)
@@ -1503,8 +1552,6 @@ extern void* GE_memset(void* str, int c, size_t n);
 					end
 					if a_library_name.same_string ("net") then
 						create l_filenames_only_windows.make_equal (3)
-						l_filenames_only_windows.force_last ("hostname.c")
-						l_filenames_only_windows.force_last ("syncpoll.c")
 						l_filenames_only_windows.force_last ("ipv6win.c")
 						create l_filenames_except_windows.make_equal (2)
 						l_filenames_except_windows.force_last ("local.c")
