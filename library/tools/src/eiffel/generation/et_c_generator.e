@@ -1255,13 +1255,7 @@ feature {NONE} -- Generate external C files
 			if not a_lflags.is_empty then
 				a_lflags.append_character (' ')
 			end
-			if a_lflag.starts_with ("%"") then
-				a_lflags.append_string (a_lflag)
-			else
-				a_lflags.append_character ('%"')
-				a_lflags.append_string (a_lflag)
-				a_lflags.append_character ('%"')
-			end
+			a_lflags.append_string (a_lflag)
 		end
 
 	add_windows_lib_to_linker_flags (a_lflags: STRING)
@@ -1274,7 +1268,7 @@ feature {NONE} -- Generate external C files
 			if attached Execution_environment.variable_value ("LIB") as l_lib and then not l_lib.is_empty then
 				create l_splitter.make_with_separators (";")
 				across l_splitter.split (l_lib) as l_pathname loop
-					add_to_linker_flags ("-L" + l_pathname, a_lflags)
+					add_to_linker_flags ("-L%"" + l_pathname + "%"", a_lflags)
 				end
 			end
 		end
