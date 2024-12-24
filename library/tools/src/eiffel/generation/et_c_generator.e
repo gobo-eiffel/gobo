@@ -38064,7 +38064,9 @@ feature {NONE} -- Assertion generation
 						index_offset := l_all_preconditions.item_2 (k)
 						l_preconditions := l_all_preconditions.item_1 (k)
 						if k = l_count then
-							print_assertions (l_preconditions, c_ge_ex_pre)
+							if not l_preconditions.are_all_true then
+								print_assertions (l_preconditions, c_ge_ex_pre)
+							end
 						else
 							j := j + 1
 							nb := l_preconditions.count
@@ -38091,7 +38093,11 @@ feature {NONE} -- Assertion generation
 									current_file.put_string (c_goto)
 									current_file.put_character (' ')
 									current_file.put_string (c_ge_pre)
-									current_file.put_integer (j)
+									if k + 1 /= l_count or else not l_all_preconditions.item_1 (k + 1).are_all_true then
+										current_file.put_integer (j)
+									else
+										current_file.put_integer (l_count)
+									end
 									print_semicolon_newline
 									dedent
 									print_indentation
@@ -38100,16 +38106,18 @@ feature {NONE} -- Assertion generation
 								end
 								i := i + 1
 							end
-							print_indentation
-							current_file.put_string (c_goto)
-							current_file.put_character (' ')
-							current_file.put_string (c_ge_pre)
-							current_file.put_integer (l_count)
-							print_semicolon_newline
-							current_file.put_string (c_ge_pre)
-							current_file.put_integer (j)
-							current_file.put_character (':')
-							current_file.put_new_line
+							if k + 1 /= l_count or else not l_all_preconditions.item_1 (k + 1).are_all_true then
+								print_indentation
+								current_file.put_string (c_goto)
+								current_file.put_character (' ')
+								current_file.put_string (c_ge_pre)
+								current_file.put_integer (l_count)
+								print_semicolon_newline
+								current_file.put_string (c_ge_pre)
+								current_file.put_integer (j)
+								current_file.put_character (':')
+								current_file.put_new_line
+							end
 						end
 						k := k + 1
 					end
