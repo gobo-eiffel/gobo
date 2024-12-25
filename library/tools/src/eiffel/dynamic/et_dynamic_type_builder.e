@@ -954,14 +954,16 @@ feature -- Validity checking
 					l_precursor := l_precursors.item_for_iteration
 					if not attached l_precursor.preconditions as l_preconditions then
 						l_precursors.forth
-					elseif l_preconditions.are_all_true then
-						l_precursors.go_after
 					else
 						index_offset := dynamic_type_sets.count.max (l_current_index) - l_current_index
 						current_dynamic_feature.preconditions.force_last (l_preconditions, index_offset)
 						check_preconditions_validity (l_preconditions, l_precursor, a_feature, a_current_type)
 						index_offset := 0
-						l_precursors.forth
+						if l_preconditions.are_all_true then
+							l_precursors.go_after
+						else
+							l_precursors.forth
+						end
 					end
 				end
 			end
