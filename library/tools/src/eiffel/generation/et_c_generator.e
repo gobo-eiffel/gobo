@@ -1159,6 +1159,16 @@ feature {NONE} -- Generate external C files
 						l_cflags.append_character (' ')
 					end
 					l_cflags.append_string ("-Wno-incompatible-pointer-types-discards-qualifiers")
+				elseif c_compiler_used.same_string ("msc") then
+						-- Avoid warnings of the form:
+						-- ~~~~~~~~~~~~
+						-- warning C4090: 'function': different 'volatile' qualifiers
+						-- ~~~~~~~~~~~~~
+						-- when compiling external C files.
+					if not l_cflags.is_empty then
+						l_cflags.append_character (' ')
+					end
+					l_cflags.append_string ("-wd4090")
 				end
 			end
 			if not l_external_obj_filenames.is_empty then
@@ -5919,10 +5929,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						l_argument_type_set := argument_type_set (i)
 						l_argument_type := l_argument_type_set.static_type.primary_type
 						if l_argument_type = current_dynamic_system.pointer_type then
-								-- When compiling with C++, MSVC++ does not want to convert
-								-- 'void*' to non-'void*' implicitly.
+								-- Discard the 'volatile' qualifier.
 							current_file.put_character ('(')
-							current_file.put_string (c_eif_native_char)
+							current_file.put_string (c_void)
 							current_file.put_character ('*')
 							current_file.put_character (')')
 							print_argument_name (l_name, current_file)
@@ -46501,7 +46510,6 @@ feature {NONE} -- Constants
 	c_eif_is_windows: STRING = "EIF_IS_WINDOWS"
 	c_eif_linux: STRING = "EIF_LINUX"
 	c_eif_mem_free: STRING = "eif_mem_free"
-	c_eif_native_char: STRING = "EIF_NATIVE_CHAR"
 	c_eif_natural: STRING = "EIF_NATURAL"
 	c_eif_natural_8: STRING = "EIF_NATURAL_8"
 	c_eif_natural_16: STRING = "EIF_NATURAL_16"
