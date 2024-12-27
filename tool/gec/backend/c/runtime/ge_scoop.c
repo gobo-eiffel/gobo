@@ -319,7 +319,7 @@ GE_scoop_session* GE_scoop_session_open(GE_scoop_region* a_caller, GE_scoop_regi
 		}
 	}
 	if (a_condition) {
-		if (l_session) {
+		if (l_session && !GE_scoop_region_has_lock_on(a_caller, a_callee)) {
 			GE_scoop_session_add_condition(a_caller, l_session, a_condition);
 		} else {
 			GE_scoop_condition_decrement(a_condition);
