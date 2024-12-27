@@ -77,8 +77,8 @@ struct GE_scoop_region_struct {
 typedef volatile struct {
 	uint32_t volatile wait_counter; /* Number of SCOOP processors which are not available yet. */
 	uint32_t volatile trigger_counter; /* Number of condition calls currently using current condition. (Useful to free the condition when not used anymore). */
-	EIF_MUTEX_TYPE* volatile mutex; /* To access `counter'. */
-	EIF_COND_TYPE* volatile condition_variable; /* To access `counter'. */
+	EIF_MUTEX_TYPE* volatile mutex; /* To access counters. */
+	EIF_COND_TYPE* volatile condition_variable; /* To access counters. */
 } GE_scoop_condition;
 
 /* Struct for SCOOP call containing a condition. */
