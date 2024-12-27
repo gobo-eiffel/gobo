@@ -294,7 +294,7 @@ GE_scoop_session* GE_scoop_session_open(GE_scoop_region* a_caller, GE_scoop_regi
 	GE_scoop_session* l_session;
 	GE_scoop_session* l_new_session;
 	GE_scoop_session* l_last_session;
-	char l_found = 0;
+	char l_has_lock = 0;
 
 	if (a_callee == a_caller) {
 		l_session = 0;
@@ -305,12 +305,12 @@ GE_scoop_session* GE_scoop_session_open(GE_scoop_region* a_caller, GE_scoop_regi
 				GE_mutex_lock((EIF_POINTER)l_session->mutex);
 				l_session->is_open++;
 				GE_mutex_unlock((EIF_POINTER)l_session->mutex);
-				l_found = '\1';
+				l_has_lock = '\1';
 				break;
 			}
 			l_session = l_session->next_locked_session;
 		}
-		if (!l_found) {
+		if (!l_has_lock) {
 			l_new_session = GE_new_scoop_session(a_callee);
 			l_new_session->is_open = 1;
 			l_new_session->next_locked_session = a_caller->first_locked_session;
@@ -319,7 +319,7 @@ GE_scoop_session* GE_scoop_session_open(GE_scoop_region* a_caller, GE_scoop_regi
 		}
 	}
 	if (a_condition) {
-		if (l_session && !GE_scoop_region_has_lock_on(a_caller, a_callee)) {
+		if (l_session && !l_has_lock) {
 			GE_scoop_session_add_condition(a_caller, l_session, a_condition);
 		} else {
 			GE_scoop_condition_decrement(a_condition);
