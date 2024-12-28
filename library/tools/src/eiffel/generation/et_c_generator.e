@@ -12774,7 +12774,10 @@ feature {NONE} -- Expression generation
 								current_file.put_character (')')
 							else
 								l_special_type := l_value_type_set.special_type
-								if l_special_type /= Void then
+								if l_special_type /= Void and not current_type.base_class.upper_name.same_string ("REFLECTED_REFERENCE_OBJECT") then
+										-- Address of the first item in the SPECIAL object.
+										-- However in class "REFLECTED_REFERENCE_OBJECT" we expect to get the
+										-- address of the SPECIAL object itself for introspection.
 									l_temp := new_temp_variable (l_value_type_set.static_type.primary_type)
 									current_file.put_character ('(')
 									current_file.put_character ('(')
@@ -23668,12 +23671,13 @@ feature {NONE} -- Built-in feature generation
 		do
 			if a_target_type.base_class.is_type_class then
 				l_dynamic_type := current_dynamic_system.none_type
+				l_meta_type := current_dynamic_system.type_none_type
 				l_attached_index := 1
 			else
 				l_dynamic_type := a_target_type
+				l_meta_type := l_dynamic_type.meta_type
 				l_attached_index := 0
 			end
-			l_meta_type := l_dynamic_type.meta_type
 			if l_meta_type = Void then
 					-- Internal error: the meta type of the target type should
 					-- have been computed when analyzing the dynamic type sets of
