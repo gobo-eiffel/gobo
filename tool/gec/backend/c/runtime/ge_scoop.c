@@ -234,6 +234,11 @@ static GE_scoop_session* GE_new_scoop_session(GE_scoop_region* a_callee)
  */
 static EIF_MUTEX_TYPE* GE_scoop_multisessions_open_mutex;
 
+/* 
+ * SCOOP condition to enter multiple SCOOP sessions.
+ */
+static GE_scoop_condition* GE_scoop_multisessions_condition;
+
 /*
  * Start opening multiple SCOOP sessions (for example in
  * a feature with several separate arguments.)
@@ -241,6 +246,32 @@ static EIF_MUTEX_TYPE* GE_scoop_multisessions_open_mutex;
 void GE_scoop_multisessions_open_start()
 {
 	GE_mutex_lock((EIF_POINTER)GE_scoop_multisessions_open_mutex);
+	GE_scoop_multisessions_condition = 0;
+}
+
+/*
+ * Wait until all processors involved in `a_condition' are synchronized.
+ */
+static void GE_scoop_condition_wait(GE_scoop_condition* a_condition)
+{
+	char l_to_be_freed = 0;
+
+	GE_scoop_condition_decrement(a_condition);
+	GE_mutex_lock(a_condition->mutex);
+	if (a_condition->wait_counter > 0) {
+		GE_condition_variable_wait((EIF_POINTER)a_condition->condition_variable, (EIF_POINTER)a_condition->mutex);
+		if (a_condition->trigger_counter > 0) {
+			a_condition->trigger_counter--;
+		}
+		if (a_condition->trigger_counter == 0) {
+			/* No more session to wake-up. */
+			l_to_be_freed = '\1';
+		}
+	}
+	GE_mutex_unlock(a_condition->mutex);
+	if (l_to_be_freed) {
+		GE_free_scoop_condition(a_condition);
+	}
 }
 
 /*
@@ -249,7 +280,13 @@ void GE_scoop_multisessions_open_start()
  */
 void GE_scoop_multisessions_open_stop()
 {
+	GE_scoop_condition* l_condition = GE_scoop_multisessions_condition;
+
+	GE_scoop_multisessions_condition = 0;
 	GE_mutex_unlock((EIF_POINTER)GE_scoop_multisessions_open_mutex);
+	if (l_condition) {
+		GE_scoop_condition_wait(l_condition);
+	}
 }
 
 /*
@@ -280,6 +317,32 @@ static void GE_scoop_session_add_condition(GE_scoop_region* a_caller, GE_scoop_s
 		GE_mutex_unlock((EIF_POINTER)a_condition->mutex);
 		GE_scoop_session_add_call(a_session, (GE_scoop_call*)l_condition_call);
 	}
+}
+
+/*
+ * Add a synchronization between the current processor and 
+ * other processors involved in `a_condition'.
+ */
+static void GE_scoop_current_session_add_condition(GE_scoop_condition* a_condition)
+{
+	if (a_condition->wait_counter > 1) {
+		if (!GE_scoop_multisessions_condition) {
+			GE_scoop_multisessions_condition = a_condition;
+			GE_mutex_lock((EIF_POINTER)a_condition->mutex);
+			a_condition->wait_counter++;
+			a_condition->trigger_counter++;
+			GE_mutex_unlock((EIF_POINTER)a_condition->mutex);
+		}
+	} else {
+		if (GE_scoop_multisessions_condition) {
+			GE_mutex_lock((EIF_POINTER)a_condition->mutex);
+			a_condition->wait_counter--;
+			a_condition->trigger_counter--;
+			GE_mutex_unlock((EIF_POINTER)a_condition->mutex);
+		}
+		GE_scoop_multisessions_condition = 0;
+	}
+	GE_scoop_condition_decrement(a_condition);
 }
 
 /* 
@@ -322,7 +385,7 @@ GE_scoop_session* GE_scoop_session_open(GE_scoop_region* a_caller, GE_scoop_regi
 		if (l_session && !l_has_lock) {
 			GE_scoop_session_add_condition(a_caller, l_session, a_condition);
 		} else {
-			GE_scoop_condition_decrement(a_condition);
+			GE_scoop_current_session_add_condition(a_condition);
 		}
 	}
 	return l_session;
@@ -627,7 +690,6 @@ static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_session* a_ses
 	GE_context l_old_context;
 	char l_is_synchronous = a_call->is_synchronous;
 	GE_rescue r;
-	char l_to_be_freed = 0;
 
 	l_caller = a_call->caller;
 	l_callee = a_session->callee;
@@ -677,22 +739,7 @@ static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_session* a_ses
 		}
 	} else if (a_call->is_condition) {
 		GE_scoop_condition* l_condition = ((GE_scoop_condition_call*)a_call)->condition;
-		GE_scoop_condition_decrement(l_condition);
-		GE_mutex_lock(l_condition->mutex);
-		if (l_condition->wait_counter > 0) {
-			GE_condition_variable_wait((EIF_POINTER)l_condition->condition_variable, (EIF_POINTER)l_condition->mutex);
-			if (l_condition->trigger_counter > 0) {
-				l_condition->trigger_counter--;
-			}
-			if (l_condition->trigger_counter == 0) {
-				/* No more session to wake-up. */
-				l_to_be_freed = '\1';
-			}
-		}
-		GE_mutex_unlock(l_condition->mutex);
-		if (l_to_be_freed) {
-			GE_free_scoop_condition(l_condition);
-		}
+		GE_scoop_condition_wait(l_condition);
 	}
 	if (l_is_synchronous) {
 		GE_mutex_lock((EIF_POINTER)l_caller->sync_mutex);
