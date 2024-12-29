@@ -21,7 +21,8 @@
 		</file_rule>
 		<variable name="GOBO_LIBRARY" value="../../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="false"/>
-		<library name="free_elks_test_unit" location="${GOBO_LIBRARY}/library/free_elks/test/unit/system.ecf" readonly="false"/>
+		<library name="free_elks_test_unit_kernel" location="${GOBO_LIBRARY}/library/free_elks/test/unit/kernel/system.ecf" readonly="false"/>
+		<library name="free_elks_test_unit_sed" location="${GOBO_LIBRARY}/library/free_elks/test/unit/sed/system.ecf" readonly="false"/>
 		<library name="argument" location="${GOBO_LIBRARY}/library/argument/library.ecf" readonly="false"/>
 		<library name="argument_example" location="${GOBO_LIBRARY}/library/argument/example/system.ecf" readonly="false"/>
 		<library name="argument_test_example" location="${GOBO_LIBRARY}/library/argument/test/example/system.ecf" readonly="false"/>
