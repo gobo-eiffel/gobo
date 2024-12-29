@@ -12637,6 +12637,7 @@ feature {NONE} -- Expression generation
 			l_query: detachable ET_DYNAMIC_FEATURE
 			l_procedure: detachable ET_DYNAMIC_FEATURE
 			l_pointer_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_implementation_class_name: STRING
 		do
 			l_pointer_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.pointer_type, current_type.base_type)
 			l_dynamic_type_set := dynamic_type_set (an_expression)
@@ -12726,7 +12727,18 @@ feature {NONE} -- Expression generation
 						print_expression (l_name_expression)
 					else
 						l_special_type := l_value_type_set.special_type
-						if l_special_type /= Void then
+						l_implementation_class_name := current_feature.static_feature.implementation_class.upper_name
+						if
+							l_special_type /= Void and
+							not l_implementation_class_name.same_string ("REFLECTED_OBJECT") and
+							not l_implementation_class_name.same_string ("REFLECTED_REFERENCE_OBJECT") and
+							not l_implementation_class_name.same_string ("OBJECT_GRAPH_MARKER") and
+							not l_implementation_class_name.same_string ("SED_OBJECTS_TABLE") and
+							not l_implementation_class_name.same_string ("INTERNAL")
+						then
+								-- Address of the first item in the SPECIAL object.
+								-- However in reflection classes we expect to get the
+								-- address of the SPECIAL object itself for introspection.
 							current_file.put_character ('(')
 							print_expression (l_name_expression)
 							current_file.put_character ('?')
@@ -12774,9 +12786,17 @@ feature {NONE} -- Expression generation
 								current_file.put_character (')')
 							else
 								l_special_type := l_value_type_set.special_type
-								if l_special_type /= Void and not current_type.base_class.upper_name.same_string ("REFLECTED_REFERENCE_OBJECT") then
+								l_implementation_class_name := current_feature.static_feature.implementation_class.upper_name
+								if
+									l_special_type /= Void and
+									not l_implementation_class_name.same_string ("REFLECTED_OBJECT") and
+									not l_implementation_class_name.same_string ("REFLECTED_REFERENCE_OBJECT") and
+									not l_implementation_class_name.same_string ("OBJECT_GRAPH_MARKER") and
+									not l_implementation_class_name.same_string ("SED_OBJECTS_TABLE") and
+									not l_implementation_class_name.same_string ("INTERNAL")
+								then
 										-- Address of the first item in the SPECIAL object.
-										-- However in class "REFLECTED_REFERENCE_OBJECT" we expect to get the
+										-- However in reflection classes we expect to get the
 										-- address of the SPECIAL object itself for introspection.
 									l_temp := new_temp_variable (l_value_type_set.static_type.primary_type)
 									current_file.put_character ('(')

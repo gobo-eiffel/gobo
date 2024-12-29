@@ -5,7 +5,7 @@
 		"Test features of class KL_BINARY_OUTPUT_FILE"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class KL_TEST_BINARY_OUTPUT_FILE
@@ -232,7 +232,7 @@ feature -- Test
 			assert ("is_opened", a_file.is_open_write)
 			a_file.close
 			assert ("is_closed2", a_file.is_closed)
-			assert_files_equal ("empty", empty_filename, a_name)
+			assert_binary_files_equal ("empty", empty_filename, a_name)
 			file_system.delete_file (a_name)
 		end
 
@@ -250,7 +250,7 @@ feature -- Test
 			assert ("is_opened1", a_file.is_open_write)
 			a_file.close
 			assert ("is_closed2", a_file.is_closed)
-			assert_files_equal ("diff1", empty_filename, a_name)
+			assert_binary_files_equal ("diff1", empty_filename, a_name)
 			a_file.delete
 				-- Create a file with append.
 			a_name := new_filename ("gobo", ".tmp")
@@ -261,7 +261,7 @@ feature -- Test
 			a_file.put_string ("Hello gobo")
 			a_file.close
 			assert ("is_closed4", a_file.is_closed)
-			assert_files_equal ("diff2", hello_filename, a_name)
+			assert_binary_files_equal ("diff2", hello_filename, a_name)
 			a_file.delete
 				-- Create a file with append and then reopen it.
 			a_name := new_filename ("gobo", ".tmp")
@@ -277,7 +277,7 @@ feature -- Test
 			a_file.put_string (" gobo")
 			a_file.close
 			assert ("is_closed7", a_file.is_closed)
-			assert_files_equal ("diff3", hello_filename, a_name)
+			assert_binary_files_equal ("diff3", hello_filename, a_name)
 			a_file.delete
 		end
 
@@ -303,7 +303,7 @@ feature -- Test
 				a_file.put_character ('o')
 				a_file.close
 				assert ("is_closed", a_file.is_closed)
-				assert_files_equal ("diff", hello_filename, a_name)
+				assert_binary_files_equal ("diff", hello_filename, a_name)
 				file_system.delete_file (a_name)
 			else
 				assert ("is_opened", False)
@@ -325,7 +325,7 @@ feature -- Test
 				a_file.put_string ("gobo")
 				a_file.close
 				assert ("is_closed", a_file.is_closed)
-				assert_files_equal ("diff", hello_filename, a_name)
+				assert_binary_files_equal ("diff", hello_filename, a_name)
 				file_system.delete_file (a_name)
 			else
 				assert ("is_opened", False)
@@ -362,7 +362,7 @@ feature -- Test
 				a_file.put_string (file_system.eol)
 				a_file.close
 				assert ("is_closed", a_file.is_closed)
-				assert_files_equal ("diff", integers_filename, a_name)
+				assert_binary_files_equal ("diff", integers_filename, a_name)
 				file_system.delete_file (a_name)
 			else
 				assert ("is_opened", False)
@@ -385,7 +385,7 @@ feature -- Test
 				a_file.put_string (file_system.eol)
 				a_file.close
 				assert ("is_closed", a_file.is_closed)
-				assert_files_equal ("diff", booleans_filename, a_name)
+				assert_binary_files_equal ("diff", booleans_filename, a_name)
 				file_system.delete_file (a_name)
 			else
 				assert ("is_opened", False)
@@ -410,7 +410,7 @@ feature -- Test
 				a_file.flush
 				a_file.close
 				assert ("is_closed", a_file.is_closed)
-				assert_files_equal ("diff", hello_filename, a_name)
+				assert_binary_files_equal ("diff", hello_filename, a_name)
 				file_system.delete_file (a_name)
 			else
 				assert ("is_opened", False)
@@ -438,7 +438,7 @@ feature -- Test
 				assert_same ("renamed", new_name, a_file.name)
 				assert ("not_readable2", not file_system.is_file_readable (old_name))
 				assert ("readable2", file_system.is_file_readable (new_name))
-				assert_files_equal ("diff", hello_filename, new_name)
+				assert_binary_files_equal ("diff", hello_filename, new_name)
 				a_file.delete
 				assert ("not_readable3", not file_system.is_file_readable (new_name))
 			else
@@ -487,7 +487,7 @@ feature -- Test
 				assert_same ("not_renamed", old_name, a_file.name)
 				assert ("not_readable2", not file_system.is_file_readable (old_name))
 				assert ("readable2", file_system.is_file_readable (new_name))
-				assert_files_equal ("diff", hello_filename, new_name)
+				assert_binary_files_equal ("diff", hello_filename, new_name)
 				new_file.delete
 				assert ("not_readable3", not file_system.is_file_readable (new_name))
 			else
@@ -527,7 +527,7 @@ feature -- Test
 					assert_same ("renamed", new_name, a_file.name)
 					assert ("not_readable2", not file_system.is_file_readable (old_name))
 					assert ("readable3", file_system.is_file_readable (new_name))
-					assert_files_equal ("diff1", gobo_filename, new_name)
+					assert_binary_files_equal ("diff1", gobo_filename, new_name)
 					a_file.delete
 					assert ("not_readable3", not file_system.is_file_readable (new_name))
 				else
@@ -552,7 +552,7 @@ feature -- Test
 				a_file.close
 				assert ("is_closed", a_file.is_closed)
 				assert ("readable", file_system.is_file_readable (a_name))
-				assert_files_equal ("diff", hello_filename, a_name)
+				assert_binary_files_equal ("diff", hello_filename, a_name)
 				a_file.delete
 				assert ("not_readable", not file_system.is_file_readable (a_name))
 			else

@@ -853,6 +853,126 @@ feature {TS_TEST_HANDLER} -- Files
 			assertions.set_exception_on_error (l_fatal)
 		end
 
+	assert_binary_files_equal (a_tag: STRING; a_filename1, a_filename2: STRING)
+			-- Assert that there is no difference between the
+			-- binary files named `a_filename1' and `a_filename2'.
+			-- (Expand environment variables in filenames.)
+		require
+			a_tag_not_void: a_tag /= Void
+			a_filename1_not_void: a_filename1 /= Void
+			a_filename1_not_empty: a_filename1.count > 0
+			a_filename2_not_void: a_filename2 /= Void
+			a_filename2_not_empty: a_filename2.count > 0
+		local
+			a_file1, a_file2: KL_BINARY_INPUT_FILE
+			a_message: detachable STRING
+			done: BOOLEAN
+			i: INTEGER
+		do
+			assertions.add_assertion
+			create a_file1.make (Execution_environment.interpreted_string (a_filename1))
+			a_file1.open_read
+			if a_file1.is_open_read then
+				create a_file2.make (Execution_environment.interpreted_string (a_filename2))
+				a_file2.open_read
+				if a_file2.is_open_read then
+					from
+					until
+						done
+					loop
+						a_file1.read_character
+						a_file2.read_character
+						i := i + 1
+						if a_file1.end_of_file then
+							if not a_file2.end_of_file then
+								create a_message.make (50)
+								a_message.append_string (a_tag)
+								a_message.append_string (" (diff between files '")
+								a_message.append_string (a_filename1)
+								a_message.append_string ("' and '")
+								a_message.append_string (a_filename2)
+								a_message.append_string ("' at byte ")
+								INTEGER_.append_decimal_integer (i, a_message)
+								a_message.append_string (")")
+								a_file1.close
+								a_file2.close
+								done := True
+							else
+								a_file1.close
+								a_file2.close
+								done := True
+							end
+						elseif a_file2.end_of_file then
+							create a_message.make (50)
+							a_message.append_string (a_tag)
+							a_message.append_string (" (diff between files '")
+							a_message.append_string (a_filename1)
+							a_message.append_string ("' and '")
+							a_message.append_string (a_filename2)
+							a_message.append_string ("' at byte ")
+							INTEGER_.append_decimal_integer (i, a_message)
+							a_message.append_string (")")
+							a_file1.close
+							a_file2.close
+							done := True
+						elseif a_file1.last_character /= a_file2.last_character then
+							create a_message.make (50)
+							a_message.append_string (a_tag)
+							a_message.append_string (" (diff between files '")
+							a_message.append_string (a_filename1)
+							a_message.append_string ("' and '")
+							a_message.append_string (a_filename2)
+							a_message.append_string ("' at byte ")
+							INTEGER_.append_decimal_integer (i, a_message)
+							a_message.append_string (")")
+							a_file1.close
+							a_file2.close
+							done := True
+						end
+					end
+				else
+					create a_message.make (50)
+					a_message.append_string (a_tag)
+					a_message.append_string (" (cannot read file '")
+					a_message.append_string (a_filename2)
+					a_message.append_string ("')")
+					a_file1.close
+				end
+			else
+				create a_message.make (50)
+				a_message.append_string (a_tag)
+				a_message.append_string (" (cannot read file '")
+				a_message.append_string (a_filename1)
+				a_message.append_string ("')")
+			end
+			if a_message /= Void then
+				logger.report_failure (a_tag, a_message)
+				assertions.report_error (a_message)
+			else
+				logger.report_success (a_tag)
+			end
+		end
+
+	check_binary_files_equal (a_tag: STRING; a_filename1, a_filename2: STRING)
+			-- Check that there is no difference between the
+			-- binary files named `a_filename1' and `a_filename2'.
+			-- (Expand environment variables in filenames.)
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_filename1_not_void: a_filename1 /= Void
+			a_filename1_not_empty: a_filename1.count > 0
+			a_filename2_not_void: a_filename2 /= Void
+			a_filename2_not_empty: a_filename2.count > 0
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_binary_files_equal (a_tag, a_filename1, a_filename2)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 	assert_file_equal_to_string (a_tag: STRING; a_filename, a_string: STRING)
 			-- Assert that there is no difference between the
 			-- content of the file named `a_filename' and `a_string'.
