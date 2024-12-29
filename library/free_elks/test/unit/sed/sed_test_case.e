@@ -45,6 +45,14 @@ feature -- Filenames
 			filename_not_void: Result /= Void
 		end
 
+	gobo_ge_debug_sed_filename: STRING
+			-- Full filename of "gobo_ge_debug.sed"
+		once
+			Result := file_system.pathname (data_dirname, "gobo_ge_debug.sed")
+		ensure
+			gobo_ge_debug_sed_filename_not_void: Result /= Void
+		end
+
 	gobo_ge_sed_filename: STRING
 			-- Full filename of "gobo_ge.sed"
 		once
