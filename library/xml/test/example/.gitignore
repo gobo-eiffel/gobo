@@ -5,6 +5,7 @@ Tnamespaces
 Ttagcount
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

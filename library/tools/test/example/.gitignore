@@ -3,6 +3,7 @@ Tbang2create
 Tpretty_printer
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

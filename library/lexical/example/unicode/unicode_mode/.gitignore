@@ -1,6 +1,7 @@
 unicode_mode
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

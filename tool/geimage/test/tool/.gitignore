@@ -2,6 +2,7 @@ xgeimage
 Tgeimage
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

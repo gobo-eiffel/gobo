@@ -2,6 +2,7 @@ xregexp
 Tpcretest
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

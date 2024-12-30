@@ -2,6 +2,7 @@ xgeant
 Tgeant_unit
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

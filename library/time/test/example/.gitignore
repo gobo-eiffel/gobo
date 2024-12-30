@@ -2,6 +2,7 @@ xtime_example
 Tclock
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh
