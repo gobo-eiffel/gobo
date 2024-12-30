@@ -2,6 +2,7 @@ xgelex
 Tgelex
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

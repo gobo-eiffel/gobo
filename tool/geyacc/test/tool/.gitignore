@@ -2,6 +2,7 @@ xgeyacc
 Tgeyacc
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

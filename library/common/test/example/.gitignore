@@ -2,6 +2,7 @@ xcommon_example
 Thello_world
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

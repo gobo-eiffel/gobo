@@ -2,6 +2,7 @@ xpattern_example
 Tdo_nothing
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

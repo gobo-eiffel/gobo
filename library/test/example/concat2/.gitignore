@@ -1,6 +1,7 @@
 xconcat2
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

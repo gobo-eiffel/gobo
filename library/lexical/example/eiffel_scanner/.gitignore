@@ -1,6 +1,7 @@
 eiffel_scanner
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

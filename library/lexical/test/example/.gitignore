@@ -8,6 +8,7 @@ Tunicode_mode
 Tutf8_mode
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh
