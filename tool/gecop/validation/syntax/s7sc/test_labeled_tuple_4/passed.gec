@@ -1,6 +1,1 @@
-Syntax error:
-line 12 column 16 in aa.e
-			t: TUPLE [
-				a: INTEGER;;
-				           ^
-				b: INTEGER
+Passed

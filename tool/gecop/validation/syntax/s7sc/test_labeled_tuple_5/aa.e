@@ -9,13 +9,12 @@ feature
 	make
 		local
 			t: TUPLE [
-				;
-				a: INTEGER;
+				a: INTEGER;;;
 				b: INTEGER
 			]
 		do
 			t := [1, 2]
-			print ("Failed")
+			print ("Passed")
 		end
 
 end

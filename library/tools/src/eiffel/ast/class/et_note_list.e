@@ -47,13 +47,20 @@ feature -- Access
 	note_keyword: ET_KEYWORD
 			-- 'note' keyword
 
+	first_semicolon: detachable ET_SEMICOLON_SYMBOL
+			-- Semicolon before the first note, if any
+
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := note_keyword.position
-			if Result.is_null and not is_empty then
-				Result := first.position
+			if Result.is_null then
+				if not is_empty then
+					Result := first.position
+				elseif attached first_semicolon as l_first_semicolon then
+					Result := l_first_semicolon.position
+				end
 			end
 		end
 
@@ -66,10 +73,12 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if is_empty then
-				Result := note_keyword
-			else
+			if not is_empty then
 				Result := last.last_leaf
+			elseif attached first_semicolon as l_first_semicolon then
+				Result := l_first_semicolon.last_leaf
+			else
+				Result := note_keyword
 			end
 		end
 
@@ -139,6 +148,14 @@ feature -- Setting
 			note_keyword := a_note
 		ensure
 			note_keyword_set: note_keyword = a_note
+		end
+
+	set_first_semicolon (a_first_semicolon: like first_semicolon)
+			-- Set `first_semicolon' to `a_first_semicolon'.
+		do
+			first_semicolon := a_first_semicolon
+		ensure
+			first_semicolon_set: first_semicolon = a_first_semicolon
 		end
 
 feature -- Basic operations

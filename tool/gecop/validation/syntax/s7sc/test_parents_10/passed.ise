@@ -1,0 +1,10 @@
+-------------------------------------------------------------------------------
+
+Obsolete syntax used at line 3 in class AA
+Use `inherit ANY` or do not specify an empty inherit clause
+
+inherit
+^---------------------------
+
+-------------------------------------------------------------------------------
+Passed

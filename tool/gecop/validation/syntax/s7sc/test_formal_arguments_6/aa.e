@@ -8,13 +8,12 @@ feature
 
 	make
 		do
-			f (1, 2, 3)
+			f (1, 2)
 		end
 
 	f (
 		a: INTEGER;
-		b: INTEGER
-		c: INTEGER
+		b: INTEGER;
 	)
 		do
 			print ("Passed")

@@ -630,31 +630,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
-	process_note (a_note: ET_NOTE)
-			-- Process `a_note'.
-		do
-		end
-
-	process_note_semicolon (a_note: ET_NOTE_SEMICOLON)
-			-- Process `a_note'.
-		do
-		end
-
-	process_note_term_comma (a_note_term: ET_NOTE_TERM_COMMA)
-			-- Process `a_note_term'.
-		do
-		end
-
-	process_note_term_list (a_list: ET_NOTE_TERM_LIST)
-			-- Process `a_list'.
-		do
-		end
-
-	process_note_list (a_list: ET_NOTE_LIST)
-			-- Process `a_list'.
-		do
-		end
-
 	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION)
 			-- Process `an_expression'.
 		do
@@ -837,6 +812,31 @@ feature {ET_AST_NODE} -- Processing
 
 	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST)
 			-- Process `an_expression'.
+		do
+		end
+
+	process_note (a_note: ET_NOTE)
+			-- Process `a_note'.
+		do
+		end
+
+	process_note_semicolon (a_note: ET_NOTE_SEMICOLON)
+			-- Process `a_note'.
+		do
+		end
+
+	process_note_term_comma (a_note_term: ET_NOTE_TERM_COMMA)
+			-- Process `a_note_term'.
+		do
+		end
+
+	process_note_term_list (a_list: ET_NOTE_TERM_LIST)
+			-- Process `a_list'.
+		do
+		end
+
+	process_note_list (a_list: ET_NOTE_LIST)
+			-- Process `a_list'.
 		do
 		end
 

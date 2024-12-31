@@ -881,41 +881,6 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_note (a_note: ET_NOTE)
-			-- Process `a_note'.
-		require
-			a_note_not_void: a_note /= Void
-		deferred
-		end
-
-	process_note_semicolon (a_note: ET_NOTE_SEMICOLON)
-			-- Process `a_note'.
-		require
-			a_note_not_void: a_note /= Void
-		deferred
-		end
-
-	process_note_term_comma (a_note_term: ET_NOTE_TERM_COMMA)
-			-- Process `a_note_term'.
-		require
-			a_note_term_not_void: a_note_term /= Void
-		deferred
-		end
-
-	process_note_term_list (a_list: ET_NOTE_TERM_LIST)
-			-- Process `a_list'.
-		require
-			a_list_not_void: a_list /= Void
-		deferred
-		end
-
-	process_note_list (a_list: ET_NOTE_LIST)
-			-- Process `a_list'.
-		require
-			a_list_not_void: a_list /= Void
-		deferred
-		end
-
 	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION)
 			-- Process `an_expression'.
 		require
@@ -1172,6 +1137,41 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
+		deferred
+		end
+
+	process_note (a_note: ET_NOTE)
+			-- Process `a_note'.
+		require
+			a_note_not_void: a_note /= Void
+		deferred
+		end
+
+	process_note_semicolon (a_note: ET_NOTE_SEMICOLON)
+			-- Process `a_note'.
+		require
+			a_note_not_void: a_note /= Void
+		deferred
+		end
+
+	process_note_term_comma (a_note_term: ET_NOTE_TERM_COMMA)
+			-- Process `a_note_term'.
+		require
+			a_note_term_not_void: a_note_term /= Void
+		deferred
+		end
+
+	process_note_term_list (a_list: ET_NOTE_TERM_LIST)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_note_list (a_list: ET_NOTE_LIST)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
 		deferred
 		end
 

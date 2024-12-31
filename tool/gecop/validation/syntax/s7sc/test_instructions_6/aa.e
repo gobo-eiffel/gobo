@@ -9,23 +9,17 @@ feature
 	make
 		do
 			f;
-			g
-			h
+			g;
 		end
 
 	f
 		do
-			print ("Pa")
+			print ("Pas")
 		end
 
 	g
 		do
-			print ("ss")
-		end
-
-	h
-		do
-			print ("ed")
+			print ("sed")
 		end
 
 end

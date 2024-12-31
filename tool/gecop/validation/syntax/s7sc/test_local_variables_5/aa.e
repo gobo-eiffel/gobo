@@ -8,12 +8,11 @@ feature
 
 	make
 		local
-			;
-			a: INTEGER;
+			a: INTEGER;;;
 			b: INTEGER
 		do
 			a := b
-			print ("Failed")
+			print ("Passed")
 		end
 
 end

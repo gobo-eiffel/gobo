@@ -125,11 +125,6 @@ inherit
 			process_identifier_comma,
 			process_if_expression,
 			process_if_instruction,
-			process_note,
-			process_note_semicolon,
-			process_note_term_comma,
-			process_note_term_list,
-			process_note_list,
 			process_infix_cast_expression,
 			process_infix_and_then_operator,
 			process_infix_expression,
@@ -161,6 +156,11 @@ inherit
 			process_manifest_tuple,
 			process_manifest_type,
 			process_named_object_test,
+			process_note,
+			process_note_semicolon,
+			process_note_term_comma,
+			process_note_term_list,
+			process_note_list,
 			process_object_equality_expression,
 			process_object_test,
 			process_octal_integer_constant,
@@ -1190,46 +1190,6 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_note (a_note: ET_NOTE)
-			-- Process `a_note'.
-		do
-			if not excluded_nodes.has (a_note) then
-				precursor (a_note)
-			end
-		end
-
-	process_note_semicolon (a_note: ET_NOTE_SEMICOLON)
-			-- Process `a_note'.
-		do
-			if not excluded_nodes.has (a_note) then
-				precursor (a_note)
-			end
-		end
-
-	process_note_term_comma (a_note_term: ET_NOTE_TERM_COMMA)
-			-- Process `a_note_term'.
-		do
-			if not excluded_nodes.has (a_note_term) then
-				precursor (a_note_term)
-			end
-		end
-
-	process_note_term_list (a_list: ET_NOTE_TERM_LIST)
-			-- Process `a_list'.
-		do
-			if not excluded_nodes.has (a_list) then
-				precursor (a_list)
-			end
-		end
-
-	process_note_list (a_list: ET_NOTE_LIST)
-			-- Process `a_list'.
-		do
-			if not excluded_nodes.has (a_list) then
-				precursor (a_list)
-			end
-		end
-
 	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION)
 			-- Process `an_expression'.
 		do
@@ -1485,6 +1445,46 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (an_expression) then
 				precursor (an_expression)
+			end
+		end
+
+	process_note (a_note: ET_NOTE)
+			-- Process `a_note'.
+		do
+			if not excluded_nodes.has (a_note) then
+				precursor (a_note)
+			end
+		end
+
+	process_note_semicolon (a_note: ET_NOTE_SEMICOLON)
+			-- Process `a_note'.
+		do
+			if not excluded_nodes.has (a_note) then
+				precursor (a_note)
+			end
+		end
+
+	process_note_term_comma (a_note_term: ET_NOTE_TERM_COMMA)
+			-- Process `a_note_term'.
+		do
+			if not excluded_nodes.has (a_note_term) then
+				precursor (a_note_term)
+			end
+		end
+
+	process_note_term_list (a_list: ET_NOTE_TERM_LIST)
+			-- Process `a_list'.
+		do
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
+			end
+		end
+
+	process_note_list (a_list: ET_NOTE_LIST)
+			-- Process `a_list'.
+		do
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
 			end
 		end
 
