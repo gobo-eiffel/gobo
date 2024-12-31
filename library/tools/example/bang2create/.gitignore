@@ -1,6 +1,7 @@
 bang2create
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

@@ -864,6 +864,9 @@ feature {NONE} -- Generate external C files
 			l_cflag: STRING
 			l_lflag: STRING
 			l_pathname: STRING
+			l_runtime_included: BOOLEAN
+			l_external_c_files_generated: BOOLEAN
+			l_windows_libs_added_to_library_paths: BOOLEAN
 			old_system_name: STRING
 		do
 			old_system_name := system_name
@@ -912,13 +915,8 @@ feature {NONE} -- Generate external C files
 			l_external_include_pathnames := current_system.external_include_pathnames
 			nb := l_external_include_pathnames.count
 			if nb >= 1 then
-					-- Add '$GOBO/backend/c/runtime' to the list of include paths if at least
-					-- one include path has been specified in the ECF file. That way if one such
-					-- include file tries to include one of the runtime 'eif_*.h' file, it can
-					-- be found by the C compiler.
-				l_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "runtime">>)
-				l_pathname := Execution_environment.interpreted_string (l_pathname)
-				add_to_include_paths (l_pathname, l_includes)
+				add_runtime_to_include_paths (l_includes)
+				l_runtime_included := True
 			end
 			from i := 1 until i > nb loop
 				l_pathname := l_external_include_pathnames.item (i)
@@ -964,6 +962,15 @@ feature {NONE} -- Generate external C files
 			if a_variables.found then
 				l_lflags.append_string (a_variables.found_item)
 			end
+			if c_compiler_used.same_string ("zig") and operating_system.is_windows then
+				if
+					not current_system.external_linker_flags.is_empty or
+					not current_system.external_library_pathnames.is_empty or
+					not current_system.external_object_pathnames.is_empty
+				then
+					add_windows_lib_to_linker_flags (l_lflags)
+				end
+			end
 			l_external_linker_flags := current_system.external_linker_flags
 			nb := l_external_linker_flags.count
 			from i := 1 until i > nb loop
@@ -974,31 +981,42 @@ feature {NONE} -- Generate external C files
 				l_lflag := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
 				if l_com_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("com", l_com_regexp.captured_substring (1) + "Clib")
+					l_external_c_files_generated := True
 				elseif l_com_runtime_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime")
+					l_external_c_files_generated := True
 				elseif l_curl_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib")
+					l_external_c_files_generated := True
 				elseif l_libpng_regexp.recognizes (l_lflag) then
 					add_to_include_paths (l_libpng_regexp.captured_substring (1), l_includes)
 					generate_external_c_files ("libpng", l_libpng_regexp.captured_substring (1))
+					l_external_c_files_generated := True
 				elseif l_net_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("net", l_net_regexp.captured_substring (1) + "Clib")
+					l_external_c_files_generated := True
+					if not l_windows_libs_added_to_library_paths and c_compiler_used.same_string ("zig") and operating_system.is_windows then
+						add_windows_libs_to_library_paths (l_libs)
+						l_windows_libs_added_to_library_paths := True
+					end
 				elseif l_vision2_gtk3_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("vision2_gtk3", l_vision2_gtk3_regexp.captured_substring (1))
+					l_external_c_files_generated := True
 				elseif l_vision2_windows_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("vision2_windows", l_vision2_windows_regexp.captured_substring (1) + "Clib")
+					l_external_c_files_generated := True
 				elseif l_wel_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib")
-					if c_compiler_used.same_string ("zig") then
+					l_external_c_files_generated := True
+					if not l_windows_libs_added_to_library_paths and c_compiler_used.same_string ("zig") then
 						add_windows_libs_to_library_paths (l_libs)
+						l_windows_libs_added_to_library_paths := True
 					end
 				elseif l_zlib_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("zlib", l_zlib_regexp.captured_substring (1))
+					l_external_c_files_generated := True
 				else
-					if not l_lflags.is_empty then
-						l_lflags.append_character (' ')
-					end
-					l_lflags.append_string (l_lflag)
+					add_to_linker_flags (l_lflag, l_lflags)
 				end
 				i := i + 1
 			end
@@ -1014,26 +1032,40 @@ feature {NONE} -- Generate external C files
 				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
 				if l_com_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("com", l_com_regexp.captured_substring (1) + "Clib")
+					l_external_c_files_generated := True
 				elseif l_com_runtime_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime")
+					l_external_c_files_generated := True
 				elseif l_curl_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib")
+					l_external_c_files_generated := True
 				elseif l_libpng_regexp.recognizes (l_pathname) then
 					add_to_include_paths (l_libpng_regexp.captured_substring (1), l_includes)
 					generate_external_c_files ("libpng", l_libpng_regexp.captured_substring (1))
+					l_external_c_files_generated := True
 				elseif l_net_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("net", l_net_regexp.captured_substring (1) + "Clib")
+					l_external_c_files_generated := True
+					if not l_windows_libs_added_to_library_paths and c_compiler_used.same_string ("zig") and operating_system.is_windows then
+						add_windows_libs_to_library_paths (l_libs)
+						l_windows_libs_added_to_library_paths := True
+					end
 				elseif l_vision2_gtk3_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("vision2_gtk3", l_vision2_gtk3_regexp.captured_substring (1))
+					l_external_c_files_generated := True
 				elseif l_vision2_windows_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("vision2_windows", l_vision2_windows_regexp.captured_substring (1) + "Clib")
+					l_external_c_files_generated := True
 				elseif l_wel_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib")
-					if c_compiler_used.same_string ("zig") then
+					l_external_c_files_generated := True
+					if not l_windows_libs_added_to_library_paths and c_compiler_used.same_string ("zig") then
 						add_windows_libs_to_library_paths (l_libs)
+						l_windows_libs_added_to_library_paths := True
 					end
 				elseif l_zlib_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("zlib", l_zlib_regexp.captured_substring (1))
+					l_external_c_files_generated := True
 				else
 					add_to_library_paths (l_pathname, l_libs)
 				end
@@ -1055,30 +1087,45 @@ feature {NONE} -- Generate external C files
 				l_pathname := Execution_environment.interpreted_string (l_env_regexp.replace_all (l_replacement))
 				if l_com_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("com", l_com_regexp.captured_substring (1) + "Clib")
+					l_external_c_files_generated := True
 				elseif l_com_runtime_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("com_runtime", l_com_runtime_regexp.captured_substring (1) + "Clib_runtime")
+					l_external_c_files_generated := True
 				elseif l_curl_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("curl", l_curl_regexp.captured_substring (1) + "Clib")
+					l_external_c_files_generated := True
 				elseif l_libpng_regexp.recognizes (l_pathname) then
 					add_to_include_paths (l_libpng_regexp.captured_substring (1), l_includes)
 					generate_external_c_files ("libpng", l_libpng_regexp.captured_substring (1))
+					l_external_c_files_generated := True
 				elseif l_net_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("net", l_net_regexp.captured_substring (1) + "Clib")
+					l_external_c_files_generated := True
+					if not l_windows_libs_added_to_library_paths and c_compiler_used.same_string ("zig") and operating_system.is_windows then
+						add_windows_libs_to_library_paths (l_libs)
+						l_windows_libs_added_to_library_paths := True
+					end
 				elseif l_vision2_gtk3_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("vision2_gtk3", l_vision2_gtk3_regexp.captured_substring (1))
+					l_external_c_files_generated := True
 				elseif l_vision2_windows_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("vision2_windows", l_vision2_windows_regexp.captured_substring (1) + "Clib")
+					l_external_c_files_generated := True
 				elseif l_wel_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("wel", l_wel_regexp.captured_substring (1) + "Clib")
-					if c_compiler_used.same_string ("zig") then
+					l_external_c_files_generated := True
+					if not l_windows_libs_added_to_library_paths and c_compiler_used.same_string ("zig") then
 						add_windows_libs_to_library_paths (l_libs)
+						l_windows_libs_added_to_library_paths := True
 					end
 				elseif l_zlib_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("zlib", l_zlib_regexp.captured_substring (1))
+					l_external_c_files_generated := True
 				elseif l_ise_compiler_bench_regexp.recognizes (l_pathname) then
 					-- Ignore. Use Gobo Eiffel runtime instead of ISE Eiffel runtime.
 				elseif l_ise_compiler_cli_writer_regexp.recognizes (l_pathname) then
 					generate_external_c_files ("cli_writer", l_ise_compiler_cli_writer_regexp.captured_substring (1) + "Clib")
+					l_external_c_files_generated := True
 				elseif l_ise_compiler_platform_regexp.recognizes (l_pathname) then
 					-- Ignore. Use Gobo Eiffel runtime instead of ISE Eiffel runtime.
 				else
@@ -1094,6 +1141,35 @@ feature {NONE} -- Generate external C files
 					end
 				end
 				i := i + 1
+			end
+			if l_external_c_files_generated then
+				if not l_runtime_included then
+						-- Add '$GOBO/backend/c/runtime' to the list of include paths.
+						-- That way if one such include file tries to include one of the runtime
+						-- 'eif_*.h' file, it can be found by the C compiler.
+					add_runtime_to_include_paths (l_includes)
+				end
+				if c_compiler_used.same_string ("zig") or c_compiler_used.same_string ("clang") then
+						-- Avoid warnings of the form:
+						-- ~~~~~~~~~~~~
+						-- warning: passing 'EIF_POINTER' (aka 'volatile void *') to parameter of type 'const void *' discards qualifiers
+						-- ~~~~~~~~~~~~~
+						-- when compiling external C files.
+					if not l_cflags.is_empty then
+						l_cflags.append_character (' ')
+					end
+					l_cflags.append_string ("-Wno-incompatible-pointer-types-discards-qualifiers")
+				elseif c_compiler_used.same_string ("msc") then
+						-- Avoid warnings of the form:
+						-- ~~~~~~~~~~~~
+						-- warning C4090: 'function': different 'volatile' qualifiers
+						-- ~~~~~~~~~~~~~
+						-- when compiling external C files.
+					if not l_cflags.is_empty then
+						l_cflags.append_character (' ')
+					end
+					l_cflags.append_string ("-wd4090")
+				end
 			end
 			if not l_external_obj_filenames.is_empty then
 				l_obj_filenames.append_character (' ')
@@ -1122,6 +1198,21 @@ feature {NONE} -- Generate external C files
 				a_include_paths.append_string (a_pathname)
 				a_include_paths.append_character ('%"')
 			end
+		end
+
+	add_runtime_to_include_paths (a_include_paths: STRING)
+			-- Add '$GOBO/backend/c/runtime' to the list of include paths `a_include_paths'.
+			-- Needed when at least one include path has been specified in the ECF file.
+			-- That way if one such include file tries to include one of the runtime
+			-- 'eif_*.h' file, it can be found by the C compiler.
+		require
+			a_include_paths_not_void: a_include_paths /= Void
+		local
+			l_pathname: STRING
+		do
+			l_pathname := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "backend", "c", "runtime">>)
+			l_pathname := Execution_environment.interpreted_string (l_pathname)
+			add_to_include_paths (l_pathname, a_include_paths)
 		end
 
 	add_to_library_paths (a_pathname: STRING; a_library_paths: STRING)
@@ -1163,6 +1254,33 @@ feature {NONE} -- Generate external C files
 			add_to_library_paths ("MPR.LIB", a_library_paths)
 			add_to_library_paths ("SHLWAPI.LIB", a_library_paths)
 			add_to_library_paths ("WINSPOOL.LIB", a_library_paths)
+		end
+
+	add_to_linker_flags (a_lflag: STRING; a_lflags: STRING)
+			-- Add `a_lflag' to the list of linker flags `a_lflags'.
+		require
+			a_lflag_not_void: a_lflag /= Void
+			a_lflags_not_void: a_lflags /= Void
+		do
+			if not a_lflags.is_empty then
+				a_lflags.append_character (' ')
+			end
+			a_lflags.append_string (a_lflag)
+		end
+
+	add_windows_lib_to_linker_flags (a_lflags: STRING)
+			-- Add Windows standard library search paths to the list of linker flags `a_lflags'.
+		require
+			a_lflags_not_void: a_lflags /= Void
+		local
+			l_splitter: ST_SPLITTER
+		do
+			if attached Execution_environment.variable_value ("LIB") as l_lib and then not l_lib.is_empty then
+				create l_splitter.make_with_separators (";")
+				across l_splitter.split (l_lib) as l_pathname loop
+					add_to_linker_flags ("-L%"" + l_pathname + "%"", a_lflags)
+				end
+			end
 		end
 
 	generate_boehm_gc_c_files (a_system_name: STRING)
@@ -1444,8 +1562,6 @@ extern void* GE_memset(void* str, int c, size_t n);
 					end
 					if a_library_name.same_string ("net") then
 						create l_filenames_only_windows.make_equal (3)
-						l_filenames_only_windows.force_last ("hostname.c")
-						l_filenames_only_windows.force_last ("syncpoll.c")
 						l_filenames_only_windows.force_last ("ipv6win.c")
 						create l_filenames_except_windows.make_equal (2)
 						l_filenames_except_windows.force_last ("local.c")
@@ -5813,10 +5929,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 						l_argument_type_set := argument_type_set (i)
 						l_argument_type := l_argument_type_set.static_type.primary_type
 						if l_argument_type = current_dynamic_system.pointer_type then
-								-- When compiling with C++, MSVC++ does not want to convert
-								-- 'void*' to non-'void*' implicitly.
+								-- Discard the 'volatile' qualifier.
 							current_file.put_character ('(')
-							current_file.put_string (c_eif_native_char)
+							current_file.put_string (c_void)
 							current_file.put_character ('*')
 							current_file.put_character (')')
 							print_argument_name (l_name, current_file)
@@ -11252,8 +11367,8 @@ feature {NONE} -- Expression generation
 								current_file.put_string (c_ge_void2)
 							end
 							current_file.put_character ('(')
+							l_do_check_void := True
 						end
-						l_do_check_void := True
 					else
 						never_void_target_count := never_void_target_count + 1
 					end
@@ -11419,6 +11534,11 @@ feature {NONE} -- Expression generation
 			if l_has_non_conforming_types then
 				current_file.put_string (c_ge_catcall)
 				current_file.put_character ('(')
+				current_file.put_character ('(')
+				print_eif_any_type_name (current_file)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
 			end
 			if l_target_primary_type.is_expanded then
 				if l_source_primary_type.is_expanded then
@@ -11448,6 +11568,7 @@ feature {NONE} -- Expression generation
 				end
 			end
 			if l_has_non_conforming_types and l_dts_name /= Void then
+				current_file.put_character (')')
 				current_file.put_character (',')
 				current_file.put_string (l_dts_name)
 				current_file.put_character (',')
@@ -12516,6 +12637,7 @@ feature {NONE} -- Expression generation
 			l_query: detachable ET_DYNAMIC_FEATURE
 			l_procedure: detachable ET_DYNAMIC_FEATURE
 			l_pointer_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_implementation_class_name: STRING
 		do
 			l_pointer_type := current_dynamic_system.dynamic_primary_type (current_universe_impl.pointer_type, current_type.base_type)
 			l_dynamic_type_set := dynamic_type_set (an_expression)
@@ -12605,7 +12727,18 @@ feature {NONE} -- Expression generation
 						print_expression (l_name_expression)
 					else
 						l_special_type := l_value_type_set.special_type
-						if l_special_type /= Void then
+						l_implementation_class_name := current_feature.static_feature.implementation_class.upper_name
+						if
+							l_special_type /= Void and
+							not l_implementation_class_name.same_string ("REFLECTED_OBJECT") and
+							not l_implementation_class_name.same_string ("REFLECTED_REFERENCE_OBJECT") and
+							not l_implementation_class_name.same_string ("OBJECT_GRAPH_MARKER") and
+							not l_implementation_class_name.same_string ("SED_OBJECTS_TABLE") and
+							not l_implementation_class_name.same_string ("INTERNAL")
+						then
+								-- Address of the first item in the SPECIAL object.
+								-- However in reflection classes we expect to get the
+								-- address of the SPECIAL object itself for introspection.
 							current_file.put_character ('(')
 							print_expression (l_name_expression)
 							current_file.put_character ('?')
@@ -12653,7 +12786,18 @@ feature {NONE} -- Expression generation
 								current_file.put_character (')')
 							else
 								l_special_type := l_value_type_set.special_type
-								if l_special_type /= Void then
+								l_implementation_class_name := current_feature.static_feature.implementation_class.upper_name
+								if
+									l_special_type /= Void and
+									not l_implementation_class_name.same_string ("REFLECTED_OBJECT") and
+									not l_implementation_class_name.same_string ("REFLECTED_REFERENCE_OBJECT") and
+									not l_implementation_class_name.same_string ("OBJECT_GRAPH_MARKER") and
+									not l_implementation_class_name.same_string ("SED_OBJECTS_TABLE") and
+									not l_implementation_class_name.same_string ("INTERNAL")
+								then
+										-- Address of the first item in the SPECIAL object.
+										-- However in reflection classes we expect to get the
+										-- address of the SPECIAL object itself for introspection.
 									l_temp := new_temp_variable (l_value_type_set.static_type.primary_type)
 									current_file.put_character ('(')
 									current_file.put_character ('(')
@@ -23547,12 +23691,13 @@ feature {NONE} -- Built-in feature generation
 		do
 			if a_target_type.base_class.is_type_class then
 				l_dynamic_type := current_dynamic_system.none_type
+				l_meta_type := current_dynamic_system.type_none_type
 				l_attached_index := 1
 			else
 				l_dynamic_type := a_target_type
+				l_meta_type := l_dynamic_type.meta_type
 				l_attached_index := 0
 			end
-			l_meta_type := l_dynamic_type.meta_type
 			if l_meta_type = Void then
 					-- Internal error: the meta type of the target type should
 					-- have been computed when analyzing the dynamic type sets of
@@ -37937,7 +38082,11 @@ feature {NONE} -- Assertion generation
 			j, k, l_count: INTEGER
 			l_assertion: ET_ASSERTION
 			l_old_index_offset: INTEGER
+			l_old_max_nested_inlining_count: INTEGER
 		do
+				-- Limitation: no inlining in preconditions.
+			l_old_max_nested_inlining_count := max_nested_inlining_count
+			max_nested_inlining_count := 0
 			if attached {ET_FEATURE} a_feature as l_feature then
 				l_old_index_offset := index_offset
 				l_all_preconditions := current_feature.preconditions
@@ -37948,7 +38097,9 @@ feature {NONE} -- Assertion generation
 						index_offset := l_all_preconditions.item_2 (k)
 						l_preconditions := l_all_preconditions.item_1 (k)
 						if k = l_count then
-							print_assertions (l_preconditions, c_ge_ex_pre)
+							if not l_preconditions.are_all_true then
+								print_assertions (l_preconditions, c_ge_ex_pre)
+							end
 						else
 							j := j + 1
 							nb := l_preconditions.count
@@ -37975,7 +38126,11 @@ feature {NONE} -- Assertion generation
 									current_file.put_string (c_goto)
 									current_file.put_character (' ')
 									current_file.put_string (c_ge_pre)
-									current_file.put_integer (j)
+									if k + 1 /= l_count or else not l_all_preconditions.item_1 (k + 1).are_all_true then
+										current_file.put_integer (j)
+									else
+										current_file.put_integer (l_count)
+									end
 									print_semicolon_newline
 									dedent
 									print_indentation
@@ -37984,16 +38139,18 @@ feature {NONE} -- Assertion generation
 								end
 								i := i + 1
 							end
-							print_indentation
-							current_file.put_string (c_goto)
-							current_file.put_character (' ')
-							current_file.put_string (c_ge_pre)
-							current_file.put_integer (l_count)
-							print_semicolon_newline
-							current_file.put_string (c_ge_pre)
-							current_file.put_integer (j)
-							current_file.put_character (':')
-							current_file.put_new_line
+							if k + 1 /= l_count or else not l_all_preconditions.item_1 (k + 1).are_all_true then
+								print_indentation
+								current_file.put_string (c_goto)
+								current_file.put_character (' ')
+								current_file.put_string (c_ge_pre)
+								current_file.put_integer (l_count)
+								print_semicolon_newline
+								current_file.put_string (c_ge_pre)
+								current_file.put_integer (j)
+								current_file.put_character (':')
+								current_file.put_new_line
+							end
 						end
 						k := k + 1
 					end
@@ -38011,6 +38168,7 @@ feature {NONE} -- Assertion generation
 				print_assertions (l_preconditions_impl, c_ge_ex_pre)
 				print_after_assertions
 			end
+			max_nested_inlining_count := l_old_max_nested_inlining_count
 		end
 
 	print_all_postconditions (a_feature: ET_CLOSURE)
@@ -38025,7 +38183,11 @@ feature {NONE} -- Assertion generation
 			l_old_expression_exception_temp_variables: like old_expression_exception_temp_variables
 			l_temp: ET_IDENTIFIER
 			l_old_index_offset: INTEGER
+			l_old_max_nested_inlining_count: INTEGER
 		do
+				-- Limitation: no inlining in postconditions.
+			l_old_max_nested_inlining_count := max_nested_inlining_count
+			max_nested_inlining_count := 0
 			if attached {ET_FEATURE} a_feature as l_feature then
 				l_old_index_offset := index_offset
 				l_all_postconditions := current_feature.postconditions
@@ -38065,6 +38227,7 @@ feature {NONE} -- Assertion generation
 				l_old_expression_exception_temp_variables.forth
 			end
 			l_old_expression_exception_temp_variables.wipe_out
+			max_nested_inlining_count := l_old_max_nested_inlining_count
 		end
 
 	print_all_old_expression_declarations (a_feature: ET_CLOSURE)
@@ -38079,7 +38242,11 @@ feature {NONE} -- Assertion generation
 			i, nb: INTEGER
 			l_old_expressions: like old_expressions
 			l_old_index_offset: INTEGER
+			l_old_max_nested_inlining_count: INTEGER
 		do
+				-- Limitation: no inlining in postconditions.
+			l_old_max_nested_inlining_count := max_nested_inlining_count
+			max_nested_inlining_count := 0
 			l_old_expressions := old_expressions
 			l_old_expressions.wipe_out
 			old_expression_temp_variables.wipe_out
@@ -38102,6 +38269,7 @@ feature {NONE} -- Assertion generation
 				print_old_expression_declarations (l_old_expressions)
 				l_old_expressions.wipe_out
 			end
+			max_nested_inlining_count := l_old_max_nested_inlining_count
 		end
 
 	print_old_expression_declarations (a_old_expressions: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
@@ -46366,7 +46534,6 @@ feature {NONE} -- Constants
 	c_eif_is_windows: STRING = "EIF_IS_WINDOWS"
 	c_eif_linux: STRING = "EIF_LINUX"
 	c_eif_mem_free: STRING = "eif_mem_free"
-	c_eif_native_char: STRING = "EIF_NATIVE_CHAR"
 	c_eif_natural: STRING = "EIF_NATURAL"
 	c_eif_natural_8: STRING = "EIF_NATURAL_8"
 	c_eif_natural_16: STRING = "EIF_NATURAL_16"

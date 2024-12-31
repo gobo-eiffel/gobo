@@ -584,7 +584,7 @@ feature -- Test
 				assert_same ("renamed", new_name, a_file.name)
 				assert ("not_readable2", not file_system.is_file_readable (old_name))
 				assert ("readable2", file_system.is_file_readable (new_name))
-				assert_files_equal ("diff", hello_filename, new_name)
+				assert_binary_files_equal ("diff", hello_filename, new_name)
 				a_file.delete
 				assert ("not_readable3", not file_system.is_file_readable (new_name))
 			else
@@ -633,7 +633,7 @@ feature -- Test
 				assert_same ("not_renamed", old_name, a_file.name)
 				assert ("not_readable2", not file_system.is_file_readable (old_name))
 				assert ("readable2", file_system.is_file_readable (new_name))
-				assert_files_equal ("diff", hello_filename, new_name)
+				assert_binary_files_equal ("diff", hello_filename, new_name)
 				new_file.delete
 				assert ("not_readable3", not file_system.is_file_readable (new_name))
 			else
@@ -700,7 +700,7 @@ feature -- Test
 				out_file.close
 				assert ("is_closed", out_file.is_closed)
 				assert ("readable", file_system.is_file_readable (a_name))
-				assert_files_equal ("diff", hello_filename, a_name)
+				assert_binary_files_equal ("diff", hello_filename, a_name)
 				create a_file.make (a_name)
 				a_file.delete
 				assert ("not_readable", not file_system.is_file_readable (a_name))

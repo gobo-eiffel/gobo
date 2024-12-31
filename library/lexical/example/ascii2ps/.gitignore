@@ -1,6 +1,7 @@
 ascii2ps
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

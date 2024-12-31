@@ -76,11 +76,13 @@
 		<set name="split_size_option" value=""/>
 		<set name="split_size_option" value="${split_size}" if="${split_size}"/>
 		<set name="gelint_option" value="false" unless="${gelint_option}"/>
+		<set name="catcall_option" value="error"/>
+		<set name="catcall_option" value="${catcall}" if="${catcall}"/>
 		<set name="thread_count_option" value=""/>
 		<set name="thread_count_option" value="${thread_count}" if="${thread_count}"/>
 		<set name="executable_name_option" value=""/>
 		<set name="executable_name_option" value="${executable_name}" if="${executable_name}"/>
-		<gec ecf="${ecf_filename}" executable="${gec_executable}" target="${system}" executable_name="${executable_name_option}" finalize="${finalize}" gelint="${gelint_option}" catcall="error" split="${split}" split_size="${split_size_option}" thread="${thread_count_option}"/>
+		<gec ecf="${ecf_filename}" executable="${gec_executable}" target="${system}" executable_name="${executable_name_option}" finalize="${finalize}" gelint="${gelint_option}" catcall="${catcall_option}" split="${split}" split_size="${split_size_option}" thread="${thread_count_option}"/>
 	</target>
 
 	<target name="compile_ise" depend="prepare_compile">

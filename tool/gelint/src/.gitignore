@@ -1,6 +1,7 @@
 gelint
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

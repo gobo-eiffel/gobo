@@ -1,6 +1,8 @@
-xfree_elks
+xsed
+Tsed
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

@@ -3,6 +3,7 @@ Tconcat1
 Tconcat2
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

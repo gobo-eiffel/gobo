@@ -18,6 +18,8 @@
 extern "C" {
 #endif
 
+#include <limits.h>
+
 /* Basic sizes */
 #define EIF_ALIGN	8	/* Alignment restrictions */
 #define R64SIZ	8	/* Size of double */

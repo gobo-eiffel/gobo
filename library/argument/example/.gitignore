@@ -1,6 +1,7 @@
 ap_example
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

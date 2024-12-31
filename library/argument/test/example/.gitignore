@@ -2,6 +2,7 @@ xargument_example
 Tap_example
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

@@ -1,6 +1,7 @@
 pretty_printer
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh

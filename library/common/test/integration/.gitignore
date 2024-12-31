@@ -2,6 +2,7 @@ xintegration
 Tintegration
 compile_*.*
 *.exe
+*.melted
 *.dll
 *.bat
 *.sh
