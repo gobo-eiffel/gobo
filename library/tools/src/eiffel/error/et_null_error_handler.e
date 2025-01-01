@@ -5,7 +5,7 @@
 		"Eiffel null error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_NULL_ERROR_HANDLER
@@ -138,7 +138,7 @@ inherit
 			reportable_vrle2_error,
 			reportable_vrlv1_error,
 			reportable_vrlv2_error,
-			reportable_vscn_error,
+			reportable_vsci_error,
 			reportable_vsrc1_error,
 			reportable_vtat1_error,
 			reportable_vtat2_error,
@@ -241,8 +241,8 @@ feature -- Cluster error status
 
 feature -- Universe error status
 
-	reportable_vscn_error (a_universe: ET_UNIVERSE): BOOLEAN
-			-- Can a VSCN error be reported when it
+	reportable_vsci_error (a_universe: ET_UNIVERSE): BOOLEAN
+			-- Can a VSCI error be reported when it
 			-- appears in `a_universe'?
 		do
 			Result := False

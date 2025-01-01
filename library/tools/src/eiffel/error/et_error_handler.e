@@ -5,7 +5,7 @@
 		"Eiffel error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ERROR_HANDLER
@@ -345,8 +345,8 @@ feature -- Universe errors
 			mutex.unlock
 		end
 
-	report_vscn0a_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS)
-			-- Report VSCN error: two different classes `a_class1' and `a_class2'
+	report_vsci0a_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS)
+			-- Report VSCI error: two different classes `a_class1' and `a_class2'
 			-- with the same name corresponding to `a_current_class' in `a_universe'.
 			--
 			-- ETL2: p.38
@@ -358,14 +358,14 @@ feature -- Universe errors
 		local
 			an_error: ET_UNIVERSE_ERROR
 		do
-			if reportable_vscn_error (a_universe) then
-				create an_error.make_vscn0a (a_universe, a_current_class, a_class1, a_class2)
+			if reportable_vsci_error (a_universe) then
+				create an_error.make_vsci0a (a_universe, a_current_class, a_class1, a_class2)
 				report_universe_error (an_error)
 			end
 		end
 
-	report_vscn0b_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_override_class: ET_NAMED_CLASS)
-			-- Report VSCN error: built-in class "NONE" cannot be overridden
+	report_vsci0b_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_override_class: ET_NAMED_CLASS)
+			-- Report VSCI error: built-in class "NONE" cannot be overridden
 			-- but `a_override_class' corresponding to `a_current_class' in `a_universe'.
 			--
 			-- ETL2: p.38
@@ -376,14 +376,14 @@ feature -- Universe errors
 		local
 			an_error: ET_UNIVERSE_ERROR
 		do
-			if reportable_vscn_error (a_universe) then
-				create an_error.make_vscn0b (a_universe, a_current_class, a_override_class)
+			if reportable_vsci_error (a_universe) then
+				create an_error.make_vsci0b (a_universe, a_current_class, a_override_class)
 				report_universe_error (an_error)
 			end
 		end
 
-	report_vscn0c_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS)
-			-- Report VSCN error:  class `a_class1' appearing in a .NET assembly
+	report_vsci0c_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS)
+			-- Report VSCI error:  class `a_class1' appearing in a .NET assembly
 			-- cannot be overridden by `a_class2' corresponding to `a_current_class'
 			-- in `a_universe'.
 			--
@@ -396,14 +396,14 @@ feature -- Universe errors
 		local
 			an_error: ET_UNIVERSE_ERROR
 		do
-			if reportable_vscn_error (a_universe) then
-				create an_error.make_vscn0c (a_universe, a_current_class, a_class1, a_class2)
+			if reportable_vsci_error (a_universe) then
+				create an_error.make_vsci0c (a_universe, a_current_class, a_class1, a_class2)
 				report_universe_error (an_error)
 			end
 		end
 
-	report_vscn0d_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_MASTER_CLASS)
-			-- Report VSCN error: class `a_current_class' in `a_universe' cannot
+	report_vsci0d_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_MASTER_CLASS)
+			-- Report VSCI error: class `a_current_class' in `a_universe' cannot
 			-- be overridden both by class `a_class1' and by class `a_class2'.
 			--
 			-- ETL2: p.38
@@ -415,16 +415,16 @@ feature -- Universe errors
 		local
 			an_error: ET_UNIVERSE_ERROR
 		do
-			if reportable_vscn_error (a_universe) then
-				create an_error.make_vscn0d (a_universe, a_current_class, a_class1, a_class2)
+			if reportable_vsci_error (a_universe) then
+				create an_error.make_vsci0d (a_universe, a_current_class, a_class1, a_class2)
 				report_universe_error (an_error)
 			end
 		end
 
 feature -- Universe error status
 
-	reportable_vscn_error (a_universe: ET_UNIVERSE): BOOLEAN
-			-- Can a VSCN error be reported when it
+	reportable_vsci_error (a_universe: ET_UNIVERSE): BOOLEAN
+			-- Can a VSCI error be reported when it
 			-- appears in `a_universe'?
 		require
 			a_universe_not_void: a_universe /= Void
