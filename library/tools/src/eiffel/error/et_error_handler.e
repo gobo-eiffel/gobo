@@ -736,6 +736,92 @@ feature -- System errors
 			end
 		end
 
+	report_vsrp1a_error (a_class: ET_CLASS; a_feature_name: ET_FEATURE_NAME)
+			-- Report VSRP-1 error: root creation procedure `a_feature_name'
+			-- is not a feature of root class `a_class'.
+			--
+			-- ECMA-367-3-108, 8.5.12 page 79.
+		require
+			a_class_not_void: a_class /= Void
+			a_feature_name_not_void: a_feature_name /= Void
+		local
+			an_error: ET_SYSTEM_ERROR
+		do
+			if reportable_vsrp1_error then
+				create an_error.make_vsrp1a (a_class, a_feature_name)
+				report_system_error (an_error)
+			end
+		end
+
+	report_vsrp1b_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Report VSRP-1 error: root creation feature `a_feature'
+			-- is not a procedure in root class `a_class'.
+			--
+			-- ECMA-367-3-108, 8.5.12 page 79.
+		require
+			a_class_not_void: a_class /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_SYSTEM_ERROR
+		do
+			if reportable_vsrp1_error then
+				create an_error.make_vsrp1b (a_class, a_feature)
+				report_system_error (an_error)
+			end
+		end
+
+	report_vsrp1c_error (a_class: ET_CLASS; a_feature_name: ET_FEATURE_NAME)
+			-- Report VSRP-1 error: root creation feature `a_feature_name'
+			-- is not declared as publicly available creation procedure
+			-- in root class `a_class'.
+			--
+			-- ECMA-367-3-108, 8.5.12 page 79.
+		require
+			a_class_not_void: a_class /= Void
+			a_feature_name_not_void: a_feature_name /= Void
+		local
+			an_error: ET_SYSTEM_ERROR
+		do
+			if reportable_vsrp1_error then
+				create an_error.make_vsrp1c (a_class, a_feature_name)
+				report_system_error (an_error)
+			end
+		end
+
+	report_vsrp2a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Report VSRP-2 error: root creation feature `a_feature'
+			-- has one or more formal arguments in root class `a_class'.
+			--
+			-- ECMA-367-3-108, 8.5.12 page 79.
+		require
+			a_class_not_void: a_class /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_SYSTEM_ERROR
+		do
+			if reportable_vsrp2_error then
+				create an_error.make_vsrp2a (a_class, a_feature)
+				report_system_error (an_error)
+			end
+		end
+
+	report_vsrp3a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Report VSRP-3 error: root creation feature `a_feature'
+			-- is not precondition-free in root class `a_class'.
+			--
+			-- ECMA-367-3-108, 8.5.12 page 79.
+		require
+			a_class_not_void: a_class /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			l_error: ET_SYSTEM_ERROR
+		do
+			if reportable_vsrp3_error then
+				create l_error.make_vsrp3a (a_class, a_feature)
+				report_system_error (l_error)
+			end
+		end
+
 	report_gvknl1a_error (a_class: ET_CLASS)
 			-- Report GVKNL-1 error: unknown kernel class `a_class'.
 			--
@@ -782,47 +868,28 @@ feature -- System errors
 			end
 		end
 
-	report_gvsrc5a_error (a_class: ET_CLASS; a_feature_name: ET_FEATURE_NAME)
-			-- Report GVSRC-5 error: root creation procedure `a_feature_name'
-			-- is not a feature of root class `a_class'.
-			--
-			-- Not in ETL
-			-- GVSRC-5: See ETL2 VSRC p.36
-		require
-			a_class_not_void: a_class /= Void
-			a_feature_name_not_void: a_feature_name /= Void
-		local
-			an_error: ET_SYSTEM_ERROR
-		do
-			if reportable_gvsrc5_error then
-				create an_error.make_gvsrc5a (a_class, a_feature_name)
-				report_system_error (an_error)
-			end
-		end
-
-	report_gvsrc6a_error (a_class: ET_CLASS; a_feature_name: ET_FEATURE_NAME)
-			-- Report GVSRC-6 error: root creation feature `a_feature_name'
-			-- is not declared as publicly available creation procedure
-			-- in root class `a_class'.
-			--
-			-- Not in ETL
-			-- GVSRC-6: See ETL2 VSRC p.36
-		require
-			a_class_not_void: a_class /= Void
-			a_feature_name_not_void: a_feature_name /= Void
-		local
-			an_error: ET_SYSTEM_ERROR
-		do
-			if reportable_gvsrc6_error then
-				create an_error.make_gvsrc6a (a_class, a_feature_name)
-				report_system_error (an_error)
-			end
-		end
-
 feature -- System error status
 
 	reportable_vsrc1_error: BOOLEAN
 			-- Can a VSRC-1 error be reported?
+		do
+			Result := True
+		end
+
+	reportable_vsrp1_error: BOOLEAN
+			-- Can a VSRP-1 error be reported?
+		do
+			Result := True
+		end
+
+	reportable_vsrp2_error: BOOLEAN
+			-- Can a VSRP-2 error be reported?
+		do
+			Result := True
+		end
+
+	reportable_vsrp3_error: BOOLEAN
+			-- Can a VSRP-3 error be reported?
 		do
 			Result := True
 		end
@@ -841,18 +908,6 @@ feature -- System error status
 
 	reportable_gvsrc4_error: BOOLEAN
 			-- Can a GVSRC-4 error be reported?
-		do
-			Result := True
-		end
-
-	reportable_gvsrc5_error: BOOLEAN
-			-- Can a GVSRC-5 error be reported?
-		do
-			Result := True
-		end
-
-	reportable_gvsrc6_error: BOOLEAN
-			-- Can a GVSRC-6 error be reported?
 		do
 			Result := True
 		end

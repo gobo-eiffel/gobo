@@ -1772,6 +1772,9 @@ feature {NONE} -- C code Generation
 					if attached current_dynamic_system.ise_exception_manager_set_exception_data_feature as l_ise_exception_manager_set_exception_data_feature then
 						register_called_feature (l_ise_exception_manager_set_exception_data_feature)
 					end
+					if attached current_dynamic_system.arguments_argument_array_feature as l_arguments_argument_array_feature then
+						register_called_feature (l_arguments_argument_array_feature)
+					end
 					register_called_feature (l_root_procedure)
 					from until called_features.is_empty loop
 						l_dynamic_feature := called_features.last
@@ -34272,7 +34275,12 @@ feature {NONE} -- C function generation
 			l_root_creation_procedure: detachable ET_DYNAMIC_FEATURE
 			l_root_creation: ET_CREATE_EXPRESSION
 			l_root_call: ET_QUALIFIED_CALL
+			l_root_call_arguments: detachable ET_ACTUAL_ARGUMENT_LIST
 			l_temp: ET_IDENTIFIER
+			l_temp_arg: detachable ET_IDENTIFIER
+			l_argument_call: detachable ET_STATIC_CALL_EXPRESSION
+			l_name: ET_IDENTIFIER
+			l_argument_type: ET_DYNAMIC_PRIMARY_TYPE
 			i: INTEGER
 			l_type: ET_DYNAMIC_PRIMARY_TYPE
 			nb: INTEGER
@@ -34304,10 +34312,42 @@ feature {NONE} -- C function generation
 				print_indentation
 				print_type_declaration (l_root_type, current_file)
 				current_file.put_character (' ')
-				l_temp := temp_variable
+				l_temp := new_temp_variable (l_root_type)
+				mark_temp_variable_frozen (l_temp)
 				print_temp_name (l_temp, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
+				if l_root_creation_procedure.static_feature.arguments_count = 0 then
+					-- Nothing to be done
+				elseif not attached current_dynamic_system.arguments_argument_array_feature as l_arguments_argument_array_feature then
+						-- Internal error: feature "ARGUMENTS.argument_array" should be available.
+						-- Already reported in ET_DYNAMIC_SYSTEM.compile_system.
+					set_fatal_error
+					error_handler.report_giaac_error (generator, "print_main_function", 1, "feature 'argument_array' not found in 'ARGUMENTS'.")
+				elseif not attached l_arguments_argument_array_feature.result_type_set as l_result_type_set then
+						-- Internal error: feature "ARGUMENTS.argument_array" should be a query.
+						-- Already reported in ET_DYNAMIC_SYSTEM.compile_system.
+					set_fatal_error
+					error_handler.report_giaac_error (generator, "print_main_function", 1, "feature 'ARGUMENTS.argument_array' is not a query'.")
+				else
+					l_argument_type := l_result_type_set.static_type.primary_type
+					print_indentation
+					print_type_declaration (l_argument_type, current_file)
+					current_file.put_character (' ')
+					l_temp_arg := new_temp_variable (l_argument_type)
+					mark_temp_variable_frozen (l_temp_arg)
+					print_temp_name (l_temp_arg, current_file)
+					print_semicolon_newline
+						-- Prepare dynamic type set for the argument.
+					extra_dynamic_type_sets.force_last (l_result_type_set)
+					create l_name.make (tokens.argument_array_feature_name.name)
+					l_name.set_seed (l_arguments_argument_array_feature.static_feature.first_seed)
+					create l_argument_call.make (current_system.arguments_type, l_name, Void)
+					l_argument_call.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
+					l_temp_arg.set_index (l_argument_call.index)
+					create l_root_call_arguments.make_with_capacity (1)
+					l_root_call_arguments.put_first (l_temp_arg)
+				end
 					-- Variable for exception trace.
 				print_indentation
 				current_file.put_string (c_ge_call)
@@ -34491,19 +34531,33 @@ feature {NONE} -- C function generation
 					print_semicolon_newline
 				end
 					-- Create root object.
+				if l_temp_arg /= Void and l_argument_call /= Void then
+					print_indentation
+					print_temp_name (l_temp_arg, current_file)
+					print_assign_to
+					print_static_call_expression (l_argument_call)
+					print_semicolon_newline
+				end
 				print_indentation
 				print_temp_name (l_temp, current_file)
 				print_assign_to
-				create l_root_call.make (l_root_creation_procedure.static_feature.name, Void)
+				create l_root_call.make (l_root_creation_procedure.static_feature.name, l_root_call_arguments)
 				l_root_call.name.set_seed (l_root_creation_procedure.static_feature.first_seed)
 				create l_root_creation.make (l_root_type.base_type, l_root_call)
 					-- Prepare dynamic type sets of the root creation expression.
 				extra_dynamic_type_sets.force_last (l_root_type)
 				l_root_creation.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
 				print_creation_expression (l_root_creation)
+				print_semicolon_newline
 					-- Clean up.
 				extra_dynamic_type_sets.remove_last
-				print_semicolon_newline
+				if l_temp_arg /= Void then
+					l_temp_arg.set_index (0)
+					if l_argument_call /= Void then
+						extra_dynamic_type_sets.remove_last
+					end
+				end
+				reset_temp_variables
 				if use_scoop then
 					print_indentation
 					current_file.put_string (c_ge_decrement_scoop_sessions_count)

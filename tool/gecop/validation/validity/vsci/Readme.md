@@ -14,6 +14,6 @@ Same as above.
 
 ### Notes
 
-* The code of this validity rule used to be [VSCN](../vscn/Readme.md) in ECMA 367-2.
+* The code of this validity rule was [VSCN](../vscn/Readme.md) in ECMA 367-2.
 
 *  ISE Eiffel (as of 24.05.10.7822 and after) reports this validity rule violation using the code `VD71`.

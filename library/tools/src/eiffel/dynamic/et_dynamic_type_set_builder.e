@@ -5,7 +5,7 @@
 		"Eiffel dynamic type set builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_DYNAMIC_TYPE_SET_BUILDER
@@ -149,7 +149,8 @@ feature -- Generation
 		require
 			a_string_type_not_void: a_string_type /= Void
 		local
-			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_area_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_area_type: ET_DYNAMIC_TYPE
 		do
 			mark_type_alive (a_string_type)
 			if a_string_type.attribute_count < 2 then
@@ -160,13 +161,15 @@ feature -- Generation
 				error_handler.report_giaaa_error
 			else
 					-- Attribute 'area'.
-				l_dynamic_type_set := a_string_type.queries.item (1).result_type_set
-				if l_dynamic_type_set = Void then
+				l_area_type_set := a_string_type.queries.item (1).result_type_set
+				if l_area_type_set = Void then
 						-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					mark_type_alive (l_dynamic_type_set.static_type.primary_type)
+					l_area_type := l_area_type_set.static_type
+					mark_type_alive (l_area_type.primary_type)
+					propagate_builtin_dynamic_types (l_area_type, l_area_type_set)
 				end
 			end
 		ensure
@@ -228,6 +231,27 @@ feature {ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION, ET_DYNAMIC_EQUALITY_EXPRESSION} 
 		end
 
 feature {ET_DYNAMIC_SYSTEM} -- Generation
+
+	propagate_builtin_actual_argument_dynamic_types (a_source_type_set: ET_DYNAMIC_TYPE_SET; a_formal: INTEGER; a_callee: ET_DYNAMIC_FEATURE)
+			-- Propagate dynamic types of `a_source_type_set' to the dynamic type set
+			-- of the formal argument at index `a_formal' in `a_callee' when involved
+			-- in built-in feature `current_dynamic_feature'.
+		require
+			a_source_type_set_not_void: a_source_type_set /= Void
+			a_callee_not_void: a_callee /= Void
+		local
+			l_formal_type_set: detachable ET_DYNAMIC_TYPE_SET
+		do
+			l_formal_type_set := a_callee.argument_type_set (a_formal)
+			if l_formal_type_set = Void then
+					-- Internal error: it has already been checked somewhere else
+					-- that there was the same number of actual and formal arguments.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				propagate_builtin_dynamic_types (a_source_type_set, l_formal_type_set)
+			end
+		end
 
 	propagate_type_of_type_result_type (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_feature: ET_DYNAMIC_FEATURE)
 			-- Propagate `a_type' to the dynamic type set of the result of the
@@ -358,6 +382,18 @@ feature {ET_DYNAMIC_FEATURE} -- Generation
 			end
 		ensure
 			alive_conforming_descendants_not_void: Result /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	propagate_builtin_dynamic_types (a_source_type_set, a_target_type_set: ET_DYNAMIC_TYPE_SET)
+			-- Propagate dynamic types of `a_source_type_set' to `a_target_type_set'
+			-- in built-in feature `current_dynamic_feature'.
+		require
+			a_source_type_set_not_void: a_source_type_set /= Void
+			a_target_type_set_not_void: a_target_type_set /= Void
+		do
+			-- Do nothing.
 		end
 
 invariant

@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     541 tests
-    # FAILED:     206 tests
+    # Passed:     562 tests
+    # FAILED:     210 tests
     # Aborted:    0 test
-    # Total:      747 tests
+    # Total:      772 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo1/test\_bar\_2](definition/difo1/test\_bar\_2)\] test\_failed</br>
@@ -202,6 +202,10 @@ FAIL:  \[[validity/vgmc/test\_typed\_agent\_2](validity/vgmc/test\_typed\_agent\
 FAIL:  \[[validity/vgmc/test\_unary\_call\_1](validity/vgmc/test\_unary\_call\_1)\] test\_failed</br>
 FAIL:  \[[validity/vncc4/test1](validity/vncc4/test1)\] test\_failed</br>
 FAIL:  \[[validity/vncc4/test2](validity/vncc4/test2)\] test\_failed</br>
+FAIL:  \[[validity/vsrp1/test\_export\_1](validity/vsrp1/test\_export\_1)\] test\_failed</br>
+FAIL:  \[[validity/vsrp1/test\_export\_2](validity/vsrp1/test\_export\_2)\] test\_failed</br>
+FAIL:  \[[validity/vsrp3/test\_precondition\_free\_3](validity/vsrp3/test\_precondition\_free\_3)\] test\_failed</br>
+FAIL:  \[[validity/vsrp3/test\_precondition\_free\_6](validity/vsrp3/test\_precondition\_free\_6)\] test\_failed</br>
 FAIL:  \[[validity/vuar3g/test\_generic\_parameter\_1](validity/vuar3g/test\_generic\_parameter\_1)\] test\_failed</br>
 FAIL:  \[[validity/vuar3g/test\_generic\_parameter\_2](validity/vuar3g/test\_generic\_parameter\_2)\] test\_failed</br>
 FAIL:  \[[validity/vuar4g/test\_generic\_parameter\_1](validity/vuar4g/test\_generic\_parameter\_1)\] test\_failed</br>

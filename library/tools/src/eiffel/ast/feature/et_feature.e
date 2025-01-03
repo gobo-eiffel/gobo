@@ -5,7 +5,7 @@
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_FEATURE
@@ -360,6 +360,44 @@ feature -- Status report
 			Result := attached arguments as l_arguments and then l_arguments.count > 0
 		ensure
 			definition: Result = (attached arguments as l_arguments and then l_arguments.count > 0)
+		end
+
+	is_precondition_free: BOOLEAN
+			-- Does the combined preconditions has value 'True'?
+			-- The combined preconditions take into account the
+			-- preconditions inherited from precursors.
+		local
+			i, nb: INTEGER
+			l_other_precursor: ET_FEATURE
+		do
+			if attached first_precursor as l_first_precursor then
+				if attached preconditions as l_preconditions and then l_preconditions.are_all_true then
+					Result := True
+				elseif l_first_precursor.is_precondition_free then
+					Result := True
+				elseif attached other_precursors as l_other_precursors then
+					from
+						i := 1
+						nb := l_other_precursors.count
+					until
+						i > nb
+					loop
+						l_other_precursor := l_other_precursors.item (i)
+						if l_other_precursor.is_precondition_free then
+							Result := True
+								 -- Jump out of the loop
+							i := nb
+						end
+						i := i + 1
+					end
+				end
+			elseif not attached preconditions as l_preconditions then
+				Result := True
+			elseif l_preconditions.is_empty then
+				Result := True
+			elseif l_preconditions.are_all_true then
+				Result := True
+			end
 		end
 
 	are_preconditions_instance_free_recursive: BOOLEAN

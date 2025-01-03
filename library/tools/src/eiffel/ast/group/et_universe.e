@@ -16,7 +16,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_UNIVERSE
@@ -809,12 +809,20 @@ feature -- Kernel types
 	any_clients: ET_CLIENT_LIST
 			-- Default client clause
 
+	arguments_type: ET_CLASS_TYPE
+			-- Class type "[attached] ARGUMENTS",
+			-- where '[attached]' is an implicit type mark
+
 	array_any_type: ET_CLASS_TYPE
 			-- Class type "[attached] ARRAY [[attached] ANY]",
 			-- where '[attached]' is an implicit type mark
 
 	array_detachable_any_type: ET_CLASS_TYPE
 			-- Class type "[attached] ARRAY [detachable ANY]",
+			-- where '[attached]' is an implicit type mark
+
+	array_string_8_type: ET_CLASS_TYPE
+			-- Class type "[attached] ARRAY [[attached] STRING_8]",
 			-- where '[attached]' is an implicit type mark
 
 	array_none_type: ET_CLASS_TYPE
@@ -1036,11 +1044,16 @@ feature -- Kernel types
 				-- otherwise `none_type' is not set when `set_kernel_types' is called from
 				-- the creation procedure.
 			set_none_type
+				-- Note: make sure to call `set_string_8_type' before calling `set_array_type',
+				-- otherwise `string_8_type' is not set when `set_kernel_types' is called from
+				-- the creation procedure.
+			set_string_8_type
 				-- Note: make sure to call `set_tuple_type' before calling `set_function_type',
 				-- `set_predicate_type', `set_procedure_type' and `set_routine_type', otherwise
 				-- `tuple_type' is not set when `set_kernel_types' is called from the
 				-- creation procedure.
 			set_tuple_type
+			set_arguments_type
 			set_array_type
 			set_boolean_type
 			set_character_type
@@ -1105,6 +1118,18 @@ feature -- Kernel types
 			any_clients.put_first (l_any_client)
 		end
 
+	set_arguments_type
+			-- Set type "ARGUMENTS".
+		local
+			l_name: ET_CLASS_NAME
+			l_master_class: ET_MASTER_CLASS
+		do
+			l_name := tokens.arguments_class_name
+			l_master_class := master_class (l_name)
+			l_master_class.set_marked (True)
+			create arguments_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
+		end
+
 	set_array_type
 			-- Set type with base class "ARRAY".
 		local
@@ -1123,6 +1148,10 @@ feature -- Kernel types
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (detachable_any_type)
 			create array_detachable_any_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+				-- Type "[attached] ARRAY [[attached] STRING_8]".
+			create l_parameters.make_with_capacity (1)
+			l_parameters.put_first (string_8_type)
+			create array_string_8_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 				-- Type "[attached] ARRAY [[attached] NONE]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (none_type)
@@ -1750,8 +1779,10 @@ feature -- Kernel types
 			detachable_tuple_type := tokens.unknown_tuple_type
 			tuple_identity_type := tokens.unknown_tuple_type
 			unfolded_empty_tuple_actual_parameters := tokens.empty_actual_parameters
+			arguments_type := tokens.unknown_generic_class_type
 			array_any_type := tokens.unknown_generic_class_type
 			array_detachable_any_type := tokens.unknown_generic_class_type
+			array_string_8_type := tokens.unknown_generic_class_type
 			array_none_type := tokens.unknown_generic_class_type
 			array_identity_type := tokens.unknown_generic_class_type
 			boolean_type := tokens.unknown_class_type
@@ -2839,8 +2870,10 @@ invariant
 	any_parent_not_void: any_parent /= Void
 	any_parents_not_void: any_parents /= Void
 	any_clients_not_void: any_clients /= Void
+	arguments_type_not_void: arguments_type /= Void
 	array_any_type_not_void: array_any_type /= Void
 	array_detachable_any_type_not_void: array_detachable_any_type /= Void
+	array_string_8_type_not_void: array_string_8_type /= Void
 	array_none_type_not_void: array_none_type /= Void
 	array_identity_type_not_void: array_identity_type /= Void
 	boolean_type_not_void: boolean_type /= Void

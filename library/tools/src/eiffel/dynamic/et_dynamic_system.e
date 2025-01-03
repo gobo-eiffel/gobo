@@ -5,7 +5,7 @@
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_DYNAMIC_SYSTEM
@@ -1296,6 +1296,9 @@ feature -- Compilation
 			l_procedure: detachable ET_PROCEDURE
 			l_query: detachable ET_QUERY
 			l_root_creation_procedure: like root_creation_procedure
+			l_arguments_class: ET_CLASS
+			l_dynamic_arguments_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_arguments_query: ET_DYNAMIC_FEATURE
 			l_class: ET_CLASS
 			dt1: detachable DT_DATE_TIME
 		do
@@ -1322,7 +1325,7 @@ feature -- Compilation
 						l_name := tokens.default_create_feature_name
 					end
 					set_fatal_error
-					error_handler.report_gvsrc6a_error (l_root_type.base_class, l_name)
+					error_handler.report_vsrp1c_error (l_root_type.base_class, l_name)
 				else
 					l_class := l_root_type.base_class
 					l_class.process (a_system_processor.eiffel_parser)
@@ -1368,23 +1371,78 @@ feature -- Compilation
 										-- Error: the root creation procedure is not
 										-- a feature of the root class.
 									set_fatal_error
-									error_handler.report_gvsrc5a_error (l_class, l_name)
+									error_handler.report_vsrp1a_error (l_class, l_name)
 								else
-										-- Internal error: the root creation feature is not a procedure.
 									set_fatal_error
-									error_handler.report_giaaa_error
+									error_handler.report_vsrp1b_error (l_class, l_query)
 								end
 							elseif not l_class.is_creation_directly_exported_to (l_procedure.name, current_system.any_type.base_class) then
 								set_fatal_error
-								error_handler.report_gvsrc6a_error (l_class, l_procedure.name)
-							else
+								error_handler.report_vsrp1c_error (l_class, l_procedure.name)
+							elseif not l_procedure.is_precondition_free then
+								set_fatal_error
+								error_handler.report_vsrp3a_error (l_class, l_procedure)
+							elseif
+								not attached l_procedure.arguments as l_arguments or else l_arguments.count = 0 or else
+								l_arguments.count = 1 and then current_system.array_string_8_type.conforms_to_type (l_arguments.formal_argument (1).type, any_type.base_type, l_dynamic_root_type.base_type, a_system_processor)
+							then
 								l_root_creation_procedure := l_dynamic_root_type.dynamic_procedure (l_procedure, Current)
 								l_root_creation_procedure.set_creation (True)
 								root_creation_procedure := l_root_creation_procedure
 								dynamic_type_set_builder.mark_type_alive (l_dynamic_root_type)
 									-- Type "ISE_EXCEPTION_MANAGER" is used from the runtime.
 								dynamic_type_set_builder.mark_type_alive (ise_exception_manager_type)
+								if l_procedure.arguments_count = 1 then
+										-- Type "ARRAY [STRING_8]" is used for command-line arguments.
+									l_arguments_class := current_system.arguments_type.base_class
+									l_arguments_class.process (a_system_processor.eiffel_parser)
+									if not l_arguments_class.is_preparsed then
+											-- Error: unknown "ARGUMENTS" class.
+										set_fatal_error
+										error_handler.report_gvknl1a_error (l_arguments_class)
+									elseif not l_arguments_class.is_parsed or l_arguments_class.has_syntax_error then
+											-- Error already reported.
+										set_fatal_error
+									else
+										l_dynamic_arguments_type := dynamic_primary_type (l_arguments_class, l_arguments_class)
+										if l_arguments_class.has_interface_error then
+												-- Error already reported.
+											set_fatal_error
+										else
+											l_name := tokens.argument_array_feature_name
+											l_query := l_arguments_class.named_query (l_name)
+											if l_query /= Void then
+												l_arguments_query := l_dynamic_arguments_type.dynamic_query (l_query, Current)
+												if not attached l_arguments_query.result_type_set as l_result_type_set then
+														-- Internal error: a query should have a result type set.
+													set_fatal_error
+													error_handler.report_giaaa_error
+												elseif l_query.arguments_count /= 0 then
+														-- Error: feature "ARGUMENTS.argument_array" should have no argument.
+													set_fatal_error
+													error_handler.report_gvkfe6a_error (l_arguments_class, l_query, Void, current_system.array_string_8_type)
+												else
+													arguments_argument_array_feature := l_arguments_query
+													l_arguments_query.set_regular (True)
+													l_dynamic_arguments_type.set_static (True)
+													dynamic_type_set_builder.propagate_builtin_actual_argument_dynamic_types (l_result_type_set, 1, l_root_creation_procedure)
+												end
+											elseif attached l_arguments_class.named_procedure (l_name) as l_arguments_procedure then
+													-- Error: feature "ARGUMENTS.argument_array" should be a query.
+												set_fatal_error
+												error_handler.report_gvkfe5a_error (l_arguments_class, l_arguments_procedure)
+											else
+													-- Error: feature 'argument_array' not found in class "ARGUMENTS".
+												set_fatal_error
+												error_handler.report_gvkfe1a_error (l_arguments_class, l_name)
+											end
+										end
+									end
+								end
 								build_dynamic_type_sets
+							else
+								set_fatal_error
+								error_handler.report_vsrp2a_error (l_class, l_procedure)
 							end
 						end
 					end
@@ -1468,7 +1526,7 @@ feature -- Compilation
 								-- Error: the feature `a_feature_name' is not
 								-- a feature of the `a_class'.
 							set_fatal_error
-							error_handler.report_gvsrc5a_error (a_class, a_feature_name)
+							error_handler.report_vsrp1a_error (a_class, a_feature_name)
 						end
 					end
 				end
@@ -2387,6 +2445,10 @@ feature -- Processors
 		end
 
 feature -- Features
+
+	arguments_argument_array_feature: detachable ET_DYNAMIC_FEATURE
+			-- Expected feature 'argument_array' in class "ARGUMENTS".
+			-- Void if this feature is not called.
 
 	ise_exception_manager_init_exception_manager_feature: detachable ET_DYNAMIC_FEATURE
 			-- Expected procedure 'init_exception_manager' in class "ISE_EXCEPTION_MANAGER"

@@ -4,7 +4,7 @@
 
 		"Gobo Eiffel Lint"
 
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class GELINT
@@ -294,6 +294,7 @@ feature {NONE} -- Processing
 				l_system_processor.set_providers_enabled (True)
 				l_system_processor.set_cluster_dependence_enabled (False)
 				l_system_processor.compile (a_system)
+				l_system_processor.check_root_type (a_system)
 			end
 			l_system_processor.record_end_time (dt1, "Total Time")
 		end

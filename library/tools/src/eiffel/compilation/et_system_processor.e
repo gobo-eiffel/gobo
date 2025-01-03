@@ -5,7 +5,7 @@
 		"Eiffel system processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_SYSTEM_PROCESSOR
@@ -1460,6 +1460,116 @@ feature -- Processing
 			a_system_not_void: a_system /= Void
 		do
 			a_system.master_classes_do_recursive_until (agent {ET_MASTER_CLASS}.process (master_class_checker), stop_request)
+		end
+
+	check_root_type (a_system: ET_SYSTEM)
+			-- Check validity of root type and root creation procedure of `a_system'.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		require
+			a_system_not_void: a_system /= Void
+		local
+			l_name: detachable ET_FEATURE_NAME
+			l_procedure: detachable ET_PROCEDURE
+			l_query: detachable ET_QUERY
+			l_arguments_class: ET_CLASS
+			l_class: ET_CLASS
+		do
+			if stop_requested then
+				-- Stop.
+			elseif not attached a_system.root_type as l_root_type then
+					-- Error: missing root class.
+				error_handler.report_gvsrc3a_error
+			elseif l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) then
+					-- Error: the root creation feature is not declared as a
+					-- publicly available creation procedure in the root class.
+				l_name := a_system.root_creation
+				if l_name = Void then
+					l_name := tokens.default_create_feature_name
+				end
+				error_handler.report_vsrp1c_error (l_root_type.base_class, l_name)
+			else
+				l_class := l_root_type.base_class
+				l_class.process (eiffel_parser)
+				if not l_class.is_preparsed then
+						-- Error: unknown root class.
+					error_handler.report_gvsrc4a_error (l_class)
+				elseif not l_class.is_parsed or else l_class.has_syntax_error then
+						-- Error already reported.
+				elseif l_class.is_generic then
+						-- Error: the root class should not be generic.
+					error_handler.report_vsrc1a_error (l_class)
+				elseif l_class.has_interface_error then
+					-- Error already reported.
+				else
+					l_name := a_system.root_creation
+					if l_name /= Void then
+						l_procedure := l_class.named_procedure (l_name)
+					elseif a_system.default_create_seed /= 0 then
+						l_procedure := l_class.seeded_procedure (a_system.default_create_seed)
+						l_name := tokens.default_create_feature_name
+					else
+						l_name := tokens.default_create_feature_name
+						l_procedure := l_class.named_procedure (l_name)
+					end
+					if l_procedure = Void then
+						if l_name /= Void then
+							l_query := l_class.named_query (l_name)
+						elseif a_system.default_create_seed /= 0 then
+							l_query := l_class.seeded_query (a_system.default_create_seed)
+							l_name := tokens.default_create_feature_name
+						else
+							l_name := tokens.default_create_feature_name
+							l_query := l_class.named_query (l_name)
+						end
+						if l_query = Void then
+								-- Error: the root creation procedure is not
+								-- a feature of the root class.
+							error_handler.report_vsrp1a_error (l_class, l_name)
+						else
+							error_handler.report_vsrp1b_error (l_class, l_query)
+						end
+					elseif not l_class.is_creation_directly_exported_to (l_procedure.name, a_system.any_type.base_class) then
+						error_handler.report_vsrp1c_error (l_class, l_procedure.name)
+					elseif not l_procedure.is_precondition_free then
+						error_handler.report_vsrp3a_error (l_class, l_procedure)
+					elseif
+						attached l_procedure.arguments as l_arguments and then l_arguments.count = 1 and then
+						a_system.array_string_8_type.conforms_to_type (l_arguments.formal_argument (1).type, a_system.any_type, l_root_type, Current)
+					then
+							-- Type "ARRAY [STRING_8]" is used for command-line arguments.
+						l_arguments_class := a_system.arguments_type.base_class
+						l_arguments_class.process (eiffel_parser)
+						if not l_arguments_class.is_preparsed then
+								-- Error: unknown "ARGUMENTS" class.
+							error_handler.report_gvknl1a_error (l_arguments_class)
+						elseif not l_arguments_class.is_parsed or l_arguments_class.has_syntax_error then
+							-- Error already reported.
+						elseif l_arguments_class.has_interface_error then
+							-- Error already reported.
+						else
+							l_name := tokens.argument_array_feature_name
+							l_query := l_arguments_class.named_query (l_name)
+							if l_query /= Void then
+								if l_query.arguments_count /= 0 then
+										-- Error: feature "ARGUMENTS.argument_array" should have no argument.
+									error_handler.report_gvkfe6a_error (l_arguments_class, l_query, Void, a_system.array_string_8_type)
+								end
+							elseif attached l_arguments_class.named_procedure (l_name) as l_arguments_procedure then
+									-- Error: feature "ARGUMENTS.argument_array" should be a query.
+								error_handler.report_gvkfe5a_error (l_arguments_class, l_arguments_procedure)
+							else
+									-- Error: feature 'argument_array' not found in class "ARGUMENTS".
+								error_handler.report_gvkfe1a_error (l_arguments_class, l_name)
+							end
+						end
+					elseif l_procedure.arguments_count > 0 then
+						error_handler.report_vsrp2a_error (l_class, l_procedure)
+					end
+				end
+			end
 		end
 
 feature -- Custom processing
