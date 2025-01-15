@@ -5,7 +5,7 @@
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_VALIDITY_ERROR
@@ -17787,7 +17787,9 @@ feature {NONE} -- Implementation
 		require
 			a_template_not_void: a_template /= Void
 		do
-			if class_impl = current_class then
+			if current_class.is_root then
+				Result := "[$1] root type: " + a_template
+			elseif class_impl = current_class then
 				if position = null_position then
 					Result := "[$1] class $5: " + a_template
 				else

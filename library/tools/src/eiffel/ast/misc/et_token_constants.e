@@ -511,6 +511,15 @@ feature -- Class names
 			unknown_class_name_not_void: Result /= Void
 		end
 
+	root_class_name: ET_CLASS_NAME
+			-- "*ROOT*" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_root_name)
+		ensure
+			instance_free: class
+			root_class_name_not_void: Result /= Void
+		end
+
 feature -- Class names (used for compatibility with 5.6.0610, to be removed later)
 
 	boolean_ref_class_name: ET_CLASS_NAME
@@ -4657,6 +4666,15 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	implies_keyword: ET_KEYWORD_OPERATOR
+			-- 'implies' keyword
+		once
+			create Result.make_implies
+		ensure
+			instance_free: class
+			keyword_not_void: Result /= Void
+		end
+
 	indexing_keyword: ET_KEYWORD
 			-- 'indexing' keyword
 		once
@@ -4724,6 +4742,15 @@ feature -- Keywords
 			-- 'loop' keyword
 		once
 			create Result.make_loop
+		ensure
+			instance_free: class
+			keyword_not_void: Result /= Void
+		end
+
+	not_keyword: ET_KEYWORD_OPERATOR
+			-- 'not' keyword
+		once
+			create Result.make_not
 		ensure
 			instance_free: class
 			keyword_not_void: Result /= Void
@@ -4963,6 +4990,15 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	xor_keyword: ET_KEYWORD_OPERATOR
+			-- 'xor' keyword
+		once
+			create Result.make_xor
+		ensure
+			instance_free: class
+			keyword_not_void: Result /= Void
+		end
+
 feature -- Keyword and symbol names
 
 	capitalized_any_name: STRING = "ANY"
@@ -5020,6 +5056,7 @@ feature -- Keyword and symbol names
 	capitalized_typed_pointer_name: STRING = "TYPED_POINTER"
 	capitalized_wide_character_name: STRING = "WIDE_CHARACTER"
 	capitalized_unknown_name: STRING = "*UNKNOWN*"
+	capitalized_root_name: STRING = "*ROOT*"
 			-- Eiffel class names
 
 	after_name: STRING = "after"

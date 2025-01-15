@@ -8,4 +8,4 @@ In this test, there is a once-per-process function `f` in class `AA`. Its result
 
 ### Notes
 
-* ISE Eiffel (as of 23.09.10.7341 and after) fails to report this validity error, resulting in a type issue where a `STRING` from another SCOOP region is not flagged as separate.
+* ISE Eiffel (as of 23.09.10.7341 and after) fails to report this validity rule violation, resulting in a type issue where a `STRING` from another SCOOP region is not flagged as separate.

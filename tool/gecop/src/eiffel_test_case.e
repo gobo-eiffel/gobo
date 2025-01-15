@@ -237,6 +237,7 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 						a_regexp3.wipe_out
 						a_regexp4.wipe_out
 						a_regexp5.wipe_out
+						a_regexp6.wipe_out
 						in_file.read_line
 						l_first_line := False
 					end
@@ -370,6 +371,7 @@ feature {NONE} -- Test gelint
 						a_regexp1.wipe_out
 						a_regexp2.wipe_out
 						a_regexp3.wipe_out
+						a_regexp4.wipe_out
 						in_file.read_line
 						l_first_line := False
 					end
@@ -454,9 +456,11 @@ feature {NONE} -- Test ISE Eiffel
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
 			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5, a_pattern6: STRING
-			a_pattern7, a_pattern8, a_pattern9, a_pattern10, a_pattern11,  a_pattern12: STRING
+			a_pattern7, a_pattern8, a_pattern9, a_pattern10, a_pattern11, a_pattern12: STRING
+			a_pattern13: STRING
 			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5, a_regexp6: RX_PCRE_REGULAR_EXPRESSION
 			a_regexp7, a_regexp8, a_regexp9, a_regexp10, a_regexp11, a_regexp12: RX_PCRE_REGULAR_EXPRESSION
+			a_regexp13: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 			l_first_line: BOOLEAN
 		do
@@ -521,6 +525,11 @@ feature {NONE} -- Test ISE Eiffel
 			a_regexp12.compile (a_pattern12)
 			assert ("cannot compile regexp '" + a_pattern12 + "'", a_regexp12.is_compiled)
 			a_regexp12.optimize
+			a_pattern13 := "Parse error \(XML syntax\)  in (.*[/\\])?compile_ise.ecf (.*)"
+			create a_regexp13.make
+			a_regexp13.compile (a_pattern13)
+			assert ("cannot compile regexp '" + a_pattern13 + "'", a_regexp13.is_compiled)
+			a_regexp13.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -584,6 +593,9 @@ feature {NONE} -- Test ISE Eiffel
 								out_file.put_line (a_regexp11.captured_substring (4))
 							elseif a_regexp12.recognizes (a_line) then
 								out_file.put_line ("Configuration: compile_ise.ecf")
+							elseif a_regexp13.recognizes (a_line) then
+								out_file.put_string ("Parse error (XML syntax)  in compile_ise.ecf ")
+								out_file.put_line (a_regexp13.captured_substring (2))
 							else
 								out_file.put_line (a_line)
 							end
@@ -600,6 +612,7 @@ feature {NONE} -- Test ISE Eiffel
 						a_regexp10.wipe_out
 						a_regexp11.wipe_out
 						a_regexp12.wipe_out
+						a_regexp13.wipe_out
 						in_file.read_line
 						l_first_line := False
 					end
@@ -1070,6 +1083,7 @@ feature {NONE} -- Output logs
 							a_regexp2.wipe_out
 							a_regexp3.wipe_out
 							a_regexp4.wipe_out
+							a_regexp5.wipe_out
 							in_file.read_line
 							l_first_line := False
 						end

@@ -1,0 +1,2 @@
+[VTCG-4] root type: base class CC of the 1-th actual generic parameter of AA does not make feature `make' available as creation procedure to class AA.
+----

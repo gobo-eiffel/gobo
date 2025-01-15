@@ -16,36 +16,19 @@ inherit
 
 create
 
-	make_vsrc1a,
 	make_vsrp1a,
 	make_vsrp1b,
 	make_vsrp1c,
 	make_vsrp2a,
 	make_vsrp3a,
-	make_gvknl1a,
-	make_gvsrc3a,
-	make_gvsrc4a
+	make_vsrt0a,
+	make_vsrt1a,
+	make_vsrt1b,
+	make_vsrt2a,
+	make_vsrt4a,
+	make_gvknl1a
 
 feature {NONE} -- Initialization
-
-	make_vsrc1a (a_class: ET_CLASS)
-			-- Create a new VSRC-1 error: root class `a_class' should not be generic.
-			--
-			-- ETL2: p.36
-		require
-			a_class_not_void: a_class /= Void
-		do
-			code := vsrc1a_template_code
-			etl_code := vsrc1_etl_code
-			default_template := vsrc1a_default_template
-			create parameters.make_filled (empty_string, 1, 2)
-			parameters.put (etl_code, 1)
-			parameters.put (a_class.upper_name, 2)
-		ensure
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = root class name
-		end
 
 	make_gvknl1a (a_class: ET_CLASS)
 			-- Create a new GVKNL-1 error: unknown kernel class `a_class'.
@@ -65,42 +48,6 @@ feature {NONE} -- Initialization
 			-- dollar0: $0 = program name
 			-- dollar1: $1 = ETL code
 			-- dollar2: $2 = kernel class name
-		end
-
-	make_gvsrc3a
-			-- Create a new GVSRC-3 error: missing root class.
-			--
-			-- Not in ETL
-			-- GVSRC-3: See ETL2 VSRC p.36
-		do
-			code := gvsrc3a_template_code
-			etl_code := gvsrc3_etl_code
-			default_template := gvsrc3a_default_template
-			create parameters.make_filled (empty_string, 1, 1)
-			parameters.put (etl_code, 1)
-		ensure
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-		end
-
-	make_gvsrc4a (a_class: ET_CLASS)
-			-- Create a new GVSRC-4 error: unknown root class `a_class'.
-			--
-			-- Not in ETL
-			-- GVSRC-4: See ETL2 VSRC p.36
-		require
-			a_class_not_void: a_class /= Void
-		do
-			code := gvsrc4a_template_code
-			etl_code := gvsrc4_etl_code
-			default_template := gvsrc4a_default_template
-			create parameters.make_filled (empty_string, 1, 2)
-			parameters.put (etl_code, 1)
-			parameters.put (a_class.upper_name, 2)
-		ensure
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = root class name
 		end
 
 	make_vsrp1a (a_class: ET_CLASS; a_feature_name: ET_FEATURE_NAME)
@@ -219,37 +166,139 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = root creation procedure name
 		end
 
+	make_vsrt0a (a_root_type_name: ET_IDENTIFIER)
+			-- Create a new VSRT-0 error: syntax error in `a_root_type_name'.
+		require
+			a_root_type_name_not_void: a_root_type_name /= Void
+		do
+			code := vsrt0a_template_code
+			etl_code := vsrt0_etl_code
+			default_template := vsrt0a_default_template
+			create parameters.make_filled (empty_string, 1, 2)
+			parameters.put (etl_code, 1)
+			parameters.put (a_root_type_name.name, 2)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = root type name
+		end
+
+	make_vsrt1a (a_root_type: ET_TYPE)
+			-- Create a new VSRT-1 error: root type `a_root_type' is
+			-- not a standalone type, it is an anchored type.
+			--
+			-- ECMA-367-3-108, 8.5.10 page 78.
+		require
+			a_root_type_not_void: a_root_type /= Void
+		do
+			code := vsrt1a_template_code
+			etl_code := vsrt1_etl_code
+			default_template := vsrt1a_default_template
+			create parameters.make_filled (empty_string, 1, 2)
+			parameters.put (etl_code, 1)
+			parameters.put (a_root_type.to_text, 2)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = root type name
+		end
+
+	make_vsrt1b (a_root_type: ET_TYPE)
+			-- Create a new VSRT-1 error: root type `a_root_type' is
+			-- not a standalone type, it has an anchored type.
+			--
+			-- ECMA-367-3-108, 8.5.10 page 78.
+		require
+			a_root_type_not_void: a_root_type /= Void
+		do
+			code := vsrt1b_template_code
+			etl_code := vsrt1_etl_code
+			default_template := vsrt1b_default_template
+			create parameters.make_filled (empty_string, 1, 2)
+			parameters.put (etl_code, 1)
+			parameters.put (a_root_type.to_text, 2)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = root type name
+		end
+
+	make_vsrt2a (a_type: ET_BASE_TYPE)
+			-- Create a new VSRT-2 error: root type involves unknown class
+			-- (the base class of `a_type').
+			--
+			-- ECMA-367-3-108, 8.5.10 page 78.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			code := vsrt2a_template_code
+			etl_code := vsrt2_etl_code
+			default_template := vsrt2a_default_template
+			create parameters.make_filled (empty_string, 1, 2)
+			parameters.put (etl_code, 1)
+			parameters.put (a_type.named_base_class.upper_name, 2)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = unknown class name
+		end
+
+	make_vsrt4a (a_class: ET_CLASS)
+			-- Create a new VSRT-4 error:  the base class of the root type
+			-- is deferred.
+			--
+			-- ECMA-367-3-108, 8.5.10 page 78.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			code := vsrt4a_template_code
+			etl_code := vsrt4_etl_code
+			default_template := vsrt4a_default_template
+			create parameters.make_filled (empty_string, 1, 2)
+			parameters.put (etl_code, 1)
+			parameters.put (a_class.upper_name, 2)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = root class name
+		end
+
 feature {NONE} -- Implementation
 
-	vsrc1a_default_template: STRING = "[$1] root class $2 should not be generic."
 	vsrp1a_default_template: STRING = "[$1] root creation procedure `$3' is not a feature of root class $2."
 	vsrp1b_default_template: STRING = "[$1] root creation procedure `$3' is not a procedure in root class $2."
 	vsrp1c_default_template: STRING = "[$1] root creation procedure `$3' is not declared as publicly available creation procedure in root class $2."
 	vsrp2a_default_template: STRING = "[$1] root creation procedure `$3' has one or more formal arguments in root class $2."
 	vsrp3a_default_template: STRING = "[$1] root creation procedure `$3' is not precondition-free in root class $2."
+	vsrt0a_default_template: STRING = "[$1] syntax error in root type name `$2'."
+	vsrt1a_default_template: STRING = "[$1] root type `$2' is not standalone, it is an anchored type."
+	vsrt1b_default_template: STRING = "[$1] root type `$2' is not standalone, it has an anchored type."
+	vsrt2a_default_template: STRING = "[$1] root type involves unknown class `$2'."
+	vsrt4a_default_template: STRING = "[$1] root class $2 should not be deferred."
 	gvknl1a_default_template: STRING = "[$1] missing kernel class $2."
-	gvsrc3a_default_template: STRING = "[$1] missing root class."
-	gvsrc4a_default_template: STRING = "[$1] unknown root class $2."
 			-- Default templates
 
-	vsrc1_etl_code: STRING = "VSRC1"
 	vsrp1_etl_code: STRING = "VSRP1"
 	vsrp2_etl_code: STRING = "VSRP2"
 	vsrp3_etl_code: STRING = "VSRP3"
+	vsrt0_etl_code: STRING = "VSRT0"
+	vsrt1_etl_code: STRING = "VSRT1"
+	vsrt2_etl_code: STRING = "VSRT2"
+	vsrt4_etl_code: STRING = "VSRT4"
 	gvknl1_etl_code: STRING = "GVKNL1"
-	gvsrc3_etl_code: STRING = "GVSRC3"
-	gvsrc4_etl_code: STRING = "GVSRC4"
 			-- ETL validity codes
 
-	vsrc1a_template_code: STRING = "vsrc1a"
 	vsrp1a_template_code: STRING = "vsrp1a"
 	vsrp1b_template_code: STRING = "vsrp1b"
 	vsrp1c_template_code: STRING = "vsrp1c"
 	vsrp2a_template_code: STRING = "vsrp2a"
 	vsrp3a_template_code: STRING = "vsrp3a"
+	vsrt0a_template_code: STRING = "vsrt0a"
+	vsrt1a_template_code: STRING = "vsrt1a"
+	vsrt1b_template_code: STRING = "vsrt1b"
+	vsrt2a_template_code: STRING = "vsrt2a"
+	vsrt4a_template_code: STRING = "vsrt4a"
 	gvknl1a_template_code: STRING = "gvknl1a"
-	gvsrc3a_template_code: STRING = "gvsrc3a"
-	gvsrc4a_template_code: STRING = "gvsrc4a"
 			-- Template error codes
 
 end

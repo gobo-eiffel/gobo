@@ -5,7 +5,7 @@
 		"Groups of Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_GROUP
@@ -75,6 +75,12 @@ feature -- Status report
 
 	is_unknown: BOOLEAN
 			-- Is current group a built-in group for class "*UNKNOWN*"?
+		do
+			-- Result := False
+		end
+
+	is_root: BOOLEAN
+			-- Is current group a built-in group for class "*ROOT*"?
 		do
 			-- Result := False
 		end

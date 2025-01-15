@@ -5,7 +5,7 @@
 		"Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_TYPE
@@ -633,6 +633,16 @@ feature -- Status report
 			-- when it appears in `a_context'?
 		do
 			Result := named_type_has_class_with_ancestors_not_built_successfully (a_context)
+		end
+
+feature -- Setting
+
+	set_type_mark (a_keyword: like type_mark)
+			-- Set `type_mark' to `a_keyword'.
+		do
+			type_mark := a_keyword
+		ensure
+			type_mark_set: type_mark = a_keyword
 		end
 
 feature -- Basic operations

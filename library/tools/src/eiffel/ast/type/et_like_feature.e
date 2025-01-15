@@ -5,7 +5,7 @@
 		"Eiffel 'like feature' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_LIKE_FEATURE
@@ -535,14 +535,6 @@ feature -- Setting
 			like_keyword := a_like
 		ensure
 			like_keyword_set: like_keyword = a_like
-		end
-
-	set_type_mark (a_type_mark: like type_mark)
-			-- Set `type_mark' to `a_type_mark'.
-		do
-			type_mark := a_type_mark
-		ensure
-			type_mark_set: type_mark = a_type_mark
 		end
 
 feature -- Status report

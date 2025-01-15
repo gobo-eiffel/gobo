@@ -64,6 +64,9 @@ feature -- Status report
 	has_internal_error: BOOLEAN
 			-- Has an internal error been reported?
 
+	has_fatal_error: BOOLEAN
+			-- Has a fatal error been reported?
+
 feature -- Status setting
 
 	set_ise
@@ -91,12 +94,14 @@ feature -- Status setting
 			-- Set `has_error' to `b'.
 		do
 			has_error := b
+			has_fatal_error := b
 			if not b then
 				has_eiffel_error := False
 				has_internal_error := False
 			end
 		ensure
 			has_error_set: has_error = b
+			has_fatal_error_set: has_fatal_error = b
 			not_has_eiffel_error: not b implies not has_eiffel_error
 			not_has_internal_error: not b implies not has_internal_error
 		end
@@ -107,10 +112,12 @@ feature -- Status setting
 			has_eiffel_error := b
 			if b then
 				has_error := True
+				has_fatal_error := True
 			end
 		ensure
 			has_eiffel_error_set: has_eiffel_error = b
 			has_error: b implies has_error
+			has_fatal_error: b implies has_fatal_error
 		end
 
 	set_has_internal_error (b: BOOLEAN)
@@ -119,10 +126,12 @@ feature -- Status setting
 			has_internal_error := b
 			if b then
 				has_error := True
+				has_fatal_error := True
 			end
 		ensure
 			has_internal_error_set: has_internal_error = b
 			has_error: b implies has_error
+			has_fatal_error: b implies has_fatal_error
 		end
 
 feature -- Compilation report
@@ -721,21 +730,6 @@ feature -- System errors
 			mutex.unlock
 		end
 
-	report_vsrc1a_error (a_class: ET_CLASS)
-			-- Report VSRC-1 error: root class `a_class' should not be generic.
-			--
-			-- ETL2: p.36
-		require
-			a_class_not_void: a_class /= Void
-		local
-			an_error: ET_SYSTEM_ERROR
-		do
-			if reportable_vsrc1_error then
-				create an_error.make_vsrc1a (a_class)
-				report_system_error (an_error)
-			end
-		end
-
 	report_vsrp1a_error (a_class: ET_CLASS; a_feature_name: ET_FEATURE_NAME)
 			-- Report VSRP-1 error: root creation procedure `a_feature_name'
 			-- is not a feature of root class `a_class'.
@@ -822,6 +816,83 @@ feature -- System errors
 			end
 		end
 
+	report_vsrt0a_error (a_root_type_name: ET_IDENTIFIER)
+			-- Report VSRT-0 error: syntax error in `a_root_type_name'.
+		require
+			a_root_type_name_not_void: a_root_type_name /= Void
+		local
+			l_error: ET_SYSTEM_ERROR
+		do
+			if reportable_vsrt0_error then
+				create l_error.make_vsrt0a (a_root_type_name)
+				report_system_error (l_error)
+			end
+		end
+
+	report_vsrt1a_error (a_root_type: ET_TYPE)
+			-- Report VSRT-1 error: root type `a_root_type' is
+			-- not a standalone type, it is an anchored type.
+			--
+			-- ECMA-367-3-108, 8.5.10 page 78.
+		require
+			a_root_type_not_void: a_root_type /= Void
+		local
+			l_error: ET_SYSTEM_ERROR
+		do
+			if reportable_vsrt1_error then
+				create l_error.make_vsrt1a (a_root_type)
+				report_system_error (l_error)
+			end
+		end
+
+	report_vsrt1b_error (a_root_type: ET_TYPE)
+			-- Report VSRT-1 error: root type `a_root_type' is
+			-- not a standalone type, it has an anchored type.
+			--
+			-- ECMA-367-3-108, 8.5.10 page 78.
+		require
+			a_root_type_not_void: a_root_type /= Void
+		local
+			l_error: ET_SYSTEM_ERROR
+		do
+			if reportable_vsrt1_error then
+				create l_error.make_vsrt1b (a_root_type)
+				report_system_error (l_error)
+			end
+		end
+
+	report_vsrt2a_error (a_type: ET_BASE_TYPE)
+			-- Report VSRT-2 error: root type involves unknown class
+			-- (the base class of `a_type').
+			--
+			-- ECMA-367-3-108, 8.5.10 page 78.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_error: ET_SYSTEM_ERROR
+		do
+			if reportable_vsrt2_error then
+				create l_error.make_vsrt2a (a_type)
+				report_system_error (l_error)
+			end
+		end
+
+	report_vsrt4a_error (a_class: ET_CLASS)
+			-- Report VSRT-4 error: the base class of the root type
+			-- is deferred.
+			--
+			-- ECMA-367-3-108, 8.5.10 page 78.
+		require
+			a_class_not_void: a_class /= Void
+		local
+			l_error: ET_SYSTEM_ERROR
+		do
+			if reportable_vsrt4_error then
+				create l_error.make_vsrt4a (a_class)
+				report_system_error (l_error)
+			end
+		end
+
 	report_gvknl1a_error (a_class: ET_CLASS)
 			-- Report GVKNL-1 error: unknown kernel class `a_class'.
 			--
@@ -838,43 +909,7 @@ feature -- System errors
 			end
 		end
 
-	report_gvsrc3a_error
-			-- Report GVSRC-3 error: missing root class.
-			--
-			-- Not in ETL
-			-- GVSRC-3: See ETL2 VSRC p.36
-		local
-			an_error: ET_SYSTEM_ERROR
-		do
-			if reportable_gvsrc3_error then
-				create an_error.make_gvsrc3a
-				report_system_error (an_error)
-			end
-		end
-
-	report_gvsrc4a_error (a_class: ET_CLASS)
-			-- Report GVSRC-4 error: unknown root class `a_class'.
-			--
-			-- Not in ETL
-			-- GVSRC-4: See ETL2 VSRC p.36
-		require
-			a_class_not_void: a_class /= Void
-		local
-			an_error: ET_SYSTEM_ERROR
-		do
-			if reportable_gvsrc4_error then
-				create an_error.make_gvsrc4a (a_class)
-				report_system_error (an_error)
-			end
-		end
-
 feature -- System error status
-
-	reportable_vsrc1_error: BOOLEAN
-			-- Can a VSRC-1 error be reported?
-		do
-			Result := True
-		end
 
 	reportable_vsrp1_error: BOOLEAN
 			-- Can a VSRP-1 error be reported?
@@ -894,20 +929,32 @@ feature -- System error status
 			Result := True
 		end
 
+	reportable_vsrt0_error: BOOLEAN
+			-- Can a VSRT-0 error be reported?
+		do
+			Result := True
+		end
+
+	reportable_vsrt1_error: BOOLEAN
+			-- Can a VSRT-1 error be reported?
+		do
+			Result := True
+		end
+
+	reportable_vsrt2_error: BOOLEAN
+			-- Can a VSRT-2 error be reported?
+		do
+			Result := True
+		end
+
+	reportable_vsrt4_error: BOOLEAN
+			-- Can a VSRT-4 error be reported?
+		do
+			Result := True
+		end
+
 	reportable_gvknl1_error: BOOLEAN
 			-- Can a GVKNL-1 error be reported?
-		do
-			Result := True
-		end
-
-	reportable_gvsrc3_error: BOOLEAN
-			-- Can a GVSRC-3 error be reported?
-		do
-			Result := True
-		end
-
-	reportable_gvsrc4_error: BOOLEAN
-			-- Can a GVSRC-4 error be reported?
 		do
 			Result := True
 		end
@@ -7759,10 +7806,14 @@ feature -- Validity errors
 			a_attribute_not_void: a_attribute /= Void
 		local
 			l_error: ET_VALIDITY_ERROR
+			l_has_fatal_error: BOOLEAN
 		do
 			if reportable_vwab_error (a_class) then
 				create l_error.make_vwab0a (a_class, a_class_impl, a_attribute)
+					-- This is not considered as a fatal error.
+				l_has_fatal_error := has_fatal_error
 				report_validity_error (l_error)
+				has_fatal_error := l_has_fatal_error
 			end
 		end
 
@@ -7825,11 +7876,15 @@ feature -- Validity errors
 			a_type1_not_void: a_type1 /= Void
 			a_type2_not_void: a_type2 /= Void
 		local
-			an_error: ET_VALIDITY_ERROR
+			l_error: ET_VALIDITY_ERROR
+			l_has_fatal_error: BOOLEAN
 		do
 			if reportable_vweq_error (a_class) then
-				create an_error.make_vweq0a (a_class, a_class_impl, an_expression, a_type1, a_type2)
-				report_validity_error (an_error)
+				create l_error.make_vweq0a (a_class, a_class_impl, an_expression, a_type1, a_type2)
+					-- This is not considered as a fatal error.
+				l_has_fatal_error := has_fatal_error
+				report_validity_error (l_error)
+				has_fatal_error := l_has_fatal_error
 			end
 		end
 
@@ -7848,11 +7903,15 @@ feature -- Validity errors
 			a_type1_not_void: a_type1 /= Void
 			a_type2_not_void: a_type2 /= Void
 		local
-			an_error: ET_VALIDITY_ERROR
+			l_error: ET_VALIDITY_ERROR
+			l_has_fatal_error: BOOLEAN
 		do
 			if reportable_vweq_error (a_class) then
-				create an_error.make_vweq0b (a_class, a_class_impl, an_expression, a_type1, a_type2)
-				report_validity_error (an_error)
+				create l_error.make_vweq0b (a_class, a_class_impl, an_expression, a_type1, a_type2)
+					-- This is not considered as a fatal error.
+				l_has_fatal_error := has_fatal_error
+				report_validity_error (l_error)
+				has_fatal_error := l_has_fatal_error
 			end
 		end
 
@@ -10742,6 +10801,7 @@ invariant
 
 	has_eiffel_error: has_eiffel_error implies has_error
 	has_internal_error: has_internal_error implies has_error
+	has_fatal_error: has_fatal_error implies has_error
 	not_has_eiffel_error: not has_error implies not has_eiffel_error
 	not_has_internal_error: not has_error implies not has_internal_error
 	mutex_not_void: mutex /= Void

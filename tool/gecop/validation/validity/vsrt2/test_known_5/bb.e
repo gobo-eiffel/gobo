@@ -1,0 +1,3 @@
+class BB [G]
+
+end

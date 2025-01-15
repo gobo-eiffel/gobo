@@ -193,7 +193,7 @@ feature {NONE} -- Eiffel config file parsing
 						-- Use the first class in the file.
 					l_class := l_classes.first
 					override_root_cluster_pathname := l_root_cluster_pathname
-					override_root_type := l_class.name
+					create override_root_type.make (l_class.upper_name)
 					if not attached l_class.creators as l_creators or else l_creators.is_empty then
 						override_root_creation := tokens.default_create_feature_name
 					elseif l_creators.first.is_empty then
@@ -243,8 +243,8 @@ feature {NONE} -- Eiffel config file parsing
 							l_ecf_system.clusters.put_last (l_root_cluster)
 						end
 						if attached override_root_type as l_override_root_type then
-							l_ecf_system.set_root_type (l_override_root_type)
-							l_ecf_system.set_system_name (l_override_root_type.lower_name)
+							l_ecf_system.set_root_type_name (l_override_root_type)
+							l_ecf_system.set_root_type (Void)
 						end
 						if attached override_root_creation as l_override_root_creation then
 							l_ecf_system.set_root_creation (l_override_root_creation)
@@ -294,7 +294,6 @@ feature {NONE} -- Processing
 				l_system_processor.set_providers_enabled (True)
 				l_system_processor.set_cluster_dependence_enabled (False)
 				l_system_processor.compile (a_system)
-				l_system_processor.check_root_type (a_system)
 			end
 			l_system_processor.record_end_time (dt1, "Total Time")
 		end
@@ -322,7 +321,7 @@ feature -- Arguments
 	override_variables: detachable ET_ECF_VARIABLES
 			-- Variables overriding those specified for the selected ECF target
 
-	override_root_type: detachable ET_CLASS_NAME
+	override_root_type: detachable ET_IDENTIFIER
 			-- Root type to be used instead of the one specified in the selected ECF target
 
 	override_root_creation: detachable ET_FEATURE_NAME

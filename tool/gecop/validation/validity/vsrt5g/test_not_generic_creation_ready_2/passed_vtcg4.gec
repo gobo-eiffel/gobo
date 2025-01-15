@@ -1,0 +1,2 @@
+[VTCG-4] root type: base class STRING_8 of the 1-th actual generic parameter of AA does not make feature `default_create' available as creation procedure to class AA.
+----

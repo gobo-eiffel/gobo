@@ -5,7 +5,7 @@
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_EIFFEL_SCANNER_SKELETON
@@ -972,6 +972,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.builtin_static_marker)
 				-- Class names.
 			Result.force_new (-1, tokens.capitalized_any_name)
+			Result.force_new (-1, tokens.capitalized_arguments_name)
 			Result.force_new (-1, tokens.capitalized_arguments_32_name)
 			Result.force_new (-1, tokens.capitalized_array_name)
 			Result.force_new (-1, tokens.capitalized_boolean_name)
@@ -1029,6 +1030,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.after_name)
 			Result.force_new (-1, tokens.aliased_resized_area_name)
 			Result.force_new (-1, tokens.area_name)
+			Result.force_new (-1, tokens.argument_array_name)
 			Result.force_new (-1, tokens.argument_count_name)
 			Result.force_new (-1, tokens.as_integer_8_name)
 			Result.force_new (-1, tokens.as_integer_16_name)

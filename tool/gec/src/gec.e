@@ -4,7 +4,7 @@
 
 		"Gobo Eiffel Compiler"
 
-	copyright: "Copyright (c) 2005-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class GEC
@@ -121,7 +121,7 @@ feature -- Execution
 								std.output.put_line ("Press Enter...")
 								std.input.read_character
 							end
-							if exit_code = 0 and error_handler.has_error then
+							if exit_code = 0 and error_handler.has_fatal_error then
 								exit_code := 2
 							end
 						else
@@ -187,7 +187,7 @@ feature {NONE} -- Eiffel config file parsing
 						-- Use the first class in the file.
 					l_class := l_classes.first
 					override_root_cluster_pathname := l_root_cluster_pathname
-					override_root_type := l_class.name
+					create override_root_type.make (l_class.upper_name)
 					if not attached l_class.creators as l_creators or else l_creators.is_empty then
 						override_root_creation := tokens.default_create_feature_name
 					elseif l_creators.first.is_empty then
@@ -235,8 +235,8 @@ feature {NONE} -- Eiffel config file parsing
 							l_ecf_system.clusters.put_last (l_root_cluster)
 						end
 						if attached override_root_type as l_override_root_type then
-							l_ecf_system.set_root_type (l_override_root_type)
-							l_ecf_system.set_system_name (l_override_root_type.lower_name)
+							l_ecf_system.set_root_type_name (l_override_root_type)
+							l_ecf_system.set_root_type (Void)
 						end
 						if attached override_root_creation as l_override_root_creation then
 							l_ecf_system.set_root_creation (l_override_root_creation)
@@ -300,12 +300,12 @@ feature {NONE} -- Processing
 			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} l_builder.make (l_system, l_system_processor)
 			l_system.set_dynamic_type_set_builder (l_builder)
 			l_system.compile (l_system_processor)
-			if not attached a_system.root_type as l_root_type then
+			if l_system.has_fatal_error or error_handler.has_fatal_error then
+				exit_code := 1
+			elseif not attached a_system.root_type as l_root_type then
 				-- Do nothing.
 			elseif l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) then
 				-- Do nothing.
-			elseif l_system.has_fatal_error then
-				exit_code := 1
 			else
 				compile_degree_minus_3 (l_system, l_system_processor)
 				if exit_code = 0 and not no_c_compile then
@@ -456,7 +456,7 @@ feature -- Arguments
 	override_variables: detachable ET_ECF_VARIABLES
 			-- Variables overriding those specified for the selected ECF target
 
-	override_root_type: detachable ET_CLASS_NAME
+	override_root_type: detachable ET_IDENTIFIER
 			-- Root type to be used instead of the one specified in the selected ECF target
 
 	override_root_creation: detachable ET_FEATURE_NAME

@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     562 tests
-    # FAILED:     210 tests
+    # Passed:     581 tests
+    # FAILED:     218 tests
     # Aborted:    0 test
-    # Total:      772 tests
+    # Total:      799 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo1/test\_bar\_2](definition/difo1/test\_bar\_2)\] test\_failed</br>
@@ -172,6 +172,7 @@ FAIL:  \[[validity/vffd11g/test\_once\_per\_process\_expanded\_1](validity/vffd1
 FAIL:  \[[validity/vffd11g/test\_once\_per\_process\_expanded\_2](validity/vffd11g/test\_once\_per\_process\_expanded\_2)\] test\_failed</br>
 FAIL:  \[[validity/vffd11g/test\_once\_per\_process\_expanded\_4](validity/vffd11g/test\_once\_per\_process\_expanded\_4)\] test\_failed</br>
 FAIL:  \[[validity/vggc3/test2](validity/vggc3/test2)\] test\_failed</br>
+FAIL:  \[[validity/vggd2/test\_root\_type\_2](validity/vggd2/test\_root\_type\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_agent\_1](validity/vgmc/test\_agent\_1)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_agent\_2](validity/vgmc/test\_agent\_2)\] test\_failed</br>
 FAIL:  \[[validity/vgmc/test\_assigner\_3](validity/vgmc/test\_assigner\_3)\] test\_failed</br>
@@ -206,6 +207,13 @@ FAIL:  \[[validity/vsrp1/test\_export\_1](validity/vsrp1/test\_export\_1)\] test
 FAIL:  \[[validity/vsrp1/test\_export\_2](validity/vsrp1/test\_export\_2)\] test\_failed</br>
 FAIL:  \[[validity/vsrp3/test\_precondition\_free\_3](validity/vsrp3/test\_precondition\_free\_3)\] test\_failed</br>
 FAIL:  \[[validity/vsrp3/test\_precondition\_free\_6](validity/vsrp3/test\_precondition\_free\_6)\] test\_failed</br>
+FAIL:  \[[validity/vsrt1/test\_standalone\_3](validity/vsrt1/test\_standalone\_3)\] test\_failed</br>
+FAIL:  \[[validity/vsrt1/test\_standalone\_5](validity/vsrt1/test\_standalone\_5)\] test\_failed</br>
+FAIL:  \[[validity/vsrt2/test\_known\_3](validity/vsrt2/test\_known\_3)\] test\_failed</br>
+FAIL:  \[[validity/vsrt2/test\_known\_5](validity/vsrt2/test\_known\_5)\] test\_failed</br>
+FAIL:  \[[validity/vsrt5g/test\_generic\_creation\_ready\_1](validity/vsrt5g/test\_generic\_creation\_ready\_1)\] test\_failed</br>
+FAIL:  \[[validity/vsrt5g/test\_not\_generic\_creation\_ready\_1](validity/vsrt5g/test\_not\_generic\_creation\_ready\_1)\] test\_failed</br>
+FAIL:  \[[validity/vsrt5g/test\_not\_generic\_creation\_ready\_2](validity/vsrt5g/test\_not\_generic\_creation\_ready\_2)\] test\_failed</br>
 FAIL:  \[[validity/vuar3g/test\_generic\_parameter\_1](validity/vuar3g/test\_generic\_parameter\_1)\] test\_failed</br>
 FAIL:  \[[validity/vuar3g/test\_generic\_parameter\_2](validity/vuar3g/test\_generic\_parameter\_2)\] test\_failed</br>
 FAIL:  \[[validity/vuar4g/test\_generic\_parameter\_1](validity/vuar4g/test\_generic\_parameter\_1)\] test\_failed</br>
