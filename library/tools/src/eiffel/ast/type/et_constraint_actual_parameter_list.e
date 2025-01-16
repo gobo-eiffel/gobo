@@ -8,7 +8,7 @@
 		%names of classes or of formal generic parameters."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
@@ -53,6 +53,9 @@ feature -- Access
 	right_bracket: ET_SYMBOL
 			-- Right bracket
 
+	first_symbol: detachable ET_SYMBOL
+			-- Colon or semicolon before the first actual parameter, if any
+
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
@@ -83,6 +86,14 @@ feature -- Setting
 			right_bracket := r
 		ensure
 			right_bracket_set: right_bracket = r
+		end
+
+	set_first_symbol (a_first_symbol: like first_symbol)
+			-- Set `first_symbol' to `a_first_symbol'.
+		do
+			first_symbol := a_first_symbol
+		ensure
+			first_symbol_set: first_symbol = a_first_symbol
 		end
 
 feature -- Conversion

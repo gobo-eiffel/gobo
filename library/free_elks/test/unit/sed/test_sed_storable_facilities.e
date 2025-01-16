@@ -5,7 +5,7 @@
 		"Test features of class SED_STORABLE_FACILITIES"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2024-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class TEST_SED_STORABLE_FACILITIES
@@ -27,7 +27,6 @@ feature -- Test
 		local
 			l_sed: SED_STORABLE_FACILITIES
 			l_filename: STRING
-			l_expected_filename: STRING
 			l_file: RAW_FILE
 			l_object: STRING
 			l_retrieved: detachable ANY

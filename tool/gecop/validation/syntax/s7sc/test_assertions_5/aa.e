@@ -13,11 +13,10 @@ feature
 
 	f
 		require
-			;
-			tag1: g;
+			tag1: g;;;
 			tag2: g
 		do
-			print ("Failed")
+			print ("Passed")
 		end
 
 	g: BOOLEAN

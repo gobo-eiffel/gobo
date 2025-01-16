@@ -187,6 +187,9 @@ feature -- Status report
 
 feature -- Access
 
+	first_semicolon: detachable ET_SEMICOLON_SYMBOL
+			-- Semicolon before the first assertion, if any
+
 	assertion (i: INTEGER): ET_ASSERTION
 			-- Assertion at index `i' in list
 		require
@@ -196,6 +199,16 @@ feature -- Access
 			Result := item (i).assertion
 		ensure
 			assertion_not_void: Result /= Void
+		end
+
+feature -- Setting
+
+	set_first_semicolon (a_first_semicolon: like first_semicolon)
+			-- Set `first_semicolon' to `a_first_semicolon'.
+		do
+			first_semicolon := a_first_semicolon
+		ensure
+			first_semicolon_set: first_semicolon = a_first_semicolon
 		end
 
 feature -- Element change

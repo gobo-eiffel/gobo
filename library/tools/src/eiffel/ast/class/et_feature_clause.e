@@ -5,7 +5,7 @@
 		"Eiffel feature clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_FEATURE_CLAUSE
@@ -47,6 +47,9 @@ feature -- Access
 			end
 		end
 
+	first_semicolon: detachable ET_SEMICOLON_SYMBOL
+			-- Semicolon before the first feature declaration, if any
+
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
@@ -55,6 +58,8 @@ feature -- Access
 			if Result.is_null then
 				if attached clients_clause as l_clients_clause then
 					Result := l_clients_clause.position
+				elseif attached first_semicolon as l_first_semicolon then
+					Result := l_first_semicolon.position
 				end
 			end
 		end
@@ -68,7 +73,9 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if attached clients_clause as l_clients_clause then
+			if attached first_semicolon as l_first_semicolon then
+				Result := l_first_semicolon.last_leaf
+			elseif attached clients_clause as l_clients_clause then
 				Result := l_clients_clause.last_leaf
 			else
 				Result := feature_keyword
@@ -110,6 +117,14 @@ feature -- Setting
 			feature_keyword := a_feature
 		ensure
 			feature_keyword_set: feature_keyword = a_feature
+		end
+
+	set_first_semicolon (a_first_semicolon: like first_semicolon)
+			-- Set `first_semicolon' to `a_first_semicolon'.
+		do
+			first_semicolon := a_first_semicolon
+		ensure
+			first_semicolon_set: first_semicolon = a_first_semicolon
 		end
 
 feature -- Processing

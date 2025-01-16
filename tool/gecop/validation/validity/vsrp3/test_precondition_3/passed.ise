@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+
+Error code: VSRP(3)
+
+Error: root procedure is not precondition-free.
+What to do: make sure that the chosen creation procedure of the root type has
+   no precondition or has precondition with single assertion clause "True".
+
+Root type: AA
+Creation feature: make
+
+-------------------------------------------------------------------------------

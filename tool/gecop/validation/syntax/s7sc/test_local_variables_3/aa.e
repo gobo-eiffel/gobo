@@ -9,9 +9,11 @@ feature
 	make
 		local
 			a: INTEGER;
-			b: INTEGER;
+			b: INTEGER
+			c: INTEGER
 		do
 			a := b
+			a := c
 			print ("Passed")
 		end
 

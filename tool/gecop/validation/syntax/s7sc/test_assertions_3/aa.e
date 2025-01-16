@@ -14,7 +14,8 @@ feature
 	f
 		require
 			tag1: g;
-			tag2: g;
+			tag2: g
+			tag3: g
 		do
 			print ("Passed")
 		end

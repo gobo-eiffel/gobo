@@ -16,7 +16,7 @@ feature
 		b: INTEGER
 	)
 		do
-			print ("Failed")
+			print ("Passed")
 		end
 
 end

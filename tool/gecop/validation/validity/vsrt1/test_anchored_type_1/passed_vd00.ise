@@ -1,0 +1,10 @@
+-------------------------------------------------------------------------------
+
+Error code: VD00
+
+General configuration parsing error.
+What to do: fix the configuration file.
+
+Parse error (XML syntax)  in compile_ise.ecf (line 14, column 44): Invalid root class.
+
+-------------------------------------------------------------------------------

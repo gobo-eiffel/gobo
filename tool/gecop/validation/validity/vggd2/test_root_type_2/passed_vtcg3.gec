@@ -1,0 +1,2 @@
+[VTCG-3] root type: actual generic parameter '[attached] CC' in type 'AA [[attached] CC]' does not conform to constraint '[attached] BB'.
+----

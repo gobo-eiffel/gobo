@@ -12,12 +12,11 @@ feature
 		end
 
 	f (
-		;
-		a: INTEGER;
+		a: INTEGER;;;
 		b: INTEGER
 	)
 		do
-			print ("Failed")
+			print ("Passed")
 		end
 
 end

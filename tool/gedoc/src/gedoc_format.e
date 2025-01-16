@@ -4,7 +4,7 @@
 
 		"Gobo Eiffel Documentation Format"
 
-	copyright: "Copyright (c) 2017-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class GEDOC_FORMAT
@@ -121,7 +121,7 @@ feature -- Execution
 				if not has_error then
 					process_system (l_last_system)
 				end
-				if system_processor.error_handler.has_error then
+				if system_processor.error_handler.has_fatal_error then
 					has_error := True
 				end
 			end
@@ -419,7 +419,7 @@ feature {NONE} -- Eiffel config file parsing
 				create l_eiffel_preparser.make (system_processor)
 			end
 			l_eiffel_preparser.preparse_file (a_file.name, l_cluster)
-			if l_eiffel_preparser.error_handler.has_error then
+			if l_eiffel_preparser.error_handler.has_fatal_error then
 				has_error := True
 				l_system := Void
 			elseif not attached class_filters as l_class_filters or else l_class_filters.is_empty then

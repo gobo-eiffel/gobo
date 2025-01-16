@@ -46,7 +46,7 @@ feature -- Access
 			-- (This allows several semicolons by nesting
 			-- objects of current type.)
 
-	semicolon: ET_SYMBOL
+	semicolon: ET_SEMICOLON_SYMBOL
 			-- Semicolon separator
 
 	position: ET_POSITION

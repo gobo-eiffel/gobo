@@ -92,6 +92,9 @@ feature -- Access
 	clients_clause: detachable ET_CLIENTS
 			-- Clients clause
 
+	first_semicolon: detachable ET_SEMICOLON_SYMBOL
+			-- Semicolon before the first parent, if any
+
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
@@ -102,6 +105,8 @@ feature -- Access
 					Result := l_clients_clause.position
 				elseif not is_empty then
 					Result := first.position
+				elseif attached first_semicolon as l_first_semicolon then
+					Result := l_first_semicolon.position
 				end
 			end
 		end
@@ -115,14 +120,14 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if is_empty then
-				if attached clients_clause as l_clients_clause then
-					Result := l_clients_clause.last_leaf
-				else
-					Result := inherit_keyword
-				end
-			else
+			if not is_empty then
 				Result := last.last_leaf
+			elseif attached first_semicolon as l_first_semicolon then
+				Result := l_first_semicolon.last_leaf
+			elseif attached clients_clause as l_clients_clause then
+				Result := l_clients_clause.last_leaf
+			else
+				Result := inherit_keyword
 			end
 		end
 
@@ -144,6 +149,14 @@ feature -- Setting
 			clients_clause := a_clients_clause
 		ensure
 			clients_clause_set: clients_clause = a_clients_clause
+		end
+
+	set_first_semicolon (a_first_semicolon: like first_semicolon)
+			-- Set `first_semicolon' to `a_first_semicolon'.
+		do
+			first_semicolon := a_first_semicolon
+		ensure
+			first_semicolon_set: first_semicolon = a_first_semicolon
 		end
 
 feature -- Processing

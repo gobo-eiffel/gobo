@@ -1,0 +1,15 @@
+-------------------------------------------------------------------------------
+
+Error code: VTCT
+
+Error: type is based on unknown class.
+What to do: use an identifier that is the name of a class in the universe.
+
+Class: AA
+Unknown class name: BB
+Line: 11
+      local
+->      b: detachable BB
+        a: detachable ANY
+
+-------------------------------------------------------------------------------

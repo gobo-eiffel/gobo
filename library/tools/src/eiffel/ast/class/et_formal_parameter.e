@@ -5,7 +5,7 @@
 		"Eiffel formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_FORMAL_PARAMETER
@@ -189,14 +189,6 @@ feature -- Setting
 			index := an_index
 		ensure
 			index_set: index = an_index
-		end
-
-	set_type_mark (a_keyword: like type_mark)
-			-- Set `type_mark' to `a_keyword'.
-		do
-			type_mark := a_keyword
-		ensure
-			type_mark_set: type_mark = a_keyword
 		end
 
 feature -- Flags

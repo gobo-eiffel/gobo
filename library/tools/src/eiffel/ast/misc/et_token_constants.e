@@ -5,7 +5,7 @@
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_TOKEN_CONSTANTS
@@ -23,6 +23,15 @@ feature -- Class names
 		ensure
 			instance_free: class
 			any_class_name_not_void: Result /= Void
+		end
+
+	arguments_class_name: ET_CLASS_NAME
+			-- "ARGUMENTS" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_arguments_name)
+		ensure
+			instance_free: class
+			arguments_class_name_not_void: Result /= Void
 		end
 
 	arguments_32_class_name: ET_CLASS_NAME
@@ -502,6 +511,15 @@ feature -- Class names
 			unknown_class_name_not_void: Result /= Void
 		end
 
+	root_class_name: ET_CLASS_NAME
+			-- "*ROOT*" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_root_name)
+		ensure
+			instance_free: class
+			root_class_name_not_void: Result /= Void
+		end
+
 feature -- Class names (used for compatibility with 5.6.0610, to be removed later)
 
 	boolean_ref_class_name: ET_CLASS_NAME
@@ -711,6 +729,15 @@ feature -- Feature names
 		ensure
 			instance_free: class
 			area_feature_name_not_void: Result /= Void
+		end
+
+	argument_array_feature_name: ET_FEATURE_NAME
+			-- 'arargument_array' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (argument_array_name)
+		ensure
+			instance_free: class
+			argument_array_feature_name_not_void: Result /= Void
 		end
 
 	argument_count_feature_name: ET_FEATURE_NAME
@@ -4639,6 +4666,15 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	implies_keyword: ET_KEYWORD_OPERATOR
+			-- 'implies' keyword
+		once
+			create Result.make_implies
+		ensure
+			instance_free: class
+			keyword_not_void: Result /= Void
+		end
+
 	indexing_keyword: ET_KEYWORD
 			-- 'indexing' keyword
 		once
@@ -4706,6 +4742,15 @@ feature -- Keywords
 			-- 'loop' keyword
 		once
 			create Result.make_loop
+		ensure
+			instance_free: class
+			keyword_not_void: Result /= Void
+		end
+
+	not_keyword: ET_KEYWORD_OPERATOR
+			-- 'not' keyword
+		once
+			create Result.make_not
 		ensure
 			instance_free: class
 			keyword_not_void: Result /= Void
@@ -4945,9 +4990,19 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	xor_keyword: ET_KEYWORD_OPERATOR
+			-- 'xor' keyword
+		once
+			create Result.make_xor
+		ensure
+			instance_free: class
+			keyword_not_void: Result /= Void
+		end
+
 feature -- Keyword and symbol names
 
 	capitalized_any_name: STRING = "ANY"
+	capitalized_arguments_name: STRING = "ARGUMENTS"
 	capitalized_arguments_32_name: STRING = "ARGUMENTS_32"
 	capitalized_array_name: STRING = "ARRAY"
 	capitalized_boolean_name: STRING = "BOOLEAN"
@@ -5001,6 +5056,7 @@ feature -- Keyword and symbol names
 	capitalized_typed_pointer_name: STRING = "TYPED_POINTER"
 	capitalized_wide_character_name: STRING = "WIDE_CHARACTER"
 	capitalized_unknown_name: STRING = "*UNKNOWN*"
+	capitalized_root_name: STRING = "*ROOT*"
 			-- Eiffel class names
 
 	after_name: STRING = "after"
@@ -5011,6 +5067,9 @@ feature -- Keyword and symbol names
 
 	area_name: STRING = "area"
 			-- Name of Eiffel feature 'area'
+
+	argument_array_name: STRING = "argument_array"
+			-- Name of Eiffel feature 'argument_array'
 
 	argument_count_name: STRING = "argument_count"
 			-- Name of Eiffel feature 'argument_count'

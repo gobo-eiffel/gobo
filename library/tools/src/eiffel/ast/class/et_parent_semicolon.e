@@ -5,7 +5,7 @@
 		"Eiffel class parents followed by a semicolon"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_PARENT_SEMICOLON
@@ -38,7 +38,7 @@ feature -- Access
 	parent: ET_PARENT
 			-- Class parent in semicolon-separated list
 
-	semicolon: ET_SYMBOL
+	semicolon: ET_SEMICOLON_SYMBOL
 			-- Semicolon separator
 
 	position: ET_POSITION

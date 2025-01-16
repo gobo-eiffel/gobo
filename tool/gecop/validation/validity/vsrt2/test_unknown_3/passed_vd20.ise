@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+
+Error code: VD20
+
+Configuration error: Unknown root class.
+What to do: Make sure that the name given in the Ace for the root
+  class corresponds to a class of the universe. (If more than
+  one, specify the cluster, see example in ETL D.2, page 514.)
+
+Class name: AA [BB]
+
+-------------------------------------------------------------------------------

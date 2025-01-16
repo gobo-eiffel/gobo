@@ -1,0 +1,2 @@
+[VTCG-3] root type: actual generic parameter '[attached] INTEGER' in type 'AA [[attached] INTEGER]' does not conform to constraint '[attached] STRING'.
+----

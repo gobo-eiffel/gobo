@@ -8,6 +8,6 @@ These [tests](.) are exercising the semantics rule below.
 
 In writing the letters of an *Identifier* serving as name for a class, feature or entity, or a reserved word, using the upper-case or lower-case versions has no effect on the semantics.
 
-### ECMA 367-3 (working version 3-44), 8.4.1 page 67
+### ECMA 367-3 (working version 3-108), 8.3.2 page 70
 
-Same as above.
+In writing the letters of an *Identifier* serving as name for a class, feature or entity, or a reserved word, using the lower name or upper name has no effect on the syntactic correctness, the validity or the semantics of the software text.

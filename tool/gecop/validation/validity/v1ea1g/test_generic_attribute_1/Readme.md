@@ -8,4 +8,4 @@ In this test, the expanded class `BB [G]` has one attribute of type `detachable 
 
 ### Notes
 
-* ISE Eiffel (as of 23.09.10.7341 and after) fails to report this validity error.
+* ISE Eiffel (as of 23.09.10.7341 and after) fails to report this validity rule violation.

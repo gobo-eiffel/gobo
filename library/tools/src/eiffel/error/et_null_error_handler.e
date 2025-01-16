@@ -5,7 +5,7 @@
 		"Eiffel null error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_NULL_ERROR_HANDLER
@@ -22,10 +22,6 @@ inherit
 			reportable_gcpro_error,
 			reportable_gcscm_error,
 			reportable_gvknl1_error,
-			reportable_gvsrc3_error,
-			reportable_gvsrc4_error,
-			reportable_gvsrc5_error,
-			reportable_gvsrc6_error,
 			reportable_v1ea1g_error,
 			reportable_v1se1g_error,
 			reportable_v1se2g_error,
@@ -138,8 +134,14 @@ inherit
 			reportable_vrle2_error,
 			reportable_vrlv1_error,
 			reportable_vrlv2_error,
-			reportable_vscn_error,
-			reportable_vsrc1_error,
+			reportable_vsci_error,
+			reportable_vsrp1_error,
+			reportable_vsrp2_error,
+			reportable_vsrp3_error,
+			reportable_vsrt0_error,
+			reportable_vsrt1_error,
+			reportable_vsrt2_error,
+			reportable_vsrt4_error,
 			reportable_vtat1_error,
 			reportable_vtat2_error,
 			reportable_vtcg3_error,
@@ -241,8 +243,8 @@ feature -- Cluster error status
 
 feature -- Universe error status
 
-	reportable_vscn_error (a_universe: ET_UNIVERSE): BOOLEAN
-			-- Can a VSCN error be reported when it
+	reportable_vsci_error (a_universe: ET_UNIVERSE): BOOLEAN
+			-- Can a VSCI error be reported when it
 			-- appears in `a_universe'?
 		do
 			Result := False
@@ -266,38 +268,50 @@ feature -- .NET assembly error status
 
 feature -- System error status
 
-	reportable_vsrc1_error: BOOLEAN
-			-- Can a VSRC-1 error be reported?
+	reportable_vsrp1_error: BOOLEAN
+			-- Can a VSRP-1 error be reported?
+		do
+			Result := False
+		end
+
+	reportable_vsrp2_error: BOOLEAN
+			-- Can a VSRP-2 error be reported?
+		do
+			Result := False
+		end
+
+	reportable_vsrp3_error: BOOLEAN
+			-- Can a VSRP-3 error be reported?
+		do
+			Result := False
+		end
+
+	reportable_vsrt0_error: BOOLEAN
+			-- Can a VSRT-0 error be reported?
+		do
+			Result := False
+		end
+
+	reportable_vsrt1_error: BOOLEAN
+			-- Can a VSRT-1 error be reported?
+		do
+			Result := False
+		end
+
+	reportable_vsrt2_error: BOOLEAN
+			-- Can a VSRT-2 error be reported?
+		do
+			Result := False
+		end
+
+	reportable_vsrt4_error: BOOLEAN
+			-- Can a VSRT-4 error be reported?
 		do
 			Result := False
 		end
 
 	reportable_gvknl1_error: BOOLEAN
 			-- Can a GVKNL-1 error be reported?
-		do
-			Result := False
-		end
-
-	reportable_gvsrc3_error: BOOLEAN
-			-- Can a GVSRC-3 error be reported?
-		do
-			Result := False
-		end
-
-	reportable_gvsrc4_error: BOOLEAN
-			-- Can a GVSRC-4 error be reported?
-		do
-			Result := False
-		end
-
-	reportable_gvsrc5_error: BOOLEAN
-			-- Can a GVSRC-5 error be reported?
-		do
-			Result := False
-		end
-
-	reportable_gvsrc6_error: BOOLEAN
-			-- Can a GVSRC-6 error be reported?
 		do
 			Result := False
 		end

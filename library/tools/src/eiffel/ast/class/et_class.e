@@ -5,7 +5,7 @@
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CLASS
@@ -66,7 +66,7 @@ inherit
 
 create
 
-	make, make_unknown
+	make, make_unknown, make_root
 
 feature {NONE} -- Initialization
 
@@ -100,6 +100,15 @@ feature {NONE} -- Initialization
 			-- Create a new "*UNKNOWN*" class.
 		do
 			make (tokens.unknown_class_name)
+		end
+
+	make_root (a_system: ET_SYSTEM)
+			-- Create a new "*ROOT*" class for system `a_system'.
+		require
+			a_system_not_void: a_system /= Void
+		do
+			make (tokens.root_class_name)
+			create {ET_ROOT_GROUP} group.make (a_system)
 		end
 
 feature -- Initialization
@@ -576,6 +585,14 @@ feature -- Status report
 			Result := group.is_unknown
 		ensure
 			definition: Result = group.is_unknown
+		end
+
+	is_root: BOOLEAN
+			-- Is current class an "*ROOT*" class?
+		do
+			Result := name.same_class_name (tokens.root_class_name)
+		ensure
+			definition: Result = name.same_class_name (tokens.root_class_name)
 		end
 
 	is_ignored: BOOLEAN
@@ -1266,7 +1283,7 @@ feature -- Class header
 	is_deferred: BOOLEAN
 			-- Is current class deferred?
 			-- A class is deferred if it has been marked as
-			-- deferred or if is has deferred features. If
+			-- deferred or if it has deferred features. If
 			-- it has deferred features but has not been marked
 			-- as deferred then VCCH-1 is violated; if it is
 			-- marked as deferred but has no deferred features

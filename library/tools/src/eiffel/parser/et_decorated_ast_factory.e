@@ -249,6 +249,7 @@ inherit
 			new_feature_address,
 			new_feature_clause,
 			new_feature_name_comma,
+			new_first_semicolon,
 			new_for_all_quantifier_expression,
 			new_formal_argument_semicolon,
 			new_formal_arguments,
@@ -2100,7 +2101,7 @@ feature -- AST nodes
 		end
 
 	new_assertion_semicolon (an_assertion: detachable ET_ASSERTION;
-		a_semicolon: detachable ET_SYMBOL): detachable ET_ASSERTION_ITEM
+		a_semicolon: detachable ET_SEMICOLON_SYMBOL): detachable ET_ASSERTION_ITEM
 			-- New assertion followed by a semicolon
 		do
 			if a_semicolon = Void then
@@ -3074,6 +3075,13 @@ feature -- AST nodes
 			end
 		end
 
+	new_first_semicolon (a_semicolon: detachable ET_SEMICOLON_SYMBOL): detachable ET_SEMICOLON_SYMBOL
+			-- Semicolon appearing before the first element of a list
+			-- with semicolons as separators
+		do
+			Result := a_semicolon
+		end
+
 	new_for_all_quantifier_expression (a_quantifier_symbol: detachable ET_SYMBOL;
 		a_item_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
 		a_iterable_expression: detachable ET_EXPRESSION; a_bar_symbol: detachable ET_SYMBOL;
@@ -3095,7 +3103,7 @@ feature -- AST nodes
 		end
 
 	new_formal_argument_semicolon (an_argument: detachable ET_FORMAL_ARGUMENT;
-		a_semicolon: detachable ET_SYMBOL): detachable ET_FORMAL_ARGUMENT_ITEM
+		a_semicolon: detachable ET_SEMICOLON_SYMBOL): detachable ET_FORMAL_ARGUMENT_ITEM
 			-- New formal_argument-semicolon
 		do
 			if a_semicolon = Void then
@@ -3188,7 +3196,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_note_semicolon (a_note: detachable ET_NOTE_ITEM; a_semicolon: detachable ET_SYMBOL): detachable ET_NOTE_ITEM
+	new_note_semicolon (a_note: detachable ET_NOTE_ITEM; a_semicolon: detachable ET_SEMICOLON_SYMBOL): detachable ET_NOTE_ITEM
 			-- New note-semicolon
 		do
 			if a_semicolon = Void then
@@ -3343,7 +3351,7 @@ feature -- AST nodes
 		end
 
 	new_labeled_actual_parameter_semicolon (a_parameter: detachable ET_LABELED_ACTUAL_PARAMETER;
-		a_semicolon: detachable ET_SYMBOL): detachable ET_ACTUAL_PARAMETER_ITEM
+		a_semicolon: detachable ET_SEMICOLON_SYMBOL): detachable ET_ACTUAL_PARAMETER_ITEM
 			-- New labeled_actual_parameter-semicolon
 		do
 			if a_semicolon = Void then
@@ -3389,7 +3397,7 @@ feature -- AST nodes
 		end
 
 	new_local_variable_semicolon (a_variable: detachable ET_LOCAL_VARIABLE;
-		a_semicolon: detachable ET_SYMBOL): detachable ET_LOCAL_VARIABLE_ITEM
+		a_semicolon: detachable ET_SEMICOLON_SYMBOL): detachable ET_LOCAL_VARIABLE_ITEM
 			-- New local_variable-semicolon
 		do
 			if a_semicolon = Void then
@@ -3775,7 +3783,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_parent_semicolon (a_parent: detachable ET_PARENT; a_semicolon: detachable ET_SYMBOL): detachable ET_PARENT_ITEM
+	new_parent_semicolon (a_parent: detachable ET_PARENT; a_semicolon: detachable ET_SEMICOLON_SYMBOL): detachable ET_PARENT_ITEM
 			-- New parent-semicolon
 		do
 			if a_semicolon = Void then

@@ -1,6 +1,1 @@
-Syntax error:
-line 15 column 14 in aa.e
-	f (
-		a: INTEGER;;
-		           ^
-		b: INTEGER
+Passed

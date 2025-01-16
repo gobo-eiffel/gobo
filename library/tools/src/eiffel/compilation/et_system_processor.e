@@ -5,7 +5,7 @@
 		"Eiffel system processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_SYSTEM_PROCESSOR
@@ -922,28 +922,35 @@ feature -- Processing
 		require
 			a_system_not_void: a_system /= Void
 		local
+			l_root_type: detachable ET_BASE_TYPE
 			l_root_class: ET_CLASS
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 		do
 			compile_degree_6 (a_system)
+			set_root_type (a_system)
+			l_root_type := a_system.root_type
 			if
-				not attached a_system.root_type as l_root_type or else
-				l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) or else
-				l_root_type.same_named_type (a_system.any_type, tokens.unknown_class, tokens.unknown_class)
+				a_system.root_type_name = Void or (l_root_type /= Void and then
+				(l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) or
+				l_root_type.same_named_type (a_system.any_type, tokens.unknown_class, tokens.unknown_class)))
 			then
 				create l_classes.make (a_system.class_count_recursive)
 				a_system.classes_do_recursive (agent l_classes.force_last)
 				compile_classes (l_classes)
+				check_root_type (a_system)
+			elseif l_root_type = Void then
+				-- Error already reported in "ET_SYSTEM_PROCESSOR.set_root_type".
 			else
 				l_root_class := l_root_type.base_class
 				if not l_root_class.is_preparsed then
 						-- Error: unknown root class.
-					error_handler.report_gvsrc4a_error (l_root_class)
+					error_handler.report_vsrt2a_error (l_root_type)
 				else
 					create l_classes.make (a_system.class_count_recursive)
 					a_system.classes_do_recursive (agent l_classes.force_last)
 					l_root_class.set_marked (True)
 					compile_marked_classes (l_classes)
+					check_root_type (a_system)
 				end
 			end
 		end
@@ -967,6 +974,7 @@ feature -- Processing
 			create l_classes.make (a_system.class_count_recursive)
 			a_system.classes_do_recursive (agent l_classes.force_last)
 			compile_classes (l_classes)
+			check_root_type (a_system)
 		end
 
 	compile_classes (a_classes: DS_ARRAYED_LIST [ET_CLASS])
@@ -1158,7 +1166,7 @@ feature -- Processing
 				l_root_class := l_root_type.base_class
 				if not l_root_class.is_preparsed then
 						-- Error: unknown root class.
-					error_handler.report_gvsrc4a_error (l_root_class)
+					error_handler.report_vsrt2a_error (l_root_type)
 				else
 					create l_classes.make (a_system.class_count_recursive)
 					a_system.classes_do_recursive (agent l_classes.force_last)
@@ -1460,6 +1468,136 @@ feature -- Processing
 			a_system_not_void: a_system /= Void
 		do
 			a_system.master_classes_do_recursive_until (agent {ET_MASTER_CLASS}.process (master_class_checker), stop_request)
+		end
+
+	set_root_type (a_system: ET_SYSTEM)
+			-- Set root type of `a_system' and check that it is a standalone type.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		require
+			a_system_not_void: a_system /= Void
+		local
+			l_type_parser: ET_TYPE_PARSER
+			l_last_type: detachable ET_TYPE
+		do
+			if stop_requested then
+				-- Stop.
+			elseif attached a_system.root_type_name as l_root_type_name then
+				a_system.set_root_type (Void)
+				create l_type_parser.make (Current)
+				l_type_parser.parse_type (l_root_type_name.name, a_system)
+				l_last_type := l_type_parser.last_type
+				if l_last_type /= Void then
+					if attached l_last_type.type_mark as l_type_mark and then l_type_mark.is_implicit_mark then
+						l_last_type.set_type_mark (Void)
+					end
+				end
+				if l_type_parser.has_fatal_error or l_last_type = Void then
+						-- Syntax error.
+					error_handler.report_vsrt0a_error (l_root_type_name)
+				elseif not attached {ET_BASE_TYPE} l_last_type as l_root_type then
+						-- Not standalone.
+					error_handler.report_vsrt1a_error (l_last_type)
+				elseif not l_root_type.is_base_type then
+						-- Not standalone.
+					error_handler.report_vsrt1b_error (l_root_type)
+				elseif l_root_type.named_base_class = a_system.any_type.named_base_class then
+					a_system.set_root_type (a_system.any_type)
+				elseif l_root_type.named_base_class = a_system.none_type.named_base_class then
+					a_system.set_root_type (a_system.none_type)
+				else
+					a_system.set_root_type (l_root_type)
+				end
+			else
+				a_system.set_root_type (Void)
+			end
+		end
+
+	check_root_type (a_system: ET_SYSTEM)
+			-- Check validity of root type and root creation procedure of `a_system'.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		require
+			a_system_not_void: a_system /= Void
+		local
+			l_name: detachable ET_FEATURE_NAME
+			l_procedure: detachable ET_PROCEDURE
+			l_query: detachable ET_QUERY
+			l_class: ET_CLASS
+			l_type_checker: ET_TYPE_CHECKER
+		do
+			if stop_requested then
+				-- Stop.
+			elseif not attached a_system.root_type as l_root_type then
+					-- No root type specified.
+			elseif l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) then
+					-- Error: the root creation feature is not declared as a
+					-- publicly available creation procedure in the root class.
+				l_name := a_system.root_creation
+				if l_name = Void then
+					l_name := tokens.default_create_feature_name
+				end
+				error_handler.report_vsrp1c_error (l_root_type.base_class, l_name)
+			else
+				create l_type_checker.make (Current)
+				l_type_checker.check_root_type_validity (l_root_type, a_system)
+				l_class := l_root_type.base_class
+				l_class.process (interface_checker)
+				if not l_class.is_preparsed then
+						-- Error: unknown root class.
+						-- Error already reported.
+				elseif not l_class.is_parsed or else l_class.has_syntax_error then
+						-- Error already reported.
+				elseif not l_class.interface_checked or else l_class.has_interface_error then
+						-- Error already reported.
+				elseif l_class.is_deferred then
+					error_handler.report_vsrt4a_error (l_class)
+				else
+					l_name := a_system.root_creation
+					if l_name /= Void then
+						l_procedure := l_class.named_procedure (l_name)
+					elseif a_system.default_create_seed /= 0 then
+						l_procedure := l_class.seeded_procedure (a_system.default_create_seed)
+						l_name := tokens.default_create_feature_name
+					else
+						l_name := tokens.default_create_feature_name
+						l_procedure := l_class.named_procedure (l_name)
+					end
+					if l_procedure = Void then
+						if l_name /= Void then
+							l_query := l_class.named_query (l_name)
+						elseif a_system.default_create_seed /= 0 then
+							l_query := l_class.seeded_query (a_system.default_create_seed)
+							l_name := tokens.default_create_feature_name
+						else
+							l_name := tokens.default_create_feature_name
+							l_query := l_class.named_query (l_name)
+						end
+						if l_query = Void then
+								-- Error: the root creation procedure is not
+								-- a feature of the root class.
+							error_handler.report_vsrp1a_error (l_class, l_name)
+						else
+							error_handler.report_vsrp1b_error (l_class, l_query)
+						end
+					elseif not l_class.is_creation_directly_exported_to (l_procedure.name, a_system.any_type.base_class) then
+						error_handler.report_vsrp1c_error (l_class, l_procedure.name)
+					elseif not l_procedure.is_precondition_free then
+						error_handler.report_vsrp3a_error (l_class, l_procedure)
+					elseif
+						attached l_procedure.arguments as l_arguments and then l_arguments.count = 1 and then
+						a_system.array_string_8_type.conforms_to_type (l_arguments.formal_argument (1).type, a_system.any_type, l_root_type, Current)
+					then
+						-- Type "ARRAY [STRING_8]" is used for command-line arguments.
+					elseif l_procedure.arguments_count > 0 then
+						error_handler.report_vsrp2a_error (l_class, l_procedure)
+					end
+				end
+			end
 		end
 
 feature -- Custom processing

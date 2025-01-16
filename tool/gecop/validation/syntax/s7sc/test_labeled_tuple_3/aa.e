@@ -10,10 +10,11 @@ feature
 		local
 			t: TUPLE [
 				a: INTEGER;
-				b: INTEGER;
+				b: INTEGER
+				c: INTEGER
 			]
 		do
-			t := [1, 2]
+			t := [1, 2, 3]
 			print ("Passed")
 		end
 

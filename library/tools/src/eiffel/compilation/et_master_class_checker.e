@@ -6,7 +6,7 @@
 		Look for invalid class name clashes and invalid class overriding.
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_MASTER_CLASS_CHECKER
@@ -76,7 +76,7 @@ feature {NONE} -- Validity checking
 					from i := 1 until i > nb loop
 							-- Error: Two classes with the same name in two override groups.
 						set_fatal_error
-						error_handler.report_vscn0a_error (current_universe, current_class, l_classes.item (i), l_override_class)
+						error_handler.report_vsci0a_error (current_universe, current_class, l_classes.item (i), l_override_class)
 						i := i + 1
 					end
 				end
@@ -94,7 +94,7 @@ feature {NONE} -- Validity checking
 						end
 							-- Error: Two classes with the same name in two non-override groups.
 						set_fatal_error
-						error_handler.report_vscn0a_error (current_universe, current_class, l_classes.item (i), l_non_override_class)
+						error_handler.report_vsci0a_error (current_universe, current_class, l_classes.item (i), l_non_override_class)
 						i := i + 1
 					end
 				end
@@ -106,7 +106,7 @@ feature {NONE} -- Validity checking
 				if l_non_override_class /= Void then
 						-- Error: Two classes with the same name in two non-override groups.
 					set_fatal_error
-					error_handler.report_vscn0a_error (current_universe, current_class, l_imported_class, l_non_override_class)
+					error_handler.report_vsci0a_error (current_universe, current_class, l_imported_class, l_non_override_class)
 				end
 				if attached current_class.other_imported_classes as l_imported_classes then
 					nb := l_imported_classes.count
@@ -116,7 +116,7 @@ feature {NONE} -- Validity checking
 						end
 							-- Error: Two classes with the same name in two non-override groups.
 						set_fatal_error
-						error_handler.report_vscn0a_error (current_universe, current_class, l_imported_classes.item (i), l_imported_class)
+						error_handler.report_vsci0a_error (current_universe, current_class, l_imported_classes.item (i), l_imported_class)
 						i := i + 1
 					end
 				end
@@ -135,11 +135,11 @@ feature {NONE} -- Validity checking
 			if l_actual_class.is_none then
 					-- Error: cannot override built-in class "NONE".
 				set_fatal_error
-				error_handler.report_vscn0b_error (current_universe, current_class, a_override_class)
+				error_handler.report_vsci0b_error (current_universe, current_class, a_override_class)
 			elseif l_actual_class.is_in_dotnet_assembly then
 					-- Error: cannot override .NET assembly classes.
 				set_fatal_error
-				error_handler.report_vscn0c_error (current_universe, current_class, a_overridden_class, a_override_class)
+				error_handler.report_vsci0c_error (current_universe, current_class, a_overridden_class, a_override_class)
 			end
 		end
 
@@ -154,7 +154,7 @@ feature {NONE} -- Validity checking
 				from i := 1 until i > nb loop
 						-- Error: a class cannot be overridden by more than one class.
 					set_fatal_error
-					error_handler.report_vscn0d_error (current_universe, current_class, l_overriding_class, l_other_overriding_classes.item (i))
+					error_handler.report_vsci0d_error (current_universe, current_class, l_overriding_class, l_other_overriding_classes.item (i))
 					i := i + 1
 				end
 			end

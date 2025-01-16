@@ -72,6 +72,9 @@ feature -- Status report
 
 feature -- Access
 
+	root_type_name: detachable ET_IDENTIFIER
+			-- Name of root type
+
 	root_type: detachable ET_BASE_TYPE
 			-- Root type
 
@@ -295,32 +298,20 @@ feature -- Setting
 			dotnet_set: is_dotnet = b
 		end
 
-	set_root_type (a_name: ET_CLASS_NAME)
-			-- Set `root_type'.
-		require
-			a_name_not_void: a_name /= Void
-		local
-			l_class: ET_MASTER_CLASS
+	set_root_type_name (a_name: like root_type_name)
+			-- Set `root_type_name' to `a_root_type_name'.
 		do
-			l_class := master_class (a_name)
-			l_class.set_marked (True)
-			if l_class = any_type.named_base_class then
-				root_type := any_type
-			elseif l_class = none_type.named_base_class then
-				root_type := none_type
-			else
-				create {ET_CLASS_TYPE} root_type.make (Void, a_name, l_class)
-			end
+			root_type_name := a_name
 		ensure
-			root_type_set: attached root_type as l_root_type and then l_root_type.name.same_class_name (a_name)
+			root_type_name_set: root_type_name = a_name
 		end
 
-	unset_root_type
-			-- Unset `root_type'.
+	set_root_type (a_type: like root_type)
+			-- Set `root_type' to `a_type'.
 		do
-			root_type := Void
+			root_type := a_type
 		ensure
-			root_type_unset: root_type = Void
+			root_type_set: root_type = a_type
 		end
 
 	set_root_creation (a_name: like root_creation)

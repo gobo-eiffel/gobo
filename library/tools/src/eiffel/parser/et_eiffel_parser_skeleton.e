@@ -826,21 +826,21 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	add_expression_assertion (an_expression: detachable ET_EXPRESSION; a_semicolon: detachable ET_SYMBOL)
+	add_expression_assertion (an_expression: detachable ET_EXPRESSION; a_semicolon: detachable ET_SEMICOLON_SYMBOL)
 			-- Add `an_expression' assertion, optionally followed
 			-- by `a_semicolon', to `assertions'.
 		do
 			add_untagged_assertion (an_expression, a_semicolon)
 		end
 
-	add_class_assertion (a_class_assertion: detachable ET_CLASS_ASSERTION; a_semicolon: detachable ET_SYMBOL)
+	add_class_assertion (a_class_assertion: detachable ET_CLASS_ASSERTION; a_semicolon: detachable ET_SEMICOLON_SYMBOL)
 			-- Add `a_class_assertion' assertion, optionally followed
 			-- by `a_semicolon', to `assertions'.
 		do
 			add_untagged_assertion (a_class_assertion, a_semicolon)
 		end
 
-	add_untagged_assertion (a_untagged_assertion: detachable ET_UNTAGGED_ASSERTION; a_semicolon: detachable ET_SYMBOL)
+	add_untagged_assertion (a_untagged_assertion: detachable ET_UNTAGGED_ASSERTION; a_semicolon: detachable ET_SEMICOLON_SYMBOL)
 			-- Add `a_untagged_assertion' assertion, optionally followed
 			-- by `a_semicolon', to `assertions'.
 		local
@@ -881,7 +881,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	add_tagged_assertion (a_tag: detachable ET_IDENTIFIER; a_colon: detachable ET_SYMBOL; a_semicolon: detachable ET_SYMBOL)
+	add_tagged_assertion (a_tag: detachable ET_IDENTIFIER; a_colon: detachable ET_SYMBOL; a_semicolon: detachable ET_SEMICOLON_SYMBOL)
 			-- Add tagged assertion, optionally followed
 			-- by `a_semicolon', to `assertions'.
 		local
@@ -1209,6 +1209,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			nb := a_constraint.count
 			Result := ast_factory.new_actual_parameters (a_constraint.left_bracket, a_constraint.right_bracket, nb)
 			if Result /= Void then
+				Result.set_first_symbol (a_constraint.first_symbol)
 				from i := nb until i < 1 loop
 					l_actual := a_constraint.item (i)
 					l_type := l_actual.type
@@ -1480,8 +1481,8 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_check_instruction (a_check: detachable ET_KEYWORD; a_then_compound: detachable ET_COMPOUND;
-		an_end: detachable ET_KEYWORD): detachable ET_CHECK_INSTRUCTION
+	new_check_instruction (a_check: detachable ET_KEYWORD; a_semicolon: detachable ET_SEMICOLON_SYMBOL; 
+		a_then_compound: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD): detachable ET_CHECK_INSTRUCTION
 			-- New check instruction
 		local
 			i, nb: INTEGER
@@ -1512,6 +1513,9 @@ feature {NONE} -- AST factory
 						i := i - 1
 					end
 				end
+			end
+			if Result /= Void and attached ast_factory.new_first_semicolon (a_semicolon) as l_first_semicolon then
+				Result.set_first_semicolon (l_first_semicolon)
 			end
 			if not assertion_kinds.is_empty then
 				assertion_kind := assertion_kinds.last
@@ -1748,7 +1752,7 @@ feature {NONE} -- AST factory
 			Result := new_alias_free_name (an_alias, a_string, a_convert)
 		end
 
-	new_invariants (an_invariant: detachable ET_INVARIANT_KEYWORD): detachable ET_INVARIANTS
+	new_invariants (an_invariant: detachable ET_INVARIANT_KEYWORD; a_semicolon: detachable ET_SEMICOLON_SYMBOL): detachable ET_INVARIANTS
 			-- New class invariants
 		local
 			i, nb: INTEGER
@@ -1779,6 +1783,9 @@ feature {NONE} -- AST factory
 						i := i - 1
 					end
 				end
+			end
+			if Result /= Void and attached ast_factory.new_first_semicolon (a_semicolon) as l_first_semicolon then
+				Result.set_first_semicolon (l_first_semicolon)
 			end
 			if not assertion_kinds.is_empty then
 				assertion_kind := assertion_kinds.last
@@ -1842,7 +1849,7 @@ feature {NONE} -- AST factory
 			last_local_variables := Result
 		end
 
-	new_loop_invariants (an_invariant: detachable ET_INVARIANT_KEYWORD): detachable ET_LOOP_INVARIANTS
+	new_loop_invariants (an_invariant: detachable ET_INVARIANT_KEYWORD; a_semicolon: detachable ET_SEMICOLON_SYMBOL): detachable ET_LOOP_INVARIANTS
 			-- New loop invariants
 		local
 			i, nb: INTEGER
@@ -1873,6 +1880,9 @@ feature {NONE} -- AST factory
 						i := i - 1
 					end
 				end
+			end
+			if Result /= Void and attached ast_factory.new_first_semicolon (a_semicolon) as l_first_semicolon then
+				Result.set_first_semicolon (l_first_semicolon)
 			end
 			if not assertion_kinds.is_empty then
 				assertion_kind := assertion_kinds.last
@@ -2003,7 +2013,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_postconditions (an_ensure: detachable ET_KEYWORD; a_then: detachable ET_KEYWORD): detachable ET_POSTCONDITIONS
+	new_postconditions (an_ensure: detachable ET_KEYWORD; a_then: detachable ET_KEYWORD; a_semicolon: detachable ET_SEMICOLON_SYMBOL): detachable ET_POSTCONDITIONS
 			-- New postconditions
 		local
 			i, nb: INTEGER
@@ -2035,6 +2045,9 @@ feature {NONE} -- AST factory
 					end
 				end
 			end
+			if Result /= Void and attached ast_factory.new_first_semicolon (a_semicolon) as l_first_semicolon then
+				Result.set_first_semicolon (l_first_semicolon)
+			end
 			if not assertion_kinds.is_empty then
 				assertion_kind := assertion_kinds.last
 				assertion_kinds.remove_last
@@ -2043,7 +2056,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_preconditions (a_require: detachable ET_KEYWORD; an_else: detachable ET_KEYWORD): detachable ET_PRECONDITIONS
+	new_preconditions (a_require: detachable ET_KEYWORD; an_else: detachable ET_KEYWORD; a_semicolon: detachable ET_SEMICOLON_SYMBOL): detachable ET_PRECONDITIONS
 			-- New preconditions
 		local
 			i, nb: INTEGER
@@ -2074,6 +2087,9 @@ feature {NONE} -- AST factory
 						i := i - 1
 					end
 				end
+			end
+			if Result /= Void and attached ast_factory.new_first_semicolon (a_semicolon) as l_first_semicolon then
+				Result.set_first_semicolon (l_first_semicolon)
 			end
 			if not assertion_kinds.is_empty then
 				assertion_kind := assertion_kinds.last

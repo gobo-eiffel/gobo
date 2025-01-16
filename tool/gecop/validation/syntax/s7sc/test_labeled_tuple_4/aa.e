@@ -14,7 +14,7 @@ feature
 			]
 		do
 			t := [1, 2]
-			print ("Failed")
+			print ("Passed")
 		end
 
 end

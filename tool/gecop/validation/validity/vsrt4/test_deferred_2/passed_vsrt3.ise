@@ -1,0 +1,11 @@
+-------------------------------------------------------------------------------
+
+Error code: VSRT(3)
+
+Configuration error: System's root type is based on a deferred class.
+What to do: Choose another type as root type, which is based on a non-deferred class, or make
+  the chosen class effective.
+
+Root type AA is invalid.
+
+-------------------------------------------------------------------------------

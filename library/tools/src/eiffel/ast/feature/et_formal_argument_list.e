@@ -5,7 +5,7 @@
 		"Eiffel lists of formal arguments"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_FORMAL_ARGUMENT_LIST
@@ -121,6 +121,9 @@ feature -- Access
 	right_parenthesis: ET_SYMBOL
 			-- Right parenthesis
 
+	first_semicolon: detachable ET_SEMICOLON_SYMBOL
+			-- Semicolon before the first formal argument, if any
+
 	index_of (a_name: ET_IDENTIFIER): INTEGER
 			-- Index of formal argument `a_name';
 			-- 0 if it does not exist
@@ -148,8 +151,12 @@ feature -- Access
 			-- current node in source code
 		do
 			Result := left_parenthesis.position
-			if Result.is_null and not is_empty then
-				Result := first.position
+			if Result.is_null then
+				if not is_empty then
+					Result := first.position
+				elseif attached first_semicolon as l_first_semicolon then
+					Result := l_first_semicolon.position
+				end
 			end
 		end
 
@@ -185,6 +192,14 @@ feature -- Setting
 			right_parenthesis := a_right
 		ensure
 			right_parenthesis_set: right_parenthesis = a_right
+		end
+
+	set_first_semicolon (a_first_semicolon: like first_semicolon)
+			-- Set `first_semicolon' to `a_first_semicolon'.
+		do
+			first_semicolon := a_first_semicolon
+		ensure
+			first_semicolon_set: first_semicolon = a_first_semicolon
 		end
 
 feature -- Processing

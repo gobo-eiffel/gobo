@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+
+Error code: VSRT(4)
+
+Configuration error: System's root type does not match constraints of the root base class.
+What to do: Make sure that number of actuals matches number of formals in the root base
+  class and that the types of actual generic parameters match the specification from the
+  root base class.
+
+Root type AA [INTEGER_32] is invalid.
+
+For type: AA [INTEGER_32]
+Formal #1: INTEGER_32
+Type to which it should conform: STRING_8
+
+-------------------------------------------------------------------------------

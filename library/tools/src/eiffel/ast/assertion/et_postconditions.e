@@ -5,7 +5,7 @@
 		"Eiffel postcondition lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_POSTCONDITIONS
@@ -63,8 +63,14 @@ feature -- Access
 			-- current node in source code
 		do
 			Result := ensure_keyword.position
-			if Result.is_null and not is_empty then
-				Result := first.position
+			if Result.is_null then
+				if not is_empty then
+					Result := first.position
+				elseif attached then_keyword as l_then_keyword then
+					Result := l_then_keyword.position
+				elseif attached first_semicolon as l_first_semicolon then
+					Result := l_first_semicolon.position
+				end
 			end
 		end
 
@@ -79,6 +85,8 @@ feature -- Access
 		do
 			if not is_empty then
 				Result := last.last_leaf
+			elseif attached first_semicolon as l_first_semicolon then
+				Result := l_first_semicolon.last_leaf
 			elseif attached then_keyword as l_then_keyword then
 				Result := l_then_keyword
 			else

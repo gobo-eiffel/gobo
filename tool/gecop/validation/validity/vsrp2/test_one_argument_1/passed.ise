@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+
+Error code: VSRP(2)
+
+Error: creation procedure of system's root has improper arguments.
+What to do: make sure that the chosen creation procedure of the root type has
+   either no argument or a single argument of type ARRAY [STRING].
+
+Class: AA
+Creation feature: make (i: INTEGER_32)
+
+-------------------------------------------------------------------------------

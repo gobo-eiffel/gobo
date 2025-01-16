@@ -12,7 +12,7 @@ feature
 			b: INTEGER
 		do
 			a := b
-			print ("Failed")
+			print ("Passed")
 		end
 
 end

@@ -70,10 +70,11 @@ feature -- Setting
 			root_class_name := a_name
 			if a_name /= Void and then a_name.count > 0 then
 				create an_identifier.make (a_name)
-				set_root_type (an_identifier)
+				set_root_type_name (an_identifier)
 			else
-				unset_root_type
+				set_root_type_name (Void)
 			end
+			set_root_type (Void)
 		end
 
 	set_creation_procedure_name (a_name: like creation_procedure_name)

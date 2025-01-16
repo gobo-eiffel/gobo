@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+
+Error code: VD71
+
+Configuration error
+
+Duplicate class: BB
+cluster1/bb.e
+cluster2/bb.e
+Configuration: compile_ise.ecf
+
+-------------------------------------------------------------------------------

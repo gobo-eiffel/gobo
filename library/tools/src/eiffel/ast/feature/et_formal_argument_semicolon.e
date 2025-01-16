@@ -38,7 +38,7 @@ feature -- Access
 	formal_argument: ET_FORMAL_ARGUMENT
 			-- Formal argument in semicolon-separated list
 
-	semicolon: ET_SYMBOL
+	semicolon: ET_SEMICOLON_SYMBOL
 			-- Semicolon separator
 
 	name: ET_IDENTIFIER

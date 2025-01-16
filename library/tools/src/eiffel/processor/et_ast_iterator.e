@@ -92,6 +92,9 @@ feature {ET_AST_NODE} -- Processing
 			i, nb: INTEGER
 		do
 			a_list.left_bracket.process (Current)
+			if attached a_list.first_symbol as l_first_symbol then
+				l_first_symbol.process (Current)
+			end
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				a_list.item (i).process (Current)
@@ -420,6 +423,9 @@ feature {ET_AST_NODE} -- Processing
 			i, nb: INTEGER
 		do
 			an_instruction.check_keyword.process (Current)
+			if attached an_instruction.first_semicolon as l_first_semicolon then
+				l_first_semicolon.process (Current)
+			end
 			nb := an_instruction.count
 			from i := 1 until i > nb loop
 				an_instruction.item (i).process (Current)
@@ -1572,6 +1578,9 @@ feature {ET_AST_NODE} -- Processing
 			i, nb: INTEGER
 		do
 			a_list.left_parenthesis.process (Current)
+			if attached a_list.first_semicolon as l_first_semicolon then
+				l_first_semicolon.process (Current)
+			end
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				a_list.item (i).process (Current)
@@ -1724,51 +1733,6 @@ feature {ET_AST_NODE} -- Processing
 			process_keyword (a_keyword)
 		end
 
-	process_note (a_note: ET_NOTE)
-			-- Process `a_note'.
-		do
-			a_note.terms.process (Current)
-		end
-
-	process_note_list (a_list: ET_NOTE_LIST)
-			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-		do
-			a_list.note_keyword.process (Current)
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				a_list.item (i).process (Current)
-				i := i + 1
-			end
-		end
-
-	process_note_semicolon (a_note: ET_NOTE_SEMICOLON)
-			-- Process `a_note'.
-		do
-			a_note.note_item.process (Current)
-			a_note.semicolon.process (Current)
-		end
-
-	process_note_term_comma (a_note_term: ET_NOTE_TERM_COMMA)
-			-- Process `a_note_term'.
-		do
-			a_note_term.note_term.process (Current)
-			a_note_term.comma.process (Current)
-		end
-
-	process_note_term_list (a_list: ET_NOTE_TERM_LIST)
-			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-		do
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				a_list.item (i).process (Current)
-				i := i + 1
-			end
-		end
-
 	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION)
 			-- Process `an_expression'.
 		do
@@ -1873,6 +1837,9 @@ feature {ET_AST_NODE} -- Processing
 			i, nb: INTEGER
 		do
 			a_list.invariant_keyword.process (Current)
+			if attached a_list.first_semicolon as l_first_semicolon then
+				l_first_semicolon.process (Current)
+			end
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				a_list.item (i).process (Current)
@@ -2001,6 +1968,9 @@ feature {ET_AST_NODE} -- Processing
 			i, nb: INTEGER
 		do
 			a_list.local_keyword.process (Current)
+			if attached a_list.first_semicolon as l_first_semicolon then
+				l_first_semicolon.process (Current)
+			end
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				a_list.item (i).process (Current)
@@ -2036,6 +2006,9 @@ feature {ET_AST_NODE} -- Processing
 			i, nb: INTEGER
 		do
 			a_list.invariant_keyword.process (Current)
+			if attached a_list.first_semicolon as l_first_semicolon then
+				l_first_semicolon.process (Current)
+			end
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				a_list.item (i).process (Current)
@@ -2113,6 +2086,54 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.expression.process (Current)
 			an_expression.as_keyword.process (Current)
 			an_expression.name.process (Current)
+		end
+
+	process_note (a_note: ET_NOTE)
+			-- Process `a_note'.
+		do
+			a_note.terms.process (Current)
+		end
+
+	process_note_list (a_list: ET_NOTE_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			a_list.note_keyword.process (Current)
+			if attached a_list.first_semicolon as l_first_semicolon then
+				l_first_semicolon.process (Current)
+			end
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+		end
+
+	process_note_semicolon (a_note: ET_NOTE_SEMICOLON)
+			-- Process `a_note'.
+		do
+			a_note.note_item.process (Current)
+			a_note.semicolon.process (Current)
+		end
+
+	process_note_term_comma (a_note_term: ET_NOTE_TERM_COMMA)
+			-- Process `a_note_term'.
+		do
+			a_note_term.note_term.process (Current)
+			a_note_term.comma.process (Current)
+		end
+
+	process_note_term_list (a_list: ET_NOTE_TERM_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
 		end
 
 	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
@@ -2419,6 +2440,9 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_list.clients_clause as l_clients_clause then
 				l_clients_clause.process (Current)
 			end
+			if attached a_list.first_semicolon as l_first_semicolon then
+				l_first_semicolon.process (Current)
+			end
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				a_list.item (i).process (Current)
@@ -2474,6 +2498,9 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_list.then_keyword as l_then_keyword then
 				l_then_keyword.process (Current)
 			end
+			if attached a_list.first_semicolon as l_first_semicolon then
+				l_first_semicolon.process (Current)
+			end
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				a_list.item (i).process (Current)
@@ -2489,6 +2516,9 @@ feature {ET_AST_NODE} -- Processing
 			a_list.require_keyword.process (Current)
 			if attached a_list.else_keyword as l_else_keyword then
 				l_else_keyword.process (Current)
+			end
+			if attached a_list.first_semicolon as l_first_semicolon then
+				l_first_semicolon.process (Current)
 			end
 			nb := a_list.count
 			from i := 1 until i > nb loop
@@ -2718,6 +2748,9 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_symbol'.
 		do
 			process_symbol (a_symbol)
+			if attached a_symbol.other as l_other then
+				process_semicolon_symbol (l_other)
+			end
 		end
 
 	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)

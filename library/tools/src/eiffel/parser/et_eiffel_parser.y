@@ -232,7 +232,7 @@ create
 %type <detachable ET_RENAME_ITEM> Rename Rename_comma
 %type <detachable ET_RENAME_LIST> Rename_clause Rename_list
 %type <detachable ET_REPEAT_INSTRUCTION> Repeat_instruction_header
-%type <detachable ET_SEMICOLON_SYMBOL> Semicolon_opt
+%type <detachable ET_SEMICOLON_SYMBOL> Semicolon Semicolon_opt
 %type <detachable ET_STATIC_CALL_EXPRESSION> Static_call_expression
 %type <detachable ET_STRIP_EXPRESSION> Strip_expression Strip_feature_name_list
 %type <detachable ET_SYMBOL> Left_parenthesis
@@ -301,29 +301,45 @@ Set_providers: { set_class_providers }
 
 --------------------------------------------------------------------------------
 
-Note_clause: E_INDEXING
-		{ $$ := ast_factory.new_notes ($1, 0) }
-	| E_INDEXING
+Note_clause: E_INDEXING Semicolon_opt
+		{
+			$$ := ast_factory.new_notes ($1, 0)
+			if attached $$ as l_notes and attached ast_factory.new_first_semicolon ($2) as l_semicolon then
+				l_notes.set_first_semicolon (l_semicolon)
+			end
+		}
+	| E_INDEXING Semicolon_opt
 		{
 			add_keyword ($1)
 			add_counter
 		}
-	Indexing_list
+	 Indexing_list
 		{
-			$$ := $3
+			$$ := $4
+			if attached $$ as l_notes and attached ast_factory.new_first_semicolon ($2) as l_semicolon then
+				l_notes.set_first_semicolon (l_semicolon)
+			end
 			remove_keyword
 			remove_counter
 		}
-	| E_NOTE
-		{ $$ := ast_factory.new_notes ($1, 0) }
-	| E_NOTE
+	| E_NOTE Semicolon_opt
+		{
+			$$ := ast_factory.new_notes ($1, 0)
+			if attached $$ as l_notes and attached ast_factory.new_first_semicolon ($2) as l_semicolon then
+				l_notes.set_first_semicolon (l_semicolon)
+			end
+		}
+	| E_NOTE Semicolon_opt
 		{
 			add_keyword ($1)
 			add_counter
 		}
 	Note_list
 		{
-			$$ := $3
+			$$ := $4
+			if attached $$ as l_notes and attached ast_factory.new_first_semicolon ($2) as l_semicolon then
+				l_notes.set_first_semicolon (l_semicolon)
+			end
 			remove_keyword
 			remove_counter
 		}
@@ -336,6 +352,17 @@ Note_clause_opt: -- Empty
 	;
 
 Note_list: Note_item
+		{
+			if attached $1 as l_note then
+				$$ := ast_factory.new_notes (last_keyword, counter_value + 1)
+				if $$ /= Void then
+					$$.put_first (l_note)
+				end
+			else
+				$$ := ast_factory.new_notes (last_keyword, counter_value)
+			end
+		}
+	| Note_item_semicolon
 		{
 			if attached $1 as l_note then
 				$$ := ast_factory.new_notes (last_keyword, counter_value + 1)
@@ -379,7 +406,7 @@ Note_item_impl: Identifier ':' Note_terms
 		}
 	;
 
-Note_item_semicolon: Note_item ';'
+Note_item_semicolon: Note_item Semicolon
 		{ $$ := ast_factory.new_note_semicolon ($1, $2) }
 	;
 
@@ -395,7 +422,6 @@ Indexing_list: Indexing_item
 			end
 		}
 	| Indexing_item_semicolon
-		-- TODO: Syntax error
 		{
 			if attached $1 as l_note then
 				$$ := ast_factory.new_notes (last_keyword, counter_value + 1)
@@ -443,10 +469,7 @@ Indexing_item_impl: Note_terms
 		}
 	;
 
-Indexing_item_semicolon: Indexing_item ';'
-		{ $$ := ast_factory.new_note_semicolon ($1, $2) }
-	| Indexing_item_semicolon ';'
-		-- TODO: Syntax error
+Indexing_item_semicolon: Indexing_item Semicolon
 		{ $$ := ast_factory.new_note_semicolon ($1, $2) }
 	;
 
@@ -941,6 +964,16 @@ Constraint_tuple_actual_parameters_opt: -- Empty
 Constraint_tuple_actual_parameters: '[' ']'
 		-- Warning:
 		{ $$ := ast_factory.new_constraint_actual_parameters ($1, $2, 0) }
+	| Open_bracket Semicolon ']'
+		-- Warning:
+		{
+			$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $3, 0)
+			if $$ /= Void and attached ast_factory.new_first_semicolon ($2) as l_semicolon then
+				$$.set_first_symbol (l_semicolon)
+			end
+			remove_symbol
+			remove_counter
+		}
 	| Open_bracket Constraint_actual_parameter_list
 		{
 			$$ := $2
@@ -953,6 +986,15 @@ Constraint_tuple_actual_parameters: '[' ']'
 			remove_symbol
 			remove_counter
 		}
+	| Open_bracket Semicolon Constraint_tuple_labeled_actual_parameter_list
+		{
+			$$ := $3
+			if $$ /= Void and attached ast_factory.new_first_semicolon ($2) as l_semicolon then
+				$$.set_first_symbol (l_semicolon)
+			end
+			remove_symbol
+			remove_counter
+		}
 	;
 
 Constraint_tuple_labeled_actual_parameter_list: Identifier ':' Constraint_type ']'
@@ -960,7 +1002,7 @@ Constraint_tuple_labeled_actual_parameter_list: Identifier ':' Constraint_type '
 			$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $4, counter_value + 1)
 			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3), $$)
 		}
-	| Identifier ':' Constraint_type ';' ']'
+	| Identifier ':' Constraint_type Semicolon ']'
 		{
 			$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $5, counter_value + 1)
 			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_actual_parameter_semicolon (ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3), $4), $$)
@@ -997,7 +1039,7 @@ Constraint_tuple_labeled_actual_parameter: Identifier ':' Constraint_type
 		}
 	;
 
-Constraint_tuple_labeled_actual_parameter_semicolon: Identifier ':' Constraint_type ';'
+Constraint_tuple_labeled_actual_parameter_semicolon: Identifier ':' Constraint_type Semicolon
 		{
 			$$ := ast_factory.new_constraint_labeled_actual_parameter_semicolon (ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3), $4)
 			if $$ /= Void then
@@ -1051,23 +1093,29 @@ Inheritance_list: Inheritance_clause
 		}
 	;
 	
-Inheritance_clause: E_INHERIT None_client_opt
+Inheritance_clause: E_INHERIT None_client_opt Semicolon_opt
 		{
 			$$ := ast_factory.new_parents ($1, 0)
 			if $$ /= Void then
 				$$.set_clients_clause ($2)
+				if attached ast_factory.new_first_semicolon ($3) as l_semicolon then
+					$$.set_first_semicolon (l_semicolon)
+				end
 			end
 		}
-	| E_INHERIT None_client_opt
+	| E_INHERIT None_client_opt Semicolon_opt
 		{
 			add_keyword ($1)
 			add_counter
 		} 
 	 Parent_list
 		{
-			$$ := $4
+			$$ := $5
 			if $$ /= Void then
 				$$.set_clients_clause ($2)
+				if attached ast_factory.new_first_semicolon ($3) as l_semicolon then
+					$$.set_first_semicolon (l_semicolon)
+				end
 			end
 			remove_keyword
 			remove_counter
@@ -1149,7 +1197,7 @@ Parent_list: Parent
 		}
 	;
 
-Parent_semicolon: Parent ';'
+Parent_semicolon: Parent Semicolon
 		{
 			$$ := ast_factory.new_parent_semicolon ($1, $2)
 			if $$ /= Void and $1 = Void then
@@ -1803,15 +1851,21 @@ Feature_clause: Feature_clause_header
 		}
 	;
 
-Feature_clause_header: E_FEATURE Clients
+Feature_clause_header: E_FEATURE Clients Semicolon_opt
 		{
 			last_clients := $2
 			last_feature_clause := ast_factory.new_feature_clause ($1, last_clients)
+			if attached last_feature_clause as l_last_feature_clause and attached ast_factory.new_first_semicolon ($3) as l_semicolon then
+				l_last_feature_clause.set_first_semicolon (l_semicolon)
+			end
 		}
-	| E_FEATURE
+	| E_FEATURE Semicolon_opt
 		{
 			last_clients := new_any_clients ($1)
 			last_feature_clause := ast_factory.new_feature_clause ($1, last_clients)
+			if attached last_feature_clause as l_last_feature_clause and attached ast_factory.new_first_semicolon ($2) as l_semicolon then
+				l_last_feature_clause.set_first_semicolon (l_semicolon)
+			end
 		}
 	;
 
@@ -1909,9 +1963,7 @@ Procedure_declaration: Single_procedure_declaration
 		}
 	;
 
-Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
-		{ $$ := ast_factory.new_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, Void, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name ':' Type Assigner_opt ';'
+Single_query_declaration: Extended_feature_name ':' Type Assigner_opt Semicolon_opt
 		{ $$ := ast_factory.new_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt Note_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt Attribute_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
@@ -2079,9 +2131,22 @@ Is_opt: -- Empty
 		{ $$ := $1 }
 	;
 
+Semicolon: ';'
+		{ $$ := $1 }
+	| ';' Semicolon
+		{
+			if attached $1 as l_semicolon then
+				if l_semicolon /= tokens.semicolon_symbol then
+					l_semicolon.set_other ($2)
+				end
+				$$ := l_semicolon
+			end
+		}
+	;
+
 Semicolon_opt: -- Empty
 		-- { $$ := Void }
-	| ';'
+	| Semicolon
 		{ $$ := $1 }
 	;
 
@@ -2225,8 +2290,30 @@ Feature_formal_arguments: Formal_arguments
 		}
 	;
 
-Formal_arguments: '(' ')'
-		{ $$ := new_formal_arguments ($1, $2, 0) }
+Formal_arguments: Left_parenthesis Semicolon ')'
+		{
+			$$ := new_formal_arguments (last_symbol, $3, 0)
+			if $$ /= Void and attached ast_factory.new_first_semicolon ($2) as l_semicolon then
+				$$.set_first_semicolon (l_semicolon)
+			end
+			remove_symbol
+			remove_counter
+		}
+	| Left_parenthesis ')'
+		{
+			$$ := new_formal_arguments (last_symbol, $2, 0)
+			remove_symbol
+			remove_counter
+		}
+	| Left_parenthesis Semicolon Formal_argument_list
+		{
+			$$ := $3
+			if $$ /= Void and attached ast_factory.new_first_semicolon ($2) as l_semicolon then
+				$$.set_first_semicolon (l_semicolon)
+			end
+			remove_symbol
+			remove_counter
+		}
 	| Left_parenthesis Formal_argument_list
 		{
 			$$ := $2
@@ -2324,7 +2411,7 @@ Formal_argument: Identifier ':' Type
 		}
 	;
 
-Formal_argument_semicolon: Identifier ':' Type  ';'
+Formal_argument_semicolon: Identifier ':' Type  Semicolon
 		{
 			$$ := ast_factory.new_formal_argument_semicolon (ast_factory.new_formal_argument ($1, ast_factory.new_colon_type ($2, $3)), $4)
 			if $$ /= Void then
@@ -2337,16 +2424,25 @@ Formal_argument_semicolon: Identifier ':' Type  ';'
 
 Local_declarations_opt: -- Empty
 		{ $$ := Void }
+	| E_LOCAL Semicolon_opt
+		{
+			$$ := new_local_variables ($1, 0)
+			if $$ /= Void and attached ast_factory.new_first_semicolon ($2) as l_semicolon then
+				$$.set_first_semicolon (l_semicolon)
+			end
+		}
 	| E_LOCAL
-		{ $$ := new_local_variables ($1, 0) }
-	| E_LOCAL
+	  Semicolon_opt
 		{
 			add_keyword ($1)
 			add_counter
 		}
 	  Local_variable_list
 		{
-			$$ := $3
+			$$ := $4
+			if $$ /= Void and attached ast_factory.new_first_semicolon ($2) as l_semicolon then
+				$$.set_first_semicolon (l_semicolon)
+			end
 			remove_keyword
 			remove_counter
 		}
@@ -2430,7 +2526,7 @@ Local_variable: Identifier ':' Type
 		}
 	;
 
-Local_variable_semicolon: Identifier ':' Type  ';'
+Local_variable_semicolon: Identifier ':' Type  Semicolon
 		{
 			$$ := ast_factory.new_local_variable_semicolon (ast_factory.new_local_variable ($1, ast_factory.new_colon_type ($2, $3)), $4)
 			if $$ /= Void then
@@ -2443,11 +2539,11 @@ Local_variable_semicolon: Identifier ':' Type  ';'
 
 Assertions: Expression
 		{ add_expression_assertion ($1, Void) }
-	| Expression ';'
+	| Expression Semicolon
 		{ add_expression_assertion ($1, $2) }
 	| Identifier ':'
 		{ add_tagged_assertion ($1, $2, Void) }
-	| Identifier ':' ';'
+	| Identifier ':' Semicolon
 		{ add_tagged_assertion ($1, $2, $3) }
 	| E_CLASS
 		{
@@ -2458,7 +2554,7 @@ Assertions: Expression
 				raise_error
 			end
 		}
-	| E_CLASS ';'
+	| E_CLASS Semicolon
 		{
 			if assertion_kind = assertion_kind_postcondition then
 					-- 'class' assertions only allowed in postconditions.
@@ -2469,11 +2565,11 @@ Assertions: Expression
 		}
 	| Assertions Expression
 		{ add_expression_assertion ($2, Void) }
-	| Assertions Expression ';'
+	| Assertions Expression Semicolon
 		{ add_expression_assertion ($2, $3) }
 	| Assertions Identifier ':'
 		{ add_tagged_assertion ($2, $3, Void) }
-	| Assertions Identifier ':' ';'
+	| Assertions Identifier ':' Semicolon
 		{ add_tagged_assertion ($2, $3, $4) }
 	| Assertions E_CLASS
 		{
@@ -2484,7 +2580,7 @@ Assertions: Expression
 				raise_error
 			end
 		}
-	| Assertions E_CLASS ';'
+	| Assertions E_CLASS Semicolon
 		{
 			if assertion_kind = assertion_kind_postcondition then
 					-- 'class' assertions only allowed in postconditions.
@@ -2501,14 +2597,14 @@ Start_precondition:
 	
 Precondition_opt: -- Empty
 		-- { $$ := Void }
-	| E_REQUIRE Start_precondition
-		{ $$ := new_preconditions ($1, Void) }
-	| E_REQUIRE E_ELSE Start_precondition
-		{ $$ := new_preconditions ($1, $2) }
-	| E_REQUIRE Start_precondition Assertions
-		{ $$ := new_preconditions ($1, Void) }
-	| E_REQUIRE E_ELSE Start_precondition Assertions
-		{ $$ := new_preconditions ($1, $2) }
+	| E_REQUIRE Start_precondition Semicolon_opt
+		{ $$ := new_preconditions ($1, Void, $3) }
+	| E_REQUIRE E_ELSE Start_precondition Semicolon_opt
+		{ $$ := new_preconditions ($1, $2, $4) }
+	| E_REQUIRE Start_precondition Semicolon_opt Assertions
+		{ $$ := new_preconditions ($1, Void, $3) }
+	| E_REQUIRE E_ELSE Start_precondition Semicolon_opt Assertions
+		{ $$ := new_preconditions ($1, $2, $4) }
 	;
 
 Start_postcondition:
@@ -2517,14 +2613,14 @@ Start_postcondition:
 	
 Postcondition_opt: -- Empty
 		-- { $$ := Void }
-	| E_ENSURE Start_postcondition
-		{ $$ := new_postconditions ($1, Void) }
-	| E_ENSURE E_THEN Start_postcondition
-		{ $$ := new_postconditions ($1, $2) }
-	| E_ENSURE Start_postcondition Assertions
-		{ $$ := new_postconditions ($1, Void) }
-	| E_ENSURE E_THEN Start_postcondition Assertions
-		{ $$ := new_postconditions ($1, $2) }
+	| E_ENSURE Start_postcondition Semicolon_opt
+		{ $$ := new_postconditions ($1, Void, $3) }
+	| E_ENSURE E_THEN Start_postcondition Semicolon_opt
+		{ $$ := new_postconditions ($1, $2, $4) }
+	| E_ENSURE Start_postcondition Semicolon_opt Assertions
+		{ $$ := new_postconditions ($1, Void, $3) }
+	| E_ENSURE E_THEN Start_postcondition Semicolon_opt Assertions
+		{ $$ := new_postconditions ($1, $2, $4) }
 	;
 
 Start_invariant:
@@ -2537,10 +2633,10 @@ Invariant_clause_opt: -- Empty
 		{ $$ := $1 }
 	;
 
-Invariant_clause: E_INVARIANT Start_invariant Invariant_start_closure
-		{ $$ := new_invariants ($1) }
-	| E_INVARIANT Start_invariant Invariant_start_closure Assertions
-		{ $$ := new_invariants ($1) }
+Invariant_clause: E_INVARIANT Start_invariant Invariant_start_closure Semicolon_opt
+		{ $$ := new_invariants ($1, $4) }
+	| E_INVARIANT Start_invariant Invariant_start_closure Semicolon_opt Assertions
+		{ $$ := new_invariants ($1, $4) }
 	;
 
 Invariant_start_closure: -- Empty
@@ -2557,10 +2653,10 @@ Loop_invariant_clause_opt: -- Empty
 		{ $$ := $1 }
 	;
 
-Loop_invariant_clause: E_INVARIANT start_loop_invariant
-		{ $$ := new_loop_invariants ($1) }
-	| E_INVARIANT start_loop_invariant Assertions
-		{ $$ := new_loop_invariants ($1) }
+Loop_invariant_clause: E_INVARIANT start_loop_invariant Semicolon_opt
+		{ $$ := new_loop_invariants ($1, $3) }
+	| E_INVARIANT start_loop_invariant Semicolon_opt Assertions
+		{ $$ := new_loop_invariants ($1, $3) }
 	;
 
 Variant_clause: E_VARIANT Expression
@@ -2818,6 +2914,16 @@ Tuple_actual_parameters_opt: -- Empty
 Tuple_actual_parameters: '[' ']'
 		-- Warning:
 		{ $$ := ast_factory.new_actual_parameters ($1, $2, 0) }
+	| Open_bracket Semicolon ']'
+		-- Warning:
+		{
+			$$ := ast_factory.new_actual_parameters (last_symbol, $3, 0)
+			if $$ /= Void and attached ast_factory.new_first_semicolon ($2) as l_semicolon then
+				$$.set_first_symbol (l_semicolon)
+			end
+			remove_symbol
+			remove_counter
+		}
 	| Open_bracket Actual_parameter_list
 		{
 			$$ := $2
@@ -2830,6 +2936,15 @@ Tuple_actual_parameters: '[' ']'
 			remove_symbol
 			remove_counter
 		}
+	| Open_bracket Semicolon Tuple_labeled_actual_parameter_list
+		{
+			$$ := $3
+			if $$ /= Void and attached ast_factory.new_first_semicolon ($2) as l_semicolon then
+				$$.set_first_symbol (l_semicolon)
+			end
+			remove_symbol
+			remove_counter
+		}
 	;
 
 Tuple_labeled_actual_parameter_list: Identifier ':' Type ']'
@@ -2837,7 +2952,7 @@ Tuple_labeled_actual_parameter_list: Identifier ':' Type ']'
 			$$ := ast_factory.new_actual_parameters (last_symbol, $4, counter_value + 1)
 			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3)), $$)
 		}
-	|  Identifier ':' Type ';' ']'
+	|  Identifier ':' Type Semicolon ']'
 		{
 			$$ := ast_factory.new_actual_parameters (last_symbol, $5, counter_value + 1)
 			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3)), $4), $$)
@@ -2896,7 +3011,7 @@ Tuple_labeled_actual_parameter: Identifier ':' Type
 		}
 	;
 
-Tuple_labeled_actual_parameter_semicolon: Identifier ':' Type ';'
+Tuple_labeled_actual_parameter_semicolon: Identifier ':' Type Semicolon
 		{
 			$$ := ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3)), $4)
 			if $$ /= Void then
@@ -3185,14 +3300,14 @@ Start_check_instruction:
 		{ start_check_instruction }
 	;
 	
-Check_instruction: E_CHECK Start_check_instruction E_END
-		{ $$ := new_check_instruction ($1, Void, $3) }
-	| E_CHECK Start_check_instruction Assertions E_END
-		{ $$ := new_check_instruction ($1, Void, $4) }
-	| E_CHECK Start_check_instruction Explicit_then_compound E_END
-		{ $$ := new_check_instruction ($1, $3, $4) }
-	| E_CHECK Start_check_instruction Assertions Explicit_then_compound E_END
-		{ $$ := new_check_instruction ($1, $4, $5) }
+Check_instruction: E_CHECK Start_check_instruction Semicolon_opt E_END
+		{ $$ := new_check_instruction ($1, $3, Void, $4) }
+	| E_CHECK Start_check_instruction Semicolon_opt Assertions E_END
+		{ $$ := new_check_instruction ($1, $3, Void, $5) }
+	| E_CHECK Start_check_instruction Semicolon_opt Explicit_then_compound E_END
+		{ $$ := new_check_instruction ($1, $3, $4, $5) }
+	| E_CHECK Start_check_instruction Semicolon_opt Assertions Explicit_then_compound E_END
+		{ $$ := new_check_instruction ($1, $3, $5, $6) }
 	;
 	
 ------------------------------------------------------------------------------------

@@ -5,7 +5,7 @@
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel Tools Library"
 		library: "Gobo Eiffel Tools Library"
-		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2025, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
@@ -30,6 +30,8 @@
 		<geant target="eiffel_preparser"/>
 		<geant target="lace_scanner"/>
 		<geant target="lace_parser"/>
+		<geant target="type_scanner"/>
+		<geant target="type_parser"/>
 	</target>
 
 	<target name="clobber" depend="init">
@@ -45,6 +47,9 @@
 		<delete file="lace/parser/et_lace_scanner.e"/>
 		<delete file="lace/parser/et_lace_parser.e"/>
 		<delete file="lace/parser/et_lace_tokens.e"/>
+		<delete file="eiffel/parser/et_type_scanner.e"/>
+		<delete file="eiffel/parser/et_type_parser.e"/>
+		<delete file="eiffel/parser/et_type_tokens.e"/>
 	</target>
 
 <!-- Implementation -->
@@ -67,6 +72,14 @@
 
 	<target name="lace_parser" dir="lace/parser" export="NONE">
 		<geyacc input="et_lace_parser.y" tokens="ET_LACE_TOKENS" output="et_lace_parser.e"/>
+	</target>
+
+	<target name="type_scanner" dir="eiffel/parser" export="NONE">
+		<gelex input="et_type_scanner.l"/>
+	</target>
+
+	<target name="type_parser" dir="eiffel/parser" export="NONE">
+		<geyacc input="et_type_parser.y" tokens="ET_TYPE_TOKENS" output="et_type_parser.e" separate_actions="true"/>
 	</target>
 
 </project>

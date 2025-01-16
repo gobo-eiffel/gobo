@@ -4,4 +4,3 @@ line 14 column 10 in aa.e
 	f alias "⟲" (i: INTEGER): INTEGER
 	        ^
 		do
-Failed

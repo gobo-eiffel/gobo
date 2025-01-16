@@ -5,7 +5,7 @@
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_DYNAMIC_SYSTEM
@@ -1268,9 +1268,13 @@ feature -- Compilation
 		local
 			l_root_type: detachable ET_BASE_TYPE
 		do
+			a_system_processor.set_root_type (current_system)
 			l_root_type := current_system.root_type
-			if l_root_type = Void then
+			if current_system.root_type_name = Void then
 				compile_all (a_system_processor)
+			elseif l_root_type = Void then
+					-- Error already reported in "ET_SYSTEM_PROCESSOR.set_root_type".
+				set_fatal_error
 			elseif l_root_type.same_named_type (current_system.none_type, tokens.unknown_class, tokens.unknown_class) then
 				compile_all (a_system_processor)
 			elseif l_root_type.same_named_type (current_system.any_type, tokens.unknown_class, tokens.unknown_class) then
@@ -1296,6 +1300,9 @@ feature -- Compilation
 			l_procedure: detachable ET_PROCEDURE
 			l_query: detachable ET_QUERY
 			l_root_creation_procedure: like root_creation_procedure
+			l_arguments_class: ET_CLASS
+			l_dynamic_arguments_type: ET_DYNAMIC_PRIMARY_TYPE
+			l_arguments_query: ET_DYNAMIC_FEATURE
 			l_class: ET_CLASS
 			dt1: detachable DT_DATE_TIME
 		do
@@ -1303,90 +1310,96 @@ feature -- Compilation
 			activate_dynamic_type_set_builder (a_system_processor)
 			if full_class_checking then
 				a_system_processor.compile (current_system)
-				dt1 := a_system_processor.benchmark_start_time
 			else
 				a_system_processor.compile_degree_6 (current_system)
+				a_system_processor.check_root_type (current_system)
 			end
-			compile_kernel (a_system_processor)
-			if not a_system_processor.stop_requested then
+			if error_handler.has_fatal_error then
+				set_fatal_error
+			elseif full_class_checking then
+				dt1 := a_system_processor.benchmark_start_time
+			end
+			if not has_fatal_error and not a_system_processor.stop_requested then
+				compile_kernel (a_system_processor)
+			end
+			if not has_fatal_error and not a_system_processor.stop_requested then
 				l_root_type := current_system.root_type
 				if l_root_type = Void then
 						-- Error: missing root class.
-					set_fatal_error
-					error_handler.report_gvsrc3a_error
-				elseif l_root_type.same_named_type (current_system.none_type, tokens.unknown_class, tokens.unknown_class) then
-						-- Error: the root creation feature is not declared as a
-						-- publicly available creation procedure in the root class.
-					l_name := current_system.root_creation
-					if l_name = Void then
-						l_name := tokens.default_create_feature_name
-					end
-					set_fatal_error
-					error_handler.report_gvsrc6a_error (l_root_type.base_class, l_name)
+						-- Error already reported.
 				else
 					l_class := l_root_type.base_class
-					l_class.process (a_system_processor.eiffel_parser)
-					if not l_class.is_preparsed then
-							-- Error: unknown root class.
-						set_fatal_error
-						error_handler.report_gvsrc4a_error (l_class)
-					elseif not l_class.is_parsed or else l_class.has_syntax_error then
-							-- Error already reported.
-						set_fatal_error
-					elseif l_class.is_generic then
-							-- Error: the root class should not be generic.
-						set_fatal_error
-						error_handler.report_vsrc1a_error (l_class)
+					l_dynamic_root_type := dynamic_primary_type (l_root_type, l_class)
+					root_type := l_dynamic_root_type
+					l_name := current_system.root_creation
+					if l_name /= Void then
+						l_procedure := l_class.named_procedure (l_name)
+					elseif current_system.default_create_seed /= 0 then
+						l_procedure := l_class.seeded_procedure (current_system.default_create_seed)
+						l_name := tokens.default_create_feature_name
 					else
-						l_dynamic_root_type := dynamic_primary_type (l_class, l_class)
-						root_type := l_dynamic_root_type
-						if l_class.has_interface_error then
-								-- Error already reported.
-							set_fatal_error
-						else
-							l_name := current_system.root_creation
-							if l_name /= Void then
-								l_procedure := l_class.named_procedure (l_name)
-							elseif current_system.default_create_seed /= 0 then
-								l_procedure := l_class.seeded_procedure (current_system.default_create_seed)
-								l_name := tokens.default_create_feature_name
-							else
-								l_name := tokens.default_create_feature_name
-								l_procedure := l_class.named_procedure (l_name)
-							end
-							if l_procedure = Void then
-								if l_name /= Void then
-									l_query := l_class.named_query (l_name)
-								elseif current_system.default_create_seed /= 0 then
-									l_query := l_class.seeded_query (current_system.default_create_seed)
-									l_name := tokens.default_create_feature_name
-								else
-									l_name := tokens.default_create_feature_name
-									l_query := l_class.named_query (l_name)
-								end
-								if l_query = Void then
-										-- Error: the root creation procedure is not
-										-- a feature of the root class.
-									set_fatal_error
-									error_handler.report_gvsrc5a_error (l_class, l_name)
-								else
-										-- Internal error: the root creation feature is not a procedure.
-									set_fatal_error
-									error_handler.report_giaaa_error
-								end
-							elseif not l_class.is_creation_directly_exported_to (l_procedure.name, current_system.any_type.base_class) then
+						l_name := tokens.default_create_feature_name
+						l_procedure := l_class.named_procedure (l_name)
+					end
+					if l_procedure = Void then
+							-- Error already reported in "ET_SYSTEM_PROCESSOR.check_root_type".
+						set_fatal_error
+						error_handler.report_giaac_error (generator, "compile_system", 1, "unknown root creation procedure.")
+					else
+						l_root_creation_procedure := l_dynamic_root_type.dynamic_procedure (l_procedure, Current)
+						l_root_creation_procedure.set_creation (True)
+						root_creation_procedure := l_root_creation_procedure
+						dynamic_type_set_builder.mark_type_alive (l_dynamic_root_type)
+							-- Type "ISE_EXCEPTION_MANAGER" is used from the runtime.
+						dynamic_type_set_builder.mark_type_alive (ise_exception_manager_type)
+						if l_procedure.arguments_count = 1 then
+								-- Type "ARRAY [STRING_8]" is used for command-line arguments.
+							l_arguments_class := current_system.arguments_type.base_class
+							l_arguments_class.process (a_system_processor.eiffel_parser)
+							if not l_arguments_class.is_preparsed then
+									-- Error: unknown "ARGUMENTS" class.
 								set_fatal_error
-								error_handler.report_gvsrc6a_error (l_class, l_procedure.name)
+								error_handler.report_gvknl1a_error (l_arguments_class)
+							elseif not l_arguments_class.is_parsed or l_arguments_class.has_syntax_error then
+									-- Error already reported.
+								set_fatal_error
 							else
-								l_root_creation_procedure := l_dynamic_root_type.dynamic_procedure (l_procedure, Current)
-								l_root_creation_procedure.set_creation (True)
-								root_creation_procedure := l_root_creation_procedure
-								dynamic_type_set_builder.mark_type_alive (l_dynamic_root_type)
-									-- Type "ISE_EXCEPTION_MANAGER" is used from the runtime.
-								dynamic_type_set_builder.mark_type_alive (ise_exception_manager_type)
-								build_dynamic_type_sets
+								l_dynamic_arguments_type := dynamic_primary_type (l_arguments_class, l_arguments_class)
+								if l_arguments_class.has_interface_error then
+										-- Error already reported.
+									set_fatal_error
+								else
+									l_name := tokens.argument_array_feature_name
+									l_query := l_arguments_class.named_query (l_name)
+									if l_query /= Void then
+										l_arguments_query := l_dynamic_arguments_type.dynamic_query (l_query, Current)
+										if not attached l_arguments_query.result_type_set as l_result_type_set then
+												-- Internal error: a query should have a result type set.
+											set_fatal_error
+											error_handler.report_giaac_error (generator, "compile_system", 2, "a query should have a result type set.")
+										elseif l_query.arguments_count /= 0 then
+												-- Error: feature "ARGUMENTS.argument_array" should have no argument.
+											set_fatal_error
+											error_handler.report_gvkfe6a_error (l_arguments_class, l_query, Void, current_system.array_string_8_type)
+										else
+											arguments_argument_array_feature := l_arguments_query
+											l_arguments_query.set_regular (True)
+											l_dynamic_arguments_type.set_static (True)
+											dynamic_type_set_builder.propagate_builtin_actual_argument_dynamic_types (l_result_type_set, 1, l_root_creation_procedure)
+										end
+									elseif attached l_arguments_class.named_procedure (l_name) as l_arguments_procedure then
+											-- Error: feature "ARGUMENTS.argument_array" should be a query.
+										set_fatal_error
+										error_handler.report_gvkfe5a_error (l_arguments_class, l_arguments_procedure)
+									else
+											-- Error: feature 'argument_array' not found in class "ARGUMENTS".
+										set_fatal_error
+										error_handler.report_gvkfe1a_error (l_arguments_class, l_name)
+									end
+								end
 							end
 						end
+						build_dynamic_type_sets
 					end
 				end
 			end
@@ -1417,8 +1430,8 @@ feature -- Compilation
 			a_system_processor.record_end_time (dt1, "Degree -2")
 		end
 
-	compile_feature (a_feature_name: ET_FEATURE_NAME; a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR)
-			-- Compile all code reachable from the feature `a_feature_name' from `a_class'.
+	compile_feature (a_feature_name: ET_FEATURE_NAME; a_target_type: ET_BASE_TYPE; a_system_processor: ET_SYSTEM_PROCESSOR)
+			-- Compile all code reachable from the feature `a_feature_name' from `a_target_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
 			-- Note that this operation will be interrupted if a stop request
@@ -1426,49 +1439,48 @@ feature -- Compilation
 			-- True. No interruption if `a_system_processor.stop_request' is Void.
 		require
 			a_feature_name_not_void: a_feature_name /= Void
-			a_class_not_void: a_class /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_valid: a_target_type.is_valid_context
 			a_system_processor_not_void: a_system_processor /= Void
 		local
+			l_class: ET_CLASS
 			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			dt1: detachable DT_DATE_TIME
 		do
 			has_fatal_error := False
+			l_class := a_target_type.base_class
 			activate_dynamic_type_set_builder (a_system_processor)
 			a_system_processor.compile_degree_6 (current_system)
 			compile_kernel (a_system_processor)
 			if not a_system_processor.stop_requested then
-				if not a_class.is_preparsed then
+				if not l_class.is_preparsed then
 						-- Error: unknown class.
 					set_fatal_error
-					error_handler.report_gvsrc4a_error (a_class)
+					error_handler.report_vsrt2a_error (l_class)
 				else
-					a_class.process (a_system_processor.eiffel_parser)
-					if not a_class.is_parsed or else a_class.has_syntax_error then
+					l_class.process (a_system_processor.eiffel_parser)
+					if not l_class.is_parsed or else l_class.has_syntax_error then
 							-- Error already reported.
 						set_fatal_error
-					elseif a_class.is_generic then
-							-- Error: the root class should not be generic.
-						set_fatal_error
-						error_handler.report_vsrc1a_error (a_class)
 					else
-						l_dynamic_type := dynamic_primary_type (a_class, a_class)
-						if a_class.has_interface_error then
+						l_dynamic_type := dynamic_primary_type (a_target_type, a_target_type)
+						if l_class.has_interface_error then
 								-- Error already reported.
 							set_fatal_error
-						elseif attached a_class.named_procedure (a_feature_name) as l_procedure then
+						elseif attached l_class.named_procedure (a_feature_name) as l_procedure then
 							l_dynamic_feature := l_dynamic_type.dynamic_procedure (l_procedure, Current)
 							dynamic_type_set_builder.mark_type_alive (l_dynamic_type)
 							build_dynamic_type_sets
-						elseif attached a_class.named_query (a_feature_name) as l_query then
+						elseif attached l_class.named_query (a_feature_name) as l_query then
 							l_dynamic_feature := l_dynamic_type.dynamic_query (l_query, Current)
 							dynamic_type_set_builder.mark_type_alive (l_dynamic_type)
 							build_dynamic_type_sets
 						else
 								-- Error: the feature `a_feature_name' is not
-								-- a feature of the `a_class'.
+								-- a feature of the `l_class'.
 							set_fatal_error
-							error_handler.report_gvsrc5a_error (a_class, a_feature_name)
+							error_handler.report_vsrp1a_error (l_class, a_feature_name)
 						end
 					end
 				end
@@ -2387,6 +2399,10 @@ feature -- Processors
 		end
 
 feature -- Features
+
+	arguments_argument_array_feature: detachable ET_DYNAMIC_FEATURE
+			-- Expected feature 'argument_array' in class "ARGUMENTS".
+			-- Void if this feature is not called.
 
 	ise_exception_manager_init_exception_manager_feature: detachable ET_DYNAMIC_FEATURE
 			-- Expected procedure 'init_exception_manager' in class "ISE_EXCEPTION_MANAGER"

@@ -5,7 +5,7 @@
 		"ECF root classes and creation procedures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ECF_ROOT_CLASS
@@ -64,7 +64,8 @@ feature -- Element change
 	fill_root (a_system: ET_ECF_SYSTEM)
 			-- Fill `a_system' with root information.
 		do
-			a_system.set_root_type (class_name)
+			a_system.set_root_type_name (class_name)
+			a_system.set_root_type (Void)
 			a_system.set_root_creation (creation_procedure_name)
 		end
 

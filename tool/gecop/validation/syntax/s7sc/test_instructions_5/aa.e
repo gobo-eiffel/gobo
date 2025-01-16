@@ -8,8 +8,7 @@ feature
 
 	make
 		do
-			;
-			f;
+			f;;;
 			g
 		end
 

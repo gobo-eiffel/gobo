@@ -4,4 +4,8 @@ This [test](.) is exercising the syntax rule [S7SC](../Readme.md).
 
 ### Description
 
-In this test, feature `f` has two formal arguments separated by two semicolons. This is not valid according to the specification of the construct `Entity_declaration_list` (see syntax rule `SRFE`) and to the *Semicolon Optionality rule* `S7SC`.
+In this test, feature `f` has two formal argument declarations separated by two semicolons. This is valid according to the *Semicolon Optionality rule* `S7SC`.
+
+### Notes
+
+* ISE Eiffel (as of 24.05.10.7822 and after) erroneously reports a syntax error.

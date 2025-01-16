@@ -126,8 +126,12 @@ feature -- Access
 			-- current node in source code
 		do
 			Result := invariant_keyword.position
-			if Result.is_null and not is_empty then
-				Result := first.position
+			if Result.is_null then
+				if not is_empty then
+					Result := first.position
+				elseif attached first_semicolon as l_first_semicolon then
+					Result := l_first_semicolon.position
+				end
 			end
 		end
 
@@ -142,6 +146,8 @@ feature -- Access
 		do
 			if not is_empty then
 				Result := last.last_leaf
+			elseif attached first_semicolon as l_first_semicolon then
+				Result := l_first_semicolon.last_leaf
 			else
 				Result := invariant_keyword
 			end

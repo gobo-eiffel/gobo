@@ -4,7 +4,7 @@
 
 		"Gobo Eiffel ECF Documentation Format"
 
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class GEDOC_ECF_SYSTEM_CONFIG_FORMAT
@@ -30,7 +30,7 @@ feature -- Execution
 			parse_input_file (input_filename)
 			if not has_error and attached last_system_config as l_last_system_config then
 				process_system_config (l_last_system_config)
-				if system_processor.error_handler.has_error then
+				if system_processor.error_handler.has_fatal_error then
 					has_error := True
 				end
 			end

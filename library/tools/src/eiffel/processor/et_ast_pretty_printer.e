@@ -106,8 +106,6 @@ inherit
 			process_hexadecimal_integer_constant,
 			process_if_expression,
 			process_if_instruction,
-			process_note_list,
-			process_note_term_list,
 			process_infix_and_then_operator,
 			process_infix_expression,
 			process_infix_or_else_operator,
@@ -134,6 +132,8 @@ inherit
 			process_manifest_string_list,
 			process_manifest_tuple,
 			process_named_object_test,
+			process_note_list,
+			process_note_term_list,
 			process_object_equality_expression,
 			process_object_test,
 			process_octal_integer_constant,
@@ -452,6 +452,9 @@ feature {ET_AST_NODE} -- Processing
 			l_comment: ET_COMMENT
 		do
 			a_list.left_bracket.process (Current)
+			if attached a_list.first_symbol as l_first_symbol then
+				comment_finder.find_comments (l_first_symbol, comment_list)
+			end
 			nb := a_list.count
 				-- The actual parameter list is considered as unlabeled (i.e. not being part
 				-- of a Labeled Tuple type declaration) as soon as one of the parameters is
@@ -638,6 +641,10 @@ feature {ET_AST_NODE} -- Processing
 			l_item: ET_ASSERTION_ITEM
 			l_assertion: ET_ASSERTION
 		do
+			if attached a_list.first_semicolon as l_first_semicolon then
+				comment_finder.find_comments (l_first_semicolon, comment_list)
+				process_comments
+			end
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				l_item := a_list.item (i)
@@ -3219,6 +3226,9 @@ feature {ET_AST_NODE} -- Processing
 			l_type: ET_TYPE
 		do
 			a_list.left_parenthesis.process (Current)
+			if attached a_list.first_semicolon as l_first_semicolon then
+				comment_finder.find_comments (l_first_semicolon, comment_list)
+			end
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				l_item := a_list.item (i)
@@ -3395,85 +3405,6 @@ feature {ET_AST_NODE} -- Processing
 			process_comments
 			print_new_line
 			an_instruction.end_keyword.process (Current)
-		end
-
-	process_note_list (a_list: ET_NOTE_LIST)
-			-- Process `a_list'.
-		do
-			process_note_clause (a_list, True)
-		end
-
-	process_note_clause (a_list: ET_NOTE_LIST; a_new_line: BOOLEAN)
-			-- Process `a_list'.
-			-- `a_new_line' indicates that an empty new-line should
-			-- appear between the 'note' keyword and the first item.
-		local
-			i, nb: INTEGER
-			l_item: ET_NOTE_ITEM
-			l_note: ET_NOTE
-		do
-			if a_list.is_empty then
-					-- Do not print empty note clause, but keep the comments if any.
-				comment_finder.find_comments (a_list, comment_list)
-			else
-				a_list.note_keyword.process (Current)
-				indent
-				process_comments
-				if a_new_line then
-					print_new_line
-				end
-				nb := a_list.count
-				from i := 1 until i > nb loop
-					process_comments
-					print_new_line
-					l_item := a_list.item (i)
-					l_note := l_item.note_clause
-					if attached {ET_TAGGED_NOTE} l_note as l_tagged_note and then STRING_.same_string (l_tagged_note.tag.identifier.lower_name, "description") then
-						process_tagged_note_indented (l_tagged_note)
-						print_new_line
-					else
-						l_note.process (Current)
-					end
-					comment_finder.add_excluded_node (l_note)
-					comment_finder.find_comments (l_item, comment_list)
-					comment_finder.reset_excluded_nodes
-					i := i + 1
-				end
-				dedent
-			end
-		end
-
-	process_note_tag (a_tag: ET_TAG)
-			-- Process `a_tag' when appearing in a note clause.
-		require
-			a_tag_not_void: a_tag /= Void
-		do
-			process_tag (a_tag)
-		end
-
-	process_note_term_list (a_list: ET_NOTE_TERM_LIST)
-			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-			l_item: ET_NOTE_TERM_ITEM
-			l_note_term: ET_NOTE_TERM
-		do
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				l_item := a_list.item (i)
-				l_note_term := l_item.note_term
-				l_note_term.process (Current)
-				comment_finder.add_excluded_node (l_note_term)
-				comment_finder.find_comments (l_item, comment_list)
-				comment_finder.reset_excluded_nodes
-				if i /= nb then
-						-- The AST may or may not contain the comma.
-						-- So we have to print it explicitly here.
-					tokens.comma_symbol.process (Current)
-					print_space
-				end
-				i := i + 1
-			end
 		end
 
 	process_infix_and_then_operator (an_operator: ET_INFIX_AND_THEN_OPERATOR)
@@ -3946,7 +3877,7 @@ feature {ET_AST_NODE} -- Processing
 			l_has_comment_assertion: BOOLEAN
 		do
 			l_has_comment_assertion := attached a_list.break as l_break and then l_break.has_comment
-			if a_list.is_empty and not l_has_comment_assertion then
+			if a_list.is_empty and a_list.first_semicolon = Void and not l_has_comment_assertion then
 					-- Do not print empty local variable clause, but keep the comments if any.
 					--
 					-- Note that a comment could be a commented out local variable,
@@ -3956,6 +3887,9 @@ feature {ET_AST_NODE} -- Processing
 				a_list.local_keyword.process (Current)
 				print_new_line
 				indent
+				if attached a_list.first_semicolon as l_first_semicolon then
+					comment_finder.find_comments (l_first_semicolon, comment_list)
+				end
 				process_comments
 				nb := a_list.count
 				from i := 1 until i > nb loop
@@ -4185,6 +4119,88 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.as_keyword.process (Current)
 			print_space
 			an_expression.name.process (Current)
+		end
+
+	process_note_list (a_list: ET_NOTE_LIST)
+			-- Process `a_list'.
+		do
+			process_note_clause (a_list, True)
+		end
+
+	process_note_clause (a_list: ET_NOTE_LIST; a_new_line: BOOLEAN)
+			-- Process `a_list'.
+			-- `a_new_line' indicates that an empty new-line should
+			-- appear between the 'note' keyword and the first item.
+		local
+			i, nb: INTEGER
+			l_item: ET_NOTE_ITEM
+			l_note: ET_NOTE
+		do
+			if a_list.is_empty then
+					-- Do not print empty note clause, but keep the comments if any.
+				comment_finder.find_comments (a_list, comment_list)
+			else
+				a_list.note_keyword.process (Current)
+				if attached a_list.first_semicolon as l_first_semicolon then
+					comment_finder.find_comments (l_first_semicolon, comment_list)
+				end
+				indent
+				process_comments
+				if a_new_line then
+					print_new_line
+				end
+				nb := a_list.count
+				from i := 1 until i > nb loop
+					process_comments
+					print_new_line
+					l_item := a_list.item (i)
+					l_note := l_item.note_clause
+					if attached {ET_TAGGED_NOTE} l_note as l_tagged_note and then STRING_.same_string (l_tagged_note.tag.identifier.lower_name, "description") then
+						process_tagged_note_indented (l_tagged_note)
+						print_new_line
+					else
+						l_note.process (Current)
+					end
+					comment_finder.add_excluded_node (l_note)
+					comment_finder.find_comments (l_item, comment_list)
+					comment_finder.reset_excluded_nodes
+					i := i + 1
+				end
+				dedent
+			end
+		end
+
+	process_note_tag (a_tag: ET_TAG)
+			-- Process `a_tag' when appearing in a note clause.
+		require
+			a_tag_not_void: a_tag /= Void
+		do
+			process_tag (a_tag)
+		end
+
+	process_note_term_list (a_list: ET_NOTE_TERM_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+			l_item: ET_NOTE_TERM_ITEM
+			l_note_term: ET_NOTE_TERM
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				l_item := a_list.item (i)
+				l_note_term := l_item.note_term
+				l_note_term.process (Current)
+				comment_finder.add_excluded_node (l_note_term)
+				comment_finder.find_comments (l_item, comment_list)
+				comment_finder.reset_excluded_nodes
+				if i /= nb then
+						-- The AST may or may not contain the comma.
+						-- So we have to print it explicitly here.
+					tokens.comma_symbol.process (Current)
+					print_space
+				end
+				i := i + 1
+			end
 		end
 
 	process_new_name_of_rename (a_rename: ET_RENAME)
@@ -4766,6 +4782,9 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_list.clients_clause as l_clients then
 				print_space
 				l_clients.process (Current)
+			end
+			if attached a_list.first_semicolon as l_first_semicolon then
+				comment_finder.find_comments (l_first_semicolon, comment_list)
 			end
 			process_comments_on_same_line
 			print_new_line

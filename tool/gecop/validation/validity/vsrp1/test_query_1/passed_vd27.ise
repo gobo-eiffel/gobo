@@ -1,0 +1,19 @@
+-------------------------------------------------------------------------------
+
+Error code: VD27
+
+Configuration error: There is an inconsistency between the Root clause
+  of the ecf file and the creation clause of the system's root
+  class
+What to do:
+  1) If the system's root class has a creation procedure: make
+     sure that the name listed in the Root clause is that of a
+     feature which is a creation procedure of the root class
+  2) If the system's root class does not have a creation procedure:
+     make sure that that the Root clause does not list a creation
+     procedure.
+
+Root class: AA
+Invalid procedure name: make
+
+-------------------------------------------------------------------------------
