@@ -5,7 +5,7 @@
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_C_GENERATOR
@@ -1015,6 +1015,8 @@ feature {NONE} -- Generate external C files
 				elseif l_zlib_regexp.recognizes (l_lflag) then
 					generate_external_c_files ("zlib", l_zlib_regexp.captured_substring (1))
 					l_external_c_files_generated := True
+				elseif l_lflag.ends_with (".lib") then
+					add_to_library_paths (l_lflag, l_libs)
 				else
 					add_to_linker_flags (l_lflag, l_lflags)
 				end
@@ -1220,16 +1222,24 @@ feature {NONE} -- Generate external C files
 		require
 			a_pathname_not_void: a_pathname /= Void
 			a_library_paths_not_void: a_library_paths /= Void
+		local
+			l_pathname: STRING
 		do
-			if not a_library_paths.has_substring (a_pathname) then
+			l_pathname := a_pathname
+			if c_compiler_used.same_string ("zig") and operating_system.is_windows then
+					-- There is a bug in zig 0.14 where the -L linker flag is
+					-- not taken into account to search for lib files.
+				l_pathname := windows_lib_full_pathname (l_pathname)
+			end
+			if not a_library_paths.has_substring (l_pathname) then
 				if not a_library_paths.is_empty then
 					a_library_paths.append_character (' ')
 				end
-				if a_pathname.starts_with ("%"") then
-					a_library_paths.append_string (a_pathname)
+				if l_pathname.starts_with ("%"") then
+					a_library_paths.append_string (l_pathname)
 				else
 					a_library_paths.append_character ('%"')
-					a_library_paths.append_string (a_pathname)
+					a_library_paths.append_string (l_pathname)
 					a_library_paths.append_character ('%"')
 				end
 			end
@@ -1251,9 +1261,9 @@ feature {NONE} -- Generate external C files
 			add_to_library_paths ("OLE32.lib", a_library_paths)
 			add_to_library_paths ("OLEAUT32.lib", a_library_paths)
 			add_to_library_paths ("COMCTL32.lib", a_library_paths)
-			add_to_library_paths ("MPR.LIB", a_library_paths)
-			add_to_library_paths ("SHLWAPI.LIB", a_library_paths)
-			add_to_library_paths ("WINSPOOL.LIB", a_library_paths)
+			add_to_library_paths ("MPR.lib", a_library_paths)
+			add_to_library_paths ("SHLWAPI.lib", a_library_paths)
+			add_to_library_paths ("WINSPOOL.lib", a_library_paths)
 		end
 
 	add_to_linker_flags (a_lflag: STRING; a_lflags: STRING)
@@ -1281,6 +1291,41 @@ feature {NONE} -- Generate external C files
 					add_to_linker_flags ("-L%"" + l_pathname + "%"", a_lflags)
 				end
 			end
+		end
+
+	windows_lib_full_pathname (a_pathname: STRING): STRING
+			-- Add Windows library search path to `a_pathname' when possible.
+			-- This is a workaround for a bug in zig 0.14 where the -L linker
+			-- flag is not taken into account to search for lib files.
+		require
+			a_pathname_not_void: a_pathname /= Void
+		local
+			l_splitter: ST_SPLITTER
+			l_pathnames: DS_LIST [STRING]
+			l_full_pathname: STRING
+		do
+			Result := a_pathname
+			if not a_pathname.as_lower.ends_with (".lib") then
+				-- This is not a lib file.
+			elseif a_pathname.has ('$') or a_pathname.has ('/') or a_pathname.has ('\') then
+				-- Do not add library search path.
+			elseif not attached Execution_environment.variable_value ("LIB") as l_lib or else l_lib.is_empty then
+				-- No library search path.
+			else
+				create l_splitter.make_with_separators (";")
+				l_pathnames := l_splitter.split (l_lib)
+				from l_pathnames.start until l_pathnames.after loop
+					l_full_pathname := file_system.pathname (l_pathnames.item_for_iteration, a_pathname)
+					if file_system.file_exists (l_full_pathname) then
+						Result := l_full_pathname
+						l_pathnames.go_after
+					else
+						l_pathnames.forth
+					end
+				end
+			end
+		ensure
+			windows_lib_full_pathname_not_void: Result /= Void
 		end
 
 	generate_boehm_gc_c_files (a_system_name: STRING)
