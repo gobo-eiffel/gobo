@@ -1306,13 +1306,13 @@ feature {NONE} -- Object input
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 		local
-			l_type_code: INTEGER_8
+			l_type_code: NATURAL_8
 			l_boolean_objects: DS_HASH_TABLE [SB_BOOLEAN_OBJECT, BOOLEAN]
 			l_boolean_object: SB_BOOLEAN_OBJECT
 			l_boolean_value: BOOLEAN
 		do
-			a_file.read_integer_8
-			l_type_code := a_file.last_integer_8
+			a_file.read_natural_8
+			l_type_code := a_file.last_natural_8
 			if l_type_code = Eif_boolean_code then
 				a_file.read_character_8
 				l_boolean_value := (a_file.last_character_8 /= '%U')
