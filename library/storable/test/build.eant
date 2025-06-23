@@ -1,0 +1,14 @@
+﻿<?xml version="1.0"?>
+
+<project name="storable_test" default="help">
+
+	<description>
+		description: "Gobo Eiffel Storable Library Tester"
+		copyright: "Copyright (c) 2025, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/tests.eant"/>
+	</inherit>
+</project>

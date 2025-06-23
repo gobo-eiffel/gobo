@@ -9,7 +9,7 @@
 >
 	<description>
 		system: "Gobo Eiffel all classes integration"
-		copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+		copyright: "Copyright (c) 1999-2025, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 	<target name="integration">
@@ -67,6 +67,8 @@
 		<library name="regexp_test_example" location="${GOBO_LIBRARY}/library/regexp/test/example/system.ecf" readonly="false"/>
 		<library name="regexp_test_unit" location="${GOBO_LIBRARY}/library/regexp/test/unit/system.ecf" readonly="false"/>
 		<library name="string" location="${GOBO_LIBRARY}/library/string/library.ecf" readonly="false"/>
+		<library name="storable" location="${GOBO_LIBRARY}/library/storable/library.ecf" readonly="false"/>
+		<library name="storable_test_unit" location="${GOBO_LIBRARY}/library/storable/test/unit/system.ecf" readonly="false"/>
 		<library name="string_test_unit" location="${GOBO_LIBRARY}/library/string/test/unit/system.ecf" readonly="false"/>
 		<library name="string_tool_geuc" location="${GOBO_LIBRARY}/library/string/tool/geuc/src/system.ecf" readonly="false"/>
 		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="false"/>
