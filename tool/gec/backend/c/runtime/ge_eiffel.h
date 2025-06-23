@@ -385,11 +385,6 @@ extern void* GE_memset(void* str, int c, size_t n);
 #define GE_USE_POSIX_THREADS
 #endif
 
-#ifdef _MSC_VER /* MSVC */
-/* MSVC does not support ISO C 99's 'snprintf' from stdio.h */
-#define snprintf(a,b,c,d) sprintf(a,c,d)
-#endif
-
 /*
  * Gobo compiler version.
  * Starts with 6080 (looks like GOBO) followed by 5 digits.

@@ -142,6 +142,15 @@ feature -- Class names
 			exception_manager_factory_class_name_not_void: Result /= Void
 		end
 
+	file_class_name: ET_CLASS_NAME
+			-- "FILE" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_file_name)
+		ensure
+			instance_free: class
+			file_class_name_not_void: Result /= Void
+		end
+
 	function_class_name: ET_CLASS_NAME
 			-- "FUNCTION" class name
 		once
@@ -936,6 +945,15 @@ feature -- Feature names
 		ensure
 			instance_free: class
 			boolean_field_at_feature_name_not_void: Result /= Void
+		end
+
+	c_retrieved_feature_name: ET_FEATURE_NAME
+			-- 'c_retrieved' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (c_retrieved_name)
+		ensure
+			instance_free: class
+			c_retrieved_feature_name_not_void: Result /= Void
 		end
 
 	c_strlen_feature_name: ET_FEATURE_NAME
@@ -5015,6 +5033,7 @@ feature -- Keyword and symbol names
 	capitalized_exception_name: STRING = "EXCEPTION"
 	capitalized_exception_manager_name: STRING = "EXCEPTION_MANAGER"
 	capitalized_exception_manager_factory_name: STRING = "EXCEPTION_MANAGER_FACTORY"
+	capitalized_file_name: STRING = "FILE"
 	capitalized_function_name: STRING = "FUNCTION"
 	capitalized_identified_routines_name: STRING = "IDENTIFIED_ROUTINES"
 	capitalized_immutable_string_8_name: STRING = "IMMUTABLE_STRING_8"
@@ -5136,6 +5155,9 @@ feature -- Keyword and symbol names
 
 	boolean_item_name: STRING = "boolean_item"
 			-- Name of Eiffel feature 'boolean_item'
+
+	c_retrieved_name: STRING = "c_retrieved"
+			-- Name of Eiffel feature 'c_retrieved'
 
 	c_strlen_name: STRING = "c_strlen"
 			-- Name of Eiffel feature 'c_strlen'

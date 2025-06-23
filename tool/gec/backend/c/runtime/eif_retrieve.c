@@ -20,6 +20,12 @@
 #ifndef GE_CONSOLE_H
 #include "ge_console.h"
 #endif
+#ifndef GE_RETRIEVE_H
+#include "ge_retrieve.h"
+#endif
+#ifndef GE_EXCEPTION_H
+#include "ge_exception.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,17 +33,15 @@ extern "C" {
 
 char* eretrieve(EIF_INTEGER file_desc)
 {
-	/* TODO */
-	GE_show_console();
-	fprintf(stderr, "'eretrieve' in 'eif_retrieve.h' not implemented\n");
-	return (char*)0;
+	return (char*)GE_storable_retrieved_from_file(file_desc);
 }
 
 void eif_set_discard_pointer_values(EIF_BOOLEAN state)
 {
-	/* TODO */
-	GE_show_console();
-	fprintf(stderr, "'eif_set_discard_pointer_values' in 'eif_retrieve.h' not implemented\n");
+	GE_context* l_context;
+
+	l_context = GE_current_context();
+	l_context->storable_discard_pointer_values = state;
 }
 
 EIF_REFERENCE stream_eretrieve(EIF_POINTER* buffer, EIF_INTEGER size, EIF_INTEGER start_pos, EIF_INTEGER* real_size)

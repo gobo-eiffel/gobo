@@ -112,8 +112,15 @@ typedef volatile struct {
 #ifdef GE_USE_ATTRIBUTE_TYPE_ID
 	EIF_ENCODED_TYPE volatile type_id; /* Static type id */
 #endif
+#ifdef GE_USE_ATTRIBUTE_DYNAMIC_TYPE_SET
+	EIF_TYPE_INDEX* volatile dynamic_type_set; /* Dynamic type set */
+	uint32_t volatile dynamic_type_count; /* Number of types in `dynamic_type_set` */
+#endif
 #ifdef GE_USE_ATTRIBUTE_OFFSET
 	uint32_t volatile offset; /* Address offset in object */
+#endif
+#ifdef GE_USE_ATTRIBUTE_SIZE
+	uint32_t volatile size; /* Size of attribute in object */
 #endif
 } GE_attribute;
 #endif
@@ -538,6 +545,23 @@ extern EIF_REFERENCE GE_new_special_of_reference_instance_of_type_index(GE_conte
  * New instance of TYPE for object of type `a_type'.
  */
 extern EIF_REFERENCE GE_new_type_instance_of_encoded_type(GE_context* a_context, EIF_ENCODED_TYPE a_type);
+
+/*
+ * Check whether the `a_type' is in `a_dynamic_type_set'.
+ * `nb' is the number of ids in `a_dynamic_type_set'.
+ * `a_dynamic_type_set' is sorted in increasing order.
+ * A type-id 0 means Void (aka 'detachable NONE').
+ */
+extern EIF_BOOLEAN GE_type_in_dynamic_type_set(EIF_TYPE_INDEX a_type, EIF_TYPE_INDEX a_dynamic_type_set[], int nb);
+
+#ifdef GE_USE_ATTRIBUTES
+/*
+ * Attribute with name `a_name' (in lower-case) in type `a_type`.
+ * Null if no such attribute.
+ */
+extern GE_attribute* GE_attribute_with_name(EIF_TYPE_INDEX a_type, char* name);
+#endif
+
 
 #ifdef __cplusplus
 }
