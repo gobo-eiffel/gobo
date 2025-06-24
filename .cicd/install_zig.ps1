@@ -38,7 +38,11 @@ $GOBO_CI_ZIG_PATH = "https://ziglang.org/download/$GOBO_CI_ZIG_VERSION"
 
 switch ($GOBO_CI_OS) {
 	"linux" {
-		$GOBO_CI_ZIG_PLATFORM = "linux-x86_64"
+		if ($GOBO_CI_ARCH -eq "arm64") {
+			$GOBO_CI_ZIG_PLATFORM = "linux-aarch64"
+		} else {
+			$GOBO_CI_ZIG_PLATFORM = "linux-x86_64"
+		}
 		$GOBO_CI_ZIG_ARCHIVE_EXTENSION = ".tar.xz"
 	}
 	"macos" {
@@ -50,7 +54,11 @@ switch ($GOBO_CI_OS) {
 		$GOBO_CI_ZIG_ARCHIVE_EXTENSION = ".tar.xz"
 	}
 	"windows" {
-		$GOBO_CI_ZIG_PLATFORM = "windows-x86_64"
+		if ($GOBO_CI_ARCH -eq "arm64") {
+			$GOBO_CI_ZIG_PLATFORM = "windows-aarch64"
+		} else {
+			$GOBO_CI_ZIG_PLATFORM = "windows-x86_64"
+		}
 		$GOBO_CI_ZIG_ARCHIVE_EXTENSION = ".zip"
 	}
 }
