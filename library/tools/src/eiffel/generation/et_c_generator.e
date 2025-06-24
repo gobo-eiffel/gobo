@@ -1878,12 +1878,12 @@ feature {NONE} -- C code Generation
 				print_init_const_function
 				current_file.put_new_line
 				flush_to_c_file
-					-- Print 'GE_dts' dynamic type id set constants.
-				print_dynamic_type_id_set_constants
-				flush_to_c_file
 					-- Print 'GE_types' array.
 				print_types_array
 				current_file.put_new_line
+				flush_to_c_file
+					-- Print 'GE_dts' dynamic type id set constants.
+				print_dynamic_type_id_set_constants
 				flush_to_c_file
 					-- Print 'main' function.
 				print_main_function
@@ -1951,7 +1951,9 @@ feature {NONE} -- C code Generation
 					type_info_attributes_used or
 					type_info_attribute_name_used or
 					type_info_attribute_type_id_used or
+					type_info_attribute_dynamic_type_set_used or
 					type_info_attribute_offset_used or
+					type_info_attribute_size_used or
 					type_info_generator_used or
 					type_info_name_used or
 					type_info_generic_parameters_used or
@@ -2008,10 +2010,20 @@ feature {NONE} -- C code Generation
 							header_file.put_character (' ')
 							header_file.put_line (c_ge_use_attribute_type_id)
 						end
+						if type_info_attribute_dynamic_type_set_used then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_use_attribute_dynamic_type_set)
+						end
 						if type_info_attribute_offset_used then
 							header_file.put_string (c_define)
 							header_file.put_character (' ')
 							header_file.put_line (c_ge_use_attribute_offset)
+						end
+						if type_info_attribute_size_used then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_use_attribute_size)
 						end
 						if type_info_generator_used then
 							header_file.put_string (c_define)
@@ -2046,7 +2058,9 @@ feature {NONE} -- C code Generation
 					type_info_attributes_used := False
 					type_info_attribute_name_used := False
 					type_info_attribute_type_id_used := False
+					type_info_attribute_dynamic_type_set_used := False
 					type_info_attribute_offset_used := False
+					type_info_attribute_size_used := False
 					type_info_generator_used := False
 					type_info_name_used := False
 					type_info_generic_parameters_used := False
@@ -2544,6 +2558,18 @@ feature {NONE} -- Feature generation
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
+			if
+				a_feature.implementation_class.name.same_class_name (tokens.file_class_name) and then 
+				a_feature.implementation_feature.name.same_feature_name (tokens.c_retrieved_feature_name)
+			then
+				type_info_name_used := True
+				type_info_attributes_used:= True
+				type_info_attribute_name_used:= True
+				type_info_attribute_offset_used:= True
+				type_info_attribute_size_used:= True
+				type_info_attribute_type_id_used:= True
+				type_info_attribute_dynamic_type_set_used := True
+			end
 				--
 				-- Print signature to `header_file' and `current_file'.
 				--
@@ -30821,7 +30847,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			current_file.put_character ('s')
 			current_file.put_character ('[')
 			current_file.put_character ('2')
-			current_file.put_character ('0')
+			current_file.put_character ('1')
 			current_file.put_character (']')
 			current_file.put_character (';')
 			current_file.put_new_line
@@ -31707,7 +31733,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			current_file.put_character ('s')
 			current_file.put_character ('[')
 			current_file.put_character ('4')
-			current_file.put_character ('0')
+			current_file.put_character ('1')
 			current_file.put_character (']')
 			current_file.put_character (';')
 			current_file.put_new_line
@@ -36517,7 +36543,7 @@ feature {NONE} -- Memory allocation
 		end
 
 	print_object_allocation_functions
-			-- For each non-expanded type that is alive (e.g. that can have instances at runtime),
+			-- For each type that is alive (e.g. that can have instances at runtime),
 			-- print a 'GE_new<type-id>' function to `current_file', and its signature to `header_file'.
 			-- 'GE_new<type-id>' creates a new instance of type type-id, with possible default
 			-- initialization depending on its argument. It also registers the 'dispose' feature
@@ -36531,7 +36557,7 @@ feature {NONE} -- Memory allocation
 			nb := l_dynamic_types.count
 			from i := 1 until i > nb loop
 				l_type := l_dynamic_types.item (i)
-				if l_type.is_alive and then not l_type.is_expanded then
+				if l_type.is_alive then
 					if not l_type.base_class.is_type_class then
 						print_object_allocation_function (l_type)
 					end
@@ -36547,7 +36573,6 @@ feature {NONE} -- Memory allocation
 			-- for that object to the GC if such feature exists.
 		require
 			a_type_not_void: a_type /= Void
-			a_type_reference: not a_type.is_expanded
 		local
 			l_special_type: detachable ET_DYNAMIC_SPECIAL_TYPE
 			l_item_type: detachable ET_DYNAMIC_PRIMARY_TYPE
@@ -36567,8 +36592,13 @@ feature {NONE} -- Memory allocation
 			current_file.put_line (" */")
 			header_file.put_string (c_extern)
 			header_file.put_character (' ')
-			print_type_declaration (a_type, header_file)
-			print_type_declaration (a_type, current_file)
+			if a_type.is_expanded then
+				print_boxed_type_declaration (a_type, header_file)
+				print_boxed_type_declaration (a_type, current_file)
+			else
+				print_type_declaration (a_type, header_file)
+				print_type_declaration (a_type, current_file)
+			end
 			header_file.put_character (' ')
 			current_file.put_character (' ')
 			header_file.put_string (c_ge_new)
@@ -36627,7 +36657,11 @@ feature {NONE} -- Memory allocation
 			current_file.put_new_line
 			indent
 			print_indentation
-			print_type_declaration (a_type, current_file)
+			if a_type.is_expanded then
+				print_boxed_type_declaration (a_type, current_file)
+			else
+				print_type_declaration (a_type, current_file)
+			end
 			current_file.put_character (' ')
 			print_result_name (current_file)
 			print_semicolon_newline
@@ -36643,7 +36677,11 @@ feature {NONE} -- Memory allocation
 			print_assign_to
 			current_file.put_string (c_sizeof)
 			current_file.put_character ('(')
-			print_type_name (a_type, current_file)
+			if a_type.is_expanded then
+				print_boxed_type_name (a_type, current_file)
+			else
+				print_type_name (a_type, current_file)
+			end
 			current_file.put_character (')')
 			if l_special_type /= Void then
 				l_item_type := l_special_type.item_type_set.static_type.primary_type
@@ -36661,9 +36699,13 @@ feature {NONE} -- Memory allocation
 			print_result_name (current_file)
 			print_assign_to
 			current_file.put_character ('(')
-			print_type_declaration (a_type, current_file)
+			if a_type.is_expanded then
+				print_boxed_type_declaration (a_type, current_file)
+			else
+				print_type_declaration (a_type, current_file)
+			end
 			current_file.put_character (')')
-			if use_scoop or a_type.has_nested_reference_fields then
+			if use_scoop or a_type.is_expanded or a_type.has_nested_reference_fields then
 				current_file.put_string (c_ge_calloc)
 			else
 				l_atomic_malloc := True
@@ -36688,18 +36730,37 @@ feature {NONE} -- Memory allocation
 				-- Default initialization.
 				-- Set 'type_id'.
 			print_indentation
-			print_attribute_type_id_access (tokens.result_keyword, a_type, False)
+			if a_type.is_expanded then
+				print_boxed_attribute_type_id_access (tokens.result_keyword, a_type, False)
+			else
+				print_attribute_type_id_access (tokens.result_keyword, a_type, False)
+			end
 			print_assign_to
 			current_file.put_integer (a_type.id)
 			print_semicolon_newline
 			if use_scoop then
 					-- Set SCOOP region.
 				print_indentation
-				print_attribute_region_access (tokens.result_keyword, a_type, False)
+				if a_type.is_expanded then
+					print_boxed_attribute_region_access (tokens.result_keyword, a_type, False)
+				else
+					print_attribute_region_access (tokens.result_keyword, a_type, False)
+				end
 				print_assign_to
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
 				current_file.put_string (c_region)
+				print_semicolon_newline
+			end
+			if a_type.is_expanded then
+					-- Set pointer.
+				print_indentation
+				print_boxed_attribute_pointer_access (tokens.result_keyword, a_type, False)
+				print_assign_to
+				current_file.put_character ('&')
+				current_file.put_character ('(')
+				print_boxed_attribute_item_access (tokens.result_keyword, a_type, False)
+				current_file.put_character (')')
 				print_semicolon_newline
 			end
 			if l_special_type /= Void then
@@ -40435,6 +40496,13 @@ feature {NONE} -- Type generation
 			l_parameter_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_name: STRING
+			k, nb_types: INTEGER
+			l_dynamic_type_ids: DS_ARRAYED_LIST [INTEGER]
+			l_dts_ids: STRING
+			l_dts_name: STRING
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
+			l_item_count: INTEGER
 		do
 			l_dynamic_types := dynamic_types
 			nb := l_dynamic_types.count
@@ -40715,6 +40783,58 @@ feature {NONE} -- Type generation
 								end
 								l_comma_needed := True
 							end
+								-- dynamic type set.
+							if type_info_attribute_dynamic_type_set_used then
+								if l_comma_needed then
+									current_file.put_character (',')
+									current_file.put_character (' ')
+								end
+								if attached l_attribute.result_type_set as l_result_type_set then
+									nb_types := l_result_type_set.count
+									l_dynamic_type_ids := attachment_dynamic_type_ids
+									if nb_types >= l_dynamic_type_ids.capacity then
+										l_dynamic_type_ids.resize (nb_types + 1)
+									end
+									if l_result_type_set.can_be_void and not l_result_type_set.static_type.is_attached then
+										l_dynamic_type_ids.put_last (0)
+									end
+									from k := 1 until k > nb_types loop
+										l_dynamic_type_ids.put_last (l_result_type_set.dynamic_type (k).id)
+										k := k + 1
+									end
+									l_dynamic_type_ids.sort (dynamic_type_id_sorter)
+									nb_types := l_dynamic_type_ids.count
+									create l_dts_ids.make (5 * nb_types)
+									from k := 1 until k > nb_types loop
+										if k /= 1 then
+											l_dts_ids.append_character (',')
+										end
+										l_dts_ids.append_string (l_dynamic_type_ids.item (k).out)
+										k := k + 1
+									end
+									dynamic_type_id_set_names.search (l_dts_ids)
+									if dynamic_type_id_set_names.found then
+										l_dts_name := dynamic_type_id_set_names.found_item
+									else
+										l_dts_name := c_ge_dts + (dynamic_type_id_set_names.count + 1).out
+										dynamic_type_id_set_names.force_last_new (l_dts_name, l_dts_ids)
+									end
+									l_dynamic_type_ids.wipe_out
+									current_file.put_string (l_dts_name)
+									current_file.put_character (',')
+									current_file.put_character (' ')
+									current_file.put_integer (nb_types)
+								else
+										-- Internal error: attributes have a result type.
+									set_fatal_error
+									error_handler.report_giaac_error (generator, "print_types_array", 2, "attribute with no dynamic type set.")
+									current_file.put_character ('0')
+									current_file.put_character (',')
+									current_file.put_character (' ')
+									current_file.put_character ('0')
+								end
+								l_comma_needed := True
+							end
 								-- offset.
 							if type_info_attribute_offset_used then
 								if l_comma_needed then
@@ -40735,6 +40855,25 @@ feature {NONE} -- Type generation
 									current_file.put_character (',')
 									current_file.put_character (' ')
 									print_attribute_name (l_attribute, l_type, current_file)
+								end
+								current_file.put_character (')')
+								l_comma_needed := True
+							end
+								-- size.
+							if type_info_attribute_size_used then
+								if l_comma_needed then
+									current_file.put_character (',')
+									current_file.put_character (' ')
+								end
+								current_file.put_string (c_sizeof)
+								current_file.put_character ('(')
+								if attached l_attribute.result_type_set as l_result_type_set then
+									print_type_declaration (l_result_type_set.static_type.primary_type, current_file)
+								else
+										-- Internal error: attributes have a result type.
+									set_fatal_error
+									error_handler.report_giaac_error (generator, "print_types_array", 3, "attribute with no type.")
+									current_file.put_character ('0')
 								end
 								current_file.put_character (')')
 							end
@@ -40767,6 +40906,48 @@ feature {NONE} -- Type generation
 							current_file.put_integer (l_special_type.item_type_set.static_type.type_id)
 							l_comma_needed := True
 						end
+							-- dynamic type set.
+						if type_info_attribute_dynamic_type_set_used then
+							if l_comma_needed then
+								current_file.put_character (',')
+								current_file.put_character (' ')
+							end
+							nb_types := l_special_type.item_type_set.count
+							l_dynamic_type_ids := attachment_dynamic_type_ids
+							if nb_types >= l_dynamic_type_ids.capacity then
+								l_dynamic_type_ids.resize (nb_types + 1)
+							end
+							if l_special_type.item_type_set.can_be_void and not l_special_type.item_type_set.static_type.is_attached then
+								l_dynamic_type_ids.put_last (0)
+							end
+							from k := 1 until k > nb_types loop
+								l_dynamic_type_ids.put_last (l_special_type.item_type_set.dynamic_type (k).id)
+								k := k + 1
+							end
+							l_dynamic_type_ids.sort (dynamic_type_id_sorter)
+							nb_types := l_dynamic_type_ids.count
+							create l_dts_ids.make (5 * nb_types)
+							from k := 1 until k > nb_types loop
+								if k /= 1 then
+									l_dts_ids.append_character (',')
+								end
+								l_dts_ids.append_string (l_dynamic_type_ids.item (k).out)
+								k := k + 1
+							end
+							dynamic_type_id_set_names.search (l_dts_ids)
+							if dynamic_type_id_set_names.found then
+								l_dts_name := dynamic_type_id_set_names.found_item
+							else
+								l_dts_name := c_ge_dts + (dynamic_type_id_set_names.count + 1).out
+								dynamic_type_id_set_names.force_last_new (l_dts_name, l_dts_ids)
+							end
+							l_dynamic_type_ids.wipe_out
+							current_file.put_string (l_dts_name)
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							current_file.put_integer (nb_types)
+							l_comma_needed := True
+						end
 							-- offset.
 						if type_info_attribute_offset_used then
 							if l_comma_needed then
@@ -40781,6 +40962,197 @@ feature {NONE} -- Type generation
 							current_file.put_character (',')
 							current_file.put_character (' ')
 							print_attribute_special_item_name (l_type, current_file)
+							current_file.put_character (')')
+							l_comma_needed := True
+						end
+								-- size.
+						if type_info_attribute_size_used then
+							if l_comma_needed then
+								current_file.put_character (',')
+								current_file.put_character (' ')
+							end
+							current_file.put_string (c_sizeof)
+							current_file.put_character ('(')
+							print_type_declaration (l_special_type.item_type_set.static_type.primary_type, current_file)
+							current_file.put_character (')')
+						end
+						current_file.put_character ('}')
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+					if attached {ET_DYNAMIC_TUPLE_TYPE} l_type as l_tuple_type then
+							-- One more attribute for each Tuple item: 'item N'.
+						l_item_type_sets := l_tuple_type.item_type_sets
+						l_item_count := l_item_type_sets.count
+						from j := 1 until j > l_item_count loop
+							l_item_type_set := l_item_type_sets.item (j)
+							l_attribute_count := l_attribute_count + 1
+							l_comma_needed := False
+							current_file.put_string ("GE_attribute T")
+							current_file.put_integer (l_type.id)
+							current_file.put_string ("aa")
+							current_file.put_integer (l_attribute_count)
+							current_file.put_string (" = {")
+								-- name.
+							if type_info_attribute_name_used then
+								print_escaped_string ("item " + j.out)
+								l_comma_needed := True
+							end
+								-- type_id.
+							if type_info_attribute_type_id_used then
+								if l_comma_needed then
+									current_file.put_character (',')
+									current_file.put_character (' ')
+								end
+								current_file.put_integer (l_item_type_set.static_type.type_id)
+								l_comma_needed := True
+							end
+								-- dynamic type set.
+							if type_info_attribute_dynamic_type_set_used then
+								if l_comma_needed then
+									current_file.put_character (',')
+									current_file.put_character (' ')
+								end
+								nb_types := l_item_type_set.count
+								l_dynamic_type_ids := attachment_dynamic_type_ids
+								if nb_types >= l_dynamic_type_ids.capacity then
+									l_dynamic_type_ids.resize (nb_types + 1)
+								end
+								if l_item_type_set.can_be_void and not l_item_type_set.static_type.is_attached then
+									l_dynamic_type_ids.put_last (0)
+								end
+								from k := 1 until k > nb_types loop
+									l_dynamic_type_ids.put_last (l_item_type_set.dynamic_type (k).id)
+									k := k + 1
+								end
+								l_dynamic_type_ids.sort (dynamic_type_id_sorter)
+								nb_types := l_dynamic_type_ids.count
+								create l_dts_ids.make (5 * nb_types)
+								from k := 1 until k > nb_types loop
+									if k /= 1 then
+										l_dts_ids.append_character (',')
+									end
+									l_dts_ids.append_string (l_dynamic_type_ids.item (k).out)
+									k := k + 1
+								end
+								dynamic_type_id_set_names.search (l_dts_ids)
+								if dynamic_type_id_set_names.found then
+									l_dts_name := dynamic_type_id_set_names.found_item
+								else
+									l_dts_name := c_ge_dts + (dynamic_type_id_set_names.count + 1).out
+									dynamic_type_id_set_names.force_last_new (l_dts_name, l_dts_ids)
+								end
+								l_dynamic_type_ids.wipe_out
+								current_file.put_string (l_dts_name)
+								current_file.put_character (',')
+								current_file.put_character (' ')
+								current_file.put_integer (nb_types)
+								l_comma_needed := True
+							end
+								-- offset.
+							if type_info_attribute_offset_used then
+								if l_comma_needed then
+									current_file.put_character (',')
+									current_file.put_character (' ')
+								end
+									-- Note: if `offsetof' is not supported, then we can use: ((int)&(((T317*) 0)->a2))
+									-- See: http://stackoverflow.com/questions/142016/c-c-structure-offset
+								current_file.put_string (c_offsetof)
+								current_file.put_character ('(')
+								print_type_name (l_type, current_file)
+								current_file.put_character (',')
+								current_file.put_character (' ')
+								print_attribute_tuple_item_name (j, l_type, current_file)
+								current_file.put_character (')')
+								l_comma_needed := True
+							end
+								-- size.
+							if type_info_attribute_size_used then
+								if l_comma_needed then
+									current_file.put_character (',')
+									current_file.put_character (' ')
+								end
+								current_file.put_string (c_sizeof)
+								current_file.put_character ('(')
+								print_type_declaration (l_item_type_set.static_type.primary_type, current_file)
+								current_file.put_character (')')
+							end
+							current_file.put_character ('}')
+							current_file.put_character (';')
+							current_file.put_new_line
+							j := j + 1
+						end
+					end
+					if (type_info_attribute_offset_used or type_info_attribute_size_used) and then l_type.is_expanded and then not l_type.is_basic then
+							-- One extra hidden attribute for the offset within the boxed object.
+						l_attribute_count := l_attribute_count + 1
+						l_comma_needed := False
+						current_file.put_string ("GE_attribute T")
+						current_file.put_integer (l_type.id)
+						current_file.put_string ("aa")
+						current_file.put_integer (l_attribute_count)
+						current_file.put_string (" = {")
+							-- name.
+						if type_info_attribute_name_used then
+							print_escaped_string ("current")
+							l_comma_needed := True
+						end
+							-- type_id.
+						if type_info_attribute_type_id_used then
+							if l_comma_needed then
+								current_file.put_character (',')
+								current_file.put_character (' ')
+							end
+							current_file.put_integer (l_type.type_id)
+							l_comma_needed := True
+						end
+							-- dynamic type set.
+						if type_info_attribute_dynamic_type_set_used then
+							if l_comma_needed then
+								current_file.put_character (',')
+								current_file.put_character (' ')
+							end
+							nb_types := 1
+							l_dts_ids := l_type.id.out
+							dynamic_type_id_set_names.search (l_dts_ids)
+							if dynamic_type_id_set_names.found then
+								l_dts_name := dynamic_type_id_set_names.found_item
+							else
+								l_dts_name := c_ge_dts + (dynamic_type_id_set_names.count + 1).out
+								dynamic_type_id_set_names.force_last_new (l_dts_name, l_dts_ids)
+							end
+							current_file.put_string (l_dts_name)
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							current_file.put_integer (nb_types)
+							l_comma_needed := True
+						end
+							-- offset.
+						if type_info_attribute_offset_used then
+							if l_comma_needed then
+								current_file.put_character (',')
+								current_file.put_character (' ')
+							end
+								-- Note: if `offsetof' is not supported, then we can use: ((int)&(((T317*) 0)->a2))
+								-- See: http://stackoverflow.com/questions/142016/c-c-structure-offset
+							current_file.put_string (c_offsetof)
+							current_file.put_character ('(')
+							print_boxed_type_name (l_type, current_file)
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							print_boxed_attribute_item_name (l_type, current_file)
+							current_file.put_character (')')
+							l_comma_needed := True
+						end
+							-- size.
+						if type_info_attribute_size_used then
+							if l_comma_needed then
+								current_file.put_character (',')
+								current_file.put_character (' ')
+							end
+							current_file.put_string (c_sizeof)
+							current_file.put_character ('(')
+							print_type_declaration (l_type, current_file)
 							current_file.put_character (')')
 						end
 						current_file.put_character ('}')
@@ -41041,11 +41413,18 @@ feature {NONE} -- Type generation
 						if l_type.is_special then
 								-- One more attribute: 'item'.
 							l_attribute_count := l_attribute_count + 1
+	
+						end
+						if attached {ET_DYNAMIC_TUPLE_TYPE} l_type as l_tuple_type then
+								-- One more attribute per Tuple item.
+							l_attribute_count := l_attribute_count + l_tuple_type.item_type_sets.count
 						end
 					else
 						l_attribute_count := 0
 					end
-					if l_attribute_count > 0 then
+					if l_attribute_count > 0 or ((type_info_attribute_offset_used or type_info_attribute_size_used) and then l_type.is_alive and then l_type.is_expanded and then not l_type.is_basic) then
+							-- For expanded types there is an extra hidden attribute
+							-- for the offset within the boxed object.
 						current_file.put_string ("T")
 						current_file.put_integer (l_type.id)
 						current_file.put_string ("aa")
@@ -41078,12 +41457,6 @@ feature {NONE} -- Type generation
 				current_file.put_character (' ')
 					-- new_instance.
 				if not l_type.is_alive then
-					current_file.put_character ('0')
-				elseif l_type.is_expanded then
-					current_file.put_character ('0')
-				elseif not current_dynamic_system.is_new_instance_type (l_type) then
-						-- Raise an exception and return Void when the result type has not been
-						-- specified as a type which can have instances created by 'new_instance'.
 					current_file.put_character ('0')
 				elseif l_type.base_class.is_type_class then
 						-- Cannot have two instances of class TYPE representing the same Eiffel type.
@@ -43506,6 +43879,9 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("ge_real.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					l_c_filename := "ge_real.c"
+				elseif a_filename.same_string ("ge_retrieve.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "ge_retrieve.c"
 				elseif a_filename.same_string ("ge_scoop.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					include_runtime_header_file ("ge_exception.h", a_force, a_file)
@@ -43593,6 +43969,8 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("eif_retrieve.c") then
 					include_runtime_header_file ("eif_retrieve.h", False, a_header_file)
 					include_runtime_header_file ("ge_console.h", False, a_header_file)
+					include_runtime_header_file ("ge_retrieve.h", False, a_header_file)
+					include_runtime_header_file ("ge_exception.h", False, a_header_file)
 				elseif a_filename.same_string ("eif_store.c") then
 					include_runtime_header_file ("eif_store.h", False, a_header_file)
 					include_runtime_header_file ("ge_console.h", False, a_header_file)
@@ -43644,6 +44022,11 @@ feature {NONE} -- Include files
 					end
 				elseif a_filename.same_string ("ge_real.c") then
 					include_runtime_header_file ("ge_real.h", False, a_header_file)
+				elseif a_filename.same_string ("ge_retrieve.c") then
+					include_runtime_header_file ("ge_retrieve.h", False, a_header_file)
+					include_runtime_header_file ("ge_storable.h", False, a_header_file)
+					include_runtime_header_file ("ge_gc.h", False, a_header_file)
+					include_runtime_header_file ("ge_types.h", False, a_header_file)
 				elseif a_filename.same_string ("ge_scoop.c") then
 					include_runtime_header_file ("ge_scoop.h", False, a_header_file)
 					include_runtime_header_file ("ge_gc.h", False, a_header_file)
@@ -45090,7 +45473,7 @@ feature {NONE} -- Dynamic type sets
 			-- List of dynamic type ids of the source of an attachment
 
 	target_dynamic_type_ids: DS_ARRAYED_LIST [INTEGER]
-			-- List of dynamic type ids of the target of a  call
+			-- List of dynamic type ids of the target of a call
 
 	target_dynamic_types: DS_HASH_TABLE [ET_DYNAMIC_PRIMARY_TYPE, INTEGER]
 			-- Dynamic types of the target of a call indexed by type ids
@@ -46410,8 +46793,14 @@ feature {NONE} -- Implementation
 	type_info_attribute_type_id_used: BOOLEAN
 			-- Is the type id of attributes used in the system?
 
+	type_info_attribute_dynamic_type_set_used: BOOLEAN
+			-- Is the dynamic type set of attributes used in the system?
+
 	type_info_attribute_offset_used: BOOLEAN
 			-- Is the offset of attributes used in the system?
+
+	type_info_attribute_size_used: BOOLEAN
+			-- Is the size of attributes used in the system?
 
 	type_info_generator_used: BOOLEAN
 			-- Is the generator of types used in the system?
@@ -46962,8 +47351,10 @@ feature {NONE} -- Constants
 	c_ge_unmark_object: STRING = "GE_unmark_object"
 	c_ge_unqualified: STRING = "GE_unqualified"
 	c_ge_use_ancestors: STRING = "GE_USE_ANCESTORS"
+	c_ge_use_attribute_dynamic_type_set: STRING = "GE_USE_ATTRIBUTE_DYNAMIC_TYPE_SET"
 	c_ge_use_attribute_name: STRING = "GE_USE_ATTRIBUTE_NAME"
 	c_ge_use_attribute_offset: STRING = "GE_USE_ATTRIBUTE_OFFSET"
+	c_ge_use_attribute_size: STRING = "GE_USE_ATTRIBUTE_SIZE"
 	c_ge_use_attribute_type_id: STRING = "GE_USE_ATTRIBUTE_TYPE_ID"
 	c_ge_use_attributes: STRING = "GE_USE_ATTRIBUTES"
 	c_ge_use_boehm_gc: STRING = "GE_USE_BOEHM_GC"

@@ -137,6 +137,7 @@ struct GE_context_struct {
 	GE_exception_trace_buffer last_exception_trace; /* Last non-routine-failure exception trace */
 	int volatile signal_number; /* Number of last signal received */
 	int volatile pre_ecma_mapping_status; /* Do we map old names to new name? (i.e. STRING to STRING_8, INTEGER to INTEGER_32, ...). */
+	char volatile storable_discard_pointer_values; /* Should POINTER values be set to NUll when retrieving Storables? */
 #ifdef GE_USE_THREADS
 	GE_thread_context* volatile thread; /* Thread context */
 	GE_onces* volatile process_onces; /* Cache for status and results of onces-per-process */

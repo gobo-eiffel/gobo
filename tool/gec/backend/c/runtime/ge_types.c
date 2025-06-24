@@ -281,16 +281,15 @@ EIF_REFERENCE GE_generating_type_8_of_encoded_type(EIF_ENCODED_TYPE a_type)
 EIF_ENCODED_TYPE GE_encoded_type_from_name(EIF_POINTER a_name)
 {
 #ifdef GE_USE_TYPE_NAME
-/* TODO: check that `a_type' is valid. */
 	int i;
 	const char* l_name;
 
 	for (i = 1; i <= GE_type_info_count; i++) {
 		l_name = GE_type_infos[i].name;
 		if (strcmp((char*)a_name, l_name + 1) == 0) {
-			return (EIF_INTEGER)GE_encoded_type(GE_new_type(i, 0x0));
+			return GE_encoded_type(GE_new_type(i, 0x0));
 		} else if (strcmp((char*)a_name, l_name) == 0) {
-			return (EIF_INTEGER)GE_encoded_type(GE_new_type(i, ATTACHED_FLAG));
+			return GE_encoded_type(GE_new_type(i, ATTACHED_FLAG));
 		}
 	}
 #endif
@@ -660,6 +659,67 @@ EIF_REFERENCE GE_new_type_instance_of_encoded_type(GE_context* a_context, EIF_EN
 	}
 	return l_result;
 }
+
+/*
+ * Check whether the `a_type' is in `a_dynamic_type_set'.
+ * `nb' is the number of ids in `a_dynamic_type_set'.
+ * `a_dynamic_type_set' is sorted in increasing order.
+ * A type-id 0 means Void (aka 'detachable NONE').
+ */
+EIF_BOOLEAN GE_type_in_dynamic_type_set(EIF_TYPE_INDEX a_type, EIF_TYPE_INDEX a_dynamic_type_set[], int nb)
+{
+	int i;
+
+	if (nb < 1) {
+		return EIF_FALSE;
+	}
+	if (a_type < a_dynamic_type_set[0]) {
+		return EIF_FALSE;
+	}
+	if (a_type > a_dynamic_type_set[nb-1]) {
+		return EIF_FALSE;
+	}	
+	for (i = 0; i < nb; i++) {
+		if (a_type == a_dynamic_type_set[i]) {
+			return EIF_TRUE;
+		} else if (a_type < a_dynamic_type_set[i]) {
+				/* type-ids are sorted in increasing order. */
+			return EIF_FALSE;
+		}
+	}
+	return EIF_FALSE;
+}
+
+#ifdef GE_USE_ATTRIBUTES
+/*
+ * Attribute with name `a_name' (in lower-case) in type `a_type`.
+ * Null if no such attribute.
+ */
+GE_attribute* GE_attribute_with_name(EIF_TYPE_INDEX a_type, char* a_name)
+{
+#ifdef GE_USE_ATTRIBUTE_NAME
+	uint32_t i;
+	uint32_t l_count;
+	GE_type_info* l_type_info;
+	GE_attribute** l_attributes;
+	GE_attribute* l_attribute;
+
+	if (a_type > 0 && a_type <= GE_type_info_count) {
+		l_type_info = &(GE_type_infos[a_type]);
+		l_count = l_type_info->attribute_count;
+		l_attributes = l_type_info->attributes;
+		for (i = 0; i < l_count; i++) {
+			l_attribute = l_attributes[i];
+			if (strcmp(a_name, l_attribute->name) == 0) {
+				return l_attribute;
+			}
+		}
+		fprintf(stderr, "H8\n");
+	}
+#endif
+	return (GE_attribute*)0;
+}
+#endif
 
 #ifdef __cplusplus
 }

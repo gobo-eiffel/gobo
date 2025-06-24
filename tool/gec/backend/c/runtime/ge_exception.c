@@ -438,6 +438,7 @@ GE_context* GE_new_context(int is_scoop_processor)
 		l_context = (GE_context*)GE_calloc(1, sizeof(GE_context));
 	}
 	l_context->exception_trace_enabled = '\1';
+	l_context->storable_discard_pointer_values = '\1';
 	l_context->pre_ecma_mapping_status = 1;
 	return l_context;
 }
@@ -747,30 +748,17 @@ EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, EIF_TYPE_INDEX type_ids[], int
 {
 	if (obj) {
 		int type_id = obj->id;
-		if (type_id < type_ids[0]) {
-			/* Done */
-		} else if (type_id > type_ids[nb-1]) {
-			/* Done */
-		} else {
-			int i;
-			for (i = 0; i < nb; i++) {
-				if (type_id == type_ids[i]) {
-					GE_show_console();
-					fprintf(stderr, "CAT-call error!\n");
+		if (GE_type_in_dynamic_type_set(type_id, type_ids, nb)) {
+			GE_show_console();
+			fprintf(stderr, "CAT-call error!\n");
 #ifdef EIF_DEBUG
-					{
-						volatile char c;
-						fprintf(stderr, "Press Enter...\n");
-						scanf("%c", &c);
-					}
-#endif
-					GE_raise_with_message(GE_EX_PROG, "CAT-call error.");
-					break;
-				} else if (type_id < type_ids[i]) {
-						/* type-ids are sorted in increasing order. */
-					break;
-				}
+			{
+				volatile char c;
+				fprintf(stderr, "Press Enter...\n");
+				scanf("%c", &c);
 			}
+#endif
+			GE_raise_with_message(GE_EX_PROG, "CAT-call error.");
 		}
 	}
 	return (obj);

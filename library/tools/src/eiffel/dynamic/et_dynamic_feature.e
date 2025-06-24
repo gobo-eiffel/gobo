@@ -170,6 +170,13 @@ feature {NONE} -- Initialization
 			elseif a_feature.has_seed (a_system.current_system.is_equal_seed) then
 				is_is_equal_routine := True
 			end
+			if
+				a_feature.implementation_class.name.same_class_name (tokens.file_class_name) and then 
+				a_feature.implementation_feature.name.same_feature_name (tokens.c_retrieved_feature_name)
+			then
+					-- Keep all attributes when using Storable.
+				a_system.use_all_attributes
+			end
 		ensure
 			static_feature_set: static_feature = a_feature
 			target_type_set: target_type = a_target_type

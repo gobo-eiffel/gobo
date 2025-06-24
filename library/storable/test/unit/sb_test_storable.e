@@ -58,17 +58,15 @@ feature -- Test
 			l_filename: STRING
 			l_file: RAW_FILE
 		do
-			if not eiffel_compiler.is_ge then
-				l_filename := Execution_environment.interpreted_string (storable_1_workbench_ise_filename)
-				create l_file.make_with_name (l_filename)
-				l_file.open_read
-				l_retrieved := l_file.retrieved
-				l_file.close
-				if attached {SB_DATA_1} l_retrieved as l_object then
-					check_values (l_object)
-				else
-					assert ("is_retrieved", False)
-				end
+			l_filename := Execution_environment.interpreted_string (storable_1_workbench_ise_filename)
+			create l_file.make_with_name (l_filename)
+			l_file.open_read
+			l_retrieved := l_file.retrieved
+			l_file.close
+			if attached {SB_DATA_1} l_retrieved as l_object then
+				check_values (l_object)
+			else
+				assert ("is_retrieved", False)
 			end
 		end
 
@@ -80,17 +78,15 @@ feature -- Test
 			l_filename: STRING
 			l_file: RAW_FILE
 		do
-			if not eiffel_compiler.is_ge then
-				l_filename := Execution_environment.interpreted_string (storable_1_finalized_ise_filename)
-				create l_file.make_with_name (l_filename)
-				l_file.open_read
-				l_retrieved := l_file.retrieved
-				l_file.close
-				if attached {SB_DATA_1} l_retrieved as l_object then
-					check_values (l_object)
-				else
-					assert ("is_retrieved", False)
-				end
+			l_filename := Execution_environment.interpreted_string (storable_1_finalized_ise_filename)
+			create l_file.make_with_name (l_filename)
+			l_file.open_read
+			l_retrieved := l_file.retrieved
+			l_file.close
+			if attached {SB_DATA_1} l_retrieved as l_object then
+				check_values (l_object)
+			else
+				assert ("is_retrieved", False)
 			end
 		end
 

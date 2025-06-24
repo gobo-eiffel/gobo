@@ -19,7 +19,7 @@
 #ifndef GE_EIFFEL_H
 #include "ge_eiffel.h"
 #endif
-#ifndef GE_THREAD_TYPES_H
+#ifndef GE_EXCEPTION_H
 #include "ge_exception.h"
 #endif
 
