@@ -32,32 +32,32 @@ if ($LastExitCode -ne 0) {
 	exit $LastExitCode
 }
 
-$GOBO_CI_ZIG_VERSION = "0.14.0"
+$GOBO_CI_ZIG_VERSION = "0.14.1"
 $GOBO_CI_ZIG_PATH = "https://ziglang.org/download/$GOBO_CI_ZIG_VERSION"
 # $GOBO_CI_ZIG_PATH = "https://ziglang.org/builds"
 
 switch ($GOBO_CI_OS) {
 	"linux" {
 		if ($GOBO_CI_ARCH -eq "arm64") {
-			$GOBO_CI_ZIG_PLATFORM = "linux-aarch64"
+			$GOBO_CI_ZIG_PLATFORM = "aarch64-linux"
 		} else {
-			$GOBO_CI_ZIG_PLATFORM = "linux-x86_64"
+			$GOBO_CI_ZIG_PLATFORM = "x86_64-linux"
 		}
 		$GOBO_CI_ZIG_ARCHIVE_EXTENSION = ".tar.xz"
 	}
 	"macos" {
 		if ($GOBO_CI_ARCH -eq "arm64") {
-			$GOBO_CI_ZIG_PLATFORM = "macos-aarch64"
+			$GOBO_CI_ZIG_PLATFORM = "aarch64-macos"
 		} else {
-			$GOBO_CI_ZIG_PLATFORM = "macos-x86_64"
+			$GOBO_CI_ZIG_PLATFORM = "x86_64-macos"
 		}
 		$GOBO_CI_ZIG_ARCHIVE_EXTENSION = ".tar.xz"
 	}
 	"windows" {
 		if ($GOBO_CI_ARCH -eq "arm64") {
-			$GOBO_CI_ZIG_PLATFORM = "windows-aarch64"
+			$GOBO_CI_ZIG_PLATFORM = "aarch64-windows"
 		} else {
-			$GOBO_CI_ZIG_PLATFORM = "windows-x86_64"
+			$GOBO_CI_ZIG_PLATFORM = "x86_64-windows"
 		}
 		$GOBO_CI_ZIG_ARCHIVE_EXTENSION = ".zip"
 	}
