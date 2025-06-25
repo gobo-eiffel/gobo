@@ -38,7 +38,11 @@ $GOBO_CI_ZIG_PATH = "https://ziglang.org/download/$GOBO_CI_ZIG_VERSION"
 
 switch ($GOBO_CI_OS) {
 	"linux" {
-		$GOBO_CI_ZIG_PLATFORM = "linux-x86_64"
+		if ($GOBO_CI_ARCH -eq "arm64") {
+			$GOBO_CI_ZIG_PLATFORM = "linux-aarch64"
+		} else {
+			$GOBO_CI_ZIG_PLATFORM = "linux-x86_64"
+		}
 		$GOBO_CI_ZIG_ARCHIVE_EXTENSION = ".tar.xz"
 	}
 	"macos" {
@@ -50,7 +54,11 @@ switch ($GOBO_CI_OS) {
 		$GOBO_CI_ZIG_ARCHIVE_EXTENSION = ".tar.xz"
 	}
 	"windows" {
-		$GOBO_CI_ZIG_PLATFORM = "windows-x86_64"
+		if ($GOBO_CI_ARCH -eq "arm64") {
+			$GOBO_CI_ZIG_PLATFORM = "windows-aarch64"
+		} else {
+			$GOBO_CI_ZIG_PLATFORM = "windows-x86_64"
+		}
 		$GOBO_CI_ZIG_ARCHIVE_EXTENSION = ".zip"
 	}
 }
@@ -60,8 +68,12 @@ $GOBO_CI_ZIG_ARCHIVE_FILENAME = "${GOBO_CI_ZIG_ARCHIVE_BASENAME}${GOBO_CI_ZIG_AR
 
 Invoke-RestMethod -Method Get -Uri "$GOBO_CI_ZIG_PATH/$GOBO_CI_ZIG_ARCHIVE_FILENAME" -OutFile "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME"
 if ($GOBO_CI_OS -eq "windows") {
-	Install-Module -Name 7Zip4PowerShell -Force
-	Expand-7Zip -ArchiveFileName "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME" -TargetPath "$env:GOBO"
+	if ($GOBO_CI_ARCH -eq "arm64") {
+		7z x "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME" -o"$env:GOBO"
+	} else {
+		Install-Module -Name 7Zip4PowerShell -Force
+		Expand-7Zip -ArchiveFileName "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME" -TargetPath "$env:GOBO"
+	}
 } else {
 	tar -xJf "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME"
 	if ($LastExitCode -ne 0) {
