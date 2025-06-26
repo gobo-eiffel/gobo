@@ -36,18 +36,6 @@ stages:
 
   - template: .azure/build.yml
     parameters:
-      os: linux_ubuntu_20_04
-      c_compiler: zig
-      vm_image: ubuntu-20.04
-
-  - template: .azure/build.yml
-    parameters:
-      os: linux_ubuntu_20_04
-      c_compiler: gcc
-      vm_image: ubuntu-20.04
-
-  - template: .azure/build.yml
-    parameters:
       os: macos_15
       c_compiler: zig
       vm_image: macos-15
@@ -84,6 +72,18 @@ stages:
 
   - template: .azure/build.yml
     parameters:
+      os: windows_2025
+      c_compiler: zig
+      vm_image: windows-2025
+
+  - template: .azure/build.yml
+    parameters:
+      os: windows_2025
+      c_compiler: msc
+      vm_image: windows-2025
+
+  - template: .azure/build.yml
+    parameters:
       os: windows_2022
       c_compiler: zig
       vm_image: windows-2022
@@ -93,18 +93,6 @@ stages:
       os: windows_2022
       c_compiler: msc
       vm_image: windows-2022
-
-  - template: .azure/build.yml
-    parameters:
-      os: windows_2019
-      c_compiler: zig
-      vm_image: windows-2019
-
-  - template: .azure/build.yml
-    parameters:
-      os: windows_2019
-      c_compiler: msc
-      vm_image: windows-2019
 
 #
 # Running tests.
@@ -136,18 +124,6 @@ stages:
 
   - template: .azure/test.yml
     parameters:
-      os: linux_ubuntu_20_04
-      c_compiler: zig
-      vm_image: ubuntu-20.04
-
-  - template: .azure/test.yml
-    parameters:
-      os: linux_ubuntu_20_04
-      c_compiler: gcc
-      vm_image: ubuntu-20.04
-
-  - template: .azure/test.yml
-    parameters:
       os: macos_15
       c_compiler: zig
       vm_image: macos-15
@@ -184,6 +160,18 @@ stages:
 
   - template: .azure/test.yml
     parameters:
+      os: windows_2025
+      c_compiler: zig
+      vm_image: windows-2025
+
+  - template: .azure/test.yml
+    parameters:
+      os: windows_2025
+      c_compiler: msc
+      vm_image: windows-2025
+
+  - template: .azure/test.yml
+    parameters:
       os: windows_2022
       c_compiler: zig
       vm_image: windows-2022
@@ -193,15 +181,3 @@ stages:
       os: windows_2022
       c_compiler: msc
       vm_image: windows-2022
-
-  - template: .azure/test.yml
-    parameters:
-      os: windows_2019
-      c_compiler: zig
-      vm_image: windows-2019
-
-  - template: .azure/test.yml
-    parameters:
-      os: windows_2019
-      c_compiler: msc
-      vm_image: windows-2019
