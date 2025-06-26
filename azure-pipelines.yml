@@ -72,30 +72,6 @@ stages:
 
   - template: .azure/build.yml
     parameters:
-      os: windows_2022
-      c_compiler: zig
-      vm_image: windows-2022
-
-  - template: .azure/build.yml
-    parameters:
-      os: windows_2022
-      c_compiler: msc
-      vm_image: windows-2022
-
-  - template: .azure/build.yml
-    parameters:
-      os: windows_2019
-      c_compiler: zig
-      vm_image: windows-2019
-
-  - template: .azure/build.yml
-    parameters:
-      os: windows_2019
-      c_compiler: msc
-      vm_image: windows-2019
-
-  - template: .azure/build.yml
-    parameters:
       os: windows_2025
       c_compiler: zig
       vm_image: windows-2025
@@ -105,6 +81,18 @@ stages:
       os: windows_2025
       c_compiler: msc
       vm_image: windows-2025
+
+  - template: .azure/build.yml
+    parameters:
+      os: windows_2022
+      c_compiler: zig
+      vm_image: windows-2022
+
+  - template: .azure/build.yml
+    parameters:
+      os: windows_2022
+      c_compiler: msc
+      vm_image: windows-2022
 
 #
 # Running tests.
@@ -172,30 +160,6 @@ stages:
 
   - template: .azure/test.yml
     parameters:
-      os: windows_2022
-      c_compiler: zig
-      vm_image: windows-2022
-
-  - template: .azure/test.yml
-    parameters:
-      os: windows_2022
-      c_compiler: msc
-      vm_image: windows-2022
-
-  - template: .azure/test.yml
-    parameters:
-      os: windows_2019
-      c_compiler: zig
-      vm_image: windows-2019
-
-  - template: .azure/test.yml
-    parameters:
-      os: windows_2019
-      c_compiler: msc
-      vm_image: windows-2019
-
-  - template: .azure/test.yml
-    parameters:
       os: windows_2025
       c_compiler: zig
       vm_image: windows-2025
@@ -205,3 +169,15 @@ stages:
       os: windows_2025
       c_compiler: msc
       vm_image: windows-2025
+
+  - template: .azure/test.yml
+    parameters:
+      os: windows_2022
+      c_compiler: zig
+      vm_image: windows-2022
+
+  - template: .azure/test.yml
+    parameters:
+      os: windows_2022
+      c_compiler: msc
+      vm_image: windows-2022
