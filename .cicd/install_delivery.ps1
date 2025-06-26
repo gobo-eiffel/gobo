@@ -35,8 +35,7 @@ if ($LastExitCode -ne 0) {
 $GOBO_CI_GE_ARCHIVE_FILENAME =  Get-ChildItem "gobo-*" -Name 
 
 if ($GOBO_CI_OS -eq "windows") {
-	Install-Module -Name 7Zip4PowerShell -Force
-	Expand-7Zip -ArchiveFileName "$env:GOBO/$GOBO_CI_GE_ARCHIVE_FILENAME" -TargetPath "$env:GOBO"
+	7z x "$env:GOBO/$GOBO_CI_GE_ARCHIVE_FILENAME" -o"$env:GOBO"
 } else {
 	tar -xJf "$env:GOBO/$GOBO_CI_GE_ARCHIVE_FILENAME"
 	if ($LastExitCode -ne 0) {

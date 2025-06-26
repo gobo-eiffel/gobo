@@ -73,8 +73,7 @@ $GOBO_CI_GE_ARCHIVE_FILENAME = "gobo-${GOBO_CI_GE_PLATFORM}-${GOBO_CI_GE_VERSION
 
 Set-Location "$env:GOBO/.."
 if ($GOBO_CI_OS -eq "windows") {
-	Install-Module -Name 7Zip4PowerShell
-	Compress-7Zip -Path "$env:GOBO" -ArchiveFileName "$GOBO_CI_GE_ARCHIVE_FILENAME" -PreserveDirectoryRoot
+	7z a -t7z "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME" gobo\
 } else {
 	tar -cJf "$GOBO_CI_GE_ARCHIVE_FILENAME" gobo
 	if ($LastExitCode -ne 0) {
