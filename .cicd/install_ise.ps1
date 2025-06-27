@@ -81,8 +81,7 @@ $GOBO_CI_ISE_ARCHIVE_FILENAME = "Eiffel_${GOBO_CI_ISE_VERSION}_${GOBO_CI_ISE_REV
 
 Invoke-RestMethod -Method Get -Uri "https://ftp.eiffel.com/pub/beta/$GOBO_CI_ISE_VERSION/$GOBO_CI_ISE_ARCHIVE_FILENAME" -OutFile "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME"
 if ($GOBO_CI_OS -eq "windows") {
-	Install-Module -Name 7Zip4PowerShell -Force
-	Expand-7Zip -ArchiveFileName "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME" -TargetPath "$env:GOBO"
+	7z x "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME" -o"$env:GOBO"
 } else {
 	tar -x -p --bzip2 -f "$env:GOBO/$GOBO_CI_ISE_ARCHIVE_FILENAME"
 	if ($LastExitCode -ne 0) {

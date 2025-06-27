@@ -68,12 +68,7 @@ $GOBO_CI_ZIG_ARCHIVE_FILENAME = "${GOBO_CI_ZIG_ARCHIVE_BASENAME}${GOBO_CI_ZIG_AR
 
 Invoke-RestMethod -Method Get -Uri "$GOBO_CI_ZIG_PATH/$GOBO_CI_ZIG_ARCHIVE_FILENAME" -OutFile "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME"
 if ($GOBO_CI_OS -eq "windows") {
-	if ($GOBO_CI_ARCH -eq "arm64") {
-		7z x "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME" -o"$env:GOBO"
-	} else {
-		Install-Module -Name 7Zip4PowerShell -Force
-		Expand-7Zip -ArchiveFileName "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME" -TargetPath "$env:GOBO"
-	}
+	7z x "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME" -o"$env:GOBO"
 } else {
 	tar -xJf "$env:GOBO/$GOBO_CI_ZIG_ARCHIVE_FILENAME"
 	if ($LastExitCode -ne 0) {
