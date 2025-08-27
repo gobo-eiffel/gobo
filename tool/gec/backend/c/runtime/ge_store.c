@@ -1118,7 +1118,7 @@ static uint32_t GE_storable_out_write_object_subtype(GE_storable_out_buffer* a_b
  */
 static void GE_storable_out_write_object_type(GE_storable_out_buffer* a_buffer, GE_storable_out_data* a_data, GE_storable_out_object* a_object)
 {
-	EIF_TYPE l_type;
+	EIF_TYPE l_type = {0, 0};
 	uint32_t l_count;
 
 	l_type.id = a_object->class->type_info->type_id;
