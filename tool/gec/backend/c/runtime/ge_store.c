@@ -1217,7 +1217,6 @@ static void GE_storable_out_write_special_subobject(GE_storable_out_buffer* a_bu
 		}
 	} else {
 		/* Non-basic expanded item type. */
-		l_item_size = l_runtime_attribute->size;
 		l_attribute = a_object->attributes;
 		l_expanded_object = l_attribute->value;
 		l_expanded_object->flags &= ~GE_STORABLE_EO_TYPE;
