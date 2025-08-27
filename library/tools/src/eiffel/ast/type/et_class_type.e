@@ -263,6 +263,34 @@ feature -- Access
 			end
 		end
 
+	type_without_non_basic_actual_generic_parameters (a_parameters: DS_ARRAYED_LIST [ET_BASE_TYPE]): ET_CLASS_TYPE
+			-- Current type whose non basic actual generic parameters
+			-- are replaced by those in `a_parameters'
+		require
+			a_parameters_not_void: a_parameters /= Void
+			a_parameters_large_enough: a_parameters.count >= actual_parameter_count
+			no_void_parameter: not a_parameters.has_void
+		local
+			i, nb: INTEGER
+			l_actual_parameter_list: ET_ACTUAL_PARAMETER_LIST
+		do
+			if attached actual_parameters as l_actual_parameters and then not l_actual_parameters.is_empty then
+				nb := l_actual_parameters.count
+				create l_actual_parameter_list.make_with_capacity (nb)
+				from i := nb until i < 1 loop
+					if attached {ET_CLASS_TYPE} l_actual_parameters.actual_parameter (i).type as l_class_type and then l_class_type.base_class.is_basic then
+						l_actual_parameter_list.put_first (l_class_type)
+					else
+						l_actual_parameter_list.put_first (a_parameters.item (i))
+					end
+					i := i - 1
+				end
+				create Result.make_generic (type_mark, name, l_actual_parameter_list, named_base_class)
+			else
+				Result := Current
+			end
+		end
+
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
@@ -375,6 +403,24 @@ feature -- Status report
 				Result := is_expanded
 			else
 				Result := is_attached
+			end
+		end
+
+	has_non_basic_actual_generic_parameter: BOOLEAN
+			-- Does current type have a non basic type amongst its actual generic parameters?
+		local
+			i, nb: INTEGER
+		do
+			if attached actual_parameters as l_actual_parameters then
+				nb := l_actual_parameters.count
+				from i := 1 until i > nb loop
+					if attached {ET_CLASS_TYPE} l_actual_parameters.actual_parameter (i).type as l_class_type and then not l_class_type.base_class.is_basic then
+						Result := True
+							-- Jump out of the loop.
+						i := nb + 1
+					end
+					i := i + 1
+				end
 			end
 		end
 

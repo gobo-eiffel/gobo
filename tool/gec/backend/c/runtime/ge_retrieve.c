@@ -178,7 +178,6 @@ static void GE_storable_fill_read_buffer(GE_storable_read_buffer* a_buffer)
 	}
 	a_buffer->position = 0;
 	a_buffer->count = l_total_read;
-
 }
 
 /*
@@ -434,7 +433,7 @@ typedef struct {
 	GE_storable_attribute** attributes; /* Attributes. */
 } GE_storable_class;
 
-/* Struct for  Addresses not resolved yet. */
+/* Struct for addresses not resolved yet. */
 typedef struct GE_storable_unresolved_address_struct GE_storable_unresolved_address;
 struct GE_storable_unresolved_address_struct {
 	uint64_t old_address;
@@ -569,7 +568,7 @@ static void GE_storable_resolve_all_addresses(GE_storable_data* a_data);
  */
 static EIF_REFERENCE GE_storable_retrieved_from_buffer(GE_storable_read_buffer* a_buffer)
 {
-	uint8_t l_storable_format;
+	int8_t l_storable_format;
 	char l_storable_properties;
 	char l_error_message[101];
 
@@ -714,7 +713,7 @@ static void GE_storable_read_attribute(GE_storable_read_buffer* a_buffer, GE_sto
 	char* l_name;
 	char l_error_message[201];
 
-		/* Read class name. */
+		/* Read attribute name. */
 	GE_storable_read_integer_16(a_buffer, &nb, 1);
 	if (nb <= 0) {
 		snprintf(l_error_message, 200, "Independent retrieve: negative length of attribute name in class %s: %d", a_class->name, nb);
@@ -742,7 +741,7 @@ static void GE_storable_read_objects(GE_storable_read_buffer* a_buffer, GE_stora
 	int32_t i;
 	char l_error_message[101];
 
-	GE_storable_read_integer_32(a_buffer, &(a_data->object_count), 1);	
+	GE_storable_read_integer_32(a_buffer, &(a_data->object_count), 1);
 	if (a_data->object_count <= 0) {
 		snprintf(l_error_message, 100, "Independent retrieve: negative number of objects to be retrieved: %d", a_data->object_count);
 		GE_raise_with_message(GE_EX_RETR, l_error_message);
@@ -1212,7 +1211,7 @@ static void GE_storable_read_regular_subobject(GE_storable_read_buffer* a_buffer
 	} else {
 		l_new = l_type_info->new_instance;
 		if (!l_new) {
-			snprintf(l_error_message, 200, "Independent retrieve: cannot create retrieved objectwith type id %d", l_type_id);
+			snprintf(l_error_message, 200, "Independent retrieve: cannot create retrieved object with type id %d", l_type_id);
 			GE_raise_with_message(GE_EX_RETR, l_error_message);
 		}
 		l_object = l_new(GE_current_context(), EIF_TRUE);
@@ -1524,6 +1523,7 @@ static void GE_storable_resolve_object_type(GE_storable_read_buffer* a_buffer, G
 			**a_type_name_ptr = '!';
 			(*a_type_name_ptr)++;
 		}
+		/* TODO: separate */
 		(*a_types_ptr)++;
 		GE_storable_resolve_object_type(a_buffer, a_data, a_object, a_types_ptr, a_type_name_ptr);
 	} else if (**a_types_ptr == GE_STORABLE_NONE_TYPE) {

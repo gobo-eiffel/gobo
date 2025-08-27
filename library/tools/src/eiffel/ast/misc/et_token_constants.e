@@ -947,6 +947,33 @@ feature -- Feature names
 			boolean_field_at_feature_name_not_void: Result /= Void
 		end
 
+	c_basic_store_feature_name: ET_FEATURE_NAME
+			-- 'c_basic_store' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (c_basic_store_name)
+		ensure
+			instance_free: class
+			c_basic_store_feature_name_not_void: Result /= Void
+		end
+
+	c_general_store_feature_name: ET_FEATURE_NAME
+			-- 'c_general_store' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (c_general_store_name)
+		ensure
+			instance_free: class
+			c_general_store_feature_name_not_void: Result /= Void
+		end
+
+	c_independent_store_feature_name: ET_FEATURE_NAME
+			-- 'c_independent_store' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (c_independent_store_name)
+		ensure
+			instance_free: class
+			c_independent_store_feature_name_not_void: Result /= Void
+		end
+
 	c_retrieved_feature_name: ET_FEATURE_NAME
 			-- 'c_retrieved' feature name
 		once
@@ -5155,6 +5182,15 @@ feature -- Keyword and symbol names
 
 	boolean_item_name: STRING = "boolean_item"
 			-- Name of Eiffel feature 'boolean_item'
+
+	c_basic_store_name: STRING = "c_basic_store"
+			-- Name of Eiffel feature 'c_basic_store'
+
+	c_general_store_name: STRING = "c_general_store"
+			-- Name of Eiffel feature 'c_general_store'
+
+	c_independent_store_name: STRING = "c_independent_store"
+			-- Name of Eiffel feature 'c_independent_store'
 
 	c_retrieved_name: STRING = "c_retrieved"
 			-- Name of Eiffel feature 'c_retrieved'

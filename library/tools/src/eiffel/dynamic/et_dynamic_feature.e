@@ -5,7 +5,7 @@
 		"Eiffel features equipped with dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_DYNAMIC_FEATURE
@@ -171,11 +171,20 @@ feature {NONE} -- Initialization
 				is_is_equal_routine := True
 			end
 			if
-				a_feature.implementation_class.name.same_class_name (tokens.file_class_name) and then 
+				a_feature.implementation_class.name.same_class_name (tokens.file_class_name) and then
 				a_feature.implementation_feature.name.same_feature_name (tokens.c_retrieved_feature_name)
 			then
 					-- Keep all attributes when using Storable.
 				a_system.use_all_attributes
+			elseif
+				a_feature.implementation_class.name.same_class_name (tokens.file_class_name) and then
+				(a_feature.implementation_feature.name.same_feature_name (tokens.c_basic_store_feature_name) or
+				a_feature.implementation_feature.name.same_feature_name (tokens.c_general_store_feature_name) or
+				a_feature.implementation_feature.name.same_feature_name (tokens.c_independent_store_feature_name))
+			then
+					-- Keep all attributes when using Storable.
+				a_system.use_all_attributes
+				a_system.set_independent_store_used (True)
 			end
 		ensure
 			static_feature_set: static_feature = a_feature
@@ -232,6 +241,9 @@ feature -- Access
 			-- Invariants corresponding to `static_feature' when it is an invariant
 			-- (even those from ancestors), and their index offset when accessing dynamic
 			-- type sets
+
+	storable_type: detachable ET_DYNAMIC_TYPE
+			-- Type used for attribute types (with formal generic parameters) in Storable file
 
 	first_precursor: detachable ET_DYNAMIC_PRECURSOR
 			-- First precursor called from current feature;
@@ -335,6 +347,14 @@ feature -- Setting
 			target_type := a_target_type
 		ensure
 			target_type_set: target_type = a_target_type
+		end
+
+	set_storable_type (a_storable_type: like storable_type)
+			-- Set `storable_type' to `a_storable_type'.
+		do
+			storable_type := a_storable_type
+		ensure
+			storable_type_set: storable_type = a_storable_type
 		end
 
 	set_id (i: INTEGER)

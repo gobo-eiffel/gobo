@@ -4,7 +4,7 @@
 		"C functions used to implement class STORABLE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2025, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -18,6 +18,9 @@
 #ifndef EIF_STORE_H
 #include "eif_store.h"
 #endif
+#ifndef GE_STORE_H
+#include "ge_store.h"
+#endif
 #ifndef GE_CONSOLE_H
 #include "ge_console.h"
 #endif
@@ -28,23 +31,19 @@ extern "C" {
 
 void estore(EIF_INTEGER file_desc, EIF_REFERENCE object)
 {
-	/* TODO */
-	GE_show_console();
-	fprintf(stderr, "'estore' in 'eif_store.h' not implemented\n");
+	/* Note: use independent store in Gobo Eiffel. */
+	GE_storable_store_to_file(object, file_desc);
 }
 
 void eestore(EIF_INTEGER file_desc, EIF_REFERENCE object)
 {
-	/* TODO */
-	GE_show_console();
-	fprintf(stderr, "'eestore' in 'eif_store.h' not implemented\n");
+	/* Note: use independent store in Gobo Eiffel. */
+	GE_storable_store_to_file(object, file_desc);
 }
 
 void sstore(EIF_INTEGER file_desc, EIF_REFERENCE object)
 {
-	/* TODO */
-	GE_show_console();
-	fprintf(stderr, "'sstore' in 'eif_store.h' not implemented\n");
+	GE_storable_store_to_file(object, file_desc);
 }
 
 void eif_set_new_independent_format(EIF_BOOLEAN v)

@@ -66,7 +66,10 @@ inherit
 
 create
 
-	make, make_unknown, make_root
+	make,
+	make_unknown,
+	make_root,
+	make_formal
 
 feature {NONE} -- Initialization
 
@@ -109,6 +112,16 @@ feature {NONE} -- Initialization
 		do
 			make (tokens.root_class_name)
 			create {ET_ROOT_GROUP} group.make (a_system)
+		end
+
+	make_formal (a_index: INTEGER; a_system: ET_SYSTEM)
+			-- Create a new virtual class representing formal generic parameters
+			-- (used for Storable files).
+		require
+			a_index_large_enough: a_index >= 1
+		do
+			make (create {ET_IDENTIFIER}.make ("G#" + a_index.out))
+			create {ET_FORMAL_GROUP} group.make (a_system)
 		end
 
 feature -- Initialization
@@ -368,6 +381,15 @@ feature -- Status report
 			Result := group.is_none
 		ensure
 			definition: Result = group.is_none
+		end
+
+	is_formal: BOOLEAN
+			-- Is current class a virtual class representing formal generic parameters
+			-- (used for Storable files)?
+		do
+			Result := group.is_formal
+		ensure
+			definition: Result = group.is_formal
 		end
 
 	is_basic: BOOLEAN

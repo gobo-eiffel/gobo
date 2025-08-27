@@ -323,7 +323,7 @@ feature {NONE} -- Schema input
 				a_class.set_attributes (l_attributes)
 				from i := 1 until i > nb loop
 					read_attribute (a_class, a_schema, a_file)
-					if False then --error.signaled then
+					if error_handler.has_error then
 						i := nb + 1 -- Jump out of the loop.
 					else
 						i := i + 1

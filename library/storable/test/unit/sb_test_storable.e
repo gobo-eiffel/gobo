@@ -32,21 +32,40 @@ feature -- Test
 		do
 			create l_object
 			check_values (l_object)
-			if not eiffel_compiler.is_ge then
-				l_filename := new_filename ("gobo", ".tmp")
-				create l_file.make_with_name (l_filename)
-				l_file.open_write
-				l_file.independent_store (l_object)
-				l_file.close
-				create l_file.make_with_name (l_filename)
-				l_file.open_read
-				l_retrieved := l_file.retrieved
-				l_file.close
-				if attached {SB_DATA_1} l_retrieved as l_retrieved_object then
-					check_values (l_retrieved_object)
-				else
-					assert ("is_retrieved", False)
-				end
+			l_filename := new_filename ("gobo", ".tmp")
+			create l_file.make_with_name (l_filename)
+			l_file.open_write
+			l_file.independent_store (l_object)
+			l_file.close
+			create l_file.make_with_name (l_filename)
+			l_file.open_read
+			l_retrieved := l_file.retrieved
+			l_file.close
+			if attached {SB_DATA_1} l_retrieved as l_retrieved_object then
+				check_values (l_retrieved_object)
+			else
+				assert ("is_retrieved", False)
+			end
+		end
+
+	test_retrieved_1_ge
+			-- Test feature `retrieved' with a Storable file stored by
+			-- system compiled by Gobo Eiffel.
+		local
+			l_retrieved: detachable ANY
+			l_filename: STRING
+			l_file: RAW_FILE
+		do
+			l_filename := Execution_environment.interpreted_string (storable_1_ge_filename)
+			create l_file.make_with_name (l_filename)
+			l_file.open_read
+			l_retrieved := l_file.retrieved
+			l_file.close
+			if attached {SB_DATA_1} l_retrieved as l_object then
+				check_values (l_object)
+			else
+				print (l_retrieved)
+				assert ("is_retrieved", False)
 			end
 		end
 

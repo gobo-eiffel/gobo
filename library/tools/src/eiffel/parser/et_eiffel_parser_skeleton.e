@@ -5,7 +5,7 @@
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_EIFFEL_PARSER_SKELETON
@@ -355,6 +355,8 @@ feature -- AST processing
 		do
 			if a_class.is_none then
 				process_none_class (a_class)
+			elseif a_class.is_formal then
+				process_formal_class (a_class)
 			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)
 					-- This internal error is fatal.
@@ -501,6 +503,24 @@ feature {NONE} -- AST processing
 		require
 			a_class_not_void: a_class /= Void
 			a_class_is_none: a_class.is_none
+		do
+			if not {PLATFORM}.is_thread_capable or else a_class.processing_mutex.try_lock then
+				if not a_class.is_parsed then
+					a_class.set_parsed
+					system_processor.report_class_processed (a_class)
+				end
+				a_class.processing_mutex.unlock
+			end
+		ensure
+			is_parsed: not {PLATFORM}.is_thread_capable implies a_class.is_parsed
+		end
+
+	process_formal_class (a_class: ET_CLASS)
+			-- Process virtual class representing formal generic parameters
+			-- (used for Storable files).
+		require
+			a_class_not_void: a_class /= Void
+			a_class_is_formal: a_class.is_formal
 		do
 			if not {PLATFORM}.is_thread_capable or else a_class.processing_mutex.try_lock then
 				if not a_class.is_parsed then
@@ -1481,7 +1501,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_check_instruction (a_check: detachable ET_KEYWORD; a_semicolon: detachable ET_SEMICOLON_SYMBOL; 
+	new_check_instruction (a_check: detachable ET_KEYWORD; a_semicolon: detachable ET_SEMICOLON_SYMBOL;
 		a_then_compound: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD): detachable ET_CHECK_INSTRUCTION
 			-- New check instruction
 		local

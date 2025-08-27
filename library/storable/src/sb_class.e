@@ -267,7 +267,7 @@ feature -- Access
 
 	flags: NATURAL_32
 			-- Class flags
-			-- (int32)
+			-- (uint32)
 
 	storable_version: detachable STRING
 			-- Storable version

@@ -61,6 +61,14 @@ feature -- Filenames
 			storable_1_finalized_ise_filename_not_void: Result /= Void
 		end
 
+	storable_1_ge_filename: STRING
+			-- Full filename of "storable_1.ge"
+		once
+			Result := file_system.pathname (data_dirname, "storable_1.ge")
+		ensure
+			storable_1_ge_filename_not_void: Result /= Void
+		end
+
 feature -- Directory names
 
 	data_dirname: STRING

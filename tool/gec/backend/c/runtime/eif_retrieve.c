@@ -4,7 +4,7 @@
 		"C functions used to implement class STORABLE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2025, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -17,14 +17,14 @@
 #ifndef EIF_RETRIEVE_H
 #include "eif_retrieve.h"
 #endif
-#ifndef GE_CONSOLE_H
-#include "ge_console.h"
-#endif
 #ifndef GE_RETRIEVE_H
 #include "ge_retrieve.h"
 #endif
 #ifndef GE_EXCEPTION_H
 #include "ge_exception.h"
+#endif
+#ifndef GE_CONSOLE_H
+#include "ge_console.h"
 #endif
 
 #ifdef __cplusplus

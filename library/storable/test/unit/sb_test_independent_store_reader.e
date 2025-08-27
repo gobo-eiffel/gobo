@@ -20,6 +20,13 @@ create
 
 feature -- Test
 
+	test_independent_store_6_6_ge
+			-- Test reading Storable file with format independent_store_6_6
+			-- stored by system compiled by Gobo Eiffel.
+		do
+			check_read (storable_1_ge_filename)
+		end
+
 	test_independent_store_6_6_ise_workbench
 			-- Test reading Storable file with format independent_store_6_6
 			-- stored by system compiled by ISE Eiffel in workbench mode.

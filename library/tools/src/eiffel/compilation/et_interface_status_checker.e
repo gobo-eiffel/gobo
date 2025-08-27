@@ -8,7 +8,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_INTERFACE_STATUS_CHECKER
@@ -59,6 +59,8 @@ feature -- Processing
 			a_processor: like Current
 		do
 			if a_class.is_none then
+				a_class.unset_interface_error
+			elseif a_class.is_formal then
 				a_class.unset_interface_error
 			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)

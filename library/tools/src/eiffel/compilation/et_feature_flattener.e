@@ -5,7 +5,7 @@
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_FEATURE_FLATTENER
@@ -92,6 +92,8 @@ feature -- Processing
 			a_processor: like Current
 		do
 			if a_class.is_none then
+				a_class.set_features_flattened
+			elseif a_class.is_formal then
 				a_class.set_features_flattened
 			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)

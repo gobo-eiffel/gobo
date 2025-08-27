@@ -85,6 +85,13 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_formal: BOOLEAN
+			-- Is current group a built-in group for virtual classes representing
+			-- formal generic parameters (used for Storable files)?
+		do
+			-- Result := False
+		end
+
 	is_override: BOOLEAN
 			-- Is current group an override group?
 			-- In other words, do classes in this group and other override

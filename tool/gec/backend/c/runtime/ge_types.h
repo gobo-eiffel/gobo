@@ -47,6 +47,7 @@ extern "C" {
 #define GE_TYPE_FLAG_EXPANDED		0x0040
 #define GE_TYPE_FLAG_DEFERRED		0x0080
 #define GE_TYPE_FLAG_NONE			0x0100
+#define GE_TYPE_FLAG_FORMAL			0x0200
 #define GE_TYPE_FLAG_BASIC_MASK		0x000F /* One of "BOOLEAN", "CHARACTER_8", "CHARACTER_32", "INTEGER_8", "INTEGER_16", "INTEGER_32", "INTEGER_64", "NATURAL_8", "NATURAL_16", "NATURAL_32", "NATURAL_64", "POINTER", "REAL_32", "REAL_64" */
 #define GE_TYPE_FLAG_BOOLEAN		0x0001
 #define GE_TYPE_FLAG_CHARACTER_8	0x0002
@@ -111,6 +112,10 @@ typedef volatile struct {
 #endif
 #ifdef GE_USE_ATTRIBUTE_TYPE_ID
 	EIF_ENCODED_TYPE volatile type_id; /* Static type id */
+#endif
+#ifdef GE_USE_ATTRIBUTE_STORABLE_TYPE_ID
+	EIF_ENCODED_TYPE volatile storable_type_id; /* Static type id used in Storable files */
+	/* with formal generic parameters when the actual generic parameter is not a basic type */
 #endif
 #ifdef GE_USE_ATTRIBUTE_DYNAMIC_TYPE_SET
 	EIF_TYPE_INDEX* volatile dynamic_type_set; /* Dynamic type set */

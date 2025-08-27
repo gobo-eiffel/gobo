@@ -144,6 +144,9 @@ feature -- Status report
 			-- Is there at least one "SPECIAL" type with at least one
 			-- once-per-object routine?
 
+	independent_store_used: BOOLEAN
+			-- Is Storable independent_store used in the current system?
+
 	all_attributes_used: BOOLEAN
 			-- Should all attributes of all types are marked as used
 			-- and hence included in the generated run-time instances?
@@ -190,17 +193,29 @@ feature -- Status setting
 			has_special_once_per_object_routines_set: has_special_once_per_object_routines = b
 		end
 
+	set_independent_store_used (b: BOOLEAN)
+			-- Set `independent_store_used' to `b'.
+		do
+			independent_store_used := b
+		ensure
+			independent_store_used_set: independent_store_used = b
+		end
+
 	use_all_attributes
 			-- Set `all_attributes_used' to True.
 		local
 			i, nb: INTEGER
 			l_dynamic_types: like dynamic_types
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			all_attributes_used := True
 			l_dynamic_types := dynamic_types
 			nb := dynamic_types.count
 			from i := 1 until i > nb loop
-				l_dynamic_types.item (i).use_all_attributes (Current)
+				l_dynamic_type := l_dynamic_types.item (i)
+				if l_dynamic_type.is_alive then
+					l_dynamic_type.use_all_attributes (Current)
+				end
 				i := i + 1
 			end
 		ensure
@@ -928,7 +943,6 @@ feature {NONE} -- Types
 					initialize_predicate_type (l_type)
 				end
 				propagate_type_of_type_result_type (l_type)
-				propagate_attribute_type_sets (l_type)
 				propagate_alive_conforming_descendants (l_type)
 				i := i + 1
 			end
@@ -1101,24 +1115,6 @@ feature {NONE} -- Types
 			end
 		end
 
-	propagate_attribute_type_sets (a_type: ET_DYNAMIC_PRIMARY_TYPE)
-			-- If `all_attributes_used' is set, then make sure that all
-			-- attributes of `a_type' are marked as used and their type sets
-			-- propagated to `ise_runtime_reference_field' and
-			-- `ise_runtime_set_reference_field'.
-		require
-			a_type_not_void: a_type /= Void
-		local
-			l_old_in_create_meta_type: BOOLEAN
-		do
-			if all_attributes_used then
-				l_old_in_create_meta_type := in_create_meta_type
-				in_create_meta_type := False
-				a_type.use_all_attributes (Current)
-				in_create_meta_type := l_old_in_create_meta_type
-			end
-		end
-
 	propagate_alive_conforming_descendants (a_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- If `a_type' is alive, then propagage `a_type' to all
 			-- `dynamic_type_set_builder.alive_conforming_descendants' to
@@ -1148,7 +1144,7 @@ feature {NONE} -- Types
 			l_other_base_class: ET_CLASS
 		do
 			l_base_class := a_type.base_class
-			if not l_base_class.is_none then
+			if not l_base_class.is_none and not l_base_class.is_formal then
 				l_base_type := a_type.base_type
 				l_conforming_ancestors := a_type.conforming_ancestors
 				l_conforming_ancestors.force_last (a_type)
@@ -1166,7 +1162,7 @@ feature {NONE} -- Types
 						until
 							l_other_type = Void
 						loop
-							if l_other_type /= a_type and then not l_other_type.base_class.is_none then
+							if l_other_type /= a_type and then not l_other_type.base_class.is_none and then not l_other_type.base_class.is_formal then
 								l_other_base_type := l_other_type.base_type
 								if l_base_type.conforms_to_type_with_type_marks (l_other_base_type, l_other_type.type_mark, l_other_base_type, a_type.type_mark, l_base_type, tokens.null_system_processor) then
 									l_conforming_ancestors.force_last (l_other_type)
@@ -1184,7 +1180,7 @@ feature {NONE} -- Types
 				from i := 1 until i > nb loop
 					l_other_type := dynamic_types.item (i)
 					l_other_base_class := l_other_type.base_class
-					if l_other_base_class.index = i and then not l_other_base_class.is_none and then (l_other_base_class = l_base_class or else l_other_base_class.conforming_ancestors.has_class (l_base_class)) then
+					if l_other_base_class.index = i and then not l_other_base_class.is_none and then not l_other_base_class.is_formal and then (l_other_base_class = l_base_class or else l_other_base_class.conforming_ancestors.has_class (l_base_class)) then
 						from
 						until
 							l_other_type = Void
@@ -1196,6 +1192,56 @@ feature {NONE} -- Types
 								end
 							end
 							l_other_type := l_other_type.next_type
+						end
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	build_storable_types
+			-- Build the Storable types of attributes (types with formal generic parameters)
+			-- if 'independent_store' is used.
+		local
+			i, nb_types: INTEGER
+			l_dynamic_types: like dynamic_types
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
+			j, nb_attributes: INTEGER
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_attribute: ET_DYNAMIC_FEATURE
+			k, nb_generics: INTEGER
+			l_storable_formal_parameters: DS_ARRAYED_LIST [ET_BASE_TYPE]
+		do
+			if independent_store_used then
+				create l_storable_formal_parameters.make (10)
+				l_dynamic_types := dynamic_types
+				nb_types := dynamic_types.count
+				from i := 1 until i > nb_types loop
+					l_dynamic_type := l_dynamic_types.item (i)
+					if l_dynamic_type.is_alive then
+						l_queries := l_dynamic_type.queries
+						nb_attributes := l_dynamic_type.attribute_count
+						from j := 1 until j > nb_attributes loop
+							l_attribute := l_queries.item (j)
+							if attached {ET_CLASS_TYPE} l_attribute.target_type.base_type as l_class_type and then l_class_type.has_non_basic_actual_generic_parameter then
+								nb_generics := l_class_type.actual_parameter_count
+								from
+									k := l_storable_formal_parameters.count + 1
+								until
+									k > nb_generics
+								loop
+									l_storable_formal_parameters.force_last (create {ET_CLASS}.make_formal (k, current_system))
+									k := k + 1
+								end
+								check attached l_attribute.static_feature.type as l_attribute_type then
+									l_attribute.set_storable_type (dynamic_type (l_attribute_type, l_class_type.type_without_non_basic_actual_generic_parameters (l_storable_formal_parameters)))
+								end
+							else
+								check attached l_attribute.result_type_set as l_result_type_set then
+									l_attribute.set_storable_type (l_result_type_set.static_type)
+								end
+							end
+							j := j + 1
 						end
 					end
 					i := i + 1
@@ -2339,6 +2385,7 @@ feature {NONE} -- Compilation
 				l_builder.set_catcall_error_mode (catcall_error_mode)
 				l_builder.set_catcall_warning_mode (catcall_warning_mode)
 				l_builder.build_dynamic_type_sets
+				build_storable_types
 				if l_builder.has_fatal_error then
 					set_fatal_error
 				end

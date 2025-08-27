@@ -5,7 +5,7 @@
 		"Eiffel class ancestor builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ANCESTOR_BUILDER
@@ -55,6 +55,8 @@ feature -- Processing
 			a_processor: like Current
 		do
 			if a_class.is_none then
+				a_class.set_ancestors_built
+			elseif a_class.is_formal then
 				a_class.set_ancestors_built
 			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)
