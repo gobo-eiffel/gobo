@@ -152,6 +152,20 @@ feature -- Output
 			type.print_type (a_file)
 		end
 
+	dump_attribute (a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print current attribute to `a_file' in
+			-- a format close to what has been read
+			-- from the Storable file.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string ("attribute ")
+			a_file.put_string (name)
+			a_file.put_string (": ")
+			type.print_type (a_file)
+		end
+
 invariant
 
 	name_not_void: name /= Void

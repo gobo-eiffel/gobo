@@ -55,7 +55,7 @@ extern "C" {
 
 #define GE_STORABLE_EO_SPEC		0x01000000		/* Object is special (C area) */
 #define GE_STORABLE_EO_TUPLE	0x40000000		/* Object is tuple */
-#define GE_STORABLE_EO_REF		0x00800000		/* Does object contain references */
+#define GE_STORABLE_EO_REF		0x00800000		/* Does special or tuple object contain references */
 #define GE_STORABLE_EO_COMP		0x00010000		/* Composite (has expanded) */
 #define GE_STORABLE_EO_EXP		0x00020000		/* Object is an expanded one (even when boxed) */
 #define GE_STORABLE_EO_TYPE		0x0000FFFF		/* Mask to get the dynamic type */

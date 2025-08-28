@@ -83,6 +83,27 @@ feature -- Comparison
 			Result := address < other.address
 		end
 
+feature -- Output
+
+	dump_object (a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print current object to `a_file' in
+			-- a format close to what has been read
+			-- from the Storable file.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string ("object ")
+			type.print_type (a_file)
+			a_file.put_new_line
+			a_file.put_string ("    address: 0x")
+			a_file.put_string (address.to_hex_string)
+			a_file.put_new_line
+			a_file.put_string ("    flags: 0x")
+			a_file.put_string (flags.to_hex_string)
+			a_file.put_new_line
+		end
+
 invariant
 
 	reference_count_non_negative: reference_count >= 0

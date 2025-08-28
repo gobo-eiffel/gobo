@@ -53,22 +53,36 @@ feature {NONE} -- Implementation
 			l_input_file: SB_INPUT_FILE
 			l_input_filename: STRING
 			l_error_handler: SB_ERROR_HANDLER
+			l_dump_filename: STRING
+			l_dump_file: KL_TEXT_OUTPUT_FILE
 		do
 			l_input_filename := Execution_environment.interpreted_string (a_input_filename)
 			create l_input_file.make (l_input_filename)
 			l_input_file.open_read
 			if l_input_file.is_open_read then
-				create l_error_handler.make_null
+				create l_error_handler.make_standard
 				l_input_file.set_error_handler (l_error_handler)
 				create l_schema.make
 				create l_objects.make
 				l_schema.read_schema (l_input_file)
-				if l_error_handler.has_error then
+				if not l_error_handler.has_error then
 					l_objects.read_objects (l_schema, l_input_file)
 				end
 				l_input_file.close
 				if l_error_handler.has_error or l_schema.has_attribute_type_error then
 					assert ("error when reading storable file " + l_input_filename, False)
+				else
+					l_dump_filename := new_filename ("gobo", ".tmp")
+					create l_dump_file.make (l_dump_filename)
+					l_dump_file.open_write
+					if l_dump_file.is_open_write then
+						l_schema.dump_schema (l_dump_file)
+						l_dump_file.put_new_line
+						l_objects.dump_objects (l_dump_file)
+						l_dump_file.close
+					else
+						assert ("cannot write to dump file " + l_dump_filename, False)
+					end
 				end
 			else
 				assert ("cannot read file " + l_input_filename, False)

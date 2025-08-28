@@ -605,6 +605,41 @@ feature -- Output
 			end
 		end
 
+	dump_schema (a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print current schema to `a_file' in
+			-- a format close to what has been read
+			-- from the Storable file.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			l_class: detachable SB_CLASS
+			i, nb: INTEGER
+		do
+			a_file.put_string ("storable_format: 0x")
+			a_file.put_line (storable_format.to_hex_string)
+			a_file.put_string ("storable_properties: 0x")
+			a_file.put_line (storable_properties.natural_32_code.to_natural_8.to_hex_string)
+			a_file.put_string ("overhead_size: ")
+			a_file.put_integer_16 (overhead_size)
+			a_file.put_new_line
+			a_file.put_string ("maximum_class_index: ")
+			a_file.put_integer (maximum_class_index)
+			a_file.put_new_line
+			a_file.put_string ("class_count: ")
+			a_file.put_integer (class_count)
+			a_file.put_new_line
+			a_file.put_new_line
+			nb := classes.upper
+			from i := 0 until i > nb loop
+				l_class := classes.item (i)
+				if l_class /= Void then
+					l_class.dump_class (a_file)
+				end
+				i := i + 1
+			end
+		end
+
 	write_schema (a_file: SB_OUTPUT_FILE)
 			-- Write schema to `a_file'.
 		require

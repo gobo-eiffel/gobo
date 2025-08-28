@@ -275,6 +275,9 @@ feature -- Access
 	formal_parameters: SB_TYPE_LIST
 			-- Formal generic parameters
 
+	raw_formal_parameters: detachable DS_ARRAYED_LIST [NATURAL_32]
+			-- Formal generic parameters as read from the Storable file
+
 	attributes: SB_ATTRIBUTE_LIST
 			-- Attributes
 
@@ -597,6 +600,14 @@ feature -- Setting
 			formal_parameters_set: formal_parameters = a_parameters
 		end
 
+	set_raw_formal_parameters (a_parameters: like raw_formal_parameters)
+			-- Set `raw_formal_parameters' to `a_parameters'.
+		do
+			raw_formal_parameters := a_parameters
+		ensure
+			raw_formal_parameters_set: raw_formal_parameters = a_parameters
+		end
+
 	set_attributes (an_attributes: like attributes)
 			-- Set `attributes' to `an_attributes'.
 		require
@@ -911,6 +922,64 @@ feature -- Output
 			from i := 1 until i > nb loop
 				a_file.put_string ("    ")
 				attributes.item (i).print_attribute (a_file)
+				a_file.put_new_line
+				i := i + 1
+			end
+			a_file.put_new_line
+		end
+
+	dump_class (a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print current class to `a_file' in
+			-- a format close to what has been read
+			-- from the Storable file.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			i, nb: INTEGER
+		do
+			a_file.put_string ("class ")
+			a_file.put_string (name)
+			nb := formal_parameters.count
+			if nb > 0 then
+				a_file.put_character (' ')
+				a_file.put_character ('[')
+				formal_parameters.item (1).print_type (a_file)
+				from i := 2 until i > nb loop
+					a_file.put_character (',')
+					a_file.put_character (' ')
+					formal_parameters.item (i).print_type (a_file)
+					i := i + 1
+				end
+				a_file.put_character (']')
+			end
+			a_file.put_new_line
+			a_file.put_string ("    flags: 0x")
+			a_file.put_line (flags.to_hex_string)
+			a_file.put_string ("    index: 0x")
+			a_file.put_line (index.to_hex_string)
+			a_file.put_string ("    storable_version: ")
+			if attached storable_version as l_storable_version then
+				a_file.put_line (l_storable_version)
+			else
+				a_file.put_new_line
+			end
+			a_file.put_string ("    formal_parameters: ")
+			if attached raw_formal_parameters as l_formal_parameters and then not l_formal_parameters.is_empty then
+				nb := l_formal_parameters.count
+				a_file.put_string ("0x")
+				a_file.put_string (l_formal_parameters.first.to_hex_string)
+				from i := 2 until i > nb loop
+					a_file.put_string (" 0x")
+					a_file.put_string (l_formal_parameters.item (i).to_hex_string)
+					i := i + 1
+				end
+			end
+			a_file.put_new_line
+			nb := attributes.count
+			from i := 1 until i > nb loop
+				a_file.put_string ("    ")
+				attributes.item (i).dump_attribute (a_file)
 				a_file.put_new_line
 				i := i + 1
 			end

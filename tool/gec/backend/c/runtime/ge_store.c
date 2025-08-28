@@ -621,8 +621,15 @@ static void GE_storable_out_record_special_attributes(GE_storable_out_object* a_
 		/* Skip. */
 	} else {
 		/* Non-basic expanded type. */
-		a_object->flags |= (GE_STORABLE_EO_REF | GE_STORABLE_EO_COMP);
-		a_object->class->flags |= GE_STORABLE_CLASS_IS_COMPOSITE_FLAG;
+		a_object->flags |= GE_STORABLE_EO_COMP;
+		nb = GE_type_infos[l_item_type_id].attribute_count;
+		for (i = 0; i < nb; i++) {
+			if (!(GE_type_infos[GE_decoded_type(GE_type_infos[l_item_type_id].attributes[i]->type_id).id].flags & GE_TYPE_FLAG_BASIC_MASK)) {
+				a_object->flags |= GE_STORABLE_EO_REF;
+				break;
+			}
+		}
+
 		l_special = (EIF_SPECIAL*)a_object->object;
 		l_item_offset = l_runtime_attribute->offset;
 		l_object = GE_storable_out_record_object((void*)GE_field_address_at(l_item_offset, l_special, 0), l_item_type_id, 1, 0, a_data);
@@ -671,8 +678,7 @@ static void GE_storable_out_record_tuple_attributes(GE_storable_out_object* a_ob
 		} else if (l_flags & GE_TYPE_FLAG_BASIC_MASK) {
 			/* Skip. */
 		} else {
-			a_object->flags |= (GE_STORABLE_EO_REF | GE_STORABLE_EO_COMP);
-			a_object->class->flags |= GE_STORABLE_CLASS_IS_COMPOSITE_FLAG;
+			a_object->flags |= GE_STORABLE_EO_REF;
 			l_object = GE_storable_out_record_object((void*)GE_field_address_at(l_runtime_attribute->offset, l_enclosing_object, 0), l_runtime_type, 1, 1, a_data);
 			l_attribute = (GE_storable_out_attribute*)GE_calloc(1, sizeof(GE_storable_out_attribute));
 			l_attribute->value = l_object;
@@ -711,7 +717,6 @@ static void GE_storable_out_record_regular_attributes(GE_storable_out_object* a_
 		l_runtime_type = GE_decoded_type(l_runtime_attribute->type_id).id;
 		l_flags = GE_type_infos[l_runtime_type].flags;
 		if (!(l_flags & GE_TYPE_FLAG_EXPANDED)) {
-			a_object->flags |= GE_STORABLE_EO_REF;
 			l_ref = GE_reference_field_at(l_runtime_attribute->offset, l_enclosing_object, l_physical_offset);
 			if (l_ref) {
 				l_object = GE_storable_out_record_reference_object(l_ref, a_data);
@@ -724,7 +729,7 @@ static void GE_storable_out_record_regular_attributes(GE_storable_out_object* a_
 		} else if (l_flags & GE_TYPE_FLAG_BASIC_MASK) {
 			/* Skip. */
 		} else {
-			a_object->flags |= (GE_STORABLE_EO_REF | GE_STORABLE_EO_COMP);
+			a_object->flags |= GE_STORABLE_EO_COMP;
 			a_object->class->flags |= GE_STORABLE_CLASS_IS_COMPOSITE_FLAG;
 			l_object = GE_storable_out_record_object((void*)GE_field_address_at(l_runtime_attribute->offset, l_enclosing_object, l_physical_offset), l_runtime_type, 1, 0, a_data);
 			l_attribute = (GE_storable_out_attribute*)GE_calloc(1, sizeof(GE_storable_out_attribute));

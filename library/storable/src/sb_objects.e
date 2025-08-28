@@ -327,6 +327,27 @@ feature -- Input
 
 feature -- Output
 
+	dump_objects (a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print current objects to `a_file' in
+			-- a format close to what has been read
+			-- from the Storable file.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			l_cursor: DS_MULTIARRAYED_HASH_TABLE_CURSOR [SB_REFERENCE_OBJECT, NATURAL_64]
+		do
+			a_file.put_string ("object_count: ")
+			a_file.put_integer (count)
+			a_file.put_new_line
+			l_cursor := objects.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				a_file.put_new_line
+				l_cursor.item.dump_object (a_file)
+				l_cursor.forth
+			end
+		end
+
 	write_objects (a_schema: SB_SCHEMA; a_file: SB_OUTPUT_FILE)
 			-- Write objects to `a_file', using `a_schema'.
 		require

@@ -212,6 +212,7 @@ feature {NONE} -- Schema input
 			l_gentype: NATURAL_32
 			l_class_id: INTEGER
 			l_class: SB_CLASS
+			l_raw_type_list: DS_ARRAYED_LIST [NATURAL_32]
 		do
 				-- Read number of formal parameters.
 			a_file.read_integer_16
@@ -222,9 +223,12 @@ feature {NONE} -- Schema input
 				if nb > 0 then
 					create l_type_list.make_with_capacity (nb)
 					a_class.set_formal_parameters (l_type_list)
+					create l_raw_type_list.make (nb)
+					a_class.set_raw_formal_parameters (l_raw_type_list)
 					from i := 1 until i > nb loop
 						a_file.read_natural_32
 						l_gentype := a_file.last_natural_32
+						l_raw_type_list.put_last (l_gentype)
 						inspect l_gentype
 						when Sk_bool then
 							l_type := a_schema.boolean_type
