@@ -2,19 +2,19 @@
 
 	description:
 
-		"Built-in groups for class *ROOT*"
+		"Built-in groups for virtual classes representing formal generic parameters (used for Storable files)"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2025, Eric Bezault and others"
 	license: "MIT License"
 
-class ET_ROOT_GROUP
+class ET_FORMAL_GROUP
 
 inherit
 
 	ET_BUILTIN_GROUP
 		redefine
-			is_root
+			is_formal
 		end
 
 create
@@ -24,20 +24,22 @@ create
 feature {NONE} -- Initialization
 
 	make (a_system: ET_SYSTEM)
-			-- Create a new built-in group for the class "*ROOT*".
+			-- Create a new built-in group for virtual classes representing
+			-- formal generic parameters (used for Storable files).
 		require
 			a_system_not_void: a_system /= Void
 		do
 			universe := a_system
-			name := "root"
+			name := "formal"
 		ensure
 			universe_set: universe = a_system
 		end
 
 feature -- status report
 
-	is_root: BOOLEAN = True
-			-- Is current group a built-in group for class "*ROOT*"?
+	is_formal: BOOLEAN = True
+			-- Is current group a built-in group for virtual classes representing
+			-- formal generic parameters (used for Storable files)?
 
 	has_class (a_class: ET_CLASS): BOOLEAN
 			-- Is `a_class' part of current group?
@@ -75,6 +77,6 @@ feature -- Iteration
 
 invariant
 
-	is_root: is_root
+	is_formal: is_formal
 
 end

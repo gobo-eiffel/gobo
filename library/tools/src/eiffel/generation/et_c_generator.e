@@ -1951,6 +1951,7 @@ feature {NONE} -- C code Generation
 					type_info_attributes_used or
 					type_info_attribute_name_used or
 					type_info_attribute_type_id_used or
+					type_info_attribute_storable_type_id_used or
 					type_info_attribute_dynamic_type_set_used or
 					type_info_attribute_offset_used or
 					type_info_attribute_size_used or
@@ -2010,6 +2011,11 @@ feature {NONE} -- C code Generation
 							header_file.put_character (' ')
 							header_file.put_line (c_ge_use_attribute_type_id)
 						end
+						if type_info_attribute_storable_type_id_used then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_use_attribute_storable_type_id)
+						end
 						if type_info_attribute_dynamic_type_set_used then
 							header_file.put_string (c_define)
 							header_file.put_character (' ')
@@ -2058,6 +2064,7 @@ feature {NONE} -- C code Generation
 					type_info_attributes_used := False
 					type_info_attribute_name_used := False
 					type_info_attribute_type_id_used := False
+					type_info_attribute_storable_type_id_used := False
 					type_info_attribute_dynamic_type_set_used := False
 					type_info_attribute_offset_used := False
 					type_info_attribute_size_used := False
@@ -2559,7 +2566,7 @@ feature {NONE} -- Feature generation
 			old_file := current_file
 			current_file := current_function_header_buffer
 			if
-				a_feature.implementation_class.name.same_class_name (tokens.file_class_name) and then 
+				a_feature.implementation_class.name.same_class_name (tokens.file_class_name) and then
 				a_feature.implementation_feature.name.same_feature_name (tokens.c_retrieved_feature_name)
 			then
 				type_info_name_used := True
@@ -2569,6 +2576,20 @@ feature {NONE} -- Feature generation
 				type_info_attribute_size_used:= True
 				type_info_attribute_type_id_used:= True
 				type_info_attribute_dynamic_type_set_used := True
+			elseif
+				a_feature.implementation_class.name.same_class_name (tokens.file_class_name) and then
+				(a_feature.implementation_feature.name.same_feature_name (tokens.c_basic_store_feature_name) or
+				a_feature.implementation_feature.name.same_feature_name (tokens.c_general_store_feature_name) or
+				a_feature.implementation_feature.name.same_feature_name (tokens.c_independent_store_feature_name))
+			then
+				type_info_generator_used := True
+				type_info_generic_parameters_used := True
+				type_info_attributes_used := True
+				type_info_attribute_name_used := True
+				type_info_attribute_offset_used := True
+				type_info_attribute_size_used := True
+				type_info_attribute_type_id_used := True
+				type_info_attribute_storable_type_id_used := True
 			end
 				--
 				-- Print signature to `header_file' and `current_file'.
@@ -34112,7 +34133,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character (' ')
 					print_typed_default_entity_value (l_primary_type, current_file)
 					current_file.put_character (')')
-				elseif l_primary_type.base_class.is_deferred or l_primary_type.base_class.is_none then
+				elseif l_primary_type.base_class.is_deferred or l_primary_type.base_class.is_none or l_primary_type.base_class.is_formal then
 					current_file.put_character ('(')
 					current_file.put_string (c_ge_raise)
 					current_file.put_character ('(')
@@ -40783,6 +40804,22 @@ feature {NONE} -- Type generation
 								end
 								l_comma_needed := True
 							end
+								-- storable_type_id.
+							if type_info_attribute_storable_type_id_used then
+								if l_comma_needed then
+									current_file.put_character (',')
+									current_file.put_character (' ')
+								end
+								if attached l_attribute.storable_type as l_storable_type then
+									current_file.put_integer (l_storable_type.type_id)
+								else
+										-- Internal error: attributes have a storable type.
+									set_fatal_error
+									error_handler.report_giaac_error (generator, "print_types_array", 2, "attribute with no storable type.")
+									current_file.put_character ('0')
+								end
+								l_comma_needed := True
+							end
 								-- dynamic type set.
 							if type_info_attribute_dynamic_type_set_used then
 								if l_comma_needed then
@@ -40827,7 +40864,7 @@ feature {NONE} -- Type generation
 								else
 										-- Internal error: attributes have a result type.
 									set_fatal_error
-									error_handler.report_giaac_error (generator, "print_types_array", 2, "attribute with no dynamic type set.")
+									error_handler.report_giaac_error (generator, "print_types_array", 3, "attribute with no dynamic type set.")
 									current_file.put_character ('0')
 									current_file.put_character (',')
 									current_file.put_character (' ')
@@ -40872,7 +40909,7 @@ feature {NONE} -- Type generation
 								else
 										-- Internal error: attributes have a result type.
 									set_fatal_error
-									error_handler.report_giaac_error (generator, "print_types_array", 3, "attribute with no type.")
+									error_handler.report_giaac_error (generator, "print_types_array", 4, "attribute with no type.")
 									current_file.put_character ('0')
 								end
 								current_file.put_character (')')
@@ -40899,6 +40936,15 @@ feature {NONE} -- Type generation
 						end
 							-- type_id.
 						if type_info_attribute_type_id_used then
+							if l_comma_needed then
+								current_file.put_character (',')
+								current_file.put_character (' ')
+							end
+							current_file.put_integer (l_special_type.item_type_set.static_type.type_id)
+							l_comma_needed := True
+						end
+							-- storable_type_id.
+						if type_info_attribute_storable_type_id_used then
 							if l_comma_needed then
 								current_file.put_character (',')
 								current_file.put_character (' ')
@@ -41007,6 +41053,15 @@ feature {NONE} -- Type generation
 								current_file.put_integer (l_item_type_set.static_type.type_id)
 								l_comma_needed := True
 							end
+								-- storable_type_id.
+							if type_info_attribute_storable_type_id_used then
+								if l_comma_needed then
+									current_file.put_character (',')
+									current_file.put_character (' ')
+								end
+								current_file.put_integer (l_item_type_set.static_type.type_id)
+								l_comma_needed := True
+							end
 								-- dynamic type set.
 							if type_info_attribute_dynamic_type_set_used then
 								if l_comma_needed then
@@ -41099,6 +41154,15 @@ feature {NONE} -- Type generation
 						end
 							-- type_id.
 						if type_info_attribute_type_id_used then
+							if l_comma_needed then
+								current_file.put_character (',')
+								current_file.put_character (' ')
+							end
+							current_file.put_integer (l_type.type_id)
+							l_comma_needed := True
+						end
+							-- storable_type_id.
+						if type_info_attribute_storable_type_id_used then
 							if l_comma_needed then
 								current_file.put_character (',')
 								current_file.put_character (' ')
@@ -41343,6 +41407,8 @@ feature {NONE} -- Type generation
 					current_file.put_string (c_ge_type_flag_expanded)
 				elseif l_type.base_class.is_deferred then
 					current_file.put_string (c_ge_type_flag_deferred)
+				elseif l_type.base_class.is_formal then
+					current_file.put_string (c_ge_type_flag_formal)
 				else
 					current_file.put_character ('0')
 				end
@@ -41413,7 +41479,7 @@ feature {NONE} -- Type generation
 						if l_type.is_special then
 								-- One more attribute: 'item'.
 							l_attribute_count := l_attribute_count + 1
-	
+
 						end
 						if attached {ET_DYNAMIC_TUPLE_TYPE} l_type as l_tuple_type then
 								-- One more attribute per Tuple item.
@@ -43889,6 +43955,9 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("ge_signal.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					l_c_filename := "ge_signal.c"
+				elseif a_filename.same_string ("ge_store.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "ge_store.c"
 				elseif a_filename.same_string ("ge_string.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					l_c_filename := "ge_string.c"
@@ -43968,11 +44037,12 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("eif_plug.h", False, a_header_file)
 				elseif a_filename.same_string ("eif_retrieve.c") then
 					include_runtime_header_file ("eif_retrieve.h", False, a_header_file)
-					include_runtime_header_file ("ge_console.h", False, a_header_file)
 					include_runtime_header_file ("ge_retrieve.h", False, a_header_file)
 					include_runtime_header_file ("ge_exception.h", False, a_header_file)
+					include_runtime_header_file ("ge_console.h", False, a_header_file)
 				elseif a_filename.same_string ("eif_store.c") then
 					include_runtime_header_file ("eif_store.h", False, a_header_file)
+					include_runtime_header_file ("ge_store.h", False, a_header_file)
 					include_runtime_header_file ("ge_console.h", False, a_header_file)
 				elseif a_filename.same_string ("eif_threads.c") then
 					include_runtime_header_file ("eif_threads.h", False, a_header_file)
@@ -44039,6 +44109,11 @@ feature {NONE} -- Include files
 					if use_threads then
 						include_runtime_header_file ("ge_thread.h", False, a_header_file)
 					end
+				elseif a_filename.same_string ("ge_store.c") then
+					include_runtime_header_file ("ge_store.h", False, a_header_file)
+					include_runtime_header_file ("ge_storable.h", False, a_header_file)
+					include_runtime_header_file ("ge_gc.h", False, a_header_file)
+					include_runtime_header_file ("ge_types.h", False, a_header_file)
 				elseif a_filename.same_string ("ge_string.c") then
 					include_runtime_header_file ("ge_string.h", False, a_header_file)
 					include_runtime_header_file ("ge_native_string.h", False, a_header_file)
@@ -46793,6 +46868,9 @@ feature {NONE} -- Implementation
 	type_info_attribute_type_id_used: BOOLEAN
 			-- Is the type id of attributes used in the system?
 
+	type_info_attribute_storable_type_id_used: BOOLEAN
+			-- Is the storable type id of attributes used in the system?
+
 	type_info_attribute_dynamic_type_set_used: BOOLEAN
 			-- Is the dynamic type set of attributes used in the system?
 
@@ -47331,6 +47409,7 @@ feature {NONE} -- Constants
 	c_ge_type_flag_character_32: STRING = "GE_TYPE_FLAG_CHARACTER_32"
 	c_ge_type_flag_deferred: STRING = "GE_TYPE_FLAG_DEFERRED"
 	c_ge_type_flag_expanded: STRING = "GE_TYPE_FLAG_EXPANDED"
+	c_ge_type_flag_formal: STRING = "GE_TYPE_FLAG_FORMAL"
 	c_ge_type_flag_integer_8: STRING = "GE_TYPE_FLAG_INTEGER_8"
 	c_ge_type_flag_integer_16: STRING = "GE_TYPE_FLAG_INTEGER_16"
 	c_ge_type_flag_integer_32: STRING = "GE_TYPE_FLAG_INTEGER_32"
@@ -47355,6 +47434,7 @@ feature {NONE} -- Constants
 	c_ge_use_attribute_name: STRING = "GE_USE_ATTRIBUTE_NAME"
 	c_ge_use_attribute_offset: STRING = "GE_USE_ATTRIBUTE_OFFSET"
 	c_ge_use_attribute_size: STRING = "GE_USE_ATTRIBUTE_SIZE"
+	c_ge_use_attribute_storable_type_id: STRING = "GE_USE_ATTRIBUTE_STORABLE_TYPE_ID"
 	c_ge_use_attribute_type_id: STRING = "GE_USE_ATTRIBUTE_TYPE_ID"
 	c_ge_use_attributes: STRING = "GE_USE_ATTRIBUTES"
 	c_ge_use_boehm_gc: STRING = "GE_USE_BOEHM_GC"

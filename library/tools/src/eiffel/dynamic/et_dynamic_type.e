@@ -5,7 +5,7 @@
 		"Eiffel dynamic types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_DYNAMIC_TYPE
@@ -43,7 +43,7 @@ feature -- Status report
 			-- set should also be non-empty. Therefore it is recommended to
 			-- use 'not can_be_void'.)
 		do
-			Result := not base_class.is_none and primary_type.is_alive
+			Result := not base_class.is_none and not base_class.is_formal and primary_type.is_alive
 		end
 
 	is_generic: BOOLEAN
@@ -207,7 +207,7 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of types in current type set
 		do
-			if not base_class.is_none and primary_type.is_alive then
+			if not base_class.is_none and not base_class.is_formal and primary_type.is_alive then
 				Result := 1
 			end
 		end

@@ -111,6 +111,9 @@ feature -- Generation
 		do
 			if not a_type.is_alive then
 				a_type.set_alive
+				if current_dynamic_system.all_attributes_used then
+					a_type.use_all_attributes (current_dynamic_system)
+				end
 				if a_type.is_expanded then
 						-- Make sure that feature 'twin' is alive for expanded types.
 						-- Note that this will make fetaure 'copy' alive as well

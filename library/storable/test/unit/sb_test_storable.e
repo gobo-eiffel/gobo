@@ -32,21 +32,40 @@ feature -- Test
 		do
 			create l_object
 			check_values (l_object)
-			if not eiffel_compiler.is_ge then
-				l_filename := new_filename ("gobo", ".tmp")
-				create l_file.make_with_name (l_filename)
-				l_file.open_write
-				l_file.independent_store (l_object)
-				l_file.close
-				create l_file.make_with_name (l_filename)
-				l_file.open_read
-				l_retrieved := l_file.retrieved
-				l_file.close
-				if attached {SB_DATA_1} l_retrieved as l_retrieved_object then
-					check_values (l_retrieved_object)
-				else
-					assert ("is_retrieved", False)
-				end
+			l_filename := new_filename ("gobo", ".tmp")
+			create l_file.make_with_name (l_filename)
+			l_file.open_write
+			l_file.independent_store (l_object)
+			l_file.close
+			create l_file.make_with_name (l_filename)
+			l_file.open_read
+			l_retrieved := l_file.retrieved
+			l_file.close
+			if attached {SB_DATA_1} l_retrieved as l_retrieved_object then
+				check_values (l_retrieved_object)
+			else
+				assert ("is_retrieved", False)
+			end
+		end
+
+	test_retrieved_1_ge
+			-- Test feature `retrieved' with a Storable file stored by
+			-- system compiled by Gobo Eiffel.
+		local
+			l_retrieved: detachable ANY
+			l_filename: STRING
+			l_file: RAW_FILE
+		do
+			l_filename := Execution_environment.interpreted_string (storable_1_ge_filename)
+			create l_file.make_with_name (l_filename)
+			l_file.open_read
+			l_retrieved := l_file.retrieved
+			l_file.close
+			if attached {SB_DATA_1} l_retrieved as l_object then
+				check_values (l_object)
+			else
+				print (l_retrieved)
+				assert ("is_retrieved", False)
 			end
 		end
 
@@ -208,11 +227,11 @@ feature {NONE} -- Implementation
 			assert ("arr_gen", attached {ARRAY [SB_DATA_3 [INTEGER_32]]} a_object.arr_gen)
 			assert ("arr_gen_lower", a_object.arr_gen.lower = 1)
 			assert ("arr_gen_upper", a_object.arr_gen.upper = 5)
-			assert ("arr_gen_item_1", a_object.arr_gen.item (1).attr = 3)
-			assert ("arr_gen_item_2", a_object.arr_gen.item (2).attr = 3)
-			assert ("arr_gen_item_3", a_object.arr_gen.item (3).attr = 3)
-			assert ("arr_gen_item_4", a_object.arr_gen.item (4).attr = 3)
-			assert ("arr_gen_item_5", a_object.arr_gen.item (5).attr = 3)
+			assert_integers_equal ("arr_gen_item_1", 3, a_object.arr_gen.item (1).attr)
+			assert_integers_equal ("arr_gen_item_2", 3, a_object.arr_gen.item (2).attr)
+			assert_integers_equal ("arr_gen_item_3", 3, a_object.arr_gen.item (3).attr)
+			assert_integers_equal ("arr_gen_item_4", 3, a_object.arr_gen.item (4).attr)
+			assert_integers_equal ("arr_gen_item_5", 3, a_object.arr_gen.item (5).attr)
 			assert ("arr_gen_gen", attached {ARRAY [SB_DATA_3 [SB_DATA_6 [INTEGER_32]]]} a_object.arr_gen_gen)
 			assert ("arr_gen_gen_lower", a_object.arr_gen_gen.lower = 1)
 			assert ("arr_gen_gen_upper", a_object.arr_gen_gen.upper = 5)

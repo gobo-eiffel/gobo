@@ -5,7 +5,7 @@
 		"Eiffel class interface checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_INTERFACE_CHECKER
@@ -68,6 +68,8 @@ feature -- Processing
 			l_other_class: ET_CLASS
 		do
 			if a_class.is_none then
+				a_class.set_interface_checked
+			elseif a_class.is_formal then
 				a_class.set_interface_checked
 			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)

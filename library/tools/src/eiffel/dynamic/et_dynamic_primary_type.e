@@ -10,7 +10,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_DYNAMIC_PRIMARY_TYPE
@@ -48,7 +48,6 @@ feature -- Status report
 	is_alive: BOOLEAN
 			-- Is current type considered alive?
 			-- (e.g. instances of this type may be created)
-
 
 	is_agent_type: BOOLEAN
 			-- Is current type an agent type?
@@ -98,10 +97,11 @@ feature -- Status report
 	is_used: BOOLEAN
 			-- Should current type used in the system?
 		do
-			Result := is_alive or has_static or (attached meta_type as l_meta_type and then l_meta_type.is_used)
+			Result := is_alive or has_static or base_class.is_formal or (attached meta_type as l_meta_type and then l_meta_type.is_used)
 		ensure
 			is_alive: is_alive implies Result
 			has_static: has_static implies Result
+			formal: base_class.is_formal implies Result
 			has_meta_type: (attached meta_type as l_meta_type and then l_meta_type.is_used) implies Result
 		end
 

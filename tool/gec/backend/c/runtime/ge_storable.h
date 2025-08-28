@@ -55,25 +55,45 @@ extern "C" {
 
 #define GE_STORABLE_EO_SPEC		0x01000000		/* Object is special (C area) */
 #define GE_STORABLE_EO_TUPLE	0x40000000		/* Object is tuple */
-#define GE_STORABLE_EO_REF		0x00800000		/* Special object is full of references */
+#define GE_STORABLE_EO_REF		0x00800000		/* Does special or tuple object contain references */
+#define GE_STORABLE_EO_COMP		0x00010000		/* Composite (has expanded) */
+#define GE_STORABLE_EO_EXP		0x00020000		/* Object is an expanded one (even when boxed) */
 #define GE_STORABLE_EO_TYPE		0x0000FFFF		/* Mask to get the dynamic type */
 
 #define GE_STORABLE_SK_EXP		0x80			/* Type is a user-defined expanded */
 #define GE_STORABLE_SK_BOOL		0x04			/* Simple boolean type */
 #define GE_STORABLE_SK_CHAR8	0x08			/* Simple character type */
-#define GE_STORABLE_SK_INT8		0x0c			/* Simple integer 8 type */
+#define GE_STORABLE_SK_INT8		0x0C			/* Simple integer 8 type */
 #define GE_STORABLE_SK_INT32	0x10			/* Simple integer 32 type */
 #define GE_STORABLE_SK_INT16	0x14			/* Simple integer 16 type */
 #define GE_STORABLE_SK_REAL32	0x18			/* Simple real type */
-#define GE_STORABLE_SK_CHAR32	0x1c			/* Simple unicode character type */
+#define GE_STORABLE_SK_CHAR32	0x1C			/* Simple unicode character type */
 #define GE_STORABLE_SK_REAL64	0x20			/* Simple double type */
 #define GE_STORABLE_SK_INT64	0x24			/* Simple integer 64 types */
 #define GE_STORABLE_SK_UINT8	0x30			/* Simple unsigned integer 8 type */
 #define GE_STORABLE_SK_UINT16	0x34			/* Simple unsigned integer 16 type */
 #define GE_STORABLE_SK_UINT32	0x38			/* Simple unsigned integer 32 type */
-#define GE_STORABLE_SK_UINT64	0x3c			/* Simple unsigned integer 64 type */
+#define GE_STORABLE_SK_UINT64	0x3C			/* Simple unsigned integer 64 type */
 #define GE_STORABLE_SK_POINTER	0x40			/* Simple pointer type */
-#define GE_STORABLE_SK_REF		0xf8			/* Mask to test for reference type */
+#define GE_STORABLE_SK_REF		0xF8			/* Mask to test for reference type */
+
+#define GE_STORABLE_SK32_EXP		0x80000000			/* Type is a user-defined expanded */
+#define GE_STORABLE_SK32_BOOL		0x04000000			/* Simple boolean type */
+#define GE_STORABLE_SK32_CHAR8		0x08000000			/* Simple character type */
+#define GE_STORABLE_SK32_INT8		0x0C000000			/* Simple integer 8 type */
+#define GE_STORABLE_SK32_INT32		0x10000000			/* Simple integer 32 type */
+#define GE_STORABLE_SK32_INT16		0x14000000			/* Simple integer 16 type */
+#define GE_STORABLE_SK32_REAL32		0x18000000			/* Simple real type */
+#define GE_STORABLE_SK32_CHAR32		0x1C000000			/* Simple unicode character type */
+#define GE_STORABLE_SK32_REAL64		0x20000000			/* Simple double type */
+#define GE_STORABLE_SK32_INT64		0x24000000			/* Simple integer 64 types */
+#define GE_STORABLE_SK32_UINT8		0x30000000			/* Simple unsigned integer 8 type */
+#define GE_STORABLE_SK32_UINT16		0x34000000			/* Simple unsigned integer 16 type */
+#define GE_STORABLE_SK32_UINT32		0x38000000			/* Simple unsigned integer 32 type */
+#define GE_STORABLE_SK32_UINT64		0x3C000000			/* Simple unsigned integer 64 type */
+#define GE_STORABLE_SK32_POINTER	0x40000000			/* Simple pointer type */
+#define GE_STORABLE_SK32_REF		0xF8000000			/* Mask to test for reference type */
+#define GE_STORABLE_SK32_DTYPE		0x0000FFFF			/* Mask to get the dynamic type */
 
 #define GE_STORABLE_TUPLE_REFERENCE_CODE	0x00
 #define GE_STORABLE_TUPLE_BOOLEAN_CODE		0x01
@@ -90,6 +110,11 @@ extern "C" {
 #define GE_STORABLE_TUPLE_NATURAL_32_CODE 	0x0C
 #define GE_STORABLE_TUPLE_NATURAL_64_CODE 	0x0D
 #define GE_STORABLE_TUPLE_CHARACTER_32_CODE	0x0E
+
+#define GE_STORABLE_CLASS_IS_FROZEN_FLAG			0x00002000
+#define GE_STORABLE_CLASS_IS_COMPOSITE_FLAG			0x00000800
+#define GE_STORABLE_CLASS_IS_EXPANDED_FLAG			0x00000200
+#define GE_STORABLE_CLASS_IS_DECLARED_EXPANDED_FLAG	0x00000100
 
 #ifdef __cplusplus
 }
