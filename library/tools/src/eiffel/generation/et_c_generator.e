@@ -14424,6 +14424,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 		local
 			l_type: ET_DYNAMIC_TYPE
 			l_meta_type: detachable ET_DYNAMIC_PRIMARY_TYPE
+			l_index: INTEGER
 		do
 			if in_operand then
 				operand_stack.force (an_expression)
@@ -14451,7 +14452,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					if l_type = l_type.primary_type then
 						current_file.put_integer (0)
 					else
-						current_file.put_integer (1)
+						l_index := 0
+						if l_type.is_attached then
+							l_index := 1
+						end
+						if use_scoop and then l_type.is_separate then
+							l_index := l_index + 2
+						end
+						current_file.put_integer (l_index)
 					end
 					current_file.put_character (']')
 					current_file.put_character (')')
@@ -33816,6 +33824,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_meta_type: detachable ET_DYNAMIC_PRIMARY_TYPE
 			i, nb: INTEGER
+			l_index: INTEGER
 		do
 			l_arguments := a_feature.arguments
 			l_parameters := current_type.base_type.actual_parameters
@@ -33862,7 +33871,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						if l_dynamic_type = l_dynamic_type.primary_type then
 							current_file.put_integer (0)
 						else
-							current_file.put_integer (1)
+							l_index := 0
+							if l_dynamic_type.is_attached then
+								l_index := 1
+							end
+							if use_scoop and then l_dynamic_type.is_separate then
+								l_index := l_index + 2
+							end
+							current_file.put_integer (l_index)
 						end
 						current_file.put_character (']')
 						current_file.put_character (')')
@@ -33916,7 +33932,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 							if l_dynamic_type = l_dynamic_type.primary_type then
 								current_file.put_integer (0)
 							else
-								current_file.put_integer (1)
+								l_index := 0
+								if l_dynamic_type.is_attached then
+									l_index := 1
+								end
+								if use_scoop and then l_dynamic_type.is_separate then
+									l_index := l_index + 2
+								end
+								current_file.put_integer (l_index)
 							end
 							current_file.put_character (']')
 							current_file.put_character (')')
@@ -34110,6 +34133,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_type: ET_DYNAMIC_TYPE
 			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_meta_type: detachable ET_DYNAMIC_PRIMARY_TYPE
+			l_index: INTEGER
 		do
 			l_parameters := a_target_type.base_type.actual_parameters
 			if l_parameters = Void or else l_parameters.count < 1 then
@@ -34191,7 +34215,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 						if l_type = l_primary_type then
 							current_file.put_integer (0)
 						else
-							current_file.put_integer (1)
+							l_index := 0
+							if l_type.is_attached then
+								l_index := 1
+							end
+							if use_scoop and then l_type.is_separate then
+								l_index := l_index + 2
+							end
+							current_file.put_integer (l_index)
 						end
 						current_file.put_character (']')
 						current_file.put_character (')')
@@ -40504,7 +40535,6 @@ feature {NONE} -- Type generation
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
 			l_type, l_other_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_meta_type: detachable ET_DYNAMIC_PRIMARY_TYPE
-			l_attached_type: ET_DYNAMIC_TYPE
 			i, j, nb: INTEGER
 			l_dispose_procedure: detachable ET_DYNAMIC_FEATURE
 			l_ancestors: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
@@ -40524,6 +40554,8 @@ feature {NONE} -- Type generation
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_count: INTEGER
+			a, l_nb_variants: INTEGER
+			l_annotation: INTEGER
 		do
 			l_dynamic_types := dynamic_types
 			nb := l_dynamic_types.count
@@ -40534,7 +40566,11 @@ feature {NONE} -- Type generation
 			current_file.put_integer (nb + 1)
 			current_file.put_character (']')
 			current_file.put_character ('[')
-			current_file.put_integer (2)
+			l_nb_variants := 2
+			if use_scoop then
+				l_nb_variants := 2 * l_nb_variants
+			end
+			current_file.put_integer (l_nb_variants)
 			current_file.put_character (']')
 			current_file.put_character (' ')
 			current_file.put_character ('=')
@@ -40543,59 +40579,38 @@ feature {NONE} -- Type generation
 			current_file.put_new_line
 				-- Dummy type at index 0.
 			current_file.put_character ('{')
-			current_file.put_character ('{')
-			current_file.put_integer (0)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			current_file.put_integer (0)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			if use_scoop then
+			from a := 1 until a > l_nb_variants loop
+				current_file.put_character ('{')
 				current_file.put_integer (0)
 				current_file.put_character (',')
 				current_file.put_character (' ')
-			end
-			current_file.put_integer (0)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			current_file.put_string (c_eif_false)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			current_file.put_integer (0)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			current_file.put_integer (0)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			current_file.put_integer (0)
-			current_file.put_character ('}')
-			current_file.put_character (',')
-			current_file.put_character ('{')
-			current_file.put_integer (0)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			current_file.put_integer (0)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			if use_scoop then
 				current_file.put_integer (0)
 				current_file.put_character (',')
 				current_file.put_character (' ')
+				if use_scoop then
+					current_file.put_integer (0)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
+				current_file.put_integer (0)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_eif_false)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_integer (0)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_integer (0)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_integer (0)
+				current_file.put_character ('}')
+				if a < l_nb_variants then
+					current_file.put_character (',')
+				end
+				a := a + 1
 			end
-			current_file.put_integer (0)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			current_file.put_string (c_eif_false)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			current_file.put_integer (0)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			current_file.put_integer (0)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			current_file.put_integer (0)
-			current_file.put_character ('}')
 			current_file.put_character ('}')
 			current_file.put_character (',')
 			current_file.put_new_line
@@ -40603,118 +40618,85 @@ feature {NONE} -- Type generation
 			from i := 1 until i > nb loop
 				l_type := l_dynamic_types.item (i)
 				current_file.put_character ('{')
-				current_file.put_character ('{')
-					-- id.
-				l_meta_type := l_type.meta_type
-				if l_meta_type /= Void then
-					current_file.put_integer (l_meta_type.id)
-				else
-					current_file.put_integer (0)
-				end
-				current_file.put_character (',')
-				current_file.put_character (' ')
-					-- Flags.
-				current_file.put_character ('0')
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				if use_scoop then
-						-- SCOOP region.
-					current_file.put_character ('0')
-					current_file.put_character (',')
-					current_file.put_character (' ')
-				end
-					-- type_id.
-				current_file.put_integer (l_type.id)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-					-- is_special.
-				if l_type.is_special then
-					current_file.put_string (c_eif_true)
-				else
-					current_file.put_string (c_eif_false)
-				end
-				current_file.put_character (',')
-				current_file.put_character (' ')
-					-- dispose.
-				l_dispose_procedure := Void
-				dispose_procedures.search (l_type)
-				if dispose_procedures.found then
-					l_dispose_procedure := dispose_procedures.found_item
-				end
-				if l_dispose_procedure /= Void then
-					current_file.put_character ('&')
-					print_routine_name (l_dispose_procedure, l_type, current_file)
-				else
-					current_file.put_integer (0)
-				end
-					-- Attribute `internal_name'.
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_integer (0)
-					-- Attribute `internal_name_32'.
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_integer (0)
-				current_file.put_character ('}')
-				current_file.put_character (',')
-				current_file.put_character ('{')
-					-- id.
-				l_attached_type := l_type.attached_type
-				if l_attached_type /= Void then
-					l_meta_type := l_attached_type.meta_type
-				else
+				from a := 1 until a > l_nb_variants loop
+					current_file.put_character ('{')
+						-- id.
 					l_meta_type := Void
-				end
-				if l_meta_type /= Void then
-					current_file.put_integer (l_meta_type.id)
-				else
-					current_file.put_integer (0)
-				end
-				current_file.put_character (',')
-				current_file.put_character (' ')
-					-- Flags.
-				current_file.put_character ('0')
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				if use_scoop then
-						-- SCOOP region.
+					inspect a
+					when 1 then
+						l_meta_type := l_type.meta_type
+						l_annotation := 0
+					when 2 then
+						if attached l_type.attached_type as l_attached_type then
+							l_meta_type := l_attached_type.meta_type
+						end
+						l_annotation := 1
+					when 3 then
+						if attached l_type.separate_type as l_separate_type then
+							l_meta_type := l_separate_type.meta_type
+						end
+						l_annotation := 4
+					when 4 then
+						if attached l_type.attached_separate_type as l_attached_separate_type then
+							l_meta_type := l_attached_separate_type.meta_type
+						end
+						l_annotation := 5
+					end
+					if l_meta_type /= Void then
+						current_file.put_integer (l_meta_type.id)
+					else
+						current_file.put_integer (0)
+					end
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- Flags.
 					current_file.put_character ('0')
 					current_file.put_character (',')
 					current_file.put_character (' ')
-				end
-					-- type_id.
-				current_file.put_integer ((1 |<< 16) | l_type.id)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-					-- is_special.
-				if l_type.is_special then
-					current_file.put_string (c_eif_true)
-				else
-					current_file.put_string (c_eif_false)
-				end
-				current_file.put_character (',')
-				current_file.put_character (' ')
-					-- dispose.
-				l_dispose_procedure := Void
-				dispose_procedures.search (l_type)
-				if dispose_procedures.found then
-					l_dispose_procedure := dispose_procedures.found_item
-				end
-				if l_dispose_procedure /= Void then
-					current_file.put_character ('&')
-					print_routine_name (l_dispose_procedure, l_type, current_file)
-				else
+					if use_scoop then
+							-- SCOOP region.
+						current_file.put_character ('0')
+						current_file.put_character (',')
+						current_file.put_character (' ')
+					end
+						-- type_id.
+					current_file.put_integer ((l_annotation |<< 16) | l_type.id)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- is_special.
+					if l_type.is_special then
+						current_file.put_string (c_eif_true)
+					else
+						current_file.put_string (c_eif_false)
+					end
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- dispose.
+					l_dispose_procedure := Void
+					dispose_procedures.search (l_type)
+					if dispose_procedures.found then
+						l_dispose_procedure := dispose_procedures.found_item
+					end
+					if l_dispose_procedure /= Void then
+						current_file.put_character ('&')
+						print_routine_name (l_dispose_procedure, l_type, current_file)
+					else
+						current_file.put_integer (0)
+					end
+						-- Attribute `internal_name'.
+					current_file.put_character (',')
+					current_file.put_character (' ')
 					current_file.put_integer (0)
+						-- Attribute `internal_name_32'.
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_integer (0)
+					current_file.put_character ('}')
+					if a < l_nb_variants then
+						current_file.put_character (',')
+					end
+					a := a + 1
 				end
-					-- Attribute `internal_name'.
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_integer (0)
-					-- Attribute `internal_name_32'.
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_integer (0)
-				current_file.put_character ('}')
 				current_file.put_character ('}')
 				if i /= nb then
 					current_file.put_character (',')
