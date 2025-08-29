@@ -30,7 +30,7 @@
 		<root class="XSTORABLE" feature="make"/>
 		<setting name="console_application" value="true"/>
 		<capability>
-			<concurrency use="none"/>
+			<concurrency use="scoop"/>
 		</capability>
 		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
 		<cluster name="sb_testgen" location="${GOBO_TESTGEN}"/>

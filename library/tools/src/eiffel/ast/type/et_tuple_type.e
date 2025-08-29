@@ -5,7 +5,7 @@
 		"Eiffel TUPLE types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_TUPLE_TYPE
@@ -531,11 +531,20 @@ feature -- Output
 
 	append_runtime_name_to_string (a_string: STRING)
 			-- Append `runtime_name_to_text' to `a_string'.
+		local
+			l_base_class: ET_CLASS
 		do
-			if base_class.current_system.attachment_type_conformance_mode then
+			l_base_class := base_class
+			if l_base_class.current_system.attachment_type_conformance_mode then
 					-- Void-safe mode.
 				if is_attached then
 					a_string.append_character ('!')
+				end
+			end
+			if l_base_class.current_system.scoop_mode then
+				if is_separate then
+					a_string.append_string (tokens.separate_keyword_name)
+					a_string.append_character (' ')
 				end
 			end
 			a_string.append_string (tuple_string)

@@ -5,7 +5,7 @@
 		"Eiffel formal generic parameter types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_FORMAL_PARAMETER_TYPE
@@ -2740,8 +2740,14 @@ feature -- Output
 	append_runtime_name_to_string (a_string: STRING)
 			-- Append `runtime_name_to_text' to `a_string'.
 		do
-			if attached type_mark as l_type_mark and then (l_type_mark.is_attached_mark or not l_type_mark.is_expanded_mark) then
-				a_string.append_character ('!')
+			if attached type_mark as l_type_mark then
+				if l_type_mark.is_attached_mark or l_type_mark.is_expanded_mark then
+					a_string.append_character ('!')
+				end
+				if l_type_mark.is_separate_mark then
+					a_string.append_string (tokens.separate_keyword_name)
+					a_string.append_character (' ')
+				end
 			end
 			a_string.append_string (upper_name)
 		end

@@ -1465,6 +1465,9 @@ static void GE_storable_in_read_object_type(GE_storable_in_buffer* a_buffer, GE_
 				if ((l_type & GE_STORABLE_ATTACHED_FLAG) == GE_STORABLE_ATTACHED_FLAG) {
 					nb_char++;
 				}
+				if ((l_type & GE_STORABLE_SEPARATE_FLAG) == GE_STORABLE_SEPARATE_FLAG) {
+					nb_char += 9;
+				}
 			} else if (l_type == GE_STORABLE_NONE_TYPE) {
 				nb_char += 7;
 			} else if (l_type == GE_STORABLE_TUPLE_TYPE) {
@@ -1523,7 +1526,10 @@ static void GE_storable_in_resolve_object_type(GE_storable_in_buffer* a_buffer, 
 			**a_type_name_ptr = '!';
 			(*a_type_name_ptr)++;
 		}
-		/* TODO: separate */
+		if ((**a_types_ptr & GE_STORABLE_SEPARATE_FLAG) == GE_STORABLE_SEPARATE_FLAG) {
+			strcpy(*a_type_name_ptr, "separate ");
+			*a_type_name_ptr += 9;
+		}
 		(*a_types_ptr)++;
 		GE_storable_in_resolve_object_type(a_buffer, a_data, a_object, a_types_ptr, a_type_name_ptr);
 	} else if (**a_types_ptr == GE_STORABLE_NONE_TYPE) {

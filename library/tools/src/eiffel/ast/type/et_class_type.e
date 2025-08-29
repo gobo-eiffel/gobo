@@ -5,7 +5,7 @@
 		"Eiffel class types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright:  "Copyright (c) 1999-2023, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CLASS_TYPE
@@ -930,7 +930,13 @@ feature -- Output
 					a_string.append_character ('!')
 				end
 			end
-			a_string.append_string (base_class.upper_name)
+			if l_base_class.current_system.scoop_mode then
+				if is_separate then
+					a_string.append_string (tokens.separate_keyword_name)
+					a_string.append_character (' ')
+				end
+			end
+			a_string.append_string (l_base_class.upper_name)
 			if attached actual_parameters as l_parameters and then not l_parameters.is_empty then
 				a_string.append_character (' ')
 				l_parameters.append_runtime_name_to_string (a_string)

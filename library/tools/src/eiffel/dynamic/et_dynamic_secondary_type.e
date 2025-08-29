@@ -8,7 +8,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_DYNAMIC_SECONDARY_TYPE
@@ -103,9 +103,9 @@ feature -- Access
 			Result := primary_type.id
 			if attached type_mark as l_type_mark then
 				if l_type_mark.is_separate_mark and l_type_mark.is_attached_mark then
-					Result := (1 |<< 18) | Result
+					Result := (5 |<< 16) | Result
 				elseif l_type_mark.is_separate_mark then
-					Result := (1 |<< 17) | Result
+					Result := (4 |<< 16) | Result
 				elseif l_type_mark.is_attached_mark then
 					Result := (1 |<< 16) | Result
 				end

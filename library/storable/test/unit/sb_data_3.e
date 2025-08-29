@@ -5,7 +5,7 @@
 	copyright: "Copyright (c) 2025, Eric Bezault and others"
 	license: "MIT License"
 
-expanded class SB_DATA_3 [G]
+expanded class SB_DATA_3 [expanded G]
 
 inherit
 
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	attr: detachable G
+	attr: G
 
 feature -- Setting
 

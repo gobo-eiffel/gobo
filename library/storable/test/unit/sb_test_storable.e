@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 			if not eiffel_compiler.is_ise then
 					-- ISE Eiffel (as of 25.02.9.8732) fails to retrieve a user-defined
 					-- expanded attribute within an object which is itself a user-defined
-					-- expanded attribute.
+					-- expanded item in SPECIAL objects.
 				assert ("arr_gen_gen_item_1", a_object.arr_gen_gen.item (1).attr.attr = 6)
 				assert ("arr_gen_gen_item_2", a_object.arr_gen_gen.item (2).attr.attr = 6)
 				assert ("arr_gen_gen_item_3", a_object.arr_gen_gen.item (3).attr.attr = 6)

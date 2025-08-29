@@ -5,17 +5,17 @@
 	copyright: "Copyright (c) 2025, Eric Bezault and others"
 	license: "MIT License"
 
-expanded class SB_DATA_6 [expanded G]
+class SB_DATA_12
 
 feature -- Access
 
-	attr: G
+	stopped: BOOLEAN
 
 feature -- Setting
 
-	set_attr (a: like attr)
+	set_stopped (b: BOOLEAN)
 		do
-			attr := a
+			stopped := b
 		end
 
 end
