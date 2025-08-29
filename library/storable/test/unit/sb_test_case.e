@@ -93,6 +93,30 @@ feature -- Filenames
 			storable_2_ge_filename_not_void: Result /= Void
 		end
 
+	storable_3_workbench_ise_filename: STRING
+			-- Full filename of "storable_3_workbench.ise"
+		once
+			Result := file_system.pathname (data_dirname, "storable_3_workbench.ise")
+		ensure
+			storable_3_workbench_ise_filename_not_void: Result /= Void
+		end
+
+	storable_3_finalized_ise_filename: STRING
+			-- Full filename of "storable_3_finalized.ise"
+		once
+			Result := file_system.pathname (data_dirname, "storable_3_finalized.ise")
+		ensure
+			storable_3_finalized_ise_filename_not_void: Result /= Void
+		end
+
+	storable_3_ge_filename: STRING
+			-- Full filename of "storable_3.ge"
+		once
+			Result := file_system.pathname (data_dirname, "storable_3.ge")
+		ensure
+			storable_3_ge_filename_not_void: Result /= Void
+		end
+
 feature -- Directory names
 
 	data_dirname: STRING
