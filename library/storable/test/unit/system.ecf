@@ -24,6 +24,8 @@
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
 		<library name="storable" location="${GOBO_LIBRARY}/library/storable/library.ecf" readonly="true"/>
 		<library name="test_skl" location="${GOBO_LIBRARY}/library/test/library_skl.ecf" readonly="true"/>
+		<library name="library_3" location="./library_3/library.ecf" readonly="true"/>
+		<library name="library_4" location="./library_4/library.ecf" readonly="true"/>
 		<cluster name="sb_tester" location="./"/>
 	</target>
 	<target name="xstorable" extends="all_classes">
