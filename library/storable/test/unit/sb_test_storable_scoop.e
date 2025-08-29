@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			l_generating_type: STRING
 			l_attr1_attr1: STRING
 		do
-			l_generating_type := a_object.generating_type
+			l_generating_type := a_object.generating_type.name_32.to_string_8
 			assert_strings_equal ("generating_type", "SB_DATA_11 [!separate STRING_8]", l_generating_type)
 			if a_retrieved then
 				separate a_object.attr1 as l_attr1 do
