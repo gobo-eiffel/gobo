@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Markdown Viewer</title>
+
+  <!-- Marked.js v5 -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- GitHub Markdown CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+
+  <!-- Highlight.js CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+
+  <style>
+    /* Frameless layout */
+    body {
+      margin: 0;
+      padding: 1rem;
+      background-color: #fff;
+    }
+    .markdown-body {
+      max-width: none;
+      padding: 0;
+    }
+
+    /* Images inside links (e.g., badges) */
+    .markdown-body a img {
+      max-height: 30px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <article id="content" class="markdown-body">
+    Loading Markdown…
+  </article>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const file = params.get("file") || "Readme.md";
+
+    function slugify(text) {
+      return text.toLowerCase().trim().replace(/[^\w]+/g, "-");
+    }
+
+    let firstHeading = null;
+
+    const renderer = {
+      heading(token) {
+        let text = "";
+        if (token.tokens && Array.isArray(token.tokens)) {
+          text = token.tokens.map(t => t.text || "").join("");
+        } else {
+          text = token.text || "";
+        }
+
+        if (!firstHeading) firstHeading = text;
+
+        const slug = slugify(text);
+        return `<h${token.depth} id="${slug}">${text}</h${token.depth}>`;
+      },
+
+      link(token) {
+        let href = token.href || "";
+        if (!href.startsWith("http") && href.endsWith(".md")) {
+          href = `index.html?file=${encodeURIComponent(href)}`;
+        }
+
+        const innerHtml = token.tokens.map(t => {
+          if (t.type === "image") {
+            return `<img src="${t.href}" alt="${t.text || ""}"${t.title ? ` title="${t.title}"` : ""}>`;
+          } else {
+            return t.text || "";
+          }
+        }).join("");
+
+        return `<a href="${href}"${token.title ? ` title="${token.title}"` : ""}>${innerHtml}</a>`;
+      }
+    };
+
+    marked.use({ renderer });
+
+    marked.setOptions({
+      highlight: function(code, lang) {
+        try {
+          if (lang && hljs.getLanguage(lang)) {
+            return hljs.highlight(code, { language: lang }).value;
+          }
+        } catch (e) {}
+        return hljs.highlightAuto(code).value;
+      }
+    });
+
+    fetch(file)
+      .then(resp => {
+        if (!resp.ok) throw new Error("File not found: " + file);
+        return resp.text();
+      })
+      .then(md => {
+        const mdString = String(md).trim();
+        const html = marked.parse(mdString);
+        document.getElementById("content").innerHTML = html;
+
+        if (firstHeading) document.title = firstHeading;
+
+        hljs.highlightAll();
+      })
+      .catch(err => {
+        document.getElementById("content").innerHTML =
+          `<p><strong>Error:</strong> ${err.message}</p>`;
+        console.error(err);
+      });
+  </script>
+</body>
+</html>

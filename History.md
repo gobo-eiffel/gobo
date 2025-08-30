@@ -1,6 +1,6 @@
 # Release History
 
-## Version 24.04.xx+xxxxxxx - xx April 2024
+## Version 25.09 - 1st September 2025
 
 ### geant
 
@@ -11,6 +11,12 @@
 
 ### gec
 
+* Added support for `STORABLE` (independent store format only).
+  Does not support classes `MISMATCH_CORRECTOR`, `CLASS_NAME_TRANSLATIONS`,
+  nor the note tag `"storable_version"` yet.
+* Added support for SED classes.
+* Added support for assertion monitoring.
+* Added support for signals.
 * Added support for SCOOP. Using preconditions as wait conditions
   is not supported yet.
 * Do not generate the SCOOP overhead when there is no separate creation
@@ -66,6 +72,10 @@
 
 ### gecop
 
+* Added validation tests for `VSCI`, `VSRP` and `VSRT`.
+* Added validation tests for `VSCN` ("Class Name rule").
+* Added validation tests for `S7SC` ("Semicolon Optionality rule").
+* Added validation tests for `M7CI` ("Case Insensitivity principle").
 * Added test cases for SCOOP semantics and validity rules.
 * Added command-line option `--progress` to show the names.
 * Changed the default for the command-line option `--thread`
@@ -2272,3 +2282,9 @@
 
 * First public release.
 * Gold Award at the Eiffel Class Struggle '97.
+
+## Authors
+
+Copyright (c) 1997-2025, Eric Bezault and others<br>
+mailto:[ericb@gobosoft.com](mailto:ericb@gobosoft.com)<br>
+https:[//www.gobosoft.com](https://www.gobosoft.com)
