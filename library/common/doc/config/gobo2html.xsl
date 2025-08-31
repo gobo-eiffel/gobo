@@ -1206,28 +1206,39 @@
 				result: xxx/yyy.html#zzz
 		-->
 	<xsl:param name="linkend"/>
-	<xsl:if test="starts-with($linkend,'${library/') or starts-with($linkend,'${tool/')">
-		<xsl:variable name="linkend_kind_name" select="substring-before(substring-after($linkend,'/'),'}/')"/>
-		<xsl:variable name="linkend_kind_type" select="substring-before(substring-after($linkend,'${'),'/')"/>
-		<xsl:value-of select="$path_to_gobo"/>
-		<xsl:if test="not(ends-with($path_to_gobo,'/'))">
-			<xsl:value-of select="'/'"/>
-		</xsl:if>
-		<xsl:choose>
-			<xsl:when test="starts-with($path_to_gobo,'http')">
-				<xsl:if test="compare($linkend_kind_name,'common')!=0">
-					<xsl:value-of select="concat($linkend_kind_name,'/')"/>
-				</xsl:if>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="concat($linkend_kind_type,'/',$linkend_kind_name,'/doc/')"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:if>
+	<xsl:choose>
+		<xsl:when test="starts-with($linkend,'${library/') or starts-with($linkend,'${tool/')">
+			<xsl:variable name="linkend_kind_name" select="substring-before(substring-after($linkend,'/'),'}/')"/>
+			<xsl:variable name="linkend_kind_type" select="substring-before(substring-after($linkend,'${'),'/')"/>
+			<xsl:value-of select="$path_to_gobo"/>
+			<xsl:if test="not(ends-with($path_to_gobo,'/'))">
+				<xsl:value-of select="'/'"/>
+			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="starts-with($path_to_gobo,'http')">
+					<xsl:if test="compare($linkend_kind_name,'common')!=0">
+						<xsl:value-of select="concat($linkend_kind_name,'/')"/>
+					</xsl:if>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="concat($linkend_kind_type,'/',$linkend_kind_name,'/doc/')"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="starts-with($linkend,'${root}/')">
+			<xsl:value-of select="$path_to_gobo"/>
+			<xsl:if test="not(ends-with($path_to_gobo,'/'))">
+				<xsl:value-of select="'/'"/>
+			</xsl:if>
+		</xsl:when>
+	</xsl:choose>
 	<xsl:variable name="linkend_relative_name">
 		<xsl:choose>
 			<xsl:when test="starts-with($linkend,'${library/') or starts-with($linkend,'${tool/')">
 				<xsl:value-of select="substring-after($linkend,'}/')"/>
+			</xsl:when>
+			<xsl:when test="starts-with($linkend,'${root}/')">
+				<xsl:value-of select="substring-after($linkend,'${root}/')"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$linkend"/>
