@@ -162,6 +162,8 @@ feature {NONE} -- Eiffel config file parsing
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 			l_class: ET_CLASS
 			l_root_cluster_pathname: STRING
+			l_executable_name: STRING
+			l_override_settings: detachable ET_ECF_SETTINGS
 		do
 			override_root_cluster_pathname := Void
 			override_root_type := Void
@@ -196,6 +198,13 @@ feature {NONE} -- Eiffel config file parsing
 							-- Use the first creation procedure.
 						override_root_creation := l_creators.first.feature_name (1)
 					end
+					l_executable_name := l_class.lower_name
+					l_override_settings := override_settings
+					if l_override_settings = Void then
+						create l_override_settings.make
+						override_settings := l_override_settings
+					end
+					l_override_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.executable_name_setting_name, l_executable_name)
 				end
 			end
 		end
