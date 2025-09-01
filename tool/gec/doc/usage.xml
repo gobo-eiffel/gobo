@@ -240,6 +240,81 @@ used with <projectname>gec</projectname>:
 </para>
 </section>
 
+<section><title>Environment variables</title>
+<para>
+It is possible to override some of the command-line options above, or
+the default values for these options, using environment variables.
+<variablelist>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_CLI_GC</filename>
+		</term>
+		<listitem><para>
+			Override the command-line option <filename>--gc</filename>.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_DEFAULT_GC</filename>
+		</term>
+		<listitem><para>
+			Override the default value when the command-line option <filename>--gc</filename>
+			has not been specified and the environment variable <filename>$GOBO_CLI_GC</filename>
+			has not been set.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_CLI_SETTING</filename>
+		</term>
+		<listitem><para>
+			Override settings as if they were specified with the command-line
+			option <filename>--setting</filename>, or override their values
+			if they are also specified with the command-line option.
+			Several settings can be specified in this environment variable,
+			separated by a comma or a space.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_DEFAULT_SETTING</filename>
+		</term>
+		<listitem><para>
+			Override the default value for a given setting when the command-line
+			option <filename>--setting</filename> or the environment variable
+			<filename>$GOBO_CLI_SETTING</filename> did not set it. Several settings
+			can be specified in this environment variable, separated by a comma or
+			a space.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_CLI_CAPABILITY</filename>
+		</term>
+		<listitem><para>
+			Override capabilities as if they were specified with the command-line
+			option <filename>--capability</filename>, or override their values
+			if they are also specified with the command-line option.
+			Several capabilities can be specified in this environment variable,
+			separated by a comma or a space.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_DEFAULT_CAPABILITY</filename>
+		</term>
+		<listitem><para>
+			Override the default value for a given capability when the command-line
+			option <filename>--capability</filename> or the environment variable
+			<filename>$GOBO_CLI_CAPABILITY</filename> did not set it. Several capabilities
+			can be specified in this environment variable, separated by a comma or
+			a space.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</para>
+</section>
+
 <section><title>ECF files</title>
 <para>
 An ECF file contains the description of the Eiffel program to be compiled.

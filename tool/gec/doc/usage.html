@@ -261,6 +261,92 @@
    
   </div>
   <div>
+   <h2>Environment variables</h2>
+   
+   <p>
+    It is possible to override some of the command-line options above, or
+    the default values for these options, using environment variables.
+    
+    <dl>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>$GOBO_CLI_GC</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Override the command-line option <font color="#800000"><i><tt>--gc</tt></i></font>.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>$GOBO_DEFAULT_GC</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Override the default value when the command-line option <font color="#800000"><i><tt>--gc</tt></i></font>
+      			has not been specified and the environment variable <font color="#800000"><i><tt>$GOBO_CLI_GC</tt></i></font>
+      			has not been set.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>$GOBO_CLI_SETTING</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Override settings as if they were specified with the command-line
+      			option <font color="#800000"><i><tt>--setting</tt></i></font>, or override their values
+      			if they are also specified with the command-line option.
+      			Several settings can be specified in this environment variable,
+      			separated by a comma or a space.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>$GOBO_DEFAULT_SETTING</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Override the default value for a given setting when the command-line
+      			option <font color="#800000"><i><tt>--setting</tt></i></font> or the environment variable
+      			<font color="#800000"><i><tt>$GOBO_CLI_SETTING</tt></i></font> did not set it. Several settings
+      			can be specified in this environment variable, separated by a comma or
+      			a space.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>$GOBO_CLI_CAPABILITY</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Override capabilities as if they were specified with the command-line
+      			option <font color="#800000"><i><tt>--capability</tt></i></font>, or override their values
+      			if they are also specified with the command-line option.
+      			Several capabilities can be specified in this environment variable,
+      			separated by a comma or a space.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>$GOBO_DEFAULT_CAPABILITY</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Override the default value for a given capability when the command-line
+      			option <font color="#800000"><i><tt>--capability</tt></i></font> or the environment variable
+      			<font color="#800000"><i><tt>$GOBO_CLI_CAPABILITY</tt></i></font> did not set it. Several capabilities
+      			can be specified in this environment variable, separated by a comma or
+      			a space.
+      		
+     </dd>
+     
+    </dl>
+    
+   </p>
+   
+  </div>
+  <div>
    <h2>ECF files</h2>
    
    <p>
@@ -345,7 +431,7 @@ lflags_finalize:
     platform on which this C compiler will be invoked. And finally we find
     C compilation and linker flags that should be used when
     <i>gec</i> is invoked with or without the
-    command-line option "--finalize". Note that Eiffel-style comments,
+    command-line option <font color="#800000"><i><tt>--finalize</tt></i></font>. Note that Eiffel-style comments,
     starting with "--", can be included in these config files.
     
    </p>
