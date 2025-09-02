@@ -12,13 +12,13 @@ That way, you can still use your favorite Eiffel compiler while taking
 advantage of the goodies included in *Gobo Eiffel*.
 
 The software included in this package is copyrighted freeware distributed
-under the terms and conditions of the MIT License as specified in 
+under the terms and conditions of the MIT License as specified in
 [License](License.md) file.
 *Gobo Eiffel* is a multi-developer open-source project whose development
 is hosted at
 [Github](http://github.com/gobo-eiffel/gobo)
 while the official site (for stable releases) is located at
-[gobosoft.com](https://www.gobosoft.com). This package also contains files 
+[gobosoft.com](https://www.gobosoft.com). This package also contains files
 from the [Boehm GC](https://github.com/ivmai/bdwgc) project which is also
 released under a MIT-style [license](https://github.com/bdwgc/bdwgc/blob/master/LICENSE), and is bundled with the [Zig toolchain](https://ziglang.org/) which is also released under a MIT-style [license](https://github.com/ziglang/zig/blob/master/LICENSE).
 
@@ -65,7 +65,7 @@ library classes provided in this package.
 
 The supported Eiffel compilers, in alphabetical order, are:
 
-* Gobo Eiffel Compiler (gec) 25.09
+* Gobo Eiffel Compiler (gec) 25.09.02
 * ISE Eiffel 25.02.9.8732 (Classic and .NET)
 
 For more details about the supported Eiffel compilers, please see the file
@@ -80,7 +80,7 @@ and implemented, you can also have a look at
 
 The software provided in this distribution should work on any platform
 where supported Eiffel compilers are available. However this software
-has only been tested under Windows 11, Linux Ubuntu and MacOS. 
+has only been tested under Windows 11, Linux Ubuntu and MacOS.
 Since most Eiffel compilers use the notation `$NAME` for environment
 variables in their ECF files (or equivalent), this convention has been
 used instead of the Windowish `%NAME%`. Likewise, the directory separator
@@ -168,10 +168,10 @@ with bug fixes and features under development is available on GitHub, next to th
 The official releases are also available on
 [SourceForge](https://sourceforge.net/projects/gobo-eiffel/files/gobo-eiffel/) for those of you who prefer to use this mirror.
 
-Although the license allows you to do pretty much whatever you want 
-with this software, we would be grateful to get your feedback, 
-bug reports and/or bug fixes, improvements, etc. so that others 
-could benefit from your work and ideas as well. 
+Although the license allows you to do pretty much whatever you want
+with this software, we would be grateful to get your feedback,
+bug reports and/or bug fixes, improvements, etc. so that others
+could benefit from your work and ideas as well.
 We would also be interested in hearing about your projects and
 how easy (or difficult) it was to adapt this software for your
 specific needs. Thank you in advance.

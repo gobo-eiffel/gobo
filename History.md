@@ -1,6 +1,6 @@
 # Release History
 
-## Version 25.09 - 1st September 2025
+## Version 25.09.02 - 2 September 2025
 
 ### geant
 
