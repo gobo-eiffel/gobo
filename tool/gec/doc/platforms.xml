@@ -202,9 +202,9 @@ has already been used successfully:
 			<entry>x86_64</entry>
 			<entry>msc 17 (Visual Studio 2022)</entry>
 			<entry>
-				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>,
-				<ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
-				and <ulink url="https://gitlab.com/ebezault/gobo/-/pipelines">GitLab Pipelines</ulink>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
+				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
+				
 			</entry>
 		</row>
 		<row>
@@ -212,21 +212,22 @@ has already been used successfully:
 			<entry>x86_64</entry>
 			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
 			<entry>
-				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
-				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>,
+				<ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
+				and <ulink url="https://gitlab.com/ebezault/gobo/-/pipelines">GitLab Pipelines</ulink>
 			</entry>
 		</row>
 		<row>
 			<entry>Windows 11</entry>
 			<entry>x86_64</entry>
 			<entry>msc 17 (Visual Studio 2022)</entry>
-			<entry>On Eric Bezault's computer</entry>
+			<entry>On personal computer</entry>
 		</row>
 		<row>
 			<entry>Windows 11</entry>
 			<entry>x86_64</entry>
 			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
-			<entry>On Eric Bezault's computer</entry>
+			<entry>On personal computer</entry>
 		</row>
 		<row>
 			<entry>Windows 11</entry>
