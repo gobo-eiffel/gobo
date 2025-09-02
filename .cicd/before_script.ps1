@@ -205,7 +205,7 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 							} elseif (Test-Path "$vs2019_setting_script") {
 								Invoke-Environment("`"$vs2019_setting_script`"")
 							} else {
-								Write-Error "Dir content"
+								Write-out "Dir content"
 								dir "C:\Program Files\Microsoft Visual Studio"
 								Write-Error "VisualStudio not found"
 								exit 1
