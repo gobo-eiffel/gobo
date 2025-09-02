@@ -6,11 +6,11 @@
 		"Output URI Resolver"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2025, Colin Adams and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_security_manager">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_security_manager">
   <chapterinfo>
     <copyright>
       <year>2005</year>
@@ -52,7 +52,7 @@
 	    This routine is supposed to be called by the <classname>XM_XSLT_OUTPUT_URI_RESOLVER</classname> to decide
 	    if an <xslt>xsl:result-document</xslt> has permission to write to the URI specified as the value of
 	    it's <xslt>href</xslt> attribute. If your implementation withholds permission, then the transformation will be terminated
-	    with the non recoverable error: <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension#OUTPUT_RESOLVER_ERROR</uri>.
+	    with the non recoverable error: <uri>https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension#OUTPUT_RESOLVER_ERROR</uri>.
 	  </para>
 	</listitem>
       </varlistentry>

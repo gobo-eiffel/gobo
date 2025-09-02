@@ -6,11 +6,11 @@
 		"Scientific Format"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004, Berend de Boer and others"
+	copyright: "Copyright (c) 2004-2025, Berend de Boer and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/formatter/scientific_format">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="string/formatter/scientific_format">
 
 <chapterinfo>
 	<copyright>

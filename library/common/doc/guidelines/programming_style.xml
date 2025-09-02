@@ -1,15 +1,15 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <!--
 	description:
 
 		"Programming Style"
 
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/programming_style">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/programming_style">
 <chapterinfo>
 	<copyright>
 		<year>2001-2016</year>

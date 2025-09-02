@@ -1,9 +1,9 @@
-# Gobo Eiffel Parse Example: rpcalc
+﻿# Gobo Eiffel Parse Example: rpcalc
 
 This folder contains the source code for the reverse polish notation
 calculator used as an example in `geyacc` documentation.
 Please refer to
-[`$GOBO/tool/geyacc/doc/examples.html`](http://www.gobosoft.com/eiffel/gobo/geyacc/examples.html)
+[`$GOBO/tool/geyacc/doc/examples.html`](https://www.gobosoft.com/eiffel/gobo/tool/geyacc/doc/examples.html)
 for details.
 
 **To compile and run this example:**

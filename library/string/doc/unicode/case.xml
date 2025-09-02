@@ -6,11 +6,11 @@
 		"Unicode full case mappings"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2025, Colin Adams and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/unicode/case">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="string/unicode/case">
 
 <chapterinfo>
 	<copyright>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <BOOKS>
   <ITEM CAT="S">
     <TITLE>Number, the Language of Science</TITLE>
@@ -32,7 +32,7 @@
     <QUANTITY>0</QUANTITY>
   </ITEM>
 
-  <ITEM CAT="F" TAX="7.5" xml:base="http://www.gobosoft.com/xml-tests/AAMilne-book">
+  <ITEM CAT="F" TAX="7.5" xml:base="https://www.gobosoft.com/xml-tests/AAMilne-book">
     <?testpi1 here is a message ?>
     <TITLE>When We Were Very Young</TITLE>
     <AUTHOR>Milne, A. A.</AUTHOR>

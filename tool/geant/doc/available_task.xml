@@ -6,11 +6,11 @@
 		"Available Tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2025, Sven Ehrke and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="available_task">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="available_task">
 <chapterinfo>
 	<copyright>
 		<year>2002-2005</year>

@@ -6,11 +6,11 @@
 		"Test Suite"
 
 	library: "Gobo Eiffel Developer Guidelines"
-	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/test">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/test">
 <chapterinfo>
 	<copyright>
 		<year>2001-2019</year>

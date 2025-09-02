@@ -1,9 +1,9 @@
-# Gobo Eiffel Parse Library
+﻿# Gobo Eiffel Parse Library
 
 This library provides parsing functionalities such as syntactical analyzers
 (also known as parsers). This library is mainly used by *Gobo Eiffel Yacc*
 (`geyacc`). To get information about `geyacc`, have a look at
-[`$GOBO/tool/geyacc/doc`](http://www.gobosoft.com/eiffel/gobo/geyacc/index.html).
+[`$GOBO/tool/geyacc/doc`](https://www.gobosoft.com/eiffel/gobo/tool/geyacc/doc/index.html).
 
 **Included in this library:**
 

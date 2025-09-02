@@ -1,6 +1,6 @@
-<xsl:transform
+﻿<xsl:transform
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
- xmlns:gexslt="http://www.gobosoft.com/eiffel/gobo/gexslt/extension"
+ xmlns:gexslt="https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension"
  gexslt:explain="no"
  exclude-result-prefixes="gexslt"
  version="2.0"

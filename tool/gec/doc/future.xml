@@ -10,7 +10,7 @@
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/future">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gec/future">
 <chapterinfo>
 	<copyright>
 		<year>2006-2025</year>
@@ -78,7 +78,7 @@ needed for incrementality are lost as soon as the program exists.
 <para>
 Several kinds of validation test suite are needed. One to test interoperability
 with ISE Eiffel. Another one to test compliance with the <ulink
-url="http://www.ecma-international.org/publications/standards/Ecma-367.htm">ECMA
+url="https://ecma-international.org/publications-and-standards/standards/ecma-367/">ECMA
 Eiffel standard</ulink>. It would also be useful to have a test suite for
 <ulink url="https://github.com/EiffelSoftware/FreeELKS">FreeELKS</ulink> kernel
 library. This effort has already been started with <projectname>gecop</projectname>

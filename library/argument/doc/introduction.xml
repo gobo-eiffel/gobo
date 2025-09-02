@@ -5,11 +5,11 @@
 
 		"Argument Parser Introduction"
 
-	copyright: "Copyright (c) 2006-2019, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2025, Bernd Schoeller and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="argument/introduction">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="argument/introduction">
 <chapterinfo>
 	<copyright>
 		<year>2001-2019</year>

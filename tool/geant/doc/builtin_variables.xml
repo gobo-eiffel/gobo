@@ -6,11 +6,11 @@
 		"Geant's builtin variables"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2003-2004, Sven Ehrke and others"
+	copyright: "Copyright (c) 2003-2025, Sven Ehrke and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geant_builtin_variables">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="geant_builtin_variables">
 <chapterinfo>
 	<copyright>
 		<year>2002-2005</year>

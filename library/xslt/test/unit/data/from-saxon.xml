@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -267,7 +267,7 @@ This documentation is structured as follows:
 	
                <dt>
 			
-                  <a href="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+                  <a href="https://www.gobosoft.com/eiffel/gobo/index.html">Downloading
 			Instructions</a>
 		
                </dt>
@@ -286,18 +286,18 @@ This documentation is structured as follows:
          <tr>
             <td>
                <address>
-                  <b>Copyright � 1999-2001, Eric Bezault</b>
+                  <b>Copyright © 1999-2001, Eric Bezault</b>
                   <br/>
                   <b>mailto:</b>
                   <a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a>
                   <br/>
                   <b>http://</b>
-                  <a href="http://www.gobosoft.com">www.gobosoft.com</a>
+                  <a href="https://www.gobosoft.com">www.gobosoft.com</a>
                   <br/>
                   <b>Last Updated: </b>31 March 2001</address>
             </td>
             <td align="right" valign="top">
-               <a href="http://www.gobosoft.com">
+               <a href="https://www.gobosoft.com">
                   <img src="../image/home.gif" alt="Home"/>
                </a>
                <img src="../image/toc.gif" alt="Toc"/>

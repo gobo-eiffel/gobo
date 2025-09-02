@@ -6,11 +6,11 @@
 		"Eiffel built-in routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="tools/builtin_routines">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="tools/builtin_routines">
 <chapterinfo>
 	<copyright>
 		<year>2010</year>

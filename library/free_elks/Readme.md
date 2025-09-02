@@ -1,10 +1,10 @@
-# FreeELKS Library
+﻿# FreeELKS Library
 
 FreeELKS is an attempt to provide a free compiler-independent implementation
 of ELKS (Eiffel Kernel Library Standard) from NICE (Nonprofit International
 Consortium for Eiffel):
 
-* <http://www.gobosoft.com/eiffel/nice/elks01/index.html>
+* <https://www.gobosoft.com/eiffel/nice/elks01/index.html>
 
 FreeELKS has been initially contributed by ISE and is hosted at SourceForge
 and GitHub:
@@ -30,6 +30,6 @@ copy.
 * `test`: this folder contains the unit tests for this library, provided
   by the *Gobo Eiffel Project*.
 
-## Authors 
+## Authors
 
 Copyright (c) 2005-2017, Eric Bezault and others

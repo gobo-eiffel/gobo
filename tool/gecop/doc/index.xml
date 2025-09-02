@@ -10,7 +10,7 @@
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gecop/index">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gecop/index">
 <chapterinfo>
 	<copyright>
 		<year>2018</year>
@@ -47,7 +47,7 @@ This documentation of <projectname>gecop</projectname> is structured as follows:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			<ulink url="https://www.gobosoft.com/eiffel/gobo/index.html">Downloading
 			Instructions</ulink>
 		</term>
 		<listitem><para>

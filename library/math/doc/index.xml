@@ -5,11 +5,11 @@
 
 		"Gobo Eiffel Math Library documentation"
 
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="math/index">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="math/index">
 <chapterinfo>
 	<copyright>
 		<year>2001-2005</year>
@@ -45,7 +45,7 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
-			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			<ulink url="https://www.gobosoft.com/eiffel/gobo/download.html">Downloading
 			Instructions</ulink>
 		</term>
 		<listitem><para>

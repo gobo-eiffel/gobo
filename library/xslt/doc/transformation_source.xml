@@ -6,11 +6,11 @@
 		"Transformation Source"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2025, Colin Adams and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_transformation_source">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_transformation_source">
   <chapterinfo>
     <copyright>
       <year>2004</year>

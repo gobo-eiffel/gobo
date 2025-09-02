@@ -3,13 +3,13 @@
 <!--
 	description: "Gobo Documentation RelaxNG specification"
 	system: "Gobo Eiffel"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
 <grammar
 	xmlns="http://relaxng.org/ns/structure/1.0"
-	ns="http://www.gobosoft.com/eiffel/gobo/documentation"
+	ns="https://www.gobosoft.com/eiffel/gobo/documentation"
 >
 
 <start>

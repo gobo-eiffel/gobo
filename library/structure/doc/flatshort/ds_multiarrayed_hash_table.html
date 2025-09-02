@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+﻿<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html>
 
 <head>
@@ -33,10 +33,10 @@ content="text/html; charset=iso-8859-1">
 
 <font color="#800000"><em>    &quot;Hash tables implemented with multi-arrays. %
     %Keys are hashed using </em></font><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html#hash_code"><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/hashable.html#hash_code"><font
 color="#800000"><em>hash_code</em></font></a><font
 color="#800000"><em> from </em></font><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html"><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/hashable.html"><font
 color="#800000"><em>HASHABLE</em></font></a><font color="#800000"><em>.&quot;
 
 </em></font><em>library:    </em><font color="#800000"><em>&quot;Gobo Eiffel Structure Library&quot;
@@ -48,7 +48,7 @@ color="#800000"><em>HASHABLE</em></font></a><font color="#800000"><em>.&quot;
 
 <blockquote>
     <pre><em>DS_MULTIARRAYED_SPARSE_TABLE </em>[<em>G</em>, <em>K </em>-&gt; <a
-href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html"><em>HASHABLE</em></a>]</pre>
+href="https://www.gobosoft.com/eiffel/nice/elks95/hashable.html"><em>HASHABLE</em></a>]</pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>inherit</strong></em></font></pre>
@@ -72,14 +72,14 @@ href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html"><em>HASHABLE</em
 
 <blockquote>
     <pre><a name="make"><em>make</em></a><em> </em>(<em>n</em>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
 </em><font color="#008000">        -- Create an empty table and allocate memory space
         -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
         -- a size of </font><a href="#default_chunk_size"><em>default_chunk_size</em></a><font
 color="#008000">.
         -- Use `=' as comparison criterion for items.
         -- Use </font><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
 color="#008000"> as comparison criterion for keys.</font><em>
 </em><font color="#008000">        -- (From </font><a
 href="ds_sparse_table.html"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
@@ -94,16 +94,16 @@ color="#808000"><em>0</em></font><em>
 href="#default_chunk_size"><em>default_chunk_size</em></a><em>
         before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
     <pre><a name="make_equal"><em>make_equal</em></a><em> </em>(<em>n</em>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
 </em><font color="#008000">        -- Create an empty table and allocate memory space
         -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
         -- a size of </font><a href="#default_chunk_size"><em>default_chunk_size</em></a><font
 color="#008000">.
         -- Use </font><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
 color="#008000"> as comparison criterion for items.
         -- Use </font><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
 color="#008000"> as comparison criterion for keys.</font><em>
 </em><font color="#008000">        -- (From </font><a
 href="ds_sparse_table.html"><font color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
@@ -118,15 +118,15 @@ color="#808000"><em>0</em></font><em>
 href="#default_chunk_size"><em>default_chunk_size</em></a><em>
         before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
     <pre><a name="make_with_chunk_size"><em>make_with_chunk_size</em></a><em> </em>(<em>n</em>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em> a_chunk_size: </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em> a_chunk_size: </em><a
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
 </em><font color="#008000">        -- Create an empty table and allocate memory space
         -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
         -- a size of </font><em>a_chunk_size</em><font
 color="#008000">.
         -- Use `=' as comparison criterion for items.
         -- Use </font><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
 color="#008000"> as comparison criterion for keys.</font><em>
 </em><font color="#008000">        -- (From </font><a
 href="ds_multiarrayed_sparse_table.html"><font color="#008000"><em>DS_MULTIARRAYED_SPARSE_TABLE</em></font></a><font
@@ -142,17 +142,17 @@ color="#808000"><em>0</em></font><em>
         chunk_size_set</em>: <a href="#chunk_size"><em>chunk_size</em></a><em> </em>=<em> a_chunk_size
         before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
     <pre><a name="make_equal_with_chunk_size"><em>make_equal_with_chunk_size</em></a><em> </em>(<em>n</em>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em> a_chunk_size: </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em> a_chunk_size: </em><a
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
 </em><font color="#008000">        -- Create an empty table and allocate memory space
         -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
         -- a size of </font><em>a_chunk_size</em><font
 color="#008000">.
         -- Use </font><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
 color="#008000"> as comparison criterion for items.
         -- Use </font><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
 color="#008000"> as comparison criterion for keys.</font><em>
 </em><font color="#008000">        -- (From </font><a
 href="ds_multiarrayed_sparse_table.html"><font color="#008000"><em>DS_MULTIARRAYED_SPARSE_TABLE</em></font></a><font
@@ -176,7 +176,7 @@ href="#default_chunk_size"><em>default_chunk_size</em></a><font
 color="#008000">.
         -- Use `=' as comparison criterion for items.
         -- Use </font><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
 color="#008000"> as comparison criterion for keys.</font><em>
 </em><font color="#008000">        -- (From </font><a
 href="ds_container.html#make_default"><font color="#008000"><em>DS_CONTAINER</em></font></a><font
@@ -189,7 +189,7 @@ href="#default_capacity"><em>default_capacity</em></a><em>
 href="#default_chunk_size"><em>default_chunk_size</em></a><em>
         before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
     <pre><a name="make_map"><em>make_map</em></a><em> </em>(<em>n</em>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
 </em><font color="#008000">        -- Create an empty table and allocate memory space
         -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
         -- a size of </font><a href="#default_chunk_size"><em>default_chunk_size</em></a><font
@@ -209,13 +209,13 @@ color="#808000"><em>0</em></font><em>
 href="#default_chunk_size"><em>default_chunk_size</em></a><em>
         before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
     <pre><a name="make_map_equal"><em>make_map_equal</em></a><em> </em>(<em>n</em>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
 </em><font color="#008000">        -- Create an empty table and allocate memory space
         -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
         -- a size of </font><a href="#default_chunk_size"><em>default_chunk_size</em></a><font
 color="#008000">.
         -- Use </font><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
 color="#008000"> as comparison criterion for items.
         -- Use `=' as comparison criterion for keys.</font><em>
 </em><font color="#008000">        -- (From </font><a
@@ -231,8 +231,8 @@ color="#808000"><em>0</em></font><em>
 href="#default_chunk_size"><em>default_chunk_size</em></a><em>
         before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
     <pre><a name="make_map_with_chunk_size"><em>make_map_with_chunk_size</em></a><em> </em>(<em>n</em>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em> a_chunk_size: </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em> a_chunk_size: </em><a
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
 </em><font color="#008000">        -- Create an empty table and allocate memory space
         -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
         -- a size of </font><em>a_chunk_size</em><font
@@ -253,14 +253,14 @@ color="#808000"><em>0</em></font><em>
         chunk_size_set</em>: <a href="#chunk_size"><em>chunk_size</em></a><em> </em>=<em> a_chunk_size
         before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
     <pre><a name="make_map_equal_with_chunk_size"><em>make_map_equal_with_chunk_size</em></a><em> </em>(<em>n</em>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em> a_chunk_size: </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em> a_chunk_size: </em><a
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
 </em><font color="#008000">        -- Create an empty table and allocate memory space
         -- for at least </font><em>n</em><font color="#008000"> items. Array chunks will have
         -- a size of </font><em>a_chunk_size</em><font
 color="#008000">.
         -- Use </font><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/general.html#equal"><em>equal</em></a><font
 color="#008000"> as comparison criterion for items.
         -- Use `=' as comparison criterion for keys.</font><em>
 </em><font color="#008000">        -- (From </font><a
@@ -296,7 +296,7 @@ href="#default_capacity"><em>default_capacity</em></a><em>
 href="#default_chunk_size"><em>default_chunk_size</em></a><em>
         before</em>:<em> </em><a href="#before"><em>before</em></a></pre>
     <pre><a name="make_with_equality_testers"><em>make_with_equality_testers</em></a><em> </em>(<em>n</em>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em>
     an_item_tester</em>:<em> </em><font color="#000080"><em><strong>like</strong></em></font><em> </em><a
 href="#equality_tester"><em>equality_tester</em></a>;<em>
     a_key_tester</em>:<em> </em><font color="#000080"><em><strong>like</strong></em></font><em> </em><a
@@ -326,9 +326,9 @@ href="#equality_tester"><em>equality_tester</em></a><em> </em>=<em> an_item_test
         key_equality_tester_set</em>:<em> </em><a
 href="#key_equality_tester"><em>key_equality_tester</em></a><em> </em>=<em> a_key_tester</em></pre>
     <pre><a name="make_with_chunk_size_and_equality_testers"><em>make_with_chunk_size_and_equality_testers</em></a><em> </em>(<em>n</em>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em>
     a_chunk_size</em>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em> an_item_tester</em>:<em> </em><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>;<em> an_item_tester</em>:<em> </em><font
 color="#000080"><em><strong>like</strong></em></font><em> </em><a
 href="#equality_tester"><em>equality_tester</em></a>;<em>
     a_key_tester</em>:<em> </em><font color="#000080"><em><strong>like</strong></em></font><em> </em><a
@@ -470,20 +470,20 @@ color="#008000"> -- Measurement</font></pre>
 
 <blockquote>
     <pre><a name="count"><em>count</em></a>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><font
 color="#000080"><em><strong>
         </strong></em></font><font color="#008000">-- Number of items in table
         -- (From </font><a href="ds_container.html#count"><font
 color="#008000"><em>DS_CONTAINER</em></font></a><font
 color="#008000">.)</font></pre>
     <pre><a name="capacity"><em>capacity</em></a>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
         </em><font color="#008000">-- Maximum number of items in table</font><em>
 </em><font color="#008000">        -- (From </font><a
 href="ds_resizable.html#capacity"><font color="#008000"><em>DS_RESIZABLE</em></font></a><font
 color="#008000">.)</font></pre>
     <pre><a name="default_capacity"><em>default_capacity</em></a><em>: </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
 </em><font color="#008000">        -- Initial capacity in </font><a
 href="#make_default"><em>make_default</em></a><em>
 </em><font color="#008000">        -- (Default value: 10)</font><em>
@@ -495,14 +495,14 @@ color="#008000">.)</font><em>
 color="#008080"><em>Result</em></font><em> </em>&gt;=<em> </em><font
 color="#808000"><em>0</em></font></pre>
     <pre><a name="chunk_size"><em>chunk_size</em></a><em>: </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
 </em><font color="#008000">        -- Size of array chunks
         -- (From </font><a
 href="ds_multiarrayed_sparse_table.html#chunk_size"><font
 color="#008000"><em>DS_MULTIARRAYED_SPARSE_TABLE</em></font></a><font
 color="#008000">.)</font></pre>
     <pre><a name="default_chunk_size"><em>default_chunk_size</em></a><em>: </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
 </em><font color="#008000">        -- Default value for </font><a
 href="#chunk_size"><em>chunk_size</em></a><font color="#008000">
         -- (Default value: 30000)</font><em>
@@ -515,7 +515,7 @@ color="#008000">.)</font><em>
 color="#008080"><em>Result</em></font><em> </em>&gt;<em> </em><font
 color="#808000"><em>0</em></font></pre>
     <pre><a name="occurrences"><em>occurrences</em></a><em> </em>(<em>v</em>:<em> G</em>):<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a><em>
         </em><font color="#008000">-- Number of times </font><em>v</em><font
 color="#008000"> appears in table
         -- (Use </font><a href="#equality_tester"><em>equality_tester</em></a><font
@@ -538,7 +538,7 @@ color="#008000"> -- Status report</font></pre>
 
 <blockquote>
     <pre><a name="has"><em>has</em></a><em> </em>(<em>k</em>:<em> K</em>):<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
 </em><font color="#008000">        -- Is there an item associated with </font><em>k</em><font
 color="#008000">?</font><em>
 </em><font color="#008000">        -- (From in </font><a
@@ -549,7 +549,7 @@ color="#008000">.)</font><font color="#000080"><em><strong>
 color="#000080"><em><strong>implies</strong></em></font><em> </em><a
 href="#valid_key"><em>valid_key</em></a><em> </em>(<em>k</em>)</pre>
     <pre><a name="has_item"><em>has_item</em></a><em> </em>(<em>v</em>:<em> G</em>):<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
         </em><font color="#008000">-- Does table include </font><em>v</em><font
 color="#008000">?
         -- (Use </font><a href="#equality_tester"><em>equality_tester</em></a><font
@@ -565,28 +565,28 @@ color="#008000">.)</font><em>
 color="#000080"><em><strong>implies not</strong></em></font><em> </em><a
 href="#is_empty"><em>is_empty</em></a></pre>
     <pre><a name="found"><em>found</em></a>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
        </em><font color="#008000"> -- Did last call to </font><a
 href="#search"><em>search</em></a><font color="#008000"> succeed?
         -- (From </font><a href="ds_sparse_table.html#found"><font
 color="#008000"><em>DS_SPARSE_TABLE</em></font></a><font
 color="#008000">.)</font></pre>
     <pre><a name="is_empty"><em>is_empty</em></a>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><font
 color="#000080"><em><strong>
        </strong></em></font><font color="#008000"> -- Is table empty?
         -- (From </font><a href="ds_container.html#is_empty"><font
 color="#008000"><em>DS_CONTAINER</em></font></a><font
 color="#008000">.)</font></pre>
     <pre><a name="is_full"><em>is_full</em></a>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><font
 color="#008000">
         -- Is table full?
         -- (From </font><a href="ds_resizable.html#is_full"><font
 color="#008000"><em>DS_RESIZABLE</em></font></a><font
 color="#008000">.)</font></pre>
     <pre><a name="is_first"><em>is_first</em></a>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
         </em><font color="#008000">-- Is internal cursor on first item?</font><em>
         </em><font color="#008000">-- (From </font><a
 href="ds_linear.html#is_first"><font color="#008000"><em>DS_LINEAR</em></font></a><font
@@ -605,7 +605,7 @@ color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
 href="#item_for_iteration"><em>item_for_iteration</em></a><em> </em>= <a
 href="#first"><em>first</em></a>)</pre>
     <pre><a name="is_last"><em>is_last</em></a><em>: </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
         </em><font color="#008000">-- Is internal cursor on last item?</font><em>
         </em><font color="#008000">-- (From </font><a
 href="ds_bilinear.html#is_last"><font color="#008000"><em>DS_BILINEAR</em></font></a><font
@@ -624,19 +624,19 @@ color="#000080"><em><strong>implies</strong></em></font><em> </em>(<a
 href="#item_for_iteration"><em>item_for_iteration</em></a><em> </em>= <a
 href="#last"><em>last</em></a>)</pre>
     <pre><a name="after"><em>after</em></a><em>: </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
         </em><font color="#008000">-- Is there no valid position to right of internal cursor?
         -- (From </font><a href="ds_linear.html#after"><font
 color="#008000"><em>DS_LINEAR</em></font></a><font
 color="#008000">.)</font></pre>
     <pre><a name="before"><em>before</em></a><em>: </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
         </em><font color="#008000">-- Is there no valid position to left of internal cursor?
 </font><em>        </em><font color="#008000">-- (From </font><a
 href="ds_bilinear.html#before"><font color="#008000"><em>DS_BILINEAR</em></font></a><font
 color="#008000">.)</font></pre>
     <pre><a name="off"><em>off</em></a><em>: </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
         </em><font color="#008000">-- Is there no item at internal cursor position?
         -- (From </font><a href="ds_traversable.html#off"><font
 color="#008000"><em>DS_TRAVERSABLE</em></font></a><font
@@ -644,7 +644,7 @@ color="#008000">.)</font></pre>
     <pre><a name="same_position"><em>same_position</em></a><em> </em>(<em>a_cursor</em>:<em> </em><font
 color="#000080"><em><strong>like</strong></em></font><em> </em><a
 href="#new_cursor"><em>new_cursor</em></a>):<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
         </em><font color="#008000">-- Is internal cursor at same position as </font><em>a_cursor</em><font
 color="#008000">?</font><em>
         </em><font color="#008000">-- (From </font><a
@@ -655,7 +655,7 @@ color="#008000">.)</font><em>
 color="#008080"><em>Void</em></font></pre>
     <pre><a name="valid_cursor"><em>valid_cursor</em></a><em> </em>(<em>a_cursor</em>:<em> </em><a
 href="ds_cursor.html"><em>DS_CURSOR</em></a><em> </em>[<em>G</em>]):<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
         </em><font color="#008000">-- Is </font><em>a_cursor</em><font
 color="#008000"> a valid cursor?
         -- (From </font><a
@@ -665,7 +665,7 @@ color="#008000">.)</font><em>
         a_cursor_not_void</em>:<em> a_cursor </em>/=<em> </em><font
 color="#008080"><em>Void</em></font></pre>
     <pre><a name="valid_key"><em>valid_key</em></a><em> </em>(<em>k</em>:<em> K</em>):<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
         </em><font color="#008000">-- Is </font><em>k</em><font
 color="#008000"> a valid key?</font><em>
 </em><font color="#008000">        -- (From </font><a
@@ -676,7 +676,7 @@ color="#008000">.)</font><em>
 color="#008080"><em>Result</em></font><em> </em>=<em> </em><font
 color="#808000"><em>True</em></font></pre>
     <pre><a name="same_items"><em>same_items</em></a><em> </em>(<em>v</em>,<em> u</em>:<em> G</em>):<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
        </em><font color="#008000"> -- Are </font><em>v</em><font
 color="#008000"> and </font><em>u</em><font color="#008000"> considered equal?
         -- (Use </font><a href="#equality_tester"><em>equality_tester</em></a><font
@@ -687,7 +687,7 @@ href="ds_searchable.html#same_items"><font color="#008000"><em>DS_SEARCHABLE</em
 color="#008000">.)</font></pre>
     <pre><a name="same_equality_tester"><em>same_equality_tester</em></a><em> </em>(<em>other</em>:<em> </em><a
 href="ds_searchable.html"><em>DS_SEARCHABLE</em></a><em> </em>[<em>G</em>]):<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
        </em><font color="#008000"> -- Does container use the same comparison
         -- criterion as </font><em>other</em><font
 color="#008000">?</font><em>
@@ -701,7 +701,7 @@ color="#008080"><em>Void</em></font></pre>
     <pre><a name="equality_tester_settable"><em>equality_tester_settable</em></a><em> </em>(<em>a_tester</em>:<em> </em><font
 color="#000080"><em><strong>like</strong></em></font><em> </em><a
 href="#equality_tester"><em>equality_tester</em></a>):<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
 </em><font color="#008000">        -- Can </font><a
 href="#set_equality_tester"><em>set_equality_tester</em></a><font
 color="#008000"> be called with </font><em>a_tester</em><font
@@ -745,7 +745,7 @@ color="#008000"> -- Comparison</font></pre>
     <pre><a name="is_equal"><em>is_equal</em></a><em> </em>(<em>other</em>:<em> </em><font
 color="#000080"><em><strong>like</strong></em></font><em> </em><font
 color="#008080"><em>Current</em></font><em>)</em>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
         </em><font color="#008000">-- Is current table equal to </font><em>other</em><font
 color="#008000">?</font><em>
         </em><font color="#008000">-- Do not take cursor positions, </font><a
@@ -753,19 +753,19 @@ href="#capacity"><em>capacity</em></a><font color="#008000">
         -- nor </font><a href="#equality_tester"><em>equality_tester</em></a><font
 color="#008000"> into account.</font><em>
         </em><font color="#008000">-- (From </font><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#is_equal"><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/general.html#is_equal"><font
 color="#008000"><em>GENERAL</em></font></a><font color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
         other_not_void</em>:<em> other </em>/=<em> </em><font
 color="#008080"><em>Void</em></font><em>
     </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
         consistent</em>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#standard_is_equal"><em>standard_is_equal</em></a><em> </em>(<em>other</em>)<em> </em><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/general.html#standard_is_equal"><em>standard_is_equal</em></a><em> </em>(<em>other</em>)<em> </em><font
 color="#000080"><em><strong>implies</strong></em></font><em> </em><font
 color="#008080"><em>Result</em></font><em>
         same_type</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
 color="#000080"><em><strong>implies</strong></em></font><em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#same_type"><em>same_type</em></a><em> </em>(<em>other</em>)<em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/general.html#same_type"><em>same_type</em></a><em> </em>(<em>other</em>)<em>
         symmetric</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
 color="#000080"><em><strong>implies</strong></em></font><em> other</em>.<a
 href="#is_equal"><em>is_equal</em></a><em> </em>(<font
@@ -789,13 +789,13 @@ color="#008000"> (unless </font><em>other</em><font
 color="#008000"> = </font><font color="#008080"><em>Current</em></font><font
 color="#008000">).
         -- (From </font><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#copy"><font
+href="https://www.gobosoft.com/eiffel/nice/elks95/general.html#copy"><font
 color="#008000"><em>GENERAL</em></font></a><font color="#008000">.)</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
         other_not_void</em>:<em> other </em>/= <font
 color="#008080"><em>Void</em></font><em>
         type_identity</em>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/general.html#same_type"><em>same_type</em></a><em> </em>(<em>other</em>)<font
+href="https://www.gobosoft.com/eiffel/nice/elks95/general.html#same_type"><em>same_type</em></a><em> </em>(<em>other</em>)<font
 color="#000080"><em><strong>
     ensure</strong></em></font><em>
         is_equal</em>:<em> </em><a href="#is_equal"><em>is_equal</em></a><em> </em>(<em>other</em>)</pre>
@@ -1188,7 +1188,7 @@ color="#008000"> -- Resizing</font></pre>
 
 <blockquote>
     <pre><a name="resize"><em>resize</em></a><em> </em>(<em>n</em>:<em> </em><a
-href="http://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
+href="https://www.gobosoft.com/eiffel/nice/elks95/integer.html"><em>INTEGER</em></a>)<em>
         </em><font color="#008000">-- Resize table so that it can contain
         -- at least </font><em>n</em><font color="#008000"> items. Do not lose any item.</font><em>
 </em><font color="#008000">        -- Move all cursors </font><a
@@ -1260,15 +1260,15 @@ color="#008000"> -- class DS_MULTIARRAYED_HASH_TABLE</font></pre>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright � 2001</b></font><font
+            <font size="2"><b>Copyright © 2001</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
             <strong>mailto:</strong></font><a
             href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
             size="2"><br>
-            <strong>http:</strong></font><a
-            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            <strong>https:</strong></font><a
+            href="https://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
             <strong>Last Updated:</strong> 2 April 2001</font><br>
             <!--webbot bot="PurpleText"
@@ -1278,7 +1278,7 @@ $Revision$" -->
         </address>
         </td>
         <td align="right" valign="top"><a
-        href="http://www.gobosoft.com"><img
+        href="https://www.gobosoft.com"><img
         src="../image/home.gif" alt="Home" border="0"
         width="40" height="40"></a><a href="index.html"><img
         src="../image/toc.gif" alt="Toc" border="0" width="40"

@@ -6,11 +6,11 @@
 		"Applications using the Gobo Eiffel Tools Library"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="tools/applications">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="tools/applications">
 <chapterinfo>
 	<copyright>
 		<year>2006-2016</year>

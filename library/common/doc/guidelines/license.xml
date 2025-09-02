@@ -5,11 +5,11 @@
 
 		"License"
 
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/license">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/license">
 <chapterinfo>
 	<copyright>
 		<year>2001-2005</year>

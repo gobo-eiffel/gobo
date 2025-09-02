@@ -6,11 +6,11 @@
 		"XSLT 2.0 serializer"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2007-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2025, Colin Adams and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_serializer">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_serializer">
  
   <chapterinfo>
    <copyright>

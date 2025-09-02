@@ -6,11 +6,11 @@
 		"Adding a new Eiffel built-in routine"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="tools/new_builtin_routine">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="tools/new_builtin_routine">
 <chapterinfo>
 	<copyright>
 		<year>2010-2017</year>
