@@ -195,7 +195,16 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 						if ($GOBO_CI_C_COMPILER -eq "msc") {
 							# Setting the environment variables for `cl`.
 							# See https://gitlab.com/gitlab-org/ci-cd/shared-runners/images/gcp/windows-containers/blob/main/cookbooks/preinstalled-software/README.md
-							Invoke-Environment('"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsx86_amd64.bat"')
+							$vs2022_setting_script = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"
+							$vs2019_setting_script = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsx86_amd64.bat"
+							if (Test-Path "$vs2022_setting_script") {
+								Invoke-Environment("`"$vs2022_setting_script`"")
+							} elseif (Test-Path "$vs2019_setting_script") {
+								Invoke-Environment("`"$vs2019_setting_script`"")
+							} else {
+								Write-Error "VisualStudio not found"
+								exit 1
+							}
 						}
 					}
 					default {
