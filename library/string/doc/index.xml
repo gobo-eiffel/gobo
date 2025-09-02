@@ -5,11 +5,11 @@
 
 		"Gobo Eiffel String Library documentation"
 
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/index">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="string/index">
 <chapterinfo>
 	<copyright>
 		<year>2001-2005</year>
@@ -64,7 +64,7 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
-			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			<ulink url="https://www.gobosoft.com/eiffel/gobo/index.html">Downloading
 			Instructions</ulink>
 		</term>
 		<listitem><para>

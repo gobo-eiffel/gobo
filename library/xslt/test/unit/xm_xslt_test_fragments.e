@@ -132,7 +132,7 @@ feature -- Test
 			l_transformer := l_transformer_factory.created_transformer
 			assert ("transformer", l_transformer /= Void)
 			check asserted_above: l_transformer /= Void then end
-			create l_second_uri_source.make (books3_xml_uri.full_reference + "#xmlns(gexslt=http://www.gobosoft.com/eiffel/gobo/gexslt/extension)gexslt:xpath(/descendant::AUTHOR%%5B1%%5D)")
+			create l_second_uri_source.make (books3_xml_uri.full_reference + "#xmlns(gexslt=https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension)gexslt:xpath(/descendant::AUTHOR%%5B1%%5D)")
 			create l_output
 			l_output.set_output_to_string
 			create l_result.make (l_output, "string:")

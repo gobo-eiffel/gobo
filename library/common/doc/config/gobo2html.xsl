@@ -1,11 +1,11 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:gexslt="http://www.gobosoft.com/eiffel/gobo/gexslt/extension"
-	xmlns:gobodoc="http://www.gobosoft.com/eiffel/gobo/documentation"
+	xmlns:gexslt="https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension"
+	xmlns:gobodoc="https://www.gobosoft.com/eiffel/gobo/documentation"
 	gexslt:explain="no"
 	exclude-result-prefixes="xs gexslt gobodoc"
 	version="2.0">
@@ -154,13 +154,13 @@
 				<br/>
 				<xsl:apply-templates select="gobodoc:chapterinfo/gobodoc:email" mode="footer"/>
 				<br/>
-				<b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a>
+				<b>https://</b><a href="https://www.gobosoft.com">www.gobosoft.com</a>
 				<br/>
 				<xsl:apply-templates select="gobodoc:chapterinfo/gobodoc:date" mode="footer"/>
 			</font></address>
 		</td>
 		<td align="right" valign="top">
-			<a href="http://www.gobosoft.com">
+			<a href="https://www.gobosoft.com">
 				<img src="{$images}home.gif" alt="Home" border="0"/>
 			</a>
 			<xsl:choose>
@@ -1206,28 +1206,39 @@
 				result: xxx/yyy.html#zzz
 		-->
 	<xsl:param name="linkend"/>
-	<xsl:if test="starts-with($linkend,'${library/') or starts-with($linkend,'${tool/')">
-		<xsl:variable name="linkend_kind_name" select="substring-before(substring-after($linkend,'/'),'}/')"/>
-		<xsl:variable name="linkend_kind_type" select="substring-before(substring-after($linkend,'${'),'/')"/>
-		<xsl:value-of select="$path_to_gobo"/>
-		<xsl:if test="not(ends-with($path_to_gobo,'/'))">
-			<xsl:value-of select="'/'"/>
-		</xsl:if>
-		<xsl:choose>
-			<xsl:when test="starts-with($path_to_gobo,'http')">
-				<xsl:if test="compare($linkend_kind_name,'common')!=0">
-					<xsl:value-of select="concat($linkend_kind_name,'/')"/>
-				</xsl:if>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="concat($linkend_kind_type,'/',$linkend_kind_name,'/doc/')"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:if>
+	<xsl:choose>
+		<xsl:when test="starts-with($linkend,'${library/') or starts-with($linkend,'${tool/')">
+			<xsl:variable name="linkend_kind_name" select="substring-before(substring-after($linkend,'/'),'}/')"/>
+			<xsl:variable name="linkend_kind_type" select="substring-before(substring-after($linkend,'${'),'/')"/>
+			<xsl:value-of select="$path_to_gobo"/>
+			<xsl:if test="not(ends-with($path_to_gobo,'/'))">
+				<xsl:value-of select="'/'"/>
+			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="starts-with($path_to_gobo,'http')">
+					<xsl:if test="compare($linkend_kind_name,'common')!=0">
+						<xsl:value-of select="concat($linkend_kind_name,'/')"/>
+					</xsl:if>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="concat($linkend_kind_type,'/',$linkend_kind_name,'/doc/')"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="starts-with($linkend,'${root}/')">
+			<xsl:value-of select="$path_to_gobo"/>
+			<xsl:if test="not(ends-with($path_to_gobo,'/'))">
+				<xsl:value-of select="'/'"/>
+			</xsl:if>
+		</xsl:when>
+	</xsl:choose>
 	<xsl:variable name="linkend_relative_name">
 		<xsl:choose>
 			<xsl:when test="starts-with($linkend,'${library/') or starts-with($linkend,'${tool/')">
 				<xsl:value-of select="substring-after($linkend,'}/')"/>
+			</xsl:when>
+			<xsl:when test="starts-with($linkend,'${root}/')">
+				<xsl:value-of select="substring-after($linkend,'${root}/')"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$linkend"/>

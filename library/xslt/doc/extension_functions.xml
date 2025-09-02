@@ -6,11 +6,11 @@
 		"Extension functions"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2025, Colin Adams and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_output_extensions">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_output_extensions">
   <chapterinfo>
     <copyright>
       <year>2005</year>

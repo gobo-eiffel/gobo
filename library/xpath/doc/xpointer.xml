@@ -126,15 +126,15 @@
   </para>
   <para>
     Instead, I have implemented a scheme which takes an XPath 2.0 expression as it's pointer. This has a local name of "xpath", and a namespace URI 
-    of "http://www.gobosoft.com/eiffel/gobo/gexslt/extension". Therefore, you have to declare a prefix, using the <xpath>xmlns</xpath> scheme, before
+    of "https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension". Therefore, you have to declare a prefix, using the <xpath>xmlns</xpath> scheme, before
     you can use this scheme.
   </para>
   <para>
     So, in order to find the third child of the document element, conditional upon it having an attribute named "test", then you will want a pointer that 
-    looks something like: "xmlns(&program_name; = http://www.gobosoft.com/eiffel/gobo/gexslt/extension)&program_name;:xpath(/*[1]/*[3][@test]".
+    looks something like: "xmlns(&program_name; = https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension)&program_name;:xpath(/*[1]/*[3][@test]".
     <warning>
       Within a URI, the square brackets and spaces will need percent-encoding, so this example should actually read:
-      "xmlns(&program_name;%20=%20http://www.gobosoft.com/eiffel/gobo/gexslt/extension)&program_name;:xpath(/*%5B1%5D/*%5B3%5D%5B@test%5D".
+      "xmlns(&program_name;%20=%20https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension)&program_name;:xpath(/*%5B1%5D/*%5B3%5D%5B@test%5D".
       although the spaces can always be omitted.
     </warning>
   </para>

@@ -62,7 +62,7 @@ feature -- Access
 	nested_xml_base_uri: STRING
 			-- Base-uri of nested element with xml:base
 		once
-			Result := "http://www.gobosoft.com/xml-tests/AAMilne-book"
+			Result := "https://www.gobosoft.com/xml-tests/AAMilne-book"
 		end
 
 	xml_base_uri: STRING

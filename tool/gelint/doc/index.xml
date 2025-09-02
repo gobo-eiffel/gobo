@@ -10,7 +10,7 @@
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gelint/index">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gelint/index">
 <chapterinfo>
 	<copyright>
 		<year>2006-2016</year>
@@ -77,7 +77,7 @@ This documentation of <projectname>gelint</projectname> is structured as follows
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			<ulink url="https://www.gobosoft.com/eiffel/gobo/index.html">Downloading
 			Instructions</ulink>
 		</term>
 		<listitem><para>

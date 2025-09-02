@@ -1,9 +1,9 @@
-# Gobo Eiffel Parse Example: mcalc
+﻿# Gobo Eiffel Parse Example: mcalc
 
 This folder contains the source code for the calculator with memory
 used as an example in `geyacc` documentation.
 Please refer to
-[`$GOBO/tool/geyacc/doc/examples.html`](http://www.gobosoft.com/eiffel/gobo/geyacc/examples.html)
+[`$GOBO/tool/geyacc/doc/examples.html`](https://www.gobosoft.com/eiffel/gobo/tool/geyacc/doc/examples.html)
 for details.
 
 **To compile and run this example:**

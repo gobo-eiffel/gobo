@@ -6,32 +6,262 @@
 		"ECF Files"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="tools/ecf">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="tools/ecf">
 <chapterinfo>
 	<copyright>
-		<year>2008-2020</year>
+		<year>2008-2025</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>6 April 2020</date>
+	<date>31 August 2025</date>
 </chapterinfo>
 
 <title>ECF Files</title>
 
 <para>
+An ECF file contains the description of the Eiffel program to be compiled.
+ECF stands for Eiffel Configuration File. It tells the compiler:
+<itemizedlist>
+	<listitem><para>
+	what the system is called
+	</para></listitem>
+	<listitem><para>
+	which target to build
+	</para></listitem>
+	<listitem><para>
+	where the Eiffel files are located
+	</para></listitem>
+	<listitem><para>
+	which external libraries or C code must be included
+	</para></listitem>
+	<listitem><para>
+	which settings (platform, assertions, optimizations, etc.) to use
+	</para></listitem>
+</itemizedlist>
+Two compilers are currently using ECF files to describe Eiffel systems:
+ISE Eiffel and <link linkend="${tool/gec}/index">Gobo Eiffel</link>.
+</para>
+
+<section><title>Simple Example</title>
+<para>
+Here is a simple example for a hello_world program:
+<blockquote><programlisting>
+&lt;system name="hello_world"&gt;
+    &lt;target name="hello_world"&gt;
+        &lt;root class="HELLO_WORLD" feature="make"/&gt;
+        &lt;setting name="console_application" value="true"/&gt;
+        &lt;library name="free_elks" location="${GOBO}/library/free_elks/library.ecf"/&gt;
+        &lt;cluster name="hello_world" location="./"/&gt;
+    &lt;/target&gt;
+&lt;/system&gt;
+</programlisting></blockquote>
+It tells the compiler that the name of the system is "hello_world".
+By default, this will be the name of the executable. 
+</para>
+<para>
+There is only one target, which means that this ECF file describes
+only one way to build this system. For some systems, there might be
+several ways to compile a system, with different settings, different
+library classes, etc. This might be the case when compiling a system
+as a console application, or as a GUI application. Or when compiling
+a system as a single threaded application or as an application taking
+advantage of concurrency. Even though they have the same name in the
+example above, the name of the target may be different from the name
+of the system.
+</para>
+<para>
+The root class of the system is <classname>HELLO_WORLD</classname>
+and the root creation procedure is its creation procedure
+<featurename>make</featurename>.
+</para>
+<para>
+The system is an console application. Without this setting, the system
+would be compiled as a GUI application.
+</para>
+<para>
+Finally, the compiler is told where to find the Eiffel classes. A
+cluster is a directory containing Eiffel files with the extension
+<filename>.e</filename>. A library is a set of classes described
+by another ECF file. In the example above the library contains the
+kernel classes, which are classes describing strings, characters,
+integers, arrays, etc.
+</para>
+</section>
+
+<section><title>System</title>
+<para>
+The beginning of an ECF file will typically look like that:
+<blockquote><programlisting>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;system
+    xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd"
+    name="system_name"
+    uuid="12345678-1234-1234-1234-123456789ABC"
+    library_target="target_name"
+&gt;
+</programlisting></blockquote>
+The first line indicates to the XML parser which character encoding
+should be used to read this XML file.
+</para>
+<para>
+The lines starting with <filename>xmlns=</filename> and <filename>xsi:schemaLocation</filename>
+specify which version of ECF is used in this file. In this case, it is using version
+1.23.0. The XML description of each version can be found in
+<ulink url="../config/ecf/">
+<filename class="directory">$GOBO/library/tools/config/ecf/</filename></ulink>.
+</para>
+<para>
+The line which starts with <filename>xmlns:xsi=</filename> is for
+XML schema, and is not relevant for ECF.
+</para>
+<para>
+The <filename>name</filename> of the system is used by default as the name of the executable. 
+</para>
+<para>
+The <filename>uuid</filename> is a way to uniquely identify this ECF file.
+This is important when the ECF file describes a library whose classes are
+to be used in other libraries or systems because it uniquely identifies this 
+library as well.
+</para>
+<para>
+When the ECF file describes a library whose classes are to be used in
+other libraries or systems, the <filename>library_target</filename> is
+the name of the target in the current ECF file which will describe the
+classes included in this library as well as some settings and options
+to be applied to these classes. This is important when the ECF file
+contains several targets.
+</para>
+<para>
+A system can contain one or more <filename>target</filename>s.
+</para>
+</section>
+
+<section><title>Targets</title>
+<para>
+Targets are defined in <filename>system</filename>s. In the following example:
+<blockquote><programlisting>
+&lt;target name="debug"&gt;
+    &lt;root class="HELLO_WORLD" feature="make"/&gt;
+    &lt;setting name="console_application" value="true"/&gt;
+    &lt;library name="free_elks" location="${GOBO}/library/free_elks/library.ecf"/&gt;
+    &lt;cluster name="hello_world" location="./"/&gt;
+&lt;/target&gt;
+&lt;target name="release" extends="debug"&gt;
+    &lt;setting name="inlining" value="true"/&gt;
+&lt;/target&gt;
+</programlisting></blockquote>
+we have two targets named <filename>debug</filename> and
+<filename>release</filename>. The second one is an extension of the
+first one, instructing the compiler that inlining should be turned
+on when generating C code.
+</para>
+<para>
+A target can be abstract:
+<blockquote><programlisting>
+&lt;target name="target_name" abstract="true"&gt;
+    ...
+&lt;/target&gt;
+</programlisting></blockquote>
+which means that it cannot be used to compile a system or as a 
+<filename>library_target</filename> of a library. The purpose of
+abstract targets is to be used as parents of other targets.
+</para>
+<para>
+The root class and root creation procedure can be specified in a 
+target using:
+<blockquote><programlisting>
+&lt;root class="ROOT_CLASS" feature="root_creation_procedure"/&gt;
+</programlisting></blockquote>
+When the target describes a library whose classes are
+to be used in other libraries or systems, the <filename>root</filename>
+will look like that:
+<blockquote><programlisting>
+&lt;root all_classes="true"/&gt;
+</programlisting></blockquote>
+</para>
+<para>
+Targets can contain <filename>cluster</filename>s,
+<filename>library</filename>s,
+<filename>assembly</filename>s,
+class <filename>mapping</filename>s and
+<filename>file_rule</filename>s
+to specify the classes which will be part of the system.
+They can also contain <filename>setting</filename>s,
+<filename>capability</filename>s and
+<filename>option</filename>s to let the
+compiler know how to compile this system. When the Eiffel code
+needs to call C functions (or code written in other languages),
+the compiler will use the information provided in 
+<filename>external_include</filename>s,
+<filename>external_cflag</filename>s,
+<filename>external_object</filename>s,
+<filename>external_library</filename>s,
+<filename>external_resource</filename>s and
+<filename>external_linker_flag</filename>s.
+Constructs appearing in the ECF file may use <filename>variable</filename>s defined in the target.
+</para>
+</section>
+
+<section><title>Clusters</title>
+<para>
 Under construction
 </para>
+</section>
+
+<section><title>Overrides</title>
+<para>
+Under construction
+</para>
+</section>
+
+<section><title>Libraries</title>
+<para>
+Under construction
+</para>
+</section>
+
+<section><title>Assemblies</title>
+<para>
+Under construction
+</para>
+</section>
+
+<section><title>Settings</title>
+<para>
+Under construction
+</para>
+</section>
+
+<section><title>Capabilities</title>
+<para>
+Under construction
+</para>
+</section>
+
+<section><title>Options</title>
+<para>
+Under construction
+</para>
+</section>
+
+<section><title>File rules</title>
+<para>
+Under construction
+</para>
+</section>
 
 <section><title>Variables</title>
 <para>
-Variables are defined in targets, using the following syntax:
+Variables are defined in <filename>target</filename>s, using the following syntax:
 <blockquote><programlisting>
 &lt;variable name="..." value="..."/&gt;
 </programlisting></blockquote>
@@ -51,11 +281,11 @@ pathname is specified are not take into account, even if that pathname is used a
 part of this child target through inheritance. For example:
 <blockquote><programlisting>
 &lt;target name="parent"&gt;
-	&lt;variable name="foo" value="gobo"/&gt;
-	&lt;cluster name="foo" location="${foo}/library"/&gt;
+    &lt;variable name="foo" value="gobo"/&gt;
+    &lt;cluster name="foo" location="${foo}/library"/&gt;
 &lt;/target&gt;
 &lt;target name="child" extends="parent"&gt;
-	&lt;variable name="foo" value="ise"/&gt;
+    &lt;variable name="foo" value="ise"/&gt;
 &lt;/target&gt;
 </programlisting></blockquote>
 even when dealing with the target 'child', the pathname of the cluster 'foo' will be
@@ -78,7 +308,7 @@ Contrary to variables appearing in pathnames, variables used in 'custom' clauses
 conditions, such as 'foo' in the example below:
 <blockquote><programlisting>
 &lt;condition/&gt;
-	&lt;custom name="foo" value="gobo"/&gt;
+    &lt;custom name="foo" value="gobo"/&gt;
 &lt;/condition/&gt;
 </programlisting></blockquote>
 only take into account values visible from the project target, and not from the target
@@ -91,14 +321,15 @@ from the project target, even if this variable has another value in the current 
 
 <section><title>Class mappings</title>
 <para>
-Class mappings are defined in targets and clusters, using the following syntax:
+Class mappings are defined in <filename>target</filename>s and
+<filename>cluster</filename>s, using the following syntax:
 <blockquote><programlisting>
 &lt;mapping old_name="..." new_name="..."/&gt;
 </programlisting></blockquote>
 They are used to create class name aliases. For example if 'old_name' is 'STRING'
 and 'new_name' is 'STRING_8', it means that whenever the type 'STRING' will
 be found in the class texts of the given target or cluster, they will be seen
-as if 'STRING_8' had been typed.
+as if 'STRING_8' had been written.
 </para>
 <para>
 Class mappings specified in a target override mappings with the same 'old_name'
@@ -124,7 +355,8 @@ the given cluster C1.
 </para>
 <para>
 Note that <projectname>gec</projectname> and <projectname>gelint</projectname>
-do not support class mappings at the cluster level, only at the target level.
+do not support class mappings at the <filename>cluster</filename> level, only
+at the <filename>target</filename> level.
 </para>
 </section>
 

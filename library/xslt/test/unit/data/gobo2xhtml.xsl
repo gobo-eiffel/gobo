@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -220,13 +220,13 @@ table.header tbody tr td {
 				<br/>
 				<xsl:apply-templates select="chapterinfo/email" mode="footer"/>
 				<br/>
-				<b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a>
+				<b>https://</b><a href="https://www.gobosoft.com">www.gobosoft.com</a>
 				<br/>
 				<xsl:apply-templates select="chapterinfo/date" mode="footer"/>
 			</address>
 		</td>
 		<td align="right" valign="top">
-			<a href="http://www.gobosoft.com">
+			<a href="https://www.gobosoft.com">
 				<img src="../image/home.gif" alt="Home"/>
 			</a>
 			<xsl:choose>

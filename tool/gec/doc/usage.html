@@ -24,7 +24,19 @@
     This will read the description of your program in the ECF file
     <font color="#800000"><i><tt>ecf_filename</tt></i></font>, compile it and invoke the
     back-end C compiler on the generated C code as explained
-    below. Here is the list of options that can be
+    below. 
+    
+   </p>
+   
+   <p>
+    For simple programs, one can just provide the Eiffel file containing
+    the root class: 
+    
+    <blockquote>
+     	<font color="#800000"><i><tt>gec eiffel_filename</tt></i></font>
+     
+    </blockquote>
+    Here is the list of options that can be
     used with <i>gec</i>:
     
     <dl>
@@ -85,7 +97,7 @@
      </dt>
      <dd>
       			Should CAT-call errors be considered as fatal errors, as warnings, or just ignored? 
-      			(default: warning)
+      			(default: no)
       		
      </dd>
      	
@@ -110,11 +122,12 @@
      </dd>
      	
      <dt>
-      			<font color="#800000"><i><tt>--cc=&lt;no|script|make|gecc&gt;</tt></i></font>
+      			<font color="#800000"><i><tt>--cc=&lt;no|script|gecc&gt;</tt></i></font>
       		
      </dt>
      <dd>
       			Should the back-end C compiler be invoked on the generated C code, and if yes with what method?
+      			Use `gecc` to allow the generated C code to be compiled using multiple threads.
       			(default: gecc)
       		
      </dd>
@@ -135,7 +148,10 @@
       		
      </dt>
      <dd>
-      			Which garbage collector should the application be compiled with? (default: no)
+      			Which garbage collector should the application be compiled with?
+      			Note that the Boehm GC is included into the
+      			<i>Gobo Eiffel package</i>.
+      			(default: boehm if available, no otherwise)
       		
      </dd>
      	
@@ -245,27 +261,132 @@
    
   </div>
   <div>
-   <h2>Ace files</h2>
+   <h2>Environment variables</h2>
    
    <p>
-    An Ace file contains the description of the Eiffel program to be compiled.
-    <i>gec</i> is able to read the same Ace files as
-    ISE Eiffel. So if you already have your Ace files the only thing you have
-    to do is to instruct <i>gec</i> to use
-    <i>FreeELKS</i> kernel classes instead of ISE
-    <i>EiffelBase</i> kernel classes. To do so you just
-    have to replace the EiffelBase clusters in your Ace file by:
+    It is possible to override some of the command-line options above, or
+    the default values for these options, using environment variables.
     
-    <blockquote>
-     	<font color="#800000"><i><tt>all free_elks: "${GOBO}/library/free_elks"</tt></i></font>
+    <dl>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>$GOBO_CLI_GC</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Override the command-line option <font color="#800000"><i><tt>--gc</tt></i></font>.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>$GOBO_DEFAULT_GC</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Override the default value when the command-line option <font color="#800000"><i><tt>--gc</tt></i></font>
+      			has not been specified and the environment variable <font color="#800000"><i><tt>$GOBO_CLI_GC</tt></i></font>
+      			has not been set.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>$GOBO_CLI_SETTING</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Override settings as if they were specified with the command-line
+      			option <font color="#800000"><i><tt>--setting</tt></i></font>, or override their values
+      			if they are also specified with the command-line option.
+      			Several settings can be specified in this environment variable,
+      			separated by a comma or a space.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>$GOBO_DEFAULT_SETTING</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Override the default value for a given setting when the command-line
+      			option <font color="#800000"><i><tt>--setting</tt></i></font> or the environment variable
+      			<font color="#800000"><i><tt>$GOBO_CLI_SETTING</tt></i></font> did not set it. Several settings
+      			can be specified in this environment variable, separated by a comma or
+      			a space.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>$GOBO_CLI_CAPABILITY</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Override capabilities as if they were specified with the command-line
+      			option <font color="#800000"><i><tt>--capability</tt></i></font>, or override their values
+      			if they are also specified with the command-line option.
+      			Several capabilities can be specified in this environment variable,
+      			separated by a comma or a space.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>$GOBO_DEFAULT_CAPABILITY</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Override the default value for a given capability when the command-line
+      			option <font color="#800000"><i><tt>--capability</tt></i></font> or the environment variable
+      			<font color="#800000"><i><tt>$GOBO_CLI_CAPABILITY</tt></i></font> did not set it. Several capabilities
+      			can be specified in this environment variable, separated by a comma or
+      			a space.
+      		
+     </dd>
      
-    </blockquote>
-    If you are new to Eiffel and don't know what an Ace file is, please have
-    a look at this <a href="../../../library/tools/doc/ace.html">description</a> from the
+    </dl>
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>ECF files</h2>
+   
+   <p>
+    An ECF file contains the description of the Eiffel program to be compiled.
+    <i>gec</i> is able to read the same ECF files as
+    ISE Eiffel. So if you already have your ECF files, you can use them
+    without any modifications with <i>gec</i>.
+    
+   </p>
+   
+   <p>
+    If you are new to Eiffel and don't know what an ECF file is, please have
+    a look at this <a href="../../../library/tools/doc/ecf.html">description</a> from the
     documentation of the <i>Gobo Eiffel Tools Library</i>
     on which <i>gec</i> is based.
     
    </p>
+   
+   <p>
+    Note that for simple programs like a hello_world program, it is not necessary
+    to provide an ECF file. You can just let <i>gec</i> know
+    in which Eiffel file it can find the root class of the Eiffel system:
+    
+    <blockquote>
+     	<font color="#800000"><i><tt>gec hello_world.e</tt></i></font>
+     
+    </blockquote>
+    It will use the first creation procedure declared in the `create` clause
+    of the root class as root creation procedure. This will work fine provided
+    that all classes used in your simple program are part of one of the libraries
+    provided in the <a href="../../../index.html"><i>Gobo
+      Eiffel Project</i></a>. 
+    You can give it a try using the <font color="#008080"><i><tt>HELLO_WORLD</tt></i></font> class provided in
+    <a href="../../../library/common/example/hello_world/hello_world.e">
+     <font color="#800000"><i><tt>$GOBO/library/common/example/hello_world/hello_world.e</tt></i></font></a>.
+    An ECF file will be needed when you want to use classes from other libraries
+    or if you want to override the default settings (e.g. console application, SCOOP mode).
+    
+   </p>
+   
    
   </div>
   <div>
@@ -274,11 +395,10 @@
    <p>
     <i>gec</i> translates your Eiffel programs into C code.
     This C code is then passed to a back-end C compiler to generate an executable.
-    By default <i>gec</i> uses Microsoft Visual C
-    <i>cl</i> on Windows and GNU <i>gcc</i>
-    on other operating systems such as Linux. This section explains how to override
-    this default if you want to use another back-end C compiler or if you want to
-    specify different C compilation options.
+    By default <i>gec</i> uses the <a href="https://ziglang.org/">
+     Zig toolchain</a> which is included into the <i>Gobo Eiffel package</i>.
+    This section explains how to override this default if you want to use another
+    back-end C compiler or if you want to specify different C compilation options.
     
    </p>
    
@@ -311,7 +431,7 @@ lflags_finalize:
     platform on which this C compiler will be invoked. And finally we find
     C compilation and linker flags that should be used when
     <i>gec</i> is invoked with or without the
-    command-line option "--finalize". Note that Eiffel-style comments,
+    command-line option <font color="#800000"><i><tt>--finalize</tt></i></font>. Note that Eiffel-style comments,
     starting with "--", can be included in these config files.
     
    </p>
@@ -322,7 +442,7 @@ lflags_finalize:
     of the chosen C compiler in the file <font color="#800000"><i><tt>$GOBO/tool/gec/backend/c/config/default.cfg</tt></i></font>.
     You might need to create this file if it does not exist yet. Alternatively
     you can specify the name of the chosen C compiler in the environment
-    variable $GOBO_CC. Let's say that the name of your chosen C compiler
+    variable <font color="#800000"><i><tt>$GOBO_CC</tt></i></font>. Let's say that the name of your chosen C compiler
     is <i>my_cc</i>. <i>gec</i> will
     then look for the config file <font color="#800000"><i><tt>$GOBO/tool/gec/backend/c/config/my_cc.cfg</tt></i></font>.
     
@@ -333,9 +453,9 @@ lflags_finalize:
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2006-2024, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>14 February 2024</font></address>
+     <address><font size="2"><b>Copyright © 2006-2025, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>https://</b><a href="https://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>31 August 2025</font></address>
     </td>
-    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="technology.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+    <td align="right" valign="top"><a href="https://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="technology.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>
   </table>
  </body>

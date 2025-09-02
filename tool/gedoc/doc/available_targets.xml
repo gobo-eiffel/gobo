@@ -10,7 +10,7 @@
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/available_targets">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/available_targets">
 <chapterinfo>
 	<copyright>
 		<year>2018</year>

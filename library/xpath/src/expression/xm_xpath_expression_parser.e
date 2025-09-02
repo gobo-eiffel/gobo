@@ -2508,11 +2508,11 @@ feature {NONE} -- Implementation
 						if a_parser.is_prefix_present then
 							if l_tokenizer.last_token = String_literal_token then
 								report_parse_warning ("No processing instruction name will ever contain a colon")
-								if not shared_name_pool.is_name_code_allocated ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt-fake-namespace", "gexslt-invalid-name") then
-									shared_name_pool.allocate_name ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt-fake-namespace", "gexslt-invalid-name")
+								if not shared_name_pool.is_name_code_allocated ("fake-gexslt-prefix", "https://www.gobosoft.com/gexslt-fake-namespace", "gexslt-invalid-name") then
+									shared_name_pool.allocate_name ("fake-gexslt-prefix", "https://www.gobosoft.com/gexslt-fake-namespace", "gexslt-invalid-name")
 									a_name_code := shared_name_pool.last_name_code
 								else
-									a_name_code := shared_name_pool.name_code ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt-fake-namespace", "gexslt-invalid-name")
+									a_name_code := shared_name_pool.name_code ("fake-gexslt-prefix", "https://www.gobosoft.com/gexslt-fake-namespace", "gexslt-invalid-name")
 								end
 							else
 								report_parse_error ("Processing instruction name must not contain a colon", "XPST0003")

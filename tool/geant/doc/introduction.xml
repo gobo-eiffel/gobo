@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <!--
 	description:
@@ -10,7 +10,7 @@
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geant_introduction">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="geant_introduction">
 <chapterinfo>
 	<copyright>
 		<year>2002-2019</year>

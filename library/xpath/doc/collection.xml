@@ -8,7 +8,7 @@
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="collection">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="collection">
  <chapterinfo>
   <copyright>
    <year>2007</year>
@@ -42,7 +42,7 @@
   <para>
    Class <classname>XM_XPATH_COLLECTION_FILE_SCHEME_RESOLVER</classname> resolves URIs in the <uri>file</uri> scheme. The URI must point to 
    a directory on the local disk, and it must end in a /. The resulting collection of nodes consists of document nodes, each containing a single
-   element in the namespace <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension</uri>. The local name of the element is either <xpath>directory</xpath>
+   element in the namespace <uri>https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension</uri>. The local name of the element is either <xpath>directory</xpath>
    or <xpath>file</xpath>. The element has no child element and a single text node naming the file or directory - all the additional information is expressed as attributes.
   </para>
   <para>

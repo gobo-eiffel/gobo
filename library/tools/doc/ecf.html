@@ -12,14 +12,315 @@
   </table>
   <hr size="1" />
   <p>
-   Under construction
+   An ECF file contains the description of the Eiffel program to be compiled.
+   ECF stands for Eiffel Configuration File. It tells the compiler:
+   
+   <ul>
+    <li>
+     	what the system is called
+     	
+    </li>
+    <li>
+     	which target to build
+     	
+    </li>
+    <li>
+     	where the Eiffel files are located
+     	
+    </li>
+    <li>
+     	which external libraries or C code must be included
+     	
+    </li>
+    <li>
+     	which settings (platform, assertions, optimizations, etc.) to use
+     	
+    </li>
+   </ul>
+   Two compilers are currently using ECF files to describe Eiffel systems:
+   ISE Eiffel and <a href="../../../tool/gec/doc/index.html">Gobo Eiffel</a>.
    
   </p>
+  <div>
+   <h2>Simple Example</h2>
+   
+   <p>
+    Here is a simple example for a hello_world program:
+    
+    <blockquote><pre>
+&lt;system name="hello_world"&gt;
+    &lt;target name="hello_world"&gt;
+        &lt;root class="HELLO_WORLD" feature="make"/&gt;
+        &lt;setting name="console_application" value="true"/&gt;
+        &lt;library name="free_elks" location="${GOBO}/library/free_elks/library.ecf"/&gt;
+        &lt;cluster name="hello_world" location="./"/&gt;
+    &lt;/target&gt;
+&lt;/system&gt;
+</pre></blockquote>
+    It tells the compiler that the name of the system is "hello_world".
+    By default, this will be the name of the executable. 
+    
+   </p>
+   
+   <p>
+    There is only one target, which means that this ECF file describes
+    only one way to build this system. For some systems, there might be
+    several ways to compile a system, with different settings, different
+    library classes, etc. This might be the case when compiling a system
+    as a console application, or as a GUI application. Or when compiling
+    a system as a single threaded application or as an application taking
+    advantage of concurrency. Even though they have the same name in the
+    example above, the name of the target may be different from the name
+    of the system.
+    
+   </p>
+   
+   <p>
+    The root class of the system is <font color="#008080"><i><tt>HELLO_WORLD</tt></i></font>
+    and the root creation procedure is its creation procedure
+    <font color="#008080"><i><tt>make</tt></i></font>.
+    
+   </p>
+   
+   <p>
+    The system is an console application. Without this setting, the system
+    would be compiled as a GUI application.
+    
+   </p>
+   
+   <p>
+    Finally, the compiler is told where to find the Eiffel classes. A
+    cluster is a directory containing Eiffel files with the extension
+    <font color="#800000"><i><tt>.e</tt></i></font>. A library is a set of classes described
+    by another ECF file. In the example above the library contains the
+    kernel classes, which are classes describing strings, characters,
+    integers, arrays, etc.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>System</h2>
+   
+   <p>
+    The beginning of an ECF file will typically look like that:
+    
+    <blockquote><pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;system
+    xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd"
+    name="system_name"
+    uuid="12345678-1234-1234-1234-123456789ABC"
+    library_target="target_name"
+&gt;
+</pre></blockquote>
+    The first line indicates to the XML parser which character encoding
+    should be used to read this XML file.
+    
+   </p>
+   
+   <p>
+    The lines starting with <font color="#800000"><i><tt>xmlns=</tt></i></font> and <font color="#800000"><i><tt>xsi:schemaLocation</tt></i></font>
+    specify which version of ECF is used in this file. In this case, it is using version
+    1.23.0. The XML description of each version can be found in
+    <a href="../config/ecf/">
+     <font color="#800000"><i><tt>$GOBO/library/tools/config/ecf/</tt></i></font></a>.
+    
+   </p>
+   
+   <p>
+    The line which starts with <font color="#800000"><i><tt>xmlns:xsi=</tt></i></font> is for
+    XML schema, and is not relevant for ECF.
+    
+   </p>
+   
+   <p>
+    The <font color="#800000"><i><tt>name</tt></i></font> of the system is used by default as the name of the executable. 
+    
+   </p>
+   
+   <p>
+    The <font color="#800000"><i><tt>uuid</tt></i></font> is a way to uniquely identify this ECF file.
+    This is important when the ECF file describes a library whose classes are
+    to be used in other libraries or systems because it uniquely identifies this 
+    library as well.
+    
+   </p>
+   
+   <p>
+    When the ECF file describes a library whose classes are to be used in
+    other libraries or systems, the <font color="#800000"><i><tt>library_target</tt></i></font> is
+    the name of the target in the current ECF file which will describe the
+    classes included in this library as well as some settings and options
+    to be applied to these classes. This is important when the ECF file
+    contains several targets.
+    
+   </p>
+   
+   <p>
+    A system can contain one or more <font color="#800000"><i><tt>target</tt></i></font>s.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Targets</h2>
+   
+   <p>
+    Targets are defined in <font color="#800000"><i><tt>system</tt></i></font>s. In the following example:
+    
+    <blockquote><pre>
+&lt;target name="debug"&gt;
+    &lt;root class="HELLO_WORLD" feature="make"/&gt;
+    &lt;setting name="console_application" value="true"/&gt;
+    &lt;library name="free_elks" location="${GOBO}/library/free_elks/library.ecf"/&gt;
+    &lt;cluster name="hello_world" location="./"/&gt;
+&lt;/target&gt;
+&lt;target name="release" extends="debug"&gt;
+    &lt;setting name="inlining" value="true"/&gt;
+&lt;/target&gt;
+</pre></blockquote>
+    we have two targets named <font color="#800000"><i><tt>debug</tt></i></font> and
+    <font color="#800000"><i><tt>release</tt></i></font>. The second one is an extension of the
+    first one, instructing the compiler that inlining should be turned
+    on when generating C code.
+    
+   </p>
+   
+   <p>
+    A target can be abstract:
+    
+    <blockquote><pre>
+&lt;target name="target_name" abstract="true"&gt;
+    ...
+&lt;/target&gt;
+</pre></blockquote>
+    which means that it cannot be used to compile a system or as a 
+    <font color="#800000"><i><tt>library_target</tt></i></font> of a library. The purpose of
+    abstract targets is to be used as parents of other targets.
+    
+   </p>
+   
+   <p>
+    The root class and root creation procedure can be specified in a 
+    target using:
+    
+    <blockquote><pre>
+&lt;root class="ROOT_CLASS" feature="root_creation_procedure"/&gt;
+</pre></blockquote>
+    When the target describes a library whose classes are
+    to be used in other libraries or systems, the <font color="#800000"><i><tt>root</tt></i></font>
+    will look like that:
+    
+    <blockquote><pre>
+&lt;root all_classes="true"/&gt;
+</pre></blockquote>
+    
+   </p>
+   
+   <p>
+    Targets can contain <font color="#800000"><i><tt>cluster</tt></i></font>s,
+    <font color="#800000"><i><tt>library</tt></i></font>s,
+    <font color="#800000"><i><tt>assembly</tt></i></font>s,
+    class <font color="#800000"><i><tt>mapping</tt></i></font>s and
+    <font color="#800000"><i><tt>file_rule</tt></i></font>s
+    to specify the classes which will be part of the system.
+    They can also contain <font color="#800000"><i><tt>setting</tt></i></font>s,
+    <font color="#800000"><i><tt>capability</tt></i></font>s and
+    <font color="#800000"><i><tt>option</tt></i></font>s to let the
+    compiler know how to compile this system. When the Eiffel code
+    needs to call C functions (or code written in other languages),
+    the compiler will use the information provided in 
+    <font color="#800000"><i><tt>external_include</tt></i></font>s,
+    <font color="#800000"><i><tt>external_cflag</tt></i></font>s,
+    <font color="#800000"><i><tt>external_object</tt></i></font>s,
+    <font color="#800000"><i><tt>external_library</tt></i></font>s,
+    <font color="#800000"><i><tt>external_resource</tt></i></font>s and
+    <font color="#800000"><i><tt>external_linker_flag</tt></i></font>s.
+    Constructs appearing in the ECF file may use <font color="#800000"><i><tt>variable</tt></i></font>s defined in the target.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Clusters</h2>
+   
+   <p>
+    Under construction
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Overrides</h2>
+   
+   <p>
+    Under construction
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Libraries</h2>
+   
+   <p>
+    Under construction
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Assemblies</h2>
+   
+   <p>
+    Under construction
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Settings</h2>
+   
+   <p>
+    Under construction
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Capabilities</h2>
+   
+   <p>
+    Under construction
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Options</h2>
+   
+   <p>
+    Under construction
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>File rules</h2>
+   
+   <p>
+    Under construction
+    
+   </p>
+   
+  </div>
   <div>
    <h2>Variables</h2>
    
    <p>
-    Variables are defined in targets, using the following syntax:
+    Variables are defined in <font color="#800000"><i><tt>target</tt></i></font>s, using the following syntax:
     
     <blockquote><pre>
 &lt;variable name="..." value="..."/&gt;
@@ -45,11 +346,11 @@
      
      <blockquote><pre>
 &lt;target name="parent"&gt;
-	&lt;variable name="foo" value="gobo"/&gt;
-	&lt;cluster name="foo" location="${foo}/library"/&gt;
+    &lt;variable name="foo" value="gobo"/&gt;
+    &lt;cluster name="foo" location="${foo}/library"/&gt;
 &lt;/target&gt;
 &lt;target name="child" extends="parent"&gt;
-	&lt;variable name="foo" value="ise"/&gt;
+    &lt;variable name="foo" value="ise"/&gt;
 &lt;/target&gt;
 </pre></blockquote>
      even when dealing with the target 'child', the pathname of the cluster 'foo' will be
@@ -84,7 +385,7 @@
      
      <blockquote><pre>
 &lt;condition/&gt;
-	&lt;custom name="foo" value="gobo"/&gt;
+    &lt;custom name="foo" value="gobo"/&gt;
 &lt;/condition/&gt;
 </pre></blockquote>
      only take into account values visible from the project target, and not from the target
@@ -101,7 +402,8 @@
    <h2>Class mappings</h2>
    
    <p>
-    Class mappings are defined in targets and clusters, using the following syntax:
+    Class mappings are defined in <font color="#800000"><i><tt>target</tt></i></font>s and
+    <font color="#800000"><i><tt>cluster</tt></i></font>s, using the following syntax:
     
     <blockquote><pre>
 &lt;mapping old_name="..." new_name="..."/&gt;
@@ -109,7 +411,7 @@
     They are used to create class name aliases. For example if 'old_name' is 'STRING'
     and 'new_name' is 'STRING_8', it means that whenever the type 'STRING' will
     be found in the class texts of the given target or cluster, they will be seen
-    as if 'STRING_8' had been typed.
+    as if 'STRING_8' had been written.
     
    </p>
    
@@ -143,7 +445,8 @@
    
    <p>
     Note that <i>gec</i> and <i>gelint</i>
-    do not support class mappings at the cluster level, only at the target level.
+    do not support class mappings at the <font color="#800000"><i><tt>cluster</tt></i></font> level, only
+    at the <font color="#800000"><i><tt>target</tt></i></font> level.
     
    </p>
    
@@ -152,9 +455,9 @@
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2008-2020, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>6 April 2020</font></address>
+     <address><font size="2"><b>Copyright © 2008-2025, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>https://</b><a href="https://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>31 August 2025</font></address>
     </td>
-    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="builtin_routines.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+    <td align="right" valign="top"><a href="https://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="builtin_routines.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>
   </table>
  </body>

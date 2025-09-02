@@ -6,11 +6,11 @@
 		"Geant's examples"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2003-2023, Sven Ehrke and others"
+	copyright: "Copyright (c) 2003-2025, Sven Ehrke and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geant_examples">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="geant_examples">
 <chapterinfo>
 	<copyright>
 		<year>2002-2023</year>

@@ -99,10 +99,10 @@ feature -- Access
 	Xhtml_uri: STRING = "http://www.w3.org/1999/xhtml"
 			-- XHTML namespace
 
-	Gexslt_eiffel_type_uri: STRING = "http://www.gobosoft.com/eiffel/gobo/gexslt/extension"
+	Gexslt_eiffel_type_uri: STRING = "https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension"
 			-- Namespace for extension functions, etc. written in Eiffel
 
-	Gexslt_examples_uri: STRING = "http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example"
+	Gexslt_examples_uri: STRING = "https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension/example"
 			-- Namespace for examples provided in the library, but not regarded as standard extensions
 
 	Exslt_environment_uri: STRING = "http://exslt.org/system/environment"

@@ -6,11 +6,11 @@
 		"About Unicode normalization"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2025, Colin Adams and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/unicode/about">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="string/unicode/about">
 
 <chapterinfo>
 	<copyright>

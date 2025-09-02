@@ -75,7 +75,7 @@ feature -- Test
 			check asserted_above: evaluated_items /= Void then end
 			assert ("QName value", evaluated_items.item (1).is_qname_value)
 			assert ("Prefix is eg", STRING_.same_string (evaluated_items.item (1).as_qname_value.optional_prefix, "eg"))
-			assert ("Correct namespace", STRING_.same_string (evaluated_items.item (1).as_qname_value.namespace_uri, "http://www.gobosoft.com/xpath-tests/eg"))
+			assert ("Correct namespace", STRING_.same_string (evaluated_items.item (1).as_qname_value.namespace_uri, "https://www.gobosoft.com/xpath-tests/eg"))
 			assert ("correct name", STRING_.same_string (evaluated_items.item (1).as_qname_value.local_name, "myFunc"))
 		end
 

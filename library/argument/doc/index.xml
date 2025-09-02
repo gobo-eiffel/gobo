@@ -5,11 +5,11 @@
 
 		"Gobo Eiffel Argument Library documentation"
 
-	copyright: "Copyright (c) 2006-2019, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2025, Bernd Schoeller and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="argument/index">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="argument/index">
 <chapterinfo>
 	<copyright>
 		<year>2001-2019</year>
@@ -85,7 +85,7 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
-			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			<ulink url="https://www.gobosoft.com/eiffel/gobo/index.html">Downloading
 			Instructions</ulink>
 		</term>
 		<listitem><para>

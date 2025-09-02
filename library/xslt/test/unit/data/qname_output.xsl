@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
+﻿<?xml version="1.0" encoding="ISO-8859-1" ?>
 <xsl:transform 
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:gexslt-examples="http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example"
+  xmlns:gexslt-examples="https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension/example"
   version="2.0"
   exclude-result-prefixes="gexslt-examples"
 >

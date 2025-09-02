@@ -1,8 +1,8 @@
 # Installing the Gobo Eiffel tools
 
 If you downloaded the source code of Gobo from Git or
-if you got it from a source package (e.g. `gobo*-src.7z`
-or `gobo*-src.gz`), you will need to run this install
+if you got it from a source package (e.g. `gobo-*.zip`
+or `gobo-*.tar.gz`), you will need to run this install
 procedure in order to compile the tools which will be
 placed in `$GOBO/bin`.
 
@@ -25,7 +25,7 @@ The procedure is quite simple:
 * The Gobo tools will now be accessible in `$GOBO/bin`.
 
 To find out about the already supported values for
-`<c_compiler>`, run the same command but with the 
+`<c_compiler>`, run the same command but with the
 option `-help`. The optional command-line
 option `-v` is used to run the installation in verbose mode.
 Since not all C compilers nor all platforms have been
@@ -52,4 +52,5 @@ build file, type:
 		geant help
 
 ## Authors
+
 Copyright (c) 2001-2016, Eric Bezault and others

@@ -6,11 +6,11 @@
 		"Conformance to standards"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2025, Colin Adams and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_conformance">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_conformance">
   <chapterinfo>
     <copyright>
       <year>2004-2016</year>
@@ -291,7 +291,7 @@
 	 <varlistentry>
 	  <term>xsl:vendor-url</term>
 	  <listitem>
-	  <para>http://www.gobosoft.com/</para>
+	  <para>https://www.gobosoft.com/</para>
 	  <para>
 	   This is actually configurable, by calling <featurename>set_vendor_url</featurename> from
 	   <classname>XM_XPATH_CONFIGURATION</classname>. For Gestalt, the value is http://gestalt.sourceforge.net/.
@@ -311,7 +311,7 @@
 	 <varlistentry>
 	  <term>xsl:product-version</term>
 	  <listitem>
-	   <para>This is equal to the version of the Gobo library. See <ulink url="http://www.gobosoft.com/whatsnew/index.html">Gobo news</ulink></para>
+	   <para>This is equal to the version of the Gobo library. See <ulink url="https://www.gobosoft.com/whatsnew/index.html">Gobo news</ulink></para>
 	  <para>
 	   This is actually configurable, by calling <featurename>set_product_version</featurename> from
 	   <classname>XM_XPATH_CONFIGURATION</classname>. For Gestalt, the value is the version of Gestalt.
@@ -342,7 +342,7 @@
 	</para>
 	<para>
 	 Additional system properties in other namespaces may be registered. The standard implementation
-	 provides the following properties in the namespace <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension</uri>:
+	 provides the following properties in the namespace <uri>https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension</uri>:
 	 <variablelist>
 	  <varlistentry>
 	   <term>gexslt:standard-file-collection</term>

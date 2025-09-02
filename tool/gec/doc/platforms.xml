@@ -6,21 +6,21 @@
 		"Supported Platforms"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/platforms">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gec/platforms">
 <chapterinfo>
 	<copyright>
-		<year>2006-2024</year>
+		<year>2006-2025</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>14 February 2024</date>
+	<date>2 September 2025</date>
 </chapterinfo>
 
 <title>Supported Platforms</title>
@@ -40,57 +40,206 @@ has already been used successfully:
 </para>
 <table>
 	<title></title>
-	<tgroup cols="3">
+	<tgroup cols="4">
 	<thead>
 		<row>
 			<entry>Operating System</entry>
-			<entry>C Compiler</entry>
 			<entry>Hardware</entry>
+			<entry>C Compiler</entry>
 			<entry>Comment</entry>
 		</row>
 	</thead>
 	<tbody>
 		<row>
-			<entry>Windows 10</entry>
-			<entry>msc 15 (Visual Studio 2017)</entry>
-			<entry>x86 64-bit</entry>
-			<entry></entry>
+			<entry>Linux Ubuntu 24.04</entry>
+			<entry>x86_64</entry>
+			<entry>gcc 13.3.0</entry>
+			<entry>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
+				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
+			</entry>
 		</row>
 		<row>
-			<entry>Windows 10</entry>
-			<entry>msc 16 (Visual Studio 2019)</entry>
-			<entry>x86 64-bit</entry>
-			<entry>Using <ulink url="https://gitlab.com/ebezault/gobo/-/pipelines">GitLab runner</ulink></entry>
+			<entry>Linux Ubuntu 24.04</entry>
+			<entry>x86_64</entry>
+			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
+				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
+			</entry>
 		</row>
 		<row>
-			<entry>Debian GNU/Linux 10</entry>
-			<entry>gcc 8.3.0</entry>
-			<entry>x86 64-bit</entry>
-			<entry>Using <ulink url="https://gitlab.com/ebezault/gobo/-/pipelines">GitLab runner</ulink></entry>
+			<entry>Linux Ubuntu 24.04</entry>
+			<entry>arm64</entry>
+			<entry>gcc 13.3.0</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
 		</row>
 		<row>
-			<entry>Linux Ubuntu 16.04.6</entry>
-			<entry>gcc 5.4.0</entry>
-			<entry>x86 64-bit</entry>
-			<entry>Using <ulink url="https://travis-ci.org/github/ebezault/gobo/builds">Travis CI</ulink></entry>
+			<entry>Linux Ubuntu 24.04</entry>
+			<entry>arm64</entry>
+			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
 		</row>
 		<row>
-			<entry>Linux CentOS 7</entry>
-			<entry>gcc 4.8.5</entry>
-			<entry>x86 64-bit</entry>
-			<entry>Using SourceForge</entry>
+			<entry>Linux Ubuntu 22.04</entry>
+			<entry>x86_64</entry>
+			<entry>gcc 11.4.0</entry>
+			<entry>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
+				and <ulink url="https://gitlab.com/ebezault/gobo/-/pipelines">GitLab Pipelines</ulink>
+			</entry>
 		</row>
 		<row>
-			<entry>Mac OS X 10.13.6</entry>
-			<entry>clang 9.1.0</entry>
-			<entry>x86 64-bit</entry>
-			<entry>Using <ulink url="https://travis-ci.org/github/ebezault/gobo/builds">Travis CI</ulink></entry>
+			<entry>Linux Ubuntu 22.04</entry>
+			<entry>x86_64</entry>
+			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
 		</row>
 		<row>
-			<entry>Mac OS X</entry>
-			<entry>clang 11.0.3</entry>
-			<entry>x86 64-bit</entry>
-			<entry></entry>
+			<entry>Linux Ubuntu 22.04</entry>
+			<entry>arm64</entry>
+			<entry>gcc 11.4.0</entry>
+			<entry>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
+				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
+			</entry>
+		</row>
+		<row>
+			<entry>Linux Ubuntu 22.04</entry>
+			<entry>arm64</entry>
+			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
+				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
+			</entry>
+		</row>
+		<row>
+			<entry>MacOS 15.5</entry>
+			<entry>x86_64</entry>
+			<entry>clang 17.0.0</entry>
+			<entry>Using <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 15.5</entry>
+			<entry>x86_64</entry>
+			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>Using <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 15.5</entry>
+			<entry>arm64</entry>
+			<entry>clang 17.0.0</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 15.5</entry>
+			<entry>arm64</entry>
+			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 14.7.6</entry>
+			<entry>x86_64</entry>
+			<entry>clang 15.0.0</entry>
+			<entry>Using <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 14.7.6</entry>
+			<entry>x86_64</entry>
+			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>Using <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 14.7.6</entry>
+			<entry>arm64</entry>
+			<entry>clang 15.0.0</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 14.7.6</entry>
+			<entry>arm64</entry>
+			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
+		</row>
+		<row>
+			<entry>MacOS 13.7.6</entry>
+			<entry>x86_64</entry>
+			<entry>clang 15.0.0</entry>
+			<entry>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
+				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
+			</entry>
+		</row>
+		<row>
+			<entry>MacOS 13.7.6</entry>
+			<entry>x86_64</entry>
+			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
+				<ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
+			</entry>
+		</row>
+		<row>
+			<entry>Windows 2025</entry>
+			<entry>x86_64</entry>
+			<entry>msc 17 (Visual Studio 2022)</entry>
+			<entry>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
+				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
+			</entry>
+		</row>
+		<row>
+			<entry>Windows 2025</entry>
+			<entry>x86_64</entry>
+			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
+				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
+			</entry>
+		</row>
+		<row>
+			<entry>Windows 2022</entry>
+			<entry>x86_64</entry>
+			<entry>msc 17 (Visual Studio 2022)</entry>
+			<entry>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>
+				and <ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
+				
+			</entry>
+		</row>
+		<row>
+			<entry>Windows 2022</entry>
+			<entry>x86_64</entry>
+			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>
+				Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink>,
+				<ulink url="https://dev.azure.com/ericb0733/gobo/_build?definitionId=1">Azure DevOps</ulink>
+				and <ulink url="https://gitlab.com/ebezault/gobo/-/pipelines">GitLab Pipelines</ulink>
+			</entry>
+		</row>
+		<row>
+			<entry>Windows 11</entry>
+			<entry>x86_64</entry>
+			<entry>msc 17 (Visual Studio 2022)</entry>
+			<entry>On personal computer</entry>
+		</row>
+		<row>
+			<entry>Windows 11</entry>
+			<entry>x86_64</entry>
+			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>On personal computer</entry>
+		</row>
+		<row>
+			<entry>Windows 11</entry>
+			<entry>arm64</entry>
+			<entry>msc 17 (Visual Studio 2022)</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
+		</row>
+		<row>
+			<entry>Windows 11</entry>
+			<entry>arm64</entry>
+			<entry>zig toolchain 0.15.1 (clang 20.1.2)</entry>
+			<entry>Using <ulink url="https://github.com/gobo-eiffel/gobo/actions?query=branch%3Amaster+">GitHub Actions</ulink></entry>
 		</row>
 	</tbody>
 	</tgroup>
@@ -105,7 +254,7 @@ on a new platform or with a new C compiler using the code from the Git repositor
 <para>
 First you need to check-out the code from the
 <ulink url="https://github.com/gobo-eiffel/gobo">Gobo Git
-repository</ulink>. Then you should set the environment variable $GOBO
+repository</ulink>. Then you should set the environment variable <filename>$GOBO</filename>
 to the directory where you checked out the code, and add
 <filename class="directory">$GOBO/bin</filename> to your $PATH.
 All this is explained in <filename>$GOBO/bin/Readme.md</filename>.

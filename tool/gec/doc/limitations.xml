@@ -6,21 +6,21 @@
 		"Limitations"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2022, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/limitations">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gec/limitations">
 <chapterinfo>
 	<copyright>
-		<year>2006-2022</year>
+		<year>2006-2025</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>9 January 2022</date>
+	<date>31 August 2025</date>
 </chapterinfo>
 
 <title>Gec Limitations</title>
@@ -31,20 +31,11 @@ The following Eiffel constructs have not been implemented yet:
 <blockquote>
 <variablelist>
 	<varlistentry>
-		<term>Assertions</term>
-		<listitem><para>
-			not monitored at runtime
-		</para></listitem>
-	</varlistentry>
-	<varlistentry>
-		<term>Garbage Collection</term>
-		<listitem><para>
-			no internal GC, the Boehm GC can be plugged instead
-		</para></listitem>
-	</varlistentry>
-	<varlistentry>
 		<term>Storable</term>
-		<listitem></listitem>
+		<listitem><para>
+			does not support classes `MISMATCH_CORRECTOR`, `CLASS_NAME_TRANSLATIONS`,
+			nor the note tag "storable_version" yet
+		</para></listitem>
 	</varlistentry>
 	<varlistentry>
 		<term>User-defined expanded classes</term>
@@ -60,7 +51,9 @@ The following Eiffel constructs have not been implemented yet:
 	</varlistentry>
 	<varlistentry>
 		<term>SCOOP</term>
-		<listitem></listitem>
+		<listitem><para>
+			using preconditions as wait conditions is not supported yet
+		</para></listitem>
 	</varlistentry>
 	<varlistentry>
 		<term>Debugger</term>

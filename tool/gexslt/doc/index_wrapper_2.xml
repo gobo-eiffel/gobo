@@ -16,7 +16,7 @@
  <!ENTITY program_name_cased "Gestalt">
  <!ENTITY inclusion SYSTEM "index.xml" >
 ]>
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gexslt_introduction">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gexslt_introduction">
 &inclusion;
 </chapter>
 

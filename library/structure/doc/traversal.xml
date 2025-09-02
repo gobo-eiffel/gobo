@@ -6,11 +6,11 @@
 		"Traversable Containers"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1997-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1997-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="structure/traversal">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="structure/traversal">
 <chapterinfo>
 	<copyright>
 		<year>1999-2016</year>

@@ -6,21 +6,21 @@
 		"Gobo Eiffel Compiler"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/index">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gec/index">
 <chapterinfo>
 	<copyright>
-		<year>2006-2016</year>
+		<year>2006-2025</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>27 December 2016</date>
+	<date>31 August 2025</date>
 </chapterinfo>
 
 <title>Gobo Eiffel Compiler</title>
@@ -43,10 +43,10 @@ to be tied to a single vendor.
 </para>
 <para>
 <projectname>gec</projectname> is the only open source Eiffel compiler
-that is released under a <link linkend="${library/common}/license">less constraining
+that is released under a <link linkend="${root}/License">less constraining
 license</link> than GNU GPL. To my knowledge it is also the first and only one whose
 source code can be compiled by all its major Eiffel compiler competitors, as is the
-case of all other classes provided in the <link linkend="${library/common}/index"><projectname>Gobo
+case of all other classes provided in the <link linkend="${root}/index"><projectname>Gobo
 Eiffel Project</projectname></link>. However, note that although it is already
 able to compile all Eiffel classes included in the <projectname>Gobo Eiffel
 Project</projectname>, <projectname>gec</projectname> is still under development.
@@ -65,7 +65,7 @@ This documentation of <projectname>gec</projectname> is structured as follows:
 			<link linkend="usage">Using <projectname>gec</projectname></link>
 		</term>
 		<listitem><para>
-			Configuration, compiler options, Ace files.
+			Configuration, compiler options, ECF files.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
@@ -113,7 +113,7 @@ This documentation of <projectname>gec</projectname> is structured as follows:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			<ulink url="https://www.gobosoft.com/eiffel/gobo/index.html">Downloading
 			Instructions</ulink>
 		</term>
 		<listitem><para>

@@ -17,7 +17,7 @@
  <!ENTITY additional_options "">
  <!ENTITY inclusion SYSTEM "options.xml" >
 ]>
-<chapter  xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gexslt_options">
+<chapter  xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gexslt_options">
 &inclusion;
 </chapter>
 

@@ -93,7 +93,7 @@ feature -- Element change
 			-- You could also set defaults for extension attributes. Note that these
 			--  do not honour the import precedence rules.
 
-			-- E.g. a_properties.extension_attributes.force ("BUG - invalid dtd internal subset", "{http://www.gobosoft.com/eiffel/gobo/gexslt/extension/examples}internal-subset")
+			-- E.g. a_properties.extension_attributes.force ("BUG - invalid dtd internal subset", "{https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension/examples}internal-subset")
 		end
 
 invariant

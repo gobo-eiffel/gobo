@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 					if attached vendor_url as l_vendor_url then
 						Result := l_vendor_url
 					else
-						Result := "http://www.gobosoft.com/"
+						Result := "https://www.gobosoft.com/"
 					end
 				elseif STRING_.same_string (a_local_name, "product-name") then
 					if attached product_name as l_product_name then

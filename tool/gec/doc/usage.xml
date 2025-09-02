@@ -6,21 +6,21 @@
 		"Using gec"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/usage">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gec/usage">
 <chapterinfo>
 	<copyright>
-		<year>2006-2024</year>
+		<year>2006-2025</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>14 February 2024</date>
+	<date>31 August 2025</date>
 </chapterinfo>
 
 <title>Using gec</title>
@@ -34,7 +34,15 @@ The usual way to invoke <projectname>gec</projectname> is as follows:
 This will read the description of your program in the ECF file
 <filename>ecf_filename</filename>, compile it and invoke the
 back-end C compiler on the generated C code as explained
-below. Here is the list of options that can be
+below. 
+</para>
+<para>
+For simple programs, one can just provide the Eiffel file containing
+the root class: 
+<blockquote>
+	<filename>gec eiffel_filename</filename>
+</blockquote>
+Here is the list of options that can be
 used with <projectname>gec</projectname>:
 <variablelist>
 	<varlistentry>
@@ -87,7 +95,7 @@ used with <projectname>gec</projectname>:
 		</term>
 		<listitem><para>
 			Should CAT-call errors be considered as fatal errors, as warnings, or just ignored? 
-			(default: warning)
+			(default: no)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
@@ -110,10 +118,11 @@ used with <projectname>gec</projectname>:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<filename>--cc=&lt;no|script|make|gecc&gt;</filename>
+			<filename>--cc=&lt;no|script|gecc&gt;</filename>
 		</term>
 		<listitem><para>
 			Should the back-end C compiler be invoked on the generated C code, and if yes with what method?
+			Use `gecc` to allow the generated C code to be compiled using multiple threads.
 			(default: gecc)
 		</para></listitem>
 	</varlistentry>
@@ -132,7 +141,10 @@ used with <projectname>gec</projectname>:
 			<filename>--gc=&lt;no|boehm&gt;</filename>
 		</term>
 		<listitem><para>
-			Which garbage collector should the application be compiled with? (default: no)
+			Which garbage collector should the application be compiled with?
+			Note that the Boehm GC is included into the
+			<projectname>Gobo Eiffel package</projectname>.
+			(default: boehm if available, no otherwise)
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
@@ -228,34 +240,123 @@ used with <projectname>gec</projectname>:
 </para>
 </section>
 
-<section><title>Ace files</title>
+<section><title>Environment variables</title>
 <para>
-An Ace file contains the description of the Eiffel program to be compiled.
-<projectname>gec</projectname> is able to read the same Ace files as
-ISE Eiffel. So if you already have your Ace files the only thing you have
-to do is to instruct <projectname>gec</projectname> to use
-<libraryname>FreeELKS</libraryname> kernel classes instead of ISE
-<libraryname>EiffelBase</libraryname> kernel classes. To do so you just
-have to replace the EiffelBase clusters in your Ace file by:
-<informalexample>
-	<filename class="directory">all free_elks: "${GOBO}/library/free_elks"</filename>
-</informalexample>
-If you are new to Eiffel and don't know what an Ace file is, please have
-a look at this <link linkend="${library/tools}/ace">description</link> from the
+It is possible to override some of the command-line options above, or
+the default values for these options, using environment variables.
+<variablelist>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_CLI_GC</filename>
+		</term>
+		<listitem><para>
+			Override the command-line option <filename>--gc</filename>.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_DEFAULT_GC</filename>
+		</term>
+		<listitem><para>
+			Override the default value when the command-line option <filename>--gc</filename>
+			has not been specified and the environment variable <filename>$GOBO_CLI_GC</filename>
+			has not been set.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_CLI_SETTING</filename>
+		</term>
+		<listitem><para>
+			Override settings as if they were specified with the command-line
+			option <filename>--setting</filename>, or override their values
+			if they are also specified with the command-line option.
+			Several settings can be specified in this environment variable,
+			separated by a comma or a space.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_DEFAULT_SETTING</filename>
+		</term>
+		<listitem><para>
+			Override the default value for a given setting when the command-line
+			option <filename>--setting</filename> or the environment variable
+			<filename>$GOBO_CLI_SETTING</filename> did not set it. Several settings
+			can be specified in this environment variable, separated by a comma or
+			a space.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_CLI_CAPABILITY</filename>
+		</term>
+		<listitem><para>
+			Override capabilities as if they were specified with the command-line
+			option <filename>--capability</filename>, or override their values
+			if they are also specified with the command-line option.
+			Several capabilities can be specified in this environment variable,
+			separated by a comma or a space.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_DEFAULT_CAPABILITY</filename>
+		</term>
+		<listitem><para>
+			Override the default value for a given capability when the command-line
+			option <filename>--capability</filename> or the environment variable
+			<filename>$GOBO_CLI_CAPABILITY</filename> did not set it. Several capabilities
+			can be specified in this environment variable, separated by a comma or
+			a space.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</para>
+</section>
+
+<section><title>ECF files</title>
+<para>
+An ECF file contains the description of the Eiffel program to be compiled.
+<projectname>gec</projectname> is able to read the same ECF files as
+ISE Eiffel. So if you already have your ECF files, you can use them
+without any modifications with <projectname>gec</projectname>.
+</para>
+<para>
+If you are new to Eiffel and don't know what an ECF file is, please have
+a look at this <link linkend="${library/tools}/ecf">description</link> from the
 documentation of the <libraryname>Gobo Eiffel Tools Library</libraryname>
 on which <projectname>gec</projectname> is based.
 </para>
+<para>
+Note that for simple programs like a hello_world program, it is not necessary
+to provide an ECF file. You can just let <projectname>gec</projectname> know
+in which Eiffel file it can find the root class of the Eiffel system:
+<blockquote>
+	<filename>gec hello_world.e</filename>
+</blockquote>
+It will use the first creation procedure declared in the `create` clause
+of the root class as root creation procedure. This will work fine provided
+that all classes used in your simple program are part of one of the libraries
+provided in the <link linkend="${root}/index"><projectname>Gobo
+Eiffel Project</projectname></link>. 
+You can give it a try using the <classname>HELLO_WORLD</classname> class provided in
+<ulink url="../../../library/common/example/hello_world/hello_world.e">
+<filename>$GOBO/library/common/example/hello_world/hello_world.e</filename></ulink>.
+An ECF file will be needed when you want to use classes from other libraries
+or if you want to override the default settings (e.g. console application, SCOOP mode).
+</para>
+
 </section>
 
 <section><title>Back-end C compiler</title>
 <para>
 <projectname>gec</projectname> translates your Eiffel programs into C code.
 This C code is then passed to a back-end C compiler to generate an executable.
-By default <projectname>gec</projectname> uses Microsoft Visual C
-<projectname>cl</projectname> on Windows and GNU <projectname>gcc</projectname>
-on other operating systems such as Linux. This section explains how to override
-this default if you want to use another back-end C compiler or if you want to
-specify different C compilation options.
+By default <projectname>gec</projectname> uses the <ulink url="https://ziglang.org/">
+Zig toolchain</ulink> which is included into the <projectname>Gobo Eiffel package</projectname>.
+This section explains how to override this default if you want to use another
+back-end C compiler or if you want to specify different C compilation options.
 </para>
 <para>
 For each C compiler that you want to use as back-end C compiler, you should
@@ -285,7 +386,7 @@ represent the file extensions for object files and executables on the
 platform on which this C compiler will be invoked. And finally we find
 C compilation and linker flags that should be used when
 <projectname>gec</projectname> is invoked with or without the
-command-line option "--finalize". Note that Eiffel-style comments,
+command-line option <filename>--finalize</filename>. Note that Eiffel-style comments,
 starting with "--", can be included in these config files.
 </para>
 <para>
@@ -294,7 +395,7 @@ use a different back-end C compiler. You can either write the name
 of the chosen C compiler in the file <filename>$GOBO/tool/gec/backend/c/config/default.cfg</filename>.
 You might need to create this file if it does not exist yet. Alternatively
 you can specify the name of the chosen C compiler in the environment
-variable $GOBO_CC. Let's say that the name of your chosen C compiler
+variable <filename>$GOBO_CC</filename>. Let's say that the name of your chosen C compiler
 is <projectname>my_cc</projectname>. <projectname>gec</projectname> will
 then look for the config file <filename>$GOBO/tool/gec/backend/c/config/my_cc.cfg</filename>.
 </para>

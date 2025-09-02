@@ -6,11 +6,11 @@
 		"Implemented core functions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2025, Colin Adams and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xpath_implemented_functions">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="xpath_implemented_functions">
   <chapterinfo>
     <copyright>
       <year>2004-2016</year>

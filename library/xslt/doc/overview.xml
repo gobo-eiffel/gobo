@@ -6,11 +6,11 @@
 		"Overview of the XSLT library"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2019, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2025, Colin Adams and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_overview">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_overview">
   <chapterinfo>
     <copyright>
       <year>2004-2019</year>
@@ -143,9 +143,9 @@
     <title>Extensions</title>
     <para>
       XSLT and XPath provide for standard mechanisms to access extensions to the language.
-      This library provides some built-in extensions in the namespace <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension</uri>.
+      This library provides some built-in extensions in the namespace <uri>https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension</uri>.
       In order to make use of them, you must provide a namespace declaration in your stylesheets, something like:
-      <exmlsyntax>gexslt:xmlns="http://www.gobosoft.com/eiffel/gobo/gexslt/extension"</exmlsyntax>. Don't forget
+      <exmlsyntax>gexslt:xmlns="https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension"</exmlsyntax>. Don't forget
       to exclude this namespace from your result documents with: <xslt>exclude-result-prefixes="gexslt"</xslt> when
       appropriate.
     </para>
@@ -157,7 +157,7 @@
       In some cases (notably output extensions), the mechanism for accessing built-in extensions differs slightly 
       from that for user-written extensions. In these cases, I have incorporated example classes into the library so
       you can see how to code your own extensions. These examples are all in the namespace
-      <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example</uri>.
+      <uri>https://www.gobosoft.com/eiffel/gobo/tool/gexslt/doc/extension/example</uri>.
     </para>
     <para>
       <link linkend="output_extensions">Output extensions</link>

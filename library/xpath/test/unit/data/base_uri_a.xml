@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <?top-level-pi1 here is a message ?>
 <ITEM CAT="X">
   <TITLE>Patterns of Crime in Animal Culture</TITLE>
@@ -7,7 +7,7 @@
   <QUANTITY>0</QUANTITY>
 </ITEM>
 <?top-level-pi2 here is a message ?>
-<ITEM CAT="F" TAX="7.5" xml:base="http://www.gobosoft.com/xml-tests/AAMilne-book">
+<ITEM CAT="F" TAX="7.5" xml:base="https://www.gobosoft.com/xml-tests/AAMilne-book">
   <?contained-pi here is a message ?>
   <TITLE>When We Were Very Young</TITLE>
   <AUTHOR>Milne, A. A.</AUTHOR>

@@ -156,13 +156,13 @@ feature -- Test. These tests check the system_id and base_uri routines
 			assert ("sixth item", item_element /= Void)
 			check asserted_above: item_element /= Void then end
 			assert_strings_case_insensitive_equal ("SYSTEM ID for ITEM", a_base_uri, item_element.system_id)
-			assert_strings_equal ("Base URI for ITEM", "http://www.gobosoft.com/xml-tests/AAMilne-book", item_element.base_uri)
+			assert_strings_equal ("Base URI for ITEM", "https://www.gobosoft.com/xml-tests/AAMilne-book", item_element.base_uri)
 			assert ("Item element line number is 35", item_element.line_number = 35)
 			if not attached {XM_XPATH_PROCESSING_INSTRUCTION} item_element.first_child as a_pi then
 				assert ("PI child 1 not_void", False)
 			else
 				assert_strings_equal ("PI child 1", "testpi1", a_pi.node_name)
-				assert_strings_equal ("Base URI for PI 1", "http://www.gobosoft.com/xml-tests/AAMilne-book", a_pi.base_uri)
+				assert_strings_equal ("Base URI for PI 1", "https://www.gobosoft.com/xml-tests/AAMilne-book", a_pi.base_uri)
 				assert ("PI1 line number is 36", a_pi.line_number = 36)
 			end
 			item_element := Void

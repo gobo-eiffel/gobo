@@ -61,7 +61,7 @@ feature -- Tests
 			a_uri: STRING
 		do
 			shared_catalog_manager.set_debug_level (0)
-			a_uri := shared_catalog_manager.resolved_fsi ("http://www.gobosoft.com/test/system-id-one")
+			a_uri := shared_catalog_manager.resolved_fsi ("https://www.gobosoft.com/test/system-id-one")
 			assert ("SYSTEM resolved", a_uri /= Void and then STRING_.same_string (a_uri, "http://colina.demon.co.uk/gobo/system-id-one"))
 		end
 
@@ -111,7 +111,7 @@ feature -- Tests
 			a_uri: STRING
 		do
 			shared_catalog_manager.set_debug_level (0)
-			a_uri := shared_catalog_manager.resolved_uri ("http://www.gobosoft.com/test/system-id-one")
+			a_uri := shared_catalog_manager.resolved_uri ("https://www.gobosoft.com/test/system-id-one")
 			assert ("URI reference resolved", a_uri /= Void and then STRING_.same_string (a_uri, "http://colina.demon.co.uk/gobo/system-id-one"))
 		end
 

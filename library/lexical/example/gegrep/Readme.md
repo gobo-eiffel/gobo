@@ -1,4 +1,4 @@
-# Gobo Eiffel Lexical Example: gegrep
+﻿# Gobo Eiffel Lexical Example: gegrep
 
 This folder contains the source code for a simple Unix-like `grep`
 program. *Gobo Eiffel Grep* (`gegrep`) takes a regular expression and
@@ -46,7 +46,7 @@ uses this DFA to directly analyze input streams.
 
 The regular expression given as argument follows the same notation as
 regular expressions provided in `gelex`. See
-[`$GOBO/tool/gelex/doc/patterns.html`](http://www.gobosoft.com/eiffel/gobo/gelex/patterns.html)
+[`$GOBO/tool/gelex/doc/patterns.html`](https://www.gobosoft.com/eiffel/gobo/tool/gelex/doc/patterns.html)
 for details.
 
 When several filenames are given as argument, the matched lines are
