@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: build
-        run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github zig
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github gcc
         shell: pwsh
       - uses: actions/upload-artifact@v4
         with:
@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: build
-        run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github zig
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github gcc
         shell: pwsh
       - uses: actions/upload-artifact@v4
         with:
@@ -77,7 +77,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: build
-        run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github zig
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github msc
         shell: pwsh
       - uses: actions/upload-artifact@v4
         with:
@@ -91,7 +91,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: build
-        run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github zig
+        run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github msc
         shell: pwsh
       - uses: actions/upload-artifact@v4
         with:
