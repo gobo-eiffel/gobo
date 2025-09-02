@@ -38,6 +38,15 @@ if ($LastExitCode -ne 0) {
 	exit $LastExitCode
 }
 
+if ($CCompiler -ne "zig") {
+	& "$PSScriptRoot/install_zig.ps1" $CiTool
+	if ($LastExitCode -ne 0) {
+		Write-Error "Command 'install_zig.ps1 $CiTool' exited with code $LastExitCode"
+		exit $LastExitCode
+	}
+	"zig" | Out-File "$env:GOBO/tool/gec/backend/c/config/default.cfg"
+}
+
 Set-Location "$env:GOBO"
 
 geant delivery
