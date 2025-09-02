@@ -63,13 +63,13 @@ macos_clang_build_ge:
       - $GOBO/bin/
       - $GOBO/tool/gec/backend/c/config/default.cfg
 
-windows_msc_build_ge:
+windows_zig_build_ge:
   stage: build_ge
   tags:
     - saas-windows-medium-amd64
   dependencies: []
   script:
-    - . "$GOBO/.cicd/build_ge.ps1" gitlab msc
+    - . "$GOBO/.cicd/build_ge.ps1" gitlab zig
   rules:
     - if: $CI_COMMIT_TAG
       when: never
@@ -172,16 +172,16 @@ tool_macos_clang_test_ge:
     - if: $GOBO_CUSTOM_PIPELINE == "not_available_for_free"
       when: on_success
 
-library_windows_msc_test_ge:
+library_windows_zig_test_ge:
   stage: test_ge
   tags:
     - saas-windows-medium-amd64
   dependencies:
-    - windows_msc_build_ge
+    - windows_zig_build_ge
   script:
 # The tests in `$GOBO\library\lexical` are failing in GitLab CI/CD when using `geant test_ge`.
 # So use `geant test_debug_ge` instead.
-    - . "$GOBO/.cicd/test_ge.ps1" gitlab msc debug_ge library
+    - . "$GOBO/.cicd/test_ge.ps1" gitlab zig debug_ge library
   rules:
     - if: $CI_COMMIT_TAG
       when: never
@@ -190,20 +190,20 @@ library_windows_msc_test_ge:
     - if: $GOBO_CUSTOM_PIPELINE == null
       when: on_success
 
-# We have `tool_no_gec_windows_msc_test_ge` and `tool_gec_windows_msc_test_ge`,
-# instead of just `tool_windows_msc_test_ge`, because it takes more than
+# We have `tool_no_gec_windows_zig_test_ge` and `tool_gec_windows_zig_test_ge`,
+# instead of just `tool_windows_zig_test_ge`, because it takes more than
 # 1 hour to run this job and the job timeout on GitLab runners for Windows 
 # is set to 1 hour (even though it is set to 2 hours for the project).
 
-tool_no_gec_windows_msc_test_ge:
+tool_no_gec_windows_zig_test_ge:
   stage: test_ge
   tags:
     - saas-windows-medium-amd64
   dependencies:
-    - windows_msc_build_ge
+    - windows_zig_build_ge
   script:
     - Remove-Item "$GOBO/tool/gec/test" -Force -Recurse
-    - . "$GOBO/.cicd/test_ge.ps1" gitlab msc ge tool
+    - . "$GOBO/.cicd/test_ge.ps1" gitlab zig ge tool
   rules:
     - if: $CI_COMMIT_TAG
       when: never
@@ -212,14 +212,14 @@ tool_no_gec_windows_msc_test_ge:
     - if: $GOBO_CUSTOM_PIPELINE == null
       when: on_success
 
-tool_gec_windows_msc_test_ge:
+tool_gec_windows_zig_test_ge:
   stage: test_ge
   tags:
     - saas-windows-medium-amd64
   dependencies:
-    - windows_msc_build_ge
+    - windows_zig_build_ge
   script:
-    - . "$GOBO/.cicd/test_ge.ps1" gitlab msc ge tool/gec
+    - . "$GOBO/.cicd/test_ge.ps1" gitlab zig ge tool/gec
   rules:
     - if: $CI_COMMIT_TAG
       when: never
@@ -312,66 +312,66 @@ tool_macos_clang_test_ise:
       when: on_success
   timeout: 3 hours
 
-# We have `library_no_xslt_windows_msc_test_ise` and `library_xslt_msc_windows_test_ise`,
-# instead of just `library_windows_msc_test_ise`, because it takes more than
+# We have `library_no_xslt_windows_zig_test_ise` and `library_xslt_zigwindows_test_ise`,
+# instead of just `library_windows_zig_test_ise`, because it takes more than
 # 1 hour to run this job and the job timeout on GitLab runners for Windows 
 # is set to 1 hour (even though it is set to 2 hours for the project).
 
-library_no_xslt_windows_msc_test_ise:
+library_no_xslt_windows_zig_test_ise:
   stage: test_ge
   tags:
     - saas-windows-medium-amd64
   dependencies:
-    - windows_msc_build_ge
+    - windows_zig_build_ge
   script:
     - Remove-Item "$GOBO/library/xslt/test" -Force -Recurse
 # Use ISE Eiffel in finalized mode because it takes more than
 # 1 hour to run this job in workbench mode and the job timeout
 # on GitLab runners for Windows is set to 1 hour (even though
 # it is set to 2 hours for the project).
-    - . "$GOBO/.cicd/test_ge.ps1" gitlab msc ise library
+    - . "$GOBO/.cicd/test_ge.ps1" gitlab zig ise library
   rules:
     - if: $CI_COMMIT_TAG
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == "windows_msc_test_ise"
+    - if: $GOBO_CUSTOM_PIPELINE == "windows_zig_test_ise"
       when: on_success
 
-library_xslt_windows_msc_test_ise:
+library_xslt_windows_zig_test_ise:
   stage: test_ge
   tags:
     - saas-windows-medium-amd64
   dependencies:
-    - windows_msc_build_ge
+    - windows_zig_build_ge
   script:
 # Use ISE Eiffel in finalized mode because it takes more than
 # 1 hour to run this job in workbench mode and the job timeout
 # on GitLab runners for Windows is set to 1 hour (even though
 # it is set to 2 hours for the project).
-    - . "$GOBO/.cicd/test_ge.ps1" gitlab msc ise library/xslt
+    - . "$GOBO/.cicd/test_ge.ps1" gitlab zig ise library/xslt
   rules:
     - if: $CI_COMMIT_TAG
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == "windows_msc_test_ise"
+    - if: $GOBO_CUSTOM_PIPELINE == "windows_zig_test_ise"
       when: on_success
 
-tool_windows_msc_test_ise:
+tool_windows_zig_test_ise:
   stage: test_ge
   tags:
     - saas-windows-medium-amd64
   dependencies:
-    - windows_msc_build_ge
+    - windows_zig_build_ge
   script:
-    - . "$GOBO/.cicd/test_ge.ps1" gitlab msc debug_ise tool
+    - . "$GOBO/.cicd/test_ge.ps1" gitlab zig debug_ise tool
   rules:
     - if: $CI_COMMIT_TAG
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == "windows_msc_test_ise"
+    - if: $GOBO_CUSTOM_PIPELINE == "windows_zig_test_ise"
       when: on_success
 
 #
