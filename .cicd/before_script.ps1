@@ -206,7 +206,7 @@ if ("$GOBO_CI_C_COMPILER" -eq "") {
 								Invoke-Environment("`"$vs2019_setting_script`"")
 							} else {
 								Write-Host "Dir content"
-								dir "C:\Program Files\Microsoft Visual Studio"
+								dir "C:\Program Files (x86)\Microsoft Visual Studio"
 								Write-Error "VisualStudio not found"
 								exit 1
 							}
