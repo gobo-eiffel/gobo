@@ -518,6 +518,9 @@ feature -- Syntax errors
 			create an_error.make (a_filename, p)
 			report_info (an_error)
 			set_has_eiffel_error (True)
+			if attached {KL_STDOUT_FILE} info_file then
+				info_file.put_line ("----")
+			end
 			mutex.unlock
 		end
 

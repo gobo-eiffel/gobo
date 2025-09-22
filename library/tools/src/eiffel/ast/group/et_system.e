@@ -375,7 +375,7 @@ feature -- Compilation options
 	use_boehm_gc: BOOLEAN
 			-- Should the application be compiled with the Boehm GC?
 
-	system_name: detachable STRING
+	system_name: STRING
 			-- Name of system
 
 	executable_name: detachable STRING
@@ -510,6 +510,9 @@ feature -- Compilation options setting
 
 	set_system_name (a_name: like system_name)
 			-- Set `system_name' to `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 		do
 			system_name := a_name
 		ensure
@@ -763,6 +766,8 @@ invariant
 	routine_call_seed_not_negative: routine_call_seed >= 0
 	function_item_seed_not_negative: function_item_seed >= 0
 		-- Compilation options.
+	system_name_not_void: system_name /= Void
+	system_name_not_empty: not system_name.is_empty
 	external_include_pathnames_not_void: external_include_pathnames /= Void
 	no_void_external_include_pathname: not external_include_pathnames.has_void
 	external_object_pathnames_not_void: external_object_pathnames /= Void

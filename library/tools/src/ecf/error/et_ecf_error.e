@@ -1125,7 +1125,7 @@ feature {NONE} -- Initialization
 			system_config := a_system_config
 			position := a_system_element_name.position
 			code := etam_code
-			default_template := default_message_template (etam_default_template)
+			default_template := default_message_template (etnu_default_template)
 			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (code, 1)
 			parameters.put (filename, 2)
