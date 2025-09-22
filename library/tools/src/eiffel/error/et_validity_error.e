@@ -17783,7 +17783,9 @@ feature {NONE} -- Implementation
 			--    $4 = column
 			--    $5 = class name
 			--    $6 = implementation class name
-			-- Omit parantheses when no location is provided.
+			-- Omit parentheses when no location is provided.
+			-- Add the filenames of `current_class' and `class_imp' on
+			-- separate lines.
 		require
 			a_template_not_void: a_template /= Void
 		do
@@ -17795,8 +17797,17 @@ feature {NONE} -- Implementation
 				else
 					Result := "[$1] class $5 ($3,$4): " + a_template
 				end
+				if attached current_class.filename as l_filename then
+					Result := Result + "%N%Tclass $5: " + l_filename
+				end
 			else
 				Result := "[$1] class $5 ($6,$3,$4): " + a_template
+				if attached current_class.filename as l_filename then
+					Result := Result + "%N%Tclass $5: " + l_filename
+				end
+				if attached class_impl.filename as l_filename then
+					Result := Result + "%N%Tclass $6: " + l_filename
+				end
 			end
 		ensure
 			template_not_void: Result /= Void

@@ -403,12 +403,8 @@ feature {NONE} -- Processing
 			dt1 := a_system_processor.benchmark_start_time
 			if attached a_system.executable_name as l_name then
 				l_system_name := l_name
-			elseif attached a_system.system_name as l_name then
-				l_system_name := l_name
-			elseif attached a_system.root_type as l_root_type then
-				l_system_name := l_root_type.base_class.lower_name
 			else
-				l_system_name := "unknown"
+				l_system_name := a_system.system_name
 			end
 			if operating_system.is_windows then
 				l_script_filename := l_system_name + ".bat"
