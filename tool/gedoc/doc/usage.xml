@@ -6,7 +6,7 @@
 		"Using gedoc"
 
 	tool: "Gobo Eiffel Doc"
-	copyright: "Copyright (c) 2017-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
@@ -20,7 +20,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>20 December 2023</date>
+	<date>22 September 2025</date>
 </chapterinfo>
 
 <title>Using gedoc</title>
@@ -64,7 +64,7 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<filename>--format=&lt;pretty_print|html_ise_stylesheet|implicit_converts|explicit_converts|ecf_pretty_print|available_targets&gt;</filename>
+			<filename>--format=&lt;pretty_print|html_ise_stylesheet|descendants|implicit_converts|explicit_converts|ecf_pretty_print|available_targets|executable_name&gt;</filename>
 		</term>
 		<listitem><para>
 			Format for the output. (default: <filename>pretty_print</filename>) The formats currently supported are
@@ -73,13 +73,17 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 			<filename>html_ise_stylesheet</filename> to generate
 			<link linkend="html_ise_stylesheet">HTML documentation using
 			ISE's stylesheet</link>, 
+			<filename>descendants</filename> to get the <link linkend="descendants">descendants</link>
+			of a class or of a set of classes,
 			<filename>implicit_converts</filename> and <filename>explicit_converts</filename>
 			to list <link linkend="implicit_conversions">implicit conversions</link> in the code and make them explicit,
 			<filename>ecf_pretty_print</filename> to use <projectname>gedoc</projectname> as an
 			<link linkend="ecf_pretty_printer">ECF pretty-printer</link> to format or
-			convert ECF files, and
-			<filename>available_targets</filename> to
-			figure out the list of <link linkend="available_targets">available targets</link> in an ECF file.
+			convert ECF files,
+			<filename>available_targets</filename> to figure out the list of
+			<link linkend="available_targets">available targets</link> in an ECF file, and
+			<filename>executable_name</filename> to get the <link linkend="executable_name">name
+			of the executable</link> to be compiled using a given ECF file.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
