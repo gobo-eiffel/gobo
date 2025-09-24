@@ -79,8 +79,6 @@ feature {NONE} -- Eiffel config file parsing
 			else
 				last_system_config := l_last_system_config
 			end
-		ensure then
-			has_error_if_void: last_system_config = Void implies has_error
 		end
 
 feature {NONE} -- Processing

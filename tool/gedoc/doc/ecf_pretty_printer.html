@@ -15,7 +15,7 @@
    <i>gedoc</i> can be used as an ECF pretty-printer. The resulting
    ECF file will be formatted using the same guidelines as used throughout the 
    <i>Gobo Eiffel Project</i>. It can also be used to convert
-   an ECF file to newer versions of ECF.
+   an ECF file to newer versions of ECF, or to genertate a new ECF file.
    
   </p>
   <div>
@@ -68,11 +68,30 @@
    </p>
    
   </div>
+  <div>
+   <h2>Generating an new ECF file</h2>
+   
+   <p>
+    When providing an Eiffel file instead of an ECF file as input, <i>gedoc</i>
+    will generate a new ECF file using the class found in the Eiffel file as root class,
+    and its first creation procedure as root creation procedure. After possible modifications,
+    this new ECF file can then be used to compile this class. In this example:
+    
+    <blockquote>
+     	<font color="#800000"><i><tt>gedoc --format=ecf_pretty_print hello_world.e</tt></i></font>
+     
+    </blockquote>
+    <i>gedoc</i> will generate the ECF file
+    <font color="#800000"><i><tt>hello_world.ecf</tt></i></font>.
+    
+   </p>
+   
+  </div>
   <hr size="1" />
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2018, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>https://</b><a href="https://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>23 October 2018</font></address>
+     <address><font size="2"><b>Copyright © 2018-2025, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>https://</b><a href="https://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>24 September 2025</font></address>
     </td>
     <td align="right" valign="top"><a href="https://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="implicit_conversions.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="available_targets.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

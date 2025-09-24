@@ -6,21 +6,21 @@
 		"ECF Pretty-Printer"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
 <chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/ecf_pretty_printer">
 <chapterinfo>
 	<copyright>
-		<year>2018</year>
+		<year>2018-2025</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>23 October 2018</date>
+	<date>24 September 2025</date>
 </chapterinfo>
 
 <title>ECF Pretty-Printer</title>
@@ -29,7 +29,7 @@
 <projectname>gedoc</projectname> can be used as an ECF pretty-printer. The resulting
 ECF file will be formatted using the same guidelines as used throughout the 
 <projectname>Gobo Eiffel Project</projectname>. It can also be used to convert
-an ECF file to newer versions of ECF.
+an ECF file to newer versions of ECF, or to genertate a new ECF file.
 </para>
 
 <section><title>Pretty-printing an ECF file</title>
@@ -70,4 +70,19 @@ For example some options, settings or capabilities used in your ECF file
 may not be supported in older versions.
 </para>
 </section>
+
+<section><title>Generating an new ECF file</title>
+<para>
+When providing an Eiffel file instead of an ECF file as input, <projectname>gedoc</projectname>
+will generate a new ECF file using the class found in the Eiffel file as root class,
+and its first creation procedure as root creation procedure. After possible modifications,
+this new ECF file can then be used to compile this class. In this example:
+<blockquote>
+	<filename>gedoc --format=ecf_pretty_print hello_world.e</filename>
+</blockquote>
+<projectname>gedoc</projectname> will generate the ECF file
+<filename>hello_world.ecf</filename>.
+</para>
+</section>
+
 </chapter>

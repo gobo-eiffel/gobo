@@ -5,7 +5,7 @@
 		"Interface for file systems"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class KI_FILE_SYSTEM
@@ -871,5 +871,8 @@ feature -- Pathname handling
 
 	eiffel_extension: STRING = ".e"
 			-- Eiffel file extension (with the leading '.')
+
+	ecf_extension: STRING = ".ecf"
+			-- ECF file extension (with the leading '.')
 
 end

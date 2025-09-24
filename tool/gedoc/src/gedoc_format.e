@@ -359,8 +359,6 @@ feature {NONE} -- Eiffel config file parsing
 			else
 				report_cannot_read_error (a_input_filename)
 			end
-		ensure
-			has_error_if_void: last_system = Void implies has_error
 		end
 
 	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM)
@@ -392,8 +390,6 @@ feature {NONE} -- Eiffel config file parsing
 			else
 				last_system := l_last_system
 			end
-		ensure
-			has_error_if_void: last_system = Void implies has_error
 		end
 
 	parse_eiffel_file (a_file: KI_CHARACTER_INPUT_STREAM)
@@ -434,8 +430,6 @@ feature {NONE} -- Eiffel config file parsing
 				end
 			end
 			last_system := l_system
-		ensure
-			has_error_if_void: last_system = Void implies has_error
 		end
 
 feature {NONE} -- Processing

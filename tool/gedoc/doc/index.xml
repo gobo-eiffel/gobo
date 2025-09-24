@@ -81,7 +81,7 @@ This documentation of <projectname>gedoc</projectname> is structured as follows:
 			<link linkend="ecf_pretty_printer">ECF Pretty-Printer</link>
 		</term>
 		<listitem><para>
-			Using <projectname>gedoc</projectname> as an ECF pretty-printer and converter.
+			Using <projectname>gedoc</projectname> as an ECF pretty-printer, generator and converter.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
