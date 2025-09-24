@@ -1,0 +1,75 @@
+﻿<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Executable Name"
+
+	tool: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	license: "MIT License"
+-->
+
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/executable_name">
+<chapterinfo>
+	<copyright>
+		<year>2025</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>22 September 2025</date>
+</chapterinfo>
+
+<title>Eiffel Executable Name</title>
+
+<para>
+<projectname>gedoc</projectname> can be used to figure out the name of the
+executable to be compiled using a given ECF file.
+</para>
+
+<section><title>Name of executable from an ECF file</title>
+<para>
+Here is how to get the name of the executable to be compiled using the ECF file <filename>project.ecf</filename>:
+<programlisting>
+	<filename>gedoc --format=executable_name project.ecf</filename>
+</programlisting>
+This will display to the standard output (console window) the executable
+name, with no path nor file extension. For example <filename>hello_world</filename>
+instead of <filename>path/to/hello_world.exe</filename>. It is also possible to
+select the ECF target when the ECF file describes several Eiffel
+systems:
+<programlisting>
+	<filename>gedoc --format=executable_name --target=foo project.ecf</filename>
+</programlisting>
+The command will exit with a non-zero exit code if it was not possible
+to find the executable name, for example if the ECF file has no target
+or the target specified does not exist.
+</para>
+<para>
+The command-line option <filename>--no-benchmark</filename> can be used
+to avoid displaying benchmark information.
+<programlisting>
+	<filename>gedoc --format=executable_name --no-benchmark project.ecf</filename>
+</programlisting>
+</para>
+</section>
+
+<section><title>Name of executable from an Eiffel file</title>
+<para>
+With the Gobo Eiffel compiler, it is also possible to compile an Eiffel
+file without having to write an ECF file:
+<programlisting>
+	<filename>gec hello_world.e</filename>
+</programlisting>
+In that case, it is also possible to get the name of the executable
+which will be based on the name of the Eiffel class found in this file:
+<programlisting>
+	<filename>gedoc --format=executable_name hello_world.e</filename>
+</programlisting>
+</para>
+</section>
+
+</chapter>

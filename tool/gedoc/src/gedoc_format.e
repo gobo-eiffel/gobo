@@ -359,8 +359,6 @@ feature {NONE} -- Eiffel config file parsing
 			else
 				report_cannot_read_error (a_input_filename)
 			end
-		ensure
-			has_error_if_void: last_system = Void implies has_error
 		end
 
 	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM)
@@ -392,8 +390,6 @@ feature {NONE} -- Eiffel config file parsing
 			else
 				last_system := l_last_system
 			end
-		ensure
-			has_error_if_void: last_system = Void implies has_error
 		end
 
 	parse_eiffel_file (a_file: KI_CHARACTER_INPUT_STREAM)
@@ -434,8 +430,6 @@ feature {NONE} -- Eiffel config file parsing
 				end
 			end
 			last_system := l_system
-		ensure
-			has_error_if_void: last_system = Void implies has_error
 		end
 
 feature {NONE} -- Processing
@@ -758,7 +752,7 @@ feature -- Error handling
 		end
 
 	report_file_already_exists_error (a_filename: STRING)
-			-- Report that `a_filename' already exists an dwill not be overwritten.
+			-- Report that `a_filename' already exists and will not be overwritten.
 		require
 			a_filename_not_void: a_filename /= Void
 		local
@@ -823,6 +817,17 @@ feature -- Error handling
 			l_error: UT_MESSAGE
 		do
 			create l_error.make ("Target '" + a_target_name + "' not found.")
+			report_error (l_error)
+		ensure
+			has_error: has_error
+		end
+
+	report_no_target_found_error
+			-- Report that no target could be found in ECF file.
+		local
+			l_error: UT_MESSAGE
+		do
+			create l_error.make ("No target was found in ECF file.")
 			report_error (l_error)
 		ensure
 			has_error: has_error

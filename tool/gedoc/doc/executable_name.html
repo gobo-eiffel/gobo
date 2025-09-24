@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Eiffel Executable Name</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Eiffel Executable Name</strong></font></td>
+    <td align="right"><a href="available_targets.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="see_also.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   <i>gedoc</i> can be used to figure out the name of the
+   executable to be compiled using a given ECF file.
+   
+  </p>
+  <div>
+   <h2>Name of executable from an ECF file</h2>
+   
+   <p>
+    Here is how to get the name of the executable to be compiled using the ECF file <font color="#800000"><i><tt>project.ecf</tt></i></font>:
+    <pre>
+	<font color="#800000"><i><tt>gedoc --format=executable_name project.ecf</tt></i></font>
+</pre>
+    This will display to the standard output (console window) the executable
+    name, with no path nor file extension. For example <font color="#800000"><i><tt>hello_world</tt></i></font>
+    instead of <font color="#800000"><i><tt>path/to/hello_world.exe</tt></i></font>. It is also possible to
+    select the ECF target when the ECF file describes several Eiffel
+    systems:
+    <pre>
+	<font color="#800000"><i><tt>gedoc --format=executable_name --target=foo project.ecf</tt></i></font>
+</pre>
+    The command will exit with a non-zero exit code if it was not possible
+    to find the executable name, for example if the ECF file has no target
+    or the target specified does not exist.
+    </p>
+   
+   <p>
+    The command-line option <font color="#800000"><i><tt>--no-benchmark</tt></i></font> can be used
+    to avoid displaying benchmark information.
+    <pre>
+	<font color="#800000"><i><tt>gedoc --format=executable_name --no-benchmark project.ecf</tt></i></font>
+</pre>
+    </p>
+   
+  </div>
+  <div>
+   <h2>Name of executable from an Eiffel file</h2>
+   
+   <p>
+    With the Gobo Eiffel compiler, it is also possible to compile an Eiffel
+    file without having to write an ECF file:
+    <pre>
+	<font color="#800000"><i><tt>gec hello_world.e</tt></i></font>
+</pre>
+    In that case, it is also possible to get the name of the executable
+    which will be based on the name of the Eiffel class found in this file:
+    <pre>
+	<font color="#800000"><i><tt>gedoc --format=executable_name hello_world.e</tt></i></font>
+</pre>
+    </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2025, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>https://</b><a href="https://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>22 September 2025</font></address>
+    </td>
+    <td align="right" valign="top"><a href="https://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="available_targets.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="see_also.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>
