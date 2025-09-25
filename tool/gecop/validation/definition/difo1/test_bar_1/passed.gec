@@ -4,3 +4,4 @@ line 15 column 11 in aa.e
 			i := a ¦ 2
 			       ^
 			print ("Failed")
+----
