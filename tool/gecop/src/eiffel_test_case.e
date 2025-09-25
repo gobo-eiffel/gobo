@@ -152,8 +152,8 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5, a_pattern6: STRING
-			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5, a_regexp6: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5, a_pattern6, a_pattern7: STRING
+			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5, a_regexp6, a_regexp7: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 			l_first_line: BOOLEAN
 		do
@@ -188,6 +188,11 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 			a_regexp6.compile (a_pattern6)
 			assert ("cannot compile regexp '" + a_pattern6 + "'", a_regexp6.is_compiled)
 			a_regexp6.optimize
+			a_pattern7 := "(\tclass [a-zA-Z0-9_]+: )([^\\/]*[\\/])*([a-z][a-z0-9_]*\.e)"
+			create a_regexp7.make
+			a_regexp7.compile (a_pattern7)
+			assert ("cannot compile regexp '" + a_pattern7 + "'", a_regexp7.is_compiled)
+			a_regexp7.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -219,6 +224,9 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 						elseif a_regexp4.recognizes (a_line) then
 								-- Skip this line and the previous empty line.
 							l_empty_line := False
+						elseif a_regexp7.recognizes (a_line) then
+								-- Skip this line and the previous empty line.
+							l_empty_line := False
 						else
 							if l_empty_line then
 								out_file.put_new_line
@@ -238,6 +246,7 @@ feature {NONE} -- Test Gobo Eiffel Compiler
 						a_regexp4.wipe_out
 						a_regexp5.wipe_out
 						a_regexp6.wipe_out
+						a_regexp7.wipe_out
 						in_file.read_line
 						l_first_line := False
 					end
@@ -304,8 +313,8 @@ feature {NONE} -- Test gelint
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
 			a_line: STRING
-			a_pattern1, a_pattern2, a_pattern3, a_pattern4: STRING
-			a_regexp1, a_regexp2, a_regexp3, a_regexp4: RX_PCRE_REGULAR_EXPRESSION
+			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5: STRING
+			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5: RX_PCRE_REGULAR_EXPRESSION
 			l_empty_line: BOOLEAN
 			l_first_line: BOOLEAN
 		do
@@ -330,6 +339,11 @@ feature {NONE} -- Test gelint
 			a_regexp4.compile (a_pattern4)
 			assert ("cannot compile regexp '" + a_pattern4 + "'", a_regexp4.is_compiled)
 			a_regexp4.optimize
+			a_pattern5 := "(\tclass [a-zA-Z0-9_]+: )([^\\/]*[\\/])*([a-z][a-z0-9_]*\.e)"
+			create a_regexp5.make
+			a_regexp5.compile (a_pattern5)
+			assert ("cannot compile regexp '" + a_pattern5 + "'", a_regexp5.is_compiled)
+			a_regexp5.optimize
 				-- Copy files.
 			create out_file.make (an_output_filename)
 			out_file.open_append
@@ -355,6 +369,9 @@ feature {NONE} -- Test gelint
 						elseif a_regexp2.recognizes (a_line) then
 								-- Skip this line and the previous empty line.
 							l_empty_line := False
+						elseif a_regexp5.recognizes (a_line) then
+								-- Skip this line and the previous empty line.
+							l_empty_line := False
 						else
 							if l_empty_line then
 								out_file.put_new_line
@@ -372,6 +389,7 @@ feature {NONE} -- Test gelint
 						a_regexp2.wipe_out
 						a_regexp3.wipe_out
 						a_regexp4.wipe_out
+						a_regexp5.wipe_out
 						in_file.read_line
 						l_first_line := False
 					end

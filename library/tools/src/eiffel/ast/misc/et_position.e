@@ -136,7 +136,6 @@ feature -- Output
 						a_string.append_character ('^')
 						a_string.append_character ('%N')
 						append_line_to_string (a_file, a_string)
-						a_string.append_character ('%N')
 					else
 						from
 							i := 1
@@ -170,7 +169,6 @@ feature -- Output
 						end
 						a_string.append_character ('%N')
 						append_line_to_string (a_file, a_string)
-						a_string.append_character ('%N')
 					end
 					a_file.close
 				end
