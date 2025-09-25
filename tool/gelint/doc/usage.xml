@@ -6,21 +6,21 @@
 		"Using gelint"
 
 	tool: "Gobo Eiffel Lint"
-	copyright: "Copyright (c) 2006-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
 <chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gelint/usage">
 <chapterinfo>
 	<copyright>
-		<year>2006-2023</year>
+		<year>2006-2025</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>20 December 2023</date>
+	<date>25 September 2025</date>
 </chapterinfo>
 
 <title>Using gelint</title>
@@ -35,7 +35,20 @@ This will read the description of your Eiffel system in the ECF file
 <filename>ecf_filename</filename>, perform code analysis on the
 corresponding Eiffel classes and report any syntax or validity
 errors. Your Eiffel system can be an Eiffel project or an 
-Eiffel library. Here is the list of options that can be used with 
+Eiffel library.
+</para>
+<para>
+For simple programs, one can just provide the Eiffel file containing
+the root class: 
+<blockquote>
+	<filename>gec eiffel_filename</filename>
+</blockquote>
+This will perform the code analysis on all classes reachable from
+that class, starting from its first creation procedure as root
+creation procedure.
+</para>
+<para>
+Here is the list of options that can be used with 
 <projectname>gelint</projectname>:
 <variablelist>
 	<varlistentry>
