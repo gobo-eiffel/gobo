@@ -1,5 +1,25 @@
 # Release History
 
+## Version 25.10.01 - 1 October 2025
+
+### gec
+
+* Fixed and improved Eiffel error messages so that they can be
+  captured in the *Gobo Eiffel VS Code Extension*.
+
+### gedoc
+
+* Added format `executable_name` to get the name of the executable
+  to be compiled using a given ECF file.
+* Let the `ecf_pretty_print` format generate a new ECF file when
+  provided with an Eiffel file instead of an ECF file as input.
+
+### Miscellaneous
+
+* Released a VS Code extension for the Eiffel language using
+  Gobo Eiffel. See description in [Marketplace](https://marketplace.visualstudio.com/items?itemName=gobosoft.gobo-eiffel)
+  and code in GitHub [repository](https://github.com/gobo-eiffel/gobo-vscode).
+
 ## Version 25.09.02 - 2 September 2025
 
 ### geant
@@ -2283,7 +2303,7 @@
 * First public release.
 * Gold Award at the Eiffel Class Struggle '97.
 
-## Authors
+----
 
 Copyright (c) 1997-2025, Eric Bezault and others<br>
 mailto:[ericb@gobosoft.com](mailto:ericb@gobosoft.com)<br>

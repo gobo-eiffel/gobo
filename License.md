@@ -34,7 +34,7 @@ This license is an
 and a
 [GPL-Compatible Free Software License](http://www.gnu.org/licenses/license-list.html#X11License).
 
-## Authors
+----
 
 Copyright (c) 1997-2025, Eric Bezault and others<br>
 mailto:[ericb@gobosoft.com](mailto:ericb@gobosoft.com)<br>
