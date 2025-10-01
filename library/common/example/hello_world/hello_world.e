@@ -1,4 +1,4 @@
-class HELLO_WORLD
+﻿class HELLO_WORLD
 
 create
 
@@ -8,7 +8,7 @@ feature
 
 	make
 		do
-			print ("Hello world!")
+			print ("Hello world!%N")
 		end
 
 end
