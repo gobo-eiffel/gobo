@@ -18,7 +18,7 @@ In order to see what is new in this release, please read the [Release History](.
     geant install
   ```
 
-## Authors
+----
 
 Copyright (c) 1997-2025, Eric Bezault and others<br>
 mailto:[ericb@gobosoft.com](mailto:ericb@gobosoft.com)<br>
