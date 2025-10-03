@@ -1,4 +1,4 @@
-# For available runners, see https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories
+# For available runners, see https://docs.github.com/en/enterprise-cloud@latest/actions/reference/runners/github-hosted-runners#standard-github-hosted-runners-for-public-repositories
 
 name: "Nightly Build"
 
@@ -45,7 +45,7 @@ jobs:
 
   macos_x86_64_build:
     if: ${{ github.repository == 'gobo-eiffel/gobo' }}
-    runs-on: macos-13
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
       - name: build
@@ -152,7 +152,7 @@ jobs:
         shell: pwsh
 
   macos_x86_64_test:
-    runs-on: macos-13
+    runs-on: macos-15-intel
     needs: macos_x86_64_build
     strategy:
       fail-fast: false
