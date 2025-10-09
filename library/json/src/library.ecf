@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd"
+	name="json"
+	uuid="E1FFE100-60B0-0021-0001-000000000001"
+	library_target="json"
+>
+	<description>
+		description: "ECF file for the Gobo Eiffel JSON Library"
+		library: "Gobo Eiffel JSON Library"
+		copyright: "Copyright (c) 2025, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+	<target name="json">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<variable name="GOBO_LIBRARY" value="../../.."/>
+		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
+		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
+		<library name="lexical_skl" location="${GOBO_LIBRARY}/library/lexical/library_skl.ecf" readonly="true"/>
+		<library name="parse_skl" location="${GOBO_LIBRARY}/library/parse/library_skl.ecf" readonly="true"/>
+		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
+		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
+		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
+		<cluster name="json" location="./" recursive="true"/>
+	</target>
+</system>

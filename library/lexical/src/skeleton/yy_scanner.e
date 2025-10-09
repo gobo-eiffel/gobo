@@ -92,7 +92,7 @@ feature -- Initialization
 				l_input_buffer := new_file_buffer (a_file)
 			end
 			set_input_buffer (l_input_buffer)
- 		end
+		end
 
 	reset_with_string (a_string: STRING_8)
 			-- Reset scanner before scanning next input source.
@@ -115,7 +115,7 @@ feature -- Initialization
 			set_input_buffer (l_input_buffer)
 		end
 
- 	reset_start_condition
+	reset_start_condition
 			-- Clear pushed start conditions and set `start_condition'
 			-- to the "INITIAL" start condition.
 		deferred
