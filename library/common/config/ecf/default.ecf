@@ -14,6 +14,7 @@
 		<setting name="console_application" value="true"/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
 		<library name="argument" location="${GOBO_LIBRARY}/library/argument/library.ecf" readonly="true"/>
+		<library name="json" location="${GOBO_LIBRARY}/library/json/library.ecf" readonly="true"/>
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
 		<library name="lexical" location="${GOBO_LIBRARY}/library/lexical/library.ecf" readonly="true"/>
 		<library name="math" location="${GOBO_LIBRARY}/library/math/library.ecf" readonly="true"/>
@@ -28,5 +29,6 @@
 		<library name="xslt" location="${GOBO_LIBRARY}/library/xslt/library.ecf" readonly="true"/>
 		<library name="tools" location="${GOBO_LIBRARY}/library/tools/library.ecf" readonly="true"/>
 		<library name="test" location="${GOBO_LIBRARY}/library/test/library.ecf" readonly="true"/>
+		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
 	</target>
 </system>

@@ -1,0 +1,53 @@
+﻿<?xml version="1.0"?>
+
+<project name="json_source" default="help">
+
+	<description>
+		description: "Eiffel Ant file for the Gobo Eiffel JSON Library"
+		library: "Gobo Eiffel JSON Library"
+		copyright: "Copyright (c) 2025, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/basic.eant">
+			<redefine target="install"/>
+			<redefine target="clobber"/>
+		</parent>
+		<parent location="${GOBO}/library/common/config/ecf.eant"/>
+	</inherit>
+	
+	<target name="install" depend="init">
+		<description>
+			Install the Gobo Eiffel JSON Library.
+			Generate scanner and parser files.
+			Regenerate ECF files.
+		</description>
+
+		<geant target="update_all_ecf"/>
+		<geant target="json_scanner"/>
+		<geant target="json_parser"/>
+	</target>
+
+	<target name="clobber" depend="init">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant target="clean"/>
+		<delete file="eiffel/parser/jn_json_scanner.e"/>
+		<delete file="eiffel/parser/jn_json_parser.e"/>
+		<delete file="eiffel/parser/jn_json_tokens.e"/>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="json_scanner" dir="parser" export="NONE">
+		<gelex input="jn_json_scanner.l"/>
+	</target>
+
+	<target name="json_parser" dir="parser" export="NONE">
+		<geyacc input="jn_json_parser.y" tokens="JN_JSON_TOKENS" output="jn_json_parser.e" separate_actions="true"/>
+	</target>
+
+</project>
