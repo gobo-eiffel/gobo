@@ -1,0 +1,53 @@
+﻿<?xml version="1.0"?>
+
+<project name="langserver_source" default="help">
+
+	<description>
+		description: "Eiffel Ant file for the Gobo Eiffel Language Server Protocol Library"
+		library: "Gobo Eiffel Language Server Protocol Library"
+		copyright: "Copyright (c) 2025, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/basic.eant">
+			<redefine target="install"/>
+			<redefine target="clobber"/>
+		</parent>
+		<parent location="${GOBO}/library/common/config/ecf.eant"/>
+	</inherit>
+	
+	<target name="install" depend="init">
+		<description>
+			Install the Gobo Eiffel Language Server Protocol Library.
+			Generate scanner and parser files.
+			Regenerate ECF files.
+		</description>
+
+		<geant target="update_all_ecf"/>
+		<geant target="message_scanner"/>
+		<geant target="message_parser"/>
+	</target>
+
+	<target name="clobber" depend="init">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant target="clean"/>
+		<delete file="eiffel/parser/ls_message_scanner.e"/>
+		<delete file="eiffel/parser/ls_message_parser.e"/>
+		<delete file="eiffel/parser/ls_message_tokens.e"/>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="message_scanner" dir="parser" export="NONE">
+		<gelex input="ls_message_scanner.l"/>
+	</target>
+
+	<target name="message_parser" dir="parser" export="NONE">
+		<geyacc input="ls_message_parser.y" tokens="LS_MESSAGE_TOKENS" output="ls_message_parser.e" separate_actions="true"/>
+	</target>
+
+</project>

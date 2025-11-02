@@ -31,9 +31,10 @@
 		<library name="common_test_common" location="${GOBO_LIBRARY}/library/common/test/common/library.ecf" readonly="false"/>
 		<library name="common_test_example" location="${GOBO_LIBRARY}/library/common/test/example/system.ecf" readonly="false"/>
 		<library name="common_test_integration" location="${GOBO_LIBRARY}/library/common/test/integration/system.ecf" readonly="false"/>
-		<library name="json" location="${GOBO_LIBRARY}/library/json/library.ecf" readonly="false"/>
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="false"/>
 		<library name="kernel_test_unit" location="${GOBO_LIBRARY}/library/kernel/test/unit/system.ecf" readonly="false"/>
+		<library name="langserver" location="${GOBO_LIBRARY}/library/langserver/library.ecf" readonly="false"/>
+		<library name="langserver_example_scoop" location="${GOBO_LIBRARY}/library/langserver/example/scoop/system.ecf" readonly="false"/>
 		<library name="lexical" location="${GOBO_LIBRARY}/library/lexical/library.ecf" readonly="false"/>
 		<library name="lexical_skl" location="${GOBO_LIBRARY}/library/lexical/library_skl.ecf" readonly="false"/>
 		<library name="lexical_example_ascii2ps" location="${GOBO_LIBRARY}/library/lexical/example/ascii2ps/system.ecf" readonly="false"/>
@@ -137,6 +138,8 @@
 		<library name="gelex_test_tool" location="${GOBO_LIBRARY}/tool/gelex/test/tool/system.ecf" readonly="false"/>
 		<library name="gelint" location="${GOBO_LIBRARY}/tool/gelint/src/system.ecf" readonly="false"/>
 		<library name="gelint_test_tool" location="${GOBO_LIBRARY}/tool/gelint/test/tool/system.ecf" readonly="false"/>
+		<library name="gelsp" location="${GOBO_LIBRARY}/tool/gelsp/src/system.ecf" readonly="false"/>
+		<library name="gelsp_test_tool" location="${GOBO_LIBRARY}/tool/gelsp/test/tool/system.ecf" readonly="false"/>
 		<library name="gepp" location="${GOBO_LIBRARY}/tool/gepp/src/system.ecf" readonly="false"/>
 		<library name="gepp_test_tool" location="${GOBO_LIBRARY}/tool/gepp/test/tool/system.ecf" readonly="false"/>
 		<library name="getest" location="${GOBO_LIBRARY}/tool/getest/src/system.ecf" readonly="false"/>

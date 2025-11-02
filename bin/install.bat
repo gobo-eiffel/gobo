@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Install Gobo Eiffel tools"
-rem copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
+rem copyright: "Copyright (c) 2007-2025, Eric Bezault and others"
 rem license: "MIT License"
 
 
@@ -116,6 +116,8 @@ goto no_verbose_no_testonly
 	if not .%VERBOSE%. == .-s. echo Compiling gecop...
 	"%BIN_DIR%\gec%EXE%" --finalize "%GOBO%\tool\gecop\src\system.ecf"
 	if .%TEST_ONLY%. == .-t. goto clean
+	if not .%VERBOSE%. == .-s. echo Compiling gelsp...
+	"%BIN_DIR%\gec%EXE%" --finalize "%GOBO%\tool\gelsp\src\system.ecf"
 	if not .%VERBOSE%. == .-s. echo Compiling geimage...
 	"%BIN_DIR%\gec%EXE%" --finalize "%GOBO%\tool\geimage\src\system.ecf"
 	if not .%VERBOSE%. == .-s. echo Compiling gelex...
@@ -141,6 +143,7 @@ goto no_verbose_no_testonly
 	geant%EXE% %VERBOSE% --buildfilename="%GOBO%\tool\gedoc\src\build.eant" clean
 	geant%EXE% %VERBOSE% --buildfilename="%GOBO%\tool\gecop\src\build.eant" clean
 	if .%TEST_ONLY%. == .-t. goto exit
+	geant%EXE% %VERBOSE% --buildfilename="%GOBO%\tool\gelsp\src\build.eant" clean
 	geant%EXE% %VERBOSE% --buildfilename="%GOBO%\tool\geimage\src\build.eant" clean
 	geant%EXE% %VERBOSE% --buildfilename="%GOBO%\tool\gelex\src\build.eant" clean
 	geant%EXE% %VERBOSE% --buildfilename="%GOBO%\tool\geyacc\src\build.eant" clean

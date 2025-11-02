@@ -5,7 +5,7 @@
 		"Structured URI (Universal Resource Identifier)"
 
 	standards: "RFC 3986 (obsoleting RFC 2396)"
-	library: "Gobo Eiffel XML Library"
+	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2004-2018, Berend de Boer and others"
 	license: "MIT License"
 

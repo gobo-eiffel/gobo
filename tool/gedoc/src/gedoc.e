@@ -271,7 +271,7 @@ feature -- Argument parsing
 			create l_list.make (version_flag)
 			l_parser.alternative_options_lists.force_first (l_list)
 				-- Parsing.
-			l_parser.parse_arguments
+			l_parser.parse_array (a_args)
 			if silent_flag.was_found then
 				create {ET_NULL_ERROR_HANDLER} error_handler.make_null
 			end

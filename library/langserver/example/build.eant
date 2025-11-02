@@ -1,0 +1,15 @@
+﻿<?xml version="1.0"?>
+
+<project name="langserver_example" default="help">
+
+	<description>
+		description: "Eiffel Ant file for Gobo Eiffel Language Server Protocol Library examples"
+		copyright: "Copyright (c) 2025, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/basic_all.eant"/>
+	</inherit>
+
+</project>
