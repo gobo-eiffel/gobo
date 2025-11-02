@@ -55,12 +55,12 @@ feature {NONE} -- Initialization
 			beginning_of_line: beginning_of_line
 		end
 
-	make_from_utf8_string (a_string: STRING_8)
+	make_from_utf8_string (a_string: separate STRING_8)
 			-- Create a new buffer with characters from `a_string'.
 			-- Do not alter `a_string' during the scanning process.
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: a_string.same_type ({STRING_8} "")
+			a_string_is_string_8: {ISE_RUNTIME}.dynamic_type (a_string) = {ISE_RUNTIME}.dynamic_type ({STRING_8} "")
 		local
 			nb: INTEGER
 			l_buffer: like content
@@ -112,7 +112,7 @@ feature -- Setting
 			beginning_of_line: beginning_of_line
 		end
 
-	set_utf8_string (a_string: STRING_8)
+	set_utf8_string (a_string: separate STRING_8)
 			-- Reset buffer with characters from `a_string'.
 			-- `a_string' is expected to be encoded with UTF-8.
 			-- Replace invalid UTF-8 sequence by `content.invalid_unicode_charater'.
@@ -120,7 +120,7 @@ feature -- Setting
 			-- Do not alter `a_string' during the scanning process.
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: a_string.same_type ({STRING_8} "")
+			a_string_is_string_8: {ISE_RUNTIME}.dynamic_type (a_string) = {ISE_RUNTIME}.dynamic_type ({STRING_8} "")
 		local
 			nb: INTEGER
 			l_buffer: like content

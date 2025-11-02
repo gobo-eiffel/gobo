@@ -209,7 +209,7 @@ feature -- Argument parsing
 			create l_list.make (version_flag)
 			l_parser.alternative_options_lists.force_last (l_list)
 				-- Parsing.
-			l_parser.parse_arguments
+			l_parser.parse_array (a_args)
 			if version_flag.was_found then
 				report_version_number
 				image_filename := ""

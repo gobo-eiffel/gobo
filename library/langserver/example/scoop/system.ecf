@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd"
+	name="langserver"
+	uuid="E1FFE100-60B0-0021-2001-000000000001"
+	library_target="all_classes"
+>
+	<description>
+		system: "langserver example using SCOOP"
+		copyright: "Copyright (c) 2025, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+	<target name="all_classes">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<variable name="GOBO_LIBRARY" value="../../../.."/>
+		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
+		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
+		<library name="langserver" location="${GOBO_LIBRARY}/library/langserver/library.ecf" readonly="true"/>
+		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
+		<cluster name="langserver" location="./" recursive="true"/>
+	</target>
+	<target name="langserver" extends="all_classes">
+		<root class="LANGSERVER" feature="execute"/>
+		<setting name="console_application" value="true"/>
+		<capability>
+			<concurrency use="scoop"/>
+		</capability>
+	</target>
+</system>

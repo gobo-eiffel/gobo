@@ -235,7 +235,7 @@ feature -- Endian-ness detection
 feature -- Surrogate
 
 	is_surrogate (a_most: INTEGER): BOOLEAN
-			-- Is this a high surrogate byte?
+			-- Is this a surrogate byte?
 		require
 			byte: is_byte (a_most)
 		do

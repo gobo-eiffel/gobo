@@ -1,0 +1,15 @@
+﻿<?xml version="1.0"?>
+
+<project name="langserver" default="help">
+
+	<description>
+		description: "Gobo Eiffel Language Server Protocol Library"
+		copyright: "Copyright (c) 2025, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/library.eant"/>
+	</inherit>
+
+</project>

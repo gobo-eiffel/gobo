@@ -50,7 +50,11 @@ feature {NONE} -- Initialization
 			a_string_not_void: a_string /= Void
 			valid_unicode: across 1 |..| a_string.count as l_index all {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (a_string.code (l_index.item)) end
 		do
-			make_from_utf8 ({UC_UTF8_ROUTINES}.string_to_utf8 (a_string))
+			if a_string.same_type (once {STRING_8} "") and then {UC_UTF8_ROUTINES}.string_byte_count (a_string) = a_string.count then
+				make_from_utf8 (a_string)
+			else
+				make_from_utf8 ({UC_UTF8_ROUTINES}.string_to_utf8 (a_string))
+			end
 		end
 
 	make_from_escaped (a_value: STRING_8)

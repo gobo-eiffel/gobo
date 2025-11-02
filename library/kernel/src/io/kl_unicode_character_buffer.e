@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			charaters_set: to_unicode_text.same_string_general (a_string)
 		end
 
-	make_from_utf8_string (a_string: STRING_8)
+	make_from_utf8_string (a_string: separate STRING_8)
 			-- Create a new character buffer with
 			-- characters encoded in `a_string'.
 			-- `a_string' is expected to be encoded with UTF-8.
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 			-- may not share internal representation.)
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: a_string.same_type ({STRING_8} "")
+			a_string_is_string_8: {ISE_RUNTIME}.dynamic_type (a_string) = {ISE_RUNTIME}.dynamic_type ({STRING_8} "")
 		local
 			nb: INTEGER
 		do
@@ -334,7 +334,7 @@ feature -- Element change
 			end
 		end
 
-	fill_from_utf8_string (a_string: STRING_8; pos: INTEGER): INTEGER
+	fill_from_utf8_string (a_string: separate STRING_8; pos: INTEGER): INTEGER
 			-- Copy characters encoded in `a_string' to buffer
 			-- starting at position `pos'.
 			-- `a_string' is expected to be encoded with UTF-8.
@@ -342,7 +342,7 @@ feature -- Element change
 			-- Return the number of items actually copied.
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string: a_string.same_type ({STRING_8} "")
+			a_string_is_string_8: {ISE_RUNTIME}.dynamic_type (a_string) = {ISE_RUNTIME}.dynamic_type ({STRING_8} "")
 			pos_large_enough: pos >= 1
 				-- The precondition below assumes the worse case
 				-- where all UTF-8 encoded characters are ASCII.
@@ -351,12 +351,10 @@ feature -- Element change
 			i, nb: INTEGER
 			j: INTEGER
 			l_byte1, l_byte2, l_byte3, l_byte4: CHARACTER_8
-			l_area: SPECIAL [CHARACTER_8]
 		do
 			nb := a_string.count
-			if nb > 0 then
+			if nb > 0 and then attached a_string.area as l_area then
 				j := pos + 1
-				l_area := a_string.area
 				nb := nb - 1
 				from i := 0 until i > nb loop
 					l_byte1 := l_area.item (i)

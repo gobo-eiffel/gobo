@@ -1,9 +1,9 @@
 ﻿note
 
 	description:
-
-		"Routines to encode and decode url encoded (%HH in hex) strings"
-
+	"[
+		Routines to encode and decode url encoded (%HH in hex) strings
+	]"
 	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2004-2022, Berend de Boer and others"
 	license: "MIT License"

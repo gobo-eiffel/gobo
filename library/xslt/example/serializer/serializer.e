@@ -61,7 +61,7 @@ feature -- Access
 			-- XSLT serialization options
 
 	emitter_factory: XM_XSLT_EMITTER_FACTORY
-			-- Factory for creating emitter/reciever chains
+			-- Factory for creating emitter/receiver chains
 
 feature {NONE} -- Basic operations
 

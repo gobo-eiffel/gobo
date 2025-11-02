@@ -123,7 +123,7 @@ feature -- Setting
 			filled := False
 		end
 
-	set_utf8_string (a_string: STRING_8)
+	set_utf8_string (a_string: separate STRING_8)
 			-- Reset buffer with characters from `a_string'.
 			-- `a_string' is expected to be encoded with UTF-8.
 			-- Replace invalid UTF-8 sequence by `content.invalid_unicode_charater'.
