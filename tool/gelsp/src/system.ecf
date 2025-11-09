@@ -24,7 +24,10 @@
 		<library name="argument" location="${GOBO_LIBRARY}/library/argument/library.ecf" readonly="true"/>
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
 		<library name="langserver" location="${GOBO_LIBRARY}/library/langserver/library.ecf" readonly="true"/>
+		<library name="regexp" location="${GOBO_LIBRARY}/library/regexp/library.ecf" readonly="true"/>
+		<library name="string" location="${GOBO_LIBRARY}/library/string/library.ecf" readonly="true"/>
 		<library name="structure" location="${GOBO_LIBRARY}/library/structure/library.ecf" readonly="true"/>
+		<library name="time" location="${GOBO_LIBRARY}/library/time/library.ecf" readonly="true"/>
 		<library name="tools" location="${GOBO_LIBRARY}/library/tools/library.ecf" readonly="true"/>
 		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
 		<cluster name="gelsp" location="./"/>

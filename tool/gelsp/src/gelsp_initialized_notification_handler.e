@@ -14,7 +14,8 @@ inherit
 
 	LS_SERVER_INITIALIZED_NOTIFICATION_HANDLER
 		redefine
-			handle
+			handle,
+			message_manager
 		end
 
 create
@@ -25,16 +26,16 @@ feature -- Basic operations
 
 	handle (a_notification: like notification; a_manager: like message_manager)
 			-- Handle `a_notification`.
-		local
-			l_registrations: LS_REGISTRATION_LIST
-			l_registration: LS_REGISTRATION
-			l_options: LS_HOVER_REGISTRATION_OPTIONS
 		do
-			create l_options.make ({LS_NULL}.null, False)
-			create l_registration.make ("xxx", "textDocument/hover", l_options)
-			create l_registrations.make_with_capacity (1)
-			l_registrations.put_last (l_registration)
-			a_manager.send_register_capability_request (l_registrations)
+			a_manager.on_initialized_notification (a_notification)
+		end
+
+feature {NONE} -- Implementation
+
+	message_manager: GELSP
+			-- Type of the surrounding message manager
+		do
+			check False then end
 		end
 
 end
