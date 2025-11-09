@@ -625,7 +625,7 @@ feature -- Export status
 	add_creation_clients_to (a_clients: ET_CLIENT_LIST; a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- If current feature is listed in the creation clauses
 			-- of `a_class', then add its creation clients to `a_clients'.
-			-- If current feature the version of 'default_create' in `a_class'
+			-- If current feature is the version of 'default_create' in `a_class'
 			-- with `a_class' being a non-deferred class with no creation clauses,
 			-- then add "ANY" to `a_clients'.
 			-- (Note: Use `a_system_processor.feature_flattener' on `a_class' if needed
