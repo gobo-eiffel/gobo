@@ -88,6 +88,7 @@ inherit
 			process_explicit_convert_to_expression,
 			process_export_list,
 			process_extended_attribute,
+			process_extended_feature_name,
 			process_external_function,
 			process_external_function_inline_agent,
 			process_external_procedure,
@@ -2603,8 +2604,6 @@ feature {ET_AST_NODE} -- Processing
 
 	process_extended_feature_name (a_extended_feature_name: ET_EXTENDED_FEATURE_NAME)
 			-- Process `a_extended_feature_name'.
-		require
-			a_extended_feature_name_not_void: a_extended_feature_name /= Void
 		local
 			l_feature_name: ET_FEATURE_NAME
 		do
@@ -2617,27 +2616,6 @@ feature {ET_AST_NODE} -- Processing
 			end
 			comment_finder.add_excluded_node (l_feature_name)
 			comment_finder.find_comments (a_extended_feature_name, comment_list)
-			comment_finder.reset_excluded_nodes
-		end
-
-	process_extended_feature_name_of_feature (a_feature: ET_FEATURE)
-			-- Process extended feature name of `a_feature'.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
-			l_feature_name: ET_FEATURE_NAME
-		do
-			l_extended_feature_name := a_feature.extended_name
-			l_feature_name := l_extended_feature_name.feature_name
-			l_feature_name.process (Current)
-			if attached l_extended_feature_name.alias_names as l_alias_names and then not l_alias_names.is_empty then
-				print_space
-				l_alias_names.process (Current)
-				comment_finder.add_excluded_node (l_alias_names)
-			end
-			comment_finder.add_excluded_node (l_feature_name)
-			comment_finder.find_comments (l_extended_feature_name, comment_list)
 			comment_finder.reset_excluded_nodes
 		end
 
