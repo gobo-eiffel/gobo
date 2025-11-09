@@ -166,7 +166,7 @@ feature -- Output
 		do
 			a_string.append_string (like_space)
 			a_string.append_character ('{')
-			target_type.append_canonical_actual_parameter_to_string (a_string)
+			target_type.append_canonical_with_leading_type_mark_to_string (a_string)
 			a_string.append_character ('}')
 			a_string.append_character ('.')
 			a_string.append_string (name.lower_name)

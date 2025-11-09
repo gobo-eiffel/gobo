@@ -34,7 +34,7 @@ inherit
 			resolved_formal_parameters_with_type_mark,
 			type_with_type_mark,
 			is_valid_context_type,
-			append_canonical_actual_parameter_to_string
+			append_canonical_with_leading_type_mark_to_string
 		end
 
 	ET_TYPE_CONTEXT
@@ -773,7 +773,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Type context
 
 feature -- Output
 
-	append_canonical_actual_parameter_to_string (a_string: STRING)
+	append_canonical_with_leading_type_mark_to_string (a_string: STRING)
 			-- Append textual representation of canonical version of current
 			-- actual generic parameter to `a_string'.
 			-- A canonical version is an unaliased version, that is when

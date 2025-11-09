@@ -16,7 +16,7 @@ inherit
 
 	ET_ACTUAL_PARAMETER
 		rename
-			append_canonical_to_string as append_canonical_actual_parameter_to_string
+			append_canonical_to_string as append_canonical_with_leading_type_mark_to_string
 		undefine
 			resolved_syntactical_constraint_with_type
 		end
