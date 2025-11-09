@@ -5,7 +5,7 @@
 		"Eiffel comma-separated lists of clients"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CLIENT_LIST
@@ -73,6 +73,24 @@ feature -- Status report
 				else
 					Result := False
 					i := nb + 1 -- Jump out of the loop.
+				end
+			end
+		end
+
+	is_any: BOOLEAN
+			-- Does current client list contain the class name "ANY"?
+		local
+			i, nb: INTEGER
+			l_class: ET_CLASS
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				l_class := storage.item (i).base_class
+				if l_class.is_any_class then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
 				end
 			end
 		end
