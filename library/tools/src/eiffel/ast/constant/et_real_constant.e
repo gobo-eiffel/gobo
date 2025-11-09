@@ -5,7 +5,7 @@
 		"Eiffel real constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_REAL_CONSTANT
@@ -16,16 +16,16 @@ inherit
 		rename
 			make as make_leaf,
 			make_with_position as make_leaf_with_position
-		undefine
-			first_position
 		redefine
 			position,
+			first_position,
 			first_leaf
 		end
 
 	ET_CONSTANT
 		undefine
 			last_position,
+			first_position,
 			break
 		redefine
 			reset,
@@ -36,6 +36,7 @@ inherit
 	ET_NOTE_TERM
 		undefine
 			last_position,
+			first_position,
 			break
 		end
 
@@ -86,6 +87,20 @@ feature -- Access
 				Result := l_sign.position
 			else
 				Result := Current
+			end
+		end
+
+	first_position: ET_POSITION
+			-- Position of first character of current node in source code;
+			-- Null position if current node is empty or the position had not been set
+		local
+			l_first_leaf: ET_AST_LEAF
+		do
+			l_first_leaf := first_leaf
+			if l_first_leaf = Current then
+				Result := Current
+			else
+				Result := l_first_leaf.first_position
 			end
 		end
 
