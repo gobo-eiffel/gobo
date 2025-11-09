@@ -31,6 +31,9 @@ feature -- Access
 	connection: separate LS_SERVER_CONNECTION
 			-- Connection to receive and send messages
 
+	workspace_folders: detachable LS_OPTIONAL_WORKSPACE_FOLDER_LIST
+			-- Workspace folders configured in the client
+
 feature -- Basic operations
 
 	send_register_capability_request (a_registrations: LS_REGISTRATION_LIST)
@@ -123,6 +126,16 @@ feature {LS_MESSAGE, LS_MESSAGE_FACTORY, LS_INITIALIZE_REQUEST_HANDLER} -- Handl
 			-- Handler for 'shutdown' requests
 		once ("OBJECT")
 			create Result.make
+		end
+
+feature {LS_SERVER_INITIALIZE_REQUEST_HANDLER} -- Setting
+
+	set_workspace_folders (a_workspace_folders: like workspace_folders)
+			-- Set `workspace_folders` to `a_workspace_folders`.
+		do
+			workspace_folders := a_workspace_folders
+		ensure
+			workspace_folders_set: workspace_folders = a_workspace_folders
 		end
 
 end

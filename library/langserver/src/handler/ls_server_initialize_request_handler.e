@@ -31,10 +31,30 @@ feature -- Basic operations
 			l_response: LS_RESPONSE
 			l_result: LS_INITIALIZE_RESULT
 			l_capabilities: LS_SERVER_CAPABILITIES
+			l_workspace_folders: detachable LS_OPTIONAL_WORKSPACE_FOLDER_LIST
+			l_workspace_folder: LS_WORKSPACE_FOLDER
+			l_workspace_folder_list: LS_WORKSPACE_FOLDER_LIST
+			l_uri: LS_STRING
 		do
 			if attached a_request.trace as l_trace then
 				a_manager.set_trace_notification_handler.set_trace_value (l_trace)
 			end
+			l_workspace_folders := a_request.workspace_folders
+			if not attached {LS_WORKSPACE_FOLDER_LIST} l_workspace_folders as l_list or else l_list.count = 0 then
+				if attached {LS_DOCUMENT_URI} a_request.root_uri as l_root_uri then
+					create l_workspace_folder.make (l_root_uri, "workspace1")
+					create l_workspace_folder_list.make_with_capacity (1)
+					l_workspace_folder_list.put_last (l_workspace_folder)
+					l_workspace_folders := l_workspace_folder_list
+				elseif attached {LS_STRING} a_request.root_path as l_root_path then
+					l_uri := {UT_FILE_URI_ROUTINES}.filename_to_uri (l_root_path.utf8_value).full_reference
+					create l_workspace_folder.make (l_uri, "workspace1")
+					create l_workspace_folder_list.make_with_capacity (1)
+					l_workspace_folder_list.put_last (l_workspace_folder)
+					l_workspace_folders := l_workspace_folder_list
+				end
+			end
+			a_manager.set_workspace_folders (l_workspace_folders)
 			if attached a_request.capabilities.text_document as l_text_document_capabilities then
 				a_manager.hover_request_handler.set_client_capabilities (l_text_document_capabilities.hover)
 			end
