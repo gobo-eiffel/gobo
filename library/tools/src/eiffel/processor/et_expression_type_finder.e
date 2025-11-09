@@ -5,7 +5,7 @@
 		"Eiffel expression type finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_EXPRESSION_TYPE_FINDER
@@ -97,9 +97,9 @@ feature {NONE} -- Initialization
 			precursor (a_system_processor)
 			create type_checker.make (a_system_processor)
 			current_type := current_class
-			current_feature := dummy_feature
-			current_feature_impl := dummy_feature.implementation_feature
-			current_class_impl := current_feature_impl.implementation_class
+			current_closure := dummy_feature
+			current_closure_impl := dummy_feature.implementation_feature
+			current_class_impl := dummy_feature.implementation_feature.implementation_class
 				-- Type contexts.
 			create unused_contexts.make (20)
 			current_context := new_context (current_type)
@@ -133,38 +133,8 @@ feature -- Basic operations
 			a_current_class_preparsed: a_context.root_context.base_class.is_preparsed
 			a_target_type_not_void: a_target_type /= Void
 			valid_target_context: a_target_type.is_valid_context
-		local
-			old_feature: ET_STANDALONE_CLOSURE
-			old_feature_impl: ET_STANDALONE_CLOSURE
-			old_class: ET_CLASS
-			old_class_impl: ET_CLASS
-			old_type: ET_BASE_TYPE
-			old_target_type: ET_TYPE_CONTEXT
-			old_context: ET_NESTED_TYPE_CONTEXT
 		do
-			reset_fatal_error (False)
-			old_feature_impl := current_feature_impl
-			current_feature_impl := a_feature.implementation_feature
-			old_feature := current_feature
-			current_feature := a_feature
-			old_type := current_type
-			current_type := a_context.root_context
-			old_class := current_class
-			current_class := current_type.base_class
-			old_class_impl := current_class_impl
-			current_class_impl := a_feature.implementation_class
-			old_context := current_context
-			current_context := a_context
-			old_target_type := current_target_type
-			current_target_type := a_target_type
-			a_expression.process (Current)
-			current_target_type := old_target_type
-			current_context := old_context
-			current_class := old_class
-			current_type := old_type
-			current_class_impl := old_class_impl
-			current_feature := old_feature
-			current_feature_impl := old_feature_impl
+			find_expression_type_in_closure (a_expression, a_feature, a_feature, a_feature.implementation_class, a_context, a_target_type)
 		end
 
 	find_expression_type_in_agent (a_expression: ET_EXPRESSION; a_agent: ET_INLINE_AGENT; a_feature: ET_STANDALONE_CLOSURE; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT)
@@ -187,40 +157,8 @@ feature -- Basic operations
 			a_current_class_preparsed: a_context.root_context.base_class.is_preparsed
 			a_target_type_not_void: a_target_type /= Void
 			valid_target_context: a_target_type.is_valid_context
-		local
-			old_feature: ET_STANDALONE_CLOSURE
-			old_feature_impl: ET_STANDALONE_CLOSURE
-			old_class: ET_CLASS
-			old_class_impl: ET_CLASS
-			old_type: ET_BASE_TYPE
-			old_target_type: ET_TYPE_CONTEXT
-			old_context: ET_NESTED_TYPE_CONTEXT
 		do
-			reset_fatal_error (False)
-			current_inline_agent := a_agent
-			old_feature_impl := current_feature_impl
-			current_feature_impl := a_feature.implementation_feature
-			old_feature := current_feature
-			current_feature := a_feature
-			old_type := current_type
-			current_type := a_context.root_context
-			old_class := current_class
-			current_class := current_type.base_class
-			old_class_impl := current_class_impl
-			current_class_impl := a_feature.implementation_class
-			old_context := current_context
-			current_context := a_context
-			old_target_type := current_target_type
-			current_target_type := a_target_type
-			a_expression.process (Current)
-			current_target_type := old_target_type
-			current_context := old_context
-			current_class := old_class
-			current_type := old_type
-			current_class_impl := old_class_impl
-			current_feature := old_feature
-			current_feature_impl := old_feature_impl
-			current_inline_agent := Void
+			find_expression_type_in_closure (a_expression, a_agent, a_agent, a_feature.implementation_class, a_context, a_target_type)
 		end
 
 	find_expression_type_in_precondition (a_expression: ET_EXPRESSION; a_feature_impl, a_feature: ET_FEATURE; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT)
@@ -248,46 +186,8 @@ feature -- Basic operations
 			a_current_class_preparsed: a_context.root_context.base_class.is_preparsed
 			a_target_type_not_void: a_target_type /= Void
 			valid_target_context: a_target_type.is_valid_context
-		local
-			old_feature: ET_STANDALONE_CLOSURE
-			old_feature_impl: ET_STANDALONE_CLOSURE
-			old_class: ET_CLASS
-			old_class_impl: ET_CLASS
-			old_type: ET_BASE_TYPE
-			old_target_type: ET_TYPE_CONTEXT
-			old_context: ET_NESTED_TYPE_CONTEXT
-			old_in_assertion: BOOLEAN
-			old_in_precondition: BOOLEAN
 		do
-			reset_fatal_error (False)
-			old_feature_impl := current_feature_impl
-			current_feature_impl := a_feature_impl.implementation_feature
-			old_feature := current_feature
-			current_feature := a_feature
-			old_type := current_type
-			current_type := a_context.root_context
-			old_class := current_class
-			current_class := current_type.base_class
-			old_class_impl := current_class_impl
-			current_class_impl := a_feature_impl.implementation_class
-			old_context := current_context
-			current_context := a_context
-			old_target_type := current_target_type
-			current_target_type := a_target_type
-			old_in_assertion := in_assertion
-			in_assertion := True
-			old_in_precondition := in_precondition
-			in_precondition := True
-			a_expression.process (Current)
-			in_assertion := old_in_assertion
-			in_precondition := old_in_precondition
-			current_target_type := old_target_type
-			current_context := old_context
-			current_class := old_class
-			current_type := old_type
-			current_class_impl := old_class_impl
-			current_feature := old_feature
-			current_feature_impl := old_feature_impl
+			find_expression_type_in_closure (a_expression, a_feature_impl, a_feature, a_feature_impl.implementation_class, a_context, a_target_type)
 		end
 
 	find_expression_type_in_postcondition (a_expression: ET_EXPRESSION; a_feature_impl, a_feature: ET_FEATURE; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT)
@@ -313,46 +213,8 @@ feature -- Basic operations
 			a_current_class_preparsed: a_context.root_context.base_class.is_preparsed
 			a_target_type_not_void: a_target_type /= Void
 			valid_target_context: a_target_type.is_valid_context
-		local
-			old_feature: ET_STANDALONE_CLOSURE
-			old_feature_impl: ET_STANDALONE_CLOSURE
-			old_class: ET_CLASS
-			old_class_impl: ET_CLASS
-			old_type: ET_BASE_TYPE
-			old_target_type: ET_TYPE_CONTEXT
-			old_context: ET_NESTED_TYPE_CONTEXT
-			old_in_assertion: BOOLEAN
-			old_in_postcondition: BOOLEAN
 		do
-			reset_fatal_error (False)
-			old_feature_impl := current_feature_impl
-			current_feature_impl := a_feature_impl.implementation_feature
-			old_feature := current_feature
-			current_feature := a_feature
-			old_type := current_type
-			current_type := a_context.root_context
-			old_class := current_class
-			current_class := current_type.base_class
-			old_class_impl := current_class_impl
-			current_class_impl := a_feature_impl.implementation_class
-			old_context := current_context
-			current_context := a_context
-			old_target_type := current_target_type
-			current_target_type := a_target_type
-			old_in_assertion := in_assertion
-			in_assertion := True
-			old_in_postcondition := in_postcondition
-			in_postcondition := True
-			a_expression.process (Current)
-			in_assertion := old_in_assertion
-			in_postcondition := old_in_postcondition
-			current_target_type := old_target_type
-			current_context := old_context
-			current_class := old_class
-			current_type := old_type
-			current_class_impl := old_class_impl
-			current_feature := old_feature
-			current_feature_impl := old_feature_impl
+			find_expression_type_in_closure (a_expression, a_feature_impl, a_feature, a_feature_impl.implementation_class, a_context, a_target_type)
 		end
 
 	find_expression_type_in_invariant (a_expression: ET_EXPRESSION; a_invariant: ET_INVARIANTS; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT)
@@ -373,46 +235,65 @@ feature -- Basic operations
 			a_current_class_preparsed: a_context.root_context.base_class.is_preparsed
 			a_target_type_not_void: a_target_type /= Void
 			valid_target_context: a_target_type.is_valid_context
+		do
+			find_expression_type_in_closure (a_expression, a_invariant, a_invariant, a_invariant.implementation_class, a_context, a_target_type)
+		end
+
+	find_expression_type_in_closure (a_expression: ET_EXPRESSION; a_closure_impl, a_closure: ET_CLOSURE; a_class_impl: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT)
+			-- Expression `a_expression' (whose possible attachment target is of type
+			-- `a_target_type') appears in `a_closure' (written in `a_closure_impl')
+			-- and is viewed from `a_context' (`a_closure' is a closure of the root
+			-- context of `a_context').
+			-- Alter `a_context' so that it represents the type of `a_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+			--
+			-- Note that it is assumed that `a_closure' has been successfully checked
+			-- in the context of `a_context.root_context' as well as `a_closure_impl'
+			-- in the context of `a_class_impl' (using  ET_FEATURE_CHECKER for example).
+			-- Otherwise internal errors may be reported (using
+			-- ET_ERROR_HANDLER.report_giaaa_error) if `a_closure' or `a_closure_impl'
+			-- has not been checked or if `internal_error_enabled' has been set.
+		require
+			a_expression_not_void: a_expression /= Void
+			a_closure_impl_not_void: a_closure_impl /= Void
+			a_closure_not_void: a_closure /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_context_not_void: a_context /= Void
+			a_current_class_preparsed: a_context.root_context.base_class.is_preparsed
+			a_target_type_not_void: a_target_type /= Void
+			valid_target_context: a_target_type.is_valid_context
 		local
-			old_feature: ET_STANDALONE_CLOSURE
-			old_feature_impl: ET_STANDALONE_CLOSURE
+			old_closure: like current_closure
+			old_closure_impl: like current_closure_impl
 			old_class: ET_CLASS
 			old_class_impl: ET_CLASS
 			old_type: ET_BASE_TYPE
 			old_target_type: ET_TYPE_CONTEXT
 			old_context: ET_NESTED_TYPE_CONTEXT
-			old_in_assertion: BOOLEAN
-			old_in_invariant: BOOLEAN
 		do
 			reset_fatal_error (False)
-			old_feature_impl := current_feature_impl
-			current_feature_impl := a_invariant
-			old_feature := current_feature
-			current_feature := a_invariant
+			old_closure_impl := current_closure_impl
+			current_closure_impl := a_closure_impl.implementation_closure
+			old_closure := current_closure
+			current_closure := a_closure
 			old_type := current_type
 			current_type := a_context.root_context
 			old_class := current_class
 			current_class := current_type.base_class
 			old_class_impl := current_class_impl
-			current_class_impl := a_invariant.implementation_class
+			current_class_impl := a_class_impl
 			old_context := current_context
 			current_context := a_context
 			old_target_type := current_target_type
 			current_target_type := a_target_type
-			old_in_assertion := in_assertion
-			in_assertion := True
-			old_in_invariant := in_invariant
-			in_invariant := True
 			a_expression.process (Current)
-			in_assertion := old_in_assertion
-			in_invariant := old_in_invariant
 			current_target_type := old_target_type
 			current_context := old_context
 			current_class := old_class
 			current_type := old_type
 			current_class_impl := old_class_impl
-			current_feature := old_feature
-			current_feature_impl := old_feature_impl
+			current_closure := old_closure
+			current_closure_impl := old_closure_impl
 		end
 
 feature -- Status report
@@ -787,33 +668,29 @@ feature {NONE} -- Expression processing
 			l_type: ET_TYPE
 		do
 			reset_fatal_error (False)
-			if attached current_inline_agent as l_current_inline_agent then
-				l_arguments := l_current_inline_agent.formal_arguments
-			else
-					-- Use arguments of `current_feature' instead of `current_feature_impl'
-					-- because when processing inherited assertions the types of signature
-					-- should be those of the version of the feature in the current class.
-					-- For example:
-					--    deferred class A
-					--    feature
-					--       f (a: ANY)
-					--           require
-					--               pre: g (a)
-					--           deferred
-					--           end
-					--      g (a: ANY): BOOLEAN deferred end
-					--    end
-					--    class B
-					--    inherit
-					--        A
-					--    feature
-					--        f (a: STRING) do ... end
-					--        g (a: STRING): BOOLEAN do ... end
-					--    end
-					-- `a' in the inherited precondition "pre" should be considered
-					-- of type STRING (and not ANY) is class B.
-				l_arguments := current_feature.arguments
-			end
+				-- Use arguments of `current_closure' instead of `current_closuree_impl'
+				-- because when processing inherited assertions the types of signature
+				-- should be those of the version of the feature in the current class.
+				-- For example:
+				--    deferred class A
+				--    feature
+				--       f (a: ANY)
+				--           require
+				--               pre: g (a)
+				--           deferred
+				--           end
+				--      g (a: ANY): BOOLEAN deferred end
+				--    end
+				--    class B
+				--    inherit
+				--        A
+				--    feature
+				--        f (a: STRING) do ... end
+				--        g (a: STRING): BOOLEAN do ... end
+				--    end
+				-- `a' in the inherited precondition "pre" should be considered
+				-- of type STRING (and not ANY) is class B.
+			l_arguments := current_closure.arguments
 			l_seed := a_name.seed
 			if l_arguments = Void then
 					-- Internal error.
@@ -1989,33 +1866,29 @@ feature {NONE} -- Expression processing
 			l_type: detachable ET_TYPE
 		do
 			reset_fatal_error (False)
-			if attached current_inline_agent as l_current_inline_agent then
-				l_type := l_current_inline_agent.type
-			else
-					-- Use type of `current_feature' instead of `current_feature_impl'
-					-- because when processing inherited assertions the types of signature
-					-- should be those of the version of the feature in the current class.
-					-- For example:
-					--    deferred class A
-					--    feature
-					--       f: ANY
-					--           deferred
-					--           ensure
-					--              post: g (Result)
-					--           end
-					--      g (a: ANY): BOOLEAN deferred end
-					--    end
-					--    class B
-					--    inherit
-					--        A
-					--    feature
-					--        f: STRING do ... end
-					--        g (a: STRING): BOOLEAN do ... end
-					--    end
-					-- 'Result' in the inherited postcondition "post" should be considered
-					-- of type STRING (and not ANY) is class B.
-				l_type := current_feature.type
-			end
+				-- Use type of `current_closure' instead of `current_closure_impl'
+				-- because when processing inherited assertions the types of signature
+				-- should be those of the version of the feature in the current class.
+				-- For example:
+				--    deferred class A
+				--    feature
+				--       f: ANY
+				--           deferred
+				--           ensure
+				--              post: g (Result)
+				--           end
+				--      g (a: ANY): BOOLEAN deferred end
+				--    end
+				--    class B
+				--    inherit
+				--        A
+				--    feature
+				--        f: STRING do ... end
+				--        g (a: STRING): BOOLEAN do ... end
+				--    end
+				-- 'Result' in the inherited postcondition "post" should be considered
+				-- of type STRING (and not ANY) is class B.
+			l_type := current_closure.type
 			if l_type = Void then
 					-- The entity 'Result' has to appear in a query.
 					-- This error should have already been reported when checking
@@ -2033,7 +1906,7 @@ feature {NONE} -- Expression processing
 								-- we can guarantee that at this stage it is attached.
 							a_context.force_last (tokens.attached_like_current)
 						end
-					elseif not (current_inline_agent = Void and in_postcondition) and then (not a_context.is_type_detachable and not a_context.is_type_expanded) then
+					elseif not a_context.is_type_detachable and not a_context.is_type_expanded then
 						if system_processor.is_ise then
 								-- In ISE Eiffel, local variables (including 'Result') are considered
 								-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
@@ -2059,33 +1932,29 @@ feature {NONE} -- Expression processing
 			l_typed_pointer_type: ET_CLASS_TYPE
 		do
 			reset_fatal_error (False)
-			if attached current_inline_agent as l_current_inline_agent then
-				l_type := l_current_inline_agent.type
-			else
-					-- Use type of `current_feature' instead of `current_feature_impl'
-					-- because when processing inherited assertions the types of signature
-					-- should be those of the version of the feature in the current class.
-					-- For example:
-					--    deferred class A
-					--    feature
-					--       f: ANY
-					--           deferred
-					--           ensure
-					--              post: g ($Result)
-					--           end
-					--      g (a: TYPED_POINTER [ANY]): BOOLEAN deferred end
-					--    end
-					--    class B
-					--    inherit
-					--        A
-					--    feature
-					--        f: STRING do ... end
-					--        g (a: TYPED_POINTER [STRING]): BOOLEAN do ... end
-					--    end
-					-- 'Result' in the inherited postcondition "post" should be considered
-					-- of type STRING (and not ANY) is class B.
-				l_type := current_feature.type
-			end
+				-- Use type of `current_closure' instead of `current_closure_impl'
+				-- because when processing inherited assertions the types of signature
+				-- should be those of the version of the feature in the current class.
+				-- For example:
+				--    deferred class A
+				--    feature
+				--       f: ANY
+				--           deferred
+				--           ensure
+				--              post: g ($Result)
+				--           end
+				--      g (a: TYPED_POINTER [ANY]): BOOLEAN deferred end
+				--    end
+				--    class B
+				--    inherit
+				--        A
+				--    feature
+				--        f: STRING do ... end
+				--        g (a: TYPED_POINTER [STRING]): BOOLEAN do ... end
+				--    end
+				-- 'Result' in the inherited postcondition "post" should be considered
+				-- of type STRING (and not ANY) is class B.
+			l_type := current_closure.type
 			if l_type = Void then
 					-- The entity 'Result' has to appear in a query.
 					-- This error should have already been reported when checking
@@ -3550,13 +3419,14 @@ feature {ET_AST_NODE} -- Processing
 
 feature {NONE} -- Access
 
-	current_feature: ET_STANDALONE_CLOSURE
-			-- Feature or invariant being processed
+	current_closure: ET_CLOSURE
+			-- Inner closure being processed
 
-	current_feature_impl: ET_STANDALONE_CLOSURE
-			-- Feature or invariant where the code being processed has been written;
-			-- It might be different from `current_feature' or even from
-			-- `current_feature.implementation_feature' when
+	current_closure_impl: ET_CLOSURE
+			-- Inner closure where the code being processed has been written
+			--
+			-- It might be different from `current_closure' or even from
+			-- `current_closure.implementation_closure' when
 			-- processing inherited assertions. For example:
 			--
 			--    deferred class A
@@ -3577,39 +3447,8 @@ feature {NONE} -- Access
 			--    end
 			--
 			-- When processing the inherited precondition 'pre' in B.f,
-			-- `current_feature' is B.f and `current_feature_impl' is A.f
+			-- `current_closure' is B.f and `current_closure_impl' is A.f
 			-- (where the inherited precondition has been written).
-
-	current_inline_agent: detachable ET_INLINE_AGENT
-			-- Inline agent being processed if any, Void otherwise
-
-	current_closure: ET_CLOSURE
-			-- Inner closure being processed
-		do
-			if attached current_inline_agent as l_current_inline_agent then
-				Result := l_current_inline_agent
-			else
-				Result := current_feature
-			end
-		ensure
-			current_closure_not_void: Result /= Void
-			in_agent: current_inline_agent /= Void implies Result = current_inline_agent
-			not_in_agent: current_inline_agent = Void implies Result = current_feature
-		end
-
-	current_closure_impl: ET_CLOSURE
-			-- Inner closure where the code being processed has been written
-		do
-			if attached current_inline_agent as l_current_inline_agent then
-				Result := l_current_inline_agent
-			else
-				Result := current_feature_impl
-			end
-		ensure
-			current_closure_impl_not_void: Result /= Void
-			in_agent: current_inline_agent /= Void implies Result = current_inline_agent
-			not_in_agent: current_inline_agent = Void implies Result = current_feature_impl
-		end
 
 	current_type: ET_BASE_TYPE
 			-- Type from which `current_feature' is processed;
@@ -3621,7 +3460,7 @@ feature {NONE} -- Access
 			-- implemented in a proper parent.
 
 	current_class_impl: ET_CLASS
-			-- Class where `current_feature_impl' has been written
+			-- Class where `current_closure_impl' has been written
 
 	current_universe_impl: ET_UNIVERSE
 			-- Universe to which `current_class_impl' belongs
@@ -3670,20 +3509,6 @@ feature {NONE} -- Attachments
 
 	unused_attachment_scopes: DS_ARRAYED_LIST [ET_ATTACHMENT_SCOPE]
 			-- Attachment scopes that are not currently used
-
-feature {NONE} -- Status report
-
-	in_assertion: BOOLEAN
-			-- Are we processing an assertion?
-
-	in_precondition: BOOLEAN
-			-- Are we processing a precondition?
-
-	in_postcondition: BOOLEAN
-			-- Are we processing a postcondition?
-
-	in_invariant: BOOLEAN
-			-- Are we processing an invariant?
 
 feature {NONE} -- Type checking
 
@@ -3844,15 +3669,14 @@ feature {NONE} -- Constants
 
 invariant
 
-	current_feature_not_void: current_feature /= Void
-	current_feature_impl_not_void: current_feature_impl /= Void
-	current_feature_impl_constraint: current_feature_impl = current_feature_impl.implementation_feature
+	current_closure_not_void: current_closure /= Void
+	current_closure_impl_not_void: current_closure_impl /= Void
+	current_feature_impl_constraint: current_closure_impl = current_closure_impl.implementation_closure
 	current_type_not_void: current_type /= Void
 	current_type_valid: current_type.is_valid_context
 	current_class_definition: current_class = current_type.base_class
 	current_class_impl_not_void: current_class_impl /= Void
-	current_class_impl_definition: current_class_impl = current_feature_impl.implementation_class
-	-- implementation_checked: if inherited, then the code being analyzed has already been checked in implementation class of `current_feature_impl'
+	-- implementation_checked: if inherited, then the code being analyzed has already been checked in implementation class of `current_closure_impl'
 	type_checker_not_void: type_checker /= Void
 	current_context_not_void: current_context /= Void
 	unused_contexts_not_void: unused_contexts /= Void
