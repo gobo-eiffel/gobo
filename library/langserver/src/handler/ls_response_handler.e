@@ -50,14 +50,7 @@ feature -- Basic operations
 					l_request := pending_requests.found_item
 					pending_requests.remove_found_item
 					l_handler := l_request.handler (a_manager)
-					if attached a_response.error as l_error then
-						l_handler.handle_response_error (l_error, l_request, a_manager)
-					elseif
-						attached a_manager.message_factories.value (l_request.method) as l_factory and then
-						attached l_factory.new_response_result (a_response, a_manager) as l_result
-					then
-						l_handler.handle_response_result (l_result, l_request, a_manager)
-					end
+					l_handler.handle_response (a_response, l_request, a_manager)
 				end
 			end
 		end

@@ -44,9 +44,15 @@ deferred class LS_URI
 
 inherit
 
-	LS_ANY
+	LS_BASE_URI
 
 feature -- Access
+
+	uri: LS_URI
+			-- URI
+		do
+			Result := Current
+		end
 
 	to_string: LS_STRING
 			-- String representation

@@ -261,6 +261,7 @@ feature {NONE} -- Implementation
 			-- Capabilities provided by the client (editor or tool)
 		local
 			l_text_document_capabilities: detachable LS_TEXT_DOCUMENT_CAPABILITIES
+			l_workspace_capabilities: detachable LS_WORKSPACE_CAPABILITIES
 		do
 			create Result.make
 			hover_request_handler.build_client_capabilities
@@ -270,6 +271,14 @@ feature {NONE} -- Implementation
 					Result.set_text_document (l_text_document_capabilities)
 				end
 				l_text_document_capabilities.set_hover (l_hover_capabilities)
+			end
+			did_change_watched_files_notification_handler.build_client_capabilities
+			if attached did_change_watched_files_notification_handler.client_capabilities as l_did_change_watched_files_capabilities then
+				if l_workspace_capabilities = Void then
+					create l_workspace_capabilities.make
+					Result.set_workspace (l_workspace_capabilities)
+				end
+				l_workspace_capabilities.set_did_change_watched_files (l_did_change_watched_files_capabilities)
 			end
 		ensure
 			client_capabilities_not_void: Result /= Void

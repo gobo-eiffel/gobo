@@ -17,7 +17,7 @@ inherit
 			is_equal
 		end
 		
-	LS_STRING_CONTENT
+	LS_MARKED_STRING
 		redefine
 			is_equal
 		end
@@ -58,6 +58,11 @@ inherit
 		end
 
 	LS_TRACE_VALUE
+		redefine
+			is_equal
+		end
+
+	LS_PATTERN
 		redefine
 			is_equal
 		end

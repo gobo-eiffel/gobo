@@ -47,6 +47,11 @@ inherit
 			is_equal
 		end
 
+	LS_FILE_CHANGE_TYPE
+		redefine
+			is_equal
+		end
+
 	HASHABLE
 		redefine
 			is_equal

@@ -30,6 +30,7 @@ feature -- Basic operations
 		local
 			l_response: LS_RESPONSE
 		do
+			a_manager.on_shutdown_request (a_request)
 			create l_response.make_success (a_request.id, {LS_NULL}.null)
 			a_manager.send_message (l_response)
 		end

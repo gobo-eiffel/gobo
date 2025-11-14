@@ -58,6 +58,9 @@ feature -- Basic operations
 			if attached a_request.capabilities.text_document as l_text_document_capabilities then
 				a_manager.hover_request_handler.set_client_capabilities (l_text_document_capabilities.hover)
 			end
+			if attached a_request.capabilities.workspace as l_workspace_capabilities then
+				a_manager.did_change_watched_files_notification_handler.set_client_capabilities (l_workspace_capabilities.did_change_watched_files)
+			end
 			create l_capabilities.make
 			a_manager.hover_request_handler.build_server_options
 			if attached a_manager.hover_request_handler.server_options as l_server_options then

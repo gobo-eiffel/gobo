@@ -40,7 +40,9 @@ feature -- Access
 	handler (a_manager: LS_MESSAGE_MANAGER): LS_CANCEL_REQUEST_NOTIFICATION_HANDLER
 			-- Message handler for current dynamic registration options
 		do
-			Result := a_manager.cancel_request_notification_handler
+			Result := {LS_CANCEL_REQUEST_NOTIFICATION}.handler (a_manager)
+		ensure then
+			instance_free: class
 		end
 
 end

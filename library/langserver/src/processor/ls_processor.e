@@ -68,6 +68,13 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_code_block (a_value: LS_CODE_BLOCK)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_code_description (a_value: LS_CODE_DESCRIPTION)
 			-- Process `a_value`.
 		require
@@ -110,6 +117,27 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_did_change_watched_files_capabilities (a_value: LS_DID_CHANGE_WATCHED_FILES_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_did_change_watched_files_notification (a_value: LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_did_change_watched_files_registration_options (a_value: LS_DID_CHANGE_WATCHED_FILES_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_document_filter (a_value: LS_DOCUMENT_FILTER)
 			-- Process `a_value`.
 		require
@@ -125,6 +153,34 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_exit_notification (a_value: LS_EXIT_NOTIFICATION)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_file_event (a_value: LS_FILE_EVENT)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_file_event_list (a_value: LS_FILE_EVENT_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_file_system_watcher (a_value: LS_FILE_SYSTEM_WATCHER)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_file_system_watcher_list (a_value: LS_FILE_SYSTEM_WATCHER_LIST)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void
@@ -236,6 +292,13 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_marked_string_list (a_value: LS_MARKED_STRING_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_markup_content (a_value: LS_MARKUP_CONTENT)
 			-- Process `a_value`.
 		require
@@ -314,6 +377,13 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_registration_list (a_value: LS_REGISTRATION_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_relative_pattern (a_value: LS_RELATIVE_PATTERN)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void
@@ -440,6 +510,13 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_versioned_text_document_identifier (a_value: LS_VERSIONED_TEXT_DOCUMENT_IDENTIFIER)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_workspace_capabilities (a_value: LS_WORKSPACE_CAPABILITIES)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void

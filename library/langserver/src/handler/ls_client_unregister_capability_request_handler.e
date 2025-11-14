@@ -48,7 +48,7 @@ feature -- Basic operations
 					l_error_message.append_string ("method '" + l_unregistration.method.utf8_value + "' not supported")
 				else
 					l_handler := l_factory.handler (a_manager)
-					if not l_handler.is_dynamically_registrable then
+					if not l_handler.is_dynamic_registration_supported then
 						if not l_error_message.is_empty then
 							l_error_message.append_string (", ")
 						end

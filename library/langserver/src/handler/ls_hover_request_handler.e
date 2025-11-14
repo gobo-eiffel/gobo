@@ -32,6 +32,44 @@ feature -- Access
 	server_options: detachable LS_OPTIONAL_HOVER_OPTIONS
 			-- Server options
 
+feature -- Status report
+
+	is_markdown_supported: BOOLEAN
+			-- Does client support markdown content format?
+		local
+			i, nb: INTEGER
+		do
+			if attached client_capabilities as l_capabilities and then attached l_capabilities.content_format as l_content_format then
+				nb := l_content_format.count
+				from i := 1 until i > nb loop
+					if l_content_format.markup_kind (i) ~ {LS_MARKUP_KINDS}.markdown then
+						Result := True
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	is_plaintext_supported: BOOLEAN
+			-- Does client support plaintext content format?
+		local
+			i, nb: INTEGER
+		do
+			if attached client_capabilities as l_capabilities and then attached l_capabilities.content_format as l_content_format then
+				nb := l_content_format.count
+				from i := 1 until i > nb loop
+					if l_content_format.markup_kind (i) ~ {LS_MARKUP_KINDS}.plaintext then
+						Result := True
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
+
 feature -- Setting
 
 	build_server_options

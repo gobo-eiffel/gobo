@@ -39,6 +39,8 @@ feature -- Access
 			-- Message handler for current request
 		do
 			Result := a_manager.handled_message_handler
+		ensure then
+			instance_free: class
 		end
 
 feature -- Field names

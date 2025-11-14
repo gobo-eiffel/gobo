@@ -39,6 +39,8 @@ feature -- Access
 			-- Message handler for current notification
 		do
 			Result := a_manager.initialized_notification_handler
+		ensure then
+			instance_free: class
 		end
 
 feature -- Processing

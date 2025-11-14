@@ -44,6 +44,8 @@ feature -- Access
 			-- Message handler for current request
 		do
 			Result := a_manager.shutdown_request_handler
+		ensure then
+			instance_free: class
 		end
 
 feature -- Processing

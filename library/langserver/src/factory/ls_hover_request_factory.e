@@ -92,7 +92,9 @@ feature -- Access
 	handler (a_manager: LS_MESSAGE_MANAGER): LS_HOVER_REQUEST_HANDLER
 			-- Message handler for current dynamic registration options
 		do
-			Result := a_manager.hover_request_handler
+			Result := {LS_HOVER_REQUEST}.handler (a_manager)
+		ensure then
+			instance_free: class
 		end
 
 end

@@ -33,6 +33,23 @@ feature -- Basic operations
 			a_manager.send_message (l_response)
 		end
 
+	handle_response (a_response: LS_RESPONSE; a_request: like request; a_manager: like message_manager)
+			-- Handle response `a_response` to `a_request`.
+		require
+			a_response_not_void: a_response /= Void
+			a_request_not_void: a_request /= Void
+			a_manager_not_void: a_manager /= Void
+		do
+			if attached a_response.error as l_error then
+				handle_response_error (l_error, a_request, a_manager)
+			elseif
+				attached a_manager.message_factories.value (a_request.method) as l_factory and then
+				attached {like response_result} l_factory.new_response_result (a_response, a_manager) as l_result
+			then
+				handle_response_result (l_result, a_request, a_manager)
+			end
+		end
+
 	handle_response_result (a_result: like response_result; a_request: like request; a_manager: like message_manager)
 			-- Handle response result `a_result` to `a_request`.
 		require

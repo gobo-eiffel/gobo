@@ -133,6 +133,14 @@ feature -- Basic operations
 
 feature -- Handlers
 
+	did_change_watched_files_notification_handler: LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION_HANDLER
+			-- Handler for 'workspace/didChangeWatchedFiles' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			did_change_watched_files_notification_handler_not_void: Result /= Void
+		end
+
 	hover_request_handler: LS_HOVER_REQUEST_HANDLER
 			-- Handler for 'textDocument/hover' requests
 		once ("OBJECT")
@@ -412,13 +420,14 @@ feature {LS_CONNECTION} -- Actions
 			end
 		end
 
-feature {LS_RESPONSE_HANDLER, LS_CLIENT_REGISTER_CAPABILITY_REQUEST_HANDLER, LS_CLIENT_UNREGISTER_CAPABILITY_REQUEST_HANDLER} -- Implementation
+feature {LS_RESPONSE_HANDLER, LS_REQUEST_HANDLER} -- Implementation
 
 	message_factories: DS_HASH_TABLE [LS_MESSAGE_FACTORY, LS_STRING]
 			-- Message factories, indexed by methods
 		once ("OBJECT")
 			create Result.make (100)
 			Result.force (create {LS_CANCEL_REQUEST_NOTIFICATION_FACTORY}.make, {LS_CANCEL_REQUEST_NOTIFICATION}.method)
+			Result.force (create {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION_FACTORY}.make, {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION}.method)
 			Result.force (create {LS_EXIT_NOTIFICATION_FACTORY}.make, {LS_EXIT_NOTIFICATION}.method)
 			Result.force (create {LS_HOVER_REQUEST_FACTORY}.make, {LS_HOVER_REQUEST}.method)
 			Result.force (create {LS_INITIALIZE_REQUEST_FACTORY}.make, {LS_INITIALIZE_REQUEST}.method)

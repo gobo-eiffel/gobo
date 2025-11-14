@@ -45,7 +45,9 @@ feature -- Access
 	handler (a_manager: LS_MESSAGE_MANAGER): LS_RESPONSE_HANDLER
 			-- Message handler for current dynamic registration options
 		do
-			Result := a_manager.response_handler
+			Result := {LS_RESPONSE}.handler (a_manager)
+		ensure then
+			instance_free: class
 		end
 
 end

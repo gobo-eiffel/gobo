@@ -12,7 +12,7 @@ class LS_UINTEGER
 
 inherit
 
-	LS_ANY
+	LS_WATCH_KIND
 		redefine
 			is_equal
 		end

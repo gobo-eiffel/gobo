@@ -197,6 +197,32 @@ feature {LS_ANY} -- Processing
 				utf8_string.append_character (':')
 				l_text_document.process (Current)
 			end
+			process_comma_if_not_first
+			if attached a_value.workspace as l_workspace then
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_CLIENT_ALL_CAPABILITIES}.workspace_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_workspace.process (Current)
+			end
+			utf8_string.append_character ('}')
+		end
+
+	process_code_block (a_value: LS_CODE_BLOCK)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_CODE_BLOCK}.language_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.language.process (Current)
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_CODE_BLOCK}.value_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.value.process (Current)
 			utf8_string.append_character ('}')
 		end
 
@@ -372,6 +398,68 @@ feature {LS_ANY} -- Processing
 			utf8_string.append_character (']')
 		end
 
+	process_did_change_watched_files_capabilities (a_value: LS_DID_CHANGE_WATCHED_FILES_CAPABILITIES)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			process_dynamic_registration_capabilities (a_value)
+			if attached a_value.relative_pattern_support as l_relative_pattern_support then
+				process_comma_if_not_first
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_DID_CHANGE_WATCHED_FILES_CAPABILITIES}.relative_pattern_support_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_relative_pattern_support.process (Current)
+			end
+			utf8_string.append_character ('}')
+		end
+
+	process_did_change_watched_files_notification (a_value: LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			process_jsonrpc_version
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION}.method_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.method.process (Current)
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION}.params_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			process_did_change_watched_files_params (a_value)
+			utf8_string.append_character ('}')
+		end
+
+	process_did_change_watched_files_params (a_value: LS_DID_CHANGE_WATCHED_FILES_PARAMS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			utf8_string.append_character ('{')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_DID_CHANGE_WATCHED_FILES_PARAMS}.changes_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.changes.process (Current)
+			utf8_string.append_character ('}')
+		end
+
+	process_did_change_watched_files_registration_options (a_value: LS_DID_CHANGE_WATCHED_FILES_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_DID_CHANGE_WATCHED_FILES_REGISTRATION_OPTIONS}.watchers_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.watchers.process (Current)
+			utf8_string.append_character ('}')
+		end
+
 	process_document_filter (a_value: LS_DOCUMENT_FILTER)
 			-- Process `a_value`.
 		local
@@ -454,6 +542,80 @@ feature {LS_ANY} -- Processing
 			utf8_string.append_character (':')
 			a_value.method.process (Current)
 			utf8_string.append_character ('}')
+		end
+
+	process_file_event (a_value: LS_FILE_EVENT)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			process_jsonrpc_version
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_FILE_EVENT}.uri_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.uri.process (Current)
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_FILE_EVENT}.type_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.type.process (Current)
+			utf8_string.append_character ('}')
+		end
+
+	process_file_event_list (a_value: LS_FILE_EVENT_LIST)
+			-- Process `a_value`.
+		local
+			i, nb: INTEGER
+		do
+			utf8_string.append_character ('[')
+			nb := a_value.count
+			from i := 1 until i > nb loop
+				if i /= 1 then
+					utf8_string.append_character (',')
+				end
+				a_value.file_event (i).process (Current)
+				i := i + 1
+			end
+			utf8_string.append_character (']')
+		end
+
+	process_file_system_watcher (a_value: LS_FILE_SYSTEM_WATCHER)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_FILE_SYSTEM_WATCHER}.glob_pattern_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.glob_pattern.process (Current)
+			if attached a_value.kind as l_kind then
+				utf8_string.append_character (',')
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_FILE_SYSTEM_WATCHER}.kind_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_kind.process (Current)
+			end
+			utf8_string.append_character ('}')
+		end
+
+	process_file_system_watcher_list (a_value: LS_FILE_SYSTEM_WATCHER_LIST)
+			-- Process `a_value`.
+		local
+			i, nb: INTEGER
+		do
+			utf8_string.append_character ('[')
+			nb := a_value.count
+			from i := 1 until i > nb loop
+				if i /= 1 then
+					utf8_string.append_character (',')
+				end
+				a_value.file_system_watcher (i).process (Current)
+				i := i + 1
+			end
+			utf8_string.append_character (']')
 		end
 
 	process_handled_message (a_value: LS_HANDLED_MESSAGE)
@@ -832,6 +994,23 @@ feature {LS_ANY} -- Processing
 			utf8_string.append_character ('}')
 		end
 
+	process_marked_string_list (a_value: LS_MARKED_STRING_LIST)
+			-- Process `a_value`.
+		local
+			i, nb: INTEGER
+		do
+			utf8_string.append_character ('[')
+			nb := a_value.count
+			from i := 1 until i > nb loop
+				if i /= 1 then
+					utf8_string.append_character (',')
+				end
+				a_value.marked_string (i).process (Current)
+				i := i + 1
+			end
+			utf8_string.append_character (']')
+		end
+
 	process_markup_content (a_value: LS_MARKUP_CONTENT)
 			-- Process `a_value`.
 		do
@@ -954,19 +1133,25 @@ feature {LS_ANY} -- Processing
 			utf8_string.append_string ({LS_PROGRESS_NOTIFICATION}.params_name)
 			utf8_string.append_character ('"')
 			utf8_string.append_character (':')
+			process_progress_params (a_value)
+			utf8_string.append_character ('}')
+		end
+
+	process_progress_params (a_value: LS_PROGRESS_PARAMS)
+			-- Process `a_value`.
+		do
 			utf8_string.append_character ('{')
 			utf8_string.append_character ('"')
-			utf8_string.append_string ({LS_PROGRESS_NOTIFICATION}.token_name)
+			utf8_string.append_string ({LS_PROGRESS_PARAMS}.token_name)
 			utf8_string.append_character ('"')
 			utf8_string.append_character (':')
 			a_value.token.process (Current)
 			utf8_string.append_character (',')
 			utf8_string.append_character ('"')
-			utf8_string.append_string ({LS_PROGRESS_NOTIFICATION}.value_name)
+			utf8_string.append_string ({LS_PROGRESS_PARAMS}.value_name)
 			utf8_string.append_character ('"')
 			utf8_string.append_character (':')
 			a_value.value.process (Current)
-			utf8_string.append_character ('}')
 			utf8_string.append_character ('}')
 		end
 
@@ -1066,6 +1251,24 @@ feature {LS_ANY} -- Processing
 			utf8_string.append_character ('"')
 			utf8_string.append_character (':')
 			a_value.registrations.process (Current)
+			utf8_string.append_character ('}')
+		end
+
+	process_relative_pattern (a_value: LS_RELATIVE_PATTERN)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_RELATIVE_PATTERN}.base_uri_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.base_uri.process (Current)
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_RELATIVE_PATTERN}.pattern_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.pattern.process (Current)
 			utf8_string.append_character ('}')
 		end
 
@@ -1486,6 +1689,20 @@ feature {LS_ANY} -- Processing
 				utf8_string.append_character (':')
 				l_work_done_token.process (Current)
 			end
+		end
+
+	process_workspace_capabilities (a_value: LS_WORKSPACE_CAPABILITIES)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			if attached a_value.did_change_watched_files as l_did_change_watched_files then
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_WORKSPACE_CAPABILITIES}.did_change_watched_files_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_did_change_watched_files.process (Current)
+			end
+			utf8_string.append_character ('}')
 		end
 
 	process_workspace_folder (a_value: LS_WORKSPACE_FOLDER)

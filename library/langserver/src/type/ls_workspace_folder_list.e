@@ -83,7 +83,7 @@ feature -- Element change
 	put_last (a_workspace_folder: LS_WORKSPACE_FOLDER)
 			-- Put `a_workspace_folder` at the end of the list of workspace folders.
 		require
-			workspace_folders: a_workspace_folder /= Void
+			a_workspace_folder_not_void: a_workspace_folder /= Void
 		do
 			workspace_folders.force_last (a_workspace_folder)
 		end
