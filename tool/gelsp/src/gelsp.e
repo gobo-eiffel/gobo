@@ -19,7 +19,10 @@ inherit
 			server_name,
 			server_description,
 			hover_request_handler,
-			initialized_notification_handler,
+			on_did_change_watched_files_notification,
+			on_file_system_watchers_registered,
+			on_hover_request,
+			on_initialized_notification,
 			add_other_options,
 			process_other_options,
 			error_handler
@@ -75,43 +78,92 @@ feature -- Access
 	server_description: STRING_8 = "Gobo Eiffel LSP, Language Server for Eiffel."
 			-- Server description
 
-feature -- Handlers
+feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 
-	hover_request_handler: GELSP_HOVER_REQUEST_HANDLER
-			-- Handler for 'textDocument/hover' requests
-		once ("OBJECT")
-			create Result.make
+	on_did_change_watched_files_notification (a_notification: LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION)
+			-- Handle 'workspace/didChangeWatchedFiles' notification `a_notification`.
+			-- Actions to be executed when watched files are changed.
+		local
+			l_changes: LS_FILE_EVENT_LIST
+			l_file_event: LS_FILE_EVENT
+			i, nb: INTEGER
+			l_incremental: BOOLEAN
+			l_master_class: ET_MASTER_CLASS
+			l_no_action: BOOLEAN
+			l_deleted_class: ET_CLASS
+		do
+			l_incremental := True
+			l_no_action := True
+			l_changes := a_notification.changes
+			nb := l_changes.count
+			from i := 1 until i > nb loop
+				l_file_event := l_changes.file_event (i)
+				if not attached pathname_from_uri (l_file_event.uri) as l_pathname then
+						-- Rebuild from scratch, just in case we missed something.
+					l_no_action := False
+					l_incremental := False
+					i := nb + 1 -- Jump out of the loop.
+				elseif file_system.has_extension (l_pathname, {KL_FILE_SYSTEM}.ecf_extension) then
+					l_no_action := False
+					l_incremental := False
+					i := nb + 1 -- Jump out of the loop.
+				elseif not file_system.has_extension (l_pathname, {KL_FILE_SYSTEM}.eiffel_extension) then
+						-- Look for deleted folders containing Eiffel classes.
+					if l_file_event.type.value = {LS_FILE_CHANGE_TYPES}.deleted.value then
+						from class_mapping.start until class_mapping.after loop
+							if class_mapping.key_for_iteration.starts_with (l_pathname) then
+								l_no_action := False
+								l_deleted_class := class_mapping.item_for_iteration
+								l_master_class := l_deleted_class.master_class_in_universe
+								l_master_class.reset_local_modified_class (l_deleted_class, system_processor)
+								l_master_class.remove_unknown_local_classes
+							end
+							class_mapping.forth
+						end
+					end
+					i := i + 1
+				elseif l_file_event.type.value = {LS_FILE_CHANGE_TYPES}.created.value then
+					l_no_action := False
+					l_incremental := False
+					i := nb + 1 -- Jump out of the loop.
+				elseif not attached class_mapping.value (l_pathname) as l_class then
+					l_no_action := False
+					l_incremental := False
+					i := nb + 1 -- Jump out of the loop.
+				else
+					l_no_action := False
+					l_master_class := l_class.master_class_in_universe
+					l_master_class.reset_local_modified_class (l_class, system_processor)
+					l_master_class.remove_unknown_local_classes
+					i := i + 1
+				end
+			end
+			if l_no_action then
+				-- Done.
+			elseif l_incremental then
+				refresh_eiffel_system
+			else
+				set_system_processor
+				build_eiffel_system
+			end
 		end
 
-	initialized_notification_handler: GELSP_INITIALIZED_NOTIFICATION_HANDLER
-			-- Handler for 'initialized' notifications
-		once ("OBJECT")
-			create Result.make
-		end
-
-feature -- Notification handling - 'initialized'
-
-	on_initialized_notification (a_notification: LS_INITIALIZED_NOTIFICATION)
-			-- Handle initialized notification `a_notification`.
-		require
-			a_notification_not_void: a_notification /= Void
+	on_file_system_watchers_registered (a_watchers: LS_FILE_SYSTEM_WATCHER_LIST; a_registration: LS_REGISTRATION; a_response: LS_RESPONSE)
+			-- Action to be executed when the client registered file system watchers.
 		do
 			build_eiffel_system
 		end
 
-feature -- Request handling - 'textDocument/hover'
+feature -- Handling 'textDocument/hover' requests
 
-	on_hover_request (a_request: LS_HOVER_REQUEST): detachable LS_RESPONSE
-			-- Handle hover request `a_request`.
-		require
-			a_request_not_void: a_request /= Void
+	on_hover_request (a_request: LS_HOVER_REQUEST; a_response: LS_HOVER_RESPONSE)
+			-- Handle 'textDocument/hover' request `a_request`.
+			-- Build `a_response` accordingly.
 		local
 			l_browsable_name_finder: ET_BROWSABLE_NAME_FINDER
 			l_request_position: LS_POSITION
 			l_position: ET_COMPRESSED_POSITION
-			l_markdown_text: STRING_8
-			l_contents: LS_MARKUP_CONTENT
-			l_result: LS_HOVER_RESULT
+			l_text: STRING_8
 		do
 			if attached class_from_uri (a_request.text_document.uri) as l_class then
 				if not l_class.implementation_checked then
@@ -122,15 +174,37 @@ feature -- Request handling - 'textDocument/hover'
 				create l_browsable_name_finder.make (system_processor)
 				l_browsable_name_finder.find_browsable_name (l_position, l_class)
 				if attached l_browsable_name_finder.last_browsable_name as l_last_browsable_name then
-					create l_markdown_text.make (50)
-					l_markdown_text.append_string ("```eiffel%N")
-					l_last_browsable_name.append_description_to_string (l_markdown_text)
-					l_markdown_text.append_string ("%N```")
-					create l_contents.make ({LS_MARKUP_KINDS}.markdown, create {LS_STRING}.make_from_utf8 (l_markdown_text))
-					create l_result.make (l_contents)
-					create Result.make_success (a_request.id, l_result)
+					if hover_request_handler.is_markdown_supported then
+						create l_text.make (50)
+						l_text.append_string (once "```eiffel%N")
+						l_last_browsable_name.append_description_to_string (l_text)
+						l_text.append_string (once "%N```")
+						a_response.set_markdown_utf8 (l_text, Current)
+					else
+						create l_text.make (50)
+						l_last_browsable_name.append_description_to_string (l_text)
+						if hover_request_handler.is_plaintext_supported then
+							a_response.set_plaintext_utf8 (l_text, Current)
+						else
+							a_response.set_string_utf8 (l_text, Current)
+						end
+					end
 				end
 			end
+		end
+
+	hover_request_handler: LS_SERVER_HOVER_REQUEST_HANDLER
+			-- Handler for 'textDocument/hover' requests
+		once ("OBJECT")
+			create Result.make
+		end
+
+feature -- Handling 'initialized' notification
+
+	on_initialized_notification (a_notification: LS_INITIALIZED_NOTIFICATION)
+			-- Handle 'initialized' notification `a_notification`.
+		do
+			register_file_system_watchers (<<["**/*.{ecf}", {LS_WATCH_KINDS}.create_ | {LS_WATCH_KINDS}.change], ["**/*", {LS_WATCH_KINDS}.delete]>>)
 		end
 
 feature {NONE} -- Eiffel processing
@@ -140,7 +214,11 @@ feature {NONE} -- Eiffel processing
 			-- Build class filename mapping.
 		local
 			l_file: KL_TEXT_INPUT_FILE
+			dt1: detachable DT_DATE_TIME
 		do
+			if debug_mode then
+				dt1 := system_processor.benchmark_start_time
+			end
 			reset
 			find_ecf_filename
 			if attached ecf_filename as l_ecf_filename then
@@ -154,14 +232,36 @@ feature {NONE} -- Eiffel processing
 				end
 			end
 			if attached eiffel_system as l_system then
-				prepare_system (l_system)
+				system_processor.compile_all (l_system)
 				build_class_mapping (l_system)
+				if debug_mode then
+					std.error.put_line ("Class count: " + class_mapping.count.out)
+				end
+			end
+			if dt1 /= Void then
+				system_processor.record_end_time (dt1, "Total Time")
 			end
 		end
 
 	refresh_eiffel_system
 			-- Refresh Eiffel system after a class has been modified.
+		local
+			dt1: detachable DT_DATE_TIME
+			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 		do
+			if debug_mode then
+				dt1 := system_processor.benchmark_start_time
+			end
+			if attached eiffel_system as l_system then
+				l_system.reset_classes_incremental_recursive (system_processor)
+				create l_classes.make (l_system.class_count_recursive)
+				l_system.classes_do_recursive (agent l_classes.force_last)
+				system_processor.compile_classes (l_classes)
+				build_class_mapping (l_system)
+			end
+			if dt1 /= Void then
+				system_processor.record_end_time (dt1, "Total Time")
+			end
 		end
 
 	reset
@@ -219,20 +319,6 @@ feature {NONE} -- Eiffel processing
 			end
 		end
 
-	prepare_system (a_system: ET_SYSTEM)
-			-- Prepare `a_system' before being processed.
-		require
-			a_system_not_void: a_system /= Void
-		local
-			dt1: detachable DT_DATE_TIME
-		do
-			dt1 := system_processor.benchmark_start_time
-			system_processor.compile (a_system)
-			if debug_mode then
-				system_processor.record_end_time (dt1, "Total Time")
-			end
-		end
-
 	build_class_mapping (a_system: ET_SYSTEM)
 			-- Build `class_mapping` with the classes found in `a_system`.
 		require
@@ -266,13 +352,21 @@ feature -- Eiffel system
 			-- Eiffel class in file corresponding to `a_uri`, if any
 		require
 			a_uri_not_void: a_uri /= Void
+		do
+			if attached pathname_from_uri (a_uri) as l_filename then
+				Result := class_mapping.value (l_filename)
+			end
+		end
+
+	pathname_from_uri (a_uri: LS_URI): detachable STRING_8
+			-- Eiffel class in file corresponding to `a_uri`, if any
+		require
+			a_uri_not_void: a_uri /= Void
 		local
 			l_uri: UT_URI
 		do
 			create l_uri.make (a_uri.to_string.utf8_value)
-			if attached {UT_FILE_URI_ROUTINES}.uri_to_filename (l_uri) as l_filename then
-				Result := class_mapping.value (l_filename)
-			end
+			Result := {UT_FILE_URI_ROUTINES}.uri_to_filename (l_uri)
 		end
 
 	ise_version: UT_VERSION
@@ -481,6 +575,7 @@ feature -- Argument parsing
 			system_processor.set_ise_version (ise_version)
 			system_processor.set_unknown_builtin_reported (False)
 			system_processor.set_providers_enabled (True)
+			system_processor.set_suppliers_enabled (True)
 			system_processor.set_cluster_dependence_enabled (False)
 			system_processor.set_flat_mode (False)
 			system_processor.set_flat_dbc_mode (False)

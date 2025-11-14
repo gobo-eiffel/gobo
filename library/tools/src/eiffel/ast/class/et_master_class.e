@@ -2053,8 +2053,6 @@ feature -- Initialization
 			end
 		end
 
-feature {NONE} -- Initialization
-
 	reset_local_modified_class (a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Reset `a_class' appropriately if it has been modified and possibly removed (either
 			-- its old file does not exist anymore, or it has been modified and may contain another
