@@ -608,7 +608,7 @@ feature -- Parsing
 			if not is_preparsed then
 				is_preparsed := True
 				clusters.do_all (agent {ET_CLUSTER}.process (a_system_processor.eiffel_preparser))
-			elseif not is_read_only then
+			elseif not is_read_only or a_system_processor.preparse_readonly_mode then
 					-- Take care of possibly removed classes (either their old files do not exist
 					-- anymore, or they have been modified and may contain another class).
 					-- Note that if a file contains two classes and is modified between the
@@ -681,7 +681,7 @@ feature -- Parsing
 			if not is_preparsed then
 				is_preparsed := True
 				clusters.do_all (agent {ET_CLUSTER}.process (a_system_processor.eiffel_parser))
-			elseif not is_read_only then
+			elseif not is_read_only or a_system_processor.preparse_readonly_mode then
 					-- Take care of possibly removed classes (either their old files do not exist
 					-- anymore, or they have been modified and may contain another class).
 					-- Note that if a file contains two classes and is modified between the
