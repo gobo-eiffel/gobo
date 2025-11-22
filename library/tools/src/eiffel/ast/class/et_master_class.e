@@ -16,7 +16,7 @@
 		the given name when viewed from the surrounding universe using `actual_class'.
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_MASTER_CLASS
@@ -2140,6 +2140,29 @@ feature -- Initialization
 								-- preparsed using the "shallow" algorithm (i.e. the
 								-- file is named "classname.e").
 								-- We already know that the file still exists.
+								-- Just skip this class.
+						end
+					end
+				elseif attached {ET_EDITED_CLASS_TEXT_GROUP} a_class.group as l_edited_group then
+					if l_override_mode and then not l_edited_group.is_override then
+							-- This class does not belong to an override cluster.
+							-- Just skip it.
+					elseif not l_readonly_mode and then l_edited_group.is_read_only then
+							-- This class belongs to an read-only cluster (i.e. a cluster
+							-- which is not traversed again during incremental compilation).
+							-- Just skip this class.
+					else
+						l_time_stamp := a_class.time_stamp
+						l_new_timestamp := l_edited_group.time_stamp
+						if l_time_stamp < 0 or else l_new_timestamp /= l_time_stamp then
+								-- The time-stamp of the edited class text has changed or was never recorded.
+								-- The class text may have been modified.
+								-- Force parsing again.
+								-- No need to preparse again because we assume that the name of the file has not changed.
+							a_class.reset_after_preparsed
+							is_modified := is_modified or (l_actual_class = a_class)
+						else
+								-- The time-stamp of the file has not changed.
 								-- Just skip this class.
 						end
 					end
