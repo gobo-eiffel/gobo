@@ -71,6 +71,7 @@ feature {NONE} -- Initialization
 		do
 			create class_mapping.make (10_000)
 			create edited_classes.make (500)
+			create ecf_libraries.make (100)
 				-- Set environment variables "$GOBO", "$GOBO_LIBRARY",
 				-- "$BOEHM_GC" and "$ZIG" if not set yet.
 			gobo_variables.set_gobo_variables
@@ -116,7 +117,7 @@ feature -- Handling 'textDocument/didChange' notifications
 					l_master_class := l_class.master_class_in_universe
 					l_class.reset_after_preparsed
 					l_master_class.set_modified (True)
-					refresh_eiffel_system
+					refresh_eiffel_system (False)
 				elseif not edited_classes.has (l_filename) then
 					create l_edited_group.make (l_class_text, tokens.unknown_class)
 					edited_classes.force (l_edited_group, l_filename)
@@ -186,7 +187,7 @@ feature -- Handling 'textDocument/didOpen' notifications
 					l_master_class := l_class.master_class_in_universe
 					l_class.reset_after_preparsed
 					l_master_class.set_modified (True)
-					refresh_eiffel_system
+					refresh_eiffel_system (False)
 				elseif not edited_classes.has (l_filename) then
 					create l_edited_group.make (l_class_text, tokens.unknown_class)
 					edited_classes.force (l_edited_group, l_filename)
@@ -255,9 +256,15 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 			l_file_event: LS_FILE_EVENT
 			i, nb: INTEGER
 			l_incremental: BOOLEAN
+			l_preparse_needed: BOOLEAN
 			l_master_class: ET_MASTER_CLASS
 			l_no_action: BOOLEAN
 			l_deleted_class: ET_CLASS
+			l_filename: STRING_8
+			l_basename: STRING_8
+			l_dirname: STRING_8
+			l_found: BOOLEAN
+			l_group: ET_PRIMARY_GROUP
 		do
 			l_incremental := True
 			l_no_action := True
@@ -271,15 +278,24 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 					l_incremental := False
 					i := nb + 1 -- Jump out of the loop.
 				elseif file_system.has_extension (l_pathname, {KL_FILE_SYSTEM}.ecf_extension) then
-					l_no_action := False
-					l_incremental := False
-					i := nb + 1 -- Jump out of the loop.
+					if l_file_event.type.value /= {LS_FILE_CHANGE_TYPES}.changed.value then
+							-- Ignore new or deleted ECF files.
+						i := i + 1
+					elseif not ecf_libraries.has (l_pathname) then
+							-- Ignore modifications in other ECF files.
+						i := i + 1
+					else
+						l_no_action := False
+						l_incremental := False
+						i := nb + 1 -- Jump out of the loop.
+					end
 				elseif not file_system.has_extension (l_pathname, {KL_FILE_SYSTEM}.eiffel_extension) then
 						-- Look for deleted folders containing Eiffel classes.
 					if l_file_event.type.value = {LS_FILE_CHANGE_TYPES}.deleted.value then
 						from class_mapping.start until class_mapping.after loop
-							if class_mapping.key_for_iteration.starts_with (l_pathname) then
-								if not edited_classes.has (class_mapping.key_for_iteration) then
+							l_filename := class_mapping.key_for_iteration
+							if l_filename.starts_with (l_pathname) then
+								if not edited_classes.has (l_filename) then
 									l_no_action := False
 									l_deleted_class := class_mapping.item_for_iteration
 									l_master_class := l_deleted_class.master_class_in_universe
@@ -292,9 +308,36 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 					end
 					i := i + 1
 				elseif l_file_event.type.value = {LS_FILE_CHANGE_TYPES}.created.value then
+						-- Look for cluster containing this file.
+					if attached {ET_EIFFEL_PREPARSER_SKELETON} system_processor.eiffel_preparser as l_eiffel_preparser then
+						l_basename := file_system.basename (l_pathname)
+						l_dirname := file_system.dirname (l_pathname)
+						from class_mapping.start until class_mapping.after loop
+							l_filename := class_mapping.key_for_iteration
+							if file_system.same_pathnames (file_system.dirname (l_filename), l_dirname) then
+								l_group := class_mapping.item_for_iteration.group
+								if attached edited_classes.value (l_filename) as l_edited_group then
+									l_group := l_edited_group.current_group
+								end
+								if
+									attached {ET_CLUSTER} l_group as l_cluster and then
+									l_cluster.is_valid_eiffel_filename (l_basename)
+								then
+									l_found := True
+									class_mapping.go_after
+									l_eiffel_preparser.preparse_file (l_pathname, l_cluster)
+								end
+							end
+							if not l_found then
+								class_mapping.forth
+							end
+						end
+					end
 					l_no_action := False
-					l_incremental := False
-					i := nb + 1 -- Jump out of the loop.
+					if not l_found then
+						l_preparse_needed := True
+					end
+					i := i + 1
 				elseif not attached class_mapping.value (l_pathname) as l_class then
 						-- Class not in system.
 						-- Ignore this event.
@@ -315,7 +358,7 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 			if l_no_action then
 				-- Done.
 			elseif l_incremental then
-				refresh_eiffel_system
+				refresh_eiffel_system (l_preparse_needed)
 			else
 				set_system_processor
 				build_eiffel_system
@@ -339,7 +382,7 @@ feature -- Handling 'initialized' notification
 	on_initialized_notification (a_notification: LS_INITIALIZED_NOTIFICATION)
 			-- Handle 'initialized' notification `a_notification`.
 		do
-			register_file_system_watchers (<<["**/*.{ecf}", {LS_WATCH_KINDS}.change], ["**/*", {LS_WATCH_KINDS}.delete]>>)
+			register_file_system_watchers (<<["**/*.ecf", {LS_WATCH_KINDS}.change], ["**/*", {LS_WATCH_KINDS}.delete]>>)
 		end
 
 feature {NONE} -- Eiffel processing
@@ -384,6 +427,7 @@ feature {NONE} -- Eiffel processing
 				full_compilation_count := full_compilation_count + 1
 				incremental_compilation_count := 0
 				if debug_mode then
+					std.error.put_line ("ECF file count: " + ecf_libraries.count.out)
 					std.error.put_line ("Full compilation count: " + full_compilation_count.out)
 					std.error.put_line ("Incremental compilation count: " + incremental_compilation_count.out)
 					std.error.put_line ("Class count: " + class_mapping.count.out)
@@ -394,8 +438,10 @@ feature {NONE} -- Eiffel processing
 			end
 		end
 
-	refresh_eiffel_system
+	refresh_eiffel_system (a_preparse_needed: BOOLEAN)
 			-- Refresh Eiffel system after a class has been modified.
+			-- `a_preparse_needed` means that we should run a Degree 6
+			-- again to find new classes. Otherwise Degree 6 is skipped.
 		local
 			dt1: detachable DT_DATE_TIME
 			dt2: detachable DT_DATE_TIME
@@ -405,13 +451,18 @@ feature {NONE} -- Eiffel processing
 				dt1 := system_processor.benchmark_start_time
 			end
 			if attached eiffel_system as l_system then
-				if debug_mode then
-					dt2 := system_processor.benchmark_start_time
-				end
-				l_system.reset_classes_incremental_recursive (system_processor)
-				if dt2 /= Void then
-					system_processor.record_end_time (dt2, "Reset class incremental")
-					dt2 := system_processor.benchmark_start_time
+				reset_class_mapping (True)
+				if a_preparse_needed then
+					system_processor.compile_degree_6 (l_system)
+				else
+					if debug_mode then
+						dt2 := system_processor.benchmark_start_time
+					end
+					l_system.reset_classes_incremental_recursive (system_processor)
+					if dt2 /= Void then
+						system_processor.record_end_time (dt2, "Reset class incremental")
+						dt2 := system_processor.benchmark_start_time
+					end
 				end
 				build_class_mapping (l_system)
 				if dt2 /= Void then
@@ -436,8 +487,8 @@ feature {NONE} -- Eiffel processing
 		do
 			ecf_filename := Void
 			eiffel_system := Void
-			class_mapping.wipe_out
-			edited_classes.do_all (agent (a_edited_group: ET_EDITED_CLASS_TEXT_GROUP) do a_edited_group.set_current_class (tokens.unknown_class) end)
+			ecf_libraries.wipe_out
+			reset_class_mapping (False)
 		end
 
 	find_ecf_filename
@@ -470,6 +521,7 @@ feature {NONE} -- Eiffel processing
 			l_ecf_error_handler: ET_ECF_ERROR_HANDLER
 		do
 			eiffel_system := Void
+			ecf_libraries.wipe_out
 			create l_ecf_error_handler.make_standard
 			l_ecf_error_handler.set_info_file (std.error)
 			create l_ecf_parser.make (l_ecf_error_handler)
@@ -484,6 +536,12 @@ feature {NONE} -- Eiffel processing
 				report_no_system_found_error (a_file.name)
 			else
 				eiffel_system := l_last_system
+				l_last_system.universes_do_recursive (agent (a_universe: ET_UNIVERSE)
+					do
+						if attached {ET_ECF_INTERNAL_UNIVERSE} a_universe as l_ecf_universe then
+							ecf_libraries.force (l_ecf_universe, l_ecf_universe.filename)
+						end
+					end)
 			end
 		end
 
@@ -492,7 +550,28 @@ feature {NONE} -- Eiffel processing
 		require
 			a_system_not_void: a_system /= Void
 		do
-			if not class_mapping.is_empty then
+			reset_class_mapping (True)
+			a_system.classes_do_recursive (
+				agent (a_class: ET_CLASS)
+					do
+						if attached a_class.filename as l_filename then
+							if attached edited_classes.value (l_filename) as l_edited_group then
+								l_edited_group.set_current_class (a_class)
+								a_class.set_group (l_edited_group)
+							end
+							class_mapping.force_last (a_class, l_filename)
+						end
+					end)
+		end
+
+	reset_class_mapping (a_incremental: BOOLEAN)
+			-- Reset `class_mapping`.
+			-- If `a_incremental` is False, it means that we recompile from scratch.
+		do
+			if not a_incremental then
+				class_mapping.wipe_out
+				edited_classes.do_all (agent (a_edited_group: ET_EDITED_CLASS_TEXT_GROUP) do a_edited_group.set_current_class (tokens.unknown_class) end)
+			elseif not class_mapping.is_empty then
 				edited_classes.do_all (agent (a_edited_group: ET_EDITED_CLASS_TEXT_GROUP)
 					local
 						l_edited_class: ET_CLASS
@@ -505,17 +584,9 @@ feature {NONE} -- Eiffel processing
 					end)
 				class_mapping.wipe_out
 			end
-			a_system.classes_do_recursive (
-				agent (a_class: ET_CLASS)
-					do
-						if attached a_class.filename as l_filename then
-							if attached edited_classes.value (l_filename) as l_edited_group then
-								l_edited_group.set_current_class (a_class)
-								a_class.set_group (l_edited_group)
-							end
-							class_mapping.force_last (a_class, l_filename)
-						end
-					end)
+		ensure
+			class_mapping_reset: class_mapping.is_empty
+			edited_classes_reset: across edited_classes as l_edited_class all l_edited_class.current_class.is_unknown end
 		end
 
 feature -- Eiffel system
@@ -534,6 +605,9 @@ feature -- Eiffel system
 
 	edited_classes: DS_HASH_TABLE [ET_EDITED_CLASS_TEXT_GROUP, STRING_8]
 			-- Text of Eiffel classes currently edited in the client, indexed by filenames
+
+	ecf_libraries: DS_HASH_TABLE [ET_ECF_INTERNAL_UNIVERSE, STRING_8]
+			-- ECF libraries indexed by ECF filenames
 
 	class_from_uri (a_uri: LS_URI): detachable ET_CLASS
 			-- Eiffel class in file corresponding to `a_uri`, if any
@@ -839,8 +913,13 @@ invariant
 	system_processor_not_void: system_processor /= Void
 	class_mapping_not_void: class_mapping /= Void
 	no_void_mapped_class: not class_mapping.has_void_item
+	no_void_mapped_class_filename: not class_mapping.has_void
 	edited_classes_not_void: edited_classes /= Void
 	no_void_edited_class: not edited_classes.has_void_item
+	no_void_edited_class_filename: not edited_classes.has_void
+	ecf_libraries_not_void: ecf_libraries /= Void
+	no_void_ecf_library: not ecf_libraries.has_void_item
+	no_void_ecf_library_filename: not ecf_libraries.has_void
 	ise_version_not_void: ise_version /= Void
 	setting_option_not_void: setting_option /= Void
 	capability_option_not_void: capability_option /= Void
