@@ -18,8 +18,15 @@ inherit
 			make,
 			server_name,
 			server_description,
+			did_change_text_document_notification_handler,
+			did_change_watched_files_notification_handler,
+			did_close_text_document_notification_handler,
+			did_open_text_document_notification_handler,
 			hover_request_handler,
+			on_did_change_text_document_notification,
 			on_did_change_watched_files_notification,
+			on_did_close_text_document_notification,
+			on_did_open_text_document_notification,
 			on_file_system_watchers_registered,
 			on_hover_request,
 			on_initialized_notification,
@@ -31,6 +38,9 @@ inherit
 	GELSP_VERSION
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
+		export {NONE} all end
+
+	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
 	UT_SHARED_ISE_VARIABLES
@@ -60,6 +70,7 @@ feature {NONE} -- Initialization
 			-- Create a new message manager.
 		do
 			create class_mapping.make (10_000)
+			create edited_classes.make (500)
 				-- Set environment variables "$GOBO", "$GOBO_LIBRARY",
 				-- "$BOEHM_GC" and "$ZIG" if not set yet.
 			gobo_variables.set_gobo_variables
@@ -78,80 +89,115 @@ feature -- Access
 	server_description: STRING_8 = "Gobo Eiffel LSP, Language Server for Eiffel."
 			-- Server description
 
-feature -- Handling 'workspace/didChangeWatchedFiles' notifications
+feature -- Handling 'textDocument/didChange' notifications
 
-	on_did_change_watched_files_notification (a_notification: LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION)
-			-- Handle 'workspace/didChangeWatchedFiles' notification `a_notification`.
-			-- Actions to be executed when watched files are changed.
+	on_did_change_text_document_notification (a_notification: LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION)
+			-- Handle 'textDocument/didChange' notification `a_notification`.
+			-- Actions to be executed when text documents are changed in the client.
 		local
-			l_changes: LS_FILE_EVENT_LIST
-			l_file_event: LS_FILE_EVENT
-			i, nb: INTEGER
-			l_incremental: BOOLEAN
+			nb: INTEGER
+			l_class_text: STRING_8
+			l_content_changes: LS_TEXT_DOCUMENT_CONTENT_CHANGE_EVENT_LIST
+			l_edited_group: ET_EDITED_CLASS_TEXT_GROUP
 			l_master_class: ET_MASTER_CLASS
-			l_no_action: BOOLEAN
-			l_deleted_class: ET_CLASS
 		do
-			l_incremental := True
-			l_no_action := True
-			l_changes := a_notification.changes
-			nb := l_changes.count
-			from i := 1 until i > nb loop
-				l_file_event := l_changes.file_event (i)
-				if not attached pathname_from_uri (l_file_event.uri) as l_pathname then
-						-- Rebuild from scratch, just in case we missed something.
-					l_no_action := False
-					l_incremental := False
-					i := nb + 1 -- Jump out of the loop.
-				elseif file_system.has_extension (l_pathname, {KL_FILE_SYSTEM}.ecf_extension) then
-					l_no_action := False
-					l_incremental := False
-					i := nb + 1 -- Jump out of the loop.
-				elseif not file_system.has_extension (l_pathname, {KL_FILE_SYSTEM}.eiffel_extension) then
-						-- Look for deleted folders containing Eiffel classes.
-					if l_file_event.type.value = {LS_FILE_CHANGE_TYPES}.deleted.value then
-						from class_mapping.start until class_mapping.after loop
-							if class_mapping.key_for_iteration.starts_with (l_pathname) then
-								l_no_action := False
-								l_deleted_class := class_mapping.item_for_iteration
-								l_master_class := l_deleted_class.master_class_in_universe
-								l_master_class.reset_local_modified_class (l_deleted_class, system_processor)
-								l_master_class.remove_unknown_local_classes
-							end
-							class_mapping.forth
-						end
+			l_content_changes := a_notification.content_changes
+			nb := l_content_changes.count
+			if nb > 0 and attached pathname_from_uri (a_notification.text_document.uri) as l_filename then
+				l_class_text := l_content_changes.text_document_content_change_event (nb).text.utf8_value
+				if attached class_mapping.value (l_filename) as l_class then
+					if attached {ET_EDITED_CLASS_TEXT_GROUP} l_class.group as l_group then
+						l_group.set_class_text (l_class_text)
+					else
+						create l_edited_group.make (l_class_text, l_class)
+						l_class.set_group (l_edited_group)
+						edited_classes.force (l_edited_group, l_filename)
 					end
-					i := i + 1
-				elseif l_file_event.type.value = {LS_FILE_CHANGE_TYPES}.created.value then
-					l_no_action := False
-					l_incremental := False
-					i := nb + 1 -- Jump out of the loop.
-				elseif not attached class_mapping.value (l_pathname) as l_class then
-					l_no_action := False
-					l_incremental := False
-					i := nb + 1 -- Jump out of the loop.
-				else
-					l_no_action := False
 					l_master_class := l_class.master_class_in_universe
-					l_master_class.reset_local_modified_class (l_class, system_processor)
-					l_master_class.remove_unknown_local_classes
-					i := i + 1
+					l_class.reset_after_preparsed
+					l_master_class.set_modified (True)
+					refresh_eiffel_system
+				elseif not edited_classes.has (l_filename) then
+					create l_edited_group.make (l_class_text, tokens.unknown_class)
+					edited_classes.force (l_edited_group, l_filename)
 				end
-			end
-			if l_no_action then
-				-- Done.
-			elseif l_incremental then
-				refresh_eiffel_system
-			else
-				set_system_processor
-				build_eiffel_system
 			end
 		end
 
-	on_file_system_watchers_registered (a_watchers: LS_FILE_SYSTEM_WATCHER_LIST; a_registration: LS_REGISTRATION; a_response: LS_RESPONSE)
-			-- Action to be executed when the client registered file system watchers.
+	did_change_text_document_notification_handler: LS_SERVER_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION_HANDLER
+			-- Handler for 'textDocument/didChange' notifications
+		once ("OBJECT")
+			create Result.make
+			Result.set_server_options ({LS_TEXT_DOCUMENT_SYNC_KINDS}.full)
+		end
+
+feature -- Handling 'textDocument/didClose' notifications
+
+	on_did_close_text_document_notification (a_notification: LS_DID_CLOSE_TEXT_DOCUMENT_NOTIFICATION)
+			-- Handle 'textDocument/didClose' notification `a_notification`.
+			-- Actions to be executed when text documents are closed in the client.
+		local
+			l_edited_class: ET_CLASS
 		do
-			build_eiffel_system
+			if attached pathname_from_uri (a_notification.text_document.uri) as l_filename then
+				if attached class_mapping.value (l_filename) as l_class then
+					if attached {ET_EDITED_CLASS_TEXT_GROUP} l_class.group as l_edited_group then
+						l_class.set_group (l_edited_group.current_group)
+						l_edited_group.set_current_class (tokens.unknown_class)
+					end
+				end
+				if attached edited_classes.value (l_filename) as l_edited_group then
+					l_edited_class := l_edited_group.current_class
+					if not l_edited_class.is_unknown then
+						l_edited_class.set_group (l_edited_group.current_group)
+						l_edited_group.set_current_class (tokens.unknown_class)
+					end
+					edited_classes.remove (l_filename)
+				end
+			end
+		end
+
+	did_close_text_document_notification_handler: LS_SERVER_DID_CLOSE_TEXT_DOCUMENT_NOTIFICATION_HANDLER
+			-- Handler for 'textDocument/didClose' notifications
+		once ("OBJECT")
+			create Result.make
+		end
+
+feature -- Handling 'textDocument/didOpen' notifications
+
+	on_did_open_text_document_notification (a_notification: LS_DID_OPEN_TEXT_DOCUMENT_NOTIFICATION)
+			-- Handle 'textDocument/didOpen' notification `a_notification`.
+			-- Actions to be executed when text documents are newly opened in the client.
+		local
+			l_class_text: STRING_8
+			l_edited_group: ET_EDITED_CLASS_TEXT_GROUP
+			l_master_class: ET_MASTER_CLASS
+		do
+			if attached pathname_from_uri (a_notification.text_document.uri) as l_filename then
+				l_class_text := a_notification.text_document.text.utf8_value
+				if attached class_mapping.value (l_filename) as l_class then
+					if attached {ET_EDITED_CLASS_TEXT_GROUP} l_class.group as l_group then
+						l_group.set_class_text (l_class_text)
+					else
+						create l_edited_group.make (l_class_text, l_class)
+						l_class.set_group (l_edited_group)
+						edited_classes.force (l_edited_group, l_filename)
+					end
+					l_master_class := l_class.master_class_in_universe
+					l_class.reset_after_preparsed
+					l_master_class.set_modified (True)
+					refresh_eiffel_system
+				elseif not edited_classes.has (l_filename) then
+					create l_edited_group.make (l_class_text, tokens.unknown_class)
+					edited_classes.force (l_edited_group, l_filename)
+				end
+			end
+		end
+
+	did_open_text_document_notification_handler: LS_SERVER_DID_OPEN_TEXT_DOCUMENT_NOTIFICATION_HANDLER
+			-- Handler for 'textDocument/didOpen' notifications
+		once ("OBJECT")
+			create Result.make
 		end
 
 feature -- Handling 'textDocument/hover' requests
@@ -199,12 +245,101 @@ feature -- Handling 'textDocument/hover' requests
 			create Result.make
 		end
 
+feature -- Handling 'workspace/didChangeWatchedFiles' notifications
+
+	on_did_change_watched_files_notification (a_notification: LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION)
+			-- Handle 'workspace/didChangeWatchedFiles' notification `a_notification`.
+			-- Actions to be executed when watched files are changed.
+		local
+			l_changes: LS_FILE_EVENT_LIST
+			l_file_event: LS_FILE_EVENT
+			i, nb: INTEGER
+			l_incremental: BOOLEAN
+			l_master_class: ET_MASTER_CLASS
+			l_no_action: BOOLEAN
+			l_deleted_class: ET_CLASS
+		do
+			l_incremental := True
+			l_no_action := True
+			l_changes := a_notification.changes
+			nb := l_changes.count
+			from i := 1 until i > nb loop
+				l_file_event := l_changes.file_event (i)
+				if not attached pathname_from_uri (l_file_event.uri) as l_pathname then
+						-- Rebuild from scratch, just in case we missed something.
+					l_no_action := False
+					l_incremental := False
+					i := nb + 1 -- Jump out of the loop.
+				elseif file_system.has_extension (l_pathname, {KL_FILE_SYSTEM}.ecf_extension) then
+					l_no_action := False
+					l_incremental := False
+					i := nb + 1 -- Jump out of the loop.
+				elseif not file_system.has_extension (l_pathname, {KL_FILE_SYSTEM}.eiffel_extension) then
+						-- Look for deleted folders containing Eiffel classes.
+					if l_file_event.type.value = {LS_FILE_CHANGE_TYPES}.deleted.value then
+						from class_mapping.start until class_mapping.after loop
+							if class_mapping.key_for_iteration.starts_with (l_pathname) then
+								if not edited_classes.has (class_mapping.key_for_iteration) then
+									l_no_action := False
+									l_deleted_class := class_mapping.item_for_iteration
+									l_master_class := l_deleted_class.master_class_in_universe
+									l_master_class.reset_local_modified_class (l_deleted_class, system_processor)
+									l_master_class.remove_unknown_local_classes
+								end
+							end
+							class_mapping.forth
+						end
+					end
+					i := i + 1
+				elseif l_file_event.type.value = {LS_FILE_CHANGE_TYPES}.created.value then
+					l_no_action := False
+					l_incremental := False
+					i := nb + 1 -- Jump out of the loop.
+				elseif not attached class_mapping.value (l_pathname) as l_class then
+						-- Class not in system.
+						-- Ignore this event.
+					i := i + 1
+				elseif edited_classes.has (l_pathname) then
+						-- Class being edited in the client.
+						-- Ignore this event. Modifications to this class
+						-- are handled by `on_did_change_text_document_notification`.
+					i := i + 1
+				else
+					l_no_action := False
+					l_master_class := l_class.master_class_in_universe
+					l_master_class.reset_local_modified_class (l_class, system_processor)
+					l_master_class.remove_unknown_local_classes
+					i := i + 1
+				end
+			end
+			if l_no_action then
+				-- Done.
+			elseif l_incremental then
+				refresh_eiffel_system
+			else
+				set_system_processor
+				build_eiffel_system
+			end
+		end
+
+	on_file_system_watchers_registered (a_watchers: LS_FILE_SYSTEM_WATCHER_LIST; a_registration: LS_REGISTRATION; a_response: LS_RESPONSE)
+			-- Action to be executed when the client registered file system watchers.
+		do
+			build_eiffel_system
+		end
+
+	did_change_watched_files_notification_handler: LS_SERVER_DID_CHANGE_WATCHED_FILES_NOTIFICATION_HANDLER
+			-- Handler for 'workspace/didChangeWatchedFiles' notifications
+		once ("OBJECT")
+			create Result.make
+		end
+
 feature -- Handling 'initialized' notification
 
 	on_initialized_notification (a_notification: LS_INITIALIZED_NOTIFICATION)
 			-- Handle 'initialized' notification `a_notification`.
 		do
-			register_file_system_watchers (<<["**/*.{ecf}", {LS_WATCH_KINDS}.create_ | {LS_WATCH_KINDS}.change], ["**/*", {LS_WATCH_KINDS}.delete]>>)
+			register_file_system_watchers (<<["**/*.{ecf}", {LS_WATCH_KINDS}.change], ["**/*", {LS_WATCH_KINDS}.delete]>>)
 		end
 
 feature {NONE} -- Eiffel processing
@@ -215,13 +350,19 @@ feature {NONE} -- Eiffel processing
 		local
 			l_file: KL_TEXT_INPUT_FILE
 			dt1: detachable DT_DATE_TIME
+			dt2: detachable DT_DATE_TIME
+			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 		do
 			if debug_mode then
 				dt1 := system_processor.benchmark_start_time
 			end
 			reset
+			{MEMORY}.full_collect
 			find_ecf_filename
 			if attached ecf_filename as l_ecf_filename then
+				if debug_mode then
+					dt2 := system_processor.benchmark_start_time
+				end
 				create l_file.make (l_ecf_filename)
 				l_file.open_read
 				if l_file.is_open_read then
@@ -230,11 +371,21 @@ feature {NONE} -- Eiffel processing
 				else
 					report_cannot_read_error (l_ecf_filename)
 				end
+				if dt2 /= Void then
+					system_processor.record_end_time (dt2, "Read ECF file")
+				end
 			end
 			if attached eiffel_system as l_system then
-				system_processor.compile_all (l_system)
+				system_processor.compile_degree_6 (l_system)
 				build_class_mapping (l_system)
+				create l_classes.make (l_system.class_count_recursive)
+				l_system.classes_do_recursive (agent l_classes.force_last)
+				system_processor.compile_classes (l_classes)
+				full_compilation_count := full_compilation_count + 1
+				incremental_compilation_count := 0
 				if debug_mode then
+					std.error.put_line ("Full compilation count: " + full_compilation_count.out)
+					std.error.put_line ("Incremental compilation count: " + incremental_compilation_count.out)
 					std.error.put_line ("Class count: " + class_mapping.count.out)
 				end
 			end
@@ -247,17 +398,33 @@ feature {NONE} -- Eiffel processing
 			-- Refresh Eiffel system after a class has been modified.
 		local
 			dt1: detachable DT_DATE_TIME
+			dt2: detachable DT_DATE_TIME
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 		do
 			if debug_mode then
 				dt1 := system_processor.benchmark_start_time
 			end
 			if attached eiffel_system as l_system then
+				if debug_mode then
+					dt2 := system_processor.benchmark_start_time
+				end
 				l_system.reset_classes_incremental_recursive (system_processor)
+				if dt2 /= Void then
+					system_processor.record_end_time (dt2, "Reset class incremental")
+					dt2 := system_processor.benchmark_start_time
+				end
+				build_class_mapping (l_system)
+				if dt2 /= Void then
+					system_processor.record_end_time (dt2, "Build class mapping")
+				end
 				create l_classes.make (l_system.class_count_recursive)
 				l_system.classes_do_recursive (agent l_classes.force_last)
 				system_processor.compile_classes (l_classes)
-				build_class_mapping (l_system)
+				incremental_compilation_count := incremental_compilation_count + 1
+				if debug_mode then
+					std.error.put_line ("Full compilation count: " + full_compilation_count.out)
+					std.error.put_line ("Incremental compilation count: " + incremental_compilation_count.out)
+				end
 			end
 			if dt1 /= Void then
 				system_processor.record_end_time (dt1, "Total Time")
@@ -270,6 +437,7 @@ feature {NONE} -- Eiffel processing
 			ecf_filename := Void
 			eiffel_system := Void
 			class_mapping.wipe_out
+			edited_classes.do_all (agent (a_edited_group: ET_EDITED_CLASS_TEXT_GROUP) do a_edited_group.set_current_class (tokens.unknown_class) end)
 		end
 
 	find_ecf_filename
@@ -324,11 +492,27 @@ feature {NONE} -- Eiffel processing
 		require
 			a_system_not_void: a_system /= Void
 		do
-			class_mapping.wipe_out
+			if not class_mapping.is_empty then
+				edited_classes.do_all (agent (a_edited_group: ET_EDITED_CLASS_TEXT_GROUP)
+					local
+						l_edited_class: ET_CLASS
+					do
+						l_edited_class := a_edited_group.current_class
+						if not l_edited_class.is_unknown then
+							l_edited_class.set_group (a_edited_group.current_group)
+							a_edited_group.set_current_class (tokens.unknown_class)
+						end
+					end)
+				class_mapping.wipe_out
+			end
 			a_system.classes_do_recursive (
 				agent (a_class: ET_CLASS)
 					do
 						if attached a_class.filename as l_filename then
+							if attached edited_classes.value (l_filename) as l_edited_group then
+								l_edited_group.set_current_class (a_class)
+								a_class.set_group (l_edited_group)
+							end
 							class_mapping.force_last (a_class, l_filename)
 						end
 					end)
@@ -347,6 +531,9 @@ feature -- Eiffel system
 
 	class_mapping: DS_HASH_TABLE [ET_CLASS, STRING_8]
 			-- Eiffel classes indexed by filenames
+
+	edited_classes: DS_HASH_TABLE [ET_EDITED_CLASS_TEXT_GROUP, STRING_8]
+			-- Text of Eiffel classes currently edited in the client, indexed by filenames
 
 	class_from_uri (a_uri: LS_URI): detachable ET_CLASS
 			-- Eiffel class in file corresponding to `a_uri`, if any
@@ -398,6 +585,12 @@ feature -- Eiffel system
 		ensure
 			thread_count_not_negative: Result >= 1
 		end
+
+	full_compilation_count: INTEGER
+			-- Number of compilations from scratch
+
+	incremental_compilation_count: INTEGER
+			-- Number of incremental compilations since the last compilation from scratch
 
 feature -- Argument parsing
 
@@ -574,6 +767,9 @@ feature -- Argument parsing
 			system_processor.set_metrics_shown (False)
 			system_processor.set_ise_version (ise_version)
 			system_processor.set_unknown_builtin_reported (False)
+			system_processor.set_preparse_shallow_mode
+				-- Parse again classes even when they are in read-only clusters.
+			system_processor.set_preparse_readonly_mode (True)
 			system_processor.set_providers_enabled (True)
 			system_processor.set_suppliers_enabled (True)
 			system_processor.set_cluster_dependence_enabled (False)
@@ -641,6 +837,10 @@ feature -- Error handling
 invariant
 
 	system_processor_not_void: system_processor /= Void
+	class_mapping_not_void: class_mapping /= Void
+	no_void_mapped_class: not class_mapping.has_void_item
+	edited_classes_not_void: edited_classes /= Void
+	no_void_edited_class: not edited_classes.has_void_item
 	ise_version_not_void: ise_version /= Void
 	setting_option_not_void: setting_option /= Void
 	capability_option_not_void: capability_option /= Void
