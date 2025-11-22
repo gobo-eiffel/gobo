@@ -14,11 +14,24 @@ inherit
 
 	LS_ANY
 
+convert
+
+	value: {NATURAL_32},
+	to_uinteger: {LS_UINTEGER}
+
 feature -- Access
 
 	value: NATURAL_32
 			-- Unsigned integer value
+		do
+			Result := to_uinteger.value
+		end
+
+	to_uinteger: LS_UINTEGER
+			-- Uinteger representation
 		deferred
+		ensure
+			to_uinteger_not_void: Result /= Void
 		end
 
 	bit_or alias "|" (other: LS_WATCH_KIND): LS_WATCH_KIND
@@ -44,7 +57,7 @@ feature -- Status report
 
 	has_change_value: BOOLEAN
 			-- Interested in change events
-		do	
+		do
 			Result := (value & {LS_WATCH_KINDS}.change.value) = {LS_WATCH_KINDS}.change.value
 		end
 

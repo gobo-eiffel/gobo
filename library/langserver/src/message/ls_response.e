@@ -67,7 +67,20 @@ feature -- Access
 			instance_free: class
 		end
 
-feature-- Field names
+feature -- Setting
+
+	set_error (a_error: LS_RESPONSE_ERROR)
+			-- Set `error` to `a_error`.
+		require
+			a_error_not_void: a_error /= Void
+		do
+			error := a_error
+			result_ := Void
+		ensure
+			error_set: error = a_error
+		end
+
+feature -- Field names
 
 	id_name: STRING_8 = "id"
 	result_name: STRING_8 = "result"

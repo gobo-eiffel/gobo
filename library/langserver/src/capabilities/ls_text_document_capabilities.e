@@ -27,10 +27,21 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	synchronization: detachable LS_TEXT_DOCUMENT_SYNC_CAPABILITIES
+			-- Capabilities specific to text document synchronization
+
 	hover: detachable LS_HOVER_CAPABILITIES
 			-- Capabilities specific to the 'textDocument/hover' request.
 
 feature -- Setting
+
+	set_synchronization (a_synchronization: like synchronization)
+			-- Set `synchronization` to `a_synchronization`.
+		do
+			synchronization := a_synchronization
+		ensure
+			synchronization_set: synchronization = a_synchronization
+		end
 
 	set_hover (a_hover: like hover)
 			-- Set `hover` to `a_hover`.
@@ -43,6 +54,7 @@ feature -- Setting
 feature -- Field names
 
 	hover_name: STRING_8 = "hover"
+	synchronization_name: STRING_8 = "synchronization"
 			-- Field names
 
 feature -- Processing

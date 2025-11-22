@@ -966,6 +966,63 @@ feature -- Access
 			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
 		end
 
+	did_change_text_document_registration_options_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_DID_CHANGE_TEXT_DOCUMENT_REGISTRATION_OPTIONS
+			-- Convert `a_object` to a did change text document registration options.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if not attached text_document_sync_kind_in_object (a_object, {LS_DID_CHANGE_TEXT_DOCUMENT_REGISTRATION_OPTIONS}.sync_kind_name, False) as l_sync_kind then
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					last_error := a_field_name + "." + {LS_DID_CHANGE_TEXT_DOCUMENT_REGISTRATION_OPTIONS}.sync_kind_name + ": missing field"
+				end
+			elseif not attached optional_document_selector_in_object (a_object, {LS_DID_CHANGE_TEXT_DOCUMENT_REGISTRATION_OPTIONS}.document_selector_name, False) as l_document_selector then
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					last_error := a_field_name + "." + {LS_DID_CHANGE_TEXT_DOCUMENT_REGISTRATION_OPTIONS}.document_selector_name + ": missing field"
+				end
+			else
+				create Result.make (l_sync_kind, l_document_selector)
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	did_change_text_document_registration_options_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DID_CHANGE_TEXT_DOCUMENT_REGISTRATION_OPTIONS
+			-- Did change text document registration options stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_DID_CHANGE_TEXT_DOCUMENT_REGISTRATION_OPTIONS} l_value as l_did_change_text_document_registration_options then
+				Result := l_did_change_text_document_registration_options
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := did_change_text_document_registration_options_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
 	did_change_watched_files_capabilities_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_DID_CHANGE_WATCHED_FILES_CAPABILITIES
 			-- Convert `a_object` to a did change watched files capabilities.
 			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
@@ -1069,6 +1126,292 @@ feature -- Access
 				last_error := a_field_name + ": invalid type"
 			else
 				Result := did_change_watched_files_registration_options_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	did_close_text_document_options_from_any (a_any: LS_ANY; a_field_name: STRING_8): detachable LS_DID_CLOSE_TEXT_DOCUMENT_OPTIONS
+			-- Convert `a_any` to a did close text document options.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_any_not_void: a_any /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached {LS_DID_CLOSE_TEXT_DOCUMENT_OPTIONS} a_any as l_did_close_text_document_options then
+				Result := l_did_close_text_document_options
+			else
+				last_error := a_field_name + ": invalid type"
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	did_close_text_document_options_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DID_CLOSE_TEXT_DOCUMENT_OPTIONS
+			-- Did close text document options stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached a_object.value (a_field_name) as l_value then
+				Result := did_close_text_document_options_from_any (l_value, a_field_name)
+			elseif not a_optional then
+				last_error := a_field_name + ": missing field"
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	did_close_text_document_registration_options_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_DID_CLOSE_TEXT_DOCUMENT_REGISTRATION_OPTIONS
+			-- Convert `a_object` to a did close text document registration options.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if not attached optional_document_selector_in_object (a_object, {LS_DID_CLOSE_TEXT_DOCUMENT_REGISTRATION_OPTIONS}.document_selector_name, False) as l_document_selector then
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					last_error := a_field_name + "." + {LS_DID_CLOSE_TEXT_DOCUMENT_REGISTRATION_OPTIONS}.document_selector_name + ": missing field"
+				end
+			else
+				create Result.make (l_document_selector)
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	did_close_text_document_registration_options_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DID_CLOSE_TEXT_DOCUMENT_REGISTRATION_OPTIONS
+			-- Did close text document registration options stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_DID_CLOSE_TEXT_DOCUMENT_REGISTRATION_OPTIONS} l_value as l_did_close_text_document_registration_options then
+				Result := l_did_close_text_document_registration_options
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := did_close_text_document_registration_options_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	did_open_text_document_options_from_any (a_any: LS_ANY; a_field_name: STRING_8): detachable LS_DID_OPEN_TEXT_DOCUMENT_OPTIONS
+			-- Convert `a_any` to a did open text document options.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_any_not_void: a_any /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached {LS_DID_OPEN_TEXT_DOCUMENT_OPTIONS} a_any as l_did_open_text_document_options then
+				Result := l_did_open_text_document_options
+			else
+				last_error := a_field_name + ": invalid type"
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	did_open_text_document_options_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DID_OPEN_TEXT_DOCUMENT_OPTIONS
+			-- Did open text document options stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached a_object.value (a_field_name) as l_value then
+				Result := did_open_text_document_options_from_any (l_value, a_field_name)
+			elseif not a_optional then
+				last_error := a_field_name + ": missing field"
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	did_open_text_document_registration_options_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_DID_OPEN_TEXT_DOCUMENT_REGISTRATION_OPTIONS
+			-- Convert `a_object` to a did open text document registration options.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if not attached optional_document_selector_in_object (a_object, {LS_DID_OPEN_TEXT_DOCUMENT_REGISTRATION_OPTIONS}.document_selector_name, False) as l_document_selector then
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					last_error := a_field_name + "." + {LS_DID_OPEN_TEXT_DOCUMENT_REGISTRATION_OPTIONS}.document_selector_name + ": missing field"
+				end
+			else
+				create Result.make (l_document_selector)
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	did_open_text_document_registration_options_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DID_OPEN_TEXT_DOCUMENT_REGISTRATION_OPTIONS
+			-- Did open text document registration options stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_DID_OPEN_TEXT_DOCUMENT_REGISTRATION_OPTIONS} l_value as l_did_open_text_document_registration_options then
+				Result := l_did_open_text_document_registration_options
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := did_open_text_document_registration_options_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	did_save_text_document_options_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_DID_SAVE_TEXT_DOCUMENT_OPTIONS
+			-- Convert `a_object` to a did save text document options.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_include_text: detachable LS_BOOLEAN
+		do
+			last_error := Void
+			l_include_text := boolean_in_object (a_object, {LS_DID_SAVE_TEXT_DOCUMENT_OPTIONS}.include_text_name, True)
+			if attached last_error as l_last_error then
+				last_error := a_field_name + "." + l_last_error
+			else
+				create Result.make (l_include_text)
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	did_save_text_document_options_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DID_SAVE_TEXT_DOCUMENT_OPTIONS
+			-- Did save text document options stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_DID_SAVE_TEXT_DOCUMENT_OPTIONS} l_value as l_did_save_text_document_options then
+				Result := l_did_save_text_document_options
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := did_save_text_document_options_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	did_save_text_document_registration_options_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_DID_SAVE_TEXT_DOCUMENT_REGISTRATION_OPTIONS
+			-- Convert `a_object` to a did save text document registration options.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_include_text: detachable LS_BOOLEAN
+		do
+			last_error := Void
+			if not attached optional_document_selector_in_object (a_object, {LS_DID_SAVE_TEXT_DOCUMENT_REGISTRATION_OPTIONS}.document_selector_name, False) as l_document_selector then
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					last_error := a_field_name + "." + {LS_DID_SAVE_TEXT_DOCUMENT_REGISTRATION_OPTIONS}.document_selector_name + ": missing field"
+				end
+			else
+				l_include_text := boolean_in_object (a_object, {LS_DID_SAVE_TEXT_DOCUMENT_REGISTRATION_OPTIONS}.include_text_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					create Result.make (l_include_text, l_document_selector)
+				end
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	did_save_text_document_registration_options_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DID_SAVE_TEXT_DOCUMENT_REGISTRATION_OPTIONS
+			-- Did save text document registration options stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_DID_SAVE_TEXT_DOCUMENT_REGISTRATION_OPTIONS} l_value as l_did_save_text_document_registration_options then
+				Result := l_did_save_text_document_registration_options
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := did_save_text_document_registration_options_from_object (l_object, a_field_name)
 			end
 		ensure
 			error: last_error /= Void implies Result = Void
@@ -1256,6 +1599,46 @@ feature -- Access
 			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
 		end
 
+	file_change_type_from_any (a_any: LS_ANY; a_field_name: STRING_8): detachable LS_FILE_CHANGE_TYPE
+			-- Convert `a_any` to a file change type.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_any_not_void: a_any /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached {LS_FILE_CHANGE_TYPE} a_any as l_file_change_type then
+				Result := l_file_change_type
+			elseif attached {LS_NUMBER} a_any as l_number and then l_number.is_integer then
+				Result := l_number.to_integer
+			else
+				last_error := a_field_name + ": invalid type"
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	file_change_type_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_FILE_CHANGE_TYPE
+			-- File change type stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached a_object.value (a_field_name) as l_value then
+				Result := file_change_type_from_any (l_value, a_field_name)
+			elseif not a_optional then
+				last_error := a_field_name + ": missing field"
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
 	file_event_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_FILE_EVENT
 			-- Convert `a_object` to a file event.
 			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
@@ -1371,46 +1754,6 @@ feature -- Access
 				last_error := a_field_name + ": invalid type"
 			else
 				Result := file_event_list_from_array (l_array, a_field_name)
-			end
-		ensure
-			error: last_error /= Void implies Result = Void
-			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
-		end
-
-	file_change_type_from_any (a_any: LS_ANY; a_field_name: STRING_8): detachable LS_FILE_CHANGE_TYPE
-			-- Convert `a_any` to a file change type.
-			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
-			-- Set `last_error` in case of error.
-		require
-			a_any_not_void: a_any /= Void
-			a_field_name_not_void: a_field_name /= Void
-		do
-			last_error := Void
-			if attached {LS_FILE_CHANGE_TYPE} a_any as l_file_change_type then
-				Result := l_file_change_type
-			elseif attached {LS_NUMBER} a_any as l_number and then l_number.is_integer then
-				Result := l_number.to_integer
-			else
-				last_error := a_field_name + ": invalid type"
-			end
-		ensure
-			error_or_success: Result /= Void xor last_error /= Void
-		end
-
-	file_change_type_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_FILE_CHANGE_TYPE
-			-- File change type stored in field `a_field_name` of `a_object`.
-			-- `a_optional` means that that it is valid if there is no
-			-- such field in `a_object`. Return Void in that case.
-			-- Set `last_error` in case of error.
-		require
-			a_object_not_void: a_object /= Void
-			a_field_name_not_void: a_field_name /= Void
-		do
-			last_error := Void
-			if attached a_object.value (a_field_name) as l_value then
-				Result := file_change_type_from_any (l_value, a_field_name)
-			elseif not a_optional then
-				last_error := a_field_name + ": missing field"
 			end
 		ensure
 			error: last_error /= Void implies Result = Void
@@ -2607,6 +2950,46 @@ feature -- Access
 			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
 		end
 
+	optional_did_save_text_document_options_from_any (a_any: LS_ANY; a_field_name: STRING_8): detachable LS_OPTIONAL_DID_SAVE_TEXT_DOCUMENT_OPTIONS
+			-- Convert `a_any` to an optional did save text document options.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_any_not_void: a_any /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached {LS_OPTIONAL_DID_SAVE_TEXT_DOCUMENT_OPTIONS} a_any as l_optional_did_save_text_document_options then
+				Result := l_optional_did_save_text_document_options
+			elseif attached {LS_OBJECT} a_any as l_object and then attached did_save_text_document_options_from_object (l_object, a_field_name) as l_did_save_text_document_options then
+				Result := l_did_save_text_document_options
+			else
+				last_error := a_field_name + ": invalid type"
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	optional_did_save_text_document_options_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_OPTIONAL_DID_SAVE_TEXT_DOCUMENT_OPTIONS
+			-- Optional did save text document options stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached a_object.value (a_field_name) as l_value then
+				Result := optional_did_save_text_document_options_from_any (l_value, a_field_name)
+			elseif not a_optional then
+				last_error := a_field_name + ": missing field"
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
 	optional_string_from_any (a_any: LS_ANY; a_field_name: STRING_8): detachable LS_OPTIONAL_STRING
 			-- Convert `a_any` to an optional string.
 			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
@@ -2736,6 +3119,46 @@ feature -- Access
 				last_error := a_field_name + ": invalid type"
 			else
 				Result := optional_versioned_text_document_identifier_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	optional_will_save_wait_until_text_document_result_from_any (a_any: LS_ANY; a_field_name: STRING_8): detachable LS_OPTIONAL_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_RESULT
+			-- Convert `a_any` to an optional will save wait until text document result.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_any_not_void: a_any /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached {LS_OPTIONAL_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_RESULT} a_any as l_optional_will_save_wait_until_text_document_result then
+				Result := l_optional_will_save_wait_until_text_document_result
+			elseif attached {LS_ARRAY} a_any as l_array and then attached text_edit_list_from_array (l_array, a_field_name) as l_text_edit_list then
+				Result := l_text_edit_list
+			else
+				last_error := a_field_name + ": invalid type"
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	optional_will_save_wait_until_text_document_result_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_OPTIONAL_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_RESULT
+			-- Optional will save wait until text document result stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached a_object.value (a_field_name) as l_value then
+				Result := optional_will_save_wait_until_text_document_result_from_any (l_value, a_field_name)
+			elseif not a_optional then
+				last_error := a_field_name + ": missing field"
 			end
 		ensure
 			error: last_error /= Void implies Result = Void
@@ -3342,12 +3765,23 @@ feature -- Access
 			a_field_name_not_void: a_field_name /= Void
 		local
 			l_hover_provider: detachable LS_OPTIONAL_HOVER_OPTIONS
+			l_text_document_sync: detachable LS_TEXT_DOCUMENT_SYNC_GENERAL_OPTIONS
 		do
 			last_error := Void
 			l_hover_provider := optional_hover_options_in_object (a_object, {LS_SERVER_CAPABILITIES}.hover_provider_name, True)
+			if attached last_error as l_last_error then
+				last_error := a_field_name + "." + l_last_error
+			end
+			if last_error = Void then
+				l_text_document_sync := text_document_sync_general_options_in_object (a_object, {LS_SERVER_CAPABILITIES}.text_document_sync_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
 			if last_error = Void then
 				create Result.make
 				Result.set_hover_provider (l_hover_provider)
+				Result.set_text_document_sync (l_text_document_sync)
 			end
 		ensure
 			error_or_success: Result /= Void xor last_error /= Void
@@ -3474,15 +3908,23 @@ feature -- Access
 			a_object_not_void: a_object /= Void
 			a_field_name_not_void: a_field_name /= Void
 		local
+			l_synchronization: detachable LS_TEXT_DOCUMENT_SYNC_CAPABILITIES
 			l_hover: detachable LS_HOVER_CAPABILITIES
 		do
 			last_error := Void
-			l_hover := hover_capabilities_in_object (a_object, {LS_TEXT_DOCUMENT_CAPABILITIES}.hover_name, True)
+			l_synchronization := text_document_sync_capabilities_in_object (a_object, {LS_TEXT_DOCUMENT_CAPABILITIES}.synchronization_name, True)
 			if attached last_error as l_last_error then
 				last_error := a_field_name + "." + l_last_error
 			end
 			if last_error = Void then
+				l_hover := hover_capabilities_in_object (a_object, {LS_TEXT_DOCUMENT_CAPABILITIES}.hover_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
+			if last_error = Void then
 				create Result.make
+				Result.set_synchronization (l_synchronization)
 				Result.set_hover (l_hover)
 			end
 		ensure
@@ -3512,6 +3954,119 @@ feature -- Access
 				last_error := a_field_name + ": invalid type"
 			else
 				Result := text_document_capabilities_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	text_document_content_change_event_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_TEXT_DOCUMENT_CONTENT_CHANGE_EVENT
+			-- Convert `a_object` to a text document content change event.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached text_document_full_content_change_event_from_object (a_object, a_field_name) as l_text_document_full_content_change_event then
+				Result := l_text_document_full_content_change_event
+			elseif attached text_document_incremental_content_change_event_from_object (a_object, a_field_name) as l_text_document_incremental_content_change_event then
+				Result := l_text_document_incremental_content_change_event
+			else
+				last_error := a_field_name + ": invalid type"
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	text_document_content_change_event_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_TEXT_DOCUMENT_CONTENT_CHANGE_EVENT
+			-- Text document content change event stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_TEXT_DOCUMENT_CONTENT_CHANGE_EVENT} l_value as l_text_document_content_change_event then
+				Result := l_text_document_content_change_event
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := text_document_content_change_event_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	text_document_content_change_event_list_from_array (a_array: LS_ARRAY; a_field_name: STRING_8): detachable LS_TEXT_DOCUMENT_CONTENT_CHANGE_EVENT_LIST
+			-- Convert `a_array` to text document content change event list.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_array /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			i, nb: INTEGER
+		do
+			last_error := Void
+			nb := a_array.count
+			create Result.make_with_capacity (nb)
+			from i := 1 until i > nb loop
+				if not attached {LS_OBJECT} a_array.value (i) as l_object then
+					last_error := a_field_name + "." + i.out + ": invalid type"
+					i := nb + 1 -- Jump out of the loop.
+				elseif attached text_document_content_change_event_from_object (l_object, i.out) as l_text_document_content_change_event then
+					Result.put_last (l_text_document_content_change_event)
+					i := i + 1
+				elseif attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+					i := nb + 1 -- Jump out of the loop.
+				else
+					last_error := a_field_name + "." + i.out + ": invalid type"
+					i := nb + 1 -- Jump out of the loop.
+				end
+			end
+			if last_error /= Void then
+				Result := Void
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	text_document_content_change_event_list_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_TEXT_DOCUMENT_CONTENT_CHANGE_EVENT_LIST
+			-- Text document content change event list stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_TEXT_DOCUMENT_CONTENT_CHANGE_EVENT_LIST} l_value as l_text_document_content_change_event_list then
+				Result := l_text_document_content_change_event_list
+			elseif not attached {LS_ARRAY} l_value as l_array then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := text_document_content_change_event_list_from_array (l_array, a_field_name)
 			end
 		ensure
 			error: last_error /= Void implies Result = Void
@@ -3575,6 +4130,57 @@ feature -- Access
 			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
 		end
 
+	text_document_full_content_change_event_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_TEXT_DOCUMENT_FULL_CONTENT_CHANGE_EVENT
+			-- Convert `a_object` to a text document full content change event.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if not attached string_in_object (a_object, {LS_TEXT_DOCUMENT_FULL_CONTENT_CHANGE_EVENT}.text_name, False) as l_text then
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					last_error := a_field_name + "." + {LS_TEXT_DOCUMENT_FULL_CONTENT_CHANGE_EVENT}.text_name + ": missing field"
+				end
+			else
+				create Result.make (l_text)
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	text_document_full_content_change_event_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_TEXT_DOCUMENT_FULL_CONTENT_CHANGE_EVENT
+			-- Text document full content change event stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_TEXT_DOCUMENT_FULL_CONTENT_CHANGE_EVENT} l_value as l_text_document_full_content_change_event then
+				Result := l_text_document_full_content_change_event
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := text_document_full_content_change_event_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
 	text_document_identifier_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_TEXT_DOCUMENT_IDENTIFIER
 			-- Convert `a_object` to a text document identifier.
 			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
@@ -3620,6 +4226,70 @@ feature -- Access
 				last_error := a_field_name + ": invalid type"
 			else
 				Result := text_document_identifier_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	text_document_incremental_content_change_event_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_TEXT_DOCUMENT_INCREMENTAL_CONTENT_CHANGE_EVENT
+			-- Convert `a_object` to a text document incremental content change event.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_range_length: detachable LS_UINTEGER
+		do
+			last_error := Void
+			if not attached range_in_object (a_object, {LS_TEXT_DOCUMENT_INCREMENTAL_CONTENT_CHANGE_EVENT}.range_name, False) as l_range then
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					last_error := a_field_name + "." + {LS_TEXT_DOCUMENT_INCREMENTAL_CONTENT_CHANGE_EVENT}.range_name + ": missing field"
+				end
+			elseif not attached string_in_object (a_object, {LS_TEXT_DOCUMENT_INCREMENTAL_CONTENT_CHANGE_EVENT}.text_name, False) as l_text then
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					last_error := a_field_name + "." + {LS_TEXT_DOCUMENT_INCREMENTAL_CONTENT_CHANGE_EVENT}.text_name + ": missing field"
+				end
+			else
+				l_range_length := uinteger_in_object (a_object, {LS_TEXT_DOCUMENT_INCREMENTAL_CONTENT_CHANGE_EVENT}.range_length_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					create Result.make (l_range, l_range_length, l_text)
+				end
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	text_document_incremental_content_change_event_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_TEXT_DOCUMENT_INCREMENTAL_CONTENT_CHANGE_EVENT
+			-- Text document incremental content change event stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_TEXT_DOCUMENT_INCREMENTAL_CONTENT_CHANGE_EVENT} l_value as l_text_document_incremental_content_change_event then
+				Result := l_text_document_incremental_content_change_event
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := text_document_incremental_content_change_event_from_object (l_object, a_field_name)
 			end
 		ensure
 			error: last_error /= Void implies Result = Void
@@ -3689,6 +4359,279 @@ feature -- Access
 				last_error := a_field_name + ": invalid type"
 			else
 				Result := text_document_item_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	text_document_save_reason_from_any (a_any: LS_ANY; a_field_name: STRING_8): detachable LS_TEXT_DOCUMENT_SAVE_REASON
+			-- Convert `a_any` to a text document save reason.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_any_not_void: a_any /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached {LS_TEXT_DOCUMENT_SAVE_REASON} a_any as l_text_document_save_reason then
+				Result := l_text_document_save_reason
+			elseif attached {LS_NUMBER} a_any as l_number and then l_number.is_integer then
+				Result := l_number.to_integer
+			else
+				last_error := a_field_name + ": invalid type"
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	text_document_save_reason_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_TEXT_DOCUMENT_SAVE_REASON
+			-- Text document save reason stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached a_object.value (a_field_name) as l_value then
+				Result := text_document_save_reason_from_any (l_value, a_field_name)
+			elseif not a_optional then
+				last_error := a_field_name + ": missing field"
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	text_document_sync_capabilities_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_TEXT_DOCUMENT_SYNC_CAPABILITIES
+			-- Convert `a_object` to a text document sync capabilities.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_dynamic_registration: detachable LS_BOOLEAN
+			l_did_save: detachable LS_BOOLEAN
+			l_will_save: detachable LS_BOOLEAN
+			l_will_save_wait_until: detachable LS_BOOLEAN
+		do
+			last_error := Void
+			l_dynamic_registration := boolean_in_object (a_object, {LS_TEXT_DOCUMENT_SYNC_CAPABILITIES}.dynamic_registration_name, True)
+			if attached last_error as l_last_error then
+				last_error := a_field_name + "." + l_last_error
+			end
+			if last_error = Void then
+				l_will_save := boolean_in_object (a_object, {LS_TEXT_DOCUMENT_SYNC_CAPABILITIES}.will_save_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
+			if last_error = Void then
+				l_will_save_wait_until := boolean_in_object (a_object, {LS_TEXT_DOCUMENT_SYNC_CAPABILITIES}.will_save_wait_until_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
+			if last_error = Void then
+				l_did_save := boolean_in_object (a_object, {LS_TEXT_DOCUMENT_SYNC_CAPABILITIES}.did_save_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
+			if last_error = Void then
+				create Result.make (l_dynamic_registration, l_did_save, l_will_save, l_will_save_wait_until)
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	text_document_sync_capabilities_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_TEXT_DOCUMENT_SYNC_CAPABILITIES
+			-- Text document sync capabilities stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_TEXT_DOCUMENT_SYNC_CAPABILITIES} l_value as l_text_document_sync_capabilities then
+				Result := l_text_document_sync_capabilities
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := text_document_sync_capabilities_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	text_document_sync_general_options_from_any (a_any: LS_ANY; a_field_name: STRING_8): detachable LS_TEXT_DOCUMENT_SYNC_GENERAL_OPTIONS
+			-- Convert `a_any` to a text document sync general options.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_any_not_void: a_any /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached {LS_TEXT_DOCUMENT_SYNC_GENERAL_OPTIONS} a_any as l_text_document_change_options then
+				Result := l_text_document_change_options
+			elseif attached {LS_OBJECT} a_any as l_object and then attached text_document_sync_options_from_object (l_object, a_field_name) as l_text_document_sync_options then
+				Result := l_text_document_sync_options
+			elseif attached {LS_NUMBER} a_any as l_number and then l_number.is_integer then
+				Result := l_number.to_integer
+			else
+				last_error := a_field_name + ": invalid type"
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	text_document_sync_general_options_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_TEXT_DOCUMENT_SYNC_GENERAL_OPTIONS
+			-- Text document sync general options stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached a_object.value (a_field_name) as l_value then
+				Result := text_document_sync_general_options_from_any (l_value, a_field_name)
+			elseif not a_optional then
+				last_error := a_field_name + ": missing field"
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	text_document_sync_kind_from_any (a_any: LS_ANY; a_field_name: STRING_8): detachable LS_TEXT_DOCUMENT_SYNC_KIND
+			-- Convert `a_any` to a text document sync kind.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_any_not_void: a_any /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached {LS_TEXT_DOCUMENT_SYNC_KIND} a_any as l_text_document_sync_kind then
+				Result := l_text_document_sync_kind
+			elseif attached {LS_NUMBER} a_any as l_number and then l_number.is_integer then
+				Result := l_number.to_integer
+			else
+				last_error := a_field_name + ": invalid type"
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	text_document_sync_kind_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_TEXT_DOCUMENT_SYNC_KIND
+			-- Text document sync kind stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached a_object.value (a_field_name) as l_value then
+				Result := text_document_sync_kind_from_any (l_value, a_field_name)
+			elseif not a_optional then
+				last_error := a_field_name + ": missing field"
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	text_document_sync_options_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_TEXT_DOCUMENT_SYNC_OPTIONS
+			-- Convert `a_object` to a text document sync options.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_open_close: detachable LS_BOOLEAN
+			l_change: detachable LS_TEXT_DOCUMENT_SYNC_KIND
+			l_will_save: detachable LS_BOOLEAN
+			l_will_save_wait_until: detachable LS_BOOLEAN
+			l_save: detachable LS_OPTIONAL_DID_SAVE_TEXT_DOCUMENT_OPTIONS
+		do
+			last_error := Void
+			l_open_close := boolean_in_object (a_object, {LS_TEXT_DOCUMENT_SYNC_OPTIONS}.open_close_name, True)
+			if attached last_error as l_last_error then
+				last_error := a_field_name + "." + l_last_error
+			end
+			if last_error = Void then
+				l_change := text_document_sync_kind_in_object (a_object, {LS_TEXT_DOCUMENT_SYNC_OPTIONS}.change_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
+			if last_error = Void then
+				l_will_save := boolean_in_object (a_object, {LS_TEXT_DOCUMENT_SYNC_OPTIONS}.will_save_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
+			if last_error = Void then
+				l_will_save_wait_until := boolean_in_object (a_object, {LS_TEXT_DOCUMENT_SYNC_OPTIONS}.will_save_wait_until_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
+			if last_error = Void then
+				l_save := optional_did_save_text_document_options_in_object (a_object, {LS_TEXT_DOCUMENT_SYNC_OPTIONS}.save_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
+			if last_error = Void then
+				create Result.make (l_open_close, l_change, l_will_save, l_will_save_wait_until, l_save)
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	text_document_sync_options_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_TEXT_DOCUMENT_SYNC_OPTIONS
+			-- Text document sync options stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_TEXT_DOCUMENT_SYNC_OPTIONS} l_value as l_text_document_sync_options then
+				Result := l_text_document_sync_options
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := text_document_sync_options_from_object (l_object, a_field_name)
 			end
 		ensure
 			error: last_error /= Void implies Result = Void
@@ -4147,6 +5090,108 @@ feature -- Access
 				Result := watch_kind_from_any (l_value, a_field_name)
 			elseif not a_optional then
 				last_error := a_field_name + ": missing field"
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	will_save_text_document_registration_options_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_WILL_SAVE_TEXT_DOCUMENT_REGISTRATION_OPTIONS
+			-- Convert `a_object` to a will save text document registration options.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if not attached optional_document_selector_in_object (a_object, {LS_WILL_SAVE_TEXT_DOCUMENT_REGISTRATION_OPTIONS}.document_selector_name, False) as l_document_selector then
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					last_error := a_field_name + "." + {LS_WILL_SAVE_TEXT_DOCUMENT_REGISTRATION_OPTIONS}.document_selector_name + ": missing field"
+				end
+			else
+				create Result.make (l_document_selector)
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	will_save_text_document_registration_options_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_WILL_SAVE_TEXT_DOCUMENT_REGISTRATION_OPTIONS
+			-- Will save text document registration options stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_WILL_SAVE_TEXT_DOCUMENT_REGISTRATION_OPTIONS} l_value as l_will_save_text_document_registration_options then
+				Result := l_will_save_text_document_registration_options
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := will_save_text_document_registration_options_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	will_save_wait_until_text_document_registration_options_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REGISTRATION_OPTIONS
+			-- Convert `a_object` to a will save wait until text document registration options.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if not attached optional_document_selector_in_object (a_object, {LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REGISTRATION_OPTIONS}.document_selector_name, False) as l_document_selector then
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					last_error := a_field_name + "." + {LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REGISTRATION_OPTIONS}.document_selector_name + ": missing field"
+				end
+			else
+				create Result.make (l_document_selector)
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	will_save_wait_until_text_document_registration_options_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REGISTRATION_OPTIONS
+			-- Will save wait until text document registration options stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REGISTRATION_OPTIONS} l_value as l_will_save_wait_until_text_document_registration_options then
+				Result := l_will_save_wait_until_text_document_registration_options
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := will_save_wait_until_text_document_registration_options_from_object (l_object, a_field_name)
 			end
 		ensure
 			error: last_error /= Void implies Result = Void

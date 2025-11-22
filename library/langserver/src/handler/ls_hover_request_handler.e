@@ -77,7 +77,9 @@ feature -- Setting
 			--
 			-- (To be redefined in servers.)
 		do
-			if not generating_type.same_type ({detachable LS_HOVER_REQUEST_HANDLER}) then
+			if server_options /= Void then
+				-- Keep `server_options` if already built.
+			elseif not generating_type.same_type ({detachable LS_HOVER_REQUEST_HANDLER}) then
 				server_options := {LS_BOOLEAN}.true_
 			end
 		end

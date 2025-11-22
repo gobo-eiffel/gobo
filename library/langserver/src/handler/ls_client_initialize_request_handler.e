@@ -32,6 +32,14 @@ feature -- Basic operations
 		do
 			l_server_capabilities := a_result.capabilities
 			a_manager.hover_request_handler.set_server_options (l_server_capabilities.hover_provider)
+			if attached {LS_TEXT_DOCUMENT_SYNC_KIND} l_server_capabilities.text_document_sync as l_sync_kind then
+				a_manager.did_change_text_document_notification_handler.set_server_options (l_sync_kind)
+			elseif attached {LS_TEXT_DOCUMENT_SYNC_OPTIONS} l_server_capabilities.text_document_sync as l_text_document_sync then
+				a_manager.did_open_text_document_notification_handler.set_server_options (l_text_document_sync.open_close)
+				a_manager.did_close_text_document_notification_handler.set_server_options (l_text_document_sync.open_close)
+				a_manager.did_change_text_document_notification_handler.set_server_options (l_text_document_sync.change)
+				a_manager.did_save_text_document_notification_handler.set_server_options (l_text_document_sync.save)
+			end
 			a_manager.send_initialized_notification
 		end
 

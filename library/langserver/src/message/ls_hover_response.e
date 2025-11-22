@@ -43,6 +43,33 @@ feature -- Access
 
 feature -- Setting
 
+	set_null_result
+			-- Set `result_` to 'null'.
+		do
+			error := Void
+			result_ := {LS_NULL}.null
+		end
+
+	set_result (a_result: LS_HOVER_RESULT)
+			-- Set `result_` to `a_result`.
+		require
+			a_result_not_void: a_result /= Void
+		do
+			error := Void
+			result_ := a_result
+		ensure
+			result_set: result_ = a_result
+		end
+
+	set_markup_content (a_markup_content: LS_MARKUP_CONTENT)
+			-- Set markup content.
+		require
+			a_markup_content_not_void: a_markup_content /= Void
+		do
+			error := Void
+			create {LS_HOVER_RESULT} result_.make (a_markup_content)
+		end
+
 	set_string (a_text: READABLE_STRING_GENERAL; a_manager: LS_MESSAGE_MANAGER)
 			-- Set string.
 		require
@@ -51,6 +78,7 @@ feature -- Setting
 		local
 			l_contents: LS_STRING
 		do
+			error := Void
 			create l_contents.make_from_string (a_text)
 			create {LS_HOVER_RESULT} result_.make (l_contents)
 		end
@@ -65,6 +93,7 @@ feature -- Setting
 		local
 			l_contents: LS_STRING
 		do
+			error := Void
 			create l_contents.make_from_utf8 (a_text)
 			create {LS_HOVER_RESULT} result_.make (l_contents)
 		end
@@ -78,6 +107,7 @@ feature -- Setting
 		local
 			l_contents: LS_MARKUP_CONTENT
 		do
+			error := Void
 			create l_contents.make ({LS_MARKUP_KINDS}.plaintext, create {LS_STRING}.make_from_string (a_text))
 			create {LS_HOVER_RESULT} result_.make (l_contents)
 		end
@@ -93,6 +123,7 @@ feature -- Setting
 		local
 			l_contents: LS_MARKUP_CONTENT
 		do
+			error := Void
 			create l_contents.make ({LS_MARKUP_KINDS}.plaintext, create {LS_STRING}.make_from_utf8 (a_text))
 			create {LS_HOVER_RESULT} result_.make (l_contents)
 		end
@@ -106,6 +137,7 @@ feature -- Setting
 		local
 			l_contents: LS_MARKUP_CONTENT
 		do
+			error := Void
 			create l_contents.make ({LS_MARKUP_KINDS}.markdown, create {LS_STRING}.make_from_string (a_text))
 			create {LS_HOVER_RESULT} result_.make (l_contents)
 		end
@@ -121,6 +153,7 @@ feature -- Setting
 		local
 			l_contents: LS_MARKUP_CONTENT
 		do
+			error := Void
 			create l_contents.make ({LS_MARKUP_KINDS}.markdown, create {LS_STRING}.make_from_utf8 (a_text))
 			create {LS_HOVER_RESULT} result_.make (l_contents)
 		end

@@ -117,6 +117,27 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_did_change_text_document_capabilities (a_value: LS_DID_CHANGE_TEXT_DOCUMENT_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_did_change_text_document_notification (a_value: LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_did_change_text_document_registration_options (a_value: LS_DID_CHANGE_TEXT_DOCUMENT_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_did_change_watched_files_capabilities (a_value: LS_DID_CHANGE_WATCHED_FILES_CAPABILITIES)
 			-- Process `a_value`.
 		require
@@ -132,6 +153,76 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_did_change_watched_files_registration_options (a_value: LS_DID_CHANGE_WATCHED_FILES_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_did_close_text_document_capabilities (a_value: LS_DID_CLOSE_TEXT_DOCUMENT_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_did_close_text_document_notification (a_value: LS_DID_CLOSE_TEXT_DOCUMENT_NOTIFICATION)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_did_close_text_document_registration_options (a_value: LS_DID_CLOSE_TEXT_DOCUMENT_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_did_open_text_document_capabilities (a_value: LS_DID_OPEN_TEXT_DOCUMENT_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+	
+	process_did_open_text_document_notification (a_value: LS_DID_OPEN_TEXT_DOCUMENT_NOTIFICATION)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_did_open_text_document_registration_options (a_value: LS_DID_OPEN_TEXT_DOCUMENT_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_did_save_text_document_capabilities (a_value: LS_DID_SAVE_TEXT_DOCUMENT_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_did_save_text_document_notification (a_value: LS_DID_SAVE_TEXT_DOCUMENT_NOTIFICATION)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_did_save_text_document_options (a_value: LS_DID_SAVE_TEXT_DOCUMENT_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_did_save_text_document_registration_options (a_value: LS_DID_SAVE_TEXT_DOCUMENT_REGISTRATION_OPTIONS)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void
@@ -439,7 +530,21 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_text_document_content_change_event_list (a_value: LS_TEXT_DOCUMENT_CONTENT_CHANGE_EVENT_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_text_document_edit (a_value: LS_TEXT_DOCUMENT_EDIT)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_text_document_full_content_change_event (a_value: LS_TEXT_DOCUMENT_FULL_CONTENT_CHANGE_EVENT)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void
@@ -454,6 +559,27 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_text_document_item (a_value: LS_TEXT_DOCUMENT_ITEM)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_text_document_incremental_content_change_event (a_value: LS_TEXT_DOCUMENT_INCREMENTAL_CONTENT_CHANGE_EVENT)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_text_document_sync_capabilities (a_value: LS_TEXT_DOCUMENT_SYNC_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_text_document_sync_options (a_value: LS_TEXT_DOCUMENT_SYNC_OPTIONS)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void
@@ -510,6 +636,48 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_versioned_text_document_identifier (a_value: LS_VERSIONED_TEXT_DOCUMENT_IDENTIFIER)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_will_save_text_document_capabilities (a_value: LS_WILL_SAVE_TEXT_DOCUMENT_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_will_save_text_document_notification (a_value: LS_WILL_SAVE_TEXT_DOCUMENT_NOTIFICATION)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_will_save_text_document_registration_options (a_value: LS_WILL_SAVE_TEXT_DOCUMENT_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+	
+	process_will_save_wait_until_text_document_capabilities (a_value: LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_will_save_wait_until_text_document_registration_options (a_value: LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_will_save_wait_until_text_document_request (a_value: LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REQUEST)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void

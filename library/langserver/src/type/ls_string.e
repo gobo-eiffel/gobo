@@ -16,7 +16,7 @@ inherit
 		redefine
 			is_equal
 		end
-		
+
 	LS_MARKED_STRING
 		redefine
 			is_equal
@@ -28,6 +28,9 @@ inherit
 		end
 
 	LS_DOCUMENT_URI
+		undefine
+			utf8_value,
+			value
 		redefine
 			is_equal
 		end
@@ -38,6 +41,9 @@ inherit
 		end
 
 	LS_CHANGE_ANNOTATION_IDENTIFIER
+		undefine
+			utf8_value,
+			value
 		redefine
 			is_equal
 		end
@@ -48,21 +54,33 @@ inherit
 		end
 
 	LS_MARKUP_KIND
+		undefine
+			utf8_value,
+			value
 		redefine
 			is_equal
 		end
 
 	LS_POSITION_ENCODING_KIND
+		undefine
+			utf8_value,
+			value
 		redefine
 			is_equal
 		end
 
 	LS_TRACE_VALUE
+		undefine
+			utf8_value,
+			value
 		redefine
 			is_equal
 		end
 
 	LS_PATTERN
+		undefine
+			utf8_value,
+			value
 		redefine
 			is_equal
 		end
@@ -80,7 +98,8 @@ create
 
 convert
 
-	make_from_string ({STRING_8, STRING_32})
+	make_from_string ({STRING_8, STRING_32, READABLE_STRING_GENERAL}),
+	value: {READABLE_STRING_GENERAL}
 
 feature {NONE} -- Initialization
 
@@ -260,10 +279,6 @@ feature -- Access
 			else
 				Result := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (utf8_value)
 			end
-		ensure
-			value_not_void: Result /= Void
-			valid_unicode: across 1 |..| Result.count as l_index all {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (Result.code (l_index.item)) end
-			same_as_utf8_value_if_ascii: ({UC_UTF8_ROUTINES}.unicode_character_count (utf8_value) = utf8_value.count) implies Result = utf8_value
 		end
 
 	to_string: LS_STRING

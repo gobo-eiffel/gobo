@@ -262,8 +262,44 @@ feature {NONE} -- Implementation
 		local
 			l_text_document_capabilities: detachable LS_TEXT_DOCUMENT_CAPABILITIES
 			l_workspace_capabilities: detachable LS_WORKSPACE_CAPABILITIES
+			l_dynamic_registration: detachable LS_BOOLEAN
+			l_did_save: detachable LS_BOOLEAN
+			l_text_document_sync_capabilities: detachable LS_TEXT_DOCUMENT_SYNC_CAPABILITIES
 		do
 			create Result.make
+			did_open_text_document_notification_handler.build_client_capabilities
+			did_close_text_document_notification_handler.build_client_capabilities
+			did_change_text_document_notification_handler.build_client_capabilities
+			did_save_text_document_notification_handler.build_client_capabilities
+			if attached did_open_text_document_notification_handler.client_capabilities as l_capabilities then
+				if attached l_capabilities.dynamic_registration as l_dynamic and then l_dynamic then
+					l_dynamic_registration := l_dynamic
+				end
+			end
+			if attached did_close_text_document_notification_handler.client_capabilities as l_capabilities then
+				if attached l_capabilities.dynamic_registration as l_dynamic and then l_dynamic then
+					l_dynamic_registration := l_dynamic
+				end
+			end
+			if attached did_change_text_document_notification_handler.client_capabilities as l_capabilities then
+				if attached l_capabilities.dynamic_registration as l_dynamic and then l_dynamic then
+					l_dynamic_registration := l_dynamic
+				end
+			end
+			if attached did_save_text_document_notification_handler.client_capabilities as l_capabilities then
+				if attached l_capabilities.dynamic_registration as l_dynamic and then l_dynamic then
+					l_dynamic_registration := l_dynamic
+				end
+				l_did_save := l_capabilities.did_save
+			end
+			if l_dynamic_registration /= Void or l_did_save /= Void then
+				create l_text_document_sync_capabilities.make (l_dynamic_registration, Void, Void, l_did_save)
+				if l_text_document_capabilities = Void then
+					create l_text_document_capabilities.make
+					Result.set_text_document (l_text_document_capabilities)
+				end
+				l_text_document_capabilities.set_synchronization (l_text_document_sync_capabilities)
+			end
 			hover_request_handler.build_client_capabilities
 			if attached hover_request_handler.client_capabilities as l_hover_capabilities then
 				if l_text_document_capabilities = Void then
