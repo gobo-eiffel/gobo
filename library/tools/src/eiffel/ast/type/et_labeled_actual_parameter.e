@@ -5,7 +5,7 @@
 		"Eiffel labeled actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_LABELED_ACTUAL_PARAMETER
@@ -31,17 +31,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_label: like label_item; a_type: like declared_type)
+	make (a_label: like label_item; a_type: like declared_type; a_class: like implementation_class)
 			-- Create a new labeled actual generic parameter.
 		require
 			a_label_not_void: a_label /= Void
 			a_type_not_void: a_type /= Void
+			a_class_not_void: a_class /= Void
 		do
 			label_item := a_label
 			declared_type := a_type
+			implementation_class := a_class
 		ensure
 			label_set: label_item = a_label
 			declared_type_set: declared_type = a_type
+			implementation_class_set: implementation_class = a_class
 		end
 
 feature -- Access
@@ -65,6 +68,9 @@ feature -- Access
 	declared_type: ET_DECLARED_TYPE
 			-- Declared type (type preceded by a colon)
 
+	implementation_class: ET_CLASS
+			-- Class where the tuple label appears
+
 	named_parameter (a_context: ET_TYPE_CONTEXT): ET_ACTUAL_PARAMETER
 			-- Same as current actual parameter but its type
 			-- replaced by its named type
@@ -76,7 +82,7 @@ feature -- Access
 			if a_named_type = type then
 				Result := Current
 			else
-				create a_parameter.make (label_item, a_named_type)
+				create a_parameter.make (label_item, a_named_type, implementation_class)
 				Result := a_parameter
 			end
 		end
@@ -90,7 +96,7 @@ feature -- Access
 			if a_type = type then
 				Result := Current
 			else
-				create a_parameter.make (label_item, a_type)
+				create a_parameter.make (label_item, a_type, implementation_class)
 				Result := a_parameter
 			end
 		end
@@ -142,7 +148,7 @@ feature -- Type processing
 			if a_type = type then
 				Result := Current
 			else
-				create a_parameter.make (label_item, a_type)
+				create a_parameter.make (label_item, a_type, implementation_class)
 				Result := a_parameter
 			end
 		end
@@ -184,5 +190,6 @@ invariant
 
 	label_item_not_void: label_item /= Void
 	declared_type_not_void: declared_type /= Void
+	implementation_class_not_void: implementation_class /= Void
 
 end

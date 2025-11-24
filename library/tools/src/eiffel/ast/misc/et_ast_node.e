@@ -91,6 +91,46 @@ feature -- Status report
 			end
 		end
 
+	is_after_position (a_position: ET_POSITION): BOOLEAN
+			-- Is current node after character at position `a_position` in the class text?
+		require
+			a_position_not_void: a_position /= Void
+		local
+			l_first_position: ET_POSITION
+		do
+			l_first_position := first_position
+			if first_position.line > a_position.line then
+				Result := True
+			elseif l_first_position.line = a_position.line then
+				Result := l_first_position.column > a_position.column
+			end
+		end
+
+	is_before_position (a_position: ET_POSITION): BOOLEAN
+			-- Is current node before character at position `a_position` in the class text?
+		require
+			a_position_not_void: a_position /= Void
+		local
+			l_last_position: ET_POSITION
+		do
+			l_last_position := last_position
+			if l_last_position.line < a_position.line then
+				Result := True
+			elseif l_last_position.line = a_position.line then
+				Result := l_last_position.column < a_position.column
+			end
+		end
+
+	contains_position (a_position: ET_POSITION): BOOLEAN
+			-- Does `a_ast_node` contains character at `a_position` in the class text?
+		require
+			a_position_not_void: a_position /= Void
+		do
+			if first_position.line /= 0 and last_position.line /= 0 then
+				Result := not is_before_position (a_position) and not is_after_position (a_position)
+			end
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR)

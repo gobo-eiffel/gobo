@@ -18,11 +18,13 @@ inherit
 			make,
 			server_name,
 			server_description,
+			definition_request_handler,
 			did_change_text_document_notification_handler,
 			did_change_watched_files_notification_handler,
 			did_close_text_document_notification_handler,
 			did_open_text_document_notification_handler,
 			hover_request_handler,
+			on_definition_request,
 			on_did_change_text_document_notification,
 			on_did_change_watched_files_notification,
 			on_did_close_text_document_notification,
@@ -89,6 +91,39 @@ feature -- Access
 
 	server_description: STRING_8 = "Gobo Eiffel LSP, Language Server for Eiffel."
 			-- Server description
+
+feature -- Handling 'textDocument/definition' requests
+
+	on_definition_request (a_request: LS_DEFINITION_REQUEST; a_response: LS_DEFINITION_RESPONSE)
+			-- Handle 'textDocument/definition' request `a_request`.
+			-- Build `a_response` accordingly.
+		local
+			l_browsable_name_finder: ET_BROWSABLE_NAME_FINDER
+			l_request_position: LS_POSITION
+			l_position: ET_COMPRESSED_POSITION
+		do
+			if attached class_from_uri (a_request.text_document.uri) as l_class then
+				l_request_position := a_request.position
+				create l_position.make (l_request_position.line.value.to_integer_32 + 1, l_request_position.character.value.to_integer_32 + 1)
+				create l_browsable_name_finder.make (system_processor)
+				l_browsable_name_finder.find_browsable_name (l_position, l_class)
+				if not attached l_browsable_name_finder.last_browsable_name as l_last_browsable_name then
+					-- No browsable name.
+				elseif not attached l_last_browsable_name.definition_ast_node as l_definition then
+					-- No definition
+				elseif l_definition.ast_node.contains_position (l_position) then
+					-- The browsable name is its own definition.
+				elseif attached location (l_definition.ast_node, l_definition.class_impl) as l_location then
+					a_response.add_location (l_location)
+				end
+			end
+		end
+
+	definition_request_handler: LS_SERVER_DEFINITION_REQUEST_HANDLER
+			-- Handler for 'textDocument/definition' requests
+		once ("OBJECT")
+			create Result.make
+		end
 
 feature -- Handling 'textDocument/didChange' notifications
 
@@ -213,9 +248,6 @@ feature -- Handling 'textDocument/hover' requests
 			l_text: STRING_8
 		do
 			if attached class_from_uri (a_request.text_document.uri) as l_class then
-				if not l_class.implementation_checked then
-					l_class.process (system_processor.implementation_checker)
-				end
 				l_request_position := a_request.position
 				create l_position.make (l_request_position.line.value.to_integer_32 + 1, l_request_position.character.value.to_integer_32 + 1)
 				create l_browsable_name_finder.make (system_processor)
@@ -226,14 +258,20 @@ feature -- Handling 'textDocument/hover' requests
 						l_text.append_string (once "```eiffel%N")
 						l_last_browsable_name.append_description_to_string (l_text)
 						l_text.append_string (once "%N```")
-						a_response.set_markdown_utf8 (l_text, Current)
+						if l_text.count = 14 then
+							-- No description.
+						else
+							a_response.set_markdown_utf8 (l_text, Current)
+						end
 					else
 						create l_text.make (50)
 						l_last_browsable_name.append_description_to_string (l_text)
-						if hover_request_handler.is_plaintext_supported then
+						if l_text.is_empty then
+							-- No description.
+						elseif hover_request_handler.is_plaintext_supported then
 							a_response.set_plaintext_utf8 (l_text, Current)
 						else
-							a_response.set_string_utf8 (l_text, Current)
+							a_response.set_string_utf8 (l_text)
 						end
 					end
 				end
@@ -665,6 +703,58 @@ feature -- Eiffel system
 
 	incremental_compilation_count: INTEGER
 			-- Number of incremental compilations since the last compilation from scratch
+
+feature -- Helper
+
+	position (a_position: ET_POSITION; a_class: ET_CLASS): LS_POSITION
+			-- LSP position corresponding to `a_position` in `a_class`
+		require
+			a_position_not_void: a_position /= Void
+			a_class_no_void: a_class /= Void
+		do
+			create Result.make ((a_position.line - 1).max (0).to_natural_32, (a_position.column - 1).max (0).to_natural_32)
+		ensure
+			position_not_void: Result /= Void
+		end
+
+	range (a_node: ET_AST_NODE; a_class: ET_CLASS): LS_RANGE
+			-- LSP range corresponding to `a_node` in `a_class`
+		require
+			a_node_not_void: a_node /= Void
+			a_class_no_void: a_class /= Void
+		local
+			l_first_position: ET_POSITION
+			l_last_position: ET_POSITION
+			l_last_position_plus_one: ET_COMPRESSED_POSITION
+		do
+			l_first_position := a_node.first_position
+			l_last_position := a_node.last_position
+			if l_first_position.is_null then
+				l_first_position := l_last_position
+			elseif l_last_position.is_null then
+				l_last_position := l_first_position
+			end
+			create l_last_position_plus_one.make (l_last_position.line, l_last_position.column + 1)
+			create Result.make (position (l_first_position, a_class), position (l_last_position_plus_one, a_class))
+		ensure
+			range_not_void: Result /= Void
+		end
+
+	location (a_node: ET_AST_NODE; a_class: ET_CLASS): detachable LS_LOCATION
+			-- LSP location corresponding to `a_node` in `a_class`
+		require
+			a_node_not_void: a_node /= Void
+			a_class_no_void: a_class /= Void
+		local
+			l_uri: UT_URI
+			l_string: LS_STRING
+		do
+			if attached a_class.filename as l_filename then
+				l_uri := {UT_FILE_URI_ROUTINES}.filename_to_uri (l_filename)
+				create l_string.make_from_string (l_uri.full_reference)
+				create Result.make (l_string, range (a_node, a_class))
+			end
+		end
 
 feature -- Argument parsing
 

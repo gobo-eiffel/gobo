@@ -58,6 +58,13 @@ feature -- Output
 			local_variable.type.named_type_with_type_mark (tokens.detachable_keyword, current_class).append_canonical_with_leading_type_mark_to_string (a_string)
 		end
 
+	definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
+			-- AST node, and its implementation class, where
+			-- the current browsable name is defined
+		do
+			Result := [local_variable.name, current_class]
+		end
+
 invariant
 
 	name_is_local: name.is_local

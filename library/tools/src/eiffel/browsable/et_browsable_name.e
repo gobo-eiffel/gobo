@@ -51,6 +51,12 @@ feature -- Output
 			valid_utf8: (a_string.same_type ({STRING_8} "") and then old {UC_UTF8_ROUTINES}.valid_utf8 (a_string)) implies {UC_UTF8_ROUTINES}.valid_utf8 (a_string)
 		end
 
+	definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
+			-- AST node, and its implementation class, where
+			-- the current browsable name is defined
+		deferred
+		end
+
 invariant
 
 	current_class_not_void: current_class /= Void

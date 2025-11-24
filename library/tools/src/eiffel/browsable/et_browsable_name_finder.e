@@ -25,6 +25,10 @@ inherit
 			process_bang_instruction,
 			process_base_type_rename_constraint,
 			process_bracket_expression,
+			process_class,
+			process_class_type,
+			process_client,
+			process_client_comma,
 			process_constant_attribute,
 			process_constrained_formal_parameter,
 			process_create_expression,
@@ -43,6 +47,8 @@ inherit
 			process_external_function_inline_agent,
 			process_external_procedure,
 			process_external_procedure_inline_agent,
+			process_formal_parameter,
+			process_formal_parameter_type,
 			process_identifier,
 			process_infix_expression,
 			process_invariants,
@@ -63,6 +69,7 @@ inherit
 			process_result_address,
 			process_static_call_expression,
 			process_static_call_instruction,
+			process_tuple_type,
 			process_type_rename_constraint,
 			process_unique_attribute,
 			process_unqualified_call_expression,
@@ -121,7 +128,7 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_seed: INTEGER
 		do
-			if ast_node_contains (a_identifier, current_position) then
+			if a_identifier.contains_position (current_position) then
 				if attached current_closure as l_closure and then attached l_closure.arguments as l_arguments then
 					l_seed := a_identifier.seed
 					if l_seed >= 1 and l_seed <= l_arguments.count then
@@ -166,6 +173,62 @@ feature {ET_AST_NODE} -- Processing
 			process_type_rename_constraint (a_type_rename_constraint)
 		end
 
+	process_class (a_class: ET_CLASS)
+			-- Process `a_class'.
+		local
+			l_name: ET_CLASS_NAME
+		do
+			l_name := a_class.name
+			if l_name.contains_position (current_position) then
+				create {ET_BROWSABLE_CLASS_NAME} last_browsable_name.make (l_name, a_class, current_class)
+			end
+			if last_browsable_name = Void then
+				precursor (a_class)
+			end
+		end
+
+	process_class_type (a_type: ET_CLASS_TYPE)
+			-- Process `a_type'.
+		local
+			l_name: ET_CLASS_NAME
+		do
+			l_name := a_type.name
+			if l_name.contains_position (current_position) then
+				create {ET_BROWSABLE_CLASS_NAME} last_browsable_name.make (l_name, a_type.base_class, current_class)
+			end
+			if last_browsable_name = Void then
+				precursor (a_type)
+			end
+		end
+
+	process_client (a_client: ET_CLIENT)
+			-- Process `a_client'.
+		local
+			l_name: ET_CLASS_NAME
+		do
+			l_name := a_client.name
+			if l_name.contains_position (current_position) then
+				create {ET_BROWSABLE_CLASS_NAME} last_browsable_name.make (l_name, a_client.base_class, current_class)
+			end
+			if last_browsable_name = Void then
+				precursor (a_client)
+			end
+		end
+
+	process_client_comma (a_client_comma: ET_CLIENT_COMMA)
+			-- Process `a_client_comma'.
+		local
+			l_name: ET_CLASS_NAME
+		do
+			l_name := a_client_comma.name
+			if l_name.contains_position (current_position) then
+				create {ET_BROWSABLE_CLASS_NAME} last_browsable_name.make (l_name, a_client_comma.base_class, current_class)
+			end
+			if last_browsable_name = Void then
+				precursor (a_client_comma)
+			end
+		end
+
 	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
@@ -183,12 +246,16 @@ feature {ET_AST_NODE} -- Processing
 			i, nb: INTEGER
 			l_name: ET_FEATURE_NAME
 			l_target_type: ET_BASE_TYPE
+			l_parameter_name: ET_IDENTIFIER
 		do
-			if attached a_parameter.creation_procedures as l_creation_procedures then
+			l_parameter_name := a_parameter.name
+			if l_parameter_name.contains_position (current_position) then
+				create {ET_BROWSABLE_FORMAL_PARAMETER_NAME} last_browsable_name.make (l_parameter_name, a_parameter, current_class)
+			elseif attached a_parameter.creation_procedures as l_creation_procedures then
 				nb := l_creation_procedures.count
 				from i := 1 until i > nb loop
 					l_name := l_creation_procedures.feature_name (i)
-					if ast_node_contains (l_name, current_position) then
+					if l_name.contains_position (current_position) then
 						internal_type_context.reset (current_class)
 						internal_type_context.put_last (a_parameter.type)
 						l_target_type := internal_type_context.base_type
@@ -231,7 +298,7 @@ feature {ET_AST_NODE} -- Processing
 			l_target_type: ET_BASE_TYPE
 		do
 			l_name := a_expression.name
-			if ast_node_contains (l_name, current_position) then
+			if l_name.contains_position (current_position) then
 				internal_type_context.reset (current_class)
 				internal_type_context.put_last (a_expression.type)
 				l_target_type := internal_type_context.base_type
@@ -250,7 +317,7 @@ feature {ET_AST_NODE} -- Processing
 			l_target_type: ET_BASE_TYPE
 		do
 			l_name := a_instruction.name
-			if ast_node_contains (l_name, current_position) then
+			if l_name.contains_position (current_position) then
 				if attached current_closure as l_closure then
 					internal_type_context.reset (current_class)
 					if attached a_instruction.type as l_type then
@@ -373,14 +440,14 @@ feature {ET_AST_NODE} -- Processing
 			l_alias_string: ET_MANIFEST_STRING
 		do
 			l_feature_name := a_feature.name
-			if ast_node_contains (l_feature_name, current_position) then
+			if l_feature_name.contains_position (current_position) then
 				create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} last_browsable_name.make (l_feature_name, a_feature, current_class)
 			end
 			if attached a_feature.alias_names as l_alias_names then
 				nb := l_alias_names.count
 				from i := 1 until i > nb loop
 					l_alias_string := l_alias_names.item (i).alias_string
-					if ast_node_contains (l_alias_string, current_position) then
+					if l_alias_string.contains_position (current_position) then
 						create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} last_browsable_name.make (l_alias_string, a_feature, current_class)
 					end
 					i := i + 1
@@ -438,10 +505,44 @@ feature {ET_AST_NODE} -- Processing
 			a_identifier_not_void: a_identifier /= Void
 			a_identifier_is_feature_name: a_identifier.is_feature_name
 		do
-			if ast_node_contains (a_identifier, current_position) then
+			if a_identifier.contains_position (current_position) then
 				if attached current_class.seeded_feature (a_identifier.seed) as l_feature then
 					create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} last_browsable_name.make (a_identifier, l_feature, current_class)
 				end
+			end
+		end
+
+	process_formal_parameter (a_parameter: ET_FORMAL_PARAMETER)
+			-- Process `a_parameter'.
+		local
+			l_name: ET_IDENTIFIER
+		do
+			l_name := a_parameter.name
+			if l_name.contains_position (current_position) then
+				create {ET_BROWSABLE_FORMAL_PARAMETER_NAME} last_browsable_name.make (l_name, a_parameter, current_class)
+			end
+			if last_browsable_name = Void then
+				precursor (a_parameter)
+			end
+		end
+
+	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE)
+			-- Process `a_type'.
+		local
+			l_name: ET_IDENTIFIER
+			l_index: INTEGER
+		do
+			l_name := a_type.name
+			if l_name.contains_position (current_position) then
+				if attached current_class.formal_parameters as l_formal_parameters then
+					l_index := a_type.index
+					if l_index >= 1 and l_index <= l_formal_parameters.count then
+						create {ET_BROWSABLE_FORMAL_PARAMETER_NAME} last_browsable_name.make (l_name, l_formal_parameters.formal_parameter (l_index), current_class)
+					end
+				end
+			end
+			if last_browsable_name = Void then
+				precursor (a_type)
 			end
 		end
 
@@ -454,6 +555,10 @@ feature {ET_AST_NODE} -- Processing
 				process_argument_name (a_identifier)
 			elseif a_identifier.is_object_test_local then
 				process_object_test_local_name (a_identifier)
+			elseif a_identifier.is_iteration_item then
+				process_iteration_item_name (a_identifier)
+			elseif a_identifier.is_inline_separate_argument then
+				process_inline_separate_argument_name (a_identifier)
 			elseif a_identifier.is_feature_name then
 				process_feature_name (a_identifier)
 			else
@@ -470,6 +575,26 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_inline_separate_argument_name (a_identifier: ET_IDENTIFIER)
+			-- Process `a_identifier'.
+		require
+			a_identifier_not_void: a_identifier /= Void
+			a_identifier_is_inline_separate_argument: a_identifier.is_inline_separate_argument
+		local
+			l_seed: INTEGER
+		do
+			if a_identifier.contains_position (current_position) then
+				if attached current_closure as l_closure and then attached l_closure.inline_separate_arguments as l_inline_separate_arguments then
+					l_seed := a_identifier.seed
+					if l_seed >= 1 and l_seed <= l_inline_separate_arguments.count then
+						internal_type_context.reset (current_class)
+						expression_type_finder.find_expression_type_in_closure (a_identifier, l_closure, l_closure, current_class, internal_type_context, current_universe.any_type)
+						create {ET_BROWSABLE_INLINE_SEPARATE_ARGUMENT_NAME} last_browsable_name.make (a_identifier, internal_type_context.named_type, l_inline_separate_arguments.argument (l_seed), current_class)
+					end
+				end
+			end
+		end
+
 	process_invariants (a_list: ET_INVARIANTS)
 			-- Process `a_list'.
 		local
@@ -481,6 +606,26 @@ feature {ET_AST_NODE} -- Processing
 			current_closure := l_old_closure
 		end
 
+	process_iteration_item_name (a_identifier: ET_IDENTIFIER)
+			-- Process `a_identifier'.
+		require
+			a_identifier_not_void: a_identifier /= Void
+			a_identifier_is_iteration_item: a_identifier.is_iteration_item
+		local
+			l_seed: INTEGER
+		do
+			if a_identifier.contains_position (current_position) then
+				if attached current_closure as l_closure and then attached l_closure.iteration_components as l_iteration_components then
+					l_seed := a_identifier.seed
+					if l_seed >= 1 and l_seed <= l_iteration_components.count then
+						internal_type_context.reset (current_class)
+						expression_type_finder.find_expression_type_in_closure (a_identifier, l_closure, l_closure, current_class, internal_type_context, current_universe.any_type)
+						create {ET_BROWSABLE_ITERATION_ITEM_NAME} last_browsable_name.make (a_identifier, internal_type_context.named_type, l_iteration_components.iteration_component (l_seed), current_class)
+					end
+				end
+			end
+		end
+
 	process_local_name (a_identifier: ET_IDENTIFIER)
 			-- Process `a_identifier'.
 		require
@@ -489,7 +634,7 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_seed: INTEGER
 		do
-			if ast_node_contains (a_identifier, current_position) then
+			if a_identifier.contains_position (current_position) then
 				if attached current_closure as l_closure and then attached l_closure.locals as l_locals then
 					l_seed := a_identifier.seed
 					if l_seed >= 1 and l_seed <= l_locals.count then
@@ -507,7 +652,7 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_seed: INTEGER
 		do
-			if ast_node_contains (a_identifier, current_position) then
+			if a_identifier.contains_position (current_position) then
 				if attached current_closure as l_closure and then attached l_closure.object_tests as l_object_tests then
 					l_seed := a_identifier.seed
 					if l_seed >= 1 and l_seed <= l_object_tests.count then
@@ -578,13 +723,19 @@ feature {ET_AST_NODE} -- Processing
 			a_call_not_void: a_call /= Void
 		local
 			l_name: ET_CALL_NAME
-			l_target_type: ET_BASE_TYPE
+			l_class_name: ET_CLASS_NAME
 		do
 			l_name := a_call.precursor_keyword
-			if ast_node_contains (l_name, current_position) then
-				l_target_type := a_call.parent_type
-				if l_target_type /= Void and then attached l_target_type.base_class.seeded_feature (l_name.seed) as l_feature then
-					create {ET_BROWSABLE_QUALIFIED_CALL_NAME} last_browsable_name.make (l_name, l_feature, l_target_type, current_class)
+			if not attached a_call.parent_type as l_parent_type then
+				-- Do nothing.
+			elseif l_name.contains_position (current_position) then
+				if attached l_parent_type.base_class.seeded_feature (l_name.seed) as l_feature then
+					create {ET_BROWSABLE_QUALIFIED_CALL_NAME} last_browsable_name.make (l_name, l_feature, l_parent_type, current_class)
+				end
+			elseif attached a_call.parent_name as l_parent_name then
+				l_class_name := l_parent_name.class_name
+				if l_class_name.contains_position (current_position) then
+					create {ET_BROWSABLE_CLASS_NAME} last_browsable_name.make (l_class_name, l_parent_type.base_class, current_class)
 				end
 			end
 		end
@@ -657,14 +808,24 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_name: ET_CALL_NAME
 			l_target_type: ET_BASE_TYPE
+			l_seed: INTEGER
 		do
 			l_name := a_call.name
-			if ast_node_contains (l_name, current_position) then
+			if l_name.contains_position (current_position) then
 				if attached current_closure as l_closure then
 					internal_type_context.reset (current_class)
 					expression_type_finder.find_expression_type_in_closure (a_call.target, l_closure, l_closure, current_class, internal_type_context, current_universe.any_type)
 					l_target_type := internal_type_context.base_type
-					if attached l_target_type.base_class.seeded_feature (l_name.seed) as l_feature then
+					if attached {ET_IDENTIFIER} l_name as l_label and then l_label.is_tuple_label then
+						l_seed := l_label.seed
+						if
+							attached l_target_type.actual_parameters as l_actual_parameters and then
+							l_seed >= 1 and then l_seed <= l_actual_parameters.count and then
+							attached {ET_LABELED_ACTUAL_PARAMETER} l_actual_parameters.actual_parameter (l_seed) as l_labeled_parameter
+						then
+							create {ET_BROWSABLE_TUPLE_LABEL_NAME} last_browsable_name.make (l_label, l_labeled_parameter, current_class)
+						end
+					elseif attached l_target_type.base_class.seeded_feature (l_name.seed) as l_feature then
 						create {ET_BROWSABLE_QUALIFIED_CALL_NAME} last_browsable_name.make (l_name, l_feature, l_target_type, current_class)
 					end
 				end
@@ -689,7 +850,7 @@ feature {ET_AST_NODE} -- Processing
 			l_target_type: ET_BASE_TYPE
 		do
 			l_name := a_type.name
-			if ast_node_contains (l_name, current_position) then
+			if l_name.contains_position (current_position) then
 				internal_type_context.reset (current_class)
 				internal_type_context.put_last (a_type.target_type)
 				l_target_type := internal_type_context.base_type
@@ -722,14 +883,14 @@ feature {ET_AST_NODE} -- Processing
 			from i := 1 until i > nb loop
 				l_rename := a_list.rename_pair (i)
 				l_name := l_rename.old_name
-				if ast_node_contains (l_name, current_position) then
+				if l_name.contains_position (current_position) then
 					if attached current_class.base_class.seeded_feature (l_name.seed) as l_feature then
 						create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} last_browsable_name.make (l_name, l_feature, current_class)
 					end
 				end
 				l_extended_name := l_rename.new_name
 				l_name := l_extended_name.feature_name
-				if ast_node_contains (l_name, current_position) then
+				if l_name.contains_position (current_position) then
 					if attached current_class.base_class.seeded_feature (l_name.seed) as l_feature then
 						create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} last_browsable_name.make (l_name, l_feature, current_class)
 					end
@@ -738,7 +899,7 @@ feature {ET_AST_NODE} -- Processing
 					nb2 := l_alias_names.count
 					from j := 1 until j > nb2 loop
 						l_alias_string := l_alias_names.item (j).alias_string
-						if ast_node_contains (l_alias_string, current_position) then
+						if l_alias_string.contains_position (current_position) then
 							if attached current_class.base_class.seeded_feature (l_name.seed) as l_feature then
 								create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} last_browsable_name.make (l_alias_string, l_feature, current_class)
 							end
@@ -753,7 +914,7 @@ feature {ET_AST_NODE} -- Processing
 	process_result (a_expression: ET_RESULT)
 			-- Process `a_expression'.
 		do
-			if ast_node_contains (a_expression, current_position) then
+			if a_expression.contains_position (current_position) then
 				if attached current_closure as l_closure and then attached l_closure.type as l_type then
 					create {ET_BROWSABLE_RESULT} last_browsable_name.make (a_expression, l_type, current_class)
 				end
@@ -801,13 +962,27 @@ feature {ET_AST_NODE} -- Processing
 			l_target_type: ET_BASE_TYPE
 		do
 			l_name := a_call.name
-			if ast_node_contains (l_name, current_position) then
+			if l_name.contains_position (current_position) then
 				internal_type_context.reset (current_class)
 				internal_type_context.put_last (a_call.type)
 				l_target_type := internal_type_context.base_type
 				if attached l_target_type.base_class.seeded_feature (l_name.seed) as l_feature then
 					create {ET_BROWSABLE_QUALIFIED_CALL_NAME} last_browsable_name.make (l_name, l_feature, l_target_type, current_class)
 				end
+			end
+		end
+
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
+			-- Process `a_type'.
+		local
+			l_name: ET_IDENTIFIER
+		do
+			l_name := a_type.tuple_keyword
+			if l_name.contains_position (current_position) then
+				create {ET_BROWSABLE_CLASS_NAME} last_browsable_name.make (l_name, a_type.base_class, current_class)
+			end
+			if last_browsable_name = Void then
+				precursor (a_type)
 			end
 		end
 
@@ -828,7 +1003,7 @@ feature {ET_AST_NODE} -- Processing
 			from i := 1 until i > nb loop
 				l_rename := l_renames.rename_pair (i)
 				l_name := l_rename.old_name
-				if ast_node_contains (l_name, current_position) then
+				if l_name.contains_position (current_position) then
 					internal_type_context.reset (current_class)
 					internal_type_context.put_last (a_type_rename_constraint.type)
 					l_target_type := internal_type_context.base_type
@@ -838,7 +1013,7 @@ feature {ET_AST_NODE} -- Processing
 				end
 				l_extended_name := l_rename.new_name
 				l_name := l_extended_name.feature_name
-				if ast_node_contains (l_name, current_position) then
+				if l_name.contains_position (current_position) then
 					internal_type_context.reset (current_class)
 					internal_type_context.put_last (a_type_rename_constraint.type)
 					l_target_type := internal_type_context.base_type
@@ -850,7 +1025,7 @@ feature {ET_AST_NODE} -- Processing
 					nb2 := l_alias_names.count
 					from j := 1 until j > nb2 loop
 						l_alias_string := l_alias_names.item (j).alias_string
-						if ast_node_contains (l_alias_string, current_position) then
+						if l_alias_string.contains_position (current_position) then
 							internal_type_context.reset (current_class)
 							internal_type_context.put_last (a_type_rename_constraint.type)
 							l_target_type := internal_type_context.base_type
@@ -862,6 +1037,9 @@ feature {ET_AST_NODE} -- Processing
 					end
 				end
 				i := i + 1
+			end
+			if last_browsable_name = Void then
+				precursor (a_type_rename_constraint)
 			end
 		end
 
@@ -928,7 +1106,7 @@ feature {NONE} -- Implementation
 		end
 
 	ast_node_is_above (a_ast_node: ET_AST_NODE; a_position: ET_POSITION): BOOLEAN
-			-- Is `a_ast_node` belaboveow `a_position` in the class text?
+			-- Is `a_ast_node` above `a_position` in the class text?
 		require
 			a_ast_node_not_void: a_ast_node /= Void
 			a_position_not_void: a_position /= Void

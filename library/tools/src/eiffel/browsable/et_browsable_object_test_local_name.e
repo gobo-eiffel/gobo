@@ -48,7 +48,7 @@ feature -- Access
 	type: ET_TYPE
 			-- Type of `name`
 
-	object_test: ET_OBJECT_TEST
+	object_test: ET_NAMED_OBJECT_TEST
 			-- Object test
 
 feature -- Output
@@ -62,6 +62,13 @@ feature -- Output
 			a_string.append_character (':')
 			a_string.append_character (' ')
 			type.named_type (current_class).append_canonical_with_leading_type_mark_to_string (a_string)
+		end
+
+	definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
+			-- AST node, and its implementation class, where
+			-- the current browsable name is defined
+		do
+			Result := [object_test.name, current_class]
 		end
 
 invariant

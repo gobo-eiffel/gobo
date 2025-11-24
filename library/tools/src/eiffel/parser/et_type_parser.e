@@ -2585,7 +2585,7 @@ debug ("GEYACC")
 end
 
 			yyval19 := ast_factory.new_actual_parameters (last_symbol, yyvs14.item (yyvsp14), counter_value + 1)
-			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter (yyvs8.item (yyvsp8), ast_factory.new_colon_type (yyvs14.item (yyvsp14 - 1), yyvs22.item (yyvsp22))), yyval19)
+			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter (yyvs8.item (yyvsp8), ast_factory.new_colon_type (yyvs14.item (yyvsp14 - 1), yyvs22.item (yyvsp22)), tokens.unknown_class), yyval19)
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
@@ -2615,7 +2615,7 @@ debug ("GEYACC")
 end
 
 			yyval19 := ast_factory.new_actual_parameters (last_symbol, yyvs14.item (yyvsp14), counter_value + 1)
-			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter (yyvs8.item (yyvsp8), ast_factory.new_colon_type (yyvs14.item (yyvsp14 - 1), yyvs22.item (yyvsp22))), yyvs15.item (yyvsp15)), yyval19)
+			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter (yyvs8.item (yyvsp8), ast_factory.new_colon_type (yyvs14.item (yyvsp14 - 1), yyvs22.item (yyvsp22)), tokens.unknown_class), yyvs15.item (yyvsp15)), yyval19)
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
@@ -2688,9 +2688,9 @@ end
 			yyval19 := yyvs19.item (yyvsp19)
 			if yyval19 /= Void then
 				if not yyval19.is_empty then
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs8.item (yyvsp8), yyvs14.item (yyvsp14)), yyval19.first.type), yyval19)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs8.item (yyvsp8), yyvs14.item (yyvsp14)), yyval19.first.type, tokens.unknown_class), yyval19)
 				else
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs8.item (yyvsp8), yyvs14.item (yyvsp14)), Void), yyval19)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs8.item (yyvsp8), yyvs14.item (yyvsp14)), Void, tokens.unknown_class), yyval19)
 				end
 			end
 		
@@ -2716,9 +2716,9 @@ end
 			yyval19 := yyvs19.item (yyvsp19)
 			if yyval19 /= Void then
 				if not yyval19.is_empty then
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs8.item (yyvsp8), yyvs14.item (yyvsp14)), yyval19.first.type), yyval19)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs8.item (yyvsp8), yyvs14.item (yyvsp14)), yyval19.first.type, tokens.unknown_class), yyval19)
 				else
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs8.item (yyvsp8), yyvs14.item (yyvsp14)), Void), yyval19)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs8.item (yyvsp8), yyvs14.item (yyvsp14)), Void, tokens.unknown_class), yyval19)
 				end
 			end
 		
@@ -2744,9 +2744,9 @@ end
 			yyval19 := yyvs19.item (yyvsp19)
 			if yyval19 /= Void then
 				if not yyval19.is_empty then
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs8.item (yyvsp8), yyvs14.item (yyvsp14)), yyval19.first.type), yyval19)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs8.item (yyvsp8), yyvs14.item (yyvsp14)), yyval19.first.type, tokens.unknown_class), yyval19)
 				else
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs8.item (yyvsp8), yyvs14.item (yyvsp14)), Void), yyval19)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs8.item (yyvsp8), yyvs14.item (yyvsp14)), Void, tokens.unknown_class), yyval19)
 				end
 			end
 		
@@ -2769,7 +2769,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 352")
 end
 
-			yyval18 := ast_factory.new_labeled_actual_parameter (yyvs8.item (yyvsp8), ast_factory.new_colon_type (yyvs14.item (yyvsp14), yyvs22.item (yyvsp22)))
+			yyval18 := ast_factory.new_labeled_actual_parameter (yyvs8.item (yyvsp8), ast_factory.new_colon_type (yyvs14.item (yyvsp14), yyvs22.item (yyvsp22)), tokens.unknown_class)
 			if yyval18 /= Void then
 				increment_counter
 			end
@@ -2801,7 +2801,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_type_parser.y' at line 361")
 end
 
-			yyval18 := ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter (yyvs8.item (yyvsp8), ast_factory.new_colon_type (yyvs14.item (yyvsp14), yyvs22.item (yyvsp22))), yyvs15.item (yyvsp15))
+			yyval18 := ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter (yyvs8.item (yyvsp8), ast_factory.new_colon_type (yyvs14.item (yyvsp14), yyvs22.item (yyvsp22)), tokens.unknown_class), yyvs15.item (yyvsp15))
 			if yyval18 /= Void then
 				increment_counter
 			end

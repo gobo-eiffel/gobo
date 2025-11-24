@@ -25,19 +25,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_label: like label; a_comma: like comma; a_type: like type)
+	make (a_label: like label; a_comma: like comma; a_type: like type; a_class: like implementation_class)
 			-- Create a new labeled actual parameter.
 		require
 			a_label_not_void: a_label /= Void
 			a_type_not_void: a_type /= Void
+			a_class_not_void: a_class /= Void
 		do
 			label := a_label
 			comma := a_comma
 			type := a_type
+			implementation_class := a_class
 		ensure
 			label_set: label = a_label
 			comma_set: comma = a_comma
 			type_set: type = a_type
+			implementation_class_set: implementation_class = a_class
 		end
 
 feature -- Access
@@ -51,6 +54,9 @@ feature -- Access
 
 	type: ET_CONSTRAINT_TYPE
 			-- Type
+
+	implementation_class: ET_CLASS
+			-- Class where the tuple label appears
 
 	position: ET_POSITION
 			-- Position of first character of
@@ -72,5 +78,6 @@ feature -- Conversion
 invariant
 
 	label_not_void: label /= Void
+	implementation_class_not_void: implementation_class /= Void
 
 end

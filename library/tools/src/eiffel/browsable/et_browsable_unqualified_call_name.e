@@ -2,13 +2,13 @@
 
 	description:
 
-		"Browsable names of qualified calls"
+		"Browsable names of unqualified calls"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2025, Eric Bezault and others"
 	license: "MIT License"
 
-class ET_BROWSABLE_QUALIFIED_CALL_NAME
+class ET_BROWSABLE_UNQUALIFIED_CALL_NAME
 
 inherit
 
@@ -20,22 +20,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_call_feature: like call_feature; a_target_type: like target_type; a_class: like current_class)
+	make (a_name: like name; a_call_feature: like call_feature; a_class: like current_class)
 			-- Create a new browsable unqualified call name.
 		require
 			a_name_not_void: a_name /= Void
 			a_call_feature_not_void: a_call_feature /= Void
-			a_target_type_not_void: a_target_type /= Void
 			a_class_not_void: a_class /= Void
 		do
 			name := a_name
 			call_feature := a_call_feature
-			target_type := a_target_type
 			current_class := a_class
 		ensure
 			name_set: name = a_name
 			call_feature_not_void: call_feature = a_call_feature
-			target_type_set: target_type = a_target_type
 			current_class_not_void: current_class = a_class
 		end
 
@@ -47,9 +44,6 @@ feature -- Access
 	call_feature: ET_FEATURE
 			-- Feature of the call
 
-	target_type: ET_TYPE
-			-- Base type of target of the call
-
 feature -- Output
 
 	append_description_to_string (a_string: STRING_8)
@@ -59,12 +53,8 @@ feature -- Output
 			l_argument: ET_FORMAL_ARGUMENT
 			l_splitter: ST_SPLITTER
 			l_index: INTEGER
-			l_nested_type_context: ET_NESTED_TYPE_CONTEXT
 			l_clients: ET_CLIENT_LIST
-			l_target_base_type: ET_BASE_TYPE
 		do
-			create l_nested_type_context.make_with_capacity (current_class, 1)
-			l_nested_type_context.put_last (target_type)
 			a_string.append_string (tokens.feature_keyword.text)
 			l_clients := call_feature.clients
 			if l_clients.is_none then
@@ -87,11 +77,6 @@ feature -- Output
 				a_string.append_character ('}')
 			end
 			a_string.append_string ("%N%T")
-			a_string.append_character ('{')
-			l_target_base_type := target_type.base_type (current_class)
-			l_target_base_type.append_canonical_to_string (a_string)
-			a_string.append_character ('}')
-			a_string.append_character ('.')
 			a_string.append_string (call_feature.lower_name)
 			if attached call_feature.alias_names as l_alias_names then
 				nb := l_alias_names.count
@@ -114,7 +99,7 @@ feature -- Output
 					a_string.append_string (l_argument.name.lower_name)
 					a_string.append_character (':')
 					a_string.append_character (' ')
-					l_argument.type.named_type (l_nested_type_context).append_canonical_with_leading_type_mark_to_string (a_string)
+					l_argument.type.named_type (current_class).append_canonical_with_leading_type_mark_to_string (a_string)
 					i := i + 1
 				end
 				a_string.append_character (')')
@@ -122,7 +107,7 @@ feature -- Output
 			if attached call_feature.type as l_type then
 				a_string.append_character (':')
 				a_string.append_character (' ')
-				l_type.named_type (l_nested_type_context).append_canonical_with_leading_type_mark_to_string (a_string)
+				l_type.named_type (current_class).append_canonical_with_leading_type_mark_to_string (a_string)
 			end
 			if attached call_feature.implementation_feature.header_break as l_header_break then
 				create l_splitter.make_with_separators ("%N%R")
@@ -135,16 +120,25 @@ feature -- Output
 					end
 				end
 			end
-			if l_target_base_type.base_class /= call_feature.implementation_class then
+			if current_class /= call_feature.implementation_class then
 				a_string.append_string ("%N%T%T%T-- (from class ")
 				a_string.append_string (call_feature.implementation_class.upper_name)
 				a_string.append_character (')')
 			end
 		end
 
+	definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
+			-- AST node, and its implementation class, where
+			-- the current browsable name is defined
+		local
+			l_feature: ET_FEATURE
+		do
+			l_feature := call_feature.implementation_feature
+			Result := [l_feature.name, l_feature.implementation_class]
+		end
+
 invariant
 
 	call_feature_not_void: call_feature /= Void
-	target_type_not_void: target_type /= Void
 
 end

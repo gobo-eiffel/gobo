@@ -1000,12 +1000,12 @@ Constraint_tuple_actual_parameters: '[' ']'
 Constraint_tuple_labeled_actual_parameter_list: Identifier ':' Constraint_type ']'
 		{
 			$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $4, counter_value + 1)
-			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3), $$)
+			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3, last_class), $$)
 		}
 	| Identifier ':' Constraint_type Semicolon ']'
 		{
 			$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $5, counter_value + 1)
-			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_actual_parameter_semicolon (ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3), $4), $$)
+			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_actual_parameter_semicolon (ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3, last_class), $4), $$)
 		}
 	| Constraint_tuple_labeled_actual_parameter_semicolon Constraint_tuple_labeled_actual_parameter_list
 		{
@@ -1022,9 +1022,9 @@ Constraint_tuple_labeled_actual_parameter_list: Identifier ':' Constraint_type '
 			$$ := $4
 			if $$ /= Void then
 				if not $$.is_empty then
-					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter ($1, $2, $$.first.type), $$)
+					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter ($1, $2, $$.first.type, last_class), $$)
 				else
-					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter ($1, $2, Void), $$)
+					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter ($1, $2, Void, last_class), $$)
 				end
 			end
 		}
@@ -1032,7 +1032,7 @@ Constraint_tuple_labeled_actual_parameter_list: Identifier ':' Constraint_type '
 
 Constraint_tuple_labeled_actual_parameter: Identifier ':' Constraint_type
 		{
-			$$ := ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3)
+			$$ := ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3, last_class)
 			if $$ /= Void then
 				increment_counter
 			end
@@ -1041,7 +1041,7 @@ Constraint_tuple_labeled_actual_parameter: Identifier ':' Constraint_type
 
 Constraint_tuple_labeled_actual_parameter_semicolon: Identifier ':' Constraint_type Semicolon
 		{
-			$$ := ast_factory.new_constraint_labeled_actual_parameter_semicolon (ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3), $4)
+			$$ := ast_factory.new_constraint_labeled_actual_parameter_semicolon (ast_factory.new_constraint_labeled_actual_parameter ($1, $2, $3, last_class), $4)
 			if $$ /= Void then
 				increment_counter
 			end
@@ -2950,12 +2950,12 @@ Tuple_actual_parameters: '[' ']'
 Tuple_labeled_actual_parameter_list: Identifier ':' Type ']'
 		{
 			$$ := ast_factory.new_actual_parameters (last_symbol, $4, counter_value + 1)
-			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3)), $$)
+			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3), last_class), $$)
 		}
 	|  Identifier ':' Type Semicolon ']'
 		{
 			$$ := ast_factory.new_actual_parameters (last_symbol, $5, counter_value + 1)
-			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3)), $4), $$)
+			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3), last_class), $4), $$)
 		}
 	| Tuple_labeled_actual_parameter_semicolon Tuple_labeled_actual_parameter_list
 		{
@@ -2972,9 +2972,9 @@ Tuple_labeled_actual_parameter_list: Identifier ':' Type ']'
 			$$ := $4
 			if $$ /= Void then
 				if not $$.is_empty then
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), $$.first.type), $$)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), $$.first.type, last_class), $$)
 				else
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), Void), $$)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), Void, last_class), $$)
 				end
 			end
 		}
@@ -2983,9 +2983,9 @@ Tuple_labeled_actual_parameter_list: Identifier ':' Type ']'
 			$$ := $4
 			if $$ /= Void then
 				if not $$.is_empty then
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), $$.first.type), $$)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), $$.first.type, last_class), $$)
 				else
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), Void), $$)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), Void, last_class), $$)
 				end
 			end
 		}
@@ -2994,9 +2994,9 @@ Tuple_labeled_actual_parameter_list: Identifier ':' Type ']'
 			$$ := $4
 			if $$ /= Void then
 				if not $$.is_empty then
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), $$.first.type), $$)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), $$.first.type, last_class), $$)
 				else
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), Void), $$)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), Void, last_class), $$)
 				end
 			end
 		}
@@ -3004,7 +3004,7 @@ Tuple_labeled_actual_parameter_list: Identifier ':' Type ']'
 
 Tuple_labeled_actual_parameter: Identifier ':' Type
 		{
-			$$ := ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3))
+			$$ := ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3), last_class)
 			if $$ /= Void then
 				increment_counter
 			end
@@ -3013,7 +3013,7 @@ Tuple_labeled_actual_parameter: Identifier ':' Type
 
 Tuple_labeled_actual_parameter_semicolon: Identifier ':' Type Semicolon
 		{
-			$$ := ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3)), $4)
+			$$ := ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter ($1, ast_factory.new_colon_type ($2, $3), last_class), $4)
 			if $$ /= Void then
 				increment_counter
 			end
