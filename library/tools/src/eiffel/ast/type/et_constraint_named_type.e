@@ -8,7 +8,7 @@
 		%of formal generic parameters."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CONSTRAINT_NAMED_TYPE
@@ -58,14 +58,14 @@ feature -- Access
 feature -- Conversion
 
 	resolved_syntactical_constraint (a_formals: ET_FORMAL_PARAMETER_LIST;
-		a_class: ET_CLASS; a_parser: ET_EIFFEL_PARSER_SKELETON): detachable ET_TYPE
+		a_parser: ET_EIFFEL_PARSER_SKELETON): detachable ET_TYPE
 			-- Version of current type, appearing in the constraint of one
-			-- of the formal generic parameters in `a_formals' of `a_class',
+			-- of the formal generic parameters in `a_formals',
 			-- where class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)
 		do
-			Result := a_parser.resolved_constraint_named_type (Current, a_formals, a_class)
+			Result := a_parser.resolved_constraint_named_type (Current, a_formals)
 		end
 
 invariant

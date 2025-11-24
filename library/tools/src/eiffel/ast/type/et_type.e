@@ -1133,9 +1133,9 @@ feature -- Type processing
 		end
 
 	resolved_syntactical_constraint (a_formals: ET_FORMAL_PARAMETER_LIST;
-		a_class: ET_CLASS; a_parser: ET_EIFFEL_PARSER_SKELETON): ET_TYPE
+		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_TYPE
 			-- Version of current type, appearing in the constraint of one
-			-- of the formal generic parameters in `a_formals' of `a_class',
+			-- of the formal generic parameters in `a_formals',
 			-- where class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)

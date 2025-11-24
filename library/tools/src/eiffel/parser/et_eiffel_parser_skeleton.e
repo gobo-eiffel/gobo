@@ -727,7 +727,7 @@ feature {NONE} -- Basic operations
 							l_constraint := a_constrained_formal.constraint
 							if attached {ET_TYPE_RENAME_CONSTRAINT} l_constraint as l_type_constraint then
 								if j > 0 and then attached constraints.item (j) as l_constraint_type then
-									a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, a_class, Current)
+									a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, Current)
 								else
 									a_type := Void
 								end
@@ -739,7 +739,7 @@ feature {NONE} -- Basic operations
 								end
 							elseif attached {ET_TYPE_CONSTRAINT} l_constraint as l_type_constraint then
 								if j > 0 and then attached constraints.item (j) as l_constraint_type then
-									a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, a_class, Current)
+									a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, Current)
 								else
 									a_type := Void
 								end
@@ -756,7 +756,7 @@ feature {NONE} -- Basic operations
 									k < 1
 								loop
 									if j > 0 and then attached constraints.item (j) as l_constraint_type then
-										a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, a_class, Current)
+										a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, Current)
 									else
 										a_type := Void
 									end
@@ -1144,16 +1144,15 @@ feature {NONE} -- Basic operations
 feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIST} -- Generic constraints
 
 	resolved_constraint_named_type (a_constraint: ET_CONSTRAINT_NAMED_TYPE;
-		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): detachable ET_TYPE
+		a_formals: ET_FORMAL_PARAMETER_LIST): detachable ET_TYPE
 			-- Version of `a_constraint', appearing in the constraint of one
-			-- of the formal generic parameters in `a_formals' of `a_class',
+			-- of the formal generic parameters in `a_formals',
 			-- where class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)
 		require
 			a_constraint_not_void: a_constraint /= Void
 			a_formals_not_void: a_formals /= Void
-			a_class_not_void: a_class /= Void
 		local
 			a_name: ET_IDENTIFIER
 			a_formal: detachable ET_FORMAL_PARAMETER
@@ -1170,9 +1169,9 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 						-- It cannot be prefixed by 'expanded' or 'reference'.
 						-- But it can be prefixed by 'attached', 'detachable', '!' or '?'.
 					report_syntax_error (a_type_mark.position)
-					Result := ast_factory.new_formal_parameter_type (Void, a_name, a_formal.index, a_class)
+					Result := ast_factory.new_formal_parameter_type (Void, a_name, a_formal.index, a_formal.implementation_class)
 				else
-					Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index, a_class)
+					Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index, a_formal.implementation_class)
 				end
 			else
 				a_base_class := current_universe.master_class (a_name)
@@ -1202,16 +1201,15 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_generic_named_type (a_constraint: ET_CONSTRAINT_GENERIC_NAMED_TYPE;
-		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): detachable ET_TYPE
+		a_formals: ET_FORMAL_PARAMETER_LIST): detachable ET_TYPE
 			-- Version `a_constraint', appearing in the constraint of one
-			-- of the formal generic parameters in `a_formals' of `a_class',
+			-- of the formal generic parameters in `a_formals',
 			-- where class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)
 		require
 			a_constraint_not_void: a_constraint /= Void
 			a_formals_not_void: a_formals /= Void
-			a_class_not_void: a_class /= Void
 		local
 			a_name: ET_IDENTIFIER
 			a_type_mark: detachable ET_TYPE_MARK
@@ -1231,10 +1229,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 				end
 					-- A formal parameter cannot have actual generic parameters.
 				report_syntax_error (a_constraint.actual_parameters.position)
-				Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index, a_class)
+				Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index, a_formal.implementation_class)
 			else
 				a_base_class := current_universe.master_class (a_name)
-				a_parameters := a_constraint.actual_parameters.resolved_syntactical_constraint (a_formals, a_class, Current)
+				a_parameters := a_constraint.actual_parameters.resolved_syntactical_constraint (a_formals, Current)
 				if a_parameters /= Void then
 					if providers_enabled then
 						providers.force_last (a_base_class)
@@ -1264,16 +1262,15 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_actual_parameter_list (a_constraint: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST;
-		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): detachable ET_ACTUAL_PARAMETER_LIST
+		a_formals: ET_FORMAL_PARAMETER_LIST): detachable ET_ACTUAL_PARAMETER_LIST
 			-- Version of `a_constraint', appearing in the constraint of one
-			-- of the formal generic parameters in `a_formals' of `a_class',
+			-- of the formal generic parameters in `a_formals',
 			-- where class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)
 		require
 			a_constraint_not_void: a_constraint /= Void
 			a_formals_not_void: a_formals /= Void
-			a_class_not_void: a_class /= Void
 		local
 			i, nb: INTEGER
 			l_type: ET_CONSTRAINT_TYPE
@@ -1290,7 +1287,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 					l_actual := a_constraint.item (i)
 					l_type := l_actual.type
 					if l_type /= l_other_type then
-						l_resolved_type := l_type.resolved_syntactical_constraint (a_formals, a_class, Current)
+						l_resolved_type := l_type.resolved_syntactical_constraint (a_formals, Current)
 						l_other_type := l_type
 					end
 					l_parameter := l_actual.resolved_syntactical_constraint_with_type (l_resolved_type, Current)
