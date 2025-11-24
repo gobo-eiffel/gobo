@@ -133,6 +133,14 @@ feature -- Basic operations
 
 feature -- Handlers
 
+	definition_request_handler: LS_DEFINITION_REQUEST_HANDLER
+			-- Handler for 'textDocument/definition' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			definition_request_handler_not_void: Result /= Void
+		end
+
 	did_change_text_document_notification_handler: LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION_HANDLER
 			-- Handler for 'textDocument/didChange' notifications
 		once ("OBJECT")
@@ -475,6 +483,7 @@ feature {LS_RESPONSE_HANDLER, LS_REQUEST_HANDLER} -- Implementation
 		once ("OBJECT")
 			create Result.make (100)
 			Result.force (create {LS_CANCEL_REQUEST_NOTIFICATION_FACTORY}.make, {LS_CANCEL_REQUEST_NOTIFICATION}.method)
+			Result.force (create {LS_DEFINITION_REQUEST_FACTORY}.make, {LS_DEFINITION_REQUEST}.method)
 			Result.force (create {LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION}.method)
 			Result.force (create {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION_FACTORY}.make, {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION}.method)
 			Result.force (create {LS_DID_CLOSE_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_DID_CLOSE_TEXT_DOCUMENT_NOTIFICATION}.method)

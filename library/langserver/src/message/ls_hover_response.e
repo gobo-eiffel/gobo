@@ -70,11 +70,10 @@ feature -- Setting
 			create {LS_HOVER_RESULT} result_.make (a_markup_content)
 		end
 
-	set_string (a_text: READABLE_STRING_GENERAL; a_manager: LS_MESSAGE_MANAGER)
+	set_string (a_text: READABLE_STRING_GENERAL)
 			-- Set string.
 		require
 			a_text_not_void: a_text /= Void
-			a_manager_not_void: a_manager /= Void
 		local
 			l_contents: LS_STRING
 		do
@@ -83,13 +82,12 @@ feature -- Setting
 			create {LS_HOVER_RESULT} result_.make (l_contents)
 		end
 
-	set_string_utf8 (a_text: STRING_8; a_manager: LS_MESSAGE_MANAGER)
+	set_string_utf8 (a_text: STRING_8)
 			-- Set string UTF-8 text.
 		require
 			a_text_not_void: a_text /= Void
 			a_text_is_string_8: a_text.same_type ({STRING_8} "")
 			valid_utf8_text: {UC_UTF8_ROUTINES}.valid_utf8 (a_text)
-			a_manager_not_void: a_manager /= Void
 		local
 			l_contents: LS_STRING
 		do

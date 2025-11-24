@@ -263,6 +263,8 @@ feature {NONE} -- Implementation
 			l_text_document_capabilities: detachable LS_TEXT_DOCUMENT_CAPABILITIES
 			l_workspace_capabilities: detachable LS_WORKSPACE_CAPABILITIES
 			l_dynamic_registration: detachable LS_BOOLEAN
+			l_will_save: detachable LS_BOOLEAN
+			l_will_save_wait_until: detachable LS_BOOLEAN
 			l_did_save: detachable LS_BOOLEAN
 			l_text_document_sync_capabilities: detachable LS_TEXT_DOCUMENT_SYNC_CAPABILITIES
 		do
@@ -270,6 +272,8 @@ feature {NONE} -- Implementation
 			did_open_text_document_notification_handler.build_client_capabilities
 			did_close_text_document_notification_handler.build_client_capabilities
 			did_change_text_document_notification_handler.build_client_capabilities
+			will_save_text_document_notification_handler.build_client_capabilities
+			will_save_wait_until_text_document_request_handler.build_client_capabilities
 			did_save_text_document_notification_handler.build_client_capabilities
 			if attached did_open_text_document_notification_handler.client_capabilities as l_capabilities then
 				if attached l_capabilities.dynamic_registration as l_dynamic and then l_dynamic then
@@ -286,14 +290,26 @@ feature {NONE} -- Implementation
 					l_dynamic_registration := l_dynamic
 				end
 			end
+			if attached will_save_text_document_notification_handler.client_capabilities as l_capabilities then
+				if attached l_capabilities.dynamic_registration as l_dynamic and then l_dynamic then
+					l_dynamic_registration := l_dynamic
+				end
+				l_will_save := l_capabilities.will_save
+			end
+			if attached will_save_wait_until_text_document_request_handler.client_capabilities as l_capabilities then
+				if attached l_capabilities.dynamic_registration as l_dynamic and then l_dynamic then
+					l_dynamic_registration := l_dynamic
+				end
+				l_will_save_wait_until := l_capabilities.will_save_wait_until
+			end
 			if attached did_save_text_document_notification_handler.client_capabilities as l_capabilities then
 				if attached l_capabilities.dynamic_registration as l_dynamic and then l_dynamic then
 					l_dynamic_registration := l_dynamic
 				end
 				l_did_save := l_capabilities.did_save
 			end
-			if l_dynamic_registration /= Void or l_did_save /= Void then
-				create l_text_document_sync_capabilities.make (l_dynamic_registration, Void, Void, l_did_save)
+			if l_dynamic_registration /= Void or l_will_save /= Void or l_will_save_wait_until /= Void or l_did_save /= Void then
+				create l_text_document_sync_capabilities.make (l_dynamic_registration, l_will_save, l_will_save_wait_until, l_did_save)
 				if l_text_document_capabilities = Void then
 					create l_text_document_capabilities.make
 					Result.set_text_document (l_text_document_capabilities)
@@ -307,6 +323,14 @@ feature {NONE} -- Implementation
 					Result.set_text_document (l_text_document_capabilities)
 				end
 				l_text_document_capabilities.set_hover (l_hover_capabilities)
+			end
+			definition_request_handler.build_client_capabilities
+			if attached definition_request_handler.client_capabilities as l_definition_capabilities then
+				if l_text_document_capabilities = Void then
+					create l_text_document_capabilities.make
+					Result.set_text_document (l_text_document_capabilities)
+				end
+				l_text_document_capabilities.set_definition (l_definition_capabilities)
 			end
 			did_change_watched_files_notification_handler.build_client_capabilities
 			if attached did_change_watched_files_notification_handler.client_capabilities as l_did_change_watched_files_capabilities then

@@ -45,6 +45,21 @@ feature {LS_SERVER_INITIALIZE_REQUEST_HANDLER} -- Setting
 			workspace_folders_set: workspace_folders = a_workspace_folders
 		end
 
+feature -- Handling 'textDocument/hover' requests
+
+	on_definition_request (a_request: LS_DEFINITION_REQUEST; a_response: LS_DEFINITION_RESPONSE)
+			-- Handle 'textDocument/definition' request `a_request`.
+			-- Build `a_response` accordingly.
+			--
+			-- (To be redefined in servers.
+			-- Redefine `definition_request_handler` accordingly as per the precondition.)
+		require
+			a_request_not_void: a_request /= Void
+			a_response_not_void: a_response /= Void
+			definition_request_supported: definition_request_handler.conforms_to ({detachable LS_SERVER_DEFINITION_REQUEST_HANDLER})
+		do
+		end
+
 feature -- Handling 'textDocument/didChange' notifications
 
 	on_did_change_text_document_notification (a_notification: LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION)

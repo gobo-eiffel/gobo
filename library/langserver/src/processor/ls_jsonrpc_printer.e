@@ -272,6 +272,75 @@ feature {LS_ANY} -- Processing
 			utf8_string.append_character ('}')
 		end
 
+	process_definition_capabilities (a_value: LS_DEFINITION_CAPABILITIES)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			process_dynamic_registration_capabilities (a_value)
+			if attached a_value.link_support as l_link_support then
+				process_comma_if_not_first
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_DEFINITION_CAPABILITIES}.link_support_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_link_support.process (Current)
+			end
+			utf8_string.append_character ('}')
+		end
+
+	process_definition_options (a_value: LS_DEFINITION_OPTIONS)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			process_work_done_progress_options (a_value)
+			utf8_string.append_character ('}')
+		end
+
+	process_definition_params (a_value: LS_DEFINITION_PARAMS)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			process_text_document_location_params (a_value)
+			process_work_done_progress_params (a_value)
+			process_partial_result_params (a_value)
+			utf8_string.append_character ('}')
+		end
+
+	process_definition_registration_options (a_value: LS_DEFINITION_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			process_text_document_registration_options (a_value)
+			process_work_done_progress_options (a_value)
+			utf8_string.append_character ('}')
+		end
+
+	process_definition_request (a_value: LS_DEFINITION_REQUEST)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			process_jsonrpc_version
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_DEFINITION_REQUEST}.id_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.id.process (Current)
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_DEFINITION_REQUEST}.method_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.method.process (Current)
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_DEFINITION_REQUEST}.params_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			process_definition_params (a_value)
+			utf8_string.append_character ('}')
+		end
+
 	process_diagnostic (a_value: LS_DIAGNOSTIC)
 			-- Process `a_value`.
 		do
@@ -1200,6 +1269,40 @@ feature {LS_ANY} -- Processing
 			utf8_string.append_character ('}')
 		end
 
+	process_location_link_list (a_value: LS_LOCATION_LINK_LIST)
+			-- Process `a_value`.
+		local
+			i, nb: INTEGER
+		do
+			utf8_string.append_character ('[')
+			nb := a_value.count
+			from i := 1 until i > nb loop
+				if i /= 1 then
+					utf8_string.append_character (',')
+				end
+				a_value.location_link (i).process (Current)
+				i := i + 1
+			end
+			utf8_string.append_character (']')
+		end
+
+	process_location_list (a_value: LS_LOCATION_LIST)
+			-- Process `a_value`.
+		local
+			i, nb: INTEGER
+		do
+			utf8_string.append_character ('[')
+			nb := a_value.count
+			from i := 1 until i > nb loop
+				if i /= 1 then
+					utf8_string.append_character (',')
+				end
+				a_value.location (i).process (Current)
+				i := i + 1
+			end
+			utf8_string.append_character (']')
+		end
+
 	process_log_trace_notification (a_value: LS_LOG_TRACE_NOTIFICATION)
 			-- Process `a_value`.
 		do
@@ -1345,6 +1448,21 @@ feature {LS_ANY} -- Processing
 			utf8_string.append_character (':')
 			a_value.version.process (Current)
 			utf8_string.append_character ('}')
+		end
+
+	process_partial_result_params (a_value: LS_PARTIAL_RESULT_PARAMS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			if attached a_value.partial_result_token as l_partial_result_token then
+				process_comma_if_not_first
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_PARTIAL_RESULT_PARAMS}.partial_result_token_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_partial_result_token.process (Current)
+			end
 		end
 
 	process_position (a_value: LS_POSITION)
@@ -1579,20 +1697,28 @@ feature {LS_ANY} -- Processing
 			-- Process `a_value`.
 		do
 			utf8_string.append_character ('{')
+			if attached a_value.text_document_sync as l_text_document_sync then
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_SERVER_CAPABILITIES}.text_document_sync_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_text_document_sync.process (Current)
+			end
 			if attached a_value.hover_provider as l_hover_provider then
+				process_comma_if_not_first
 				utf8_string.append_character ('"')
 				utf8_string.append_string ({LS_SERVER_CAPABILITIES}.hover_provider_name)
 				utf8_string.append_character ('"')
 				utf8_string.append_character (':')
 				l_hover_provider.process (Current)
 			end
-			if attached a_value.text_document_sync as l_text_document_sync then
+			if attached a_value.definition_provider as l_definition_provider then
 				process_comma_if_not_first
 				utf8_string.append_character ('"')
-				utf8_string.append_string ({LS_SERVER_CAPABILITIES}.text_document_sync_name)
+				utf8_string.append_string ({LS_SERVER_CAPABILITIES}.definition_provider_name)
 				utf8_string.append_character ('"')
 				utf8_string.append_character (':')
-				l_text_document_sync.process (Current)
+				l_definition_provider.process (Current)
 			end
 			utf8_string.append_character ('}')
 		end

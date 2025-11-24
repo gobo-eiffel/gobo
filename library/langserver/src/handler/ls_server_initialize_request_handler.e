@@ -39,6 +39,8 @@ feature -- Basic operations
 			l_open_close: detachable LS_BOOLEAN
 			l_change: detachable LS_TEXT_DOCUMENT_SYNC_KIND
 			l_save: detachable LS_OPTIONAL_DID_SAVE_TEXT_DOCUMENT_OPTIONS
+			l_will_save: detachable LS_BOOLEAN
+			l_will_save_wait_until: detachable LS_BOOLEAN
 		do
 			if attached a_request.trace as l_trace then
 				a_manager.set_trace_notification_handler.set_trace_value (l_trace)
@@ -64,6 +66,8 @@ feature -- Basic operations
 				a_manager.did_close_text_document_notification_handler.set_client_capabilities (l_text_document_capabilities.synchronization)
 				a_manager.did_change_text_document_notification_handler.set_client_capabilities (l_text_document_capabilities.synchronization)
 				a_manager.did_save_text_document_notification_handler.set_client_capabilities (l_text_document_capabilities.synchronization)
+				a_manager.will_save_text_document_notification_handler.set_client_capabilities (l_text_document_capabilities.synchronization)
+				a_manager.will_save_wait_until_text_document_request_handler.set_client_capabilities (l_text_document_capabilities.synchronization)
 				a_manager.hover_request_handler.set_client_capabilities (l_text_document_capabilities.hover)
 			end
 			if attached a_request.capabilities.workspace as l_workspace_capabilities then
@@ -73,6 +77,8 @@ feature -- Basic operations
 			a_manager.did_open_text_document_notification_handler.build_server_options
 			a_manager.did_close_text_document_notification_handler.build_server_options
 			a_manager.did_change_text_document_notification_handler.build_server_options
+			a_manager.will_save_text_document_notification_handler.build_server_options
+			a_manager.will_save_wait_until_text_document_request_handler.build_server_options
 			a_manager.did_save_text_document_notification_handler.build_server_options
 			if attached a_manager.did_open_text_document_notification_handler.server_options as l_server_options and then l_server_options.open then
 				l_open_close := l_server_options.open
@@ -82,19 +88,23 @@ feature -- Basic operations
 			if attached a_manager.did_change_text_document_notification_handler.server_options as l_server_options then
 				l_change := l_server_options.change
 			end
+			if attached a_manager.will_save_text_document_notification_handler.server_options as l_server_options then
+				l_will_save := l_server_options.will_save
+			end
+			if attached a_manager.will_save_wait_until_text_document_request_handler.server_options as l_server_options then
+				l_will_save_wait_until := l_server_options.will_save_wait_until
+			end
 			if attached a_manager.did_save_text_document_notification_handler.server_options as l_server_options then
 				l_save := l_server_options.save
 			end
-			if l_open_close /= Void or l_change /= Void or l_save /= Void then
-				create l_text_document_sync_options.make (
-					l_open_close,
-					l_change,
-					Void, Void,
-					l_save)
+			if l_open_close /= Void or l_change /= Void or l_will_save /= Void or l_will_save_wait_until /= Void or l_save /= Void then
+				create l_text_document_sync_options.make (l_open_close, l_change, l_will_save, l_will_save_wait_until, l_save)
 				l_server_capabilities.set_text_document_sync (l_text_document_sync_options)
 			end
 			a_manager.hover_request_handler.build_server_options
 			l_server_capabilities.set_hover_provider (a_manager.hover_request_handler.server_options)
+			a_manager.definition_request_handler.build_server_options
+			l_server_capabilities.set_definition_provider (a_manager.definition_request_handler.server_options)
 			create l_result.make (l_server_capabilities)
 			create l_response.make_success (a_request.id, l_result)
 			a_manager.send_message (l_response)

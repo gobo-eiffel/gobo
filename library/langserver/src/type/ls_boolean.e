@@ -17,6 +17,11 @@ inherit
 			is_equal
 		end
 
+	LS_OPTIONAL_DEFINITION_OPTIONS
+		redefine
+			is_equal
+		end
+
 	LS_OPTIONAL_DID_SAVE_TEXT_DOCUMENT_OPTIONS
 		redefine
 			is_equal

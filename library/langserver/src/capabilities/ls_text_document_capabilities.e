@@ -33,6 +33,9 @@ feature -- Access
 	hover: detachable LS_HOVER_CAPABILITIES
 			-- Capabilities specific to the 'textDocument/hover' request.
 
+	definition: detachable LS_DEFINITION_CAPABILITIES
+			-- Capabilities specific to the `textDocument/definition` request.
+
 feature -- Setting
 
 	set_synchronization (a_synchronization: like synchronization)
@@ -51,10 +54,19 @@ feature -- Setting
 			hover_set: hover = a_hover
 		end
 
+	set_definition (a_definition: like definition)
+			-- Set `definition` to `a_definition`.
+		do
+			definition := a_definition
+		ensure
+			definition_set: definition = a_definition
+		end
+
 feature -- Field names
 
-	hover_name: STRING_8 = "hover"
 	synchronization_name: STRING_8 = "synchronization"
+	hover_name: STRING_8 = "hover"
+	definition_name: STRING_8 = "definition"
 			-- Field names
 
 feature -- Processing

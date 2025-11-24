@@ -89,6 +89,34 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_definition_capabilities (a_value: LS_DEFINITION_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_definition_options (a_value: LS_DEFINITION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_definition_registration_options (a_value: LS_DEFINITION_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_definition_request (a_value: LS_DEFINITION_REQUEST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_diagnostic (a_value: LS_DIAGNOSTIC)
 			-- Process `a_value`.
 		require
@@ -370,6 +398,20 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_location_link (a_value: LS_LOCATION_LINK)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_location_link_list (a_value: LS_LOCATION_LINK_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_location_list (a_value: LS_LOCATION_LIST)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void
