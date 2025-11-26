@@ -59,7 +59,7 @@ feature -- Tests
 feature -- Setting
 
 	set_up
-			-- <Precursor>.
+			-- <Precursor>
 		local
 			l_path: STRING
 		do

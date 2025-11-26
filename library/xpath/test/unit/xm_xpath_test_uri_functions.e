@@ -250,7 +250,7 @@ feature -- Tests
 		end
 
 	set_up
-			-- <Precursor>.
+			-- <Precursor>
 		do
 			conformance.set_basic_xslt_processor
 		end
