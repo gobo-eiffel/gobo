@@ -322,6 +322,12 @@ feature {ET_AST_NODE} -- Processing
 					internal_type_context.reset (current_class)
 					if attached a_instruction.type as l_type then
 						internal_type_context.put_last (l_type)
+					elseif
+						attached {ET_IDENTIFIER} a_instruction.target as l_identifier and then
+						attached current_class.seeded_feature (l_identifier.seed) as l_feature and then
+						attached l_feature.type as l_type
+					then
+						internal_type_context.put_last (l_type)
 					else
 						expression_type_finder.find_expression_type_in_closure (a_instruction.target, l_closure, l_closure, current_class, internal_type_context, current_universe.any_type)
 					end

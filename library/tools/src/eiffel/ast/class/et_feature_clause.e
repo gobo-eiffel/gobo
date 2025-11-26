@@ -5,7 +5,7 @@
 		"Eiffel feature clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_FEATURE_CLAUSE
@@ -13,6 +13,8 @@ class ET_FEATURE_CLAUSE
 inherit
 
 	ET_AST_NODE
+
+	HASHABLE
 
 create
 
@@ -88,6 +90,12 @@ feature -- Access
 			Result := break
 		end
 
+	hash_code: INTEGER
+			-- Hash value
+		do
+			Result := position.line
+		end
+
 feature -- Status report
 
 	has_header_comment: BOOLEAN
@@ -125,6 +133,36 @@ feature -- Setting
 			first_semicolon := a_first_semicolon
 		ensure
 			first_semicolon_set: first_semicolon = a_first_semicolon
+		end
+
+feature -- Output
+
+	append_first_line_comment_to_string (a_indentation: detachable STRING_8; a_string: STRING_8)
+			-- Append first line of header comment, if any, to `a_string`.
+			-- Prepend with `a_indentation` if specified.
+		require
+			valid_indentation: a_indentation /= Void implies (a_indentation.same_type ({STRING_8} "") and then {UC_UTF8_ROUTINES}.valid_utf8 (a_indentation))
+			a_string_not_void: a_string /= Void
+		do
+			if attached header_break as l_header_break then
+				l_header_break.append_first_line_comment_to_string (a_indentation, a_string)
+			end
+		ensure
+			valid_utf8: (a_string.same_type ({STRING_8} "") and then old {UC_UTF8_ROUTINES}.valid_utf8 (a_string)) implies {UC_UTF8_ROUTINES}.valid_utf8 (a_string)
+		end
+
+	append_client_clause_to_string (a_indentation: detachable STRING_8; a_string: STRING_8)
+			-- Append client clause, if any, with surrounding braces, to `a_string`.
+			-- Prepend with `a_indentation` if specified.
+		require
+			valid_indentation: a_indentation /= Void implies (a_indentation.same_type ({STRING_8} "") and then {UC_UTF8_ROUTINES}.valid_utf8 (a_indentation))
+			a_string_not_void: a_string /= Void
+		do
+			if attached clients_clause as l_clients_clause then
+				l_clients_clause.append_client_clause_to_string (a_indentation, a_string)
+			end
+		ensure
+			valid_utf8: (a_string.same_type ({STRING_8} "") and then old {UC_UTF8_ROUTINES}.valid_utf8 (a_string)) implies {UC_UTF8_ROUTINES}.valid_utf8 (a_string)
 		end
 
 feature -- Processing

@@ -23,12 +23,14 @@ inherit
 			did_change_watched_files_notification_handler,
 			did_close_text_document_notification_handler,
 			did_open_text_document_notification_handler,
+			document_symbol_request_handler,
 			hover_request_handler,
 			on_definition_request,
 			on_did_change_text_document_notification,
 			on_did_change_watched_files_notification,
 			on_did_close_text_document_notification,
 			on_did_open_text_document_notification,
+			on_document_symbol_request,
 			on_file_system_watchers_registered,
 			on_hover_request,
 			on_initialized_notification,
@@ -232,6 +234,101 @@ feature -- Handling 'textDocument/didOpen' notifications
 
 	did_open_text_document_notification_handler: LS_SERVER_DID_OPEN_TEXT_DOCUMENT_NOTIFICATION_HANDLER
 			-- Handler for 'textDocument/didOpen' notifications
+		once ("OBJECT")
+			create Result.make
+		end
+
+feature -- Handling 'textDocument/documentSymbol' requests
+
+	on_document_symbol_request (a_request: LS_DOCUMENT_SYMBOL_REQUEST; a_response: LS_DOCUMENT_SYMBOL_RESPONSE)
+			-- Handle 'textDocument/documentSymbol' request `a_request`.
+			-- Build `a_response` accordingly.
+		local
+			l_feature_clause: ET_FEATURE_CLAUSE
+			l_feature_clause_symbols: DS_HASH_TABLE [LS_DOCUMENT_SYMBOL, ET_FEATURE_CLAUSE]
+			i, nb: INTEGER
+			l_document_symbol: LS_DOCUMENT_SYMBOL
+			l_range: LS_RANGE
+			l_text: STRING_8
+			l_name: LS_STRING
+		do
+			if attached class_from_uri (a_request.text_document.uri) as l_class then
+				if attached l_class.feature_clauses as l_feature_clauses then
+					nb := l_feature_clauses.count
+					create l_feature_clause_symbols.make_map (nb)
+					from i := 1 until i > nb loop
+						l_feature_clause := l_feature_clauses.item (i)
+						l_range := range (l_feature_clause.feature_keyword, l_class)
+						create l_text.make (50)
+						l_text.append_string (tokens.feature_keyword.text)
+						l_feature_clause.append_client_clause_to_string (" ", l_text)
+						l_feature_clause.append_first_line_comment_to_string (" ", l_text)
+						create l_name.make_from_utf8 (l_text)
+						create l_document_symbol.make (l_name, Void, {LS_SYMBOL_KINDS}.interface, Void, Void, l_range, l_range, Void)
+						a_response.add_document_symbol (l_document_symbol)
+						l_feature_clause_symbols.put (l_document_symbol, l_feature_clause)
+						i := i + 1
+					end
+				end
+				add_features_document_symbols (l_class.queries, l_class, l_feature_clause_symbols, a_response)
+				add_features_document_symbols (l_class.procedures, l_class, l_feature_clause_symbols, a_response)
+			end
+		end
+
+	add_features_document_symbols (a_feature_list: ET_FEATURE_LIST; a_class: ET_CLASS;
+		a_feature_clause_symbols: detachable DS_HASH_TABLE [LS_DOCUMENT_SYMBOL, ET_FEATURE_CLAUSE];
+		a_response: LS_DOCUMENT_SYMBOL_RESPONSE)
+			-- Add the document symbols of each feature in `a_feature_list` declared
+			-- in `a_class` to its associated feature clause document symbol if any,
+			-- or to `a_response` otherwise.
+		require
+			a_feature_list_not_void: a_feature_list /= Void
+			a_class_not_void: a_class /= Void
+			a_response_not_void: a_response /= Void
+		local
+			l_feature: ET_FEATURE
+			l_feature_name: ET_FEATURE_NAME
+			i, nb: INTEGER
+			l_document_symbol: LS_DOCUMENT_SYMBOL
+			l_range: LS_RANGE
+			l_text: STRING_8
+			l_name: LS_STRING
+			l_kind: LS_SYMBOL_KIND
+			l_with_signature: BOOLEAN
+		do
+			nb := a_feature_list.declared_count
+			from i := 1 until i > nb loop
+				l_feature := a_feature_list.item (i)
+				l_feature_name := l_feature.name
+				l_range := range (l_feature_name, a_class)
+				if l_feature.is_attribute then
+					l_kind := {LS_SYMBOL_KINDS}.field
+				else
+					l_kind := {LS_SYMBOL_KINDS}.method
+				end
+				if l_with_signature then
+					create l_text.make (50)
+					l_feature.append_canonical_signature_to_string (a_class, l_text)
+				else
+					l_text := l_feature_name.lower_name
+				end
+				create l_name.make_from_utf8 (l_text)
+				create l_document_symbol.make (l_name, Void, l_kind, Void, Void, l_range, l_range, Void)
+				if
+					a_feature_clause_symbols /= Void and then
+					attached l_feature.feature_clause as l_feature_clause and then
+					attached a_feature_clause_symbols.value (l_feature_clause) as l_parent_symbol
+				then
+					l_parent_symbol.add_child (l_document_symbol)
+				else
+					a_response.add_document_symbol (l_document_symbol)
+				end
+				i := i + 1
+			end
+		end
+
+	document_symbol_request_handler: LS_SERVER_DOCUMENT_SYMBOL_REQUEST_HANDLER
+			-- Handler for 'textDocument/documentSymbol' requests
 		once ("OBJECT")
 			create Result.make
 		end
