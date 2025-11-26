@@ -47,6 +47,11 @@ inherit
 			is_equal
 		end
 
+	LS_OPTIONAL_DOCUMENT_SYMBOL_OPTIONS
+		redefine
+			is_equal
+		end
+
 create
 
 	make,

@@ -43,6 +43,7 @@ feature -- Basic operations
 			end
 			a_manager.hover_request_handler.set_server_options (l_server_capabilities.hover_provider)
 			a_manager.definition_request_handler.set_server_options (l_server_capabilities.definition_provider)
+			a_manager.document_symbol_request_handler.set_server_options (l_server_capabilities.document_symbol_provider)
 			a_manager.send_initialized_notification
 		end
 

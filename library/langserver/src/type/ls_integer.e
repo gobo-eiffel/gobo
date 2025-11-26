@@ -58,6 +58,20 @@ inherit
 			is_equal
 		end
 
+	LS_SYMBOL_KIND
+		undefine
+			value
+		redefine
+			is_equal
+		end
+
+	LS_SYMBOL_TAG
+		undefine
+			value
+		redefine
+			is_equal
+		end
+
 	LS_TEXT_DOCUMENT_SYNC_KIND
 		undefine
 			value

@@ -39,10 +39,13 @@ feature -- Access
 	definition_provider: detachable LS_OPTIONAL_DEFINITION_OPTIONS
 			-- The server provides goto definition support.
 
+	document_symbol_provider: detachable LS_OPTIONAL_DOCUMENT_SYMBOL_OPTIONS
+			-- The server provides document symbol support.
+
 feature -- Setting
 
 	set_text_document_sync (a_text_document_sync: like text_document_sync)
-			-- Set `text_document_sync` to `a_text_document_sync`.
+			-- Set `text_document_sync` to `a_text_document_sync`.O
 		do
 			text_document_sync := a_text_document_sync
 		ensure
@@ -65,11 +68,20 @@ feature -- Setting
 			definition_provider_set: definition_provider = a_definition_provider
 		end
 
+	set_document_symbol_provider (a_document_symbol_provider: like document_symbol_provider)
+			-- Set `document_symbol_provider` to `a_document_symbol_provider`.
+		do
+			document_symbol_provider := a_document_symbol_provider
+		ensure
+			document_symbol_provider_set: document_symbol_provider = a_document_symbol_provider
+		end
+
 feature -- Field names
 
 	text_document_sync_name: STRING_8 = "textDocumentSync"
 	hover_provider_name: STRING_8 = "hoverProvider"
 	definition_provider_name: STRING_8 = "definitionProvider"
+	document_symbol_provider_name: STRING_8 = "documentSymbolProvider"
 			-- Field names
 
 feature -- Processing

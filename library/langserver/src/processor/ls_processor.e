@@ -271,6 +271,48 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_document_symbol (a_value: LS_DOCUMENT_SYMBOL)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_document_symbol_capabilities (a_value: LS_DOCUMENT_SYMBOL_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_document_symbol_list (a_value: LS_DOCUMENT_SYMBOL_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_document_symbol_options (a_value: LS_DOCUMENT_SYMBOL_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_document_symbol_registration_options (a_value: LS_DOCUMENT_SYMBOL_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_document_symbol_request (a_value: LS_DOCUMENT_SYMBOL_REQUEST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_exit_notification (a_value: LS_EXIT_NOTIFICATION)
 			-- Process `a_value`.
 		require
@@ -559,6 +601,48 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_string (a_value: LS_STRING)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_symbol_information (a_value: LS_SYMBOL_INFORMATION)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_symbol_information_list (a_value: LS_SYMBOL_INFORMATION_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_symbol_kind_list (a_value: LS_SYMBOL_KIND_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_symbol_kind_set (a_value: LS_SYMBOL_KIND_SET)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_symbol_tag_list (a_value: LS_SYMBOL_TAG_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_symbol_tag_set (a_value: LS_SYMBOL_TAG_SET)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void

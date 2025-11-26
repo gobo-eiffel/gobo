@@ -332,6 +332,14 @@ feature {NONE} -- Implementation
 				end
 				l_text_document_capabilities.set_definition (l_definition_capabilities)
 			end
+			document_symbol_request_handler.build_client_capabilities
+			if attached document_symbol_request_handler.client_capabilities as l_document_symbol_capabilities then
+				if l_text_document_capabilities = Void then
+					create l_text_document_capabilities.make
+					Result.set_text_document (l_text_document_capabilities)
+				end
+				l_text_document_capabilities.set_document_symbol (l_document_symbol_capabilities)
+			end
 			did_change_watched_files_notification_handler.build_client_capabilities
 			if attached did_change_watched_files_notification_handler.client_capabilities as l_did_change_watched_files_capabilities then
 				if l_workspace_capabilities = Void then

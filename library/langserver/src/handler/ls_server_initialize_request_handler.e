@@ -105,6 +105,8 @@ feature -- Basic operations
 			l_server_capabilities.set_hover_provider (a_manager.hover_request_handler.server_options)
 			a_manager.definition_request_handler.build_server_options
 			l_server_capabilities.set_definition_provider (a_manager.definition_request_handler.server_options)
+			a_manager.document_symbol_request_handler.build_server_options
+			l_server_capabilities.set_document_symbol_provider (a_manager.document_symbol_request_handler.server_options)
 			create l_result.make (l_server_capabilities)
 			create l_response.make_success (a_request.id, l_result)
 			a_manager.send_message (l_response)

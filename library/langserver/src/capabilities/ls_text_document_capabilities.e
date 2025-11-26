@@ -36,6 +36,9 @@ feature -- Access
 	definition: detachable LS_DEFINITION_CAPABILITIES
 			-- Capabilities specific to the `textDocument/definition` request.
 
+	document_symbol: detachable LS_DOCUMENT_SYMBOL_CAPABILITIES
+			-- Capabilities specific to the `textDocument/documentSymbol` request.
+
 feature -- Setting
 
 	set_synchronization (a_synchronization: like synchronization)
@@ -62,11 +65,20 @@ feature -- Setting
 			definition_set: definition = a_definition
 		end
 
+	set_document_symbol (a_document_symbol: like document_symbol)
+			-- Set `document_symbol` to `a_document_symbol`.
+		do
+			document_symbol := a_document_symbol
+		ensure
+			document_symbol_set: document_symbol = a_document_symbol
+		end
+
 feature -- Field names
 
 	synchronization_name: STRING_8 = "synchronization"
 	hover_name: STRING_8 = "hover"
 	definition_name: STRING_8 = "definition"
+	document_symbol_name: STRING_8 = "documentSymbol"
 			-- Field names
 
 feature -- Processing

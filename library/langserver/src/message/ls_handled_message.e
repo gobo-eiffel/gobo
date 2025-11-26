@@ -21,7 +21,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_response: like response)
-			--
+			-- Create an already handled message, with its response.
 		require
 			a_response_not_void: a_response /= Void
 		do
