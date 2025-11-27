@@ -649,9 +649,7 @@ feature -- Parsing
 			libraries.do_recursive (agent {ET_LIBRARY}.preparse (a_system_processor))
 			preparse (a_system_processor)
 				-- Then for each universe, import classes from other universes.
-			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.import_classes)
-			libraries.do_recursive (agent {ET_LIBRARY}.import_classes)
-			import_classes
+			import_classes_recursive
 				-- Reset incrementally all classes that may have been
 				-- affected by changes made above.
 			if classes_modified_recursive then
@@ -724,14 +722,21 @@ feature -- Parsing
 			libraries.do_recursive (agent {ET_LIBRARY}.parse_all (a_system_processor))
 			parse_all (a_system_processor)
 				-- Then for each universe, import classes from other universes.
-			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.import_classes)
-			libraries.do_recursive (agent {ET_LIBRARY}.import_classes)
-			import_classes
+			import_classes_recursive
 				-- Reset incrementally all classes that may have been
 				-- affected by changes made above.
 			if classes_modified_recursive then
 				reset_classes_incremental_recursive (a_system_processor)
 			end
+		end
+
+	import_classes_recursive
+			-- For each universe (the current universe and the universes it depends on),
+			-- import classes from other universes.
+		do
+			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.import_classes)
+			libraries.do_recursive (agent {ET_LIBRARY}.import_classes)
+			import_classes
 		end
 
 feature {ET_UNIVERSE} -- Parsing

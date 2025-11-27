@@ -400,6 +400,7 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 			l_dirname: STRING_8
 			l_found: BOOLEAN
 			l_group: ET_PRIMARY_GROUP
+			l_class_added: BOOLEAN
 		do
 			l_incremental := True
 			l_no_action := True
@@ -461,6 +462,7 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 									l_found := True
 									class_mapping.go_after
 									l_eiffel_preparser.preparse_file (l_pathname, l_cluster)
+									l_class_added := True
 								end
 							end
 							if not l_found then
@@ -493,6 +495,9 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 			if l_no_action then
 				-- Done.
 			elseif l_incremental then
+				if l_class_added and not l_preparse_needed and attached eiffel_system as l_system then
+					l_system.import_classes_recursive
+				end
 				refresh_eiffel_system (l_preparse_needed)
 			else
 				set_system_processor
