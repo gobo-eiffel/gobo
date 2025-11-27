@@ -69,6 +69,8 @@ feature -- Basic operations
 				a_manager.will_save_text_document_notification_handler.set_client_capabilities (l_text_document_capabilities.synchronization)
 				a_manager.will_save_wait_until_text_document_request_handler.set_client_capabilities (l_text_document_capabilities.synchronization)
 				a_manager.hover_request_handler.set_client_capabilities (l_text_document_capabilities.hover)
+				a_manager.definition_request_handler.set_client_capabilities (l_text_document_capabilities.definition)
+				a_manager.document_symbol_request_handler.set_client_capabilities (l_text_document_capabilities.document_symbol)
 			end
 			if attached a_request.capabilities.workspace as l_workspace_capabilities then
 				a_manager.did_change_watched_files_notification_handler.set_client_capabilities (l_workspace_capabilities.did_change_watched_files)

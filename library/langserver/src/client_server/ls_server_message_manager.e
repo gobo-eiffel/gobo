@@ -131,6 +131,39 @@ feature -- Handling 'textDocument/documentSymbol' requests
 		do
 		end
 
+	register_document_symbol_options (a_id: LS_STRING; a_label: detachable LS_STRING;
+		a_document_selector: LS_OPTIONAL_DOCUMENT_SELECTOR; a_work_done_progress: detachable LS_BOOLEAN)
+			-- Register options for 'textDocument/documentSymbol' requests.
+		require
+			a_id_not_void: a_id /= Void
+			a_document_selector_not_void: a_document_selector /= Void
+			dynamic_registration_supported: document_symbol_request_handler.is_dynamic_registration_supported
+			is_initialized: is_initialized
+			not_is_shutdown: not is_shutdown
+		local
+			l_options: LS_DOCUMENT_SYMBOL_REGISTRATION_OPTIONS
+			l_registrations: LS_REGISTRATION_LIST
+			l_registration: LS_REGISTRATION
+		do
+			create l_options.make (a_label, a_document_selector, a_work_done_progress)
+			create l_registration.make (a_id, {LS_DOCUMENT_SYMBOL_REQUEST}.method, l_options)
+			create l_registrations.make_with_capacity (1)
+			l_registrations.put_last (l_registration)
+			send_register_capability_request (l_registrations)
+		end
+
+	on_document_symbol_options_registered (a_options: LS_DOCUMENT_SYMBOL_REGISTRATION_OPTIONS; a_registration: LS_REGISTRATION; a_response: LS_RESPONSE)
+			-- Action to be executed when the client registered options
+			-- for 'textDocument/documentSymbol' requests.
+			--
+			-- (To be redefined in servers.)
+		require
+			a_options_not_void: a_options /= Void
+			a_registration_not_void: a_registration /= Void
+			a_response_not_void: a_response /= Void
+		do
+		end
+
 feature -- Handling 'textDocument/hover' requests
 
 	on_hover_request (a_request: LS_HOVER_REQUEST; a_response: LS_HOVER_RESPONSE)
@@ -187,9 +220,10 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 		do
 		end
 
-	register_file_system_watchers (a_watchers: ARRAY [TUPLE [pattern: STRING_8; kind: detachable LS_WATCH_KIND]])
-			-- Register watchers for file system change events.
+	register_did_change_watched_files_options (a_id: LS_STRING; a_watchers: ARRAY [TUPLE [pattern: STRING_8; kind: detachable LS_WATCH_KIND]])
+			-- Register options for 'workspace/didChangeWatchedFiles' notifications.
 		require
+			a_id_not_void: a_id /= Void
 			a_watchers_not_void: a_watchers /= Void
 			no_void_watcher: across a_watchers as l_watcher all l_watcher /= Void and then l_watcher.pattern /= Void end
 			dynamic_registration_supported: did_change_watched_files_notification_handler.is_dynamic_registration_supported
@@ -216,18 +250,19 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 				i := i + 1
 			end
 			create l_registration_options.make (l_file_system_watchers)
-			create l_registration.make ("xxx", {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION}.method, l_registration_options)
+			create l_registration.make (a_id, {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION}.method, l_registration_options)
 			create l_registrations.make_with_capacity (1)
 			l_registrations.put_last (l_registration)
 			send_register_capability_request (l_registrations)
 		end
 
-	on_file_system_watchers_registered (a_watchers: LS_FILE_SYSTEM_WATCHER_LIST; a_registration: LS_REGISTRATION; a_response: LS_RESPONSE)
-			-- Action to be executed when the client registered file system watchers.
+	on_did_change_watched_files_options_registered (a_options: LS_DID_CHANGE_WATCHED_FILES_REGISTRATION_OPTIONS; a_registration: LS_REGISTRATION; a_response: LS_RESPONSE)
+			-- Action to be executed when the client registered options
+			-- for 'workspace/didChangeWatchedFiles' notifications.
 			--
 			-- (To be redefined in servers.)
 		require
-			a_watchers_not_void: a_watchers /= Void
+			a_options_not_void: a_options /= Void
 			a_registration_not_void: a_registration /= Void
 			a_response_not_void: a_response /= Void
 		do

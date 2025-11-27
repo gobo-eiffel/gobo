@@ -37,7 +37,11 @@ feature -- Basic oprations
 				l_registration := l_registration_list.registration (i)
 				if l_registration.method ~ {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION}.method then
 					if attached {LS_DID_CHANGE_WATCHED_FILES_REGISTRATION_OPTIONS} l_registration.register_options as l_register_options then
-						a_manager.on_file_system_watchers_registered (l_register_options.watchers, l_registration, a_response)
+						a_manager.on_did_change_watched_files_options_registered (l_register_options, l_registration, a_response)
+					end
+				elseif l_registration.method ~ {LS_DOCUMENT_SYMBOL_REQUEST}.method then
+					if attached {LS_DOCUMENT_SYMBOL_REGISTRATION_OPTIONS} l_registration.register_options as l_register_options then
+						a_manager.on_document_symbol_options_registered (l_register_options, l_registration, a_response)
 					end
 				end
 				i := i + 1

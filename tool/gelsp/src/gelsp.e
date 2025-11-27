@@ -31,7 +31,6 @@ inherit
 			on_did_close_text_document_notification,
 			on_did_open_text_document_notification,
 			on_document_symbol_request,
-			on_file_system_watchers_registered,
 			on_hover_request,
 			on_initialized_notification,
 			add_other_options,
@@ -331,6 +330,7 @@ feature -- Handling 'textDocument/documentSymbol' requests
 			-- Handler for 'textDocument/documentSymbol' requests
 		once ("OBJECT")
 			create Result.make
+			Result.set_server_options ({LS_BOOLEAN}.false_)
 		end
 
 feature -- Handling 'textDocument/hover' requests
@@ -505,12 +505,6 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 			end
 		end
 
-	on_file_system_watchers_registered (a_watchers: LS_FILE_SYSTEM_WATCHER_LIST; a_registration: LS_REGISTRATION; a_response: LS_RESPONSE)
-			-- Action to be executed when the client registered file system watchers.
-		do
-			build_eiffel_system
-		end
-
 	did_change_watched_files_notification_handler: LS_SERVER_DID_CHANGE_WATCHED_FILES_NOTIFICATION_HANDLER
 			-- Handler for 'workspace/didChangeWatchedFiles' notifications
 		once ("OBJECT")
@@ -522,7 +516,13 @@ feature -- Handling 'initialized' notification
 	on_initialized_notification (a_notification: LS_INITIALIZED_NOTIFICATION)
 			-- Handle 'initialized' notification `a_notification`.
 		do
-			register_file_system_watchers (<<["**/*.ecf", {LS_WATCH_KINDS}.change], ["**/*", {LS_WATCH_KINDS}.delete]>>)
+			if did_change_watched_files_notification_handler.is_dynamic_registration_supported then
+				register_did_change_watched_files_options ("xxx", <<["**/*.ecf", {LS_WATCH_KINDS}.change], ["**/*", {LS_WATCH_KINDS}.delete]>>)
+			end
+			if document_symbol_request_handler.is_dynamic_registration_supported then
+				register_document_symbol_options ("yyyy", Void, {LS_NULL}.null, Void)
+			end
+			build_eiffel_system
 		end
 
 feature {NONE} -- Eiffel processing
