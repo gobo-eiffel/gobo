@@ -34,6 +34,17 @@ feature -- Access
 		deferred
 		end
 
+feature -- Basic operations
+
+	handle_response (a_response: LS_RESPONSE; a_manager: LS_MESSAGE_MANAGER)
+			-- Handle  response `a_response` to current message using `handler`.
+		require
+			a_response_not_void: a_response /= Void
+			a_manager_not_void: a_manager /= Void
+		do
+			handler (a_manager).handle_response (a_response, Current, a_manager)
+		end
+
 feature -- Field names
 
 	id_name: STRING_8 = "id"

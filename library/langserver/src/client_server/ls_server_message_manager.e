@@ -15,6 +15,7 @@ inherit
 	LS_MESSAGE_MANAGER
 		redefine
 			connection,
+			configuration_request_handler,
 			exit_notification_handler,
 			initialize_request_handler,
 			initialized_notification_handler,
@@ -206,6 +207,64 @@ feature -- Handling 'textDocument/willSaveWaitUntil' requests
 			a_response_not_void: a_response /= Void
 			will_save_wait_until_request_supported: will_save_wait_until_text_document_request_handler.conforms_to ({detachable LS_SERVER_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REQUEST_HANDLER})
 		do
+		end
+
+feature -- Handling 'workspace/configuration' requests
+
+	send_configuration_request (a_configurations: ARRAY [TUPLE [scope_uri, section: detachable STRING_8]])
+			-- Send 'workspace/configuration' request to the client.
+		require
+			a_configurations_not_void: a_configurations /= Void
+			no_void_configuration: across a_configurations as l_configuration all l_configuration /= Void end
+		local
+			l_configuration_item: LS_CONFIGURATION_ITEM
+			l_configuration_item_list: LS_CONFIGURATION_ITEM_LIST
+			i, nb: INTEGER
+			l_scope_uri: detachable LS_STRING
+			l_section: detachable LS_STRING
+			l_configuration_tuple: TUPLE [scope_uri, section: detachable STRING_8]
+			l_request: LS_CONFIGURATION_REQUEST
+			l_id: LS_STRING
+		do
+			create l_configuration_item_list.make_with_capacity (a_configurations.count)
+			nb := a_configurations.upper
+			from i := a_configurations.lower until i > nb loop
+				l_configuration_tuple := a_configurations.item (i)
+				if attached l_configuration_tuple.scope_uri as l_configuration_scope_uri then
+					create l_scope_uri.make_from_utf8 (l_configuration_scope_uri)
+				else
+					l_scope_uri := Void
+				end
+				if attached l_configuration_tuple.section as l_configuration_section then
+					create l_section.make_from_utf8 (l_configuration_section)
+				else
+					l_section := Void
+				end
+				create l_configuration_item.make (l_scope_uri, l_section)
+				l_configuration_item_list.put_last (l_configuration_item)
+				i := i + 1
+			end
+			request_id_counter := request_id_counter + 1
+			l_id := request_id_counter.out
+			create l_request.make (l_id, l_configuration_item_list)
+			send_request (l_request)
+		end
+
+	on_configuration_response (a_result: detachable LS_CONFIGURATION_RESULT; a_request: LS_CONFIGURATION_REQUEST; a_response: LS_RESPONSE)
+			-- Action to be executed when the client sent response
+			-- to a 'workspace/configuration' request.
+			--
+			-- (To be redefined in servers.)
+		require
+			a_request_not_void: a_request /= Void
+			a_response_not_void: a_response /= Void
+		do
+		end
+
+	configuration_request_handler: LS_SERVER_CONFIGURATION_REQUEST_HANDLER
+			-- Handler for 'workspace/configuration' requests
+		once ("OBJECT")
+			create Result.make
 		end
 
 feature -- Handling 'workspace/didChangeWatchedFiles' notifications

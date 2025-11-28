@@ -27,7 +27,7 @@ feature -- Access
 		end
 
 	handler (a_manager: LS_MESSAGE_MANAGER): LS_INITIALIZED_NOTIFICATION_HANDLER
-			-- Message handler for current dynamic registration options
+			-- Message handler for this kind of messages
 		do
 			Result := {LS_INITIALIZED_NOTIFICATION}.handler (a_manager)
 		ensure then

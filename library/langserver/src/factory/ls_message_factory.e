@@ -52,7 +52,7 @@ feature -- Access
 
 
 	handler (a_manager: LS_MESSAGE_MANAGER): LS_MESSAGE_HANDLER
-			-- Message handler for current dynamic registration options
+			-- Message handler for this kind of messages
 		require
 			a_manager_not_void: a_manager /= Void
 		deferred

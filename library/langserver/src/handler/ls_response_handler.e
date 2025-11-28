@@ -42,15 +42,13 @@ feature -- Basic operations
 			-- Handle `a_response`.
 		local
 			l_request: LS_REQUEST
-			l_handler: LS_REQUEST_HANDLER
 		do
 			if attached {LS_REQUEST_ID} a_response.id as l_id then
 				pending_requests.search (l_id)
 				if pending_requests.found then
 					l_request := pending_requests.found_item
 					pending_requests.remove_found_item
-					l_handler := l_request.handler (a_manager)
-					l_handler.handle_response (a_response, l_request, a_manager)
+					l_request.handle_response (a_response, a_manager)
 				end
 			end
 		end

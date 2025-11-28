@@ -56,7 +56,7 @@ feature -- Access
 		end
 
 	handler (a_manager: LS_MESSAGE_MANAGER): LS_WILL_SAVE_TEXT_DOCUMENT_NOTIFICATION_HANDLER
-			-- Message handler for current dynamic registration options
+			-- Message handler for this kind of messages
 		do
 			Result := {LS_WILL_SAVE_TEXT_DOCUMENT_NOTIFICATION}.handler (a_manager)
 		ensure then

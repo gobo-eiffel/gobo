@@ -133,6 +133,14 @@ feature -- Basic operations
 
 feature -- Handlers
 
+	configuration_request_handler: LS_CONFIGURATION_REQUEST_HANDLER
+			-- Handler for 'workspace/configuration' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			configuration_request_handler_not_void: Result /= Void
+		end
+
 	definition_request_handler: LS_DEFINITION_REQUEST_HANDLER
 			-- Handler for 'textDocument/definition' requests
 		once ("OBJECT")
@@ -490,6 +498,7 @@ feature {LS_RESPONSE_HANDLER, LS_REQUEST_HANDLER} -- Implementation
 			-- Message factories, indexed by methods
 		once ("OBJECT")
 			create Result.make (100)
+			Result.force (create {LS_CONFIGURATION_REQUEST_FACTORY}.make, {LS_CONFIGURATION_REQUEST}.method)
 			Result.force (create {LS_CANCEL_REQUEST_NOTIFICATION_FACTORY}.make, {LS_CANCEL_REQUEST_NOTIFICATION}.method)
 			Result.force (create {LS_DEFINITION_REQUEST_FACTORY}.make, {LS_DEFINITION_REQUEST}.method)
 			Result.force (create {LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION}.method)

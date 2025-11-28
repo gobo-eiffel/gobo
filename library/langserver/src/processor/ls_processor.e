@@ -82,6 +82,27 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_configuration_item (a_value: LS_CONFIGURATION_ITEM)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_configuration_item_list (a_value: LS_CONFIGURATION_ITEM_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_configuration_request (a_value: LS_CONFIGURATION_REQUEST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_command (a_value: LS_COMMAND)
 			-- Process `a_value`.
 		require

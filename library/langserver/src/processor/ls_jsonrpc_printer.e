@@ -238,6 +238,83 @@ feature {LS_ANY} -- Processing
 			utf8_string.append_character ('}')
 		end
 
+	process_configuration_item (a_value: LS_CONFIGURATION_ITEM)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			if attached a_value.scope_uri as l_scope_uri then
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_CONFIGURATION_ITEM}.scope_uri_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_scope_uri.process (Current)
+			end
+			if attached a_value.section as l_section then
+				process_comma_if_not_first
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_CONFIGURATION_ITEM}.section_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_section.process (Current)
+			end
+			utf8_string.append_character ('}')
+		end
+
+	process_configuration_item_list (a_value: LS_CONFIGURATION_ITEM_LIST)
+			-- Process `a_value`.
+		local
+			i, nb: INTEGER
+		do
+			utf8_string.append_character ('[')
+			nb := a_value.count
+			from i := 1 until i > nb loop
+				if i /= 1 then
+					utf8_string.append_character (',')
+				end
+				a_value.value (i).process (Current)
+				i := i + 1
+			end
+			utf8_string.append_character (']')
+		end
+
+	process_configuration_params (a_value: LS_CONFIGURATION_PARAMS)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_CONFIGURATION_PARAMS}.items_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.items.process (Current)
+			utf8_string.append_character ('}')
+		end
+
+	process_configuration_request (a_value: LS_CONFIGURATION_REQUEST)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			process_jsonrpc_version
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_CONFIGURATION_REQUEST}.id_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.id.process (Current)
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_CONFIGURATION_REQUEST}.method_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.method.process (Current)
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_CONFIGURATION_REQUEST}.params_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			process_configuration_params (a_value)
+			utf8_string.append_character ('}')
+		end
+
 	process_comma_if_not_first
 			-- Append a comma to `utf8_string` if not preceded by '{'.
 		do
@@ -779,8 +856,6 @@ feature {LS_ANY} -- Processing
 
 	process_document_filter (a_value: LS_DOCUMENT_FILTER)
 			-- Process `a_value`.
-		local
-			l_comma_needed: BOOLEAN
 		do
 			utf8_string.append_character ('{')
 			if attached a_value.language as l_language then
@@ -789,23 +864,17 @@ feature {LS_ANY} -- Processing
 				utf8_string.append_character ('"')
 				utf8_string.append_character (':')
 				l_language.process (Current)
-				l_comma_needed := True
 			end
 			if attached a_value.scheme as l_scheme then
-				if l_comma_needed then
-					utf8_string.append_character (',')
-				end
+				process_comma_if_not_first
 				utf8_string.append_character ('"')
 				utf8_string.append_string ({LS_DOCUMENT_FILTER}.scheme_name)
 				utf8_string.append_character ('"')
 				utf8_string.append_character (':')
 				l_scheme.process (Current)
-				l_comma_needed := True
 			end
 			if attached a_value.pattern as l_pattern then
-				if l_comma_needed then
-					utf8_string.append_character (',')
-				end
+				process_comma_if_not_first
 				utf8_string.append_character ('"')
 				utf8_string.append_string ({LS_DOCUMENT_FILTER}.pattern_name)
 				utf8_string.append_character ('"')

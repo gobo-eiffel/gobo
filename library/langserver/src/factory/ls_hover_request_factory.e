@@ -90,7 +90,7 @@ feature -- Access
 		end
 
 	handler (a_manager: LS_MESSAGE_MANAGER): LS_HOVER_REQUEST_HANDLER
-			-- Message handler for current dynamic registration options
+			-- Message handler for this kind of messages
 		do
 			Result := {LS_HOVER_REQUEST}.handler (a_manager)
 		ensure then

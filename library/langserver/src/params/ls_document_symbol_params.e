@@ -26,4 +26,8 @@ feature -- Field names
 	text_document_name: STRING_8 = "textDocument"
 			-- Field names
 
+invariant
+
+	text_document_not_void: text_document /= Void
+
 end

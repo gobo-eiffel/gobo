@@ -13,7 +13,7 @@ class LS_ARRAY
 
 inherit
 
-	LS_ANY
+	LS_CONFIGURATION_RESULT
 
 create
 
@@ -86,12 +86,18 @@ feature -- Access
 			definition: Result = values.item (i)
 		end
 
-	values: DS_ARRAYED_LIST [LS_ANY]
+	values: DS_ARRAYED_LIST [like value]
 			-- Values
+
+	to_array: LS_ARRAY
+			-- Array representation
+		do
+			Result := Current
+		end
 
 feature -- Element change
 
-	put_last (a_value: LS_ANY)
+	put_last (a_value: like value)
 			-- Put `a_value` at the end of the current array.
 		require
 			a_value_not_void: a_value /= Void
