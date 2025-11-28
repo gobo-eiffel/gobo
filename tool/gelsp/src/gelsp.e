@@ -25,6 +25,7 @@ inherit
 			did_open_text_document_notification_handler,
 			document_symbol_request_handler,
 			hover_request_handler,
+			on_configuration_response,
 			on_definition_request,
 			on_did_change_text_document_notification,
 			on_did_change_watched_files_notification,
@@ -92,6 +93,19 @@ feature -- Access
 
 	server_description: STRING_8 = "Gobo Eiffel LSP, Language Server for Eiffel."
 			-- Server description
+
+	workspace_folder_root_path: detachable STRING_8
+			-- Root path of workspace folder, if any
+		local
+			l_uri: UT_URI
+		do
+			if attached {LS_WORKSPACE_FOLDER_LIST} workspace_folders as l_workspace_folders and then l_workspace_folders.count > 0 then
+				create l_uri.make (l_workspace_folders.workspace_folder (1).uri.to_string.utf8_value)
+				if attached {UT_FILE_URI_ROUTINES}.uri_to_filename (l_uri) as l_root_path then
+					Result := l_root_path
+				end
+			end
+		end
 
 feature -- Handling 'textDocument/definition' requests
 
@@ -381,6 +395,34 @@ feature -- Handling 'textDocument/hover' requests
 			create Result.make
 		end
 
+feature -- Handling 'workspace/configuration' requests
+
+	on_configuration_response (a_result: detachable LS_CONFIGURATION_RESULT; a_request: LS_CONFIGURATION_REQUEST; a_response: LS_RESPONSE)
+			-- Action to be executed when the client sent response
+			-- to a 'workspace/configuration' request.
+		local
+			l_configurations: LS_ARRAY
+		do
+			if a_result /= Void then
+				l_configurations := a_result.to_array
+				if l_configurations.count = 2 then
+					if attached {LS_STRING} l_configurations.value (1) as l_config_ecf_filename then
+						config_ecf_filename := l_config_ecf_filename.utf8_value
+					end
+					if attached {LS_STRING} l_configurations.value (2) as l_config_ecf_target then
+						config_ecf_target := l_config_ecf_target.utf8_value
+					end
+				end
+			end
+			if did_change_watched_files_notification_handler.is_dynamic_registration_supported then
+				register_did_change_watched_files_options ("xxx", <<["**/*.ecf", {LS_WATCH_KINDS}.change], ["**/*", {LS_WATCH_KINDS}.delete]>>)
+			end
+			if document_symbol_request_handler.is_dynamic_registration_supported then
+				register_document_symbol_options ("yyyy", Void, {LS_NULL}.null, Void)
+			end
+			build_eiffel_system
+		end
+
 feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 
 	on_did_change_watched_files_notification (a_notification: LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION)
@@ -417,6 +459,13 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 					if l_file_event.type.value /= {LS_FILE_CHANGE_TYPES}.changed.value then
 							-- Ignore new or deleted ECF files.
 						i := i + 1
+					elseif ecf_libraries.is_empty then
+							-- Rebuild from scratch, because there might have been
+							-- an issue with one of our ECF files (hence the empty
+							-- `ecf_libraries`), and this modification may have fixed it.
+						l_no_action := False
+						l_incremental := False
+						i := nb + 1 -- Jump out of the loop.
 					elseif not ecf_libraries.has (l_pathname) then
 							-- Ignore modifications in other ECF files.
 						i := i + 1
@@ -516,13 +565,7 @@ feature -- Handling 'initialized' notification
 	on_initialized_notification (a_notification: LS_INITIALIZED_NOTIFICATION)
 			-- Handle 'initialized' notification `a_notification`.
 		do
-			if did_change_watched_files_notification_handler.is_dynamic_registration_supported then
-				register_did_change_watched_files_options ("xxx", <<["**/*.ecf", {LS_WATCH_KINDS}.change], ["**/*", {LS_WATCH_KINDS}.delete]>>)
-			end
-			if document_symbol_request_handler.is_dynamic_registration_supported then
-				register_document_symbol_options ("yyyy", Void, {LS_NULL}.null, Void)
-			end
-			build_eiffel_system
+			send_configuration_request (<<[Void, "gobo-eiffel.workspaceEcf"], [Void, "gobo-eiffel.workspaceEcfTarget"]>>)
 		end
 
 feature {NONE} -- Eiffel processing
@@ -535,6 +578,7 @@ feature {NONE} -- Eiffel processing
 			dt1: detachable DT_DATE_TIME
 			dt2: detachable DT_DATE_TIME
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
+			l_filename: STRING_8
 		do
 			if debug_mode then
 				dt1 := system_processor.benchmark_start_time
@@ -542,21 +586,24 @@ feature {NONE} -- Eiffel processing
 			reset
 			{MEMORY}.full_collect
 			find_ecf_filename
-			if attached ecf_filename as l_ecf_filename then
-				if debug_mode then
-					dt2 := system_processor.benchmark_start_time
-				end
-				create l_file.make (l_ecf_filename)
-				l_file.open_read
-				if l_file.is_open_read then
-					parse_ecf_file (l_file)
-					l_file.close
-				else
-					report_cannot_read_error (l_ecf_filename)
-				end
-				if dt2 /= Void then
-					system_processor.record_end_time (dt2, "Read ECF file")
-				end
+			l_filename := ecf_filename
+			if l_filename = Void then
+				l_filename := file_system.nested_pathname ("${GOBO}", <<"library", "common", "config", "ecf", "default.ecf">>)
+				l_filename := Execution_environment.interpreted_string (l_filename)
+			end
+			if debug_mode then
+				dt2 := system_processor.benchmark_start_time
+			end
+			create l_file.make (l_filename)
+			l_file.open_read
+			if l_file.is_open_read then
+				parse_ecf_file (l_file)
+				l_file.close
+			else
+				report_cannot_read_error (l_filename)
+			end
+			if dt2 /= Void then
+				system_processor.record_end_time (dt2, "Read ECF file")
 			end
 			if attached eiffel_system as l_system then
 				system_processor.compile_degree_6 (l_system)
@@ -635,16 +682,26 @@ feature {NONE} -- Eiffel processing
 			-- Find the ECF filename for the current workspace.
 			-- Make the result available in `ecf_filename`.
 		local
-			l_filename: STRING_8
-			l_uri: UT_URI
+			l_dir: KL_DIRECTORY
+			l_filenames: DS_ARRAYED_LIST [STRING_8]
+			l_sorter: DS_QUICK_SORTER [STRING_8]
+			l_comparator: UC_STRING_COMPARATOR
 		do
 			ecf_filename := Void
-			if attached {LS_WORKSPACE_FOLDER_LIST} workspace_folders as l_workspace_folders and then l_workspace_folders.count > 0 then
-				create l_uri.make (l_workspace_folders.workspace_folder (1).uri.to_string.utf8_value)
-				if attached {UT_FILE_URI_ROUTINES}.uri_to_filename (l_uri) as l_root_path then
-					l_filename := file_system.pathname (l_root_path, "lsp.ecf")
-					if file_system.file_exists (l_filename) then
-						ecf_filename := l_filename
+			if attached workspace_folder_root_path as l_root_path then
+				if attached config_ecf_filename as l_config_ecf_filename then
+					ecf_filename := file_system.pathname (l_root_path, l_config_ecf_filename)
+				else
+					create l_dir.make (l_root_path)
+					create l_filenames.make (5)
+					l_dir.do_if (agent l_filenames.force_last, agent file_system.has_extension (?, file_system.ecf_extension))
+					if l_filenames.count = 1 then
+						ecf_filename := file_system.pathname (l_root_path, l_filenames.first)
+					elseif not l_filenames.is_empty then
+						create l_comparator
+						create l_sorter.make (l_comparator)
+						l_filenames.sort (l_sorter)
+						ecf_filename := file_system.pathname (l_root_path, l_filenames.last)
 					end
 				end
 			end
@@ -659,6 +716,7 @@ feature {NONE} -- Eiffel processing
 		local
 			l_ecf_parser: ET_ECF_SYSTEM_PARSER
 			l_ecf_error_handler: ET_ECF_ERROR_HANDLER
+			l_root_cluster: ET_ECF_CLUSTER
 		do
 			eiffel_system := Void
 			ecf_libraries.wipe_out
@@ -669,13 +727,20 @@ feature {NONE} -- Eiffel processing
 			l_ecf_parser.set_override_settings (override_settings)
 			l_ecf_parser.set_override_capabilities (override_capabilities)
 			l_ecf_parser.set_override_variables (override_variables)
-			l_ecf_parser.parse_file (a_file, Void)
+			l_ecf_parser.parse_file (a_file, config_ecf_target)
 			if l_ecf_error_handler.has_error then
 				-- Error already reported.
 			elseif not attached l_ecf_parser.last_system as l_last_system then
 				report_no_system_found_error (a_file.name)
 			else
 				eiffel_system := l_last_system
+				if ecf_filename = Void and attached l_last_system.selected_target as l_target and attached workspace_folder_root_path as l_root_path then
+						-- When no ECF files was provided, add a recursive cluster
+						-- at the root of the workspace folder.
+					create l_root_cluster.make ("root_cluster", l_root_path, l_last_system, l_target)
+					l_root_cluster.set_recursive (True)
+					l_last_system.clusters.put_last (l_root_cluster)
+				end
 				l_last_system.universes_do_recursive (agent (a_universe: ET_UNIVERSE)
 					do
 						if attached {ET_ECF_INTERNAL_UNIVERSE} a_universe as l_ecf_universe then
@@ -733,6 +798,12 @@ feature -- Eiffel system
 
 	ecf_filename: detachable STRING_8
 			-- Name of ECF file
+
+	config_ecf_filename: detachable STRING_8
+			-- Name of ECF file specified in the workspace config, if any
+
+	config_ecf_target: detachable STRING_8
+			-- Name of ECF target specified in the workspace config, if any
 
 	eiffel_system: detachable ET_SYSTEM
 			-- Eiffel system
