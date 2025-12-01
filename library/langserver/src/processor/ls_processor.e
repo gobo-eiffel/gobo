@@ -145,6 +145,13 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_diagnostic_list (a_value: LS_DIAGNOSTIC_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_diagnostic_related_information (a_value: LS_DIAGNOSTIC_RELATED_INFORMATION)
 			-- Process `a_value`.
 		require
@@ -160,6 +167,13 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_diagnostic_tag_list (a_value: LS_DIAGNOSTIC_TAG_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_diagnostic_tag_set (a_value: LS_DIAGNOSTIC_TAG_SET)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void
@@ -545,6 +559,20 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_progress_notification (a_value: LS_PROGRESS_NOTIFICATION)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_publish_diagnostics_capabilities (a_value: LS_PUBLISH_DIAGNOSTICS_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_publish_diagnostics_notification (a_value: LS_PUBLISH_DIAGNOSTICS_NOTIFICATION)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void

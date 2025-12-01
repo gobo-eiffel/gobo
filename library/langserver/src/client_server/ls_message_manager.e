@@ -221,6 +221,14 @@ feature -- Handlers
 			progress_notification_handler_not_void: Result /= Void
 		end
 
+	publish_diagnostics_notification_handler: LS_PUBLISH_DIAGNOSTICS_NOTIFICATION_HANDLER
+			-- Handler for 'textDocument/publishDiagnostics' notifications
+		once ("OBJECT")
+			create Result.make
+		ensure
+			publish_diagnostics_notification_handler_not_void: Result /= Void
+		end
+
 	will_save_text_document_notification_handler: LS_WILL_SAVE_TEXT_DOCUMENT_NOTIFICATION_HANDLER
 			-- Handler for 'textDocument/willSave' notifications
 		once ("OBJECT")
@@ -513,6 +521,7 @@ feature {LS_RESPONSE_HANDLER, LS_REQUEST_HANDLER} -- Implementation
 			Result.force (create {LS_INITIALIZED_NOTIFICATION_FACTORY}.make, {LS_INITIALIZED_NOTIFICATION}.method)
 			Result.force (create {LS_LOG_TRACE_NOTIFICATION_FACTORY}.make, {LS_LOG_TRACE_NOTIFICATION}.method)
 			Result.force (create {LS_PROGRESS_NOTIFICATION_FACTORY}.make, {LS_PROGRESS_NOTIFICATION}.method)
+			Result.force (create {LS_PUBLISH_DIAGNOSTICS_NOTIFICATION_FACTORY}.make, {LS_PUBLISH_DIAGNOSTICS_NOTIFICATION}.method)
 			Result.force (create {LS_REGISTER_CAPABILITY_REQUEST_FACTORY}.make, {LS_REGISTER_CAPABILITY_REQUEST}.method)
 			Result.force (create {LS_SET_TRACE_NOTIFICATION_FACTORY}.make, {LS_SET_TRACE_NOTIFICATION}.method)
 			Result.force (create {LS_SHUTDOWN_REQUEST_FACTORY}.make, {LS_SHUTDOWN_REQUEST}.method)

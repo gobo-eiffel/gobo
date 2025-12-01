@@ -39,6 +39,9 @@ feature -- Access
 	document_symbol: detachable LS_DOCUMENT_SYMBOL_CAPABILITIES
 			-- Capabilities specific to the `textDocument/documentSymbol` request.
 
+	publish_diagnostics: detachable LS_PUBLISH_DIAGNOSTICS_CAPABILITIES
+			-- Capabilities specific to the 'textDocument/publishDiagnostics' notification.
+
 feature -- Setting
 
 	set_synchronization (a_synchronization: like synchronization)
@@ -73,12 +76,21 @@ feature -- Setting
 			document_symbol_set: document_symbol = a_document_symbol
 		end
 
+	set_publish_diagnostics (a_publish_diagnostics: like publish_diagnostics)
+			-- Set `publish_diagnostics` to `a_publish_diagnostics`.
+		do
+			publish_diagnostics := a_publish_diagnostics
+		ensure
+			publish_diagnostics_set: publish_diagnostics = a_publish_diagnostics
+		end
+
 feature -- Field names
 
 	synchronization_name: STRING_8 = "synchronization"
 	hover_name: STRING_8 = "hover"
 	definition_name: STRING_8 = "definition"
 	document_symbol_name: STRING_8 = "documentSymbol"
+	publish_diagnostics_name: STRING_8 = "publishDiagnostics"
 			-- Field names
 
 feature -- Processing

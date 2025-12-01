@@ -492,6 +492,23 @@ feature {LS_ANY} -- Processing
 			utf8_string.append_character ('}')
 		end
 
+	process_diagnostic_list (a_value: LS_DIAGNOSTIC_LIST)
+			-- Process `a_value`.
+		local
+			i, nb: INTEGER
+		do
+			utf8_string.append_character ('[')
+			nb := a_value.count
+			from i := 1 until i > nb loop
+				if i /= 1 then
+					utf8_string.append_character (',')
+				end
+				a_value.value (i).process (Current)
+				i := i + 1
+			end
+			utf8_string.append_character (']')
+		end
+
 	process_diagnostic_related_information (a_value: LS_DIAGNOSTIC_RELATED_INFORMATION)
 			-- Process `a_value`.
 		do
@@ -542,6 +559,20 @@ feature {LS_ANY} -- Processing
 				i := i + 1
 			end
 			utf8_string.append_character (']')
+		end
+
+	process_diagnostic_tag_set (a_value: LS_DIAGNOSTIC_TAG_SET)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			if attached a_value.value_set as l_value_set then
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_DIAGNOSTIC_TAG_SET}.value_set_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_value_set.process (Current)
+			end
+			utf8_string.append_character ('}')
 		end
 
 	process_did_change_text_document_capabilities (a_value: LS_DID_CHANGE_TEXT_DOCUMENT_CAPABILITIES)
@@ -1780,6 +1811,100 @@ feature {LS_ANY} -- Processing
 			utf8_string.append_character ('}')
 		end
 
+	process_publish_diagnostics_capabilities (a_value: LS_PUBLISH_DIAGNOSTICS_CAPABILITIES)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			if attached a_value.related_information as l_related_information then
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_PUBLISH_DIAGNOSTICS_CAPABILITIES}.related_information_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_related_information.process (Current)
+			end
+			if attached a_value.tag_support as l_tag_support then
+				process_comma_if_not_first
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_PUBLISH_DIAGNOSTICS_CAPABILITIES}.tag_support_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_tag_support.process (Current)
+			end
+			if attached a_value.version_support as l_version_support then
+				process_comma_if_not_first
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_PUBLISH_DIAGNOSTICS_CAPABILITIES}.version_support_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_version_support.process (Current)
+			end
+			if attached a_value.code_description_support as l_code_description_support then
+				process_comma_if_not_first
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_PUBLISH_DIAGNOSTICS_CAPABILITIES}.code_description_support_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_code_description_support.process (Current)
+			end
+			if attached a_value.data_support as l_data_support then
+				process_comma_if_not_first
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_PUBLISH_DIAGNOSTICS_CAPABILITIES}.data_support_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_data_support.process (Current)
+			end
+			utf8_string.append_character ('}')
+		end
+
+	process_publish_diagnostics_notification (a_value: LS_PUBLISH_DIAGNOSTICS_NOTIFICATION)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			process_jsonrpc_version
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_PUBLISH_DIAGNOSTICS_NOTIFICATION}.method_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.method.process (Current)
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_PUBLISH_DIAGNOSTICS_NOTIFICATION}.params_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			process_publish_diagnostics_params (a_value)
+			utf8_string.append_character ('}')
+		end
+
+	process_publish_diagnostics_params (a_value: LS_PUBLISH_DIAGNOSTICS_PARAMS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			utf8_string.append_character ('{')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_PUBLISH_DIAGNOSTICS_PARAMS}.uri_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.uri.process (Current)
+			if attached a_value.version as l_version then
+				utf8_string.append_character (',')
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_PUBLISH_DIAGNOSTICS_PARAMS}.version_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_version.process (Current)
+			end
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_PUBLISH_DIAGNOSTICS_PARAMS}.diagnostics_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.diagnostics.process (Current)
+			utf8_string.append_character ('}')
+		end
+
 	process_range (a_value: LS_RANGE)
 			-- Process `a_value`.
 		do
@@ -2211,6 +2336,14 @@ feature {LS_ANY} -- Processing
 				utf8_string.append_character ('"')
 				utf8_string.append_character (':')
 				l_document_symbol.process (Current)
+			end
+			if attached a_value.publish_diagnostics as l_publish_diagnostics then
+				process_comma_if_not_first
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_TEXT_DOCUMENT_CAPABILITIES}.publish_diagnostics_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_publish_diagnostics.process (Current)
 			end
 			utf8_string.append_character ('}')
 		end
@@ -2746,6 +2879,13 @@ feature {LS_ANY} -- Processing
 				utf8_string.append_character ('"')
 				utf8_string.append_character (':')
 				l_did_change_watched_files.process (Current)
+			end
+			if attached a_value.configuration as l_configuration then
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_WORKSPACE_CAPABILITIES}.configuration_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_configuration.process (Current)
 			end
 			utf8_string.append_character ('}')
 		end

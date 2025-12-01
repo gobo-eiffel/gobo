@@ -23,8 +23,16 @@ create
 
 feature -- Access
 
-	client_capabilities: detachable LS_CLIENT_CAPABILITIES
+	client_capabilities: detachable LS_CONFIGURATION_CAPABILITIES
 			-- Client capabilities
+
+feature -- Status report
+
+	is_configuration_supported: BOOLEAN
+			-- Does client support 'workspace/configuration' requests?
+		do
+			Result := attached client_capabilities as l_capabilities and then l_capabilities.to_boolean
+		end
 
 feature {NONE} -- Implementation
 

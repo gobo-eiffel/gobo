@@ -71,9 +71,11 @@ feature -- Basic operations
 				a_manager.hover_request_handler.set_client_capabilities (l_text_document_capabilities.hover)
 				a_manager.definition_request_handler.set_client_capabilities (l_text_document_capabilities.definition)
 				a_manager.document_symbol_request_handler.set_client_capabilities (l_text_document_capabilities.document_symbol)
+				a_manager.publish_diagnostics_notification_handler.set_client_capabilities (l_text_document_capabilities.publish_diagnostics)
 			end
 			if attached a_request.capabilities.workspace as l_workspace_capabilities then
 				a_manager.did_change_watched_files_notification_handler.set_client_capabilities (l_workspace_capabilities.did_change_watched_files)
+				a_manager.configuration_request_handler.set_client_capabilities (l_workspace_capabilities.configuration)
 			end
 			create l_server_capabilities.make
 			a_manager.did_open_text_document_notification_handler.build_server_options

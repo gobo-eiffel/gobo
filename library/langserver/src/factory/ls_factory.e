@@ -494,6 +494,44 @@ feature -- Access
 			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
 		end
 
+	configuration_capabilities_from_any (a_any: LS_ANY; a_field_name: STRING_8): detachable LS_CONFIGURATION_CAPABILITIES
+			-- Convert `a_any` to a configuration capabilities.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_any_not_void: a_any /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached {LS_CONFIGURATION_CAPABILITIES} a_any as l_configuration_capabilities then
+				Result := l_configuration_capabilities
+			else
+				last_error := a_field_name + ": invalid type"
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	configuration_capabilities_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_CONFIGURATION_CAPABILITIES
+			-- Configuration capabilities stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached a_object.value (a_field_name) as l_value then
+				Result := configuration_capabilities_from_any (l_value, a_field_name)
+			elseif not a_optional then
+				last_error := a_field_name + ": missing field"
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
 	configuration_item_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_CONFIGURATION_ITEM
 			-- Convert `a_object` to a configuration item.
 			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
@@ -1030,6 +1068,70 @@ feature -- Access
 			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
 		end
 
+	diagnostic_list_from_array (a_array: LS_ARRAY; a_field_name: STRING_8): detachable LS_DIAGNOSTIC_LIST
+			-- Convert `a_array` to diagnostic list.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_array /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			i, nb: INTEGER
+		do
+			last_error := Void
+			nb := a_array.count
+			create Result.make_with_capacity (nb)
+			from i := 1 until i > nb loop
+				if not attached {LS_OBJECT} a_array.value (i) as l_object then
+					last_error := a_field_name + "." + i.out + ": invalid type"
+					i := nb + 1 -- Jump out of the loop.
+				elseif attached diagnostic_from_object (l_object, i.out) as l_diagnostic then
+					Result.put_last (l_diagnostic)
+					i := i + 1
+				elseif attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+					i := nb + 1 -- Jump out of the loop.
+				else
+					last_error := a_field_name + "." + i.out + ": invalid type"
+					i := nb + 1 -- Jump out of the loop.
+				end
+			end
+			if last_error /= Void then
+				Result := Void
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	diagnostic_list_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DIAGNOSTIC_LIST
+			-- Diagnostic list stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_DIAGNOSTIC_LIST} l_value as l_diagnostic_list then
+				Result := l_diagnostic_list
+			elseif not attached {LS_ARRAY} l_value as l_array then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := diagnostic_list_from_array (l_array, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
 	diagnostic_related_information_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_DIAGNOSTIC_RELATED_INFORMATION
 			-- Convert `a_object` to a diagnostic related information.
 			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
@@ -1286,6 +1388,56 @@ feature -- Access
 				last_error := a_field_name + ": invalid type"
 			else
 				Result := diagnostic_tag_list_from_array (l_array, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	diagnostic_tag_set_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_DIAGNOSTIC_TAG_SET
+			-- Convert `a_object` to a diagnostic tag set.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value_set: detachable LS_DIAGNOSTIC_TAG_LIST
+		do
+			last_error := Void
+			l_value_set := diagnostic_tag_list_in_object (a_object, {LS_DIAGNOSTIC_TAG_SET}.value_set_name, True)
+			if attached last_error as l_last_error then
+				last_error := a_field_name + "." + l_last_error
+			else
+				create Result.make (l_value_set)
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	diagnostic_tag_set_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DIAGNOSTIC_TAG_SET
+			-- Diagnostic tag set stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_DIAGNOSTIC_TAG_SET} l_value as l_diagnostic_tag_set then
+				Result := l_diagnostic_tag_set
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := diagnostic_tag_set_from_object (l_object, a_field_name)
 			end
 		ensure
 			error: last_error /= Void implies Result = Void
@@ -4363,6 +4515,85 @@ feature -- Access
 			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
 		end
 
+	publish_diagnostics_capabilities_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_PUBLISH_DIAGNOSTICS_CAPABILITIES
+			-- Convert `a_object` to a publish diagnostics capabilities.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_related_information: detachable LS_BOOLEAN
+			l_tag_support: detachable LS_DIAGNOSTIC_TAG_SET
+			l_version_support: detachable LS_BOOLEAN
+			l_code_description_support: detachable LS_BOOLEAN
+			l_data_support: detachable LS_BOOLEAN
+		do
+			last_error := Void
+			l_related_information := boolean_in_object (a_object, {LS_PUBLISH_DIAGNOSTICS_CAPABILITIES}.related_information_name, True)
+			if attached last_error as l_last_error then
+				last_error := a_field_name + "." + l_last_error
+			end
+			if last_error = Void then
+				l_tag_support := diagnostic_tag_set_in_object (a_object, {LS_PUBLISH_DIAGNOSTICS_CAPABILITIES}.tag_support_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
+			if last_error = Void then
+				l_version_support := boolean_in_object (a_object, {LS_PUBLISH_DIAGNOSTICS_CAPABILITIES}.version_support_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
+			if last_error = Void then
+				l_code_description_support := boolean_in_object (a_object, {LS_PUBLISH_DIAGNOSTICS_CAPABILITIES}.code_description_support_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
+			if last_error = Void then
+				l_data_support := boolean_in_object (a_object, {LS_PUBLISH_DIAGNOSTICS_CAPABILITIES}.data_support_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
+			if last_error = Void then
+				create Result.make (l_related_information, l_tag_support, l_version_support, l_code_description_support, l_data_support)
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	publish_diagnostics_capabilities_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_PUBLISH_DIAGNOSTICS_CAPABILITIES
+			-- Publish diagnostics capabilities stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_PUBLISH_DIAGNOSTICS_CAPABILITIES} l_value as l_publish_diagnostics_capabilities then
+				Result := l_publish_diagnostics_capabilities
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := publish_diagnostics_capabilities_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
 	range_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_RANGE
 			-- Convert `a_object` to a range.
 			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
@@ -5365,6 +5596,7 @@ feature -- Access
 			l_hover: detachable LS_HOVER_CAPABILITIES
 			l_definition: detachable LS_DEFINITION_CAPABILITIES
 			l_document_symbol: detachable LS_DOCUMENT_SYMBOL_CAPABILITIES
+			l_publish_diagnostics: detachable LS_PUBLISH_DIAGNOSTICS_CAPABILITIES
 		do
 			last_error := Void
 			l_synchronization := text_document_sync_capabilities_in_object (a_object, {LS_TEXT_DOCUMENT_CAPABILITIES}.synchronization_name, True)
@@ -5390,11 +5622,18 @@ feature -- Access
 				end
 			end
 			if last_error = Void then
+				l_publish_diagnostics := publish_diagnostics_capabilities_in_object (a_object, {LS_TEXT_DOCUMENT_CAPABILITIES}.publish_diagnostics_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
+			if last_error = Void then
 				create Result.make
 				Result.set_synchronization (l_synchronization)
 				Result.set_hover (l_hover)
 				Result.set_definition (l_definition)
 				Result.set_document_symbol (l_document_symbol)
+				Result.set_publish_diagnostics (l_publish_diagnostics)
 			end
 		ensure
 			error_or_success: Result /= Void xor last_error /= Void

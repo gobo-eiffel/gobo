@@ -340,6 +340,14 @@ feature {NONE} -- Implementation
 				end
 				l_text_document_capabilities.set_document_symbol (l_document_symbol_capabilities)
 			end
+			publish_diagnostics_notification_handler.build_client_capabilities
+			if attached publish_diagnostics_notification_handler.client_capabilities as l_publish_diagnostics_capabilities then
+				if l_text_document_capabilities = Void then
+					create l_text_document_capabilities.make
+					Result.set_text_document (l_text_document_capabilities)
+				end
+				l_text_document_capabilities.set_publish_diagnostics (l_publish_diagnostics_capabilities)
+			end
 			did_change_watched_files_notification_handler.build_client_capabilities
 			if attached did_change_watched_files_notification_handler.client_capabilities as l_did_change_watched_files_capabilities then
 				if l_workspace_capabilities = Void then
@@ -347,6 +355,14 @@ feature {NONE} -- Implementation
 					Result.set_workspace (l_workspace_capabilities)
 				end
 				l_workspace_capabilities.set_did_change_watched_files (l_did_change_watched_files_capabilities)
+			end
+			configuration_request_handler.build_client_capabilities
+			if attached configuration_request_handler.client_capabilities as l_configuration_capabilities then
+				if l_workspace_capabilities = Void then
+					create l_workspace_capabilities.make
+					Result.set_workspace (l_workspace_capabilities)
+				end
+				l_workspace_capabilities.set_configuration (l_configuration_capabilities)
 			end
 		ensure
 			client_capabilities_not_void: Result /= Void

@@ -23,7 +23,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_changes: like changes)
-			-- Create a new '$/progress' notification.
+			-- Create a new 'workspace/didChangeWatchedFiles' notification.
 		require
 			a_changes_not_void: a_changes /= Void
 		do
