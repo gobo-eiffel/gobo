@@ -580,7 +580,21 @@ feature {NONE} -- Eiffel processing
 			dt2: detachable DT_DATE_TIME
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 			l_filename: STRING_8
+			l_message: STRING_8
 		do
+			if full_compilation_count >= max_full_compilation_count or total_compilation_count >= max_total_compilation_count then
+				if trace_value ~ {LS_TRACE_VALUES}.message then
+					send_log_trace_message_notification ("Restarting Eiffel language server...")
+				elseif trace_value ~ {LS_TRACE_VALUES}.verbose then
+					if full_compilation_count >= max_full_compilation_count then
+						l_message := "Restarting Eiffel language server after " + max_full_compilation_count.out + " Eiffel compilations from scratch..."
+					else
+						l_message := "Restarting Eiffel language server after " + max_total_compilation_count.out + " Eiffel compilations..."
+					end
+					send_log_trace_verbose_notification ("Restarting Eiffel language server...", l_message)
+				end
+				Exceptions.die (2)
+			end
 			if debug_mode then
 				dt1 := system_processor.benchmark_start_time
 			end
@@ -615,10 +629,12 @@ feature {NONE} -- Eiffel processing
 				send_diagnostics
 				full_compilation_count := full_compilation_count + 1
 				incremental_compilation_count := 0
+				total_compilation_count := total_compilation_count + 1
 				if debug_mode then
 					std.error.put_line ("ECF file count: " + ecf_libraries.count.out)
 					std.error.put_line ("Full compilation count: " + full_compilation_count.out)
 					std.error.put_line ("Incremental compilation count: " + incremental_compilation_count.out)
+					std.error.put_line ("Total compilation count: " + total_compilation_count.out)
 					std.error.put_line ("Class count: " + class_mapping.count.out)
 				end
 			end
@@ -635,7 +651,17 @@ feature {NONE} -- Eiffel processing
 			dt1: detachable DT_DATE_TIME
 			dt2: detachable DT_DATE_TIME
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
+			l_message: STRING_8
 		do
+			if total_compilation_count >= max_total_compilation_count then
+				if trace_value ~ {LS_TRACE_VALUES}.message then
+					send_log_trace_message_notification ("Restarting Eiffel language server...")
+				elseif trace_value ~ {LS_TRACE_VALUES}.verbose then
+					l_message := "Restarting Eiffel language server after " + max_total_compilation_count.out + " Eiffel compilations..."
+					send_log_trace_verbose_notification ("Restarting Eiffel language server...", l_message)
+				end
+				Exceptions.die (2)
+			end
 			if debug_mode then
 				dt1 := system_processor.benchmark_start_time
 			end
@@ -662,9 +688,11 @@ feature {NONE} -- Eiffel processing
 				system_processor.compile_classes (l_classes)
 				send_diagnostics
 				incremental_compilation_count := incremental_compilation_count + 1
+				total_compilation_count := total_compilation_count + 1
 				if debug_mode then
 					std.error.put_line ("Full compilation count: " + full_compilation_count.out)
 					std.error.put_line ("Incremental compilation count: " + incremental_compilation_count.out)
+					std.error.put_line ("Total compilation count: " + total_compilation_count.out)
 				end
 			end
 			if dt1 /= Void then
@@ -994,6 +1022,15 @@ feature -- Eiffel system
 
 	incremental_compilation_count: INTEGER
 			-- Number of incremental compilations since the last compilation from scratch
+
+	total_compilation_count: INTEGER
+			-- Total number of compilations
+
+	max_full_compilation_count: INTEGER = 2
+			-- Maximum number of compilations from scratch before exiting
+
+	max_total_compilation_count: INTEGER = 400
+			-- Maximum number of compilations before exiting
 
 feature -- Helper
 
