@@ -1,5 +1,49 @@
 # Release History
 
+## Version 25.12.01 - 1 December 2025
+
+### gelsp
+
+* Initial implementation of a language server for the Eiffel language.
+  Used from the *Gobo Eiffel VS Code Extension*.
+* Use the ECF specified in the workspace settings, otherwise use the
+  last ECF file (in alphabetic order) found at the root of the
+  workspace folder, otherwise use the default ECF file (using
+  Gobo Eiffel libraries and recursive clusters from the root of
+  the workspace folder).
+  Then use the ECF target specified in the workspace settings,
+  otherwise use the last target in the ECF file.
+* Display Eiffel syntax and validity errors on the fly
+  (in the Problems panel and with error squiggles).
+* Update displayed information on the fly when Eiffel classes are
+  modified.
+* Implemented tooltips with signatures and header comments.
+* Implemented `Go To Definition` navigation (in the contextual menu).
+* Implemented feature and feature clause navigation (in the Outline panel).
+* Restart Eiffel language server after a given number Eiffel compilations
+  to reclaim memory and avoid potential incremental compilation issues.
+
+### Gobo Eiffel Language Server Protocol Library
+
+* Initial implementation of a language server SDK in Eiffel.
+* Added support for text document synchronization.
+* Added support for `textDocument/hover` requests.
+* Added support for `workspace/didChangeWatchedFiles` notifications.
+* Added support for `textDocument/definition` requests.
+* Added support for `textDocument/documentSymbol` requests.
+* Added support for `workspace/configuration` requests.
+* Added support for `textDocument/publishDiagnostics` requests.
+
+### Gobo Eiffel Tools Library
+
+* Added new AST processor to find browsable items (i.e. Eiffel text
+  for which we can get additional information) at a given text
+  position.
+* Allow read-only universes to be preparsed again when
+  `preparse_readonly_mode` is True.
+* Made it possible to handle class texts currently being modified in
+  a text editor but not saved in files yet.
+
 ## Version 25.10.01 - 1 October 2025
 
 ### gec
