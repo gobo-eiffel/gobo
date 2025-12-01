@@ -68,11 +68,29 @@ feature {NONE} -- Initialization
 			create error_message_actions
 		end
 
+feature -- Status report
+
+	keep_default_actions: BOOLEAN
+			-- Should default actions be executed in addition to the agent actions?
+
+feature -- Status setting
+
+	set_keep_default_actions (b: BOOLEAN)
+			-- Set `keep_default_actions' to `b'.
+		do
+			keep_default_actions := b
+		ensure
+			keep_default_actions_set: keep_default_actions = b
+		end
+
 feature -- Compilation report
 
 	report_preparsing_status (a_group: ET_GROUP)
 			-- Report that `a_group' is currently being preparsed.
 		do
+			if keep_default_actions then
+				precursor (a_group)
+			end
 			mutex.lock
 			preparsing_status_actions.call ([a_group])
 			mutex.unlock
@@ -85,6 +103,9 @@ feature -- Compilation report
 	report_compilation_status (a_processor: ET_AST_PROCESSOR; a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Report that `a_processor' is currently processing `a_class'.
 		do
+			if keep_default_actions then
+				precursor (a_processor, a_class, a_system_processor)
+			end
 			mutex.lock
 			compilation_status_actions.call ([a_processor, a_class])
 			mutex.unlock
@@ -99,6 +120,9 @@ feature -- Cluster errors
 	report_cluster_error (a_error: ET_CLUSTER_ERROR)
 			-- Report cluster error.
 		do
+			if keep_default_actions then
+				precursor (a_error)
+			end
 			mutex.lock
 			cluster_error_actions.call ([a_error])
 			set_has_eiffel_error (True)
@@ -114,6 +138,9 @@ feature -- Universe errors
 	report_universe_error (a_error: ET_UNIVERSE_ERROR)
 			-- Report universe error.
 		do
+			if keep_default_actions then
+				precursor (a_error)
+			end
 			mutex.lock
 			universe_error_actions.call ([a_error])
 			set_has_eiffel_error (True)
@@ -129,6 +156,9 @@ feature -- .NET assembly errors
 	report_assembly_error (a_error: ET_DOTNET_ASSEMBLY_ERROR)
 			-- Report .NET assembly error.
 		do
+			if keep_default_actions then
+				precursor (a_error)
+			end
 			mutex.lock
 			assembly_error_actions.call ([a_error])
 			set_has_eiffel_error (True)
@@ -146,6 +176,9 @@ feature -- Syntax errors
 		local
 			l_error: ET_SYNTAX_ERROR
 		do
+			if keep_default_actions then
+				precursor (a_filename, p)
+			end
 			mutex.lock
 			create l_error.make (a_filename, p)
 			syntax_error_actions.call ([l_error])
@@ -162,6 +195,9 @@ feature -- System errors
 	report_system_error (a_error: ET_SYSTEM_ERROR)
 			-- Report system error.
 		do
+			if keep_default_actions then
+				precursor (a_error)
+			end
 			mutex.lock
 			system_error_actions.call ([a_error])
 			set_has_eiffel_error (True)
@@ -177,6 +213,9 @@ feature -- Validity errors
 	report_validity_error (a_error: ET_VALIDITY_ERROR)
 			-- Report validity error.
 		do
+			if keep_default_actions then
+				precursor (a_error)
+			end
 			if
 				(is_ise and a_error.ise_reported) or
 				(is_ge and a_error.ge_reported)
@@ -197,6 +236,9 @@ feature -- Internal errors
 	report_internal_error (a_error: ET_INTERNAL_ERROR)
 			-- Report internal error.
 		do
+			if keep_default_actions then
+				precursor (a_error)
+			end
 			mutex.lock
 			internal_error_actions.call ([a_error])
 			set_has_internal_error (True)
@@ -212,10 +254,11 @@ feature -- Error messages
 	report_error_message (a_error: STRING)
 			-- Report `an_error'.
 		do
-			mutex.lock
+			if keep_default_actions then
+				precursor (a_error)
+			end
 			error_message_actions.call ([a_error])
 			set_has_error (True)
-			mutex.unlock
 		end
 
 	error_message_actions: ACTION_SEQUENCE [TUPLE [STRING]]

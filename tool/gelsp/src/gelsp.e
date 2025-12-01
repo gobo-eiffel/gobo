@@ -76,6 +76,7 @@ feature {NONE} -- Initialization
 			create class_mapping.make (10_000)
 			create edited_classes.make (500)
 			create ecf_libraries.make (100)
+			create diagnostics.make (100)
 				-- Set environment variables "$GOBO", "$GOBO_LIBRARY",
 				-- "$BOEHM_GC" and "$ZIG" if not set yet.
 			gobo_variables.set_gobo_variables
@@ -611,6 +612,7 @@ feature {NONE} -- Eiffel processing
 				create l_classes.make (l_system.class_count_recursive)
 				l_system.classes_do_recursive (agent l_classes.force_last)
 				system_processor.compile_classes (l_classes)
+				send_diagnostics
 				full_compilation_count := full_compilation_count + 1
 				incremental_compilation_count := 0
 				if debug_mode then
@@ -658,6 +660,7 @@ feature {NONE} -- Eiffel processing
 				create l_classes.make (l_system.class_count_recursive)
 				l_system.classes_do_recursive (agent l_classes.force_last)
 				system_processor.compile_classes (l_classes)
+				send_diagnostics
 				incremental_compilation_count := incremental_compilation_count + 1
 				if debug_mode then
 					std.error.put_line ("Full compilation count: " + full_compilation_count.out)
@@ -676,6 +679,10 @@ feature {NONE} -- Eiffel processing
 			eiffel_system := Void
 			ecf_libraries.wipe_out
 			reset_class_mapping (False)
+			error_handler.syntax_error_actions.wipe_out
+			error_handler.syntax_error_actions.extend (agent report_syntax_error)
+			error_handler.validity_error_actions.wipe_out
+			error_handler.validity_error_actions.extend (agent report_validity_error)
 		end
 
 	find_ecf_filename
@@ -794,6 +801,114 @@ feature {NONE} -- Eiffel processing
 			edited_classes_reset: across edited_classes as l_edited_class all l_edited_class.current_class.is_unknown end
 		end
 
+	report_validity_error (a_error: ET_VALIDITY_ERROR)
+			-- Report validity error.
+		require
+			a_error_not_void: a_error /= Void
+		local
+			l_class_impl: ET_CLASS
+			l_diagnostic_list: detachable LS_DIAGNOSTIC_LIST
+			l_diagnostic: LS_DIAGNOSTIC
+			l_code: LS_STRING
+			l_range: LS_RANGE
+			l_position: ET_POSITION
+			l_last_position_plus_one: ET_COMPRESSED_POSITION
+			l_message: STRING
+			l_error_message: LS_STRING
+			l_index: INTEGER
+		do
+			l_class_impl := a_error.class_impl
+			if attached l_class_impl.filename as l_filename then
+				l_diagnostic_list := diagnostics.value (l_filename)
+				if l_diagnostic_list = Void then
+					create l_diagnostic_list.make_with_capacity (10)
+					diagnostics.force (l_diagnostic_list, l_filename)
+				end
+				l_position := a_error.position
+				if attached {ET_AST_NODE} l_position as l_ast_node then
+					l_range := range (l_ast_node, l_class_impl)
+				else
+					create l_last_position_plus_one.make (l_position.line, l_position.column + 1)
+					create l_range.make (position (l_position, l_class_impl), position (l_last_position_plus_one, l_class_impl))
+				end
+				l_code := a_error.etl_code
+				l_message := a_error.message (a_error.default_template)
+				l_index := l_message.index_of (':', 1)
+				if l_index > 0 then
+					l_message.remove_head (l_index)
+				end
+				l_index := l_message.substring_index ("%N%Tclass ", 1)
+				if l_index > 0 then
+					l_message.keep_head (l_index - 1)
+					l_message.right_adjust
+				end
+				l_message.replace_substring_all ("%R%N", "\n")
+				l_message.replace_substring_all ("%N", "\n")
+				if a_error.current_class /= l_class_impl then
+					l_message := "class " + a_error.current_class.upper_name + " (" + l_class_impl.upper_name + "):" + l_message
+				else
+					l_message := "class " + l_class_impl.upper_name + ":" + l_message
+				end
+				create l_error_message.make_from_utf8 (l_message)
+				create l_diagnostic.make (l_range, {LS_DIAGNOSTIC_SEVERITIES}.error, l_code, Void, "Eiffel", l_error_message, Void, Void, Void)
+				l_diagnostic_list.put_last (l_diagnostic)
+			end
+		end
+
+	report_syntax_error (a_error: ET_SYNTAX_ERROR)
+			-- Report syntax error.
+		require
+			a_error_not_void: a_error /= Void
+		local
+			l_filename: STRING_8
+			l_diagnostic_list: detachable LS_DIAGNOSTIC_LIST
+			l_diagnostic: LS_DIAGNOSTIC
+			l_range: LS_RANGE
+			l_position: ET_POSITION
+			l_last_position_plus_one: ET_COMPRESSED_POSITION
+			l_message: STRING
+			l_error_message: LS_STRING
+		do
+			l_filename := a_error.filename
+			l_position := a_error.position
+			l_diagnostic_list := diagnostics.value (l_filename)
+			if l_diagnostic_list = Void then
+				create l_diagnostic_list.make_with_capacity (10)
+				diagnostics.force (l_diagnostic_list, l_filename)
+			end
+			create l_last_position_plus_one.make (l_position.line, l_position.column + 1)
+			create l_range.make (position (l_position, tokens.unknown_class), position (l_last_position_plus_one, tokens.unknown_class))
+			l_message := "Syntax error"
+			create l_error_message.make_from_utf8 (l_message)
+			create l_diagnostic.make (l_range, {LS_DIAGNOSTIC_SEVERITIES}.error, Void, Void, "Eiffel", l_error_message, Void, Void, Void)
+			l_diagnostic_list.put_last (l_diagnostic)
+		end
+
+	send_diagnostics
+			-- Send Eiffel error messages to client.
+		local
+			l_notification: LS_PUBLISH_DIAGNOSTICS_NOTIFICATION
+			l_diagnostic_list: LS_DIAGNOSTIC_LIST
+			l_filename: STRING_8
+			l_uri: UT_URI
+			l_string: LS_STRING
+		do
+			from diagnostics.start until diagnostics.after loop
+				l_diagnostic_list := diagnostics.item_for_iteration
+				l_filename := diagnostics.key_for_iteration
+				l_uri := {UT_FILE_URI_ROUTINES}.filename_to_uri (l_filename)
+				create l_string.make_from_string (l_uri.full_reference)
+				create l_notification.make (l_string, Void, l_diagnostic_list)
+				send_message (l_notification)
+				if l_diagnostic_list.count = 0 then
+					diagnostics.remove (l_filename)
+				else
+					l_diagnostic_list.wipe_out
+					diagnostics.forth
+				end
+			end
+		end
+
 feature -- Eiffel system
 
 	ecf_filename: detachable STRING_8
@@ -819,6 +934,9 @@ feature -- Eiffel system
 
 	ecf_libraries: DS_HASH_TABLE [ET_ECF_INTERNAL_UNIVERSE, STRING_8]
 			-- ECF libraries indexed by ECF filenames
+
+	diagnostics: DS_HASH_TABLE [LS_DIAGNOSTIC_LIST, STRING_8]
+			-- Diagnostics, indexed by filenames
 
 	class_from_uri (a_uri: LS_URI): detachable ET_CLASS
 			-- Eiffel class in file corresponding to `a_uri`, if any
@@ -1133,6 +1251,7 @@ feature -- Argument parsing
 				error_handler.set_info_file (std.error)
 				error_handler.set_warning_file (std.error)
 				error_handler.set_error_file (std.error)
+				error_handler.set_keep_default_actions (True)
 			else
 				error_handler.set_info_null
 				error_handler.set_warning_null
@@ -1145,7 +1264,7 @@ feature -- Argument parsing
 
 feature -- Error handling
 
-	error_handler: ET_ERROR_HANDLER
+	error_handler: ET_AGENT_ERROR_HANDLER
 			-- Error handler
 
 	report_cannot_read_error (a_filename: STRING)

@@ -142,14 +142,12 @@ feature -- Compilation report
 			a_group_not_void: a_group /= Void
 		do
 			if is_verbose then
-				if info_file /= Void then
-					mutex.lock
-					info_file.put_string ("Degree 6 ")
-					info_file.put_string (a_group.kind_lower_name)
-					info_file.put_character (' ')
-					info_file.put_line (a_group.full_lower_name ('/'))
-					mutex.unlock
-				end
+				mutex.lock
+				info_file.put_string ("Degree 6 ")
+				info_file.put_string (a_group.kind_lower_name)
+				info_file.put_character (' ')
+				info_file.put_line (a_group.full_lower_name ('/'))
+				mutex.unlock
 			end
 		end
 
@@ -162,30 +160,28 @@ feature -- Compilation report
 			a_system_processor_not_void: a_system_processor /= Void
 		do
 			if is_verbose then
-				if info_file /= Void then
-					mutex.lock
-					if a_processor = a_system_processor.eiffel_parser then
-						info_file.put_string ("Degree 5 class ")
-						info_file.put_line (a_class.upper_name)
-					elseif a_processor = a_system_processor.ancestor_builder then
-						info_file.put_string ("Degree 4.3 class ")
-						info_file.put_line (a_class.upper_name)
-					elseif a_processor = a_system_processor.feature_flattener then
-						info_file.put_string ("Degree 4.2 class ")
-						info_file.put_line (a_class.upper_name)
-					elseif a_processor = a_system_processor.interface_checker then
-						info_file.put_string ("Degree 4.1 class ")
-						info_file.put_line (a_class.upper_name)
-					elseif a_processor = a_system_processor.implementation_checker then
-						if a_system_processor.flat_mode then
-							info_file.put_string ("Degree 3 (flat) class ")
-						else
-							info_file.put_string ("Degree 3 class ")
-						end
-						info_file.put_line (a_class.upper_name)
+				mutex.lock
+				if a_processor = a_system_processor.eiffel_parser then
+					info_file.put_string ("Degree 5 class ")
+					info_file.put_line (a_class.upper_name)
+				elseif a_processor = a_system_processor.ancestor_builder then
+					info_file.put_string ("Degree 4.3 class ")
+					info_file.put_line (a_class.upper_name)
+				elseif a_processor = a_system_processor.feature_flattener then
+					info_file.put_string ("Degree 4.2 class ")
+					info_file.put_line (a_class.upper_name)
+				elseif a_processor = a_system_processor.interface_checker then
+					info_file.put_string ("Degree 4.1 class ")
+					info_file.put_line (a_class.upper_name)
+				elseif a_processor = a_system_processor.implementation_checker then
+					if a_system_processor.flat_mode then
+						info_file.put_string ("Degree 3 (flat) class ")
+					else
+						info_file.put_string ("Degree 3 class ")
 					end
-					mutex.unlock
+					info_file.put_line (a_class.upper_name)
 				end
+				mutex.unlock
 			end
 		end
 
@@ -198,10 +194,8 @@ feature -- Cluster errors
 		do
 			mutex.lock
 			report_info (an_error)
+			add_separator_if_console (info_file)
 			set_has_eiffel_error (True)
-			if attached {KL_STDOUT_FILE} info_file then
-				info_file.put_line ("----")
-			end
 			mutex.unlock
 		end
 
@@ -347,10 +341,8 @@ feature -- Universe errors
 		do
 			mutex.lock
 			report_info (an_error)
+			add_separator_if_console (info_file)
 			set_has_eiffel_error (True)
-			if attached {KL_STDOUT_FILE} info_file then
-				info_file.put_line ("----")
-			end
 			mutex.unlock
 		end
 
@@ -450,10 +442,8 @@ feature -- .NET assembly errors
 		do
 			mutex.lock
 			report_info (an_error)
+			add_separator_if_console (info_file)
 			set_has_eiffel_error (True)
-			if attached {KL_STDOUT_FILE} info_file then
-				info_file.put_line ("----")
-			end
 			mutex.unlock
 		end
 
@@ -517,10 +507,8 @@ feature -- Syntax errors
 			mutex.lock
 			create an_error.make (a_filename, p)
 			report_info (an_error)
+			add_separator_if_console (info_file)
 			set_has_eiffel_error (True)
-			if attached {KL_STDOUT_FILE} info_file then
-				info_file.put_line ("----")
-			end
 			mutex.unlock
 		end
 
@@ -715,10 +703,8 @@ feature -- System errors
 		do
 			mutex.lock
 			report_info (an_error)
+			add_separator_if_console (info_file)
 			set_has_eiffel_error (True)
-			if attached {KL_STDOUT_FILE} info_file then
-				info_file.put_line ("----")
-			end
 			mutex.unlock
 		end
 
@@ -975,10 +961,8 @@ feature -- Validity errors
 			then
 				mutex.lock
 				report_info (an_error)
+				add_separator_if_console (info_file)
 				set_has_eiffel_error (True)
-				if attached {KL_STDOUT_FILE} info_file then
-					info_file.put_line ("----")
-				end
 				mutex.unlock
 			end
 		end
@@ -10743,10 +10727,8 @@ feature -- Internal errors
 		do
 			mutex.lock
 			report_error (an_error)
+			add_separator_if_console (error_file)
 			set_has_internal_error (True)
-			if attached {KL_STDERR_FILE} error_file then
-				error_file.put_line ("----")
-			end
 			mutex.unlock
 		end
 
@@ -10789,10 +10771,18 @@ feature -- Reporting
 	report_error_message (an_error: STRING)
 			-- Report `an_error'.
 		do
-			mutex.lock
 			precursor (an_error)
 			set_has_error (True)
-			mutex.unlock
+		end
+
+	add_separator_if_console (a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Add separator to `a_file' if it is stdout or stderr.
+		require
+			a_file_not_void: a_file /= Void
+		do
+			if attached {KL_STDOUT_FILE} a_file or attached {KL_STDERR_FILE} a_file then
+				a_file.put_line ("----")
+			end
 		end
 
 feature {NONE} -- Concurrency
