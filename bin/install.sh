@@ -123,7 +123,7 @@ if [ "$EIF" = "ge" ]; then
 		if [ "$VERBOSE" != "-s" ]; then
 			echo "Compiling gelsp..."
 		fi
-		"$BIN_DIR/gec$EXE" --finalize $THREAD_OPTION "$GOBO/tool/gelsp/src/system.ecf"
+		"$BIN_DIR/gec$EXE" --finalize --gc=boehm $THREAD_OPTION "$GOBO/tool/gelsp/src/system.ecf"
 		$STRIP gelsp${EXE}
 		if [ "$VERBOSE" != "-s" ]; then
 			echo "Compiling geimage..."
