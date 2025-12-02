@@ -5,7 +5,7 @@
 		"Eiffel preparser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_EIFFEL_PREPARSER_SKELETON
@@ -81,7 +81,7 @@ feature -- Parsing
 	preparse_file (a_filename: STRING; a_cluster: ET_CLUSTER)
 			-- Analyze the file `a_filename' in `a_cluster' to determine the
 			-- class(es) that it contains. When in shallow mode, it is assumed
-			-- to contain excactly one class whose name is 'CLASSNAME' if the
+			-- to contain exactly one class whose name is 'CLASSNAME' if the
 			-- filename is of the form 'classname.e'. In single mode the file
 			-- is expected to contain exactly one class, whose name does not
 			-- necessarily match the filename. In multiple mode the file may

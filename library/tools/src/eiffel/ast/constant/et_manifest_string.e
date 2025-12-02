@@ -5,7 +5,7 @@
 		"Eiffel manifest strings"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_MANIFEST_STRING
@@ -14,6 +14,7 @@ inherit
 
 	ET_CONSTANT
 		undefine
+			first_position,
 			last_position,
 			break
 		redefine
@@ -25,30 +26,35 @@ inherit
 	ET_MANIFEST_STRING_ITEM
 		undefine
 			last_position,
+			first_position,
 			break
 		end
 
 	ET_NOTE_TERM
 		undefine
 			last_position,
+			first_position,
 			break
 		end
 
 	ET_EXTERNAL_LANGUAGE
 		undefine
 			last_position,
+			first_position,
 			break
 		end
 
 	ET_EXTERNAL_ALIAS
 		undefine
 			last_position,
+			first_position,
 			break
 		end
 
 	ET_OBSOLETE
 		undefine
 			last_position,
+			first_position,
 			break
 		end
 
@@ -56,11 +62,10 @@ inherit
 		rename
 			make as make_leaf,
 			make_with_position as make_leaf_with_position
-		undefine
-			first_position
 		redefine
 			position,
-			first_leaf
+			first_leaf,
+			first_position
 		end
 
 feature -- Initialization
@@ -150,6 +155,20 @@ feature -- Access
 			Result := Current
 		ensure
 			value_position_not_void: Result /= Void
+		end
+
+	first_position: ET_POSITION
+			-- Position of first character of current node in source code;
+			-- Null position if current node is empty or the position had not been set
+		local
+			l_first_leaf: ET_AST_LEAF
+		do
+			l_first_leaf := first_leaf
+			if l_first_leaf = Current then
+				Result := Current
+			else
+				Result := l_first_leaf.first_position
+			end
 		end
 
 	first_leaf: ET_AST_LEAF

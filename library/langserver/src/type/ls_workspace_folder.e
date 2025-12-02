@@ -12,7 +12,7 @@ class LS_WORKSPACE_FOLDER
 
 inherit
 
-	LS_ANY
+	LS_BASE_URI
 
 create
 

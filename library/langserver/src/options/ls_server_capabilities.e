@@ -27,11 +27,31 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	text_document_sync: detachable LS_TEXT_DOCUMENT_SYNC_GENERAL_OPTIONS
+			-- Defines how text documents are synced. Is either a detailed structure
+			-- defining each notification or for backwards compatibility the
+			-- LS_TEXT_DOCUMENT_SYNC_KIND number. If omitted it defaults to
+			-- `LS_TEXT_DOCUMENT_SYNC_KINDS.none`.
+
 	hover_provider: detachable LS_OPTIONAL_HOVER_OPTIONS
 			-- The server provides hover support.
 
+	definition_provider: detachable LS_OPTIONAL_DEFINITION_OPTIONS
+			-- The server provides goto definition support.
+
+	document_symbol_provider: detachable LS_OPTIONAL_DOCUMENT_SYMBOL_OPTIONS
+			-- The server provides document symbol support.
+
 feature -- Setting
 
+	set_text_document_sync (a_text_document_sync: like text_document_sync)
+			-- Set `text_document_sync` to `a_text_document_sync`.O
+		do
+			text_document_sync := a_text_document_sync
+		ensure
+			text_document_sync_set: text_document_sync = a_text_document_sync
+		end
+	
 	set_hover_provider (a_hover_provider: like hover_provider)
 			-- Set `hover_provider` to `a_hover_provider`.
 		do
@@ -40,9 +60,28 @@ feature -- Setting
 			hover_provider_set: hover_provider = a_hover_provider
 		end
 
+	set_definition_provider (a_definition_provider: like definition_provider)
+			-- Set `definition_provider` to `a_definition_provider`.
+		do
+			definition_provider := a_definition_provider
+		ensure
+			definition_provider_set: definition_provider = a_definition_provider
+		end
+
+	set_document_symbol_provider (a_document_symbol_provider: like document_symbol_provider)
+			-- Set `document_symbol_provider` to `a_document_symbol_provider`.
+		do
+			document_symbol_provider := a_document_symbol_provider
+		ensure
+			document_symbol_provider_set: document_symbol_provider = a_document_symbol_provider
+		end
+
 feature -- Field names
 
+	text_document_sync_name: STRING_8 = "textDocumentSync"
 	hover_provider_name: STRING_8 = "hoverProvider"
+	definition_provider_name: STRING_8 = "definitionProvider"
+	document_symbol_provider_name: STRING_8 = "documentSymbolProvider"
 			-- Field names
 
 feature -- Processing

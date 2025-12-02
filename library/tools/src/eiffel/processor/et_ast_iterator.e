@@ -274,7 +274,7 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 				end
-				a_synonym.extended_name.process (Current)
+				process_extended_feature_name_of_feature (a_synonym)
 				a_synonym := a_synonym.synonym
 			end
 			a_feature.declared_type.process (Current)
@@ -586,7 +586,7 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 				end
-				a_synonym.extended_name.process (Current)
+				process_extended_feature_name_of_feature (a_synonym)
 				a_synonym := a_synonym.synonym
 			end
 			a_feature.declared_type.process (Current)
@@ -819,7 +819,7 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 				end
-				a_synonym.extended_name.process (Current)
+				process_extended_feature_name_of_feature (a_synonym)
 				a_synonym := a_synonym.synonym
 			end
 			if attached a_feature.arguments as l_arguments then
@@ -864,7 +864,7 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 				end
-				a_synonym.extended_name.process (Current)
+				process_extended_feature_name_of_feature (a_synonym)
 				a_synonym := a_synonym.synonym
 			end
 			if attached a_feature.arguments as l_arguments then
@@ -905,7 +905,7 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 				end
-				a_synonym.extended_name.process (Current)
+				process_extended_feature_name_of_feature (a_synonym)
 				a_synonym := a_synonym.synonym
 			end
 			if attached a_feature.arguments as l_arguments then
@@ -987,7 +987,7 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 				end
-				a_synonym.extended_name.process (Current)
+				process_extended_feature_name_of_feature (a_synonym)
 				a_synonym := a_synonym.synonym
 			end
 			if attached a_feature.arguments as l_arguments then
@@ -1083,7 +1083,7 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 				end
-				a_synonym.extended_name.process (Current)
+				process_extended_feature_name_of_feature (a_synonym)
 				a_synonym := a_synonym.synonym
 			end
 			if attached a_feature.arguments as l_arguments then
@@ -1115,7 +1115,7 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 				end
-				a_synonym.extended_name.process (Current)
+				process_extended_feature_name_of_feature (a_synonym)
 				a_synonym := a_synonym.synonym
 			end
 			if attached a_feature.arguments as l_arguments then
@@ -1231,7 +1231,7 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 				end
-				a_synonym.extended_name.process (Current)
+				process_extended_feature_name_of_feature (a_synonym)
 				a_synonym := a_synonym.synonym
 			end
 			a_feature.declared_type.process (Current)
@@ -1265,10 +1265,26 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_extended_feature_name (a_name: ET_EXTENDED_FEATURE_NAME)
+			-- Process `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			a_name.process (Current)
+		end
+
+	process_extended_feature_name_of_feature (a_feature: ET_FEATURE)
+			-- Process extended feature name of `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			process_extended_feature_name (a_feature.extended_name)
+		end
+
 	process_extended_feature_name_comma (a_name: ET_EXTENDED_FEATURE_NAME_COMMA)
 			-- Process `a_name'.
 		do
-			a_name.extended_feature_name.process (Current)
+			process_extended_feature_name (a_name.extended_feature_name)
 			a_name.comma.process (Current)
 		end
 
@@ -1285,7 +1301,7 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 				end
-				a_synonym.extended_name.process (Current)
+				process_extended_feature_name_of_feature (a_synonym)
 				a_synonym := a_synonym.synonym
 			end
 			if attached a_feature.arguments as l_arguments then
@@ -1357,7 +1373,7 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 				end
-				a_synonym.extended_name.process (Current)
+				process_extended_feature_name_of_feature (a_synonym)
 				a_synonym := a_synonym.synonym
 			end
 			if attached a_feature.arguments as l_arguments then
@@ -1727,12 +1743,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Implicit type marks are ignored.
 		end
 
-	process_invariant_keyword (a_keyword: ET_INVARIANT_KEYWORD)
-			-- Process `a_keyword'.
-		do
-			process_keyword (a_keyword)
-		end
-
 	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION)
 			-- Process `an_expression'.
 		do
@@ -1829,6 +1839,12 @@ feature {ET_AST_NODE} -- Processing
 				l_else_compound.process (Current)
 			end
 			an_instruction.end_keyword.process (Current)
+		end
+
+	process_invariant_keyword (a_keyword: ET_INVARIANT_KEYWORD)
+			-- Process `a_keyword'.
+		do
+			process_keyword (a_keyword)
 		end
 
 	process_invariants (a_list: ET_INVARIANTS)
@@ -2197,7 +2213,7 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 				end
-				a_synonym.extended_name.process (Current)
+				process_extended_feature_name_of_feature (a_synonym)
 				a_synonym := a_synonym.synonym
 			end
 			if attached a_feature.arguments as l_arguments then
@@ -2309,7 +2325,7 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 				end
-				a_synonym.extended_name.process (Current)
+				process_extended_feature_name_of_feature (a_synonym)
 				a_synonym := a_synonym.synonym
 			end
 			if attached a_feature.arguments as l_arguments then
@@ -2943,7 +2959,7 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 				end
-				a_synonym.extended_name.process (Current)
+				process_extended_feature_name_of_feature (a_synonym)
 				a_synonym := a_synonym.synonym
 			end
 			a_feature.declared_type.process (Current)

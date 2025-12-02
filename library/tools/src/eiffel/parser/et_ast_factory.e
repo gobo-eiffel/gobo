@@ -5,7 +5,7 @@
 		"Eiffel Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_AST_FACTORY
@@ -2089,11 +2089,11 @@ feature -- AST nodes
 		end
 
 	new_constraint_labeled_actual_parameter (a_label: detachable ET_IDENTIFIER; a_colon: detachable ET_SYMBOL;
-		a_type: detachable ET_CONSTRAINT_TYPE): detachable ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER
+		a_type: detachable ET_CONSTRAINT_TYPE; a_class: detachable ET_CLASS): detachable ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER
 			-- New constraint labeled actual parameter
 		do
-			if a_label /= Void and a_type /= Void then
-				create Result.make (a_label, a_colon, a_type)
+			if a_label /= Void and a_type /= Void and a_class /= Void then
+				create Result.make (a_label, a_colon, a_type, a_class)
 			end
 		end
 
@@ -2105,11 +2105,11 @@ feature -- AST nodes
 		end
 
 	new_constraint_labeled_comma_actual_parameter (a_label: detachable ET_IDENTIFIER; a_comma: detachable ET_SYMBOL;
-		a_type: detachable ET_CONSTRAINT_TYPE): detachable ET_CONSTRAINT_LABELED_COMMA_ACTUAL_PARAMETER
+		a_type: detachable ET_CONSTRAINT_TYPE; a_class: detachable ET_CLASS): detachable ET_CONSTRAINT_LABELED_COMMA_ACTUAL_PARAMETER
 			-- New constraint labeled actual parameter followed by a comma
 		do
-			if a_label /= Void and a_type /= Void then
-				create Result.make (a_label, a_comma, a_type)
+			if a_label /= Void and a_type /= Void and a_class /= Void then
+				create Result.make (a_label, a_comma, a_type, a_class)
 			end
 		end
 
@@ -3037,11 +3037,11 @@ feature -- AST nodes
 			Result := a_label
 		end
 
-	new_labeled_actual_parameter (a_label: detachable ET_LABEL; a_type: detachable ET_DECLARED_TYPE): detachable ET_LABELED_ACTUAL_PARAMETER
+	new_labeled_actual_parameter (a_label: detachable ET_LABEL; a_type: detachable ET_DECLARED_TYPE; a_class: detachable ET_CLASS): detachable ET_LABELED_ACTUAL_PARAMETER
 			-- New labeled actual parameter
 		do
-			if a_label /= Void and a_type /= Void then
-				create Result.make (a_label, a_type)
+			if a_label /= Void and a_type /= Void and a_class /= Void then
+				create Result.make (a_label, a_type, a_class)
 			end
 		end
 
@@ -3052,11 +3052,11 @@ feature -- AST nodes
 			Result := a_parameter
 		end
 
-	new_labeled_comma_actual_parameter (a_label: detachable ET_LABEL; a_type: detachable ET_DECLARED_TYPE): detachable ET_LABELED_ACTUAL_PARAMETER
+	new_labeled_comma_actual_parameter (a_label: detachable ET_LABEL; a_type: detachable ET_DECLARED_TYPE; a_class: detachable ET_CLASS): detachable ET_LABELED_ACTUAL_PARAMETER
 			-- New labeled actual parameter whose label is followed by a comma
 		do
-			if a_label /= Void and a_type /= Void then
-				create {ET_LABELED_COMMA_ACTUAL_PARAMETER} Result.make (a_label, a_type)
+			if a_label /= Void and a_type /= Void and a_class /= Void then
+				create {ET_LABELED_COMMA_ACTUAL_PARAMETER} Result.make (a_label, a_type, a_class)
 			end
 		end
 

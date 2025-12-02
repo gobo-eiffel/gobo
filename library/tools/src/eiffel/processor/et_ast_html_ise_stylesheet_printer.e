@@ -17,7 +17,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_AST_HTML_ISE_STYLESHEET_PRINTER
@@ -719,7 +719,8 @@ feature {ET_AST_PROCESSOR} -- Processing
 				an_identifier.is_argument or
 				an_identifier.is_local or
 				an_identifier.is_object_test_local or
-				an_identifier.is_iteration_item
+				an_identifier.is_iteration_item or
+				an_identifier.is_inline_separate_argument
 			then
 				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_elocal)
 				print_string (an_identifier.name)

@@ -5,7 +5,7 @@
 		"Eiffel character constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_CHARACTER_CONSTANT
@@ -15,6 +15,7 @@ inherit
 	ET_CONSTANT
 		undefine
 			last_position,
+			first_position,
 			break
 		redefine
 			reset,
@@ -26,6 +27,7 @@ inherit
 		undefine
 			reset,
 			last_position,
+			first_position,
 			is_never_void,
 			manifest_constant_convert_feature,
 			break
@@ -34,6 +36,7 @@ inherit
 	ET_NOTE_TERM
 		undefine
 			last_position,
+			first_position,
 			break
 		end
 
@@ -41,11 +44,10 @@ inherit
 		rename
 			make as make_leaf,
 			make_with_position as make_leaf_with_position
-		undefine
-			first_position
 		redefine
 			position,
-			first_leaf
+			first_leaf,
+			first_position
 		end
 
 feature -- Initialization
@@ -137,6 +139,20 @@ feature -- Access
 			value_position_not_void: Result /= Void
 		end
 
+	first_position: ET_POSITION
+			-- Position of first character of current node in source code;
+			-- Null position if current node is empty or the position had not been set
+		local
+			l_first_leaf: ET_AST_LEAF
+		do
+			l_first_leaf := first_leaf
+			if l_first_leaf = Current then
+				Result := Current
+			else
+				Result := l_first_leaf.first_position
+			end
+		end
+		
 	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do

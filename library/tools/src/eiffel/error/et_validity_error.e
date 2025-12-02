@@ -17739,7 +17739,12 @@ feature -- Access
 	filename: STRING
 			-- Name of file where current error occurred
 		do
-			if attached class_impl.filename as l_filename and then not l_filename.is_empty and then (class_impl.group.is_cluster or attached {ET_TEXT_GROUP} class_impl.group) then
+			if
+				attached class_impl.filename as l_filename and then not l_filename.is_empty and then
+				(class_impl.group.is_cluster or
+				attached {ET_TEXT_GROUP} class_impl.group or
+				(attached {ET_EDITED_CLASS_TEXT_GROUP} class_impl.group as l_edited_group and then l_edited_group.current_group.is_cluster))
+			then
 				Result := l_filename
 			else
 				Result := "not in a cluster"

@@ -45,6 +45,8 @@ feature -- Access
 			-- Message handler for current notification
 		do
 			Result := a_manager.unknown_notification_handler
+		ensure then
+			instance_free: class
 		end
 
 feature -- Field names

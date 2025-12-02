@@ -60,7 +60,7 @@ null		{
 
 ----------/** Strings **/-------------------------------------------------------
 
-\"([\u{0020}-\u{1680}]{-}[\\\"]|\\([\"\\/bfnrt]|u[0-9a-fA-F]{4}))*\"	{
+\"([\u{0020}-\u{10FFFF}]{-}[\\\"]|\\([\"\\/bfnrt]|u[0-9a-fA-F]{4}))*\"	{
 				last_token := T_STRING
 				create last_detachable_ls_string_value.make_from_escaped_utf8 (utf8_text_substring (2, text_count - 1))
 			}

@@ -8383,7 +8383,7 @@ debug ("GEYACC")
 end
 
 			yyval52 := ast_factory.new_constraint_actual_parameters (last_symbol, yyvs6.item (yyvsp6), counter_value + 1)
-			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_actual_parameter (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6 - 1), yyvs55.item (yyvsp55)), yyval52)
+			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_actual_parameter (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6 - 1), yyvs55.item (yyvsp55), last_class), yyval52)
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
@@ -8413,7 +8413,7 @@ debug ("GEYACC")
 end
 
 			yyval52 := ast_factory.new_constraint_actual_parameters (last_symbol, yyvs6.item (yyvsp6), counter_value + 1)
-			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_actual_parameter_semicolon (ast_factory.new_constraint_labeled_actual_parameter (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6 - 1), yyvs55.item (yyvsp55)), yyvs22.item (yyvsp22)), yyval52)
+			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_actual_parameter_semicolon (ast_factory.new_constraint_labeled_actual_parameter (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6 - 1), yyvs55.item (yyvsp55), last_class), yyvs22.item (yyvsp22)), yyval52)
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
@@ -8486,9 +8486,9 @@ end
 			yyval52 := yyvs52.item (yyvsp52)
 			if yyval52 /= Void then
 				if not yyval52.is_empty then
-					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6), yyval52.first.type), yyval52)
+					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6), yyval52.first.type, last_class), yyval52)
 				else
-					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6), Void), yyval52)
+					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6), Void, last_class), yyval52)
 				end
 			end
 		
@@ -8511,7 +8511,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1033")
 end
 
-			yyval51 := ast_factory.new_constraint_labeled_actual_parameter (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6), yyvs55.item (yyvsp55))
+			yyval51 := ast_factory.new_constraint_labeled_actual_parameter (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6), yyvs55.item (yyvsp55), last_class)
 			if yyval51 /= Void then
 				increment_counter
 			end
@@ -8543,7 +8543,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1042")
 end
 
-			yyval51 := ast_factory.new_constraint_labeled_actual_parameter_semicolon (ast_factory.new_constraint_labeled_actual_parameter (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6), yyvs55.item (yyvsp55)), yyvs22.item (yyvsp22))
+			yyval51 := ast_factory.new_constraint_labeled_actual_parameter_semicolon (ast_factory.new_constraint_labeled_actual_parameter (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6), yyvs55.item (yyvsp55), last_class), yyvs22.item (yyvsp22))
 			if yyval51 /= Void then
 				increment_counter
 			end
@@ -18825,7 +18825,7 @@ debug ("GEYACC")
 end
 
 			yyval29 := ast_factory.new_actual_parameters (last_symbol, yyvs6.item (yyvsp6), counter_value + 1)
-			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter (yyvs13.item (yyvsp13), ast_factory.new_colon_type (yyvs6.item (yyvsp6 - 1), yyvs128.item (yyvsp128))), yyval29)
+			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter (yyvs13.item (yyvsp13), ast_factory.new_colon_type (yyvs6.item (yyvsp6 - 1), yyvs128.item (yyvsp128)), last_class), yyval29)
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
@@ -18855,7 +18855,7 @@ debug ("GEYACC")
 end
 
 			yyval29 := ast_factory.new_actual_parameters (last_symbol, yyvs6.item (yyvsp6), counter_value + 1)
-			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter (yyvs13.item (yyvsp13), ast_factory.new_colon_type (yyvs6.item (yyvsp6 - 1), yyvs128.item (yyvsp128))), yyvs22.item (yyvsp22)), yyval29)
+			add_to_actual_parameter_list (ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter (yyvs13.item (yyvsp13), ast_factory.new_colon_type (yyvs6.item (yyvsp6 - 1), yyvs128.item (yyvsp128)), last_class), yyvs22.item (yyvsp22)), yyval29)
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
@@ -18928,9 +18928,9 @@ end
 			yyval29 := yyvs29.item (yyvsp29)
 			if yyval29 /= Void then
 				if not yyval29.is_empty then
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6)), yyval29.first.type), yyval29)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6)), yyval29.first.type, last_class), yyval29)
 				else
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6)), Void), yyval29)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6)), Void, last_class), yyval29)
 				end
 			end
 		
@@ -18956,9 +18956,9 @@ end
 			yyval29 := yyvs29.item (yyvsp29)
 			if yyval29 /= Void then
 				if not yyval29.is_empty then
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6)), yyval29.first.type), yyval29)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6)), yyval29.first.type, last_class), yyval29)
 				else
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6)), Void), yyval29)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6)), Void, last_class), yyval29)
 				end
 			end
 		
@@ -18984,9 +18984,9 @@ end
 			yyval29 := yyvs29.item (yyvsp29)
 			if yyval29 /= Void then
 				if not yyval29.is_empty then
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6)), yyval29.first.type), yyval29)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6)), yyval29.first.type, last_class), yyval29)
 				else
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6)), Void), yyval29)
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (yyvs13.item (yyvsp13), yyvs6.item (yyvsp6)), Void, last_class), yyval29)
 				end
 			end
 		
@@ -19009,7 +19009,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3005")
 end
 
-			yyval28 := ast_factory.new_labeled_actual_parameter (yyvs13.item (yyvsp13), ast_factory.new_colon_type (yyvs6.item (yyvsp6), yyvs128.item (yyvsp128)))
+			yyval28 := ast_factory.new_labeled_actual_parameter (yyvs13.item (yyvsp13), ast_factory.new_colon_type (yyvs6.item (yyvsp6), yyvs128.item (yyvsp128)), last_class)
 			if yyval28 /= Void then
 				increment_counter
 			end
@@ -19041,7 +19041,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3014")
 end
 
-			yyval28 := ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter (yyvs13.item (yyvsp13), ast_factory.new_colon_type (yyvs6.item (yyvsp6), yyvs128.item (yyvsp128))), yyvs22.item (yyvsp22))
+			yyval28 := ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter (yyvs13.item (yyvsp13), ast_factory.new_colon_type (yyvs6.item (yyvsp6), yyvs128.item (yyvsp128)), last_class), yyvs22.item (yyvsp22))
 			if yyval28 /= Void then
 				increment_counter
 			end

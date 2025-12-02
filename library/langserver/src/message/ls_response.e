@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_success (a_id: LS_RESPONSE_ID; a_result: LS_ANY)
+	make_success (a_id: LS_RESPONSE_ID; a_result: attached like result_)
 			-- Create a new response in case of success.
 		require
 			a_id_not_void: a_id /= Void
@@ -63,9 +63,24 @@ feature -- Access
 			-- Message handler for current response
 		do
 			Result := a_manager.response_handler
+		ensure then
+			instance_free: class
 		end
 
-feature-- Field names
+feature -- Setting
+
+	set_error (a_error: LS_RESPONSE_ERROR)
+			-- Set `error` to `a_error`.
+		require
+			a_error_not_void: a_error /= Void
+		do
+			error := a_error
+			result_ := Void
+		ensure
+			error_set: error = a_error
+		end
+
+feature -- Field names
 
 	id_name: STRING_8 = "id"
 	result_name: STRING_8 = "result"

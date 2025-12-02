@@ -33,16 +33,55 @@ inherit
 		end
 
 	LS_DIAGNOSTIC_SEVERITY
+		undefine
+			value
 		redefine
 			is_equal
 		end
 
 	LS_DIAGNOSTIC_TAG
+		undefine
+			value
 		redefine
 			is_equal
 		end
 
 	LS_DIAGNOSTIC_CODE
+		redefine
+			is_equal
+		end
+
+	LS_FILE_CHANGE_TYPE
+		undefine
+			value
+		redefine
+			is_equal
+		end
+
+	LS_SYMBOL_KIND
+		undefine
+			value
+		redefine
+			is_equal
+		end
+
+	LS_SYMBOL_TAG
+		undefine
+			value
+		redefine
+			is_equal
+		end
+
+	LS_TEXT_DOCUMENT_SYNC_KIND
+		undefine
+			value
+		redefine
+			is_equal
+		end
+
+	LS_TEXT_DOCUMENT_SAVE_REASON
+		undefine
+			value
 		redefine
 			is_equal
 		end
@@ -58,7 +97,8 @@ create
 
 convert
 
-	make ({INTEGER_32})
+	make ({INTEGER_32}),
+	value: {INTEGER_32}
 
 feature {NONE} -- Initialization
 
@@ -94,6 +134,12 @@ feature -- Access
 
 	value: INTEGER_32
 			-- Integer value
+
+	to_integer: LS_INTEGER
+			-- Integer representation
+		do
+			Result := Current
+		end
 
 	hash_code: INTEGER
 			-- Hash value

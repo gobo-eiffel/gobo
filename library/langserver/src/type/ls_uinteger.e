@@ -12,7 +12,9 @@ class LS_UINTEGER
 
 inherit
 
-	LS_ANY
+	LS_WATCH_KIND
+		undefine
+			value
 		redefine
 			is_equal
 		end
@@ -28,7 +30,8 @@ create
 
 convert
 
-	make ({NATURAL_32})
+	make ({NATURAL_32}),
+	value: {NATURAL_32}
 
 feature {NONE} -- Initialization
 
@@ -64,6 +67,12 @@ feature -- Access
 
 	value: NATURAL_32
 			-- Unsigned integer value
+
+	to_uinteger: LS_UINTEGER
+			-- Uinteger representation
+		do
+			Result := Current
+		end
 
 	hash_code: INTEGER
 			-- Hash value

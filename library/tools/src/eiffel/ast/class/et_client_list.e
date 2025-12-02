@@ -5,7 +5,7 @@
 		"Eiffel comma-separated lists of clients"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CLIENT_LIST
@@ -16,6 +16,9 @@ inherit
 		export
 			{ET_CLIENT_LIST} storage
 		end
+
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
 
 create
 
@@ -73,6 +76,24 @@ feature -- Status report
 				else
 					Result := False
 					i := nb + 1 -- Jump out of the loop.
+				end
+			end
+		end
+
+	is_any: BOOLEAN
+			-- Does current client list contain the class name "ANY"?
+		local
+			i, nb: INTEGER
+			l_class: ET_CLASS
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				l_class := storage.item (i).base_class
+				if l_class.is_any_class then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
 				end
 			end
 		end
@@ -170,6 +191,60 @@ feature -- Comparison
 					end
 				end
 			end
+		end
+
+feature -- Output
+
+	append_client_clause_to_string (a_indentation: detachable STRING_8; a_string: STRING_8)
+			-- Append client clause, with surrounding braces, to `a_string`.
+			-- Prepend with `a_indentation` if specified.
+		require
+			valid_indentation: a_indentation /= Void implies (a_indentation.same_type ({STRING_8} "") and then {UC_UTF8_ROUTINES}.valid_utf8 (a_indentation))
+			a_string_not_void: a_string /= Void
+		local
+			i, nb: INTEGER
+		do
+			if a_indentation /= Void then
+				a_string.append_string (a_indentation)
+			end
+			a_string.append_character ('{')
+			nb := count
+			from i := 1 until i > nb loop
+				if i /= 1 then
+					a_string.append_character (',')
+					a_string.append_character (' ')
+				end
+				a_string.append_string (client (i).name.upper_name)
+				i := i + 1
+			end
+			a_string.append_character ('}')
+		ensure
+			valid_utf8: (a_string.same_type ({STRING_8} "") and then old {UC_UTF8_ROUTINES}.valid_utf8 (a_string)) implies {UC_UTF8_ROUTINES}.valid_utf8 (a_string)
+		end
+
+	append_canonical_client_clause_to_string (a_indentation: detachable STRING_8; a_string: STRING_8)
+			-- Append client clause, with surrounding braces, to `a_string`.
+			-- Append only one "NONE" if all clients are "NONE".
+			-- Append nothing if at least one client is "ANY".
+			-- Prepend with `a_indentation` if specified.
+		require
+			valid_indentation: a_indentation /= Void implies (a_indentation.same_type ({STRING_8} "") and then {UC_UTF8_ROUTINES}.valid_utf8 (a_indentation))
+			a_string_not_void: a_string /= Void
+		do
+			if is_any then
+				-- Do nothing.
+			elseif is_none then
+				if a_indentation /= Void then
+					a_string.append_string (a_indentation)
+				end
+				a_string.append_character ('{')
+				a_string.append_string (tokens.none_class_name.upper_name)
+				a_string.append_character ('}')
+			else
+				append_client_clause_to_string (a_indentation, a_string)
+			end
+		ensure
+			valid_utf8: (a_string.same_type ({STRING_8} "") and then old {UC_UTF8_ROUTINES}.valid_utf8 (a_string)) implies {UC_UTF8_ROUTINES}.valid_utf8 (a_string)
 		end
 
 feature {NONE} -- Implementation

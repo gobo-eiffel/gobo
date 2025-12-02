@@ -46,6 +46,8 @@ feature -- Access
 			-- Message handler for current notification
 		do
 			Result := a_manager.set_trace_notification_handler
+		ensure then
+			instance_free: class
 		end
 
 feature -- Processing

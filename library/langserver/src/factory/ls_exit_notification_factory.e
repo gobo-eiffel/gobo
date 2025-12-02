@@ -27,9 +27,11 @@ feature -- Access
 		end
 
 	handler (a_manager: LS_MESSAGE_MANAGER): LS_EXIT_NOTIFICATION_HANDLER
-			-- Message handler for current dynamic registration options
+			-- Message handler for this kind of messages
 		do
-			Result := a_manager.exit_notification_handler
+			Result := {LS_EXIT_NOTIFICATION}.handler (a_manager)
+		ensure then
+			instance_free: class
 		end
 
 end

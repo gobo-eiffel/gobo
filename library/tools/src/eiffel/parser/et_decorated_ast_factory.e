@@ -1334,7 +1334,7 @@ feature -- Eiffel symbols
 		do
 			create Result.make_right_parenthesis
 			Result.set_position (a_scanner.line, a_scanner.column)
-			Result.set_break (last_break (False, a_scanner))
+			Result.set_break (last_break (True, a_scanner))
 		end
 
 	new_semicolon_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SEMICOLON_SYMBOL

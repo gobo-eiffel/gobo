@@ -31,6 +31,7 @@ feature -- Basic operations
 	handle (a_notification: like notification; a_manager: like message_manager)
 			-- Handle `a_notification`.
 		do
+			a_manager.on_exit_notification (a_notification)
 			if a_manager.is_shutdown then
 				Exceptions.die (0)
 			else

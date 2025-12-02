@@ -22,7 +22,7 @@ feature -- Access
 
 feature -- Field names
 
-	partial_result_token_token_name: STRING_8 = "partialResultToken"
+	partial_result_token_name: STRING_8 = "partialResultToken"
 			-- Field names
 
 end

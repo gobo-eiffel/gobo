@@ -28,11 +28,10 @@ feature -- Access
 	other_server_options: detachable DS_HASH_TABLE [like registration_options, LS_STRING]
 			-- Server options used through dynamic registration, indexed by ids
 
-Feature -- Access
+feature -- Status report
 
-	is_dynamically_registrable: BOOLEAN
-			-- Does the client support dynamic registration
-			-- for this kind of message?
+	is_dynamic_registration_supported: BOOLEAN
+			-- Does client support dynamic registration for this kind of message?
 		do
 			Result := attached {LS_DYNAMIC_REGISTRATION_CAPABILITIES} client_capabilities as l_client_capabilities and then
 				attached l_client_capabilities.dynamic_registration as l_dynamic_registration and then
@@ -95,7 +94,7 @@ feature -- Setting
 		require
 			a_id_not_void: a_id /= Void
 			a_register_options_not_void: a_register_options /= Void
-			is_dynamically_registrable: is_dynamically_registrable
+			is_dynamic_registration_supported: is_dynamic_registration_supported
 			not_registered: not has_server_options_with_id (a_id)
 			valid_options: is_server_option_valid (a_register_options)
 		local
@@ -115,7 +114,7 @@ feature -- Setting
 			-- Unregister server options with id `a_id`.
 		require
 			a_id_not_void: a_id /= Void
-			is_dynamically_registrable: is_dynamically_registrable
+			is_dynamic_registration_supported: is_dynamic_registration_supported
 			registered: has_server_options_with_id (a_id)
 		do
 			if (attached {LS_STATIC_REGISTRATION_OPTIONS} server_options as l_server_options and then l_server_options.id ~ a_id) then

@@ -40,9 +40,11 @@ feature -- Access
 		end
 
 	handler (a_manager: LS_MESSAGE_MANAGER): LS_PROGRESS_NOTIFICATION_HANDLER
-			-- Message handler for current dynamic registration options
+			-- Message handler for this kind of messages
 		do
-			Result := a_manager.progress_notification_handler
+			Result := {LS_PROGRESS_NOTIFICATION}.handler (a_manager)
+		ensure then
+			instance_free: class
 		end
 
 end

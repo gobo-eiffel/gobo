@@ -669,9 +669,7 @@ feature -- Ignored classes
 			master_classes_do_recursive (agent {ET_MASTER_CLASS}.local_ignored_classes_do_if (agent {ET_CLASS}.unmark_ignored_class, agent any_actions.negated ({ET_CLASS} ?, agent a_classes.has)))
 			a_classes.do_all (agent {ET_CLASS}.mark_ignored_class)
 				-- Then for each universe, import classes from other universes.
-			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.import_classes)
-			libraries.do_recursive (agent {ET_LIBRARY}.import_classes)
-			import_classes
+			import_classes_recursive
 				-- Reset incrementally all classes that may have been
 				-- affected by changes made above.
 			if classes_modified_recursive then

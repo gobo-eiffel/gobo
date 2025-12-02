@@ -16,4 +16,8 @@ inherit
 
 	LS_OPTIONAL_DOCUMENT_URI
 
+convert
+
+	value: {READABLE_STRING_GENERAL}
+
 end

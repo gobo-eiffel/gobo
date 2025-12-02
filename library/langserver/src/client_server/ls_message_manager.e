@@ -133,6 +133,70 @@ feature -- Basic operations
 
 feature -- Handlers
 
+	configuration_request_handler: LS_CONFIGURATION_REQUEST_HANDLER
+			-- Handler for 'workspace/configuration' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			configuration_request_handler_not_void: Result /= Void
+		end
+
+	definition_request_handler: LS_DEFINITION_REQUEST_HANDLER
+			-- Handler for 'textDocument/definition' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			definition_request_handler_not_void: Result /= Void
+		end
+
+	did_change_text_document_notification_handler: LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION_HANDLER
+			-- Handler for 'textDocument/didChange' notifications
+		once ("OBJECT")
+			create Result.make
+		ensure
+			did_change_text_document_notification_handler_not_void: Result /= Void
+		end
+
+	did_change_watched_files_notification_handler: LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION_HANDLER
+			-- Handler for 'workspace/didChangeWatchedFiles' notifications
+		once ("OBJECT")
+			create Result.make
+		ensure
+			did_change_watched_files_notification_handler_not_void: Result /= Void
+		end
+
+	did_close_text_document_notification_handler: LS_DID_CLOSE_TEXT_DOCUMENT_NOTIFICATION_HANDLER
+			-- Handler for 'textDocument/didClose' notifications
+		once ("OBJECT")
+			create Result.make
+		ensure
+			did_close_text_document_notification_handler_not_void: Result /= Void
+		end
+
+	did_open_text_document_notification_handler: LS_DID_OPEN_TEXT_DOCUMENT_NOTIFICATION_HANDLER
+			-- Handler for 'textDocument/didOpen' notifications
+		once ("OBJECT")
+			create Result.make
+		ensure
+			did_open_text_document_notification_handler_not_void: Result /= Void
+		end
+
+	did_save_text_document_notification_handler: LS_DID_SAVE_TEXT_DOCUMENT_NOTIFICATION_HANDLER
+			-- Handler for 'textDocument/didSave' notifications
+		once ("OBJECT")
+			create Result.make
+		ensure
+			did_save_text_document_notification_handler_not_void: Result /= Void
+		end
+
+	document_symbol_request_handler: LS_DOCUMENT_SYMBOL_REQUEST_HANDLER
+			-- Handler for 'textDocument/documentSymbol' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			document_symbol_request_handler_not_void: Result /= Void
+		end
+
 	hover_request_handler: LS_HOVER_REQUEST_HANDLER
 			-- Handler for 'textDocument/hover' requests
 		once ("OBJECT")
@@ -155,6 +219,30 @@ feature -- Handlers
 			create Result.make
 		ensure
 			progress_notification_handler_not_void: Result /= Void
+		end
+
+	publish_diagnostics_notification_handler: LS_PUBLISH_DIAGNOSTICS_NOTIFICATION_HANDLER
+			-- Handler for 'textDocument/publishDiagnostics' notifications
+		once ("OBJECT")
+			create Result.make
+		ensure
+			publish_diagnostics_notification_handler_not_void: Result /= Void
+		end
+
+	will_save_text_document_notification_handler: LS_WILL_SAVE_TEXT_DOCUMENT_NOTIFICATION_HANDLER
+			-- Handler for 'textDocument/willSave' notifications
+		once ("OBJECT")
+			create Result.make
+		ensure
+			will_save_text_document_notification_handler_not_void: Result /= Void
+		end
+
+	will_save_wait_until_text_document_request_handler: LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REQUEST_HANDLER
+			-- Handler for 'textDocument/willSaveWaitUntil' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			will_save_wait_until_text_document_request_handler_not_void: Result /= Void
 		end
 
 feature {LS_MESSAGE, LS_MESSAGE_FACTORY, LS_INITIALIZE_REQUEST_HANDLER} -- Handlers (protocol)
@@ -412,23 +500,34 @@ feature {LS_CONNECTION} -- Actions
 			end
 		end
 
-feature {LS_RESPONSE_HANDLER, LS_CLIENT_REGISTER_CAPABILITY_REQUEST_HANDLER, LS_CLIENT_UNREGISTER_CAPABILITY_REQUEST_HANDLER} -- Implementation
+feature {LS_RESPONSE_HANDLER, LS_REQUEST_HANDLER} -- Implementation
 
 	message_factories: DS_HASH_TABLE [LS_MESSAGE_FACTORY, LS_STRING]
 			-- Message factories, indexed by methods
 		once ("OBJECT")
 			create Result.make (100)
+			Result.force (create {LS_CONFIGURATION_REQUEST_FACTORY}.make, {LS_CONFIGURATION_REQUEST}.method)
 			Result.force (create {LS_CANCEL_REQUEST_NOTIFICATION_FACTORY}.make, {LS_CANCEL_REQUEST_NOTIFICATION}.method)
+			Result.force (create {LS_DEFINITION_REQUEST_FACTORY}.make, {LS_DEFINITION_REQUEST}.method)
+			Result.force (create {LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION}.method)
+			Result.force (create {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION_FACTORY}.make, {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION}.method)
+			Result.force (create {LS_DID_CLOSE_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_DID_CLOSE_TEXT_DOCUMENT_NOTIFICATION}.method)
+			Result.force (create {LS_DID_OPEN_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_DID_OPEN_TEXT_DOCUMENT_NOTIFICATION}.method)
+			Result.force (create {LS_DID_SAVE_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_DID_SAVE_TEXT_DOCUMENT_NOTIFICATION}.method)
+			Result.force (create {LS_DOCUMENT_SYMBOL_REQUEST_FACTORY}.make, {LS_DOCUMENT_SYMBOL_REQUEST}.method)
 			Result.force (create {LS_EXIT_NOTIFICATION_FACTORY}.make, {LS_EXIT_NOTIFICATION}.method)
 			Result.force (create {LS_HOVER_REQUEST_FACTORY}.make, {LS_HOVER_REQUEST}.method)
 			Result.force (create {LS_INITIALIZE_REQUEST_FACTORY}.make, {LS_INITIALIZE_REQUEST}.method)
 			Result.force (create {LS_INITIALIZED_NOTIFICATION_FACTORY}.make, {LS_INITIALIZED_NOTIFICATION}.method)
 			Result.force (create {LS_LOG_TRACE_NOTIFICATION_FACTORY}.make, {LS_LOG_TRACE_NOTIFICATION}.method)
 			Result.force (create {LS_PROGRESS_NOTIFICATION_FACTORY}.make, {LS_PROGRESS_NOTIFICATION}.method)
+			Result.force (create {LS_PUBLISH_DIAGNOSTICS_NOTIFICATION_FACTORY}.make, {LS_PUBLISH_DIAGNOSTICS_NOTIFICATION}.method)
 			Result.force (create {LS_REGISTER_CAPABILITY_REQUEST_FACTORY}.make, {LS_REGISTER_CAPABILITY_REQUEST}.method)
 			Result.force (create {LS_SET_TRACE_NOTIFICATION_FACTORY}.make, {LS_SET_TRACE_NOTIFICATION}.method)
 			Result.force (create {LS_SHUTDOWN_REQUEST_FACTORY}.make, {LS_SHUTDOWN_REQUEST}.method)
 			Result.force (create {LS_UNREGISTER_CAPABILITY_REQUEST_FACTORY}.make, {LS_UNREGISTER_CAPABILITY_REQUEST}.method)
+			Result.force (create {LS_WILL_SAVE_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_WILL_SAVE_TEXT_DOCUMENT_NOTIFICATION}.method)
+			Result.force (create {LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REQUEST_FACTORY}.make, {LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REQUEST}.method)
 		ensure
 			message_factories_not_void: Result /= Void
 			no_void_message_factory: not Result.has_void

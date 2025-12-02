@@ -5,7 +5,7 @@
 		"Cluster dependence constraints"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CLUSTER_DEPENDENCE_CONSTRAINT
@@ -164,7 +164,11 @@ feature {NONE} -- Implementation
 				l_pathname := a_pathname
 				if attached a_wildcard.pattern as l_pattern and then not l_pattern.is_empty and then l_pattern.item (l_pattern.count) = '/' then
 					if not l_pathname.is_empty and then l_pathname.item (l_pathname.count) /= '/' then
-						if a_group.is_cluster or attached {ET_TEXT_GROUP} a_group then
+						if
+							a_group.is_cluster or
+							attached {ET_TEXT_GROUP} a_group or
+							(attached {ET_EDITED_CLASS_TEXT_GROUP} a_group as l_edited_group and then l_edited_group.current_group.is_cluster)
+						then
 							if l_pathname = pathname_buffer then
 								l_pathname.append_character ('/')
 								l_slash_added := True

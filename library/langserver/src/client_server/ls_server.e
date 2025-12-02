@@ -174,6 +174,7 @@ feature -- Argument parsing
 				Exceptions.die (1)
 			end
 			debug_mode := debug_flag.was_found
+			process_other_options (l_parser)
 		ensure
 			debug_flag_not_void: debug_flag /= Void
 			stdio_flag_not_void: stdio_flag /= Void
@@ -181,6 +182,16 @@ feature -- Argument parsing
 
 	add_other_options (a_parser: AP_PARSER)
 			-- Add other command-line options.
+			--
+			-- (To be redefined in servers.)
+		require
+			a_parser_not_void: a_parser /= Void
+		do
+		end
+
+	process_other_options (a_parser: AP_PARSER)
+			-- Process other command-line options
+			-- after they have been parsed.
 			--
 			-- (To be redefined in servers.)
 		require

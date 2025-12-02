@@ -637,26 +637,10 @@ feature -- Argument parsing
 			a_parser_not_void: a_parser /= Void
 		local
 			l_override_settings: detachable ET_ECF_SETTINGS
-			l_definition: STRING
-			l_index: INTEGER
 		do
 			if not a_option.parameters.is_empty then
 				create l_override_settings.make
-				across a_option.parameters as i_setting loop
-					if attached i_setting as l_setting then
-						l_definition := l_setting
-						if l_definition.count > 0 then
-							l_index := l_definition.index_of ('=', 1)
-							if l_index = 0 then
-								l_override_settings.set_primary_value (l_definition, "")
-							elseif l_index = l_definition.count then
-								l_override_settings.set_primary_value (l_definition.substring (1, l_index - 1), "")
-							elseif l_index /= 1 then
-								l_override_settings.set_primary_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
-							end
-						end
-					end
-				end
+				l_override_settings.set_primary_values_from_definitions (a_option.parameters)
 			end
 			override_settings := l_override_settings
 		end
@@ -669,26 +653,10 @@ feature -- Argument parsing
 			a_parser_not_void: a_parser /= Void
 		local
 			l_override_capabilities: detachable ET_ECF_CAPABILITIES
-			l_definition: STRING
-			l_index: INTEGER
 		do
 			if not a_option.parameters.is_empty then
 				create l_override_capabilities.make
-				across a_option.parameters as i_capability loop
-					if attached i_capability as l_capability then
-						l_definition := l_capability
-						if l_definition.count > 0 then
-							l_index := l_definition.index_of ('=', 1)
-							if l_index = 0 then
-								l_override_capabilities.set_primary_use_value (l_definition, "")
-							elseif l_index = l_definition.count then
-								l_override_capabilities.set_primary_use_value (l_definition.substring (1, l_index - 1), "")
-							elseif l_index /= 1 then
-								l_override_capabilities.set_primary_use_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
-							end
-						end
-					end
-				end
+				l_override_capabilities.set_primary_use_values_from_definitions (a_option.parameters)
 			end
 			override_capabilities := l_override_capabilities
 		end

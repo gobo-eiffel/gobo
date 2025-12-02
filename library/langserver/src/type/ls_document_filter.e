@@ -83,4 +83,5 @@ feature -- Processing
 invariant
 
 	at_least_one: language /= Void or scheme /= Void or pattern /= Void
+
 end

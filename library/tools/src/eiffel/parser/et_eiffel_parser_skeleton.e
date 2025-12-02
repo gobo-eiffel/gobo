@@ -178,6 +178,45 @@ feature -- Parsing
 			reset
 		end
 
+	parse_class_text (a_class_text: STRING_8; a_filename: STRING; a_time_stamp: INTEGER; a_group: ET_PRIMARY_GROUP)
+			-- Parse all classes in `a_class_text', which is a possibly modified version
+			-- of the content of file `a_filename' within group `a_group'.
+			-- `a_time_stamp' is the version of the class text being modified.
+			--
+			-- The queries `current_system.preparse_*_mode' govern the way
+			-- parsing works. Read the header comments of these features
+			-- for more details.
+		require
+			a_class_text_not_void: a_class_text /= Void
+			a_class_text_is_string_8: a_class_text.same_type ({STRING_8} "")
+			valid_utf8_class_text: {UC_UTF8_ROUTINES}.valid_utf8 (a_class_text)
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.is_empty
+			a_group_not_void: a_group /= Void
+		local
+			old_group: ET_PRIMARY_GROUP
+		do
+			old_group := group
+			group := a_group
+			filename := a_filename
+			time_stamp := a_time_stamp
+			input_buffer := eiffel_buffer
+			eiffel_buffer.set_utf8_string (a_class_text)
+			yy_load_input_buffer
+			yyparse
+			if attached last_class as l_last_class then
+				l_last_class.set_has_utf8_bom (True)
+				if l_last_class /= current_class then
+					l_last_class.processing_mutex.unlock
+					last_class := Void
+				end
+			end
+			reset
+			group := old_group
+		rescue
+			reset
+		end
+
 	parse_cluster (a_cluster: ET_CLUSTER)
 			-- Traverse `a_cluster' (recursively) and parse the classes
 			-- it contains. Classes are added to `universe.classes'.
@@ -452,12 +491,29 @@ feature {NONE} -- AST processing
 						end
 					elseif current_class.is_in_dotnet_assembly then
 						system_processor.dotnet_assembly_consumer.consume_class (current_class)
+					elseif attached {ET_EDITED_CLASS_TEXT_GROUP} current_class.group as l_edited_group and then attached current_class.filename as a_filename then
+						current_class.reset_after_preparsed
+						parse_class_text (l_edited_group.class_text, a_filename, l_edited_group.time_stamp, l_edited_group)
+						if not current_class.is_preparsed then
+								-- Make sure that `current_class' is as it was
+								-- after it was last preparsed when the file
+								-- does not contain this class anymore.
+							current_class.set_filename (a_filename)
+							current_class.set_group (l_edited_group)
+						end
+						if not current_class.is_parsed then
+							if not syntax_error and system_processor.preparse_multiple_mode then
+									-- The class text contains other classes, but not `current_class'.
+								set_fatal_error (current_class)
+								error_handler.report_gvscn1b_error (current_class, a_filename)
+							end
+						end
 					elseif attached {ET_TEXT_GROUP} current_class.group as l_text_group then
 						l_class_filename := current_class.filename
 						if l_class_filename /= Void and then not l_class_filename.is_empty then
 							a_text_filename := l_class_filename
 						else
-							a_text_filename := current_class.lower_name + ".e"
+							a_text_filename := current_class.lower_name + file_system.eiffel_extension
 						end
 						current_class.reset_after_preparsed
 						if attached l_text_group.class_text (current_class) as l_text then
@@ -671,7 +727,7 @@ feature {NONE} -- Basic operations
 							l_constraint := a_constrained_formal.constraint
 							if attached {ET_TYPE_RENAME_CONSTRAINT} l_constraint as l_type_constraint then
 								if j > 0 and then attached constraints.item (j) as l_constraint_type then
-									a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, a_class, Current)
+									a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, Current)
 								else
 									a_type := Void
 								end
@@ -683,7 +739,7 @@ feature {NONE} -- Basic operations
 								end
 							elseif attached {ET_TYPE_CONSTRAINT} l_constraint as l_type_constraint then
 								if j > 0 and then attached constraints.item (j) as l_constraint_type then
-									a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, a_class, Current)
+									a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, Current)
 								else
 									a_type := Void
 								end
@@ -700,7 +756,7 @@ feature {NONE} -- Basic operations
 									k < 1
 								loop
 									if j > 0 and then attached constraints.item (j) as l_constraint_type then
-										a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, a_class, Current)
+										a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, Current)
 									else
 										a_type := Void
 									end
@@ -1088,16 +1144,15 @@ feature {NONE} -- Basic operations
 feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIST} -- Generic constraints
 
 	resolved_constraint_named_type (a_constraint: ET_CONSTRAINT_NAMED_TYPE;
-		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): detachable ET_TYPE
+		a_formals: ET_FORMAL_PARAMETER_LIST): detachable ET_TYPE
 			-- Version of `a_constraint', appearing in the constraint of one
-			-- of the formal generic parameters in `a_formals' of `a_class',
+			-- of the formal generic parameters in `a_formals',
 			-- where class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)
 		require
 			a_constraint_not_void: a_constraint /= Void
 			a_formals_not_void: a_formals /= Void
-			a_class_not_void: a_class /= Void
 		local
 			a_name: ET_IDENTIFIER
 			a_formal: detachable ET_FORMAL_PARAMETER
@@ -1114,9 +1169,9 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 						-- It cannot be prefixed by 'expanded' or 'reference'.
 						-- But it can be prefixed by 'attached', 'detachable', '!' or '?'.
 					report_syntax_error (a_type_mark.position)
-					Result := ast_factory.new_formal_parameter_type (Void, a_name, a_formal.index, a_class)
+					Result := ast_factory.new_formal_parameter_type (Void, a_name, a_formal.index, a_formal.implementation_class)
 				else
-					Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index, a_class)
+					Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index, a_formal.implementation_class)
 				end
 			else
 				a_base_class := current_universe.master_class (a_name)
@@ -1146,16 +1201,15 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_generic_named_type (a_constraint: ET_CONSTRAINT_GENERIC_NAMED_TYPE;
-		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): detachable ET_TYPE
+		a_formals: ET_FORMAL_PARAMETER_LIST): detachable ET_TYPE
 			-- Version `a_constraint', appearing in the constraint of one
-			-- of the formal generic parameters in `a_formals' of `a_class',
+			-- of the formal generic parameters in `a_formals',
 			-- where class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)
 		require
 			a_constraint_not_void: a_constraint /= Void
 			a_formals_not_void: a_formals /= Void
-			a_class_not_void: a_class /= Void
 		local
 			a_name: ET_IDENTIFIER
 			a_type_mark: detachable ET_TYPE_MARK
@@ -1175,10 +1229,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 				end
 					-- A formal parameter cannot have actual generic parameters.
 				report_syntax_error (a_constraint.actual_parameters.position)
-				Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index, a_class)
+				Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index, a_formal.implementation_class)
 			else
 				a_base_class := current_universe.master_class (a_name)
-				a_parameters := a_constraint.actual_parameters.resolved_syntactical_constraint (a_formals, a_class, Current)
+				a_parameters := a_constraint.actual_parameters.resolved_syntactical_constraint (a_formals, Current)
 				if a_parameters /= Void then
 					if providers_enabled then
 						providers.force_last (a_base_class)
@@ -1208,16 +1262,15 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_actual_parameter_list (a_constraint: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST;
-		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): detachable ET_ACTUAL_PARAMETER_LIST
+		a_formals: ET_FORMAL_PARAMETER_LIST): detachable ET_ACTUAL_PARAMETER_LIST
 			-- Version of `a_constraint', appearing in the constraint of one
-			-- of the formal generic parameters in `a_formals' of `a_class',
+			-- of the formal generic parameters in `a_formals',
 			-- where class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)
 		require
 			a_constraint_not_void: a_constraint /= Void
 			a_formals_not_void: a_formals /= Void
-			a_class_not_void: a_class /= Void
 		local
 			i, nb: INTEGER
 			l_type: ET_CONSTRAINT_TYPE
@@ -1234,7 +1287,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 					l_actual := a_constraint.item (i)
 					l_type := l_actual.type
 					if l_type /= l_other_type then
-						l_resolved_type := l_type.resolved_syntactical_constraint (a_formals, a_class, Current)
+						l_resolved_type := l_type.resolved_syntactical_constraint (a_formals, Current)
 						l_other_type := l_type
 					end
 					l_parameter := l_actual.resolved_syntactical_constraint_with_type (l_resolved_type, Current)
@@ -1264,7 +1317,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		require
 			a_constraint_not_void: a_constraint /= Void
 		do
-			Result := ast_factory.new_labeled_actual_parameter (a_constraint.label, ast_factory.new_colon_type (a_constraint.colon, a_type))
+			Result := ast_factory.new_labeled_actual_parameter (a_constraint.label, ast_factory.new_colon_type (a_constraint.colon, a_type), a_constraint.implementation_class)
 		end
 
 	resolved_constraint_labeled_comma_actual_parameter (a_constraint: ET_CONSTRAINT_LABELED_COMMA_ACTUAL_PARAMETER;
@@ -1273,7 +1326,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		require
 			a_constraint_not_void: a_constraint /= Void
 		do
-			Result := ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (a_constraint.label, a_constraint.comma), a_type)
+			Result := ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma (a_constraint.label, a_constraint.comma), a_type, a_constraint.implementation_class)
 		end
 
 	resolved_constraint_labeled_actual_parameter_semicolon (a_constraint: ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER_SEMICOLON;

@@ -49,6 +49,8 @@ feature -- Access
 			-- Message handler for current request
 		do
 			Result := a_manager.register_capability_request_handler
+		ensure then
+			instance_free: class
 		end
 
 feature -- Processing

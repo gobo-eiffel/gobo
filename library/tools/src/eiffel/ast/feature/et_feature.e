@@ -625,7 +625,7 @@ feature -- Export status
 	add_creation_clients_to (a_clients: ET_CLIENT_LIST; a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- If current feature is listed in the creation clauses
 			-- of `a_class', then add its creation clients to `a_clients'.
-			-- If current feature the version of 'default_create' in `a_class'
+			-- If current feature is the version of 'default_create' in `a_class'
 			-- with `a_class' being a non-deferred class with no creation clauses,
 			-- then add "ANY" to `a_clients'.
 			-- (Note: Use `a_system_processor.feature_flattener' on `a_class' if needed
@@ -903,6 +903,88 @@ feature -- Element change
 			end
 		ensure
 			no_void_precursor: not a_precursors.has_void
+		end
+
+feature -- Output
+
+	append_header_comment_to_string (a_indentation: detachable STRING_8; a_string: STRING_8)
+			-- Append header comment, if any, to `a_string`.
+			-- Prepend each line with `a_indentation` if specified.
+			-- Replace "-- <Precursor>" with the header comment of the precursors
+			-- of current feature.
+		require
+			valid_indentation: a_indentation /= Void implies (a_indentation.same_type ({STRING_8} "") and then {UC_UTF8_ROUTINES}.valid_utf8 (a_indentation))
+			a_string_not_void: a_string /= Void
+		do
+			if attached header_break as l_header_break then
+				l_header_break.append_header_comment_to_string (Current, a_indentation, a_string)
+			end
+		ensure
+			valid_utf8: (a_string.same_type ({STRING_8} "") and then old {UC_UTF8_ROUTINES}.valid_utf8 (a_string)) implies {UC_UTF8_ROUTINES}.valid_utf8 (a_string)
+		end
+
+	append_canonical_signature_to_string (a_context: ET_TYPE_CONTEXT; a_string: STRING_8)
+			-- Append signature of current feature to `a_string`.
+			-- Use canonical versions of the types in `a_context`.
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+			a_string_not_void: a_string /= Void
+		local
+			i, nb: INTEGER
+			l_argument: ET_FORMAL_ARGUMENT
+		do
+			a_string.append_string (lower_name)
+			if attached alias_names as l_alias_names then
+				nb := l_alias_names.count
+				from i := 1 until i > nb loop
+					a_string.append_character (' ')
+					a_string.append_string (l_alias_names.item (i).alias_lower_name)
+					i := i + 1
+				end
+			end
+			if attached arguments as l_arguments and then not l_arguments.is_empty then
+				a_string.append_character (' ')
+				a_string.append_character ('(')
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					if i /= 1 then
+						a_string.append_character (';')
+						a_string.append_character (' ')
+					end
+					l_argument := l_arguments.formal_argument (i)
+					a_string.append_string (l_argument.name.lower_name)
+					a_string.append_character (':')
+					a_string.append_character (' ')
+					l_argument.type.named_type (a_context).append_canonical_with_leading_type_mark_to_string (a_string)
+					i := i + 1
+				end
+				a_string.append_character (')')
+			end
+			if attached type as l_type then
+				a_string.append_character (':')
+				a_string.append_character (' ')
+				l_type.named_type (a_context).append_canonical_with_leading_type_mark_to_string (a_string)
+			end
+		ensure
+			valid_utf8: (a_string.same_type ({STRING_8} "") and then old {UC_UTF8_ROUTINES}.valid_utf8 (a_string)) implies {UC_UTF8_ROUTINES}.valid_utf8 (a_string)
+		end
+
+	append_canonical_client_clause_to_string (a_indentation: detachable STRING_8; a_string: STRING_8)
+			-- Append clients, if any, with surrounding braces, to `a_string`.
+			-- Append only one "NONE" if all clients are "NONE".
+			-- Append nothing if at least one client is "ANY".
+			-- Prepend with `a_indentation` if specified.
+		require
+			valid_indentation: a_indentation /= Void implies (a_indentation.same_type ({STRING_8} "") and then {UC_UTF8_ROUTINES}.valid_utf8 (a_indentation))
+			a_string_not_void: a_string /= Void
+		do
+			if attached clients as l_clients then
+				l_clients.append_canonical_client_clause_to_string (a_indentation, a_string)
+			end
+		ensure
+			valid_utf8: (a_string.same_type ({STRING_8} "") and then old {UC_UTF8_ROUTINES}.valid_utf8 (a_string)) implies {UC_UTF8_ROUTINES}.valid_utf8 (a_string)
 		end
 
 invariant

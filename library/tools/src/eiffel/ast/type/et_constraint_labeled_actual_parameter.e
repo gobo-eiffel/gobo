@@ -7,7 +7,7 @@
 		%they may be names of classes or of formal generic parameters."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER
@@ -25,19 +25,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_label: like label; a_colon: like colon; a_type: like type)
+	make (a_label: like label; a_colon: like colon; a_type: like type; a_class: like implementation_class)
 			-- Create a new labeled actual parameter.
 		require
 			a_label_not_void: a_label /= Void
 			a_type_not_void: a_type /= Void
+			a_class_not_void: a_class /= Void
 		do
 			label := a_label
 			colon := a_colon
 			type := a_type
+			implementation_class := a_class
 		ensure
 			label_set: label = a_label
 			colon_set: colon = a_colon
 			type_set: type = a_type
+			implementation_class_set: implementation_class /= a_class
 		end
 
 feature -- Access
@@ -51,6 +54,9 @@ feature -- Access
 
 	type: ET_CONSTRAINT_TYPE
 			-- Type
+
+	implementation_class: ET_CLASS
+			-- Class where the tuple label appears
 
 	position: ET_POSITION
 			-- Position of first character of
@@ -72,5 +78,6 @@ feature -- Conversion
 invariant
 
 	label_not_void: label /= Void
+	implementation_class_not_vodi: implementation_class /= Void
 
 end

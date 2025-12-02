@@ -17,6 +17,46 @@ inherit
 			is_equal
 		end
 
+	LS_OPTIONAL_DEFINITION_OPTIONS
+		redefine
+			is_equal
+		end
+
+	LS_OPTIONAL_DID_SAVE_TEXT_DOCUMENT_OPTIONS
+		redefine
+			is_equal
+		end
+
+	LS_DID_OPEN_TEXT_DOCUMENT_OPTIONS
+		redefine
+			is_equal
+		end
+
+	LS_DID_CLOSE_TEXT_DOCUMENT_OPTIONS
+		redefine
+			is_equal
+		end
+
+	LS_WILL_SAVE_TEXT_DOCUMENT_OPTIONS
+		redefine
+			is_equal
+		end
+
+	LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_OPTIONS
+		redefine
+			is_equal
+		end
+
+	LS_OPTIONAL_DOCUMENT_SYMBOL_OPTIONS
+		redefine
+			is_equal
+		end
+
+	LS_CONFIGURATION_CAPABILITIES
+		redefine
+			is_equal
+		end
+
 create
 
 	make,
@@ -25,7 +65,8 @@ create
 
 convert
 
-	make ({BOOLEAN})
+	make ({BOOLEAN}),
+	value: {BOOLEAN}
 
 feature {NONE} -- Initialization
 
@@ -84,6 +125,12 @@ feature -- Access
 			false_not_void: Result /= Void
 			is_false: not Result.value
 			instance_free: class
+		end
+
+	to_boolean: LS_BOOLEAN
+			-- Boolean representation
+		do
+			Result := Current
 		end
 
 feature -- Processing

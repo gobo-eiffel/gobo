@@ -14,6 +14,7 @@ inherit
 
 	LS_INITIALIZED_NOTIFICATION_HANDLER
 		redefine
+			handle,
 			message_manager,
 			internal_handle
 		end
@@ -21,6 +22,14 @@ inherit
 create
 
 	make
+
+feature -- Basic operations
+
+	handle (a_notification: like notification; a_manager: like message_manager)
+			-- Handle `a_notification`.
+		do
+			a_manager.on_initialized_notification (a_notification)
+		end
 
 feature {LS_MESSAGE} -- Basic operations
 

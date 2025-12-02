@@ -12,7 +12,7 @@ class LS_LOCATION
 
 inherit
 
-	LS_ANY
+	LS_OPTIONAL_DEFINITION_RESULT
 
 create
 

@@ -46,6 +46,8 @@ feature -- Access
 			-- Message handler for current notification
 		do
 			Result := a_manager.cancel_request_notification_handler
+		ensure then
+			instance_free: class
 		end
 
 feature -- Processing
