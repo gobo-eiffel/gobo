@@ -594,6 +594,7 @@ feature {NONE} -- Eiffel processing
 					end
 					send_log_trace_verbose_notification ("Restarting Eiffel language server...", l_message)
 				end
+				send_diagnostics
 				Exceptions.die (2)
 			end
 			if debug_mode then
@@ -661,6 +662,7 @@ feature {NONE} -- Eiffel processing
 					l_message := "Restarting Eiffel language server after " + max_total_compilation_count.out + " Eiffel compilations..."
 					send_log_trace_verbose_notification ("Restarting Eiffel language server...", l_message)
 				end
+				send_diagnostics
 				Exceptions.die (2)
 			end
 			if debug_mode then
