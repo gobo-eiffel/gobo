@@ -498,6 +498,7 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 					if attached {ET_EIFFEL_PREPARSER_SKELETON} system_processor.eiffel_preparser as l_eiffel_preparser then
 						l_basename := file_system.basename (l_pathname)
 						l_dirname := file_system.dirname (l_pathname)
+						l_found := False
 						from class_mapping.start until class_mapping.after loop
 							l_filename := class_mapping.key_for_iteration
 							if file_system.same_pathnames (file_system.dirname (l_filename), l_dirname) then
