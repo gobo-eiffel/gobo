@@ -22,10 +22,11 @@ while the official site (for stable releases) is located at
 from the [Boehm GC](https://github.com/ivmai/bdwgc) project which is also
 released under a MIT-style [license](https://github.com/bdwgc/bdwgc/blob/master/LICENSE), and is bundled with the [Zig toolchain](https://ziglang.org/) which is also released under a MIT-style [license](https://github.com/ziglang/zig/blob/master/LICENSE).
 
-*Gobo Eiffel* already consists of eighteen Eiffel libraries:
+*Gobo Eiffel* already consists of nineteen Eiffel libraries:
 
 * [Gobo Eiffel Argument Library](./library/argument/doc/index.html)
 * Gobo Eiffel Kernel Library
+* Gobo Eiffel Language Server Protocol Library
 * Gobo Eiffel Lexical Library
 * [Gobo Eiffel Math Library](./library/math/doc/index.html)
 * Gobo Eiffel Parse Library
@@ -43,7 +44,7 @@ released under a MIT-style [license](https://github.com/bdwgc/bdwgc/blob/master/
 * [Gobo Eiffel XPath Library](./library/xpath/doc/index.html)
 * [Gobo Eiffel XSLT Library](./library/xslt/doc/index.html)
 
-and twelve utilities:
+and thirteen utilities:
 
 * [Gobo Eiffel Ant](./tool/geant/doc/overview.html) (geant)
 * [Gobo Eiffel Compiler](./tool/gec/doc/index.html) (gec)
@@ -51,6 +52,7 @@ and twelve utilities:
 * [Gobo Eiffel Cop](./tool/gecop/doc/index.html) (gecop)
 * [Gobo Eiffel Doc](./tool/gedoc/doc/index.html) (gedoc)
 * [Gobo Eiffel Image](./tool/image/doc/index.html) (geimage)
+* Gobo Eiffel Language Server (gelsp)
 * [Gobo Eiffel Lex](./tool/gelex/doc/index.html) (gelex)
 * [Gobo Eiffel Lint](./tool/gelint/doc/index.html) (gelint)
 * [Gobo Eiffel Preprocessor](./tool/gepp/doc/index.html) (gepp)
@@ -65,7 +67,7 @@ library classes provided in this package.
 
 The supported Eiffel compilers, in alphabetical order, are:
 
-* Gobo Eiffel Compiler (gec) 25.09.02
+* Gobo Eiffel Compiler (gec) 25.12.02
 * ISE Eiffel 25.02.9.8732 (Classic and .NET)
 
 For more details about the supported Eiffel compilers, please see the file
