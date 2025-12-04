@@ -53,10 +53,12 @@ feature -- Output
 			a_string.append_string (tokens.tuple_class_name.upper_name)
 			a_string.append_character (' ')
 			a_string.append_character ('[')
+			a_string.append_character (' ')
 			a_string.append_string (name.lower_name)
 			a_string.append_character (':')
 			a_string.append_character (' ')
 			labeled_parameter.type.named_type (current_class).append_canonical_with_leading_type_mark_to_string (a_string)
+			a_string.append_character (' ')
 			a_string.append_character (']')
 		end
 
