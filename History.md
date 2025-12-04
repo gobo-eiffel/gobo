@@ -1,6 +1,6 @@
 # Release History
 
-## Version 25.12.03 - 3 December 2025
+## Version 25.12.04 - 4 December 2025
 
 ### gelsp
 
