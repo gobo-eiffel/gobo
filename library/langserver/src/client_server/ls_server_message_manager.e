@@ -57,7 +57,7 @@ feature -- Handling 'textDocument/hover' requests
 		require
 			a_request_not_void: a_request /= Void
 			a_response_not_void: a_response /= Void
-			definition_request_supported: definition_request_handler.conforms_to ({detachable LS_SERVER_DEFINITION_REQUEST_HANDLER})
+			definition_request_supported: definition_request_handler.generating_type.conforms_to ({detachable LS_SERVER_DEFINITION_REQUEST_HANDLER})
 		do
 		end
 
@@ -71,7 +71,7 @@ feature -- Handling 'textDocument/didChange' notifications
 			-- Redefine `did_change_text_document_notification_handler` accordingly as per the precondition.)
 		require
 			a_notification_not_void: a_notification /= Void
-			did_change_notification_supported: did_change_text_document_notification_handler.conforms_to ({detachable LS_SERVER_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION_HANDLER})
+			did_change_notification_supported: did_change_text_document_notification_handler.generating_type.conforms_to ({detachable LS_SERVER_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION_HANDLER})
 		do
 		end
 
@@ -85,7 +85,7 @@ feature -- Handling 'textDocument/didClose' notifications
 			-- Redefine `did_close_text_document_notification_handler` accordingly as per the precondition.)
 		require
 			a_notification_not_void: a_notification /= Void
-			did_close_notification_supported: did_close_text_document_notification_handler.conforms_to ({detachable LS_SERVER_DID_CLOSE_TEXT_DOCUMENT_NOTIFICATION_HANDLER})
+			did_close_notification_supported: did_close_text_document_notification_handler.generating_type.conforms_to ({detachable LS_SERVER_DID_CLOSE_TEXT_DOCUMENT_NOTIFICATION_HANDLER})
 		do
 		end
 
@@ -99,7 +99,7 @@ feature -- Handling 'textDocument/didOpen' notifications
 			-- Redefine `did_open_text_document_notification_handler` accordingly as per the precondition.)
 		require
 			a_notification_not_void: a_notification /= Void
-			did_open_notification_supported: did_open_text_document_notification_handler.conforms_to ({detachable LS_SERVER_DID_OPEN_TEXT_DOCUMENT_NOTIFICATION_HANDLER})
+			did_open_notification_supported: did_open_text_document_notification_handler.generating_type.conforms_to ({detachable LS_SERVER_DID_OPEN_TEXT_DOCUMENT_NOTIFICATION_HANDLER})
 		do
 		end
 
@@ -113,7 +113,7 @@ feature -- Handling 'textDocument/didSave' notifications
 			-- Redefine `did_save_text_document_notification_handler` accordingly as per the precondition.)
 		require
 			a_notification_not_void: a_notification /= Void
-			did_save_notification_supported: did_save_text_document_notification_handler.conforms_to ({detachable LS_SERVER_DID_SAVE_TEXT_DOCUMENT_NOTIFICATION_HANDLER})
+			did_save_notification_supported: did_save_text_document_notification_handler.generating_type.conforms_to ({detachable LS_SERVER_DID_SAVE_TEXT_DOCUMENT_NOTIFICATION_HANDLER})
 		do
 		end
 
@@ -128,7 +128,7 @@ feature -- Handling 'textDocument/documentSymbol' requests
 		require
 			a_request_not_void: a_request /= Void
 			a_response_not_void: a_response /= Void
-			document_symbol_request_supported: document_symbol_request_handler.conforms_to ({detachable LS_SERVER_DOCUMENT_SYMBOL_REQUEST_HANDLER})
+			document_symbol_request_supported: document_symbol_request_handler.generating_type.conforms_to ({detachable LS_SERVER_DOCUMENT_SYMBOL_REQUEST_HANDLER})
 		do
 		end
 
@@ -176,7 +176,7 @@ feature -- Handling 'textDocument/hover' requests
 		require
 			a_request_not_void: a_request /= Void
 			a_response_not_void: a_response /= Void
-			hover_request_supported: hover_request_handler.conforms_to ({detachable LS_SERVER_HOVER_REQUEST_HANDLER})
+			hover_request_supported: hover_request_handler.generating_type.conforms_to ({detachable LS_SERVER_HOVER_REQUEST_HANDLER})
 		do
 		end
 
@@ -190,7 +190,7 @@ feature -- Handling 'textDocument/willSave' notifications
 			-- Redefine `will_save_text_document_notification_handler` accordingly as per the precondition.)
 		require
 			a_notification_not_void: a_notification /= Void
-			will_save_notification_supported: will_save_text_document_notification_handler.conforms_to ({detachable LS_SERVER_WILL_SAVE_TEXT_DOCUMENT_NOTIFICATION_HANDLER})
+			will_save_notification_supported: will_save_text_document_notification_handler.generating_type.conforms_to ({detachable LS_SERVER_WILL_SAVE_TEXT_DOCUMENT_NOTIFICATION_HANDLER})
 		do
 		end
 
@@ -205,7 +205,7 @@ feature -- Handling 'textDocument/willSaveWaitUntil' requests
 		require
 			a_request_not_void: a_request /= Void
 			a_response_not_void: a_response /= Void
-			will_save_wait_until_request_supported: will_save_wait_until_text_document_request_handler.conforms_to ({detachable LS_SERVER_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REQUEST_HANDLER})
+			will_save_wait_until_request_supported: will_save_wait_until_text_document_request_handler.generating_type.conforms_to ({detachable LS_SERVER_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REQUEST_HANDLER})
 		do
 		end
 
