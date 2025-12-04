@@ -2,7 +2,7 @@
 
 	description:
 
-		"Gobo Eiffel Language Server, using protocol LSP."
+		"Gobo Eiffel Language Server, using protocol LSP"
 
 	copyright: "Copyright (c) 2025, Eric Bezault and others"
 	license: "MIT License"
@@ -283,7 +283,7 @@ feature -- Handling 'textDocument/documentSymbol' requests
 						l_feature_clause_symbols.put (l_document_symbol, l_feature_clause)
 						i := i + 1
 					end
-				end
+				end 
 				add_features_document_symbols (l_class.queries, l_class, l_feature_clause_symbols, a_response)
 				add_features_document_symbols (l_class.procedures, l_class, l_feature_clause_symbols, a_response)
 			end
@@ -403,15 +403,26 @@ feature -- Handling 'workspace/configuration' requests
 			-- to a 'workspace/configuration' request.
 		local
 			l_configurations: LS_ARRAY
+			l_value: STRING
 		do
+			config_ecf_filename := Void
+			config_ecf_target := Void
 			if a_result /= Void then
 				l_configurations := a_result.to_array
 				if l_configurations.count = 2 then
 					if attached {LS_STRING} l_configurations.value (1) as l_config_ecf_filename then
-						config_ecf_filename := l_config_ecf_filename.utf8_value
+						l_value := l_config_ecf_filename.utf8_value
+						l_value.right_adjust
+						if not l_value.is_empty then
+							config_ecf_filename := l_value
+						end
 					end
 					if attached {LS_STRING} l_configurations.value (2) as l_config_ecf_target then
-						config_ecf_target := l_config_ecf_target.utf8_value
+						l_value := l_config_ecf_target.utf8_value
+						l_value.adjust
+						if not l_value.is_empty then
+							config_ecf_target := l_value
+						end
 					end
 				end
 			end
@@ -567,7 +578,7 @@ feature -- Handling 'initialized' notification
 	on_initialized_notification (a_notification: LS_INITIALIZED_NOTIFICATION)
 			-- Handle 'initialized' notification `a_notification`.
 		do
-			send_configuration_request (<<[Void, "gobo-eiffel.workspaceEcf"], [Void, "gobo-eiffel.workspaceEcfTarget"]>>)
+			send_configuration_request (<<[Void, "gobo-eiffel.workspaceEcfFile"], [Void, "gobo-eiffel.workspaceEcfTarget"]>>)
 		end
 
 feature {NONE} -- Eiffel processing
