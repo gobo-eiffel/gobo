@@ -83,8 +83,8 @@ feature -- Basic operations
 				end
 			end
 			separate other_connection as l_other_connection do
-				if attached l_other_connection as la_other_connection then
-					la_other_connection.on_message_received (l_full_message)
+				if l_other_connection /= Void then
+					l_other_connection.on_message_received (l_full_message)
 				end
 			end
 		end
@@ -159,8 +159,8 @@ feature {LS_SCOOP_CONNECTION} -- Implementation
 				if {PLATFORM}.is_thread_capable or {PLATFORM}.is_scoop_capable then
 					lock_message_manager_mutex
 					separate message_manager as l_message_manager do
-						if attached l_message_manager as la_message_manager then
-							la_message_manager.on_message_received
+						if l_message_manager /= Void then
+							l_message_manager.on_message_received
 						end
 					end
 					unlock_message_manager_mutex
