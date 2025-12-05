@@ -9,7 +9,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ATTACHMENT_SCOPE
@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 		do
 			create locals_attached.make (50)
 			create arguments_attached.make (10)
+			create inline_separate_arguments_attached.make (10)
 			create attributes_attached.make (50)
 		end
 
@@ -57,6 +58,16 @@ feature -- Status report
 			Result := arguments_attached.has (a_name.seed)
 		end
 
+	has_inline_separate_argument (a_name: ET_IDENTIFIER): BOOLEAN
+			-- Is inline separate argument `a_name' attached (when declared as detachable)
+			-- or initialized (when declared as attached)?
+		require
+			a_name_not_void: a_name /= Void
+			a_name_is_argument: a_name.is_inline_separate_argument
+		do
+			Result := inline_separate_arguments_attached.has (a_name.seed)
+		end
+
 	has_attribute (a_name: ET_IDENTIFIER): BOOLEAN
 			-- Is attribute `a_name' attached (when declared as detachable)
 			-- or initialized (when declared as attached)?
@@ -78,12 +89,14 @@ feature -- Status report
 			-- or initialized (when declared as attached)?
 		require
 			a_name_not_void: a_name /= Void
-			valid_name: a_name.is_local or a_name.is_argument or a_name.is_feature_name
+			valid_name: a_name.is_local or a_name.is_argument or a_name.is_inline_separate_argument or a_name.is_feature_name
 		do
 			if a_name.is_local then
 				Result := locals_attached.has (a_name.seed)
 			elseif a_name.is_argument then
 				Result := arguments_attached.has (a_name.seed)
+			elseif a_name.is_inline_separate_argument then
+				Result := inline_separate_arguments_attached.has (a_name.seed)
 			elseif a_name.is_feature_name then
 				Result := attributes_attached.has (a_name.seed)
 			end
@@ -130,6 +143,21 @@ feature -- Status report
 			end
 			if Result then
 				from
+					inline_separate_arguments_attached.start
+				until
+					inline_separate_arguments_attached.after
+				loop
+					if not other.inline_separate_arguments_attached.has (inline_separate_arguments_attached.item_for_iteration) then
+						Result := False
+							-- Jump out of the loop.
+						inline_separate_arguments_attached.go_after
+					else
+						inline_separate_arguments_attached.forth
+					end
+				end
+			end
+			if Result then
+				from
 					attributes_attached.start
 				until
 					attributes_attached.after
@@ -161,6 +189,10 @@ feature -- Access
 
 	arguments_attached: DS_HASH_SET [INTEGER]
 			-- Indexes of formal arguments which are attached (when declared as detachable)
+			-- or initialized (when declared as attached)
+
+	inline_separate_arguments_attached: DS_HASH_SET [INTEGER]
+			-- Indexes of inline separate arguments which are attached (when declared as detachable)
 			-- or initialized (when declared as attached)
 
 	attributes_attached: DS_HASH_SET [INTEGER]
@@ -199,6 +231,19 @@ feature -- Element change
 			formal_argument_added: has_formal_argument (a_name)
 		end
 
+	add_inline_separate_argument (a_name: ET_IDENTIFIER)
+			-- Indicate that inline separate argument `a_name' is attached
+			-- (when declared as detachable) or initialized
+			-- (when declared as attached).
+		require
+			a_name_not_void: a_name /= Void
+			a_name_is_argument: a_name.is_inline_separate_argument
+		do
+			inline_separate_arguments_attached.force_last (a_name.seed)
+		ensure
+			inline_separate_argument_added: has_inline_separate_argument (a_name)
+		end
+
 	add_attribute (a_name: ET_IDENTIFIER)
 			-- Indicate that attribute `a_name' is attached
 			-- (when declared as detachable) or initialized
@@ -228,12 +273,14 @@ feature -- Element change
 			-- (when declared as attached).
 		require
 			a_name_not_void: a_name /= Void
-			valid_name: a_name.is_local or a_name.is_argument or a_name.is_feature_name
+			valid_name: a_name.is_local or a_name.is_argument or a_name.is_inline_separate_argument or a_name.is_feature_name
 		do
 			if a_name.is_local then
 				add_local_variable (a_name)
 			elseif a_name.is_argument then
 				add_formal_argument (a_name)
+			elseif a_name.is_inline_separate_argument then
+				add_inline_separate_argument (a_name)
 			elseif a_name.is_feature_name then
 				add_attribute (a_name)
 			end
@@ -267,6 +314,19 @@ feature -- Element change
 			formal_argument_removed: not has_formal_argument (a_name)
 		end
 
+	remove_inline_separate_argument (a_name: ET_IDENTIFIER)
+			-- Indicate that inline separate argument `a_name' is not attached
+			-- (when declared as detachable) or not initialized
+			-- (when declared as attached).
+		require
+			a_name_not_void: a_name /= Void
+			a_name_is_argument: a_name.is_inline_separate_argument
+		do
+			inline_separate_arguments_attached.remove (a_name.seed)
+		ensure
+			inline_separate_argument_removed: not has_inline_separate_argument (a_name)
+		end
+
 	remove_attribute (a_name: ET_IDENTIFIER)
 			-- Indicate that attribute `a_name' is not attached
 			-- (when declared as detachable) or not initialized
@@ -296,12 +356,14 @@ feature -- Element change
 			-- (when declared as attached).
 		require
 			a_name_not_void: a_name /= Void
-			valid_name: a_name.is_local or a_name.is_argument or a_name.is_feature_name
+			valid_name: a_name.is_local or a_name.is_argument or a_name.is_inline_separate_argument or a_name.is_feature_name
 		do
 			if a_name.is_local then
 				remove_local_variable (a_name)
 			elseif a_name.is_argument then
 				remove_formal_argument (a_name)
+			elseif a_name.is_inline_separate_argument then
+				remove_inline_separate_argument (a_name)
 			elseif a_name.is_feature_name then
 				remove_attribute (a_name)
 			end
@@ -326,6 +388,8 @@ feature -- Element change
 			locals_attached.append_last (other.locals_attached)
 			arguments_attached.wipe_out
 			arguments_attached.append_last (other.arguments_attached)
+			inline_separate_arguments_attached.wipe_out
+			inline_separate_arguments_attached.append_last (other.inline_separate_arguments_attached)
 			attributes_attached.wipe_out
 			attributes_attached.append_last (other.attributes_attached)
 			result_attached := other.result_attached
@@ -372,6 +436,18 @@ feature -- Element change
 					end
 				end
 				from
+					inline_separate_arguments_attached.start
+				until
+					inline_separate_arguments_attached.after
+				loop
+					l_seed := inline_separate_arguments_attached.item_for_iteration
+					if not other.inline_separate_arguments_attached.has (l_seed) then
+						inline_separate_arguments_attached.remove (l_seed)
+					else
+						inline_separate_arguments_attached.forth
+					end
+				end
+				from
 					attributes_attached.start
 				until
 					attributes_attached.after
@@ -395,6 +471,7 @@ feature -- Element change
 		do
 			locals_attached.wipe_out
 			arguments_attached.wipe_out
+			inline_separate_arguments_attached.wipe_out
 			attributes_attached.wipe_out
 			result_attached := False
 			is_code_unreachable := False
@@ -404,6 +481,7 @@ invariant
 
 	locals_attached_not_void: locals_attached /= Void
 	arguments_attached_not_void: arguments_attached /= Void
+	inline_separate_arguments_attached_not_void: inline_separate_arguments_attached /= Void
 	attributes_attached_not_void: attributes_attached /= Void
 
 end

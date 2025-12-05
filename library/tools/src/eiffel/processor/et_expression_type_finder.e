@@ -953,6 +953,13 @@ feature {NONE} -- Expression processing
 			else
 				l_inline_separate_argument := l_inline_separate_arguments.argument (l_seed)
 				find_expression_type (l_inline_separate_argument.expression, a_context, current_system.detachable_separate_any_type)
+				if current_system.attachment_type_conformance_mode then
+					if not a_context.is_type_attached and then current_attachment_scope.has_inline_separate_argument (a_name) then
+							-- Even though this inline separate argument has not been declared as attached,
+							-- we can guarantee that at this stage this entity is attached.
+						a_context.force_last (tokens.attached_like_current)
+					end
+				end
 			end
 		end
 

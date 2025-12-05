@@ -5,7 +5,7 @@
 		"Eiffel attachment scope builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ATTACHMENT_SCOPE_BUILDER
@@ -81,6 +81,27 @@ feature -- Basic operations
 
 feature {ET_AST_NODE} -- Processing
 
+	process_attached_expression (a_expression: ET_EXPRESSION)
+			-- Process `a_expression' which is known to be attached.
+		require
+			a_expression_not_void: a_expression /= Void
+		do
+			if not attached scope as l_scope then
+				-- Do nothing.
+			elseif attached {ET_RESULT} a_expression then
+				l_scope.add_result
+			elseif attached {ET_IDENTIFIER} a_expression as l_identifier then
+				if l_identifier.is_local or l_identifier.is_argument or l_identifier.is_inline_separate_argument or l_identifier.is_feature_name then
+					l_scope.add_name (l_identifier)
+				end
+			elseif attached {ET_UNQUALIFIED_CALL_EXPRESSION} a_expression as l_unqualified_call then
+					-- This might be a stable attribute.
+				if l_unqualified_call.arguments = Void and then l_unqualified_call.parenthesis_call = Void and then attached {ET_IDENTIFIER} l_unqualified_call.name as l_identifier then
+					l_scope.add_name (l_identifier)
+				end
+			end
+		end
+
 	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION)
 			-- Process `an_expression'.
 		local
@@ -91,39 +112,9 @@ feature {ET_AST_NODE} -- Processing
 				l_left := an_expression.left.unparenthesized_expression
 				l_right := an_expression.right.unparenthesized_expression
 				if attached {ET_VOID} l_right then
-					if attached {ET_RESULT} l_left then
-						if attached scope as l_scope then
-							l_scope.add_result
-						end
-					elseif attached {ET_IDENTIFIER} l_left as l_identifier then
-						if attached scope as l_scope then
-							l_scope.add_name (l_identifier)
-						end
-					elseif attached {ET_UNQUALIFIED_CALL_EXPRESSION} l_left as l_unqualified_call then
-						if l_unqualified_call.arguments = Void and then l_unqualified_call.parenthesis_call = Void and then attached {ET_IDENTIFIER} l_unqualified_call.name as l_identifier then
-								-- This might be a stable attribute.
-							if attached scope as l_scope then
-								l_scope.add_name (l_identifier)
-							end
-						end
-					end
+					process_attached_expression (l_left)
 				elseif attached {ET_VOID} l_left then
-					if attached {ET_RESULT} l_right then
-						if attached scope as l_scope then
-							l_scope.add_result
-						end
-					elseif attached {ET_IDENTIFIER} l_right as l_identifier then
-						if attached scope as l_scope then
-							l_scope.add_name (l_identifier)
-						end
-					elseif attached {ET_UNQUALIFIED_CALL_EXPRESSION} l_left as l_unqualified_call then
-							-- This might be a stable attribute.
-						if l_unqualified_call.arguments = Void and then l_unqualified_call.parenthesis_call = Void and then attached {ET_IDENTIFIER} l_unqualified_call.name as l_identifier then
-							if attached scope as l_scope then
-								l_scope.add_name (l_identifier)
-							end
-						end
-					end
+					process_attached_expression (l_right)
 				end
 			end
 		end
@@ -163,27 +154,9 @@ feature {ET_AST_NODE} -- Processing
 
 	process_object_test (an_expression: ET_OBJECT_TEST)
 			-- Process `an_expression'.
-		local
-			l_expression: ET_EXPRESSION
 		do
 			if not is_negated then
-				l_expression := an_expression.expression.unparenthesized_expression
-				if attached {ET_RESULT} l_expression then
-					if attached scope as l_scope then
-						l_scope.add_result
-					end
-				elseif attached {ET_IDENTIFIER} l_expression as l_identifier then
-					if attached scope as l_scope then
-						l_scope.add_name (l_identifier)
-					end
-				elseif attached {ET_UNQUALIFIED_CALL_EXPRESSION} l_expression as l_unqualified_call then
-						-- This might be a stable attribute.
-					if l_unqualified_call.arguments = Void and then l_unqualified_call.parenthesis_call = Void and then attached {ET_IDENTIFIER} l_unqualified_call.name as l_identifier then
-						if attached scope as l_scope then
-							l_scope.add_name (l_identifier)
-						end
-					end
-				end
+				process_attached_expression (an_expression.expression.unparenthesized_expression)
 			end
 		end
 
