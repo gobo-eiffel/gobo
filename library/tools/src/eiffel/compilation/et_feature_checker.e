@@ -17148,15 +17148,8 @@ feature {NONE} -- Attachments
 			else
 				l_old_attachment_scope := current_attachment_scope
 				current_attachment_scope := new_attachment_scope
-				current_attachment_scope.copy_scope (l_old_attachment_scope)
 				l_preconditions_attachment_scope := new_attachment_scope
-				from
-					l_set.start
-					build_assertions_attachment_scope (l_set.item_for_iteration)
-					l_preconditions_attachment_scope.copy_scope (current_attachment_scope)
-				until
-					l_set.is_last
-				loop
+				from l_set.start until l_set.after loop
 					current_attachment_scope.copy_scope (l_old_attachment_scope)
 					build_assertions_attachment_scope (l_set.item_for_iteration)
 					l_preconditions_attachment_scope.merge_scope (current_attachment_scope)
@@ -17164,11 +17157,10 @@ feature {NONE} -- Attachments
 				end
 				free_attachment_scope (current_attachment_scope)
 				current_attachment_scope := l_old_attachment_scope
-				build_assertions_attachment_scope (l_set.item_for_iteration)
 				current_attachment_scope.merge_scope (l_preconditions_attachment_scope)
 				free_attachment_scope (l_preconditions_attachment_scope)
-				l_set.wipe_out
 			end
+			l_set.wipe_out
 		end
 
 	current_initialization_scope: ET_ATTACHMENT_SCOPE
@@ -17202,6 +17194,7 @@ feature {NONE} -- Attachments
 		require
 			a_attachment_scope_not_void: a_attachment_scope /= Void
 		do
+			a_attachment_scope.wipe_out
 			unused_attachment_scopes.force_last (a_attachment_scope)
 		end
 

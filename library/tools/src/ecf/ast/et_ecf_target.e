@@ -5,7 +5,7 @@
 		"ECF targets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ECF_TARGET
@@ -594,12 +594,12 @@ feature -- Basic operations
 			if l_value = Void then
 				l_value := capabilities.support_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name)
 			end
-			if l_value = Void or else STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
-				a_system.set_attachment_type_conformance_mode (False)
-				a_system.set_target_type_attachment_mode (False)
-			elseif STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.all_capability_value) then
+			if l_value = Void or else STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.all_capability_value) then
 				a_system.set_attachment_type_conformance_mode (True)
 				a_system.set_target_type_attachment_mode (True)
+			elseif STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
+				a_system.set_attachment_type_conformance_mode (False)
+				a_system.set_target_type_attachment_mode (False)
 			elseif STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.transitional_capability_value) then
 				a_system.set_attachment_type_conformance_mode (True)
 				a_system.set_target_type_attachment_mode (True)
