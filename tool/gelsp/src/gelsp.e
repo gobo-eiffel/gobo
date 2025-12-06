@@ -41,8 +41,7 @@ inherit
 
 	GELSP_VERSION
 
-	KL_SHARED_EXECUTION_ENVIRONMENT
-		export {NONE} all end
+	ET_GOBO_CLI
 
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
@@ -283,7 +282,7 @@ feature -- Handling 'textDocument/documentSymbol' requests
 						l_feature_clause_symbols.put (l_document_symbol, l_feature_clause)
 						i := i + 1
 					end
-				end 
+				end
 				add_features_document_symbols (l_class.queries, l_class, l_feature_clause_symbols, a_response)
 				add_features_document_symbols (l_class.procedures, l_class, l_feature_clause_symbols, a_response)
 			end
@@ -1016,17 +1015,13 @@ feature -- Eiffel system
 
 	thread_count: INTEGER
 			-- Number of threads to be used
+		local
+			l_option_value: detachable INTEGER_REF
 		do
-			Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 - 3
 			if thread_option.was_found then
-				Result := thread_option.parameter
-				if Result <= 0 then
-					Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 + Result
-				end
+				l_option_value := thread_option.parameter
 			end
-			if Result < 1 or not {PLATFORM}.is_thread_capable then
-				Result := 1
-			end
+			Result := thread_count_from_cli_value (l_option_value)
 		ensure
 			thread_count_not_negative: Result >= 1
 		end
@@ -1200,68 +1195,29 @@ feature -- Argument parsing
 
 	set_override_settings (a_option: like setting_option; a_parser: AP_PARSER)
 			-- Set `override_settings' with information passed in `a_option'.
-			-- Report usage message and exit in case of invalid input.
 		require
 			a_option_not_void: a_option /= Void
 			a_parser_not_void: a_parser /= Void
-		local
-			l_override_settings: detachable ET_ECF_SETTINGS
 		do
-			if not a_option.parameters.is_empty then
-				create l_override_settings.make
-				l_override_settings.set_primary_values_from_definitions (a_option.parameters)
-			end
-			override_settings := l_override_settings
+			override_settings := settings_from_cli_value (a_option.parameters, False)
 		end
 
 	set_override_capabilities (a_option: like capability_option; a_parser: AP_PARSER)
 			-- Set `override_capabilities' with information passed in `a_option'.
-			-- Report usage message and exit in case of invalid input.
 		require
 			a_option_not_void: a_option /= Void
 			a_parser_not_void: a_parser /= Void
-		local
-			l_override_capabilities: detachable ET_ECF_CAPABILITIES
 		do
-			if not a_option.parameters.is_empty then
-				create l_override_capabilities.make
-				l_override_capabilities.set_primary_use_values_from_definitions (a_option.parameters)
-			end
-			override_capabilities := l_override_capabilities
+			override_capabilities := capabilities_from_cli_value (a_option.parameters)
 		end
 
 	set_override_variables (a_option: like variable_option; a_parser: AP_PARSER)
 			-- Set `override_variables' with information passed in `a_option'.
-			-- Report usage message and exit in case of invalid input.
 		require
 			a_option_not_void: a_option /= Void
 			a_parser_not_void: a_parser /= Void
-		local
-			l_override_variables: ET_ECF_VARIABLES
-			l_definition: STRING
-			l_index: INTEGER
 		do
-			create l_override_variables.make
-			l_override_variables.set_primary_value ("GOBO_EIFFEL", "ge")
-			Execution_environment.set_variable_value ("GOBO_EIFFEL", "ge")
-			if not a_option.parameters.is_empty then
-				across a_option.parameters as i_variable loop
-					if attached i_variable as l_variable then
-						l_definition := l_variable
-						if l_definition.count > 0 then
-							l_index := l_definition.index_of ('=', 1)
-							if l_index = 0 then
-								l_override_variables.set_primary_value (l_definition, "")
-							elseif l_index = l_definition.count then
-								l_override_variables.set_primary_value (l_definition.substring (1, l_index - 1), "")
-							elseif l_index /= 1 then
-								l_override_variables.set_primary_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
-							end
-						end
-					end
-				end
-			end
-			override_variables := l_override_variables
+			override_variables :=  variables_from_cli_value (a_option.parameters, True, False)
 		end
 
 	set_system_processor

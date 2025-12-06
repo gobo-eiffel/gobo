@@ -6,21 +6,21 @@
 		"Using gecc"
 
 	tool: "Gobo Eiffel C Compilation"
-	copyright: "Copyright (c) 2018-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
 <chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gecc/usage">
 <chapterinfo>
 	<copyright>
-		<year>2018-2023</year>
+		<year>2018-2025</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>20 December 2023</date>
+	<date>6 December 2025</date>
 </chapterinfo>
 
 <title>Using gecc</title>
@@ -71,6 +71,33 @@ Here is the list of options that can be used with <projectname>gecc</projectname
 		</term>
 		<listitem><para>
 			Print the version number of <projectname>gecc</projectname> and exit.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</para>
+</section>
+
+<section><title>Environment variables</title>
+<para>
+It is possible to override some of the command-line options above, or
+the default values for these options, using environment variables.
+<variablelist>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_CLI_THREAD</filename>
+		</term>
+		<listitem><para>
+			Override the command-line option <filename>--thread</filename>.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_DEFAULT_THREAD</filename>
+		</term>
+		<listitem><para>
+			Override the default value when the command-line option <filename>--thread</filename>
+			has not been specified and the environment variable <filename>$GOBO_CLI_THREAD</filename>
+			has not been set.
 		</para></listitem>
 	</varlistentry>
 </variablelist>

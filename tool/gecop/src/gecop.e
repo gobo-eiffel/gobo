@@ -7,7 +7,7 @@
 			An Eiffel language conformance validation suite.
 		]"
 
-	copyright: "Copyright (c) 2018-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class GECOP
@@ -15,11 +15,11 @@ class GECOP
 inherit
 
 	GECOP_VERSION
+	UT_GOBO_CLI
 
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
 	KL_SHARED_FILE_SYSTEM
-	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_OPERATING_SYSTEM
 	KL_SHARED_STANDARD_FILES
 	KL_SHARED_STREAMS
@@ -473,17 +473,13 @@ feature -- Access
 
 	thread_count: INTEGER
 			-- Number of threads to be used
+		local
+			l_option_value: detachable INTEGER_REF
 		do
-			Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 - 3
 			if thread_option.was_found then
-				Result := thread_option.parameter
-				if Result <= 0 then
-					Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 + Result
-				end
+				l_option_value := thread_option.parameter
 			end
-			if Result < 1 or not {PLATFORM}.is_thread_capable then
-				Result := 1
-			end
+			Result := thread_count_from_cli_value (l_option_value)
 		ensure
 			thread_count_not_negative: Result >= 1
 		end
