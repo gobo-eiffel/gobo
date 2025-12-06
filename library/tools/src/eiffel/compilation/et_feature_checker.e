@@ -6480,6 +6480,7 @@ feature {NONE} -- Expression validity
 			l_object_test: detachable ET_NAMED_OBJECT_TEST
 			l_iteration_component: detachable ET_ITERATION_COMPONENT
 			l_iteration_components: detachable ET_ITERATION_COMPONENT_LIST
+			l_inline_separate_argument: detachable ET_INLINE_SEPARATE_ARGUMENT
 		do
 			has_fatal_error := False
 			l_name := an_expression.name
@@ -6633,7 +6634,8 @@ feature {NONE} -- Expression validity
 							end
 						else
 							l_identifier := l_name.inline_separate_argument_name
-							if not attached current_inline_separate_argument_scope.inline_separate_argument (l_identifier) as l_inline_separate_argument then
+							l_inline_separate_argument := current_inline_separate_argument_scope.inline_separate_argument (l_identifier)
+							if l_inline_separate_argument = Void then
 									-- Error: `l_identifier' is an inline separate argument that is used outside of its scope.
 								set_fatal_error
 								if current_feature_impl.is_feature then
@@ -6643,7 +6645,7 @@ feature {NONE} -- Expression validity
 								end
 							else
 								set_index_to (l_identifier, l_inline_separate_argument.name.index)
-								report_inline_separate_argument (l_identifier, l_inline_separate_argument)
+								report_inline_separate_argument (l_identifier, False, l_inline_separate_argument)
 								l_seed := l_inline_separate_argument.name.seed
 								l_identifier.set_seed (l_seed)
 								l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
@@ -6960,6 +6962,50 @@ feature {NONE} -- Expression validity
 							end
 						else
 								-- Use the ETL2 implementation: the type of '$iteration_item' is POINTER.
+							set_pointer_index (an_expression)
+							l_pointer_type := current_universe_impl.pointer_type
+							a_context.force_last (l_pointer_type)
+							report_pointer_expression (an_expression, l_pointer_type)
+						end
+					end
+				elseif l_name.is_inline_separate_argument then
+					if not attached current_closure_impl.inline_separate_arguments as l_inline_separate_arguments then
+							-- Internal error.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					elseif l_seed < 1 or l_seed > l_inline_separate_arguments.count then
+							-- Internal error.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_inline_separate_argument := l_inline_separate_arguments.argument (l_seed)
+						l_identifier := l_name.inline_separate_argument_name
+						set_index_to (l_identifier, l_inline_separate_argument.name.index)
+						report_inline_separate_argument (l_identifier, False, l_inline_separate_argument)
+						l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
+						l_typed_pointer_class := l_typed_pointer_type.named_base_class
+						if l_typed_pointer_class.actual_class.is_preparsed then
+								-- Class TYPED_POINTER has been found in the universe.
+								-- Use ISE's implementation: the type of '$inline_separate_argument'
+								-- is 'TYPED_POINTER [<type-of-inline-separate-argument>]'.
+							current_inline_separate_argument_types.search (l_inline_separate_argument)
+							if not current_inline_separate_argument_types.found then
+									-- The type of the inline separate argument should have been determined
+									-- when processing the arguments of the inline separate instruction.
+									-- And this should have already been done since we are in the
+									-- scope of that inline separate argument (i.e the body of the inline
+									-- separate instruction). Here we don't have this type, which means that
+									-- an error had occurred (and had been reported) when processing
+									-- the argument expressions of the inline separate instruction.
+								set_fatal_error
+							else
+								a_context.copy_type_context (current_inline_separate_argument_types.found_item)
+								set_index (an_expression)
+								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+								a_context.force_last (l_typed_pointer_type)
+							end
+						else
+								-- Use the ETL2 implementation: the type of '$inline_separate_argument' is POINTER.
 							set_pointer_index (an_expression)
 							l_pointer_type := current_universe_impl.pointer_type
 							a_context.force_last (l_pointer_type)
@@ -7368,6 +7414,7 @@ feature {NONE} -- Expression validity
 		local
 			l_seed: INTEGER
 			l_inline_separate_argument: detachable ET_INLINE_SEPARATE_ARGUMENT
+			l_is_attached: BOOLEAN
 		do
 			has_fatal_error := False
 			l_seed := a_name.seed
@@ -7406,13 +7453,36 @@ feature {NONE} -- Expression validity
 							set_fatal_error
 						else
 							a_context.copy_type_context (current_inline_separate_argument_types.found_item)
+							if current_system.attachment_type_conformance_mode then
+								if not a_context.is_type_attached and then current_attachment_scope.has_inline_separate_argument (a_name) then
+										-- Even though this inline separate argument has not been declared as attached,
+										-- we can guarantee that at this stage this entity is attached.
+									a_context.force_last (tokens.attached_like_current)
+									l_is_attached := True
+								end
+							end
 							if current_system.scoop_mode then
 								if not a_context.is_type_non_separate then
 									a_context.force_last (tokens.controlled_type_modifier)
 								end
 							end
-							set_index_to (a_name, l_inline_separate_argument.name.index)
-							report_inline_separate_argument (a_name, l_inline_separate_argument)
+							if a_name.index /= 0 then
+									-- Already set.
+									-- Make sure that `l_is_attached' is consistent with the index.
+									-- This is needed when the type of the inline separate argument is a
+									-- formal generic parameter and the actual generic parameter
+									-- is attached. In that case the index was set to `attached_index'
+									-- when processing with the formal generic parameter (because
+									-- `l_is_attached' was True at that time). But because the actual
+									-- generic parameter is attached then `l_is_attached' is False.
+									-- So we need to force it to True.
+								l_is_attached := (a_name.index = l_inline_separate_argument.attached_index)
+							elseif l_is_attached then
+								a_name.set_index (l_inline_separate_argument.attached_index)
+							else
+								a_name.set_index (l_inline_separate_argument.index)
+							end
+							report_inline_separate_argument (a_name, l_is_attached, l_inline_separate_argument)
 						end
 					end
 				end
@@ -7438,13 +7508,36 @@ feature {NONE} -- Expression validity
 						error_handler.report_giaaa_error
 					else
 						a_context.copy_type_context (current_inline_separate_argument_types.found_item)
+						if current_system.attachment_type_conformance_mode then
+							if not a_context.is_type_attached and then current_attachment_scope.has_inline_separate_argument (a_name) then
+									-- Even though this inline separate argument has not been declared as attached,
+									-- we can guarantee that at this stage this entity is attached.
+								a_context.force_last (tokens.attached_like_current)
+								l_is_attached := True
+							end
+						end
 						if current_system.scoop_mode then
 							if not a_context.is_type_non_separate then
 								a_context.force_last (tokens.controlled_type_modifier)
 							end
 						end
-						set_index_to (a_name, l_inline_separate_argument.name.index)
-						report_inline_separate_argument (a_name, l_inline_separate_argument)
+						if a_name.index /= 0 then
+								-- Already set.
+								-- Make sure that `l_is_attached' is consistent with the index.
+								-- This is needed when the type of the inline separate argument is a
+								-- formal generic parameter and the actual generic parameter
+								-- is attached. In that case the index was set to `attached_index'
+								-- when processing with the formal generic parameter (because
+								-- `l_is_attached' was True at that time). But because the actual
+								-- generic parameter is attached then `l_is_attached' is False.
+								-- So we need to force it to True.
+							l_is_attached := (a_name.index = l_inline_separate_argument.attached_index)
+						elseif l_is_attached then
+							a_name.set_index (l_inline_separate_argument.attached_index)
+						else
+							a_name.set_index (l_inline_separate_argument.index)
+						end
+						report_inline_separate_argument (a_name, l_is_attached, l_inline_separate_argument)
 					end
 				end
 			end
@@ -7561,7 +7654,12 @@ feature {NONE} -- Expression validity
 					end
 				end
 				if not has_fatal_error then
-					set_index (l_argument.name)
+					if l_argument.index = 0 then
+						l_argument.set_index (index_count + 1)
+						index_count := index_count + 2
+						l_argument.set_attached_index (index_count)
+						l_argument.name.set_index (l_argument.index)
+					end
 					current_inline_separate_argument_types.force_last (l_expression_context, l_argument)
 					report_inline_separate_argument_declaration (l_argument, l_expression_context)
 				else
@@ -15480,8 +15578,10 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_inline_separate_argument (a_name: ET_IDENTIFIER; a_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT)
+	report_inline_separate_argument (a_name: ET_IDENTIFIER; a_is_attached: BOOLEAN; a_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT)
 			-- Report that a call to inline separate argument `a_name' has been processed.
+			-- `a_is_attached' means that we know (with a CAP, Certified Attachment Pattern)
+			-- that this inline separate argument is attached at this position in the code.
 		require
 			no_error: not has_fatal_error
 			a_name_not_void: a_name /= Void

@@ -1,5 +1,12 @@
 # Release History
 
+## Version xx.xx.xx - xxxxxxx
+
+### Gobo Eiffel Tools Library
+
+* Implemented CAP (Certified Attachment Pattern) for inline separate
+  arguments: `sepatate exp as x do if x /= Void then x.f end end`.
+
 ## Version 25.12.04 - 4 December 2025
 
 ### gelsp
@@ -96,7 +103,7 @@
   at runtime). Use the command-line option `--catcall` with `warning`
   to get the previous behavior (warning at compile time and caught
   at runtime). All applications in the Gobo Eiffel package are compiled
-  using the option `--catcall` with `error` to guarantee at 
+  using the option `--catcall` with `error` to guarantee at
   compile time that they don't contain any CAT-calls.
 * Build dynamic type sets of external C functions (assuming that
   the C code does not set an attribute of the resulting objects
@@ -110,7 +117,7 @@
   compiled correctly using the Gobo Eiffel runtime.
 * Fixed implementation of `PLATFORM.is_64_bits`.
 * Accept the following external C syntaxes:
-  `C [macro <ev_gtk.h>] | "eif_argv.h"` and 
+  `C [macro <ev_gtk.h>] | "eif_argv.h"` and
   `C Macro use <ev_gtk.h>` used in ISE EiffelVision2.
 * Do not generate Makefiles anymore under Linux/MacOS. Rely on
   `gecc` instead.
@@ -197,7 +204,7 @@
 * Let the test in `$GOBO/tool/gec/test/tool` run `gecop` with the `gec`
   executable just built (the executable under test).
 * Added support for once-per-object.
-* Fixed C code generation for creation instruction when the target is 
+* Fixed C code generation for creation instruction when the target is
   declared of reference type and the creation type is expanded.
 * Fixed C code generation of creation expressions.
 * Fixed C code generation when extracting agent arguments from polymorphic
@@ -205,7 +212,7 @@
 * Improved interoperability with ISE Eiffel when calling routines: for
   each actual argument in the order listed, first it is evaluated, then
   converted if needed, and finally if the resulting object has copy
-  semantics it is cloned. This is different from what is specified in 
+  semantics it is cloned. This is different from what is specified in
   `MUGC` in the ECMA Eiffel standard where the actual arguments are first
   evaluated and converted (first traversal in step `4`) and then cloned
   (second traversal in step `5`). So the two traversals in steps `4` and
@@ -221,7 +228,7 @@
 
 * Made `gecop` multi-threaded. Each thread will run its own set of
   validation tests independently of the others.
-* Added command-line option `--tool-executable` to specify the 
+* Added command-line option `--tool-executable` to specify the
   executable filename (optionally with a pathname) of the Eiffel tool
   to be tested. The default is either `gec`, `gelint`, `ec` which can
   be found in the `PATH`.
@@ -276,7 +283,7 @@
 
 ### Miscellaneous
 
-* Added test execution in [GitHub Actions](https://github.com/gobo-eiffel/gobo/actions) 
+* Added test execution in [GitHub Actions](https://github.com/gobo-eiffel/gobo/actions)
   and [Azure DevOps](https://dev.azure.com/ericb0733/gobo/_build?definitionId=1).
 * Upgraded all ECF files to ECF 1.22.0.
 * Display more progress information when installing the Gobo Eiffel package
@@ -286,9 +293,9 @@
 
 ### gec
 
-* Added support for class mappings `STRING` -> `STRING_32` and 
+* Added support for class mappings `STRING` -> `STRING_32` and
   `CHARACTER` -> `CHARACTER_32` when specified that way in the ECF
-  file. The default is still set to `STRING` -> `STRING_8` and 
+  file. The default is still set to `STRING` -> `STRING_8` and
   `CHARACTER` -> `CHARACTER_8` in the FreeELKS ECF file.
 * Added support for new built-in features `generator_8_of_type` and
   `generating_type_8_of_type` in class `ISE_RUNTIME`.
@@ -362,8 +369,8 @@
 ### Gobo Eiffel Tools Library
 
 * Fixed bug in Eiffel pretty-printer. The symbol `∃` was printed instead of `~`.
-* Added support for new values `none|current|error` for warning option 
-  `obsolete_feature` in ECF classes as introduced in ECF 1.21.0. 
+* Added support for new values `none|current|error` for warning option
+  `obsolete_feature` in ECF classes as introduced in ECF 1.21.0.
   Note that `gec` does not take this option into account.
 * Added support for stable attributes in void-safe mode.
 * Reordered `VFAV` rules to match those of ISE Eiffel. Added a rule
@@ -414,7 +421,7 @@
 * Fixed bug when computing equivalence classes. The generated arrays should
   be slightly smaller.
 * Added support for Unicode. Regular expressions and embedded Eiffel code in
-  the `.l` input file can contain Unicode characters. Unicode is supported 
+  the `.l` input file can contain Unicode characters. Unicode is supported
   natively by default, with no increase in size and execution time when the
   regular expressions only contain 8-bit characters. Alternatively, with the
   option `utf8` Unicode characters are internally converted to their UTF-8
@@ -453,7 +460,7 @@
   Unicode characters can be entered verbatim in the string (`STRING_32`) or
   with their escaped form (e.g. `\u03B2` or `\x{03B2}` where `03B2` is the
   hexadecimal code for Greek character beta). Surrogate and invalid  Unicode
-  characters produce a regular expression syntax error.   
+  characters produce a regular expression syntax error.
 * Fixed bug in `LX_DFA_REGULAR_EXPRESSION` and `LX_DFA_WILDCARD` when the
   string to be matched contains a null character.
 * Added support for addition and subtraction of character classes.
@@ -468,7 +475,7 @@
   POSIX character set names (e.g `[:alpha:]`) recognize only ASCII characters
   (code less than 128). Unicode is supported natively, there is no internal
   conversion to UTF-8. Unicode characters can be entered verbatim in the
-  string (`STRING_32`) or with their escaped form (e.g. `\u{03B2}` or 
+  string (`STRING_32`) or with their escaped form (e.g. `\u{03B2}` or
   `\x{03B2}` where `03B2` is the hexadecimal code for Greek character beta).
   Surrogate and invalid Unicode characters produce a regular expression
   syntax error.
@@ -496,7 +503,7 @@
 * Added support for bracket expressions whose target is itself a bracket expression
   (e.g. `f [i][j]`) in order to be compatible with ISE Eiffel's parser.
 * Fixed bug in the Tuple-argument-unfolding mechanism when the formal argument
-  with a Tuple type was not at the last position. The routine was erroneously 
+  with a Tuple type was not at the last position. The routine was erroneously
   considered as not being a single-tuple routine.
 * Added support for hidden clusters, as defined in ECF.
 * Added support for hexadecimal, octal and binary character codes in manifest
@@ -513,7 +520,7 @@
 
 ### gec
 
-* Fixed name of built-in feature `ISE_RUNTIME.new_special_of_reference_instance_of` 
+* Fixed name of built-in feature `ISE_RUNTIME.new_special_of_reference_instance_of`
   in generated C code.
 * Added header files to the C runtime to allow compilation of the ISE Eiffel
   compiler.
@@ -567,7 +574,7 @@
 * This tool is not supported anymore and has been removed. The only
   Eiffel configuration notation supported by the Gobo project is ECF.
   The source code of `gexace` can still be found in
-  `$GOBO/library/tools/src/xace`, but the classes have been marked 
+  `$GOBO/library/tools/src/xace`, but the classes have been marked
   as obsolete.
 
 ### Gobo Eiffel Argument Library
@@ -620,18 +627,18 @@
 * Interoperability with ISE Eiffel: let `like Current` be attached in
   void-safe mode even with the option `is_attached_by_default="false"`
   in the ECF file.
-* Interoperability with ISE Eiffel: do not accept `reference` before 
+* Interoperability with ISE Eiffel: do not accept `reference` before
   class types anymore (e.g. `reference INTEGER`), only before the
   declaration of a formal generic parameter (e.g. `class C [reference G]`).
 * Improved the way some kernel types and their implicit attachment marks
   are processed in void-safe mode.
-* Improved the way dynamic type sets and their attachment marks are 
+* Improved the way dynamic type sets and their attachment marks are
   processed in void-safe mode.
 * Improved speed when computing dynamic type sets.
 * Made sure that no `VDRS-4` error is reported when two features are
   inherited under the same name (after possible renaming) from the same
   parent and one is deferred and not the other.
-* Report a validity error `VAPE-1` when the address expression `$g` 
+* Report a validity error `VAPE-1` when the address expression `$g`
   appears in the precondition of `f` and `g` is not exported to all
   classes to which `f` is exported.
 * Fixed bug where a `VEEN-2` validity error was erroneously reported
@@ -686,7 +693,7 @@
 * Added option `target` for the task `<ise>` and renamed the option
   `ace` as `ecf`.
 * Added options `target`, `thread`, `new_instance_types`, `silent`, `verbose`,
-  `no_benchmark`, `nested_benchmark`, `metrics` for the task `<gec>` and 
+  `no_benchmark`, `nested_benchmark`, `metrics` for the task `<gec>` and
   renamed the option `ace` as `ecf`.
 
 ### gec
@@ -696,7 +703,7 @@
 * Added command-line options `--no-benchmark`, `--nested-benchmark` and --`metrics`.
 * Improved the way benchmarks, metrics, silent and verbose modes are
   specified and taken into account.
-* Change the command-line option `--cc` to accept the following values: 
+* Change the command-line option `--cc` to accept the following values:
   `no|script|make|gecc`.
 * Made `gec` multi-threaded, with the command-line option `--thread`.
 * Added command-line option `--target` to select the name of the target
@@ -779,18 +786,18 @@
   [here](https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array).
 * Implemented new semantics for untyped manifest arrays as described
   [here](https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array).
-* Fixed bug where a VFFD-5 error was wrongly reported when the 
-  result type of a once-per-object function contains an anchored type 
+* Fixed bug where a VFFD-5 error was wrongly reported when the
+  result type of a once-per-object function contains an anchored type
   or a formal generic parameter.
-* Avoid reporting that an object-test local is used outside of its scope 
+* Avoid reporting that an object-test local is used outside of its scope
   when there is an error in the expression of the corresponding object-test.
 * Added support for instance-free features (which can be used in
   Non-object-calls of the form `{T}.f`).
 * Added support for class routines, similar to instance-free features
   above, except that they are declared with `class` in the postcondition
   instead of `option: instance_free` in the `note` clause.
-* Improved support for ECF, including capabilities and redirection. 
-  Even if not all ECF options are supported by the Gobo tools, it is now 
+* Improved support for ECF, including capabilities and redirection.
+  Even if not all ECF options are supported by the Gobo tools, it is now
   possible to read an ECF file, make some modifications and write it back.
 * Fixed data race in `ET_CLASS.formal_parameter_type` when executed in
   multi-threaded mode.
@@ -829,7 +836,7 @@
 * Added support for once-per-thread.
 * Added support for multi-threading.
 * Fixed misused of `volatile` qualifier in the generated C code
-  when there is a rescue clause. It was declaring a variable 
+  when there is a rescue clause. It was declaring a variable
   pointing to a `volatile` object instead of a `volatile` variable
   pointing to an object.
 * Fixed bug when a routine had a local variable which was both
@@ -842,14 +849,14 @@
 
 ### gedoc
 
-* Fixed bug in the html format when the target of an assignment 
+* Fixed bug in the html format when the target of an assignment
   is a local variable. It was sometimes shown as a feature name.
-* Made `gedoc` multi-threaded. It runs almost 3 times faster on 
+* Made `gedoc` multi-threaded. It runs almost 3 times faster on
   a 4-CPU machine.
 
 ### gelint
 
-* Made `gelint` multi-threaded. It runs almost 3 times faster on 
+* Made `gelint` multi-threaded. It runs almost 3 times faster on
   a 4-CPU machine.
 
 ### Gobo Eiffel Kernel Library
@@ -871,12 +878,12 @@
 * Simplified the way built-in features are supported.
 * Moved some code from `ET_SYSTEM` to `ET_SYSTEM_PROCESSOR`
   to allow several system processor objects to work together
-  when analyzing the classes of an Eiffel system in a 
+  when analyzing the classes of an Eiffel system in a
   multi-threaded environment.
-* Added support for conditional expressions 
+* Added support for conditional expressions
   (e.g. `if b then exp1 else exp2 end`)
 * Interoperability with ISE Eiffel: local variables (including
-  'Result') are considered as 'detachable' (even when the 
+  'Result') are considered as 'detachable' (even when the
   'attached' keyword is explicitly specified).
 
 ### Gobo Eiffel Utility Library
@@ -917,7 +924,7 @@
 * Added buffered version of output file classes (`KL_BUFFERED_OUTPUT_FILE`
   and descendants).
 * Changed feature names and signatures in classes `KL_PART_COMPARATOR`
-  and `KL_COMPARATOR` in order to compile in void-safe mode with 
+  and `KL_COMPARATOR` in order to compile in void-safe mode with
   ISE 17.05.
 
 ### Gobo Eiffel Tools Library
@@ -929,7 +936,7 @@
   `ET_CLASS.reset_after_interface_checked`. The original arguments
   were not reset correctly.
 * Fixed bug in Tuple-type-unfolding mechanism after calling
-  `ET_CLASS.reset_after_features_flattened` or 
+  `ET_CLASS.reset_after_features_flattened` or
   `ET_CLASS.reset_after_ancestors_built`. The unfolded form was
   erroneously discarded.
 
@@ -948,16 +955,16 @@
   a fast SSD or memdisk.
   Not yet supported for the Gobo compiler.
 * Dropped support for the EIFGEN directory in task `<ise>`.
-* Relative pathnames in the `<inherit>` clause are now relative to 
+* Relative pathnames in the `<inherit>` clause are now relative to
   the directory containing the current eant file (and not relative
   to the working directory where geant is currently running).
-* Added optional attribute `fail_on_error` to task <delete> (true
+* Added optional attribute `fail_on_error` to task `<delete>` (true
   by default).
 * Added attributes `array_size` and `inspect_actions` to task `<gelex>`.
 * Added attribute `array_size` to task `<geyacc>`.
 * Moved the code/doc/examples/tests to `$GOBO/tool/geant`.
 * Moved the buildfiles to `$GOBO/library/common/config`. `geant` will
-  automatically redirect inherited files which were located in 
+  automatically redirect inherited files which were located in
   `$GOBO/misc` to the new location.
 
 ### gec
@@ -1051,20 +1058,19 @@
 * In order to be void-safe compliant, the generated token class has been
   made deferred (`last_value` attributes may be attached).
 * Made the generated parsers compilable in void-safe mode with ISE 7.3.
-* Added option `--rescue-on-abort` to generate a rescue clause in action 
+* Added option `--rescue-on-abort` to generate a rescue clause in action
   routines to catch abort exceptions. Useful when compiling in void-safe mode.
-* Added option `--array-size` and changed the default maximum size for 
+* Added option `--array-size` and changed the default maximum size for
   manifest arrays to be 200.
 * Fixed generation of manifest arrays when the size of the generated table
   is a multiple of the maximum array size.
 * Moved the code/doc/examples/tests to `$GOBO/tool/geyacc`.
-	
+
 ### Gobo Eiffel Argument Library
 
 * Made it compilable in void-safe mode with ISE 13.11.
 * Made the parameter of boolean options possibly optional.
 * Moved the doc/examples/tests to `$GOBO/library/argument`.
-
 
 ### Gobo Eiffel Kernel Library
 
@@ -1827,7 +1833,7 @@
   attributes `last_<type>_value` instead of `last_value`
   to be used to set the semantic values of tokens.
   Transition path: If you still want to use the old typing
-  mechanism (now made obsolete), use `geyacc` with the 
+  mechanism (now made obsolete), use `geyacc` with the
   command-line option `--old_typing` or with `geant`'s attribute
   `old_typing` in task `<geyacc>`. It is also recommended that you replace
   class `YY_PARSER_SKELETON` by `YY_OLD_PARSER_SKELETON` in your

@@ -55,6 +55,7 @@ inherit
 			report_inline_agent_formal_argument_declaration,
 			report_inline_agent_local_variable_declaration,
 			report_inline_agent_result_declaration,
+			report_inline_separate_argument,
 			report_inline_separate_argument_declaration,
 			report_integer_8_constant,
 			report_integer_16_constant,
@@ -1881,6 +1882,40 @@ feature {NONE} -- Event handling
 			end
 		end
 
+	report_inline_separate_argument (a_name: ET_IDENTIFIER; a_is_attached: BOOLEAN; a_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT)
+			-- Report that a call to inline separate argument `a_name' has been processed.
+			-- `a_is_attached' means that we know (with a CAP, Certified Attachment Pattern)
+			-- that this inline separate argument is attached at this position in the code.
+		local
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_attached_type: ET_DYNAMIC_TYPE
+			l_dynamic_attached_type_set: detachable ET_DYNAMIC_TYPE_SET
+		do
+			if current_type = current_dynamic_type.base_type then
+				if a_is_attached then
+					if not attached dynamic_type_set (a_name) as l_dynamic_type_set then
+							-- Internal error: this dynamic type set should already have been
+							-- set by `report_inline_separate_argument_declaration'.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_dynamic_type := l_dynamic_type_set.static_type
+						l_dynamic_attached_type := current_dynamic_system.attached_type (l_dynamic_type)
+						if l_dynamic_attached_type /= l_dynamic_type then
+								-- The dynamic type set for the attached version of the
+								-- inline separate argument has not been created yet.
+								-- `attached_index' was just pointing to a placeholder
+								-- (containing the dynamic type set associated with the
+								-- primary type of the inline separate argument).
+							l_dynamic_attached_type_set := new_dynamic_type_set (l_dynamic_attached_type)
+							set_dynamic_type_set (l_dynamic_attached_type_set, a_name)
+							propagate_cap_dynamic_types (a_inline_separate_argument.name, l_dynamic_type_set, l_dynamic_attached_type_set)
+						end
+					end
+				end
+			end
+		end
+
 	report_inline_separate_argument_declaration (a_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT; a_type: ET_TYPE_CONTEXT)
 			-- Report that the declaration of inline separate argument `a_inline_separate_argument'
 			-- of type `a_type' has been processed.
@@ -1889,10 +1924,15 @@ feature {NONE} -- Event handling
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-					-- Take care of the type of the inline separate argument name.
+					-- Take care of the type of the inline separate argument name
 				l_dynamic_type := current_dynamic_system.dynamic_type (tokens.identity_type, a_type)
 				l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
 				set_dynamic_type_set (l_dynamic_type_set, a_inline_separate_argument.name)
+					-- Reserve a placeholder in `dynamic_type_sets' for the attached version
+					-- of the inline separate argument, if later needed with a CAP
+					-- (Certified Attachment Pattern).
+				dummy_operand.set_index (a_inline_separate_argument.attached_index)
+				set_dynamic_type_set (l_dynamic_type_set, dummy_operand)
 				propagate_inline_separate_argument_dynamic_types (a_inline_separate_argument)
 			end
 		end

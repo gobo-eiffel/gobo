@@ -119,8 +119,8 @@ feature {LS_ABSTRACT_STDIN_MESSAGE_RECEIVER} -- Implementation
 			if {PLATFORM}.is_thread_capable or {PLATFORM}.is_scoop_capable then
 				lock_message_manager_mutex
 				separate message_manager as l_message_manager do
-					if attached l_message_manager as la_message_manager then
-						la_message_manager.on_message_received
+					if l_message_manager /= Void then
+						l_message_manager.on_message_received
 					end
 				end
 				unlock_message_manager_mutex

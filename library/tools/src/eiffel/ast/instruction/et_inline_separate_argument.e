@@ -5,7 +5,7 @@
 		"Eiffel arguments in inline separate instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2022-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2022-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_INLINE_SEPARATE_ARGUMENT
@@ -61,6 +61,15 @@ feature -- Access
 		do
 			Result := Current
 		end
+
+	index: INTEGER
+			-- Index of inline separate argument in enclosing feature;
+			-- Used to get dynamic information about this inline separate argumen.
+
+	attached_index: INTEGER
+			-- Index of attached version (with a CAP, Certified Attachment Pattern)
+			-- of inline separate argumen in enclosing feature;
+			-- Used to get dynamic information about this inline separate argumen.
 
 	position: ET_POSITION
 			-- Position of first character of
@@ -137,6 +146,26 @@ feature -- Setting
 			as_keyword := a_as
 		ensure
 			as_keyword_set: as_keyword = a_as
+		end
+
+	set_index (i: INTEGER)
+			-- Set `index' to `i'.
+		require
+			i_not_negative: i >= 0
+		do
+			index := i
+		ensure
+			index_set: index = i
+		end
+
+	set_attached_index (i: INTEGER)
+			-- Set `attached_index' to `i'.
+		require
+			i_not_negative: i >= 0
+		do
+			attached_index := i
+		ensure
+			attached_index_set: attached_index = i
 		end
 
 feature -- Processing
