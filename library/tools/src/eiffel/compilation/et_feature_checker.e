@@ -17202,6 +17202,7 @@ feature {NONE} -- Attachments
 		require
 			a_attachment_scope_not_void: a_attachment_scope /= Void
 		do
+			a_attachment_scope.wipe_out
 			unused_attachment_scopes.force_last (a_attachment_scope)
 		end
 
