@@ -29,7 +29,7 @@ feature -- Initialization
 			-- Reset component as it was just after it was last parsed.
 		do
 			iterable_expression.reset
-			item_name.reset
+			item_name.set_index (0)
 			if attached invariant_part as l_invariant_part then
 				l_invariant_part.reset
 			end
@@ -145,6 +145,7 @@ feature -- Unfolded form
 			cursor_item_expression.name.reset
 			cursor_after_expression.name.reset
 			cursor_forth_instruction.name.reset
+			unfolded_cursor_name.set_index (0)
 		end
 
 invariant
