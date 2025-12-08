@@ -5,11 +5,14 @@
 ### Gobo Eiffel Tools Library
 
 * Implemented CAP (Certified Attachment Pattern) for inline separate
-  arguments: `sepatate exp as x do if x /= Void then x.f end end`.
+  arguments (e.g. `sepatate exp as x do if x /= Void then x.f end end`).
 * Fixed bugs during incremental compilations (used a lot from VS Code
   to report errors as you type).
 * Fixed bug where some formal arguments were wrongly assumed to be
   attached.
+* Report correct error messages in case of name mismatches involving
+  arguments of inline separate instructions (e.g.
+  `sepatate exp1 as x do across exp2 as x loop x.f end end`).
 
 ## Version 25.12.04 - 4 December 2025
 
@@ -404,7 +407,8 @@
   (like `STRING_8` and `STRING_32`).
 * Removed support for `infix "..."` and `prefix "..."` syntax notations.
   We should use `alias "..."` instead, as described in the ECMA standard.
-* Added support for multiple aliases (e.g. `f alias "[]" alias "@" (i: INTEGER): T`).
+* Added support for multiple aliases (e.g.
+  `f alias "[]" alias "@" (i: INTEGER): T`).
 * Added support for quantifier expressions of the form `∀ x: list ¦ x > 0`
   as syntactic sugar for `across list is x all x > 0 end`.
 * Added support for quantifier expressions of the form `∃ x: list ¦ x > 0`

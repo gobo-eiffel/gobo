@@ -2403,8 +2403,9 @@ feature -- Validity errors
 	report_veen0a_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report VEEN error: `an_identifier', appearing in `a_feature'
 			-- of `a_class', is not the final name of a feature in `a_class'
-			-- nor the name of a local variable or a formal argument of
-			-- `a_feature'.
+			-- nor the name of an object-test local, of an iteration
+			-- item, of an inline separate argument, of a local variable or
+			-- of a formal argument of `a_feature'.
 			--
 			-- ETL2: p.276
 			-- ETR: p.61
@@ -2425,8 +2426,9 @@ feature -- Validity errors
 	report_veen0b_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
 			-- Report VEEN error: `an_identifier', appearing in inline
 			-- agent `an_agent' in `a_class', is not the final name of a feature
-			-- in `a_class' nor the name of a local variable or a formal argument of
-			-- `an_agent'.
+			-- in `a_class' nor the name of an object-test local, of an iteration
+			-- item, of an inline separate argument, of a local variable or
+			-- of a formal argument of `an_agent'.
 			--
 			-- ETL2: p.276
 			-- ETR: p.61
@@ -5016,6 +5018,7 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_name_not_void: a_name /= Void
+			a_name_is_argument: a_name.is_argument
 			a_feature_not_void: a_feature /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
@@ -5035,6 +5038,7 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_name_not_void: a_name /= Void
+			a_name_is_argument: a_name.is_argument
 			an_agent_not_void: an_agent /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
@@ -5042,6 +5046,63 @@ feature -- Validity errors
 			if reportable_vjaw_error (a_class) then
 				create an_error.make_vjaw0c (a_class, a_name, an_agent)
 				report_validity_error (an_error)
+			end
+		end
+
+	report_vjaw0d_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER)
+			-- Report VJAW error: `a_name' is supposed to be a Writable but
+			-- it is an object-test local.
+			--
+			-- Only in ISE Eiffel.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_object_test_local: a_name.is_object_test_local
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vjaw_error (a_class) then
+				create l_error.make_vjaw0d (a_class, a_name)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vjaw0e_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER)
+			-- Report VJAW error: `a_name' is supposed to be a Writable but
+			-- it is an iteration item.
+			--
+			-- Only in ISE Eiffel.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_iteration_item: a_name.is_iteration_item
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vjaw_error (a_class) then
+				create l_error.make_vjaw0e (a_class, a_name)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vjaw0f_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER)
+			-- Report VJAW error: `a_name' is supposed to be a Writable but
+			-- it is an inline separate argument.
+			--
+			-- Only in ISE Eiffel.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_inline_separate_argument: a_name.is_inline_separate_argument
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vjaw_error (a_class) then
+				create l_error.make_vjaw0f (a_class, a_name)
+				report_validity_error (l_error)
 			end
 		end
 
@@ -5593,6 +5654,26 @@ feature -- Validity errors
 			if reportable_voit2_error (a_class) then
 				create an_error.make_voit2e (a_class, a_iteration_component1, a_iteration_component2)
 				report_validity_error (an_error)
+			end
+		end
+
+	report_voit2f_error (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT)
+			-- Report VOIT-2 error: `a_iteration_component' appears in the scope
+			-- of the inline separate argument of `a_inline_separate_argument'
+			-- with the same name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_iteration_component_not_void: a_iteration_component /= Void
+			a_inline_separate_argument_not_void: a_inline_separate_argument /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_voit2_error (a_class) then
+				create l_error.make_voit2f (a_class, a_iteration_component, a_inline_separate_argument)
+				report_validity_error (l_error)
 			end
 		end
 
