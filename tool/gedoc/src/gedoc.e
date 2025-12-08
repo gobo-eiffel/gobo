@@ -13,13 +13,12 @@ inherit
 
 	GEDOC_VERSION
 
+	ET_GOBO_CLI
+
 	KL_SHARED_EXCEPTIONS
 		export {NONE} all end
 
 	KL_SHARED_ARGUMENTS
-		export {NONE} all end
-
-	KL_SHARED_EXECUTION_ENVIRONMENT
 		export {NONE} all end
 
 	UT_SHARED_ISE_VERSIONS
@@ -438,79 +437,32 @@ feature -- Argument parsing
 
 	set_override_settings (a_option: like setting_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
 			-- Set 'override_settings' of `a_format' with information passed in `a_option'.
-			-- Report usage message and exit in case of invalid input.
 		require
 			a_option_not_void: a_option /= Void
 			a_parser_not_void: a_parser /= Void
 			a_format_not_void: a_format /= Void
-		local
-			l_override_settings: detachable ET_ECF_SETTINGS
 		do
-			if not a_option.parameters.is_empty then
-				create l_override_settings.make
-				l_override_settings.set_primary_values_from_definitions (a_option.parameters)
-			end
-			a_format.set_override_settings (l_override_settings)
+			a_format.set_override_settings (settings_from_cli_value (a_option.parameters, False))
 		end
 
 	set_override_capabilities (a_option: like capability_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
 			-- Set 'override_capabilities' of `a_format' with information passed in `a_option'.
-			-- Report usage message and exit in case of invalid input.
 		require
 			a_option_not_void: a_option /= Void
 			a_parser_not_void: a_parser /= Void
 			a_format_not_void: a_format /= Void
-		local
-			l_override_capabilities: detachable ET_ECF_CAPABILITIES
 		do
-			if not a_option.parameters.is_empty then
-				create l_override_capabilities.make
-				l_override_capabilities.set_primary_use_values_from_definitions (a_option.parameters)
-			end
-			a_format.set_override_capabilities (l_override_capabilities)
+			a_format.set_override_capabilities (capabilities_from_cli_value (a_option.parameters))
 		end
 
 	set_override_variables (a_option: like variable_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
 			-- Set 'override_variables' of `a_format' with information passed in `a_option'.
-			-- Report usage message and exit in case of invalid input.
 		require
 			a_option_not_void: a_option /= Void
 			a_parser_not_void: a_parser /= Void
 			a_format_not_void: a_format /= Void
-		local
-			l_override_variables: ET_ECF_VARIABLES
-			l_definition: STRING
-			l_index: INTEGER
-			l_gobo_eiffel: detachable STRING
 		do
-			l_gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
-			if l_gobo_eiffel = Void or else l_gobo_eiffel.is_empty then
-				if ise_option.was_found then
-					l_gobo_eiffel := "ise"
-				else
-					l_gobo_eiffel := "ge"
-				end
-				Execution_environment.set_variable_value ("GOBO_EIFFEL", l_gobo_eiffel)
-			end
-			if not a_option.parameters.is_empty then
-				create l_override_variables.make
-				across a_option.parameters as i_variable loop
-					if attached i_variable as l_variable then
-						l_definition := l_variable
-						if l_definition.count > 0 then
-							l_index := l_definition.index_of ('=', 1)
-							if l_index = 0 then
-								l_override_variables.set_primary_value (l_definition, "")
-							elseif l_index = l_definition.count then
-								l_override_variables.set_primary_value (l_definition.substring (1, l_index - 1), "")
-							elseif l_index /= 1 then
-								l_override_variables.set_primary_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
-							end
-						end
-					end
-				end
-			end
-			a_format.set_override_variables (l_override_variables)
+			a_format.set_override_variables (variables_from_cli_value (a_option.parameters, False, ise_option.was_found))
 		end
 
 	set_class_filters (a_option: like class_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
@@ -566,17 +518,12 @@ feature -- Argument parsing
 			a_thread_option_not_void: a_thread_option /= Void
 		local
 			l_thread_count: INTEGER
+			l_option_value: detachable INTEGER_REF
 		do
-			l_thread_count := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 - 3
-			if a_thread_option.was_found then
-				l_thread_count := a_thread_option.parameter
-				if l_thread_count <= 0 then
-					l_thread_count := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 + l_thread_count
-				end
+			if thread_option.was_found then
+				l_option_value := thread_option.parameter
 			end
-			if l_thread_count < 1 or not {PLATFORM}.is_thread_capable then
-				l_thread_count := 1
-			end
+			l_thread_count := thread_count_from_cli_value (l_option_value)
 			Result := {ET_SYSTEM_PROCESSOR_FACTORY}.new_system_processor (l_thread_count)
 			Result.set_error_handler (error_handler)
 		ensure

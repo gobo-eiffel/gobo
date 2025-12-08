@@ -12,10 +12,10 @@ class GEC
 inherit
 
 	GEC_VERSION
+	ET_GOBO_CLI
 
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
-	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_STANDARD_FILES
 	KL_SHARED_OPERATING_SYSTEM
 	KL_SHARED_FILE_SYSTEM
@@ -554,17 +554,13 @@ feature -- Arguments
 
 	thread_count: INTEGER
 			-- Number of threads to be used
+		local
+			l_option_value: detachable INTEGER_REF
 		do
-			Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 - 3
 			if thread_option.was_found then
-				Result := thread_option.parameter
-				if Result <= 0 then
-					Result := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 + Result
-				end
+				l_option_value := thread_option.parameter
 			end
-			if Result < 1 or not {PLATFORM}.is_thread_capable then
-				Result := 1
-			end
+			Result := thread_count_from_cli_value (l_option_value)
 		ensure
 			thread_count_not_negative: Result >= 1
 		end
@@ -866,105 +862,29 @@ feature -- Argument parsing
 
 	set_override_settings (a_option: like setting_option; a_parser: AP_PARSER)
 			-- Set `override_settings' with information passed in `a_option'.
-			-- Report usage message and exit in case of invalid input.
 		require
 			a_option_not_void: a_option /= Void
 			a_parser_not_void: a_parser /= Void
-		local
-			l_override_settings: detachable ET_ECF_SETTINGS
-			l_gobo_cli_setting_variable_value: detachable STRING
-			l_gobo_default_setting_variable_value: detachable STRING
-			l_splitter: ST_SPLITTER
 		do
-			if attached Execution_environment.variable_value (gobo_default_setting_variable_name) as l_variable_value and then not l_variable_value.is_empty then
-				l_gobo_default_setting_variable_value := l_variable_value
-			end
-			if attached Execution_environment.variable_value (gobo_cli_setting_variable_name) as l_variable_value and then not l_variable_value.is_empty then
-				l_gobo_cli_setting_variable_value := l_variable_value
-			end
-			if not a_option.parameters.is_empty or is_finalize or l_gobo_default_setting_variable_value /= Void or l_gobo_cli_setting_variable_value /= Void then
-				create l_override_settings.make
-				if l_gobo_default_setting_variable_value /= Void then
-					create l_splitter.make_with_separators (", ")
-					l_override_settings.set_primary_values_from_definitions (l_splitter.split (l_gobo_default_setting_variable_value))
-				end
-				l_override_settings.set_primary_values_from_definitions (a_option.parameters)
-				if l_gobo_cli_setting_variable_value /= Void then
-					create l_splitter.make_with_separators (", ")
-					l_override_settings.set_primary_values_from_definitions (l_splitter.split (l_gobo_cli_setting_variable_value))
-				end
-				if is_finalize then
-					l_override_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.finalize_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
-				end
-			end
-			override_settings := l_override_settings
+			override_settings := settings_from_cli_value (a_option.parameters, is_finalize)
 		end
 
 	set_override_capabilities (a_option: like capability_option; a_parser: AP_PARSER)
 			-- Set `override_capabilities' with information passed in `a_option'.
-			-- Report usage message and exit in case of invalid input.
 		require
 			a_option_not_void: a_option /= Void
 			a_parser_not_void: a_parser /= Void
-		local
-			l_override_capabilities: detachable ET_ECF_CAPABILITIES
-			l_gobo_cli_capability_variable_value: detachable STRING
-			l_gobo_default_capability_variable_value: detachable STRING
-			l_splitter: ST_SPLITTER
 		do
-			if attached Execution_environment.variable_value (gobo_default_capability_variable_name) as l_variable_value and then not l_variable_value.is_empty then
-				l_gobo_default_capability_variable_value := l_variable_value
-			end
-			if attached Execution_environment.variable_value (gobo_cli_capability_variable_name) as l_variable_value and then not l_variable_value.is_empty then
-				l_gobo_cli_capability_variable_value := l_variable_value
-			end
-			if not a_option.parameters.is_empty or l_gobo_default_capability_variable_value /= Void or l_gobo_cli_capability_variable_value /= Void then
-				create l_override_capabilities.make
-				if l_gobo_default_capability_variable_value /= Void then
-					create l_splitter.make_with_separators (", ")
-					l_override_capabilities.set_primary_use_values_from_definitions (l_splitter.split (l_gobo_default_capability_variable_value))
-				end
-				l_override_capabilities.set_primary_use_values_from_definitions (a_option.parameters)
-				if l_gobo_cli_capability_variable_value /= Void then
-					create l_splitter.make_with_separators (", ")
-					l_override_capabilities.set_primary_use_values_from_definitions (l_splitter.split (l_gobo_cli_capability_variable_value))
-				end
-			end
-			override_capabilities := l_override_capabilities
+			override_capabilities := capabilities_from_cli_value (a_option.parameters)
 		end
 
 	set_override_variables (a_option: like variable_option; a_parser: AP_PARSER)
 			-- Set `override_variables' with information passed in `a_option'.
-			-- Report usage message and exit in case of invalid input.
 		require
 			a_option_not_void: a_option /= Void
 			a_parser_not_void: a_parser /= Void
-		local
-			l_override_variables: ET_ECF_VARIABLES
-			l_definition: STRING
-			l_index: INTEGER
 		do
-			create l_override_variables.make
-			l_override_variables.set_primary_value ("GOBO_EIFFEL", "ge")
-			Execution_environment.set_variable_value ("GOBO_EIFFEL", "ge")
-			if not a_option.parameters.is_empty then
-				across a_option.parameters as i_variable loop
-					if attached i_variable as l_variable then
-						l_definition := l_variable
-						if l_definition.count > 0 then
-							l_index := l_definition.index_of ('=', 1)
-							if l_index = 0 then
-								l_override_variables.set_primary_value (l_definition, "")
-							elseif l_index = l_definition.count then
-								l_override_variables.set_primary_value (l_definition.substring (1, l_index - 1), "")
-							elseif l_index /= 1 then
-								l_override_variables.set_primary_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
-							end
-						end
-					end
-				end
-			end
-			override_variables := l_override_variables
+			override_variables := variables_from_cli_value (a_option.parameters, True, False)
 		end
 
 	set_split_size (a_option: like split_size_option; a_parser: AP_PARSER)
@@ -1025,26 +945,6 @@ feature -- Argument parsing
 		end
 
 feature {NONE} -- Environment variables
-
-	gobo_cli_setting_variable_name: STRING = "GOBO_CLI_SETTING"
-			-- Environment variable name to specify settings
-			-- as if they were specified with the command-line
-			-- argument '--setting'.
-
-	gobo_default_setting_variable_name: STRING = "GOBO_DEFAULT_SETTING"
-			-- Environment variable name to specify settings
-			-- which are not overridden with the command-line
-			-- argument '--setting'.
-
-	gobo_cli_capability_variable_name: STRING = "GOBO_CLI_CAPABILITY"
-			-- Environment variable name to specify capabilities
-			-- as if they were specified with the command-line
-			-- argument '--capability'.
-
-	gobo_default_capability_variable_name: STRING = "GOBO_DEFAULT_CAPABILITY"
-			-- Environment variable name to specify capabilities
-			-- which are not overridden with the command-line
-			-- argument '--capability'.
 
 	gobo_cli_gc_variable_name: STRING = "GOBO_CLI_GC"
 			-- Environment variable name to specify the GC to

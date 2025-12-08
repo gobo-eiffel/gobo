@@ -13,14 +13,14 @@
 <chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/usage">
 <chapterinfo>
 	<copyright>
-		<year>2017-2023</year>
+		<year>2017-2025</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>22 September 2025</date>
+	<date>6 December 2025</date>
 </chapterinfo>
 
 <title>Using gedoc</title>
@@ -245,6 +245,81 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 		</term>
 		<listitem><para>
 			Print the version number of <projectname>gedoc</projectname> and exit.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</para>
+</section>
+
+<section><title>Environment variables</title>
+<para>
+It is possible to override some of the command-line options above, or
+the default values for these options, using environment variables.
+<variablelist>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_CLI_SETTING</filename>
+		</term>
+		<listitem><para>
+			Override settings as if they were specified with the command-line
+			option <filename>--setting</filename>, or override their values
+			if they are also specified with the command-line option.
+			Several settings can be specified in this environment variable,
+			separated by a comma or a space.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_DEFAULT_SETTING</filename>
+		</term>
+		<listitem><para>
+			Override the default value for a given setting when the command-line
+			option <filename>--setting</filename> or the environment variable
+			<filename>$GOBO_CLI_SETTING</filename> did not set it. Several settings
+			can be specified in this environment variable, separated by a comma or
+			a space.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_CLI_CAPABILITY</filename>
+		</term>
+		<listitem><para>
+			Override capabilities as if they were specified with the command-line
+			option <filename>--capability</filename>, or override their values
+			if they are also specified with the command-line option.
+			Several capabilities can be specified in this environment variable,
+			separated by a comma or a space.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_DEFAULT_CAPABILITY</filename>
+		</term>
+		<listitem><para>
+			Override the default value for a given capability when the command-line
+			option <filename>--capability</filename> or the environment variable
+			<filename>$GOBO_CLI_CAPABILITY</filename> did not set it. Several capabilities
+			can be specified in this environment variable, separated by a comma or
+			a space.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_CLI_THREAD</filename>
+		</term>
+		<listitem><para>
+			Override the command-line option <filename>--thread</filename>.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>$GOBO_DEFAULT_THREAD</filename>
+		</term>
+		<listitem><para>
+			Override the default value when the command-line option <filename>--thread</filename>
+			has not been specified and the environment variable <filename>$GOBO_CLI_THREAD</filename>
+			has not been set.
 		</para></listitem>
 	</varlistentry>
 </variablelist>
