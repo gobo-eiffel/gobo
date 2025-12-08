@@ -207,6 +207,9 @@ create
 	make_vjaw0a,
 	make_vjaw0b,
 	make_vjaw0c,
+	make_vjaw0d,
+	make_vjaw0e,
+	make_vjaw0f,
 	make_vjrv0a,
 	make_vkcn1a,
 	make_vkcn1b,
@@ -234,6 +237,7 @@ create
 	make_voit2c,
 	make_voit2d,
 	make_voit2e,
+	make_voit2f,
 	make_voit3a,
 	make_vomb1a,
 	make_vomb2a,
@@ -3488,7 +3492,8 @@ feature {NONE} -- Initialization
 	make_veen0a (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Create a new VEEN error: `an_identifier', appearing in `a_feature'
 			-- of `a_class', is not the final name of a feature in `a_class'
-			-- nor the name of a local variable or a formal argument of
+			-- nor the name of an object-test local, of an iteration item, of an inline
+			-- separate argument, of a local variable or of a formal argument of
 			-- `a_feature'.
 			--
 			-- ETL2: p.276
@@ -3534,7 +3539,8 @@ feature {NONE} -- Initialization
 	make_veen0b (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
 			-- Create a new VEEN error: `an_identifier', appearing in inline agent
 			-- `an_agent' in `a_class', is not the final name of a feature in `a_class'
-			-- nor the name of a local variable or a formal argument of
+			-- nor the name of an object-test local, of an iteration item, of an inline
+			-- separate argument, of a local variable or of a formal argument of
 			-- `an_agent'.
 			--
 			-- ETL2: p.276
@@ -8987,6 +8993,7 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_name_not_void: a_name /= Void
+			a_name_is_argument: a_name.is_argument
 			a_feature_not_void: a_feature /= Void
 		do
 			current_class := a_class
@@ -9030,6 +9037,7 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_name_not_void: a_name /= Void
+			a_name_is_argument: a_name.is_argument
 			an_agent_not_void: an_agent /= Void
 		do
 			current_class := a_class
@@ -9060,6 +9068,129 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = formal argument name
+		end
+
+	make_vjaw0d (a_class: ET_CLASS; a_name: ET_IDENTIFIER)
+			-- Create a new VJAW error: `a_name' is supposed to be a Writable but
+			-- it is an object-test local.
+			--
+			-- Only in ISE Eiffel.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_object_test_local: a_name.is_object_test_local
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (vjaw0d_template_code)
+			etl_code := vjaw_etl_code
+			default_template := default_message_template (vjaw0d_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = object-test local name
+		end
+
+	make_vjaw0e (a_class: ET_CLASS; a_name: ET_IDENTIFIER)
+			-- Create a new VJAW error: `a_name' is supposed to be a Writable but
+			-- it is an iteration item.
+			--
+			-- Only in ISE Eiffel.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_iteration_item: a_name.is_iteration_item
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (vjaw0e_template_code)
+			etl_code := vjaw_etl_code
+			default_template := default_message_template (vjaw0e_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = iteration item name
+		end
+
+	make_vjaw0f (a_class: ET_CLASS; a_name: ET_IDENTIFIER)
+			-- Create a new VJAW error: `a_name' is supposed to be a Writable but
+			-- it is an inline separate argument.
+			--
+			-- Only in ISE Eiffel.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_name_is_inline_separate_argument: a_name.is_inline_separate_argument
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (vjaw0f_template_code)
+			etl_code := vjaw_etl_code
+			default_template := default_message_template (vjaw0f_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = inline separate argument name
 		end
 
 	make_vjrv0a (a_class, a_class_impl: ET_CLASS; a_target: ET_WRITABLE; a_target_type: ET_NAMED_TYPE)
@@ -10285,6 +10416,46 @@ feature {NONE} -- Initialization
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (a_iteration_component1.item_name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = iteration item name
+		end
+
+	make_voit2f (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT;  a_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT)
+			-- Create a new VOIT-2 error: `a_iteration_component' appears in the scope
+			-- of the inline separate argument of `a_inline_separate_argument'
+			-- with the same name.
+			--
+			-- Not in ECMA.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_iteration_component_not_void: a_iteration_component /= Void
+			a_inline_separate_argument_not_void: a_inline_separate_argument /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_iteration_component.item_name.position
+			code := template_code (voit2f_template_code)
+			etl_code := voit2_etl_code
+			default_template := default_message_template (voit2f_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_iteration_component.item_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -17884,8 +18055,8 @@ feature {NONE} -- Implementation
 	vdus2b_default_template: STRING = "cannot undefine the attribute `$7'."
 	vdus3a_default_template: STRING = "cannot undefine the deferred feature `$7'."
 	vdus4a_default_template: STRING = "feature name `$7' appears twice in the Undefine subclause of parent $8."
-	veen0a_default_template: STRING = "`$7' appears in feature `$8', but it is not the final name of a feature in class $6 nor the name of a local variable or formal argument of feature `$8'."
-	veen0b_default_template: STRING = "`$7' appears in an inline agent, but it is not the final name of a feature in class $6 nor the name of a local variable or formal argument of this inline agent."
+	veen0a_default_template: STRING = "`$7' appears in feature `$8', but it is not the final name of a feature in class $6 nor the name of an object-test local, of an iteration item, of an inline separate argument, of a local variable, or of a formal argument of feature `$8'."
+	veen0b_default_template: STRING = "`$7' appears in an inline agent, but it is not the final name of a feature in class $6 nor the name of an object-test local, of an iteration item, of an inline separate argument, of a local variable, or of a formal argument of this inline agent."
 	veen2a_default_template: STRING = "entity 'Result' appears in the body, postcondition or rescue clause of a procedure `$7'."
 	veen2b_default_template: STRING = "entity 'Result' appears in the precondition of feature `$7'."
 	veen2c_default_template: STRING = "local entity `$7' appears in the precondition or postcondition of feature `$8'."
@@ -18001,6 +18172,9 @@ feature {NONE} -- Implementation
 	vjaw0a_default_template: STRING = "feature `$7' is not an attribute. A Writable is either a local variable (including Result) or an attribute."
 	vjaw0b_default_template: STRING = "`$7' is the name of a formal argument of feature `$8'. A Writable is either a local variable (including Result) or an attribute."
 	vjaw0c_default_template: STRING = "`$7' is the name of a formal argument of an inline agent. A Writable is either a local variable (including Result) or an attribute."
+	vjaw0d_default_template: STRING = "`$7' is the name of an object-test local. A Writable is either a local variable (including Result) or an attribute."
+	vjaw0e_default_template: STRING = "`$7' is the name of an iteration item. A Writable is either a local variable (including Result) or an attribute."
+	vjaw0f_default_template: STRING = "`$7' is the name of an inline separate argument. A Writable is either a local variable (including Result) or an attribute."
 	vjrv0a_default_template: STRING = "the type '$7' of the target entity of the assignment attempt is not a reference type."
 	vkcn1a_default_template: STRING = "query `$8' of class $9 appears in a call instruction."
 	vkcn1b_default_template: STRING = "tuple label `$7' appears in a call instruction."
@@ -18028,6 +18202,7 @@ feature {NONE} -- Implementation
 	voit2c_default_template: STRING = "iteration item name '$6' is also the name of a local variable of an enclosing feature or inline agent."
 	voit2d_default_template: STRING = "iteration with item name '$6' appears in the scope of an object-test local with the same name."
 	voit2e_default_template: STRING = "iteration with item name '$6' appears in the scope of another iteration item with the same name."
+	voit2f_default_template: STRING = "iteration with item name '$6' appears in the scope of an inline separate argument with the same name."
 	voit3a_default_template: STRING = "'$6' appearing in '@$6' is not the name of an iteration item."
 	vomb1a_default_template: STRING = "inspect expression of type '$7' different from INTEGER or CHARACTER."
 	vomb2a_default_template: STRING = "inspect constant of type '$7' different from type '$8' of inspect expression."
@@ -18573,6 +18748,9 @@ feature {NONE} -- Implementation
 	vjaw0a_template_code: STRING = "vjaw0a"
 	vjaw0b_template_code: STRING = "vjaw0b"
 	vjaw0c_template_code: STRING = "vjaw0c"
+	vjaw0d_template_code: STRING = "vjaw0d"
+	vjaw0e_template_code: STRING = "vjaw0e"
+	vjaw0f_template_code: STRING = "vjaw0f"
 	vjrv0a_template_code: STRING = "vjrv0a"
 	vkcn1a_template_code: STRING = "vkcn1a"
 	vkcn1b_template_code: STRING = "vkcn1b"
@@ -18600,6 +18778,7 @@ feature {NONE} -- Implementation
 	voit2c_template_code: STRING = "voit2c"
 	voit2d_template_code: STRING = "voit2d"
 	voit2e_template_code: STRING = "voit2e"
+	voit2f_template_code: STRING = "voit2f"
 	voit3a_template_code: STRING = "voit3a"
 	vomb1a_template_code: STRING = "vomb1a"
 	vomb2a_template_code: STRING = "vomb2a"

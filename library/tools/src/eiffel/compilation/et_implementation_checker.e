@@ -557,8 +557,8 @@ feature {NONE} -- Feature validity
 			if flat_mode and not an_error_in_parent then
 				feature_checker.set_precursor_queries (precursor_queries)
 			end
-			check_assertions_validity (a_query, a_query, an_error_in_parent)
 			feature_checker.check_feature_validity (a_query, current_class)
+			check_assertions_validity (a_query, a_query, an_error_in_parent)
 			feature_checker.set_precursor_queries (Void)
 			if feature_checker.has_fatal_error then
 				set_fatal_error (current_class)
@@ -582,8 +582,8 @@ feature {NONE} -- Feature validity
 			if flat_mode and not an_error_in_parent then
 				feature_checker.set_precursor_procedures (precursor_procedures)
 			end
-			check_assertions_validity (a_procedure, a_procedure, an_error_in_parent)
 			feature_checker.check_feature_validity (a_procedure, current_class)
+			check_assertions_validity (a_procedure, a_procedure, an_error_in_parent)
 			feature_checker.set_precursor_procedures (Void)
 			if feature_checker.has_fatal_error then
 				set_fatal_error (current_class)

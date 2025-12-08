@@ -1,0 +1,11 @@
+{
+	"no-duplicate-heading": {
+		"siblings_only": true
+	},
+	"descriptive-link-text": {
+		"prohibited_texts": []
+	},
+	"no-inline-html": {
+		"allowed_elements": ["br"]
+	}
+}

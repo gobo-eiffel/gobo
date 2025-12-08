@@ -7639,16 +7639,31 @@ feature {NONE} -- Expression validity
 							-- object-test local with the same name.
 						set_fatal_error
 						error_handler.report_v1se2gd_error (current_class, l_argument, l_object_test)
+					elseif attached current_object_test_scope.hidden_object_test (l_name) as l_object_test then
+							-- Take into account object-tests in enclosing feature or inline agent as
+							-- well when in an inline agent.
+						set_fatal_error
+						error_handler.report_v1se2gd_error (current_class, l_argument, l_object_test)
 					end
 					if attached current_iteration_item_scope.iteration_component (l_name) as l_iteration_component then
 							-- This inline separate argument appears in the scope of an iteration
 							-- item with the same name.
 						set_fatal_error
 						error_handler.report_v1se2ge_error (current_class, l_argument, l_iteration_component)
+					elseif attached current_iteration_item_scope.hidden_iteration_component (l_name) as l_iteration_component then
+							-- Take into account iteration items in enclosing feature or inline agent as
+							-- well when in an inline agent.
+						set_fatal_error
+						error_handler.report_v1se2ge_error (current_class, l_argument, l_iteration_component)
 					end
 					if attached current_inline_separate_argument_scope.inline_separate_argument (l_name) as l_other_inline_separate_argument then
 							-- This inline separate argument appears in the scope of
 							-- another inline separate argument with the same name.
+						set_fatal_error
+						error_handler.report_v1se2gf_error (current_class, l_argument, l_other_inline_separate_argument)
+					elseif attached current_inline_separate_argument_scope.hidden_inline_separate_argument (l_name) as l_other_inline_separate_argument then
+							-- Take into account inline separate arguments in enclosing feature or inline agent as
+							-- well when in an inline agent.
 						set_fatal_error
 						error_handler.report_v1se2gf_error (current_class, l_argument, l_other_inline_separate_argument)
 					end
@@ -8206,7 +8221,7 @@ feature {NONE} -- Expression validity
 					end
 				end
 				if attached current_object_test_scope.object_test (l_item_name) as l_object_test then
-						-- This iteration item appears in the scope of a
+						-- This iteration item appears in the scope of an
 						-- object-test local with the same name.
 					l_had_error := True
 					set_fatal_error
@@ -8219,7 +8234,7 @@ feature {NONE} -- Expression validity
 					error_handler.report_voit2d_error (current_class, a_iteration_component, l_object_test)
 				end
 				if attached current_iteration_item_scope.iteration_component (l_item_name) as l_other_iteration_component then
-						-- This iteration item appears in the scope of an other iteration
+						-- This iteration item appears in the scope of another iteration
 						-- item with the same name.
 					l_had_error := True
 					set_fatal_error
@@ -8230,6 +8245,19 @@ feature {NONE} -- Expression validity
 					l_had_error := True
 					set_fatal_error
 					error_handler.report_voit2e_error (current_class, a_iteration_component, l_other_iteration_component)
+				end
+				if attached current_inline_separate_argument_scope.inline_separate_argument (l_item_name) as l_inline_separate_argument then
+						-- This iteration item appears in the scope of an
+						-- inline separate argument with the same name.
+					l_had_error := True
+					set_fatal_error
+					error_handler.report_voit2f_error (current_class, a_iteration_component, l_inline_separate_argument)
+				elseif attached current_inline_separate_argument_scope.hidden_inline_separate_argument (l_item_name) as l_inline_separate_argument then
+						-- Take into account inline separate arguments in enclosing feature or inline agent as
+						-- well when in an inline agent.
+					l_had_error := True
+					set_fatal_error
+					error_handler.report_voit2f_error (current_class, a_iteration_component, l_inline_separate_argument)
 				end
 			end
 				-- Type of iteration item.
@@ -9395,16 +9423,31 @@ feature {NONE} -- Expression validity
 						-- object-test local with the same name.
 					set_fatal_error
 					error_handler.report_vuot1d_error (current_class, an_expression, l_other_object_test)
+				elseif attached current_object_test_scope.hidden_object_test (l_name) as l_other_object_test then
+						-- Take into account object-tests in enclosing feature or inline agent as
+						-- well when in an inline agent.
+					set_fatal_error
+					error_handler.report_vuot1d_error (current_class, an_expression, l_other_object_test)
 				end
 				if attached current_iteration_item_scope.iteration_component (l_name) as l_iteration_component then
 						-- This object-test appears in the scope of an iteration
 						-- item with the same name.
 					set_fatal_error
 					error_handler.report_vuot1e_error (current_class, an_expression, l_iteration_component)
+				elseif attached current_iteration_item_scope.hidden_iteration_component (l_name) as l_iteration_component then
+						-- Take into account iteration items in enclosing feature or inline agent as
+						-- well when in an inline agent.
+					set_fatal_error
+					error_handler.report_vuot1e_error (current_class, an_expression, l_iteration_component)
 				end
 				if attached current_inline_separate_argument_scope.inline_separate_argument (l_name) as l_inline_separate_argument then
 						-- This object-test appears in the scope of an inline separate
 						-- argument with the same name.
+					set_fatal_error
+					error_handler.report_vuot1f_error (current_class, an_expression, l_inline_separate_argument)
+				elseif attached current_inline_separate_argument_scope.hidden_inline_separate_argument (l_name) as l_inline_separate_argument then
+						-- Take into account inline separate arguments in enclosing feature or inline agent as
+						-- well when in an inline agent.
 					set_fatal_error
 					error_handler.report_vuot1f_error (current_class, an_expression, l_inline_separate_argument)
 				end
@@ -11754,6 +11797,15 @@ feature {NONE} -- Expression validity
 						-- Internal error: invariants don't have writables.
 						error_handler.report_giaaa_error
 					end
+				elseif l_identifier.is_object_test_local then
+					set_fatal_error
+					error_handler.report_vjaw0d_error (current_class, l_identifier)
+				elseif l_identifier.is_iteration_item then
+					set_fatal_error
+					error_handler.report_vjaw0e_error (current_class, l_identifier)
+				elseif l_identifier.is_inline_separate_argument then
+					set_fatal_error
+					error_handler.report_vjaw0f_error (current_class, l_identifier)
 				elseif not l_identifier.is_feature_name then
 					set_fatal_error
 					if attached current_inline_agent as l_current_inline_agent then
