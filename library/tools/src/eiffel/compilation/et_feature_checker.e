@@ -8459,12 +8459,13 @@ feature {NONE} -- Expression validity
 					l_iteration_component := l_iteration_components.iteration_component (l_seed)
 					current_iteration_item_types.search (l_iteration_component)
 					if not current_iteration_item_types.found then
-							-- Internal error: the type of the iteration item should
-							-- have been determined when processing the header of the
-							-- iteration component itself. And this should have already
-							-- been done since we are in the scope of that iteration item.
+							-- The type of the iteration item should have been determined
+							-- when processing the header of the iteration component itself.
+							-- And this should have already been done since we are in the
+							-- scope of that iteration item. Here we don't have this type, which
+							-- means that an error had occurred (and had been reported)
+							-- when processing the iterable expression of the iteration component.
 						set_fatal_error
-						error_handler.report_giaaa_error
 					else
 						a_context.copy_type_context (current_iteration_item_types.found_item)
 						if a_name /= l_iteration_component.unfolded_cursor_name then

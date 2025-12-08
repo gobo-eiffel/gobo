@@ -6,6 +6,10 @@
 
 * Implemented CAP (Certified Attachment Pattern) for inline separate
   arguments: `sepatate exp as x do if x /= Void then x.f end end`.
+* Fixed bugs during incremental compilations (used a lot from VS Code
+  to report errors as you type).
+* Fixed bug where some formal arguments were wrongly assumed to be
+  attached.
 
 ## Version 25.12.04 - 4 December 2025
 
