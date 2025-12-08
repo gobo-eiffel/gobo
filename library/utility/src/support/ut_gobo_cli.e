@@ -27,7 +27,7 @@ feature -- Access
 		do
 			l_cpu_count := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32
 			l_user_defined := True
-			if attached Execution_environment.variable_value (gobo_cli_thread_variable_name) as l_variable_value and then not l_variable_value.is_integer then
+			if attached Execution_environment.variable_value (gobo_cli_thread_variable_name) as l_variable_value and then l_variable_value.is_integer then
 				Result := l_variable_value.to_integer
 			elseif attached a_cli_value as l_cli_value then
 				Result := l_cli_value.item
