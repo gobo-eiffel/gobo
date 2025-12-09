@@ -38294,11 +38294,7 @@ feature {NONE} -- Assertion generation
 			j, k, l_count: INTEGER
 			l_assertion: ET_ASSERTION
 			l_old_index_offset: INTEGER
-			l_old_max_nested_inlining_count: INTEGER
 		do
-				-- Limitation: no inlining in preconditions.
-			l_old_max_nested_inlining_count := max_nested_inlining_count
-			max_nested_inlining_count := 0
 			if attached {ET_FEATURE} a_feature as l_feature then
 				l_old_index_offset := index_offset
 				l_all_preconditions := current_feature.preconditions
@@ -38380,7 +38376,6 @@ feature {NONE} -- Assertion generation
 				print_assertions (l_preconditions_impl, c_ge_ex_pre)
 				print_after_assertions
 			end
-			max_nested_inlining_count := l_old_max_nested_inlining_count
 		end
 
 	print_all_postconditions (a_feature: ET_CLOSURE)
@@ -38395,11 +38390,7 @@ feature {NONE} -- Assertion generation
 			l_old_expression_exception_temp_variables: like old_expression_exception_temp_variables
 			l_temp: ET_IDENTIFIER
 			l_old_index_offset: INTEGER
-			l_old_max_nested_inlining_count: INTEGER
 		do
-				-- Limitation: no inlining in postconditions.
-			l_old_max_nested_inlining_count := max_nested_inlining_count
-			max_nested_inlining_count := 0
 			if attached {ET_FEATURE} a_feature as l_feature then
 				l_old_index_offset := index_offset
 				l_all_postconditions := current_feature.postconditions
@@ -38439,7 +38430,6 @@ feature {NONE} -- Assertion generation
 				l_old_expression_exception_temp_variables.forth
 			end
 			l_old_expression_exception_temp_variables.wipe_out
-			max_nested_inlining_count := l_old_max_nested_inlining_count
 		end
 
 	print_all_old_expression_declarations (a_feature: ET_CLOSURE)
@@ -38454,11 +38444,7 @@ feature {NONE} -- Assertion generation
 			i, nb: INTEGER
 			l_old_expressions: like old_expressions
 			l_old_index_offset: INTEGER
-			l_old_max_nested_inlining_count: INTEGER
 		do
-				-- Limitation: no inlining in postconditions.
-			l_old_max_nested_inlining_count := max_nested_inlining_count
-			max_nested_inlining_count := 0
 			l_old_expressions := old_expressions
 			l_old_expressions.wipe_out
 			old_expression_temp_variables.wipe_out
@@ -38481,7 +38467,6 @@ feature {NONE} -- Assertion generation
 				print_old_expression_declarations (l_old_expressions)
 				l_old_expressions.wipe_out
 			end
-			max_nested_inlining_count := l_old_max_nested_inlining_count
 		end
 
 	print_old_expression_declarations (a_old_expressions: DS_ARRAYED_LIST [ET_OLD_EXPRESSION])
@@ -46354,7 +46339,9 @@ feature {NONE} -- Inlined operands
 			current_type := current_feature.target_type
 			current_dynamic_type_sets := current_feature.dynamic_type_sets
 			current_index := current_feature.current_index
-			index_offset := 0
+			if current_feature /= l_old_feature then
+				index_offset := 0
+			end
 			l_dynamic_type_set := dynamic_type_set (a_expression)
 			current_feature := l_old_feature
 			current_type := current_feature.target_type
