@@ -13,7 +13,9 @@ on:
   pull_request:
 
 env:
-  GOBO_CLI_SETTING: exception_trace=true
+  GOBO_CLI_GC: no
+  GOBO_CLI_THREAD: 0
+  GOBO_DEFAULT_SETTING: exception_trace=true
 
 jobs:
 

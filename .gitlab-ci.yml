@@ -2,6 +2,7 @@
 
 variables:
   GOBO: '$CI_PROJECT_DIR'
+  GOBO_CLI_THREAD: 0
 
 #
 # Build Gobo tools.
