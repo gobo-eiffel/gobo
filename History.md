@@ -2,6 +2,11 @@
 
 ## Version xx.xx.xx - xxxxxxx
 
+### gec
+
+* Fixed bug when inlining code in inherited assertions (preconditions,
+  postconditions and invariants).
+
 ### Gobo Eiffel Tools Library
 
 * Implemented CAP (Certified Attachment Pattern) for inline separate
