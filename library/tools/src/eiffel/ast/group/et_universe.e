@@ -407,31 +407,6 @@ feature -- Access
 			no_void_class: not Result.has_void
 		end
 
-	add_classes_by_wildcarded_name (a_wildcard: LX_DFA_WILDCARD; a_list: DS_HASH_SET [ET_CLASS])
-			-- Add to `a_list' all classes declared locally in current universe
-			-- whose name (in upper-case) matches `a_wildcard'.
-			-- Do not take into account overridden classes.
-		require
-			a_wildcard_not_void: a_wildcard /= Void
-			a_wildcard_compiled: a_wildcard.is_compiled
-			a_list_not_void: a_list /= Void
-		do
-			classes_do_all (agent do_class_by_wildcarded_name (?, a_wildcard, agent a_list.force_last))
-		end
-
-	add_classes_by_wildcarded_name_recursive (a_wildcard: LX_DFA_WILDCARD; a_list: DS_HASH_SET [ET_CLASS])
-			-- Add to `a_list' all classes declared locally in current universe,
-			-- or recursively in one of the universes it depends on,
-			-- whose name (in upper-case) matches `a_wildcard'.
-			-- Do not take into account overridden classes.
-		require
-			a_wildcard_not_void: a_wildcard /= Void
-			a_wildcard_compiled: a_wildcard.is_compiled
-			a_list_not_void: a_list /= Void
-		do
-			universes_do_recursive (agent {ET_UNIVERSE}.add_classes_by_wildcarded_name (a_wildcard, a_list))
-		end
-
 	classes_in_group (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS]
 			-- Classes declared locally in current universe which are in `a_group'.
 			-- Overridden and ignored classes are also taken into account.
@@ -2112,6 +2087,60 @@ feature -- Built-in convert features
 	string_32_convert_feature: ET_BUILTIN_CONVERT_FEATURE
 			-- Built-in conversion feature to STRING_32
 
+feature -- Basic operations
+
+	add_classes_by_wildcarded_name (a_wildcard: LX_DFA_WILDCARD; a_set: DS_HASH_SET [ET_CLASS])
+			-- Add to `a_set' all classes declared locally in current universe
+			-- whose name (in upper-case) matches `a_wildcard'.
+			-- Do not take into account overridden classes.
+		require
+			a_wildcard_not_void: a_wildcard /= Void
+			a_wildcard_compiled: a_wildcard.is_compiled
+			a_set_not_void: a_set /= Void
+		do
+			classes_do_all (agent do_class_by_wildcarded_name (?, a_wildcard, agent a_set.force_last))
+		end
+
+	add_classes_by_wildcarded_name_recursive (a_wildcard: LX_DFA_WILDCARD; a_set: DS_HASH_SET [ET_CLASS])
+			-- Add to `a_set' all classes declared locally in current universe,
+			-- or recursively in one of the universes it depends on,
+			-- whose name (in upper-case) matches `a_wildcard'.
+			-- Do not take into account overridden classes.
+		require
+			a_wildcard_not_void: a_wildcard /= Void
+			a_wildcard_compiled: a_wildcard.is_compiled
+			a_set_not_void: a_set /= Void
+		do
+			universes_do_recursive (agent {ET_UNIVERSE}.add_classes_by_wildcarded_name (a_wildcard, a_set))
+		end
+
+	add_classes_if_wildcarded_universe_name (a_wildcard: LX_DFA_WILDCARD; a_set: DS_HASH_SET [ET_CLASS])
+			-- Add to `a_set' all classes declared locally in current universe
+			-- if its name (in lower-case) matches `a_wildcard'.
+			-- Do not take into account overridden classes.
+		require
+			a_wildcard_not_void: a_wildcard /= Void
+			a_wildcard_compiled: a_wildcard.is_compiled
+			a_set_not_void: a_set /= Void
+		do
+			if a_wildcard.recognizes (lower_name) then
+				classes_do_all (agent a_set.force_last)
+			end
+		end
+
+	add_classes_if_wildcarded_universe_name_recursive (a_wildcard: LX_DFA_WILDCARD; a_set: DS_HASH_SET [ET_CLASS])
+			-- Add to `a_set' all classes declared locally in current universe,
+			-- or recursively in one of the universes it depends on,
+			-- if their names (in lower-case) match `a_wildcard'.
+			-- Do not take into account overridden classes.
+		require
+			a_wildcard_not_void: a_wildcard /= Void
+			a_wildcard_compiled: a_wildcard.is_compiled
+			a_set_not_void: a_set /= Void
+		do
+			universes_do_recursive (agent {ET_UNIVERSE}.add_classes_if_wildcarded_universe_name (a_wildcard, a_set))
+		end
+
 feature -- Iteration
 
 	classes_do_all (an_action: PROCEDURE [ET_CLASS])
@@ -2628,6 +2657,19 @@ feature -- Actions
 		do
 			if a_wildcard.recognizes (a_class.upper_name) then
 				a_action.call ([a_class])
+			end
+		end
+
+	do_universe_by_wildcarded_name (a_wildcard: LX_DFA_WILDCARD; a_action: PROCEDURE [ET_UNIVERSE])
+			-- Execute `a_action' on current universe if its name (in lower-case) matches `a_wildcard'.
+			-- Do nothing otherwise.
+		require
+			a_wildcard_not_void: a_wildcard /= Void
+			a_wildcard_compiled: a_wildcard.is_compiled
+			a_action_not_void: a_action /= Void
+		do
+			if a_wildcard.recognizes (lower_name) then
+				a_action.call ([Current])
 			end
 		end
 

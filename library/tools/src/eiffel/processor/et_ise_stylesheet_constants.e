@@ -4,7 +4,7 @@
 
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ISE_STYLESHEET_CONSTANTS
@@ -60,117 +60,184 @@ feature -- Access
 			-- CSS class "necluster"	
 
 	css_file_content: STRING = "[
-BODY {
-	BACKGROUND-COLOR: white;
+body {
+	font-family: "PT Sans", sans-serif;
 }
 
-A {
-    TEXT-DECORATION: none;
+pre {
+	tab-size: 3;
+	-moz-tab-size: 3;
+	-ms-tab-size: 3;
+	-o-tab-size: 3;
+	font-family: Tahoma, sans-serif;
+	line-height: 1.35;
+	font-size: 13.6px;
+	clear: both;
 }
 
-A:hover {
-    TEXT-DECORATION: underline;
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
 }
 
 .eclass {
-    COLOR: blue;
-    FONT-STYLE: italic;
+	color: blue;
 }
 
 .neclass {
-    COLOR: black;
-    FONT-STYLE: italic;
+	color: black;
 }
 
 .ekeyword {
-    COLOR: navy;
-    FONT-WEIGHT: bold;
+	color: navy;
+	font-weight: bold;
+	font-size: 90%;
 }
 
 .esymbol {
-    COLOR: navy;
+	color: navy;
 }
 
 .eitag {
-    COLOR: sienna;
-    FONT: 91% "Courier New", serif;
+	color: sienna;
+	font-weight: 95%;
 }
 
 .estring {
-    COLOR: indigo;
-    FONT: 91% "Courier New", serif;
+	color: indigo;
+	font-weight: 95%;
 }
 
 .echar {
-    COLOR: indigo;
-    FONT-WEIGHT: bold;
+	color: indigo;
 }
 
 .enumber {
-    COLOR: indigo;
-    FONT-WEIGHT: bold;
+	color: MediumOrchid;
 }
 
 .etag {
-    COLOR: sienna;
+	color: Teal; /*DarkOliveGreen;*/
 }
 
 .efeature {
-    COLOR: darkgreen;
-    FONT-STYLE: italic;
+	color: darkgreen;
 }
 
 .nefeature {
-    COLOR: black;
-    FONT-STYLE: italic;
+	color: black;
 }
 
 .ecomment {
-    COLOR: red;
-    FONT: 80% "Courier New", serif;
+	color: brown;
+	font-weight: 80%;
 }
 
 .elocal, .equoted {
-    COLOR: darkred;
-    FONT-STYLE: italic;
+	color: RoyalBlue;
 }
 
 .ereserved {
-    COLOR: darkgreen;
-    FONT-STYLE: italic;
-    FONT-WEIGHT: bold;
+	color: darkgreen;
+	font-weight: bold;
 }
 
 .egeneric {
-    FONT-STYLE: italic;
-	COLOR: dodgerblue;
+	color: dodgerblue;
 }
 
 .ecluster {
-    COLOR: maroon;
-    FONT-STYLE: italic;
-    FONT-WEIGHT: bold;
+	color: maroon;
+	font-variant: small-caps;
+	font-weight: bold;
 }
 
 .necluster {
-    COLOR: black;
-    FONT-STYLE: italic;
-    FONT-WEIGHT: bold;
+	color: black;
+	font-variant: small-caps;
+	font-weight: bold;
 }
 
-.link1 {
-	BACKGROUND-COLOR: #006633;
-	COLOR: white;
+div.nav {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
 }
 
-.link2 {
-	BACKGROUND-COLOR: #330066;
-	COLOR: white;
+a.nav,
+label.nav,
+span.nav
+{
+	flex-grow: 1;
+	display: block;
+	padding: 1ex 0.5em;
+	text-decoration: none;
+	text-align: center;
 }
 
-.nolink1, .nolink2 {
-	BACKGROUND-COLOR: #FFCC00;
-	COLOR: #330066;
+.nav.goto
+{
+	flex-grow: 10000;
+	text-align: right;
+}
+
+input
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 0.2em;
+	margin: 0;
+	border: none;
+}
+
+.nav
+{
+	color: black;
+}
+
+.nav.selected
+{
+	color: white;
+}
+
+.nav.hierarchy
+{
+	background-color: rgb(209,230,220);
+}
+
+.nav.hierarchy:hover {
+	background-color: rgb(163,204,186);
+}
+
+.nav.hierarchy.selected
+{
+	background-color: rgb(85,155,123);
+}
+
+.nav.class
+{
+	background-color: rgb(178,209,240);
+}
+
+.nav.class:hover {
+	background-color: rgb(157,196,236);
+}
+
+.nav.class.selected
+{
+	background-color: rgb(68,143,218);
+}
+
+.nav + pre {
+	padding: 1ex 0.3em;
+}
+
+form + pre + form.nav + pre {
+	padding: 0px;
 }
 ]"
 			-- Content of css file

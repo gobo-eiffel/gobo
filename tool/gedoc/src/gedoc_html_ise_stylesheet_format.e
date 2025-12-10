@@ -9,7 +9,7 @@
 			ec -filter html-stylesheet -all -config project.ecf
 	]"
 
-	copyright: "Copyright (c) 2017-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class GEDOC_HTML_ISE_STYLESHEET_FORMAT
@@ -115,7 +115,7 @@ feature {NONE} -- Processing
 			print_goto_file (l_class_chart_mapping)
 			l_feature_mapping := feature_mapping (l_input_classes)
 			print_class_list_file (a_system, l_class_chart_mapping, l_feature_mapping, l_root_path)
-			l_universe_mapping := universe_mapping (a_system)
+			l_universe_mapping := universe_mapping (l_input_classes)
 			print_index_file (a_system, l_universe_mapping, l_class_chart_mapping, l_feature_mapping, l_root_path)
 			print_group_list_file (a_system, l_universe_mapping, l_root_path)
 			print_group_hierarchy_file (a_system, l_universe_mapping, l_root_path)
@@ -254,8 +254,8 @@ feature {NONE} -- Output
 					l_printer.print_bom
 					l_title := concat (universe_lower_name (a_system), titla_suffix_documentation)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
-					l_file.put_string (html_start_pre)
 					print_navigation_bar (Void, True, True, True, False, False, False, a_root_path, l_file)
+					l_file.put_string (html_start_pre)
 						-- General.
 					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
 					l_printer.print_string (title_system)
@@ -272,19 +272,18 @@ feature {NONE} -- Output
 					l_printer.dedent
 					l_printer.print_new_line
 						-- Root class.
-					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
-					l_printer.print_string (title_root_class)
-					l_printer.print_end_span
-					l_printer.print_new_line
-					l_printer.indent
 					l_root_type := a_system.root_type
-					if l_root_type = Void then
-						l_root_type := a_system.any_type
+					if l_root_type /= Void then
+						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
+						l_printer.print_string (title_root_class)
+						l_printer.print_end_span
+						l_printer.print_new_line
+						l_printer.indent
+						l_printer.print_class_header (l_root_type.base_class, False)
+						l_printer.print_new_line
+						l_printer.dedent
+						l_printer.print_new_line
 					end
-					l_printer.print_class_header (l_root_type.base_class, False)
-					l_printer.print_new_line
-					l_printer.dedent
-					l_printer.print_new_line
 						-- Groups.
 					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
 					l_printer.print_string (title_groups)
@@ -299,8 +298,8 @@ feature {NONE} -- Output
 					end
 					l_printer.dedent
 					l_printer.print_new_line
+					l_file.put_string (html_end_pre)
 					print_navigation_bar (Void, True, True, True, False, False, False, a_root_path, l_file)
-					l_file.put_line (html_end_pre)
 					print_footer (l_file)
 					l_printer.set_null_file
 					l_printer.reset
@@ -344,8 +343,8 @@ feature {NONE} -- Output
 					l_line_splitter := line_splitter
 					l_title := concat (universe_lower_name (a_system), title_suffix_class_dictionary)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
-					l_file.put_string (html_start_pre)
 					print_navigation_bar (Void, False, True, True, False, False, False, a_root_path, l_file)
+					l_file.put_string (html_start_pre)
 					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
 					l_printer.print_string (title_classes)
 					l_printer.print_end_span
@@ -370,8 +369,8 @@ feature {NONE} -- Output
 						l_printer.print_new_line
 					end
 					l_printer.dedent
+					l_file.put_string (html_end_pre)
 					print_navigation_bar (Void, False, True, True, False, False, False, a_root_path, l_file)
-					l_file.put_line (html_end_pre)
 					print_footer (l_file)
 					l_printer.set_null_file
 					l_printer.reset
@@ -409,8 +408,8 @@ feature {NONE} -- Output
 					l_printer.print_bom
 					l_title := concat (universe_lower_name (a_system), title_suffix_alphabetical_group_list)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
-					l_file.put_string (html_start_pre)
 					print_navigation_bar (Void, True, False, True, False, False, False, a_root_path, l_file)
+					l_file.put_string (html_start_pre)
 					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
 					l_printer.print_string (title_groups)
 					l_printer.print_end_span
@@ -424,8 +423,8 @@ feature {NONE} -- Output
 					end
 					l_printer.dedent
 					l_printer.print_new_line
+					l_file.put_string (html_end_pre)
 					print_navigation_bar (Void, True, False, True, False, False, False, a_root_path, l_file)
-					l_file.put_line (html_end_pre)
 					print_footer (l_file)
 					l_printer.set_null_file
 					l_printer.reset
@@ -463,8 +462,8 @@ feature {NONE} -- Output
 					l_printer.print_bom
 					l_title := concat (universe_lower_name (a_system), title_suffix_group_hierarchy)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
-					l_file.put_string (html_start_pre)
 					print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
+					l_file.put_string (html_start_pre)
 					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
 					l_printer.print_string (title_groups)
 					l_printer.print_end_span
@@ -483,8 +482,8 @@ feature {NONE} -- Output
 					end
 					l_printer.dedent
 					l_printer.print_new_line
+					l_file.put_string (html_end_pre)
 					print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
-					l_file.put_line (html_end_pre)
 					print_footer (l_file)
 					l_printer.set_null_file
 					l_printer.reset
@@ -535,9 +534,9 @@ feature {NONE} -- Output
 					l_printer.print_bom
 						-- Header.
 					print_header (a_universe.kind_capitalized_name + " " + l_universe_name, keyword_eiffel_group, a_root_path, l_file)
-					l_file.put_string (html_start_pre)
 					print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
 						-- Universe name.
+					l_file.put_string (html_start_pre)
 					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
 					l_printer.print_string (a_universe.kind_capitalized_name)
 					l_printer.print_end_span
@@ -577,9 +576,9 @@ feature {NONE} -- Output
 					end
 					l_printer.dedent
 					l_printer.print_new_line
+					l_file.put_string (html_end_pre)
 						-- Footer.
 					print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
-					l_file.put_line (html_end_pre)
 					print_footer (l_file)
 					l_printer.set_null_file
 					l_printer.reset
@@ -887,21 +886,24 @@ feature {NONE} -- Output
 			a_file.put_line (header_line_1)
 			a_file.put_line (header_line_2)
 			a_file.put_line (header_line_3)
-			a_file.put_string (header_line_4a)
-			a_file.put_string (a_keywords)
-			a_file.put_line (header_line_4b)
+			a_file.put_line (header_line_4)
 			a_file.put_string (header_line_5a)
-			a_file.put_string (a_title)
+			a_file.put_string (a_keywords)
 			a_file.put_line (header_line_5b)
-			a_file.put_string (header_line_6a)
+			a_file.put_line (header_line_6)
+			a_file.put_line (header_line_7)
+			a_file.put_string (header_line_8a)
+			a_file.put_string (a_title)
+			a_file.put_line (header_line_8b)
+			a_file.put_string (header_line_9a)
 			a_file.put_string (a_root_path)
-			a_file.put_line (header_line_6b)
-			a_file.put_string (header_line_7a)
+			a_file.put_line (header_line_9b)
+			a_file.put_string (header_line_10a)
 			a_file.put_string (a_root_path)
-			a_file.put_line (header_line_7b)
-			a_file.put_line (header_line_8)
-			a_file.put_line (header_line_9)
-			a_file.put_line (header_line_10)
+			a_file.put_line (header_line_10b)
+			a_file.put_line (header_line_11)
+			a_file.put_line (header_line_12)
+			a_file.put_line (header_line_13)
 		end
 
 	print_footer (a_file: KI_TEXT_OUTPUT_STREAM)
@@ -914,6 +916,7 @@ feature {NONE} -- Output
 			a_file.put_line (footer_line_2)
 			a_file.put_line (footer_line_3)
 			a_file.put_line (footer_line_4)
+			a_file.put_new_line
 		end
 
 	print_navigation_bar (a_class_name: detachable STRING; a_class_list, a_group_list, a_group_hierarchy, a_class_chart, a_class_links, a_class_text: BOOLEAN; a_root_path: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
@@ -1031,17 +1034,17 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 								-- Header.
 							l_title := concat (l_class_name, title_suffix_chart)
 							print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
-							l_file.put_string (html_start_pre)
 							print_navigation_bar (l_class_name, True, True, True, False, True, True, a_root_path, l_file)
 								-- Content.
+							l_file.put_string (html_start_pre)
 							print_class_header (a_class, l_printer)
 							print_class_general (a_class, a_universe_mapping, l_printer)
 							print_class_relation (a_class, title_parents, a_parent_classes, l_printer)
 							print_feature_signatures (a_class.queries, title_queries, l_printer)
 							print_feature_signatures (a_class.procedures, title_commands, l_printer)
+							l_file.put_string (html_end_pre)
 								-- Footer.
 							print_navigation_bar (l_class_name, True, True, True, False, True, True, a_root_path, l_file)
-							l_file.put_line (html_end_pre)
 							print_footer (l_file)
 							l_printer.set_null_file
 							l_printer.reset
@@ -1097,17 +1100,17 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 								-- Header.
 							l_title := concat (l_class_name, title_suffix_relations)
 							print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
-							l_file.put_string (html_start_pre)
 							print_navigation_bar (l_class_name, True, True, True, True, False, True, a_root_path, l_file)
 								-- Content.
+							l_file.put_string (html_start_pre)
 							print_class_header (a_class, l_printer)
 							print_class_relation (a_class, title_parents, a_parent_classes, l_printer)
 							print_class_relation (a_class, title_heirs, a_heir_classes, l_printer)
 							print_class_relation (a_class, title_clients, a_client_classes, l_printer)
 							print_class_relation (a_class, title_suppliers, a_suppliers_classes, l_printer)
+							l_file.put_string (html_end_pre)
 								-- Footer.
 							print_navigation_bar (l_class_name, True, True, True, True, False, True, a_root_path, l_file)
-							l_file.put_line (html_end_pre)
 							print_footer (l_file)
 							l_printer.set_null_file
 							l_printer.reset
@@ -1158,11 +1161,11 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 							l_printer.print_bom
 							l_title := concat (l_class_name, title_suffix_text)
 							print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
+							print_navigation_bar (l_class_name, True, True, True, True, True, False, a_root_path, l_file)
 							l_file.put_string (html_start_pre)
-							print_navigation_bar (l_class_name, True, True, True, True, True, False, a_root_path, l_file)
 							a_class.process (l_printer)
+							l_file.put_string (html_end_pre)
 							print_navigation_bar (l_class_name, True, True, True, True, True, False, a_root_path, l_file)
-							l_file.put_line (html_end_pre)
 							print_footer (l_file)
 							l_printer.set_null_file
 							l_printer.reset
@@ -1180,15 +1183,17 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 
 feature {NONE} -- Mapping
 
-	universe_mapping (a_system: ET_SYSTEM): DS_HASH_TABLE [STRING, ET_UNIVERSE]
-			-- Universes in `a_system', sorted by name
-			-- Mapping between universe in `a_system' and the
+	universe_mapping (a_input_classes: like input_classes): DS_HASH_TABLE [STRING, ET_UNIVERSE]
+			-- Universes containing all classes in `a_input_classes', sorted by name
+			-- Mapping between these universes and the
 			-- name of file for these universes (relative to
 			-- `output_directory'), ordered by universe names.
 		require
-			a_system_not_void: a_system /= Void
+			a_input_classes_not_void: a_input_classes /= Void
+			no_void_input_class: not a_input_classes.has_void
 		local
-			l_list: DS_ARRAYED_LIST [ET_UNIVERSE]
+			l_universes: DS_HASH_SET [ET_UNIVERSE]
+			l_class: ET_CLASS
 			l_universes_by_name: DS_HASH_TABLE [ET_UNIVERSE, STRING]
 			l_names: DS_ARRAYED_LIST [STRING]
 			l_universe: ET_UNIVERSE
@@ -1198,17 +1203,22 @@ feature {NONE} -- Mapping
 			l_name_comparator: KL_AGENT_COMPARATOR [STRING]
 			l_filename: STRING
 		do
-			create l_list.make_default
-			a_system.universes_do_recursive (agent l_list.force_last)
-			nb := l_list.count
+			nb := a_input_classes.count
+			create l_universes.make (nb)
+			from i := 1 until i > nb loop
+				l_class := a_input_classes.item (i)
+				l_universes.force_last (l_class.universe)
+				i := i + 1
+			end
+			nb := l_universes.count
 			create l_universes_by_name.make (nb)
 			create l_names.make (nb)
-			from i := 1 until i > nb loop
-				l_universe := l_list.item (i)
+			from l_universes.start until l_universes.after loop
+				l_universe := l_universes.item_for_iteration
 				create l_name.make_from_string (universe_lower_name (l_universe))
 				l_names.put_last (l_name)
 				l_universes_by_name.put_last (l_universe, l_name)
-				i := i + 1
+				l_universes.forth
 			end
 			create l_name_comparator.make (agent STRING_.is_less)
 			create l_name_sorter.make (l_name_comparator)
@@ -1785,133 +1795,142 @@ feature {NONE} -- Constants
 	html_end_pre: STRING = "</pre>"
 			-- </pre>
 
-	header_line_1: STRING = "<HTML>"
+	header_line_1: STRING = "<!DOCTYPE html>"
 			-- 1rst line in HTML header
 
-	header_line_2: STRING = "<HEAD>"
+	header_line_2: STRING = "<html>"
 			-- 2nd line in HTML header
 
-	header_line_3: STRING = "<META NAME=%"generator%" CONTENT=%"Gobo Eiffel Doc%">"
+	header_line_3: STRING = "<head>"
 			-- 3rd line in HTML header
 
-	header_line_4a: STRING = "<META NAME=%"keywords%" content=%""
-			-- 4th line in HTML header, first part
+	header_line_4: STRING = "<meta name=%"generator%" content=%"Gobo Eiffel Doc%">"
+			-- 4th line in HTML header
 
-	header_line_4b: STRING =  "%"/>"
-			-- 4th line in HTML header, second part
-
-	header_line_5a: STRING = "<TITLE>"
+	header_line_5a: STRING = "<meta name=%"keywords%" content=%""
 			-- 5th line in HTML header, first part
 
-	header_line_5b: STRING = "</TITLE>"
+	header_line_5b: STRING =  "%"/>"
 			-- 5th line in HTML header, second part
 
-	header_line_6a: STRING = "<LINK REL=%"stylesheet%" HREF=%""
-			-- 6th line in HTML header, first part
+	header_line_6: STRING = "<meta name=%"viewport%" content=%"width=device-width, initial-scale=1.0%">"
+			-- 6th line in HTML header
 
-	header_line_6b: STRING = "default.css%" TYPE=%"text/css%">"
-			-- 6th line in HTML header, second part
+	header_line_7: STRING = "<link href=%"https://fonts.googleapis.com/css?family=PT+Sans%" rel=%"stylesheet%">"
+			-- 7th line in HTML header
 
-	header_line_7a: STRING = "<SCRIPT TYPE=%"text/javascript%" SRC=%""
-			-- 7th line in HTML header, first part
+	header_line_8a: STRING = "<title>"
+			-- 8th line in HTML header, first part
 
-	header_line_7b: STRING = "goto.js%"></SCRIPT>"
-			-- 7th line in HTML header, second part
+	header_line_8b: STRING = "</title>"
+			-- 8th line in HTML header, second part
 
-	header_line_8: STRING = "</HEAD>"
-			-- 8th line in HTML header
+	header_line_9a: STRING = "<link rel=%"stylesheet%" href=%""
+			-- 9th line in HTML header, first part
 
-	header_line_9: STRING = "<BODY>"
-			-- 9th line in HTML header
+	header_line_9b: STRING = "default.css%" type=%"text/css%">"
+			-- 9th line in HTML header, second part
 
-	header_line_10: STRING = "<P ALIGN=%"CENTER%">Automatic generation produced by Gobo Eiffel Doc</P>"
-			-- 10th line in HTML header
+	header_line_10a: STRING = "<script type=%"text/javascript%" src=%""
+			-- 10th line in HTML header, first part
 
-	footer_line_1: STRING = "<P ALIGN=%"CENTER%"> &#045;&#045; Generated by Gobo Eiffel Doc&#045;&#045; "
+	header_line_10b: STRING = "goto.js%"></script>"
+			-- 10th line in HTML header, second part
+
+	header_line_11: STRING = "</head>"
+			-- 11th line in HTML header
+
+	header_line_12: STRING = "<body>"
+			-- 12th line in HTML header
+
+	header_line_13: STRING = "<p align=%"center%">Automatic generation produced by Gobo Eiffel Doc</P>"
+			-- 13th line in HTML header
+
+	footer_line_1: STRING = "<p align=%"center%"> &#045;&#045; Generated by Gobo Eiffel Doc&#045;&#045; "
 			-- 1rst line in HTML footer
 
-	footer_line_2: STRING = "<BR>For more details: <A HREF=%"https://www.gobosoft.com%">www.gobosoft.com</A></P>"
+	footer_line_2: STRING = "<br>For more details: <a href=%"https://www.gobosoft.com%">www.gobosoft.com</a></p>"
 			-- 2nd line in HTML footer
 
-	footer_line_3: STRING = "</BODY>"
+	footer_line_3: STRING = "</body>"
 			-- 3rd line in HTML footer
 
-	footer_line_4: STRING = "</HTML>"
+	footer_line_4: STRING = "</html>"
 			-- 4th line in HTML footer
 
-	navigation_line_1a: STRING = "<FORM ONSUBMIT=%"go_to('"
+	navigation_line_1a: STRING = "<form class=%"nav%" onsubmit=%"go_to('"
 			-- 1rst line in HTML navigation bar, first part
 
 	navigation_line_1b: STRING = "',this.c.value);return false;%">"
 			-- 1rst line in HTML navigation bar, second part
 
-	navigation_line_2: STRING = "<TABLE CELLSPACING=%"5%" CELLPADDING=%"4%"><TR>"
+	navigation_line_2: STRING = "<div class=%"nav%">"
 			-- 2nd line in HTML navigation bar
 
-	navigation_line_3a: STRING = "<TD CLASS=%"link1%"><A CLASS=%"link1%" HREF=%""
+	navigation_line_3a: STRING = "<a class=%"nav hierarchy%" href=%""
 			-- 3rd line in HTML navigation bar, first part
 
-	navigation_line_3b: STRING = "class_list.html%">Classes</A></TD>"
+	navigation_line_3b: STRING = "class_list.html%">Classes</a>"
 			-- 3rd line in HTML navigation bar, second part
 
-	navigation_line_4: STRING = "<TD CLASS=%"nolink1%">Classes</TD>"
+	navigation_line_4: STRING = "<span class=%"nav hierarchy selected%">Classes</span>"
 			-- 4th line in HTML navigation bar
 
-	navigation_line_5a: STRING = "<TD CLASS=%"link1%"><A CLASS=%"link1%" HREF=%""
+	navigation_line_5a: STRING = "<a class=%"nav hierarchy%" href=%""
 			-- 5th line in HTML navigation bar, first part
 
-	navigation_line_5b: STRING = "group_list.html%">Groups</A></TD>"
+	navigation_line_5b: STRING = "group_list.html%">Groups</a>"
 			-- 5th line in HTML navigation bar, second part
 
-	navigation_line_6: STRING = "<TD CLASS=%"nolink1%">Groups</TD>"
+	navigation_line_6: STRING = "<span class=%"nav hierarchy selected%">Groups</span>"
 			-- 6th line in HTML navigation bar
 
-	navigation_line_7a: STRING = "<TD CLASS=%"link1%"><A CLASS=%"link1%" HREF=%""
+	navigation_line_7a: STRING = "<a class=%"nav hierarchy%" href=%""
 			-- 7th line in HTML navigation bar, first part
 
-	navigation_line_7b: STRING = "group_hierarchy.html%">Group hierarchy</A></TD>"
+	navigation_line_7b: STRING = "group_hierarchy.html%">Group hierarchy</a>"
 			-- 7th line in HTML navigation bar, second part
 
-	navigation_line_8: STRING = "<TD CLASS=%"nolink1%">Group hierarchy</TD>"
+	navigation_line_8: STRING = "<span class=%"nav hierarchy selected%">Group hierarchy</span>"
 			-- 8th line in HTML navigation bar
 
-	navigation_line_9a: STRING = "<TD CLASS=%"link2%"><A CLASS=%"link2%" HREF=%""
+	navigation_line_9a: STRING = "<a class=%"nav class%" href=%""
 			-- 9th line in HTML navigation bar, first part
 
-	navigation_line_9b: STRING = "_chart.html%">Chart</A></TD>"
+	navigation_line_9b: STRING = "_chart.html%">Chart</a>"
 			-- 9th line in HTML navigation bar, second part
 
-	navigation_line_10: STRING = "<TD CLASS=%"nolink2%">Chart</TD>"
+	navigation_line_10: STRING = "<span class=%"nav class selected%">Chart</span>"
 			-- 10th line in HTML navigation bar
 
-	navigation_line_11a: STRING = "<TD CLASS=%"link2%"><A CLASS=%"link2%" HREF=%""
+	navigation_line_11a: STRING = "<a class=%"nav class%" href=%""
 			-- 11th line in HTML navigation bar, first part
 
-	navigation_line_11b: STRING = "_links.html%">Relations</A></TD>"
+	navigation_line_11b: STRING = "_links.html%">Relations</a>"
 			-- 11th line in HTML navigation bar, second part
 
-	navigation_line_12: STRING = "<TD CLASS=%"nolink2%">Relations</TD>"
+	navigation_line_12: STRING = "<span class=%"nav class selected%">Relations</span>"
 			-- 12th line in HTML navigation bar
 
-	navigation_line_13a: STRING = "<TD CLASS=%"link2%"><A CLASS=%"link2%" HREF=%""
+	navigation_line_13a: STRING = "<a class=%"nav class%" href=%""
 			-- 13th line in HTML navigation bar, first part
 
-	navigation_line_13b: STRING = ".html%">Text</A></TD>"
+	navigation_line_13b: STRING = ".html%">Text</a>"
 			-- 13th line in HTML navigation bar, second part
 
-	navigation_line_14: STRING = "<TD CLASS=%"nolink2%">Text</TD>"
+	navigation_line_14: STRING = "<span class=%"nav class selected%">Text</span>"
 			-- 14th line in HTML navigation bar
 
-	navigation_line_15a: STRING = "<TD CLASS=%"link2%">Go to: <INPUT NAME=%"c%" VALUE=%""
+	navigation_line_15a: STRING = "<span class=%"nav class goto%">Go to: <input name=%"c%" value=%""
 			-- 15th line in HTML navigation bar, first part
 
-	navigation_line_15b: STRING = "%"></TD>"
+	navigation_line_15b: STRING = "%"></span>"
 			-- 15th line in HTML navigation bar, second part
 
-	navigation_line_16: STRING = "<TD CLASS=%"link2%">Go to: <INPUT NAME=%"c%" VALUE=%"%"></TD>"
+	navigation_line_16: STRING = "<span class=%"nav class goto%">Go to: <input name=%"c%" value=%"%"></span>"
 			-- 16th line in HTML navigation bar
 
-	navigation_line_17: STRING = "</TR></TABLE></FORM>"
+	navigation_line_17: STRING = "</div></form>"
 			-- 17th line in HTML navigation bar
 
 	filename_class_list: STRING = "class_list.html"

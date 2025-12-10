@@ -20,7 +20,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>6 December 2025</date>
+	<date>10 December 2025</date>
 </chapterinfo>
 
 <title>Using gedoc</title>
@@ -99,6 +99,22 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 			<filename>FOO*</filename> or <filename>@(FOO|BAR)</filename>.
 			This option can be used several times to specify several class
 			names.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>-l &lt;library_name&gt;</filename>
+		</term>
+		<term>
+			<filename>--library=&lt;library_name&gt;</filename>
+		</term>
+		<listitem><para>
+			Name of libraries whose classes will be processed. (default: process all classes
+			in the Eiffel project) The name can contain wildcards such as
+			<filename>str*</filename> or <filename>@(structure|string)</filename>.
+			This option can be used several times to specify several library
+			names. The name of a library is defined as follows in its ECF file:
+			<filename>&lt;system name=&quot;...&quot; ...&gt;</filename>.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
