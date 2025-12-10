@@ -3164,6 +3164,8 @@ feature {ET_AST_NODE} -- Processing
 
 	process_identifier (an_identifier: ET_IDENTIFIER)
 			-- Process `an_identifier'.
+		local
+			l_call: ET_UNQUALIFIED_CALL_EXPRESSION
 		do
 			if an_identifier.is_argument then
 				find_formal_argument_type (an_identifier, current_context)
@@ -3175,6 +3177,11 @@ feature {ET_AST_NODE} -- Processing
 				find_iteration_item_type (an_identifier, current_context)
 			elseif an_identifier.is_inline_separate_argument then
 				find_inline_separate_argument_type (an_identifier, current_context)
+			elseif an_identifier.is_feature_name then
+					-- Probably an attribute, target of a creation instruction.
+				create l_call.make (an_identifier, Void)
+				l_call.set_index (an_identifier.index)
+				find_unqualified_call_expression_type (l_call, current_context)
 			else
 					-- Internal error: invalid kind of identifier.
 					-- This error should have already been reported when checking
