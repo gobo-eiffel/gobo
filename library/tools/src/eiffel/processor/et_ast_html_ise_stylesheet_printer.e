@@ -540,7 +540,7 @@ feature -- Printing
 		end
 
 	print_start_a_class (a_css_class, a_href: STRING)
-			-- Print <A CLASS="`a_css_class'" HREF="`a_href'">.
+			-- Print <a class="`a_css_class'" href="`a_href'">.
 			-- Note that `a_href' is prefixed by `root_path' if not Void.
 		require
 			a_css_class_not_void: a_css_class /= Void
@@ -562,7 +562,7 @@ feature -- Printing
 		end
 
 	print_end_a
-			-- Print </A>.
+			-- Print </a>.
 		do
 			print_unescaped_string (html_end_a)
 		end
@@ -1083,26 +1083,26 @@ feature {NONE} -- Constants
 	html_quot: STRING = "&quot;"
 			-- Escaped '%"' symbol
 
-	html_start_span_class: STRING = "<SPAN CLASS="
-			-- <SPAN CLASS=
+	html_start_span_class: STRING = "<span class="
+			-- <span class=
 
-	html_start_span_title: STRING = "<SPAN TITLE="
-			-- <SPAN TITLE=
+	html_start_span_title: STRING = "<span title="
+			-- <span title=
 
-	html_end_span: STRING = "</SPAN>"
-			-- </SPAN>
+	html_end_span: STRING = "</span>"
+			-- </span>
 
-	html_start_a_name: STRING = "<A NAME="
-			-- <A NAME=
+	html_start_a_name: STRING = "<a name="
+			-- <a name=
 
-	html_start_a_class: STRING = "<A CLASS="
-			-- <A CLASS=
+	html_start_a_class: STRING = "<a class="
+			-- <a class=
 
-	html_end_a: STRING = "</A>"
-			-- </A>
+	html_end_a: STRING = "</a>"
+			-- </a>
 
-	html_href: STRING = "HREF="
-			-- HREF=
+	html_href: STRING = "href="
+			-- href=
 
 	string_was_declared_in: STRING  = " was declared in "
 			-- String constant
