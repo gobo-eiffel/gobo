@@ -197,7 +197,7 @@ feature -- Printing
 
 	print_cluster_names_recursive (a_clusters: ET_CLUSTERS)
 			-- Print names of `a_clusters' (one per line), and recursively
-			-- of their explicit subclusters (indented).
+			-- of their subclusters (indented).
 			-- Do not print comments.
 		require
 			a_clusters_not_void: a_clusters /= Void
@@ -211,16 +211,14 @@ feature -- Printing
 			nb := a_clusters.count
 			from i := 1 until i > nb loop
 				l_cluster := a_clusters.cluster (i)
-				if not l_cluster.is_implicit then
-					print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_necluster)
-					print_string_lower_case (l_cluster.name)
-					print_end_span
-					print_new_line
-					if attached l_cluster.subclusters as l_subclusters then
-						indent
-						print_cluster_names_recursive (l_subclusters)
-						dedent
-					end
+				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_necluster)
+				print_string_lower_case (l_cluster.name)
+				print_end_span
+				print_new_line
+				if attached l_cluster.subclusters as l_subclusters then
+					indent
+					print_cluster_names_recursive (l_subclusters)
+					dedent
 				end
 				i := i + 1
 			end
