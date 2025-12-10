@@ -115,7 +115,7 @@ feature {NONE} -- Processing
 			print_goto_file (l_class_chart_mapping)
 			l_feature_mapping := feature_mapping (l_input_classes)
 			print_class_list_file (a_system, l_class_chart_mapping, l_feature_mapping, l_root_path)
-			l_universe_mapping := universe_mapping (a_system)
+			l_universe_mapping := universe_mapping (l_input_classes)
 			print_index_file (a_system, l_universe_mapping, l_class_chart_mapping, l_feature_mapping, l_root_path)
 			print_group_list_file (a_system, l_universe_mapping, l_root_path)
 			print_group_hierarchy_file (a_system, l_universe_mapping, l_root_path)
@@ -272,19 +272,18 @@ feature {NONE} -- Output
 					l_printer.dedent
 					l_printer.print_new_line
 						-- Root class.
-					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
-					l_printer.print_string (title_root_class)
-					l_printer.print_end_span
-					l_printer.print_new_line
-					l_printer.indent
 					l_root_type := a_system.root_type
-					if l_root_type = Void then
-						l_root_type := a_system.any_type
+					if l_root_type /= Void then
+						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
+						l_printer.print_string (title_root_class)
+						l_printer.print_end_span
+						l_printer.print_new_line
+						l_printer.indent
+						l_printer.print_class_header (l_root_type.base_class, False)
+						l_printer.print_new_line
+						l_printer.dedent
+						l_printer.print_new_line
 					end
-					l_printer.print_class_header (l_root_type.base_class, False)
-					l_printer.print_new_line
-					l_printer.dedent
-					l_printer.print_new_line
 						-- Groups.
 					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
 					l_printer.print_string (title_groups)
@@ -1184,15 +1183,17 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 
 feature {NONE} -- Mapping
 
-	universe_mapping (a_system: ET_SYSTEM): DS_HASH_TABLE [STRING, ET_UNIVERSE]
-			-- Universes in `a_system', sorted by name
-			-- Mapping between universe in `a_system' and the
+	universe_mapping (a_input_classes: like input_classes): DS_HASH_TABLE [STRING, ET_UNIVERSE]
+			-- Universes containing all classes in `a_input_classes', sorted by name
+			-- Mapping between these universes and the
 			-- name of file for these universes (relative to
 			-- `output_directory'), ordered by universe names.
 		require
-			a_system_not_void: a_system /= Void
+			a_input_classes_not_void: a_input_classes /= Void
+			no_void_input_class: not a_input_classes.has_void
 		local
-			l_list: DS_ARRAYED_LIST [ET_UNIVERSE]
+			l_universes: DS_HASH_SET [ET_UNIVERSE]
+			l_class: ET_CLASS
 			l_universes_by_name: DS_HASH_TABLE [ET_UNIVERSE, STRING]
 			l_names: DS_ARRAYED_LIST [STRING]
 			l_universe: ET_UNIVERSE
@@ -1202,17 +1203,22 @@ feature {NONE} -- Mapping
 			l_name_comparator: KL_AGENT_COMPARATOR [STRING]
 			l_filename: STRING
 		do
-			create l_list.make_default
-			a_system.universes_do_recursive (agent l_list.force_last)
-			nb := l_list.count
+			nb := a_input_classes.count
+			create l_universes.make (nb)
+			from i := 1 until i > nb loop
+				l_class := a_input_classes.item (i)
+				l_universes.force_last (l_class.universe)
+				i := i + 1
+			end
+			nb := l_universes.count
 			create l_universes_by_name.make (nb)
 			create l_names.make (nb)
-			from i := 1 until i > nb loop
-				l_universe := l_list.item (i)
+			from l_universes.start until l_universes.after loop
+				l_universe := l_universes.item_for_iteration
 				create l_name.make_from_string (universe_lower_name (l_universe))
 				l_names.put_last (l_name)
 				l_universes_by_name.put_last (l_universe, l_name)
-				i := i + 1
+				l_universes.forth
 			end
 			create l_name_comparator.make (agent STRING_.is_less)
 			create l_name_sorter.make (l_name_comparator)

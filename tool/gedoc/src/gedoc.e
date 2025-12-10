@@ -110,6 +110,9 @@ feature -- Argument parsing
 	class_option: AP_STRING_OPTION
 			-- Option for '--class=<class_name>'
 
+	library_option: AP_STRING_OPTION
+			-- Option for '--library=<class_name>'
+
 	output_option: AP_STRING_OPTION
 			-- Option for '--output=<directory_name>'
 
@@ -194,6 +197,11 @@ feature -- Argument parsing
 			class_option.set_description ("Name (with wildcards) of classes to be processed.")
 			class_option.set_parameter_description ("class_name")
 			l_parser.options.force_last (class_option)
+				-- library.
+			create library_option.make ('l', "library")
+			library_option.set_description ("Name (with wildcards) of libraries to be processed.")
+			library_option.set_parameter_description ("library_name")
+			l_parser.options.force_last (library_option)
 				-- output directory.
 			create output_option.make ('o', "output")
 			output_option.set_description ("Directory for generated files. (default: next to each class file)")
@@ -305,6 +313,7 @@ feature -- Argument parsing
 				set_override_capabilities (capability_option, l_parser, l_format)
 				set_override_variables (variable_option, l_parser, l_format)
 				set_class_filters (class_option, l_parser, l_format)
+				set_library_filters (library_option, l_parser, l_format)
 				set_output_directory (output_option, l_parser, l_format)
 				l_format.set_force_flag (force_flag.was_found)
 				l_format.set_interactive_flag (interactive_flag.was_found)
@@ -319,6 +328,7 @@ feature -- Argument parsing
 		ensure
 			format_option_not_void: format_option /= Void
 			class_option_not_void: class_option /= Void
+			library_option_not_void: library_option /= Void
 			output_option_not_void: output_option /= Void
 			library_prefix_flag_not_void: library_prefix_flag /= Void
 			force_flag_not_void: force_flag /= Void
@@ -495,6 +505,36 @@ feature -- Argument parsing
 			end
 		end
 
+	set_library_filters (a_option: like class_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
+			-- Set 'library_filters' of `a_format' with information passed in `a_option'.
+			-- Report usage message and exit in case of invalid input.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+			a_format_not_void: a_format /= Void
+		local
+			l_wildcard: LX_DFA_WILDCARD
+			l_library_filters: DS_ARRAYED_LIST [LX_DFA_WILDCARD]
+		do
+			if not a_option.parameters.is_empty then
+				create l_library_filters.make (a_option.parameters.count)
+				across a_option.parameters as i_library_option loop
+					if attached i_library_option as l_library_filter and then not l_library_filter.is_empty then
+						create l_wildcard.compile_case_insensitive (l_library_filter)
+						if not l_wildcard.is_compiled then
+							report_invalid_library_option_error (l_library_filter)
+							exit_code := 1
+						else
+							l_library_filters.put_last (l_wildcard)
+						end
+					end
+				end
+				if not l_library_filters.is_empty then
+					a_format.set_library_filters (l_library_filters)
+				end
+			end
+		end
+
 	set_output_directory (a_option: like output_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
 			-- Set 'output_directory' of `a_format' with information passed in `a_option'.
 			-- Report usage message and exit in case of invalid input.
@@ -558,6 +598,17 @@ feature -- Error handling
 			report_error (l_error)
 		end
 
+	report_invalid_library_option_error (a_wildcard: STRING)
+			-- Report that the wildcard specified for `library_option' is invalid.
+		require
+			a_wildcard_not_void: a_wildcard /= Void
+		local
+			l_error: UT_MESSAGE
+		do
+			create l_error.make ("Invalid wildcard '" + a_wildcard + "' in option '--library'.")
+			report_error (l_error)
+		end
+
 	report_missing_output_option_error
 			-- Report that the specified format requires an output directory
 			-- but none was provided.
@@ -597,6 +648,7 @@ invariant
 	target_option_not_void: target_option /= Void
 	format_option_not_void: format_option /= Void
 	class_option_not_void: class_option /= Void
+	library_option_not_void: library_option /= Void
 	output_option_not_void: output_option /= Void
 	library_prefix_flag_not_void: library_prefix_flag /= Void
 	force_flag_not_void: force_flag /= Void

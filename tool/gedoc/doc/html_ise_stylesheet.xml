@@ -6,21 +6,21 @@
 		"HTML Format with ISE's stylesheet"
 
 	tool: "Gobo Eiffel Doc"
-	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
 	license: "MIT License"
 -->
 
 <chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/html_ise_stylesheet">
 <chapterinfo>
 	<copyright>
-		<year>2017-2019</year>
+		<year>2017-2025</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>15 March 2019</date>
+	<date>10 December 2025</date>
 </chapterinfo>
 
 <title>HTML Format with ISE's Stylesheet</title>
@@ -59,8 +59,8 @@ this option, files will not be overwritten and <projectname>gedoc</projectname> 
 emit an error message. Alternatively, the command-line option <filename>--interactive</filename>
 can be used. It will ask confirmation to the user before overwriting files. Finally, if
 you want to generate HTML documentation only for a subset of the classes in your Eiffel
-project, you can use the command-line option <filename>--class</filename> with some 
-wildcards.
+project, you can use the command-line options <filename>--class</filename> and
+<filename>--library</filename> with some wildcards.
 </para>
 </section>
 
