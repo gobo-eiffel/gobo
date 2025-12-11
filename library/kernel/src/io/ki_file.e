@@ -5,7 +5,7 @@
 		"Interface for files"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class KI_FILE
@@ -78,7 +78,7 @@ feature -- Basic operations
 
 	copy_file (new_name: STRING)
 			-- Copy current file to `new_name'.
-			-- Do nothing if the file could not be copied, if it
+			-- Do nothing if the current file could not be copied, if it
 			-- did not exist or if `new_name' is physically
 			-- the same file as current file. Overwrite `new_name'
 			-- if it already existed.

@@ -88,7 +88,7 @@ feature {GEDOC_EXPLICIT_CONVERTS_FORMAT} -- Processing
 						explicit_convert_expression_finder.find_explicit_convert_expressions (a_class, explicit_convert_expressions)
 						nb := explicit_convert_expressions.count
 						if nb > 0 then
-							l_filename := filename (l_directory, concat (class_lower_name (a_class), eiffel_file_extension))
+							l_filename := filename (l_directory, concat (class_lower_name (a_class), file_system.eiffel_extension))
 							if not is_file_overwritable (l_filename) then
 								report_file_already_exists_error (l_filename)
 							else
@@ -124,11 +124,6 @@ feature {NONE} -- Implementation
 
 	ast_printer: ET_AST_PRINTER
 			-- Printer for Eiffel code
-
-feature {NONE} -- Constants
-
-	eiffel_file_extension: STRING = ".e"
-			-- Extension for Eiffel files
 
 invariant
 

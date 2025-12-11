@@ -5,7 +5,7 @@
 		"Test task 'copy'"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2010-2018, Sven Ehrke and others"
+	copyright: "Copyright (c) 2010-2025, Sven Ehrke and others"
 	license: "MIT License"
 
 class GEANT_FUNCTIONAL_COPY_TEST
@@ -60,21 +60,11 @@ feature -- Test
 
 	test_copy3
 			-- Test task 'copy': file, to_file, into nonexisting directory to test that the directory
-			-- specified in 'to_file' is not created automatically
+			-- specified in 'to_file' is created automatically
 		do
  			tasks := "<copy file='${GOBO}/Readme.md' to_file='__copy/1.txt'/>"
-
-			expected_exit_code := 1
- 			expected_task_output := "{
-			|  [copy] error: cannot copy file '
-			}" + Execution_environment.interpreted_string (path ("$GOBO/Readme.md")) + "' to file '" + path ("__copy/1.txt") + "%'"
-			expected_stdout_txt := default_expected_stdout_txt
-			expected_stderr_txt := "{
-				|
-				|BUILD FAILED!
-			}"
  			basic_test ("test_copy3a")
- 			assert_false ("test_copy3b", file_system.file_exists (path ("__copy/1.txt")))
+ 			assert_files_equal ("test_copy3b", path ("${GOBO}/Readme.md"), path ("__copy/1.txt"))
 		end
 
 	test_copy4

@@ -5,7 +5,7 @@
 		"Files"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class KL_FILE
@@ -294,7 +294,7 @@ feature -- Basic operations
 
 	copy_file (new_name: STRING)
 			-- Copy current file to `new_name'.
-			-- Do nothing if the file could not be copied, if it
+			-- Do nothing if the current file could not be copied, if it
 			-- did not exist or if `new_name' is physically
 			-- the same file as current file. Overwrite `new_name'
 			-- if it already existed.
@@ -314,7 +314,7 @@ feature -- Basic operations
 						old_file.open_read
 						if old_file.is_open_read then
 							create new_file.make (string_new_name)
-							new_file.open_write
+							new_file.recursive_open_write
 							if new_file.is_open_write then
 								from
 									old_file.read_string (8192)

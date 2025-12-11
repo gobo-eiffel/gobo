@@ -2,6 +2,11 @@
 
 ## Version xx.xx.xx - xxxxxxx
 
+### geant
+
+* `<copy file="..." to_file="..."/>` now creates missing
+  directories in the destination path.
+
 ### gec
 
 * Fixed bug when inlining code in inherited assertions (preconditions,
@@ -18,6 +23,16 @@
   of EiffelStudio (25.02).
 * Modified output of format `html_ise_stylesheet` to display all
   subclusters, even when the root cluster is declared as recursive.
+* Added command-line option `--no-force` to indicate that existing
+  files should not be overwritten. Nothing shoud be done, silently
+  without asking.
+* Added format `unused_class` to get the list of unused classes,
+  and/or delete them.
+
+### Gobo Eiffel Kernel Library
+
+* `KI_FILE.copy_file` and `KI_FILE_SYSTEM.copy_file` now create missing
+  directories in the destination path.
 
 ### Gobo Eiffel Tools Library
 

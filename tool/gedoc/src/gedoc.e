@@ -122,6 +122,9 @@ feature -- Argument parsing
 	force_flag: AP_FLAG
 			-- Flag for '--force'
 
+	no_force_flag: AP_FLAG
+			-- Flag for '--no-force'
+
 	interactive_flag: AP_FLAG
 			-- Flag for '--interactive'
 
@@ -185,12 +188,13 @@ feature -- Argument parsing
 			format_option.extend ("pretty_print")
 			format_option.extend ("html_ise_stylesheet")
 			format_option.extend ("descendants")
+			format_option.extend ("unused_classes")
 			format_option.extend ("implicit_converts")
 			format_option.extend ("explicit_converts")
 			format_option.extend ("ecf_pretty_print")
 			format_option.extend ("available_targets")
 			format_option.extend ("executable_name")
-			format_option.set_parameter_description ("pretty_print|html_ise_stylesheet|descendants|implicit_converts|explicit_converts|ecf_pretty_print|available_targets|executable_name")
+			format_option.set_parameter_description ("pretty_print|html_ise_stylesheet|descendants|unused_classes|implicit_converts|explicit_converts|ecf_pretty_print|available_targets|executable_name")
 			l_parser.options.force_last (format_option)
 				-- class.
 			create class_option.make ('c', "class")
@@ -215,9 +219,13 @@ feature -- Argument parsing
 			create force_flag.make ('f', "force")
 			force_flag.set_description ("Overwrite existing files without asking.")
 			l_parser.options.force_last (force_flag)
+				-- no-force.
+			create no_force_flag.make_with_long_form ("no-force")
+			no_force_flag.set_description ("Do not overwrite existing files, do nothing silently without asking.")
+			l_parser.options.force_last (no_force_flag)
 				-- interactive.
 			create interactive_flag.make ('i', "interactive")
-			interactive_flag.set_description ("Ask before overwriting a file, unless --force is specified.")
+			interactive_flag.set_description ("Ask before overwriting a file, unless --force or --no-force is specified.")
 			l_parser.options.force_last (interactive_flag)
 				-- verbose.
 			create verbose_flag.make_with_long_form ("verbose")
@@ -294,6 +302,8 @@ feature -- Argument parsing
 				create {GEDOC_HTML_ISE_STYLESHEET_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif format_option.parameter ~ "descendants" then
 				create {GEDOC_DESCENDANTS_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
+			elseif format_option.parameter ~ "unused_classes" then
+				create {GEDOC_UNUSED_CLASSES_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif format_option.parameter ~ "implicit_converts" then
 				create {GEDOC_IMPLICIT_CONVERTS_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif format_option.parameter ~ "explicit_converts" then
@@ -316,6 +326,7 @@ feature -- Argument parsing
 				set_library_filters (library_option, l_parser, l_format)
 				set_output_directory (output_option, l_parser, l_format)
 				l_format.set_force_flag (force_flag.was_found)
+				l_format.set_no_force_flag (no_force_flag.was_found)
 				l_format.set_interactive_flag (interactive_flag.was_found)
 				l_format.set_library_prefix_flag (library_prefix_flag.was_found)
 				l_format.set_verbose_flag (verbose_flag.was_found)
@@ -332,6 +343,7 @@ feature -- Argument parsing
 			output_option_not_void: output_option /= Void
 			library_prefix_flag_not_void: library_prefix_flag /= Void
 			force_flag_not_void: force_flag /= Void
+			no_force_flag_not_void: no_force_flag /= Void
 			interactive_flag_not_void: interactive_flag /= Void
 			verbose_flag_not_void: verbose_flag /= Void
 			no_benchmark_flag_not_void: no_benchmark_flag /= Void
@@ -652,6 +664,7 @@ invariant
 	output_option_not_void: output_option /= Void
 	library_prefix_flag_not_void: library_prefix_flag /= Void
 	force_flag_not_void: force_flag /= Void
+	no_force_flag_not_void: no_force_flag /= Void
 	interactive_flag_not_void: interactive_flag /= Void
 	verbose_flag_not_void: verbose_flag /= Void
 	no_benchmark_flag_not_void: no_benchmark_flag /= Void

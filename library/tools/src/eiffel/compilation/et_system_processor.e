@@ -974,6 +974,7 @@ feature -- Processing
 			create l_classes.make (a_system.class_count_recursive)
 			a_system.classes_do_recursive (agent l_classes.force_last)
 			compile_classes (l_classes)
+			set_root_type (a_system)
 			check_root_type (a_system)
 		end
 
@@ -1000,7 +1001,7 @@ feature -- Processing
 			-- Compile marked all classes in `a_classes'.
 			--
 			-- Note that parsing these classes may mark other classes. Process these
-			-- other classes as well until no more marked classes are not processed.
+			-- other classes as well until no more marked classes are processed.
 			-- Remove unmarked classes from `a_classes' when no more marked classes
 			-- need to be parsed.
 
@@ -1039,7 +1040,7 @@ feature -- Processing
 			--
 			-- `a_marked_only' indicates that only classes which are marked will be processed.
 			-- Note that parsing these classes may mark other classes. Process these
-			-- other classes as well until no more marked classes are not processed.
+			-- other classes as well until no more marked classes are processed.
 			-- Remove unmarked classes from `a_classes' when no more marked classes
 			-- need to be parsed.
 			--

@@ -5,7 +5,7 @@
 
 		"Eiffel Pretty-Printer"
 
-	tool: "Gobo Eiffel Compiler"
+	tool: "Gobo Eiffel Doc"
 	copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
 	license: "MIT License"
 -->

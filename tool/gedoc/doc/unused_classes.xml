@@ -1,0 +1,89 @@
+﻿<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Eiffel Unused Classes"
+
+	tool: "Gobo Eiffel Doc"
+	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	license: "MIT License"
+-->
+
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/unused_classes">
+<chapterinfo>
+	<copyright>
+		<year>2025</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>10 December 2025</date>
+</chapterinfo>
+
+<title>Eiffel Unused Classes</title>
+
+<para>
+When compiling an Eiffel system, we start from the root class, and then follow
+all classes it depends on recursively. But the Eiffel universe (the set of
+all classes available in the clusters and libraries specified in the ECF
+file) may contain many more classes. It is expected for a reusable library
+to provide more classes than actually used in a given Eiffel system.
+But after months of coding, of redesign and refactoring, some user-defined
+classes may not be needed anymore and we don't necessarily want to have
+to maintain them.
+</para>
+<para>
+<projectname>gedoc</projectname> can be used to get the list of such unused classes,
+and/or delete them. Alternatively it can copy in a separate directory the classes
+which are still used.
+</para>
+
+<section><title>Getting the list of unused classes</title>
+<para>
+Here is how to get the list of unused classes:
+<programlisting>
+	<filename>gedoc --format=unused_classes --no-force --library=foo project.ecf</filename>
+</programlisting>
+where <filename>project.ecf</filename> is the ECF file describing your Eiffel project.
+The option <filename>--no-force</filename> indicates that no class will be deleted,
+only the list of unused classes will be displayed. The option <filename>--library</filename>
+is useful when we are only interested in user-defined classes, and not those coming from
+reusable libraries. In that case, only the classes in the library <filename>foo</filename>
+will be potentially marked as unused. All other classes will be considered as used.
+Library names can contain wildcards such as <filename>--library=str*</filename> or
+<filename>--library=@(structure|string)</filename>. And this option can be used several times
+to specify several library names. The name of a library is defined as follows in
+its ECF file: <filename>&lt;system name=&quot;foo&quot; ...&gt;</filename>.
+</para>
+</section>
+
+<section><title>Deleting unused classes</title>
+<para>
+To get rid of the unused classes, you need to replace the option <filename>--no-force</filename>
+with the option <filename>--interactive</filename>:
+<programlisting>
+	<filename>gedoc --format=unused_classes --interactive --library=foo project.ecf</filename>
+</programlisting>
+With this option, <projectname>gedoc</projectname> will ask confirmation each time it needs
+to delete an unused class. Alternatively you can use the option <filename>--force</filename>:
+<programlisting>
+	<filename>gedoc --format=unused_classes --force --library=foo project.ecf</filename>
+</programlisting>
+where the unused classes will be deleted without asking.
+</para>
+</section>
+
+<section><title>Copying used classes</title>
+<para>
+Another solution is to copy the classes which are still used to a new directory:
+<programlisting>
+	<filename>gedoc --format=unused_classes --library=foo --output=path/to/directory --library-prefix project.ecf</filename>
+</programlisting>
+The original class files (used or not) will be kept untouched. However the class files will be copied in
+a flat directory, without keeping their cluster hierarchy.
+</para>
+</section>
+</chapter>

@@ -5,7 +5,7 @@
 
 		"Executable Name"
 
-	tool: "Gobo Eiffel Compiler"
+	tool: "Gobo Eiffel Doc"
 	copyright: "Copyright (c) 2025, Eric Bezault and others"
 	license: "MIT License"
 -->

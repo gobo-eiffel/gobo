@@ -272,6 +272,7 @@ feature {NONE} -- Output
 					l_printer.dedent
 					l_printer.print_new_line
 						-- Root class.
+					system_processor.set_root_type (a_system)
 					l_root_type := a_system.root_type
 					if l_root_type /= Void then
 						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
