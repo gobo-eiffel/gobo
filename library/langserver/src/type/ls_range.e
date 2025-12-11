@@ -53,6 +53,28 @@ feature -- Access
 	end_: LS_POSITION
 			-- The range's end position.
 
+feature -- Setting
+
+	set_start (a_start: like start)
+			-- Set `start` to `a_start`.
+		require
+			a_start_not_void: a_start /= Void
+		do
+			start := a_start
+		ensure
+			start_set: start = a_start
+		end
+
+	set_end (a_end: like end_)
+			-- Set `end_` to `a_end`.
+		require
+			a_end_not_void: a_end /= Void
+		do
+			end_ := a_end
+		ensure
+			end_set: end_ = a_end
+		end
+
 feature -- Field names
 
 	start_name: STRING_8 = "start"

@@ -19,6 +19,11 @@ class LS_POSITION
 inherit
 
 	LS_ANY
+		undefine
+			is_equal
+		end
+
+	COMPARABLE
 
 create
 
@@ -50,6 +55,18 @@ feature -- Access
 			--
 			-- If the character value is greater than the line length it defaults back
 			-- to the line length.
+
+feature -- Comparison
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- Is current object less than `other'?
+		do
+			if line.value < other.line.value then
+				Result := True
+			elseif line.value = other.line.value then
+				Result := character.value < other.character.value
+			end
+		end
 
 feature -- Field names
 

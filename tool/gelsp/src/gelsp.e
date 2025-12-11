@@ -262,6 +262,7 @@ feature -- Handling 'textDocument/documentSymbol' requests
 			i, nb: INTEGER
 			l_document_symbol: LS_DOCUMENT_SYMBOL
 			l_range: LS_RANGE
+			l_selection_range: LS_RANGE
 			l_text: STRING_8
 			l_name: LS_STRING
 		do
@@ -272,12 +273,13 @@ feature -- Handling 'textDocument/documentSymbol' requests
 					from i := 1 until i > nb loop
 						l_feature_clause := l_feature_clauses.item (i)
 						l_range := range (l_feature_clause.feature_keyword, l_class)
+						l_selection_range := range (l_feature_clause.feature_keyword, l_class)
 						create l_text.make (50)
 						l_text.append_string (tokens.feature_keyword.text)
 						l_feature_clause.append_client_clause_to_string (" ", l_text)
 						l_feature_clause.append_first_line_comment_to_string (" ", l_text)
 						create l_name.make_from_utf8 (l_text)
-						create l_document_symbol.make (l_name, Void, {LS_SYMBOL_KINDS}.interface, Void, Void, l_range, l_range, Void)
+						create l_document_symbol.make (l_name, Void, {LS_SYMBOL_KINDS}.interface, Void, Void, l_range, l_selection_range, Void)
 						a_response.add_document_symbol (l_document_symbol)
 						l_feature_clause_symbols.put (l_document_symbol, l_feature_clause)
 						i := i + 1
@@ -304,6 +306,7 @@ feature -- Handling 'textDocument/documentSymbol' requests
 			i, nb: INTEGER
 			l_document_symbol: LS_DOCUMENT_SYMBOL
 			l_range: LS_RANGE
+			l_selection_range: LS_RANGE
 			l_text: STRING_8
 			l_name: LS_STRING
 			l_kind: LS_SYMBOL_KIND
@@ -313,7 +316,8 @@ feature -- Handling 'textDocument/documentSymbol' requests
 			from i := 1 until i > nb loop
 				l_feature := a_feature_list.item (i)
 				l_feature_name := l_feature.name
-				l_range := range (l_feature_name, a_class)
+				l_range := range (l_feature, a_class)
+				l_selection_range := range (l_feature_name, a_class)
 				if l_feature.is_attribute then
 					l_kind := {LS_SYMBOL_KINDS}.field
 				else
@@ -326,12 +330,15 @@ feature -- Handling 'textDocument/documentSymbol' requests
 					l_text := l_feature_name.lower_name
 				end
 				create l_name.make_from_utf8 (l_text)
-				create l_document_symbol.make (l_name, Void, l_kind, Void, Void, l_range, l_range, Void)
+				create l_document_symbol.make (l_name, Void, l_kind, Void, Void, l_range, l_selection_range, Void)
 				if
 					a_feature_clause_symbols /= Void and then
 					attached l_feature.feature_clause as l_feature_clause and then
 					attached a_feature_clause_symbols.value (l_feature_clause) as l_parent_symbol
 				then
+					if l_parent_symbol.range.end_ < l_document_symbol.range.end_ then
+						l_parent_symbol.range.set_end (l_document_symbol.range.end_)
+					end
 					l_parent_symbol.add_child (l_document_symbol)
 				else
 					a_response.add_document_symbol (l_document_symbol)
