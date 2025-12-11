@@ -2,6 +2,11 @@
 
 ## Version xx.xx.xx - xxxxxxx
 
+### geant
+
+* `<copy file="..." to_file="..."/>` now creates missing
+  directories in the destination path.
+
 ### gec
 
 * Fixed bug when inlining code in inherited assertions (preconditions,
@@ -23,6 +28,11 @@
   without asking.
 * Added format `unused_class` to get the list of unused classes,
   and/or delete them.
+
+### Gobo Eiffel Kernel Library
+
+* `KI_FILE.copy_file` and `KI_FILE_SYSTEM.copy_file` now create missing
+  directories in the destination path.
 
 ### Gobo Eiffel Tools Library
 

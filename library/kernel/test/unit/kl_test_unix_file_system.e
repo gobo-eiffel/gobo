@@ -5,7 +5,7 @@
 		"Test features of class KL_UNIX_FILE_SYSTEM"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class KL_TEST_UNIX_FILE_SYSTEM
@@ -593,7 +593,7 @@ feature -- File handling
 					-- Try to copy file.
 				a_file_system.copy_file (old_name, new_name)
 					-- Old file still exists and new file still does not exist.
-					-- We cannot rename when the new pathname is empty.
+					-- We cannot copy when the new pathname is empty.
 				assert ("readable2", a_file_system.is_file_readable (old_name))
 				assert ("not_readable2", not a_file_system.is_file_readable (new_name))
 					-- The contents of old file has not been altered.
@@ -630,16 +630,19 @@ feature -- File handling
 				assert ("not_readable1", not a_file_system.is_file_readable (new_name))
 					-- Try to copy file.
 				a_file_system.copy_file (old_name, new_name)
-					-- Old file still exists and new file still does not exist.
-					-- We cannot rename when the dirname of the new pathname
-					-- does not exist.
+					-- Old file still exists and new file now exists.
+					-- Its missing directory has been created.
 				assert ("readable2", a_file_system.is_file_readable (old_name))
-				assert ("not_readable2", not a_file_system.is_file_readable (new_name))
+				assert ("readable3", a_file_system.is_file_readable (new_name))
 					-- The contents of old file has not been altered.
-				assert_files_equal ("diff", hello_filename, old_name)
+					-- New file still has the same contents as old file.
+				assert_files_equal ("diff1", hello_filename, old_name)
+				assert_files_equal ("diff2", old_name, new_name)
 					-- Remove temporary files.
 				a_file_system.delete_file (old_name)
 				assert ("not_readable3", not a_file_system.is_file_readable (old_name))
+				a_file_system.delete_file (new_name)
+				assert ("not_readable3", not a_file_system.is_file_readable (new_name))
 			else
 				assert ("is_opened", False)
 			end
