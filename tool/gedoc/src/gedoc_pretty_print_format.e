@@ -80,7 +80,7 @@ feature {GEDOC_PRETTY_PRINT_FORMAT} -- Processing
 					elseif not attached class_output_directory (a_class) as l_directory then
 						report_no_output_directory_for_class_error (a_class)
 					else
-						l_filename := filename (l_directory, concat (class_lower_name (a_class), eiffel_file_extension))
+						l_filename := filename (l_directory, concat (class_lower_name (a_class), file_system.eiffel_extension))
 						if not is_file_overwritable (l_filename) then
 							report_file_already_exists_error (l_filename)
 						else
@@ -131,11 +131,6 @@ feature {NONE} -- Implementation
 
 	pretty_printer: ET_AST_PRETTY_PRINTER
 			-- Pretty-printer
-
-feature {NONE} -- Constants
-
-	eiffel_file_extension: STRING = ".e"
-			-- Extension for Eiffel files
 
 invariant
 

@@ -172,6 +172,10 @@ feature -- Access
 	force_flag: BOOLEAN
 			-- Should existing files be overwritten without asking?
 
+	no_force_flag: BOOLEAN
+			-- Should existing files not be overwritten?
+			-- Just do nothing, silently.
+
 	interactive_flag: BOOLEAN
 			-- Should ask before overwriting a file, unless `force_flag' is True?
 
@@ -291,6 +295,14 @@ feature -- Setting
 			force_flag_set: force_flag = b
 		end
 
+	set_no_force_flag (b: BOOLEAN)
+			-- Set `no_force_flag' to `b'.
+		do
+			no_force_flag := b
+		ensure
+			no_force_flag_set: no_force_flag = b
+		end
+
 	set_interactive_flag (b: BOOLEAN)
 			-- Set `interactive_flag' to `b'.
 		do
@@ -345,6 +357,50 @@ feature -- Status report
 			-- Is `output_directory' required by the current format?
 		do
 			Result := False
+		end
+
+	is_file_overwritable (a_filename: STRING): BOOLEAN
+			-- Is it allowed to write to file `a_filename'?
+		require
+			a_filename_not_void: a_filename /= Void
+		do
+			if force_flag then
+				Result := True
+			elseif not file_system.file_exists (a_filename) then
+				Result := True
+			elseif no_force_flag then
+				Result := False
+			elseif interactive_flag then
+				interactive_mutex.lock
+				std.output.put_string ("File '")
+				std.output.put_string (a_filename)
+				std.output.put_line ("' already exists. Overwrite it (y/n)?")
+				std.input.read_line
+				Result := std.input.last_string.as_lower.starts_with ("y")
+				interactive_mutex.unlock
+			end
+		end
+
+	is_file_deletable (a_filename: STRING): BOOLEAN
+			-- Is it allowed to delete file `a_filename'?
+		require
+			a_filename_not_void: a_filename /= Void
+		do
+			if force_flag then
+				Result := True
+			elseif not file_system.file_exists (a_filename) then
+				Result := True
+			elseif no_force_flag then
+				Result := False
+			elseif interactive_flag then
+				interactive_mutex.lock
+				std.output.put_string ("Delete '")
+				std.output.put_string (a_filename)
+				std.output.put_line ("' (y/n)?")
+				std.input.read_line
+				Result := std.input.last_string.as_lower.starts_with ("y")
+				interactive_mutex.unlock
+			end
 		end
 
 feature {NONE} -- Eiffel config file parsing
@@ -435,7 +491,7 @@ feature {NONE} -- Eiffel config file parsing
 			elseif
 				(not attached class_filters as l_class_filters or else l_class_filters.is_empty) and
 				(not attached library_filters as l_library_filters or else l_library_filters.is_empty)
-			 then
+			then
 				create l_input_classes.make (1)
 				input_classes := l_input_classes
 				l_system.classes_do_if (agent l_input_classes.force_last, agent {ET_CLASS}.is_in_group (l_cluster))
@@ -496,7 +552,7 @@ feature {NONE} -- Processing
 			elseif
 				(attached class_filters as l_class_filters and then not l_class_filters.is_empty) or
 				(attached library_filters as l_library_filters and then not l_library_filters.is_empty)
-			 then
+			then
 				create l_input_classes.make (500)
 				if attached class_filters as l_class_filters and then not l_class_filters.is_empty then
 					across l_class_filters as i_class_wildcard loop
@@ -568,26 +624,6 @@ feature {NONE} -- Output
 				if library_prefix_flag then
 					Result := file_system.pathname (Result, universe_lower_name (a_universe))
 				end
-			end
-		end
-
-	is_file_overwritable (a_filename: STRING): BOOLEAN
-			-- Is it allowed to write to file `a_filename'?
-		require
-			a_filename_not_void: a_filename /= Void
-		do
-			if force_flag then
-				Result := True
-			elseif not file_system.file_exists (a_filename) then
-				Result := True
-			elseif interactive_flag then
-				interactive_mutex.lock
-				std.output.put_string ("File '")
-				std.output.put_string (a_filename)
-				std.output.put_line ("' already exists. Overwrite it (y/n)?")
-				std.input.read_line
-				Result := std.input.last_string.starts_with ("y")
-				interactive_mutex.unlock
 			end
 		end
 
@@ -786,8 +822,35 @@ feature -- Error handling
 		local
 			l_error: UT_MESSAGE
 		do
-			create l_error.make ("File '" + a_filename + "' already exists. Not overwritten.")
-			report_error (l_error)
+			if no_force_flag then
+				-- Do nothing silently.
+			elseif not force_flag and not interactive_flag then
+				create l_error.make ("File '" + a_filename + "' already exists. Not overwritten. Use option `--force` or `--interactive`.")
+				report_error (l_error)
+			else
+				create l_error.make ("File '" + a_filename + "' already exists. Not overwritten.")
+				report_error (l_error)
+			end
+		ensure
+			has_error: has_error
+		end
+
+	report_file_not_deleted_error (a_filename: STRING)
+			-- Report that `a_filename' will not be deleted.
+		require
+			a_filename_not_void: a_filename /= Void
+		local
+			l_error: UT_MESSAGE
+		do
+			if no_force_flag then
+				-- Do nothing silently.
+			elseif not force_flag and not interactive_flag then
+				create l_error.make ("File '" + a_filename + "' not deleted. Use option `--force` or `--interactive`.")
+				report_error (l_error)
+			else
+				create l_error.make ("File '" + a_filename + "' not deleted.")
+				report_error (l_error)
+			end
 		ensure
 			has_error: has_error
 		end

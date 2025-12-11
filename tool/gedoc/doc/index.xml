@@ -20,7 +20,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>22 September 2025</date>
+	<date>10 December 2025</date>
 </chapterinfo>
 
 <title>Gobo Eiffel Doc</title>
@@ -66,6 +66,14 @@ This documentation of <projectname>gedoc</projectname> is structured as follows:
 		</term>
 		<listitem><para>
 			Getting the list of descendants of a class or of a set of classes.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="unused_classes">Unused Classes</link>
+		</term>
+		<listitem><para>
+			Getting the list of unused classes, and/or deleting them.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

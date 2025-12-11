@@ -18,6 +18,11 @@
   of EiffelStudio (25.02).
 * Modified output of format `html_ise_stylesheet` to display all
   subclusters, even when the root cluster is declared as recursive.
+* Added command-line option `--no-force` to indicate that existing
+  files should not be overwritten. Nothing shoud be done, silently
+  without asking.
+* Added format `unused_class` to get the list of unused classes,
+  and/or delete them.
 
 ### Gobo Eiffel Tools Library
 

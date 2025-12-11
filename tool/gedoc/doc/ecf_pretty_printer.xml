@@ -5,7 +5,7 @@
 
 		"ECF Pretty-Printer"
 
-	tool: "Gobo Eiffel Compiler"
+	tool: "Gobo Eiffel Doc"
 	copyright: "Copyright (c) 2018-2025, Eric Bezault and others"
 	license: "MIT License"
 -->

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Eiffel Unused Classes</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Eiffel Unused Classes</strong></font></td>
+    <td align="right"><a href="descendants.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="implicit_conversions.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   When compiling an Eiffel system, we start from the root class, and then follow
+   all classes it depends on recursively. But the Eiffel universe (the set of
+   all classes available in the clusters and libraries specified in the ECF
+   file) may contain many more classes. It is expected for a reusable library
+   to provide more classes than actually used in a given Eiffel system.
+   But after months of coding, of redesign and refactoring, some user-defined
+   classes may not be needed anymore and we don't necessarily want to have
+   to maintain them.
+   
+  </p>
+  <p>
+   <i>gedoc</i> can be used to get the list of such unused classes,
+   and/or delete them. Alternatively it can copy in a separate directory the classes
+   which are still used.
+   
+  </p>
+  <div>
+   <h2>Getting the list of unused classes</h2>
+   
+   <p>
+    Here is how to get the list of unused classes:
+    <pre>
+	<font color="#800000"><i><tt>gedoc --format=unused_classes --no-force --library=foo project.ecf</tt></i></font>
+</pre>
+    where <font color="#800000"><i><tt>project.ecf</tt></i></font> is the ECF file describing your Eiffel project.
+    The option <font color="#800000"><i><tt>--no-force</tt></i></font> indicates that no class will be deleted,
+    only the list of unused classes will be displayed. The option <font color="#800000"><i><tt>--library</tt></i></font>
+    is useful when we are only interested in user-defined classes, and not those coming from
+    reusable libraries. In that case, only the classes in the library <font color="#800000"><i><tt>foo</tt></i></font>
+    will be potentially marked as unused. All other classes will be considered as used.
+    Library names can contain wildcards such as <font color="#800000"><i><tt>--library=str*</tt></i></font> or
+    <font color="#800000"><i><tt>--library=@(structure|string)</tt></i></font>. And this option can be used several times
+    to specify several library names. The name of a library is defined as follows in
+    its ECF file: <font color="#800000"><i><tt>&lt;system name="foo" ...&gt;</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Deleting unused classes</h2>
+   
+   <p>
+    To get rid of the unused classes, you need to replace the option <font color="#800000"><i><tt>--no-force</tt></i></font>
+    with the option <font color="#800000"><i><tt>--interactive</tt></i></font>:
+    <pre>
+	<font color="#800000"><i><tt>gedoc --format=unused_classes --interactive --library=foo project.ecf</tt></i></font>
+</pre>
+    With this option, <i>gedoc</i> will ask confirmation each time it needs
+    to delete an unused class. Alternatively you can use the option <font color="#800000"><i><tt>--force</tt></i></font>:
+    <pre>
+	<font color="#800000"><i><tt>gedoc --format=unused_classes --force --library=foo project.ecf</tt></i></font>
+</pre>
+    where the unused classes will be deleted without asking.
+    </p>
+   
+  </div>
+  <div>
+   <h2>Copying used classes</h2>
+   
+   <p>
+    Another solution is to copy the classes which are still used to a new directory:
+    <pre>
+	<font color="#800000"><i><tt>gedoc --format=unused_classes --library=foo --output=path/to/directory --library-prefix project.ecf</tt></i></font>
+</pre>
+    The original class files (used or not) will be kept untouched. However the class files will be copied in
+    a flat directory, without keeping their cluster hierarchy.
+    </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2025, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>https://</b><a href="https://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>10 December 2025</font></address>
+    </td>
+    <td align="right" valign="top"><a href="https://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="descendants.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="implicit_conversions.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

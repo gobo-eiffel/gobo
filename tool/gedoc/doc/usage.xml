@@ -149,13 +149,21 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 	</varlistentry>
 	<varlistentry>
 		<term>
+			<filename>--no-force</filename>
+		</term>
+		<listitem><para>
+			Do not overwrite existing files, do nothing silently without asking.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
 			<filename>-i</filename>
 		</term>
 		<term>
 			<filename>--interactive</filename>
 		</term>
 		<listitem><para>
-			Ask before overwriting a file, unless <filename>--force</filename> is specified.
+			Ask before overwriting a file, unless <filename>--force</filename> or <filename>--no-force</filename> is specified.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

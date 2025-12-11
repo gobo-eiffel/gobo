@@ -5,12 +5,12 @@
 
 		"Eiffel Descendant Classes"
 
-	tool: "Gobo Eiffel Compiler"
+	tool: "Gobo Eiffel Doc"
 	copyright: "Copyright (c) 2021, Eric Bezault and others"
 	license: "MIT License"
 -->
 
-<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/pretty_printer">
+<chapter xmlns="https://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/descendants">
 <chapterinfo>
 	<copyright>
 		<year>2021</year>
