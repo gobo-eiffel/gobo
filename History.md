@@ -45,6 +45,12 @@
 * Report correct error messages in case of name mismatches involving
   arguments of inline separate instructions (e.g.
   `sepatate exp1 as x do across exp2 as x loop x.f end end`).
+* Fixed interoperability issue with ISE Eiffel: in ISE Eiffel it is
+  allowed to have a binary expression where the left-hand-side
+  expression is converted to the type of the right-hand-side
+  expression even if there is no such binary operator defined in the
+  type of the left-hand-side expression. This violates ECMA rule `DWTC`
+	("Definition: Target-converted form of a binary expression").
 
 ## Version 25.12.04 - 4 December 2025
 

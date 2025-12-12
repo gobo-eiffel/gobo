@@ -9958,6 +9958,7 @@ feature {NONE} -- Expression validity
 			l_first_query: detachable ET_QUERY
 			l_first_tuple_label: INTEGER
 			l_other_query: detachable ET_QUERY
+			l_right_context: ET_NESTED_TYPE_CONTEXT
 		do
 			has_fatal_error := False
 			l_target := a_call.target
@@ -10041,6 +10042,19 @@ feature {NONE} -- Expression validity
 								check_qualified_tuple_label_call_expression_validity (a_call, l_class, a_context, a_call_info)
 							end
 						end
+					end
+					if l_seed = 0 and system_processor.is_ise and attached {ET_INFIX_EXPRESSION} a_call as l_infix_expression then
+							-- In ISE Eiffel it is allowed to have a binary expression
+							-- where the left-hand-side expression is converted to the
+							-- type of the right-hand-side expression even if there is
+							-- no such binary operator defined in the type of the
+							-- left-hand-side expression. This violates ECMA rule DWTC
+							-- ("Definition: Target-converted form of a binary expression").
+						l_right_context := new_context (current_type)
+						check_actual_argument_validity (l_infix_expression.right, l_right_context, current_system.detachable_separate_any_type, l_infix_expression, l_class)
+						check_converted_target_infix_expression_validity (l_infix_expression, l_class, a_context, l_right_context, a_call_info)
+						free_context (l_right_context)
+						l_seed := l_infix_expression.name.seed
 					end
 					if l_seed = 0 then
 						set_fatal_error
@@ -11934,7 +11948,7 @@ feature {NONE} -- Expression validity
 			current_target_type := old_target_type
 		end
 
-	check_actual_argument_validity (a_actual: ET_EXPRESSION; a_actual_context, a_formal_context: ET_NESTED_TYPE_CONTEXT; a_call: ET_CALL_WITH_ACTUAL_ARGUMENTS; a_class: detachable ET_CLASS)
+	check_actual_argument_validity (a_actual: ET_EXPRESSION; a_actual_context: ET_NESTED_TYPE_CONTEXT; a_formal_context: ET_TYPE_CONTEXT; a_call: ET_CALL_WITH_ACTUAL_ARGUMENTS; a_class: detachable ET_CLASS)
 			-- Check validity of actual argument `a_actual' of `a_call'.
 			-- `a_actual_context' is the context in which `a_actual' is viewed.
 			-- `a_formal_context' represents the type of the corresponding formal argument.
