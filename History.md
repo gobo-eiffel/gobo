@@ -50,7 +50,7 @@
   expression is converted to the type of the right-hand-side
   expression even if there is no such binary operator defined in the
   type of the left-hand-side expression. This violates ECMA rule `DWTC`
-	("Definition: Target-converted form of a binary expression").
+  ("Definition: Target-converted form of a binary expression").
 
 ## Version 25.12.04 - 4 December 2025
 
