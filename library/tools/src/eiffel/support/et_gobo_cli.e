@@ -90,20 +90,21 @@ feature -- Access
 			l_definition: STRING
 			l_index: INTEGER
 		do
-			create l_override_variables.make
 			if a_is_ge then
+				create l_override_variables.make
 				l_override_variables.set_primary_value ("GOBO_EIFFEL", "ge")
 				Execution_environment.set_variable_value ("GOBO_EIFFEL", "ge")
 			elseif attached Execution_environment.variable_value ("GOBO_EIFFEL") as l_gobo_eiffel and then not l_gobo_eiffel.is_empty then
 				-- Do nothing.
 			elseif a_is_ise then
-				l_override_variables.set_primary_value ("GOBO_EIFFEL", "ise")
 				Execution_environment.set_variable_value ("GOBO_EIFFEL", "ise")
 			else
-				l_override_variables.set_primary_value ("GOBO_EIFFEL", "ge")
 				Execution_environment.set_variable_value ("GOBO_EIFFEL", "ge")
 			end
 			if not a_cli_value.is_empty then
+				if l_override_variables = Void then
+					create l_override_variables.make
+				end
 				across a_cli_value as i_variable loop
 					if attached i_variable as l_variable then
 						l_definition := l_variable
@@ -118,9 +119,6 @@ feature -- Access
 							end
 						end
 					end
-				end
-				if attached l_override_variables.primary_value ("GOBO_EIFFEL") as l_gobo_eiffel and then not l_gobo_eiffel.is_empty then
-					Execution_environment.set_variable_value ("GOBO_EIFFEL", l_gobo_eiffel)
 				end
 			end
 			Result := l_override_variables
