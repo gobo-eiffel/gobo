@@ -14,6 +14,7 @@ feature
 			print ("Before AA.f%N")
 			f (b)
 			print ("After AA.f%N")
+			{SCHEDULER}.set_value (1)
 		end
 
 	f (b: separate BB)
@@ -23,7 +24,7 @@ feature
 
 	h
 		do
-			{EXECUTION_ENVIRONMENT}.sleep (1_000_000_000)
+			{SCHEDULER}.wait_for_value (2)
 			print ("End of AA.h%N")
 		end
 
