@@ -4,7 +4,8 @@ name: "Nightly Build"
 
 on:
   schedule:
-    - cron: '22 4 * * *'
+    - cron: '22 1 * * *'
+  workflow_dispatch:
 
 env:
   GOBO_DEFAULT_GC: no
