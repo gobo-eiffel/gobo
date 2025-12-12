@@ -94,7 +94,7 @@ feature -- Access
 			if a_is_ge then
 				l_override_variables.set_primary_value ("GOBO_EIFFEL", "ge")
 				Execution_environment.set_variable_value ("GOBO_EIFFEL", "ge")
-			elseif attached Execution_environment.variable_value ("GOBO_EIFFEL") as l_gobo_eiffel and then l_gobo_eiffel.is_empty then
+			elseif attached Execution_environment.variable_value ("GOBO_EIFFEL") as l_gobo_eiffel and then not l_gobo_eiffel.is_empty then
 				l_override_variables.set_primary_value ("GOBO_EIFFEL", l_gobo_eiffel)
 			elseif a_is_ise then
 				l_override_variables.set_primary_value ("GOBO_EIFFEL", "ise")
@@ -118,6 +118,9 @@ feature -- Access
 							end
 						end
 					end
+				end
+				if attached l_override_variables.primary_value ("GOBO_EIFFEL") as l_gobo_eiffel and then not l_gobo_eiffel.is_empty then
+					Execution_environment.set_variable_value ("GOBO_EIFFEL", l_gobo_eiffel)
 				end
 			end
 			Result := l_override_variables
