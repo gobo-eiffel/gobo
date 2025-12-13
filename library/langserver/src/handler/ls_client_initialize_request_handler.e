@@ -42,7 +42,10 @@ feature -- Basic operations
 				a_manager.did_save_text_document_notification_handler.set_server_options (l_text_document_sync.save)
 			end
 			a_manager.hover_request_handler.set_server_options (l_server_capabilities.hover_provider)
+			a_manager.declaration_request_handler.set_server_options (l_server_capabilities.declaration_provider)
 			a_manager.definition_request_handler.set_server_options (l_server_capabilities.definition_provider)
+			a_manager.type_definition_request_handler.set_server_options (l_server_capabilities.type_definition_provider)
+			a_manager.implementation_request_handler.set_server_options (l_server_capabilities.implementation_provider)
 			a_manager.document_symbol_request_handler.set_server_options (l_server_capabilities.document_symbol_provider)
 			a_manager.send_initialized_notification
 		end

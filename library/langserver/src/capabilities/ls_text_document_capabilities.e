@@ -33,8 +33,17 @@ feature -- Access
 	hover: detachable LS_HOVER_CAPABILITIES
 			-- Capabilities specific to the 'textDocument/hover' request.
 
+	declaration: detachable LS_DECLARATION_CAPABILITIES
+			-- Capabilities specific to the `textDocument/declaration` request.
+
 	definition: detachable LS_DEFINITION_CAPABILITIES
 			-- Capabilities specific to the `textDocument/definition` request.
+
+	type_definition: detachable LS_TYPE_DEFINITION_CAPABILITIES
+			-- Capabilities specific to the `textDocument/typeDefinition` request.
+
+	implementation: detachable LS_IMPLEMENTATION_CAPABILITIES
+			-- Capabilities specific to the `textDocument/implementation` request.
 
 	document_symbol: detachable LS_DOCUMENT_SYMBOL_CAPABILITIES
 			-- Capabilities specific to the `textDocument/documentSymbol` request.
@@ -60,12 +69,36 @@ feature -- Setting
 			hover_set: hover = a_hover
 		end
 
+	set_declaration (a_declaration: like declaration)
+			-- Set `declaration` to `a_declaration`.
+		do
+			declaration := a_declaration
+		ensure
+			declaration_set: declaration = a_declaration
+		end
+
 	set_definition (a_definition: like definition)
 			-- Set `definition` to `a_definition`.
 		do
 			definition := a_definition
 		ensure
 			definition_set: definition = a_definition
+		end
+
+	set_type_definition (a_type_definition: like type_definition)
+			-- Set `type_definition` to `a_type_definition`.
+		do
+			type_definition := a_type_definition
+		ensure
+			type_definition_set: type_definition = a_type_definition
+		end
+
+	set_implementation (a_implementation: like implementation)
+			-- Set `implementation` to `a_implementation`.
+		do
+			implementation := a_implementation
+		ensure
+			implementation_set: implementation = a_implementation
 		end
 
 	set_document_symbol (a_document_symbol: like document_symbol)
@@ -88,7 +121,10 @@ feature -- Field names
 
 	synchronization_name: STRING_8 = "synchronization"
 	hover_name: STRING_8 = "hover"
+	declaration_name: STRING_8 = "declaration"
 	definition_name: STRING_8 = "definition"
+	type_definition_name: STRING_8 = "typeDefinition"
+	implementation_name: STRING_8 = "implementation"
 	document_symbol_name: STRING_8 = "documentSymbol"
 	publish_diagnostics_name: STRING_8 = "publishDiagnostics"
 			-- Field names

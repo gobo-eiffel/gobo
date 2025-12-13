@@ -324,6 +324,14 @@ feature {NONE} -- Implementation
 				end
 				l_text_document_capabilities.set_hover (l_hover_capabilities)
 			end
+			declaration_request_handler.build_client_capabilities
+			if attached declaration_request_handler.client_capabilities as l_declaration_capabilities then
+				if l_text_document_capabilities = Void then
+					create l_text_document_capabilities.make
+					Result.set_text_document (l_text_document_capabilities)
+				end
+				l_text_document_capabilities.set_declaration (l_declaration_capabilities)
+			end
 			definition_request_handler.build_client_capabilities
 			if attached definition_request_handler.client_capabilities as l_definition_capabilities then
 				if l_text_document_capabilities = Void then
@@ -331,6 +339,22 @@ feature {NONE} -- Implementation
 					Result.set_text_document (l_text_document_capabilities)
 				end
 				l_text_document_capabilities.set_definition (l_definition_capabilities)
+			end
+			type_definition_request_handler.build_client_capabilities
+			if attached type_definition_request_handler.client_capabilities as l_type_definition_capabilities then
+				if l_text_document_capabilities = Void then
+					create l_text_document_capabilities.make
+					Result.set_text_document (l_text_document_capabilities)
+				end
+				l_text_document_capabilities.set_type_definition (l_type_definition_capabilities)
+			end
+			implementation_request_handler.build_client_capabilities
+			if attached implementation_request_handler.client_capabilities as l_implementation_capabilities then
+				if l_text_document_capabilities = Void then
+					create l_text_document_capabilities.make
+					Result.set_text_document (l_text_document_capabilities)
+				end
+				l_text_document_capabilities.set_implementation (l_implementation_capabilities)
 			end
 			document_symbol_request_handler.build_client_capabilities
 			if attached document_symbol_request_handler.client_capabilities as l_document_symbol_capabilities then

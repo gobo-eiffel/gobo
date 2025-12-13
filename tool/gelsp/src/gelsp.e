@@ -25,6 +25,7 @@ inherit
 			did_open_text_document_notification_handler,
 			document_symbol_request_handler,
 			hover_request_handler,
+			type_definition_request_handler,
 			on_configuration_response,
 			on_definition_request,
 			on_did_change_text_document_notification,
@@ -34,6 +35,7 @@ inherit
 			on_document_symbol_request,
 			on_hover_request,
 			on_initialized_notification,
+			on_type_definition_request,
 			add_other_options,
 			process_other_options,
 			error_handler
@@ -398,6 +400,39 @@ feature -- Handling 'textDocument/hover' requests
 
 	hover_request_handler: LS_SERVER_HOVER_REQUEST_HANDLER
 			-- Handler for 'textDocument/hover' requests
+		once ("OBJECT")
+			create Result.make
+		end
+
+feature -- Handling 'textDocument/typeDefinition' requests
+
+	on_type_definition_request (a_request: LS_TYPE_DEFINITION_REQUEST; a_response: LS_TYPE_DEFINITION_RESPONSE)
+			-- Handle 'textDocument/typeDefinition' request `a_request`.
+			-- Build `a_response` accordingly.
+		local
+			l_browsable_name_finder: ET_BROWSABLE_NAME_FINDER
+			l_request_position: LS_POSITION
+			l_position: ET_COMPRESSED_POSITION
+		do
+			if attached class_from_uri (a_request.text_document.uri) as l_class then
+				l_request_position := a_request.position
+				create l_position.make (l_request_position.line.value.to_integer_32 + 1, l_request_position.character.value.to_integer_32 + 1)
+				create l_browsable_name_finder.make (system_processor)
+				l_browsable_name_finder.find_browsable_name (l_position, l_class)
+				if not attached l_browsable_name_finder.last_browsable_name as l_last_browsable_name then
+					-- No browsable name.
+				elseif not attached l_last_browsable_name.type_definition_ast_node as l_type_definition then
+					-- No definition
+				elseif l_type_definition.ast_node.contains_position (l_position) then
+					-- The browsable name is its own definition.
+				elseif attached location (l_type_definition.ast_node, l_type_definition.class_impl) as l_location then
+					a_response.add_location (l_location)
+				end
+			end
+		end
+
+	type_definition_request_handler: LS_SERVER_TYPE_DEFINITION_REQUEST_HANDLER
+			-- Handler for 'textDocument/typeDefinition' requests
 		once ("OBJECT")
 			create Result.make
 		end
