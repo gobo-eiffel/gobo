@@ -2,7 +2,6 @@ note
 
 	description: "Scheduler to get some predictable output in SCOOP tests "
 
-	library: "Gobo Eiffel Cop"
 	copyright: "Copyright (c) 2025, Eric Bezault and others"
 	license: "MIT License"
 
@@ -37,14 +36,29 @@ feature -- Basic operation
 	wait_for_value (a_value: INTEGER)
 			-- Wait for `value` to be equal to `a_value`.
 			-- Give up after 10 seconds.
-		local
-			i: INTEGER
 		do
+			wait_for_value_with_timeout (a_value, 10_000_000_000)
+		ensure
+			instance_free: class
+		end
+
+	wait_for_value_with_timeout (a_value: INTEGER; a_timeout: INTEGER_64)
+			-- Wait for `value` to be equal to `a_value`.
+			-- Give up after `a_timeout` nanoseconds.
+		local
+			i: INTEGER_64
+			nb: INTEGER_64
+		do
+			nb := a_timeout // 1_000_000
 			from until
-				value = a_value or i > 10_000
+				value = a_value or i > nb
 			loop
-					-- 1 millisecond.
-				{EXECUTION_ENVIRONMENT}.sleep (1_000_000)
+				if i = nb then
+					{EXECUTION_ENVIRONMENT}.sleep (a_timeout \\ 1_000_000)
+				else
+						-- 1 millisecond.
+					{EXECUTION_ENVIRONMENT}.sleep (1_000_000)
+				end
 				i := i + 1
 			end
 		ensure

@@ -20,7 +20,7 @@ feature
 
 	f (a_c: separate CC)
 		do
-			a_c.f ("EE")
+			a_c.fe ("EE")
 			print ("EE end f%N")
 		end
 

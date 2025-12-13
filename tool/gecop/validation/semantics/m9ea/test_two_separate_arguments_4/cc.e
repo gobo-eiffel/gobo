@@ -10,11 +10,17 @@ feature
 		do
 		end
 
-	f (s: separate STRING)
+	fe (s: separate STRING)
 		do
-			{EXECUTION_ENVIRONMENT}.sleep (50_000_000)
-			print (create {STRING}.make_from_separate (s) + " calling CC.f%N")
-			{EXECUTION_ENVIRONMENT}.sleep (50_000_000)
+			print (create {STRING}.make_from_separate (s) + " calling CC.fe%N")
+			{SCHEDULER}.set_value (1)
+			{SCHEDULER}.wait_for_value (2)
+			{SCHEDULER}.wait_for_value_with_timeout (3, 100_000_000)
+		end
+
+	fd (s: separate STRING)
+		do
+			print (create {STRING}.make_from_separate (s) + " calling CC.fd%N")
 		end
 
 end

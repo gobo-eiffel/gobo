@@ -24,6 +24,7 @@
 		</capability>
 		<variable name="GOBO_LIBRARY" value="../../../../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library.ecf" readonly="true"/>
+		<library name="test_common" location="${GOBO_LIBRARY}/library/common/test/common/library.ecf" readonly="true"/>
 		<cluster name="aa" location="./"/>
 	</target>
 </system>
