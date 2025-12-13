@@ -141,6 +141,14 @@ feature -- Handlers
 			configuration_request_handler_not_void: Result /= Void
 		end
 
+	declaration_request_handler: LS_DECLARATION_REQUEST_HANDLER
+			-- Handler for 'textDocument/declaration' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			declaration_request_handler_not_void: Result /= Void
+		end
+
 	definition_request_handler: LS_DEFINITION_REQUEST_HANDLER
 			-- Handler for 'textDocument/definition' requests
 		once ("OBJECT")
@@ -205,6 +213,14 @@ feature -- Handlers
 			hover_request_handler_not_void: Result /= Void
 		end
 
+	implementation_request_handler: LS_IMPLEMENTATION_REQUEST_HANDLER
+			-- Handler for 'textDocument/implementation' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			implementation_request_handler_not_void: Result /= Void
+		end
+
 	log_trace_notification_handler: LS_LOG_TRACE_NOTIFICATION_HANDLER
 			-- Handler for '$/logTrace' notifications
 		once ("OBJECT")
@@ -227,6 +243,14 @@ feature -- Handlers
 			create Result.make
 		ensure
 			publish_diagnostics_notification_handler_not_void: Result /= Void
+		end
+
+	type_definition_request_handler: LS_TYPE_DEFINITION_REQUEST_HANDLER
+			-- Handler for 'textDocument/typeDefinition' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			type_definition_request_handler_not_void: Result /= Void
 		end
 
 	will_save_text_document_notification_handler: LS_WILL_SAVE_TEXT_DOCUMENT_NOTIFICATION_HANDLER
@@ -508,6 +532,7 @@ feature {LS_RESPONSE_HANDLER, LS_REQUEST_HANDLER} -- Implementation
 			create Result.make (100)
 			Result.force (create {LS_CONFIGURATION_REQUEST_FACTORY}.make, {LS_CONFIGURATION_REQUEST}.method)
 			Result.force (create {LS_CANCEL_REQUEST_NOTIFICATION_FACTORY}.make, {LS_CANCEL_REQUEST_NOTIFICATION}.method)
+			Result.force (create {LS_DECLARATION_REQUEST_FACTORY}.make, {LS_DECLARATION_REQUEST}.method)
 			Result.force (create {LS_DEFINITION_REQUEST_FACTORY}.make, {LS_DEFINITION_REQUEST}.method)
 			Result.force (create {LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION}.method)
 			Result.force (create {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION_FACTORY}.make, {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION}.method)
@@ -517,6 +542,7 @@ feature {LS_RESPONSE_HANDLER, LS_REQUEST_HANDLER} -- Implementation
 			Result.force (create {LS_DOCUMENT_SYMBOL_REQUEST_FACTORY}.make, {LS_DOCUMENT_SYMBOL_REQUEST}.method)
 			Result.force (create {LS_EXIT_NOTIFICATION_FACTORY}.make, {LS_EXIT_NOTIFICATION}.method)
 			Result.force (create {LS_HOVER_REQUEST_FACTORY}.make, {LS_HOVER_REQUEST}.method)
+			Result.force (create {LS_IMPLEMENTATION_REQUEST_FACTORY}.make, {LS_IMPLEMENTATION_REQUEST}.method)
 			Result.force (create {LS_INITIALIZE_REQUEST_FACTORY}.make, {LS_INITIALIZE_REQUEST}.method)
 			Result.force (create {LS_INITIALIZED_NOTIFICATION_FACTORY}.make, {LS_INITIALIZED_NOTIFICATION}.method)
 			Result.force (create {LS_LOG_TRACE_NOTIFICATION_FACTORY}.make, {LS_LOG_TRACE_NOTIFICATION}.method)
@@ -525,6 +551,7 @@ feature {LS_RESPONSE_HANDLER, LS_REQUEST_HANDLER} -- Implementation
 			Result.force (create {LS_REGISTER_CAPABILITY_REQUEST_FACTORY}.make, {LS_REGISTER_CAPABILITY_REQUEST}.method)
 			Result.force (create {LS_SET_TRACE_NOTIFICATION_FACTORY}.make, {LS_SET_TRACE_NOTIFICATION}.method)
 			Result.force (create {LS_SHUTDOWN_REQUEST_FACTORY}.make, {LS_SHUTDOWN_REQUEST}.method)
+			Result.force (create {LS_TYPE_DEFINITION_REQUEST_FACTORY}.make, {LS_TYPE_DEFINITION_REQUEST}.method)
 			Result.force (create {LS_UNREGISTER_CAPABILITY_REQUEST_FACTORY}.make, {LS_UNREGISTER_CAPABILITY_REQUEST}.method)
 			Result.force (create {LS_WILL_SAVE_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_WILL_SAVE_TEXT_DOCUMENT_NOTIFICATION}.method)
 			Result.force (create {LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REQUEST_FACTORY}.make, {LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REQUEST}.method)

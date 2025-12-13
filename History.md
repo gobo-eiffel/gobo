@@ -34,6 +34,12 @@
 * `KI_FILE.copy_file` and `KI_FILE_SYSTEM.copy_file` now create missing
   directories in the destination path.
 
+### Gobo Eiffel Language Server Protocol Library
+
+* Added support for `textDocument/declaration` requests.
+* Added support for `textDocument/typeDefinition` requests.
+* Added support for `textDocument/implementation` requests.
+
 ### Gobo Eiffel Tools Library
 
 * Implemented CAP (Certified Attachment Pattern) for inline separate

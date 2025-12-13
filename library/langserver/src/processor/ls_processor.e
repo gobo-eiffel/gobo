@@ -110,6 +110,34 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_declaration_capabilities (a_value: LS_DECLARATION_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_declaration_options (a_value: LS_DECLARATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_declaration_registration_options (a_value: LS_DECLARATION_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_declaration_request (a_value: LS_DECLARATION_REQUEST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_definition_capabilities (a_value: LS_DEFINITION_CAPABILITIES)
 			-- Process `a_value`.
 		require
@@ -419,6 +447,34 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_hover_result (a_value: LS_HOVER_RESULT)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_implementation_capabilities (a_value: LS_IMPLEMENTATION_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_implementation_options (a_value: LS_IMPLEMENTATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_implementation_registration_options (a_value: LS_IMPLEMENTATION_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_implementation_request (a_value: LS_IMPLEMENTATION_REQUEST)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void
@@ -769,6 +825,34 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_text_edit_list (a_value: LS_TEXT_EDIT_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_type_definition_capabilities (a_value: LS_TYPE_DEFINITION_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_type_definition_options (a_value: LS_TYPE_DEFINITION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_type_definition_registration_options (a_value: LS_TYPE_DEFINITION_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_type_definition_request (a_value: LS_TYPE_DEFINITION_REQUEST)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void

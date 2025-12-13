@@ -22,6 +22,21 @@ inherit
 			is_equal
 		end
 
+	LS_OPTIONAL_TYPE_DEFINITION_OPTIONS
+		redefine
+			is_equal
+		end
+
+	LS_OPTIONAL_DECLARATION_OPTIONS
+		redefine
+			is_equal
+		end
+
+	LS_OPTIONAL_IMPLEMENTATION_OPTIONS
+		redefine
+			is_equal
+		end
+
 	LS_OPTIONAL_DID_SAVE_TEXT_DOCUMENT_OPTIONS
 		redefine
 			is_equal

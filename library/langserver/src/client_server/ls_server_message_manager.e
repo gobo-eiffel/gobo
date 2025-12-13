@@ -46,7 +46,22 @@ feature {LS_SERVER_INITIALIZE_REQUEST_HANDLER} -- Setting
 			workspace_folders_set: workspace_folders = a_workspace_folders
 		end
 
-feature -- Handling 'textDocument/hover' requests
+feature -- Handling 'textDocument/declaration' requests
+
+	on_declaration_request (a_request: LS_DECLARATION_REQUEST; a_response: LS_DECLARATION_RESPONSE)
+			-- Handle 'textDocument/declaration' request `a_request`.
+			-- Build `a_response` accordingly.
+			--
+			-- (To be redefined in servers.
+			-- Redefine `declaration_request_handler` accordingly as per the precondition.)
+		require
+			a_request_not_void: a_request /= Void
+			a_response_not_void: a_response /= Void
+			declaration_request_supported: declaration_request_handler.generating_type.conforms_to ({detachable LS_SERVER_DECLARATION_REQUEST_HANDLER})
+		do
+		end
+
+feature -- Handling 'textDocument/definition' requests
 
 	on_definition_request (a_request: LS_DEFINITION_REQUEST; a_response: LS_DEFINITION_RESPONSE)
 			-- Handle 'textDocument/definition' request `a_request`.
@@ -177,6 +192,36 @@ feature -- Handling 'textDocument/hover' requests
 			a_request_not_void: a_request /= Void
 			a_response_not_void: a_response /= Void
 			hover_request_supported: hover_request_handler.generating_type.conforms_to ({detachable LS_SERVER_HOVER_REQUEST_HANDLER})
+		do
+		end
+
+feature -- Handling 'textDocument/implementation' requests
+
+	on_implementation_request (a_request: LS_IMPLEMENTATION_REQUEST; a_response: LS_IMPLEMENTATION_RESPONSE)
+			-- Handle 'textDocument/implementation' request `a_request`.
+			-- Build `a_response` accordingly.
+			--
+			-- (To be redefined in servers.
+			-- Redefine `implementation_request_handler` accordingly as per the precondition.)
+		require
+			a_request_not_void: a_request /= Void
+			a_response_not_void: a_response /= Void
+			implementation_request_supported: implementation_request_handler.generating_type.conforms_to ({detachable LS_SERVER_IMPLEMENTATION_REQUEST_HANDLER})
+		do
+		end
+
+feature -- Handling 'textDocument/typeDefinition' requests
+
+	on_type_definition_request (a_request: LS_TYPE_DEFINITION_REQUEST; a_response: LS_TYPE_DEFINITION_RESPONSE)
+			-- Handle 'textDocument/typeDefinition' request `a_request`.
+			-- Build `a_response` accordingly.
+			--
+			-- (To be redefined in servers.
+			-- Redefine `type_definition_request_handler` accordingly as per the precondition.)
+		require
+			a_request_not_void: a_request /= Void
+			a_response_not_void: a_response /= Void
+			type_definition_request_supported: type_definition_request_handler.generating_type.conforms_to ({detachable LS_SERVER_TYPE_DEFINITION_REQUEST_HANDLER})
 		do
 		end
 
