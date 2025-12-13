@@ -78,7 +78,7 @@ where the unused classes will be deleted without asking.
 
 <section><title>Copying used classes</title>
 <para>
-Another solution is to copy the classes which are still used to a new directory:
+Another solution is to copy to a new directory the classes which are still used:
 <programlisting>
 	<filename>gedoc --format=unused_classes --library=foo --output=path/to/directory --library-prefix project.ecf</filename>
 </programlisting>
