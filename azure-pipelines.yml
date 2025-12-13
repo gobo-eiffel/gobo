@@ -34,32 +34,24 @@ stages:
       vm_image: ubuntu-22.04
 
   - template: .azure/build.yml
-    variables:
-      GOBO_CLI_THREAD: 1
     parameters:
       os: macos_15
       c_compiler: zig
       vm_image: macos-15
 
   - template: .azure/build.yml
-    variables:
-      GOBO_CLI_THREAD: 1
     parameters:
       os: macos_15
       c_compiler: clang
       vm_image: macos-15
 
   - template: .azure/build.yml
-    variables:
-      GOBO_CLI_THREAD: 1
     parameters:
       os: macos_14
       c_compiler: zig
       vm_image: macos-14
 
   - template: .azure/build.yml
-    variables:
-      GOBO_CLI_THREAD: 1
     parameters:
       os: macos_14
       c_compiler: clang
@@ -118,32 +110,24 @@ stages:
       vm_image: ubuntu-22.04
 
   - template: .azure/test.yml
-    variables:
-      GOBO_CLI_THREAD: 1
     parameters:
       os: macos_15
       c_compiler: zig
       vm_image: macos-15
 
   - template: .azure/test.yml
-    variables:
-      GOBO_CLI_THREAD: 1
     parameters:
       os: macos_15
       c_compiler: clang
       vm_image: macos-15
 
   - template: .azure/test.yml
-    variables:
-      GOBO_CLI_THREAD: 1
     parameters:
       os: macos_14
       c_compiler: zig
       vm_image: macos-14
 
   - template: .azure/test.yml
-    variables:
-      GOBO_CLI_THREAD: 1
     parameters:
       os: macos_14
       c_compiler: clang
