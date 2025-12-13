@@ -15,11 +15,12 @@ feature
 
 	g
 		do
-			{EXECUTION_ENVIRONMENT}.sleep (1_000_000_000)
+			{SCHEDULER}.wait_for_value (1)
 			separate attr as a do
 				a.h
 			end
 			print ("End of BB.g%N")
+			{SCHEDULER}.set_value (2)
 		end
 
 end

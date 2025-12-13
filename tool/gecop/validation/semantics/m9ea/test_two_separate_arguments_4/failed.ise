@@ -1,6 +1,6 @@
+EE calling CC.fe
 DD calling BB.f
-EE calling CC.f
 DD middle f
 EE end f
-DD calling CC.f
+DD calling CC.fd
 DD end f
