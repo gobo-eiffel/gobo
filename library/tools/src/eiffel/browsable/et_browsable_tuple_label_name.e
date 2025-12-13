@@ -69,6 +69,16 @@ feature -- Output
 			Result := [labeled_parameter.label, labeled_parameter.implementation_class]
 		end
 
+	type_definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
+			-- AST node, and its implementation class, where
+			-- the type of the current browsable name is defined
+		local
+			l_base_class: ET_CLASS
+		do
+			l_base_class := labeled_parameter.type.base_class (current_class)
+			Result := [l_base_class.name, l_base_class]
+		end
+
 invariant
 
 	name_is_tuple_label: name.is_tuple_label

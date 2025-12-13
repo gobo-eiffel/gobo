@@ -71,6 +71,18 @@ feature -- Output
 			Result := [l_feature.name, l_feature.implementation_class]
 		end
 
+	type_definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
+			-- AST node, and its implementation class, where
+			-- the type of the current browsable name is defined
+		local
+			l_base_class: ET_CLASS
+		do
+			if attached call_feature.type as l_type then
+				l_base_class := l_type.base_class (current_class)
+				Result := [l_base_class.name, l_base_class]
+			end
+		end
+
 invariant
 
 	call_feature_not_void: call_feature /= Void

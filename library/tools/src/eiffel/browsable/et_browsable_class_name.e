@@ -58,6 +58,13 @@ feature -- Output
 			Result := [actual_class.name, actual_class]
 		end
 
+	type_definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
+			-- AST node, and its implementation class, where
+			-- the type of the current browsable name is defined
+		do
+			Result := [actual_class.name, actual_class]
+		end
+
 invariant
 
 	actual_class_not_void: actual_class /= Void

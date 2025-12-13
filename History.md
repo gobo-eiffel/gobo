@@ -29,6 +29,10 @@
 * Added format `unused_class` to get the list of unused classes,
   and/or delete them.
 
+### gelsp
+
+* Implemented `Go To Type Definition` navigation (in the contextual menu).
+
 ### Gobo Eiffel Kernel Library
 
 * `KI_FILE.copy_file` and `KI_FILE_SYSTEM.copy_file` now create missing
