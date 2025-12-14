@@ -110,17 +110,11 @@ feature -- Status report
 					Result := l_wildcard.recognizes (l_actual_value)
 				end
 			elseif STRING_.same_case_insensitive (l_match, match_regexp) then
-			io.error.put_string (name)
-			io.error.put_string ("%N")
-			io.error.put_string (l_actual_value)
-			io.error.put_string ("%N")
 				create l_regexp.make
 				l_regexp.compile (value)
 				if l_regexp.is_compiled then
 					Result := l_regexp.recognizes (l_actual_value)
 				end
-				io.error.put_string (Result.out)
-			io.error.put_string ("%N")
 			else
 				Result := STRING_.same_string (value, l_actual_value)
 			end
