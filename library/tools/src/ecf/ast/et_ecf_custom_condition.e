@@ -93,26 +93,36 @@ feature -- Status report
 		local
 			l_regexp: RX_PCRE_REGULAR_EXPRESSION
 			l_wildcard: LX_DFA_WILDCARD
+			l_actual_value: STRING
 		do
 			if attached a_state.target.variables.value (name) as l_variable then
-				if not attached match as l_match then
-					Result := STRING_.same_string (value, l_variable)
-				elseif STRING_.same_case_insensitive (l_match, match_case_insensitive) then
-					Result := STRING_.same_case_insensitive (value, l_variable)
-				elseif STRING_.same_case_insensitive (l_match, match_wildcard) then
-					create l_wildcard.compile_case_sensitive (value)
-					if l_wildcard.is_compiled then
-						Result := l_wildcard.recognizes (l_variable)
-					end
-				elseif STRING_.same_case_insensitive (l_match, match_regexp) then
-					create l_regexp.make
-					l_regexp.compile (value)
-					if l_regexp.is_compiled then
-						Result := l_regexp.recognizes (l_variable)
-					end
-				else
-					Result := STRING_.same_string (value, l_variable)
+				l_actual_value := l_variable
+			else
+				l_actual_value := ""
+			end
+			if not attached match as l_match then
+				Result := STRING_.same_string (value, l_actual_value)
+			elseif STRING_.same_case_insensitive (l_match, match_case_insensitive) then
+				Result := STRING_.same_case_insensitive (value, l_actual_value)
+			elseif STRING_.same_case_insensitive (l_match, match_wildcard) then
+				create l_wildcard.compile_case_sensitive (value)
+				if l_wildcard.is_compiled then
+					Result := l_wildcard.recognizes (l_actual_value)
 				end
+			elseif STRING_.same_case_insensitive (l_match, match_regexp) then
+			io.error.put_string (name)
+			io.error.put_string ("%N")
+			io.error.put_string (l_actual_value)
+			io.error.put_string ("%N")
+				create l_regexp.make
+				l_regexp.compile (value)
+				if l_regexp.is_compiled then
+					Result := l_regexp.recognizes (l_actual_value)
+				end
+				io.error.put_string (Result.out)
+			io.error.put_string ("%N")
+			else
+				Result := STRING_.same_string (value, l_actual_value)
 			end
 			Result := (is_excluded /= Result)
 		end

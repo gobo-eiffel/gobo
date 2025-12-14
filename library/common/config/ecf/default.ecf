@@ -30,5 +30,45 @@
 		<library name="tools" location="${GOBO_LIBRARY}/library/tools/library.ecf" readonly="true"/>
 		<library name="test" location="${GOBO_LIBRARY}/library/test/library.ecf" readonly="true"/>
 		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
+		<library name="ise_time" location="${ISE_EIFFEL}/library/time/time.ecf" readonly="true">
+			<condition>
+				<custom name="ISE_EIFFEL" excluded_value="^$" match="regexp"/>
+			</condition>
+		</library>
+		<library name="ise_decimal" location="${ISE_EIFFEL}\contrib\library\math\decimal\decimal\decimal.ecf" readonly="true">
+			<condition>
+				<custom name="ISE_EIFFEL" excluded_value="^$" match="regexp"/>
+			</condition>
+		</library>
+		<library name="ise_encoder" location="${ISE_EIFFEL}\contrib\library\web\framework\ewf\text\encoder\encoder.ecf" readonly="true">
+			<condition>
+				<custom name="ISE_EIFFEL" excluded_value="^$" match="regexp"/>
+			</condition>
+		</library>
+		<library name="ise_encoding" location="${ISE_EIFFEL}\library\encoding\encoding.ecf" readonly="true">
+			<condition>
+				<custom name="ISE_EIFFEL" excluded_value="^$" match="regexp"/>
+			</condition>
+		</library>
+		<library name="ise_json" location="${ISE_EIFFEL}\contrib\library\text\parser\json\library\json.ecf" readonly="true">
+			<condition>
+				<custom name="ISE_EIFFEL" excluded_value="^$" match="regexp"/>
+			</condition>
+		</library>
+		<library name="ise_logging" location="${ISE_EIFFEL}\library\runtime\logging\logging.ecf" readonly="true">
+			<condition>
+				<custom name="ISE_EIFFEL" excluded_value="^$" match="regexp"/>
+			</condition>
+		</library>
+		<library name="base_extension" location="${ISE_EIFFEL}\library\base_extension\base_extension.ecf" readonly="true">
+			<condition>
+				<custom name="ISE_EIFFEL" excluded_value="^$" match="regexp"/>
+			</condition>
+		</library>
+		<library name="testing" location="${ISE_EIFFEL}\library\testing\testing.ecf" readonly="true">
+			<condition>
+				<custom name="ISE_EIFFEL" excluded_value="^$" match="regexp"/>
+			</condition>
+		</library>
 	</target>
 </system>
