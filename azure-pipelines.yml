@@ -1,9 +1,7 @@
 # For available vmImages, see https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml
 
 variables:
-  GOBO_CLI_GC: no
   GOBO_CLI_THREAD: 0
-  GOBO_DEFAULT_SETTING: exception_trace=true
 
 stages:
 
