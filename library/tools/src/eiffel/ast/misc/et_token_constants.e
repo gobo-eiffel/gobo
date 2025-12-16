@@ -160,6 +160,15 @@ feature -- Class names
 			function_class_name_not_void: Result /= Void
 		end
 
+	identified_controller_class_name: ET_CLASS_NAME
+			-- "IDENTIFIED_CONTROLLER" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_identified_controller_name)
+		ensure
+			instance_free: class
+			identified_controller_class_name_not_void: Result /= Void
+		end
+
 	identified_routines_class_name: ET_CLASS_NAME
 			-- "IDENTIFIED_ROUTINES" class name
 		once
@@ -1433,6 +1442,15 @@ feature -- Feature names
 			extend_feature_name_not_void: Result /= Void
 		end
 
+	extend_object_id_stack_feature_name: ET_FEATURE_NAME
+			-- 'extend_object_id_stack' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (extend_object_id_stack_name)
+		ensure
+			instance_free: class
+			extend_object_id_stack_feature_name_not_void: Result /= Void
+		end
+
 	fast_call_feature_name: ET_FEATURE_NAME
 			-- 'fast_call' feature name
 		once
@@ -2592,6 +2610,15 @@ feature -- Feature names
 		ensure
 			instance_free: class
 			object_comparison_feature_name_not_void: Result /= Void
+		end
+
+	object_id_stack_size_feature_name: ET_FEATURE_NAME
+			-- 'obobject_id_stack_size' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (object_id_stack_size_name)
+		ensure
+			instance_free: class
+			object_id_stack_size_feature_name_not_void: Result /= Void
 		end
 
 	object_size_feature_name: ET_FEATURE_NAME
@@ -5062,6 +5089,7 @@ feature -- Keyword and symbol names
 	capitalized_exception_manager_factory_name: STRING = "EXCEPTION_MANAGER_FACTORY"
 	capitalized_file_name: STRING = "FILE"
 	capitalized_function_name: STRING = "FUNCTION"
+	capitalized_identified_controller_name: STRING = "IDENTIFIED_CONTROLLER"
 	capitalized_identified_routines_name: STRING = "IDENTIFIED_ROUTINES"
 	capitalized_immutable_string_8_name: STRING = "IMMUTABLE_STRING_8"
 	capitalized_immutable_string_32_name: STRING = "IMMUTABLE_STRING_32"
@@ -5345,6 +5373,9 @@ feature -- Keyword and symbol names
 	extend_name: STRING = "extend"
 			-- Name of Eiffel feature 'extend'
 
+	extend_object_id_stack_name: STRING = "extend_object_id_stack"
+			-- Name of Eiffel feature 'extend_object_id_stack'
+	
 	fast_call_name: STRING = "fast_call"
 			-- Name of Eiffel feature 'fast_call'
 
@@ -5728,6 +5759,9 @@ feature -- Keyword and symbol names
 
 	object_comparison_name: STRING = "object_comparison"
 			-- Name of Eiffel feature 'object_comparison'
+
+	object_id_stack_size_name: STRING = "object_id_stack_size"
+			-- Name of Eiffel feature 'object_id_stack_size'
 
 	object_size_name: STRING = "object_size"
 			-- Name of Eiffel feature 'object_size'

@@ -3468,6 +3468,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_external_builtin_exception_manager_factory_function_body (a_feature)
 			when {ET_TOKEN_CODES}.builtin_function_class then
 				print_external_builtin_function_function_body (a_feature)
+			when {ET_TOKEN_CODES}.builtin_identified_controller_class then
+				print_external_builtin_identified_controller_function_body (a_feature)
 			when {ET_TOKEN_CODES}.builtin_identified_routines_class then
 				print_external_builtin_identified_routines_function_body (a_feature)
 			when {ET_TOKEN_CODES}.builtin_integer_8_class then
@@ -3897,6 +3899,31 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_external_builtin_function_function_body", 1, "unknown built-in feature.")
+			end
+		end
+
+	print_external_builtin_identified_controller_function_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in function introduced in class "IDENTIFIED_CONTROLLER".
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_function: a_feature.is_function
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_identified_controller: current_feature.is_builtin_identified_controller_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_feature_code
+			when {ET_TOKEN_CODES}.builtin_identified_controller_object_id_stack_size then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_identified_controller_object_id_stack_size_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_identified_conroller_function_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -5269,6 +5296,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_external_builtin_com_failure_procedure_body (a_feature)
 			when {ET_TOKEN_CODES}.builtin_exception_manager_class then
 				print_external_builtin_exception_manager_procedure_body (a_feature)
+			when {ET_TOKEN_CODES}.builtin_identified_controller_class then
+				print_external_builtin_identified_controller_procedure_body (a_feature)
 			when {ET_TOKEN_CODES}.builtin_identified_routines_class then
 				print_external_builtin_identified_routines_procedure_body (a_feature)
 			when {ET_TOKEN_CODES}.builtin_integer_8_ref_class then
@@ -5429,6 +5458,29 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- This error should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
 				error_handler.report_giaac_error (generator, "print_external_builtin_exception_manager_procedure_body", 1, "unknown built-in feature.")
+			end
+		end
+
+	print_external_builtin_identified_controller_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in procedure introduced in class "IDENTIFIED_CONTROLLER".
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_procedure: a_feature.is_procedure
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_identified_controller: current_feature.is_builtin_identified_controller_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_feature_code
+			when {ET_TOKEN_CODES}.builtin_identified_controller_extend_object_id_stack then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_identified_controller_extend_object_id_stack_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_external_builtin_identified_controller_procedure_body", 1, "unknown built-in feature.")
 			end
 		end
 
@@ -10947,6 +10999,8 @@ feature {NONE} -- Procedure call generation
 				print_builtin_character_n_ref_procedure_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_com_failure_class then
 				print_builtin_com_failure_procedure_call (a_feature, a_target_type, a_check_void_target)
+			when {ET_TOKEN_CODES}.builtin_identified_controller_class then
+				print_builtin_identified_controller_procedure_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_identified_routines_class then
 				print_builtin_identified_routines_procedure_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_integer_8_ref_class then
@@ -11069,6 +11123,27 @@ feature {NONE} -- Procedure call generation
 			inspect a_feature.builtin_feature_code
 			when {ET_TOKEN_CODES}.builtin_com_failure_cwin_local_free then
 				print_builtin_com_failure_cwin_local_free_call (a_feature, a_target_type, a_check_void_target)
+			else
+				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
+	print_builtin_identified_controller_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to procedure `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "IDENTIFIED_CONTROLLER".
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_identified_controller: a_feature.is_builtin_identified_controller_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_feature_code
+			when {ET_TOKEN_CODES}.builtin_identified_controller_extend_object_id_stack then
+				print_builtin_identified_controller_extend_object_id_stack_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -17718,6 +17793,8 @@ feature {NONE} -- Query call generation
 				print_builtin_com_failure_query_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_function_class then
 				print_builtin_function_query_call (a_feature, a_target_type, a_check_void_target)
+			when {ET_TOKEN_CODES}.builtin_identified_controller_class then
+				print_builtin_identified_controller_query_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_identified_routines_class then
 				print_builtin_identified_routines_query_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_integer_8_class then
@@ -18024,6 +18101,31 @@ feature {NONE} -- Query call generation
 				print_builtin_function_fast_item_call (a_feature, a_target_type, a_check_void_target)
 			when {ET_TOKEN_CODES}.builtin_function_item then
 				print_builtin_function_item_call (a_feature, a_target_type, a_check_void_target)
+			else
+				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
+	print_builtin_identified_controller_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to query `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "IDENTIFIED_CONTROLLER".
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+			-- Note that the result of the query is not adapted to match the kind
+			-- of result type expected by the caller. It is recommended to use
+			-- `print_adapted_query_call' whenever possible.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_query: a_feature.is_query
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_controller_routines: a_feature.is_builtin_identified_controller_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_feature_code
+			when {ET_TOKEN_CODES}.builtin_identified_controller_object_id_stack_size then
+				print_builtin_identified_controller_object_id_stack_size_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -27220,6 +27322,40 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			else
 				print_builtin_routine_call_call (a_feature, a_target_type, a_check_void_target)
 			end
+		end
+
+	print_builtin_identified_controller_extend_object_id_stack_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'IDENTIFIED_CONTROLLER.extend_object_id_stack'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaac_error (generator, "print_builtin_identified_controller_extend_object_id_stack_call", 1, "wrong number of arguments.")
+			else
+				-- Empty implementation.
+			end
+		end
+
+	print_builtin_identified_controller_object_id_stack_size_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'IDENTIFIED_CONTROLLER.object_id_stack_size'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			current_file.put_character ('0')
 		end
 
 	print_builtin_identified_routines_eif_current_object_id_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
