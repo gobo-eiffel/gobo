@@ -299,26 +299,36 @@ feature {NONE} -- Processing
 				l_system_processor.set_flat_mode (True)
 				l_system_processor.set_flat_dbc_mode (True)
 			end
-			create l_system.make (a_system, l_system_processor)
-			if is_gelint or l_thread_count > 1 or l_system_processor.benchmark_shown or l_system_processor.nested_benchmark_shown then
-				l_system.set_full_class_checking (True)
-			end
-			l_system.set_catcall_error_mode (catcall_error_mode)
-			l_system.set_catcall_warning_mode (catcall_warning_mode)
-			l_system.set_new_instance_types (new_instance_types)
-			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} l_builder.make (l_system, l_system_processor)
-			l_system.set_dynamic_type_set_builder (l_builder)
-			l_system.compile (l_system_processor)
-			if l_system.has_fatal_error or error_handler.has_fatal_error then
-				exit_code := 1
-			elseif not attached a_system.root_type as l_root_type then
-				-- Do nothing.
-			elseif l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) then
-				-- Do nothing.
+			if a_system.root_type_name = Void and not (catcall_error_mode or catcall_warning_mode) then
+					-- Stop compilation after Degree 3.
+				l_system_processor.compile (a_system)
 			else
-				compile_degree_minus_3 (l_system, l_system_processor)
-				if exit_code = 0 and not no_c_compile then
-					compile_c_code (a_system, l_system_processor)
+				create l_system.make (a_system, l_system_processor)
+				if is_gelint or l_thread_count > 1 or l_system_processor.benchmark_shown or l_system_processor.nested_benchmark_shown then
+					l_system.set_full_class_checking (True)
+				end
+				l_system.set_catcall_error_mode (catcall_error_mode)
+				l_system.set_catcall_warning_mode (catcall_warning_mode)
+				l_system.set_new_instance_types (new_instance_types)
+				if a_system.root_type_name = Void then
+						-- Use the same builder as `gelint`.
+					create {ET_DYNAMIC_PULL_TYPE_SET_BUILDER} l_builder.make (l_system, l_system_processor)
+				else
+					create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} l_builder.make (l_system, l_system_processor)
+				end
+				l_system.set_dynamic_type_set_builder (l_builder)
+				l_system.compile (l_system_processor)
+				if l_system.has_fatal_error or error_handler.has_fatal_error then
+					exit_code := 1
+				elseif not attached a_system.root_type as l_root_type then
+					-- Do nothing.
+				elseif l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) then
+					-- Do nothing.
+				else
+					compile_degree_minus_3 (l_system, l_system_processor)
+					if exit_code = 0 and not no_c_compile then
+						compile_c_code (a_system, l_system_processor)
+					end
 				end
 			end
 			l_system_processor.record_end_time (dt_total, "Total Time")

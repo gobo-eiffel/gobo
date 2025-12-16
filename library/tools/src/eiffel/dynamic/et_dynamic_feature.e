@@ -99,6 +99,12 @@ feature {NONE} -- Initialization
 				elseif builtin_class_code = tokens.builtin_ise_runtime_class and then builtin_feature_code = tokens.builtin_ise_runtime_new_tuple_instance_of then
 					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 					result_type_set := l_dynamic_type_set_builder.alive_conforming_descendants (l_dynamic_type)
+				elseif
+					builtin_class_code = tokens.builtin_any_class and then
+					builtin_feature_code = tokens.builtin_any_generating_type and then
+					target_type.base_class.is_type_class
+				then
+					result_type_set := a_system.type_none_type
 				else
 					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 					l_dynamic_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
