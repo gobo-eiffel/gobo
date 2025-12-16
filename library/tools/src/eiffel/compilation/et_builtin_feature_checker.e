@@ -5,7 +5,7 @@
 		"Eiffel built-in feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_BUILTIN_FEATURE_CHECKER
@@ -133,6 +133,8 @@ feature {NONE} -- Built-in validity
 				check_builtin_exception_manager_factory_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.ise_exception_manager_class_name) then
 				check_builtin_ise_exception_manager_feature_validity (a_feature)
+			elseif l_name.same_class_name (tokens.identified_controller_class_name) then
+				check_builtin_identified_controller_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.identified_routines_class_name) then
 				check_builtin_identified_routines_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.ise_runtime_class_name) then
@@ -469,6 +471,31 @@ feature {NONE} -- Built-in validity
 					-- Functions.
 				register_builtin_feature (tokens.fast_item_feature_name, <<current_universe.pointer_type.type, current_universe.pointer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.boolean_type.type, current_universe.integer_type.type, current_universe.integer_type.type, current_universe.pointer_type.type>>, l_result_type, tokens.builtin_function_fast_item, l_builtin_features)
 				register_builtin_feature (tokens.item_feature_name, <<detachable_separate_formal_parameter_type (l_open_args).type>>, l_result_type, tokens.builtin_function_item, l_builtin_features)
+			end
+			check_expected_builtin_feature_validity (a_feature, l_builtin_class_code, l_builtin_features)
+		end
+
+	check_builtin_identified_controller_feature_validity (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Check validity of built-in `a_feature' from class "IDENTIFIED_CONTROLLER".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_builtin_features: DS_HASH_TABLE [TUPLE [arguments: detachable ARRAY [ET_TYPE]; type: detachable ET_TYPE; builtin_feature_code: NATURAL_8], ET_FEATURE_NAME]
+			l_builtin_class_code: NATURAL_8
+		do
+			l_builtin_class_code := tokens.builtin_identified_controller_class
+			builtin_features.search (l_builtin_class_code)
+			if builtin_features.found then
+				l_builtin_features := builtin_features.found_item
+			else
+				create l_builtin_features.make_map (2)
+				l_builtin_features.set_key_equality_tester (feature_name_tester)
+				builtin_features.force_last (l_builtin_features, l_builtin_class_code)
+					-- Functions.
+				register_builtin_feature (tokens.object_id_stack_size_feature_name, Void, current_universe.integer_type, tokens.builtin_identified_controller_object_id_stack_size, l_builtin_features)					-- Procedures.
+					-- Procedures.
+				register_builtin_feature (tokens.extend_object_id_stack_feature_name, <<current_universe.integer_type.type>>, Void, tokens.builtin_identified_controller_extend_object_id_stack, l_builtin_features)
 			end
 			check_expected_builtin_feature_validity (a_feature, l_builtin_class_code, l_builtin_features)
 		end

@@ -669,6 +669,15 @@ feature -- Status report
 			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_function_class)
 		end
 
+	is_builtin_identified_controller_class: BOOLEAN
+			-- Is current feature a built-in feature of class "IDENTIFIED_CONTROLLER"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_identified_controller_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_identified_controller_class)
+		end
+
 	is_builtin_identified_routines_class: BOOLEAN
 			-- Is current feature a built-in feature of class "IDENTIFIED_ROUTINES"?
 		do

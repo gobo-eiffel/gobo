@@ -169,37 +169,38 @@ feature -- Built-in codes
 	builtin_exception_manager_class: NATURAL_8 = 11
 	builtin_exception_manager_factory_class: NATURAL_8 = 12
 	builtin_function_class: NATURAL_8 = 13
-	builtin_identified_routines_class: NATURAL_8 = 14
-	builtin_integer_8_class: NATURAL_8 = 15
-	builtin_integer_8_ref_class: NATURAL_8 = 16
-	builtin_integer_16_class: NATURAL_8 = 17
-	builtin_integer_16_ref_class: NATURAL_8 = 18
-	builtin_integer_32_class: NATURAL_8 = 19
-	builtin_integer_32_ref_class: NATURAL_8 = 20
-	builtin_integer_64_class: NATURAL_8 = 21
-	builtin_integer_64_ref_class: NATURAL_8 = 22
-	builtin_ise_exception_manager_class: NATURAL_8 = 23
-	builtin_ise_runtime_class: NATURAL_8 = 24
-	builtin_memory_class: NATURAL_8 = 25
-	builtin_natural_8_class: NATURAL_8 = 26
-	builtin_natural_8_ref_class: NATURAL_8 = 27
-	builtin_natural_16_class: NATURAL_8 = 28
-	builtin_natural_16_ref_class: NATURAL_8 = 29
-	builtin_natural_32_class: NATURAL_8 = 30
-	builtin_natural_32_ref_class: NATURAL_8 = 31
-	builtin_natural_64_class: NATURAL_8 = 32
-	builtin_natural_64_ref_class: NATURAL_8 = 33
-	builtin_platform_class: NATURAL_8 = 34
-	builtin_pointer_class: NATURAL_8 = 35
-	builtin_pointer_ref_class: NATURAL_8 = 36
-	builtin_procedure_class: NATURAL_8 = 37
-	builtin_real_32_class: NATURAL_8 = 38
-	builtin_real_32_ref_class: NATURAL_8 = 39
-	builtin_real_64_class: NATURAL_8 = 40
-	builtin_real_64_ref_class: NATURAL_8 = 41
-	builtin_special_class: NATURAL_8 = 42
-	builtin_tuple_class: NATURAL_8 = 43
-	builtin_type_class: NATURAL_8 = 44
+	builtin_identified_controller_class: NATURAL_8 = 14
+	builtin_identified_routines_class: NATURAL_8 = 15
+	builtin_integer_8_class: NATURAL_8 = 16
+	builtin_integer_8_ref_class: NATURAL_8 = 17
+	builtin_integer_16_class: NATURAL_8 = 18
+	builtin_integer_16_ref_class: NATURAL_8 = 19
+	builtin_integer_32_class: NATURAL_8 = 20
+	builtin_integer_32_ref_class: NATURAL_8 = 21
+	builtin_integer_64_class: NATURAL_8 = 22
+	builtin_integer_64_ref_class: NATURAL_8 = 23
+	builtin_ise_exception_manager_class: NATURAL_8 = 24
+	builtin_ise_runtime_class: NATURAL_8 = 25
+	builtin_memory_class: NATURAL_8 = 26
+	builtin_natural_8_class: NATURAL_8 = 27
+	builtin_natural_8_ref_class: NATURAL_8 = 28
+	builtin_natural_16_class: NATURAL_8 = 29
+	builtin_natural_16_ref_class: NATURAL_8 = 30
+	builtin_natural_32_class: NATURAL_8 = 31
+	builtin_natural_32_ref_class: NATURAL_8 = 32
+	builtin_natural_64_class: NATURAL_8 = 33
+	builtin_natural_64_ref_class: NATURAL_8 = 34
+	builtin_platform_class: NATURAL_8 = 35
+	builtin_pointer_class: NATURAL_8 = 36
+	builtin_pointer_ref_class: NATURAL_8 = 37
+	builtin_procedure_class: NATURAL_8 = 38
+	builtin_real_32_class: NATURAL_8 = 39
+	builtin_real_32_ref_class: NATURAL_8 = 40
+	builtin_real_64_class: NATURAL_8 = 41
+	builtin_real_64_ref_class: NATURAL_8 = 42
+	builtin_special_class: NATURAL_8 = 43
+	builtin_tuple_class: NATURAL_8 = 44
+	builtin_type_class: NATURAL_8 = 45
 			-- Code for classes of built-in features	
 
 	builtin_any_conforms_to: NATURAL_8 = 1
@@ -283,6 +284,10 @@ feature -- Built-in codes
 	builtin_function_fast_item: NATURAL_8 = 1
 	builtin_function_item: NATURAL_8 = 2
 			-- Codes for built-in functions from class "FUNCTION"
+
+	builtin_identified_controller_object_id_stack_size: NATURAL_8 = 1
+	builtin_identified_controller_extend_object_id_stack: NATURAL_8 = 2
+			-- Codes for built-in procedures from class "IDENTIFIED_CONTROLLER"
 
 	builtin_identified_routines_eif_current_object_id: NATURAL_8 = 1
 	builtin_identified_routines_eif_id_object: NATURAL_8 = 2

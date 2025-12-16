@@ -349,6 +349,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_exception_manager_factory_name)
 			Result.force_new (-1, tokens.capitalized_file_name)
 			Result.force_new (-1, tokens.capitalized_function_name)
+			Result.force_new (-1, tokens.capitalized_identified_controller_name)
 			Result.force_new (-1, tokens.capitalized_identified_routines_name)
 			Result.force_new (-1, tokens.capitalized_immutable_string_8_name)
 			Result.force_new (-1, tokens.capitalized_immutable_string_32_name)
