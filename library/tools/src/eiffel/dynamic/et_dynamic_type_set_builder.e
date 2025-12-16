@@ -270,15 +270,14 @@ feature {ET_DYNAMIC_SYSTEM} -- Generation
 		require
 			a_type_not_void: a_type /= Void
 			a_type_is_alive: a_type.is_alive
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [like new_dynamic_type_set, ET_DYNAMIC_TYPE]
 		do
 			if attached alive_conforming_descendants_per_type as l_alive_conforming_descendants then
-				from
-					l_alive_conforming_descendants.start
-				until
-					l_alive_conforming_descendants.after
-				loop
-					l_alive_conforming_descendants.item_for_iteration.put_type_from_type_set (a_type, a_type, current_dynamic_system)
-					l_alive_conforming_descendants.forth
+				l_cursor := l_alive_conforming_descendants.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					l_cursor.item.put_type_from_type_set (a_type, a_type, current_dynamic_system)
+					l_cursor.forth
 				end
 			end
 		end

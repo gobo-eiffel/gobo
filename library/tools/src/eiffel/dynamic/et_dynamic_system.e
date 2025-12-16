@@ -709,6 +709,13 @@ feature {NONE} -- Types
 				if attached l_type.meta_type as l_meta_type then
 					Result := l_meta_type
 				else
+					if l_type.base_class.is_type_class then
+						if attached l_type.base_type.actual_parameters as l_foo and then l_foo.count = 1 then
+							if l_foo.type (1).base_class (l_any).is_type_class then
+								do_nothing
+							end
+						end
+					end
 					create Result.make (a_base_type, l_base_class)
 					register_dynamic_type (Result)
 					l_type.set_meta_type (Result)
@@ -1101,7 +1108,10 @@ feature {NONE} -- Types
 			a_type_not_void: a_type /= Void
 		do
 			if attached ise_runtime_new_type_instance_of_feature as l_ise_runtime_new_type_instance_of_feature then
-				if not in_create_meta_type then
+				if a_type.base_class.is_type_class then
+					dynamic_type_set_builder.mark_type_alive (type_none_type)
+					dynamic_type_set_builder.propagate_type_of_type_result_type (type_none_type, l_ise_runtime_new_type_instance_of_feature)
+				elseif not in_create_meta_type then
 					create_meta_type (a_type)
 					if attached a_type.meta_type as l_meta_type then
 						dynamic_type_set_builder.mark_type_alive (l_meta_type)

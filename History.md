@@ -11,6 +11,8 @@
 
 * Fixed bug when inlining code in inherited assertions (preconditions,
   postconditions and invariants).
+* Stop at the end of Degree 3 when there is no root class specified
+  and CAT-call error reporting is turned off.
 
 ### gedoc
 
@@ -61,6 +63,10 @@
   expression even if there is no such binary operator defined in the
   type of the left-hand-side expression. This violates ECMA rule `DWTC`
   ("Definition: Target-converted form of a binary expression").
+* Avoid infinite loop when computing dynamic type sets involing
+  `TYPE` (e.g. `TYPE [TYPE [TYPE [... TYPE [FOO] ...]]]`) by
+  considering that the type of a `TYPE` object is `TYPE [NONE]`
+  and not `TYPE [TYPE [...]]`.
 * Implemented built-in features from class `IDENTIFIED_CONTROLLER`.
 
 ## Version 25.12.04 - 4 December 2025
