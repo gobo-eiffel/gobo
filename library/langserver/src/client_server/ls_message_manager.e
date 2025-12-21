@@ -133,6 +133,22 @@ feature -- Basic operations
 
 feature -- Handlers
 
+	completion_request_handler: LS_COMPLETION_REQUEST_HANDLER
+			-- Handler for 'textDocument/completion' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			completion_request_handler_not_void: Result /= Void
+		end
+
+	completion_item_resolve_request_handler: LS_COMPLETION_ITEM_RESOLVE_REQUEST_HANDLER
+			-- Handler for 'completionItem/resolve' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			completion_item_resolve_request_handler_not_void: Result /= Void
+		end
+
 	configuration_request_handler: LS_CONFIGURATION_REQUEST_HANDLER
 			-- Handler for 'workspace/configuration' requests
 		once ("OBJECT")
@@ -530,6 +546,8 @@ feature {LS_RESPONSE_HANDLER, LS_REQUEST_HANDLER} -- Implementation
 			-- Message factories, indexed by methods
 		once ("OBJECT")
 			create Result.make (100)
+			Result.force (create {LS_COMPLETION_REQUEST_FACTORY}.make, {LS_COMPLETION_REQUEST}.method)
+			Result.force (create {LS_COMPLETION_ITEM_RESOLVE_REQUEST_FACTORY}.make, {LS_COMPLETION_ITEM_RESOLVE_REQUEST}.method)
 			Result.force (create {LS_CONFIGURATION_REQUEST_FACTORY}.make, {LS_CONFIGURATION_REQUEST}.method)
 			Result.force (create {LS_CANCEL_REQUEST_NOTIFICATION_FACTORY}.make, {LS_CANCEL_REQUEST_NOTIFICATION}.method)
 			Result.force (create {LS_DECLARATION_REQUEST_FACTORY}.make, {LS_DECLARATION_REQUEST}.method)

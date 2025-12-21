@@ -34,7 +34,7 @@ feature -- Basic oprations
 			l_registration_list := a_request.registrations
 			nb := l_registration_list.count
 			from i := 1 until i > nb loop
-				l_registration := l_registration_list.registration (i)
+				l_registration := l_registration_list.value (i)
 				if l_registration.method ~ {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION}.method then
 					if attached {LS_DID_CHANGE_WATCHED_FILES_REGISTRATION_OPTIONS} l_registration.register_options as l_register_options then
 						a_manager.on_did_change_watched_files_options_registered (l_register_options, l_registration, a_response)

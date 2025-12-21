@@ -12,7 +12,7 @@ class LS_TEXT_EDIT
 
 inherit
 
-	LS_ANY
+	LS_EDIT
 
 create
 

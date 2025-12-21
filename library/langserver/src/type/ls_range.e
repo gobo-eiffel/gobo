@@ -24,7 +24,7 @@ class LS_RANGE
 
 inherit
 
-	LS_ANY
+	LS_EDIT_RANGE
 
 create
 

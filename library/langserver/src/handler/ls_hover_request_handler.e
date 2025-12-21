@@ -42,7 +42,7 @@ feature -- Status report
 			if attached client_capabilities as l_capabilities and then attached l_capabilities.content_format as l_content_format then
 				nb := l_content_format.count
 				from i := 1 until i > nb loop
-					if l_content_format.markup_kind (i) ~ {LS_MARKUP_KINDS}.markdown then
+					if l_content_format.value (i) ~ {LS_MARKUP_KINDS}.markdown then
 						Result := True
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -60,7 +60,7 @@ feature -- Status report
 			if attached client_capabilities as l_capabilities and then attached l_capabilities.content_format as l_content_format then
 				nb := l_content_format.count
 				from i := 1 until i > nb loop
-					if l_content_format.markup_kind (i) ~ {LS_MARKUP_KINDS}.plaintext then
+					if l_content_format.value (i) ~ {LS_MARKUP_KINDS}.plaintext then
 						Result := True
 						i := nb + 1 -- Jump out of the loop.
 					else

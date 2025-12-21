@@ -12,34 +12,12 @@ class LS_DIAGNOSTIC_LIST
 
 inherit
 
-	LS_ARRAY
-		redefine
-			value,
-			process
-		end
+	LS_LIST [LS_DIAGNOSTIC]
 
 create
 
 	make,
 	make_with_capacity
-
-feature -- Access
-
-	value (i: INTEGER): LS_DIAGNOSTIC
-			-- Value at index `i`
-		do
-			Result := values.item (i)
-		end
-
-feature -- Removal
-
-	wipe_out
-			-- Delete all diagnostics in current list.
-		do
-			values.wipe_out
-		ensure
-			wiped_out: count = 0
-		end
 
 feature -- Processing
 

@@ -30,6 +30,9 @@ feature -- Access
 	synchronization: detachable LS_TEXT_DOCUMENT_SYNC_CAPABILITIES
 			-- Capabilities specific to text document synchronization
 
+	completion: detachable LS_COMPLETION_CAPABILITIES
+			-- Capabilities specific to the 'textDocument/completion' request.
+
 	hover: detachable LS_HOVER_CAPABILITIES
 			-- Capabilities specific to the 'textDocument/hover' request.
 
@@ -59,6 +62,14 @@ feature -- Setting
 			synchronization := a_synchronization
 		ensure
 			synchronization_set: synchronization = a_synchronization
+		end
+
+	set_completion (a_completion: like completion)
+			-- Set `completion` to `a_completion`.
+		do
+			completion := a_completion
+		ensure
+			completion_set: completion = a_completion
 		end
 
 	set_hover (a_hover: like hover)
@@ -120,6 +131,7 @@ feature -- Setting
 feature -- Field names
 
 	synchronization_name: STRING_8 = "synchronization"
+	completion_name: STRING_8 = "completion"
 	hover_name: STRING_8 = "hover"
 	declaration_name: STRING_8 = "declaration"
 	definition_name: STRING_8 = "definition"

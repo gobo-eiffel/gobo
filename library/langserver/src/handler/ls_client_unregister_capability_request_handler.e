@@ -39,7 +39,7 @@ feature -- Basic operations
 			l_unregistrations := a_request.unregistrations
 			nb := l_unregistrations.count
 			from i := 1 until i > nb loop
-				l_unregistration := l_unregistrations.unregistration (i)
+				l_unregistration := l_unregistrations.value (i)
 				if not attached a_manager.message_factories.value (l_unregistration.method) as l_factory then
 					if not l_error_message.is_empty then
 						l_error_message.append_string (", ")

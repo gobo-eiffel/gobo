@@ -41,6 +41,7 @@ feature -- Basic operations
 				a_manager.will_save_wait_until_text_document_request_handler.set_server_options (l_text_document_sync.will_save_wait_until)
 				a_manager.did_save_text_document_notification_handler.set_server_options (l_text_document_sync.save)
 			end
+			a_manager.completion_request_handler.set_server_options (l_server_capabilities.completion_provider)
 			a_manager.hover_request_handler.set_server_options (l_server_capabilities.hover_provider)
 			a_manager.declaration_request_handler.set_server_options (l_server_capabilities.declaration_provider)
 			a_manager.definition_request_handler.set_server_options (l_server_capabilities.definition_provider)

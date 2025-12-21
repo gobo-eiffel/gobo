@@ -86,6 +86,41 @@ inherit
 			is_equal
 		end
 
+	LS_COMPLETION_ITEM_KIND
+		undefine
+			value
+		redefine
+			is_equal
+		end
+
+	LS_COMPLETION_TRIGGER_KIND
+		undefine
+			value
+		redefine
+			is_equal
+		end
+
+	LS_COMPLETION_ITEM_TAG
+		undefine
+			value
+		redefine
+			is_equal
+		end
+
+	LS_INSERT_TEXT_MODE
+		undefine
+			value
+		redefine
+			is_equal
+		end
+
+	LS_INSERT_TEXT_FORMAT
+		undefine
+			value
+		redefine
+			is_equal
+		end
+
 	HASHABLE
 		redefine
 			is_equal

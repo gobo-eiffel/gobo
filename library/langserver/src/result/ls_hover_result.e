@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	contents: LS_STRING_CONTENT
+	contents: LS_STRING_CONTENTS
 			-- The hover's content
 
 	range: detachable LS_RANGE

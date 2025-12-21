@@ -12,25 +12,12 @@ class LS_CONFIGURATION_ITEM_LIST
 
 inherit
 
-	LS_ARRAY
-		redefine
-			value,
-			process
-		end
+	LS_LIST [LS_CONFIGURATION_ITEM]
 
 create
 
 	make,
 	make_with_capacity
-
-feature -- Access
-
-	value (i: INTEGER): LS_CONFIGURATION_ITEM
-			-- Value at index `i`
-		do
-			Result := values.item (i)
-		end
-
 feature -- Processing
 
 	process (a_processor: LS_PROCESSOR)
