@@ -20,7 +20,7 @@ inherit
 create
 
 	make
-		
+
 feature -- Status report
 
 	is_null: BOOLEAN = True
@@ -30,7 +30,7 @@ feature -- Access
 
 	last_position: ET_POSITION
 			-- Position of last character of current node in source code;
-			-- Null position is current node is empty
+			-- Null position if current node is empty
 		do
 			Result := Current
 		end

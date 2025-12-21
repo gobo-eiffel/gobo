@@ -18,6 +18,7 @@ inherit
 			make,
 			server_name,
 			server_description,
+			completion_request_handler,
 			definition_request_handler,
 			did_change_text_document_notification_handler,
 			did_change_watched_files_notification_handler,
@@ -26,6 +27,7 @@ inherit
 			document_symbol_request_handler,
 			hover_request_handler,
 			type_definition_request_handler,
+			on_completion_request,
 			on_configuration_response,
 			on_definition_request,
 			on_did_change_text_document_notification,
@@ -102,11 +104,48 @@ feature -- Access
 			l_uri: UT_URI
 		do
 			if attached {LS_WORKSPACE_FOLDER_LIST} workspace_folders as l_workspace_folders and then l_workspace_folders.count > 0 then
-				create l_uri.make (l_workspace_folders.workspace_folder (1).uri.to_string.utf8_value)
+				create l_uri.make (l_workspace_folders.value (1).uri.to_string.utf8_value)
 				if attached {UT_FILE_URI_ROUTINES}.uri_to_filename (l_uri) as l_root_path then
 					Result := l_root_path
 				end
 			end
+		end
+
+feature -- Handling 'textDocument/completion' requests
+
+	on_completion_request (a_request: LS_COMPLETION_REQUEST; a_response: LS_COMPLETION_RESPONSE)
+			-- Handle 'textDocument/completion' request `a_request`.
+			-- Build `a_response` accordingly.
+		local
+			l_browsable_name_finder: ET_BROWSABLE_NAME_FINDER
+			l_request_position: LS_POSITION
+			l_position: ET_COMPRESSED_POSITION
+			l_completion_builder: GELSP_COMPLETION_BUILDER
+		do
+			if attached class_from_uri (a_request.text_document.uri) as l_class then
+				l_request_position := a_request.position
+				create l_position.make (l_request_position.line.value.to_integer_32 + 1, l_request_position.character.value.to_integer_32)
+				create l_browsable_name_finder.make (system_processor)
+				l_browsable_name_finder.find_browsable_name (l_position, l_class)
+				if attached l_browsable_name_finder.last_browsable_name as l_last_browsable_name then
+					create l_completion_builder.make (a_response, Current)
+					l_last_browsable_name.build_completion (l_completion_builder, system_processor)
+				end
+			end
+		end
+
+	completion_request_handler: LS_SERVER_COMPLETION_REQUEST_HANDLER
+			-- Handler for 'textDocument/completion' requests
+		local
+			l_options: LS_COMPLETION_OPTIONS
+			l_trigger_characters: LS_STRING_LIST
+		once ("OBJECT")
+			create Result.make
+			create l_trigger_characters.make_with_capacity (2)
+			l_trigger_characters.put_last ("_")
+			l_trigger_characters.put_last (".")
+			create l_options.make (l_trigger_characters, Void, Void, Void, False)
+			Result.set_server_options (l_options)
 		end
 
 feature -- Handling 'textDocument/definition' requests
@@ -157,7 +196,7 @@ feature -- Handling 'textDocument/didChange' notifications
 			l_content_changes := a_notification.content_changes
 			nb := l_content_changes.count
 			if nb > 0 and attached pathname_from_uri (a_notification.text_document.uri) as l_filename then
-				l_class_text := l_content_changes.text_document_content_change_event (nb).text.utf8_value
+				l_class_text := l_content_changes.value (nb).text.utf8_value
 				if attached class_mapping.value (l_filename) as l_class then
 					if attached {ET_EDITED_CLASS_TEXT_GROUP} l_class.group as l_group then
 						l_group.set_class_text (l_class_text)
@@ -502,7 +541,7 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 			l_changes := a_notification.changes
 			nb := l_changes.count
 			from i := 1 until i > nb loop
-				l_file_event := l_changes.file_event (i)
+				l_file_event := l_changes.value (i)
 				if not attached pathname_from_uri (l_file_event.uri) as l_pathname then
 						-- Rebuild from scratch, just in case we missed something.
 					l_no_action := False

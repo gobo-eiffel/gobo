@@ -34,6 +34,9 @@
 ### gelsp
 
 * Implemented `Go To Type Definition` navigation (in the contextual menu).
+* Implemented completion (`Ctrl+Space` or as you type), with snippet
+  for the arguments of feature calls and the generic parameters of
+  a class type.
 
 ### Gobo Eiffel Kernel Library
 

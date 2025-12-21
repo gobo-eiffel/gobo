@@ -12,7 +12,12 @@ class ET_BROWSABLE_LOCAL_NAME
 
 inherit
 
-	ET_BROWSABLE_NAME
+	ET_BROWSABLE_UNQUALIFIED_NAME
+		rename
+			make as make_browsable_unqualified_name
+		redefine
+			name
+		end
 
 create
 
@@ -20,21 +25,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_local_variable: like local_variable; a_class: like current_class)
+	make (a_name: like name; a_closure: like current_closure; a_class: like current_class)
 			-- Create a new browsable local variable name.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_is_local: a_name.is_local
-			a_local_variable_not_void: a_local_variable /= Void
 			a_class_not_void: a_class /= Void
 		do
 			name := a_name
-			local_variable := a_local_variable
+			current_closure := a_closure
 			current_class := a_class
 		ensure
 			name_set: name = a_name
-			local_variable_not_void: local_variable = a_local_variable
-			current_class_not_void: current_class = a_class
+			current_closure_set: current_closure = a_closure
+			current_class_set: current_class = a_class
 		end
 
 feature -- Access
@@ -42,27 +46,36 @@ feature -- Access
 	name: ET_IDENTIFIER
 			-- AST node corresponding to the local name
 
-	local_variable: ET_LOCAL_VARIABLE
-			-- Local variable
+	local_variable: detachable ET_LOCAL_VARIABLE
+			-- Local variable, if any
+		local
+			l_seed: INTEGER
+		do
+			if attached current_closure as l_closure and then attached l_closure.locals as l_locals then
+				l_seed := name.seed
+				if l_seed >= 1 and l_seed <= l_locals.count then
+					Result := l_locals.local_variable (l_seed)
+				end
+			end
+		end
 
 feature -- Output
 
 	append_description_to_string (a_string: STRING_8)
 			-- Append `description' to `a_string'.
 		do
-			a_string.append_string (tokens.local_keyword.text)
-			a_string.append_character (' ')
-			a_string.append_string (name.lower_name)
-			a_string.append_character (':')
-			a_string.append_character (' ')
-			local_variable.type.named_type_with_type_mark (tokens.detachable_keyword, current_class).append_canonical_with_leading_type_mark_to_string (a_string)
+			if attached local_variable as l_local_variable then
+				append_local_variable_description_to_string (l_local_variable, a_string)
+			end
 		end
 
 	definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
 			-- AST node, and its implementation class, where
 			-- the current browsable name is defined
 		do
-			Result := [local_variable.name, current_class]
+			if attached local_variable as l_local_variable then
+				Result := [l_local_variable.name, current_class]
+			end
 		end
 
 	type_definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
@@ -71,13 +84,14 @@ feature -- Output
 		local
 			l_base_class: ET_CLASS
 		do
-			l_base_class := local_variable.type.base_class (current_class)
-			Result := [l_base_class.name, l_base_class]
+			if attached local_variable as l_local_variable then
+				l_base_class := l_local_variable.type.base_class (current_class)
+				Result := [l_base_class.name, l_base_class]
+			end
 		end
 
 invariant
 
 	name_is_local: name.is_local
-	local_variable_not_void: local_variable /= Void
 
 end
