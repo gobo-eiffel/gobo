@@ -37,6 +37,8 @@ class LS_MARKUP_CONTENT
 
 inherit
 
+	LS_STRING_CONTENTS
+
 	LS_STRING_CONTENT
 
 create

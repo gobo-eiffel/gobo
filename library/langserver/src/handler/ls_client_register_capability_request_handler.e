@@ -39,7 +39,7 @@ feature -- Basic operations
 			l_registrations := a_request.registrations
 			nb := l_registrations.count
 			from i := 1 until i > nb loop
-				l_registration := l_registrations.registration (i)
+				l_registration := l_registrations.value (i)
 				if not attached a_manager.message_factories.value (l_registration.method) as l_factory then
 					if not l_error_message.is_empty then
 						l_error_message.append_string (", ")

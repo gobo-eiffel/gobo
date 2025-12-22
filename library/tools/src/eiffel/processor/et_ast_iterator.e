@@ -26,7 +26,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.across_keyword.process (Current)
 			an_expression.iterable_expression.process (Current)
 			an_expression.as_keyword.process (Current)
-			an_expression.item_name.process (Current)
+			process_iteration_item_name_declaration (an_expression.item_name)
 			if attached an_expression.invariant_part as l_invariant_part then
 				l_invariant_part.process (Current)
 			end
@@ -46,7 +46,7 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.across_keyword.process (Current)
 			an_instruction.iterable_expression.process (Current)
 			an_instruction.as_keyword.process (Current)
-			an_instruction.item_name.process (Current)
+			process_iteration_item_name_declaration (an_instruction.item_name)
 			if attached an_instruction.from_compound as l_from_compound then
 				l_from_compound.process (Current)
 			end
@@ -225,6 +225,14 @@ feature {ET_AST_NODE} -- Processing
 			an_assigner.feature_name.process (Current)
 		end
 
+	process_assigner (a_assigner: ET_ASSIGNER)
+			-- Process `a_assigner'.
+		require
+			a_assigner_not_void: a_assigner /= Void
+		do
+			a_assigner.process (Current)
+		end
+
 	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
@@ -279,7 +287,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 			a_feature.declared_type.process (Current)
 			if attached a_feature.assigner as l_assigner then
-				l_assigner.process (Current)
+				process_assigner (l_assigner)
 			end
 			if attached a_feature.semicolon as l_semicolon then
 				l_semicolon.process (Current)
@@ -591,7 +599,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 			a_feature.declared_type.process (Current)
 			if attached a_feature.assigner as l_assigner then
-				l_assigner.process (Current)
+				process_assigner (l_assigner)
 			end
 			a_feature.is_keyword.process (Current)
 			a_feature.constant.process (Current)
@@ -827,7 +835,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 			a_feature.declared_type.process (Current)
 			if attached a_feature.assigner as l_assigner then
-				l_assigner.process (Current)
+				process_assigner (l_assigner)
 			end
 			if attached a_feature.is_keyword as l_is_keyword then
 				l_is_keyword.process (Current)
@@ -913,7 +921,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 			a_feature.declared_type.process (Current)
 			if attached a_feature.assigner as l_assigner then
-				l_assigner.process (Current)
+				process_assigner (l_assigner)
 			end
 			if attached a_feature.is_keyword as l_is_keyword then
 				l_is_keyword.process (Current)
@@ -1091,7 +1099,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 			a_feature.declared_type.process (Current)
 			if attached a_feature.assigner as l_assigner then
-				l_assigner.process (Current)
+				process_assigner (l_assigner)
 			end
 			if attached a_feature.is_keyword as l_is_keyword then
 				l_is_keyword.process (Current)
@@ -1236,7 +1244,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 			a_feature.declared_type.process (Current)
 			if attached a_feature.assigner as l_assigner then
-				l_assigner.process (Current)
+				process_assigner (l_assigner)
 			end
 			if attached a_feature.first_note as l_first_note then
 				l_first_note.process (Current)
@@ -1309,7 +1317,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 			a_feature.declared_type.process (Current)
 			if attached a_feature.assigner as l_assigner then
-				l_assigner.process (Current)
+				process_assigner (l_assigner)
 			end
 			if attached a_feature.is_keyword as l_is_keyword then
 				l_is_keyword.process (Current)
@@ -1870,6 +1878,15 @@ feature {ET_AST_NODE} -- Processing
 			a_iteration_cursor.item_name.process (Current)
 		end
 
+	process_iteration_item_name_declaration (a_identifier: ET_IDENTIFIER)
+			-- Process `a_identifier`.
+		require
+			a_identifier_not_void: a_identifier /= Void
+			a_identifier_is_iteration_item: a_identifier.is_iteration_item
+		do
+			a_identifier.process (Current)
+		end
+
 	process_keyword (a_keyword: ET_KEYWORD)
 			-- Process `a_keyword'.
 		do
@@ -2221,7 +2238,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 			a_feature.declared_type.process (Current)
 			if attached a_feature.assigner as l_assigner then
-				l_assigner.process (Current)
+				process_assigner (l_assigner)
 			end
 			if attached a_feature.is_keyword as l_is_keyword then
 				l_is_keyword.process (Current)
@@ -2650,7 +2667,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_expression'.
 		do
 			a_expression.quantifier_symbol.process (Current)
-			a_expression.item_name.process (Current)
+			process_iteration_item_name_declaration (a_expression.item_name)
 			a_expression.colon_symbol.process (Current)
 			a_expression.iterable_expression.process (Current)
 			a_expression.bar_symbol.process (Current)
@@ -2727,7 +2744,7 @@ feature {ET_AST_NODE} -- Processing
 			i, nb: INTEGER
 		do
 			a_instruction.open_repeat_symbol.process (Current)
-			a_instruction.item_name.process (Current)
+			process_iteration_item_name_declaration (a_instruction.item_name)
 			a_instruction.colon_symbol.process (Current)
 			a_instruction.iterable_expression.process (Current)
 			a_instruction.bar_symbol.process (Current)
@@ -2964,7 +2981,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 			a_feature.declared_type.process (Current)
 			if attached a_feature.assigner as l_assigner then
-				l_assigner.process (Current)
+				process_assigner (l_assigner)
 			end
 			a_feature.is_keyword.process (Current)
 			a_feature.unique_keyword.process (Current)

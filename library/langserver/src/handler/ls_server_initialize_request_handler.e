@@ -68,6 +68,7 @@ feature -- Basic operations
 				a_manager.did_save_text_document_notification_handler.set_client_capabilities (l_text_document_capabilities.synchronization)
 				a_manager.will_save_text_document_notification_handler.set_client_capabilities (l_text_document_capabilities.synchronization)
 				a_manager.will_save_wait_until_text_document_request_handler.set_client_capabilities (l_text_document_capabilities.synchronization)
+				a_manager.completion_request_handler.set_client_capabilities (l_text_document_capabilities.completion)
 				a_manager.hover_request_handler.set_client_capabilities (l_text_document_capabilities.hover)
 				a_manager.declaration_request_handler.set_client_capabilities (l_text_document_capabilities.declaration)
 				a_manager.definition_request_handler.set_client_capabilities (l_text_document_capabilities.definition)
@@ -108,15 +109,21 @@ feature -- Basic operations
 				create l_text_document_sync_options.make (l_open_close, l_change, l_will_save, l_will_save_wait_until, l_save)
 				l_server_capabilities.set_text_document_sync (l_text_document_sync_options)
 			end
+			a_manager.completion_request_handler.build_server_options
+			a_manager.completion_item_resolve_request_handler.build_server_options
+			if attached a_manager.completion_request_handler.server_options as l_completion_options then
+				l_completion_options.set_resolve_provider (a_manager.completion_item_resolve_request_handler.server_options)
+			end
+			l_server_capabilities.set_completion_provider (a_manager.completion_request_handler.server_options)
 			a_manager.hover_request_handler.build_server_options
 			l_server_capabilities.set_hover_provider (a_manager.hover_request_handler.server_options)
 			a_manager.declaration_request_handler.build_server_options
-			a_manager.definition_request_handler.build_server_options
-			a_manager.type_definition_request_handler.build_server_options
-			a_manager.implementation_request_handler.build_server_options
 			l_server_capabilities.set_declaration_provider (a_manager.declaration_request_handler.server_options)
+			a_manager.definition_request_handler.build_server_options
 			l_server_capabilities.set_definition_provider (a_manager.definition_request_handler.server_options)
+			a_manager.type_definition_request_handler.build_server_options
 			l_server_capabilities.set_type_definition_provider (a_manager.type_definition_request_handler.server_options)
+			a_manager.implementation_request_handler.build_server_options
 			l_server_capabilities.set_implementation_provider (a_manager.implementation_request_handler.server_options)
 			a_manager.document_symbol_request_handler.build_server_options
 			l_server_capabilities.set_document_symbol_provider (a_manager.document_symbol_request_handler.server_options)

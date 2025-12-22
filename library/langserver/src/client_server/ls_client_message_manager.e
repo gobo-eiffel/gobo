@@ -81,7 +81,7 @@ feature -- Access
 			-- @deprecated in favour of `workspaceFolders`
 		do
 			if attached {LS_WORKSPACE_FOLDER_LIST} workspace_folders as l_workspace_folders and then l_workspace_folders.count > 0 then
-				Result := l_workspace_folders.workspace_folder (1).uri.to_string
+				Result := l_workspace_folders.value (1).uri.to_string
 			else
 				Result := {LS_NULL}.null
 			end
@@ -315,6 +315,14 @@ feature {NONE} -- Implementation
 					Result.set_text_document (l_text_document_capabilities)
 				end
 				l_text_document_capabilities.set_synchronization (l_text_document_sync_capabilities)
+			end
+			completion_request_handler.build_client_capabilities
+			if attached completion_request_handler.client_capabilities as l_completion_capabilities then
+				if l_text_document_capabilities = Void then
+					create l_text_document_capabilities.make
+					Result.set_text_document (l_text_document_capabilities)
+				end
+				l_text_document_capabilities.set_completion (l_completion_capabilities)
 			end
 			hover_request_handler.build_client_capabilities
 			if attached hover_request_handler.client_capabilities as l_hover_capabilities then

@@ -33,6 +33,9 @@ feature -- Access
 			-- LS_TEXT_DOCUMENT_SYNC_KIND number. If omitted it defaults to
 			-- `LS_TEXT_DOCUMENT_SYNC_KINDS.none`.
 
+	completion_provider: detachable LS_COMPLETION_OPTIONS
+			-- The server provides go to completion support.
+
 	hover_provider: detachable LS_OPTIONAL_HOVER_OPTIONS
 			-- The server provides hover support.
 
@@ -60,7 +63,15 @@ feature -- Setting
 		ensure
 			text_document_sync_set: text_document_sync = a_text_document_sync
 		end
-	
+
+	set_completion_provider (a_completion_provider: like completion_provider)
+			-- Set `completion_provider` to `a_completion_provider`.
+		do
+			completion_provider := a_completion_provider
+		ensure
+			completion_provider_set: completion_provider = a_completion_provider
+		end
+
 	set_hover_provider (a_hover_provider: like hover_provider)
 			-- Set `hover_provider` to `a_hover_provider`.
 		do
@@ -112,7 +123,8 @@ feature -- Setting
 feature -- Field names
 
 	text_document_sync_name: STRING_8 = "textDocumentSync"
-	hover_provider_name: STRING_8 = "hoverProvider"
+	completion_provider_name: STRING_8 = "hoverProvider"
+	hover_provider_name: STRING_8 = "completionProvider"
 	declaration_provider_name: STRING_8 = "declarationProvider"
 	definition_provider_name: STRING_8 = "definitionProvider"
 	type_definition_provider_name: STRING_8 = "typeDefinitionProvider"

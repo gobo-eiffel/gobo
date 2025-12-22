@@ -34,6 +34,9 @@
 ### gelsp
 
 * Implemented `Go To Type Definition` navigation (in the contextual menu).
+* Implemented completion (`Ctrl+Space` or as you type), with snippet
+  for the arguments of feature calls and the generic parameters of
+  a class type.
 
 ### Gobo Eiffel Kernel Library
 
@@ -45,6 +48,8 @@
 * Added support for `textDocument/declaration` requests.
 * Added support for `textDocument/typeDefinition` requests.
 * Added support for `textDocument/implementation` requests.
+* Added support for `textDocument/completion` and
+  `completionItem/resolve` requests.
 
 ### Gobo Eiffel Tools Library
 
@@ -468,8 +473,9 @@
   as syntactic sugar for `across list is x all x > 0 end`.
 * Added support for quantifier expressions of the form `∃ x: list ¦ x > 0`
   as syntactic sugar for `across list is x some x > 0 end`.
-* Added support for repeat instructions of the form `⟳ x: list ¦ x.do_something ⟲`
-  as syntactic sugar for `across list is x loop x.do_something end`.
+* Added support for repeat instructions of the form
+  `⟳ x: list ¦ x.do_something ⟲` as syntactic sugar for
+  `across list is x loop x.do_something end`.
 * Relaxed the implementation of export status of inherited features
   in order to be compliant with the ECMA standard.
 * Refined the way dynamic type sets for tuple items are computed.
@@ -1200,8 +1206,8 @@
 * Fixed bug in `DS_HASH_TABLE` when the calls to `key_equality_tester` in
   `search_position` trigger the invariant which internally calls `search_position`.
    But this routine was not written to be re-entrant.
-* Added iteration routines to the descendants of `DS_TABLE` so that the key can be
-  passed first and then the item to the agents.
+* Added iteration routines to the descendants of `DS_TABLE` so that the key can
+  be passed first and then the item to the agents.
 * Made it compilable in void-safe mode with ISE 7.3.
 * Added support for the `across` Eiffel construct.
 * Moved the doc/examples/tests to `$GOBO/library/structure`.

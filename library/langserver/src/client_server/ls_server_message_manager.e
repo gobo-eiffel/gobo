@@ -46,6 +46,34 @@ feature {LS_SERVER_INITIALIZE_REQUEST_HANDLER} -- Setting
 			workspace_folders_set: workspace_folders = a_workspace_folders
 		end
 
+feature -- Handling 'textDocument/completion' requests
+
+	on_completion_request (a_request: LS_COMPLETION_REQUEST; a_response: LS_COMPLETION_RESPONSE)
+			-- Handle 'textDocument/completion' request `a_request`.
+			-- Build `a_response` accordingly.
+			--
+			-- (To be redefined in servers.
+			-- Redefine `completion_request_handler` accordingly as per the precondition.)
+		require
+			a_request_not_void: a_request /= Void
+			a_response_not_void: a_response /= Void
+			completion_request_supported: completion_request_handler.generating_type.conforms_to ({detachable LS_SERVER_COMPLETION_REQUEST_HANDLER})
+		do
+		end
+
+	on_completion_item_resolve_request (a_request: LS_COMPLETION_ITEM_RESOLVE_REQUEST; a_response: LS_COMPLETION_ITEM_RESOLVE_RESPONSE)
+			-- Handle 'completionItem/resolve' request `a_request`.
+			-- Build `a_response` accordingly.
+			--
+			-- (To be redefined in servers.
+			-- Redefine `completion_item_resolve_request_handler` accordingly as per the precondition.)
+		require
+			a_request_not_void: a_request /= Void
+			a_response_not_void: a_response /= Void
+			completion_item_resolve_request_supported: completion_item_resolve_request_handler.generating_type.conforms_to ({detachable LS_SERVER_COMPLETION_ITEM_RESOLVE_REQUEST_HANDLER})
+		do
+		end
+
 feature -- Handling 'textDocument/declaration' requests
 
 	on_declaration_request (a_request: LS_DECLARATION_REQUEST; a_response: LS_DECLARATION_RESPONSE)

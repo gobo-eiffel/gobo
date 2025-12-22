@@ -19,6 +19,6 @@ deferred class LS_MARKED_STRING
 
 inherit
 
-	LS_STRING_CONTENT
+	LS_STRING_CONTENTS
 
 end

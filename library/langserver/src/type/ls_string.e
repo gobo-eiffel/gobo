@@ -22,6 +22,11 @@ inherit
 			is_equal
 		end
 
+	LS_STRING_CONTENT
+		redefine
+			is_equal
+		end
+
 	LS_REQUEST_ID
 		redefine
 			is_equal
