@@ -199,7 +199,13 @@ feature {NONE} -- Implementation
 			assert ("arr_real_64", attached {ARRAY [REAL_64]} a_object.arr_real_64)
 			assert ("arr_real_64_lower", a_object.arr_real_64.lower = 1)
 			assert ("arr_real_64_upper", a_object.arr_real_64.upper = 5)
-			assert ("arr_real_64_items", a_object.arr_real_64.same_items ({ARRAY [REAL_64]} <<132.5, 133.5, 134.5, 135.5, 136.5>>))
+			assert_same ("arr_real_64_item_1", {REAL_64} 132.5, a_object.arr_real_64.item (1))
+			assert_same ("arr_real_64_item_2", {REAL_64} 133.5, a_object.arr_real_64.item (2))
+			assert_same ("arr_real_64_item_3", {REAL_64} 134.5, a_object.arr_real_64.item (3))
+			assert_same ("arr_real_64_item_4", {REAL_64} 135.5, a_object.arr_real_64.item (4))
+				-- We get 136.50000000000003 on ubuntu-24.04-arm
+				-- with ISE Eiffel 25.02.9.8732 in finalized mode.
+			assert_doubles_equal_with_tolerance ("arr_real_64_item_5", {REAL_64} 136.5, a_object.arr_real_64.item (5), 1.0E-10)
 			assert ("arr_pointer", attached {ARRAY [POINTER]} a_object.arr_pointer)
 			assert ("arr_pointer_lower", a_object.arr_pointer.lower = 1)
 			assert ("arr_pointer_upper", a_object.arr_pointer.upper = 5)
