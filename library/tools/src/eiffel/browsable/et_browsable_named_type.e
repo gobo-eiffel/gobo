@@ -16,7 +16,7 @@ inherit
 
 feature -- Basic operations
 
-	build_completion (a_builder: ET_BROWSABLE_COMPLETION_BUILDER; a_system_processor: ET_SYSTEM_PROCESSOR)
+	build_completion (a_builder: ET_BROWSABLE_COMPLETION_BUILDER)
 			-- Build list of completion suggestions.
 		local
 			i, nb: INTEGER
@@ -75,18 +75,6 @@ feature -- Output
 
 	append_local_variable_description_to_string (a_local_variable: ET_LOCAL_VARIABLE; a_string: STRING_8)
 			-- Append description of `a_local_variable` to `a_string'.
-		do
-		end
-
-	definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
-			-- AST node, and its implementation class, where
-			-- the current browsable name is defined
-		do
-		end
-
-	type_definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
-			-- AST node, and its implementation class, where
-			-- the type of the current browsable name is defined
 		do
 		end
 

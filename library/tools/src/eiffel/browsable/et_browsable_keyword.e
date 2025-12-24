@@ -26,22 +26,22 @@ feature -- Access
 	name: ET_KEYWORD
 			-- AST node corresponding to the Result
 
+feature -- Basic operations
+
+	build_definition (a_builder: ET_BROWSABLE_DEFINITION_BUILDER)
+			-- Build list of definitions.
+		do
+		end
+
+	build_type_definition (a_builder: ET_BROWSABLE_TYPE_DEFINITION_BUILDER)
+			-- Build list of type definitions.
+		do
+		end
+
 feature -- Output
 
 	append_description_to_string (a_string: STRING_8)
 			-- Append `description' to `a_string'.
-		do
-		end
-
-	definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
-			-- AST node, and its implementation class, where
-			-- the current browsable name is defined
-		do
-		end
-
-	type_definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
-			-- AST node, and its implementation class, where
-			-- the type of the current browsable name is defined
 		do
 		end
 

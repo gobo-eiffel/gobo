@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	build_completion (a_builder: ET_BROWSABLE_COMPLETION_BUILDER; a_system_processor: ET_SYSTEM_PROCESSOR)
+	build_completion (a_builder: ET_BROWSABLE_COMPLETION_BUILDER)
 			-- Build list of completion suggestions.
 		local
 			l_base_class: ET_CLASS
@@ -57,7 +57,7 @@ feature -- Basic operations
 					nb := l_features.count
 					from i := 1 until i > nb loop
 						l_feature := l_features.item (i)
-						if not l_feature.is_exported_to (current_class, a_system_processor) then
+						if not l_feature.is_exported_to (current_class, tokens.null_system_processor) then
 							-- Do nothing.
 						elseif not is_only_static_call_expected or else l_feature.is_static then
 							a_builder.add_query (l_features.item (i), Current)
@@ -84,10 +84,10 @@ feature -- Basic operations
 					from i := 1 until i > nb loop
 						l_feature := l_features.item (i)
 						if is_only_creation_procedure_expected then
-							if l_feature.is_creation_exported_to (current_class, l_base_class, a_system_processor) then
+							if l_feature.is_creation_exported_to (current_class, l_base_class, tokens.null_system_processor) then
 								a_builder.add_creation_procedure (l_feature, Current)
 							end
-						elseif not is_non_exported_feature_allowed and not l_feature.is_exported_to (current_class, a_system_processor) then
+						elseif not is_non_exported_feature_allowed and not l_feature.is_exported_to (current_class, tokens.null_system_processor) then
 							-- Do nothing.
 						elseif not is_only_static_call_expected or else l_feature.is_static then
 							a_builder.add_procedure (l_feature, Current)

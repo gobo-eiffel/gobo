@@ -965,7 +965,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			l_name := a_local.name
 			if l_name.contains_position (current_position) then
-				create {ET_BROWSABLE_ARGUMENT_NAME} l_browsable_name.make (l_name, current_closure, current_class)
+				create {ET_BROWSABLE_LOCAL_NAME} l_browsable_name.make (l_name, current_closure, current_class)
 				l_browsable_name.set_completion_disabled (True)
 				last_browsable_name := l_browsable_name
 			else
@@ -992,7 +992,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			l_name := a_local.name
 			if l_name.contains_position (current_position) then
-				create {ET_BROWSABLE_ARGUMENT_NAME} l_browsable_name.make (l_name, current_closure, current_class)
+				create {ET_BROWSABLE_LOCAL_NAME} l_browsable_name.make (l_name, current_closure, current_class)
 				l_browsable_name.set_completion_disabled (True)
 				last_browsable_name := l_browsable_name
 			else

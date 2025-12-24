@@ -14,9 +14,7 @@ inherit
 
 	ET_BROWSABLE_NAMED_TYPE
 		redefine
-			append_description_to_string,
-			definition_ast_node,
-			type_definition_ast_node
+			append_description_to_string
 		end
 
 create
@@ -49,6 +47,24 @@ feature -- Access
 	actual_class: ET_CLASS
 			-- Class corresponding to `name'
 
+feature -- Basic operations
+
+	build_definition (a_builder: ET_BROWSABLE_DEFINITION_BUILDER)
+			-- Build list of definitions.
+		do
+			if not actual_class.is_unknown then
+				a_builder.add_class (actual_class, Current)
+			end
+		end
+
+	build_type_definition (a_builder: ET_BROWSABLE_TYPE_DEFINITION_BUILDER)
+			-- Build list of type definitions.
+		do
+			if not actual_class.is_unknown then
+				a_builder.add_class (actual_class, Current)
+			end
+		end
+
 feature -- Output
 
 	append_description_to_string (a_string: STRING_8)
@@ -56,24 +72,6 @@ feature -- Output
 		do
 			if not actual_class.is_unknown then
 				append_class_description_to_string (actual_class, a_string)
-			end
-		end
-
-	definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
-			-- AST node, and its implementation class, where
-			-- the current browsable name is defined
-		do
-			if not actual_class.is_unknown then
-				Result := [actual_class.name, actual_class]
-			end
-		end
-
-	type_definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
-			-- AST node, and its implementation class, where
-			-- the type of the current browsable name is defined
-		do
-			if not actual_class.is_unknown then
-				Result := [actual_class.name, actual_class]
 			end
 		end
 

@@ -14,8 +14,7 @@ inherit
 
 	ET_BROWSABLE_NAMED_TYPE
 		redefine
-			append_description_to_string,
-			definition_ast_node
+			append_description_to_string
 		end
 
 create
@@ -48,19 +47,26 @@ feature -- Access
 	formal_parameter: ET_FORMAL_PARAMETER
 			-- Formal parameter
 
+feature -- Basic operations
+
+	build_definition (a_builder: ET_BROWSABLE_DEFINITION_BUILDER)
+			-- Build list of definitions.
+		do
+			a_builder.add_formal_parameter (formal_parameter, Current)
+		end
+
+	build_type_definition (a_builder: ET_BROWSABLE_TYPE_DEFINITION_BUILDER)
+			-- Build list of type definitions.
+		do
+			a_builder.add_formal_parameter (formal_parameter, Current)
+		end
+
 feature -- Output
 
 	append_description_to_string (a_string: STRING_8)
 			-- Append `description' to `a_string'.
 		do
 			append_formal_parameter_description_to_string (formal_parameter, a_string)
-		end
-
-	definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
-			-- AST node, and its implementation class, where
-			-- the current browsable name is defined
-		do
-			Result := [formal_parameter.name, current_class]
 		end
 
 invariant
