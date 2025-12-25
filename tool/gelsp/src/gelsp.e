@@ -26,6 +26,7 @@ inherit
 			did_open_text_document_notification_handler,
 			document_symbol_request_handler,
 			hover_request_handler,
+			implementation_request_handler,
 			type_definition_request_handler,
 			on_completion_request,
 			on_configuration_response,
@@ -36,6 +37,7 @@ inherit
 			on_did_open_text_document_notification,
 			on_document_symbol_request,
 			on_hover_request,
+			on_implementation_request,
 			on_initialized_notification,
 			on_type_definition_request,
 			add_other_options,
@@ -129,7 +131,7 @@ feature -- Handling 'textDocument/completion' requests
 				l_browsable_name_finder.find_browsable_name (l_position, l_class)
 				if attached l_browsable_name_finder.last_browsable_name as l_last_browsable_name then
 					create l_completion_builder.make (a_response, Current)
-					l_last_browsable_name.build_completion (l_completion_builder, system_processor)
+					l_last_browsable_name.build_completion (l_completion_builder)
 				end
 			end
 		end
@@ -157,20 +159,16 @@ feature -- Handling 'textDocument/definition' requests
 			l_browsable_name_finder: ET_BROWSABLE_NAME_FINDER
 			l_request_position: LS_POSITION
 			l_position: ET_COMPRESSED_POSITION
+			l_definition_builder: GELSP_DEFINITION_BUILDER
 		do
 			if attached class_from_uri (a_request.text_document.uri) as l_class then
 				l_request_position := a_request.position
 				create l_position.make (l_request_position.line.value.to_integer_32 + 1, l_request_position.character.value.to_integer_32 + 1)
 				create l_browsable_name_finder.make (system_processor)
 				l_browsable_name_finder.find_browsable_name (l_position, l_class)
-				if not attached l_browsable_name_finder.last_browsable_name as l_last_browsable_name then
-					-- No browsable name.
-				elseif not attached l_last_browsable_name.definition_ast_node as l_definition then
-					-- No definition
-				elseif l_definition.ast_node.contains_position (l_position) then
-					-- The browsable name is its own definition.
-				elseif attached location (l_definition.ast_node, l_definition.class_impl) as l_location then
-					a_response.add_location (l_location)
+				if attached l_browsable_name_finder.last_browsable_name as l_last_browsable_name then
+					create l_definition_builder.make (a_response, l_position, Current)
+					l_last_browsable_name.build_definition (l_definition_builder)
 				end
 			end
 		end
@@ -443,6 +441,36 @@ feature -- Handling 'textDocument/hover' requests
 			create Result.make
 		end
 
+feature -- Handling 'textDocument/implementation' requests
+
+	on_implementation_request (a_request: LS_IMPLEMENTATION_REQUEST; a_response: LS_IMPLEMENTATION_RESPONSE)
+			-- Handle 'textDocument/implementation' request `a_request`.
+			-- Build `a_response` accordingly.
+		local
+			l_browsable_name_finder: ET_BROWSABLE_NAME_FINDER
+			l_request_position: LS_POSITION
+			l_position: ET_COMPRESSED_POSITION
+			l_implementation_builder: GELSP_IMPLEMENTATION_BUILDER
+		do
+			if attached class_from_uri (a_request.text_document.uri) as l_class then
+				l_request_position := a_request.position
+				create l_position.make (l_request_position.line.value.to_integer_32 + 1, l_request_position.character.value.to_integer_32 + 1)
+				create l_browsable_name_finder.make (system_processor)
+				l_browsable_name_finder.find_browsable_name (l_position, l_class)
+				if attached l_browsable_name_finder.last_browsable_name as l_last_browsable_name then
+					create l_implementation_builder.make (a_response, Current)
+					l_last_browsable_name.build_implementation (l_implementation_builder)
+				end
+			end
+		end
+
+	implementation_request_handler: LS_SERVER_IMPLEMENTATION_REQUEST_HANDLER
+			-- Handler for 'textDocument/implementation' requests
+		once ("OBJECT")
+			create Result.make
+
+		end
+
 feature -- Handling 'textDocument/typeDefinition' requests
 
 	on_type_definition_request (a_request: LS_TYPE_DEFINITION_REQUEST; a_response: LS_TYPE_DEFINITION_RESPONSE)
@@ -452,20 +480,16 @@ feature -- Handling 'textDocument/typeDefinition' requests
 			l_browsable_name_finder: ET_BROWSABLE_NAME_FINDER
 			l_request_position: LS_POSITION
 			l_position: ET_COMPRESSED_POSITION
+			l_type_definition_builder: GELSP_TYPE_DEFINITION_BUILDER
 		do
 			if attached class_from_uri (a_request.text_document.uri) as l_class then
 				l_request_position := a_request.position
 				create l_position.make (l_request_position.line.value.to_integer_32 + 1, l_request_position.character.value.to_integer_32 + 1)
 				create l_browsable_name_finder.make (system_processor)
 				l_browsable_name_finder.find_browsable_name (l_position, l_class)
-				if not attached l_browsable_name_finder.last_browsable_name as l_last_browsable_name then
-					-- No browsable name.
-				elseif not attached l_last_browsable_name.type_definition_ast_node as l_type_definition then
-					-- No definition
-				elseif l_type_definition.ast_node.contains_position (l_position) then
-					-- The browsable name is its own definition.
-				elseif attached location (l_type_definition.ast_node, l_type_definition.class_impl) as l_location then
-					a_response.add_location (l_location)
+				if attached l_browsable_name_finder.last_browsable_name as l_last_browsable_name then
+					create l_type_definition_builder.make (a_response, l_position, Current)
+					l_last_browsable_name.build_type_definition (l_type_definition_builder)
 				end
 			end
 		end

@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	build_completion (a_builder: ET_BROWSABLE_COMPLETION_BUILDER; a_system_processor: ET_SYSTEM_PROCESSOR)
+	build_completion (a_builder: ET_BROWSABLE_COMPLETION_BUILDER)
 			-- Build list of completion suggestions.
 		local
 			i, nb: INTEGER
@@ -104,7 +104,7 @@ feature -- Basic operations
 									a_builder.add_inline_separate_argument (l_inline_separate_arguments.argument (i), Current)
 									i := i + 1
 								end
-							end 
+							end
 							if attached {ET_QUERY} l_closure then
 									-- Warning: not valid in preconditions.
 								a_builder.add_keyword (tokens.result_keyword, Current)

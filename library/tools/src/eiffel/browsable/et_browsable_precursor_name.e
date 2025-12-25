@@ -62,31 +62,21 @@ feature -- Access
 			end
 		end
 
-feature -- Output
+feature -- Basic operations
 
-	append_description_to_string (a_string: STRING_8)
-			-- Append `description' to `a_string'.
-		do
-			if attached call_feature as l_feature then
-				append_precursor_description_to_string (l_feature, a_string)
-			end
-		end
-
-	definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
-			-- AST node, and its implementation class, where
-			-- the current browsable name is defined
+	build_definition (a_builder: ET_BROWSABLE_DEFINITION_BUILDER)
+			-- Build list of definitions.
 		local
 			l_feature_impl: ET_FEATURE
 		do
 			if attached call_feature as l_feature then
 				l_feature_impl := l_feature.implementation_feature
-				Result := [l_feature_impl.name, l_feature_impl.implementation_class]
+				a_builder.add_feature (l_feature_impl, Current)
 			end
 		end
 
-	type_definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
-			-- AST node, and its implementation class, where
-			-- the type of the current browsable name is defined
+	build_type_definition (a_builder: ET_BROWSABLE_TYPE_DEFINITION_BUILDER)
+			-- Build list of type definitions.
 		local
 			l_nested_type_context: ET_NESTED_TYPE_CONTEXT
 			l_base_class: ET_CLASS
@@ -97,11 +87,19 @@ feature -- Output
 				create l_nested_type_context.make_with_capacity (current_class, 1)
 				l_nested_type_context.put_last (target_type)
 				l_base_class := l_type.base_class (l_nested_type_context)
-				Result := [l_base_class.name, l_base_class]
+				a_builder.add_class (l_base_class, Current)
 			end
 		end
 
-feature {NONE} -- Implementation
+feature -- Output
+
+	append_description_to_string (a_string: STRING_8)
+			-- Append `description' to `a_string'.
+		do
+			if attached call_feature as l_feature then
+				append_precursor_description_to_string (l_feature, a_string)
+			end
+		end
 
 	append_precursor_description_to_string (a_feature: ET_FEATURE; a_string: STRING_8)
 			-- Append description of `a_feature` to `a_string'.

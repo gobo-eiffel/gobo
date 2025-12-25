@@ -1722,9 +1722,67 @@ feature -- Ancestors
 			-- Proper ancestors in reverse topological order
 			-- (parents, then grand-parents, etc.)
 
+	ancestor_classes: DS_ARRAYED_LIST [ET_CLASS]
+			-- Proper ancestor classes in reverse topological order
+			-- (parents, then grand-parents, etc.)
+			-- Do not repeat the class in case of repeated inheritance.
+		local
+			i, nb: INTEGER
+			l_set: DS_HASH_SET [ET_CLASS]
+			l_ancestors: like ancestors
+			l_class: ET_CLASS
+		do
+			l_ancestors := ancestors
+			nb := l_ancestors.count
+			create l_set.make (nb)
+			from i := 1 until i > nb loop
+				l_class := l_ancestors.item (i).base_class
+				if not l_set.has (l_class) then
+					l_set.put_last (l_class)
+				end
+				i := i + 1
+			end
+			nb := l_set.count
+			create Result.make (nb)
+			l_set.do_all (agent Result.put_last)
+		ensure
+			ancestor_classes_not_void: Result /= Void
+			no_void_ancestor_class: not Result.has_void
+			classes_not_repeated: across Result as l_ancestor all Result.occurrences (l_ancestor) = 1 end
+		end
+
 	conforming_ancestors: ET_BASE_TYPE_LIST
 			-- Proper conforming ancestors in reverse topological order
 			-- (parents, then grand-parents, etc.)
+
+	conforming_ancestor_classes: DS_ARRAYED_LIST [ET_CLASS]
+			-- Proper conforming ancestor classes in reverse topological order
+			-- (parents, then grand-parents, etc.)
+			-- Do not repeat the class in case of repeated inheritance.
+		local
+			i, nb: INTEGER
+			l_set: DS_HASH_SET [ET_CLASS]
+			l_ancestors: like conforming_ancestors
+			l_class: ET_CLASS
+		do
+			l_ancestors := conforming_ancestors
+			nb := l_ancestors.count
+			create l_set.make (nb)
+			from i := 1 until i > nb loop
+				l_class := l_ancestors.item (i).base_class
+				if not l_set.has (l_class) then
+					l_set.put_last (l_class)
+				end
+				i := i + 1
+			end
+			nb := l_set.count
+			create Result.make (nb)
+			l_set.do_all (agent Result.put_last)
+		ensure
+			conforming_ancestor_classes_not_void: Result /= Void
+			no_void_conforming_ancestor_class: not Result.has_void
+			classes_not_repeated: across Result as l_ancestor all Result.occurrences (l_ancestor) = 1 end
+		end
 
 	set_ancestors (some_ancestors: like ancestors)
 			-- Set `ancestors' to `some_ancestors'.
@@ -1747,7 +1805,8 @@ feature -- Ancestors
 		end
 
 	descendants: DS_ARRAYED_LIST [ET_CLASS]
-			-- Proper descendant classes of current class in the surrounding Eiffel system
+			-- Proper descendant classes of current class in the surrounding Eiffel system,
+			-- in no specific order.
 			-- (Note: you have to make sure that the ancestors of the classes in the
 			-- surrounding Eiffel system have correctly been built first in order to
 			-- get the correct answer.)
@@ -1770,6 +1829,72 @@ feature -- Ancestors
 		ensure
 			descendants_not_void: Result /= Void
 			no_void_descendant: not Result.has_void
+			classes_not_repeated: across Result as l_descendant all Result.occurrences (l_descendant) = 1 end
+		end
+
+	descendant_classes: DS_ARRAYED_LIST [ET_CLASS]
+			-- Proper descendant classes of current class in the surrounding Eiffel system,
+			-- in topological order.
+			-- (Note: you have to make sure that the ancestors of the classes in the
+			-- surrounding Eiffel system have correctly been built first in order to
+			-- get the correct answer.)
+		local
+			l_descendants: like descendants
+			l_sorter: DS_HASH_TOPOLOGICAL_SORTER [ET_CLASS]
+			l_parent_list: ET_PARENT_LIST
+			i1, nb1: INTEGER
+			i2, nb2: INTEGER
+			i3, nb3: INTEGER
+			l_class: ET_CLASS
+			l_parent: ET_CLASS
+		do
+			if is_unknown then
+					-- Class "*UNKNOWN*" has no descendants.
+				create Result.make (0)
+			elseif is_none then
+					-- Class "NONE" has no descendants.
+				create Result.make (0)
+			elseif not is_preparsed then
+					-- Current class is not preparsed, this means that we know nothing
+					-- about it, not even its filename. Therefore it cannot possibly
+					-- have descendant classes.
+				create Result.make (0)
+			else
+				create l_descendants.make (initial_descendants_capacity)
+				current_system.classes_do_recursive (agent {ET_CLASS}.add_to_descendants (Current, l_descendants))
+				nb1 := l_descendants.count
+				create l_sorter.make (nb1)
+				from i1 := 1 until i1 > nb1 loop
+					l_class := l_descendants.item (i1)
+					l_sorter.put (l_class)
+					i1 := i1 + 1
+				end
+				from i1 := 1 until i1 > nb1 loop
+					l_class := l_descendants.item (i1)
+					nb2 := parents_count
+					from i2 := 1 until i2 > nb2 loop
+						l_parent_list := parents (i2)
+						nb3 := l_parent_list.count
+						from i3 := 1 until i3 > nb3 loop
+							l_parent := l_parent_list.parent (i3).type.base_class
+							if l_sorter.has (l_parent) then
+								l_sorter.put_relation (l_class, l_parent)
+							end
+							i3 := i3 + 1
+						end
+						i2 := i2 + 1
+					end
+					i1 := i1 + 1
+				end
+				l_sorter.sort
+				check is_sorted: attached l_sorter.sorted_items as l_sorted_descendants then
+					Result := l_sorted_descendants
+				end
+			end
+		ensure
+			descendant_classes_not_void: Result /= Void
+			no_void_descendant_class: not Result.has_void
+			classes_not_repeated: across Result as l_descendant all Result.occurrences (l_descendant) = 1 end
 		end
 
 	add_to_descendants (a_class: ET_CLASS; a_descendants: DS_ARRAYED_LIST [ET_CLASS])
@@ -1791,7 +1916,8 @@ feature -- Ancestors
 		end
 
 	conforming_descendants: DS_ARRAYED_LIST [ET_CLASS]
-			-- Proper conforming descendant classes of current class in the surrounding Eiffel system
+			-- Proper conforming descendant classes of current class in the surrounding Eiffel system,
+			-- in no specific order.
 			-- (Note: you have to make sure that the ancestors of the classes in the
 			-- surrounding Eiffel system have correctly been built first in order to
 			-- get the correct answer.)
@@ -1814,6 +1940,74 @@ feature -- Ancestors
 		ensure
 			conforming_descendants_not_void: Result /= Void
 			no_void_conforming_descendant: not Result.has_void
+			classes_not_repeated: across Result as l_descendant all Result.occurrences (l_descendant) = 1 end
+		end
+
+	conforming_descendant_classes: DS_ARRAYED_LIST [ET_CLASS]
+			-- Proper conforming descendant classes of current class in the surrounding
+			-- Eiffel system, in topological order.
+			-- (Note: you have to make sure that the ancestors of the classes in the
+			-- surrounding Eiffel system have correctly been built first in order to
+			-- get the correct answer.)
+		local
+			l_descendants: like conforming_descendants
+			l_sorter: DS_HASH_TOPOLOGICAL_SORTER [ET_CLASS]
+			l_parent_list: ET_PARENT_LIST
+			i1, nb1: INTEGER
+			i2, nb2: INTEGER
+			i3, nb3: INTEGER
+			l_class: ET_CLASS
+			l_parent: ET_CLASS
+		do
+			if is_unknown then
+					-- Class "*UNKNOWN*" has no descendants.
+				create Result.make (0)
+			elseif is_none then
+					-- Class "NONE" has no descendants.
+				create Result.make (0)
+			elseif not is_preparsed then
+					-- Current class is not preparsed, this means that we know nothing
+					-- about it, not even its filename. Therefore it cannot possibly
+					-- have descendant classes.
+				create Result.make (0)
+			else
+				create l_descendants.make (initial_descendants_capacity)
+				current_system.classes_do_recursive (agent {ET_CLASS}.add_to_conforming_descendants (Current, l_descendants))
+				nb1 := l_descendants.count
+				create l_sorter.make (nb1)
+				from i1 := 1 until i1 > nb1 loop
+					l_class := l_descendants.item (i1)
+					l_sorter.put (l_class)
+					i1 := i1 + 1
+				end
+				from i1 := 1 until i1 > nb1 loop
+					l_class := l_descendants.item (i1)
+					nb2 := parents_count
+					from i2 := 1 until i2 > nb2 loop
+						l_parent_list := parents (i2)
+						if l_parent_list.is_conforming then
+							nb3 := l_parent_list.count
+							from i3 := 1 until i3 > nb3 loop
+								l_parent := l_parent_list.parent (i3).type.base_class
+								if l_sorter.has (l_parent) then
+									l_sorter.put_relation (l_class, l_parent)
+								end
+								i3 := i3 + 1
+							end
+						end
+						i2 := i2 + 1
+					end
+					i1 := i1 + 1
+				end
+				l_sorter.sort
+				check is_sorted: attached l_sorter.sorted_items as l_sorted_descendants then
+					Result := l_sorted_descendants
+				end
+			end
+		ensure
+			conforming_descendant_classes_not_void: Result /= Void
+			no_void_conforming_descendan_class: not Result.has_void
+			classes_not_repeated: across Result as l_descendant all Result.occurrences (l_descendant) = 1 end
 		end
 
 	add_to_conforming_descendants (a_class: ET_CLASS; a_descendants: DS_ARRAYED_LIST [ET_CLASS])

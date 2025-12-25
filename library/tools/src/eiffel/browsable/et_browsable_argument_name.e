@@ -59,6 +59,27 @@ feature -- Access
 			end
 		end
 
+feature -- Basic operations
+
+	build_definition (a_builder: ET_BROWSABLE_DEFINITION_BUILDER)
+			-- Build list of definitions.
+		do
+			if attached formal_argument as l_formal_argument then
+				a_builder.add_formal_argument (l_formal_argument, Current)
+			end
+		end
+
+	build_type_definition (a_builder: ET_BROWSABLE_TYPE_DEFINITION_BUILDER)
+			-- Build list of type definitions.
+		local
+			l_base_class: ET_CLASS
+		do
+			if attached formal_argument as l_formal_argument then
+				l_base_class := l_formal_argument.type.base_class (current_class)
+				a_builder.add_class (l_base_class, Current)
+			end
+		end
+
 feature -- Output
 
 	append_description_to_string (a_string: STRING_8)
@@ -66,27 +87,6 @@ feature -- Output
 		do
 			if attached formal_argument as l_formal_argument then
 				append_formal_agument_description_to_string (l_formal_argument, a_string)
-			end
-		end
-
-	definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
-			-- AST node, and its implementation class, where
-			-- the current browsable name is defined
-		do
-			if attached formal_argument as l_formal_argument then
-				Result := [l_formal_argument.name, current_class]
-			end
-		end
-
-	type_definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
-			-- AST node, and its implementation class, where
-			-- the type of the current browsable name is defined
-		local
-			l_base_class: ET_CLASS
-		do
-			if attached formal_argument as l_formal_argument then
-				l_base_class := l_formal_argument.type.base_class (current_class)
-				Result := [l_base_class.name, l_base_class]
 			end
 		end
 

@@ -64,6 +64,27 @@ feature -- Access
 			end
 		end
 
+feature -- Basic operations
+
+	build_definition (a_builder: ET_BROWSABLE_DEFINITION_BUILDER)
+			-- Build list of definitions.
+		do
+			if attached labeled_parameter as l_labeled_parameter then
+				a_builder.add_tuple_label (l_labeled_parameter, Current)
+			end
+		end
+
+	build_type_definition (a_builder: ET_BROWSABLE_TYPE_DEFINITION_BUILDER)
+			-- Build list of type definitions.
+		local
+			l_base_class: ET_CLASS
+		do
+			if attached labeled_parameter as l_labeled_parameter then
+				l_base_class := l_labeled_parameter.type.base_class (current_class)
+				a_builder.add_class (l_base_class, Current)
+			end
+		end
+
 feature -- Output
 
 	append_description_to_string (a_string: STRING_8)
@@ -71,27 +92,6 @@ feature -- Output
 		do
 			if attached labeled_parameter as l_labeled_parameter then
 				append_tuple_label_description_to_string (l_labeled_parameter, a_string)
-			end
-		end
-
-	definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
-			-- AST node, and its implementation class, where
-			-- the current browsable name is defined
-		do
-			if attached labeled_parameter as l_labeled_parameter then
-				Result := [l_labeled_parameter.label, l_labeled_parameter.implementation_class]
-			end
-		end
-
-	type_definition_ast_node: detachable TUPLE [ast_node: ET_AST_NODE; class_impl: ET_CLASS]
-			-- AST node, and its implementation class, where
-			-- the type of the current browsable name is defined
-		local
-			l_base_class: ET_CLASS
-		do
-			if attached labeled_parameter as l_labeled_parameter then
-				l_base_class := l_labeled_parameter.type.base_class (current_class)
-				Result := [l_base_class.name, l_base_class]
 			end
 		end
 
