@@ -21,6 +21,8 @@
   `inline C` routines.
 * Fixed bug in C code generated for `old` expressions which are the
   expanded targets of qualified calls.
+* Fixed computation of the dynamic type sets of the arguments of feature
+  `ROUTINE.set_rout_disp_final`.
 
 ### gedoc
 
