@@ -1257,7 +1257,7 @@ feature -- Duplication
 			instance_free: class
 			cloned_not_void: Result /= Void
 			same_type: Result.same_type (a_string)
-			is_equal: Result.is_equal (a_string)
+			is_equal: Result.same_string (a_string)
 		end
 
 feature -- Element change

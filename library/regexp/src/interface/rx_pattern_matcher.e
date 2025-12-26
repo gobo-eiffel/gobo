@@ -251,7 +251,7 @@ feature -- Access
 		ensure
 			captured_substring_not_void: Result /= Void
 			same_type: ANY_.same_types (Result, subject)
-			definition: Result.is_equal (subject.substring (captured_start_position (n), captured_end_position (n)).to_string_8)
+			definition: Result.same_string (subject.substring (captured_start_position (n), captured_end_position (n)).to_string_8)
 		end
 
 	unicode_captured_substring (n: INTEGER): STRING_32
@@ -274,7 +274,7 @@ feature -- Access
 			end
 		ensure
 			unicode_captured_substring_not_void: Result /= Void
-			definition: Result.is_equal (subject.substring (captured_start_position (n), captured_end_position (n)).to_string_32)
+			definition: Result.same_string (subject.substring (captured_start_position (n), captured_end_position (n)).to_string_32)
 		end
 
 feature -- Element change

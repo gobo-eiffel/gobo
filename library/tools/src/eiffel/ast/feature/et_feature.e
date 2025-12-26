@@ -105,7 +105,7 @@ feature -- Access
 		do
 			Result := name.lower_name
 		ensure then
-			definition: Result.is_equal (name.name.as_lower)
+			definition: Result.same_string (name.name.as_lower)
 		end
 
 	alias_names: detachable ET_ALIAS_NAME_LIST

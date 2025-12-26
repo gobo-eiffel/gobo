@@ -51,7 +51,7 @@ feature -- Access
 			lower_name_not_empty: Result.count > 0
 			lower_name_is_string: {KL_ANY_ROUTINES}.same_types (Result, "")
 			valid_utf8_lower_name: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
-			definition: Result.is_equal (name.as_lower)
+			definition: Result.same_string (name.as_lower)
 		end
 
 	seed: INTEGER
