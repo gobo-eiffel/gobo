@@ -5,7 +5,7 @@
 		"ECF Eiffel internal universes (i.e. either systems or libraries)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_ECF_INTERNAL_UNIVERSE
@@ -69,6 +69,9 @@ feature -- Access
 			-- It might be different from the current system config itself when
 			-- using parent targets with an 'extension_location' attribute.
 
+	override_options: detachable ET_ECF_OPTIONS
+			-- Options overriding those defined in the ECF file `filename`
+
 feature -- Setting
 
 	select_target (a_target: ET_ECF_TARGET)
@@ -82,6 +85,14 @@ feature -- Setting
 			selected_target := a_target
 		ensure
 			selected_target_set: selected_target = a_target
+		end
+
+	set_override_options (a_override_options: like override_options)
+			-- Set `override_options' to `a_override_options'.
+		do
+			override_options := a_override_options
+		ensure
+			override_options_set: override_options = a_override_options
 		end
 
 invariant

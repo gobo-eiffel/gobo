@@ -13,6 +13,8 @@
   postconditions and invariants).
 * Stop at the end of Degree 3 when there is no root class specified
   and CAT-call error reporting is turned off.
+* Fixed bug where overriding library options were not taken into account
+  in ECF files.
 
 ### gedoc
 

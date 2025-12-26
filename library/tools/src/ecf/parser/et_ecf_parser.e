@@ -431,6 +431,10 @@ feature {NONE} -- Element change
 									end
 								end
 							end
+								-- Override options.
+							if attached {ET_ECF_SYSTEM} a_universe as l_system then
+								l_library.set_override_options (l_adapted_library.options)
+							end
 						end
 					end
 				end
