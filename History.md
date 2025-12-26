@@ -54,6 +54,7 @@
 
 * `KI_FILE.copy_file` and `KI_FILE_SYSTEM.copy_file` now create missing
   directories in the destination path.
+* Fixed postcondition of `KL_ARGUMENTS.to_array`.
 
 ### Gobo Eiffel Language Server Protocol Library
 
