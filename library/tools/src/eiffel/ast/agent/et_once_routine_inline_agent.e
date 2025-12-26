@@ -23,6 +23,9 @@ inherit
 	ET_ONCE_ROUTINE_CLOSURE
 		rename
 			arguments as formal_arguments
+		undefine
+			set_preconditions,
+			set_postconditions
 		end
 
 end

@@ -2715,8 +2715,8 @@ feature {NONE} -- Feature generation
 				--
 				-- Declaration of variables.
 				--
-			if current_type.base_class.invariants_enabled and not current_feature.is_static then
-			print_indentation
+			if not a_inline and current_type.base_class.invariants_enabled and not current_feature.is_static then
+				print_indentation
 				current_file.put_string (c_uint32_t)
 				current_file.put_character (' ')
 				current_file.put_string (c_in_qualified_call)
@@ -2791,15 +2791,15 @@ feature {NONE} -- Feature generation
 					current_file.put_new_line
 				end
 				print_feature_trace_message_call (True)
-			end
-			if current_type.base_class.invariants_enabled and not current_feature.is_static and not a_creation then
-				print_all_invariants (True)
-			end
-			if current_type.base_class.preconditions_enabled then
-				print_all_preconditions (a_feature)
-			end
-			if current_type.base_class.postconditions_enabled then
-				print_all_old_expression_declarations (a_feature)
+				if current_type.base_class.invariants_enabled and not current_feature.is_static and not a_creation then
+					print_all_invariants (True)
+				end
+				if current_type.base_class.preconditions_enabled then
+					print_all_preconditions (a_feature)
+				end
+				if current_type.base_class.postconditions_enabled then
+					print_all_old_expression_declarations (a_feature)
+				end
 			end
 			if a_creation then
 				print_malloc_current (a_feature)
@@ -3078,13 +3078,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			print_indentation
 			current_file.put_character ('}')
 			current_file.put_new_line
-			if current_type.base_class.invariants_enabled and not current_feature.is_static then
-				print_all_invariants (False)
-			end
-			if current_type.base_class.postconditions_enabled then
-				print_all_postconditions (a_feature)
-			end
 			if not a_inline then
+				if current_type.base_class.invariants_enabled and not current_feature.is_static then
+					print_all_invariants (False)
+				end
+				if current_type.base_class.postconditions_enabled then
+					print_all_postconditions (a_feature)
+				end
 				print_feature_trace_message_call (False)
 					-- Call stack.
 				if exception_trace_mode then
@@ -8410,7 +8410,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					--
 					-- Declaration of variables.
 					--
-				if current_type.base_class.invariants_enabled then
+				if current_type.base_class.invariants_enabled and not current_feature.is_static then
 					print_indentation
 					current_file.put_string (c_uint32_t)
 					current_file.put_character (' ')
@@ -8544,6 +8544,10 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				-- Declarations of temporary variables.
 			current_file := current_function_header_buffer
 			print_temporary_variable_declarations
+			if (current_type.base_class.invariants_enabled and not current_feature.is_static) or current_type.base_class.postconditions_enabled then
+				print_object_test_local_declarations
+				print_iteration_cursor_declarations
+			end
 				-- Flush to file.
 			flush_to_c_file
 				--
@@ -8652,7 +8656,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 		end
 
 	print_object_test_local_declarations
-			-- Print the object-test local declarations  used in the
+			-- Print the object-test local declarations used in the
 			-- generated C function to `current_file'.
 		local
 			i, nb: INTEGER
@@ -13901,17 +13905,11 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 		local
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_static_type: ET_DYNAMIC_TYPE
-			l_current_closure: ET_CLOSURE
 			l_iteration_component: ET_ITERATION_COMPONENT
 			l_seed: INTEGER
 			l_done: BOOLEAN
 		do
-			if attached {ET_INLINE_AGENT} current_agent as l_inline_agent then
-				l_current_closure := l_inline_agent
-			else
-				l_current_closure := current_feature.static_feature
-			end
-			if attached l_current_closure.iteration_components as l_iteration_components then
+			if attached current_closure_impl.iteration_components as l_iteration_components then
 				l_seed := a_name.seed
 				if l_seed >= 1 and l_seed <= l_iteration_components.count then
 					l_iteration_component := l_iteration_components.iteration_component (l_seed)
@@ -14637,6 +14635,9 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 				l_target_type_set := dynamic_type_set (l_name)
 				l_target_type := l_target_type_set.static_type
 				current_object_test_local_types.force_last (l_target_type.primary_type)
+					-- Note that the following line works even when we have two different object-tests
+					-- form two different inherited pre- or postconditions with the same name seed
+					-- because they cannot have scope overlap.
 				current_object_test_locals.force_last (current_object_test_local_types.count, l_name.seed)
 			elseif l_type /= Void then
 				l_target_type := current_dynamic_system.dynamic_type (l_type, current_type.base_type)
@@ -14843,10 +14844,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_inspect_expression -
 					print_temp_name (l_exception_temp, current_file)
 					current_file.put_character (')')
 					current_file.put_character (',')
-					print_temp_name (l_temp, current_file)
+					print_temporary_variable (l_temp)
 					current_file.put_character (')')
 					current_file.put_character (':')
-					print_temp_name (l_temp, current_file)
+					print_temporary_variable (l_temp)
 					current_file.put_character (')')
 				end
 			end
@@ -19640,10 +19641,18 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			an_agent_not_void: an_agent /= Void
 		local
 			l_old_agent: like current_agent
+			l_old_preconditions: like current_preconditions
+			l_old_postconditions: like current_postconditions
 		do
 			l_old_agent := current_agent
 			current_agent := an_agent
+			l_old_preconditions := current_preconditions
+			current_preconditions := Void
+			l_old_postconditions := current_postconditions
+			current_postconditions := Void
 			an_agent.process (Current)
+			current_preconditions := l_old_preconditions
+			current_postconditions := l_old_postconditions
 			current_agent := l_old_agent
 		end
 
@@ -38430,6 +38439,7 @@ feature {NONE} -- Assertion generation
 			j, k, l_count: INTEGER
 			l_assertion: ET_ASSERTION
 			l_old_index_offset: INTEGER
+			l_old_preconditions: ET_PRECONDITIONS
 		do
 			if attached {ET_FEATURE} a_feature as l_feature then
 				l_old_index_offset := index_offset
@@ -38440,6 +38450,8 @@ feature {NONE} -- Assertion generation
 					from k := 1 until k > l_count loop
 						index_offset := l_all_preconditions.item_2 (k)
 						l_preconditions := l_all_preconditions.item_1 (k)
+						l_old_preconditions := current_preconditions
+						current_preconditions := l_preconditions
 						if k = l_count then
 							if not l_preconditions.are_all_true then
 								print_assertions (l_preconditions, c_ge_ex_pre)
@@ -38496,6 +38508,7 @@ feature {NONE} -- Assertion generation
 								current_file.put_new_line
 							end
 						end
+						current_preconditions := l_old_preconditions
 						k := k + 1
 					end
 					if j > 0 then
@@ -38509,7 +38522,10 @@ feature {NONE} -- Assertion generation
 				index_offset := l_old_index_offset
 			elseif attached a_feature.preconditions as l_preconditions_impl and then not l_preconditions_impl.are_all_true then
 				print_before_assertions
+				l_old_preconditions := current_preconditions
+				current_preconditions := l_preconditions_impl
 				print_assertions (l_preconditions_impl, c_ge_ex_pre)
+				current_preconditions := l_old_preconditions
 				print_after_assertions
 			end
 		end
@@ -38526,6 +38542,7 @@ feature {NONE} -- Assertion generation
 			l_old_expression_exception_temp_variables: like old_expression_exception_temp_variables
 			l_temp: ET_IDENTIFIER
 			l_old_index_offset: INTEGER
+			l_old_postconditions: ET_POSTCONDITIONS
 		do
 			if attached {ET_FEATURE} a_feature as l_feature then
 				l_old_index_offset := index_offset
@@ -38536,7 +38553,10 @@ feature {NONE} -- Assertion generation
 					from i := 1 until i > nb loop
 						index_offset := l_all_postconditions.item_2 (i)
 						l_postconditions := l_all_postconditions.item_1 (i)
+						l_old_postconditions := current_postconditions
+						current_postconditions := l_postconditions
 						print_assertions (l_postconditions, c_ge_ex_post)
+						current_postconditions := l_old_postconditions
 						i := i + 1
 					end
 					print_after_assertions
@@ -38544,7 +38564,10 @@ feature {NONE} -- Assertion generation
 				index_offset := l_old_index_offset
 			elseif attached a_feature.postconditions as l_postconditions_impl and then not l_postconditions_impl.are_all_true then
 				print_before_assertions
+				l_old_postconditions := current_postconditions
+				current_postconditions := l_postconditions_impl
 				print_assertions (l_postconditions_impl, c_ge_ex_post)
+				current_postconditions := l_old_postconditions
 				print_after_assertions
 			end
 				--
@@ -38580,6 +38603,7 @@ feature {NONE} -- Assertion generation
 			i, nb: INTEGER
 			l_old_expressions: like old_expressions
 			l_old_index_offset: INTEGER
+			l_old_postconditions: ET_POSTCONDITIONS
 		do
 			l_old_expressions := old_expressions
 			l_old_expressions.wipe_out
@@ -38592,16 +38616,22 @@ feature {NONE} -- Assertion generation
 				from i := 1 until i > nb loop
 					index_offset := l_all_postconditions.item_2 (i)
 					l_postconditions := l_all_postconditions.item_1 (i)
+					l_old_postconditions := current_postconditions
+					current_postconditions := l_postconditions
 					l_postconditions.add_old_expressions (l_old_expressions)
 					print_old_expression_declarations (l_old_expressions)
 					l_old_expressions.wipe_out
+					current_postconditions := l_old_postconditions
 					i := i + 1
 				end
 				index_offset := l_old_index_offset
 			elseif attached a_feature.postconditions as l_postconditions_impl and then not l_postconditions_impl.are_all_true then
+				l_old_postconditions := current_postconditions
+				current_postconditions := l_postconditions_impl
 				l_postconditions_impl.add_old_expressions (l_old_expressions)
 				print_old_expression_declarations (l_old_expressions)
 				l_old_expressions.wipe_out
+				current_postconditions := l_old_postconditions
 			end
 		end
 
@@ -45169,6 +45199,12 @@ feature {NONE} -- Access
 	current_non_inlined_feature: ET_DYNAMIC_FEATURE
 			-- Non-inline feature being processed
 
+	current_preconditions: detachable ET_PRECONDITIONS
+			-- Preconditions being processed if any, Void otherwise
+
+	current_postconditions: detachable ET_POSTCONDITIONS
+			-- Postconditions being processed if any, Void otherwise
+
 	current_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type where `current_feature' belongs
 
@@ -45200,6 +45236,27 @@ feature {NONE} -- Access
 		ensure
 			current_closure_not_void: Result /= Void
 			definition: Result = if attached {ET_INLINE_AGENT} current_agent as l_current_agent then l_current_agent else current_feature.static_feature end
+		end
+
+	current_closure_impl: ET_CLOSURE
+			-- Closure where the current pre- or postconditions have been written if any,
+			-- or inline agent being processed if any, current feature otherwise
+		do
+			if attached current_preconditions as l_preconditions then
+				Result := l_preconditions.implementation_closure
+			elseif attached current_postconditions as l_postconditions then
+				Result := l_postconditions.implementation_closure
+			elseif attached {ET_INLINE_AGENT} current_agent as l_current_agent then
+				Result := l_current_agent
+			else
+				Result := current_feature.static_feature
+			end
+		ensure
+			current_closure_not_void: Result /= Void
+			definition: Result = if attached current_preconditions as l_preconditions then l_preconditions.implementation_closure
+				elseif attached current_postconditions as l_postconditions then l_postconditions.implementation_closure
+				elseif attached {ET_INLINE_AGENT} current_agent as l_current_agent then l_current_agent
+				else current_feature.static_feature end
 		end
 
 	current_agent: detachable ET_AGENT

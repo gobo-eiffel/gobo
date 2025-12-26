@@ -606,6 +606,12 @@ feature {NONE} -- Basic operations
 				if attached last_inline_separate_arguments as l_last_inline_separate_arguments then
 					a_query.set_inline_separate_arguments (l_last_inline_separate_arguments.cloned_inline_separate_argument_list)
 				end
+				if attached a_query.preconditions as l_preconditions then
+					l_preconditions.set_implementation_closure (a_query)
+				end
+				if attached a_query.postconditions as l_postconditions then
+					l_postconditions.set_implementation_closure (a_query)
+				end
 			end
 				-- Reset local variables, formal arguments, object-tests,
 				-- iteration components and inline separate arguments before
@@ -643,6 +649,12 @@ feature {NONE} -- Basic operations
 				end
 				if attached last_inline_separate_arguments as l_last_inline_separate_arguments then
 					a_procedure.set_inline_separate_arguments (l_last_inline_separate_arguments.cloned_inline_separate_argument_list)
+				end
+				if attached a_procedure.preconditions as l_preconditions then
+					l_preconditions.set_implementation_closure (a_procedure)
+				end
+				if attached a_procedure.postconditions as l_postconditions then
+					l_postconditions.set_implementation_closure (a_procedure)
 				end
 			end
 				-- Reset local variables, formal arguments, object-tests,

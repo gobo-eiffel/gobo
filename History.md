@@ -15,6 +15,12 @@
   and CAT-call error reporting is turned off.
 * Fixed bug where overriding library options were not taken into account
   in ECF files.
+* Fixed bug in C code generated for iteration items and object-test locals
+  in inherited pre- and postconditions.
+* Fixed bug in C code generated for pre- and postconditions of external
+  `inline C` routines.
+* Fixed bug in C code generated for `old` expressions which are the
+  expanded targets of qualified calls.
 
 ### gedoc
 

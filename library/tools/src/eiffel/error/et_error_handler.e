@@ -384,7 +384,7 @@ feature -- Universe errors
 		end
 
 	report_vsci0c_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS)
-			-- Report VSCI error:  class `a_class1' appearing in a .NET assembly
+			-- Report VSCI error: class `a_class1' appearing in a .NET assembly
 			-- cannot be overridden by `a_class2' corresponding to `a_current_class'
 			-- in `a_universe'.
 			--

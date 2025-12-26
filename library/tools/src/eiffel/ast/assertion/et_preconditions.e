@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			-- Create a new precondition clause.
 		do
 			require_keyword := tokens.require_keyword
+			implementation_closure := tokens.unknown_feature
 			precursor
 		end
 
@@ -36,6 +37,7 @@ feature {NONE} -- Initialization
 			-- Create a new precondition clause with capacity `nb'.
 		do
 			require_keyword := tokens.require_keyword
+			implementation_closure := tokens.unknown_feature
 			precursor (nb)
 		end
 
@@ -94,6 +96,11 @@ feature -- Access
 			end
 		end
 
+	implementation_closure: ET_CLOSURE
+			-- Closure where the current preconditions have been written
+			--
+			-- Useful for interpreting inherited preconditions.
+
 feature -- Status report
 
 	is_require_else: BOOLEAN
@@ -120,6 +127,16 @@ feature -- Setting
 			else_keyword := an_else
 		ensure
 			else_keyword_set: else_keyword = an_else
+		end
+
+	set_implementation_closure (a_closure: like implementation_closure)
+			-- Set `implementation_closure' to `a_closure'.
+		require
+			a_closure_not_void: a_closure /= Void
+		do
+			implementation_closure := a_closure
+		ensure
+			implementation_closure_set: implementation_closure = a_closure
 		end
 
 feature -- Validity checking status
@@ -167,5 +184,6 @@ feature -- Processing
 invariant
 
 	require_keyword_not_void: require_keyword /= Void
+	implementation_closure_not_void: implementation_closure /= Void
 
 end
