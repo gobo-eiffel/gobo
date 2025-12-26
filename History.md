@@ -23,6 +23,8 @@
   expanded targets of qualified calls.
 * Fixed computation of the dynamic type sets of the arguments of feature
   `ROUTINE.set_rout_disp_final`.
+* Made sure that invariants are not checked when calling `dispose`
+  from the GC.
 
 ### gedoc
 
