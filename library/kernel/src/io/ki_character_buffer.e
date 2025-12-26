@@ -113,7 +113,7 @@ feature -- Access
 			utf8_substring_not_void: Result /= Void
 			utf8_substring_is_string_8: Result.same_type ({STRING_8} "")
 			correct_count: Result.count = {UC_UTF8_ROUTINES}.string_byte_count (unicode_substring (s, e))
-			valid_utf8: across unicode_substring (s, e) as l_string all {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (l_string.item.natural_32_code) end implies {UC_UTF8_ROUTINES}.valid_utf8 (Result)
+			valid_utf8: across unicode_substring (s, e) as l_string all {UC_UNICODE_ROUTINES}.valid_non_surrogate_natural_32_code (l_string.natural_32_code) end implies {UC_UTF8_ROUTINES}.valid_utf8 (Result)
 		end
 
 feature -- Conversion

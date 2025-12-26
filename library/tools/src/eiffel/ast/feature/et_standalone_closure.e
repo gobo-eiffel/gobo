@@ -133,7 +133,7 @@ feature -- Access
 		ensure
 			lower_name_not_void: Result /= Void
 			lower_name_not_empty: Result.count > 0
-			lower_case: across Result as l_result all l_result.item.is_lower end
+			lower_case: across Result as l_result all l_result.is_lower end
 		end
 
 	first_precursor: detachable ET_STANDALONE_CLOSURE
