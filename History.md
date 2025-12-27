@@ -29,6 +29,8 @@
   target and the argument are the same object so that we don't get
   `reflexive_equality: standard_is_equal (Current)` invariant violations
   in multi-threaded mode.
+* Improved C code generation for inherited pre- and postconditions to
+  avoid checking twice the same assertion.
 
 ### gedoc
 

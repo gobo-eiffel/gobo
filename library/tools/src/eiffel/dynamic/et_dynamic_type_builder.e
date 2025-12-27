@@ -938,8 +938,8 @@ feature -- Validity checking
 		do
 			l_precursors := precursors
 			l_precursors.wipe_out
-			a_feature.add_precursors (l_precursors)
-			l_precursors.force_last (a_feature)
+			a_feature.add_precursors_impl (l_precursors)
+			l_precursors.force_last (a_feature.implementation_feature)
 			from l_precursors.start until l_precursors.after loop
 				l_precursor := l_precursors.item_for_iteration
 				if l_precursor.first_precursor = Void and (not attached l_precursor.preconditions as l_preconditions or else l_preconditions.are_all_true) then
@@ -984,8 +984,8 @@ feature -- Validity checking
 		do
 			l_precursors := precursors
 			l_precursors.wipe_out
-			a_feature.add_precursors (l_precursors)
-			l_precursors.force_last (a_feature)
+			a_feature.add_precursors_impl (l_precursors)
+			l_precursors.force_last (a_feature.implementation_feature)
 			l_current_index := 2 * a_feature.arguments_count + 1 + if a_feature.type /= Void then 2 else 0 end
 			from l_precursors.start until l_precursors.after loop
 				l_precursor := l_precursors.item_for_iteration
