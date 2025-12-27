@@ -5,7 +5,7 @@
 		"Nested contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_NESTED_TYPE_CONTEXT
@@ -383,6 +383,7 @@ feature -- Status report
 		do
 			Result := count = 0 or else (attached {ET_LIKE_N} last as l_like_n and then l_like_n.index = 0)
 		ensure then
+			empty: is_empty implies Result
 			not_empty: not Result implies not is_empty
 		end
 

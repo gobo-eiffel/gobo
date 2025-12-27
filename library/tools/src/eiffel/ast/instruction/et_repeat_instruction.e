@@ -204,7 +204,6 @@ invariant
 	open_repeat_symbol_not_void: open_repeat_symbol /= Void
 	colon_symbol_not_void: colon_symbol /= Void
 	bar_symbol_not_void: bar_symbol /= Void
-	loop_compound_not_void: loop_compound /= Void
 	close_repeat_symbol_not_void: close_repeat_symbol /= Void
 
 end

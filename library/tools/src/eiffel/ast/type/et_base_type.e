@@ -5,7 +5,7 @@
 		"Eiffel types directly based on a class"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_BASE_TYPE
@@ -543,6 +543,8 @@ feature -- Type context
 			-- Is current context its own root context?
 		do
 			Result := True
+		ensure then
+			is_root_context: Result
 		end
 
 	is_valid_context: BOOLEAN
