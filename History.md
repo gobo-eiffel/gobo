@@ -86,6 +86,8 @@
   considering that the type of a `TYPE` object is `TYPE [NONE]`
   and not `TYPE [TYPE [...]]`.
 * Implemented built-in features from class `IDENTIFIED_CONTROLLER`.
+* Fixed regular expressions to check the validity of special characters
+  and manifest strings.
 
 ## Version 25.12.04 - 4 December 2025
 

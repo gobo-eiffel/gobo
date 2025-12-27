@@ -107,7 +107,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	literal_regexp: STRING = "\%"([^%"%%\n]|%%([ABCDFHLNQRSTUV%'%"()<>]|\/([[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*)\/|[ \t\x0B\f\r\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]*\n[ \t\x0B\f\r\n\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]*%%))*\%""
+	literal_regexp: STRING = "\%"([^%"%%\n]|%%([ABCDFHLNQRSTUV%%'%"()<>]|/(0([xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|[cC][0-7](_*[0-7]+)*|[bB][0-1](_*[0-1]+)*|(_*[0-9]+)*)|[1-9](_*[0-9]+)*)/|[ \t\x0B\f\r\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]*\n[ \t\x0B\f\r\n\u{00A0}\u{1680}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]*%%))*\%""
 			-- Regular expression for literal
 
 invariant
