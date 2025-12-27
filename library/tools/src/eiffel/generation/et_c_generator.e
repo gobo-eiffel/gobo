@@ -24680,10 +24680,32 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					-- No field to compare with.
 				current_file.put_string (c_eif_true)
 			else
-					-- Note: do not compare the flag, SCOOP region, nor once-per-object.
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
 				print_declaration_type_cast (a_result_type, current_file)
+				current_file.put_character ('(')
+					-- First, check whether they are the same object.
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_string (c_char)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				print_target_expression (l_target, a_target_type, a_check_void_target)
+				current_file.put_character (')')
+				current_file.put_character ('=')
+				current_file.put_character ('=')
+				current_file.put_character ('(')
+				current_file.put_string (c_char)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				print_attachment_expression (l_argument, a_argument_type_set, a_argument_formal_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('|')
+				current_file.put_character ('|')
+					-- Note: do not compare the flag, SCOOP region, nor once-per-object.
 				current_file.put_character ('(')
 				current_file.put_character ('!')
 				current_file.put_string (c_memcmp)
@@ -24736,6 +24758,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				end
 				print_minus
 				print_attribute_offset (a_target_type, current_file)
+				current_file.put_character (')')
 				current_file.put_character (')')
 				current_file.put_character (')')
 			end

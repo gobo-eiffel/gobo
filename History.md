@@ -25,6 +25,10 @@
   `ROUTINE.set_rout_disp_final`.
 * Made sure that invariants are not checked when calling `dispose`
   from the GC.
+* Made the implementation of `ANY.standard_is_equal` atomic when the
+  target and the argument are the same object so that we don't get
+  `reflexive_equality: standard_is_equal (Current)` invariant violations
+  in multi-threaded mode.
 
 ### gedoc
 
