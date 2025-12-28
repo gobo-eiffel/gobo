@@ -31,6 +31,8 @@
   in multi-threaded mode.
 * Improved C code generation for inherited pre- and postconditions to
   avoid checking twice the same assertion.
+* Fixed bug in C code generated for exception trace in empty routines
+  when assertions are monitored.
 
 ### gedoc
 

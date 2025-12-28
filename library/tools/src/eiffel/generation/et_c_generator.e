@@ -2536,7 +2536,7 @@ feature {NONE} -- Feature generation
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
 			is_creation: a_creation implies current_feature.is_creation
-			one_kind: (not a_creation and not a_inline) or (a_creation xor a_inline)
+			one_kind: (a_creation implies not a_inline) and (a_inline implies not a_creation)
 		local
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_result_type: detachable ET_DYNAMIC_PRIMARY_TYPE
@@ -7222,7 +7222,13 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			end
 				-- Call stack.
 			if exception_trace_mode then
-				l_is_empty := not a_creation and then (not attached a_feature.compound as l_compound or else l_compound.is_empty) and then a_feature.rescue_clause = Void
+				l_is_empty :=
+					not a_creation and then
+					not (current_type.base_class.invariants_enabled and not current_closure.is_static) and then
+					not current_type.base_class.preconditions_enabled and then
+					not current_type.base_class.postconditions_enabled and then
+					(not attached a_feature.compound as l_compound or else l_compound.is_empty) and then
+					a_feature.rescue_clause = Void
 				if not l_is_empty then
 					print_indentation
 					current_file.put_string (c_ge_call)
