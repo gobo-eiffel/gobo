@@ -33,6 +33,8 @@
   avoid checking twice the same assertion.
 * Fixed bug in C code generated for exception trace in empty routines
   when assertions are monitored.
+* Fixed implementation of built-in feature `SPECIAL.standard_is_equal`:
+  `capacity` should not be taken into account.
 
 ### gedoc
 

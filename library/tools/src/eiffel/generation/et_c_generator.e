@@ -24270,7 +24270,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		do
 			nb := current_type.attribute_count
 			l_queries := current_type.queries
-			from i := 1 until i > nb loop
+			from
+				i := 1
+				if current_type.is_special then
+						-- Skip the 'capacity' attribute.
+					i := 2
+				end
+			until
+				i > nb
+			loop
 				l_attribute := l_queries.item (i)
 				if not attached l_attribute.result_type_set as l_attribute_type_set then
 						-- Internal error: should never happen: queries have a result type set.
@@ -24676,6 +24684,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 		local
 			l_target: ET_EXPRESSION
 			l_argument: ET_EXPRESSION
+			l_is_special: BOOLEAN
 		do
 			if a_target_type.base_class.is_type_class then
 					-- Cannot have two instances of class "TYPE" representing the same Eiffel type.
@@ -24727,7 +24736,13 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character (')')
 				current_file.put_character (')')
 				print_plus
-				print_attribute_offset (a_target_type, current_file)
+				l_is_special := a_target_type.is_special and then a_target_type.attribute_count >= 2
+				if l_is_special then
+						-- Skip the 'capacity' attribute.
+					print_special_count_offset (a_target_type, current_file)
+				else
+					print_attribute_offset (a_target_type, current_file)
+				end
 				print_comma
 				current_file.put_character ('(')
 				current_file.put_character ('(')
@@ -24739,7 +24754,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				current_file.put_character (')')
 				current_file.put_character (')')
 				print_plus
-				print_attribute_offset (a_target_type, current_file)
+				if l_is_special then
+						-- Skip the 'capacity' attribute.
+					print_special_count_offset (a_target_type, current_file)
+				else
+					print_attribute_offset (a_target_type, current_file)
+				end
 				print_comma
 				if attached {ET_DYNAMIC_SPECIAL_TYPE} a_target_type as l_special_type then
 						-- Note: if `offsetof' is not supported, then we can use: ((int)&(((T317*) 0)->a2))
@@ -24764,7 +24784,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					current_file.put_character (')')
 				end
 				print_minus
-				print_attribute_offset (a_target_type, current_file)
+				if l_is_special then
+						-- Skip the 'capacity' attribute.
+					print_special_count_offset (a_target_type, current_file)
+				else
+					print_attribute_offset (a_target_type, current_file)
+				end
 				current_file.put_character (')')
 				current_file.put_character (')')
 				current_file.put_character (')')
@@ -42009,6 +42034,23 @@ feature {NONE} -- Type generation
 			else
 				print_attribute_special_item_name (a_type, a_file)
 			end
+			a_file.put_character (')')
+		end
+
+	print_special_count_offset (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print offset of pseudo-attribute 'count' of `a_type' to `a_file'.
+		require
+			a_type_not_void: a_type /= Void
+			a_type_is_special: a_type.is_special
+			has_capacity_and_count: a_type.attribute_count >= 2
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string (c_offsetof)
+			a_file.put_character ('(')
+			print_type_name (a_type, a_file)
+			a_file.put_character (',')
+			print_attribute_name (a_type.queries.item (2), a_type, a_file)
 			a_file.put_character (')')
 		end
 
