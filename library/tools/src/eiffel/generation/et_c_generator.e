@@ -23977,7 +23977,13 @@ feature {NONE} -- Built-in feature generation
 		do
 -- TODO
 error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented")
-			print_builtin_any_standard_is_equal_body (a_feature)
+			if current_type.has_nested_reference_attributes then
+				print_indentation_assign_to_result
+				current_file.put_string (c_eif_true)
+				print_semicolon_newline
+			else
+				print_builtin_any_standard_is_equal_body (a_feature)
+			end
 		end
 
 	print_builtin_any_is_equal_body (a_feature: ET_EXTERNAL_ROUTINE)
