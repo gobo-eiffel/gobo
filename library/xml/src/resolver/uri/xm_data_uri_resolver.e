@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 	parse_components (a_uri: UT_URI)
 			-- Parse `a_uri' into parameters, media-type and data
 		require
-			data_uri: a_uri /= Void and then a_uri.is_opaque and then attached a_uri.scheme as l_scheme and then l_scheme.is_equal (scheme)
+			data_uri: a_uri /= Void and then a_uri.is_opaque and then attached a_uri.scheme as l_scheme and then l_scheme.same_string (scheme)
 			no_previous_error: not has_error
 		local
 			opaque_part: STRING

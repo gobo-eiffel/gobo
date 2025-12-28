@@ -103,10 +103,10 @@ feature -- Execution
 			is_line_numbering := True
 			from i := 1 until i > nb loop
 				arg := Arguments.argument (i)
-				if arg.is_equal ("-V") or else arg.is_equal ("--version") then
+				if arg.same_string ("-V") or else arg.same_string ("--version") then
 					report_version_number
 					Exceptions.die (0)
-				elseif arg.is_equal ("-h") or else arg.is_equal ("-?") or else arg.is_equal ("--help") then
+				elseif arg.same_string ("-h") or else arg.same_string ("-?") or else arg.same_string ("--help") then
 					report_usage_message
 					Exceptions.die (0)
 				elseif arg.substring_index ("--", 1) = 1 then
@@ -542,15 +542,15 @@ feature {NONE} -- Implementation
 			an_integer: INTEGER
 			a_number: STRING
 		do
-			if an_option.is_equal ("no-line-numbers") then
+			if an_option.same_string ("no-line-numbers") then
 				is_line_numbering := False
-			elseif an_option.is_equal ("force-explaining") then
+			elseif an_option.same_string ("force-explaining") then
 				configuration.force_explaining
-			elseif an_option.is_equal ("suppress-dtd") then
+			elseif an_option.same_string ("suppress-dtd") then
 				configuration.suppress_dtd
-			elseif an_option.is_equal ("tiny-tree") then
+			elseif an_option.same_string ("tiny-tree") then
 				is_tiny_tree_model := True
-			elseif an_option.is_equal ("report-document-statistics") then
+			elseif an_option.same_string ("report-document-statistics") then
 				is_reporting_document_statistics := True
 			elseif an_option.substring_index ("nodes=", 1) = 1 then
 				if an_option.count > 6 then
@@ -615,7 +615,7 @@ feature {NONE} -- Implementation
 					report_usage_message
 					Exceptions.die (1)
 				end
-			elseif an_option.is_equal ("use-pi") then
+			elseif an_option.same_string ("use-pi") then
 				use_processing_instruction := True
 			elseif an_option.substring_index ("medium=", 1) = 1 and then an_option.count > 7 then
 				medium := an_option.substring (8, an_option.count)
@@ -627,25 +627,25 @@ feature {NONE} -- Implementation
 				initial_mode_name := an_option.substring (6, an_option.count)
 			elseif an_option.substring_index ("context=", 1) = 1 and then an_option.count > 8 then
 				initial_context := an_option.substring (9, an_option.count)
-			elseif an_option.is_equal ("no-gc") then
+			elseif an_option.same_string ("no-gc") then
 				memory.collection_off
-			elseif an_option.is_equal ("secure") then
+			elseif an_option.same_string ("secure") then
 				highly_secure := True
-			elseif an_option.is_equal ("html-text-ok") then
+			elseif an_option.same_string ("html-text-ok") then
 				configuration.do_not_assume_xhtml
-			elseif an_option.is_equal ("default-template-warning") then
+			elseif an_option.same_string ("default-template-warning") then
 				configuration.set_warns_on_default_action (True)
-			elseif an_option.is_equal ("suppress-default-action") then
+			elseif an_option.same_string ("suppress-default-action") then
 				configuration.set_default_action_suppressed (True)
-			elseif an_option.is_equal ("treat-warnings-as-errors") then
+			elseif an_option.same_string ("treat-warnings-as-errors") then
 				error_listener.treat_warnings_as_recoverable_errors
-			elseif an_option.is_equal ("do-not-recover") then
+			elseif an_option.same_string ("do-not-recover") then
 				configuration.set_recovery_policy (Do_not_recover)
-			elseif an_option.is_equal ("recover-silently") then
+			elseif an_option.same_string ("recover-silently") then
 				configuration.set_recovery_policy (Recover_silently)
-			elseif an_option.is_equal ("stop-after-source-document") then
+			elseif an_option.same_string ("stop-after-source-document") then
 				configuration.set_final_execution_phase (Stop_after_principal_source)
-			elseif an_option.is_equal ("stop-after-compilation") then
+			elseif an_option.same_string ("stop-after-compilation") then
 				configuration.set_final_execution_phase (Stop_after_compilation)
 			elseif an_option.substring_index ("warning-threshold=", 1) = 1 and then an_option.count > 18 then
 				set_warning_threshold (an_option.substring (19, an_option.count))
@@ -659,19 +659,19 @@ feature {NONE} -- Implementation
 				process_file (an_option.substring (6, an_option.count))
 			elseif an_option.substring_index ("digits=", 1) = 1 and then an_option.count > 7 then
 				set_digits (an_option.substring (8, an_option.count))
-			elseif an_option.is_equal ("no-output-extensions") then
+			elseif an_option.same_string ("no-output-extensions") then
 				suppress_output_extensions := True
-			elseif an_option.is_equal ("no-extension-functions") then
+			elseif an_option.same_string ("no-extension-functions") then
 				suppress_extension_functions := True
-			elseif an_option.is_equal ("no-network-protocols") then
+			elseif an_option.same_string ("no-network-protocols") then
 				suppress_network_protocols := True
-			elseif an_option.is_equal ("no-catalogs") then
+			elseif an_option.same_string ("no-catalogs") then
 				shared_catalog_manager.suppress_catalogs
-			elseif an_option.is_equal ("no-catalog-pi") then
+			elseif an_option.same_string ("no-catalog-pi") then
 				shared_catalog_manager.suppress_processing_instructions
-			elseif an_option.is_equal ("no-default-catalog") then
+			elseif an_option.same_string ("no-default-catalog") then
 				shared_catalog_manager.suppress_default_system_catalog_file
-			elseif an_option.is_equal ("prefer-system") then
+			elseif an_option.same_string ("prefer-system") then
 				shared_catalog_manager.set_prefer_system
 			elseif an_option.substring_index ("error-script=", 1) = 1 then
 				if an_option.count > 13 then
@@ -837,7 +837,7 @@ feature {NONE} -- Implementation
 				if l_medium = Void then
 					l_medium := "screen"
 					medium := l_medium
-				elseif l_medium.is_equal ("all") then
+				elseif l_medium.same_string ("all") then
 					report_processing_error ("Forbidden option value", "Medium must not be 'all'")
 					Exceptions.die (1)
 				end

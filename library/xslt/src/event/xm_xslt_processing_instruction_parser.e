@@ -77,7 +77,7 @@ feature -- Document type definuition callbacks
 	on_dtd_processing_instruction (a_name, a_content: STRING)
 			-- PI.
 		do
-			if pi_name.is_equal (a_name) then
+			if pi_name.same_string (a_name) then
 				process_pi (a_content)
 			end
 		end
@@ -104,7 +104,7 @@ feature -- Meta
 	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- Processing instruction.
 		do
-			if pi_name.is_equal (a_name) then
+			if pi_name.same_string (a_name) then
 				process_pi (a_content)
 			end
 		end

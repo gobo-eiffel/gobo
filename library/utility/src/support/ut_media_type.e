@@ -46,8 +46,8 @@ feature {NONE} -- Initialization
 			create parameters.make_map (10)
 			parameters.set_key_equality_tester (string_equality_tester)
 		ensure
-			type_set: type.is_equal (a_type.as_lower)
-			subtype_set: subtype.is_equal (a_subtype.as_lower)
+			type_set: type.same_string (a_type.as_lower)
+			subtype_set: subtype.same_string (a_subtype.as_lower)
 		end
 
 feature -- Access
@@ -160,10 +160,10 @@ invariant
 
 	type_not_void: type /= Void
 	type_not_empty: type.count > 0
-	type_is_lower_case: type.is_equal (type.as_lower)
+	type_is_lower_case: type.same_string (type.as_lower)
 	subtype_not_void: subtype /= Void
 	subtype_not_empty: subtype.count > 0
-	subtype_is_lower_case: subtype.is_equal (subtype.as_lower)
+	subtype_is_lower_case: subtype.same_string (subtype.as_lower)
 	parameters_not_void: parameters /= Void
 	no_void_parameter: not parameters.has_void_item
 
