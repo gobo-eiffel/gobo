@@ -2223,6 +2223,12 @@ feature {NONE} -- Compilation
 							l_dynamic_feature := ise_exception_manager_type.dynamic_procedure (l_procedure, Current)
 							l_dynamic_feature.set_regular (True)
 							ise_exception_manager_once_raise_feature := l_dynamic_feature
+							if
+								attached ise_exception_manager_last_exception_feature as l_ise_exception_manager_last_exception_feature and then
+								attached l_ise_exception_manager_last_exception_feature.result_type_set as l_result_type_set
+							then
+								dynamic_type_set_builder.propagate_builtin_actual_argument_dynamic_types (l_result_type_set, 1, l_dynamic_feature)
+							end
 						end
 							-- Check feature 'set_exception_data' of class "ISE_EXCEPTION_MANAGER".
 						if not attached l_class.named_procedure (tokens.set_exception_data_feature_name) as l_procedure then
