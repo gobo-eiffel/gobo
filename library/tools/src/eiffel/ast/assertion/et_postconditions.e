@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			-- Create a new postcondition clause.
 		do
 			ensure_keyword := tokens.ensure_keyword
+			implementation_closure := tokens.unknown_feature
 			precursor
 		end
 
@@ -36,6 +37,7 @@ feature {NONE} -- Initialization
 			-- Create a new postcondition clause with capacity `nb'.
 		do
 			ensure_keyword := tokens.ensure_keyword
+			implementation_closure := tokens.unknown_feature
 			precursor (nb)
 		end
 
@@ -94,6 +96,11 @@ feature -- Access
 			end
 		end
 
+	implementation_closure: ET_CLOSURE
+			-- Closure where the current postconditions have been written
+			--
+			-- Useful for interpreting inherited postconditions.
+
 feature -- Status report
 
 	is_ensure_then: BOOLEAN
@@ -120,6 +127,16 @@ feature -- Setting
 			then_keyword := a_then
 		ensure
 			then_keyword_set: then_keyword = a_then
+		end
+
+	set_implementation_closure (a_closure: like implementation_closure)
+			-- Set `implementation_closure' to `a_closure'.
+		require
+			a_closure_not_void: a_closure /= Void
+		do
+			implementation_closure := a_closure
+		ensure
+			implementation_closure_set: implementation_closure = a_closure
 		end
 
 feature -- Validity checking status
@@ -167,5 +184,6 @@ feature -- Processing
 invariant
 
 	ensure_keyword_not_void: ensure_keyword /= Void
+	implementation_closure_not_void: implementation_closure /= Void
 
 end

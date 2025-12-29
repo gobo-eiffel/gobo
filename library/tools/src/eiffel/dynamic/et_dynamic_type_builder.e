@@ -938,8 +938,8 @@ feature -- Validity checking
 		do
 			l_precursors := precursors
 			l_precursors.wipe_out
-			a_feature.add_precursors (l_precursors)
-			l_precursors.force_last (a_feature)
+			a_feature.add_precursors_impl (l_precursors)
+			l_precursors.force_last (a_feature.implementation_feature)
 			from l_precursors.start until l_precursors.after loop
 				l_precursor := l_precursors.item_for_iteration
 				if l_precursor.first_precursor = Void and (not attached l_precursor.preconditions as l_preconditions or else l_preconditions.are_all_true) then
@@ -984,8 +984,8 @@ feature -- Validity checking
 		do
 			l_precursors := precursors
 			l_precursors.wipe_out
-			a_feature.add_precursors (l_precursors)
-			l_precursors.force_last (a_feature)
+			a_feature.add_precursors_impl (l_precursors)
+			l_precursors.force_last (a_feature.implementation_feature)
 			l_current_index := 2 * a_feature.arguments_count + 1 + if a_feature.type /= Void then 2 else 0 end
 			from l_precursors.start until l_precursors.after loop
 				l_precursor := l_precursors.item_for_iteration
@@ -2966,46 +2966,37 @@ feature {NONE} -- Event handling
 				l_actuals := an_expression.arguments
 				if l_actuals /= Void then
 					nb := l_actuals.count
-					if nb = 1 then
+					from i := 1 until i > nb loop
+						l_actual := l_actuals.actual_argument (i)
+						propagate_argument_operand_dynamic_types (l_actual, i, l_dynamic_query)
+						i := i + 1
+					end
+					if nb = 1 and then l_dynamic_query.is_builtin_function_item and then current_dynamic_type.is_agent_type then
+							-- This is something of the form:  'item ([...])'
+							-- Try to get the open operand type sets directly from the
+							-- argument if it is a manifest tuple.
 						l_actual := l_actuals.actual_argument (1)
-						if l_dynamic_query.is_builtin_function_item and then current_dynamic_type.is_agent_type then
-								-- This is something of the form:  'item ([...])'
-								-- Try to get the open operand type sets directly from the
-								-- argument if it is a manifest tuple.
-							if not attached {ET_DYNAMIC_ROUTINE_TYPE} current_dynamic_type as l_agent_type then
-									-- Internal error: it has to be an agent type.
+						if not attached {ET_DYNAMIC_ROUTINE_TYPE} current_dynamic_type as l_agent_type then
+								-- Internal error: it has to be an agent type.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						elseif attached {ET_MANIFEST_TUPLE} l_actual as l_manifest_tuple then
+							l_open_operand_type_sets := l_agent_type.open_operand_type_sets
+							nb := l_open_operand_type_sets.count
+							if l_manifest_tuple.count < nb then
+									-- Internal error: the actual argument conforms to the
+									-- formal argument of 'item', so there cannot be less
+									-- items in the tuple.
 								set_fatal_error
 								error_handler.report_giaaa_error
 							else
-								if attached {ET_MANIFEST_TUPLE} l_actual as l_manifest_tuple then
-									l_open_operand_type_sets := l_agent_type.open_operand_type_sets
-									nb := l_open_operand_type_sets.count
-									if l_manifest_tuple.count < nb then
-											-- Internal error: the actual argument conforms to the
-											-- formal argument of 'item', so there cannot be less
-											-- items in the tuple.
-										set_fatal_error
-										error_handler.report_giaaa_error
-									else
-										from i := 1 until i > nb loop
-											l_actual := l_manifest_tuple.expression (i)
-											l_open_operand_type_set := l_open_operand_type_sets.item (i)
-											propagate_argument_dynamic_types (l_actual, l_open_operand_type_set)
-											i := i + 1
-										end
-									end
-								else
-									propagate_argument_operand_dynamic_types (l_actual, 1, l_dynamic_query)
+								from i := 1 until i > nb loop
+									l_actual := l_manifest_tuple.expression (i)
+									l_open_operand_type_set := l_open_operand_type_sets.item (i)
+									propagate_argument_dynamic_types (l_actual, l_open_operand_type_set)
+									i := i + 1
 								end
 							end
-						else
-							propagate_argument_operand_dynamic_types (l_actual, 1, l_dynamic_query)
-						end
-					else
-						from i := 1 until i > nb loop
-							l_actual := l_actuals.actual_argument (i)
-							propagate_argument_operand_dynamic_types (l_actual, i, l_dynamic_query)
-							i := i + 1
 						end
 					end
 				end
@@ -3054,46 +3045,37 @@ feature {NONE} -- Event handling
 				l_dynamic_procedure.set_regular (True)
 				if attached an_instruction.arguments as l_actuals then
 					nb := l_actuals.count
-					if nb = 1 then
+					from i := 1 until i > nb loop
+						l_actual := l_actuals.actual_argument (i)
+						propagate_argument_operand_dynamic_types (l_actual, i, l_dynamic_procedure)
+						i := i + 1
+					end
+					if nb = 1 and then l_dynamic_procedure.is_builtin_procedure_call and then current_dynamic_type.is_agent_type then
+							-- This is something of the form:  'call ([...])'
+							-- Try to get the open operand type sets directly from the
+							-- argument if it is a manifest tuple.
 						l_actual := l_actuals.actual_argument (1)
-						if l_dynamic_procedure.is_builtin_procedure_call and then current_dynamic_type.is_agent_type then
-								-- This is something of the form:  'call ([...])'
-								-- Try to get the open operand type sets directly from the
-								-- argument if it is a manifest tuple.
-							if not attached {ET_DYNAMIC_ROUTINE_TYPE} current_dynamic_type as l_agent_type then
-									-- Internal error: it has to be an agent type.
+						if not attached {ET_DYNAMIC_ROUTINE_TYPE} current_dynamic_type as l_agent_type then
+								-- Internal error: it has to be an agent type.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						elseif attached {ET_MANIFEST_TUPLE} l_actual as l_manifest_tuple then
+							l_open_operand_type_sets := l_agent_type.open_operand_type_sets
+							nb := l_open_operand_type_sets.count
+							if l_manifest_tuple.count < nb then
+									-- Internal error: the actual argument conforms to the
+									-- formal argument of 'call', so there cannot be less
+									-- items in the tuple.
 								set_fatal_error
 								error_handler.report_giaaa_error
 							else
-								if attached {ET_MANIFEST_TUPLE} l_actual as l_manifest_tuple then
-									l_open_operand_type_sets := l_agent_type.open_operand_type_sets
-									nb := l_open_operand_type_sets.count
-									if l_manifest_tuple.count < nb then
-											-- Internal error: the actual argument conforms to the
-											-- formal argument of 'call', so there cannot be less
-											-- items in the tuple.
-										set_fatal_error
-										error_handler.report_giaaa_error
-									else
-										from i := 1 until i > nb loop
-											l_actual := l_manifest_tuple.expression (i)
-											l_open_operand_type_set := l_open_operand_type_sets.item (i)
-											propagate_argument_dynamic_types (l_actual, l_open_operand_type_set)
-											i := i + 1
-										end
-									end
-								else
-									propagate_argument_operand_dynamic_types (l_actual, 1, l_dynamic_procedure)
+								from i := 1 until i > nb loop
+									l_actual := l_manifest_tuple.expression (i)
+									l_open_operand_type_set := l_open_operand_type_sets.item (i)
+									propagate_argument_dynamic_types (l_actual, l_open_operand_type_set)
+									i := i + 1
 								end
 							end
-						else
-							propagate_argument_operand_dynamic_types (l_actual, 1, l_dynamic_procedure)
-						end
-					else
-						from i := 1 until i > nb loop
-							l_actual := l_actuals.actual_argument (i)
-							propagate_argument_operand_dynamic_types (l_actual, i, l_dynamic_procedure)
-							i := i + 1
 						end
 					end
 				end
@@ -3185,66 +3167,58 @@ feature {NONE} -- Event handling
 				l_actuals := an_expression.arguments
 				if l_actuals /= Void then
 					nb := l_actuals.count
+					l_open_operand_type_sets := l_agent_type.open_operand_type_sets
+					nb2 := l_open_operand_type_sets.count
+					from i := 1 until i > nb loop
+						l_actual := l_actuals.actual_argument (i)
+						if attached {ET_EXPRESSION} l_actual as l_actual_expression2 then
+							propagate_argument_operand_dynamic_types (l_actual_expression2, i, a_feature)
+						else
+								-- Open operand.
+							j := j + 1
+							if j > nb2 then
+									-- Internal error: missing open operands.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								l_open_operand_type_set := l_open_operand_type_sets.item (j)
+								set_dynamic_type_set (l_open_operand_type_set, l_actual)
+								propagate_argument_operand_dynamic_types (l_actual, i, a_feature)
+							end
+						end
+						i := i + 1
+					end
+					if j < nb2 then
+							-- Internal error: too many open operands.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					end
 					if nb = 1 and then (a_feature.is_builtin_procedure_call or a_feature.is_builtin_function_item) and then current_dynamic_type.is_agent_type then
 							-- This is something of the form:  'agent call ([...])' or 'agent item ([...])'
 							-- Try to get the open operand type sets directly from the
 							-- argument if it is a manifest tuple.
+						l_actual := l_actuals.actual_argument (1)
 						if not attached {ET_DYNAMIC_ROUTINE_TYPE} current_dynamic_type as l_routine_type then
 								-- Internal error: it has to be an agent type.
 							set_fatal_error
 							error_handler.report_giaaa_error
-						else
-							l_actual := l_actuals.actual_argument (1)
-							if attached {ET_MANIFEST_TUPLE} l_actual as l_manifest_tuple then
-								l_open_operand_type_sets := l_routine_type.open_operand_type_sets
-								nb := l_open_operand_type_sets.count
-								if l_manifest_tuple.count < nb then
-										-- Internal error: the actual argument conforms to the
-										-- formal argument of 'call' or 'item', so there cannot
-										-- be less items in the tuple.
-									set_fatal_error
-									error_handler.report_giaaa_error
-								else
-									from i := 1 until i > nb loop
-										l_actual_expression := l_manifest_tuple.expression (i)
-										l_open_operand_type_set := l_open_operand_type_sets.item (i)
-										propagate_argument_dynamic_types (l_actual_expression, l_open_operand_type_set)
-										i := i + 1
-									end
-								end
+						elseif attached {ET_MANIFEST_TUPLE} l_actual as l_manifest_tuple then
+							l_open_operand_type_sets := l_routine_type.open_operand_type_sets
+							nb := l_open_operand_type_sets.count
+							if l_manifest_tuple.count < nb then
+									-- Internal error: the actual argument conforms to the
+									-- formal argument of 'call' or 'item', so there cannot
+									-- be less items in the tuple.
+								set_fatal_error
+								error_handler.report_giaaa_error
 							else
-								l_not_done := True
-							end
-						end
-					else
-						l_not_done := True
-					end
-					if l_not_done then
-						l_open_operand_type_sets := l_agent_type.open_operand_type_sets
-						nb2 := l_open_operand_type_sets.count
-						from i := 1 until i > nb loop
-							l_actual := l_actuals.actual_argument (i)
-							if attached {ET_EXPRESSION} l_actual as l_actual_expression2 then
-								propagate_argument_operand_dynamic_types (l_actual_expression2, i, a_feature)
-							else
-									-- Open operand.
-								j := j + 1
-								if j > nb2 then
-										-- Internal error: missing open operands.
-									set_fatal_error
-									error_handler.report_giaaa_error
-								else
-									l_open_operand_type_set := l_open_operand_type_sets.item (j)
-									set_dynamic_type_set (l_open_operand_type_set, l_actual)
-									propagate_argument_operand_dynamic_types (l_actual, i, a_feature)
+								from i := 1 until i > nb loop
+									l_actual_expression := l_manifest_tuple.expression (i)
+									l_open_operand_type_set := l_open_operand_type_sets.item (i)
+									propagate_argument_dynamic_types (l_actual_expression, l_open_operand_type_set)
+									i := i + 1
 								end
 							end
-							i := i + 1
-						end
-						if j < nb2 then
-								-- Internal error: too many open operands.
-							set_fatal_error
-							error_handler.report_giaaa_error
 						end
 					end
 				end

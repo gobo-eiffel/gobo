@@ -5,7 +5,7 @@
 		"General lexical analyzers"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class YY_SCANNER
@@ -175,7 +175,7 @@ feature -- Access
 			utf8_text_is_string_8: Result.same_type ({STRING_8} "")
 			valid_utf8: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
 			correct_count: Result.count = {UC_UTF8_ROUTINES}.string_byte_count (unicode_text)
-			definition: Result.is_equal ({UC_UTF8_ROUTINES}.string_to_utf8 (unicode_text))
+			definition: Result.same_string ({UC_UTF8_ROUTINES}.string_to_utf8 (unicode_text))
 		end
 
 	text_item (i: INTEGER): CHARACTER_8
@@ -215,7 +215,7 @@ feature -- Access
 		ensure
 			text_substring_not_void: Result /= Void
 			text_substring_empty: (s > e) implies Result.is_empty
-			definition: Result.is_equal (text.substring (s, e))
+			definition: Result.same_string (text.substring (s, e))
 		end
 
 	unicode_text_substring (s, e: INTEGER): STRING_32
@@ -258,7 +258,7 @@ feature -- Access
 			utf8_text_is_string_8: Result.same_type ({STRING_8} "")
 			valid_utf8: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
 			utf8_text_substring_empty: (s > e) implies Result.is_empty
-			definition: Result.is_equal ({UC_UTF8_ROUTINES}.string_to_utf8 (unicode_text.substring (s, e)))
+			definition: Result.same_string ({UC_UTF8_ROUTINES}.string_to_utf8 (unicode_text.substring (s, e)))
 			correct_count: Result.count = {UC_UTF8_ROUTINES}.string_byte_count (unicode_text.substring (s, e))
 		end
 

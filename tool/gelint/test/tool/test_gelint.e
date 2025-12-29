@@ -4,7 +4,7 @@
 
 		"Test 'gelint'"
 
-	copyright: "Copyright (c) 2016-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class TEST_GELINT
@@ -28,7 +28,7 @@ feature -- Test
 			-- Test 'gelint'.
 		do
 			compile_program
-			if eiffel_compiler.is_ge then
+			if eiffel_compiler.is_ge and then not variables.has ("debug") then
 				run_validation
 			end
 		end

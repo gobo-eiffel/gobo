@@ -335,6 +335,34 @@ feature -- Test
 			assert ("not_valid_2", not sp1.valid_index (3))
 		end
 
+	test_standard_is_equal_basic_expanded
+			-- Test feature 'standard_is_equal' with basic expanded types.
+		local
+			sp1, sp2: SPECIAL [CHARACTER]
+		do
+			create sp1.make_empty (10)
+			sp1.extend ('a')
+			sp1.extend ('b')
+			sp1.extend ('c')
+			assert_integers_equal ("sp1_capacity_1", 10, sp1.capacity)
+			assert_integers_equal ("sp1_count_1", 3, sp1.count)
+			assert_characters_equal ("sp1_item0_1", 'a', sp1.item (0))
+			assert_characters_equal ("sp1_item1_1", 'b', sp1.item (1))
+			assert_characters_equal ("sp1_item2_1", 'c', sp1.item (2))
+			create sp2.make_empty (5)
+			sp2.extend ('a')
+			sp2.extend ('b')
+			sp2.extend ('c')
+			assert_integers_equal ("sp2_capacity_1", 5, sp2.capacity)
+			assert_integers_equal ("sp2_count_1", 3, sp2.count)
+			assert_characters_equal ("sp2_item0_1", 'a', sp2.item (0))
+			assert_characters_equal ("sp2_item1_1", 'b', sp2.item (1))
+			assert_characters_equal ("sp2_item2_1", 'c', sp2.item (2))
+				-- 'standard_is_equal' returns True even though
+				-- `sp1' and `sp2' have different capacities.
+			assert ("standard_is_equal_1", sp1.standard_is_equal (sp2))
+		end
+
 	test_put_1
 			-- Test feature 'put'.
 		local

@@ -458,6 +458,7 @@ feature -- Access
 			l_actual_index: INTEGER
 			l_context_base_class: ET_CLASS
 			l_constraint_base_type: ET_BASE_TYPE
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_formal_type := Current
 			l_index := index
@@ -492,13 +493,27 @@ feature -- Access
 						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
 							-- Use the first constraint in case of multiple generic constraints.
 						l_constraint_base_type := l_actual_formal.constraint_base_types.type_constraint (1).type
-						Result := l_constraint_base_type.base_type_actual (i, l_constraint_base_type)
+						if a_context.is_root_context then
+							Result := l_constraint_base_type.base_type_actual (i, a_context)
+						else
+							l_root_context := a_context.as_nested_type_context
+							l_root_context.force_last (tokens.like_0)
+							Result := l_constraint_base_type.base_type_actual (i, l_root_context)
+							l_root_context.remove_last
+						end
 					else
 							-- Internal error: formal parameter not matched.
 						Result := tokens.unknown_class
 					end
 				elseif attached {ET_BASE_TYPE} l_actual as l_base_type then
-					Result := l_base_type.base_type_actual (i, l_base_type)
+					if a_context.is_root_context then
+						Result := l_base_type.base_type_actual (i, a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := l_base_type.base_type_actual (i, l_root_context)
+						l_root_context.remove_last
+					end
 				else
 						-- Should never happen: `a_context.base_type' is the
 						-- result of call to `base_type'. So `l_actual'
@@ -525,6 +540,7 @@ feature -- Access
 			l_actual_index: INTEGER
 			l_context_base_class: ET_CLASS
 			l_constraint_base_type: ET_BASE_TYPE
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_formal_type := Current
 			l_index := index
@@ -559,13 +575,27 @@ feature -- Access
 						l_actual_formal := l_actual_formals.formal_parameter (l_actual_index)
 							-- Use the first constraint in case of multiple generic constraints.
 						l_constraint_base_type := l_actual_formal.constraint_base_types.type_constraint (1).type
-						Result := l_constraint_base_type.base_type_actual_parameter (i, l_constraint_base_type)
+						if a_context.is_root_context then
+							Result := l_constraint_base_type.base_type_actual_parameter (i, a_context)
+						else
+							l_root_context := a_context.as_nested_type_context
+							l_root_context.force_last (tokens.like_0)
+							Result := l_constraint_base_type.base_type_actual_parameter (i, l_root_context)
+							l_root_context.remove_last
+						end
 					else
 							-- Internal error: formal parameter not matched.
 						Result := tokens.unknown_class
 					end
 				elseif attached {ET_BASE_TYPE} l_actual as l_base_type then
-					Result := l_base_type.base_type_actual_parameter (i, l_base_type)
+					if a_context.is_root_context then
+						Result := l_base_type.base_type_actual_parameter (i, a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := l_base_type.base_type_actual_parameter (i, l_root_context)
+						l_root_context.remove_last
+					end
 				else
 						-- Should never happen: `a_context.base_type' is the
 						-- result of call to `base_type'. So `l_actual'

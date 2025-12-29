@@ -41,7 +41,7 @@ feature -- Access
 		do
 			Result := "document"
 		ensure then
-			node_kind_is_document: Result /= Void and then Result.is_equal ("document")
+			node_kind_is_document: Result /= Void and then Result.same_string ("document")
 		end
 
 	item_type: XM_XPATH_ITEM_TYPE

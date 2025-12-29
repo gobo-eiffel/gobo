@@ -52,7 +52,7 @@ feature -- Access
 			to_array_not_void: Result /= Void
 			lower: Result.lower = 1
 			upper: Result.upper = argument_count
-			definition: across (1 |..| argument_count) as i all Result [i.item] = argument (i.item) end
+			definition: across (1 |..| argument_count) as i all Result [i.item].same_string (argument (i.item)) end
 		end
 
 feature -- Setting

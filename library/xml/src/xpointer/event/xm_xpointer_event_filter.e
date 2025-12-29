@@ -400,7 +400,7 @@ feature -- Tag
 			if not is_filtering or else is_forwarding then
 				Precursor (a_namespace, a_prefix, a_local_part, a_value)
 			elseif not is_error and then not is_shorthand_found then
-				if a_prefix /= Void and then Xml_prefix.is_equal (a_prefix) and then Xml_id.is_equal (a_local_part) then
+				if a_prefix /= Void and then Xml_prefix.same_string (a_prefix) and then Xml_id.same_string (a_local_part) then
 					is_shorthand_found := attached shorthand as l_shorthand and then STRING_.same_string (l_shorthand, a_value)
 					if is_shorthand_found then
 						is_shorthand_element := True

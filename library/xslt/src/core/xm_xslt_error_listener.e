@@ -111,7 +111,7 @@ feature -- Element change
 			error_change_stack.force (create {DS_PAIR [STRING, STRING]}.make (a_uri, a_code))
 		ensure
 			one_more_change: error_change_stack.count = old error_change_stack.count + 1
-			correct_error_code_set: error_change_stack.item.first.is_equal (a_uri) and error_change_stack.item.second.is_equal (a_code)
+			correct_error_code_set: error_change_stack.item.first.same_string (a_uri) and error_change_stack.item.second.same_string (a_code)
 		end
 
 	clear_next_error_code_change

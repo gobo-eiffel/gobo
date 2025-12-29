@@ -83,7 +83,11 @@ void* GE_memset(void* str, int c, size_t n)
  * Call dispose routine on object `C'.
  */
 void GE_boehm_dispose(void* C, void* disp) {
-	((GE_types[((EIF_REFERENCE)C)->id][0]).dispose)(GE_current_context(), (EIF_REFERENCE) C);
+	GE_context* ac = GE_current_context();
+	uint32_t volatile in_qualified_call = ac->in_qualified_call;
+	ac->in_qualified_call = 0;
+	((GE_types[((EIF_REFERENCE)C)->id][0]).dispose)(ac, (EIF_REFERENCE) C);
+	ac->in_qualified_call = in_qualified_call;
 }
 
 /*

@@ -5375,7 +5375,7 @@ feature -- Keyword and symbol names
 
 	extend_object_id_stack_name: STRING = "extend_object_id_stack"
 			-- Name of Eiffel feature 'extend_object_id_stack'
-	
+
 	fast_call_name: STRING = "fast_call"
 			-- Name of Eiffel feature 'fast_call'
 
@@ -6504,6 +6504,18 @@ feature -- System
 		ensure
 			instance_free: class
 			unknown_dotnet_assembly_not_void: Result /= Void
+		end
+
+	unknown_feature: ET_FEATURE
+			-- Shared unknown feature "*unknown*";
+		local
+			l_name: ET_IDENTIFIER
+		once
+			create l_name.make ("*unknown*")
+			create {ET_DO_PROCEDURE} Result.make (l_name, Void, unknown_class)
+		ensure
+			instance_free: class
+			unknown_feature_not_void: Result /= Void
 		end
 
 	standard_error_handler: ET_ERROR_HANDLER

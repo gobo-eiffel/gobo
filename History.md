@@ -13,6 +13,32 @@
   postconditions and invariants).
 * Stop at the end of Degree 3 when there is no root class specified
   and CAT-call error reporting is turned off.
+* Fixed bug where overriding library options were not taken into account
+  in ECF files.
+* Fixed bug in C code generated for iteration items and object-test locals
+  in inherited pre- and postconditions.
+* Fixed bug in C code generated for pre- and postconditions of external
+  `inline C` routines.
+* Fixed bug in C code generated for `old` expressions which are the
+  expanded targets of qualified calls.
+* Fixed computation of the dynamic type sets of the arguments of feature
+  `ROUTINE.set_rout_disp_final`.
+* Made sure that invariants are not checked when calling `dispose`
+  from the GC.
+* Made the implementation of `ANY.standard_is_equal` atomic when the
+  target and the argument are the same object so that we don't get
+  `reflexive_equality: standard_is_equal (Current)` invariant violations
+  in multi-threaded mode.
+* Improved C code generation for inherited pre- and postconditions to
+  avoid checking twice the same assertion.
+* Fixed bug in C code generated for exception trace in empty routines
+  when assertions are monitored.
+* Fixed implementation of built-in feature `SPECIAL.standard_is_equal`:
+  `capacity` should not be taken into account.
+* Fixed computation of dynamic type sets in assertions of agent
+  routines (`FUNCTION.item` and `PROCEDURE.call`).
+* Fixed computation of dynamic type sets when raising assertions in
+  once routines.
 
 ### gedoc
 
@@ -44,6 +70,7 @@
 
 * `KI_FILE.copy_file` and `KI_FILE_SYSTEM.copy_file` now create missing
   directories in the destination path.
+* Fixed postcondition of `KL_ARGUMENTS.to_array`.
 
 ### Gobo Eiffel Language Server Protocol Library
 
@@ -75,6 +102,9 @@
   considering that the type of a `TYPE` object is `TYPE [NONE]`
   and not `TYPE [TYPE [...]]`.
 * Implemented built-in features from class `IDENTIFIED_CONTROLLER`.
+* Fixed regular expressions to check the validity of special characters
+  and manifest strings.
+* Fixed several assertions and assertion violations.
 
 ## Version 25.12.04 - 4 December 2025
 

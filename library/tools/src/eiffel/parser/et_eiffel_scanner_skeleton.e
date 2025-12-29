@@ -386,7 +386,7 @@ feature -- Tokens
 		ensure
 			last_utf8_literal_not_void: Result /= Void
 			last_utf8_literal_is_string_8: Result.same_type ({STRING_8} "")
-			definition: Result.is_equal ({UC_UTF8_ROUTINES}.string_to_utf8 (last_unicode_literal))
+			definition: Result.same_string ({UC_UTF8_ROUTINES}.string_to_utf8 (last_unicode_literal))
 			valid_utf8: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
 		end
 

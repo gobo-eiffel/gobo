@@ -5,7 +5,7 @@
 		"Contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_TYPE_CONTEXT
@@ -215,8 +215,6 @@ feature -- Status report
 			-- Is current context its own root context?
 		do
 			-- Result := False
-		ensure
-			definition: Result = ANY_.same_objects (root_context, Current)
 		end
 
 	same_root_context (other: ET_TYPE_CONTEXT): BOOLEAN

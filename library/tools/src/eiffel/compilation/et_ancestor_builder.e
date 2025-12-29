@@ -202,8 +202,8 @@ feature {NONE} -- Topological sort
 					elseif class_sorter.has (current_class) then
 							-- Nothing to be done.
 					else
+						class_sorter.force (current_class)
 						if attached current_class.parent_clauses as l_parent_clauses then
-							class_sorter.force (current_class)
 							nb := l_parent_clauses.count
 							from i := 1 until i > nb loop
 								l_parent_list := l_parent_clauses.item (i)
@@ -221,16 +221,13 @@ feature {NONE} -- Topological sort
 										-- (for that to work we need to add `current_class' to the
 										-- class sorter despite the error).
 									set_fatal_error (l_system_object_class)
-									class_sorter.force (current_class)
 								elseif not l_system_object_class.is_dotnet then
 										-- Error: class "SYSTEM_OBJECT" not a .NET class (GVHSO-2, not in ETL2).
 										-- The validity error will be reported in `set_ancestors'
 										-- (for that to work we need to add `current_class' to the
 										-- class sorter despite the error).
 									set_fatal_error (l_system_object_class)
-									class_sorter.force (current_class)
 								else
-									class_sorter.force (current_class)
 									add_parents_to_sorter (current_class, current_universe.system_object_parents)
 								end
 							else
@@ -242,13 +239,11 @@ feature {NONE} -- Topological sort
 										-- (for that to work we need to add `current_class' to the
 										-- class sorter despite the error).
 									set_fatal_error (l_any_class)
-									class_sorter.force (current_class)
 								elseif not l_any_class.is_parsed or else l_any_class.has_syntax_error then
 										-- This error has already been reported
 										-- somewhere else (during the parsing).
 									set_fatal_error (l_any_class)
 								else
-									class_sorter.force (current_class)
 									add_parents_to_sorter (current_class, current_universe.any_parents)
 								end
 							end

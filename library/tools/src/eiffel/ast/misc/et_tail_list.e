@@ -194,7 +194,8 @@ feature -- Element change
 			end
 			count := j
 		ensure
-			new_more: count = old (count + other.count)
+			new_count: count = old (count + other.count)
+			new_last: last = old other.last
 		end
 
 	put (an_item: like item; i: INTEGER)

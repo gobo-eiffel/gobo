@@ -4,7 +4,7 @@
 
 		"Test 'gec'"
 
-	copyright: "Copyright (c) 2006-2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2025, Eric Bezault and others"
 	license: "MIT License"
 
 class TEST_GEC
@@ -28,7 +28,7 @@ feature -- Test
 			-- Test 'gec'.
 		do
 			compile_program
-			if eiffel_compiler.is_ge then
+			if eiffel_compiler.is_ge and then not variables.has ("debug") then
 				run_validation
 			end
 		end

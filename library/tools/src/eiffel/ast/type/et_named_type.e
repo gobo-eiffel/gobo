@@ -33,7 +33,7 @@ feature -- Access
 		ensure
 			upper_name_not_void: Result /= Void
 			upper_name_not_empty: Result.count > 0
-			definition: Result.is_equal (name.name.as_upper)
+			definition: Result.same_string (name.name.as_upper)
 		end
 
 	lower_name: STRING
@@ -45,7 +45,7 @@ feature -- Access
 		ensure
 			lower_name_not_void: Result /= Void
 			lower_name_not_empty: Result.count > 0
-			definition: Result.is_equal (name.name.as_lower)
+			definition: Result.same_string (name.name.as_lower)
 		end
 
 	type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): ET_NAMED_TYPE

@@ -54,7 +54,7 @@ feature -- Status report
 				i := i - 1
 			end
 		ensure
-			definition: there_exists (agent {ET_PARENT_LIST}.has_conforming_parent)
+			definition: Result = there_exists (agent {ET_PARENT_LIST}.has_conforming_parent)
 		end
 
 feature -- Access

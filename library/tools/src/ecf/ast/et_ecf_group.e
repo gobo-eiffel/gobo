@@ -5,7 +5,7 @@
 		"ECF Groups of Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_ECF_GROUP
@@ -160,31 +160,38 @@ feature -- Setting
 			a_class_not_vod: a_class /= Void
 		local
 			l_options: ET_ECF_OPTIONS
-			l_value: detachable STRING
+			l_override_options: detachable ET_ECF_OPTIONS
 		do
 			l_options := options_for_class (a_class)
-			l_value := l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_precondition_option_name)
-			if l_value /= Void and then l_value.is_boolean then
+			l_override_options := universe.override_options
+			if l_override_options /= Void and then attached l_override_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_precondition_option_name) as l_value and then l_value.is_boolean then
+				a_class.set_preconditions_enabled (l_value.to_boolean)
+			elseif attached l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_precondition_option_name) as l_value and then l_value.is_boolean then
 				a_class.set_preconditions_enabled (l_value.to_boolean)
 			end
-			l_value := l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_supplier_precondition_option_name)
-			if l_value /= Void and then l_value.is_boolean then
+			if l_override_options /= Void and then attached l_override_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_supplier_precondition_option_name) as l_value and then l_value.is_boolean then
+				a_class.set_supplier_preconditions_enabled (l_value.to_boolean)
+			elseif attached l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_supplier_precondition_option_name) as l_value and then l_value.is_boolean then
 				a_class.set_supplier_preconditions_enabled (l_value.to_boolean)
 			end
-			l_value := l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_postcondition_option_name)
-			if l_value /= Void and then l_value.is_boolean then
+			if l_override_options /= Void and then attached l_override_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_postcondition_option_name) as l_value and then l_value.is_boolean then
+				a_class.set_postconditions_enabled (l_value.to_boolean)
+			elseif attached l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_postcondition_option_name) as l_value and then l_value.is_boolean then
 				a_class.set_postconditions_enabled (l_value.to_boolean)
 			end
-			l_value := l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_invariant_option_name)
-			if l_value /= Void and then l_value.is_boolean then
+			if l_override_options /= Void and then attached l_override_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_invariant_option_name) as l_value and then l_value.is_boolean then
+				a_class.set_invariants_enabled (l_value.to_boolean)
+			elseif attached l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_invariant_option_name) as l_value and then l_value.is_boolean then
 				a_class.set_invariants_enabled (l_value.to_boolean)
 			end
-			l_value := l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_check_option_name)
-			if l_value /= Void and then l_value.is_boolean then
-				a_class.set_check_assertions_enabled (l_value.to_boolean)
+			if l_override_options /= Void and then attached l_override_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_check_option_name) as l_value and then l_value.is_boolean then
+				a_class.set_invariants_enabled (l_value.to_boolean)
+			elseif attached l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_check_option_name) as l_value and then l_value.is_boolean then
+				a_class.set_invariants_enabled (l_value.to_boolean)
 			end
-			l_value := l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_loop_option_name)
-			if l_value /= Void and then l_value.is_boolean then
+			if l_override_options /= Void and then attached l_override_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_loop_option_name) as l_value and then l_value.is_boolean then
+				a_class.set_loop_assertions_enabled (l_value.to_boolean)
+			elseif attached l_options.assertion_value ({ET_ECF_OPTION_NAMES}.assertions_loop_option_name) as l_value and then l_value.is_boolean then
 				a_class.set_loop_assertions_enabled (l_value.to_boolean)
 			end
 		end

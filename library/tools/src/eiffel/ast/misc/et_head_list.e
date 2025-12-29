@@ -163,6 +163,7 @@ feature -- Element change
 
 	extend_first (a_other: ET_HEAD_LIST [like item])
 			-- Put all items of `a_other' at first positions in list.
+			-- Keep items of `a_other' in the same order.
 		require
 			a_other_not_void: a_other /= Void
 			not_full: count + a_other.count <= capacity
@@ -178,12 +179,13 @@ feature -- Element change
 			end
 			count := l_new_count
 		ensure
+			new_count: count = old (count + a_other.count)
 			new_first: first = old a_other.first
-			same_last: last = old last
 		end
 
 	append_first (a_other: ET_HEAD_LIST [like item])
 			-- Put all items of `a_other' at first positions in list.
+			-- Keep items of `a_other' in the same order.
 			-- Resize list if necessary.
 		require
 			a_other_not_void: a_other /= Void
@@ -202,8 +204,8 @@ feature -- Element change
 			end
 			count := l_new_count
 		ensure
+			new_count: count = old (count + a_other.count)
 			new_first: first = old a_other.first
-			same_last: last = old last
 		end
 
 feature -- Removal
