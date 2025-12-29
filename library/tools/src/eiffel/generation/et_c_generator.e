@@ -24249,9 +24249,21 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_attribute: ET_DYNAMIC_FEATURE
 			l_name: ET_FEATURE_NAME
 			l_index: INTEGER
+			l_source_index: INTEGER
+			l_target_index: INTEGER
 			l_target_attribute: ET_QUALIFIED_CALL_EXPRESSION
 			l_source_attribute: ET_QUALIFIED_CALL_EXPRESSION
 		do
+				-- The dynamic type set of `a_target' has exactly one type, whereas the
+				-- dynamic type set of `a_source' may contain more types even though we
+				-- know that at runtime `a_source' and `a_target' will have the same type.
+				-- So, to avoid a polymorphic call when getting the attributes in `a_source'
+				-- (call to `l_source_attribute' below) we temporarily set the dynamic
+				-- type set of `a_source' to be the same as the one of `a_target'.
+			extra_dynamic_type_sets.force_last (dynamic_type_set (a_target))
+			l_target_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+			l_source_index := a_source.index
+			a_source.set_index (l_target_index)
 			nb := current_type.attribute_count
 			l_queries := current_type.queries
 			from i := 1 until i > nb loop
@@ -24278,6 +24290,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				end
 				i := i + 1
 			end
+			a_source.set_index (l_source_index)
+			extra_dynamic_type_sets.remove_last
 		end
 
 	print_builtin_any_standard_is_equal_special_items (a_source, a_target: ET_EXPRESSION; a_special_type: ET_DYNAMIC_SPECIAL_TYPE)
@@ -24298,6 +24312,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_name: ET_FEATURE_NAME
 			l_index: INTEGER
+			l_source_index: INTEGER
+			l_target_index: INTEGER
 			l_target_item: ET_QUALIFIED_CALL_EXPRESSION
 			l_source_item: ET_QUALIFIED_CALL_EXPRESSION
 			l_actual_argument_list: ET_ACTUAL_ARGUMENT_LIST
@@ -24368,6 +24384,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					l_i_temp.set_index (l_index)
 					extra_dynamic_type_sets.force_last (l_item_type_set)
 					l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+					extra_dynamic_type_sets.force_last (dynamic_type_set (a_target))
+					l_target_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
 						-- Prepare call expressions to 'item' feature.
 					l_name := l_item_routine.static_feature.name
 					l_name.set_seed (l_item_routine.static_feature.first_seed)
@@ -24375,12 +24393,22 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					l_actual_argument_list.force_first (l_i_temp)
 					l_target_item := new_qualified_call_expression (a_target, l_name, l_actual_argument_list)
 					l_target_item.set_index (l_index)
+						-- The dynamic type set of `a_target' has exactly one type, whereas the
+						-- dynamic type set of `a_source' may contain more types even though we
+						-- know that at runtime `a_source' and `a_target' will have the same type.
+						-- So, to avoid a polymorphic call when getting the item in `a_source'
+						-- (call to `l_source_item' below) we temporarily set the dynamic
+						-- type set of `a_source' to be the same as the one of `a_target'.
+					l_source_index := a_source.index
+					a_source.set_index (l_target_index)
 					l_source_item := new_qualified_call_expression (a_source, l_name, l_actual_argument_list)
 					l_source_item.set_index (l_index)
 					print_builtin_any_standard_is_equal_field (l_target_item, l_source_item, l_item_type_set)
+					a_source.set_index (l_source_index)
 					free_qualified_call_expression (l_target_item)
 					free_qualified_call_expression (l_source_item)
 					free_actual_argument_list (l_actual_argument_list)
+					extra_dynamic_type_sets.remove_last
 					extra_dynamic_type_sets.remove_last
 					extra_dynamic_type_sets.remove_last
 					mark_temp_variable_unfrozen (l_i_temp)
@@ -24454,10 +24482,22 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_index: INTEGER
+			l_source_index: INTEGER
+			l_target_index: INTEGER
 			l_tuple_label: ET_IDENTIFIER
 			l_target_item: ET_QUALIFIED_CALL_EXPRESSION
 			l_source_item: ET_QUALIFIED_CALL_EXPRESSION
 		do
+				-- The dynamic type set of `a_target' has exactly one type, whereas the
+				-- dynamic type set of `a_source' may contain more types even though we
+				-- know that at runtime `a_source' and `a_target' will have the same type.
+				-- So, to avoid a polymorphic call when getting the items in `a_source'
+				-- (call to `l_source_item' below) we temporarily set the dynamic
+				-- type set of `a_source' to be the same as the one of `a_target'.
+			extra_dynamic_type_sets.force_last (dynamic_type_set (a_target))
+			l_target_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+			l_source_index := a_source.index
+			a_source.set_index (l_target_index)
 			l_item_type_sets := a_tuple_type.item_type_sets
 			nb := l_item_type_sets.count
 			from i := 1 until i > nb loop
@@ -24478,6 +24518,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				extra_dynamic_type_sets.remove_last
 				i := i + 1
 			end
+			a_source.set_index (l_source_index)
+			extra_dynamic_type_sets.remove_last
 		end
 
 	print_builtin_any_standard_is_equal_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
@@ -25034,9 +25076,21 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_attribute_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_name: ET_FEATURE_NAME
 			l_index: INTEGER
+			l_source_index: INTEGER
+			l_target_index: INTEGER
 			l_source_attribute: ET_QUALIFIED_CALL_EXPRESSION
 			l_attribute_already_copied: BOOLEAN
 		do
+				-- The dynamic type set of `a_target' has exactly one type, whereas the
+				-- dynamic type set of `a_source' may contain more types even though we
+				-- know that at runtime `a_source' and `a_target' will have the same type.
+				-- So, to avoid a polymorphic call when getting the attributes in `a_source'
+				-- (call to `l_source_attribute' below) we temporarily set the dynamic
+				-- type set of `a_source' to be the same as the one of `a_target'.
+			extra_dynamic_type_sets.force_last (dynamic_type_set (a_target))
+			l_target_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+			l_source_index := a_source.index
+			a_source.set_index (l_target_index)
 			nb := current_type.attribute_count
 			l_queries := current_type.queries
 			from i := 1 until i > nb loop
@@ -25082,6 +25136,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				end
 				i := i + 1
 			end
+			a_source.set_index (l_source_index)
+			extra_dynamic_type_sets.remove_last
 		end
 
 	print_builtin_any_standard_copy_custom_special_items (a_source, a_target: ET_EXPRESSION; a_special_type: ET_DYNAMIC_SPECIAL_TYPE; a_item_count: ET_IDENTIFIER)
@@ -25104,6 +25160,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_name: ET_FEATURE_NAME
 			l_index: INTEGER
+			l_source_index: INTEGER
+			l_target_index: INTEGER
 			l_source_item: ET_QUALIFIED_CALL_EXPRESSION
 			l_actual_argument_list: ET_ACTUAL_ARGUMENT_LIST
 			l_item_already_copied: BOOLEAN
@@ -25168,11 +25226,21 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					l_i_temp.set_index (l_index)
 					extra_dynamic_type_sets.force_last (l_item_type_set)
 					l_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+					extra_dynamic_type_sets.force_last (dynamic_type_set (a_target))
+					l_target_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
 						-- Prepare call expressions to 'item' feature.
 					l_name := l_item_routine.static_feature.name
 					l_name.set_seed (l_item_routine.static_feature.first_seed)
 					l_actual_argument_list := new_actual_argument_list
 					l_actual_argument_list.force_first (l_i_temp)
+						-- The dynamic type set of `a_target' has exactly one type, whereas the
+						-- dynamic type set of `a_source' may contain more types even though we
+						-- know that at runtime `a_source' and `a_target' will have the same type.
+						-- So, to avoid a polymorphic call when getting the item in `a_source'
+						-- (call to `l_source_item' below) we temporarily set the dynamic
+						-- type set of `a_source' to be the same as the one of `a_target'.
+					l_source_index := a_source.index
+					a_source.set_index (l_target_index)
 					l_source_item := new_qualified_call_expression (a_source, l_name, l_actual_argument_list)
 					l_source_item.set_index (l_index)
 						-- The clone of the item with copy semantics occurs here
@@ -25189,10 +25257,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 					print_semicolon_newline
 					dedent
 					print_indentation_end_newline
+					a_source.set_index (l_source_index)
 						-- Clean up.
 					call_operands.wipe_out
 					free_qualified_call_expression (l_source_item)
 					free_actual_argument_list (l_actual_argument_list)
+					extra_dynamic_type_sets.remove_last
 					extra_dynamic_type_sets.remove_last
 					extra_dynamic_type_sets.remove_last
 					mark_temp_variable_unfrozen (l_i_temp)
@@ -25218,10 +25288,22 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_index: INTEGER
+			l_source_index: INTEGER
+			l_target_index: INTEGER
 			l_tuple_label: ET_IDENTIFIER
 			l_source_item: ET_QUALIFIED_CALL_EXPRESSION
 			l_item_already_copied: BOOLEAN
 		do
+				-- The dynamic type set of `a_target' has exactly one type, whereas the
+				-- dynamic type set of `a_source' may contain more types even though we
+				-- know that at runtime `a_source' and `a_target' will have the same type.
+				-- So, to avoid a polymorphic call when getting the items in `a_source'
+				-- (call to `l_source_item' below) we temporarily set the dynamic
+				-- type set of `a_source' to be the same as the one of `a_target'.
+			extra_dynamic_type_sets.force_last (dynamic_type_set (a_target))
+			l_target_index := current_dynamic_type_sets.count + extra_dynamic_type_sets.count
+			l_source_index := a_source.index
+			a_source.set_index (l_target_index)
 			l_item_type_sets := a_tuple_type.item_type_sets
 			nb := l_item_type_sets.count
 			from i := 1 until i > nb loop
@@ -25261,6 +25343,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_builtin_any_is_deep_
 				end
 				i := i + 1
 			end
+			a_source.set_index (l_source_index)
+			extra_dynamic_type_sets.remove_last
 		end
 
 	print_builtin_any_standard_copy_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_check_void_target: BOOLEAN)
