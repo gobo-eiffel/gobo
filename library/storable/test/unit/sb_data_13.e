@@ -24,10 +24,18 @@ feature -- Basic operation
 	run
 		local
 			l_done: BOOLEAN
+			nb: INTEGER
 		do
 			from until l_done loop
 				separate attr2 as l_attr2 do
 					l_done := l_attr2.stopped
+				end
+				nb := nb + 1
+				if nb > 2000 then
+					l_done := True
+				elseif not l_done then
+						-- 1 millisecond.
+					{EXECUTION_ENVIRONMENT}.sleep (1_000_000)
 				end
 			end
 		end
