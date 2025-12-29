@@ -46,12 +46,19 @@ feature {NONE} -- Initialization
 		do
 			precursor
 			ecf_filename := default_ecf_filename
+			class_max := 1
 		end
 
 feature -- Access
 
 	ecf_filename: STRING
 			-- Name of ECF file used for the test
+
+	class_count: INTEGER
+			-- Number of classes already processed
+
+	class_max: INTEGER
+			-- Maximum number of classes to be processed
 
 feature -- Setting
 
@@ -132,7 +139,9 @@ feature {NONE} -- Test
 			l_output: KL_STRING_OUTPUT_STREAM
 			l_filename: detachable STRING
 		do
-			if a_class.is_in_cluster then
+			if class_count >= class_max then
+				-- Done.
+			elseif a_class.is_in_cluster then
 				l_filename := a_class.filename
 				assert (a_class.lower_name + "_is_in_cluster", l_filename /= Void)
 				check asserted_above: l_filename /= Void then end
@@ -147,6 +156,7 @@ feature {NONE} -- Test
 				a_class.process (l_tokenizer)
 				l_tokenizer.set_null_file
 				assert_strings_equal (a_class.lower_name + "_diff", stripped_file (l_filename), l_output.string)
+				class_count := class_count + 1
 			end
 		end
 

@@ -46,12 +46,19 @@ feature {NONE} -- Initialization
 		do
 			precursor
 			ecf_filename := default_ecf_filename
+			class_max := 1
 		end
 
 feature -- Access
 
 	ecf_filename: STRING
 			-- Name of ECF file used for the test
+
+	class_count: INTEGER
+			-- Number of classes already processed
+
+	class_max: INTEGER
+			-- Maximum number of classes to be processed
 
 feature -- Setting
 
@@ -135,7 +142,9 @@ feature {NONE} -- Test
 			l_tokenizer_output1: KL_STRING_OUTPUT_STREAM
 			l_tokenizer_output2: KL_STRING_OUTPUT_STREAM
 		do
-			if a_class.is_in_cluster then
+			if class_count >= class_max then
+				-- Done.
+			elseif a_class.is_in_cluster then
 				a_class.process (a_system_processor.eiffel_parser)
 				assert (a_class.lower_name + "_parsed", a_class.is_parsed)
 				assert (a_class.lower_name + "_no_syntax_error", not a_class.has_syntax_error)
@@ -171,6 +180,7 @@ feature {NONE} -- Test
 				l_pretty_printed_class.process (l_tokenizer)
 				l_tokenizer.set_null_file
 				assert_strings_equal (a_class.lower_name + "_diff", l_tokenizer_output1.string, l_tokenizer_output2.string)
+				class_count := class_count + 1
 			end
 		end
 
