@@ -35,6 +35,8 @@
   when assertions are monitored.
 * Fixed implementation of built-in feature `SPECIAL.standard_is_equal`:
   `capacity` should not be taken into account.
+* Fixed computation of the dynamic type sets in assertions of agent
+  routines (`FUNCTION.item` and `PROCEDURE.call`).
 
 ### gedoc
 
