@@ -40835,6 +40835,7 @@ feature {NONE} -- Type generation
 			l_dispose_procedure: detachable ET_DYNAMIC_FEATURE
 			l_ancestors: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
 			l_ancestor_count: INTEGER
+			l_ancestor_actual_count: INTEGER
 			l_sorter: DS_QUICK_SORTER [ET_DYNAMIC_PRIMARY_TYPE]
 			l_attribute: ET_DYNAMIC_FEATURE
 			l_attribute_count: INTEGER
@@ -41015,32 +41016,41 @@ feature {NONE} -- Type generation
 					if l_type /= current_dynamic_system.none_type then
 						l_ancestors.append_last (l_type.conforming_ancestors)
 						l_ancestor_count := l_ancestors.count
+						l_ancestor_actual_count := 0
 						if l_ancestor_count > 0 then
 							l_ancestors.sort (l_sorter)
 							from j := 1 until j > l_ancestor_count loop
 								l_other_type := l_ancestors.item (j)
-								current_file.put_string ("GE_ancestor T")
-								current_file.put_integer (l_type.id)
-								current_file.put_string ("xx")
-								current_file.put_integer (l_other_type.id)
-								current_file.put_string (" = {")
-								current_file.put_integer (l_other_type.id)
-								current_file.put_line (", EIF_TRUE, 0};")
+								if l_other_type.id /= 0 then
+									current_file.put_string ("GE_ancestor T")
+									current_file.put_integer (l_type.id)
+									current_file.put_string ("xx")
+									current_file.put_integer (l_other_type.id)
+									current_file.put_string (" = {")
+									current_file.put_integer (l_other_type.id)
+									current_file.put_line (", EIF_TRUE, 0};")
+									l_ancestor_actual_count := l_ancestor_actual_count + 1
+								end
 								j := j + 1
 							end
+						end
+						if l_ancestor_actual_count > 0 then
 							current_file.put_string ("GE_ancestor* T")
 							current_file.put_integer (l_type.id)
 							current_file.put_string ("xx[")
-							current_file.put_integer (l_ancestor_count)
+							current_file.put_integer (l_ancestor_actual_count)
 							current_file.put_string ("] = {")
 							from j := 1 until j > l_ancestor_count loop
 								l_other_type := l_ancestors.item (j)
-								current_file.put_string ("&T")
-								current_file.put_integer (l_type.id)
-								current_file.put_string ("xx")
-								current_file.put_integer (l_other_type.id)
-								if j /= l_ancestor_count then
-									current_file.put_string (", ")
+								if l_other_type.id /= 0 then
+									current_file.put_string ("&T")
+									current_file.put_integer (l_type.id)
+									current_file.put_string ("xx")
+									current_file.put_integer (l_other_type.id)
+									l_ancestor_actual_count := l_ancestor_actual_count - 1
+									if l_ancestor_actual_count /= 0 then
+										current_file.put_string (", ")
+									end
 								end
 								j := j + 1
 							end
