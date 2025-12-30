@@ -954,6 +954,28 @@ feature {LS_ANY} -- Processing
 			utf8_string.append_character ('}')
 		end
 
+	process_custom_notification (a_value: LS_CUSTOM_NOTIFICATION)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			process_jsonrpc_version
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_CUSTOM_NOTIFICATION}.method_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.method.process (Current)
+			if attached a_value.params as l_params then
+				process_comma_if_not_first
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_CUSTOM_NOTIFICATION}.params_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_params.process (Current)
+			end
+			utf8_string.append_character ('}')
+		end
+
 	process_declaration_capabilities (a_value: LS_DECLARATION_CAPABILITIES)
 			-- Process `a_value`.
 		do
