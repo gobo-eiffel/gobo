@@ -9,8 +9,8 @@
 	names: linear_subset, subset, set;
 	access: membership;
 	contents: generic;
-	date: "$Date: 2023-09-26 15:21:44 +0000 (Tue, 26 Sep 2023) $"
-	revision: "$Revision: 107318 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class LINEAR_SUBSET [G] inherit
 
@@ -58,7 +58,6 @@ feature -- Element change
 	put_left (v: G)
 			-- Insert `v' before the cursor.
 		require
-			item_exists: v /= Void
 			not_before: not before
 		deferred
 		ensure

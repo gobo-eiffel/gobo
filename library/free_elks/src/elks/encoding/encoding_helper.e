@@ -232,7 +232,7 @@ feature -- Conversion
 		require
 			a_string_not_void: a_string /= Void
 		do
-			if a_string.is_string_8 then
+			if a_string.is_valid_as_string_8 then
 				Result := a_string.to_string_8
 			else
 				Result := string_32_to_multi_byte (a_string.as_string_32)
@@ -307,7 +307,7 @@ feature -- Endian
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2025, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
