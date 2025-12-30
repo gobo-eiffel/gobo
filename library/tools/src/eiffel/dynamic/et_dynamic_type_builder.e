@@ -3140,7 +3140,6 @@ feature {NONE} -- Event handling
 			l_actual_expression: ET_EXPRESSION
 			i, nb: INTEGER
 			j, nb2: INTEGER
-			l_not_done: BOOLEAN
 			l_target: ET_AGENT_TARGET
 			l_current_attached_type: ET_DYNAMIC_TYPE
 		do
