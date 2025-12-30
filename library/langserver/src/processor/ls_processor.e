@@ -243,6 +243,13 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_custom_notification (a_value: LS_CUSTOM_NOTIFICATION)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_declaration_capabilities (a_value: LS_DECLARATION_CAPABILITIES)
 			-- Process `a_value`.
 		require

@@ -157,6 +157,14 @@ feature -- Handlers
 			configuration_request_handler_not_void: Result /= Void
 		end
 
+	custom_notification_handler: LS_CUSTOM_NOTIFICATION_HANDLER
+			-- Handler for custom notifications
+		once ("OBJECT")
+			create Result.make
+		ensure
+			custom_notification_handler_not_void: Result /= Void
+		end
+
 	declaration_request_handler: LS_DECLARATION_REQUEST_HANDLER
 			-- Handler for 'textDocument/declaration' requests
 		once ("OBJECT")
@@ -520,6 +528,17 @@ feature {LS_MESSAGE_HANDLER} -- Basic operations
 		do
 			response_handler.pending_requests.force (a_request, a_request.id)
 			send_message (a_request)
+		end
+
+	send_custom_notification (a_method: LS_STRING; a_params: detachable LS_ANY)
+			-- Send custom notification.
+		require
+			a_method_not_void: a_method /= Void
+		local
+			l_notification: LS_CUSTOM_NOTIFICATION
+		do
+			create l_notification.make (a_method, a_params)
+			send_message (l_notification)
 		end
 
 feature {LS_CONNECTION} -- Actions

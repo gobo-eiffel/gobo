@@ -39,6 +39,7 @@ inherit
 			on_hover_request,
 			on_implementation_request,
 			on_initialized_notification,
+			on_shutdown_request,
 			on_type_definition_request,
 			add_other_options,
 			process_other_options,
@@ -677,12 +678,22 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 			create Result.make
 		end
 
-feature -- Handling 'initialized' notification
+feature -- Handling 'initialized' notifications
 
 	on_initialized_notification (a_notification: LS_INITIALIZED_NOTIFICATION)
 			-- Handle 'initialized' notification `a_notification`.
 		do
 			send_configuration_request (<<[Void, "gobo-eiffel.workspaceEcfFile"], [Void, "gobo-eiffel.workspaceEcfTarget"]>>)
+		end
+
+feature -- Handling 'shutdown' requests
+
+	on_shutdown_request (a_request: LS_SHUTDOWN_REQUEST)
+			-- Handle 'shutdown' request `a_request`.
+			-- Actions to be executed when client want to
+			-- shutdown the server.
+		do
+			send_diagnostics
 		end
 
 feature {NONE} -- Eiffel processing
@@ -698,6 +709,7 @@ feature {NONE} -- Eiffel processing
 			l_filename: STRING_8
 			l_message: STRING_8
 		do
+			send_custom_notification ("$/goboEiffel/busy", Void)
 			if full_compilation_count >= max_full_compilation_count or total_compilation_count >= max_total_compilation_count then
 				if trace_value ~ {LS_TRACE_VALUES}.message then
 					send_log_trace_message_notification ("Restarting Eiffel language server...")
@@ -709,8 +721,7 @@ feature {NONE} -- Eiffel processing
 					end
 					send_log_trace_verbose_notification ("Restarting Eiffel language server...", l_message)
 				end
-				send_diagnostics
-				Exceptions.die (2)
+				send_custom_notification ("$/goboEiffel/restart", Void)
 			end
 			if debug_mode then
 				dt1 := system_processor.benchmark_start_time
@@ -758,6 +769,7 @@ feature {NONE} -- Eiffel processing
 			if dt1 /= Void then
 				system_processor.record_end_time (dt1, "Total Time")
 			end
+			send_custom_notification ("$/goboEiffel/notBusy", Void)
 		end
 
 	refresh_eiffel_system (a_preparse_needed: BOOLEAN)
@@ -777,8 +789,7 @@ feature {NONE} -- Eiffel processing
 					l_message := "Restarting Eiffel language server after " + max_total_compilation_count.out + " Eiffel compilations..."
 					send_log_trace_verbose_notification ("Restarting Eiffel language server...", l_message)
 				end
-				send_diagnostics
-				Exceptions.die (2)
+				send_custom_notification ("$/goboEiffel/restart", Void)
 			end
 			if debug_mode then
 				dt1 := system_processor.benchmark_start_time

@@ -67,6 +67,10 @@
   a class type.
 * Implemented `Go To Feature Implementations` navigation (`Ctrl+F12`
   or in the contextual menu).
+* Send custom notifications to VS Code to let it know when a restart
+  of the Eiffel language server is needed.
+* Send custom notifications to VS Code to let it know when the Eiffel
+  language server is busy analyzing the whole Eiffel project from scratch.
 
 ### Gobo Eiffel Kernel Library
 
@@ -81,6 +85,7 @@
 * Added support for `textDocument/implementation` requests.
 * Added support for `textDocument/completion` and
   `completionItem/resolve` requests.
+* Added support for custom notifications.
 
 ### Gobo Eiffel Tools Library
 
