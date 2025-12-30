@@ -23,11 +23,6 @@ feature {NONE} -- Initialization
 			t_attached: attached t
 		do
 			target := t
-			if attached {VERSIONABLE} t as l_versionable then
-				version := l_versionable.version
-			else
-				version := 0
-			end
 			step := 1
 			is_reversed := False
 		ensure
@@ -92,15 +87,6 @@ feature -- Access
 			Result.set_step (n)
 		end
 
-feature -- Measurement
-
-	version: NATURAL
-			-- Current version.
-		note
-			option: transient
-		attribute
-		end
-
 feature -- Status report
 
 	after: BOOLEAN
@@ -115,7 +101,7 @@ feature -- Status report
 	is_valid: BOOLEAN
 			-- <Precursor>
 		do
-			Result := attached {VERSIONABLE} target as l_versionable implies l_versionable.version = version
+			Result := True
 		end
 
 	is_first: BOOLEAN
@@ -186,7 +172,7 @@ feature {TYPED_INDEXABLE_ITERATION_CURSOR} -- Access
 			-- <Precursor>
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2024, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
