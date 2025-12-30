@@ -45707,7 +45707,7 @@ feature {NONE} -- Dynamic type sets
 					l_adjusted_index := l_adjusted_index + index_offset
 				end
 				l_extra_index := l_index - current_dynamic_type_sets.count
-				if not current_dynamic_type_sets.valid_index (l_index) and extra_dynamic_type_sets.valid_index (l_extra_index) then
+				if extra_dynamic_type_sets.valid_index (l_extra_index) then
 					Result := extra_dynamic_type_sets.item (l_extra_index)
 				elseif current_dynamic_type_sets.valid_index (l_adjusted_index) then
 					Result := current_dynamic_type_sets.item (l_adjusted_index)
