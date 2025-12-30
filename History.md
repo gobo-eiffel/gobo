@@ -39,6 +39,8 @@
   routines (`FUNCTION.item` and `PROCEDURE.call`).
 * Fixed computation of dynamic type sets when raising assertions in
   once routines.
+* Skip types which are not in the system (type id = 0) when generating
+  ancestors information in the generated C code.
 
 ### gedoc
 
