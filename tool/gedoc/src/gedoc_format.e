@@ -554,16 +554,16 @@ feature {NONE} -- Processing
 				(attached library_filters as l_library_filters and then not l_library_filters.is_empty)
 			then
 				create l_input_classes.make (500)
-				if attached class_filters as l_class_filters and then not l_class_filters.is_empty then
-					across l_class_filters as i_class_wildcard loop
-						l_last_wildcard := i_class_wildcard.pattern
-						a_system.add_classes_by_wildcarded_name_recursive (i_class_wildcard, l_input_classes)
-					end
-				end
 				if attached library_filters as l_library_filters and then not l_library_filters.is_empty then
 					across l_library_filters as i_library_wildcard loop
 						l_last_wildcard := i_library_wildcard.pattern
 						a_system.add_classes_if_wildcarded_universe_name_recursive (i_library_wildcard, l_input_classes)
+					end
+				end
+				if attached class_filters as l_class_filters and then not l_class_filters.is_empty then
+					across l_class_filters as i_class_wildcard loop
+						l_last_wildcard := i_class_wildcard.pattern
+						a_system.add_classes_by_wildcarded_name_recursive (i_class_wildcard, l_input_classes)
 					end
 				end
 				l_input_classes.remove (a_system.none_type.base_class)
