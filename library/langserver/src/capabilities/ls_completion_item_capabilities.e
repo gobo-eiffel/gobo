@@ -88,7 +88,7 @@ feature -- Access
 				-- Client supports insert replace edit to control different behavior if
 				-- a completion item is inserted in the text or should replace text.
 
-	resolve_support: detachable LS_COMPLETION_ITEM_RESOLVE_CAPABILITIES
+	resolve_support: detachable LS_RESOLVE_CAPABILITIES
 				-- Indicates which properties a client can resolve lazily on a
 				-- completion item. Before version 3.16.0 only the predefined properties
 				-- `documentation` and `detail` could be resolved lazily.

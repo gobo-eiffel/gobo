@@ -388,6 +388,14 @@ feature {NONE} -- Implementation
 				end
 				l_workspace_capabilities.set_did_change_watched_files (l_did_change_watched_files_capabilities)
 			end
+			workspace_symbol_request_handler.build_client_capabilities
+			if attached workspace_symbol_request_handler.client_capabilities as l_workspace_symbol_capabilities then
+				if l_workspace_capabilities = Void then
+					create l_workspace_capabilities.make
+					Result.set_workspace (l_workspace_capabilities)
+				end
+				l_workspace_capabilities.set_symbol (l_workspace_symbol_capabilities)
+			end
 			configuration_request_handler.build_client_capabilities
 			if attached configuration_request_handler.client_capabilities as l_configuration_capabilities then
 				if l_workspace_capabilities = Void then

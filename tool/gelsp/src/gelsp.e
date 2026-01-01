@@ -28,6 +28,7 @@ inherit
 			hover_request_handler,
 			implementation_request_handler,
 			type_definition_request_handler,
+			workspace_symbol_request_handler,
 			on_completion_request,
 			on_configuration_response,
 			on_definition_request,
@@ -41,6 +42,7 @@ inherit
 			on_initialized_notification,
 			on_shutdown_request,
 			on_type_definition_request,
+			on_workspace_symbol_request,
 			add_other_options,
 			process_other_options,
 			error_handler
@@ -674,6 +676,87 @@ feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 
 	did_change_watched_files_notification_handler: LS_SERVER_DID_CHANGE_WATCHED_FILES_NOTIFICATION_HANDLER
 			-- Handler for 'workspace/didChangeWatchedFiles' notifications
+		once ("OBJECT")
+			create Result.make
+		end
+
+feature -- Handling 'workspace/symbol' requests
+
+	on_workspace_symbol_request (a_request: LS_WORKSPACE_SYMBOL_REQUEST; a_response: LS_WORKSPACE_SYMBOL_RESPONSE)
+			-- Handle 'workspace/symbol' request `a_request`.
+			-- Build `a_response` accordingly.
+		local
+			l_query: STRING_8
+			i: INTEGER
+			l_feature_name: detachable STRING_8
+			l_class: ET_CLASS
+			l_class_name: STRING_8
+			l_symbol: LS_WORKSPACE_SYMBOL
+		do
+			l_query := a_request.query.utf8_value
+			if not l_query.ends_with ("*") then
+				l_query := l_query + "*"
+			end
+			l_class_name := l_query.as_upper
+			i := l_query.index_of ('.', 1)
+			if i /= 0 then
+				l_class_name := l_class_name.substring (1, i - 1)
+				l_feature_name := l_query.substring (i + 1, l_query.count)
+			end
+			if l_feature_name = Void then
+				from class_mapping.start until class_mapping.after loop
+					l_class := class_mapping.item_for_iteration
+					l_class_name := l_class.upper_name
+					if attached location (l_class.name, l_class) as l_location then
+						create l_symbol.make (l_class_name, {LS_SYMBOL_KINDS}.class_, Void, Void, l_location, Void)
+						a_response.add_workspace_symbol (l_symbol)
+					end
+					class_mapping.forth
+				end
+			elseif not l_class_name.is_empty then
+				from class_mapping.start until class_mapping.after loop
+					l_class := class_mapping.item_for_iteration
+					if l_class_name.same_string (l_class.upper_name) then
+						add_features_workspace_symbols (l_class.queries, l_class, a_response)
+						add_features_workspace_symbols (l_class.procedures, l_class, a_response)
+					end
+					class_mapping.forth
+				end
+			end
+		end
+
+	add_features_workspace_symbols (a_feature_list: ET_FEATURE_LIST; a_class: ET_CLASS; a_response: LS_WORKSPACE_SYMBOL_RESPONSE)
+			-- Add the workspace symbols of each feature in `a_feature_list` declared
+			-- in `a_class` to `a_response` otherwise.
+		require
+			a_feature_list_not_void: a_feature_list /= Void
+			a_class_not_void: a_class /= Void
+			a_response_not_void: a_response /= Void
+		local
+			i, nb: INTEGER
+			l_feature: ET_FEATURE
+			l_class_name: STRING_8
+			l_feature_name: STRING_8
+			l_symbol: LS_WORKSPACE_SYMBOL
+			l_kind: LS_SYMBOL_KIND
+		do
+			l_class_name := a_class.upper_name
+			nb := a_feature_list.count
+			from i := 1 until i > nb loop
+				l_feature := a_feature_list.item (i)
+				l_feature_name := l_feature.lower_name
+				l_feature := l_feature.implementation_feature
+				if attached location (l_feature.name, l_feature.implementation_class) as l_location then
+					l_kind := if l_feature.is_attribute then {LS_SYMBOL_KINDS}.field else {LS_SYMBOL_KINDS}.method end
+					create l_symbol.make (l_class_name + "." + l_feature_name, l_kind, Void, Void, l_location, Void)
+					a_response.add_workspace_symbol (l_symbol)
+				end
+				i := i + 1
+			end
+		end
+
+	workspace_symbol_request_handler: LS_SERVER_WORKSPACE_SYMBOL_REQUEST_HANDLER
+			-- Handler for 'workspace/symbol' requests
 		once ("OBJECT")
 			create Result.make
 		end

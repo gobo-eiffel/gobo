@@ -2,17 +2,15 @@
 
 	description:
 	"[
-		LSP completion item resolve capabilities.
+		LSP resolve capabilities.
 
-		Indicate which properties a client can resolve lazily on a
-		completion item. Before version 3.16.0 only the predefined properties
-		`documentation` and `detail` could be resolved lazily.
+		Indicate which properties a client can resolve lazily.
 	]"
 	library: "Gobo Eiffel Language Server Protocol Library"
 	copyright: "Copyright (c) 2025, Eric Bezault and others"
 	license: "MIT License"
 
-class LS_COMPLETION_ITEM_RESOLVE_CAPABILITIES
+class LS_RESOLVE_CAPABILITIES
 
 inherit
 
@@ -49,7 +47,7 @@ feature -- Processing
 	process (a_processor: LS_PROCESSOR)
 			-- Process current value.
 		do
-			a_processor.process_completion_item_resolve_capabilities (Current)
+			a_processor.process_resolve_capabilities (Current)
 		end
 
 invariant

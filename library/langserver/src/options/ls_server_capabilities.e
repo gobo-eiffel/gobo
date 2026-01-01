@@ -54,6 +54,9 @@ feature -- Access
 	document_symbol_provider: detachable LS_OPTIONAL_DOCUMENT_SYMBOL_OPTIONS
 			-- The server provides document symbol support.
 
+	workspace_symbol_provider: detachable LS_OPTIONAL_WORKSPACE_SYMBOL_OPTIONS
+			-- The server provides workspace symbol support.
+
 feature -- Setting
 
 	set_text_document_sync (a_text_document_sync: like text_document_sync)
@@ -120,6 +123,14 @@ feature -- Setting
 			document_symbol_provider_set: document_symbol_provider = a_document_symbol_provider
 		end
 
+	set_workspace_symbol_provider (a_workspace_symbol_provider: like workspace_symbol_provider)
+			-- Set `workspace_symbol_provider` to `a_workspace_symbol_provider`.
+		do
+			workspace_symbol_provider := a_workspace_symbol_provider
+		ensure
+			workspace_symbol_provider_set: workspace_symbol_provider = a_workspace_symbol_provider
+		end
+
 feature -- Field names
 
 	text_document_sync_name: STRING_8 = "textDocumentSync"
@@ -130,6 +141,7 @@ feature -- Field names
 	type_definition_provider_name: STRING_8 = "typeDefinitionProvider"
 	implementation_provider_name: STRING_8 = "implementationProvider"
 	document_symbol_provider_name: STRING_8 = "documentSymbolProvider"
+	workspace_symbol_provider_name: STRING_8 = "workspaceSymbolProvider"
 			-- Field names
 
 feature -- Processing

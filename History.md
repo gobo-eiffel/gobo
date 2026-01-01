@@ -71,6 +71,8 @@
   of the Eiffel language server is needed.
 * Send custom notifications to VS Code to let it know when the Eiffel
   language server is busy analyzing the whole Eiffel project from scratch.
+* Implemented workspace symbol search (`Ctrl+T`) to go to classes
+  and their features by name.
 
 ### Gobo Eiffel Kernel Library
 
@@ -86,6 +88,8 @@
 * Added support for `textDocument/completion` and
   `completionItem/resolve` requests.
 * Added support for custom notifications.
+* Added support for `workspace/symbol` and
+  `workspaceSymbol/resolve` requests.
 
 ### Gobo Eiffel Tools Library
 

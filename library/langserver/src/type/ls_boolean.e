@@ -67,6 +67,11 @@ inherit
 			is_equal
 		end
 
+	LS_OPTIONAL_WORKSPACE_SYMBOL_OPTIONS
+		redefine
+			is_equal
+		end
+
 	LS_CONFIGURATION_CAPABILITIES
 		redefine
 			is_equal

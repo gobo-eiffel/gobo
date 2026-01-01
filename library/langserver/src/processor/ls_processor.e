@@ -159,13 +159,6 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
-	process_completion_item_resolve_capabilities (a_value: LS_COMPLETION_ITEM_RESOLVE_CAPABILITIES)
-			-- Process `a_value`.
-		require
-			a_value_not_void: a_value /= Void
-		deferred
-		end
-
 	process_completion_item_resolve_request (a_value: LS_COMPLETION_ITEM_RESOLVE_REQUEST)
 			-- Process `a_value`.
 		require
@@ -768,6 +761,13 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_optional_range_location (a_value: LS_OPTIONAL_RANGE_LOCATION)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_optional_versioned_text_document_identifier (a_value: LS_OPTIONAL_VERSIONED_TEXT_DOCUMENT_IDENTIFIER)
 			-- Process `a_value`.
 		require
@@ -832,6 +832,13 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_relative_pattern (a_value: LS_RELATIVE_PATTERN)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_resolve_capabilities (a_value: LS_RESOLVE_CAPABILITIES)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void
@@ -1133,6 +1140,55 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_workspace_folder_list (a_value: LS_WORKSPACE_FOLDER_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_workspace_symbol (a_value: LS_WORKSPACE_SYMBOL)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_workspace_symbol_capabilities (a_value: LS_WORKSPACE_SYMBOL_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_workspace_symbol_list (a_value: LS_WORKSPACE_SYMBOL_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_workspace_symbol_options (a_value: LS_WORKSPACE_SYMBOL_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_workspace_symbol_registration_options (a_value: LS_WORKSPACE_SYMBOL_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_workspace_symbol_request (a_value: LS_WORKSPACE_SYMBOL_REQUEST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_workspace_symbol_resolve_request (a_value: LS_WORKSPACE_SYMBOL_RESOLVE_REQUEST)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void
