@@ -86,6 +86,8 @@
 * Added support for `textDocument/completion` and
   `completionItem/resolve` requests.
 * Added support for custom notifications.
+* Added support for `workspace/symbol` and
+  `workspaceSymbol/resolve` requests.
 
 ### Gobo Eiffel Tools Library
 

@@ -30,6 +30,9 @@ feature -- Access
 	did_change_watched_files: detachable LS_DID_CHANGE_WATCHED_FILES_CAPABILITIES
 			-- Capabilities specific to the `workspace/didChangeWatchedFiles` notification.
 
+	symbol: detachable LS_WORKSPACE_SYMBOL_CAPABILITIES
+			-- Capabilities specific to the `workspace/symbol` request.
+
 	configuration: detachable LS_CONFIGURATION_CAPABILITIES
 			-- The client supports 'workspace/configuration' requests.
 
@@ -43,6 +46,14 @@ feature -- Setting
 			did_change_watched_files_set: did_change_watched_files = a_did_change_watched_files
 		end
 
+	set_symbol (a_symbol: like symbol)
+			-- Set `symbol` to `a_symbol`.
+		do
+			symbol := a_symbol
+		ensure
+			symbol_set: symbol = a_symbol
+		end
+
 	set_configuration (a_configuration: like configuration)
 			-- Set `did_change_watched_files` to `a_did_change_watched_files`.
 		do
@@ -54,6 +65,7 @@ feature -- Setting
 feature -- Field names
 
 	did_change_watched_files_name: STRING_8 = "didChangeWatchedFiles"
+	symbol_name: STRING_8 = "symbol"
 	configuration_name: STRING_8 = "configuration"
 			-- Field names
 

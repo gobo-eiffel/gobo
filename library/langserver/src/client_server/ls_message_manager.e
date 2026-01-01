@@ -293,6 +293,22 @@ feature -- Handlers
 			will_save_wait_until_text_document_request_handler_not_void: Result /= Void
 		end
 
+	workspace_symbol_request_handler: LS_WORKSPACE_SYMBOL_REQUEST_HANDLER
+			-- Handler for 'workspace/symbol' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			workspace_symbol_request_handler_not_void: Result /= Void
+		end
+
+	workspace_symbol_resolve_request_handler: LS_WORKSPACE_SYMBOL_RESOLVE_REQUEST_HANDLER
+			-- Handler for 'workspaceSymbol/resolve' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			completion_item_resolve_request_handler_not_void: Result /= Void
+		end
+
 feature {LS_MESSAGE, LS_MESSAGE_FACTORY, LS_INITIALIZE_REQUEST_HANDLER} -- Handlers (protocol)
 
 	cancel_request_notification_handler: LS_CANCEL_REQUEST_NOTIFICATION_HANDLER
@@ -592,6 +608,8 @@ feature {LS_RESPONSE_HANDLER, LS_REQUEST_HANDLER} -- Implementation
 			Result.force (create {LS_UNREGISTER_CAPABILITY_REQUEST_FACTORY}.make, {LS_UNREGISTER_CAPABILITY_REQUEST}.method)
 			Result.force (create {LS_WILL_SAVE_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_WILL_SAVE_TEXT_DOCUMENT_NOTIFICATION}.method)
 			Result.force (create {LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REQUEST_FACTORY}.make, {LS_WILL_SAVE_WAIT_UNTIL_TEXT_DOCUMENT_REQUEST}.method)
+			Result.force (create {LS_WORKSPACE_SYMBOL_REQUEST_FACTORY}.make, {LS_WORKSPACE_SYMBOL_REQUEST}.method)
+			Result.force (create {LS_WORKSPACE_SYMBOL_RESOLVE_REQUEST_FACTORY}.make, {LS_WORKSPACE_SYMBOL_RESOLVE_REQUEST}.method)
 		ensure
 			message_factories_not_void: Result /= Void
 			no_void_message_factory: not Result.has_void

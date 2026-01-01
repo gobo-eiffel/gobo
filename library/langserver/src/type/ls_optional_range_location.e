@@ -2,31 +2,17 @@
 
 	description:
 	
-		"LSP locations inside a resource, such as a line inside a text file"
+		"LSP locations inside a resource, with optional range"
 
 	library: "Gobo Eiffel Language Server Protocol Library"
 	copyright: "Copyright (c) 2025, Eric Bezault and others"
 	license: "MIT License"
 
-class LS_LOCATION
+class LS_OPTIONAL_RANGE_LOCATION
 
 inherit
 
-	LS_OPTIONAL_RANGE_LOCATION
-		rename
-			make as male_optional_range_location
-		redefine
-			range,
-			process
-		end
-
-	LS_OPTIONAL_DEFINITION_RESULT
-
-	LS_OPTIONAL_TYPE_DEFINITION_RESULT
-
-	LS_OPTIONAL_DECLARATION_RESULT
-
-	LS_OPTIONAL_IMPLEMENTATION_RESULT
+	LS_ANY
 
 create
 
@@ -38,7 +24,6 @@ feature {NONE} -- Initialization
 			-- Create a new location.
 		require
 			a_uri_not_void: a_uri /= Void
-			a_range_not_void: a_range /= Void
 		do
 			uri := a_uri
 			range := a_range
@@ -49,19 +34,28 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	range: LS_RANGE
+	uri: LS_DOCUMENT_URI
+			-- The text document's URI
+
+	range: detachable LS_RANGE
 			-- Position range
+
+feature -- Field names
+
+	uri_name: STRING_8 = "uri"
+	range_name: STRING_8 = "range"
+			-- Field names
 
 feature -- Processing
 
 	process (a_processor: LS_PROCESSOR)
 			-- Process current value.
 		do
-			a_processor.process_location (Current)
+			a_processor.process_optional_range_location (Current)
 		end
 
 invariant
 
-	range_not_void: range /= Void
+	uri_not_void: uri /= Void
 
 end
