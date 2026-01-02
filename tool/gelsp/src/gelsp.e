@@ -805,52 +805,53 @@ feature {NONE} -- Eiffel processing
 					send_log_trace_verbose_notification ("Restarting Eiffel language server...", l_message)
 				end
 				send_custom_notification ("$/goboEiffel/restart", Void)
-			end
-			if debug_mode then
-				dt1 := system_processor.benchmark_start_time
-			end
-			reset
-			{MEMORY}.full_collect
-			find_ecf_filename
-			l_filename := ecf_filename
-			if l_filename = Void then
-				l_filename := file_system.nested_pathname ("${GOBO}", <<"library", "common", "config", "ecf", "default.ecf">>)
-				l_filename := Execution_environment.interpreted_string (l_filename)
-			end
-			if debug_mode then
-				dt2 := system_processor.benchmark_start_time
-			end
-			create l_file.make (l_filename)
-			l_file.open_read
-			if l_file.is_open_read then
-				parse_ecf_file (l_file)
-				l_file.close
 			else
-				report_cannot_read_error (l_filename)
-			end
-			if dt2 /= Void then
-				system_processor.record_end_time (dt2, "Read ECF file")
-			end
-			if attached eiffel_system as l_system then
-				system_processor.compile_degree_6 (l_system)
-				build_class_mapping (l_system)
-				create l_classes.make (l_system.class_count_recursive)
-				l_system.classes_do_recursive (agent l_classes.force_last)
-				system_processor.compile_classes (l_classes)
-				send_diagnostics
-				full_compilation_count := full_compilation_count + 1
-				incremental_compilation_count := 0
-				total_compilation_count := total_compilation_count + 1
 				if debug_mode then
-					std.error.put_line ("ECF file count: " + ecf_libraries.count.out)
-					std.error.put_line ("Full compilation count: " + full_compilation_count.out)
-					std.error.put_line ("Incremental compilation count: " + incremental_compilation_count.out)
-					std.error.put_line ("Total compilation count: " + total_compilation_count.out)
-					std.error.put_line ("Class count: " + class_mapping.count.out)
+					dt1 := system_processor.benchmark_start_time
 				end
-			end
-			if dt1 /= Void then
-				system_processor.record_end_time (dt1, "Total Time")
+				reset
+				{MEMORY}.full_collect
+				find_ecf_filename
+				l_filename := ecf_filename
+				if l_filename = Void then
+					l_filename := file_system.nested_pathname ("${GOBO}", <<"library", "common", "config", "ecf", "default.ecf">>)
+					l_filename := Execution_environment.interpreted_string (l_filename)
+				end
+				if debug_mode then
+					dt2 := system_processor.benchmark_start_time
+				end
+				create l_file.make (l_filename)
+				l_file.open_read
+				if l_file.is_open_read then
+					parse_ecf_file (l_file)
+					l_file.close
+				else
+					report_cannot_read_error (l_filename)
+				end
+				if dt2 /= Void then
+					system_processor.record_end_time (dt2, "Read ECF file")
+				end
+				if attached eiffel_system as l_system then
+					system_processor.compile_degree_6 (l_system)
+					build_class_mapping (l_system)
+					create l_classes.make (l_system.class_count_recursive)
+					l_system.classes_do_recursive (agent l_classes.force_last)
+					system_processor.compile_classes (l_classes)
+					send_diagnostics
+					full_compilation_count := full_compilation_count + 1
+					incremental_compilation_count := 0
+					total_compilation_count := total_compilation_count + 1
+					if debug_mode then
+						std.error.put_line ("ECF file count: " + ecf_libraries.count.out)
+						std.error.put_line ("Full compilation count: " + full_compilation_count.out)
+						std.error.put_line ("Incremental compilation count: " + incremental_compilation_count.out)
+						std.error.put_line ("Total compilation count: " + total_compilation_count.out)
+						std.error.put_line ("Class count: " + class_mapping.count.out)
+					end
+				end
+				if dt1 /= Void then
+					system_processor.record_end_time (dt1, "Total Time")
+				end
 			end
 			send_custom_notification ("$/goboEiffel/notBusy", Void)
 		end
@@ -873,42 +874,43 @@ feature {NONE} -- Eiffel processing
 					send_log_trace_verbose_notification ("Restarting Eiffel language server...", l_message)
 				end
 				send_custom_notification ("$/goboEiffel/restart", Void)
-			end
-			if debug_mode then
-				dt1 := system_processor.benchmark_start_time
-			end
-			if attached eiffel_system as l_system then
-				reset_class_mapping (True)
-				if a_preparse_needed then
-					system_processor.compile_degree_6 (l_system)
-				else
-					if debug_mode then
-						dt2 := system_processor.benchmark_start_time
-					end
-					l_system.reset_classes_incremental_recursive (system_processor)
-					if dt2 /= Void then
-						system_processor.record_end_time (dt2, "Reset class incremental")
-						dt2 := system_processor.benchmark_start_time
-					end
-				end
-				build_class_mapping (l_system)
-				if dt2 /= Void then
-					system_processor.record_end_time (dt2, "Build class mapping")
-				end
-				create l_classes.make (l_system.class_count_recursive)
-				l_system.classes_do_recursive (agent l_classes.force_last)
-				system_processor.compile_classes (l_classes)
-				send_diagnostics
-				incremental_compilation_count := incremental_compilation_count + 1
-				total_compilation_count := total_compilation_count + 1
+			else
 				if debug_mode then
-					std.error.put_line ("Full compilation count: " + full_compilation_count.out)
-					std.error.put_line ("Incremental compilation count: " + incremental_compilation_count.out)
-					std.error.put_line ("Total compilation count: " + total_compilation_count.out)
+					dt1 := system_processor.benchmark_start_time
 				end
-			end
-			if dt1 /= Void then
-				system_processor.record_end_time (dt1, "Total Time")
+				if attached eiffel_system as l_system then
+					reset_class_mapping (True)
+					if a_preparse_needed then
+						system_processor.compile_degree_6 (l_system)
+					else
+						if debug_mode then
+							dt2 := system_processor.benchmark_start_time
+						end
+						l_system.reset_classes_incremental_recursive (system_processor)
+						if dt2 /= Void then
+							system_processor.record_end_time (dt2, "Reset class incremental")
+							dt2 := system_processor.benchmark_start_time
+						end
+					end
+					build_class_mapping (l_system)
+					if dt2 /= Void then
+						system_processor.record_end_time (dt2, "Build class mapping")
+					end
+					create l_classes.make (l_system.class_count_recursive)
+					l_system.classes_do_recursive (agent l_classes.force_last)
+					system_processor.compile_classes (l_classes)
+					send_diagnostics
+					incremental_compilation_count := incremental_compilation_count + 1
+					total_compilation_count := total_compilation_count + 1
+					if debug_mode then
+						std.error.put_line ("Full compilation count: " + full_compilation_count.out)
+						std.error.put_line ("Incremental compilation count: " + incremental_compilation_count.out)
+						std.error.put_line ("Total compilation count: " + total_compilation_count.out)
+					end
+				end
+				if dt1 /= Void then
+					system_processor.record_end_time (dt1, "Total Time")
+				end
 			end
 		end
 
