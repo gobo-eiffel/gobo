@@ -1526,6 +1526,9 @@ extern void* GE_memset(void* str, int c, size_t n);
 			create l_common_defines.make (15)
 			create l_common_undefines.make (15)
 			create l_common_includes.make (5)
+			if use_boehm_gc then
+				l_common_defines.force_last (c_ge_use_boehm_gc)
+			end
 			if use_threads then
 				l_common_defines.force_last (c_ge_use_threads)
 			end

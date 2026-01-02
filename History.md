@@ -43,6 +43,9 @@
   ancestors information in the generated C code.
 * Fixed computation of the dynamic type sets of the arguments of
   routines whose addresses are passed to C and then called back from C.
+* Fixed implementation of `eif_adopt`/`eif_access`/`eif_wean` when the
+  Eiffel objects are not visible from the Boehm GC's roots (e.g. when
+  using the EiffelVision GTK binding).
 
 ### gedoc
 
