@@ -59,7 +59,7 @@
 				<exclude>/structures/cursors/two_way_cursor_tree_cursor.e$</exclude>
 				<exclude>/elks/encoding$</exclude>
 			</file_rule>
-			<cluster name="encoding" location="$|elks|encoding">
+			<cluster name="encoding" location="$|elks/encoding">
 				<cluster name="implementation" location="$|implementation" hidden="true">
 					<cluster name="windows" location="$|windows" hidden="true">
 						<condition>

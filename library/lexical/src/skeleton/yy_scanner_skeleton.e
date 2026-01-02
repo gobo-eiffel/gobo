@@ -205,7 +205,7 @@ feature -- Access
 			-- the input buffer.)
 			--
 			-- Note that `unicode_text' does not contain surrogate
-			-- or invalid Unicode characters, the the resulting
+			-- or invalid Unicode characters, therefore the resulting
 			-- string is valid UTF-8.
 		do
 			if e < s then
