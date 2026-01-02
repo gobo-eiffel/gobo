@@ -2558,6 +2558,7 @@ feature {NONE} -- Feature generation
 			l_struct_type: STRING
 			old_file: KI_TEXT_OUTPUT_STREAM
 			l_is_inline: BOOLEAN
+			l_need_distinct_inline: BOOLEAN
 			l_is_cpp: BOOLEAN
 			l_cpp_class_type: STRING
 			l_dll_file: STRING
@@ -2682,8 +2683,17 @@ feature {NONE} -- Feature generation
 						l_argument_type := l_argument_type_set.static_type.primary_type
 						print_type_declaration (l_argument_type, header_file)
 						print_type_declaration (l_argument_type, current_file)
-						header_file.put_character (' ')
-						current_file.put_character (' ')
+						if a_inline and then l_argument_type.is_expanded and then not l_argument_type.is_basic then
+							header_file.put_character ('*')
+							current_file.put_character ('*')
+							header_file.put_character (' ')
+							current_file.put_character (' ')
+							header_file.put_character ('i')
+							current_file.put_character ('i')
+						else
+							header_file.put_character (' ')
+							current_file.put_character (' ')
+						end
 						l_name := l_arguments.formal_argument (i).name
 						print_argument_name (l_name, header_file)
 						print_argument_name (l_name, current_file)
@@ -2712,65 +2722,71 @@ feature {NONE} -- Feature generation
 				l_is_inline := True
 				l_is_cpp := True
 			end
+			l_need_distinct_inline := l_is_inline and then not a_inline and then
+				((exception_trace_mode or trace_mode) or
+				(current_type.base_class.invariants_enabled and then not current_feature.is_static) or
+				(current_type.base_class.postconditions_enabled and then not current_feature.postconditions.is_empty))
 				--
 				-- Declaration of variables.
 				--
-			if not a_inline and current_type.base_class.invariants_enabled and not current_feature.is_static then
-				print_indentation
-				current_file.put_string (c_uint32_t)
-				current_file.put_character (' ')
-				current_file.put_string (c_in_qualified_call)
-				print_assign_to
-				if a_creation then
-					current_file.put_character ('2')
-				else
+			if not a_inline then
+				if current_type.base_class.invariants_enabled and then not current_feature.is_static then
+					print_indentation
+					current_file.put_string (c_uint32_t)
+					current_file.put_character (' ')
+					current_file.put_string (c_in_qualified_call)
+					print_assign_to
+					if a_creation then
+						current_file.put_character ('2')
+					else
+						current_file.put_string (c_ac)
+						current_file.put_string (c_arrow)
+						current_file.put_string (c_in_qualified_call)
+					end
+					print_semicolon_newline
+				end
+					-- Variable for exception trace.
+				if exception_trace_mode then
+					print_indentation
+					current_file.put_string (c_ge_call)
+					current_file.put_character (' ')
+					current_file.put_string (c_tc)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					if current_in_exception_trace then
+						if current_feature.is_static or a_creation then
+							current_file.put_character ('0')
+						else
+							print_current_name (current_file)
+						end
+						current_file.put_character (',')
+					end
+					print_escaped_string (current_type.base_class.upper_name)
+					current_file.put_character (',')
+					print_escaped_string (a_feature.lower_name)
+					current_file.put_character (',')
 					current_file.put_string (c_ac)
 					current_file.put_string (c_arrow)
-					current_file.put_string (c_in_qualified_call)
+					current_file.put_string (c_call)
+					current_file.put_character ('}')
+					current_file.put_character (';')
+					current_file.put_new_line
 				end
-				print_semicolon_newline
-			end
-				-- Variable for exception trace.
-			if exception_trace_mode and not a_inline then
-				print_indentation
-				current_file.put_string (c_ge_call)
-				current_file.put_character (' ')
-				current_file.put_string (c_tc)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				if current_in_exception_trace then
-					if current_feature.is_static or a_creation then
-						current_file.put_character ('0')
-					else
-						print_current_name (current_file)
-					end
-					current_file.put_character (',')
+					-- Variable for 'Result' entity.
+				if l_result_type /= Void and (not l_is_inline or else l_need_distinct_inline) then
+					print_indentation
+					print_type_declaration (l_result_type, current_file)
+					current_file.put_character (' ')
+					print_result_name (current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_default_entity_value (l_result_type, current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
 				end
-				print_escaped_string (current_type.base_class.upper_name)
-				current_file.put_character (',')
-				print_escaped_string (a_feature.lower_name)
-				current_file.put_character (',')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_call)
-				current_file.put_character ('}')
-				current_file.put_character (';')
-				current_file.put_new_line
-			end
-				-- Variable for 'Result' entity.
-			if l_result_type /= Void and (not l_is_inline or else ((exception_trace_mode or trace_mode) and not a_inline)) then
-				print_indentation
-				print_type_declaration (l_result_type, current_file)
-				current_file.put_character (' ')
-				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				print_default_entity_value (l_result_type, current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
 			end
 				--
 				-- Instructions.
@@ -2836,11 +2852,11 @@ feature {NONE} -- Feature generation
 						print_external_c_includes (external_c_inline_regexp.captured_substring (3))
 					end
 				end
-				if (exception_trace_mode or trace_mode) and not a_inline then
+				if l_need_distinct_inline then
 						-- The inline C code may contain 'return' statement.
 						-- So we need to enclose its code in a separate C function.
+					print_indentation
 					if l_result_type_set /= Void then
-						print_indentation
 						print_result_name (current_file)
 						current_file.put_character (' ')
 						current_file.put_character ('=')
@@ -2853,6 +2869,11 @@ feature {NONE} -- Feature generation
 						from i := 1 until i > nb_args loop
 							current_file.put_character (',')
 							current_file.put_character (' ')
+							l_argument_type_set := argument_type_set (i)
+							l_argument_type := l_argument_type_set.static_type.primary_type
+							if l_argument_type.is_expanded and then not l_argument_type.is_basic then
+								current_file.put_character ('&')
+							end
 							l_name := l_arguments.formal_argument (i).name
 							print_argument_name (l_name, current_file)
 							i := i + 1
@@ -2862,7 +2883,41 @@ feature {NONE} -- Feature generation
 					current_file.put_character (';')
 					current_file.put_new_line
 				else
+					if a_inline and then l_arguments /= Void then
+						from i := 1 until i > nb_args loop
+							l_argument_type_set := argument_type_set (i)
+							l_argument_type := l_argument_type_set.static_type.primary_type
+							if l_argument_type.is_expanded and then not l_argument_type.is_basic then
+								l_name := l_arguments.formal_argument (i).name
+								current_file.put_string (c_define)
+								current_file.put_character (' ')
+								print_argument_name (l_name, current_file)
+								current_file.put_character (' ')
+								current_file.put_character ('(')
+								current_file.put_character ('*')
+								current_file.put_character ('i')
+								print_argument_name (l_name, current_file)
+								current_file.put_character (')')
+								current_file.put_new_line
+							end
+							i := i + 1
+						end
+					end
 					print_external_c_inline_body (a_feature)
+					if a_inline and then l_arguments /= Void then
+						from i := 1 until i > nb_args loop
+							l_argument_type_set := argument_type_set (i)
+							l_argument_type := l_argument_type_set.static_type.primary_type
+							if l_argument_type.is_expanded and then not l_argument_type.is_basic then
+								l_name := l_arguments.formal_argument (i).name
+								current_file.put_string (c_undef)
+								current_file.put_character (' ')
+								print_argument_name (l_name, current_file)
+								current_file.put_new_line
+							end
+							i := i + 1
+						end
+					end
 				end
 			elseif a_feature.is_builtin then
 				print_external_builtin_body (a_feature)
@@ -3102,7 +3157,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_new_line
 				end
 			end
-			if l_result_type /= Void and (not l_is_inline or else ((exception_trace_mode or trace_mode) and not a_inline)) then
+			if l_result_type /= Void and (not l_is_inline or else l_need_distinct_inline) then
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
@@ -3134,7 +3189,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				-- Clean up.
 				--
 			current_file := old_file
-			if (exception_trace_mode or trace_mode) and l_is_inline and not a_inline then
+			if l_need_distinct_inline then
 				print_external_routine (a_feature, False, True)
 			end
 		end
