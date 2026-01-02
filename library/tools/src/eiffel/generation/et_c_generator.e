@@ -2566,6 +2566,7 @@ feature {NONE} -- Feature generation
 			l_cpp_class_type: STRING
 			l_dll_file: STRING
 			l_has_include_files: BOOLEAN
+			l_has_reference_arguments: BOOLEAN
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
@@ -2697,6 +2698,11 @@ feature {NONE} -- Feature generation
 							header_file.put_character (' ')
 							current_file.put_character (' ')
 						end
+						if use_boehm_gc and then not a_inline and then not l_argument_type.is_expanded and then not current_feature.is_builtin then
+							l_has_reference_arguments := True
+							header_file.put_character ('r')
+							current_file.put_character ('r')
+						end
 						l_name := l_arguments.formal_argument (i).name
 						print_argument_name (l_name, header_file)
 						print_argument_name (l_name, current_file)
@@ -2726,12 +2732,33 @@ feature {NONE} -- Feature generation
 				l_is_cpp := True
 			end
 			l_need_distinct_inline := l_is_inline and then not a_inline and then
-				((exception_trace_mode or trace_mode) or
+				(l_has_reference_arguments or (exception_trace_mode or trace_mode) or
 				(current_type.base_class.invariants_enabled and then not current_feature.is_static) or
 				(current_type.base_class.postconditions_enabled and then not current_feature.postconditions.is_empty))
 				--
 				-- Declaration of variables.
 				--
+			if l_arguments /= Void and then l_has_reference_arguments then
+				from i := 1 until i > nb_args loop
+					l_argument_type_set := argument_type_set (i)
+					l_argument_type := l_argument_type_set.static_type.primary_type
+					if not l_argument_type.is_expanded then
+						print_indentation
+						print_type_declaration (l_argument_type, current_file)
+						current_file.put_character (' ')
+						l_name := l_arguments.formal_argument (i).name
+						print_argument_name (l_name, current_file)
+						print_assign_to
+						current_file.put_string (c_eif_adopt)
+						current_file.put_character ('(')
+						current_file.put_character ('r')
+						print_argument_name (l_name, current_file)
+						current_file.put_character (')')
+						print_semicolon_newline
+					end
+					i := i + 1
+				end
+			end
 			if not a_inline then
 				if current_type.base_class.invariants_enabled and then not current_feature.is_static then
 					print_indentation
@@ -3158,6 +3185,22 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					current_file.put_string (c_caller)
 					current_file.put_character (';')
 					current_file.put_new_line
+				end
+			end
+			if l_arguments /= Void and then l_has_reference_arguments then
+				from i := 1 until i > nb_args loop
+					l_argument_type_set := argument_type_set (i)
+					l_argument_type := l_argument_type_set.static_type.primary_type
+					if not l_argument_type.is_expanded then
+						print_indentation
+						current_file.put_string (c_eif_wean)
+						current_file.put_character ('(')
+						l_name := l_arguments.formal_argument (i).name
+						print_argument_name (l_name, current_file)
+						current_file.put_character (')')
+						print_semicolon_newline
+					end
+					i := i + 1
 				end
 			end
 			if l_result_type /= Void and (not l_is_inline or else l_need_distinct_inline) then
@@ -47472,6 +47515,7 @@ feature {NONE} -- Constants
 	c_define: STRING = "#define"
 	c_defined: STRING = "defined"
 	c_double: STRING = "double"
+	c_eif_adopt: STRING = "eif_adopt"
 	c_eif_any: STRING = "EIF_ANY"
 	c_eif_boolean: STRING = "EIF_BOOLEAN"
 	c_eif_character: STRING = "EIF_CHARACTER"
@@ -47509,6 +47553,7 @@ feature {NONE} -- Constants
 	c_eif_type: STRING = "EIF_TYPE_OBJ"
 	c_eif_type_index: STRING = "EIF_TYPE_INDEX"
 	c_eif_void: STRING = "EIF_VOID"
+	c_eif_wean: STRING = "eif_wean"
 	c_eif_wide_char: STRING = "EIF_WIDE_CHAR"
 	c_eif_windows: STRING = "EIF_WINDOWS"
 	c_else: STRING = "else"
