@@ -24,7 +24,7 @@
 		<library name="kernel" location="${GOBO_LIBRARY}/library/kernel/library.ecf" readonly="true"/>
 		<library name="langserver" location="${GOBO_LIBRARY}/library/langserver/library.ecf" readonly="true"/>
 		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
-		<cluster name="langserver" location="./" recursive="true"/>
+		<cluster name="scoop" location="./" recursive="true"/>
 	</target>
 	<target name="langserver" extends="all_classes">
 		<root class="LANGSERVER" feature="execute"/>
