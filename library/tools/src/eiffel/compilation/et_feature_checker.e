@@ -6485,8 +6485,28 @@ feature {NONE} -- Expression validity
 			has_fatal_error := False
 			l_name := an_expression.name
 			l_seed := l_name.seed
-			if l_seed = 0 then
-					-- We need to resolve `l_name' in the implementation
+			if l_seed /= 0 then
+					-- We already resolved `l_name' in the implementation
+					-- class of `current_feature_impl' first.
+			elseif current_class_impl /= current_class then
+				set_fatal_error
+				if not has_implementation_error (current_feature_impl) then
+						-- Internal error: `a_name' should have been resolved in
+						-- the implementation feature.
+					error_handler.report_giaaa_error
+				end
+			elseif l_name.is_argument then
+					-- Internal error: the seed of the argument should have
+					-- been set by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_name.is_local then
+					-- Internal error: the seed of the local should have
+					-- been set by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_name.is_object_test_local then
+					-- We need to resolve `a_name' in the implementation
 					-- class of `current_feature_impl' first.
 				if current_class_impl /= current_class then
 					set_fatal_error
@@ -6496,404 +6516,21 @@ feature {NONE} -- Expression validity
 						error_handler.report_giaaa_error
 					end
 				else
-					if l_name.is_argument then
-							-- Internal error: the seed of the argument should have
-							-- been set by the parser.
+					l_identifier := l_name.object_test_local_name.identifier
+					l_object_test := current_object_test_scope.object_test (l_identifier)
+					if l_object_test = Void then
+							-- Error: `l_identifier' is an object-test local that is used outside of its scope.
 						set_fatal_error
-						error_handler.report_giaaa_error
-					elseif l_name.is_local then
-							-- Internal error: the seed of the local should have
-							-- been set by the parser.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					elseif l_name.is_object_test_local then
-							-- We need to resolve `a_name' in the implementation
-							-- class of `current_feature_impl' first.
-						if current_class_impl /= current_class then
-							set_fatal_error
-							if not has_implementation_error (current_feature_impl) then
-									-- Internal error: `a_name' should have been resolved in
-									-- the implementation feature.
-								error_handler.report_giaaa_error
-							end
+						if current_feature_impl.is_feature then
+							error_handler.report_veen8a_error (current_class, l_identifier, current_feature_impl.as_feature)
 						else
-							l_identifier := l_name.object_test_local_name.identifier
-							l_object_test := current_object_test_scope.object_test (l_identifier)
-							if l_object_test = Void then
-									-- Error: `l_identifier' is an object-test local that is used outside of its scope.
-								set_fatal_error
-								if current_feature_impl.is_feature then
-									error_handler.report_veen8a_error (current_class, l_identifier, current_feature_impl.as_feature)
-								else
-									error_handler.report_veen8b_error (current_class, l_identifier)
-								end
-							else
-								set_index_to (l_identifier, l_object_test.name.index)
-								report_object_test_local (l_identifier, l_object_test)
-								l_seed := l_object_test.name.seed
-								l_identifier.set_seed (l_seed)
-								l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
-								l_typed_pointer_class := l_typed_pointer_type.named_base_class
-								if l_typed_pointer_class.actual_class.is_preparsed then
-										-- Class TYPED_POINTER has been found in the universe.
-										-- Use ISE's implementation: the type of '$object_test_local' is
-										-- 'TYPED_POINTER [<type-of-object_test_local>]'.
-									current_object_test_types.search (l_object_test)
-									if not current_object_test_types.found then
-											-- The type of the object-test local should have been determined
-											-- when processing the object-test itself. And this should have
-											-- already been done since we are in the scope of that object-test.
-											-- Here we don't have this type, which means that an error had
-											-- occurred (and had been reported) when processing the expression
-											-- of the object-test.
-										set_fatal_error
-									else
-										a_context.copy_type_context (current_object_test_types.found_item)
-										set_index (an_expression)
-										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-										a_context.force_last (l_typed_pointer_type)
-									end
-								else
-										-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
-									set_pointer_index (an_expression)
-									l_pointer_type := current_universe_impl.pointer_type
-									a_context.force_last (l_pointer_type)
-									report_pointer_expression (an_expression, l_pointer_type)
-								end
-								already_checked := True
-							end
-						end
-					elseif l_name.is_iteration_item then
-							-- We need to resolve `a_name' in the implementation
-							-- class of `current_feature_impl' first.
-						if current_class_impl /= current_class then
-							set_fatal_error
-							if not has_implementation_error (current_feature_impl) then
-									-- Internal error: `a_name' should have been resolved in
-									-- the implementation feature.
-								error_handler.report_giaaa_error
-							end
-						else
-							l_identifier := l_name.iteration_item_name
-							l_iteration_component := current_iteration_item_scope.iteration_component (l_identifier)
-							if l_iteration_component = Void then
-									-- Error: `l_identifier' is an iteration item that is used outside of its scope.
-								set_fatal_error
-								if current_feature_impl.is_feature then
-									error_handler.report_veen9a_error (current_class, l_identifier, current_feature_impl.as_feature)
-								else
-									error_handler.report_veen9b_error (current_class, l_identifier)
-								end
-							else
-								if l_identifier /= l_iteration_component.unfolded_cursor_name then
-									set_index_to (l_identifier, l_iteration_component.item_name.index)
-								end
-								report_iteration_item (l_identifier, l_iteration_component)
-								l_seed := l_iteration_component.item_name.seed
-								l_identifier.set_seed (l_seed)
-								l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
-								l_typed_pointer_class := l_typed_pointer_type.named_base_class
-								if l_typed_pointer_class.actual_class.is_preparsed then
-										-- Class TYPED_POINTER has been found in the universe.
-										-- Use ISE's implementation: the type of '$iteration_item' is
-										-- 'TYPED_POINTER [<type-of-iteration-item>]'.
-									current_iteration_item_types.search (l_iteration_component)
-									if not current_iteration_item_types.found then
-											-- The type of the iteration item should have been determined
-											-- when processing the header of the iteration component itself.
-											-- And this should have already been done since we are in the
-											-- scope of that iteration item. Here we don't have this type,
-											-- which means that an error had occurred (and had been reported)
-											-- when processing the iterable expression of the iteration component.
-										set_fatal_error
-									else
-										a_context.copy_type_context (current_iteration_item_types.found_item)
-										set_index (an_expression)
-										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-										a_context.force_last (l_typed_pointer_type)
-									end
-								else
-										-- Use the ETL2 implementation: the type of '$iteration_item' is POINTER.
-									set_pointer_index (an_expression)
-									l_pointer_type := current_universe_impl.pointer_type
-									a_context.force_last (l_pointer_type)
-									report_pointer_expression (an_expression, l_pointer_type)
-								end
-								already_checked := True
-							end
-						end
-					elseif l_name.is_inline_separate_argument then
-							-- We need to resolve `a_name' in the implementation
-							-- class of `current_feature_impl' first.
-						if current_class_impl /= current_class then
-							set_fatal_error
-							if not has_implementation_error (current_feature_impl) then
-									-- Internal error: `a_name' should have been resolved in
-									-- the implementation feature.
-								error_handler.report_giaaa_error
-							end
-						else
-							l_identifier := l_name.inline_separate_argument_name
-							l_inline_separate_argument := current_inline_separate_argument_scope.inline_separate_argument (l_identifier)
-							if l_inline_separate_argument = Void then
-									-- Error: `l_identifier' is an inline separate argument that is used outside of its scope.
-								set_fatal_error
-								if current_feature_impl.is_feature then
-									error_handler.report_veen10a_error (current_class, l_identifier, current_feature_impl.as_feature)
-								else
-									error_handler.report_veen10b_error (current_class, l_identifier)
-								end
-							else
-								set_index_to (l_identifier, l_inline_separate_argument.name.index)
-								report_inline_separate_argument (l_identifier, False, l_inline_separate_argument)
-								l_seed := l_inline_separate_argument.name.seed
-								l_identifier.set_seed (l_seed)
-								l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
-								l_typed_pointer_class := l_typed_pointer_type.named_base_class
-								if l_typed_pointer_class.actual_class.is_preparsed then
-										-- Class TYPED_POINTER has been found in the universe.
-										-- Use ISE's implementation: the type of '$inline_separate_argument'
-										-- is 'TYPED_POINTER [<type-of-inline-separate-argument>]'.
-									current_inline_separate_argument_types.search (l_inline_separate_argument)
-									if not current_inline_separate_argument_types.found then
-											-- The type of the inline separate argument should have been determined
-											-- when processing the arguments of the inline separate instruction.
-											-- And this should have already been done since we are in the
-											-- scope of that inline separate argument (i.e the body of the inline
-											-- separate instruction). Here we don't have this type, which means that
-											-- an error had occurred (and had been reported) when processing
-											-- the argument expressions of the inline separate instruction.
-										set_fatal_error
-									else
-										a_context.copy_type_context (current_inline_separate_argument_types.found_item)
-										set_index (an_expression)
-										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-										a_context.force_last (l_typed_pointer_type)
-									end
-								else
-										-- Use the ETL2 implementation: the type of '$inline_separate_argument' is POINTER.
-									set_pointer_index (an_expression)
-									l_pointer_type := current_universe_impl.pointer_type
-									a_context.force_last (l_pointer_type)
-									report_pointer_expression (an_expression, l_pointer_type)
-								end
-								already_checked := True
-							end
-						end
-						-- Try to see if it is of the form '$feature_name'.
-					elseif attached current_class.named_procedure (l_name) as l_procedure then
-							-- Note that we need to check the interface of `current_class' again.
-							-- It's already done in `check_feature_validity'
-						l_seed := l_procedure.first_seed
-						l_name.set_seed (l_seed)
-						check_unqualified_vape_validity (l_name, l_procedure)
-						report_procedure_address (an_expression, l_procedure)
-							-- $feature_name is of type POINTER, even
-							-- in ISE and its TYPED_POINTER support.
-						set_pointer_index (an_expression)
-						l_pointer_type := current_universe_impl.pointer_type
-						a_context.force_last (l_pointer_type)
-						report_pointer_expression (an_expression, l_pointer_type)
-							-- No need to check validity in the context of `current_type' again.
-						already_checked := True
-					elseif attached current_class.named_query (l_name) as l_query then
-						l_seed := l_query.first_seed
-						l_name.set_seed (l_seed)
-						check_unqualified_vape_validity (l_name, l_query)
-						if l_query.is_attribute then
-							if in_static_feature then
-									-- Error: we cannot access the address of an attribute
-									-- from a static feature.
-								set_fatal_error
-								error_handler.report_vucr0e_error (current_class, current_class_impl, l_name, l_query)
-							else
-								report_attribute_address (an_expression, l_query)
-								l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
-								l_typed_pointer_class := l_typed_pointer_type.named_base_class
-								if l_typed_pointer_class.actual_class.is_preparsed then
-										-- Class TYPED_POINTER has been found in the universe.
-										-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
-									l_type := l_query.type
-									if l_type.is_base_type or current_class = current_type then
-										a_context.force_last (l_type)
-										set_index (an_expression)
-										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-										a_context.force_last (l_typed_pointer_type)
-											-- No need to check validity in the context of `current_type' again.
-										already_checked := True
-									end
-								else
-										-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
-									set_pointer_index (an_expression)
-									l_pointer_type := current_universe_impl.pointer_type
-									a_context.force_last (l_pointer_type)
-									report_pointer_expression (an_expression, l_pointer_type)
-										-- No need to check validity in the context of `current_type' again.
-									already_checked := True
-								end
-							end
-						else
-							report_function_address (an_expression, l_query)
-								-- $feature_name is of type POINTER, even
-								-- in ISE and its TYPED_POINTER support.
-							set_pointer_index (an_expression)
-							l_pointer_type := current_universe_impl.pointer_type
-							a_context.force_last (l_pointer_type)
-							report_pointer_expression (an_expression, l_pointer_type)
-								-- No need to check validity in the context of `current_type' again.
-							already_checked := True
+							error_handler.report_veen8b_error (current_class, l_identifier)
 						end
 					else
-						set_fatal_error
-							-- It used to be a validity error VUAR-4 (ETL2 p.369).
-						error_handler.report_veen11a_error (current_class_impl, l_name)
-					end
-				end
-			end
-			if not has_fatal_error and not already_checked then
-				if l_name.is_argument then
-						-- This is of the form '$argument'.
-					if current_inline_agent = Void and in_invariant then
-							-- VEEN-3: the formal argument appears in an invariant.
-							-- Internal error: the invariant has no formal argument.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						if attached current_inline_agent as l_current_inline_agent then
-							l_arguments := l_current_inline_agent.formal_arguments
-						else
-								-- Use arguments of `current_feature' instead of `current_feature_impl'
-								-- because when processing inherited assertions the types of signature
-								-- should be those of the version of the feature in the current class.
-								-- For example:
-								--    deferred class A
-								--    feature
-								--       f (a: ANY)
-								--           require
-								--               pre: g ($a)
-								--           deferred
-								--           end
-								--      g (a: TYPED_POINTER [ANY]): BOOLEAN deferred end
-								--    end
-								--    class B
-								--    inherit
-								--        A
-								--    feature
-								--        f (a: STRING) do ... end
-								--        g (a: TYPED_POINTER [STRING]): BOOLEAN do ... end
-								--    end
-								-- `a' in the inherited precondition "pre" should be considered
-								-- of type STRING (and not ANY) is class B.
-							l_arguments := current_feature.arguments
-						end
-						if l_arguments = Void then
-								-- Internal error.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						elseif l_seed < 1 or l_seed > l_arguments.count then
-								-- Internal error.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							l_argument := l_arguments.formal_argument (l_seed)
-							l_identifier := l_name.argument_name.identifier
-							set_index_to (l_identifier, l_argument.index)
-							report_formal_argument (l_identifier, False, l_argument)
-							l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
-							l_typed_pointer_class := l_typed_pointer_type.named_base_class
-							if l_typed_pointer_class.actual_class.is_preparsed then
-									-- Class TYPED_POINTER has been found in the universe.
-									-- Use ISE's implementation: the type of '$argument' is 'TYPED_POINTER [<type-of-argument>]'.
-								l_type := l_argument.type
-								a_context.force_last (l_type)
-								set_index (an_expression)
-								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-								a_context.force_last (l_typed_pointer_type)
-							else
-									-- Use the ETL2 implementation: the type of '$argument' is POINTER.
-								set_pointer_index (an_expression)
-								l_pointer_type := current_universe_impl.pointer_type
-								a_context.force_last (l_pointer_type)
-								report_pointer_expression (an_expression, l_pointer_type)
-							end
-						end
-					end
-				elseif l_name.is_local then
-						-- This is of the form '$local'.
-					if current_inline_agent = Void and (in_precondition or in_postcondition) then
--- TODO: check the case where we are in the pre- or postcondition of an inline agent.
-							-- The local entity appears in a pre- or postcondition.
-						set_fatal_error
-						if current_class_impl = current_class then
-							if attached current_inline_agent as l_current_inline_agent then
-								error_handler.report_veen2e_error (current_class, l_name, l_current_inline_agent)
-							elseif current_feature_impl.is_feature then
-								error_handler.report_veen2c_error (current_class, l_name, current_feature_impl.as_feature)
-							else
-									-- Internal error: invariants don't have pre- or postconditions.
-								error_handler.report_giaaa_error
-							end
-						else
-							if not has_implementation_error (current_feature_impl) then
-									-- Internal error: the VEEN-2 error should have been
-									-- reported in the implementation feature.
-								error_handler.report_giaaa_error
-							end
-						end
-					elseif current_inline_agent = Void and in_invariant then
-							-- VEEN-2: the local entity appears in an invariant.
-							-- Internal error: the invariant has no local entity.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_locals := current_closure_impl.locals
-						if l_locals = Void then
-								-- Internal error.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						elseif l_seed < 1 or l_seed > l_locals.count then
-								-- Internal error.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							l_local := l_locals.local_variable (l_seed)
-							l_identifier := l_name.local_name.identifier
-							set_index_to (l_identifier, l_local.index)
-							report_local_variable (l_identifier, False, l_local)
-							l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
-							l_typed_pointer_class := l_typed_pointer_type.named_base_class
-							if l_typed_pointer_class.actual_class.is_preparsed then
-									-- Class TYPED_POINTER has been found in the universe.
-									-- Use ISE's implementation: the type of '$local' is 'TYPED_POINTER [<type-of-local>]'.
-								l_type := l_local.type
-								a_context.force_last (l_type)
-								set_index (an_expression)
-								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-								a_context.force_last (l_typed_pointer_type)
-							else
-									-- Use the ETL2 implementation: the type of '$local' is POINTER.
-								set_pointer_index (an_expression)
-								l_pointer_type := current_universe_impl.pointer_type
-								a_context.force_last (l_pointer_type)
-								report_pointer_expression (an_expression, l_pointer_type)
-							end
-						end
-					end
-				elseif l_name.is_object_test_local then
-					l_object_tests := current_closure_impl.object_tests
-					if l_object_tests = Void then
-							-- Internal error.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					elseif l_seed < 1 or l_seed > l_object_tests.count then
-							-- Internal error.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_object_test := l_object_tests.object_test (l_seed)
-						l_identifier := l_name.object_test_local_name.identifier
 						set_index_to (l_identifier, l_object_test.name.index)
 						report_object_test_local (l_identifier, l_object_test)
+						l_seed := l_object_test.name.seed
+						l_identifier.set_seed (l_seed)
 						l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 						l_typed_pointer_class := l_typed_pointer_type.named_base_class
 						if l_typed_pointer_class.actual_class.is_preparsed then
@@ -6902,12 +6539,13 @@ feature {NONE} -- Expression validity
 								-- 'TYPED_POINTER [<type-of-object_test_local>]'.
 							current_object_test_types.search (l_object_test)
 							if not current_object_test_types.found then
-									-- Internal error: the type of the object-test local should
-									-- have been determined when processing the object-test itself.
-									-- And this should have already been done since we are in the
-									-- scope of that object-test.
+									-- The type of the object-test local should have been determined
+									-- when processing the object-test itself. And this should have
+									-- already been done since we are in the scope of that object-test.
+									-- Here we don't have this type, which means that an error had
+									-- occurred (and had been reported) when processing the expression
+									-- of the object-test.
 								set_fatal_error
-								error_handler.report_giaaa_error
 							else
 								a_context.copy_type_context (current_object_test_types.found_item)
 								set_index (an_expression)
@@ -6921,24 +6559,37 @@ feature {NONE} -- Expression validity
 							a_context.force_last (l_pointer_type)
 							report_pointer_expression (an_expression, l_pointer_type)
 						end
+						already_checked := True
 					end
-				elseif l_name.is_iteration_item then
-					l_iteration_components := current_closure_impl.iteration_components
-					if l_iteration_components = Void then
-							-- Internal error.
-						set_fatal_error
+				end
+			elseif l_name.is_iteration_item then
+					-- We need to resolve `a_name' in the implementation
+					-- class of `current_feature_impl' first.
+				if current_class_impl /= current_class then
+					set_fatal_error
+					if not has_implementation_error (current_feature_impl) then
+							-- Internal error: `a_name' should have been resolved in
+							-- the implementation feature.
 						error_handler.report_giaaa_error
-					elseif l_seed < 1 or l_seed > l_iteration_components.count then
-							-- Internal error.
+					end
+				else
+					l_identifier := l_name.iteration_item_name
+					l_iteration_component := current_iteration_item_scope.iteration_component (l_identifier)
+					if l_iteration_component = Void then
+							-- Error: `l_identifier' is an iteration item that is used outside of its scope.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						if current_feature_impl.is_feature then
+							error_handler.report_veen9a_error (current_class, l_identifier, current_feature_impl.as_feature)
+						else
+							error_handler.report_veen9b_error (current_class, l_identifier)
+						end
 					else
-						l_iteration_component := l_iteration_components.iteration_component (l_seed)
-						l_identifier := l_name.iteration_item_name
 						if l_identifier /= l_iteration_component.unfolded_cursor_name then
 							set_index_to (l_identifier, l_iteration_component.item_name.index)
 						end
 						report_iteration_item (l_identifier, l_iteration_component)
+						l_seed := l_iteration_component.item_name.seed
+						l_identifier.set_seed (l_seed)
 						l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 						l_typed_pointer_class := l_typed_pointer_type.named_base_class
 						if l_typed_pointer_class.actual_class.is_preparsed then
@@ -6947,13 +6598,13 @@ feature {NONE} -- Expression validity
 								-- 'TYPED_POINTER [<type-of-iteration-item>]'.
 							current_iteration_item_types.search (l_iteration_component)
 							if not current_iteration_item_types.found then
-									-- Internal error: the type of the iteration item should
-									-- have been determined when processing the header of the
-									-- across component itself. And this should have already
-									-- been done since we are in the scope of that iteration
-									-- item.
+									-- The type of the iteration item should have been determined
+									-- when processing the header of the iteration component itself.
+									-- And this should have already been done since we are in the
+									-- scope of that iteration item. Here we don't have this type,
+									-- which means that an error had occurred (and had been reported)
+									-- when processing the iterable expression of the iteration component.
 								set_fatal_error
-								error_handler.report_giaaa_error
 							else
 								a_context.copy_type_context (current_iteration_item_types.found_item)
 								set_index (an_expression)
@@ -6967,21 +6618,35 @@ feature {NONE} -- Expression validity
 							a_context.force_last (l_pointer_type)
 							report_pointer_expression (an_expression, l_pointer_type)
 						end
+						already_checked := True
 					end
-				elseif l_name.is_inline_separate_argument then
-					if not attached current_closure_impl.inline_separate_arguments as l_inline_separate_arguments then
-							-- Internal error.
-						set_fatal_error
+				end
+			elseif l_name.is_inline_separate_argument then
+					-- We need to resolve `a_name' in the implementation
+					-- class of `current_feature_impl' first.
+				if current_class_impl /= current_class then
+					set_fatal_error
+					if not has_implementation_error (current_feature_impl) then
+							-- Internal error: `a_name' should have been resolved in
+							-- the implementation feature.
 						error_handler.report_giaaa_error
-					elseif l_seed < 1 or l_seed > l_inline_separate_arguments.count then
-							-- Internal error.
+					end
+				else
+					l_identifier := l_name.inline_separate_argument_name
+					l_inline_separate_argument := current_inline_separate_argument_scope.inline_separate_argument (l_identifier)
+					if l_inline_separate_argument = Void then
+							-- Error: `l_identifier' is an inline separate argument that is used outside of its scope.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						if current_feature_impl.is_feature then
+							error_handler.report_veen10a_error (current_class, l_identifier, current_feature_impl.as_feature)
+						else
+							error_handler.report_veen10b_error (current_class, l_identifier)
+						end
 					else
-						l_inline_separate_argument := l_inline_separate_arguments.argument (l_seed)
-						l_identifier := l_name.inline_separate_argument_name
 						set_index_to (l_identifier, l_inline_separate_argument.name.index)
 						report_inline_separate_argument (l_identifier, False, l_inline_separate_argument)
+						l_seed := l_inline_separate_argument.name.seed
+						l_identifier.set_seed (l_seed)
 						l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
 						l_typed_pointer_class := l_typed_pointer_type.named_base_class
 						if l_typed_pointer_class.actual_class.is_preparsed then
@@ -7011,61 +6676,393 @@ feature {NONE} -- Expression validity
 							a_context.force_last (l_pointer_type)
 							report_pointer_expression (an_expression, l_pointer_type)
 						end
+						already_checked := True
 					end
-					-- This is of the form '$feature_name'.
-				elseif attached current_class.seeded_procedure (l_seed) as l_procedure then
-						-- Note that we need to check the interface of `current_class' again.
-						-- It's already done in `check_feature_validity'
-					check_unqualified_vape_validity (l_name, l_procedure)
-					report_procedure_address (an_expression, l_procedure)
+				end
+				-- Try to see if it is of the form '$feature_name'.
+			elseif attached current_class.named_procedure (l_name) as l_procedure then
+					-- Note that we need to check the interface of `current_class' again.
+					-- It's already done in `check_feature_validity'
+				l_seed := l_procedure.first_seed
+				l_name.set_seed (l_seed)
+				check_unqualified_vape_validity (l_name, l_procedure)
+				report_procedure_address (an_expression, l_procedure)
+					-- $feature_name is of type POINTER, even
+					-- in ISE and its TYPED_POINTER support.
+				set_pointer_index (an_expression)
+				l_pointer_type := current_universe_impl.pointer_type
+				a_context.force_last (l_pointer_type)
+				report_pointer_expression (an_expression, l_pointer_type)
+					-- No need to check validity in the context of `current_type' again.
+				already_checked := True
+			elseif attached current_class.named_query (l_name) as l_query then
+				l_seed := l_query.first_seed
+				l_name.set_seed (l_seed)
+				check_unqualified_vape_validity (l_name, l_query)
+				if l_query.is_attribute then
+					if in_static_feature then
+							-- Error: we cannot access the address of an attribute
+							-- from a static feature.
+						set_fatal_error
+						error_handler.report_vucr0e_error (current_class, current_class_impl, l_name, l_query)
+					else
+						report_attribute_address (an_expression, l_query)
+						l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
+						l_typed_pointer_class := l_typed_pointer_type.named_base_class
+						if l_typed_pointer_class.actual_class.is_preparsed then
+								-- Class TYPED_POINTER has been found in the universe.
+								-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
+							l_type := l_query.type
+							if l_type.is_base_type or current_class = current_type then
+								a_context.force_last (l_type)
+								set_index (an_expression)
+								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+								a_context.force_last (l_typed_pointer_type)
+									-- No need to check validity in the context of `current_type' again.
+								already_checked := True
+							end
+						else
+								-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
+							set_pointer_index (an_expression)
+							l_pointer_type := current_universe_impl.pointer_type
+							a_context.force_last (l_pointer_type)
+							report_pointer_expression (an_expression, l_pointer_type)
+								-- No need to check validity in the context of `current_type' again.
+							already_checked := True
+						end
+					end
+				else
+					report_function_address (an_expression, l_query)
 						-- $feature_name is of type POINTER, even
 						-- in ISE and its TYPED_POINTER support.
 					set_pointer_index (an_expression)
 					l_pointer_type := current_universe_impl.pointer_type
 					a_context.force_last (l_pointer_type)
 					report_pointer_expression (an_expression, l_pointer_type)
-				elseif attached current_class.seeded_query (l_seed) as l_query then
-					check_unqualified_vape_validity (l_name, l_query)
-					if l_query.is_attribute then
-						if in_static_feature then
-								-- Error: we cannot access the address of an attribute
-								-- from a static feature.
-							set_fatal_error
-							error_handler.report_vucr0e_error (current_class, current_class_impl, l_name, l_query)
+						-- No need to check validity in the context of `current_type' again.
+					already_checked := True
+				end
+			else
+				set_fatal_error
+					-- It used to be a validity error VUAR-4 (ETL2 p.369).
+				error_handler.report_veen11a_error (current_class_impl, l_name)
+			end
+			if has_fatal_error or already_checked then
+				-- Do nothing.
+			elseif l_name.is_argument then
+					-- This is of the form '$argument'.
+				if current_inline_agent = Void and in_invariant then
+						-- VEEN-3: the formal argument appears in an invariant.
+						-- Internal error: the invariant has no formal argument.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					if attached current_inline_agent as l_current_inline_agent then
+						l_arguments := l_current_inline_agent.formal_arguments
+					else
+							-- Use arguments of `current_feature' instead of `current_feature_impl'
+							-- because when processing inherited assertions the types of signature
+							-- should be those of the version of the feature in the current class.
+							-- For example:
+							--    deferred class A
+							--    feature
+							--       f (a: ANY)
+							--           require
+							--               pre: g ($a)
+							--           deferred
+							--           end
+							--      g (a: TYPED_POINTER [ANY]): BOOLEAN deferred end
+							--    end
+							--    class B
+							--    inherit
+							--        A
+							--    feature
+							--        f (a: STRING) do ... end
+							--        g (a: TYPED_POINTER [STRING]): BOOLEAN do ... end
+							--    end
+							-- `a' in the inherited precondition "pre" should be considered
+							-- of type STRING (and not ANY) is class B.
+						l_arguments := current_feature.arguments
+					end
+					if l_arguments = Void then
+							-- Internal error.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					elseif l_seed < 1 or l_seed > l_arguments.count then
+							-- Internal error.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_argument := l_arguments.formal_argument (l_seed)
+						l_identifier := l_name.argument_name.identifier
+						set_index_to (l_identifier, l_argument.index)
+						report_formal_argument (l_identifier, False, l_argument)
+						l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
+						l_typed_pointer_class := l_typed_pointer_type.named_base_class
+						if l_typed_pointer_class.actual_class.is_preparsed then
+								-- Class TYPED_POINTER has been found in the universe.
+								-- Use ISE's implementation: the type of '$argument' is 'TYPED_POINTER [<type-of-argument>]'.
+							l_type := l_argument.type
+							a_context.force_last (l_type)
+							set_index (an_expression)
+							report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+							a_context.force_last (l_typed_pointer_type)
 						else
-							report_attribute_address (an_expression, l_query)
-							l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
-							l_typed_pointer_class := l_typed_pointer_type.named_base_class
-							if l_typed_pointer_class.actual_class.is_preparsed then
-									-- Class TYPED_POINTER has been found in the universe.
-									-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
-								l_type := l_query.type
-								a_context.force_last (l_type)
-								set_index (an_expression)
-								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-								a_context.force_last (l_typed_pointer_type)
-							else
-									-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
-								set_pointer_index (an_expression)
-								l_pointer_type := current_universe_impl.pointer_type
-								a_context.force_last (l_pointer_type)
-								report_pointer_expression (an_expression, l_pointer_type)
-							end
+								-- Use the ETL2 implementation: the type of '$argument' is POINTER.
+							set_pointer_index (an_expression)
+							l_pointer_type := current_universe_impl.pointer_type
+							a_context.force_last (l_pointer_type)
+							report_pointer_expression (an_expression, l_pointer_type)
+						end
+					end
+				end
+			elseif l_name.is_local then
+					-- This is of the form '$local'.
+				if current_inline_agent = Void and (in_precondition or in_postcondition) then
+-- TODO: check the case where we are in the pre- or postcondition of an inline agent.
+						-- The local entity appears in a pre- or postcondition.
+					set_fatal_error
+					if current_class_impl = current_class then
+						if attached current_inline_agent as l_current_inline_agent then
+							error_handler.report_veen2e_error (current_class, l_name, l_current_inline_agent)
+						elseif current_feature_impl.is_feature then
+							error_handler.report_veen2c_error (current_class, l_name, current_feature_impl.as_feature)
+						else
+								-- Internal error: invariants don't have pre- or postconditions.
+							error_handler.report_giaaa_error
 						end
 					else
-						report_function_address (an_expression, l_query)
-							-- $feature_name is of type POINTER, even
-							-- in ISE and its TYPED_POINTER support.
+						if not has_implementation_error (current_feature_impl) then
+								-- Internal error: the VEEN-2 error should have been
+								-- reported in the implementation feature.
+							error_handler.report_giaaa_error
+						end
+					end
+				elseif current_inline_agent = Void and in_invariant then
+						-- VEEN-2: the local entity appears in an invariant.
+						-- Internal error: the invariant has no local entity.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_locals := current_closure_impl.locals
+					if l_locals = Void then
+							-- Internal error.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					elseif l_seed < 1 or l_seed > l_locals.count then
+							-- Internal error.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_local := l_locals.local_variable (l_seed)
+						l_identifier := l_name.local_name.identifier
+						set_index_to (l_identifier, l_local.index)
+						report_local_variable (l_identifier, False, l_local)
+						l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
+						l_typed_pointer_class := l_typed_pointer_type.named_base_class
+						if l_typed_pointer_class.actual_class.is_preparsed then
+								-- Class TYPED_POINTER has been found in the universe.
+								-- Use ISE's implementation: the type of '$local' is 'TYPED_POINTER [<type-of-local>]'.
+							l_type := l_local.type
+							a_context.force_last (l_type)
+							set_index (an_expression)
+							report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+							a_context.force_last (l_typed_pointer_type)
+						else
+								-- Use the ETL2 implementation: the type of '$local' is POINTER.
+							set_pointer_index (an_expression)
+							l_pointer_type := current_universe_impl.pointer_type
+							a_context.force_last (l_pointer_type)
+							report_pointer_expression (an_expression, l_pointer_type)
+						end
+					end
+				end
+			elseif l_name.is_object_test_local then
+				l_object_tests := current_closure_impl.object_tests
+				if l_object_tests = Void then
+						-- Internal error.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif l_seed < 1 or l_seed > l_object_tests.count then
+						-- Internal error.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_object_test := l_object_tests.object_test (l_seed)
+					l_identifier := l_name.object_test_local_name.identifier
+					set_index_to (l_identifier, l_object_test.name.index)
+					report_object_test_local (l_identifier, l_object_test)
+					l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
+					l_typed_pointer_class := l_typed_pointer_type.named_base_class
+					if l_typed_pointer_class.actual_class.is_preparsed then
+							-- Class TYPED_POINTER has been found in the universe.
+							-- Use ISE's implementation: the type of '$object_test_local' is
+							-- 'TYPED_POINTER [<type-of-object_test_local>]'.
+						current_object_test_types.search (l_object_test)
+						if not current_object_test_types.found then
+								-- Internal error: the type of the object-test local should
+								-- have been determined when processing the object-test itself.
+								-- And this should have already been done since we are in the
+								-- scope of that object-test.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							a_context.copy_type_context (current_object_test_types.found_item)
+							set_index (an_expression)
+							report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+							a_context.force_last (l_typed_pointer_type)
+						end
+					else
+							-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
 						set_pointer_index (an_expression)
 						l_pointer_type := current_universe_impl.pointer_type
 						a_context.force_last (l_pointer_type)
 						report_pointer_expression (an_expression, l_pointer_type)
 					end
-				else
-						-- Internal error: if we got a seed, `l_query' should not be void.
+				end
+			elseif l_name.is_iteration_item then
+				l_iteration_components := current_closure_impl.iteration_components
+				if l_iteration_components = Void then
+						-- Internal error.
 					set_fatal_error
 					error_handler.report_giaaa_error
+				elseif l_seed < 1 or l_seed > l_iteration_components.count then
+						-- Internal error.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_iteration_component := l_iteration_components.iteration_component (l_seed)
+					l_identifier := l_name.iteration_item_name
+					if l_identifier /= l_iteration_component.unfolded_cursor_name then
+						set_index_to (l_identifier, l_iteration_component.item_name.index)
+					end
+					report_iteration_item (l_identifier, l_iteration_component)
+					l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
+					l_typed_pointer_class := l_typed_pointer_type.named_base_class
+					if l_typed_pointer_class.actual_class.is_preparsed then
+							-- Class TYPED_POINTER has been found in the universe.
+							-- Use ISE's implementation: the type of '$iteration_item' is
+							-- 'TYPED_POINTER [<type-of-iteration-item>]'.
+						current_iteration_item_types.search (l_iteration_component)
+						if not current_iteration_item_types.found then
+								-- Internal error: the type of the iteration item should
+								-- have been determined when processing the header of the
+								-- across component itself. And this should have already
+								-- been done since we are in the scope of that iteration
+								-- item.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							a_context.copy_type_context (current_iteration_item_types.found_item)
+							set_index (an_expression)
+							report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+							a_context.force_last (l_typed_pointer_type)
+						end
+					else
+							-- Use the ETL2 implementation: the type of '$iteration_item' is POINTER.
+						set_pointer_index (an_expression)
+						l_pointer_type := current_universe_impl.pointer_type
+						a_context.force_last (l_pointer_type)
+						report_pointer_expression (an_expression, l_pointer_type)
+					end
 				end
+			elseif l_name.is_inline_separate_argument then
+				if not attached current_closure_impl.inline_separate_arguments as l_inline_separate_arguments then
+						-- Internal error.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif l_seed < 1 or l_seed > l_inline_separate_arguments.count then
+						-- Internal error.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_inline_separate_argument := l_inline_separate_arguments.argument (l_seed)
+					l_identifier := l_name.inline_separate_argument_name
+					set_index_to (l_identifier, l_inline_separate_argument.name.index)
+					report_inline_separate_argument (l_identifier, False, l_inline_separate_argument)
+					l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
+					l_typed_pointer_class := l_typed_pointer_type.named_base_class
+					if l_typed_pointer_class.actual_class.is_preparsed then
+							-- Class TYPED_POINTER has been found in the universe.
+							-- Use ISE's implementation: the type of '$inline_separate_argument'
+							-- is 'TYPED_POINTER [<type-of-inline-separate-argument>]'.
+						current_inline_separate_argument_types.search (l_inline_separate_argument)
+						if not current_inline_separate_argument_types.found then
+								-- The type of the inline separate argument should have been determined
+								-- when processing the arguments of the inline separate instruction.
+								-- And this should have already been done since we are in the
+								-- scope of that inline separate argument (i.e the body of the inline
+								-- separate instruction). Here we don't have this type, which means that
+								-- an error had occurred (and had been reported) when processing
+								-- the argument expressions of the inline separate instruction.
+							set_fatal_error
+						else
+							a_context.copy_type_context (current_inline_separate_argument_types.found_item)
+							set_index (an_expression)
+							report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+							a_context.force_last (l_typed_pointer_type)
+						end
+					else
+							-- Use the ETL2 implementation: the type of '$inline_separate_argument' is POINTER.
+						set_pointer_index (an_expression)
+						l_pointer_type := current_universe_impl.pointer_type
+						a_context.force_last (l_pointer_type)
+						report_pointer_expression (an_expression, l_pointer_type)
+					end
+				end
+				-- This is of the form '$feature_name'.
+			elseif attached current_class.seeded_procedure (l_seed) as l_procedure then
+					-- Note that we need to check the interface of `current_class' again.
+					-- It's already done in `check_feature_validity'
+				check_unqualified_vape_validity (l_name, l_procedure)
+				report_procedure_address (an_expression, l_procedure)
+					-- $feature_name is of type POINTER, even
+					-- in ISE and its TYPED_POINTER support.
+				set_pointer_index (an_expression)
+				l_pointer_type := current_universe_impl.pointer_type
+				a_context.force_last (l_pointer_type)
+				report_pointer_expression (an_expression, l_pointer_type)
+			elseif attached current_class.seeded_query (l_seed) as l_query then
+				check_unqualified_vape_validity (l_name, l_query)
+				if l_query.is_attribute then
+					if in_static_feature then
+							-- Error: we cannot access the address of an attribute
+							-- from a static feature.
+						set_fatal_error
+						error_handler.report_vucr0e_error (current_class, current_class_impl, l_name, l_query)
+					else
+						report_attribute_address (an_expression, l_query)
+						l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
+						l_typed_pointer_class := l_typed_pointer_type.named_base_class
+						if l_typed_pointer_class.actual_class.is_preparsed then
+								-- Class TYPED_POINTER has been found in the universe.
+								-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
+							l_type := l_query.type
+							a_context.force_last (l_type)
+							set_index (an_expression)
+							report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+							a_context.force_last (l_typed_pointer_type)
+						else
+								-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
+							set_pointer_index (an_expression)
+							l_pointer_type := current_universe_impl.pointer_type
+							a_context.force_last (l_pointer_type)
+							report_pointer_expression (an_expression, l_pointer_type)
+						end
+					end
+				else
+					report_function_address (an_expression, l_query)
+						-- $feature_name is of type POINTER, even
+						-- in ISE and its TYPED_POINTER support.
+					set_pointer_index (an_expression)
+					l_pointer_type := current_universe_impl.pointer_type
+					a_context.force_last (l_pointer_type)
+					report_pointer_expression (an_expression, l_pointer_type)
+				end
+			else
+					-- Internal error: if we got a seed, `l_query' should not be void.
+				set_fatal_error
+				error_handler.report_giaaa_error
 			end
 		end
 

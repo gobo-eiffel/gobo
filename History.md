@@ -41,6 +41,8 @@
   once routines.
 * Skip types which are not in the system (type id = 0) when generating
   ancestors information in the generated C code.
+* Fixed computation of the dynamic type sets of the arguments of
+  routines whose addresses are passed to C and then called back from C.
 
 ### gedoc
 

@@ -1592,8 +1592,9 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_query := current_dynamic_type.dynamic_query (a_query, current_dynamic_system)
 				l_dynamic_query.set_address (True)
--- TODO: the dynamic type set of the formal arguments of `l_dynamic_query'
--- may be altered when its address is passed to an external routine.
+					-- The dynamic type set of the formal arguments of `l_dynamic_query'
+					-- may be altered when its address is passed to an external routine.
+				propagate_routine_address_arguments_dynamic_types (l_dynamic_query)
 			end
 		end
 
@@ -2294,8 +2295,9 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_procedure := current_dynamic_type.dynamic_procedure (a_procedure, current_dynamic_system)
 				l_dynamic_procedure.set_address (True)
--- TODO: the dynamic type set of the formal arguments of `l_dynamic_procedure'
--- may be altered when its address is passed to an external routine.
+					-- The dynamic type set of the formal arguments of `l_dynamic_procedure'
+					-- may be altered when its address is passed to an external routine.
+				propagate_routine_address_arguments_dynamic_types (l_dynamic_procedure)
 			end
 		end
 
@@ -4188,6 +4190,39 @@ feature {NONE} -- Implementation
 			a_equality_not_void: a_equality /= Void
 		do
 			-- Do nothing.
+		end
+
+	propagate_routine_address_arguments_dynamic_types (a_feature: ET_DYNAMIC_FEATURE)
+			-- For each formal argument of `a_feature', propagate all alive dynamic types
+			-- conforming to the static type of this argument.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			i, nb: INTEGER
+			l_formal_type: ET_DYNAMIC_TYPE
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if attached a_feature.static_feature.arguments as l_arguments then
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					if not attached a_feature.argument_type_set (i) as l_formal_type_set then
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_formal_type := l_formal_type_set.static_type
+						if not l_formal_type.is_expanded then
+								-- It is expected that the dynamic type sets of the attributes
+								-- (recursively) of the argument objects are not changed in the
+								-- C code. In other words, the C code does not set an attribute
+								-- with a object whose dynamic type is not already part of the
+								-- dynamic type set of this attribute as inferred from the Eiffel code.
+							l_dynamic_type_set := alive_conforming_descendants (l_formal_type)
+							propagate_builtin_dynamic_types (l_dynamic_type_set, l_formal_type_set)
+						end
+					end
+					i := i + 1
+				end
+			end
 		end
 
 	propagate_tuple_label_argument_dynamic_types (a_label_type_set: ET_DYNAMIC_TYPE_SET; a_assigner: ET_ASSIGNER_INSTRUCTION; a_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL)
