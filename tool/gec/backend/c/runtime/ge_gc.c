@@ -98,10 +98,28 @@ void GE_boehm_dispose_once_per_object_data(void* data, void* disp) {
 }
 #endif
 
+/* The C wants to keep the reference */
+EIF_OBJECT eif_adopt(EIF_OBJECT object)
+{
+#ifdef GE_USE_BOEHM_GC
+	EIF_OBJECT* result = (EIF_OBJECT*)GC_malloc_uncollectable(sizeof(EIF_OBJECT));
+	*result = object;
+	return (EIF_OBJECT)result;
+#else
+	return object;
+#endif
+}
+
 /* The C side weans adopted object. */
 EIF_REFERENCE eif_wean(EIF_OBJECT object)
 {
+#ifdef GE_USE_BOEHM_GC
+	EIF_REFERENCE result = eif_access(object);
+	GE_free(object);
+	return result;
+#else
 	return (EIF_REFERENCE)object;
+#endif
 }
 
 #ifdef __cplusplus

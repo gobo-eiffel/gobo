@@ -366,13 +366,18 @@ extern void GE_boehm_dispose_once_per_object_data(void* data, void* disp); /* Ca
  */
 
 /* Access object through hector. */
+#ifdef GE_USE_BOEHM_GC
+#define eif_access(obj) (*(EIF_REFERENCE*)(obj))
+#else
 #define eif_access(obj) (obj)
+#endif
+
 /* Freeze memory address. */
 #define eif_freeze(obj) (obj)
 /* The C side adopts an object. */
-#define eif_adopt(obj) (obj)
+EIF_OBJECT eif_adopt(EIF_OBJECT object);
 /* The C side protects an object. */
-#define eif_protect(obj) (obj)
+#define eif_protect(obj) eif_adopt(obj)
 /* The C side weans adopted object. */
 extern EIF_REFERENCE eif_wean(EIF_OBJECT object);
 /* Forget a frozen memory address. */
