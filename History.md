@@ -48,6 +48,8 @@
   using the EiffelVision GTK binding).
 * Eiffel objects passed as arguments to `external "C"` routines are
   `eif_protect`ed behind the scene (interoperability with ISE Eiffel).
+* Added comments in the generated C code to pinpoint preconditions,
+  postconditions and invariants.
 
 ### gedoc
 
