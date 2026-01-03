@@ -50,6 +50,9 @@
   `eif_protect`ed behind the scene (interoperability with ISE Eiffel).
 * Added comments in the generated C code to pinpoint preconditions,
   postconditions and invariants.
+* The default value for the setting `exception_trace` in ECF files is
+  now `False` in finalize mode, and `True` otherwise (for a better
+  interoperability with ISE Eiffel).
 
 ### gedoc
 
