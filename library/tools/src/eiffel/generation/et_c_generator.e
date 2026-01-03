@@ -2567,6 +2567,8 @@ feature {NONE} -- Feature generation
 			l_dll_file: STRING
 			l_has_include_files: BOOLEAN
 			l_has_reference_arguments: BOOLEAN
+			l_print_body: BOOLEAN
+			l_print_footer: BOOLEAN
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
@@ -2845,12 +2847,18 @@ feature {NONE} -- Feature generation
 				print_feature_trace_message_call (True)
 				if current_type.base_class.invariants_enabled and not current_feature.is_static and not a_creation then
 					print_all_invariants (True)
+					l_print_body := True
 				end
 				if current_type.base_class.preconditions_enabled then
 					print_all_preconditions (a_feature)
+					l_print_body := True
 				end
 				if current_type.base_class.postconditions_enabled then
 					print_all_old_expression_declarations (a_feature)
+					l_print_body := True
+				end
+				if l_print_body then
+					print_body_comment
 				end
 			end
 			if a_creation then
@@ -3172,9 +3180,14 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if not a_inline then
 				if current_type.base_class.invariants_enabled and not current_feature.is_static then
 					print_all_invariants (False)
+					l_print_footer := True
 				end
 				if current_type.base_class.postconditions_enabled then
 					print_all_postconditions (a_feature)
+					l_print_footer := True
+				end
+				if l_print_footer then
+					print_footer_comment
 				end
 				print_feature_trace_message_call (False)
 					-- Call stack.
@@ -7732,6 +7745,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			l_has_separate_arguments: BOOLEAN
 			l_has_separate_formal_arguments: BOOLEAN
 			l_separate_formal_arguments_count: INTEGER
+			l_print_body: BOOLEAN
+			l_print_footer: BOOLEAN
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
@@ -7854,12 +7869,18 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			current_file := current_function_body_buffer
 			if current_type.base_class.invariants_enabled and not current_closure.is_static and not a_creation then
 				print_all_invariants (True)
+				l_print_body := True
 			end
 			if current_type.base_class.preconditions_enabled then
 				print_all_preconditions (a_feature)
+				l_print_body := True
 			end
 			if current_type.base_class.postconditions_enabled then
 				print_all_old_expression_declarations (a_feature)
+				l_print_body := True
+			end
+			if l_print_body then
+				print_body_comment
 			end
 			if l_has_separate_formal_arguments then
 					-- Start the current SCOOP sessions.
@@ -8212,9 +8233,14 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			end
 			if current_type.base_class.invariants_enabled and not current_closure.is_static then
 				print_all_invariants (False)
+				l_print_footer := True
 			end
 			if current_type.base_class.postconditions_enabled then
 				print_all_postconditions (a_feature)
+				l_print_footer := True
+			end
+			if l_print_footer then
+				print_footer_comment
 			end
 			l_result_written_in_body := result_written
 			l_result_read_in_body := result_read
@@ -8463,6 +8489,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			l_name: ET_FEATURE_NAME
 			l_result: ET_RESULT
 			l_index: INTEGER
+			l_print_footer: BOOLEAN
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
@@ -8602,6 +8629,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					--
 				if current_type.base_class.postconditions_enabled then
 					print_all_old_expression_declarations (a_feature)
+					print_body_comment
 				end
 					-- Prepare dynamic type sets of wrapper feature.
 				extra_dynamic_type_sets.force_last (l_result_type_set)
@@ -8627,9 +8655,14 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				end
 				if current_type.base_class.invariants_enabled and not current_feature.is_static then
 					print_all_invariants (False)
+					l_print_footer := True
 				end
 				if current_type.base_class.postconditions_enabled then
 					print_all_postconditions (a_feature)
+					l_print_footer := True
+				end
+				if l_print_footer then
+					print_footer_comment
 				end
 					-- Clean up.
 				call_operands.wipe_out
@@ -38667,6 +38700,7 @@ feature {NONE} -- Assertion generation
 		do
 			if attached current_type.invariants as l_invariants then
 				register_called_feature (l_invariants)
+				print_invariants_comment
 				print_indentation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
@@ -38714,6 +38748,7 @@ feature {NONE} -- Assertion generation
 				l_all_preconditions := current_feature.preconditions
 				l_count := l_all_preconditions.count
 				if l_count > 0 then
+					print_preconditions_comment
 					print_before_assertions
 					from k := 1 until k > l_count loop
 						index_offset := l_all_preconditions.item_2 (k)
@@ -38789,6 +38824,7 @@ feature {NONE} -- Assertion generation
 				end
 				index_offset := l_old_index_offset
 			elseif attached a_feature.preconditions as l_preconditions_impl and then not l_preconditions_impl.are_all_true then
+				print_preconditions_comment
 				print_before_assertions
 				l_old_preconditions := current_preconditions
 				current_preconditions := l_preconditions_impl
@@ -38817,6 +38853,7 @@ feature {NONE} -- Assertion generation
 				l_all_postconditions := current_feature.postconditions
 				nb := l_all_postconditions.count
 				if nb > 0 then
+					print_postconditions_comment
 					print_before_assertions
 					from i := 1 until i > nb loop
 						index_offset := l_all_postconditions.item_2 (i)
@@ -38831,6 +38868,7 @@ feature {NONE} -- Assertion generation
 				end
 				index_offset := l_old_index_offset
 			elseif attached a_feature.postconditions as l_postconditions_impl and then not l_postconditions_impl.are_all_true then
+				print_postconditions_comment
 				print_before_assertions
 				l_old_postconditions := current_postconditions
 				current_postconditions := l_postconditions_impl
@@ -38872,12 +38910,14 @@ feature {NONE} -- Assertion generation
 			l_old_expressions: like old_expressions
 			l_old_index_offset: INTEGER
 			l_old_postconditions: ET_POSTCONDITIONS
+			l_first: BOOLEAN
 		do
 			l_old_expressions := old_expressions
 			l_old_expressions.wipe_out
 			old_expression_temp_variables.wipe_out
 			old_expression_exception_temp_variables.wipe_out
 			if attached {ET_FEATURE} a_feature as l_feature then
+				l_first := True
 				l_old_index_offset := index_offset
 				l_all_postconditions := current_feature.postconditions
 				nb := l_all_postconditions.count
@@ -38887,6 +38927,10 @@ feature {NONE} -- Assertion generation
 					l_old_postconditions := current_postconditions
 					current_postconditions := l_postconditions
 					l_postconditions.add_old_expressions (l_old_expressions)
+					if l_first and then not l_old_expressions.is_empty then
+						print_old_expressions_comment
+						l_first := False
+					end
 					print_old_expression_declarations (l_old_expressions)
 					l_old_expressions.wipe_out
 					current_postconditions := l_old_postconditions
@@ -38897,6 +38941,9 @@ feature {NONE} -- Assertion generation
 				l_old_postconditions := current_postconditions
 				current_postconditions := l_postconditions_impl
 				l_postconditions_impl.add_old_expressions (l_old_expressions)
+				if l_old_expressions.is_empty then
+					print_old_expressions_comment
+				end
 				print_old_expression_declarations (l_old_expressions)
 				l_old_expressions.wipe_out
 				current_postconditions := l_old_postconditions
@@ -39403,6 +39450,48 @@ feature {NONE} -- Assertion generation
 			print_indentation
 			current_file.put_character ('}')
 			current_file.put_new_line
+		end
+
+	print_preconditions_comment
+			-- Print "/* Preconditions */" to `current_file'.
+		do
+			print_indentation
+			current_file.put_line ("/* Preconditions */")
+		end
+
+	print_postconditions_comment
+			-- Print "/* Postconditions */" to `current_file'.
+		do
+			print_indentation
+			current_file.put_line ("/* Postconditions */")
+		end
+
+	print_old_expressions_comment
+			-- Print "/* Old expressions */" to `current_file'.
+		do
+			print_indentation
+			current_file.put_line ("/*  Old expressions */")
+		end
+
+	print_invariants_comment
+			-- Print "/* Invariants */" to `current_file'.
+		do
+			print_indentation
+			current_file.put_line ("/* Invariants */")
+		end
+
+	print_body_comment
+			-- Print "/* Body */" to `current_file'.
+		do
+			print_indentation
+			current_file.put_line ("/* Body */")
+		end
+
+	print_footer_comment
+			-- Print "/* Footer */" to `current_file'.
+		do
+			print_indentation
+			current_file.put_line ("/* Footer */")
 		end
 
 feature {NONE} -- Inlining
