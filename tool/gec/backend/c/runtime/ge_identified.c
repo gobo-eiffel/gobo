@@ -127,7 +127,7 @@ void GE_init_identified(void)
 /*
  * Get a new id for `object', assuming it is NOT in the stack.
  */
-EIF_INTEGER_32 GE_object_id(EIF_OBJECT object)
+EIF_INTEGER_32 GE_object_id(EIF_REFERENCE object)
 {
 	GE_weak_pointer** id_object_chunk;
 	EIF_INTEGER_32 i;

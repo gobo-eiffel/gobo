@@ -30,7 +30,7 @@ extern void GE_init_identified(void);
 /*
  * Get a new id for `object', assuming it is NOT in the stack.
  */
-extern EIF_INTEGER_32 GE_object_id(EIF_OBJECT object);
+extern EIF_INTEGER_32 GE_object_id(EIF_REFERENCE object);
 
 /*
  * Return the object associated with `id'.

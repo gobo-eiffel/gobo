@@ -22,7 +22,7 @@
 extern "C" {
 #endif
 
-#define eif_object_id(object) GE_object_id(object)
+#define eif_object_id(object) GE_object_id(eif_access(object))
 #define eif_reference_id(object) GE_object_id(object)
 #define eif_id_object(id) GE_id_object(id)
 #define eif_object_id_free(id) GE_object_id_free(id)
