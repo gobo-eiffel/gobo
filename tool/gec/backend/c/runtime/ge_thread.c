@@ -1337,7 +1337,7 @@ static void* GE_thread_routine(void* arg)
 	GE_thread_context* l_thread_context = l_context->thread;
 	GE_thread_context* l_parent_thread_context = l_thread_context->parent_context;
 #ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
-	GE_call tc = {eif_access(l_thread_context->current),"","thread's creation",0};
+	GE_call tc = {l_thread_context->current,"","thread's creation",0};
 #else
 	GE_call tc = {"","thread's creation",0};
 #endif
@@ -1361,8 +1361,8 @@ static void* GE_thread_routine(void* arg)
 			GE_scoop_processor_run(l_context);
 	} else
 #endif
-	if (eif_access(l_thread_context->current) && l_thread_context->routine) {
-		l_thread_context->routine(eif_access(l_thread_context->current), 0);
+	if (l_thread_context->current && l_thread_context->routine) {
+		l_thread_context->routine(l_thread_context->current, 0);
 	}
 	GE_thread_exit();
 #ifdef EIF_WINDOWS
@@ -1402,7 +1402,7 @@ void GE_init_thread(GE_context* a_context)
  * Create a new thread with attributes `attr' and execute
  * Eiffel routine `routine' on object `current'.
  */
-void GE_thread_create_with_attr(EIF_OBJECT current, void (*routine)(EIF_REFERENCE, EIF_INTEGER), void (*set_terminated)(EIF_REFERENCE,EIF_BOOLEAN), EIF_THR_ATTR_TYPE* attr, int is_scoop_processor)
+void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFERENCE, EIF_INTEGER), void (*set_terminated)(EIF_REFERENCE,EIF_BOOLEAN), EIF_THR_ATTR_TYPE* attr, int is_scoop_processor)
 {
 	GE_context* l_context;
 	EIF_THR_TYPE l_thread_id;
@@ -1454,14 +1454,14 @@ void GE_thread_create_with_attr(EIF_OBJECT current, void (*routine)(EIF_REFERENC
 		l_thread_context->is_scoop_processor = is_scoop_processor;
 		if (is_scoop_processor) {
 			GE_init_exception(l_context);
-			GE_scoop_region_set_context(eif_access(current)->region, l_context);
+			GE_scoop_region_set_context(current->region, l_context);
 			/* Do not keep track of the current object so that it can be
 			   reclaimed by the GC if it is not referenced anywhere else. */
 		} else {
-			l_context->region = eif_access(current)->region;
+			l_context->region = current->region;
 			l_context->is_region_alive = '\1';
 #endif
-			l_thread_context->current = eif_adopt(current);
+			l_thread_context->current = current;
 			l_thread_context->routine = routine;
 			l_thread_context->set_terminated = set_terminated;
 			GE_thread_init_onces(l_context);
@@ -1627,7 +1627,7 @@ void* GE_thread_create_wel_per_thread_data(size_t a_size)
  * which means it is terminated. The calling thread must be the
  * direct parent of the thread, or the function might loop indefinitely.
  */
-void GE_thread_wait(EIF_OBJECT obj, EIF_BOOLEAN (*get_terminated)(EIF_REFERENCE))
+void GE_thread_wait(EIF_REFERENCE obj, EIF_BOOLEAN (*get_terminated)(EIF_REFERENCE))
 {
 	GE_context* volatile l_context;
 	GE_thread_context* l_thread_context;
@@ -1638,7 +1638,7 @@ void GE_thread_wait(EIF_OBJECT obj, EIF_BOOLEAN (*get_terminated)(EIF_REFERENCE)
 	if (l_thread_context->children_mutex) {
 		SIGBLOCK;
 		GE_unprotected_mutex_lock((EIF_POINTER)l_thread_context->children_mutex);
-		while (get_terminated(eif_access(obj)) == EIF_FALSE) {
+		while (get_terminated(obj) == EIF_FALSE) {
 			GE_unprotected_condition_variable_wait((EIF_POINTER)l_thread_context->children_cond, (EIF_POINTER)l_thread_context->children_mutex);
 		}
 		GE_unprotected_mutex_unlock((EIF_POINTER)l_thread_context->children_mutex);
@@ -1652,7 +1652,7 @@ void GE_thread_wait(EIF_OBJECT obj, EIF_BOOLEAN (*get_terminated)(EIF_REFERENCE)
  * The calling thread must be the direct parent of the thread,
  * or the function might loop indefinitely.
  */
-EIF_BOOLEAN GE_thread_wait_with_timeout(EIF_OBJECT obj, EIF_BOOLEAN (*get_terminated)(EIF_REFERENCE), EIF_NATURAL_64 a_timeout_ms)
+EIF_BOOLEAN GE_thread_wait_with_timeout(EIF_REFERENCE obj, EIF_BOOLEAN (*get_terminated)(EIF_REFERENCE), EIF_NATURAL_64 a_timeout_ms)
 {
 	GE_context* volatile l_context;
 	GE_thread_context* l_thread_context;
@@ -1664,7 +1664,7 @@ EIF_BOOLEAN GE_thread_wait_with_timeout(EIF_OBJECT obj, EIF_BOOLEAN (*get_termin
 	if (l_thread_context->children_mutex) {
 		SIGBLOCK;
 		GE_unprotected_mutex_lock((EIF_POINTER)l_thread_context->children_mutex);
-		while ((get_terminated(eif_access(obj)) == EIF_FALSE) && (l_result == GE_THREAD_OK)) {
+		while ((get_terminated(obj) == EIF_FALSE) && (l_result == GE_THREAD_OK)) {
 			l_result = GE_unprotected_condition_variable_wait_with_timeout((EIF_POINTER)l_thread_context->children_cond, (EIF_POINTER)l_thread_context->children_mutex, a_timeout_ms);
 		}
 		GE_unprotected_mutex_unlock((EIF_POINTER)l_thread_context->children_mutex);
@@ -1734,12 +1734,11 @@ void GE_thread_exit(void)
 	l_thread_context = l_context->thread;
 	if (!l_thread_context->thread_exiting) {
 		l_thread_context->thread_exiting = 1;
-		if (eif_access(l_thread_context->current)) {
+		if (l_thread_context->current) {
 			if (l_thread_context->set_terminated) {
-				l_thread_context->set_terminated(eif_access(l_thread_context->current), EIF_TRUE);
+				l_thread_context->set_terminated(l_thread_context->current, EIF_TRUE);
 			}
-			eif_wean(l_thread_context->current);
-			l_thread_context->current = (EIF_OBJECT)0;
+			l_thread_context->current = EIF_VOID;
 		}
 		l_parent_thread_context = l_thread_context->parent_context;
 		if (l_parent_thread_context) {

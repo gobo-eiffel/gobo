@@ -86,7 +86,7 @@ typedef volatile struct {
 typedef volatile struct GE_thread_context_struct GE_thread_context;
 struct GE_thread_context_struct {
 	EIF_THR_TYPE volatile thread_id; /* Thread identifier for associated thread. */
-	EIF_OBJECT volatile current; /* Eiffel root object. */
+	EIF_REFERENCE volatile current; /* Eiffel root object. */
 	void (*volatile routine)(EIF_REFERENCE, EIF_INTEGER); /* Eiffel routine. */
 	void (*volatile set_terminated)(EIF_REFERENCE, EIF_BOOLEAN); /* Eiffel routine to set {THREAD}.terminated. */
 	unsigned int volatile initial_priority; /* Initial priority. */

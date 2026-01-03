@@ -179,7 +179,7 @@ extern void GE_init_thread(GE_context* a_context);
  * Create a new thread with attributes `attr' and execute
  * Eiffel routine `routine' on object `current'.
  */
-extern void GE_thread_create_with_attr(EIF_OBJECT current, void (*routine)(EIF_REFERENCE, EIF_INTEGER), void (*set_terminated)(EIF_REFERENCE,EIF_BOOLEAN), EIF_THR_ATTR_TYPE* attr, int is_scoop_processor);
+extern void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFERENCE, EIF_INTEGER), void (*set_terminated)(EIF_REFERENCE,EIF_BOOLEAN), EIF_THR_ATTR_TYPE* attr, int is_scoop_processor);
 
 /*
  * Execution context of current thread.
@@ -216,7 +216,7 @@ extern void* GE_thread_create_wel_per_thread_data(size_t a_size);
  * which means it is terminated. The calling thread must be the
  * direct parent of the thread, or the function might loop indefinitely.
  */
-extern void GE_thread_wait(EIF_OBJECT obj, EIF_BOOLEAN (*get_terminated)(EIF_REFERENCE));
+extern void GE_thread_wait(EIF_REFERENCE obj, EIF_BOOLEAN (*get_terminated)(EIF_REFERENCE));
 
 /*
  * Waits until a child thread sets `terminated' from `obj' to True,
@@ -224,7 +224,7 @@ extern void GE_thread_wait(EIF_OBJECT obj, EIF_BOOLEAN (*get_terminated)(EIF_REF
  * The calling thread must be the direct parent of the thread,
  * or the function might loop indefinitely.
  */
-extern EIF_BOOLEAN GE_thread_wait_with_timeout(EIF_OBJECT obj, EIF_BOOLEAN (*get_terminated)(EIF_REFERENCE), EIF_NATURAL_64 a_timeout_ms);
+extern EIF_BOOLEAN GE_thread_wait_with_timeout(EIF_REFERENCE obj, EIF_BOOLEAN (*get_terminated)(EIF_REFERENCE), EIF_NATURAL_64 a_timeout_ms);
 
 /*
  * Yields execution to other threads.
