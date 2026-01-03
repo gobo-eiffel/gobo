@@ -2744,12 +2744,12 @@ feature {NONE} -- Feature generation
 					l_argument_type := l_argument_type_set.static_type.primary_type
 					if not l_argument_type.is_expanded then
 						print_indentation
-						print_type_declaration (l_argument_type, current_file)
+						current_file.put_string (c_eif_object)
 						current_file.put_character (' ')
 						l_name := l_arguments.formal_argument (i).name
 						print_argument_name (l_name, current_file)
 						print_assign_to
-						current_file.put_string (c_eif_adopt)
+						current_file.put_string (c_eif_protect)
 						current_file.put_character ('(')
 						current_file.put_character ('r')
 						print_argument_name (l_name, current_file)
@@ -44415,6 +44415,7 @@ feature {NONE} -- Include files
 				if a_filename.same_string ("eif_cecil.c") then
 					include_runtime_header_file ("eif_cecil.h", False, a_header_file)
 					include_runtime_header_file ("ge_console.h", False, a_header_file)
+					include_runtime_header_file ("ge_gc.h", False, a_header_file)
 				elseif a_filename.same_string ("eif_console.c") then
 					include_runtime_header_file ("eif_console.h", False, a_header_file)
 					include_runtime_header_file ("eif_file.h", False, a_header_file)
@@ -47515,7 +47516,6 @@ feature {NONE} -- Constants
 	c_define: STRING = "#define"
 	c_defined: STRING = "defined"
 	c_double: STRING = "double"
-	c_eif_adopt: STRING = "eif_adopt"
 	c_eif_any: STRING = "EIF_ANY"
 	c_eif_boolean: STRING = "EIF_BOOLEAN"
 	c_eif_character: STRING = "EIF_CHARACTER"
@@ -47543,6 +47543,7 @@ feature {NONE} -- Constants
 	c_eif_natural_64: STRING = "EIF_NATURAL_64"
 	c_eif_object: STRING = "EIF_OBJECT"
 	c_eif_pointer: STRING = "EIF_POINTER"
+	c_eif_protect: STRING = "eif_protect"
 	c_eif_real: STRING = "EIF_REAL"
 	c_eif_real_32: STRING = "EIF_REAL_32"
 	c_eif_real_64: STRING = "EIF_REAL_64"

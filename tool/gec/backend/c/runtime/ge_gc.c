@@ -106,7 +106,7 @@ EIF_OBJECT eif_protect(EIF_REFERENCE object)
 	*result = object;
 	return (EIF_OBJECT)result;
 #else
-	return object;
+	return (EIF_OBJECT)object;
 #endif
 }
 

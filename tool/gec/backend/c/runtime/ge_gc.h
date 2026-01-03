@@ -373,7 +373,7 @@ extern void GE_boehm_dispose_once_per_object_data(void* data, void* disp); /* Ca
 #endif
 
 /* Freeze memory address. */
-#define eif_freeze(obj) (obj)
+#define eif_freeze(obj) eif_access(obj)
 
 /* The C side protects an object. */
 extern EIF_OBJECT eif_protect(EIF_REFERENCE object);

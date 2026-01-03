@@ -4,7 +4,7 @@
 		"Part of ISE Eiffel runtime. Needed to compile the EiffelCOM library."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2010-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2025, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -19,6 +19,9 @@
 #endif
 #ifndef GE_CONSOLE_H
 #include "ge_console.h"
+#endif
+#ifndef GE_GC_H
+#include "ge_gc.h"
 #endif
 
 #ifdef __cplusplus
@@ -116,7 +119,7 @@ EIF_TYPE_ID eiftype(EIF_OBJECT object)
 		/* Obsolete. Use "eif_type_by_reference" instead.
 		 * Return the Type id of the specified object.
 		 */
-	return (EIF_TYPE_ID)object->id;
+	return (EIF_TYPE_ID)(eif_access(object))->id;
 }
 
 EIF_TYPE_ID eif_type_by_reference(EIF_REFERENCE object)

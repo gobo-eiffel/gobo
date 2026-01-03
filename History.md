@@ -47,7 +47,7 @@
   Eiffel objects are not visible from the Boehm GC's roots (e.g. when
   using the EiffelVision GTK binding).
 * Eiffel objects passed as arguments to `external "C"` routines are
-  `eif_adopt`ed behind the scene (interoperability with ISE Eiffel).
+  `eif_protect`ed behind the scene (interoperability with ISE Eiffel).
 
 ### gedoc
 
