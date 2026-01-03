@@ -2685,8 +2685,13 @@ feature {NONE} -- Feature generation
 						current_file.put_character (' ')
 						l_argument_type_set := argument_type_set (i)
 						l_argument_type := l_argument_type_set.static_type.primary_type
-						print_type_declaration (l_argument_type, header_file)
-						print_type_declaration (l_argument_type, current_file)
+						if a_inline and then use_boehm_gc and then not l_argument_type.is_expanded and then not current_feature.is_builtin then
+							header_file.put_string (c_eif_object)
+							current_file.put_string (c_eif_object)
+						else
+							print_type_declaration (l_argument_type, header_file)
+							print_type_declaration (l_argument_type, current_file)
+						end
 						if a_inline and then l_argument_type.is_expanded and then not l_argument_type.is_basic then
 							header_file.put_character ('*')
 							current_file.put_character ('*')
@@ -2694,14 +2699,15 @@ feature {NONE} -- Feature generation
 							current_file.put_character (' ')
 							header_file.put_character ('i')
 							current_file.put_character ('i')
+						elseif not a_inline and then use_boehm_gc and then not l_argument_type.is_expanded and then not current_feature.is_builtin then
+							l_has_reference_arguments := True
+							header_file.put_character (' ')
+							current_file.put_character (' ')
+							header_file.put_character ('r')
+							current_file.put_character ('r')
 						else
 							header_file.put_character (' ')
 							current_file.put_character (' ')
-						end
-						if use_boehm_gc and then not a_inline and then not l_argument_type.is_expanded and then not current_feature.is_builtin then
-							l_has_reference_arguments := True
-							header_file.put_character ('r')
-							current_file.put_character ('r')
 						end
 						l_name := l_arguments.formal_argument (i).name
 						print_argument_name (l_name, header_file)
