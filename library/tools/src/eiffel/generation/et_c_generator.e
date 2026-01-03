@@ -3225,6 +3225,14 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				-- Declarations of temporary variables.
 			current_file := current_function_header_buffer
 			print_temporary_variable_declarations
+			if
+				not a_inline and then
+				(current_type.base_class.preconditions_enabled or
+				current_type.base_class.postconditions_enabled)
+			then
+				print_object_test_local_declarations
+				print_iteration_cursor_declarations
+			end
 				-- Flush to file.
 			if l_is_cpp then
 				flush_to_cpp_file
@@ -7683,6 +7691,8 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				-- Declarations of temporary variables.
 			current_file := current_function_header_buffer
 			print_temporary_variable_declarations
+			print_object_test_local_declarations
+			print_iteration_cursor_declarations
 				-- Flush to file.
 			flush_to_c_file
 				--
@@ -8346,8 +8356,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					i := i + 1
 				end
 			end
-			print_object_test_local_declarations
-			print_iteration_cursor_declarations
 			print_inline_separate_argument_declarations (a_feature)
 				-- Clean up.
 			reset_volatile_data
@@ -8651,7 +8659,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				-- Declarations of temporary variables.
 			current_file := current_function_header_buffer
 			print_temporary_variable_declarations
-			if (current_type.base_class.invariants_enabled and not current_feature.is_static) or current_type.base_class.postconditions_enabled then
+			if current_type.base_class.postconditions_enabled then
 				print_object_test_local_declarations
 				print_iteration_cursor_declarations
 			end
@@ -8769,6 +8777,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			i, nb: INTEGER
 			l_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
+			indent
 			nb := current_object_test_local_types.count
 			from i := 1 until i > nb loop
 				l_type := current_object_test_local_types.item (i)
@@ -8796,6 +8805,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_semicolon_newline
 				i := i + 1
 			end
+			dedent
 			current_object_test_locals.wipe_out
 			current_object_test_local_types.wipe_out
 		end
@@ -8807,6 +8817,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			i, nb: INTEGER
 			l_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
+			indent
 			nb := current_iteration_cursor_types.count
 			from i := 1 until i > nb loop
 				l_type := current_iteration_cursor_types.item (i)
@@ -8832,6 +8843,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				print_semicolon_newline
 				i := i + 1
 			end
+			dedent
 			current_iteration_cursors.wipe_out
 			current_iteration_cursor_types.wipe_out
 		end
@@ -19530,6 +19542,8 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				-- Declarations of temporary variables.
 			current_file := current_function_header_buffer
 			print_temporary_variable_declarations
+			print_object_test_local_declarations
+			print_iteration_cursor_declarations
 				-- Do not flush code to C file here (no call to `flush_to_c_file')
 				-- because we want the function associated with this agent and the
 				-- creation of the agent (printed just below) to be in the same C file.
@@ -23890,6 +23904,7 @@ feature {NONE} -- Built-in feature generation
 					dedent
 					print_indentation
 					current_file.put_character ('}')
+					current_file.put_new_line
 				else
 					print_indentation
 					current_file.put_string (c_switch)
@@ -23941,6 +23956,7 @@ feature {NONE} -- Built-in feature generation
 					dedent
 					print_indentation
 					current_file.put_character ('}')
+					current_file.put_new_line
 				end
 				l_conforming_types.wipe_out
 				l_non_conforming_types.wipe_out
