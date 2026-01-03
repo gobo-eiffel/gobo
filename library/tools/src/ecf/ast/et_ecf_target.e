@@ -5,7 +5,7 @@
 		"ECF targets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ECF_TARGET
@@ -535,7 +535,17 @@ feature -- Basic operations
 			end
 				-- "exception_trace".
 			l_value := settings.value ({ET_ECF_SETTING_NAMES}.exception_trace_setting_name)
-			if l_value /= Void and then l_value.is_boolean then
+			if l_value = Void then
+					-- The default value for `exception_trace` depends on whether we are in finalize mode or not:
+					--   * finalize: False
+					--   * otherwise: True
+				l_value := settings.value ({ET_ECF_SETTING_NAMES}.finalize_setting_name)
+				if l_value /= Void and then l_value.is_boolean then
+					a_system.set_exception_trace_mode (not l_value.to_boolean)
+				else
+					a_system.set_exception_trace_mode (True)
+				end
+			elseif l_value.is_boolean then
 				a_system.set_exception_trace_mode (l_value.to_boolean)
 			end
 				-- "executable_name".

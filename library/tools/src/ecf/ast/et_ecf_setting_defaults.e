@@ -5,7 +5,7 @@
 		"ECF setting default values"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2018-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2018-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ECF_SETTING_DEFAULTS
@@ -304,7 +304,10 @@ feature -- Setting
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.dotnet_naming_convention_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.dynamic_runtime_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.enforce_unique_class_names_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
-			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.exception_trace_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
+					-- The default value for `exception_trace` depends on whether we are in finalize mode or not:
+					--   * finalize: False
+					--   * otherwise: True
+			-- a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.exception_trace_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.force_32bits_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.il_verifiable_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 			a_settings.set_primary_value ({ET_ECF_SETTING_NAMES}.inlining_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
