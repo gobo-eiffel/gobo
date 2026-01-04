@@ -5,7 +5,7 @@
 		"LSP factories"
 
 	library: "Gobo Eiffel Language Server Protocol Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class LS_FACTORY
@@ -2936,6 +2936,57 @@ feature -- Access
 				last_error := a_field_name + ": invalid type"
 			else
 				Result := diagnostic_tag_set_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	did_change_configuration_capabilities_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_DID_CHANGE_CONFIGURATION_CAPABILITIES
+			-- Convert `a_object` to a did change configuration capabilities.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_dynamic_registration: detachable LS_BOOLEAN
+			l_relative_pattern_support: detachable LS_BOOLEAN
+		do
+			last_error := Void
+			l_dynamic_registration := boolean_in_object (a_object, {LS_DID_CHANGE_CONFIGURATION_CAPABILITIES}.dynamic_registration_name, True)
+			if attached last_error as l_last_error then
+				last_error := a_field_name + "." + l_last_error
+			else
+				create Result.make (l_dynamic_registration)
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	did_change_configuration_capabilities_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DID_CHANGE_CONFIGURATION_CAPABILITIES
+			-- Did change configuration capabilities stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_DID_CHANGE_CONFIGURATION_CAPABILITIES} l_value as l_did_change_configuration_capabilities then
+				Result := l_did_change_configuration_capabilities
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := did_change_configuration_capabilities_from_object (l_object, a_field_name)
 			end
 		ensure
 			error: last_error /= Void implies Result = Void
@@ -9830,14 +9881,21 @@ feature -- Access
 			a_object_not_void: a_object /= Void
 			a_field_name_not_void: a_field_name /= Void
 		local
+			l_did_change_configuration: detachable LS_DID_CHANGE_CONFIGURATION_CAPABILITIES
 			l_did_change_watched_files: detachable LS_DID_CHANGE_WATCHED_FILES_CAPABILITIES
 			l_symbol: detachable LS_WORKSPACE_SYMBOL_CAPABILITIES
 			l_configuration: detachable LS_CONFIGURATION_CAPABILITIES
 		do
 			last_error := Void
-			l_did_change_watched_files := did_change_watched_files_capabilities_in_object (a_object, {LS_WORKSPACE_CAPABILITIES}.did_change_watched_files_name, True)
+			l_did_change_configuration := did_change_configuration_capabilities_in_object (a_object, {LS_WORKSPACE_CAPABILITIES}.did_change_configuration_name, True)
 			if attached last_error as l_last_error then
 				last_error := a_field_name + "." + l_last_error
+			end
+			if last_error = Void then
+				l_did_change_watched_files := did_change_watched_files_capabilities_in_object (a_object, {LS_WORKSPACE_CAPABILITIES}.did_change_watched_files_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
 			end
 			if last_error = Void then
 				l_symbol := workspace_symbol_capabilities_in_object (a_object, {LS_WORKSPACE_CAPABILITIES}.symbol_name, True)
@@ -9853,6 +9911,7 @@ feature -- Access
 			end
 			if last_error = Void then
 				create Result.make
+				Result.set_did_change_configuration (l_did_change_configuration)
 				Result.set_did_change_watched_files (l_did_change_watched_files)
 				Result.set_symbol (l_symbol)
 				Result.set_configuration (l_configuration)

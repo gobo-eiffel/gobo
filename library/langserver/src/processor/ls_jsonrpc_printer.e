@@ -5,7 +5,7 @@
 		"LSP JSON-RPC version 2.0 printer"
 
 	library: "Gobo Eiffel Language Server Protocol Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class LS_JSONRPC_PRINTER
@@ -1231,6 +1231,48 @@ feature {LS_ANY} -- Processing
 				utf8_string.append_character (':')
 				l_value_set.process (Current)
 			end
+			utf8_string.append_character ('}')
+		end
+
+	process_did_change_configuration_capabilities (a_value: LS_DID_CHANGE_CONFIGURATION_CAPABILITIES)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			process_dynamic_registration_capabilities (a_value)
+			utf8_string.append_character ('}')
+		end
+
+	process_did_change_configuration_notification (a_value: LS_DID_CHANGE_CONFIGURATION_NOTIFICATION)
+			-- Process `a_value`.
+		do
+			utf8_string.append_character ('{')
+			process_jsonrpc_version
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_DID_CHANGE_CONFIGURATION_NOTIFICATION}.method_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.method.process (Current)
+			utf8_string.append_character (',')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_DID_CHANGE_CONFIGURATION_NOTIFICATION}.params_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			process_did_change_configuration_params (a_value)
+			utf8_string.append_character ('}')
+		end
+
+	process_did_change_configuration_params (a_value: LS_DID_CHANGE_CONFIGURATION_PARAMS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			utf8_string.append_character ('{')
+			utf8_string.append_character ('"')
+			utf8_string.append_string ({LS_DID_CHANGE_CONFIGURATION_PARAMS}.settings_name)
+			utf8_string.append_character ('"')
+			utf8_string.append_character (':')
+			a_value.settings.process (Current)
 			utf8_string.append_character ('}')
 		end
 
@@ -3710,6 +3752,13 @@ feature {LS_ANY} -- Processing
 			-- Process `a_value`.
 		do
 			utf8_string.append_character ('{')
+			if attached a_value.did_change_configuration as l_did_change_configuration then
+				utf8_string.append_character ('"')
+				utf8_string.append_string ({LS_WORKSPACE_CAPABILITIES}.did_change_configuration_name)
+				utf8_string.append_character ('"')
+				utf8_string.append_character (':')
+				l_did_change_configuration.process (Current)
+			end
 			if attached a_value.did_change_watched_files as l_did_change_watched_files then
 				utf8_string.append_character ('"')
 				utf8_string.append_string ({LS_WORKSPACE_CAPABILITIES}.did_change_watched_files_name)

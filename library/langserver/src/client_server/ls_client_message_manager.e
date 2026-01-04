@@ -5,7 +5,7 @@
 		"LSP message managers on the client side"
 
 	library: "Gobo Eiffel Language Server Protocol Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class LS_CLIENT_MESSAGE_MANAGER
@@ -379,6 +379,14 @@ feature {NONE} -- Implementation
 					Result.set_text_document (l_text_document_capabilities)
 				end
 				l_text_document_capabilities.set_publish_diagnostics (l_publish_diagnostics_capabilities)
+			end
+			did_change_configuration_notification_handler.build_client_capabilities
+			if attached did_change_configuration_notification_handler.client_capabilities as l_did_change_configuration_capabilities then
+				if l_workspace_capabilities = Void then
+					create l_workspace_capabilities.make
+					Result.set_workspace (l_workspace_capabilities)
+				end
+				l_workspace_capabilities.set_did_change_configuration (l_did_change_configuration_capabilities)
 			end
 			did_change_watched_files_notification_handler.build_client_capabilities
 			if attached did_change_watched_files_notification_handler.client_capabilities as l_did_change_watched_files_capabilities then

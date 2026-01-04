@@ -5,7 +5,7 @@
 		"LSP message managers"
 
 	library: "Gobo Eiffel Language Server Protocol Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class LS_MESSAGE_MANAGER
@@ -179,6 +179,14 @@ feature -- Handlers
 			create Result.make
 		ensure
 			definition_request_handler_not_void: Result /= Void
+		end
+
+	did_change_configuration_notification_handler: LS_DID_CHANGE_CONFIGURATION_NOTIFICATION_HANDLER
+			-- Handler for 'workspace/didChangeConfiguration' notifications
+		once ("OBJECT")
+			create Result.make
+		ensure
+			did_change_configuration_notification_handler_not_void: Result /= Void
 		end
 
 	did_change_text_document_notification_handler: LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION_HANDLER
@@ -587,6 +595,7 @@ feature {LS_RESPONSE_HANDLER, LS_REQUEST_HANDLER} -- Implementation
 			Result.force (create {LS_CANCEL_REQUEST_NOTIFICATION_FACTORY}.make, {LS_CANCEL_REQUEST_NOTIFICATION}.method)
 			Result.force (create {LS_DECLARATION_REQUEST_FACTORY}.make, {LS_DECLARATION_REQUEST}.method)
 			Result.force (create {LS_DEFINITION_REQUEST_FACTORY}.make, {LS_DEFINITION_REQUEST}.method)
+			Result.force (create {LS_DID_CHANGE_CONFIGURATION_NOTIFICATION_FACTORY}.make, {LS_DID_CHANGE_CONFIGURATION_NOTIFICATION}.method)
 			Result.force (create {LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_DID_CHANGE_TEXT_DOCUMENT_NOTIFICATION}.method)
 			Result.force (create {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION_FACTORY}.make, {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION}.method)
 			Result.force (create {LS_DID_CLOSE_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_DID_CLOSE_TEXT_DOCUMENT_NOTIFICATION}.method)
