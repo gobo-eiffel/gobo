@@ -5,7 +5,7 @@
 		"Browsable unqualified names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_BROWSABLE_UNQUALIFIED_NAME
@@ -151,13 +151,18 @@ feature -- Output
 
 	append_feature_description_to_string (a_feature: ET_FEATURE; a_string: STRING_8)
 			-- Append description of `a_feature` to `a_string'.
+		local
+			l_creation_clients: ET_CLIENT_LIST
 		do
 			if is_only_creation_procedure_expected then
 				a_string.append_string (tokens.create_keyword.text)
+				create l_creation_clients.make_with_capacity (20)
+				a_feature.add_creation_clients_to (l_creation_clients, current_class, tokens.null_system_processor)
+				l_creation_clients.append_canonical_client_clause_to_string (" ", a_string)
 			else
 				a_string.append_string (tokens.feature_keyword.text)
+				a_feature.append_canonical_client_clause_to_string (" ", a_string)
 			end
-			a_feature.append_canonical_client_clause_to_string (" ", a_string)
 			a_string.append_string ("%N%T")
 			a_feature.append_canonical_signature_to_string (current_class, a_string)
 			a_feature.implementation_feature.append_header_comment_to_string ("%N%T%T%T", a_string)
