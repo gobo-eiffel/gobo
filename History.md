@@ -102,6 +102,7 @@
 * Added support for custom notifications.
 * Added support for `workspace/symbol` and
   `workspaceSymbol/resolve` requests.
+* Added support for `workspace/didChangeConfiguration` notifications.
 
 ### Gobo Eiffel Tools Library
 

@@ -5,7 +5,7 @@
 		"LSP server handlers for 'initialize' requests"
 
 	library: "Gobo Eiffel Language Server Protocol Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class LS_SERVER_INITIALIZE_REQUEST_HANDLER
@@ -78,6 +78,7 @@ feature -- Basic operations
 				a_manager.publish_diagnostics_notification_handler.set_client_capabilities (l_text_document_capabilities.publish_diagnostics)
 			end
 			if attached a_request.capabilities.workspace as l_workspace_capabilities then
+				a_manager.did_change_configuration_notification_handler.set_client_capabilities (l_workspace_capabilities.did_change_configuration)
 				a_manager.did_change_watched_files_notification_handler.set_client_capabilities (l_workspace_capabilities.did_change_watched_files)
 				a_manager.workspace_symbol_request_handler.set_client_capabilities (l_workspace_capabilities.symbol)
 				a_manager.configuration_request_handler.set_client_capabilities (l_workspace_capabilities.configuration)

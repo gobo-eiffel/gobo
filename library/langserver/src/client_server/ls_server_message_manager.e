@@ -5,7 +5,7 @@
 		"LSP message managers on the server side"
 
 	library: "Gobo Eiffel Language Server Protocol Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class LS_SERVER_MESSAGE_MANAGER
@@ -340,15 +340,59 @@ feature -- Handling 'workspace/configuration' requests
 			create Result.make
 		end
 
+feature -- Handling 'workspace/didChangeConfiguration' notifications
+
+	on_did_change_configuration_notification (a_notification: LS_DID_CHANGE_CONFIGURATION_NOTIFICATION)
+			-- Handle 'workspace/didChangeConfiguration' notification `a_notification`.
+			-- Actions to be executed when watched files are changed.
+			--
+			-- (To be redefined in servers.
+			-- Redefine `did_change_configuration_notification_handler` accordingly as per the precondition.)
+		require
+			a_notification_not_void: a_notification /= Void
+			did_change_configuration_notification_supported: did_change_configuration_notification_handler.generating_type.conforms_to ({detachable LS_SERVER_DID_CHANGE_CONFIGURATION_NOTIFICATION_HANDLER})
+		do
+		end
+
+	register_did_change_configuration_options (a_id: LS_STRING)
+			-- Register options for 'workspace/didChangeConfiguration' notifications.
+		require
+			a_id_not_void: a_id /= Void
+			dynamic_registration_supported: did_change_configuration_notification_handler.is_dynamic_registration_supported
+			is_initialized: is_initialized
+			not_is_shutdown: not is_shutdown
+		local
+			l_registrations: LS_REGISTRATION_LIST
+			l_registration: LS_REGISTRATION
+		do
+			create l_registration.make (a_id, {LS_DID_CHANGE_CONFIGURATION_NOTIFICATION}.method, Void)
+			create l_registrations.make_with_capacity (1)
+			l_registrations.put_last (l_registration)
+			send_register_capability_request (l_registrations)
+		end
+
+	on_did_change_configuration_options_registered (a_registration: LS_REGISTRATION; a_response: LS_RESPONSE)
+			-- Action to be executed when the client registered options
+			-- for 'workspace/didChangeConfiguration' notifications.
+			--
+			-- (To be redefined in servers.)
+		require
+			a_registration_not_void: a_registration /= Void
+			a_response_not_void: a_response /= Void
+		do
+		end
+
 feature -- Handling 'workspace/didChangeWatchedFiles' notifications
 
 	on_did_change_watched_files_notification (a_notification: LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION)
 			-- Handle 'workspace/didChangeWatchedFiles' notification `a_notification`.
 			-- Actions to be executed when watched files are changed.
 			--
-			-- (To be redefined in servers.)
+			-- (To be redefined in servers.
+			-- Redefine `did_change_watched_files_notification_handler` accordingly as per the precondition.)
 		require
 			a_notification_not_void: a_notification /= Void
+			did_change_watched_files_notification_supported: did_change_watched_files_notification_handler.generating_type.conforms_to ({detachable LS_SERVER_DID_CHANGE_WATCHED_FILES_NOTIFICATION_HANDLER})
 		do
 		end
 

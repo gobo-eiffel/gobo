@@ -5,7 +5,7 @@
 		"LSP value processors"
 
 	library: "Gobo Eiffel Language Server Protocol Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class LS_PROCESSOR
@@ -335,6 +335,20 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_diagnostic_tag_set (a_value: LS_DIAGNOSTIC_TAG_SET)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_did_change_configuration_capabilities (a_value: LS_DID_CHANGE_CONFIGURATION_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_did_change_configuration_notification (a_value: LS_DID_CHANGE_CONFIGURATION_NOTIFICATION)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void

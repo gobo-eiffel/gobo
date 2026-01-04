@@ -5,7 +5,7 @@
 		"LSP server handlers for 'client/registerCapability' requests"
 
 	library: "Gobo Eiffel Language Server Protocol Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class LS_SERVER_REGISTER_CAPABILITY_REQUEST_HANDLER
@@ -35,7 +35,9 @@ feature -- Basic oprations
 			nb := l_registration_list.count
 			from i := 1 until i > nb loop
 				l_registration := l_registration_list.value (i)
-				if l_registration.method ~ {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION}.method then
+				if l_registration.method ~ {LS_DID_CHANGE_CONFIGURATION_NOTIFICATION}.method then
+					a_manager.on_did_change_configuration_options_registered (l_registration, a_response)
+				elseif l_registration.method ~ {LS_DID_CHANGE_WATCHED_FILES_NOTIFICATION}.method then
 					if attached {LS_DID_CHANGE_WATCHED_FILES_REGISTRATION_OPTIONS} l_registration.register_options as l_register_options then
 						a_manager.on_did_change_watched_files_options_registered (l_register_options, l_registration, a_response)
 					end
