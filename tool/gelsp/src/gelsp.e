@@ -4,7 +4,7 @@
 
 		"Gobo Eiffel Language Server, using protocol LSP"
 
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class GELSP
@@ -20,6 +20,7 @@ inherit
 			server_description,
 			completion_request_handler,
 			definition_request_handler,
+			did_change_configuration_notification_handler,
 			did_change_text_document_notification_handler,
 			did_change_watched_files_notification_handler,
 			did_close_text_document_notification_handler,
@@ -32,6 +33,7 @@ inherit
 			on_completion_request,
 			on_configuration_response,
 			on_definition_request,
+			on_did_change_configuration_notification,
 			on_did_change_text_document_notification,
 			on_did_change_watched_files_notification,
 			on_did_close_text_document_notification,
@@ -94,6 +96,11 @@ feature {NONE} -- Initialization
 			ise_variables.set_ise_variables
 			precursor (a_connection)
 		end
+
+feature -- Status report
+
+	is_configured: BOOLEAN
+			-- Has the language server been fully initialized?
 
 feature -- Access
 
@@ -510,8 +517,12 @@ feature -- Handling 'workspace/configuration' requests
 			-- to a 'workspace/configuration' request.
 		local
 			l_configurations: LS_ARRAY
-			l_value: STRING
+			l_value: STRING_8
+			l_old_config_ecf_filename: STRING_8
+			l_old_config_ecf_target: STRING_8
 		do
+			l_old_config_ecf_filename := config_ecf_filename
+			l_old_config_ecf_target := config_ecf_target
 			config_ecf_filename := Void
 			config_ecf_target := Void
 			if a_result /= Void then
@@ -533,13 +544,36 @@ feature -- Handling 'workspace/configuration' requests
 					end
 				end
 			end
-			if did_change_watched_files_notification_handler.is_dynamic_registration_supported then
-				register_did_change_watched_files_options ("xxx", <<["**/*.ecf", {LS_WATCH_KINDS}.change], ["**/*", {LS_WATCH_KINDS}.delete]>>)
+			if not is_configured then
+				is_configured := True
+				if did_change_watched_files_notification_handler.is_dynamic_registration_supported then
+					register_did_change_watched_files_options ("xxx", <<["**/*.ecf", {LS_WATCH_KINDS}.change], ["**/*", {LS_WATCH_KINDS}.delete]>>)
+				end
+				if document_symbol_request_handler.is_dynamic_registration_supported then
+					register_document_symbol_options ("yyyy", Void, {LS_NULL}.null, Void)
+				end
+					-- First Eiffel code analysis.
+				build_eiffel_system
+			elseif config_ecf_filename /~ l_old_config_ecf_filename or config_ecf_target /~ l_old_config_ecf_target then
+					-- Settings have been changed.
+				set_system_processor
+				build_eiffel_system
 			end
-			if document_symbol_request_handler.is_dynamic_registration_supported then
-				register_document_symbol_options ("yyyy", Void, {LS_NULL}.null, Void)
-			end
-			build_eiffel_system
+		end
+
+feature -- Handling 'workspace/didChangeConfiguration' notifications
+
+	on_did_change_configuration_notification (a_notification: LS_DID_CHANGE_CONFIGURATION_NOTIFICATION)
+			-- Handle 'workspace/didChangeConfiguration' notification `a_notification`.
+			-- Actions to be executed when watched files are changed.
+		do
+			send_configuration_request (<<[Void, "gobo-eiffel.workspaceEcfFile"], [Void, "gobo-eiffel.workspaceEcfTarget"]>>)
+		end
+
+	did_change_configuration_notification_handler: LS_SERVER_DID_CHANGE_CONFIGURATION_NOTIFICATION_HANDLER
+			-- Handler for 'workspace/didChangeConfiguration' notifications
+		once ("OBJECT")
+			create Result.make
 		end
 
 feature -- Handling 'workspace/didChangeWatchedFiles' notifications
@@ -766,6 +800,9 @@ feature -- Handling 'initialized' notifications
 	on_initialized_notification (a_notification: LS_INITIALIZED_NOTIFICATION)
 			-- Handle 'initialized' notification `a_notification`.
 		do
+			if did_change_configuration_notification_handler.is_dynamic_registration_supported then
+				register_did_change_configuration_options ("zzz")
+			end
 			send_configuration_request (<<[Void, "gobo-eiffel.workspaceEcfFile"], [Void, "gobo-eiffel.workspaceEcfTarget"]>>)
 		end
 
@@ -939,7 +976,11 @@ feature {NONE} -- Eiffel processing
 			ecf_filename := Void
 			if attached workspace_folder_root_path as l_root_path then
 				if attached config_ecf_filename as l_config_ecf_filename then
-					ecf_filename := file_system.pathname (l_root_path, l_config_ecf_filename)
+					if file_system.is_absolute_pathname (l_config_ecf_filename) then
+						ecf_filename := l_config_ecf_filename
+					else
+						ecf_filename := file_system.pathname (l_root_path, l_config_ecf_filename)
+					end
 				else
 					create l_dir.make (l_root_path)
 					create l_filenames.make (5)
@@ -1236,10 +1277,10 @@ feature -- Eiffel system
 	total_compilation_count: INTEGER
 			-- Total number of compilations
 
-	max_full_compilation_count: INTEGER = 2
+	max_full_compilation_count: INTEGER = 1
 			-- Maximum number of compilations from scratch before exiting
 
-	max_total_compilation_count: INTEGER = 400
+	max_total_compilation_count: INTEGER = 500
 			-- Maximum number of compilations before exiting
 
 feature -- Helper
