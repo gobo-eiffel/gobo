@@ -1369,7 +1369,7 @@ EIF_INTEGER stat_size(void)
 /*
  * Does the list of groups the user belongs to include `gid'?
  */
-static EIF_BOOLEAN eif_group_in_list(int gid)
+EIF_BOOLEAN eif_group_in_list(int gid)
 {
 	Groups_t* group_list;
 	int i, nb_groups, nb_groups_max;

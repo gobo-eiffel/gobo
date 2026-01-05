@@ -277,6 +277,13 @@ extern void eif_file_pr(FILE *f, EIF_REAL_32 number);
  */
 extern void eif_file_pd(FILE *f, EIF_REAL_64 val);
 
+#ifdef HAS_GETGROUPS
+/*
+ * Does the list of groups the user belongs to include `gid'?
+ */
+extern EIF_BOOLEAN eif_group_in_list(int gid);
+#endif
+
 /*
  * Size of the stat structure. This is used by the Eiffel side to create
  * the area (special object) which will play the role of a stat buffer
