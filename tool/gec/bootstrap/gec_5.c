@@ -4,6 +4,139 @@
 extern "C" {
 #endif
 
+/* ET_OCTAL_INTEGER_CONSTANT.set_cast_type */
+void T684f72(TC* ac, T0* C, T0* a1)
+{
+	((T684*)(C))->a3 = a1;
+}
+
+/* ET_HEXADECIMAL_INTEGER_CONSTANT.set_cast_type */
+void T683f72(TC* ac, T0* C, T0* a1)
+{
+	((T683*)(C))->a3 = a1;
+}
+
+/* ET_UNDERSCORED_INTEGER_CONSTANT.set_cast_type */
+void T682f72(TC* ac, T0* C, T0* a1)
+{
+	((T682*)(C))->a3 = a1;
+}
+
+/* ET_REGULAR_INTEGER_CONSTANT.set_cast_type */
+void T681f75(TC* ac, T0* C, T0* a1)
+{
+	((T681*)(C))->a7 = a1;
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_951 */
+void T68f2083(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	T0* t2;
+	l1 = (((T313*)(((T68*)(C))->a123))->z2[((T68*)(C))->a518]);
+	t1 = (T1)(l1!=EIF_VOID);
+	if (t1) {
+		t2 = (((T331*)(((T68*)(C))->a141))->z2[((T68*)(C))->a524]);
+		T312x16891947T0(ac, l1, t2);
+	}
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a524 = ((T6)((((T68*)(C))->a524)-((T6)(GE_int32(1)))));
+		T311s4(ac, ((T68*)(C))->a123, l1, ((T68*)(C))->a518);
+	}
+}
+
+/* ET_BINARY_INTEGER_CONSTANT.set_sign */
+void T685f71(TC* ac, T0* C, T0* a1)
+{
+	((T685*)(C))->a1 = a1;
+}
+
+/* ET_OCTAL_INTEGER_CONSTANT.set_sign */
+void T684f71(TC* ac, T0* C, T0* a1)
+{
+	((T684*)(C))->a1 = a1;
+}
+
+/* ET_HEXADECIMAL_INTEGER_CONSTANT.set_sign */
+void T683f71(TC* ac, T0* C, T0* a1)
+{
+	((T683*)(C))->a1 = a1;
+}
+
+/* ET_UNDERSCORED_INTEGER_CONSTANT.set_sign */
+void T682f71(TC* ac, T0* C, T0* a1)
+{
+	((T682*)(C))->a1 = a1;
+}
+
+/* ET_REGULAR_INTEGER_CONSTANT.set_sign */
+void T681f74(TC* ac, T0* C, T0* a1)
+{
+	((T681*)(C))->a6 = a1;
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_950 */
+void T68f2082(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	T0* t2;
+	l1 = (((T313*)(((T68*)(C))->a123))->z2[((T68*)(C))->a518]);
+	t1 = (T1)(l1!=EIF_VOID);
+	if (t1) {
+		t2 = (((T331*)(((T68*)(C))->a141))->z2[((T68*)(C))->a524]);
+		T312x16891947T0(ac, l1, t2);
+	}
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(2)))));
+		((T68*)(C))->a524 = ((T6)((((T68*)(C))->a524)-((T6)(GE_int32(1)))));
+		T311s4(ac, ((T68*)(C))->a123, l1, ((T68*)(C))->a518);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_949 */
+void T68f2081(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T313*)(((T68*)(C))->a123))->z2[((T68*)(C))->a518]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T311s4(ac, ((T68*)(C))->a123, l1, ((T68*)(C))->a518);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_948 */
+void T68f2080(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T313*)(((T68*)(C))->a123))->z2[((T68*)(C))->a518]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T311s4(ac, ((T68*)(C))->a123, l1, ((T68*)(C))->a518);
+	}
+}
+
+/* ET_EIFFEL_PARSER.yy_do_action_947 */
+void T68f2079(TC* ac, T0* C)
+{
+	T0* l1 = 0;
+	T1 t1;
+	l1 = (((T313*)(((T68*)(C))->a123))->z2[((T68*)(C))->a518]);
+	t1 = (T6f14(ac, &(((T68*)(C))->a1), (T6)(GE_int32(104))));
+	if (t1) {
+		((T68*)(C))->a49 = ((T6)((((T68*)(C))->a49)-((T6)(GE_int32(1)))));
+		T311s4(ac, ((T68*)(C))->a123, l1, ((T68*)(C))->a518);
+	}
+}
+
 /* ET_EIFFEL_PARSER.yy_do_action_946 */
 void T68f2078(TC* ac, T0* C)
 {
@@ -1347,9 +1480,9 @@ T0* T65f333(TC* ac, T0* C, T0* a1, T0* a2)
 void T68f2032(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T365*)(((T68*)(C))->a177))->z2[((T68*)(C))->a536]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -1534,12 +1667,12 @@ T0* T1647c2(TC* ac)
 void T68f2031(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T0* t3;
 	T6 t4;
 	T1 t5;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f969(ac, C));
 	t3 = (((T290*)(((T68*)(C))->a99))->z2[((T68*)(C))->a510]);
@@ -1724,12 +1857,12 @@ T0* T253f5(TC* ac, T0* C)
 void T68f2030(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T0* t4;
 	T6 t5;
+	T0* m1 = 0;
 	t1 = (((T359*)(((T68*)(C))->a171))->z2[((T68*)(C))->a534]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -2321,13 +2454,13 @@ T0* T68f1021(TC* ac, T0* C, T0* a1)
 {
 	T0* R = 0;
 	T6 l1 = 0;
+	T1 t1;
+	T0* t2;
 	T0* m1 = 0;
 	T0* m2 = 0;
 	T0* m3 = 0;
 	T0* m4 = 0;
 	T0* m5 = 0;
-	T1 t1;
-	T0* t2;
 	t1 = (T1)(a1!=EIF_VOID);
 	if (t1) {
 		t1 = (((T68*)(C))->a676?((m1 = ((T68*)(C))->a676, EIF_TRUE)):EIF_FALSE);
@@ -2450,9 +2583,9 @@ T6 T674f4(TC* ac, T0* C, T0* a1)
 void T48f128(TC* ac, T0* C, T1 a1)
 {
 	if (a1) {
-		((T48*)(C))->a4 = (T2)('s');
+		((T48*)(C))->a5 = (T2)('s');
 	} else {
-		((T48*)(C))->a4 = (T2)('\000');
+		((T48*)(C))->a5 = (T2)('\000');
 	}
 }
 
@@ -3469,11 +3602,11 @@ T0* T522f4(TC* ac, T0* C, T6 a1)
 /* ET_EIFFEL_PARSER.register_inline_agent */
 void T68f2127(TC* ac, T0* C, T0* a1)
 {
+	T1 t1;
+	T0* t2;
 	T0* m1 = 0;
 	T0* m2 = 0;
 	T0* m3 = 0;
-	T1 t1;
-	T0* t2;
 	t1 = (T1)(a1!=EIF_VOID);
 	if (t1) {
 		t1 = (((T68*)(C))->a678?((m1 = ((T68*)(C))->a678, EIF_TRUE)):EIF_FALSE);
@@ -3498,10 +3631,10 @@ void T68f2127(TC* ac, T0* C, T0* a1)
 /* ET_EIFFEL_PARSER.set_end_closure */
 void T68f2131(TC* ac, T0* C)
 {
+	T1 t1;
 	T0* m1 = 0;
 	T0* m2 = 0;
 	T0* m3 = 0;
-	T1 t1;
 	t1 = (T250f5(ac, ((T68*)(C))->a4));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
@@ -6564,9 +6697,9 @@ T0* T68f1020(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T0* R = 0;
 	T6 l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	t1 = (T1)(a2!=EIF_VOID);
 	if (t1) {
 		t1 = (((T68*)(C))->a679?((m1 = ((T68*)(C))->a679, EIF_TRUE)):EIF_FALSE);
@@ -12607,8 +12740,8 @@ void T192f52(TC* ac, T0* C, T0* a1)
 void T192f57(TC* ac, T0* C, T0* a1)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T192*)(C))->a3?((m1 = ((T192*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		l1 = ((T192*)(C))->a6;
@@ -12627,12 +12760,12 @@ void T192f57(TC* ac, T0* C, T0* a1)
 void T192f61(TC* ac, T0* C)
 {
 	T0* l1 = 0;
+	T1 t1;
+	T0* t2;
 	T0* m1 = 0;
 	T0* m2 = 0;
 	T0* m3 = 0;
 	T0* m4 = 0;
-	T1 t1;
-	T0* t2;
 	t1 = (((T192*)(C))->a2?((m1 = ((T192*)(C))->a2, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		l1 = m1;
@@ -12665,6 +12798,9 @@ void T192f61(TC* ac, T0* C)
 void T192f62(TC* ac, T0* C, T0* a1)
 {
 	T0* l1 = 0;
+	T1 t1;
+	T1 t2;
+	T0* t3;
 	T0* m1 = 0;
 	T0* m2 = 0;
 	T0* m3 = 0;
@@ -12672,9 +12808,6 @@ void T192f62(TC* ac, T0* C, T0* a1)
 	T0* m5 = 0;
 	T0* m6 = 0;
 	T0* m7 = 0;
-	T1 t1;
-	T1 t2;
-	T0* t3;
 	t1 = (T1)(((T192*)(C))->a12!=a1);
 	if (t1) {
 		l1 = ((T192*)(C))->a12;
@@ -13030,9 +13163,9 @@ void T192f63(TC* ac, T0* C, T0* a1)
 /* ET_MASTER_CLASS.remove_overriding_class */
 void T192f66(TC* ac, T0* C, T0* a1)
 {
+	T1 t1;
 	T0* m1 = 0;
 	T0* m2 = 0;
-	T1 t1;
 	t1 = (T1)(((T192*)(C))->a11==a1);
 	if (t1) {
 		t1 = (((T192*)(C))->a20?((m1 = ((T192*)(C))->a20, EIF_TRUE)):EIF_FALSE);
@@ -13235,10 +13368,10 @@ void T1149f17(TC* ac, T0* C, T0* a1)
 	T6 volatile l1 = 0;
 	T6 l2 = 0;
 	T6 l3 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T1 t3;
+	T0* m1 = 0;
 	T1149f24(ac, C);
 	t1 = (T1149f12(ac, C));
 	t1 = ((T1)(!(t1)));
@@ -13571,8 +13704,8 @@ T0* T782c3(TC* ac)
 void T192f56(TC* ac, T0* C, T0* a1)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T192*)(C))->a2?((m1 = ((T192*)(C))->a2, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		l1 = ((T192*)(C))->a5;
@@ -13647,8 +13780,8 @@ T1 T202s5(TC* ac)
 void T192f55(TC* ac, T0* C, T0* a1)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T192*)(C))->a4?((m1 = ((T192*)(C))->a4, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		l1 = ((T192*)(C))->a7;
@@ -13808,12 +13941,12 @@ void T1246f39(TC* ac, T0* C, T0* a1)
 	T6 l2 = 0;
 	T6 l3 = 0;
 	T6 l4 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T1 t2;
 	T6 volatile t3;
 	T0* t4;
 	T6 volatile t5;
+	T0* m1 = 0;
 	t1 = (T1)(a1==EIF_VOID);
 	if (t1) {
 		((T1246*)(C))->a3 = (T1246f26(ac, C, ((T1246*)(C))->a11));
@@ -13905,9 +14038,9 @@ void T1246f39(TC* ac, T0* C, T0* a1)
 T6 T1246f23(TC* ac, T0* C, T0* a1)
 {
 	T6 R = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T6 t2;
+	T0* m1 = 0;
 	t1 = (T1)(a1!=EIF_VOID);
 	if (t1) {
 		t1 = EIF_FALSE;
@@ -14348,8 +14481,8 @@ T0* T785s6(TC* ac)
 /* DS_HASH_TABLE [NATURAL_8, ET_CLASS_NAME].set_key_equality_tester */
 void T1246f36(TC* ac, T0* C, T0* a1)
 {
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	((T1246*)(C))->a4 = a1;
 	t1 = EIF_FALSE;
 	if (t1) {
@@ -15540,8 +15673,8 @@ void T50f143p1(TC* ac, T0* C)
 /* DS_HASH_TABLE [ET_MASTER_CLASS, ET_CLASS_NAME].set_key_equality_tester */
 void T180f39(TC* ac, T0* C, T0* a1)
 {
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	((T180*)(C))->a3 = a1;
 	t1 = EIF_FALSE;
 	if (t1) {
@@ -17292,9 +17425,9 @@ void T68f1991(TC* ac, T0* C)
 void T68f1990(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T637*)(((T68*)(C))->a462))->z2[((T68*)(C))->a631]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -17479,13 +17612,13 @@ T0* T1528c2(TC* ac)
 void T68f1989(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T0* t3;
 	T0* t4;
 	T6 t5;
 	T1 t6;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f966(ac, C));
 	t3 = (T68f969(ac, C));
@@ -17723,13 +17856,13 @@ T0* T252f5(TC* ac, T0* C)
 void T68f1988(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T0* t4;
 	T0* t5;
 	T6 t6;
+	T0* m1 = 0;
 	t1 = (((T492*)(((T68*)(C))->a312))->z2[((T68*)(C))->a581]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -18028,9 +18161,9 @@ void T68f1985(TC* ac, T0* C)
 void T68f1984(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T575*)(((T68*)(C))->a396))->z2[((T68*)(C))->a609]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -18110,12 +18243,12 @@ void T575f10(TC* ac, T0* C, T0* a1)
 void T68f1983(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T0* t3;
 	T6 t4;
 	T1 t5;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f969(ac, C));
 	t3 = (((T290*)(((T68*)(C))->a99))->z2[((T68*)(C))->a510]);
@@ -18217,12 +18350,12 @@ void T574f40(TC* ac, T0* C, T0* a1)
 void T68f1982(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T0* t4;
 	T6 t5;
+	T0* m1 = 0;
 	t1 = (((T473*)(((T68*)(C))->a291))->z2[((T68*)(C))->a574]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -18328,9 +18461,9 @@ void T68f1979(TC* ac, T0* C)
 void T68f1978(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T566*)(((T68*)(C))->a387))->z2[((T68*)(C))->a606]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -18449,12 +18582,12 @@ T0* T565f14(TC* ac, T0* C)
 void T68f1977(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T0* t3;
 	T6 t4;
 	T1 t5;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f969(ac, C));
 	t3 = (((T290*)(((T68*)(C))->a99))->z2[((T68*)(C))->a510]);
@@ -18693,12 +18826,12 @@ T0* T565s12(TC* ac)
 void T68f1976(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T0* t4;
 	T6 t5;
+	T0* m1 = 0;
 	t1 = (((T473*)(((T68*)(C))->a291))->z2[((T68*)(C))->a574]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -19048,9 +19181,9 @@ T0* T595s8(TC* ac)
 void T68f1970(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T352*)(((T68*)(C))->a162))->z2[((T68*)(C))->a531]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -19130,12 +19263,12 @@ void T352f10(TC* ac, T0* C, T0* a1)
 void T68f1969(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T0* t3;
 	T6 t4;
 	T1 t5;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f969(ac, C));
 	t3 = (((T290*)(((T68*)(C))->a99))->z2[((T68*)(C))->a510]);
@@ -19237,12 +19370,12 @@ T0* T351c23(TC* ac, T6 a1)
 void T68f1968(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T0* t4;
 	T6 t5;
+	T0* m1 = 0;
 	t1 = (((T473*)(((T68*)(C))->a291))->z2[((T68*)(C))->a574]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -21611,11 +21744,11 @@ void T68f1927(TC* ac, T0* C)
 T0* T68f1009(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T0* R = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T1 t1;
 	T0* t2;
 	T0* t3;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	t1 = (T1)(a1!=EIF_VOID);
 	if (t1) {
 		t1 = (T1)(a2!=EIF_VOID);
@@ -21723,11 +21856,11 @@ void T68f1926(TC* ac, T0* C)
 T0* T68f1008(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T0* R = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T1 t1;
 	T0* t2;
 	T0* t3;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	t1 = (T1)(a1!=EIF_VOID);
 	if (t1) {
 		t1 = (T1)(a2!=EIF_VOID);
@@ -23478,13 +23611,13 @@ T0* T68f1007(TC* ac, T0* C, T0* a1)
 {
 	T0* R = 0;
 	T6 l1 = 0;
+	T1 t1;
+	T0* t2;
 	T0* m1 = 0;
 	T0* m2 = 0;
 	T0* m3 = 0;
 	T0* m4 = 0;
 	T0* m5 = 0;
-	T1 t1;
-	T0* t2;
 	t1 = (T1)(a1!=EIF_VOID);
 	if (t1) {
 		R = a1;
@@ -23882,14 +24015,14 @@ T0* T68f1006(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T0* R = 0;
 	T6 l1 = 0;
+	T1 t1;
+	T0* t2;
 	T0* m1 = 0;
 	T0* m2 = 0;
 	T0* m3 = 0;
 	T0* m4 = 0;
 	T0* m5 = 0;
 	T0* m6 = 0;
-	T1 t1;
-	T0* t2;
 	t1 = (a2?((m1 = a2, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		t1 = (((T68*)(C))->a676?((m2 = ((T68*)(C))->a676, EIF_TRUE)):EIF_FALSE);
@@ -24141,9 +24274,9 @@ T0* T65f298(TC* ac, T0* C, T0* a1, T0* a2)
 void T68f1870(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T352*)(((T68*)(C))->a162))->z2[((T68*)(C))->a531]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -24165,12 +24298,12 @@ void T68f1870(TC* ac, T0* C)
 void T68f1869(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T0* t3;
 	T6 t4;
 	T1 t5;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f969(ac, C));
 	t3 = (((T290*)(((T68*)(C))->a99))->z2[((T68*)(C))->a510]);
@@ -24211,12 +24344,12 @@ T0* T65f297(TC* ac, T0* C, T0* a1, T0* a2, T6 a3)
 void T68f1868(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T0* t4;
 	T6 t5;
+	T0* m1 = 0;
 	t1 = (((T473*)(((T68*)(C))->a291))->z2[((T68*)(C))->a574]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -24639,13 +24772,13 @@ T0* T68f1005(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T0* R = 0;
 	T6 l1 = 0;
+	T1 t1;
+	T0* t2;
 	T0* m1 = 0;
 	T0* m2 = 0;
 	T0* m3 = 0;
 	T0* m4 = 0;
 	T0* m5 = 0;
-	T1 t1;
-	T0* t2;
 	t1 = (T1)(a1!=EIF_VOID);
 	if (t1) {
 		t1 = (((T68*)(C))->a676?((m1 = ((T68*)(C))->a676, EIF_TRUE)):EIF_FALSE);
@@ -25769,13 +25902,13 @@ T0* T68f1004(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T0* R = 0;
 	T6 l1 = 0;
+	T1 t1;
+	T0* t2;
 	T0* m1 = 0;
 	T0* m2 = 0;
 	T0* m3 = 0;
 	T0* m4 = 0;
 	T0* m5 = 0;
-	T1 t1;
-	T0* t2;
 	t1 = (T1)(a1!=EIF_VOID);
 	if (t1) {
 		t1 = (((T68*)(C))->a676?((m1 = ((T68*)(C))->a676, EIF_TRUE)):EIF_FALSE);
@@ -26353,9 +26486,9 @@ T0* T524s6(TC* ac)
 void T68f1834(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T531*)(((T68*)(C))->a351))->z2[((T68*)(C))->a594]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -26540,11 +26673,11 @@ T0* T1237c2(TC* ac)
 void T68f1833(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T6 t4;
+	T0* m1 = 0;
 	t1 = (((T525*)(((T68*)(C))->a345))->z2[((T68*)(C))->a592]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -27108,9 +27241,9 @@ T0* T65f287(TC* ac, T0* C, T0* a1, T0* a2)
 void T68f1828(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T572*)(((T68*)(C))->a393))->z2[((T68*)(C))->a608]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -27295,12 +27428,12 @@ T0* T1676c2(TC* ac)
 void T68f1827(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T0* t4;
 	T6 t5;
+	T0* m1 = 0;
 	t1 = (((T319*)(((T68*)(C))->a129))->z2[((T68*)(C))->a520]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -28921,9 +29054,9 @@ T0* T659s4(TC* ac)
 void T68f1815(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T663*)(((T68*)(C))->a489))->z2[((T68*)(C))->a640]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -29108,10 +29241,10 @@ T0* T1688c2(TC* ac)
 void T68f1814(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T6 t2;
 	T1 t3;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f967(ac, C));
 	l1 = (T65f282(ac, t1, t2));
@@ -29644,13 +29777,13 @@ T0* T68f999(TC* ac, T0* C, T0* a1)
 {
 	T0* R = 0;
 	T6 l1 = 0;
+	T1 t1;
+	T0* t2;
 	T0* m1 = 0;
 	T0* m2 = 0;
 	T0* m3 = 0;
 	T0* m4 = 0;
 	T0* m5 = 0;
-	T1 t1;
-	T0* t2;
 	t1 = (T1)(a1!=EIF_VOID);
 	if (t1) {
 		t1 = (((T68*)(C))->a676?((m1 = ((T68*)(C))->a676, EIF_TRUE)):EIF_FALSE);
@@ -30167,9 +30300,9 @@ T0* T65f279(TC* ac, T0* C, T0* a1, T0* a2)
 void T68f1802(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T401*)(((T68*)(C))->a213))->z2[((T68*)(C))->a548]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -30354,11 +30487,11 @@ T0* T1653c2(TC* ac)
 void T68f1801(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T6 t3;
 	T1 t4;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f966(ac, C));
 	t3 = (T68f967(ac, C));
@@ -30567,11 +30700,11 @@ T0* T400s4(TC* ac)
 void T68f1800(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T6 t4;
+	T0* m1 = 0;
 	t1 = (((T392*)(((T68*)(C))->a204))->z2[((T68*)(C))->a545]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -30825,9 +30958,9 @@ T0* T665c9(TC* ac, T0* a1, T0* a2)
 void T68f1795(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T669*)(((T68*)(C))->a495))->z2[((T68*)(C))->a642]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -31012,10 +31145,10 @@ T0* T1690c2(TC* ac)
 void T68f1794(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T6 t2;
 	T1 t3;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f967(ac, C));
 	l1 = (T65f276(ac, t1, t2));
@@ -31597,9 +31730,9 @@ T0* T455s4(TC* ac)
 void T68f1788(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T459*)(((T68*)(C))->a276))->z2[((T68*)(C))->a569]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -31784,10 +31917,10 @@ T0* T1661c2(TC* ac)
 void T68f1787(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T6 t2;
 	T1 t3;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f967(ac, C));
 	l1 = (T65f273(ac, t1, t2));
@@ -32344,9 +32477,9 @@ T0* T461c10(TC* ac, T0* a1, T0* a2)
 void T68f1782(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T465*)(((T68*)(C))->a282))->z2[((T68*)(C))->a571]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -32531,10 +32664,10 @@ T0* T1663c2(TC* ac)
 void T68f1781(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T6 t2;
 	T1 t3;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f967(ac, C));
 	l1 = (T65f270(ac, t1, t2));
@@ -34074,9 +34207,9 @@ T0* T68f998(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 	T6 volatile l2 = 0;
 	T6 l3 = 0;
 	T6 l4 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	t1 = (T243f6(ac, ((T68*)(C))->a15));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
@@ -35825,9 +35958,9 @@ T0* T410f4(TC* ac, T0* C, T6 a1)
 void T68f1738(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T410*)(((T68*)(C))->a225))->z2[((T68*)(C))->a552]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -35917,10 +36050,10 @@ void T1233f7(TC* ac, T0* C, T0* a1)
 void T68f1737(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T6 t3;
+	T0* m1 = 0;
 	t1 = (((T543*)(((T68*)(C))->a363))->z2[((T68*)(C))->a598]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -39743,10 +39876,10 @@ void T68f1667(TC* ac, T0* C)
 void T68f1666(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T0* t3;
+	T0* m1 = 0;
 	l1 = (((T356*)(((T68*)(C))->a168))->z2[((T68*)(C))->a533]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -39811,11 +39944,11 @@ void T68f1664(TC* ac, T0* C)
 void T68f1663(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T0* t3;
 	T1 t4;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f969(ac, C));
 	t3 = (((T290*)(((T68*)(C))->a99))->z2[((T68*)(C))->a510]);
@@ -39995,10 +40128,10 @@ T0* T68f991(TC* ac, T0* C, T0* a1, T0* a2, T0* a3)
 	T0* R = 0;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T0* t3;
+	T0* m1 = 0;
 	t1 = (T1)(a2!=EIF_VOID);
 	if (t1) {
 		t2 = (T68f765(ac, C));
@@ -40104,13 +40237,13 @@ T0* T68f990(TC* ac, T0* C, T0* a1, T0* a2, T0* a3)
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T0* l3 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T1 t1;
 	T0* t2;
 	T1 t3;
 	T6 t4;
 	T0* t5;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	t1 = (T1)(a2!=EIF_VOID);
 	if (t1) {
 		l1 = ((T68*)(C))->a28;
@@ -40242,8 +40375,8 @@ T0* T65f352(TC* ac, T0* C, T0* a1, T0* a2, T6 a3, T0* a4)
 T0* T70f145(TC* ac, T0* C, T0* a1)
 {
 	T0* R = 0;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T70*)(C))->a20?((m1 = ((T70*)(C))->a20, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T512f14(ac, m1, a1));
@@ -40327,12 +40460,12 @@ void T68f1654(TC* ac, T0* C)
 void T68f1653(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T0* t4;
 	T6 t5;
+	T0* m1 = 0;
 	t1 = (((T639*)(((T68*)(C))->a465))->z2[((T68*)(C))->a632]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -43047,9 +43180,9 @@ T0* T68f989(TC* ac, T0* C, T0* a1, T0* a2)
 	T6 volatile l2 = 0;
 	T6 l3 = 0;
 	T6 l4 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	t1 = (T243f6(ac, ((T68*)(C))->a15));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
@@ -43525,12 +43658,12 @@ T0* T68f988(TC* ac, T0* C, T0* a1, T0* a2)
 	T6 volatile l2 = 0;
 	T6 l3 = 0;
 	T6 l4 = 0;
+	T1 t1;
+	T0* t2;
 	T0* m1 = 0;
 	T0* m2 = 0;
 	T0* m3 = 0;
 	T0* m4 = 0;
-	T1 t1;
-	T0* t2;
 	t1 = (T243f6(ac, ((T68*)(C))->a15));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
@@ -43620,8 +43753,8 @@ void T68f1093(TC* ac, T0* C)
 	T0* l1 = 0;
 	T6 volatile l2 = 0;
 	T6 l3 = 0;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T68*)(C))->a680?((m1 = ((T68*)(C))->a680, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		T676f10(ac, m1);
@@ -43669,8 +43802,8 @@ void T68f1092(TC* ac, T0* C)
 	T0* l1 = 0;
 	T6 volatile l2 = 0;
 	T6 l3 = 0;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T68*)(C))->a679?((m1 = ((T68*)(C))->a679, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		T675f10(ac, m1);
@@ -43718,8 +43851,8 @@ void T68f1091(TC* ac, T0* C)
 	T0* l1 = 0;
 	T6 volatile l2 = 0;
 	T6 l3 = 0;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T68*)(C))->a678?((m1 = ((T68*)(C))->a678, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		T674f10(ac, m1);
@@ -44124,9 +44257,9 @@ T0* T68f987(TC* ac, T0* C, T0* a1, T0* a2, T0* a3)
 	T6 volatile l2 = 0;
 	T6 l3 = 0;
 	T6 l4 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	t1 = (T243f6(ac, ((T68*)(C))->a15));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
@@ -44663,9 +44796,9 @@ T0* T68f986(TC* ac, T0* C, T0* a1, T0* a2, T0* a3)
 	T6 volatile l2 = 0;
 	T6 l3 = 0;
 	T6 l4 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	t1 = (T243f6(ac, ((T68*)(C))->a15));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
@@ -45067,11 +45200,11 @@ void T68f2129(TC* ac, T0* C, T0* a1, T0* a2)
 	T6 l1 = 0;
 	T0* l2 = 0;
 	T1 l3 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T6 volatile t2;
 	T0* t3;
 	T6 t4;
+	T0* m1 = 0;
 	t1 = (T243f6(ac, ((T68*)(C))->a15));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
@@ -45367,13 +45500,13 @@ void T68f2118(TC* ac, T0* C, T0* a1, T0* a2, T0* a3)
 	T0* l3 = 0;
 	T0* l4 = 0;
 	T6 l5 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T6 volatile t2;
 	T0* t3;
 	T6 t4;
 	T6 t5;
 	T0* t6;
+	T0* m1 = 0;
 	t1 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f44(ac, ((T68*)(C))->a23):T862f46(ac, ((T68*)(C))->a23)));
 	if (t1) {
 		t1 = (T243f6(ac, ((T68*)(C))->a15));
@@ -46615,8 +46748,8 @@ void T42f229(TC* ac, T0* C, T0* a1, T0* a2)
 /* ET_EIFFEL_PARSER.set_syntax_error */
 void T68f1122(TC* ac, T0* C)
 {
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T68*)(C))->a28?((m1 = ((T68*)(C))->a28, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		T68f2097(ac, C, m1);
@@ -47977,9 +48110,9 @@ T0* T65f232(TC* ac, T0* C, T0* a1, T0* a2)
 void T68f1531(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T560*)(((T68*)(C))->a381))->z2[((T68*)(C))->a604]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -48106,9 +48239,9 @@ T0* T1673c2(TC* ac)
 void T68f1530(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T560*)(((T68*)(C))->a381))->z2[((T68*)(C))->a604]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -48130,9 +48263,9 @@ void T68f1530(TC* ac, T0* C)
 void T68f1529(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T560*)(((T68*)(C))->a381))->z2[((T68*)(C))->a604]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -48177,9 +48310,9 @@ T0* T559f6(TC* ac, T0* C)
 void T68f1528(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T560*)(((T68*)(C))->a381))->z2[((T68*)(C))->a604]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -48208,10 +48341,10 @@ void T68f1528(TC* ac, T0* C)
 void T68f1527(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T6 t2;
 	T1 t3;
+	T0* m1 = 0;
 	t1 = (T68f966(ac, C));
 	t2 = (T68f967(ac, C));
 	l1 = (T68f984(ac, C, t1, t2));
@@ -48387,10 +48520,10 @@ T0* T559s9(TC* ac)
 void T68f1526(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T6 t2;
 	T1 t3;
+	T0* m1 = 0;
 	t1 = (T68f966(ac, C));
 	t2 = (T68f967(ac, C));
 	l1 = (T68f984(ac, C, t1, t2));
@@ -48442,10 +48575,10 @@ void T68f1525(TC* ac, T0* C)
 void T68f1524(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T0* t3;
+	T0* m1 = 0;
 	l1 = (((T560*)(((T68*)(C))->a381))->z2[((T68*)(C))->a604]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -48479,10 +48612,10 @@ void T559f16(TC* ac, T0* C, T0* a1)
 void T68f1523(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
+	T0* m1 = 0;
 	t1 = (((T278*)(((T68*)(C))->a87))->z2[((T68*)(C))->a506]);
 	l1 = (T68f984(ac, C, t1, (T6)(GE_int32(0))));
 	t2 = (T1)(l1!=EIF_VOID);
@@ -48945,9 +49078,9 @@ T0* T65f228(TC* ac, T0* C, T0* a1, T0* a2)
 void T68f1517(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T504*)(((T68*)(C))->a324))->z2[((T68*)(C))->a585]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -49074,9 +49207,9 @@ T0* T1668c2(TC* ac)
 void T68f1516(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T504*)(((T68*)(C))->a324))->z2[((T68*)(C))->a585]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -49098,9 +49231,9 @@ void T68f1516(TC* ac, T0* C)
 void T68f1515(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T504*)(((T68*)(C))->a324))->z2[((T68*)(C))->a585]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -49145,9 +49278,9 @@ T0* T503f12(TC* ac, T0* C)
 void T68f1514(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T504*)(((T68*)(C))->a324))->z2[((T68*)(C))->a585]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -49176,11 +49309,11 @@ void T68f1514(TC* ac, T0* C)
 void T68f1513(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T6 t3;
 	T1 t4;
+	T0* m1 = 0;
 	t1 = (T68f969(ac, C));
 	t2 = (((T290*)(((T68*)(C))->a99))->z2[((T68*)(C))->a510]);
 	t3 = (T68f967(ac, C));
@@ -49301,11 +49434,11 @@ T0* T503s9(TC* ac)
 void T68f1512(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T6 t3;
 	T1 t4;
+	T0* m1 = 0;
 	t1 = (T68f969(ac, C));
 	t2 = (((T290*)(((T68*)(C))->a99))->z2[((T68*)(C))->a510]);
 	t3 = (T68f967(ac, C));
@@ -49368,10 +49501,10 @@ void T68f1510(TC* ac, T0* C)
 void T68f1509(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T0* t3;
+	T0* m1 = 0;
 	l1 = (((T504*)(((T68*)(C))->a324))->z2[((T68*)(C))->a585]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -49430,10 +49563,10 @@ void T68f1508(TC* ac, T0* C)
 void T68f1507(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T1 t3;
+	T0* m1 = 0;
 	t1 = (T68f969(ac, C));
 	t2 = (((T290*)(((T68*)(C))->a99))->z2[((T68*)(C))->a510]);
 	l1 = (T68f982(ac, C, t1, t2, (T6)(GE_int32(0))));
@@ -51972,9 +52105,9 @@ T0* T374f4(TC* ac, T0* C, T6 a1)
 void T68f1472(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T374*)(((T68*)(C))->a186))->z2[((T68*)(C))->a539]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -52102,10 +52235,10 @@ T0* T1649c3(TC* ac)
 void T68f1471(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T6 t3;
+	T0* m1 = 0;
 	t1 = (((T371*)(((T68*)(C))->a183))->z2[((T68*)(C))->a538]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -52178,10 +52311,10 @@ T0* T1648c5(TC* ac, T6 a1)
 void T68f1470(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
+	T0* m1 = 0;
 	t1 = (((T310*)(((T68*)(C))->a120))->z2[((T68*)(C))->a517]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -52361,9 +52494,9 @@ void T68f1469(TC* ac, T0* C)
 void T68f1468(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
+	T0* m1 = 0;
 	t1 = (((T310*)(((T68*)(C))->a120))->z2[((T68*)(C))->a517]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -52929,10 +53062,10 @@ T0* T337f4(TC* ac, T0* C, T6 a1)
 void T68f1461(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T6 t1;
 	T0* t2;
 	T1 t3;
+	T0* m1 = 0;
 	t1 = ((T6)((((T68*)(C))->a526)-((T6)(GE_int32(1)))));
 	t2 = (((T337*)(((T68*)(C))->a147))->z2[t1]);
 	t3 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
@@ -57142,13 +57275,13 @@ void T68f1423(TC* ac, T0* C)
 /* ET_EIFFEL_PARSER.register_procedure */
 void T68f2114(TC* ac, T0* C, T0* a1)
 {
+	T1 t1;
+	T0* t2;
 	T0* m1 = 0;
 	T0* m2 = 0;
 	T0* m3 = 0;
 	T0* m4 = 0;
 	T0* m5 = 0;
-	T1 t1;
-	T0* t2;
 	t1 = (T1)(a1!=EIF_VOID);
 	if (t1) {
 		T262f17(ac, ((T68*)(C))->a19, a1);
@@ -58279,13 +58412,13 @@ void T68f1417(TC* ac, T0* C)
 /* ET_EIFFEL_PARSER.register_query */
 void T68f2112(TC* ac, T0* C, T0* a1)
 {
+	T1 t1;
+	T0* t2;
 	T0* m1 = 0;
 	T0* m2 = 0;
 	T0* m3 = 0;
 	T0* m4 = 0;
 	T0* m5 = 0;
-	T1 t1;
-	T0* t2;
 	t1 = (T1)(a1!=EIF_VOID);
 	if (t1) {
 		T261f17(ac, ((T68*)(C))->a18, a1);
@@ -58451,11 +58584,11 @@ void T68f1412(TC* ac, T0* C)
 void T68f1411(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T0* t1;
 	T0* t2;
 	T1 t3;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	t1 = (((T278*)(((T68*)(C))->a87))->z2[((T68*)(C))->a506]);
 	((T68*)(C))->a61 = (T68f975(ac, C, t1));
 	t1 = (T68f767(ac, C));
@@ -58823,11 +58956,11 @@ T0* T67f17(TC* ac, T0* C)
 void T68f1410(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T0* t1;
 	T0* t2;
 	T1 t3;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	((T68*)(C))->a61 = (((T407*)(((T68*)(C))->a222))->z2[((T68*)(C))->a551]);
 	t1 = (T68f767(ac, C));
 	t2 = (((T278*)(((T68*)(C))->a87))->z2[((T68*)(C))->a506]);
@@ -58897,9 +59030,9 @@ void T68f1408(TC* ac, T0* C)
 void T68f1407(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T487*)(((T68*)(C))->a306))->z2[((T68*)(C))->a579]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -59084,10 +59217,10 @@ T0* T1665c2(TC* ac)
 void T68f1406(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T6 t2;
 	T1 t3;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f967(ac, C));
 	l1 = (T65f179(ac, t1, t2));
@@ -59221,11 +59354,11 @@ void T68f2111(TC* ac, T0* C)
 	T6 volatile l6 = 0;
 	T6 l7 = 0;
 	T6 l8 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T6 volatile t3;
 	T11 t4;
+	T0* m1 = 0;
 	l1 = ((T68*)(C))->a28;
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -59924,9 +60057,9 @@ T0* T65f178(TC* ac, T0* C, T0* a1, T0* a2)
 void T68f1401(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T654*)(((T68*)(C))->a480))->z2[((T68*)(C))->a637]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -60073,12 +60206,12 @@ void T1740f7(TC* ac, T0* C, T0* a1)
 void T68f1400(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T0* t4;
 	T6 t5;
+	T0* m1 = 0;
 	t1 = (((T639*)(((T68*)(C))->a465))->z2[((T68*)(C))->a632]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -60696,9 +60829,9 @@ T0* T65f174(TC* ac, T0* C, T0* a1, T0* a2)
 void T68f1393(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T440*)(((T68*)(C))->a255))->z2[((T68*)(C))->a562]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -60883,11 +61016,11 @@ T0* T1659c2(TC* ac)
 void T68f1392(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T6 t3;
 	T1 t4;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f966(ac, C));
 	t3 = (T68f967(ac, C));
@@ -61082,11 +61215,11 @@ T0* T439s6(TC* ac)
 void T68f1391(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T6 t3;
 	T1 t4;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f966(ac, C));
 	t3 = (T68f967(ac, C));
@@ -61188,10 +61321,10 @@ void T68f1387(TC* ac, T0* C)
 void T68f1386(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
+	T0* m1 = 0;
 	t1 = (((T310*)(((T68*)(C))->a120))->z2[((T68*)(C))->a517]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -61336,9 +61469,9 @@ T0* T65f170(TC* ac, T0* C, T0* a1, T0* a2)
 void T68f1385(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T448*)(((T68*)(C))->a264))->z2[((T68*)(C))->a565]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -61457,11 +61590,11 @@ T0* T83f6(TC* ac, T0* C)
 void T68f1384(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T0* t3;
 	T6 t4;
+	T0* m1 = 0;
 	t1 = (((((T0*)(((T68*)(C))->a23))->id==66)?T66f44(ac, ((T68*)(C))->a23):T862f46(ac, ((T68*)(C))->a23)));
 	if (t1) {
 		T68f2098(ac, C);
@@ -61604,11 +61737,11 @@ T0* T83s5(TC* ac)
 void T68f1383(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T6 t4;
+	T0* m1 = 0;
 	t1 = (((T310*)(((T68*)(C))->a120))->z2[((T68*)(C))->a517]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -62043,9 +62176,9 @@ T0* T450f4(TC* ac, T0* C, T6 a1)
 void T68f1369(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T450*)(((T68*)(C))->a267))->z2[((T68*)(C))->a566]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -62173,10 +62306,10 @@ T0* T1527c2(TC* ac)
 void T68f1368(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T6 t3;
+	T0* m1 = 0;
 	t1 = (((T448*)(((T68*)(C))->a264))->z2[((T68*)(C))->a565]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -62313,9 +62446,9 @@ void T68f1365(TC* ac, T0* C)
 void T68f1364(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T548*)(((T68*)(C))->a369))->z2[((T68*)(C))->a600]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -62434,11 +62567,11 @@ T0* T199f5(TC* ac, T0* C)
 void T68f1363(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T6 t3;
 	T1 t4;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f966(ac, C));
 	t3 = (T68f967(ac, C));
@@ -62615,11 +62748,11 @@ T0* T199s4(TC* ac)
 void T68f1362(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T6 t4;
+	T0* m1 = 0;
 	t1 = (((T492*)(((T68*)(C))->a312))->z2[((T68*)(C))->a581]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -62938,12 +63071,12 @@ void T68f1347(TC* ac, T0* C)
 void T68f1346(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T6 t2;
 	T0* t3;
 	T0* t4;
 	T1 t5;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = ((T6)((((T68*)(C))->a510)-((T6)(GE_int32(1)))));
 	t3 = (((T290*)(((T68*)(C))->a99))->z2[t2]);
@@ -63415,9 +63548,9 @@ void T68f1342(TC* ac, T0* C)
 void T68f1341(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T407*)(((T68*)(C))->a222))->z2[((T68*)(C))->a551]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -63439,9 +63572,9 @@ void T68f1341(TC* ac, T0* C)
 void T68f1340(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T407*)(((T68*)(C))->a222))->z2[((T68*)(C))->a551]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -63463,12 +63596,12 @@ void T68f1340(TC* ac, T0* C)
 void T68f1339(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T0* t3;
 	T6 t4;
 	T1 t5;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f969(ac, C));
 	t3 = (((T290*)(((T68*)(C))->a99))->z2[((T68*)(C))->a510]);
@@ -63501,12 +63634,12 @@ void T68f1339(TC* ac, T0* C)
 void T68f1338(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T0* t3;
 	T6 t4;
 	T1 t5;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f969(ac, C));
 	t3 = (((T290*)(((T68*)(C))->a99))->z2[((T68*)(C))->a510]);
@@ -63649,9 +63782,9 @@ void T68f1335(TC* ac, T0* C)
 void T68f1334(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T490*)(((T68*)(C))->a309))->z2[((T68*)(C))->a580]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -63770,10 +63903,10 @@ T0* T489f4(TC* ac, T0* C)
 void T68f1333(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T6 t2;
 	T1 t3;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f967(ac, C));
 	l1 = (T65f165(ac, t1, ((T68*)(C))->a62, t2));
@@ -64487,10 +64620,10 @@ void T68f1111(TC* ac, T0* C, T6 a1)
 void T68f1332(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T6 t3;
+	T0* m1 = 0;
 	t1 = (((T492*)(((T68*)(C))->a312))->z2[((T68*)(C))->a581]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -64922,9 +65055,9 @@ T0* T470f4(TC* ac, T0* C, T6 a1)
 void T68f1325(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T470*)(((T68*)(C))->a288))->z2[((T68*)(C))->a573]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -65052,11 +65185,11 @@ T0* T1628c2(TC* ac)
 void T68f1324(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T6 t4;
+	T0* m1 = 0;
 	t1 = (((T468*)(((T68*)(C))->a285))->z2[((T68*)(C))->a572]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -65553,9 +65686,9 @@ T0* T65f161(TC* ac, T0* C, T0* a1, T0* a2, T0* a3)
 void T68f1316(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T628*)(((T68*)(C))->a453))->z2[((T68*)(C))->a628]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -65740,11 +65873,11 @@ T0* T1625c2(TC* ac)
 void T68f1315(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T6 t3;
 	T1 t4;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f966(ac, C));
 	t3 = (T68f967(ac, C));
@@ -65940,11 +66073,11 @@ T0* T197s4(TC* ac)
 void T68f1314(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T6 t3;
 	T1 t4;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f966(ac, C));
 	t3 = (T68f967(ac, C));
@@ -66182,9 +66315,9 @@ T0* T65f159(TC* ac, T0* C, T0* a1, T0* a2)
 void T68f1309(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T605*)(((T68*)(C))->a429))->z2[((T68*)(C))->a620]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -66264,9 +66397,9 @@ void T605f10(TC* ac, T0* C, T0* a1)
 void T68f1308(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T605*)(((T68*)(C))->a429))->z2[((T68*)(C))->a620]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -66288,11 +66421,11 @@ void T68f1308(TC* ac, T0* C)
 void T68f1307(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T6 t3;
 	T1 t4;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f966(ac, C));
 	t3 = (T68f967(ac, C));
@@ -66374,11 +66507,11 @@ T0* T65f158(TC* ac, T0* C, T0* a1, T6 a2)
 void T68f1306(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T6 t3;
 	T1 t4;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f966(ac, C));
 	t3 = (T68f967(ac, C));
@@ -66596,8 +66729,8 @@ T0* T65f341(TC* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5, T0* a6, T0* a
 T1 T70f93(TC* ac, T0* C, T0* a1)
 {
 	T1 R = 0;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T70*)(C))->a20?((m1 = ((T70*)(C))->a20, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T512f13(ac, m1, a1));
@@ -66863,10 +66996,10 @@ void T68f1299(TC* ac, T0* C)
 void T68f1298(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T0* t3;
+	T0* m1 = 0;
 	l1 = (((T605*)(((T68*)(C))->a429))->z2[((T68*)(C))->a620]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -66909,10 +67042,10 @@ void T184f14(TC* ac, T0* C, T0* a1)
 void T68f1297(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T1 t3;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (((T278*)(((T68*)(C))->a87))->z2[((T68*)(C))->a506]);
 	l1 = (T65f158(ac, t1, t2, (T6)(GE_int32(0))));
@@ -67073,9 +67206,9 @@ T0* T601f4(TC* ac, T0* C, T6 a1)
 void T68f1295(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T601*)(((T68*)(C))->a423))->z2[((T68*)(C))->a618]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -67203,10 +67336,10 @@ T0* T1683c2(TC* ac)
 void T68f1294(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T6 t3;
+	T0* m1 = 0;
 	t1 = (((T605*)(((T68*)(C))->a429))->z2[((T68*)(C))->a620]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -68244,10 +68377,10 @@ void T68f1283(TC* ac, T0* C)
 void T68f1282(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T0* t3;
+	T0* m1 = 0;
 	l1 = (((T422*)(((T68*)(C))->a237))->z2[((T68*)(C))->a556]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -68312,11 +68445,11 @@ void T68f1280(TC* ac, T0* C)
 void T68f1279(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T0* t3;
 	T1 t4;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f969(ac, C));
 	t3 = (((T290*)(((T68*)(C))->a99))->z2[((T68*)(C))->a510]);
@@ -68557,12 +68690,12 @@ void T68f1273(TC* ac, T0* C)
 void T68f1272(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T0* t4;
 	T6 t5;
+	T0* m1 = 0;
 	t1 = (((T431*)(((T68*)(C))->a246))->z2[((T68*)(C))->a559]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -70053,9 +70186,9 @@ void T68f1224(TC* ac, T0* C)
 void T68f1223(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T425*)(((T68*)(C))->a240))->z2[((T68*)(C))->a557]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -70174,12 +70307,12 @@ T0* T424f6(TC* ac, T0* C)
 void T68f1222(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T0* t3;
 	T6 t4;
 	T1 t5;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f966(ac, C));
 	t3 = (((T278*)(((T68*)(C))->a87))->z2[((T68*)(C))->a506]);
@@ -70316,12 +70449,12 @@ T0* T424s5(TC* ac)
 void T68f1221(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T0* t4;
 	T6 t5;
+	T0* m1 = 0;
 	t1 = (((T310*)(((T68*)(C))->a120))->z2[((T68*)(C))->a517]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -70460,9 +70593,9 @@ void T68f1216(TC* ac, T0* C)
 void T68f1215(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T428*)(((T68*)(C))->a243))->z2[((T68*)(C))->a558]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -70581,12 +70714,12 @@ T0* T427f6(TC* ac, T0* C)
 void T68f1214(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T0* t3;
 	T6 t4;
 	T1 t5;
+	T0* m1 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (T68f966(ac, C));
 	t3 = (((T278*)(((T68*)(C))->a87))->z2[((T68*)(C))->a506]);
@@ -70731,12 +70864,12 @@ T0* T427s5(TC* ac)
 void T68f1213(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T0* t4;
 	T6 t5;
+	T0* m1 = 0;
 	t1 = (((T626*)(((T68*)(C))->a450))->z2[((T68*)(C))->a627]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -70983,9 +71116,9 @@ T0* T65f147(TC* ac, T0* C, T0* a1, T0* a2)
 void T68f1208(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T648*)(((T68*)(C))->a474))->z2[((T68*)(C))->a635]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -71170,12 +71303,12 @@ T0* T1686c2(TC* ac)
 void T68f1207(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T0* t4;
 	T6 t5;
+	T0* m1 = 0;
 	t1 = (((T642*)(((T68*)(C))->a468))->z2[((T68*)(C))->a633]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -72304,9 +72437,9 @@ T0* T65f142(TC* ac, T0* C, T0* a1, T0* a2)
 void T68f1192(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T513*)(((T68*)(C))->a333))->z2[((T68*)(C))->a588]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -72528,12 +72661,12 @@ T0* T1670c2(TC* ac)
 void T68f1191(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T0* t4;
 	T6 t5;
+	T0* m1 = 0;
 	t1 = (((T507*)(((T68*)(C))->a327))->z2[((T68*)(C))->a586]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -72759,6 +72892,8 @@ void T68f2106(TC* ac, T0* C, T0* a1)
 	T6 l5 = 0;
 	T6 volatile l6 = 0;
 	T6 l7 = 0;
+	T1 t1;
+	T0* t2;
 	T0* m1 = 0;
 	T0* m2 = 0;
 	T0* m3 = 0;
@@ -72769,8 +72904,6 @@ void T68f2106(TC* ac, T0* C, T0* a1)
 	T0* m8 = 0;
 	T0* m9 = 0;
 	T0* m10 = 0;
-	T1 t1;
-	T0* t2;
 	t1 = (T1)(a1!=EIF_VOID);
 	if (t1) {
 		l1 = ((T68*)(C))->a28;
@@ -73013,9 +73146,9 @@ void T70f291(TC* ac, T0* C, T0* a1)
 	T6 l2 = 0;
 	T6 volatile l3 = 0;
 	T6 l4 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	((T70*)(C))->a20 = a1;
 	((T70*)(C))->a34 = (T6)(GE_int32(0));
 	t1 = (T1)(a1!=EIF_VOID);
@@ -73216,12 +73349,12 @@ T0* T68f1060(TC* ac, T0* C, T0* a1, T0* a2)
 	T0* l3 = 0;
 	T0* l4 = 0;
 	T0* l5 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T1 t2;
 	T0* t3;
 	T6 t4;
 	T0* t5;
+	T0* m1 = 0;
 	l1 = (((T699*)(a1))->a2);
 	l3 = (((T699*)(a1))->a1);
 	l2 = (T512f14(ac, a2, l1));
@@ -73324,12 +73457,12 @@ T0* T68f1061(TC* ac, T0* C, T0* a1, T0* a2)
 	T0* l4 = 0;
 	T0* l5 = 0;
 	T0* l6 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T1 t2;
 	T0* t3;
 	T6 t4;
 	T0* t5;
+	T0* m1 = 0;
 	l1 = (((T1058*)(a1))->a2);
 	l2 = (((T1058*)(a1))->a1);
 	l3 = (T512f14(ac, a2, l1));
@@ -73607,8 +73740,8 @@ T0* T421f10(TC* ac, T0* C)
 T0* T699f5(TC* ac, T0* C)
 {
 	T0* R = 0;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T699*)(C))->a1?((m1 = ((T699*)(C))->a1, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T178x21250049(ac, m1));
@@ -73622,8 +73755,8 @@ T0* T699f5(TC* ac, T0* C)
 T0* T1058f6(TC* ac, T0* C)
 {
 	T0* R = 0;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T1058*)(C))->a1?((m1 = ((T1058*)(C))->a1, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T178x21250049(ac, m1));
@@ -73796,10 +73929,10 @@ void T68f1183(TC* ac, T0* C)
 void T68f1182(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T6 t3;
+	T0* m1 = 0;
 	t1 = (((T310*)(((T68*)(C))->a120))->z2[((T68*)(C))->a517]);
 	l1 = (T68f968(ac, C, t1));
 	t2 = (T1)(l1!=EIF_VOID);
@@ -73969,14 +74102,14 @@ T0* T68f968(TC* ac, T0* C, T0* a1)
 	T0* l3 = 0;
 	T0* l4 = 0;
 	T1 l5 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
-	T0* m3 = 0;
 	T1 t1;
 	T0* t2;
 	T1 t3;
 	T0* t4;
 	T6 t5;
+	T0* m1 = 0;
+	T0* m2 = 0;
+	T0* m3 = 0;
 	t1 = (((T68*)(C))->a28?((m1 = ((T68*)(C))->a28, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		t1 = (T1)(m1!=((T68*)(C))->a22);
@@ -74860,11 +74993,11 @@ T0* T91f59(TC* ac, T0* C, T0* a1, T2 a2)
 	T0* R = 0;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T6 t3;
 	T6 t4;
+	T0* m1 = 0;
 	t1 = (T1)(a1==((T91*)(C))->a4);
 	if (t1) {
 		t1 = (((T91*)(C))->a31?((m1 = ((T91*)(C))->a31, EIF_TRUE)):EIF_FALSE);
@@ -74928,11 +75061,11 @@ T0* T814f112(TC* ac, T0* C, T0* a1, T2 a2)
 	T0* l1 = 0;
 	T6 volatile l2 = 0;
 	T6 l3 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T6 t3;
 	T0* t4;
+	T0* m1 = 0;
 	t1 = (T1)(a1==C);
 	if (t1) {
 		R = (T814f116(ac, C));
@@ -75031,13 +75164,13 @@ T0* T211f104(TC* ac, T0* C, T0* a1)
 	T0* l3 = 0;
 	T6 l4 = 0;
 	T1 l5 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T6 t3;
 	T0* t4;
 	T0* t5;
 	T0* t6;
+	T0* m1 = 0;
 	t1 = EIF_FALSE;
 	if (t1) {
 		R = T1704c11(ac, (T6)(GE_int32(0)));
@@ -75742,12 +75875,12 @@ void T1879f38(TC* ac, T0* C, T0* a1)
 	T6 l2 = 0;
 	T6 l3 = 0;
 	T6 l4 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T1 t2;
 	T6 volatile t3;
 	T0* t4;
 	T6 volatile t5;
+	T0* m1 = 0;
 	t1 = (T1)(a1==EIF_VOID);
 	if (t1) {
 		((T1879*)(C))->a1 = (T1879f32(ac, C, ((T1879*)(C))->a6));
@@ -75839,9 +75972,9 @@ void T1879f38(TC* ac, T0* C, T0* a1)
 T6 T1879f24(TC* ac, T0* C, T0* a1)
 {
 	T6 R = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T6 t2;
+	T0* m1 = 0;
 	t1 = (T1)(a1!=EIF_VOID);
 	if (t1) {
 		t1 = EIF_FALSE;
@@ -76682,13 +76815,13 @@ T0* T207f104(TC* ac, T0* C, T0* a1)
 	T0* l3 = 0;
 	T6 l4 = 0;
 	T1 l5 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T6 t3;
 	T0* t4;
 	T0* t5;
 	T0* t6;
+	T0* m1 = 0;
 	t1 = EIF_FALSE;
 	if (t1) {
 		R = T1704c11(ac, (T6)(GE_int32(0)));
@@ -76859,13 +76992,13 @@ T0* T837f101(TC* ac, T0* C, T0* a1)
 	T0* l3 = 0;
 	T6 l4 = 0;
 	T1 l5 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T6 t3;
 	T0* t4;
 	T0* t5;
 	T0* t6;
+	T0* m1 = 0;
 	t1 = EIF_FALSE;
 	if (t1) {
 		R = T1704c11(ac, (T6)(GE_int32(0)));
@@ -77036,13 +77169,13 @@ T0* T50f126(TC* ac, T0* C, T0* a1)
 	T0* l3 = 0;
 	T6 l4 = 0;
 	T1 l5 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T6 t3;
 	T0* t4;
 	T0* t5;
 	T0* t6;
+	T0* m1 = 0;
 	t1 = (T1)(a1==C);
 	if (t1) {
 		R = T1704c11(ac, (T6)(GE_int32(0)));
@@ -77213,13 +77346,13 @@ T0* T814f114(TC* ac, T0* C, T0* a1)
 	T0* l3 = 0;
 	T6 l4 = 0;
 	T1 l5 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T6 t3;
 	T0* t4;
 	T0* t5;
 	T0* t6;
+	T0* m1 = 0;
 	t1 = (T1)(a1==C);
 	if (t1) {
 		R = T1704c11(ac, (T6)(GE_int32(0)));
@@ -77390,13 +77523,13 @@ T0* T89f166(TC* ac, T0* C, T0* a1)
 	T0* l3 = 0;
 	T6 l4 = 0;
 	T1 l5 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T6 t3;
 	T0* t4;
 	T0* t5;
 	T0* t6;
+	T0* m1 = 0;
 	t1 = (T1)(a1==C);
 	if (t1) {
 		R = T1704c11(ac, (T6)(GE_int32(0)));
@@ -77686,9 +77819,9 @@ T0* T833f21(TC* ac, T0* C)
 T0* T211f95(TC* ac, T0* C, T0* a1)
 {
 	T0* R = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	t1 = (a1?((m1 = a1, T211f95ot1(ac, a1))):EIF_FALSE);
 	if (t1) {
 		t2 = (((T1319*)(((T211*)(C))->a2))->a1);
@@ -77716,9 +77849,9 @@ T1 T1830f10(TC* ac, T0* C, T0* a1)
 {
 	T1 R = 0;
 	T6 l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = ((T6)((((T1830*)(C))->a1)-((T6)(GE_int32(1)))));
 	t1 = EIF_FALSE;
 	if (t1) {
@@ -77759,9 +77892,9 @@ T1 T1830f10(TC* ac, T0* C, T0* a1)
 T0* T207f96(TC* ac, T0* C, T0* a1)
 {
 	T0* R = 0;
+	T1 t1;
 	T0* m1 = 0;
 	T0* m2 = 0;
-	T1 t1;
 	t1 = (a1?((m1 = a1, T207f96ot1(ac, a1))):EIF_FALSE);
 	if (t1) {
 		R = (T176f5(ac, ((T207*)(C))->a4, m1));
@@ -77856,9 +77989,9 @@ T0* T176f5(TC* ac, T0* C, T0* a1)
 T0* T837f95(TC* ac, T0* C, T0* a1)
 {
 	T0* R = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	t1 = (a1?((m1 = a1, T837f95ot1(ac, a1))):EIF_FALSE);
 	if (t1) {
 		t2 = (((T1319*)(((T837*)(C))->a2))->a1);
@@ -77885,9 +78018,9 @@ T1 T837f95ot1(TC* ac, T0* a1)
 T0* T50f125(TC* ac, T0* C, T0* a1)
 {
 	T0* R = 0;
+	T1 t1;
 	T0* m1 = 0;
 	T0* m2 = 0;
-	T1 t1;
 	t1 = (a1?((m1 = a1, T50f125ot1(ac, a1))):EIF_FALSE);
 	if (t1) {
 		R = (T176f5(ac, ((T50*)(C))->a14, m1));
@@ -77926,9 +78059,9 @@ T1 T50f125ot2(TC* ac, T0* a1)
 T0* T814f113(TC* ac, T0* C, T0* a1)
 {
 	T0* R = 0;
+	T1 t1;
 	T0* m1 = 0;
 	T0* m2 = 0;
-	T1 t1;
 	t1 = (a1?((m1 = a1, T814f113ot1(ac, a1))):EIF_FALSE);
 	if (t1) {
 		R = (T176f5(ac, ((T814*)(C))->a13, m1));
@@ -77967,9 +78100,9 @@ T1 T814f113ot2(TC* ac, T0* a1)
 T0* T89f163(TC* ac, T0* C, T0* a1)
 {
 	T0* R = 0;
+	T1 t1;
 	T0* m1 = 0;
 	T0* m2 = 0;
-	T1 t1;
 	t1 = (a1?((m1 = a1, T89f163ot1(ac, a1))):EIF_FALSE);
 	if (t1) {
 		R = (T176f5(ac, ((T89*)(C))->a15, m1));
@@ -78042,11 +78175,11 @@ T0* T89f160(TC* ac, T0* C, T0* a1, T2 a2)
 	T0* l1 = 0;
 	T6 volatile l2 = 0;
 	T6 l3 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T6 t3;
 	T0* t4;
+	T0* m1 = 0;
 	t1 = (T1)(a1==C);
 	if (t1) {
 		R = (T89f162(ac, C));
@@ -78428,11 +78561,11 @@ T0* T67f26(TC* ac, T0* C, T0* a1, T2 a2)
 	T0* R = 0;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T6 t3;
 	T6 t4;
+	T0* m1 = 0;
 	t1 = (T1)(a1==((T67*)(C))->a4);
 	if (t1) {
 		t1 = EIF_FALSE;
@@ -78496,11 +78629,11 @@ T0* T50f135(TC* ac, T0* C, T0* a1, T2 a2)
 	T0* l1 = 0;
 	T6 volatile l2 = 0;
 	T6 l3 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T6 t3;
 	T0* t4;
+	T0* m1 = 0;
 	t1 = (T1)(a1==C);
 	if (t1) {
 		R = (T50f137(ac, C));
@@ -78941,9 +79074,9 @@ T1 T192f24(TC* ac, T0* C, T0* a1)
 T1 T192f23(TC* ac, T0* C, T0* a1)
 {
 	T1 R = 0;
+	T1 t1;
 	T0* m1 = 0;
 	T0* m2 = 0;
-	T1 t1;
 	t1 = EIF_FALSE;
 	if (t1) {
 		t1 = (T1)(m1==a1);
@@ -78963,9 +79096,9 @@ T1 T192f23(TC* ac, T0* C, T0* a1)
 T1 T192f21(TC* ac, T0* C, T0* a1)
 {
 	T1 R = 0;
+	T1 t1;
 	T0* m1 = 0;
 	T0* m2 = 0;
-	T1 t1;
 	t1 = (((T192*)(C))->a4?((m1 = ((T192*)(C))->a4, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		t1 = (T1)(m1==a1);
@@ -78986,9 +79119,9 @@ T1 T69f12(TC* ac, T0* C, T0* a1)
 {
 	T1 R = 0;
 	T6 l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = ((T6)((((T69*)(C))->a1)-((T6)(GE_int32(1)))));
 	t1 = EIF_FALSE;
 	if (t1) {
@@ -79029,9 +79162,9 @@ T1 T69f12(TC* ac, T0* C, T0* a1)
 T1 T192f30(TC* ac, T0* C, T0* a1)
 {
 	T1 R = 0;
+	T1 t1;
 	T0* m1 = 0;
 	T0* m2 = 0;
-	T1 t1;
 	t1 = (((T192*)(C))->a3?((m1 = ((T192*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		t1 = (T1)(m1==a1);
@@ -79051,9 +79184,9 @@ T1 T192f30(TC* ac, T0* C, T0* a1)
 T1 T192f27(TC* ac, T0* C, T0* a1)
 {
 	T1 R = 0;
+	T1 t1;
 	T0* m1 = 0;
 	T0* m2 = 0;
-	T1 t1;
 	t1 = (((T192*)(C))->a2?((m1 = ((T192*)(C))->a2, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		t1 = (T1)(m1==a1);
@@ -79073,10 +79206,10 @@ T1 T192f27(TC* ac, T0* C, T0* a1)
 void T68f1181(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T6 t3;
+	T0* m1 = 0;
 	t1 = (((T310*)(((T68*)(C))->a120))->z2[((T68*)(C))->a517]);
 	l1 = (T68f968(ac, C, t1));
 	t2 = (T1)(l1!=EIF_VOID);
@@ -79116,10 +79249,10 @@ void T68f1181(TC* ac, T0* C)
 void T68f1180(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T6 t3;
+	T0* m1 = 0;
 	t1 = (((T310*)(((T68*)(C))->a120))->z2[((T68*)(C))->a517]);
 	l1 = (T68f968(ac, C, t1));
 	t2 = (T1)(l1!=EIF_VOID);
@@ -79159,10 +79292,10 @@ void T68f1180(TC* ac, T0* C)
 void T68f1179(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T6 t3;
+	T0* m1 = 0;
 	t1 = (((T310*)(((T68*)(C))->a120))->z2[((T68*)(C))->a517]);
 	l1 = (T68f968(ac, C, t1));
 	t2 = (T1)(l1!=EIF_VOID);
@@ -79672,9 +79805,9 @@ void T68f1170(TC* ac, T0* C)
 void T68f1169(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T590*)(((T68*)(C))->a411))->z2[((T68*)(C))->a614]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -79859,10 +79992,10 @@ T0* T1681c2(TC* ac)
 void T68f1168(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T6 t3;
+	T0* m1 = 0;
 	t1 = (((T584*)(((T68*)(C))->a405))->z2[((T68*)(C))->a612]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -80344,9 +80477,9 @@ T0* T578f4(TC* ac, T0* C, T6 a1)
 void T68f1162(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T578*)(((T68*)(C))->a399))->z2[((T68*)(C))->a610]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -80493,9 +80626,9 @@ void T68f1161(TC* ac, T0* C)
 void T68f1160(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T578*)(((T68*)(C))->a399))->z2[((T68*)(C))->a610]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -80518,11 +80651,11 @@ void T68f1160(TC* ac, T0* C)
 void T68f1159(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T6 t4;
+	T0* m1 = 0;
 	t1 = (((T581*)(((T68*)(C))->a402))->z2[((T68*)(C))->a611]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -80691,11 +80824,11 @@ T0* T577s6(TC* ac)
 void T68f1158(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T6 t4;
+	T0* m1 = 0;
 	t1 = (((T581*)(((T68*)(C))->a402))->z2[((T68*)(C))->a611]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -80818,9 +80951,9 @@ void T68f1154(TC* ac, T0* C)
 void T68f1153(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T578*)(((T68*)(C))->a399))->z2[((T68*)(C))->a610]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -80862,9 +80995,9 @@ void T68f1152(TC* ac, T0* C)
 void T68f1151(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
 	l1 = (((T578*)(((T68*)(C))->a399))->z2[((T68*)(C))->a610]);
 	t1 = (T1)(l1!=EIF_VOID);
 	if (t1) {
@@ -80887,11 +81020,11 @@ void T68f1151(TC* ac, T0* C)
 void T68f1150(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T6 t4;
+	T0* m1 = 0;
 	t1 = (((T581*)(((T68*)(C))->a402))->z2[((T68*)(C))->a611]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -80928,11 +81061,11 @@ void T68f1150(TC* ac, T0* C)
 void T68f1149(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
 	T6 t4;
+	T0* m1 = 0;
 	t1 = (((T581*)(((T68*)(C))->a402))->z2[((T68*)(C))->a611]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -81022,11 +81155,11 @@ void T68f1146(TC* ac, T0* C)
 void T68f1145(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T1 t1;
 	T0* t2;
 	T0* t3;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	l1 = (((T578*)(((T68*)(C))->a399))->z2[((T68*)(C))->a610]);
 	t1 = (l1?((m1 = l1, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
@@ -81060,11 +81193,11 @@ void T577f15(TC* ac, T0* C, T0* a1)
 void T68f1144(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T0* t1;
 	T0* t2;
 	T1 t3;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (((T278*)(((T68*)(C))->a87))->z2[((T68*)(C))->a506]);
 	l1 = (T65f132(ac, t1, t2, (T6)(GE_int32(0))));
@@ -81119,11 +81252,11 @@ void T68f1143(TC* ac, T0* C)
 void T68f1142(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T1 t1;
 	T0* t2;
 	T0* t3;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	l1 = (((T578*)(((T68*)(C))->a399))->z2[((T68*)(C))->a610]);
 	t1 = (l1?((m1 = l1, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
@@ -81151,11 +81284,11 @@ void T68f1142(TC* ac, T0* C)
 void T68f1141(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T0* t1;
 	T0* t2;
 	T1 t3;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	t1 = (T68f767(ac, C));
 	t2 = (((T278*)(((T68*)(C))->a87))->z2[((T68*)(C))->a506]);
 	l1 = (T65f132(ac, t1, t2, (T6)(GE_int32(0))));
@@ -81994,9 +82127,9 @@ void T70f310(TC* ac, T0* C, T0* a1)
 void T68f1134(TC* ac, T0* C)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
+	T0* m1 = 0;
 	t1 = (((T403*)(((T68*)(C))->a216))->z2[((T68*)(C))->a549]);
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	if (t2) {
@@ -84057,15 +84190,15 @@ void T68f1080(TC* ac, T0* C)
 	T1 l14 = 0;
 	T0* l15 = 0;
 	T0* l16 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
-	T0* m3 = 0;
 	T1 t1;
 	T6 t2;
 	T0* t3;
 	T1 t4;
 	T2 t5;
 	T3 t6;
+	T0* m1 = 0;
+	T0* m2 = 0;
+	T0* m3 = 0;
 	((T68*)(C))->a58 = (T6)(GE_int32(-2));
 	l7 = (T6)(GE_int32(1));
 	while (1) {
@@ -86250,9 +86383,9 @@ T6 T1055f34(TC* ac, T0* C, T6 a1)
 T6 T1055f31(TC* ac, T0* C, T0* a1)
 {
 	T6 R = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T6 t2;
+	T0* m1 = 0;
 	t1 = (T1)(a1!=EIF_VOID);
 	if (t1) {
 		t1 = (((T1055*)(C))->a20?((m1 = ((T1055*)(C))->a20, EIF_TRUE)):EIF_FALSE);
@@ -86448,12 +86581,12 @@ void T1055f42(TC* ac, T0* C, T0* a1)
 	T6 l2 = 0;
 	T6 l3 = 0;
 	T6 l4 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T1 t2;
 	T6 volatile t3;
 	T0* t4;
 	T6 volatile t5;
+	T0* m1 = 0;
 	t1 = (T1)(a1==EIF_VOID);
 	if (t1) {
 		((T1055*)(C))->a4 = (T1055f34(ac, C, ((T1055*)(C))->a12));
@@ -88125,8 +88258,8 @@ T0* T68f1032(TC* ac, T0* C)
 /* DS_HASH_TABLE [INTEGER_32, STRING_8].set_key_equality_tester */
 void T1055f39(TC* ac, T0* C, T0* a1)
 {
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	((T1055*)(C))->a9 = a1;
 	t1 = EIF_FALSE;
 	if (t1) {
@@ -99811,10 +99944,10 @@ T6 T68f723(TC* ac, T0* C, T6 a1)
 	T6 volatile R = 0;
 	T6 l1 = 0;
 	T1 l2 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T6 t2;
 	T0* t3;
+	T0* m1 = 0;
 	t1 = EIF_TRUE;
 	t1 = ((T1)(!(t1)));
 	if (t1) {
@@ -99869,13 +100002,13 @@ T6 T68f722(TC* ac, T0* C)
 	T10 volatile l4 = 0;
 	T0* l5 = 0;
 	T0* l6 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T6 t1;
 	T1 t2;
 	T0* t3;
 	T2 t4;
 	T3 t5;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	t1 = (T68f704(ac, C));
 	R = ((T6)((((T68*)(C))->a73)+(t1)));
 	t2 = (((((T0*)(((T68*)(C))->a27))->id==247)?((T247*)(((T68*)(C))->a27))->a9:((T265*)(((T68*)(C))->a27))->a8));

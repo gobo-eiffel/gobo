@@ -266,10 +266,10 @@ T6 T1297f71(TC* ac, T0* C, T6 a1)
 	T6 volatile R = 0;
 	T6 l1 = 0;
 	T1 l2 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T6 t2;
 	T0* t3;
+	T0* m1 = 0;
 	t1 = EIF_FALSE;
 	t1 = ((T1)(!(t1)));
 	if (t1) {
@@ -324,13 +324,13 @@ T6 T1297f70(TC* ac, T0* C)
 	T10 volatile l4 = 0;
 	T0* l5 = 0;
 	T0* l6 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T6 t1;
 	T1 t2;
 	T0* t3;
 	T2 t4;
 	T3 t5;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	t1 = (T1297f62(ac, C));
 	R = ((T6)((((T1297*)(C))->a8)+(t1)));
 	t2 = (((((T0*)(((T1297*)(C))->a41))->id==265)?((T265*)(((T1297*)(C))->a41))->a8:((T1167*)(((T1297*)(C))->a41))->a10));
@@ -484,15 +484,15 @@ void T1258f205(TC* ac, T0* C)
 	T1 l14 = 0;
 	T0* l15 = 0;
 	T0* l16 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
-	T0* m3 = 0;
 	T1 t1;
 	T6 t2;
 	T0* t3;
 	T1 t4;
 	T2 t5;
 	T3 t6;
+	T0* m1 = 0;
+	T0* m2 = 0;
+	T0* m3 = 0;
 	((T1258*)(C))->a1 = (T6)(GE_int32(-2));
 	l7 = (T6)(GE_int32(1));
 	while (1) {
@@ -2281,10 +2281,10 @@ T6 T1258f66(TC* ac, T0* C, T6 a1)
 	T6 volatile R = 0;
 	T6 l1 = 0;
 	T1 l2 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T6 t2;
 	T0* t3;
+	T0* m1 = 0;
 	t1 = EIF_FALSE;
 	t1 = ((T1)(!(t1)));
 	if (t1) {
@@ -2339,13 +2339,13 @@ T6 T1258f65(TC* ac, T0* C)
 	T10 volatile l4 = 0;
 	T0* l5 = 0;
 	T0* l6 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T6 t1;
 	T1 t2;
 	T0* t3;
 	T2 t4;
 	T3 t5;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	t1 = (T1258f50(ac, C));
 	R = ((T6)((((T1258*)(C))->a8)+(t1)));
 	t2 = (((((T0*)(((T1258*)(C))->a39))->id==265)?((T265*)(((T1258*)(C))->a39))->a8:((T1167*)(((T1258*)(C))->a39))->a10));
@@ -14754,8 +14754,8 @@ T0* T807f85(TC* ac, T0* C)
 /* DS_HASH_TABLE [XM_EIFFEL_ENTITY_DEF, STRING_8].set_key_equality_tester */
 void T1264f39(TC* ac, T0* C, T0* a1)
 {
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	((T1264*)(C))->a7 = a1;
 	t1 = EIF_FALSE;
 	if (t1) {
@@ -19674,8 +19674,8 @@ T0* T807f84(TC* ac, T0* C)
 /* DS_HASH_TABLE [ET_ECF_DOTNET_ASSEMBLY, STRING_8].set_key_equality_tester */
 void T805f35(TC* ac, T0* C, T0* a1)
 {
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	((T805*)(C))->a3 = a1;
 	t1 = EIF_FALSE;
 	if (t1) {
@@ -19799,8 +19799,8 @@ T0* T1257c3(TC* ac)
 /* DS_HASH_TABLE [ET_ECF_LIBRARY, STRING_8].set_key_equality_tester */
 void T804f41(TC* ac, T0* C, T0* a1)
 {
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	((T804*)(C))->a4 = a1;
 	t1 = EIF_FALSE;
 	if (t1) {
@@ -20451,12 +20451,12 @@ void T26f84(TC* ac, T0* C, T0* a1)
 	T0* l9 = 0;
 	T0* l10 = 0;
 	T0* l11 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T0* t2;
 	T0* t3;
 	T1 t4;
 	T1 t5;
+	T0* m1 = 0;
 	((T26*)(C))->a27 = EIF_VOID;
 	((T26*)(C))->a5 = EIF_VOID;
 	((T26*)(C))->a28 = EIF_VOID;
@@ -20703,8 +20703,8 @@ T0* T67c41(TC* ac, T0* a1, T0* a2, T0* a3)
 /* ET_CLUSTER.set_scm_mapping_constraint_enabled */
 void T67f42(TC* ac, T0* C, T1 a1)
 {
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	if (a1) {
 		((T67*)(C))->a5 = EIF_FALSE;
 	}
@@ -21229,10 +21229,10 @@ void T26f95(TC* ac, T0* C, T0* a1, T0* a2)
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T0* l3 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T1 t3;
+	T0* m1 = 0;
 	t1 = (T54f13(ac, a1));
 	if (t1) {
 		t2 = (T54f15(ac, a1));
@@ -21357,9 +21357,6 @@ T0* T26f60(TC* ac, T0* C, T0* a1, T1 a2, T1 a3)
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T6 l3 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
-	T0* u1;
 	T0* t1;
 	T1 t2;
 	T1 t3;
@@ -21367,6 +21364,9 @@ T0* T26f60(TC* ac, T0* C, T0* a1, T1 a2, T1 a3)
 	T6 t5;
 	T6 t6;
 	T0* t7;
+	T0* m1 = 0;
+	T0* m2 = 0;
+	T0* u1;
 	if (a2) {
 		l1 = T93c20(ac);
 		T93f21(ac, l1, GE_ms8("GOBO_EIFFEL", 11), GE_ms8("ge", 2));
@@ -22198,10 +22198,10 @@ T6 T20f10(TC* ac, T0* C)
 T0* T20c13(TC* ac, T0* a1)
 {
 	T0* C;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	C = GE_new20(ac, EIF_TRUE);
 	t1 = (a1?((m1 = a1, T20f13ot1(ac, a1))):EIF_FALSE);
 	if (t1) {
@@ -22244,9 +22244,9 @@ T0* T18f11(TC* ac, T0* C)
 	T0* R = 0;
 	T6 volatile l1 = 0;
 	T6 l2 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T10 t2;
+	T0* m1 = 0;
 	t1 = (m1 = C, EIF_TRUE);
 	if (t1) {
 		R = m1;
@@ -22377,11 +22377,11 @@ T0* T26f59(TC* ac, T0* C, T0* a1)
 	T0* l2 = 0;
 	T0* l3 = 0;
 	T0* l4 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T1 t1;
 	T0* t2;
 	T1 t3;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	t2 = (T26s61(ac));
 	t2 = (T49s3(ac, ge1623ov26591239));
 	t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
@@ -22435,10 +22435,10 @@ T0* T26f59(TC* ac, T0* C, T0* a1)
 /* ET_ECF_CAPABILITIES.set_primary_use_values_from_definitions */
 void T92f14(TC* ac, T0* C, T0* a1)
 {
-	T0* m1 = 0;
-	T0* u1;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
+	T0* u1;
 	u1 = (((((T0*)(a1))->id==222)?T222f6(ac, a1):T224f12(ac, a1)));
 	while (1) {
 		t1 = (((((T0*)(u1))->id==223)?T223f7(ac, u1):((T1118*)(u1))->a1));
@@ -22512,12 +22512,12 @@ T0* T26f58(TC* ac, T0* C, T0* a1, T1 a2)
 	T0* l2 = 0;
 	T0* l3 = 0;
 	T0* l4 = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T1 t1;
 	T0* t2;
 	T1 t3;
 	T1 t4;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	t2 = (T26s61(ac));
 	t2 = (T49s3(ac, ge1623ov26591237));
 	t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
@@ -22577,10 +22577,10 @@ T0* T26f58(TC* ac, T0* C, T0* a1, T1 a2)
 /* ET_ECF_SETTINGS.set_primary_values_from_definitions */
 void T71f9(TC* ac, T0* C, T0* a1)
 {
-	T0* m1 = 0;
-	T0* u1;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
+	T0* u1;
 	u1 = (((((T0*)(a1))->id==222)?T222f6(ac, a1):T224f12(ac, a1)));
 	while (1) {
 		t1 = (((((T0*)(u1))->id==223)?T223f7(ac, u1):((T1118*)(u1))->a1));
@@ -22641,7 +22641,6 @@ void T26f90(TC* ac, T0* C, T0* a1, T0* a2)
 {
 	T0* l1 = 0;
 	T0* l2 = 0;
-	T0* m1 = 0;
 	T0* t1;
 	T1 t2;
 	T0* t3;
@@ -22649,6 +22648,7 @@ void T26f90(TC* ac, T0* C, T0* a1, T0* a2)
 	T6 t5;
 	T6 t6;
 	T6 t7;
+	T0* m1 = 0;
 	l2 = (T26s38(ac));
 	t1 = (T54f15(ac, a1));
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
@@ -22735,10 +22735,10 @@ void T26f88(TC* ac, T0* C)
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T6 volatile l3 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T10 t3;
+	T0* m1 = 0;
 	t1 = (T26f45(ac, C));
 	if (t1) {
 		l2 = T17c49(ac, (T6)(GE_int32(100)));
@@ -22784,8 +22784,8 @@ void T26f88(TC* ac, T0* C)
 void T53f14(TC* ac, T0* C, T0* a1)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T53*)(C))->a1?((m1 = ((T53*)(C))->a1, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		l1 = T220c3(ac, a1);
@@ -23156,11 +23156,11 @@ void T45s22(TC* ac)
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T0* l3 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T1 t3;
 	T0* t4;
+	T0* m1 = 0;
 	t2 = (T45s9(ac));
 	t3 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 	t1 = ((T1)(!(t3)));
@@ -23385,10 +23385,10 @@ T0* T45s9(TC* ac)
 void T45s21(TC* ac)
 {
 	T0* l1 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T1 t3;
+	T0* m1 = 0;
 	t2 = (T45s7(ac));
 	t3 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 	t1 = ((T1)(!(t3)));
@@ -23562,11 +23562,11 @@ void T44s20(TC* ac)
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T0* l3 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T1 t3;
 	T0* t4;
+	T0* m1 = 0;
 	t2 = (T44s13(ac));
 	t3 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 	t1 = ((T1)(!(t3)));
@@ -23604,11 +23604,11 @@ void T44s19(TC* ac)
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T0* l3 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T1 t3;
 	T0* t4;
+	T0* m1 = 0;
 	t2 = (T44s3(ac));
 	t3 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 	t1 = ((T1)(!(t3)));
@@ -23643,11 +23643,11 @@ GE_ms8("gc.h", 4));
 /* UT_GOBO_VARIABLES.set_gobo_library_variable */
 void T44s18(TC* ac)
 {
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T1 t1;
 	T0* t2;
 	T1 t3;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	t2 = (T44s11(ac));
 	t3 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 	t1 = ((T1)(!(t3)));
@@ -23684,12 +23684,12 @@ void T44s17(TC* ac)
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T1 l3 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T1 t3;
 	T0* t4;
 	T0* t5;
+	T0* m1 = 0;
 	t2 = (T44s1(ac));
 	t3 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 	t1 = ((T1)(!(t3)));
@@ -24074,10 +24074,10 @@ T0* T26s43(TC* ac)
 T0* T37s1(TC* ac)
 {
 	T0* R = 0;
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T1 t1;
 	T0* t2;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	t2 = (T37s2(ac));
 	t2 = (T21s1(ac));
 	t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
@@ -24097,8 +24097,8 @@ T0* T149f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T149*)(C))->a3?((m1 = ((T149*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24111,8 +24111,8 @@ T0* T148f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T148*)(C))->a3?((m1 = ((T148*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24125,8 +24125,8 @@ T0* T147f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T147*)(C))->a3?((m1 = ((T147*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24139,8 +24139,8 @@ T0* T146f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T146*)(C))->a3?((m1 = ((T146*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24153,8 +24153,8 @@ T0* T145f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T145*)(C))->a3?((m1 = ((T145*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24167,8 +24167,8 @@ T0* T144f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T144*)(C))->a3?((m1 = ((T144*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24181,8 +24181,8 @@ T0* T143f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T143*)(C))->a3?((m1 = ((T143*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24195,8 +24195,8 @@ T0* T142f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T142*)(C))->a3?((m1 = ((T142*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24209,8 +24209,8 @@ T0* T141f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T141*)(C))->a3?((m1 = ((T141*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24223,8 +24223,8 @@ T0* T140f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T140*)(C))->a3?((m1 = ((T140*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24237,8 +24237,8 @@ T0* T139f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T139*)(C))->a3?((m1 = ((T139*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24251,8 +24251,8 @@ T0* T138f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T138*)(C))->a3?((m1 = ((T138*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24265,8 +24265,8 @@ T0* T137f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T137*)(C))->a3?((m1 = ((T137*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24279,8 +24279,8 @@ T0* T136f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T136*)(C))->a3?((m1 = ((T136*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24293,8 +24293,8 @@ T0* T135f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T135*)(C))->a3?((m1 = ((T135*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24307,8 +24307,8 @@ T0* T134f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T134*)(C))->a3?((m1 = ((T134*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24321,8 +24321,8 @@ T0* T133f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T133*)(C))->a3?((m1 = ((T133*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24335,8 +24335,8 @@ T0* T131f12(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T131*)(C))->a4?((m1 = ((T131*)(C))->a4, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24349,8 +24349,8 @@ T0* T130f13(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T130*)(C))->a3?((m1 = ((T130*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24363,8 +24363,8 @@ T0* T129f12(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T129*)(C))->a3?((m1 = ((T129*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24377,8 +24377,8 @@ T0* T128f12(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T128*)(C))->a4?((m1 = ((T128*)(C))->a4, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24391,8 +24391,8 @@ T0* T127f12(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T127*)(C))->a3?((m1 = ((T127*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24405,8 +24405,8 @@ T0* T126f12(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T126*)(C))->a3?((m1 = ((T126*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24419,8 +24419,8 @@ T0* T125f12(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T125*)(C))->a4?((m1 = ((T125*)(C))->a4, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24433,8 +24433,8 @@ T0* T123f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T123*)(C))->a3?((m1 = ((T123*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24447,8 +24447,8 @@ T0* T121f12(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T121*)(C))->a3?((m1 = ((T121*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -24461,8 +24461,8 @@ T0* T119f6(TC* ac, T0* C)
 {
 	T0* R = 0;
 	T40 l1 = GE_default40;
-	T0* m1 = 0;
 	T1 t1;
+	T0* m1 = 0;
 	t1 = (((T119*)(C))->a3?((m1 = ((T119*)(C))->a3, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
 		R = (T40s8(ac, m1));
@@ -25212,11 +25212,11 @@ T0* T37s2(TC* ac)
 /* ISE_EXCEPTION_MANAGER.set_exception_data */
 void T21s16(TC* ac, T6 a1, T1 a2, T6 a3, T6 a4, T0* a5, T0* a6, T0* a7, T0* a8, T0* a9, T0* a10, T6 a11, T1 a12)
 {
-	T0* m1 = 0;
-	T0* m2 = 0;
 	T0* t1;
 	T0* t2;
 	T1 t3;
+	T0* m1 = 0;
+	T0* m2 = 0;
 	t1 = (T21s6(ac));
 	t2 = GE_mt32(ac, a1, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12);
 	T29f2(ac, t1, t2);
@@ -25729,6 +25729,9 @@ T0* T21s10(TC* ac)
 {
 	T0* R = 0;
 	T0* l1 = 0;
+	T1 t1;
+	T0* t2;
+	T6 t3;
 	T0* m1 = 0;
 	T0* m2 = 0;
 	T0* m3 = 0;
@@ -25738,9 +25741,6 @@ T0* T21s10(TC* ac)
 	T0* m7 = 0;
 	T0* m8 = 0;
 	T0* m9 = 0;
-	T1 t1;
-	T0* t2;
-	T6 t3;
 	t2 = (T21s11(ac));
 	t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
@@ -27274,11 +27274,11 @@ void T21s15(TC* ac, T0* a1)
 {
 	T14 l1 = 0;
 	T14 l2 = 0;
-	T0* m1 = 0;
 	T1 t1;
 	T0* t2;
 	T0* t3;
 	T6 t4;
+	T0* m1 = 0;
 	t1 = (T22x1753104(ac, a1));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
@@ -57621,7 +57621,7 @@ if (t1<=315) {
 if (t1<=286) {
 if (t1<=283) {
 if (t1==48) {
-	return (((T48*)(C))->a5);
+	return (((T48*)(C))->a4);
 } else {
 	return (((T283*)(C))->a4);
 }
@@ -67585,7 +67585,7 @@ if (t1==101) {
 		T102f632(ac, C, a1);
 }
 } else {
-		T113f1702(ac, C, a1);
+		T113f1708(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -67624,7 +67624,7 @@ if (t1==101) {
 		T102f631(ac, C, a1);
 }
 } else {
-		T113f1701(ac, C, a1);
+		T113f1707(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -67663,7 +67663,7 @@ if (t1==101) {
 		T102f630(ac, C, a1);
 }
 } else {
-		T113f1700(ac, C, a1);
+		T113f1706(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -67732,7 +67732,7 @@ if (t1==101) {
 		T102f621(ac, C, a1);
 }
 } else {
-		T113f1695(ac, C, a1);
+		T113f1701(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -67921,7 +67921,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1694(ac, C, a1);
+		T113f1700(ac, C, a1);
 } else {
 		T866f499(ac, C, a1);
 }
@@ -67952,7 +67952,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1693(ac, C, a1);
+		T113f1699(ac, C, a1);
 } else {
 		T866f498(ac, C, a1);
 }
@@ -67983,7 +67983,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1692(ac, C, a1);
+		T113f1698(ac, C, a1);
 } else {
 		T866f497(ac, C, a1);
 }
@@ -68014,7 +68014,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1496(ac, C, a1);
+		T113f1502(ac, C, a1);
 } else {
 		T866f496(ac, C, a1);
 }
@@ -68120,7 +68120,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1495(ac, C, a1);
+		T113f1501(ac, C, a1);
 } else {
 		T866f408(ac, C, a1);
 }
@@ -68151,7 +68151,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1494(ac, C, a1);
+		T113f1500(ac, C, a1);
 } else {
 		T866f407(ac, C, a1);
 }
@@ -68182,7 +68182,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1493(ac, C, a1);
+		T113f1499(ac, C, a1);
 } else {
 		T866f397(ac, C, a1);
 }
@@ -68213,7 +68213,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1492(ac, C, a1);
+		T113f1498(ac, C, a1);
 } else {
 		T866f403(ac, C, a1);
 }
@@ -68244,7 +68244,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1491(ac, C, a1);
+		T113f1497(ac, C, a1);
 } else {
 		T866f402(ac, C, a1);
 }
@@ -68275,7 +68275,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1490(ac, C, a1);
+		T113f1496(ac, C, a1);
 } else {
 		T866f401(ac, C, a1);
 }
@@ -68306,7 +68306,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1489(ac, C, a1);
+		T113f1495(ac, C, a1);
 } else {
 		T866f400(ac, C, a1);
 }
@@ -68337,7 +68337,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1488(ac, C, a1);
+		T113f1494(ac, C, a1);
 } else {
 		T866f399(ac, C, a1);
 }
@@ -68368,7 +68368,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1487(ac, C, a1);
+		T113f1493(ac, C, a1);
 } else {
 		T866f398(ac, C, a1);
 }
@@ -68624,7 +68624,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1486(ac, C, a1);
+		T113f1492(ac, C, a1);
 } else {
 		T866f149(ac, C, a1);
 }
@@ -68659,7 +68659,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1485(ac, C, a1);
+		T113f1491(ac, C, a1);
 } else {
 		T866f148(ac, C, a1);
 }
@@ -68694,7 +68694,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1484(ac, C, a1);
+		T113f1490(ac, C, a1);
 } else {
 		T866f147(ac, C, a1);
 }
@@ -68729,7 +68729,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1483(ac, C, a1);
+		T113f1489(ac, C, a1);
 } else {
 		T866f146(ac, C, a1);
 }
@@ -68764,7 +68764,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1482(ac, C, a1);
+		T113f1488(ac, C, a1);
 } else {
 		T866f145(ac, C, a1);
 }
@@ -68799,7 +68799,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1481(ac, C, a1);
+		T113f1487(ac, C, a1);
 } else {
 		T866f144(ac, C, a1);
 }
@@ -68834,7 +68834,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1480(ac, C, a1);
+		T113f1486(ac, C, a1);
 } else {
 		T866f143(ac, C, a1);
 }
@@ -68869,7 +68869,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1479(ac, C, a1);
+		T113f1485(ac, C, a1);
 } else {
 		T866f142(ac, C, a1);
 }
@@ -68904,7 +68904,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1478(ac, C, a1);
+		T113f1484(ac, C, a1);
 } else {
 		T866f141(ac, C, a1);
 }
@@ -68939,7 +68939,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1477(ac, C, a1);
+		T113f1483(ac, C, a1);
 } else {
 		T866f140(ac, C, a1);
 }
@@ -68974,7 +68974,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1476(ac, C, a1);
+		T113f1482(ac, C, a1);
 } else {
 		T866f139(ac, C, a1);
 }
@@ -69009,7 +69009,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1475(ac, C, a1);
+		T113f1481(ac, C, a1);
 } else {
 		T866f138(ac, C, a1);
 }
@@ -69044,7 +69044,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1474(ac, C, a1);
+		T113f1480(ac, C, a1);
 } else {
 		T866f409(ac, C, a1);
 }
@@ -69068,7 +69068,7 @@ void T234x26263655T0(TC* ac, T0* C, T0* a1)
 	EIF_TYPE_INDEX t1 = ((T0*)(C))->id;
 if (t1<=2123) {
 if (t1==113) {
-		T113f1473(ac, C, a1);
+		T113f1479(ac, C, a1);
 } else {
 		T2123f117(ac, C, a1);
 }
@@ -69090,7 +69090,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1472(ac, C, a1);
+		T113f1478(ac, C, a1);
 } else {
 		T866f405(ac, C, a1);
 }
@@ -69121,7 +69121,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1471(ac, C, a1);
+		T113f1477(ac, C, a1);
 } else {
 		T866f410(ac, C, a1);
 }
@@ -69152,7 +69152,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1470(ac, C, a1);
+		T113f1476(ac, C, a1);
 } else {
 		T866f404(ac, C, a1);
 }
@@ -69183,7 +69183,7 @@ if (t1==101) {
 }
 } else {
 if (t1==113) {
-		T113f1469(ac, C, a1);
+		T113f1475(ac, C, a1);
 } else {
 		T866f406(ac, C, a1);
 }
@@ -69364,7 +69364,7 @@ if (t1==101) {
 		T102f227(ac, C, a1);
 }
 } else {
-		T113f1367(ac, C, a1);
+		T113f1369(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69403,7 +69403,7 @@ if (t1==101) {
 		T102f217(ac, C, a1);
 }
 } else {
-		T113f1366(ac, C, a1);
+		T113f1368(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69442,7 +69442,7 @@ if (t1==101) {
 		T102f216(ac, C, a1);
 }
 } else {
-		T113f1365(ac, C, a1);
+		T113f1367(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69481,7 +69481,7 @@ if (t1==101) {
 		T102f215(ac, C, a1);
 }
 } else {
-		T113f1364(ac, C, a1);
+		T113f1366(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69520,7 +69520,7 @@ if (t1==101) {
 		T102f214(ac, C, a1);
 }
 } else {
-		T113f1363(ac, C, a1);
+		T113f1365(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69559,7 +69559,7 @@ if (t1==101) {
 		T102f213(ac, C, a1);
 }
 } else {
-		T113f1362(ac, C, a1);
+		T113f1364(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69598,7 +69598,7 @@ if (t1==101) {
 		T102f212(ac, C, a1);
 }
 } else {
-		T113f1361(ac, C, a1);
+		T113f1363(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69637,7 +69637,7 @@ if (t1==101) {
 		T102f211(ac, C, a1);
 }
 } else {
-		T113f1360(ac, C, a1);
+		T113f1362(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69676,7 +69676,7 @@ if (t1==101) {
 		T102f210(ac, C, a1);
 }
 } else {
-		T113f1359(ac, C, a1);
+		T113f1361(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69715,7 +69715,7 @@ if (t1==101) {
 		T102f209(ac, C, a1);
 }
 } else {
-		T113f1358(ac, C, a1);
+		T113f1360(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69754,7 +69754,7 @@ if (t1==101) {
 		T102f208(ac, C, a1);
 }
 } else {
-		T113f1357(ac, C, a1);
+		T113f1359(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69793,7 +69793,7 @@ if (t1==101) {
 		T102f207(ac, C, a1);
 }
 } else {
-		T113f1356(ac, C, a1);
+		T113f1358(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69832,7 +69832,7 @@ if (t1==101) {
 		T102f206(ac, C, a1);
 }
 } else {
-		T113f1355(ac, C, a1);
+		T113f1357(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69871,7 +69871,7 @@ if (t1==101) {
 		T102f205(ac, C, a1);
 }
 } else {
-		T113f1354(ac, C, a1);
+		T113f1356(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69910,7 +69910,7 @@ if (t1==101) {
 		T102f204(ac, C, a1);
 }
 } else {
-		T113f1353(ac, C, a1);
+		T113f1355(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69949,7 +69949,7 @@ if (t1==101) {
 		T102f203(ac, C, a1);
 }
 } else {
-		T113f1352(ac, C, a1);
+		T113f1354(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -69988,7 +69988,7 @@ if (t1==101) {
 		T102f202(ac, C, a1);
 }
 } else {
-		T113f1351(ac, C, a1);
+		T113f1353(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70027,7 +70027,7 @@ if (t1==101) {
 		T102f201(ac, C, a1);
 }
 } else {
-		T113f1350(ac, C, a1);
+		T113f1352(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70066,7 +70066,7 @@ if (t1==101) {
 		T102f200(ac, C, a1);
 }
 } else {
-		T113f1349(ac, C, a1);
+		T113f1351(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70105,7 +70105,7 @@ if (t1==101) {
 		T102f199(ac, C, a1);
 }
 } else {
-		T113f1348(ac, C, a1);
+		T113f1350(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70144,7 +70144,7 @@ if (t1==101) {
 		T102f198(ac, C, a1);
 }
 } else {
-		T113f1347(ac, C, a1);
+		T113f1349(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70183,7 +70183,7 @@ if (t1==101) {
 		T102f197(ac, C, a1);
 }
 } else {
-		T113f1346(ac, C, a1);
+		T113f1348(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70222,7 +70222,7 @@ if (t1==101) {
 		T102f196(ac, C, a1);
 }
 } else {
-		T113f1345(ac, C, a1);
+		T113f1347(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70261,7 +70261,7 @@ if (t1==101) {
 		T102f182(ac, C, a1);
 }
 } else {
-		T113f1344(ac, C, a1);
+		T113f1346(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70300,7 +70300,7 @@ if (t1==101) {
 		T102f180(ac, C, a1);
 }
 } else {
-		T113f1343(ac, C, a1);
+		T113f1345(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70339,7 +70339,7 @@ if (t1==101) {
 		T102f179(ac, C, a1);
 }
 } else {
-		T113f1342(ac, C, a1);
+		T113f1344(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70378,7 +70378,7 @@ if (t1==101) {
 		T102f177(ac, C, a1);
 }
 } else {
-		T113f1341(ac, C, a1);
+		T113f1343(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70417,7 +70417,7 @@ if (t1==101) {
 		T102f176(ac, C, a1);
 }
 } else {
-		T113f1340(ac, C, a1);
+		T113f1342(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70456,7 +70456,7 @@ if (t1==101) {
 		T102f175(ac, C, a1);
 }
 } else {
-		T113f1339(ac, C, a1);
+		T113f1341(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70495,7 +70495,7 @@ if (t1==101) {
 		T102f174(ac, C, a1);
 }
 } else {
-		T113f1338(ac, C, a1);
+		T113f1340(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70534,7 +70534,7 @@ if (t1==101) {
 		T102f172(ac, C, a1);
 }
 } else {
-		T113f1337(ac, C, a1);
+		T113f1339(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70573,7 +70573,7 @@ if (t1==101) {
 		T102f171(ac, C, a1);
 }
 } else {
-		T113f1336(ac, C, a1);
+		T113f1338(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70612,7 +70612,7 @@ if (t1==101) {
 		T102f169(ac, C, a1);
 }
 } else {
-		T113f1335(ac, C, a1);
+		T113f1337(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70651,7 +70651,7 @@ if (t1==101) {
 		T102f168(ac, C, a1);
 }
 } else {
-		T113f1334(ac, C, a1);
+		T113f1336(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70690,7 +70690,7 @@ if (t1==101) {
 		T102f167(ac, C, a1);
 }
 } else {
-		T113f1333(ac, C, a1);
+		T113f1335(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70729,7 +70729,7 @@ if (t1==101) {
 		T102f166(ac, C, a1);
 }
 } else {
-		T113f1332(ac, C, a1);
+		T113f1334(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70768,7 +70768,7 @@ if (t1==101) {
 		T102f165(ac, C, a1);
 }
 } else {
-		T113f1331(ac, C, a1);
+		T113f1333(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70807,7 +70807,7 @@ if (t1==101) {
 		T102f164(ac, C, a1);
 }
 } else {
-		T113f1330(ac, C, a1);
+		T113f1332(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70846,7 +70846,7 @@ if (t1==101) {
 		T102f163(ac, C, a1);
 }
 } else {
-		T113f1329(ac, C, a1);
+		T113f1331(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70885,7 +70885,7 @@ if (t1==101) {
 		T102f223(ac, C, a1);
 }
 } else {
-		T113f1328(ac, C, a1);
+		T113f1330(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70924,7 +70924,7 @@ if (t1==101) {
 		T102f222(ac, C, a1);
 }
 } else {
-		T113f1327(ac, C, a1);
+		T113f1329(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -70963,7 +70963,7 @@ if (t1==101) {
 		T102f221(ac, C, a1);
 }
 } else {
-		T113f1326(ac, C, a1);
+		T113f1328(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -71002,7 +71002,7 @@ if (t1==101) {
 		T102f226(ac, C, a1);
 }
 } else {
-		T113f1325(ac, C, a1);
+		T113f1327(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -71041,7 +71041,7 @@ if (t1==101) {
 		T102f225(ac, C, a1);
 }
 } else {
-		T113f1324(ac, C, a1);
+		T113f1326(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -71080,7 +71080,7 @@ if (t1==101) {
 		T102f228(ac, C, a1);
 }
 } else {
-		T113f1323(ac, C, a1);
+		T113f1325(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -71119,7 +71119,7 @@ if (t1==101) {
 		T102f219(ac, C, a1);
 }
 } else {
-		T113f1322(ac, C, a1);
+		T113f1324(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -71158,7 +71158,7 @@ if (t1==101) {
 		T102f220(ac, C, a1);
 }
 } else {
-		T113f1321(ac, C, a1);
+		T113f1323(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -71354,7 +71354,7 @@ if (t1==101) {
 		T102f229(ac, C, a1);
 }
 } else {
-		T113f1302(ac, C, a1);
+		T113f1305(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -71393,7 +71393,7 @@ if (t1==101) {
 		T102f305(ac, C, a1);
 }
 } else {
-		T113f960(ac, C, a1);
+		T113f964(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -71432,7 +71432,7 @@ if (t1==101) {
 		T102f183(ac, C, a1);
 }
 } else {
-		T113f1301(ac, C, a1);
+		T113f1304(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -71471,7 +71471,7 @@ if (t1==101) {
 		T102f181(ac, C, a1);
 }
 } else {
-		T113f1300(ac, C, a1);
+		T113f1303(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -71510,7 +71510,7 @@ if (t1==101) {
 		T102f178(ac, C, a1);
 }
 } else {
-		T113f1299(ac, C, a1);
+		T113f1302(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -71549,7 +71549,7 @@ if (t1==101) {
 		T102f173(ac, C, a1);
 }
 } else {
-		T113f1298(ac, C, a1);
+		T113f1301(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -71588,7 +71588,7 @@ if (t1==101) {
 		T102f170(ac, C, a1);
 }
 } else {
-		T113f1297(ac, C, a1);
+		T113f1300(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -71627,7 +71627,7 @@ if (t1==101) {
 		T102f224(ac, C, a1);
 }
 } else {
-		T113f1296(ac, C, a1);
+		T113f1299(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -71666,7 +71666,7 @@ if (t1==101) {
 		T102f218(ac, C, a1);
 }
 } else {
-		T113f1295(ac, C, a1);
+		T113f1298(ac, C, a1);
 }
 } else {
 if (t1==866) {
@@ -82535,6 +82535,7 @@ T0* ge835ov13680650;
 T0* ge890ov14581770;
 T0* ge890ov14581765;
 T0* ge890ov14581775;
+T0* ge890ov14581778;
 T0* ge890ov14581776;
 T0* ge890ov14581802;
 T0* ge890ov14581786;
@@ -82748,7 +82749,6 @@ T0* ge890ov14581820;
 T0* ge845ov13844485;
 T0* ge845ov13844486;
 T0* ge845ov13844487;
-T0* ge890ov14581778;
 T0* ge890ov14581811;
 T0* ge890ov14581823;
 T0* ge903ov14794819;
@@ -82884,7 +82884,7 @@ void GE_init_const1()
 	ge771ov12632066 = (GE_ms8("GOBO_CLI_THREAD", 15));
 	ge771ov12632067 = (GE_ms8("GOBO_DEFAULT_THREAD", 19));
 	ge356ov5832726 = (GE_ms8("usage: ", 7));
-	ge773ov12664833 = (GE_ms8("00.00.00+0b6dade30", 18));
+	ge773ov12664833 = (GE_ms8("00.00.00+d6ee88f5e", 18));
 	ge358ov5865479 = (GE_ms8("Errors parsing arguments, aborting.", 35));
 	ge361ov5914629 = (GE_ms8("Too many occurrences of option \'$1\'.", 36));
 	ge361ov5914636 = (GE_ms8("APSOPT", 6));
@@ -85055,6 +85055,7 @@ void GE_init_const22()
 	ge890ov14581770 = (GE_ms8("console_application", 19));
 	ge890ov14581765 = (GE_ms8("check_for_void_target", 21));
 	ge890ov14581775 = (GE_ms8("exception_trace", 15));
+	ge890ov14581778 = (GE_ms8("finalize", 8));
 	ge890ov14581776 = (GE_ms8("executable_name", 15));
 	ge890ov14581802 = (GE_ms8("total_order_on_reals", 20));
 	ge890ov14581786 = (GE_ms8("line_generation", 15));
@@ -85152,11 +85153,11 @@ void GE_init_const22()
 	ge903ov14794776 = (GE_ms8("attribute \'$5\' with value \"$6\" already appears in another element \'$7\'.", 71));
 	ge909ov14893074 = (GE_ms8("concurrency", 11));
 	ge909ov14893148 = (GE_ms8("void_safety", 11));
-	ge909ov14893077 = (GE_ms8("custom", 6));
 }
 
 void GE_init_const23()
 {
+	ge909ov14893077 = (GE_ms8("custom", 6));
 	ge909ov14893080 = (GE_ms8("dotnet", 6));
 	ge909ov14893081 = (GE_ms8("dynamic_runtime", 15));
 	ge909ov14893112 = (GE_ms8("multithreaded", 13));
@@ -85257,11 +85258,11 @@ void GE_init_const23()
 	ge903ov14794814 = (GE_ms8("EATM", 4));
 	ge903ov14794779 = (GE_ms8("attribute \'$5\' is missing in element \'$6\'.", 42));
 	ge903ov14794808 = (GE_ms8("EADP", 4));
-	ge903ov14794773 = (GE_ms8("value \'$6\' for capability \'$5\' not supported by library \'$7\'.", 61));
 }
 
 void GE_init_const24()
 {
+	ge903ov14794773 = (GE_ms8("value \'$6\' for capability \'$5\' not supported by library \'$7\'.", 61));
 	ge835ov13680652 = (GE_ms8(" ", 1));
 	ge835ov13680645 = (GE_ms8("conformance", 11));
 	ge835ov13680646 = (GE_ms8("initialization", 14));
@@ -85276,7 +85277,6 @@ void GE_init_const24()
 	ge845ov13844485 = (GE_ms8("case-insensitive", 16));
 	ge845ov13844486 = (GE_ms8("wildcard", 8));
 	ge845ov13844487 = (GE_ms8("regexp", 6));
-	ge890ov14581778 = (GE_ms8("finalize", 8));
 	ge890ov14581811 = (GE_ms8("finalize", 8));
 	ge890ov14581823 = (GE_ms8("workbench", 9));
 	ge903ov14794819 = (GE_ms8("EPCD", 4));
@@ -96661,9 +96661,9 @@ void eise_io(const char* tag)
 /*
  * Raise a "No more memory" exception.
  */
- void enomem(void) {
+void enomem(void) {
 	GE_raise(GE_EX_OMEM);
- }
+}
 
 /*
  * Raise EiffelCOM exception.
@@ -96844,65 +96844,6 @@ extern "C" {
 #ifndef GE_REAL_H
 #include "ge_real.h"
 #endif
-
-/* HAS_CHOWN:
- *	This symbol, if defined, indicates that the chown routine is
- *	available.
- */
-#ifndef EIF_WINDOWS
-#define HAS_CHOWN
-#endif
-
-/* HAS_GETEUID:
- *	This symbol, if defined, indicates that the geteuid system call is
- *	available
- */
-#ifndef EIF_WINDOWS
-#define  HAS_GETEUID
-#endif
-
-/* HAS_GETGRGID:
- *	This symbol, if defined, indicates that the getgrgid system call is
- *	available
- */
-#ifndef EIF_WINDOWS
-#define  HAS_GETGRGID
-#endif
-
-/* HAS_GETGROUPS:
- *	This symbol, if defined, indicates that the getgroups() routine is
- *	available to get the list of process groups.  If unavailable, multiple
- *	groups are probably not supported.
- */
-#ifndef EIF_WINDOWS
-#define HAS_GETGROUPS
-#define Groups_t gid_t	/* Type for 2nd arg to getgroups() */
-#endif
-
-/* HAS_GETPWUID:
- *	This symbol, if defined, indicates that the getpwuid system call is
- *	available
- */
-#ifndef EIF_WINDOWS
-#define  HAS_GETPWUID
-#endif
-
-/* HAS_LINK:
- *	This symbol, if defined, indicates that the link routine is
- *	available to create hard links.
- */
-#ifndef EIF_WINDOWS
-#define HAS_LINK
-#endif
-
-/* HAS_LSTAT:
- *	This symbol, if defined, indicates that the lstat routine is
- *	available to do file stats on symbolic links.
- */
-#ifndef EIF_WINDOWS
-#define HAS_LSTAT
-#endif
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -98990,7 +98931,7 @@ extern "C" {
 		"C functions used to implement class DIRECTORY"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -99002,6 +98943,9 @@ extern "C" {
 
 #ifndef EIF_DIR_H
 #include "eif_dir.h"
+#endif
+#ifndef EIF_CONFIG_H
+#include "eif_config.h"
 #endif
 
 #include <sys/stat.h>
@@ -99429,7 +99373,7 @@ extern "C" {
 		"C functions used to implement class EXECUTION_ENVIRONMENT"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -99441,6 +99385,9 @@ extern "C" {
 
 #ifndef EIF_MISC_H
 #include "eif_misc.h"
+#endif
+#ifndef EIF_CONFIG_H
+#include "eif_config.h"
 #endif
 
 #include <stdlib.h>
