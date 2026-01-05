@@ -1543,6 +1543,10 @@ extern void* GE_memset(void* str, int c, size_t n);
 				include_runtime_header_file ("eif_retrieve.h", False, header_file)
 				include_runtime_header_file ("eif_store.h", False, header_file)
 				include_runtime_header_file ("eif_threads.h", False, header_file)
+			elseif a_library_name.same_string ("vision2_gtk3") then
+				l_common_defines.force_last ("GDK_DISABLE_DEPRECATED")
+				l_common_defines.force_last ("GTK_DISABLE_DEPRECATED")
+				l_common_defines.force_last ("GSEAL_ENABLE")
 			elseif a_library_name.same_string ("zlib") then
 				l_common_undefines.force_last ("_UNICODE")
 				l_common_undefines.force_last ("UNICODE")
