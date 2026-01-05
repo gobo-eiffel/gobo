@@ -82884,7 +82884,7 @@ void GE_init_const1()
 	ge771ov12632066 = (GE_ms8("GOBO_CLI_THREAD", 15));
 	ge771ov12632067 = (GE_ms8("GOBO_DEFAULT_THREAD", 19));
 	ge356ov5832726 = (GE_ms8("usage: ", 7));
-	ge773ov12664833 = (GE_ms8("00.00.00+d6ee88f5e", 18));
+	ge773ov12664833 = (GE_ms8("00.00.00+f0146105e", 18));
 	ge358ov5865479 = (GE_ms8("Errors parsing arguments, aborting.", 35));
 	ge361ov5914629 = (GE_ms8("Too many occurrences of option \'$1\'.", 36));
 	ge361ov5914636 = (GE_ms8("APSOPT", 6));
@@ -96822,7 +96822,7 @@ extern "C" {
 		"C functions used to implement class FILE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -99472,8 +99472,8 @@ void eif_sleep(EIF_INTEGER_64 nanoseconds)
 	 */
 
 #ifdef HAS_NANOSLEEP
-	volatile struct timespec req;
-	volatile struct timespec rem;
+	struct timespec req;
+	struct timespec rem;
 	req.tv_sec = nanoseconds / 1000000000;
 	req.tv_nsec = nanoseconds % 1000000000;
 	while ((nanosleep (&req, &rem) == -1) && (errno == EINTR)) {
