@@ -103,8 +103,8 @@ void eif_sleep(EIF_INTEGER_64 nanoseconds)
 	 */
 
 #ifdef HAS_NANOSLEEP
-	volatile struct timespec req;
-	volatile struct timespec rem;
+	struct timespec req;
+	struct timespec rem;
 	req.tv_sec = nanoseconds / 1000000000;
 	req.tv_nsec = nanoseconds % 1000000000;
 	while ((nanosleep (&req, &rem) == -1) && (errno == EINTR)) {
