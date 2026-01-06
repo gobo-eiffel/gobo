@@ -2704,8 +2704,6 @@ feature {NONE} -- Feature generation
 							current_file.put_character ('*')
 							header_file.put_character (' ')
 							current_file.put_character (' ')
-							header_file.put_character ('i')
-							current_file.put_character ('i')
 						elseif not a_inline and then use_boehm_gc and then not l_argument_type.is_expanded and then not current_feature.is_builtin then
 							l_has_reference_arguments := True
 							header_file.put_character (' ')
@@ -2932,41 +2930,7 @@ feature {NONE} -- Feature generation
 					current_file.put_character (';')
 					current_file.put_new_line
 				else
-					if a_inline and then l_arguments /= Void then
-						from i := 1 until i > nb_args loop
-							l_argument_type_set := argument_type_set (i)
-							l_argument_type := l_argument_type_set.static_type.primary_type
-							if l_argument_type.is_expanded and then not l_argument_type.is_basic then
-								l_name := l_arguments.formal_argument (i).name
-								current_file.put_string (c_define)
-								current_file.put_character (' ')
-								print_argument_name (l_name, current_file)
-								current_file.put_character (' ')
-								current_file.put_character ('(')
-								current_file.put_character ('*')
-								current_file.put_character ('i')
-								print_argument_name (l_name, current_file)
-								current_file.put_character (')')
-								current_file.put_new_line
-							end
-							i := i + 1
-						end
-					end
-					print_external_c_inline_body (a_feature)
-					if a_inline and then l_arguments /= Void then
-						from i := 1 until i > nb_args loop
-							l_argument_type_set := argument_type_set (i)
-							l_argument_type := l_argument_type_set.static_type.primary_type
-							if l_argument_type.is_expanded and then not l_argument_type.is_basic then
-								l_name := l_arguments.formal_argument (i).name
-								current_file.put_string (c_undef)
-								current_file.put_character (' ')
-								print_argument_name (l_name, current_file)
-								current_file.put_new_line
-							end
-							i := i + 1
-						end
-					end
+					print_external_c_inline_body (a_feature, a_inline)
 				end
 			elseif a_feature.is_builtin then
 				print_external_builtin_body (a_feature)
@@ -6412,8 +6376,10 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			current_file.put_new_line
 		end
 
-	print_external_c_inline_body (a_feature: ET_EXTERNAL_ROUTINE)
+	print_external_c_inline_body (a_feature: ET_EXTERNAL_ROUTINE; a_inline: BOOLEAN)
 			-- Print body of external "C inline" `a_feature' to `current_file'.
+			-- `a_inline' means that `a_feature' is a C inline or C++ inline feature and
+			-- we want to generate its code in a separate function.
 		require
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
@@ -6435,6 +6401,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			l_newline_needed_before_semicolon: BOOLEAN
 			l_has_result_type_cast: BOOLEAN
 			c, c3: CHARACTER
+			l_is_typed_pointer: BOOLEAN
+			l_is_pointer: BOOLEAN
+			l_is_inlined: BOOLEAN
 		do
 			if attached a_feature.alias_clause as l_alias then
 				l_alias_value := l_alias.manifest_string
@@ -6540,6 +6509,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 										i2 := i2 + 1
 									end
 									if l_max_index /= 0 then
+										l_is_typed_pointer := False
+										l_is_pointer := False
+										l_is_inlined := False
 										l_argument_name := l_formal_arguments.formal_argument (l_max_index).name
 										l_argument_type_set := argument_type_set (l_max_index)
 										l_argument_type := l_argument_type_set.static_type.primary_type
@@ -6554,7 +6526,9 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 												set_fatal_error
 												error_handler.report_giaac_error (generator, "print_external_c_inline_body", 1, "missing generic parameter for type 'TYPED_POINTER'.")
 											else
+												l_is_typed_pointer := True
 												l_actual_parameter := current_dynamic_system.dynamic_primary_type (l_actual_parameters.type (1), current_system.any_type)
+												current_file.put_character ('(')
 												current_file.put_character ('(')
 												print_type_declaration (l_actual_parameter, current_file)
 												if l_actual_parameter.is_expanded then
@@ -6562,21 +6536,33 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 												end
 												current_file.put_character (')')
 												current_file.put_character ('(')
-												print_argument_name (l_argument_name, current_file)
-												current_file.put_character ('.')
-												current_file.put_character ('a')
-												current_file.put_character ('1')
-												current_file.put_character (')')
 											end
-										else
-											if l_argument_type = current_dynamic_system.pointer_type then
-													-- Get rid of the volatile type marker.
-												current_file.put_character ('(')
-												current_file.put_string (c_void)
-												current_file.put_character ('*')
-												current_file.put_character (')')
-											end
-											print_argument_name (l_argument_name, current_file)
+										elseif l_argument_type = current_dynamic_system.pointer_type then
+											l_is_pointer := True
+												-- Get rid of the volatile type marker.
+											current_file.put_character ('(')
+											current_file.put_character ('(')
+											current_file.put_string (c_void)
+											current_file.put_character ('*')
+											current_file.put_character (')')
+										end
+										if a_inline and then l_argument_type.is_expanded and then not l_argument_type.is_basic then
+											l_is_inlined := True
+											current_file.put_character ('(')
+											current_file.put_character ('*')
+										end
+										print_argument_name (l_argument_name, current_file)
+										if l_is_inlined then
+											current_file.put_character (')')
+										end
+										if l_is_typed_pointer then
+											current_file.put_character ('.')
+											current_file.put_character ('a')
+											current_file.put_character ('1')
+											current_file.put_character (')')
+											current_file.put_character (')')
+										elseif l_is_pointer then
+											current_file.put_character (')')
 										end
 										i := i + l_max
 									else
