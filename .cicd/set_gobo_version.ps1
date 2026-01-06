@@ -10,7 +10,7 @@
 	set_gobo_version.ps1
 
 .NOTES
-	Copyright: "Copyright (c) 2024 Eric Bezault and others"
+	Copyright: "Copyright (c) 2024-2026 Eric Bezault and others"
 	License: "MIT License"
 #>
 
@@ -29,7 +29,7 @@ if ($LastExitCode -ne 0) {
 	exit $LastExitCode
 }
 $GOBO_VERSION = "$GOBO_DATE+$GOBO_SHA1"
-$GOBO_PATTERN = "[0-9a-zA-Z]{2}\.[0-9a-zA-Z]{2}\.[0-9a-zA-Z]{2}\+[0-9a-zA-Z]{9}"
+$GOBO_PATTERN = "[0-9a-zA-Z]{2}(\.[0-9a-zA-Z]{2}){2}\+[0-9a-zA-Z]{7}"
 $GOBO_FILE = "$env:GOBO/library/utility/src/support/ut_gobo_version.e"
 
 (Get-Content "$GOBO_FILE") -replace "$GOBO_PATTERN", "$GOBO_VERSION" | Out-File -Encoding "UTF8" "$GOBO_FILE"

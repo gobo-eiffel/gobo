@@ -17705,7 +17705,7 @@ feature {NONE} -- Query call generation
 						-- Try to inject the commit SHA-1 to the Gobo version if not already done yet.
 						-- Useful when compiling Gobo tools from a local Git clone.
 					if
-						l_string_constant.value.same_string ("xx.xx.xx+xxxxxxxxx") and
+						l_string_constant.value.same_string ("xx.xx.xx+xxxxxxx") and
 						l_constant_attribute.implementation_class.upper_name.same_string ("UT_GOBO_VERSION")
 					then
 						l_constant := gobo_version_string_constant
@@ -45696,7 +45696,7 @@ feature {NONE} -- Access
 			l_git_sha1: STRING
 			l_gobo_version: STRING
 		do
-			l_gobo_version := "xx.xx.xx+xxxxxxxxx"
+			l_gobo_version := "xx.xx.xx+xxxxxxx"
 			l_git_filename := file_system.nested_pathname ("${GOBO}", <<".git", "HEAD">>)
 			l_git_filename := Execution_environment.interpreted_string (l_git_filename)
 			l_first_line := file_system.file_first_line (l_git_filename)
@@ -45708,7 +45708,7 @@ feature {NONE} -- Access
 			end
 			if l_first_line.count = 40 then
 				l_git_sha1 := l_first_line
-				l_git_sha1.keep_head (9)
+				l_git_sha1.keep_head (7)
 				l_gobo_version := "00.00.00+" + l_git_sha1
 			end
 			create Result.make (l_gobo_version)
