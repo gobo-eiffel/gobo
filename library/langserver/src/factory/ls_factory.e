@@ -2951,7 +2951,6 @@ feature -- Access
 			a_field_name_not_void: a_field_name /= Void
 		local
 			l_dynamic_registration: detachable LS_BOOLEAN
-			l_relative_pattern_support: detachable LS_BOOLEAN
 		do
 			last_error := Void
 			l_dynamic_registration := boolean_in_object (a_object, {LS_DID_CHANGE_CONFIGURATION_CAPABILITIES}.dynamic_registration_name, True)
