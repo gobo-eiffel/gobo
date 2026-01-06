@@ -32,7 +32,7 @@ if ($LastExitCode -ne 0) {
 	exit $LastExitCode
 }
 
-$GOBO_CI_GE_ARCHIVE_FILENAME =  Get-ChildItem "gobo-*" -Name 
+$GOBO_CI_GE_ARCHIVE_FILENAME = Get-ChildItem "gobo-*" -Name 
 
 if ($GOBO_CI_OS -eq "windows") {
 	7z x "$env:GOBO/$GOBO_CI_GE_ARCHIVE_FILENAME" -o"$env:GOBO"
