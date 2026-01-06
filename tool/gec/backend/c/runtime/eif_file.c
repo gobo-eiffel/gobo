@@ -4,7 +4,7 @@
 		"C functions used to implement class FILE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -26,65 +26,6 @@
 #ifndef GE_REAL_H
 #include "ge_real.h"
 #endif
-
-/* HAS_CHOWN:
- *	This symbol, if defined, indicates that the chown routine is
- *	available.
- */
-#ifndef EIF_WINDOWS
-#define HAS_CHOWN
-#endif
-
-/* HAS_GETEUID:
- *	This symbol, if defined, indicates that the geteuid system call is
- *	available
- */
-#ifndef EIF_WINDOWS
-#define  HAS_GETEUID
-#endif
-
-/* HAS_GETGRGID:
- *	This symbol, if defined, indicates that the getgrgid system call is
- *	available
- */
-#ifndef EIF_WINDOWS
-#define  HAS_GETGRGID
-#endif
-
-/* HAS_GETGROUPS:
- *	This symbol, if defined, indicates that the getgroups() routine is
- *	available to get the list of process groups.  If unavailable, multiple
- *	groups are probably not supported.
- */
-#ifndef EIF_WINDOWS
-#define HAS_GETGROUPS
-#define Groups_t gid_t	/* Type for 2nd arg to getgroups() */
-#endif
-
-/* HAS_GETPWUID:
- *	This symbol, if defined, indicates that the getpwuid system call is
- *	available
- */
-#ifndef EIF_WINDOWS
-#define  HAS_GETPWUID
-#endif
-
-/* HAS_LINK:
- *	This symbol, if defined, indicates that the link routine is
- *	available to create hard links.
- */
-#ifndef EIF_WINDOWS
-#define HAS_LINK
-#endif
-
-/* HAS_LSTAT:
- *	This symbol, if defined, indicates that the lstat routine is
- *	available to do file stats on symbolic links.
- */
-#ifndef EIF_WINDOWS
-#define HAS_LSTAT
-#endif
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1428,7 +1369,7 @@ EIF_INTEGER stat_size(void)
 /*
  * Does the list of groups the user belongs to include `gid'?
  */
-static EIF_BOOLEAN eif_group_in_list(int gid)
+EIF_BOOLEAN eif_group_in_list(int gid)
 {
 	Groups_t* group_list;
 	int i, nb_groups, nb_groups_max;

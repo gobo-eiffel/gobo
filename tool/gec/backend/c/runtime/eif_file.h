@@ -4,7 +4,7 @@
 		"C functions used to implement class FILE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -16,6 +16,9 @@
 
 #ifndef GE_EIFFEL_H
 #include "ge_eiffel.h"
+#endif
+#ifndef EIF_CONFIG_H
+#include "eif_config.h"
 #endif
 
 #include <time.h>
@@ -273,6 +276,13 @@ extern void eif_file_pr(FILE *f, EIF_REAL_32 number);
  * Write double `val' onto `f'.
  */
 extern void eif_file_pd(FILE *f, EIF_REAL_64 val);
+
+#ifdef HAS_GETGROUPS
+/*
+ * Does the list of groups the user belongs to include `gid'?
+ */
+extern EIF_BOOLEAN eif_group_in_list(int gid);
+#endif
 
 /*
  * Size of the stat structure. This is used by the Eiffel side to create

@@ -4,7 +4,7 @@
 		"C functions used to access garbage collector facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -369,7 +369,7 @@ extern void GE_boehm_dispose_once_per_object_data(void* data, void* disp); /* Ca
 #ifdef GE_USE_BOEHM_GC
 #define eif_access(obj) (*(EIF_REFERENCE*)(obj))
 #else
-#define eif_access(obj) (obj)
+#define eif_access(obj) (EIF_REFERENCE)(obj)
 #endif
 
 /* Freeze memory address. */

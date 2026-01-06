@@ -4,7 +4,7 @@
 		"C declarations for the Gobo Eiffel runtime."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2005-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -399,7 +399,7 @@ extern void* GE_memset(void* str, int c, size_t n);
 #ifdef GE_USE_BOEHM_GC
 #define EIF_OBJECT EIF_REFERENCE*
 #else
-#define EIF_OBJECT EIF_REFERENCE
+#define EIF_OBJECT void*
 #endif
 #define EIF_OBJ EIF_OBJECT
 #define OVERHEAD sizeof(EIF_ANY)

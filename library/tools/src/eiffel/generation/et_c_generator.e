@@ -5,7 +5,7 @@
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_C_GENERATOR
@@ -1535,6 +1535,7 @@ extern void* GE_memset(void* str, int c, size_t n);
 			if use_scoop then
 				l_common_defines.force_last (c_ge_use_scoop)
 			end
+			include_runtime_header_file ("eif_config.h", False, header_file)
 			if a_library_name.same_string ("net") then
 				l_common_defines.force_last ("FD_SETSIZE 256")
 				l_common_undefines.force_last ("_UNICODE")
@@ -1543,6 +1544,10 @@ extern void* GE_memset(void* str, int c, size_t n);
 				include_runtime_header_file ("eif_retrieve.h", False, header_file)
 				include_runtime_header_file ("eif_store.h", False, header_file)
 				include_runtime_header_file ("eif_threads.h", False, header_file)
+			elseif a_library_name.same_string ("vision2_gtk3") then
+				l_common_defines.force_last ("GDK_DISABLE_DEPRECATED")
+				l_common_defines.force_last ("GTK_DISABLE_DEPRECATED")
+				l_common_defines.force_last ("GSEAL_ENABLE")
 			elseif a_library_name.same_string ("zlib") then
 				l_common_undefines.force_last ("_UNICODE")
 				l_common_undefines.force_last ("UNICODE")
@@ -44374,6 +44379,7 @@ feature {NONE} -- Include files
 					l_c_filename := "eif_except.c"
 				elseif a_filename.same_string ("eif_file.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					include_runtime_header_file ("eif_config.h", a_force, a_file)
 					l_c_filename := "eif_file.c"
 				elseif a_filename.same_string ("eif_globals.h") then
 					include_runtime_header_file ("ge_exception.h", a_force, a_file)
@@ -44485,6 +44491,8 @@ feature {NONE} -- Include files
 					l_c_filename := "ge_thread.c"
 				elseif a_filename.same_string ("ge_thread_types.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+				elseif a_filename.same_string ("ge_time.h") then
+					include_runtime_header_file ("eif_config.h", a_force, a_file)
 				elseif a_filename.same_string ("ge_types.h") then
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					include_runtime_header_file ("ge_exception.h", a_force, a_file)
@@ -44533,6 +44541,7 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_console.h", False, a_header_file)
 				elseif a_filename.same_string ("eif_dir.c") then
 					include_runtime_header_file ("eif_dir.h", False, a_header_file)
+					include_runtime_header_file ("eif_config.h", False, a_header_file)
 				elseif a_filename.same_string ("eif_except.c") then
 					include_runtime_header_file ("eif_except.h", False, a_header_file)
 					include_runtime_header_file ("ge_string.h", False, a_header_file)
@@ -44548,6 +44557,7 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_gc.h", False, a_header_file)
 				elseif a_filename.same_string ("eif_misc.c") then
 					include_runtime_header_file ("eif_misc.h", False, a_header_file)
+					include_runtime_header_file ("eif_config.h", False, a_header_file)
 				elseif a_filename.same_string ("eif_path_name.c") then
 					include_runtime_header_file ("eif_path_name.h", False, a_header_file)
 					include_runtime_header_file ("ge_string.h", False, a_header_file)

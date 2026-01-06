@@ -66,9 +66,9 @@ void eise_io(const char* tag)
 /*
  * Raise a "No more memory" exception.
  */
- void enomem(void) {
+void enomem(void) {
 	GE_raise(GE_EX_OMEM);
- }
+}
 
 /*
  * Raise EiffelCOM exception.

@@ -4,7 +4,7 @@
 		"C functions used to implement class EXECUTION_ENVIRONMENT"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -16,6 +16,9 @@
 
 #ifndef EIF_MISC_H
 #include "eif_misc.h"
+#endif
+#ifndef EIF_CONFIG_H
+#include "eif_config.h"
 #endif
 
 #include <stdlib.h>
@@ -100,8 +103,8 @@ void eif_sleep(EIF_INTEGER_64 nanoseconds)
 	 */
 
 #ifdef HAS_NANOSLEEP
-	volatile struct timespec req;
-	volatile struct timespec rem;
+	struct timespec req;
+	struct timespec rem;
 	req.tv_sec = nanoseconds / 1000000000;
 	req.tv_nsec = nanoseconds % 1000000000;
 	while ((nanosleep (&req, &rem) == -1) && (errno == EINTR)) {

@@ -4,7 +4,7 @@
 		"C functions used to implement class C_DATE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -14,12 +14,8 @@
 #pragma once
 #endif
 
-#if defined _XOPEN_UNIX || defined __USE_XOPEN || defined __USE_BSD
-#define HAS_GETTIMEOFDAY
-#else
-#ifndef WIN32
-#define HAS_GETTIMEOFDAY
-#endif
+#ifndef EIF_CONFIG_H
+#include "eif_config.h"
 #endif
 
 #ifdef HAS_GETTIMEOFDAY

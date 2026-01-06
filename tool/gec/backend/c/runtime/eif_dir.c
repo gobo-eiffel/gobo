@@ -4,7 +4,7 @@
 		"C functions used to implement class DIRECTORY"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2026, Eric Bezault and others"
 	license: "MIT License"
 */
 
@@ -16,6 +16,9 @@
 
 #ifndef EIF_DIR_H
 #include "eif_dir.h"
+#endif
+#ifndef EIF_CONFIG_H
+#include "eif_config.h"
 #endif
 
 #include <sys/stat.h>
