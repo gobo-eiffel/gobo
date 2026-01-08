@@ -24,7 +24,7 @@ feature
 	f (a_b: separate BB; a_c: separate CC)
 		do
 			a_c.f (2)
-			{EXECUTION_ENVIRONMENT}.sleep (150_000_000)
+			{SCHEDULER}.wait_for_value (3)
 			a_b.f (2)
 		end
 
