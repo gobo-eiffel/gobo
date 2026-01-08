@@ -17,6 +17,7 @@ feature
 			create c.make
 			create d.make (b, c)
 			create e.make (b, c)
+			{SCHEDULER}.set_value (1)
 			f (d)
 			g (e)
 		end
