@@ -5,7 +5,7 @@
 		"Browsable 'Void' keywords"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_BROWSABLE_VOID_KEYWORD
@@ -36,7 +36,7 @@ feature -- Basic operations
 			l_base_class: ET_CLASS
 		do
 			l_base_class := current_class.universe.none_type.base_class
-			a_builder.add_class (current_class, Current)
+			a_builder.add_class (l_base_class, Current)
 		end
 feature -- Output
 
