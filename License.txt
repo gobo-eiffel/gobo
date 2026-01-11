@@ -34,4 +34,4 @@ and a GPL-Compatible Free Software License:
     http://www.gnu.org/licenses/license-list.html#X11License
 
 --
-Copyright (c) 1997-2007, Eric Bezault and others
+Copyright (c) 1997-2026, Eric Bezault and others
