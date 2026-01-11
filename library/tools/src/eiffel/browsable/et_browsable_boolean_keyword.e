@@ -24,7 +24,7 @@ create
 	make
 
 feature -- Access
-
+	
 	name: ET_BOOLEAN_CONSTANT
 			-- AST node corresponding to the Result
 

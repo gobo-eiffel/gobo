@@ -20,7 +20,9 @@ is hosted at
 while the official site (for stable releases) is located at
 [gobosoft.com](https://www.gobosoft.com). This package also contains files
 from the [Boehm GC](https://github.com/ivmai/bdwgc) project which is also
-released under a MIT-style [license](https://github.com/bdwgc/bdwgc/blob/master/LICENSE), and is bundled with the [Zig toolchain](https://ziglang.org/) which is also released under a MIT-style [license](https://github.com/ziglang/zig/blob/master/LICENSE).
+released under a MIT-style [license](https://github.com/bdwgc/bdwgc/blob/master/LICENSE),
+and is bundled with the [Zig toolchain](https://ziglang.org/) which is also
+released under a MIT-style [license](https://github.com/ziglang/zig/blob/master/LICENSE).
 
 *Gobo Eiffel* already consists of nineteen Eiffel libraries:
 
@@ -67,7 +69,7 @@ library classes provided in this package.
 
 The supported Eiffel compilers, in alphabetical order, are:
 
-* Gobo Eiffel Compiler (gec) 25.12.04
+* Gobo Eiffel Compiler (gec) 26.01.11
 * ISE Eiffel 25.02.9.8732 (Classic and .NET)
 
 For more details about the supported Eiffel compilers, please see the file
@@ -135,18 +137,18 @@ To install this package, please follow the instructions below:
   executable should be at the root of this directory), and run the command:
   ```sh
     $GOBO/.cicd/patch_zig.ps1 $GOBO/tool/gec/backend/c/zig
-  ``` 
+  ```
 * To build the tools (e.g. `gec`, `geyacc`, ...), execute the script:
   ```sh
     $GOBO/bin/install.sh <c_compiler>
   ```
-	where `<c_compiler>` is `zig` (if installed above) or a C compiler
+  where `<c_compiler>` is `zig` (if installed above) or a C compiler
   installed on your computer (for example use `gcc` for GNU C compiler).
 
 ## Feedback
 
 A list of the known defects along with eventual bug fixes or
-workarounds is available in the 
+workarounds is available in the
 [issue tracker](https://github.com/gobo-eiffel/gobo/issues)
 on GitHub (an older
 [bug tracker](https://sourceforge.net/tracker/?atid=381937&amp;group_id=24591&amp;func=browse)
@@ -168,7 +170,8 @@ A [nightly build](https://github.com/gobo-eiffel/gobo/releases/tag/nightly)
 with bug fixes and features under development is available on GitHub, next to the other
 [releases](https://github.com/gobo-eiffel/gobo/releases).
 The official releases are also available on
-[SourceForge](https://sourceforge.net/projects/gobo-eiffel/files/gobo-eiffel/) for those of you who prefer to use this mirror.
+[SourceForge](https://sourceforge.net/projects/gobo-eiffel/files/gobo-eiffel/)
+for those of you who prefer to use this mirror.
 
 Although the license allows you to do pretty much whatever you want
 with this software, we would be grateful to get your feedback,
@@ -185,6 +188,6 @@ are available to help you make the first steps.
 
 ## Authors
 
-Copyright (c) 1997-2025, Eric Bezault and others<br>
+Copyright (c) 1997-2026, Eric Bezault and others<br>
 mailto:[ericb@gobosoft.com](mailto:ericb@gobosoft.com)<br>
 https:[//www.gobosoft.com](https://www.gobosoft.com)

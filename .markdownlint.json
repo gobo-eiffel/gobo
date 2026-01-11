@@ -7,5 +7,12 @@
 	},
 	"no-inline-html": {
 		"allowed_elements": ["br"]
+	},
+	"line-length": {
+		"line_length": 100,
+		"tables": false
+	},
+	"no-hard-tabs": {
+		"code_blocks": false
 	}
 }

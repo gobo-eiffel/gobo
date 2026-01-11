@@ -36,6 +36,6 @@ and a
 
 ----
 
-Copyright (c) 1997-2025, Eric Bezault and others<br>
+Copyright (c) 1997-2026, Eric Bezault and others<br>
 mailto:[ericb@gobosoft.com](mailto:ericb@gobosoft.com)<br>
 https:[//www.gobosoft.com](https://www.gobosoft.com)
