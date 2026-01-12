@@ -194,7 +194,7 @@ library_windows_zig_test_ge:
 # We have `tool_no_gec_windows_zig_test_ge` and `tool_gec_windows_zig_test_ge`,
 # instead of just `tool_windows_zig_test_ge`, because it takes more than
 # 1 hour to run this job and the job timeout on GitLab runners for Windows 
-# is set to 1 hour (even though it is set to 2 hours for the project).
+# is set to 2 hours (even though it is set to 3 hours for the project).
 
 tool_no_gec_windows_zig_test_ge:
   stage: test_ge
@@ -213,6 +213,8 @@ tool_no_gec_windows_zig_test_ge:
     - if: $GOBO_CUSTOM_PIPELINE == null
       when: on_success
 
+# Even 2 hours is not enough to run this job.
+
 tool_gec_windows_zig_test_ge:
   stage: test_ge
   tags:
@@ -226,7 +228,7 @@ tool_gec_windows_zig_test_ge:
       when: never
     - if: $CI_MERGE_REQUEST_ID
       when: never
-    - if: $GOBO_CUSTOM_PIPELINE == null
+    - if: $GOBO_CUSTOM_PIPELINE == "tool_gec_windows_zig_test_ge"
       when: on_success
 
 #
