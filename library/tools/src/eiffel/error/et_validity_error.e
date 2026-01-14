@@ -5,7 +5,7 @@
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_VALIDITY_ERROR
@@ -99,6 +99,7 @@ create
 	make_veen2e,
 	make_veen2f,
 	make_veen2g,
+	make_veen2h,
 	make_veen8a,
 	make_veen8b,
 	make_veen9a,
@@ -3847,6 +3848,45 @@ feature {NONE} -- Initialization
 			code := template_code (veen2g_template_code)
 			etl_code := veen2_etl_code
 			default_template := default_message_template (veen2g_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+		end
+
+	make_veen2h (a_class: ET_CLASS; a_result: ET_RESULT; an_agent: ET_INLINE_AGENT)
+			-- Create a new VEEN-2 error: `a_result' appears in the precondition
+			-- of inline agent `an_agent' in `a_class'.
+			--
+			-- ETL2: p.276
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_result_not_void: a_result /= Void
+			an_agent_not_void: an_agent /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_result.position
+			code := template_code (veen2h_template_code)
+			etl_code := veen2_etl_code
+			default_template := default_message_template (veen2h_default_template)
 			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -18064,6 +18104,7 @@ feature {NONE} -- Implementation
 	veen2e_default_template: STRING = "local entity `$7' appears in the precondition or postcondition of an inline agent."
 	veen2f_default_template: STRING = "entity 'Result' appears in the precondition of an inline agent."
 	veen2g_default_template: STRING = "entity 'Result' appears in the body, postcondition or rescue clause of an inline agent whose associated feature is a procedure."
+	veen2h_default_template: STRING = "entity 'Result' appears in the precondition of an inline agent."
 	veen8a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
 	veen8b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
 	veen9a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an iteration item that is used outside of its scope."
@@ -18637,6 +18678,7 @@ feature {NONE} -- Implementation
 	veen2e_template_code: STRING = "veen2e"
 	veen2f_template_code: STRING = "veen2f"
 	veen2g_template_code: STRING = "veen2g"
+	veen2h_template_code: STRING = "veen2h"
 	veen8a_template_code: STRING = "veen8a"
 	veen8b_template_code: STRING = "veen8b"
 	veen9a_template_code: STRING = "veen9a"

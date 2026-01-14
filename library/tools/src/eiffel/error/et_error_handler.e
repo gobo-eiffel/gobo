@@ -5,7 +5,7 @@
 		"Eiffel error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ERROR_HANDLER
@@ -2581,6 +2581,25 @@ feature -- Validity errors
 			if reportable_veen2_error (a_class) then
 				create an_error.make_veen2g (a_class, a_result, an_agent)
 				report_validity_error (an_error)
+			end
+		end
+
+	report_veen2h_error (a_class: ET_CLASS; a_result: ET_RESULT; an_agent: ET_INLINE_AGENT)
+			-- Report VEEN-2 error: `a_result' appears in the precondition
+			-- of inline agent `an_agent' in `a_class'.
+			--
+			-- ETL2: p.276
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_result_not_void: a_result /= Void
+			an_agent_not_void: an_agent /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen2_error (a_class) then
+				create l_error.make_veen2h (a_class, a_result, an_agent)
+				report_validity_error (l_error)
 			end
 		end
 

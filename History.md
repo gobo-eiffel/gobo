@@ -1,5 +1,11 @@
 # Release History
 
+## Version xx.xx.xx - xxxxxxx
+
+### Gobo Eiffel Tools Library
+
+* Fixed processing of pre- and postconditions in inlined agents.
+
 ## Version 26.01.11 - 11 January 2026
 
 ### geant

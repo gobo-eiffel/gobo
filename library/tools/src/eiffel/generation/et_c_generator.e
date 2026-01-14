@@ -41303,6 +41303,14 @@ feature {NONE} -- Type generation
 								end
 								if attached l_attribute.storable_type as l_storable_type then
 									current_file.put_integer (l_storable_type.type_id)
+								elseif 
+									l_type.base_class.is_type_class and then
+									attached l_attribute.result_type_set as l_result_type_set
+								then
+										-- Attributes "TYPE.internal_name" and "TYPE.internal_name_32"
+										-- for types which have been added after the dynamic type
+										-- set building because they are meta types of other types.
+									current_file.put_integer (l_result_type_set.static_type.type_id)
 								else
 										-- Internal error: attributes have a storable type.
 									set_fatal_error
