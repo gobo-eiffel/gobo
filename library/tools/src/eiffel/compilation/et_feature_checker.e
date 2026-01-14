@@ -5,7 +5,7 @@
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_FEATURE_CHECKER
@@ -204,13 +204,13 @@ feature -- Status report
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			if in_precondition then
+			if in_feature_precondition then
 				if attached a_feature.implementation_feature.preconditions as l_preconditions then
 					Result := l_preconditions.validity_checked
 				else
 					Result := True
 				end
-			elseif in_postcondition then
+			elseif in_feature_postcondition then
 				if attached a_feature.implementation_feature.postconditions as l_postconditions then
 					Result := l_postconditions.validity_checked
 				else
@@ -227,11 +227,11 @@ feature -- Status report
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			if in_precondition then
+			if in_feature_precondition then
 				if attached a_feature.implementation_feature.preconditions as l_preconditions then
 					Result := l_preconditions.has_validity_error
 				end
-			elseif in_postcondition then
+			elseif in_feature_postcondition then
 				if attached a_feature.implementation_feature.postconditions as l_postconditions then
 					Result := l_postconditions.has_validity_error
 				end
@@ -269,7 +269,7 @@ feature -- Validity checking
 			l_class_impl := a_feature.implementation_class
 			l_class := a_current_type.base_class
 			if not l_class_impl.is_preparsed then
-			 		-- Internal error: we should already have reported a VTCT error
+					-- Internal error: we should already have reported a VTCT error
 					-- somewhere stating that `l_class_impl' (which is supposed to
 					-- be an ancestor of `a_current_type.base_class') does not exist.
 				set_fatal_error
@@ -315,7 +315,7 @@ feature -- Validity checking
 									-- Make sure to mark as boolean expression infix and prefix expressions
 									-- with target of type BOOLEAN.
 								l_old_has_error := has_fatal_error
-								feature_checker.check_preconditions_validity (l_preconditions, l_feature_impl, l_feature_impl, l_class_impl)
+								feature_checker.check_feature_preconditions_validity (l_preconditions, l_feature_impl, l_feature_impl, l_class_impl)
 								has_fatal_error := l_old_has_error
 							end
 						end
@@ -383,7 +383,7 @@ feature -- Validity checking
 			in_precursor := old_in_precursor
 		end
 
-	check_preconditions_validity (a_preconditions: ET_PRECONDITIONS;
+	check_feature_preconditions_validity (a_preconditions: ET_PRECONDITIONS;
 		a_current_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE)
 			-- Check validity of `a_preconditions' of `a_current_feature'
 			-- (written in `a_current_feature_impl') in `a_current_type'.
@@ -401,17 +401,11 @@ feature -- Validity checking
 			old_class: ET_CLASS
 			old_class_impl: ET_CLASS
 			old_type: ET_BASE_TYPE
-			old_in_precondition: BOOLEAN
+			old_in_feature_precondition: BOOLEAN
 			old_in_static_feature: BOOLEAN
-			l_assertion_context: ET_NESTED_TYPE_CONTEXT
-			i, nb: INTEGER
-			boolean_type: ET_CLASS_TYPE
-			l_named_type: ET_NAMED_TYPE
-			had_error: BOOLEAN
 			l_feature_impl: ET_FEATURE
 			l_class_impl: ET_CLASS
 			l_current_class: ET_CLASS
-			l_old_object_test_scope: INTEGER
 		do
 			has_fatal_error := False
 			l_feature_impl := a_current_feature_impl.implementation_feature
@@ -431,7 +425,7 @@ feature -- Validity checking
 					set_fatal_error
 				end
 			elseif l_class_impl /= l_current_class or else not a_current_type.same_as_base_class then
-				check_preconditions_validity (a_preconditions, l_feature_impl, l_feature_impl, l_class_impl)
+				check_feature_preconditions_validity (a_preconditions, l_feature_impl, l_feature_impl, l_class_impl)
 			end
 			if not has_fatal_error then
 				old_feature_impl := current_feature_impl
@@ -446,46 +440,17 @@ feature -- Validity checking
 				current_class_impl := l_class_impl
 				old_in_static_feature := in_static_feature
 				in_static_feature := not (a_current_feature.is_constant_attribute or a_current_feature.is_unique_attribute) and then a_current_feature.is_static
-				old_in_precondition := in_precondition
-				in_precondition := True
+				old_in_feature_precondition := in_feature_precondition
+				in_feature_precondition := True
 					-- First, make sure that the interface of `current_type' is valid.
 				current_class.process (system_processor.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
 						-- The error should have already been reported.
 					set_fatal_error
 				else
-					boolean_type := current_universe_impl.boolean_type
-					l_assertion_context := new_context (current_type)
-					l_old_object_test_scope := current_object_test_scope.count
 					initialize_indexes (a_current_feature)
-					nb := a_preconditions.count
-					from i := 1 until i > nb loop
-						if attached a_preconditions.assertion (i).expression as l_expression then
-							had_error := had_error or has_fatal_error
-							check_expression_validity (l_expression, l_assertion_context, boolean_type)
-							if has_fatal_error then
-								-- Do nothing.
-							elseif not l_assertion_context.same_named_type (boolean_type, current_class_impl) then
-								set_fatal_error
-								l_named_type := l_assertion_context.named_type
-								error_handler.report_vwbe0a_error (current_class, current_class_impl, l_expression, l_named_type)
-							end
-							l_assertion_context.wipe_out
-								-- The scope of object-test locals can cover the following assertions
-								-- in the same precondition clause because it's as if they were separated
-								-- by "and then" operators.
-							object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
-							has_fatal_error := has_fatal_error or object_test_scope_builder.has_fatal_error
-							if current_system.attachment_type_conformance_mode then
-								attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
-							end
-						end
-						i := i + 1
-					end
+					check_preconditions_validity (a_preconditions)
 					reset_indexes
-					current_object_test_scope.keep_object_tests (l_old_object_test_scope)
-					free_context (l_assertion_context)
-					has_fatal_error := has_fatal_error or had_error
 					if current_type = current_class_impl then
 						a_preconditions.set_validity_checked
 						if has_fatal_error then
@@ -493,7 +458,7 @@ feature -- Validity checking
 						end
 					end
 				end
-				in_precondition := old_in_precondition
+				in_feature_precondition := old_in_feature_precondition
 				in_static_feature := old_in_static_feature
 				from current_object_test_types.start until current_object_test_types.after loop
 					free_context (current_object_test_types.item_for_iteration)
@@ -527,7 +492,7 @@ feature -- Validity checking
 			end
 		end
 
-	check_postconditions_validity (a_postconditions: ET_POSTCONDITIONS;
+	check_feature_postconditions_validity (a_postconditions: ET_POSTCONDITIONS;
 		a_current_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE)
 			-- Check validity of `a_postconditions' of `a_current_feature'
 			-- (written in `a_current_feature_impl') in `a_current_type'.
@@ -545,17 +510,11 @@ feature -- Validity checking
 			old_class: ET_CLASS
 			old_class_impl: ET_CLASS
 			old_type: ET_BASE_TYPE
-			old_in_postcondition: BOOLEAN
+			old_in_feature_postcondition: BOOLEAN
 			old_in_static_feature: BOOLEAN
-			l_assertion_context: ET_NESTED_TYPE_CONTEXT
-			i, nb: INTEGER
-			boolean_type: ET_CLASS_TYPE
-			l_named_type: ET_NAMED_TYPE
-			had_error: BOOLEAN
 			l_feature_impl: ET_FEATURE
 			l_class_impl: ET_CLASS
 			l_current_class: ET_CLASS
-			l_old_object_test_scope: INTEGER
 			l_old_has_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -576,7 +535,7 @@ feature -- Validity checking
 					set_fatal_error
 				end
 			elseif l_class_impl /= l_current_class or else not a_current_type.same_as_base_class then
-				check_postconditions_validity (a_postconditions, l_feature_impl, l_feature_impl, l_class_impl)
+				check_feature_postconditions_validity (a_postconditions, l_feature_impl, l_feature_impl, l_class_impl)
 			end
 			if not has_fatal_error then
 				old_feature_impl := current_feature_impl
@@ -591,8 +550,8 @@ feature -- Validity checking
 				current_class_impl := l_class_impl
 				old_in_static_feature := in_static_feature
 				in_static_feature := not (a_current_feature.is_constant_attribute or a_current_feature.is_unique_attribute) and then a_current_feature.is_static
-				old_in_postcondition := in_postcondition
-				in_postcondition := True
+				old_in_feature_postcondition := in_feature_postcondition
+				in_feature_postcondition := True
 					-- First, make sure that the interface of `current_type' is valid.
 				current_class.process (system_processor.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
@@ -605,44 +564,15 @@ feature -- Validity checking
 									-- Make sure to mark as boolean expression infix and prefix expressions
 									-- with target of type BOOLEAN.
 								l_old_has_error := has_fatal_error
-								feature_checker.check_preconditions_validity (l_preconditions, l_feature_impl, l_feature_impl, l_class_impl)
+								feature_checker.check_feature_preconditions_validity (l_preconditions, l_feature_impl, l_feature_impl, l_class_impl)
 								has_fatal_error := l_old_has_error
 							end
 						end
 						build_preconditions_attachment_scope (l_feature_impl)
 					end
-					boolean_type := current_universe_impl.boolean_type
-					l_assertion_context := new_context (current_type)
-					l_old_object_test_scope := current_object_test_scope.count
 					initialize_indexes (a_current_feature)
-					nb := a_postconditions.count
-					from i := 1 until i > nb loop
-						if attached a_postconditions.assertion (i).expression as l_expression then
-							had_error := had_error or has_fatal_error
-							check_expression_validity (l_expression, l_assertion_context, boolean_type)
-							if has_fatal_error then
-								-- Do nothing.
-							elseif not l_assertion_context.same_named_type (boolean_type, current_class_impl) then
-								set_fatal_error
-								l_named_type := l_assertion_context.named_type
-								error_handler.report_vwbe0a_error (current_class, current_class_impl, l_expression, l_named_type)
-							end
-							l_assertion_context.wipe_out
-								-- The scope of object-test locals can cover the following assertions
-								-- in the same postcondition clause because it's as if they were separated
-								-- by "and then" operators.
-							object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
-							has_fatal_error := has_fatal_error or object_test_scope_builder.has_fatal_error
-							if current_system.attachment_type_conformance_mode then
-								attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
-							end
-						end
-						i := i + 1
-					end
+					check_postconditions_validity (a_postconditions)
 					reset_indexes
-					current_object_test_scope.keep_object_tests (l_old_object_test_scope)
-					free_context (l_assertion_context)
-					has_fatal_error := has_fatal_error or had_error
 					if current_type = current_class_impl then
 						a_postconditions.set_validity_checked
 						if has_fatal_error then
@@ -650,7 +580,7 @@ feature -- Validity checking
 						end
 					end
 				end
-				in_postcondition := old_in_postcondition
+				in_feature_postcondition := old_in_feature_postcondition
 				in_static_feature := old_in_static_feature
 				from current_object_test_types.start until current_object_test_types.after loop
 					free_context (current_object_test_types.item_for_iteration)
@@ -1897,6 +1827,107 @@ feature {NONE} -- Feature validity
 				end
 			end
 			has_fatal_error := has_fatal_error or had_error
+		end
+
+feature {NONE} -- Assertions
+
+	check_preconditions_validity (a_preconditions: ET_PRECONDITIONS)
+			-- Check validity of `a_preconditions'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_preconditions_not_void: a_preconditions /= Void
+		local
+			old_in_precondition: BOOLEAN
+			l_assertion_context: ET_NESTED_TYPE_CONTEXT
+			i, nb: INTEGER
+			boolean_type: ET_CLASS_TYPE
+			l_named_type: ET_NAMED_TYPE
+			had_error: BOOLEAN
+			l_old_object_test_scope: INTEGER
+		do
+			has_fatal_error := False
+			old_in_precondition := in_precondition
+			in_precondition := True
+			boolean_type := current_universe_impl.boolean_type
+			l_assertion_context := new_context (current_type)
+			l_old_object_test_scope := current_object_test_scope.count
+			nb := a_preconditions.count
+			from i := 1 until i > nb loop
+				if attached a_preconditions.assertion (i).expression as l_expression then
+					had_error := had_error or has_fatal_error
+					check_expression_validity (l_expression, l_assertion_context, boolean_type)
+					if has_fatal_error then
+						-- Do nothing.
+					elseif not l_assertion_context.same_named_type (boolean_type, current_class_impl) then
+						set_fatal_error
+						l_named_type := l_assertion_context.named_type
+						error_handler.report_vwbe0a_error (current_class, current_class_impl, l_expression, l_named_type)
+					end
+					l_assertion_context.wipe_out
+						-- The scope of object-test locals can cover the following assertions
+						-- in the same precondition clause because it's as if they were separated
+						-- by "and then" operators.
+					object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
+					has_fatal_error := has_fatal_error or object_test_scope_builder.has_fatal_error
+					if current_system.attachment_type_conformance_mode then
+						attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
+					end
+				end
+				i := i + 1
+			end
+			current_object_test_scope.keep_object_tests (l_old_object_test_scope)
+			free_context (l_assertion_context)
+			has_fatal_error := has_fatal_error or had_error
+			in_precondition := old_in_precondition
+		end
+
+	check_postconditions_validity (a_postconditions: ET_POSTCONDITIONS)
+			-- Check validity of `a_postconditions'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_postconditions_not_void: a_postconditions /= Void
+		local
+			old_in_postcondition: BOOLEAN
+			l_assertion_context: ET_NESTED_TYPE_CONTEXT
+			i, nb: INTEGER
+			boolean_type: ET_CLASS_TYPE
+			l_named_type: ET_NAMED_TYPE
+			had_error: BOOLEAN
+			l_old_object_test_scope: INTEGER
+		do
+			old_in_postcondition := in_postcondition
+			in_postcondition := True
+			boolean_type := current_universe_impl.boolean_type
+			l_assertion_context := new_context (current_type)
+			l_old_object_test_scope := current_object_test_scope.count
+			nb := a_postconditions.count
+			from i := 1 until i > nb loop
+				if attached a_postconditions.assertion (i).expression as l_expression then
+					had_error := had_error or has_fatal_error
+					check_expression_validity (l_expression, l_assertion_context, boolean_type)
+					if has_fatal_error then
+						-- Do nothing.
+					elseif not l_assertion_context.same_named_type (boolean_type, current_class_impl) then
+						set_fatal_error
+						l_named_type := l_assertion_context.named_type
+						error_handler.report_vwbe0a_error (current_class, current_class_impl, l_expression, l_named_type)
+					end
+					l_assertion_context.wipe_out
+						-- The scope of object-test locals can cover the following assertions
+						-- in the same postcondition clause because it's as if they were separated
+						-- by "and then" operators.
+					object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
+					has_fatal_error := has_fatal_error or object_test_scope_builder.has_fatal_error
+					if current_system.attachment_type_conformance_mode then
+						attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
+					end
+				end
+				i := i + 1
+			end
+			current_object_test_scope.keep_object_tests (l_old_object_test_scope)
+			free_context (l_assertion_context)
+			has_fatal_error := has_fatal_error or had_error
+			in_postcondition := old_in_postcondition
 		end
 
 feature {NONE} -- Locals/Formal arguments/query type validity
@@ -6751,7 +6782,7 @@ feature {NONE} -- Expression validity
 				-- Do nothing.
 			elseif l_name.is_argument then
 					-- This is of the form '$argument'.
-				if current_inline_agent = Void and in_invariant then
+				if in_invariant then
 						-- VEEN-3: the formal argument appears in an invariant.
 						-- Internal error: the invariant has no formal argument.
 					set_fatal_error
@@ -6818,8 +6849,7 @@ feature {NONE} -- Expression validity
 				end
 			elseif l_name.is_local then
 					-- This is of the form '$local'.
-				if current_inline_agent = Void and (in_precondition or in_postcondition) then
--- TODO: check the case where we are in the pre- or postcondition of an inline agent.
+				if in_precondition or in_postcondition then
 						-- The local entity appears in a pre- or postcondition.
 					set_fatal_error
 					if current_class_impl = current_class then
@@ -6838,7 +6868,7 @@ feature {NONE} -- Expression validity
 							error_handler.report_giaaa_error
 						end
 					end
-				elseif current_inline_agent = Void and in_invariant then
+				elseif in_invariant then
 						-- VEEN-2: the local entity appears in an invariant.
 						-- Internal error: the invariant has no local entity.
 					set_fatal_error
@@ -7083,7 +7113,7 @@ feature {NONE} -- Expression validity
 			l_is_attached: BOOLEAN
 		do
 			has_fatal_error := False
-			if current_inline_agent = Void and in_invariant then
+			if in_invariant then
 					-- VEEN-3: the formal argument appears in an invariant.
 					-- Internal error: the invariant has no formal argument.
 				set_fatal_error
@@ -8638,8 +8668,7 @@ feature {NONE} -- Expression validity
 			l_is_attached: BOOLEAN
 		do
 			has_fatal_error := False
-			if current_inline_agent = Void and (in_precondition or in_postcondition) then
--- TODO: check the case where we are in the pre- or postcondition of an inline agent.
+			if in_precondition or in_postcondition then
 					-- The local entity appears in a pre- or postcondition.
 				set_fatal_error
 				if current_class_impl = current_class then
@@ -8658,7 +8687,7 @@ feature {NONE} -- Expression validity
 						error_handler.report_giaaa_error
 					end
 				end
-			elseif current_inline_agent = Void and in_invariant then
+			elseif in_invariant then
 					-- VEEN-2: the local entity appears in an invariant.
 					-- Internal error: the invariant has no local entity,
 					-- this is guaranteed by the parser.
@@ -9450,8 +9479,7 @@ feature {NONE} -- Expression validity
 				end
 				if system_processor.older_ise_version (ise_6_3_7_5660) then
 						-- ISE did not support object-tests in preconditions before 6.3.7.5660.
-					if current_inline_agent = Void and in_precondition then
--- TODO: check the case where we are in the precondition of an inline agent.
+					if in_precondition then
 						set_fatal_error
 						error_handler.report_vuot4a_error (current_class, an_expression)
 					end
@@ -9785,17 +9813,6 @@ feature {NONE} -- Expression validity
 					error_handler.report_giaaa_error
 				end
 				check_orphan_actual_arguments_validity (an_expression)
-			elseif in_precondition or in_postcondition then
-					-- The Precursor expression does not appear in a Routine_body.
-				set_fatal_error
-				if current_class = current_class_impl then
-					error_handler.report_vdpr1b_error (current_class, an_expression)
-				elseif not has_implementation_error (current_feature_impl) then
-						-- Internal error: the VDPR-1 error should have been
-						-- reported in the implementation feature.
-					error_handler.report_giaaa_error
-				end
-				check_orphan_actual_arguments_validity (an_expression)
 			elseif attached current_inline_agent as l_current_inline_agent then
 					-- The associated feature of inline agents cannot be redefined.
 				set_fatal_error
@@ -9803,6 +9820,17 @@ feature {NONE} -- Expression validity
 					error_handler.report_vdpr3e_error (current_class, an_expression, l_current_inline_agent, l_feature_impl)
 				elseif not has_implementation_error (current_feature_impl) then
 						-- Internal error: the VDPR-3 error should have been
+						-- reported in the implementation feature.
+					error_handler.report_giaaa_error
+				end
+				check_orphan_actual_arguments_validity (an_expression)
+			elseif in_precondition or in_postcondition then
+					-- The Precursor expression does not appear in a Routine_body.
+				set_fatal_error
+				if current_class = current_class_impl then
+					error_handler.report_vdpr1b_error (current_class, an_expression)
+				elseif not has_implementation_error (current_feature_impl) then
+						-- Internal error: the VDPR-1 error should have been
 						-- reported in the implementation feature.
 					error_handler.report_giaaa_error
 				end
@@ -10627,12 +10655,13 @@ feature {NONE} -- Expression validity
 			l_attached_result_index: INTEGER
 		do
 			has_fatal_error := False
-			if current_inline_agent = Void and in_precondition then
--- TODO: check the case where we are in the precondition of an inline agent.
+			if in_precondition then
 					-- The entity Result appears in a precondition.
 				set_fatal_error
 				if current_class_impl = current_class then
-					if current_feature_impl.is_feature then
+					if attached current_inline_agent as l_current_inline_agent then
+						error_handler.report_veen2h_error (current_class, an_expression, l_current_inline_agent)
+					elseif current_feature_impl.is_feature then
 						error_handler.report_veen2b_error (current_class, an_expression, current_feature_impl.as_feature)
 					else
 							-- Internal error: invariants don't have preconditions.
@@ -10645,7 +10674,7 @@ feature {NONE} -- Expression validity
 						error_handler.report_giaaa_error
 					end
 				end
-			elseif current_inline_agent = Void and in_invariant then
+			elseif in_invariant then
 					-- The entity Result appears in an invariant.
 				set_fatal_error
 				if current_class_impl = current_class then
@@ -10715,7 +10744,7 @@ feature {NONE} -- Expression validity
 							else
 								l_is_attached := False
 							end
-						elseif not (current_inline_agent = Void and in_postcondition) and then (not a_context.is_type_detachable and not a_context.is_type_expanded) then
+						elseif not in_postcondition and then (not a_context.is_type_detachable and not a_context.is_type_expanded) then
 							if system_processor.is_ise then
 									-- In ISE Eiffel, local variables (including 'Result') are considered
 									-- as 'detachable' (even when the 'attached' keyword is explicitly specified).
@@ -10774,12 +10803,13 @@ feature {NONE} -- Expression validity
 			l_pointer_type: ET_CLASS_TYPE
 		do
 			has_fatal_error := False
-			if current_inline_agent = Void and in_precondition then
--- TODO: check the case where we are in the precondition of an inline agent.
+			if in_precondition then
 					-- The entity Result appears in a precondition.
 				set_fatal_error
 				if current_class_impl = current_class then
-					if current_feature_impl.is_feature then
+					if attached current_inline_agent as l_current_inline_agent then
+						error_handler.report_veen2h_error (current_class, an_expression.result_keyword, l_current_inline_agent)
+					elseif current_feature_impl.is_feature then
 						error_handler.report_veen2b_error (current_class, an_expression.result_keyword, current_feature_impl.as_feature)
 					else
 							-- Internal error: invariants don't have preconditions.
@@ -10792,7 +10822,7 @@ feature {NONE} -- Expression validity
 						error_handler.report_giaaa_error
 					end
 				end
-			elseif current_inline_agent = Void and in_invariant then
+			elseif in_invariant then
 					-- The entity Result appears in an invariant.
 				set_fatal_error
 				if current_class_impl = current_class then
@@ -12300,7 +12330,7 @@ feature {NONE} -- VAPE validity
 			i, nb: INTEGER
 		do
 			has_fatal_error := False
-			if in_precondition and then current_feature.is_feature then
+			if in_feature_precondition and then current_feature.is_feature then
 					-- VAPE validity rule only applies to preconditions.
 				l_non_descendant_clients := vape_non_descendant_clients
 				l_non_descendant_clients.wipe_out
@@ -12330,7 +12360,7 @@ feature {NONE} -- VAPE validity
 			i, nb: INTEGER
 		do
 			has_fatal_error := False
-			if in_precondition and then current_feature.is_feature then
+			if in_feature_precondition and then current_feature.is_feature then
 					-- VAPE validity rule only applies to preconditions.
 				l_non_descendant_clients := vape_non_descendant_clients
 				l_non_descendant_clients.wipe_out
@@ -12363,7 +12393,7 @@ feature {NONE} -- VAPE validity
 			i, nb: INTEGER
 		do
 			has_fatal_error := False
-			if in_precondition and then current_feature.is_feature then
+			if in_feature_precondition and then current_feature.is_feature then
 					-- VAPE validity rule only applies to preconditions.
 				l_creation_clients := vape_creation_clients
 				l_creation_clients.wipe_out
@@ -12404,7 +12434,7 @@ feature {NONE} -- VAPE validity
 			i, nb: INTEGER
 		do
 			has_fatal_error := False
-			if in_precondition and then current_feature.is_feature then
+			if in_feature_precondition and then current_feature.is_feature then
 					-- VAPE validity rule only applies to preconditions.
 				l_creation_clients := vape_creation_clients
 				l_creation_clients.wipe_out
@@ -14088,6 +14118,11 @@ feature {NONE} -- Agent validity
 		local
 			l_type: ET_TYPE
 			l_compound: detachable ET_COMPOUND
+			l_old_in_precondition: BOOLEAN
+			l_old_in_postcondition: BOOLEAN
+			l_old_in_invariant: BOOLEAN
+			l_old_in_rescue: BOOLEAN
+			l_old_in_check_instruction: BOOLEAN
 			l_old_hidden_object_test_scope: INTEGER
 			l_old_hidden_iteration_item_scope: INTEGER
 			l_old_hidden_inline_separate_argument_scope: INTEGER
@@ -14106,6 +14141,16 @@ feature {NONE} -- Agent validity
 				enclosing_inline_agents.force_last (l_current_inline_agent)
 			end
 			current_inline_agent := an_expression
+			l_old_in_precondition := in_precondition
+			in_precondition := False
+			l_old_in_postcondition := in_postcondition
+			in_postcondition := False
+			l_old_in_invariant := in_invariant
+			in_invariant := False
+			l_old_in_rescue := in_rescue
+			in_rescue := False
+			l_old_in_check_instruction := in_check_instruction
+			in_check_instruction := False
 				-- Make sure that we do not use object-test locals declared
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
@@ -14156,6 +14201,15 @@ feature {NONE} -- Agent validity
 				had_error := had_error or has_fatal_error
 			end
 			if not had_error then
+				if attached an_expression.preconditions as l_preconditions then
+					check_preconditions_validity (l_preconditions)
+					had_error := had_error or has_fatal_error
+					build_assertions_attachment_scope (l_preconditions)
+				end
+				if attached an_expression.postconditions as l_postconditions then
+					check_postconditions_validity (l_postconditions)
+					had_error := had_error or has_fatal_error
+				end
 				l_compound := an_expression.compound
 				l_rescue_compound := an_expression.rescue_clause
 				if current_system.attachment_type_conformance_mode then
@@ -14226,6 +14280,11 @@ feature {NONE} -- Agent validity
 				free_attachment_scope (current_attachment_scope)
 				current_attachment_scope := l_old_attachment_scope
 			end
+			in_precondition := l_old_in_precondition
+			in_postcondition := l_old_in_postcondition
+			in_invariant := l_old_in_invariant
+			in_rescue := l_old_in_rescue
+			in_check_instruction := l_old_in_check_instruction
 				-- Manage enclosing inline agents stack.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -14246,6 +14305,11 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			l_compound: detachable ET_COMPOUND
+			l_old_in_precondition: BOOLEAN
+			l_old_in_postcondition: BOOLEAN
+			l_old_in_invariant: BOOLEAN
+			l_old_in_rescue: BOOLEAN
+			l_old_in_check_instruction: BOOLEAN
 			l_old_hidden_object_test_scope: INTEGER
 			l_old_hidden_iteration_item_scope: INTEGER
 			l_old_hidden_inline_separate_argument_scope: INTEGER
@@ -14264,6 +14328,16 @@ feature {NONE} -- Agent validity
 				enclosing_inline_agents.force_last (l_current_inline_agent)
 			end
 			current_inline_agent := an_expression
+			l_old_in_precondition := in_precondition
+			in_precondition := False
+			l_old_in_postcondition := in_postcondition
+			in_postcondition := False
+			l_old_in_invariant := in_invariant
+			in_invariant := False
+			l_old_in_rescue := in_rescue
+			in_rescue := False
+			l_old_in_check_instruction := in_check_instruction
+			in_check_instruction := False
 				-- Make sure that we do not use object-test locals declared
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
@@ -14306,6 +14380,15 @@ feature {NONE} -- Agent validity
 				had_error := had_error or has_fatal_error
 			end
 			if not had_error then
+				if attached an_expression.preconditions as l_preconditions then
+					check_preconditions_validity (l_preconditions)
+					had_error := had_error or has_fatal_error
+					build_assertions_attachment_scope (l_preconditions)
+				end
+				if attached an_expression.postconditions as l_postconditions then
+					check_postconditions_validity (l_postconditions)
+					had_error := had_error or has_fatal_error
+				end
 				l_compound := an_expression.compound
 				l_rescue_compound := an_expression.rescue_clause
 				if current_system.attachment_type_conformance_mode then
@@ -14358,6 +14441,11 @@ feature {NONE} -- Agent validity
 				free_attachment_scope (current_attachment_scope)
 				current_attachment_scope := l_old_attachment_scope
 			end
+			in_precondition := l_old_in_precondition
+			in_postcondition := l_old_in_postcondition
+			in_invariant := l_old_in_invariant
+			in_rescue := l_old_in_rescue
+			in_check_instruction := l_old_in_check_instruction
 				-- Manage enclosing inline agents stack.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -14378,6 +14466,11 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			l_type: ET_TYPE
+			l_old_in_precondition: BOOLEAN
+			l_old_in_postcondition: BOOLEAN
+			l_old_in_invariant: BOOLEAN
+			l_old_in_rescue: BOOLEAN
+			l_old_in_check_instruction: BOOLEAN
 			l_old_hidden_object_test_scope: INTEGER
 			l_old_hidden_iteration_item_scope: INTEGER
 			l_old_hidden_inline_separate_argument_scope: INTEGER
@@ -14391,6 +14484,16 @@ feature {NONE} -- Agent validity
 				enclosing_inline_agents.force_last (l_current_inline_agent)
 			end
 			current_inline_agent := an_expression
+			l_old_in_precondition := in_precondition
+			in_precondition := False
+			l_old_in_postcondition := in_postcondition
+			in_postcondition := False
+			l_old_in_invariant := in_invariant
+			in_invariant := False
+			l_old_in_rescue := in_rescue
+			in_rescue := False
+			l_old_in_check_instruction := in_check_instruction
+			in_check_instruction := False
 				-- Make sure that we do not use object-test locals declared
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
@@ -14436,6 +14539,17 @@ feature {NONE} -- Agent validity
 				check_inline_agent_iteration_components_validity (l_iteration_components, an_expression)
 				had_error := had_error or has_fatal_error
 			end
+			if not had_error then
+				if attached an_expression.preconditions as l_preconditions then
+					check_preconditions_validity (l_preconditions)
+					had_error := had_error or has_fatal_error
+					build_assertions_attachment_scope (l_preconditions)
+				end
+				if attached an_expression.postconditions as l_postconditions then
+					check_postconditions_validity (l_postconditions)
+					had_error := had_error or has_fatal_error
+				end
+			end
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
@@ -14451,6 +14565,11 @@ feature {NONE} -- Agent validity
 				free_attachment_scope (current_attachment_scope)
 				current_attachment_scope := l_old_attachment_scope
 			end
+			in_precondition := l_old_in_precondition
+			in_postcondition := l_old_in_postcondition
+			in_invariant := l_old_in_invariant
+			in_rescue := l_old_in_rescue
+			in_check_instruction := l_old_in_check_instruction
 				-- Manage enclosing inline agents stack.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -14475,6 +14594,11 @@ feature {NONE} -- Agent validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
+			l_old_in_precondition: BOOLEAN
+			l_old_in_postcondition: BOOLEAN
+			l_old_in_invariant: BOOLEAN
+			l_old_in_rescue: BOOLEAN
+			l_old_in_check_instruction: BOOLEAN
 			l_old_hidden_object_test_scope: INTEGER
 			l_old_hidden_iteration_item_scope: INTEGER
 			l_old_hidden_inline_separate_argument_scope: INTEGER
@@ -14488,6 +14612,16 @@ feature {NONE} -- Agent validity
 				enclosing_inline_agents.force_last (l_current_inline_agent)
 			end
 			current_inline_agent := an_expression
+			l_old_in_precondition := in_precondition
+			in_precondition := False
+			l_old_in_postcondition := in_postcondition
+			in_postcondition := False
+			l_old_in_invariant := in_invariant
+			in_invariant := False
+			l_old_in_rescue := in_rescue
+			in_rescue := False
+			l_old_in_check_instruction := in_check_instruction
+			in_check_instruction := False
 				-- Make sure that we do not use object-test locals declared
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
@@ -14525,6 +14659,17 @@ feature {NONE} -- Agent validity
 				check_inline_agent_iteration_components_validity (l_iteration_components, an_expression)
 				had_error := had_error or has_fatal_error
 			end
+			if not had_error then
+				if attached an_expression.preconditions as l_preconditions then
+					check_preconditions_validity (l_preconditions)
+					had_error := had_error or has_fatal_error
+					build_assertions_attachment_scope (l_preconditions)
+				end
+				if attached an_expression.postconditions as l_postconditions then
+					check_postconditions_validity (l_postconditions)
+					had_error := had_error or has_fatal_error
+				end
+			end
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
@@ -14540,6 +14685,11 @@ feature {NONE} -- Agent validity
 				free_attachment_scope (current_attachment_scope)
 				current_attachment_scope := l_old_attachment_scope
 			end
+			in_precondition := l_old_in_precondition
+			in_postcondition := l_old_in_postcondition
+			in_invariant := l_old_in_invariant
+			in_rescue := l_old_in_rescue
+			in_check_instruction := l_old_in_check_instruction
 				-- Manage enclosing inline agents stack.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -14566,6 +14716,11 @@ feature {NONE} -- Agent validity
 		local
 			l_type: ET_TYPE
 			l_compound: detachable ET_COMPOUND
+			l_old_in_precondition: BOOLEAN
+			l_old_in_postcondition: BOOLEAN
+			l_old_in_invariant: BOOLEAN
+			l_old_in_rescue: BOOLEAN
+			l_old_in_check_instruction: BOOLEAN
 			l_old_hidden_object_test_scope: INTEGER
 			l_old_hidden_iteration_item_scope: INTEGER
 			l_old_hidden_inline_separate_argument_scope: INTEGER
@@ -14585,6 +14740,16 @@ feature {NONE} -- Agent validity
 				enclosing_inline_agents.force_last (l_current_inline_agent)
 			end
 			current_inline_agent := an_expression
+			l_old_in_precondition := in_precondition
+			in_precondition := False
+			l_old_in_postcondition := in_postcondition
+			in_postcondition := False
+			l_old_in_invariant := in_invariant
+			in_invariant := False
+			l_old_in_rescue := in_rescue
+			in_rescue := False
+			l_old_in_check_instruction := in_check_instruction
+			in_check_instruction := False
 				-- Make sure that we do not use object-test locals declared
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
@@ -14637,6 +14802,15 @@ feature {NONE} -- Agent validity
 			check_once_keys_validity (an_expression.keys, an_expression.first_note)
 			had_key_error := has_fatal_error
 			if not had_error then
+				if attached an_expression.preconditions as l_preconditions then
+					check_preconditions_validity (l_preconditions)
+					had_error := had_error or has_fatal_error
+					build_assertions_attachment_scope (l_preconditions)
+				end
+				if attached an_expression.postconditions as l_postconditions then
+					check_postconditions_validity (l_postconditions)
+					had_error := had_error or has_fatal_error
+				end
 				l_compound := an_expression.compound
 				l_rescue_compound := an_expression.rescue_clause
 				if current_system.attachment_type_conformance_mode then
@@ -14707,6 +14881,11 @@ feature {NONE} -- Agent validity
 				free_attachment_scope (current_attachment_scope)
 				current_attachment_scope := l_old_attachment_scope
 			end
+			in_precondition := l_old_in_precondition
+			in_postcondition := l_old_in_postcondition
+			in_invariant := l_old_in_invariant
+			in_rescue := l_old_in_rescue
+			in_check_instruction := l_old_in_check_instruction
 				-- Manage enclosing inline agents stack.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -14732,6 +14911,11 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			l_compound: detachable ET_COMPOUND
+			l_old_in_precondition: BOOLEAN
+			l_old_in_postcondition: BOOLEAN
+			l_old_in_invariant: BOOLEAN
+			l_old_in_rescue: BOOLEAN
+			l_old_in_check_instruction: BOOLEAN
 			l_old_hidden_object_test_scope: INTEGER
 			l_old_hidden_iteration_item_scope: INTEGER
 			l_old_hidden_inline_separate_argument_scope: INTEGER
@@ -14751,6 +14935,16 @@ feature {NONE} -- Agent validity
 				enclosing_inline_agents.force_last (l_current_inline_agent)
 			end
 			current_inline_agent := an_expression
+			l_old_in_precondition := in_precondition
+			in_precondition := False
+			l_old_in_postcondition := in_postcondition
+			in_postcondition := False
+			l_old_in_invariant := in_invariant
+			in_invariant := False
+			l_old_in_rescue := in_rescue
+			in_rescue := False
+			l_old_in_check_instruction := in_check_instruction
+			in_check_instruction := False
 				-- Make sure that we do not use object-test locals declared
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
@@ -14795,6 +14989,15 @@ feature {NONE} -- Agent validity
 			check_once_keys_validity (an_expression.keys, an_expression.first_note)
 			had_key_error := has_fatal_error
 			if not had_error then
+				if attached an_expression.preconditions as l_preconditions then
+					check_preconditions_validity (l_preconditions)
+					had_error := had_error or has_fatal_error
+					build_assertions_attachment_scope (l_preconditions)
+				end
+				if attached an_expression.postconditions as l_postconditions then
+					check_postconditions_validity (l_postconditions)
+					had_error := had_error or has_fatal_error
+				end
 				l_compound := an_expression.compound
 				l_rescue_compound := an_expression.rescue_clause
 				if current_system.attachment_type_conformance_mode then
@@ -14847,6 +15050,11 @@ feature {NONE} -- Agent validity
 				free_attachment_scope (current_attachment_scope)
 				current_attachment_scope := l_old_attachment_scope
 			end
+			in_precondition := l_old_in_precondition
+			in_postcondition := l_old_in_postcondition
+			in_invariant := l_old_in_invariant
+			in_rescue := l_old_in_rescue
+			in_check_instruction := l_old_in_check_instruction
 				-- Manage enclosing inline agents.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -17354,8 +17562,16 @@ feature {NONE} -- Status report
 	in_precondition: BOOLEAN
 			-- Are we processing a precondition?
 
+	in_feature_precondition: BOOLEAN
+			-- Are we processing a feature precondition
+			-- (as opposed to an inline agent precondition)?
+
 	in_postcondition: BOOLEAN
 			-- Are we processing a postcondition?
+
+	in_feature_postcondition: BOOLEAN
+			-- Are we processing a feature postcondition
+			-- (as opposed to an inline agent postcondition)?
 
 	in_invariant: BOOLEAN
 			-- Are we processing an invariant?

@@ -958,7 +958,7 @@ feature -- Validity checking
 					else
 						index_offset := dynamic_type_sets.count.max (l_current_index) - l_current_index
 						current_dynamic_feature.preconditions.force_last (l_preconditions, index_offset)
-						check_preconditions_validity (l_preconditions, l_precursor, a_feature, a_current_type)
+						check_feature_preconditions_validity (l_preconditions, l_precursor, a_feature, a_current_type)
 						index_offset := 0
 						if l_preconditions.are_all_true then
 							l_precursors.go_after
@@ -992,7 +992,7 @@ feature -- Validity checking
 				if attached l_precursor.postconditions as l_postconditions and then not l_postconditions.are_all_true then
 					index_offset := dynamic_type_sets.count.max (l_current_index) - l_current_index
 					current_dynamic_feature.postconditions.force_last (l_postconditions, index_offset)
-					check_postconditions_validity (l_postconditions, l_precursor, a_feature, a_current_type)
+					check_feature_postconditions_validity (l_postconditions, l_precursor, a_feature, a_current_type)
 					index_offset := 0
 				end
 				l_precursors.forth
