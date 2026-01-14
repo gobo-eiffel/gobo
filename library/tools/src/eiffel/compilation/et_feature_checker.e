@@ -12330,7 +12330,7 @@ feature {NONE} -- VAPE validity
 			i, nb: INTEGER
 		do
 			has_fatal_error := False
-			if in_precondition and then current_feature.is_feature then
+			if in_feature_precondition and then current_feature.is_feature then
 					-- VAPE validity rule only applies to preconditions.
 				l_non_descendant_clients := vape_non_descendant_clients
 				l_non_descendant_clients.wipe_out
@@ -12360,7 +12360,7 @@ feature {NONE} -- VAPE validity
 			i, nb: INTEGER
 		do
 			has_fatal_error := False
-			if in_precondition and then current_feature.is_feature then
+			if in_feature_precondition and then current_feature.is_feature then
 					-- VAPE validity rule only applies to preconditions.
 				l_non_descendant_clients := vape_non_descendant_clients
 				l_non_descendant_clients.wipe_out
@@ -12393,7 +12393,7 @@ feature {NONE} -- VAPE validity
 			i, nb: INTEGER
 		do
 			has_fatal_error := False
-			if in_precondition and then current_feature.is_feature then
+			if in_feature_precondition and then current_feature.is_feature then
 					-- VAPE validity rule only applies to preconditions.
 				l_creation_clients := vape_creation_clients
 				l_creation_clients.wipe_out
@@ -12434,7 +12434,7 @@ feature {NONE} -- VAPE validity
 			i, nb: INTEGER
 		do
 			has_fatal_error := False
-			if in_precondition and then current_feature.is_feature then
+			if in_feature_precondition and then current_feature.is_feature then
 					-- VAPE validity rule only applies to preconditions.
 				l_creation_clients := vape_creation_clients
 				l_creation_clients.wipe_out
