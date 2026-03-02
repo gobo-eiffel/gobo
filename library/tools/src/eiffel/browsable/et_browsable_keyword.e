@@ -14,7 +14,8 @@ inherit
 
 	ET_BROWSABLE_UNQUALIFIED_NAME
 		redefine
-			name
+			name,
+			build_completion
 		end
 
 create
@@ -30,6 +31,17 @@ feature -- Access
 			-- Base class of the type of the browsable name, if any
 		do
 			-- Result := Void
+		end
+
+feature -- Basic operations
+
+	build_completion (a_builder: ET_BROWSABLE_COMPLETION_BUILDER)
+			-- Build list of completion suggestions.
+		do
+			if not is_completion_disabled then
+				a_builder.add_keyword (name, Current)
+			end
+			precursor (a_builder)
 		end
 
 feature -- Output

@@ -2544,6 +2544,7 @@ feature {NONE} -- Parsing
 			l_feature: detachable ET_FEATURE
 			l_feature_name_expected: BOOLEAN
 			l_comma_expected: BOOLEAN
+			l_unknown_string: ET_REGULAR_MANIFEST_STRING
 			l_done: BOOLEAN
 		do
 			end_indentation_mismatch := Void
@@ -2729,6 +2730,8 @@ feature {NONE} -- Parsing
 						l_external_language := ast_factory.new_external_language (l_external_keyword, last_detachable_et_manifest_string_value)
 						read_token
 					else
+						create l_unknown_string.make (tokens.unknown_name)
+						l_external_language := ast_factory.new_external_language (l_external_keyword, l_unknown_string)
 						report_syntax_error (last_position, last_value, manifest_string_expected)
 					end
 					if last_token = E_ALIAS then
@@ -3911,13 +3914,19 @@ feature {NONE} -- Parsing
 			l_last_expression: detachable ET_EXPRESSION
 			l_is_all: BOOLEAN
 			l_end_keyword: detachable ET_KEYWORD
+			l_unknown_expression: ET_EXPRESSION
+			l_expression: detachable ET_EXPRESSION
 		do
 			last_expression := Void
 			if last_token = E_ACROSS then
+				l_unknown_expression := tokens.true_keyword
 				l_across_keyword := last_detachable_et_keyword_value
 				read_token
 				parse_expression
 				l_iterable_expression := last_expression
+				if l_iterable_expression = Void and has_syntax_error then
+					l_iterable_expression := l_unknown_expression
+				end
 				if last_token = E_AS or last_token = E_IS then
 					l_as_keyword := last_detachable_et_keyword_value
 					read_token
@@ -3941,9 +3950,16 @@ feature {NONE} -- Parsing
 					l_all_some_keyword := last_detachable_et_keyword_value
 					read_token
 					parse_expression
-					l_all_some_conditional := ast_factory.new_conditional (l_all_some_keyword, last_expression)
+					l_expression := last_expression
+					if l_expression = Void and has_syntax_error then
+						l_expression := l_unknown_expression
+					end
+					l_all_some_conditional := ast_factory.new_conditional (l_all_some_keyword, l_expression)
 				else
 					report_syntax_error (last_position, last_value, as_keyword_expected)
+				end
+				if l_all_some_conditional = Void and has_syntax_error then
+					l_all_some_conditional := l_unknown_expression
 				end
 				parse_optional_variant
 				l_variant := last_variant
@@ -4064,13 +4080,18 @@ feature {NONE} -- Parsing
 			l_elseif_then_expression: detachable ET_EXPRESSION
 			nb: INTEGER
 			l_last_expression: detachable ET_EXPRESSION
+			l_unknown_expression: ET_EXPRESSION
 		do
 			last_expression := Void
 			if last_token = E_IF then
+				l_unknown_expression := tokens.true_keyword
 				l_if_keyword := last_detachable_et_keyword_value
 				read_token
 				parse_expression
 				l_conditional_expression := last_expression
+				if l_conditional_expression = Void and has_syntax_error then
+					l_conditional_expression := l_unknown_expression
+				end
 				if last_token = E_THEN then
 					l_then_keyword := last_detachable_et_keyword_value
 					read_token
@@ -4078,6 +4099,9 @@ feature {NONE} -- Parsing
 					l_then_expression := last_expression
 				else
 					report_syntax_error (last_position, last_value, then_keyword_expected)
+				end
+				if l_then_expression = Void and has_syntax_error then
+					l_then_expression := l_unknown_expression
 				end
 				l_old_last_elseif_expression_items_count := last_elseif_expression_items.count
 				from until last_token /= E_ELSEIF loop
@@ -4116,6 +4140,9 @@ feature {NONE} -- Parsing
 				else
 					report_syntax_error (last_position, last_value, else_keyword_expected)
 				end
+				if l_else_expression = Void and has_syntax_error then
+					l_else_expression := l_unknown_expression
+				end
 				if last_token = E_END then
 					l_end_keyword := last_detachable_et_keyword_value
 					read_token
@@ -4145,13 +4172,18 @@ feature {NONE} -- Parsing
 			l_expression: detachable ET_EXPRESSION
 			nb: INTEGER
 			l_last_expression: detachable ET_EXPRESSION
+			l_unknown_expression: ET_EXPRESSION
 		do
 			last_expression := Void
 			if last_token = E_INSPECT then
+				l_unknown_expression := tokens.true_keyword
 				l_inspect_keyword := last_detachable_et_keyword_value
 				read_token
 				parse_expression
 				l_conditional_expression := last_expression
+				if l_conditional_expression = Void and has_syntax_error then
+					l_conditional_expression := l_unknown_expression
+				end
 				l_old_last_when_expression_items_count := last_when_expression_items.count
 				from until last_token /= E_WHEN loop
 					parse_choices
@@ -4487,9 +4519,11 @@ feature {NONE} -- Parsing
 			l_dot_symbol: detachable ET_SYMBOL
 			l_expression_found: BOOLEAN
 			l_last_expression: detachable ET_EXPRESSION
+			l_unknown_expression: ET_EXPRESSION
 		do
 			last_expression := Void
 			if last_token = E_ATTACHED then
+				l_unknown_expression := tokens.true_keyword
 				l_attached_keyword := last_detachable_et_keyword_value
 				read_token
 				if last_token = Left_brace_code then
@@ -4520,6 +4554,9 @@ feature {NONE} -- Parsing
 				if not l_expression_found then
 					parse_non_binary_expression
 					l_expression := last_expression
+				end
+				if l_expression = Void and has_syntax_error then
+					l_expression := l_unknown_expression
 				end
 				if last_token = E_AS then
 					l_as_keyword := last_detachable_et_keyword_value
@@ -5842,8 +5879,21 @@ feature {NONE} -- Parsing
 			last_compound := Void
 			l_old_last_instruction_items_count := last_instruction_items.count
 			from until
-				not is_instruction_first_token (last_token)
+				not is_instruction_first_token (last_token) and then
+				(is_error_recovering implies (
+					last_token <= 0 or
+					last_token = E_RESCUE or
+					last_token = E_ENSURE or
+					last_token = E_END or
+					last_token = E_FEATURE or
+					last_token = E_INVARIANT or
+					last_token = E_NOTE or
+					last_token = E_INDEXING or
+					are_next_tokens_feature_header))
 			loop
+				if is_error_recovering and then not is_instruction_first_token (last_token) then
+					read_token
+				end
 				parse_instruction
 				last_instruction_items.force (last_instruction)
 			end
@@ -6274,9 +6324,12 @@ feature {NONE} -- Parsing
 			l_has_old_variant: BOOLEAN
 			l_end_keyword: detachable ET_KEYWORD
 			l_instruction: detachable ET_INSTRUCTION
+			l_expression: detachable ET_EXPRESSION
+			l_unknown_expression: ET_EXPRESSION
 		do
 			last_instruction := Void
 			if last_token = E_FROM then
+				l_unknown_expression := tokens.true_keyword
 				l_from_keyword := last_detachable_et_keyword_value
 				read_token
 				parse_optional_compound (False)
@@ -6292,9 +6345,16 @@ feature {NONE} -- Parsing
 					l_until_keyword := last_detachable_et_keyword_value
 					read_token
 					parse_expression
-					l_until_conditional := ast_factory.new_conditional (l_until_keyword, last_expression)
+					l_expression := last_expression
+					if l_expression = Void and has_syntax_error then
+						l_expression := l_unknown_expression
+					end
+					l_until_conditional := ast_factory.new_conditional (l_until_keyword, l_expression)
 				else
 					report_syntax_error (last_position, last_value, until_keyword_expected)
+				end
+				if l_until_conditional = Void and has_syntax_error then
+					l_until_conditional := l_unknown_expression
 				end
 				if last_token = E_LOOP then
 					l_loop_keyword := last_detachable_et_keyword_value
@@ -6349,13 +6409,18 @@ feature {NONE} -- Parsing
 			l_across_header: detachable ET_ACROSS_INSTRUCTION
 			l_end_keyword: detachable ET_KEYWORD
 			l_instruction: detachable ET_INSTRUCTION
+			l_unknown_expression: ET_EXPRESSION
 		do
 			last_instruction := Void
 			if last_token = E_ACROSS then
+				l_unknown_expression := tokens.true_keyword
 				l_across_keyword := last_detachable_et_keyword_value
 				read_token
 				parse_expression
 				l_iterable_expression := last_expression
+				if l_iterable_expression = Void and has_syntax_error then
+					l_iterable_expression := l_unknown_expression
+				end
 				if last_token = E_AS or last_token = E_IS then
 					l_as_keyword := last_detachable_et_keyword_value
 					read_token
@@ -6473,15 +6538,20 @@ feature {NONE} -- Parsing
 			l_elseif_then_compound: detachable ET_COMPOUND
 			l_elseif_conditional_expression: detachable ET_EXPRESSION
 			l_end_keyword: detachable ET_KEYWORD
+			l_unknown_expression: ET_EXPRESSION
 			nb: INTEGER
 			l_instruction: detachable ET_INSTRUCTION
 		do
 			last_instruction := Void
 			if last_token = E_IF then
+				l_unknown_expression := tokens.true_keyword
 				l_if_keyword := last_detachable_et_keyword_value
 				read_token
 				parse_expression
 				l_conditional_expression := last_expression
+				if l_conditional_expression = Void and has_syntax_error then
+					l_conditional_expression := l_unknown_expression
+				end
 				if last_token = E_THEN then
 					l_then_keyword := last_detachable_et_keyword_value
 					read_token
@@ -6560,13 +6630,18 @@ feature {NONE} -- Parsing
 			l_choices: detachable ET_CHOICE_LIST
 			nb: INTEGER
 			l_instruction: detachable ET_INSTRUCTION
+			l_unknown_expression: ET_EXPRESSION
 		do
 			last_instruction := Void
 			if last_token = E_INSPECT then
+				l_unknown_expression := tokens.true_keyword
 				l_inspect_keyword := last_detachable_et_keyword_value
 				read_token
 				parse_expression
 				l_conditional_expression := last_expression
+				if l_conditional_expression = Void and has_syntax_error then
+					l_conditional_expression := l_unknown_expression
+				end
 				l_old_last_when_part_items_count := last_when_part_items.count
 				from until
 					last_token /= E_WHEN
@@ -7792,6 +7867,184 @@ feature {NONE} -- Scanner
 				Result := True
 			else
 				Result := is_string_token (a_token)
+			end
+		end
+
+	are_next_tokens_feature_header: BOOLEAN
+			-- Are the next tokens the beginning of a feature declaration?
+		local
+			l_identifier: detachable ET_IDENTIFIER
+			l_identifier_code: INTEGER
+			l_name: detachable ET_IDENTIFIER
+			l_name_code: INTEGER
+			l_comma_symbol: detachable ET_SYMBOL
+			l_left_parenthesis: detachable ET_SYMBOL
+			l_old_last_labels_count1: INTEGER
+			l_old_last_labels_count2: INTEGER
+			nb: INTEGER
+			l_done: BOOLEAN
+			l_result_found: BOOLEAN
+		do
+			if last_token = E_FROZEN then
+				Result := True
+			elseif is_identifier_token (last_token) then
+				l_name := last_detachable_et_identifier_value
+				l_name_code := last_token
+				read_token
+				inspect last_token
+				when
+					E_ALIAS,
+					E_REQUIRE,
+					E_LOCAL,
+					E_NOTE,
+					E_INDEXING,
+					E_OBSOLETE,
+					E_DO,
+					E_ONCE,
+					E_EXTERNAL,
+					E_DEFERRED,
+					Colon_code
+				then
+					unread_token
+					Result := True
+					l_result_found := True
+				when Comma_code, Left_parenthesis_code then
+					l_result_found := False
+				else
+					unread_token
+					Result := False
+					l_result_found := True
+				end
+				l_old_last_labels_count1 := last_labels.count
+				if not l_result_found and then last_token = Comma_code then
+					from until l_done loop
+						inspect last_token
+						when Comma_code then
+							l_comma_symbol := last_detachable_et_symbol_value
+							read_token
+							if last_token = E_FROZEN then
+								unread_token
+								unread_symbol_token (Comma_code, l_comma_symbol)
+								Result := True
+								l_result_found := True
+								l_done := True
+							elseif is_identifier_token (last_token) then
+								l_identifier := last_detachable_et_identifier_value
+								read_token
+								last_labels.force (ast_factory.new_label_comma (l_identifier, l_comma_symbol))
+							else
+								unread_token
+								unread_symbol_token (Comma_code, l_comma_symbol)
+								Result := False
+								l_result_found := True
+								l_done := True
+							end
+						when Left_parenthesis_code then
+							l_result_found := False
+							l_done := True
+						when
+							E_ALIAS,
+							E_REQUIRE,
+							E_LOCAL,
+							E_NOTE,
+							E_INDEXING,
+							E_OBSOLETE,
+							E_DO,
+							E_ONCE,
+							E_EXTERNAL,
+							E_DEFERRED,
+							Colon_code
+						then
+							unread_token
+							Result := True
+							l_result_found := True
+							l_done := True
+						else
+							unread_token
+							Result := False
+							l_result_found := True
+							l_done := True
+						end
+					end
+				end
+				if not l_result_found and then last_token = Left_parenthesis_code then
+					l_left_parenthesis := last_detachable_et_symbol_value
+					read_token
+					l_old_last_labels_count2 := last_labels.count
+					l_done := False
+					from until l_done loop
+						if is_identifier_token (last_token) then
+							l_identifier := last_detachable_et_identifier_value
+							l_identifier_code := last_token
+							read_token
+							if last_token = Comma_code then
+								l_comma_symbol := last_detachable_et_symbol_value
+								read_token
+								last_labels.force (ast_factory.new_label_comma (l_identifier, l_comma_symbol))
+							else
+								Result := (last_token = Colon_code)
+								unread_token
+								unread_identifier_token (l_identifier_code, l_identifier)
+								l_done := True
+							end
+						else
+							unread_token
+							Result := False
+							l_done := True
+						end
+					end
+					nb := last_labels.count - l_old_last_labels_count2
+					from until nb <= 0 loop
+						if not attached last_labels.item as l_last_label then
+							unread_symbol_token (Comma_code, tokens.comma_symbol)
+							l_identifier := Void
+						elseif attached {ET_IDENTIFIER_COMMA} l_last_label as l_identifier_comma then
+							unread_symbol_token (Comma_code, l_identifier_comma.comma)
+							l_identifier := l_identifier_comma.identifier
+						else
+							unread_symbol_token (Comma_code, tokens.comma_symbol)
+							l_identifier := l_last_label.identifier
+						end
+						if l_identifier = Void then
+							unread_identifier_token (E_IDENTIFIER, l_identifier)
+						elseif l_identifier.same_class_name (tokens.none_class_name) then
+							unread_identifier_token (E_NONE, l_identifier)
+						elseif l_identifier.same_class_name (tokens.tuple_class_name) then
+							unread_identifier_token (E_TUPLE, l_identifier)
+						else
+							unread_identifier_token (E_IDENTIFIER, l_identifier)
+						end
+						last_labels.remove
+						nb := nb - 1
+					end
+					unread_symbol_token (Left_parenthesis_code, l_left_parenthesis)
+				end
+				nb := last_labels.count - l_old_last_labels_count1
+				from until nb <= 0 loop
+					if not attached last_labels.item as l_last_label then
+						l_comma_symbol := tokens.comma_symbol
+						l_identifier := Void
+					elseif attached {ET_IDENTIFIER_COMMA} l_last_label as l_identifier_comma then
+						l_comma_symbol := l_identifier_comma.comma
+						l_identifier := l_identifier_comma.identifier
+					else
+						l_comma_symbol := tokens.comma_symbol
+						l_identifier := l_last_label.identifier
+					end
+					if l_identifier = Void then
+						unread_identifier_token (E_IDENTIFIER, l_identifier)
+					elseif l_identifier.same_class_name (tokens.none_class_name) then
+						unread_identifier_token (E_NONE, l_identifier)
+					elseif l_identifier.same_class_name (tokens.tuple_class_name) then
+						unread_identifier_token (E_TUPLE, l_identifier)
+					else
+						unread_identifier_token (E_IDENTIFIER, l_identifier)
+					end
+					unread_symbol_token (Comma_code, l_comma_symbol)
+					last_labels.remove
+					nb := nb - 1
+				end
+				set_last_identifier_token (l_identifier_code, l_identifier)
 			end
 		end
 

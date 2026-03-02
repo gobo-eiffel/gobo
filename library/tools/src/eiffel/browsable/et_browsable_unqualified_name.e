@@ -117,32 +117,34 @@ feature -- Basic operations
 							a_builder.add_keyword (tokens.precursor_keyword, Current)
 						end
 					end
-					if not is_only_procedure_expected and then not is_only_creation_procedure_expected then
-						a_builder.add_keyword (tokens.agent_keyword, Current)
-						a_builder.add_keyword (tokens.attached_keyword, Current)
-						a_builder.add_keyword (tokens.current_keyword, Current)
-						a_builder.add_keyword (tokens.false_keyword, Current)
-						a_builder.add_keyword (tokens.not_keyword, Current)
-						a_builder.add_keyword (tokens.once_keyword, Current)
-						a_builder.add_keyword (tokens.true_keyword, Current)
-						a_builder.add_keyword (tokens.void_keyword, Current)
+					if not attached {ET_KEYWORD} name then
+						if not is_only_procedure_expected and then not is_only_creation_procedure_expected then
+							a_builder.add_keyword (tokens.agent_keyword, Current)
+							a_builder.add_keyword (tokens.attached_keyword, Current)
+							a_builder.add_keyword (tokens.current_keyword, Current)
+							a_builder.add_keyword (tokens.false_keyword, Current)
+							a_builder.add_keyword (tokens.not_keyword, Current)
+							a_builder.add_keyword (tokens.once_keyword, Current)
+							a_builder.add_keyword (tokens.true_keyword, Current)
+							a_builder.add_keyword (tokens.void_keyword, Current)
+						end
+						if not is_only_query_expected then
+							a_builder.add_keyword (tokens.check_keyword, Current)
+							a_builder.add_keyword (tokens.debug_keyword, Current)
+							a_builder.add_keyword (tokens.else_keyword, Current)
+							a_builder.add_keyword (tokens.elseif_keyword, Current)
+							a_builder.add_keyword (tokens.end_keyword, Current)
+							a_builder.add_keyword (tokens.ensure_keyword, Current)
+							a_builder.add_keyword (tokens.rescue_keyword, Current)
+							a_builder.add_keyword (tokens.retry_keyword, Current)
+							a_builder.add_keyword (tokens.separate_keyword, Current)
+						end
+						a_builder.add_keyword (tokens.across_keyword, Current)
+						a_builder.add_keyword (tokens.create_keyword, Current)
+						a_builder.add_keyword (tokens.from_keyword, Current)
+						a_builder.add_keyword (tokens.if_keyword, Current)
+						a_builder.add_keyword (tokens.inspect_keyword, Current)
 					end
-					if not is_only_query_expected then
-						a_builder.add_keyword (tokens.check_keyword, Current)
-						a_builder.add_keyword (tokens.debug_keyword, Current)
-						a_builder.add_keyword (tokens.else_keyword, Current)
-						a_builder.add_keyword (tokens.elseif_keyword, Current)
-						a_builder.add_keyword (tokens.end_keyword, Current)
-						a_builder.add_keyword (tokens.ensure_keyword, Current)
-						a_builder.add_keyword (tokens.rescue_keyword, Current)
-						a_builder.add_keyword (tokens.retry_keyword, Current)
-						a_builder.add_keyword (tokens.separate_keyword, Current)
-					end
-					a_builder.add_keyword (tokens.across_keyword, Current)
-					a_builder.add_keyword (tokens.create_keyword, Current)
-					a_builder.add_keyword (tokens.from_keyword, Current)
-					a_builder.add_keyword (tokens.if_keyword, Current)
-					a_builder.add_keyword (tokens.inspect_keyword, Current)
 				end
 			end
 		end

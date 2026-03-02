@@ -12,6 +12,7 @@
   be fully browsable even when they contain syntax or compilation errors.
 * Do not request restarting the Eiffel server more than once to avoid
   ending up with several servers running.
+* Added completion snippets.
 
 ### Gobo Eiffel Language Server Protocol Library
 

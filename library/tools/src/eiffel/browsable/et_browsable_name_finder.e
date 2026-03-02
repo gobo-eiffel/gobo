@@ -21,6 +21,7 @@ inherit
 		rename
 			make as make_ast_processor
 		redefine
+			process_across_expression,
 			process_assigner,
 			process_assigner_instruction,
 			process_assignment,
@@ -71,14 +72,17 @@ inherit
 			process_invariants,
 			process_iteration_item_name_declaration,
 			process_keyword,
+			process_keyword_expression,
 			process_like_current,
 			process_like_feature,
 			process_local_comma_variable,
 			process_local_variable,
 			process_named_object_test,
+			process_object_test,
 			process_old_object_test,
 			process_once_function,
 			process_once_function_inline_agent,
+			process_once_manifest_string,
 			process_once_procedure,
 			process_once_procedure_inline_agent,
 			process_parent,
@@ -148,6 +152,23 @@ feature -- Basic operations
 		end
 
 feature {ET_AST_NODE} -- Processing
+
+	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
+			-- Process `an_expression'.
+		local
+			l_across_keyword: ET_KEYWORD
+			l_browsable_name: like last_browsable_name
+		do
+			l_across_keyword := an_expression.across_keyword
+			if l_across_keyword.contains_position (current_position) then
+				create {ET_BROWSABLE_KEYWORD} l_browsable_name.make (l_across_keyword, current_closure, current_class)
+				l_browsable_name.set_only_query_expected (True)
+				last_browsable_name := l_browsable_name
+			end
+			if last_browsable_name = Void then
+				precursor (an_expression)
+			end
+		end
 
 	process_argument_name (a_identifier: ET_IDENTIFIER)
 			-- Process `a_identifier'.
@@ -313,6 +334,14 @@ feature {ET_AST_NODE} -- Processing
 			l_name := a_class.name
 			if l_name.contains_position (current_position) then
 				create {ET_BROWSABLE_CLASS_NAME} l_browsable_name.make (l_name, a_class, current_class)
+				l_browsable_name.set_completion_disabled (True)
+				last_browsable_name := l_browsable_name
+			elseif attached {ET_KEYWORD} a_class.class_mark as l_class_mark and then l_class_mark.contains_position (current_position) then
+				create {ET_BROWSABLE_KEYWORD} l_browsable_name.make (l_class_mark, current_closure, current_class)
+				l_browsable_name.set_completion_disabled (True)
+				last_browsable_name := l_browsable_name
+			elseif attached a_class.external_keyword as l_external_keyword and then l_external_keyword.contains_position (current_position) then
+				create {ET_BROWSABLE_KEYWORD} l_browsable_name.make (l_external_keyword, current_closure, current_class)
 				l_browsable_name.set_completion_disabled (True)
 				last_browsable_name := l_browsable_name
 			end
@@ -1001,8 +1030,24 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if a_keyword.contains_position (current_position) then
 				create {ET_BROWSABLE_KEYWORD} l_browsable_name.make (a_keyword, current_closure, current_class)
-				l_browsable_name.set_completion_disabled (True)
 				last_browsable_name := l_browsable_name
+			end
+		end
+
+	process_keyword_expression (an_expression: ET_KEYWORD_EXPRESSION)
+			-- Process `an_expression'.
+		local
+			l_keyword: ET_KEYWORD
+			l_browsable_name: like last_browsable_name
+		do
+			l_keyword := an_expression.keyword
+			if l_keyword.contains_position (current_position) then
+				create {ET_BROWSABLE_KEYWORD} l_browsable_name.make (l_keyword, current_closure, current_class)
+				l_browsable_name.set_only_query_expected (True)
+				last_browsable_name := l_browsable_name
+			end
+			if last_browsable_name = Void then
+				precursor (an_expression)
 			end
 		end
 
@@ -1087,10 +1132,16 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		local
 			l_name: ET_IDENTIFIER
+			l_attached_keyword: ET_KEYWORD
 			l_browsable_name: like last_browsable_name
 		do
+			l_attached_keyword := an_expression.attached_keyword
 			l_name := an_expression.name
-			if l_name.contains_position (current_position) then
+			if l_attached_keyword.contains_position (current_position) then
+				create {ET_BROWSABLE_KEYWORD} l_browsable_name.make (l_attached_keyword, current_closure, current_class)
+				l_browsable_name.set_only_query_expected (True)
+				last_browsable_name := l_browsable_name
+			elseif l_name.contains_position (current_position) then
 				if attached current_closure as l_closure then
 					internal_type_context.reset (current_class)
 					expression_type_finder.find_expression_type_in_closure (l_name, l_closure, l_closure, current_class, internal_type_context, current_universe.any_type)
@@ -1098,6 +1149,23 @@ feature {ET_AST_NODE} -- Processing
 					l_browsable_name.set_completion_disabled (True)
 					last_browsable_name := l_browsable_name
 				end
+			end
+			if last_browsable_name = Void then
+				precursor (an_expression)
+			end
+		end
+
+	process_object_test (an_expression: ET_OBJECT_TEST)
+			-- Process `an_expression'.
+		local
+			l_attached_keyword: ET_KEYWORD
+			l_browsable_name: like last_browsable_name
+		do
+			l_attached_keyword := an_expression.attached_keyword
+			if l_attached_keyword.contains_position (current_position) then
+				create {ET_BROWSABLE_KEYWORD} l_browsable_name.make (l_attached_keyword, current_closure, current_class)
+				l_browsable_name.set_only_query_expected (True)
+				last_browsable_name := l_browsable_name
 			end
 			if last_browsable_name = Void then
 				precursor (an_expression)
@@ -1160,6 +1228,23 @@ feature {ET_AST_NODE} -- Processing
 			current_closure := a_expression
 			precursor (a_expression)
 			current_closure := l_old_closure
+		end
+
+	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING)
+			-- Process `an_expression'.
+		local
+			l_once_keyword: ET_KEYWORD
+			l_browsable_name: like last_browsable_name
+		do
+			l_once_keyword := an_expression.once_keyword
+			if l_once_keyword.contains_position (current_position) then
+				create {ET_BROWSABLE_KEYWORD} l_browsable_name.make (l_once_keyword, current_closure, current_class)
+				l_browsable_name.set_completion_disabled (True)
+				last_browsable_name := l_browsable_name
+			end
+			if last_browsable_name = Void then
+				precursor (an_expression)
+			end
 		end
 
 	process_once_procedure (a_feature: ET_ONCE_PROCEDURE)
