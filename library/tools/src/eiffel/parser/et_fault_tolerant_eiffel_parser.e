@@ -5879,8 +5879,21 @@ feature {NONE} -- Parsing
 			last_compound := Void
 			l_old_last_instruction_items_count := last_instruction_items.count
 			from until
-				not is_instruction_first_token (last_token)
+				not is_instruction_first_token (last_token) and then
+				(is_error_recovering implies (
+					last_token <= 0 or
+					last_token = E_RESCUE or
+					last_token = E_ENSURE or
+					last_token = E_END or
+					last_token = E_FEATURE or
+					last_token = E_INVARIANT or
+					last_token = E_NOTE or
+					last_token = E_INDEXING or
+					are_next_tokens_feature_header))
 			loop
+				if is_error_recovering and then not is_instruction_first_token (last_token) then
+					read_token
+				end
 				parse_instruction
 				last_instruction_items.force (last_instruction)
 			end
@@ -7854,6 +7867,184 @@ feature {NONE} -- Scanner
 				Result := True
 			else
 				Result := is_string_token (a_token)
+			end
+		end
+
+	are_next_tokens_feature_header: BOOLEAN
+			-- Are the next tokens the beginning of a feature declaration?
+		local
+			l_identifier: detachable ET_IDENTIFIER
+			l_identifier_code: INTEGER
+			l_name: detachable ET_IDENTIFIER
+			l_name_code: INTEGER
+			l_comma_symbol: detachable ET_SYMBOL
+			l_left_parenthesis: detachable ET_SYMBOL
+			l_old_last_labels_count1: INTEGER
+			l_old_last_labels_count2: INTEGER
+			nb: INTEGER
+			l_done: BOOLEAN
+			l_result_found: BOOLEAN
+		do
+			if last_token = E_FROZEN then
+				Result := True
+			elseif is_identifier_token (last_token) then
+				l_name := last_detachable_et_identifier_value
+				l_name_code := last_token
+				read_token
+				inspect last_token
+				when
+					E_ALIAS,
+					E_REQUIRE,
+					E_LOCAL,
+					E_NOTE,
+					E_INDEXING,
+					E_OBSOLETE,
+					E_DO,
+					E_ONCE,
+					E_EXTERNAL,
+					E_DEFERRED,
+					Colon_code
+				then
+					unread_token
+					Result := True
+					l_result_found := True
+				when Comma_code, Left_parenthesis_code then
+					l_result_found := False
+				else
+					unread_token
+					Result := False
+					l_result_found := True
+				end
+				l_old_last_labels_count1 := last_labels.count
+				if not l_result_found and then last_token = Comma_code then
+					from until l_done loop
+						inspect last_token
+						when Comma_code then
+							l_comma_symbol := last_detachable_et_symbol_value
+							read_token
+							if last_token = E_FROZEN then
+								unread_token
+								unread_symbol_token (Comma_code, l_comma_symbol)
+								Result := True
+								l_result_found := True
+								l_done := True
+							elseif is_identifier_token (last_token) then
+								l_identifier := last_detachable_et_identifier_value
+								read_token
+								last_labels.force (ast_factory.new_label_comma (l_identifier, l_comma_symbol))
+							else
+								unread_token
+								unread_symbol_token (Comma_code, l_comma_symbol)
+								Result := False
+								l_result_found := True
+								l_done := True
+							end
+						when Left_parenthesis_code then
+							l_result_found := False
+							l_done := True
+						when
+							E_ALIAS,
+							E_REQUIRE,
+							E_LOCAL,
+							E_NOTE,
+							E_INDEXING,
+							E_OBSOLETE,
+							E_DO,
+							E_ONCE,
+							E_EXTERNAL,
+							E_DEFERRED,
+							Colon_code
+						then
+							unread_token
+							Result := True
+							l_result_found := True
+							l_done := True
+						else
+							unread_token
+							Result := False
+							l_result_found := True
+							l_done := True
+						end
+					end
+				end
+				if not l_result_found and then last_token = Left_parenthesis_code then
+					l_left_parenthesis := last_detachable_et_symbol_value
+					read_token
+					l_old_last_labels_count2 := last_labels.count
+					l_done := False
+					from until l_done loop
+						if is_identifier_token (last_token) then
+							l_identifier := last_detachable_et_identifier_value
+							l_identifier_code := last_token
+							read_token
+							if last_token = Comma_code then
+								l_comma_symbol := last_detachable_et_symbol_value
+								read_token
+								last_labels.force (ast_factory.new_label_comma (l_identifier, l_comma_symbol))
+							else
+								Result := (last_token = Colon_code)
+								unread_token
+								unread_identifier_token (l_identifier_code, l_identifier)
+								l_done := True
+							end
+						else
+							unread_token
+							Result := False
+							l_done := True
+						end
+					end
+					nb := last_labels.count - l_old_last_labels_count2
+					from until nb <= 0 loop
+						if not attached last_labels.item as l_last_label then
+							unread_symbol_token (Comma_code, tokens.comma_symbol)
+							l_identifier := Void
+						elseif attached {ET_IDENTIFIER_COMMA} l_last_label as l_identifier_comma then
+							unread_symbol_token (Comma_code, l_identifier_comma.comma)
+							l_identifier := l_identifier_comma.identifier
+						else
+							unread_symbol_token (Comma_code, tokens.comma_symbol)
+							l_identifier := l_last_label.identifier
+						end
+						if l_identifier = Void then
+							unread_identifier_token (E_IDENTIFIER, l_identifier)
+						elseif l_identifier.same_class_name (tokens.none_class_name) then
+							unread_identifier_token (E_NONE, l_identifier)
+						elseif l_identifier.same_class_name (tokens.tuple_class_name) then
+							unread_identifier_token (E_TUPLE, l_identifier)
+						else
+							unread_identifier_token (E_IDENTIFIER, l_identifier)
+						end
+						last_labels.remove
+						nb := nb - 1
+					end
+					unread_symbol_token (Left_parenthesis_code, l_left_parenthesis)
+				end
+				nb := last_labels.count - l_old_last_labels_count1
+				from until nb <= 0 loop
+					if not attached last_labels.item as l_last_label then
+						l_comma_symbol := tokens.comma_symbol
+						l_identifier := Void
+					elseif attached {ET_IDENTIFIER_COMMA} l_last_label as l_identifier_comma then
+						l_comma_symbol := l_identifier_comma.comma
+						l_identifier := l_identifier_comma.identifier
+					else
+						l_comma_symbol := tokens.comma_symbol
+						l_identifier := l_last_label.identifier
+					end
+					if l_identifier = Void then
+						unread_identifier_token (E_IDENTIFIER, l_identifier)
+					elseif l_identifier.same_class_name (tokens.none_class_name) then
+						unread_identifier_token (E_NONE, l_identifier)
+					elseif l_identifier.same_class_name (tokens.tuple_class_name) then
+						unread_identifier_token (E_TUPLE, l_identifier)
+					else
+						unread_identifier_token (E_IDENTIFIER, l_identifier)
+					end
+					unread_symbol_token (Comma_code, l_comma_symbol)
+					last_labels.remove
+					nb := nb - 1
+				end
+				set_last_identifier_token (l_identifier_code, l_identifier)
 			end
 		end
 
