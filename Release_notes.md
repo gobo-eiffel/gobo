@@ -4,7 +4,7 @@ In order to see what is new in this release, please read the [Release History](.
 
 ## Compiler specific notes
 
-### ISE 25.02.9.8732 (ISE Eiffel)
+### ISE 25.12.9.8922 (ISE Eiffel)
 
 * The ECF files for ISE Eiffel provided in this package are for
   Eiffel classic. In order to get ECF files configured for Eiffel
@@ -20,6 +20,6 @@ In order to see what is new in this release, please read the [Release History](.
 
 ----
 
-Copyright (c) 1997-2025, Eric Bezault and others<br>
+Copyright (c) 1997-2026, Eric Bezault and others<br>
 mailto:[ericb@gobosoft.com](mailto:ericb@gobosoft.com)<br>
 https:[//www.gobosoft.com](https://www.gobosoft.com)

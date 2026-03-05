@@ -1,6 +1,6 @@
 # Release History
 
-## Version xx.xx.xx - xxxxxxx
+## Version 26.03.05 - 5 March 2026
 
 ### gelsp
 
@@ -32,7 +32,7 @@
   have been detected in one of the previous Degrees.
   Useful in order to decorate the AST with useful information such
   as the seed of the feature in call instructions.
-* Keep as many components in the AST in case of syntax error.
+* Keep as many components as possible in the AST in case of syntax error.
 * Report unused local variables.
 
 ## Version 26.01.11 - 11 January 2026
