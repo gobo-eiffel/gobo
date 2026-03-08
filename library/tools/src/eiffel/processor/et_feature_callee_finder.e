@@ -453,6 +453,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_expression'.
 		do
 			process_qualified_feature_call (a_expression)
+			precursor (a_expression)
 		end
 
 	process_invariants (a_list: ET_INVARIANTS)
