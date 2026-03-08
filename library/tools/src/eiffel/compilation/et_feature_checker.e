@@ -9761,7 +9761,17 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		local
 			l_expression: ET_EXPRESSION
+			l_old_hidden_object_test_scope: INTEGER
+			l_old_hidden_iteration_item_scope: INTEGER
 		do
+				-- Make sure that we do not use object-test locals declared
+				-- in an enclosing feature or inline agent.
+			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
+			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
+				-- Make sure that we do not use iteration items declared
+				-- in an enclosing feature or inline agent.
+			l_old_hidden_iteration_item_scope := current_iteration_item_scope.hidden_count
+			current_iteration_item_scope.hide_iteration_components (current_iteration_item_scope.count)
 				-- Check VAOL-2 (ETL2 p.124).
 			l_expression := an_expression.expression
 			check_expression_validity (l_expression, a_context, current_target_type)
@@ -9771,14 +9781,18 @@ feature {NONE} -- Expression validity
 				set_fatal_error
 				if current_class_impl = current_class then
 					error_handler.report_vaol1a_error (current_class, an_expression)
-				else
-					if not has_implementation_error (current_feature_impl) then
-							-- Internal error: the VAOL-1 error should have been
-							-- reported in the implementation feature.
-						error_handler.report_giaaa_error
-					end
+				elseif not has_implementation_error (current_feature_impl) then
+						-- Internal error: the VAOL-1 error should have been
+						-- reported in the implementation feature.
+					error_handler.report_giaaa_error
 				end
 			end
+				-- Restore the scope object-test locals declared
+				-- in the enclosing feature or inline agent.
+			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
+				-- Restore the scope iteration items declared
+				-- in the enclosing feature or inline agent.
+			current_iteration_item_scope.hide_iteration_components (l_old_hidden_iteration_item_scope)
 		end
 
 	check_once_manifest_string_validity (an_expression: ET_ONCE_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT)

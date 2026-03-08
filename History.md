@@ -1,5 +1,15 @@
 # Release History
 
+## Version xx.xx.xx - xxxxxx
+
+### Gobo Eiffel Tools Library
+
+* Fixed validity checking of `old` expressions. The following
+  code snippets `attached exp as e and then old e.f` and
+  `across exp as i all i.f end` were accepted even though
+  `e` and `i` are out of scope when evaluating the `old`
+  expressions on entry of the enclosing feature.
+
 ## Version 26.03.05 - 5 March 2026
 
 ### gelsp
