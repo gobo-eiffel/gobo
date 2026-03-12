@@ -4341,6 +4341,366 @@ feature -- Access
 			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
 		end
 
+	document_highlight_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_DOCUMENT_HIGHLIGHT
+			-- Convert `a_object` to a document highlight.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_kind: detachable LS_DOCUMENT_HIGHLIGHT_KIND
+		do
+			last_error := Void
+			if not attached range_in_object (a_object, {LS_DOCUMENT_HIGHLIGHT}.range_name, False) as l_range then
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					last_error := a_field_name + "." + {LS_DOCUMENT_HIGHLIGHT}.range_name + ": missing field"
+				end
+			else
+				l_kind := document_highlight_kind_in_object (a_object, {LS_DOCUMENT_HIGHLIGHT}.kind_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					create Result.make_with_kind (l_range, l_kind)
+				end
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	document_highlight_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DOCUMENT_HIGHLIGHT
+			-- Document highlight stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_DOCUMENT_HIGHLIGHT} l_value as l_document_highlight then
+				Result := l_document_highlight
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := document_highlight_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	document_highlight_capabilities_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_DOCUMENT_HIGHLIGHT_CAPABILITIES
+			-- Convert `a_object` to a document highlight capabilities.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_dynamic_registration: detachable LS_BOOLEAN
+		do
+			last_error := Void
+			l_dynamic_registration := boolean_in_object (a_object, {LS_DOCUMENT_HIGHLIGHT_CAPABILITIES}.dynamic_registration_name, True)
+			if attached last_error as l_last_error then
+				last_error := a_field_name + "." + l_last_error
+			else
+				create Result.make (l_dynamic_registration)
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	document_highlight_capabilities_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DOCUMENT_HIGHLIGHT_CAPABILITIES
+			-- Document highlight capabilities stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_DOCUMENT_HIGHLIGHT_CAPABILITIES} l_value as l_document_highlight_capabilities then
+				Result := l_document_highlight_capabilities
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := document_highlight_capabilities_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	document_highlight_kind_from_any (a_any: LS_ANY; a_field_name: STRING_8): detachable LS_DOCUMENT_HIGHLIGHT_KIND
+			-- Convert `a_any` to a document highlight kind.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_any_not_void: a_any /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached {LS_DOCUMENT_HIGHLIGHT_KIND} a_any as l_document_highlight_kind then
+				Result := l_document_highlight_kind
+			elseif attached {LS_NUMBER} a_any as l_number and then l_number.is_integer then
+				Result := l_number.to_integer
+			else
+				last_error := a_field_name + ": invalid type"
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	document_highlight_kind_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DOCUMENT_HIGHLIGHT_KIND
+			-- Document highlight kind stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached a_object.value (a_field_name) as l_value then
+				Result := document_highlight_kind_from_any (l_value, a_field_name)
+			elseif not a_optional then
+				last_error := a_field_name + ": missing field"
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	document_highlight_list_from_array (a_array: LS_ARRAY; a_field_name: STRING_8): detachable LS_DOCUMENT_HIGHLIGHT_LIST
+			-- Convert `a_array` to document highlight list.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_array /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			i, nb: INTEGER
+		do
+			last_error := Void
+			nb := a_array.count
+			create Result.make_with_capacity (nb)
+			from i := 1 until i > nb loop
+				if not attached {LS_OBJECT} a_array.value (i) as l_object then
+					last_error := a_field_name + "." + i.out + ": invalid type"
+					i := nb + 1 -- Jump out of the loop.
+				elseif attached document_highlight_from_object (l_object, i.out) as l_document_highlight then
+					Result.put_last (l_document_highlight)
+					i := i + 1
+				elseif attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+					i := nb + 1 -- Jump out of the loop.
+				else
+					last_error := a_field_name + "." + i.out + ": invalid type"
+					i := nb + 1 -- Jump out of the loop.
+				end
+			end
+			if last_error /= Void then
+				Result := Void
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	document_highlight_list_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DOCUMENT_HIGHLIGHT_LIST
+			-- Document highlight list stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_DOCUMENT_HIGHLIGHT_LIST} l_value as l_document_highlight_list then
+				Result := l_document_highlight_list
+			elseif not attached {LS_ARRAY} l_value as l_array then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := document_highlight_list_from_array (l_array, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	document_highlight_options_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_DOCUMENT_HIGHLIGHT_OPTIONS
+			-- Convert `a_object` to a document highlight options.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_work_done_progress: detachable LS_BOOLEAN
+		do
+			last_error := Void
+			l_work_done_progress := boolean_in_object (a_object, {LS_DOCUMENT_HIGHLIGHT_OPTIONS}.work_done_progress_name, True)
+			if attached last_error as l_last_error then
+				last_error := a_field_name + "." + l_last_error
+			else
+				create Result.make (l_work_done_progress)
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	document_highlight_options_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DOCUMENT_HIGHLIGHT_OPTIONS
+			-- Document highlight options stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_DOCUMENT_HIGHLIGHT_OPTIONS} l_value as l_document_highlight_options then
+				Result := l_document_highlight_options
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := document_highlight_options_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	document_highlight_registration_options_from_object (a_object: LS_OBJECT; a_field_name: STRING_8): detachable LS_DOCUMENT_HIGHLIGHT_REGISTRATION_OPTIONS
+			-- Convert `a_object` to a document highlight registration options.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_work_done_progress: detachable LS_BOOLEAN
+		do
+			last_error := Void
+			if not attached optional_document_selector_in_object (a_object, {LS_DOCUMENT_HIGHLIGHT_REGISTRATION_OPTIONS}.document_selector_name, False) as l_document_selector then
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					last_error := a_field_name + "." + {LS_DOCUMENT_HIGHLIGHT_REGISTRATION_OPTIONS}.document_selector_name + ": missing field"
+				end
+			else
+				l_work_done_progress := boolean_in_object (a_object, {LS_DOCUMENT_HIGHLIGHT_REGISTRATION_OPTIONS}.work_done_progress_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				else
+					create Result.make (l_document_selector, l_work_done_progress)
+				end
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	document_highlight_registration_options_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DOCUMENT_HIGHLIGHT_REGISTRATION_OPTIONS
+			-- Document highlight registration options stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		local
+			l_value: detachable LS_ANY
+		do
+			last_error := Void
+			l_value := a_object.value (a_field_name)
+			if l_value = Void then
+				if not a_optional then
+					last_error := a_field_name + ": missing field"
+				end
+			elseif attached {LS_DOCUMENT_HIGHLIGHT_REGISTRATION_OPTIONS} l_value as l_document_highlight_registration_options then
+				Result := l_document_highlight_registration_options
+			elseif not attached {LS_OBJECT} l_value as l_object then
+				last_error := a_field_name + ": invalid type"
+			else
+				Result := document_highlight_registration_options_from_object (l_object, a_field_name)
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
+	document_highlight_result_from_any (a_any: LS_ANY; a_field_name: STRING_8): detachable LS_DOCUMENT_HIGHLIGHT_RESULT
+			-- Convert `a_any` to a document highlight result.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_any_not_void: a_any /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached {LS_DOCUMENT_HIGHLIGHT_RESULT} a_any as l_document_highlight_result then
+				Result := l_document_highlight_result
+			elseif attached {LS_ARRAY} a_any as l_array and then attached document_highlight_list_from_array (l_array, a_field_name) as l_document_highlight_list then
+				Result := l_document_highlight_list
+			else
+				last_error := a_field_name + ": invalid type"
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	document_highlight_result_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_DOCUMENT_HIGHLIGHT_RESULT
+			-- Document highlight result stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached a_object.value (a_field_name) as l_value then
+				Result := document_highlight_result_from_any (l_value, a_field_name)
+			elseif not a_optional then
+				last_error := a_field_name + ": missing field"
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
 	document_selector_from_array (a_array: LS_ARRAY; a_field_name: STRING_8): detachable LS_DOCUMENT_SELECTOR
 			-- Convert `a_array` to a document selector.
 			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
@@ -6969,6 +7329,46 @@ feature -- Access
 			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
 		end
 
+	optional_document_highlight_options_from_any (a_any: LS_ANY; a_field_name: STRING_8): detachable LS_OPTIONAL_DOCUMENT_HIGHLIGHT_OPTIONS
+			-- Convert `a_any` to an optional document highlight options.
+			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
+			-- Set `last_error` in case of error.
+		require
+			a_any_not_void: a_any /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached {LS_OPTIONAL_DOCUMENT_HIGHLIGHT_OPTIONS} a_any as l_optional_document_highlight_options then
+				Result := l_optional_document_highlight_options
+			elseif attached {LS_OBJECT} a_any as l_object and then attached document_highlight_options_from_object (l_object, a_field_name) as l_document_highlight_options then
+				Result := l_document_highlight_options
+			else
+				last_error := a_field_name + ": invalid type"
+			end
+		ensure
+			error_or_success: Result /= Void xor last_error /= Void
+		end
+
+	optional_document_highlight_options_in_object (a_object: LS_OBJECT; a_field_name: STRING_8; a_optional: BOOLEAN): detachable LS_OPTIONAL_DOCUMENT_HIGHLIGHT_OPTIONS
+			-- Optional documen _highlight options stored in field `a_field_name` of `a_object`.
+			-- `a_optional` means that that it is valid if there is no
+			-- such field in `a_object`. Return Void in that case.
+			-- Set `last_error` in case of error.
+		require
+			a_object_not_void: a_object /= Void
+			a_field_name_not_void: a_field_name /= Void
+		do
+			last_error := Void
+			if attached a_object.value (a_field_name) as l_value then
+				Result := optional_document_highlight_options_from_any (l_value, a_field_name)
+			elseif not a_optional then
+				last_error := a_field_name + ": missing field"
+			end
+		ensure
+			error: last_error /= Void implies Result = Void
+			not_optional: not a_optional implies (Result /= Void xor last_error /= Void)
+		end
+
 	optional_document_selector_from_any (a_any: LS_ANY; a_field_name: STRING_8): detachable LS_OPTIONAL_DOCUMENT_SELECTOR
 			-- Convert `a_any` to an optional document selector.
 			-- `a_field_name` is the name of the field containing `a_object` in the enclosing object.
@@ -8320,6 +8720,7 @@ feature -- Access
 			l_definition_provider: detachable LS_OPTIONAL_DEFINITION_OPTIONS
 			l_type_definition_provider: detachable LS_OPTIONAL_TYPE_DEFINITION_OPTIONS
 			l_implementation_provider: detachable LS_OPTIONAL_IMPLEMENTATION_OPTIONS
+			l_document_highlight_provider: detachable LS_OPTIONAL_DOCUMENT_HIGHLIGHT_OPTIONS
 			l_document_symbol_provider: detachable LS_OPTIONAL_DOCUMENT_SYMBOL_OPTIONS
 			l_call_hierarchy_provider: detachable LS_OPTIONAL_CALL_HIERARCHY_OPTIONS
 			l_type_hierarchy_provider: detachable LS_OPTIONAL_TYPE_HIERARCHY_OPTIONS
@@ -8367,6 +8768,12 @@ feature -- Access
 				end
 			end
 			if last_error = Void then
+				l_document_highlight_provider := optional_document_highlight_options_in_object (a_object, {LS_SERVER_CAPABILITIES}.document_highlight_provider_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
+			if last_error = Void then
 				l_document_symbol_provider := optional_document_symbol_options_in_object (a_object, {LS_SERVER_CAPABILITIES}.document_symbol_provider_name, True)
 				if attached last_error as l_last_error then
 					last_error := a_field_name + "." + l_last_error
@@ -8399,6 +8806,7 @@ feature -- Access
 				Result.set_definition_provider (l_definition_provider)
 				Result.set_type_definition_provider (l_type_definition_provider)
 				Result.set_implementation_provider (l_implementation_provider)
+				Result.set_document_highlight_provider (l_document_highlight_provider)
 				Result.set_document_symbol_provider (l_document_symbol_provider)
 				Result.set_call_hierarchy_provider (l_call_hierarchy_provider)
 				Result.set_type_hierarchy_provider (l_type_hierarchy_provider)
@@ -9091,6 +9499,7 @@ feature -- Access
 			l_definition: detachable LS_DEFINITION_CAPABILITIES
 			l_type_definition: detachable LS_TYPE_DEFINITION_CAPABILITIES
 			l_implementation: detachable LS_IMPLEMENTATION_CAPABILITIES
+			l_document_highlight: detachable LS_DOCUMENT_HIGHLIGHT_CAPABILITIES
 			l_document_symbol: detachable LS_DOCUMENT_SYMBOL_CAPABILITIES
 			l_publish_diagnostics: detachable LS_PUBLISH_DIAGNOSTICS_CAPABILITIES
 			l_call_hierarchy: detachable LS_CALL_HIERARCHY_CAPABILITIES
@@ -9138,6 +9547,12 @@ feature -- Access
 				end
 			end
 			if last_error = Void then
+				l_document_highlight := document_highlight_capabilities_in_object (a_object, {LS_TEXT_DOCUMENT_CAPABILITIES}.document_highlight_name, True)
+				if attached last_error as l_last_error then
+					last_error := a_field_name + "." + l_last_error
+				end
+			end
+			if last_error = Void then
 				l_document_symbol := document_symbol_capabilities_in_object (a_object, {LS_TEXT_DOCUMENT_CAPABILITIES}.document_symbol_name, True)
 				if attached last_error as l_last_error then
 					last_error := a_field_name + "." + l_last_error
@@ -9170,6 +9585,7 @@ feature -- Access
 				Result.set_definition (l_definition)
 				Result.set_type_definition (l_type_definition)
 				Result.set_implementation (l_implementation)
+				Result.set_document_highlight (l_document_highlight)
 				Result.set_document_symbol (l_document_symbol)
 				Result.set_publish_diagnostics (l_publish_diagnostics)
 				Result.set_call_hierarchy (l_call_hierarchy)

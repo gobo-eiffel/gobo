@@ -364,6 +364,14 @@ feature {NONE} -- Implementation
 				end
 				l_text_document_capabilities.set_implementation (l_implementation_capabilities)
 			end
+			document_highlight_request_handler.build_client_capabilities
+			if attached document_highlight_request_handler.client_capabilities as l_document_highlight_capabilities then
+				if l_text_document_capabilities = Void then
+					create l_text_document_capabilities.make
+					Result.set_text_document (l_text_document_capabilities)
+				end
+				l_text_document_capabilities.set_document_highlight (l_document_highlight_capabilities)
+			end
 			document_symbol_request_handler.build_client_capabilities
 			if attached document_symbol_request_handler.client_capabilities as l_document_symbol_capabilities then
 				if l_text_document_capabilities = Void then

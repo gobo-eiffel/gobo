@@ -2,6 +2,10 @@
 
 ## Version xx.xx.xx - xxxxxx
 
+### Gobo Eiffel Language Server Protocol Library
+
+* Added support for `textDocument/documentHighlight` request.
+
 ### Gobo Eiffel Tools Library
 
 * Fixed validity checking of `old` expressions. The following

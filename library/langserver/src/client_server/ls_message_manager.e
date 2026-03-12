@@ -253,6 +253,14 @@ feature -- Handlers
 			did_save_text_document_notification_handler_not_void: Result /= Void
 		end
 
+	document_highlight_request_handler: LS_DOCUMENT_HIGHLIGHT_REQUEST_HANDLER
+			-- Handler for 'textDocument/documentHighlight' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			document_highlight_request_handler_not_void: Result /= Void
+		end
+
 	document_symbol_request_handler: LS_DOCUMENT_SYMBOL_REQUEST_HANDLER
 			-- Handler for 'textDocument/documentSymbol' requests
 		once ("OBJECT")
@@ -652,6 +660,7 @@ feature {LS_RESPONSE_HANDLER, LS_REQUEST_HANDLER} -- Implementation
 			Result.force (create {LS_DID_CLOSE_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_DID_CLOSE_TEXT_DOCUMENT_NOTIFICATION}.method)
 			Result.force (create {LS_DID_OPEN_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_DID_OPEN_TEXT_DOCUMENT_NOTIFICATION}.method)
 			Result.force (create {LS_DID_SAVE_TEXT_DOCUMENT_NOTIFICATION_FACTORY}.make, {LS_DID_SAVE_TEXT_DOCUMENT_NOTIFICATION}.method)
+			Result.force (create {LS_DOCUMENT_HIGHLIGHT_REQUEST_FACTORY}.make, {LS_DOCUMENT_HIGHLIGHT_REQUEST}.method)
 			Result.force (create {LS_DOCUMENT_SYMBOL_REQUEST_FACTORY}.make, {LS_DOCUMENT_SYMBOL_REQUEST}.method)
 			Result.force (create {LS_EXIT_NOTIFICATION_FACTORY}.make, {LS_EXIT_NOTIFICATION}.method)
 			Result.force (create {LS_HOVER_REQUEST_FACTORY}.make, {LS_HOVER_REQUEST}.method)

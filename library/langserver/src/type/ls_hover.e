@@ -66,4 +66,8 @@ feature -- Processing
 			a_processor.process_hover (Current)
 		end
 
+invariant
+
+	contents_not_void: contents /= Void
+
 end

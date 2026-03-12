@@ -51,6 +51,9 @@ feature -- Access
 	implementation_provider: detachable LS_OPTIONAL_IMPLEMENTATION_OPTIONS
 			-- The server provides go to implementation support.
 
+	document_highlight_provider: detachable LS_OPTIONAL_DOCUMENT_HIGHLIGHT_OPTIONS
+			-- The server provides document highlight  support.
+
 	document_symbol_provider: detachable LS_OPTIONAL_DOCUMENT_SYMBOL_OPTIONS
 			-- The server provides document symbol support.
 
@@ -121,6 +124,14 @@ feature -- Setting
 			implementation_provider_set: implementation_provider = a_implementation_provider
 		end
 
+	set_document_highlight_provider (a_document_highlight_provider: like document_highlight_provider)
+			-- Set `document_highlight_provider` to `a_document_highlight_provider`.
+		do
+			document_highlight_provider := a_document_highlight_provider
+		ensure
+			document_highlight_provider_set: document_highlight_provider = a_document_highlight_provider
+		end
+
 	set_document_symbol_provider (a_document_symbol_provider: like document_symbol_provider)
 			-- Set `document_symbol_provider` to `a_document_symbol_provider`.
 		do
@@ -162,6 +173,7 @@ feature -- Field names
 	definition_provider_name: STRING_8 = "definitionProvider"
 	type_definition_provider_name: STRING_8 = "typeDefinitionProvider"
 	implementation_provider_name: STRING_8 = "implementationProvider"
+	document_highlight_provider_name: STRING_8 = "documentHighlightProvider"
 	document_symbol_provider_name: STRING_8 = "documentSymbolProvider"
 	call_hierarchy_provider_name: STRING_8 = "callHierarchyProvider"
 	type_hierarchy_provider_name: STRING_8 = "typeHierarchyProvider"

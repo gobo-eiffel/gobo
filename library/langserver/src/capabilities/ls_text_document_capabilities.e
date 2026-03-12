@@ -48,6 +48,9 @@ feature -- Access
 	implementation: detachable LS_IMPLEMENTATION_CAPABILITIES
 			-- Capabilities specific to the `textDocument/implementation` request.
 
+	document_highlight: detachable LS_DOCUMENT_HIGHLIGHT_CAPABILITIES
+			-- Capabilities specific to the `textDocument/documentHighlight` request.
+
 	document_symbol: detachable LS_DOCUMENT_SYMBOL_CAPABILITIES
 			-- Capabilities specific to the `textDocument/documentSymbol` request.
 
@@ -118,6 +121,14 @@ feature -- Setting
 			implementation_set: implementation = a_implementation
 		end
 
+	set_document_highlight (a_document_highlight: like document_highlight)
+			-- Set `document_highlight` to `a_document_highlight`.
+		do
+			document_highlight := a_document_highlight
+		ensure
+			document_highlight_set: document_highlight = a_document_highlight
+		end
+
 	set_document_symbol (a_document_symbol: like document_symbol)
 			-- Set `document_symbol` to `a_document_symbol`.
 		do
@@ -159,6 +170,7 @@ feature -- Field names
 	definition_name: STRING_8 = "definition"
 	type_definition_name: STRING_8 = "typeDefinition"
 	implementation_name: STRING_8 = "implementation"
+	document_highlight_name: STRING_8 = "documentHighlight"
 	document_symbol_name: STRING_8 = "documentSymbol"
 	publish_diagnostics_name: STRING_8 = "publishDiagnostics"
 	call_hierarchy_name: STRING_8 = "callHierarchy"

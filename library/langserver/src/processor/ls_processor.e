@@ -558,6 +558,48 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_document_highlight (a_value: LS_DOCUMENT_HIGHLIGHT)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_document_highlight_capabilities (a_value: LS_DOCUMENT_HIGHLIGHT_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_document_highlight_list (a_value: LS_DOCUMENT_HIGHLIGHT_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_document_highlight_options (a_value: LS_DOCUMENT_HIGHLIGHT_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_document_highlight_registration_options (a_value: LS_DOCUMENT_HIGHLIGHT_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_document_highlight_request (a_value: LS_DOCUMENT_HIGHLIGHT_REQUEST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_document_selector (a_value: LS_DOCUMENT_SELECTOR)
 			-- Process `a_value`.
 		require
