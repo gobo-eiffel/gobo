@@ -1649,6 +1649,7 @@ feature {NONE} -- AST factory
 			l_master_class: ET_MASTER_CLASS
 			l_new_class: ET_CLASS
 			l_reset_needed: BOOLEAN
+			l_old_last_class: detachable ET_CLASS
 		do
 			if attached last_class as l_last_class and then l_last_class /= current_class then
 				l_last_class.processing_mutex.unlock
@@ -1668,8 +1669,11 @@ feature {NONE} -- AST factory
 				end
 				if not system_processor.preparse_multiple_mode and then not current_class.is_unknown and then Result /= current_class then
 						-- We are parsing another class than the one we want to parse.
-					set_fatal_error (current_class)
+					l_old_last_class := last_class
+					last_class := current_class
+					set_syntax_error
 					error_handler.report_gvscn1a_error (current_class, a_name, filename)
+					last_class := l_old_last_class
 						-- Stop the parsing.
 					stop_parsing
 				elseif system_processor.preparse_shallow_mode and then current_class.is_unknown and then not file_system.basename (filename).as_lower.same_string (a_name.lower_name + ".e") then
@@ -1683,8 +1687,11 @@ feature {NONE} -- AST factory
 					create l_new_class.make (l_class_name)
 					l_new_class.set_filename (filename)
 					l_new_class.set_group (group)
-					set_fatal_error (l_new_class)
+					l_old_last_class := last_class
+					last_class := l_new_class
+					set_syntax_error
 					error_handler.report_gvscn1a_error (l_new_class, a_name, filename)
+					last_class := l_old_last_class
 						-- Stop the parsing.
 					stop_parsing
 				else

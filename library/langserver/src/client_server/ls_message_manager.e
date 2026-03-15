@@ -309,6 +309,14 @@ feature -- Handlers
 			publish_diagnostics_notification_handler_not_void: Result /= Void
 		end
 
+	selection_range_request_handler: LS_SELECTION_RANGE_REQUEST_HANDLER
+			-- Handler for 'textDocument/selectionRange' requests
+		once ("OBJECT")
+			create Result.make
+		ensure
+			selection_range_request_handler_not_void: Result /= Void
+		end
+
 	type_definition_request_handler: LS_TYPE_DEFINITION_REQUEST_HANDLER
 			-- Handler for 'textDocument/typeDefinition' requests
 		once ("OBJECT")
@@ -671,6 +679,7 @@ feature {LS_RESPONSE_HANDLER, LS_REQUEST_HANDLER} -- Implementation
 			Result.force (create {LS_PROGRESS_NOTIFICATION_FACTORY}.make, {LS_PROGRESS_NOTIFICATION}.method)
 			Result.force (create {LS_PUBLISH_DIAGNOSTICS_NOTIFICATION_FACTORY}.make, {LS_PUBLISH_DIAGNOSTICS_NOTIFICATION}.method)
 			Result.force (create {LS_REGISTER_CAPABILITY_REQUEST_FACTORY}.make, {LS_REGISTER_CAPABILITY_REQUEST}.method)
+			Result.force (create {LS_SELECTION_RANGE_REQUEST_FACTORY}.make, {LS_SELECTION_RANGE_REQUEST}.method)
 			Result.force (create {LS_SET_TRACE_NOTIFICATION_FACTORY}.make, {LS_SET_TRACE_NOTIFICATION}.method)
 			Result.force (create {LS_SHUTDOWN_REQUEST_FACTORY}.make, {LS_SHUTDOWN_REQUEST}.method)
 			Result.force (create {LS_TYPE_DEFINITION_REQUEST_FACTORY}.make, {LS_TYPE_DEFINITION_REQUEST}.method)

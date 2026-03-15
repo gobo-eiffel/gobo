@@ -57,6 +57,9 @@ feature -- Access
 	publish_diagnostics: detachable LS_PUBLISH_DIAGNOSTICS_CAPABILITIES
 			-- Capabilities specific to the 'textDocument/publishDiagnostics' notification.
 
+	selection_range: detachable LS_SELECTION_RANGE_CAPABILITIES
+			-- Capabilities specific to the `textDocument/selectionRange` request.
+
 	call_hierarchy: detachable LS_CALL_HIERARCHY_CAPABILITIES
 			-- Capabilities specific to the various call hierarchy requests.
 
@@ -145,6 +148,14 @@ feature -- Setting
 			publish_diagnostics_set: publish_diagnostics = a_publish_diagnostics
 		end
 
+	set_selection_range (a_selection_range: like selection_range)
+			-- Set `selection_range` to `a_selection_range`.
+		do
+			selection_range := a_selection_range
+		ensure
+			selection_range_set: selection_range = a_selection_range
+		end
+
 	set_call_hierarchy (a_call_hierarchy: like call_hierarchy)
 			-- Set `call_hierarchy` to `a_call_hierarchy`.
 		do
@@ -173,6 +184,7 @@ feature -- Field names
 	document_highlight_name: STRING_8 = "documentHighlight"
 	document_symbol_name: STRING_8 = "documentSymbol"
 	publish_diagnostics_name: STRING_8 = "publishDiagnostics"
+	selection_range_name: STRING_8 = "selectionRange"
 	call_hierarchy_name: STRING_8 = "callHierarchy"
 	type_hierarchy_name: STRING_8 = "typeHierarchy"
 			-- Field names

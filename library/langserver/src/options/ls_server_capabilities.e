@@ -57,6 +57,9 @@ feature -- Access
 	document_symbol_provider: detachable LS_OPTIONAL_DOCUMENT_SYMBOL_OPTIONS
 			-- The server provides document symbol support.
 
+	selection_range_provider: detachable LS_OPTIONAL_SELECTION_RANGE_OPTIONS
+			-- The server provides selection range support.
+
 	call_hierarchy_provider: detachable LS_OPTIONAL_CALL_HIERARCHY_OPTIONS
 			-- The server provides call hierarchy support.
 
@@ -140,6 +143,14 @@ feature -- Setting
 			document_symbol_provider_set: document_symbol_provider = a_document_symbol_provider
 		end
 
+	set_selection_range_provider (a_selection_range_provider: like selection_range_provider)
+			-- Set `selection_range_provider` to `a_dselection_range_provider`.
+		do
+			selection_range_provider := a_selection_range_provider
+		ensure
+			selection_range_provider_set: selection_range_provider = a_selection_range_provider
+		end
+
 	set_call_hierarchy_provider (a_call_hierarchy_provider: like call_hierarchy_provider)
 			-- Set `call_hierarchy_provider` to `a_call_hierarchy_provider`.
 		do
@@ -175,6 +186,7 @@ feature -- Field names
 	implementation_provider_name: STRING_8 = "implementationProvider"
 	document_highlight_provider_name: STRING_8 = "documentHighlightProvider"
 	document_symbol_provider_name: STRING_8 = "documentSymbolProvider"
+	selection_range_provider_name: STRING_8 = "selectionRangeProvider"
 	call_hierarchy_provider_name: STRING_8 = "callHierarchyProvider"
 	type_hierarchy_provider_name: STRING_8 = "typeHierarchyProvider"
 	workspace_symbol_provider_name: STRING_8 = "workspaceSymbolProvider"

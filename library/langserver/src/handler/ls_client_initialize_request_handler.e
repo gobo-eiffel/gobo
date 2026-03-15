@@ -54,6 +54,7 @@ feature -- Basic operations
 			a_manager.type_hierarchy_prepare_request_handler.set_server_options (l_server_capabilities.type_hierarchy_provider)
 			a_manager.document_highlight_request_handler.set_server_options (l_server_capabilities.document_highlight_provider)
 			a_manager.document_symbol_request_handler.set_server_options (l_server_capabilities.document_symbol_provider)
+			a_manager.selection_range_request_handler.set_server_options (l_server_capabilities.selection_range_provider)
 			a_manager.workspace_symbol_request_handler.set_server_options (l_server_capabilities.workspace_symbol_provider)
 			if attached {LS_WORKSPACE_SYMBOL_OPTIONS} l_server_capabilities.workspace_symbol_provider as l_workspace_symbol_provider then
 				a_manager.workspace_symbol_resolve_request_handler.set_server_options (l_workspace_symbol_provider.resolve_provider)

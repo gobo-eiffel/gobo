@@ -5,6 +5,7 @@
 ### Gobo Eiffel Language Server Protocol Library
 
 * Added support for `textDocument/documentHighlight` request.
+* Added support for `textDocument/selectionRange` request.
 
 ### Gobo Eiffel Tools Library
 

@@ -294,6 +294,21 @@ feature -- Handling 'textDocument/implementation' requests
 		do
 		end
 
+feature -- Handling 'textDocument/selectionRange' requests
+
+	on_selection_range_request (a_request: LS_SELECTION_RANGE_REQUEST; a_response: LS_SELECTION_RANGE_RESPONSE)
+			-- Handle 'textDocument/selectionRange' request `a_request`.
+			-- Build `a_response` accordingly.
+			--
+			-- (To be redefined in servers.
+			-- Redefine `selection_range_request_handler` accordingly as per the precondition.)
+		require
+			a_request_not_void: a_request /= Void
+			a_response_not_void: a_response /= Void
+			selection_range_request_supported: selection_range_request_handler.generating_type.conforms_to ({detachable LS_SERVER_SELECTION_RANGE_REQUEST_HANDLER})
+		do
+		end
+
 feature -- Handling 'textDocument/typeDefinition' requests
 
 	on_type_definition_request (a_request: LS_TYPE_DEFINITION_REQUEST; a_response: LS_TYPE_DEFINITION_RESPONSE)
