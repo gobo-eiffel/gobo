@@ -5,7 +5,7 @@
 		"LSP integer numbers in the range of -2^31 to 2^31 - 1"
 
 	library: "Gobo Eiffel Language Server Protocol Library"
-	copyright: "Copyright (c) 2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2025-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class LS_INTEGER
@@ -115,6 +115,13 @@ inherit
 		end
 
 	LS_INSERT_TEXT_FORMAT
+		undefine
+			value
+		redefine
+			is_equal
+		end
+
+	LS_DOCUMENT_HIGHLIGHT_KIND
 		undefine
 			value
 		redefine

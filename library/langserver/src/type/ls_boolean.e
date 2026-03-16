@@ -22,6 +22,16 @@ inherit
 			is_equal
 		end
 
+	LS_OPTIONAL_DOCUMENT_HIGHLIGHT_OPTIONS
+		redefine
+			is_equal
+		end
+
+	LS_OPTIONAL_SELECTION_RANGE_OPTIONS
+		redefine
+			is_equal
+		end
+		
 	LS_OPTIONAL_TYPE_DEFINITION_OPTIONS
 		redefine
 			is_equal

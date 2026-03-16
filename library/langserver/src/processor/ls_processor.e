@@ -558,6 +558,48 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_document_highlight (a_value: LS_DOCUMENT_HIGHLIGHT)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_document_highlight_capabilities (a_value: LS_DOCUMENT_HIGHLIGHT_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_document_highlight_list (a_value: LS_DOCUMENT_HIGHLIGHT_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_document_highlight_options (a_value: LS_DOCUMENT_HIGHLIGHT_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_document_highlight_registration_options (a_value: LS_DOCUMENT_HIGHLIGHT_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_document_highlight_request (a_value: LS_DOCUMENT_HIGHLIGHT_REQUEST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_document_selector (a_value: LS_DOCUMENT_SELECTOR)
 			-- Process `a_value`.
 		require
@@ -880,6 +922,13 @@ feature {LS_ANY} -- Processing
 		deferred
 		end
 
+	process_position_list (a_value: LS_POSITION_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
 	process_progress_notification (a_value: LS_PROGRESS_NOTIFICATION)
 			-- Process `a_value`.
 		require
@@ -958,6 +1007,48 @@ feature {LS_ANY} -- Processing
 		end
 
 	process_response_error (a_value: LS_RESPONSE_ERROR)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_selection_range (a_value: LS_SELECTION_RANGE)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_selection_range_capabilities (a_value: LS_SELECTION_RANGE_CAPABILITIES)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_selection_range_list (a_value: LS_SELECTION_RANGE_LIST)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_selection_range_options (a_value: LS_SELECTION_RANGE_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_selection_range_registration_options (a_value: LS_SELECTION_RANGE_REGISTRATION_OPTIONS)
+			-- Process `a_value`.
+		require
+			a_value_not_void: a_value /= Void
+		deferred
+		end
+
+	process_selection_range_request (a_value: LS_SELECTION_RANGE_REQUEST)
 			-- Process `a_value`.
 		require
 			a_value_not_void: a_value /= Void

@@ -201,6 +201,21 @@ feature -- Handling 'textDocument/didSave' notifications
 		do
 		end
 
+feature -- Handling 'textDocument/documentHighlight' requests
+
+	on_document_highlight_request (a_request: LS_DOCUMENT_HIGHLIGHT_REQUEST; a_response: LS_DOCUMENT_HIGHLIGHT_RESPONSE)
+			-- Handle 'textDocument/documentHighlight' request `a_request`.
+			-- Build `a_response` accordingly.
+			--
+			-- (To be redefined in servers.
+			-- Redefine `document_highlight_request_handler` accordingly as per the precondition.)
+		require
+			a_request_not_void: a_request /= Void
+			a_response_not_void: a_response /= Void
+			document_highlight_request_supported: document_highlight_request_handler.generating_type.conforms_to ({detachable LS_SERVER_DOCUMENT_HIGHLIGHT_REQUEST_HANDLER})
+		do
+		end
+
 feature -- Handling 'textDocument/documentSymbol' requests
 
 	on_document_symbol_request (a_request: LS_DOCUMENT_SYMBOL_REQUEST; a_response: LS_DOCUMENT_SYMBOL_RESPONSE)
@@ -276,6 +291,21 @@ feature -- Handling 'textDocument/implementation' requests
 			a_request_not_void: a_request /= Void
 			a_response_not_void: a_response /= Void
 			implementation_request_supported: implementation_request_handler.generating_type.conforms_to ({detachable LS_SERVER_IMPLEMENTATION_REQUEST_HANDLER})
+		do
+		end
+
+feature -- Handling 'textDocument/selectionRange' requests
+
+	on_selection_range_request (a_request: LS_SELECTION_RANGE_REQUEST; a_response: LS_SELECTION_RANGE_RESPONSE)
+			-- Handle 'textDocument/selectionRange' request `a_request`.
+			-- Build `a_response` accordingly.
+			--
+			-- (To be redefined in servers.
+			-- Redefine `selection_range_request_handler` accordingly as per the precondition.)
+		require
+			a_request_not_void: a_request /= Void
+			a_response_not_void: a_response /= Void
+			selection_range_request_supported: selection_range_request_handler.generating_type.conforms_to ({detachable LS_SERVER_SELECTION_RANGE_REQUEST_HANDLER})
 		do
 		end
 

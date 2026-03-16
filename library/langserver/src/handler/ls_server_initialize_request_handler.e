@@ -76,7 +76,9 @@ feature -- Basic operations
 				a_manager.implementation_request_handler.set_client_capabilities (l_text_document_capabilities.implementation)
 				a_manager.call_hierarchy_prepare_request_handler.set_client_capabilities (l_text_document_capabilities.call_hierarchy)
 				a_manager.type_hierarchy_prepare_request_handler.set_client_capabilities (l_text_document_capabilities.type_hierarchy)
+				a_manager.document_highlight_request_handler.set_client_capabilities (l_text_document_capabilities.document_highlight)
 				a_manager.document_symbol_request_handler.set_client_capabilities (l_text_document_capabilities.document_symbol)
+				a_manager.selection_range_request_handler.set_client_capabilities (l_text_document_capabilities.selection_range)
 				a_manager.publish_diagnostics_notification_handler.set_client_capabilities (l_text_document_capabilities.publish_diagnostics)
 			end
 			if attached a_request.capabilities.workspace as l_workspace_capabilities then
@@ -133,8 +135,12 @@ feature -- Basic operations
 			l_server_capabilities.set_call_hierarchy_provider (a_manager.call_hierarchy_prepare_request_handler.server_options)
 			a_manager.type_hierarchy_prepare_request_handler.build_server_options
 			l_server_capabilities.set_type_hierarchy_provider (a_manager.type_hierarchy_prepare_request_handler.server_options)
+			a_manager.document_highlight_request_handler.build_server_options
+			l_server_capabilities.set_document_highlight_provider (a_manager.document_highlight_request_handler.server_options)
 			a_manager.document_symbol_request_handler.build_server_options
 			l_server_capabilities.set_document_symbol_provider (a_manager.document_symbol_request_handler.server_options)
+			a_manager.selection_range_request_handler.build_server_options
+			l_server_capabilities.set_selection_range_provider (a_manager.selection_range_request_handler.server_options)
 			a_manager.workspace_symbol_request_handler.build_server_options
 			a_manager.workspace_symbol_resolve_request_handler.build_server_options
 			if attached {LS_WORKSPACE_SYMBOL_OPTIONS} a_manager.workspace_symbol_request_handler.server_options as l_workspace_symbol_options then

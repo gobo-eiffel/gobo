@@ -2,6 +2,20 @@
 
 ## Version xx.xx.xx - xxxxxx
 
+### gelsp
+
+* Click on a keyword to highlight all keywords of the
+  enclosing Eiffel construct.
+* Type `Shift+Alt+RightArrow` to expand the selection to the
+  enclosing Eiffel construct (and `Shift+Alt+LeftArrow` to
+  shrink the selection). This operation can be repeated
+  several times.
+
+### Gobo Eiffel Language Server Protocol Library
+
+* Added support for `textDocument/documentHighlight` request.
+* Added support for `textDocument/selectionRange` request.
+
 ### Gobo Eiffel Tools Library
 
 * Fixed validity checking of `old` expressions. The following

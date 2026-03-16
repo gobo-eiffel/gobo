@@ -48,11 +48,17 @@ feature -- Access
 	implementation: detachable LS_IMPLEMENTATION_CAPABILITIES
 			-- Capabilities specific to the `textDocument/implementation` request.
 
+	document_highlight: detachable LS_DOCUMENT_HIGHLIGHT_CAPABILITIES
+			-- Capabilities specific to the `textDocument/documentHighlight` request.
+
 	document_symbol: detachable LS_DOCUMENT_SYMBOL_CAPABILITIES
 			-- Capabilities specific to the `textDocument/documentSymbol` request.
 
 	publish_diagnostics: detachable LS_PUBLISH_DIAGNOSTICS_CAPABILITIES
 			-- Capabilities specific to the 'textDocument/publishDiagnostics' notification.
+
+	selection_range: detachable LS_SELECTION_RANGE_CAPABILITIES
+			-- Capabilities specific to the `textDocument/selectionRange` request.
 
 	call_hierarchy: detachable LS_CALL_HIERARCHY_CAPABILITIES
 			-- Capabilities specific to the various call hierarchy requests.
@@ -118,6 +124,14 @@ feature -- Setting
 			implementation_set: implementation = a_implementation
 		end
 
+	set_document_highlight (a_document_highlight: like document_highlight)
+			-- Set `document_highlight` to `a_document_highlight`.
+		do
+			document_highlight := a_document_highlight
+		ensure
+			document_highlight_set: document_highlight = a_document_highlight
+		end
+
 	set_document_symbol (a_document_symbol: like document_symbol)
 			-- Set `document_symbol` to `a_document_symbol`.
 		do
@@ -132,6 +146,14 @@ feature -- Setting
 			publish_diagnostics := a_publish_diagnostics
 		ensure
 			publish_diagnostics_set: publish_diagnostics = a_publish_diagnostics
+		end
+
+	set_selection_range (a_selection_range: like selection_range)
+			-- Set `selection_range` to `a_selection_range`.
+		do
+			selection_range := a_selection_range
+		ensure
+			selection_range_set: selection_range = a_selection_range
 		end
 
 	set_call_hierarchy (a_call_hierarchy: like call_hierarchy)
@@ -159,8 +181,10 @@ feature -- Field names
 	definition_name: STRING_8 = "definition"
 	type_definition_name: STRING_8 = "typeDefinition"
 	implementation_name: STRING_8 = "implementation"
+	document_highlight_name: STRING_8 = "documentHighlight"
 	document_symbol_name: STRING_8 = "documentSymbol"
 	publish_diagnostics_name: STRING_8 = "publishDiagnostics"
+	selection_range_name: STRING_8 = "selectionRange"
 	call_hierarchy_name: STRING_8 = "callHierarchy"
 	type_hierarchy_name: STRING_8 = "typeHierarchy"
 			-- Field names

@@ -28,9 +28,11 @@ inherit
 			did_change_watched_files_notification_handler,
 			did_close_text_document_notification_handler,
 			did_open_text_document_notification_handler,
+			document_highlight_request_handler,
 			document_symbol_request_handler,
 			hover_request_handler,
 			implementation_request_handler,
+			selection_range_request_handler,
 			type_definition_request_handler,
 			type_hierarchy_prepare_request_handler,
 			type_hierarchy_subtypes_request_handler,
@@ -47,10 +49,12 @@ inherit
 			on_did_change_watched_files_notification,
 			on_did_close_text_document_notification,
 			on_did_open_text_document_notification,
+			on_document_highlight_request,
 			on_document_symbol_request,
 			on_hover_request,
 			on_implementation_request,
 			on_initialized_notification,
+			on_selection_range_request,
 			on_shutdown_request,
 			on_type_definition_request,
 			on_type_hierarchy_prepare_request,
@@ -466,6 +470,30 @@ feature -- Handling 'textDocument/didOpen' notifications
 			create Result.make
 		end
 
+feature -- Handling 'textDocument/documentHighlight' requests
+
+	on_document_highlight_request (a_request: LS_DOCUMENT_HIGHLIGHT_REQUEST; a_response: LS_DOCUMENT_HIGHLIGHT_RESPONSE)
+			-- Handle 'textDocument/documentHighlight' request `a_request`.
+			-- Build `a_response` accordingly.
+		local
+			l_request_position: LS_POSITION
+			l_position: ET_COMPRESSED_POSITION
+			l_builder: GELSP_DOCUMENT_HIGHLIGHT_BUILDER
+		do
+			if attached class_from_uri (a_request.text_document.uri) as l_class then
+				l_request_position := a_request.position
+				create l_position.make (l_request_position.line.value.to_integer_32 + 1, l_request_position.character.value.to_integer_32 + 1)
+				create l_builder.make (a_response, Current)
+				l_builder.build_document_highlight (l_position, l_class)
+			end
+		end
+
+	document_highlight_request_handler: LS_SERVER_DOCUMENT_HIGHLIGHT_REQUEST_HANDLER
+			-- Handler for 'textDocument/documentHighlight' requests
+		once ("OBJECT")
+			create Result.make
+		end
+
 feature -- Handling 'textDocument/documentSymbol' requests
 
 	on_document_symbol_request (a_request: LS_DOCUMENT_SYMBOL_REQUEST; a_response: LS_DOCUMENT_SYMBOL_RESPONSE)
@@ -645,6 +673,34 @@ feature -- Handling 'textDocument/implementation' requests
 		once ("OBJECT")
 			create Result.make
 
+		end
+
+feature -- Handling 'textDocument/selectionRange' requests
+
+	on_selection_range_request (a_request: LS_SELECTION_RANGE_REQUEST; a_response: LS_SELECTION_RANGE_RESPONSE)
+			-- Handle 'textDocument/selectionRange' request `a_request`.
+			-- Build `a_response` accordingly.
+		local
+			l_request_positions: LS_POSITION_LIST
+			l_request_position: LS_POSITION
+			l_position: ET_COMPRESSED_POSITION
+			l_builder: GELSP_SELECTION_RANGE_BUILDER
+		do
+			if attached class_from_uri (a_request.text_document.uri) as l_class then
+				l_request_positions := a_request.positions
+				if l_request_positions.count = 1 then
+					l_request_position := l_request_positions.value (1)
+					create l_position.make (l_request_position.line.value.to_integer_32 + 1, l_request_position.character.value.to_integer_32 + 1)
+					create l_builder.make (a_response, Current)
+					l_builder.build_selection_range (l_position, l_class)
+				end
+			end
+		end
+
+	selection_range_request_handler: LS_SERVER_SELECTION_RANGE_REQUEST_HANDLER
+			-- Handler for 'textDocument/selectionRange' requests
+		once ("OBJECT")
+			create Result.make
 		end
 
 feature -- Handling 'textDocument/typeDefinition' requests
