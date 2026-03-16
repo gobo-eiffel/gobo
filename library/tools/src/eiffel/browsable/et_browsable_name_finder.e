@@ -13,11 +13,13 @@ class ET_BROWSABLE_NAME_FINDER
 inherit
 
 	ET_CLASS_PROCESSOR
+		undefine
+			make_ast_processor
 		redefine
 			make
 		end
 
-	ET_AST_ITERATOR
+	ET_AST_ITERATOR_BY_POSITION
 		rename
 			make as make_ast_processor
 		redefine
@@ -119,8 +121,8 @@ feature {NONE} -- Initialization
 			-- Create a new browsable name finder.
 		do
 			precursor (a_system_processor)
+			make_ast_processor
 			current_class := tokens.unknown_class
-			current_position := tokens.null_position
 			create expression_type_finder.make (a_system_processor)
 			create internal_type_context.make_with_capacity (current_class, 100)
 		end
@@ -423,7 +425,7 @@ feature {ET_AST_NODE} -- Processing
 				create {ET_BROWSABLE_FORMAL_PARAMETER_NAME} l_browsable_name.make (l_parameter_name, a_parameter, current_class)
 				l_browsable_name.set_completion_disabled (True)
 				last_browsable_name := l_browsable_name
-			elseif attached a_parameter.creation_procedures as l_creation_procedures then
+			elseif attached a_parameter.creation_procedures as l_creation_procedures and then l_creation_procedures.contains_position (current_position) then
 				nb := l_creation_procedures.count
 				from i := 1 until i > nb loop
 					l_name := l_creation_procedures.feature_name (i)
@@ -550,17 +552,19 @@ feature {ET_AST_NODE} -- Processing
 			l_name: ET_FEATURE_NAME
 			l_browsable_name: like last_browsable_name
 		do
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				l_name := a_list.feature_name (i)
-				if l_name.contains_position (current_position) then
-					create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} l_browsable_name.make (l_name, Void, current_class)
-					l_browsable_name.set_only_feature_name_expected (True)
-					l_browsable_name.set_only_creation_procedure_expected (True)
-					last_browsable_name := l_browsable_name
-					i := nb + 1 -- Jump out of the loop.
+			if a_list.contains_position (current_position) then
+				nb := a_list.count
+				from i := 1 until i > nb loop
+					l_name := a_list.feature_name (i)
+					if l_name.contains_position (current_position) then
+						create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} l_browsable_name.make (l_name, Void, current_class)
+						l_browsable_name.set_only_feature_name_expected (True)
+						l_browsable_name.set_only_creation_procedure_expected (True)
+						last_browsable_name := l_browsable_name
+						i := nb + 1 -- Jump out of the loop.
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 			if last_browsable_name = Void then
 				precursor (a_list)
@@ -709,7 +713,7 @@ feature {ET_AST_NODE} -- Processing
 				l_browsable_name.set_completion_disabled (True)
 				last_browsable_name := l_browsable_name
 			end
-			if attached a_feature.alias_names as l_alias_names then
+			if attached a_feature.alias_names as l_alias_names and then l_alias_names.contains_position (current_position) then
 				nb := l_alias_names.count
 				from i := 1 until i > nb loop
 					l_alias_string := l_alias_names.item (i).alias_string
@@ -803,16 +807,18 @@ feature {ET_AST_NODE} -- Processing
 			l_name: ET_FEATURE_NAME
 			l_browsable_name: like last_browsable_name
 		do
-			nb := a_export.count
-			from i := 1 until i > nb loop
-				l_name := a_export.feature_name (i)
-				if l_name.contains_position (current_position) then
-					create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} l_browsable_name.make (l_name, Void, current_class)
-					l_browsable_name.set_only_feature_name_expected (True)
-					last_browsable_name := l_browsable_name
-					i := nb + 1 -- Jump out of the loop.
+			if a_export.contains_position (current_position) then
+				nb := a_export.count
+				from i := 1 until i > nb loop
+					l_name := a_export.feature_name (i)
+					if l_name.contains_position (current_position) then
+						create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} l_browsable_name.make (l_name, Void, current_class)
+						l_browsable_name.set_only_feature_name_expected (True)
+						last_browsable_name := l_browsable_name
+						i := nb + 1 -- Jump out of the loop.
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 			if last_browsable_name = Void then
 				precursor (a_export)
@@ -1276,7 +1282,7 @@ feature {ET_AST_NODE} -- Processing
 			l_name: ET_FEATURE_NAME
 			l_browsable_name: like last_browsable_name
 		do
-			if attached a_parent.undefines as l_undefines then
+			if attached a_parent.undefines as l_undefines and then l_undefines.contains_position (current_position) then
 				nb := l_undefines.count
 				from i := 1 until i > nb loop
 					l_name := l_undefines.feature_name (i)
@@ -1288,8 +1294,7 @@ feature {ET_AST_NODE} -- Processing
 					end
 					i := i + 1
 				end
-			end
-			if attached a_parent.redefines as l_redefines then
+			elseif attached a_parent.redefines as l_redefines and then l_redefines.contains_position (current_position) then
 				nb := l_redefines.count
 				from i := 1 until i > nb loop
 					l_name := l_redefines.feature_name (i)
@@ -1301,8 +1306,7 @@ feature {ET_AST_NODE} -- Processing
 					end
 					i := i + 1
 				end
-			end
-			if attached a_parent.selects as l_selects then
+			elseif attached a_parent.selects as l_selects and then l_selects.contains_position (current_position) then
 				nb := l_selects.count
 				from i := 1 until i > nb loop
 					l_name := l_selects.feature_name (i)
@@ -1496,41 +1500,43 @@ feature {ET_AST_NODE} -- Processing
 			l_alias_string: ET_MANIFEST_STRING
 			l_browsable_name: like last_browsable_name
 		do
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				l_rename := a_list.rename_pair (i)
-				l_name := l_rename.old_name
-				if l_name.contains_position (current_position) then
-					create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} l_browsable_name.make (l_name, Void, current_class)
-					l_browsable_name.set_only_feature_name_expected (True)
-					last_browsable_name := l_browsable_name
-					i := nb + 1 -- Jump out of the loop.
-				end
-				l_extended_name := l_rename.new_name
-				l_name := l_extended_name.feature_name
-				if l_name.contains_position (current_position) then
-					create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} l_browsable_name.make (l_name, Void, current_class)
-					l_browsable_name.set_completion_disabled (True)
-					last_browsable_name := l_browsable_name
-					i := nb + 1 -- Jump out of the loop.
-				end
-				if attached l_extended_name.alias_names as l_alias_names then
-					nb2 := l_alias_names.count
-					from j := 1 until j > nb2 loop
-						l_alias_string := l_alias_names.item (j).alias_string
-						if l_alias_string.contains_position (current_position) then
-							if attached current_class.seeded_feature (l_name.seed) as l_feature then
-								create {ET_BROWSABLE_UNQUALIFIED_ALIAS_NAME} l_browsable_name.make (l_alias_string, l_feature, current_class)
-								l_browsable_name.set_completion_disabled (True)
-								last_browsable_name := l_browsable_name
-								j := nb2 + 1 -- Jump out of the loop.
-								i := nb + 1 -- Jump out of the loop.
-							end
-						end
-						j := j + 1
+			if a_list.contains_position (current_position) then
+				nb := a_list.count
+				from i := 1 until i > nb loop
+					l_rename := a_list.rename_pair (i)
+					l_name := l_rename.old_name
+					if l_name.contains_position (current_position) then
+						create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} l_browsable_name.make (l_name, Void, current_class)
+						l_browsable_name.set_only_feature_name_expected (True)
+						last_browsable_name := l_browsable_name
+						i := nb + 1 -- Jump out of the loop.
 					end
+					l_extended_name := l_rename.new_name
+					l_name := l_extended_name.feature_name
+					if l_name.contains_position (current_position) then
+						create {ET_BROWSABLE_UNQUALIFIED_CALL_NAME} l_browsable_name.make (l_name, Void, current_class)
+						l_browsable_name.set_completion_disabled (True)
+						last_browsable_name := l_browsable_name
+						i := nb + 1 -- Jump out of the loop.
+					end
+					if attached l_extended_name.alias_names as l_alias_names then
+						nb2 := l_alias_names.count
+						from j := 1 until j > nb2 loop
+							l_alias_string := l_alias_names.item (j).alias_string
+							if l_alias_string.contains_position (current_position) then
+								if attached current_class.seeded_feature (l_name.seed) as l_feature then
+									create {ET_BROWSABLE_UNQUALIFIED_ALIAS_NAME} l_browsable_name.make (l_alias_string, l_feature, current_class)
+									l_browsable_name.set_completion_disabled (True)
+									last_browsable_name := l_browsable_name
+									j := nb2 + 1 -- Jump out of the loop.
+									i := nb + 1 -- Jump out of the loop.
+								end
+							end
+							j := j + 1
+						end
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		end
 
@@ -1631,7 +1637,7 @@ feature {ET_AST_NODE} -- Processing
 			if l_name.contains_position (current_position) then
 				create {ET_BROWSABLE_CLASS_NAME} last_browsable_name.make (l_name, a_type.base_class, current_class)
 			end
-			if attached a_type.actual_parameters as l_actual_parameters then
+			if attached a_type.actual_parameters as l_actual_parameters and then l_actual_parameters.contains_position (current_position) then
 				nb := l_actual_parameters.count
 				from i := 1 until i > nb loop
 					if attached {ET_LABELED_ACTUAL_PARAMETER} l_actual_parameters.actual_parameter (i) as l_labeled_parameter then
@@ -1666,32 +1672,34 @@ feature {ET_AST_NODE} -- Processing
 			l_browsable_name: like last_browsable_name
 		do
 			l_renames := a_type_rename_constraint.renames
-			nb := l_renames.count
-			from i := 1 until i > nb loop
-				l_rename := l_renames.rename_pair (i)
-				l_name := l_rename.old_name
-				if l_name.contains_position (current_position) then
-					internal_type_context.reset (current_class)
-					internal_type_context.put_last (a_type_rename_constraint.type)
-					l_target_type := internal_type_context.base_type
-					create {ET_BROWSABLE_QUALIFIED_CALL_NAME} l_browsable_name.make (l_name, l_target_type, current_class)
-					l_browsable_name.set_only_feature_name_expected (True)
-					l_browsable_name.set_non_exported_feature_allowed (True)
-					last_browsable_name := l_browsable_name
-					i := nb + 1 -- Jump out of the loop.
+			if l_renames.contains_position (current_position) then
+				nb := l_renames.count
+				from i := 1 until i > nb loop
+					l_rename := l_renames.rename_pair (i)
+					l_name := l_rename.old_name
+					if l_name.contains_position (current_position) then
+						internal_type_context.reset (current_class)
+						internal_type_context.put_last (a_type_rename_constraint.type)
+						l_target_type := internal_type_context.base_type
+						create {ET_BROWSABLE_QUALIFIED_CALL_NAME} l_browsable_name.make (l_name, l_target_type, current_class)
+						l_browsable_name.set_only_feature_name_expected (True)
+						l_browsable_name.set_non_exported_feature_allowed (True)
+						last_browsable_name := l_browsable_name
+						i := nb + 1 -- Jump out of the loop.
+					end
+					l_extended_name := l_rename.new_name
+					l_name := l_extended_name.feature_name
+					if l_name.contains_position (current_position) then
+						internal_type_context.reset (current_class)
+						internal_type_context.put_last (a_type_rename_constraint.type)
+						l_target_type := internal_type_context.base_type
+						create {ET_BROWSABLE_QUALIFIED_CALL_NAME} l_browsable_name.make (l_name, l_target_type, current_class)
+						l_browsable_name.set_completion_disabled (True)
+						last_browsable_name := l_browsable_name
+						i := nb + 1 -- Jump out of the loop.
+					end
+					i := i + 1
 				end
-				l_extended_name := l_rename.new_name
-				l_name := l_extended_name.feature_name
-				if l_name.contains_position (current_position) then
-					internal_type_context.reset (current_class)
-					internal_type_context.put_last (a_type_rename_constraint.type)
-					l_target_type := internal_type_context.base_type
-					create {ET_BROWSABLE_QUALIFIED_CALL_NAME} l_browsable_name.make (l_name, l_target_type, current_class)
-					l_browsable_name.set_completion_disabled (True)
-					last_browsable_name := l_browsable_name
-					i := nb + 1 -- Jump out of the loop.
-				end
-				i := i + 1
 			end
 			if last_browsable_name = Void then
 				precursor (a_type_rename_constraint)
@@ -1757,9 +1765,6 @@ feature {ET_AST_NODE} -- Processing
 
 feature {NONE} -- Implementation
 
-	current_position: ET_POSITION
-			-- Position of the browsable name being searched
-
 	current_closure: detachable ET_CLOSURE
 			-- Closure (feature, invariant, inline agent)
 			-- being processed
@@ -1772,7 +1777,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	current_position_not_void: current_position /= Void
 	expression_type_finder_not_void: expression_type_finder /= Void
 	internal_type_context_not_void: internal_type_context /= Void
 

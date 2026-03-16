@@ -476,24 +476,15 @@ feature -- Handling 'textDocument/documentHighlight' requests
 			-- Handle 'textDocument/documentHighlight' request `a_request`.
 			-- Build `a_response` accordingly.
 		local
-			l_browsable_name_finder: ET_BROWSABLE_NAME_FINDER
 			l_request_position: LS_POSITION
 			l_position: ET_COMPRESSED_POSITION
-			l_keyword: ET_KEYWORD
 			l_builder: GELSP_DOCUMENT_HIGHLIGHT_BUILDER
 		do
 			if attached class_from_uri (a_request.text_document.uri) as l_class then
 				l_request_position := a_request.position
 				create l_position.make (l_request_position.line.value.to_integer_32 + 1, l_request_position.character.value.to_integer_32 + 1)
-				create l_browsable_name_finder.make (system_processor)
-				l_browsable_name_finder.find_browsable_name (l_position, l_class)
-				if attached {ET_BROWSABLE_KEYWORD} l_browsable_name_finder.last_browsable_name as l_last_browsable_name then
-					l_keyword := l_last_browsable_name.name
-					if not l_keyword.position.is_null then
-						create l_builder.make (a_response, Current)
-						l_builder.build_document_highlight (l_keyword, l_class)
-					end
-				end
+				create l_builder.make (a_response, Current)
+				l_builder.build_document_highlight (l_position, l_class)
 			end
 		end
 
