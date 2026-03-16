@@ -5,7 +5,7 @@
 		"Test integration of all Gobo Eiffel classes"
 
 	library: "Gobo Eiffel Library"
-	copyright: "Copyright (c) 2001-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class TEST_INTEGRATION
@@ -62,7 +62,7 @@ feature {NONE} -- Integration
 			file_system.cd (testdir)
 				-- Gobo Eiffel Lint.
 			l_gelint_pathname := {UT_GOBO_VARIABLES}.executable_pathname ("gelint")
-			assert_execute (l_gelint_pathname + " --flat " + ecf_filename + output_log)
+			assert_execute_with_command_output (l_gelint_pathname + " --flat " + ecf_filename + output_log, output_log_filename, error_log_filename)
 				-- Done.
 			file_system.cd (old_cwd)
 			file_system.recursive_delete_directory (testdir)
@@ -97,7 +97,7 @@ feature {NONE} -- Integration
 				l_compat_option := " -compat"
 			end
 				-- Eiffel compilation.
-			assert_execute ("ecb" + l_compat_option + l_config_option + " -batch -config " + ecf_filename  + output_log)
+			assert_execute_with_command_output ("ecb" + l_compat_option + l_config_option + " -batch -config " + ecf_filename  + output_log, output_log_filename, error_log_filename)
 				-- Done.
 			file_system.cd (old_cwd)
 			file_system.recursive_delete_directory (testdir)
