@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			create {ET_FEATURE_FLATTENER} feature_flattener.make (Current)
 			create {ET_INTERFACE_CHECKER} interface_checker.make (Current)
 			create {ET_IMPLEMENTATION_CHECKER} implementation_checker.make (Current)
+			create {ET_ATTACHED_ATTRIBUTE_INITIALIZATION_CHECKER} attached_attribute_initialization_checker.make (Current)
 			unused_local_variable_check_enabled := True
 			error_handler := tokens.standard_error_handler
 		end
@@ -58,6 +59,7 @@ feature {NONE} -- Initialization
 			feature_flattener := l_null_processor
 			interface_checker := l_null_processor
 			implementation_checker := l_null_processor
+			attached_attribute_initialization_checker := l_null_processor
 			error_handler := tokens.null_error_handler
 			create {ET_DOTNET_ASSEMBLY_CLASSIC_CONSUMER} dotnet_assembly_consumer.make (Current)
 			set_default_keyword_usage_only
@@ -822,6 +824,9 @@ feature -- Access
 	implementation_checker: ET_AST_PROCESSOR
 			-- Implementation checker
 
+	attached_attribute_initialization_checker: ET_AST_PROCESSOR
+			-- Attached attribute initialization checker
+
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 
@@ -948,6 +953,16 @@ feature -- Setting
 			implementation_checker := a_checker
 		ensure
 			implementation_checker_set: implementation_checker = a_checker
+		end
+
+	set_attached_attribute_initialization_checker (a_checker: like attached_attribute_initialization_checker)
+			-- Set `attached_attribute_initialization_checker' to `a_checker'.
+		require
+			a_checker_not_void: a_checker /= Void
+		do
+			attached_attribute_initialization_checker := a_checker
+		ensure
+			attached_attribute_initialization_checker_set: attached_attribute_initialization_checker = a_checker
 		end
 
 	set_error_handler_only (a_handler: like error_handler)
@@ -1204,6 +1219,8 @@ feature -- Processing
 			dt1 := benchmark_start_time
 			check_implementation_validity (a_classes)
 			set_implementation_internal_error (a_classes)
+			check_attached_attribute_initialization_validity (a_classes)
+			set_attached_attribute_initialization_internal_error (a_classes)
 			record_end_time (dt1, "Degree 3")
 			report_degree_3_metrics (a_classes)
 		end
@@ -1555,6 +1572,69 @@ feature -- Processing
 			ancestor_builder := l_ancestor_builder
 			feature_flattener := l_feature_flattener
 			interface_checker := l_interface_checker
+		end
+
+	check_attached_attribute_initialization_validity (a_classes: DS_ARRAYED_LIST [ET_CLASS])
+			-- Check that all attached attributes have been initialized 
+			-- at the end of all creation procedures of `a_classes`.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		require
+			a_classes_not_void: a_classes /= Void
+			no_void_class: not a_classes.has_void
+		local
+			i, nb: INTEGER
+			l_class: ET_CLASS
+			l_done: BOOLEAN
+			l_eiffel_parser: like eiffel_parser
+			l_ancestor_builder: like ancestor_builder
+			l_feature_flattener: like feature_flattener
+			l_interface_checker: like interface_checker
+			l_implementation_checker: like implementation_checker
+			l_attached_attribute_initialization_checker: like attached_attribute_initialization_checker
+		do
+			l_eiffel_parser := eiffel_parser
+			eiffel_parser := tokens.null_ast_processor
+			l_ancestor_builder := ancestor_builder
+			ancestor_builder := tokens.null_ast_processor
+			l_feature_flattener := feature_flattener
+			feature_flattener := tokens.null_ast_processor
+			l_interface_checker := interface_checker
+			interface_checker := tokens.null_ast_processor
+			l_implementation_checker := implementation_checker
+			implementation_checker := tokens.null_ast_processor
+			l_attached_attribute_initialization_checker := attached_attribute_initialization_checker
+			reset_total_processed_class_count
+			from
+				nb := a_classes.count
+			until
+				l_done
+			loop
+				from i := 1 until i > nb loop
+					if stop_requested then
+							-- Jump out of the loops.
+						l_done := True
+						i := nb
+					else
+						l_class :=  a_classes.item (i)
+						if l_class.implementation_checked and then not l_class.attached_attribute_initialization_checked then
+							l_class.process (l_attached_attribute_initialization_checker)
+						end
+					end
+					i := i + 1
+				end
+				if not l_done then
+					l_done := processed_class_count = 0
+				end
+				reset_processed_class_count
+			end
+			eiffel_parser := l_eiffel_parser
+			ancestor_builder := l_ancestor_builder
+			feature_flattener := l_feature_flattener
+			interface_checker := l_interface_checker
+			implementation_checker := l_implementation_checker
 		end
 
 	check_master_class_validity (a_system: ET_SYSTEM)
@@ -2233,6 +2313,37 @@ feature {NONE} -- Implementation
 			all_implementation_checked: not {PLATFORM}.is_thread_capable and then not stop_requested implies a_classes.for_all (agent {ET_CLASS}.implementation_checked)
 		end
 
+	set_attached_attribute_initialization_internal_error (a_classes: DS_ARRAYED_LIST [ET_CLASS])
+			-- Set attached attribute initialization error to all classes of `a_classes' for which
+			-- the attached attribute initialization has not been checked.
+			-- Report an internal error.
+			-- Do nothing if current system processor was stopped.
+		require
+			a_classes_not_void: a_classes /= Void
+			no_void_class: not a_classes.has_void
+		local
+			i, nb: INTEGER
+			l_class: ET_CLASS
+		do
+			if not stop_requested then
+				from
+					i := 1
+					nb := a_classes.count
+				until
+					i > nb
+				loop
+					l_class := a_classes.item (i)
+					if not l_class.attached_attribute_initialization_checked then
+						l_class.set_attached_attribute_initialization_error
+						error_handler.report_giaaa_error
+					end
+					i := i + 1
+				end
+			end
+		ensure
+			all_attached_attribute_initialization_checked: not {PLATFORM}.is_thread_capable and then not stop_requested implies a_classes.for_all (agent {ET_CLASS}.attached_attribute_initialization_checked)
+		end
+
 invariant
 
 	ast_factory_not_void: ast_factory /= Void
@@ -2246,6 +2357,7 @@ invariant
 	feature_flattener_not_void: feature_flattener /= Void
 	interface_checker_not_void: interface_checker /= Void
 	implementation_checker_not_void: implementation_checker /= Void
+	attached_attribute_initialization_checker_not_void: attached_attribute_initialization_checker /= Void
 	error_handler_not_void: error_handler /= Void
 	processed_class_count_stack_not_void: processed_class_count_stack /= Void
 	processed_class_count_not_negative: processed_class_count >= 0

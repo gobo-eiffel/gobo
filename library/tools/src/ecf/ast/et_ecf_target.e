@@ -606,15 +606,23 @@ feature -- Basic operations
 			end
 			if l_value = Void or else STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.all_capability_value) then
 				a_system.set_attachment_type_conformance_mode (True)
+				a_system.set_attached_attribute_initialization_mode (True)
 				a_system.set_target_type_attachment_mode (True)
-			elseif STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
-				a_system.set_attachment_type_conformance_mode (False)
-				a_system.set_target_type_attachment_mode (False)
 			elseif STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.transitional_capability_value) then
 				a_system.set_attachment_type_conformance_mode (True)
+				a_system.set_attached_attribute_initialization_mode (True)
 				a_system.set_target_type_attachment_mode (True)
-			else
+			elseif STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.initialization_capability_value) then
 				a_system.set_attachment_type_conformance_mode (True)
+				a_system.set_attached_attribute_initialization_mode (True)
+				a_system.set_target_type_attachment_mode (False)
+			elseif STRING_.same_case_insensitive (l_value, {ET_ECF_CAPABILITY_NAMES}.conformance_capability_value) then
+				a_system.set_attachment_type_conformance_mode (True)
+				a_system.set_attached_attribute_initialization_mode (False)
+				a_system.set_target_type_attachment_mode (False)
+			else
+				a_system.set_attachment_type_conformance_mode (False)
+				a_system.set_attached_attribute_initialization_mode (False)
 				a_system.set_target_type_attachment_mode (False)
 			end
 		end

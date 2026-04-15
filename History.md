@@ -23,6 +23,9 @@
   `across exp as i all i.f end` were accepted even though
   `e` and `i` are out of scope when evaluating the `old`
   expressions on entry of the enclosing feature.
+* Check that attributes declared as attached are not used before
+  being initialized, and are initialized at the end of creation
+  procedures. Validity error `VEVI`.
 
 ## Version 26.03.05 - 5 March 2026
 

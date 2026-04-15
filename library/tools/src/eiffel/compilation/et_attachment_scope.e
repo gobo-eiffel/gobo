@@ -9,7 +9,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ATTACHMENT_SCOPE
@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			create arguments_attached.make (10)
 			create inline_separate_arguments_attached.make (10)
 			create attributes_attached.make (50)
+			create current_not_initialized.make (50)
 		end
 
 feature -- Status report
@@ -68,11 +69,12 @@ feature -- Status report
 			Result := inline_separate_arguments_attached.has (a_name.seed)
 		end
 
-	has_attribute (a_name: ET_IDENTIFIER): BOOLEAN
+	has_attribute (a_name: ET_FEATURE_NAME): BOOLEAN
 			-- Is attribute `a_name' attached (when declared as detachable)
 			-- or initialized (when declared as attached)?
 		require
 			a_name_not_void: a_name /= Void
+			a_name_is_feature_name: a_name.is_feature_name
 		do
 			Result := attributes_attached.has (a_name.seed)
 		end
@@ -102,75 +104,26 @@ feature -- Status report
 			end
 		end
 
+	has_current (a_current: ET_CURRENT_OPERAND): BOOLEAN
+			-- Has `a_current` been used before being fully initialized?
+		require
+			a_current_not_void: a_current /= Void
+		do
+			Result := current_not_initialized.has (a_current)
+		end
+
 	is_subset (other: ET_ATTACHMENT_SCOPE): BOOLEAN
 			-- Is `Current' a subset of `other'
 		require
 			other_not_void: other /= Void
 		do
-			Result := True
-			if result_attached and then not other.result_attached then
-				Result := False
-			end
-			if Result then
-				from
-					locals_attached.start
-				until
-					locals_attached.after
-				loop
-					if not other.locals_attached.has (locals_attached.item_for_iteration) then
-						Result := False
-							-- Jump out of the loop.
-						locals_attached.go_after
-					else
-						locals_attached.forth
-					end
-				end
-			end
-			if Result then
-				from
-					arguments_attached.start
-				until
-					arguments_attached.after
-				loop
-					if not other.arguments_attached.has (arguments_attached.item_for_iteration) then
-						Result := False
-							-- Jump out of the loop.
-						arguments_attached.go_after
-					else
-						arguments_attached.forth
-					end
-				end
-			end
-			if Result then
-				from
-					inline_separate_arguments_attached.start
-				until
-					inline_separate_arguments_attached.after
-				loop
-					if not other.inline_separate_arguments_attached.has (inline_separate_arguments_attached.item_for_iteration) then
-						Result := False
-							-- Jump out of the loop.
-						inline_separate_arguments_attached.go_after
-					else
-						inline_separate_arguments_attached.forth
-					end
-				end
-			end
-			if Result then
-				from
-					attributes_attached.start
-				until
-					attributes_attached.after
-				loop
-					if not other.attributes_attached.has (attributes_attached.item_for_iteration) then
-						Result := False
-							-- Jump out of the loop.
-						attributes_attached.go_after
-					else
-						attributes_attached.forth
-					end
-				end
-			end
+			Result := other.is_code_unreachable or else 
+				((not result_attached or else other.result_attached) and then
+				locals_attached.is_subset (other.locals_attached) and then
+				arguments_attached.is_subset (other.arguments_attached) and then
+				inline_separate_arguments_attached.is_subset (other.inline_separate_arguments_attached) and then
+				attributes_attached.is_subset (other.attributes_attached) and then
+				current_not_initialized.is_subset (other.current_not_initialized))
 		end
 
 	is_code_unreachable: BOOLEAN
@@ -202,6 +155,9 @@ feature -- Access
 	result_attached: BOOLEAN
 			-- Is 'Result' attached (when declared as detachable)
 			-- or initialized (when declared as attached)?
+
+	current_not_initialized: DS_HASH_SET [ET_CURRENT_OPERAND]
+			-- 'Current' operands used before being fully initialized
 
 feature -- Element change
 
@@ -244,7 +200,7 @@ feature -- Element change
 			inline_separate_argument_added: has_inline_separate_argument (a_name)
 		end
 
-	add_attribute (a_name: ET_IDENTIFIER)
+	add_attribute (a_name: ET_FEATURE_NAME)
 			-- Indicate that attribute `a_name' is attached
 			-- (when declared as detachable) or initialized
 			-- (when declared as attached).
@@ -288,6 +244,16 @@ feature -- Element change
 			name_added: has_name (a_name)
 		end
 
+	add_current (a_current: ET_CURRENT_OPERAND)
+			-- Indicate that `a_current' has been used before being fully initialized.
+		require
+			a_current_not_void: a_current /= Void
+		do
+			current_not_initialized.force_last (a_current)
+		ensure
+			current_added: has_current (a_current)
+		end
+
 	remove_local_variable (a_name: ET_IDENTIFIER)
 			-- Indicate that local variable `a_name' is not attached
 			-- (when declared as detachable) or not initialized
@@ -327,7 +293,7 @@ feature -- Element change
 			inline_separate_argument_removed: not has_inline_separate_argument (a_name)
 		end
 
-	remove_attribute (a_name: ET_IDENTIFIER)
+	remove_attribute (a_name: ET_FEATURE_NAME)
 			-- Indicate that attribute `a_name' is not attached
 			-- (when declared as detachable) or not initialized
 			-- (when declared as attached).
@@ -371,6 +337,16 @@ feature -- Element change
 			name_removed: not has_name (a_name)
 		end
 
+	remove_current (a_current: ET_CURRENT_OPERAND)
+			-- Indicate that `a_current' has not been used before being fully initialized.
+		require
+			a_current_not_void: a_current /= Void
+		do
+			current_not_initialized.Remove (a_current)
+		ensure
+			current_removed: not has_current (a_current)
+		end
+
 	set_code_unreachable (b: BOOLEAN)
 			-- Set `is_code_unreachable' to `b'.
 		do
@@ -394,6 +370,8 @@ feature -- Element change
 			attributes_attached.append_last (other.attributes_attached)
 			result_attached := other.result_attached
 			is_code_unreachable := other.is_code_unreachable
+			current_not_initialized.wipe_out
+			current_not_initialized.append_last (other.current_not_initialized)
 		end
 
 	merge_scope (other: ET_ATTACHMENT_SCOPE)
@@ -459,6 +437,7 @@ feature -- Element change
 						attributes_attached.forth
 					end
 				end
+				current_not_initialized.append_last (other.current_not_initialized)
 				if is_code_unreachable and not other.is_code_unreachable then
 					is_code_unreachable := False
 				end
@@ -473,6 +452,7 @@ feature -- Element change
 			arguments_attached.wipe_out
 			inline_separate_arguments_attached.wipe_out
 			attributes_attached.wipe_out
+			current_not_initialized.wipe_out
 			result_attached := False
 			is_code_unreachable := False
 		end
@@ -483,5 +463,7 @@ invariant
 	arguments_attached_not_void: arguments_attached /= Void
 	inline_separate_arguments_attached_not_void: inline_separate_arguments_attached /= Void
 	attributes_attached_not_void: attributes_attached /= Void
+	current_not_initialized_not_void: current_not_initialized /= Void
+	no_void_current_not_initialized: not current_not_initialized.has_void
 
 end

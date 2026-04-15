@@ -5,7 +5,7 @@
 		"Eiffel unique attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_UNIQUE_ATTRIBUTE
@@ -33,6 +33,9 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 		do
 			extended_name := a_name
+			if attached {ET_IDENTIFIER} a_name.feature_name as l_identifier then
+				l_identifier.set_feature_name (True)
+			end
 			hash_code := name.hash_code
 			declared_type := a_type
 			is_keyword := tokens.is_keyword

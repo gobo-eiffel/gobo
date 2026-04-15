@@ -31,6 +31,8 @@ inherit
 			process_call_agent,
 			process_class,
 			process_constant_attribute,
+			process_convert_from_expression,
+			process_convert_to_expression,
 			process_create_expression,
 			process_create_instruction,
 			process_deferred_function,
@@ -41,6 +43,8 @@ inherit
 			process_do_procedure_inline_agent,
 			process_dotnet_function,
 			process_dotnet_procedure,
+			process_explicit_convert_from_expression,
+			process_explicit_convert_to_expression,
 			process_extended_attribute,
 			process_external_function,
 			process_external_function_inline_agent,
@@ -53,6 +57,7 @@ inherit
 			process_infix_expression,
 			process_invariants,
 			process_like_feature,
+			process_object_equality_expression,
 			process_once_function,
 			process_once_function_inline_agent,
 			process_once_procedure,
@@ -276,9 +281,9 @@ feature {ET_AST_NODE} -- Processing
 				if attached {ET_AGENT_OPEN_TARGET} l_target as l_open_target then
 					internal_type_context.put_last (l_open_target.type)
 				elseif attached {ET_EXPRESSION} l_target as l_expression_target then
-					expression_type_finder.find_expression_type_in_closure (l_expression_target, current_closure, current_closure, current_class, internal_type_context, current_universe.any_type)
+					expression_type_finder.find_expression_type_in_closure (l_expression_target, current_closure, current_closure, current_class, internal_type_context, current_universe.detachable_separate_any_type)
 				end
-				l_class := internal_type_context.base_class
+				l_class := internal_type_context.adapted_base_class_with_seeded_feature (l_seed).base_class
 				if callee_classes.has (l_class) then
 					report_caller (l_name, current_standalone_closure)
 				end
@@ -315,6 +320,20 @@ feature {ET_AST_NODE} -- Processing
 			current_standalone_closure := l_old_standalone_closure
 		end
 
+	process_convert_from_expression (a_convert_expression: ET_CONVERT_FROM_EXPRESSION)
+			-- Process `a_convert_expression'.
+		do
+			process_creation_expression (a_convert_expression)
+			precursor (a_convert_expression)
+		end
+
+	process_convert_to_expression (a_convert_expression: ET_CONVERT_TO_EXPRESSION)
+			-- Process `a_convert_expression'.
+		do
+			process_qualified_feature_call (a_convert_expression)
+			precursor (a_convert_expression)
+		end
+
 	process_create_expression (a_expression: ET_CREATE_EXPRESSION)
 			-- Process `a_expression`.
 		do
@@ -343,7 +362,7 @@ feature {ET_AST_NODE} -- Processing
 			if l_seed /= 0 and then callee_seeds.has (l_seed) then
 				internal_type_context.reset (current_class)
 				internal_type_context.put_last (a_expression.type)
-				l_class := internal_type_context.base_class
+				l_class := internal_type_context.adapted_base_class_with_seeded_feature (l_seed).base_class
 				if callee_classes.has (l_class) then
 					report_caller (l_name, current_standalone_closure)
 				end
@@ -367,16 +386,10 @@ feature {ET_AST_NODE} -- Processing
 				internal_type_context.reset (current_class)
 				if attached a_instruction.type as l_type then
 					internal_type_context.put_last (l_type)
-				elseif
-					attached {ET_IDENTIFIER} l_target as l_identifier and then
-					attached current_class.seeded_feature (l_identifier.seed) as l_feature and then
-					attached l_feature.type as l_type
-				then
-					internal_type_context.put_last (l_type)
 				else
-					expression_type_finder.find_expression_type_in_closure (l_target, current_closure, current_closure, current_class, internal_type_context, current_universe.any_type)
+					expression_type_finder.find_expression_type_in_closure (l_target, current_closure, current_closure, current_class, internal_type_context, current_universe.detachable_separate_any_type)
 				end
-				l_class := internal_type_context.base_class
+				l_class := internal_type_context.adapted_base_class_with_seeded_feature (l_seed).base_class
 				if callee_classes.has (l_class) then
 					report_caller (l_name, current_standalone_closure)
 				end
@@ -499,6 +512,20 @@ feature {ET_AST_NODE} -- Processing
 			precursor (a_feature)
 			current_closure := l_old_closure
 			current_standalone_closure := l_old_standalone_closure
+		end
+
+	process_explicit_convert_from_expression (a_convert_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
+			-- Process `a_convert_expression'.
+		do
+			process_creation_expression (a_convert_expression)
+			precursor (a_convert_expression)
+		end
+
+	process_explicit_convert_to_expression (a_convert_expression: ET_EXPLICIT_CONVERT_TO_EXPRESSION)
+			-- Process `a_convert_expression'.
+		do
+			process_qualified_feature_call (a_convert_expression)
+			precursor (a_convert_expression)
 		end
 
 	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE)
@@ -692,6 +719,13 @@ feature {ET_AST_NODE} -- Processing
 			precursor (a_type)
 		end
 
+	process_object_equality_expression (a_expression: ET_OBJECT_EQUALITY_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			process_qualified_feature_call (a_expression)
+			precursor (a_expression)
+		end
+
 	process_once_function (a_feature: ET_ONCE_FUNCTION)
 			-- Process `a_feature'.
 		local
@@ -840,8 +874,8 @@ feature {ET_AST_NODE} -- Processing
 				l_seed := l_name.seed
 				if l_seed /= 0 and then callee_seeds.has (l_seed) then
 					internal_type_context.reset (current_class)
-					expression_type_finder.find_expression_type_in_closure (a_call.target, current_closure, current_closure, current_class, internal_type_context, current_universe.any_type)
-					l_class := internal_type_context.base_class
+					expression_type_finder.find_expression_type_in_closure (a_call.target, current_closure, current_closure, current_class, internal_type_context, current_universe.detachable_separate_any_type)
+					l_class := internal_type_context.adapted_base_class_with_seeded_feature (l_seed).base_class
 					if callee_classes.has (l_class) then
 						report_caller (l_name, current_standalone_closure)
 					end
@@ -870,7 +904,7 @@ feature {ET_AST_NODE} -- Processing
 			if l_seed /= 0 and then callee_seeds.has (l_seed) then
 				internal_type_context.reset (current_class)
 				internal_type_context.put_last (a_type.target_type)
-				l_class := internal_type_context.base_class
+				l_class := internal_type_context.adapted_base_class_with_seeded_feature (l_seed).base_class
 				if callee_classes.has (l_class) then
 					report_caller (l_name, current_standalone_closure)
 				end
@@ -920,7 +954,7 @@ feature {ET_AST_NODE} -- Processing
 			if l_seed /= 0 and then callee_seeds.has (l_seed) then
 				internal_type_context.reset (current_class)
 				internal_type_context.put_last (a_call.type)
-				l_class := internal_type_context.base_class
+				l_class := internal_type_context.adapted_base_class_with_seeded_feature (l_seed).base_class
 				if callee_classes.has (l_class) then
 					report_caller (l_name, current_standalone_closure)
 				end

@@ -5,7 +5,7 @@
 		"Mkdir commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2026, Sven Ehrke and others"
 	license: "MIT License"
 
 class GEANT_MKDIR_COMMAND
@@ -32,7 +32,8 @@ feature {NONE} -- Initialization
 			create directory.make
 
 				-- Set default agents:
-			create mkdir_agent_cell.make (agent create_directory)
+			create mkdir_agent_cell.make (agent {STRING}.do_nothing)
+			mkdir_agent_cell.put (agent create_directory)
 		end
 
 feature -- Status report
@@ -43,13 +44,13 @@ feature -- Status report
 			a_is_valid: DS_CELL [BOOLEAN]
 		do
 			create a_is_valid.make (True)
- 			validate_condition (directory.is_defined, "  [mkdir] error: 'directory' is not defined", a_is_valid)
+			validate_condition (directory.is_defined, "  [mkdir] error: 'directory' is not defined", a_is_valid)
 				-- Prevent 'Call on Void target' for `directory.value' by checking `is_valid' first. TODO: find better solution:
-  			validate_condition (a_is_valid.item and then not directory.value.is_empty, "  [mkdir] error: 'directory' is empty", a_is_valid)
+			validate_condition (a_is_valid.item and then not directory.value.is_empty, "  [mkdir] error: 'directory' is empty", a_is_valid)
 			Result := a_is_valid.item
- 		ensure then
- 			directory_defined: Result implies directory.is_defined
- 			directory_not_empty: Result implies not directory.value.is_empty
+		ensure then
+			directory_defined: Result implies directory.is_defined
+			directory_not_empty: Result implies not directory.value.is_empty
 		end
 
 feature -- Access

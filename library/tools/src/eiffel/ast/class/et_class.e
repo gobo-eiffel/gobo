@@ -130,6 +130,7 @@ feature -- Initialization
 			-- Reset current class as it was when it was created
 			-- (i.e. before it was preparsed or parsed).
 		do
+			reset_attached_attribute_initialization_checked
 			reset_implementation_checked
 			reset_interface_checked
 			reset_features_flattened
@@ -146,6 +147,7 @@ feature -- Initialization
 	reset_after_preparsed
 			-- Reset current class as it was just after it was last preparsed.
 		do
+			reset_attached_attribute_initialization_checked
 			reset_implementation_checked
 			reset_interface_checked
 			reset_features_flattened
@@ -166,6 +168,7 @@ feature -- Initialization
 			-- Reset current class as it was just after it was last parsed.
 			-- Do nothing if not parsed.
 		do
+			reset_attached_attribute_initialization_checked
 			reset_implementation_checked
 			reset_interface_checked
 			reset_features_flattened
@@ -208,6 +211,7 @@ feature -- Initialization
 			j, nb2: INTEGER
 			l_parent_list: ET_PARENT_LIST
 		do
+			reset_attached_attribute_initialization_checked
 			reset_implementation_checked
 			reset_interface_checked
 			reset_features_flattened
@@ -271,6 +275,7 @@ feature -- Initialization
 			-- Reset current class as it was just after its features were last flattened.
 			-- Do nothing if features not flattened.
 		do
+			reset_attached_attribute_initialization_checked
 			reset_implementation_checked
 			reset_interface_checked
 			queries.reset_after_features_flattened
@@ -300,6 +305,7 @@ feature -- Initialization
 			-- Reset current class as it was just after its interface was last checked.
 			-- Do nothing if interface not checked.
 		do
+			reset_attached_attribute_initialization_checked
 			reset_implementation_checked
 			queries.reset_after_interface_checked
 			procedures.reset_after_interface_checked
@@ -321,30 +327,58 @@ feature -- Initialization
 			implementation_not_checked: not implementation_checked
 		end
 
+	reset_after_implementation_checked
+			-- Reset current class as it was just after its implementation was last checked.
+			-- Do nothing if implementation not checked.
+		do
+			reset_attached_attribute_initialization_checked
+		ensure
+			same_name: name = old name
+			same_id: id = old id
+			same_preparsed: is_preparsed = old is_preparsed
+			same_parsed: is_parsed = old is_parsed
+			same_syntax_error: has_syntax_error = old has_syntax_error
+			same_ancestors_built: ancestors_built = old ancestors_built
+			same_ancestors_error: has_ancestors_error = old has_ancestors_error
+			same_features_flattened: features_flattened = old features_flattened
+			same_flattening_error: has_flattening_error = old has_flattening_error
+			same_interface_checked: interface_checked = old interface_checked
+			same_interface_erorr: has_interface_error = old has_interface_error
+			same_implementation_erorr: has_implementation_error = old has_implementation_error
+			attached_attribute_initialization_not_checked: not attached_attribute_initialization_checked
+		end
+
 	reset_errors
 			-- Reset current class as it was before the first error was reported.
 			-- Errors will be reported again if current class is processed again.
 		do
 			if has_syntax_error then
+				reset_attached_attribute_initialization_checked
 				reset_implementation_checked
 				reset_interface_checked
 				reset_features_flattened
 				reset_ancestors_built
 				reset_parsed
 			elseif has_ancestors_error then
+				reset_attached_attribute_initialization_checked
 				reset_implementation_checked
 				reset_interface_checked
 				reset_features_flattened
 				reset_ancestors_built
 			elseif has_flattening_error then
+				reset_attached_attribute_initialization_checked
 				reset_implementation_checked
 				reset_interface_checked
 				reset_features_flattened
 			elseif has_interface_error then
+				reset_attached_attribute_initialization_checked
 				reset_implementation_checked
 				reset_interface_checked
 			elseif has_implementation_error then
+				reset_attached_attribute_initialization_checked
 				reset_implementation_checked
+			elseif has_attached_attribute_initialization_error then
+				reset_attached_attribute_initialization_checked
 			end
 		end
 
@@ -3159,6 +3193,92 @@ feature {NONE} -- Implementation checking status
 
 	unprotected_has_implementation_error: BOOLEAN
 			-- Has a fatal error occurred during implementation checking?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+feature -- Attribute initialization checking status
+
+	attached_attribute_initialization_checked: BOOLEAN
+			-- Has the initialization of attached attributes of current
+			-- class been checked?
+		do
+			status_mutex.lock
+			Result := unprotected_attached_attribute_initialization_checked
+			status_mutex.unlock
+		end
+
+	attached_attribute_initialization_checked_successfully: BOOLEAN
+			-- Has the initialization of attached attributes of current
+			-- class been successfully checked?
+		do
+			status_mutex.lock
+			Result := unprotected_attached_attribute_initialization_checked and then not unprotected_has_attached_attribute_initialization_error
+			status_mutex.unlock
+		end
+
+	has_attached_attribute_initialization_error: BOOLEAN
+			-- Has a fatal error occurred during attached attribute initialization checking?
+		do
+			status_mutex.lock
+			Result := unprotected_has_attached_attribute_initialization_error
+			status_mutex.unlock
+		end
+
+	set_attached_attribute_initialization_checked
+			-- Set `attached_attribute_initialization_checked' to True.
+		do
+			status_mutex.lock
+			unprotected_attached_attribute_initialization_checked := True
+			status_mutex.unlock
+		ensure
+			attached_attribute_initialization_checked: attached_attribute_initialization_checked
+		end
+
+	set_attached_attribute_initialization_error
+			-- Set `has_attached_attribute_initialization_error' to True.
+		do
+			status_mutex.lock
+			unprotected_attached_attribute_initialization_checked := True
+			unprotected_has_attached_attribute_initialization_error := True
+			status_mutex.unlock
+		ensure
+			attached_attribute_initialization_checked: attached_attribute_initialization_checked
+			has_attached_attribute_initialization_error: has_attached_attribute_initialization_error
+		end
+
+	unset_attached_attribute_initialization_error
+			-- Set `has_attached_attribute_initialization_error' to False.
+		do
+			status_mutex.lock
+			unprotected_has_attached_attribute_initialization_error := False
+			status_mutex.unlock
+		ensure
+			not_has_attached_attribute_initialization_error: not has_attached_attribute_initialization_error
+		end
+
+	reset_attached_attribute_initialization_checked
+			-- Set `attached_attribute_initialization_checked' to False.
+		do
+			status_mutex.lock
+			unprotected_has_attached_attribute_initialization_error := False
+			unprotected_attached_attribute_initialization_checked := False
+			status_mutex.unlock
+		ensure
+			attached_attribute_initialization_not_checked: not attached_attribute_initialization_checked
+			no_attached_attribute_initialization_error: not has_attached_attribute_initialization_error
+		end
+
+feature {NONE} -- Implementation checking status
+
+	unprotected_attached_attribute_initialization_checked: BOOLEAN
+			-- Has the initialization of attached attributes of current
+			-- class been checked?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+	unprotected_has_attached_attribute_initialization_error: BOOLEAN
+			-- Has a fatal error occurred during attached attribute
+			-- initialization checking?
 			--
 			-- This is not protected by a mutex in case of multi-threading.
 

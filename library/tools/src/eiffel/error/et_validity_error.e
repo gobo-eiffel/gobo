@@ -112,6 +112,13 @@ create
 	make_vevi0c,
 	make_vevi0d,
 	make_vevi0e,
+	make_vevi0f,
+	make_vevi0g,
+	make_vevi0h,
+	make_vevi0i,
+	make_vevi0j,
+	make_vevi0k,
+	make_vevi0l,
 	make_vfac1a,
 	make_vfac1b,
 	make_vfac2a,
@@ -4537,6 +4544,407 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = attribute name
+		end
+
+	make_vevi0f (a_class, a_class_impl: ET_CLASS; a_creation_procedure: ET_PROCEDURE; a_attribute: ET_ATTRIBUTE)
+			-- Create a new VEVI error: the attribute 'a_attribute' of class `a_class`,
+			-- declared of attached type, is not initialized at the end of the creation
+			-- procedure `a_creation_procedure' declared in class `a_class_impl'
+			-- (possibly `a_class` itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_creation_procedure_not_void: a_creation_procedure /= Void
+			a_attribute_not_void: a_attribute /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_creation_procedure.end_keyword.position
+			ast_node := a_creation_procedure.end_keyword
+			if position.is_null then
+				position := a_creation_procedure.name.position
+				ast_node := a_creation_procedure.name
+			end
+			code := template_code (vevi0f_template_code)
+			etl_code := vevi_etl_code
+			default_template := default_message_template (vevi0f_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_creation_procedure.lower_name, 7)
+			parameters.put (a_attribute.lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = attribute name
+		end
+
+	make_vevi0g (a_class, a_class_impl: ET_CLASS; a_creation_procedure: ET_PROCEDURE; a_attributes: DS_ARRAYED_LIST [ET_ATTRIBUTE])
+			-- Create a new VEVI error: the attributes 'a_attributes' of class `a_class`,
+			-- declared of attached types, are not initialized at the end of the creation
+			-- procedure `a_creation_procedure' declared in class `a_class_impl'
+			-- (possibly `a_class` itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_creation_procedure_not_void: a_creation_procedure /= Void
+			a_attributes_not_void: a_attributes /= Void
+			no_void_attribute: not a_attributes.has_void
+			two_or_more_attributes: a_attributes.count >= 2
+		local
+			l_attributes_to_text: STRING
+			i, nb: INTEGER
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_creation_procedure.end_keyword.position
+			ast_node := a_creation_procedure.end_keyword
+			if position.is_null then
+				position := a_creation_procedure.name.position
+				ast_node := a_creation_procedure.name
+			end
+			code := template_code (vevi0g_template_code)
+			etl_code := vevi_etl_code
+			default_template := default_message_template (vevi0g_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_creation_procedure.lower_name, 7)
+			create l_attributes_to_text.make (15)
+			nb := a_attributes.count
+			from i := 1 until i > nb loop
+				if i = nb then
+					l_attributes_to_text.append_string (" and ")
+				elseif i > 1 then
+					l_attributes_to_text.append_character (',')
+					l_attributes_to_text.append_character (' ')
+				end
+				l_attributes_to_text.append_character ('`')
+				l_attributes_to_text.append_string (a_attributes.item (i).lower_name)
+				l_attributes_to_text.append_character ('%'')
+				i := i + 1
+			end
+			parameters.put (l_attributes_to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = attribute names
+		end
+
+	make_vevi0h (a_class, a_class_impl: ET_CLASS; a_current: ET_CURRENT; a_creation_procedure: ET_PROCEDURE; a_attribute: ET_ATTRIBUTE)
+			-- Create a new VEVI error: 'Current', written in `a_class_impl`, is used
+			-- before the attribute 'a_attribute' of one of its descendants `a_class'
+			-- (possibly itself), declared of attached type, is initialized by
+			-- `a_creation_procedure`.
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_current_not_void: a_current /= Void
+			a_creation_procedure_not_void: a_creation_procedure /= Void
+			a_attribute_not_void: a_attribute /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_current.position
+			ast_node := a_current
+			code := template_code (vevi0h_template_code)
+			etl_code := vevi_etl_code
+			default_template := default_message_template (vevi0h_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_creation_procedure.lower_name, 7)
+			parameters.put (a_attribute.lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = attribute name
+		end
+
+	make_vevi0i (a_class, a_class_impl: ET_CLASS; a_current: ET_CURRENT; a_creation_procedure: ET_PROCEDURE; a_attributes: DS_ARRAYED_LIST [ET_ATTRIBUTE])
+			-- Create a new VEVI error: 'Current', written in `a_class_impl`, is used
+			-- before the attributes 'a_attributes' of one of its descendants `a_class'
+			-- (possibly itself), declared of attached type, are initialized by
+			-- `a_creation_procedure`.
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_current_not_void: a_current /= Void
+			a_creation_procedure_not_void: a_creation_procedure /= Void
+			a_attributes_not_void: a_attributes /= Void
+			no_void_attribute: not a_attributes.has_void
+			two_or_more_attributes: a_attributes.count >= 2
+		local
+			l_attributes_to_text: STRING
+			i, nb: INTEGER
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_current.position
+			ast_node := a_current
+			code := template_code (vevi0i_template_code)
+			etl_code := vevi_etl_code
+			default_template := default_message_template (vevi0i_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_creation_procedure.lower_name, 7)
+			create l_attributes_to_text.make (15)
+			nb := a_attributes.count
+			from i := 1 until i > nb loop
+				if i = nb then
+					l_attributes_to_text.append_string (" and ")
+				elseif i > 1 then
+					l_attributes_to_text.append_character (',')
+					l_attributes_to_text.append_character (' ')
+				end
+				l_attributes_to_text.append_character ('`')
+				l_attributes_to_text.append_string (a_attributes.item (i).lower_name)
+				l_attributes_to_text.append_character ('%'')
+				i := i + 1
+			end
+			parameters.put (l_attributes_to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = attribute names
+		end
+
+	make_vevi0j (a_class, a_class_impl: ET_CLASS; a_agent: ET_AGENT; a_creation_procedure: ET_PROCEDURE; a_attribute: ET_ATTRIBUTE)
+			-- Create a new VEVI error: the implicit target 'Current' of `a_agent`,
+			-- written in `a_class_impl`, is used before the attribute 'a_attribute'
+			-- of one of its descendants `a_class' (possibly itself), declared of
+			-- attached type, is initialized by `a_creation_procedure`.
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+			a_agent_not_qualified: not a_agent.is_qualified_call
+			a_creation_procedure_not_void: a_creation_procedure /= Void
+			a_attribute_not_void: a_attribute /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_agent.position
+			ast_node := a_agent
+			code := template_code (vevi0j_template_code)
+			etl_code := vevi_etl_code
+			default_template := default_message_template (vevi0j_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_creation_procedure.lower_name, 7)
+			parameters.put (a_attribute.lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = attribute name
+		end
+
+	make_vevi0k (a_class, a_class_impl: ET_CLASS; a_agent: ET_AGENT; a_creation_procedure: ET_PROCEDURE; a_attributes: DS_ARRAYED_LIST [ET_ATTRIBUTE])
+			-- Create a new VEVI error: the implicit target 'Current' of `a_agent`,
+			-- written in `a_class_impl`, is used before the attributes 'a_attributes'
+			-- of one of its descendants `a_class' (possibly itself), declared of
+			-- attached type, are initialized by `a_creation_procedure`.
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+			a_agent_not_qualified: not a_agent.is_qualified_call
+			a_creation_procedure_not_void: a_creation_procedure /= Void
+			a_attributes_not_void: a_attributes /= Void
+			no_void_attribute: not a_attributes.has_void
+			two_or_more_attributes: a_attributes.count >= 2
+		local
+			l_attributes_to_text: STRING
+			i, nb: INTEGER
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_agent.position
+			ast_node := a_agent
+			code := template_code (vevi0k_template_code)
+			etl_code := vevi_etl_code
+			default_template := default_message_template (vevi0k_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_creation_procedure.lower_name, 7)
+			create l_attributes_to_text.make (15)
+			nb := a_attributes.count
+			from i := 1 until i > nb loop
+				if i = nb then
+					l_attributes_to_text.append_string (" and ")
+				elseif i > 1 then
+					l_attributes_to_text.append_character (',')
+					l_attributes_to_text.append_character (' ')
+				end
+				l_attributes_to_text.append_character ('`')
+				l_attributes_to_text.append_string (a_attributes.item (i).lower_name)
+				l_attributes_to_text.append_character ('%'')
+				i := i + 1
+			end
+			parameters.put (l_attributes_to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = attribute names
+		end
+
+	make_vevi0l (a_class, a_class_impl: ET_CLASS; a_call_name: ET_CALL_NAME; a_creation_procedure: ET_PROCEDURE; a_attribute: ET_ATTRIBUTE)
+			-- Create a new VEVI error: 'a_call_name', written in `a_class_impl`, is the
+			-- name of an attribute 'a_attribute' of one of its descendants `a_class'
+			-- (possibly itself), declared of attached type, used before being initialized
+			-- by `a_creation_procedure`.
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_call_name_not_void: a_call_name /= Void
+			a_creation_procedure_not_void: a_creation_procedure /= Void
+			a_attribute_not_void: a_attribute /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_call_name.position
+			ast_node := a_call_name
+			code := template_code (vevi0l_template_code)
+			etl_code := vevi_etl_code
+			default_template := default_message_template (vevi0l_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_creation_procedure.lower_name, 7)
+			parameters.put (a_attribute.lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = attribute name
 		end
 
 	make_vfac1a (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY)
@@ -18912,6 +19320,13 @@ feature {NONE} -- Implementation
 	vevi0c_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of the body of function `$7'."
 	vevi0d_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of the body of inline agent."
 	vevi0e_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of the body of attribute `$7'."
+	vevi0f_default_template: STRING = "attribute `$8' declared as attached is not initialized at the end of the body of creation procedure `$7'."
+	vevi0g_default_template: STRING = "attributes $8 declared as attached are not initialized at the end of the body of creation procedure `$7'."
+	vevi0h_default_template: STRING = "'Current' is used before attribute `$8' declared as attached is initialized by creation procedure `$7'."
+	vevi0i_default_template: STRING = "'Current' is used before attributes $8 declared as attached are initialized by creation procedure `$7'."
+	vevi0j_default_template: STRING = "the implicit target 'Current' of an agent, is used before attribute `$8' declared as attached is initialized by creation procedure `$7'."
+	vevi0k_default_template: STRING = "the implicit target 'Current' of an agent, is used before attributes $8 declared as attached are initialized by creation procedure `$7'."
+	vevi0l_default_template: STRING = "attribute `$8' declared as attached is used before being initialized by creation procedure `$7'."
 	vfac1a_default_template: STRING = "query `$7' has an assigner mark `$8' but there is no feature with that name."
 	vfac1b_default_template: STRING = "query `$7' has an assigner mark `$8' but this feature is not a procedure."
 	vfac2a_default_template: STRING = "the number of arguments in assigner procedure `$8' is not one more than the number of arguments in query `$7'."
@@ -19493,6 +19908,13 @@ feature {NONE} -- Implementation
 	vevi0c_template_code: STRING = "vevi0c"
 	vevi0d_template_code: STRING = "vevi0d"
 	vevi0e_template_code: STRING = "vevi0e"
+	vevi0f_template_code: STRING = "vevi0f"
+	vevi0g_template_code: STRING = "vevi0g"
+	vevi0h_template_code: STRING = "vevi0h"
+	vevi0i_template_code: STRING = "vevi0i"
+	vevi0j_template_code: STRING = "vevi0j"
+	vevi0k_template_code: STRING = "vevi0k"
+	vevi0l_template_code: STRING = "vevi0l"
 	vfac1a_template_code: STRING = "vfac1a"
 	vfac1b_template_code: STRING = "vfac1b"
 	vfac2a_template_code: STRING = "vfac2a"

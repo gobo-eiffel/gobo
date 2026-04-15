@@ -716,7 +716,7 @@ feature -- Validity checking
 							object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
 							has_fatal_error := has_fatal_error or object_test_scope_builder.has_fatal_error
 							if current_system.attachment_type_conformance_mode then
-								attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
+								attachment_scope_builder.build_scope (l_expression, current_class, current_attachment_scope)
 							end
 						end
 						i := i + 1
@@ -1890,7 +1890,7 @@ feature {NONE} -- Assertions
 					object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
 					has_fatal_error := has_fatal_error or object_test_scope_builder.has_fatal_error
 					if current_system.attachment_type_conformance_mode then
-						attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
+						attachment_scope_builder.build_scope (l_expression, current_class, current_attachment_scope)
 					end
 				end
 				i := i + 1
@@ -1939,7 +1939,7 @@ feature {NONE} -- Assertions
 					object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
 					has_fatal_error := has_fatal_error or object_test_scope_builder.has_fatal_error
 					if current_system.attachment_type_conformance_mode then
-						attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
+						attachment_scope_builder.build_scope (l_expression, current_class, current_attachment_scope)
 					end
 				end
 				i := i + 1
@@ -3067,6 +3067,8 @@ feature {NONE} -- Instruction validity
 			l_source: ET_EXPRESSION
 			l_source_context: ET_NESTED_TYPE_CONTEXT
 			l_convert_expression: detachable ET_CONVERT_EXPRESSION
+			l_attribute: detachable ET_QUERY
+			l_name: ET_IDENTIFIER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -3149,10 +3151,17 @@ feature {NONE} -- Instruction validity
 								end
 							end
 						elseif attached {ET_IDENTIFIER} l_target as l_identifier then
+							l_name := l_identifier
+							if l_identifier.is_feature_name and then attached current_class.seeded_query (l_identifier.seed) as l_query then
+								l_attribute := l_query
+								if attached {ET_IDENTIFIER} l_attribute.name as l_attribute_name then
+									l_name := l_attribute_name
+								end
+							end
 							if not l_target_context.is_type_detachable then
-								current_initialization_scope.add_name (l_identifier)
+								current_initialization_scope.add_name (l_name)
 							elseif not l_source_context.is_type_attached then
-								if l_identifier.is_feature_name and then attached current_class.seeded_query (l_identifier.seed) as l_attribute and then l_attribute.is_stable_attribute then
+								if l_attribute /= Void and then l_attribute.is_stable_attribute then
 										-- The target entity of the assignment is a stable attribute
 										-- but the source expression is not guaranteed to be attached.
 									set_fatal_error
@@ -3161,9 +3170,9 @@ feature {NONE} -- Instruction validity
 							end
 							if not l_target_context.is_type_attached then
 								if l_source_context.is_type_attached then
-									current_attachment_scope.add_name (l_identifier)
+									current_attachment_scope.add_name (l_name)
 								else
-									current_attachment_scope.remove_name (l_identifier)
+									current_attachment_scope.remove_name (l_name)
 								end
 							end
 						end
@@ -3311,7 +3320,7 @@ feature {NONE} -- Instruction validity
 					object_test_scope_builder.build_scope (l_expression, current_object_test_scope, current_class_impl)
 					had_error := had_error or object_test_scope_builder.has_fatal_error
 					if current_system.attachment_type_conformance_mode then
-						attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
+						attachment_scope_builder.build_scope (l_expression, current_class, current_attachment_scope)
 					end
 				end
 				i := i + 1
@@ -3335,7 +3344,7 @@ feature {NONE} -- Instruction validity
 					--      check a /= Void then end
 					--      a.f
 					--
-					-- is accetped as a CAP because if 'a' is Void
+					-- is accepted as a CAP because if 'a' is Void
 					-- then an exception is raise by the 'check'
 					-- even when check-monitoring is turned off.
 					-- So we don't reset `current_attachment_scope' here.
@@ -3599,6 +3608,7 @@ feature {NONE} -- Instruction validity
 			l_explicit_creation_type: detachable ET_TYPE
 			l_type_position: ET_POSITION
 			l_creation_context: ET_NESTED_TYPE_CONTEXT
+			l_name: ET_IDENTIFIER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -3659,11 +3669,19 @@ feature {NONE} -- Instruction validity
 							current_attachment_scope.add_result
 						end
 					elseif attached {ET_IDENTIFIER} l_target as l_identifier then
+						l_name := l_identifier
+						if
+							l_identifier.is_feature_name and then
+							attached current_class.seeded_query (l_identifier.seed) as l_attribute and then
+							attached {ET_IDENTIFIER} l_attribute.name as l_attribute_name
+						then
+							l_name := l_attribute_name
+						end
 						if not a_target_context.is_type_detachable then
-							current_initialization_scope.add_name (l_identifier)
+							current_initialization_scope.add_name (l_name)
 						end
 						if not a_target_context.is_type_attached then
-							current_attachment_scope.add_name (l_identifier)
+							current_attachment_scope.add_name (l_name)
 						end
 					end
 						-- When we have:
@@ -3879,8 +3897,8 @@ feature {NONE} -- Instruction validity
 				current_initialization_scope.copy_scope (l_old_initialization_scope)
 				current_attachment_scope := new_attachment_scope
 				current_attachment_scope.copy_scope (l_old_attachment_scope)
-				attachment_scope_builder.build_scope (l_conditional, current_attachment_scope)
-				attachment_scope_builder.build_negated_scope (l_conditional, l_old_attachment_scope)
+				attachment_scope_builder.build_scope (l_conditional, current_class, current_attachment_scope)
+				attachment_scope_builder.build_negated_scope (l_conditional, current_class, l_old_attachment_scope)
 			end
 			if attached an_instruction.then_compound as l_then_compound then
 				check_instructions_validity (l_then_compound)
@@ -3927,8 +3945,8 @@ feature {NONE} -- Instruction validity
 					object_test_scope_builder.build_scope (l_conditional, current_object_test_scope, current_class_impl)
 					had_error := had_error or object_test_scope_builder.has_fatal_error
 					if current_system.attachment_type_conformance_mode then
-						attachment_scope_builder.build_scope (l_conditional, current_attachment_scope)
-						attachment_scope_builder.build_negated_scope (l_conditional, l_old_attachment_scope)
+						attachment_scope_builder.build_scope (l_conditional, current_class, current_attachment_scope)
+						attachment_scope_builder.build_negated_scope (l_conditional, current_class, l_old_attachment_scope)
 					end
 					if attached l_elseif.then_compound as l_then_compound then
 						check_instructions_validity (l_then_compound)
@@ -4432,7 +4450,7 @@ feature {NONE} -- Instruction validity
 			end
 			if attached an_instruction.loop_compound as l_loop_compound and then not l_loop_compound.is_empty then
 				if current_system.attachment_type_conformance_mode and l_until_expression /= Void then
-					attachment_scope_builder.build_negated_scope (l_until_expression, current_attachment_scope)
+					attachment_scope_builder.build_negated_scope (l_until_expression, current_class, current_attachment_scope)
 				end
 				l_old_object_test_scope := current_object_test_scope.count
 				if l_loop_compound.has_non_null_instruction and l_until_expression /= Void then
@@ -4466,7 +4484,7 @@ feature {NONE} -- Instruction validity
 				current_attachment_scope := l_old_attachment_scope
 				current_initialization_scope := l_old_initialization_scope
 				if l_until_expression /= Void then
-					attachment_scope_builder.build_scope (l_until_expression, current_attachment_scope)
+					attachment_scope_builder.build_scope (l_until_expression, current_class, current_attachment_scope)
 				end
 			end
 		end
@@ -4510,7 +4528,7 @@ feature {NONE} -- Instruction validity
 							-- `current_attachment_scope' will be reset in `check_loop_instruction_no_from_validity'
 							-- before processing the other parts of the loop, so that the analysis of the
 							-- attachment statuses still works even when loop invariant monitoring is turned off.
-						attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
+						attachment_scope_builder.build_scope (l_expression, current_class, current_attachment_scope)
 					end
 				end
 				i := i + 1
@@ -7285,8 +7303,8 @@ feature {NONE} -- Expression validity
 				current_attachment_scope.copy_scope (l_old_attachment_scope)
 				l_else_attachment_scope := new_attachment_scope
 				l_else_attachment_scope.copy_scope (l_old_attachment_scope)
-				attachment_scope_builder.build_scope (l_conditional, current_attachment_scope)
-				attachment_scope_builder.build_negated_scope (l_conditional, l_else_attachment_scope)
+				attachment_scope_builder.build_scope (l_conditional, current_class, current_attachment_scope)
+				attachment_scope_builder.build_negated_scope (l_conditional, current_class, l_else_attachment_scope)
 			end
 			l_result_context_list := common_ancestor_type_list
 			l_old_result_context_list_count := l_result_context_list.count
@@ -7336,8 +7354,8 @@ feature {NONE} -- Expression validity
 					object_test_scope_builder.build_scope (l_conditional, current_object_test_scope, current_class_impl)
 					had_error := had_error or object_test_scope_builder.has_fatal_error
 					if current_system.attachment_type_conformance_mode then
-						attachment_scope_builder.build_scope (l_conditional, current_attachment_scope)
-						attachment_scope_builder.build_negated_scope (l_conditional, l_else_attachment_scope)
+						attachment_scope_builder.build_scope (l_conditional, current_class, current_attachment_scope)
+						attachment_scope_builder.build_negated_scope (l_conditional, current_class, l_else_attachment_scope)
 					end
 					l_expression_context := new_context (current_type)
 					check_expression_validity (l_elseif.then_expression, l_expression_context, current_target_type)
@@ -8630,7 +8648,7 @@ feature {NONE} -- Expression validity
 			l_old_object_test_scope := current_object_test_scope.count
 			if l_until_expression /= Void then
 				if current_system.attachment_type_conformance_mode then
-					attachment_scope_builder.build_negated_scope (l_until_expression, current_attachment_scope)
+					attachment_scope_builder.build_negated_scope (l_until_expression, current_class, current_attachment_scope)
 				end
 				object_test_scope_builder.build_negated_scope (l_until_expression, current_object_test_scope, current_class_impl)
 				had_error := had_error or object_test_scope_builder.has_fatal_error
@@ -11746,7 +11764,7 @@ feature {NONE} -- Expression validity
 				check_query_call_type_validity (a_call, a_query, a_context)
 				if current_system.attachment_type_conformance_mode then
 					if not a_context.is_type_attached then
-						if attached {ET_IDENTIFIER} l_name as l_identifier and then a_query.is_stable_attribute and then current_attachment_scope.has_attribute (l_identifier) then
+						if a_query.is_stable_attribute and then current_attachment_scope.has_attribute (a_query.name) then
 								-- Even though this attribute has not been declared as attached,
 								-- we can guarantee that at this stage this entity is attached.
 							a_context.force_last (tokens.attached_like_current)
@@ -12055,7 +12073,7 @@ feature {NONE} -- Expression validity
 					if current_system.attachment_type_conformance_mode then
 						current_attachment_scope := new_attachment_scope
 						current_attachment_scope.copy_scope (l_old_attachment_scope)
-						attachment_scope_builder.build_scope (l_target, current_attachment_scope)
+						attachment_scope_builder.build_scope (l_target, current_class, current_attachment_scope)
 					end
 					l_scope_changed := True
 				elseif l_name.is_infix_or_else or l_name.is_infix_or_else_symbol then
@@ -12067,7 +12085,7 @@ feature {NONE} -- Expression validity
 					if current_system.attachment_type_conformance_mode then
 						current_attachment_scope := new_attachment_scope
 						current_attachment_scope.copy_scope (l_old_attachment_scope)
-						attachment_scope_builder.build_negated_scope (l_target, current_attachment_scope)
+						attachment_scope_builder.build_negated_scope (l_target, current_class, current_attachment_scope)
 					end
 					l_scope_changed := True
 				end
@@ -17446,7 +17464,7 @@ feature {NONE} -- Attachments
 			nb := a_assertions.count
 			from i := 1 until i > nb loop
 				if attached a_assertions.assertion (i).expression as l_expression then
-					attachment_scope_builder.build_scope (l_expression, current_attachment_scope)
+					attachment_scope_builder.build_scope (l_expression, current_class, current_attachment_scope)
 				end
 				i := i + 1
 			end

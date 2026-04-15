@@ -5868,7 +5868,7 @@ feature {NONE} -- Parsing
 
 	parse_optional_compound (a_explicit: BOOLEAN)
 			-- Parse optional compound.
-			-- `a_explicit` means that the need an explicit AST node
+			-- `a_explicit` means that there is a need for an explicit AST node
 			-- even if the compound is empty.
 			-- Make the result available in `last_compound`.
 		local

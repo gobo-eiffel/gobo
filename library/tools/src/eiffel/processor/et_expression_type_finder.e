@@ -5,7 +5,7 @@
 		"Eiffel expression type finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_EXPRESSION_TYPE_FINDER
@@ -97,9 +97,9 @@ feature {NONE} -- Initialization
 			precursor (a_system_processor)
 			create type_checker.make (a_system_processor)
 			current_type := current_class
-			current_closure := dummy_feature
-			current_closure_impl := dummy_feature.implementation_feature
-			current_class_impl := dummy_feature.implementation_feature.implementation_class
+			current_closure := tokens.unknown_feature
+			current_closure_impl := tokens.unknown_feature
+			current_class_impl := tokens.unknown_class
 				-- Type contexts.
 			create unused_contexts.make (20)
 			current_context := new_context (current_type)
@@ -124,7 +124,7 @@ feature -- Basic operations
 			--
 			-- Note that it is assumed that `a_feature' has been successfully checked
 			-- in the context of `a_context.root_context' (using ET_FEATURE_CHECKER for example).
-			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaaa_error)
+			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaac_error)
 			-- if `a_feature' has not been checked or if `internal_error_enabled' has been set.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -147,7 +147,7 @@ feature -- Basic operations
 			--
 			-- Note that it is assumed that `a_feature' has been successfully checked
 			-- in the context of `a_context.root_context' (using ET_FEATURE_CHECKER for example).
-			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaaa_error)
+			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaac_error)
 			-- if `a_feature' has not been checked or if `internal_error_enabled' has been set.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -175,7 +175,7 @@ feature -- Basic operations
 			-- in the context of `a_context.root_context' as well as `a_feature_impl'
 			-- in the context of `a_feature_impl.implementation_class' (using
 			-- ET_FEATURE_CHECKER for example). Otherwise internal errors may be
-			-- reported (using ET_ERROR_HANDLER.report_giaaa_error) if `a_feature' or
+			-- reported (using ET_ERROR_HANDLER.report_giaac_error) if `a_feature' or
 			-- `a_feature_impl' has not been checked or if `internal_error_enabled'
 			-- has been set.
 		require
@@ -202,7 +202,7 @@ feature -- Basic operations
 			-- in the context of `a_context.root_context' as well as `a_feature_impl'
 			-- in the context of `a_feature_impl.implementation_class' (using
 			-- ET_FEATURE_CHECKER for example). Otherwise internal errors may be
-			-- reported (using ET_ERROR_HANDLER.report_giaaa_error) if `a_feature' or
+			-- reported (using ET_ERROR_HANDLER.report_giaac_error) if `a_feature' or
 			-- `a_feature_impl' has not been checked or if `internal_error_enabled'
 			-- has been set.
 		require
@@ -226,7 +226,7 @@ feature -- Basic operations
 			--
 			-- Note that it is assumed that `a_invariant' has been successfully checked
 			-- in the context of `a_context.root_context' (using ET_FEATURE_CHECKER for example).
-			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaaa_error)
+			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaac_error)
 			--  if `a_invariant' has not been checked or if `internal_error_enabled' has been set.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -251,7 +251,7 @@ feature -- Basic operations
 			-- in the context of `a_context.root_context' as well as `a_closure_impl'
 			-- in the context of `a_class_impl' (using  ET_FEATURE_CHECKER for example).
 			-- Otherwise internal errors may be reported (using
-			-- ET_ERROR_HANDLER.report_giaaa_error) if `a_closure' or `a_closure_impl'
+			-- ET_ERROR_HANDLER.report_giaac_error) if `a_closure' or `a_closure_impl'
 			-- has not been checked or if `internal_error_enabled' has been set.
 		require
 			a_expression_not_void: a_expression /= Void
@@ -406,12 +406,9 @@ feature {NONE} -- Expression processing
 		require
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
-		local
-			l_type: ET_TYPE
 		do
 			reset_fatal_error (False)
-			l_type := an_expression.type
-			a_context.force_last (l_type)
+			a_context.force_last (an_expression.type)
 		end
 
 	find_convert_from_expression_type (an_expression: ET_CONVERT_FROM_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -573,8 +570,6 @@ feature {NONE} -- Expression processing
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_procedure: detachable ET_PROCEDURE
-			l_query: detachable ET_QUERY
 			l_name: ET_FEATURE_NAME
 			l_seed: INTEGER
 			l_type: detachable ET_TYPE
@@ -589,7 +584,7 @@ feature {NONE} -- Expression processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_feature_address_type", 1, "unknown feature.")
 				end
 			elseif
 				l_name.is_argument or
@@ -612,43 +607,36 @@ feature {NONE} -- Expression processing
 						-- Use the ETL2 implementation: the type of '$iteration_item' is POINTER.
 					a_context.force_last (current_universe_impl.pointer_type)
 				end
-			else
-					-- This is of the form '$feature_name'.
-				l_procedure := current_class.seeded_procedure (l_seed)
-				if l_procedure /= Void then
+			elseif attached current_class.seeded_procedure (l_seed) as l_procedure then
+					-- $feature_name is of type POINTER, even
+					-- in ISE and its TYPED_POINTER support.
+				a_context.force_last (current_universe_impl.pointer_type)
+			elseif attached current_class.seeded_query (l_seed) as l_query then
+				if l_query.is_attribute then
+					l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
+					l_typed_pointer_class := l_typed_pointer_type.named_base_class
+					if l_typed_pointer_class.actual_class.is_preparsed then
+							-- Class TYPED_POINTER has been found in the universe.
+							-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
+						l_type := l_query.type
+						a_context.force_last (l_type)
+						a_context.force_last (l_typed_pointer_type)
+					else
+							-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
+						a_context.force_last (current_universe_impl.pointer_type)
+					end
+				else
 						-- $feature_name is of type POINTER, even
 						-- in ISE and its TYPED_POINTER support.
 					a_context.force_last (current_universe_impl.pointer_type)
-				else
-					l_query := current_class.seeded_query (l_seed)
-					if l_query /= Void then
-						if l_query.is_attribute then
-							l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
-							l_typed_pointer_class := l_typed_pointer_type.named_base_class
-							if l_typed_pointer_class.actual_class.is_preparsed then
-									-- Class TYPED_POINTER has been found in the universe.
-									-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
-								l_type := l_query.type
-								a_context.force_last (l_type)
-								a_context.force_last (l_typed_pointer_type)
-							else
-									-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
-								a_context.force_last (current_universe_impl.pointer_type)
-							end
-						else
-								-- $feature_name is of type POINTER, even
-								-- in ISE and its TYPED_POINTER support.
-							a_context.force_last (current_universe_impl.pointer_type)
-						end
-					else
-							-- Internal error: if we got a seed, `l_query' should not be void.
-							-- This error should have already been reported when checking
-							-- `current_feature' (using ET_FEATURE_CHECKER for example).
-						set_fatal_error
-						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
-						end
-					end
+				end
+			else
+					-- Internal error: if we got a seed, `l_query' should not be void.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaac_error (generator, "find_feature_address_type", 2, "unknown feature.")
 				end
 			end
 		end
@@ -663,7 +651,6 @@ feature {NONE} -- Expression processing
 			a_context_not_void: a_context /= Void
 		local
 			l_seed: INTEGER
-			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			l_formal: ET_FORMAL_ARGUMENT
 			l_type: ET_TYPE
 		do
@@ -690,15 +677,14 @@ feature {NONE} -- Expression processing
 				--    end
 				-- `a' in the inherited precondition "pre" should be considered
 				-- of type STRING (and not ANY) is class B.
-			l_arguments := current_closure.arguments
 			l_seed := a_name.seed
-			if l_arguments = Void then
+			if not attached current_closure.arguments as l_arguments  then
 					-- Internal error.
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_formal_argument_type", 1, "unknown arguments.")
 				end
 			elseif l_seed < 1 or l_seed > l_arguments.count then
 					-- Internal error.
@@ -706,7 +692,7 @@ feature {NONE} -- Expression processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_formal_argument_type", 2, "unknown argument.")
 				end
 			else
 				l_formal := l_arguments.formal_argument (l_seed)
@@ -761,8 +747,8 @@ feature {NONE} -- Expression processing
 				current_attachment_scope.copy_scope (l_old_attachment_scope)
 				l_else_attachment_scope := new_attachment_scope
 				l_else_attachment_scope.copy_scope (l_old_attachment_scope)
-				attachment_scope_builder.build_scope (l_conditional, current_attachment_scope)
-				attachment_scope_builder.build_negated_scope (l_conditional, l_else_attachment_scope)
+				attachment_scope_builder.build_scope (l_conditional, current_class, current_attachment_scope)
+				attachment_scope_builder.build_negated_scope (l_conditional, current_class, l_else_attachment_scope)
 			end
 			l_detachable_separate_any_type := current_system.detachable_separate_any_type
 			l_result_context_list := common_ancestor_type_list
@@ -784,8 +770,8 @@ feature {NONE} -- Expression processing
 					end
 					l_conditional := l_elseif.conditional.expression
 					if current_system.attachment_type_conformance_mode then
-						attachment_scope_builder.build_scope (l_conditional, current_attachment_scope)
-						attachment_scope_builder.build_negated_scope (l_conditional, l_else_attachment_scope)
+						attachment_scope_builder.build_scope (l_conditional, current_class, current_attachment_scope)
+						attachment_scope_builder.build_negated_scope (l_conditional, current_class, l_else_attachment_scope)
 					end
 					l_expression_context := new_context (current_type)
 					find_expression_type (l_elseif.then_expression, l_expression_context, l_detachable_separate_any_type)
@@ -836,12 +822,9 @@ feature {NONE} -- Expression processing
 		require
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
-		local
-			l_type: ET_TYPE
 		do
 			reset_fatal_error (False)
-			l_type := an_expression.type
-			a_context.force_last (l_type)
+			a_context.force_last (an_expression.type)
 		end
 
 	find_infix_expression_type (an_expression: ET_INFIX_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -851,71 +834,8 @@ feature {NONE} -- Expression processing
 		require
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
-		local
-			l_name: ET_CALL_NAME
-			l_target: ET_EXPRESSION
-			l_class: ET_CLASS
-			l_query: detachable ET_QUERY
-			l_type: ET_TYPE
-			l_seed: INTEGER
-			l_actual: ET_EXPRESSION
-			l_formal_context: ET_NESTED_TYPE_CONTEXT
 		do
-			reset_fatal_error (False)
-			l_name := an_expression.name
-			l_target := an_expression.left
-			l_seed := l_name.seed
-			find_expression_type (l_target, a_context, current_system.detachable_separate_any_type)
-			if has_fatal_error then
-				-- Do nothing.
-			elseif l_seed <= 0 then
-					-- This error should have already been reported when checking
-					-- `current_feature' (using ET_FEATURE_CHECKER for example).
-				set_fatal_error
-				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
-				end
-			else
-				l_class := a_context.base_class
-				l_query := l_class.seeded_query (l_seed)
-				if l_query = Void then
-						-- Internal error: if we got a seed, the `l_query' should not be void.
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
-					end
-				else
--- TODO: like argument (the following is just a workaround
--- which works only in a limited number of cases, in particular
--- for ANY.clone).
-					l_type := l_query.type
-					if attached {ET_LIKE_FEATURE} l_type as l_like and then l_like.is_like_argument and then attached l_query.arguments as l_formal_arguments and then l_formal_arguments.count = 1 then
-						l_formal_context := new_context (current_type)
-						l_formal_context.copy_type_context (a_context)
-						l_formal_context.force_last (l_formal_arguments.formal_argument (1).type)
-						a_context.wipe_out
-						l_actual := an_expression.right
-						find_expression_type (l_actual, a_context, l_formal_context)
-						free_context (l_formal_context)
-						if not has_fatal_error then
-							if attached {ET_CONVERT_EXPRESSION} l_actual as l_convert_expression then
-								if attached {ET_BUILTIN_CONVERT_FEATURE} l_convert_expression.convert_feature as l_builtin then
-										-- Needed for compatibility with ISE 5.6.0610:
-										-- a formal generic parameter either conforms or converts to its constraint,
-										-- then the converted version can still be chained with a conformance to
-										-- `current_target_type'.
-									a_context.reset (current_type)
-									a_context.force_last (l_builtin.type)
-								end
-							end
-						end
-					else
-						a_context.force_last (l_type)
-					end
-				end
-			end
+			find_qualified_call_expression_type (an_expression, a_context)
 		end
 
 	find_inline_separate_argument_type (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -929,18 +849,16 @@ feature {NONE} -- Expression processing
 		local
 			l_seed: INTEGER
 			l_inline_separate_argument: ET_INLINE_SEPARATE_ARGUMENT
-			l_inline_separate_arguments: detachable ET_INLINE_SEPARATE_ARGUMENT_LIST
 		do
 			reset_fatal_error (False)
 			l_seed := a_name.seed
-			l_inline_separate_arguments := current_closure_impl.inline_separate_arguments
-			if l_inline_separate_arguments = Void then
+			if not attached current_closure_impl.inline_separate_arguments as l_inline_separate_arguments then
 					-- Internal error.
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_inline_separate_argument_type", 1, "unknown inline separate arguments.")
 				end
 			elseif l_seed < 1 or l_seed > l_inline_separate_arguments.count then
 					-- Internal error.
@@ -948,7 +866,7 @@ feature {NONE} -- Expression processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_inline_separate_argument_type", 2, "unknown inline separate argument.")
 				end
 			else
 				l_inline_separate_argument := l_inline_separate_arguments.argument (l_seed)
@@ -1058,21 +976,19 @@ feature {NONE} -- Expression processing
 			l_name: ET_IDENTIFIER
 			l_seed: INTEGER
 			l_iteration_component: ET_ITERATION_COMPONENT
-			l_iteration_components: detachable ET_ITERATION_COMPONENT_LIST
 		do
 			reset_fatal_error (False)
 			l_name := a_iteration_cursor.item_name
 			if l_name.is_iteration_item then
 				l_seed := l_name.seed
 			end
-			l_iteration_components := current_closure_impl.iteration_components
-			if l_iteration_components = Void then
+			if not attached current_closure_impl.iteration_components as l_iteration_components then
 					-- Internal error.
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_iteration_cursor_type", 1, "unknown iteration components.")
 				end
 			elseif l_seed < 1 or l_seed > l_iteration_components.count then
 					-- Internal error.
@@ -1080,7 +996,7 @@ feature {NONE} -- Expression processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_iteration_cursor_type", 2, "unknown iteration component.")
 				end
 			else
 				l_iteration_component := l_iteration_components.iteration_component (l_seed)
@@ -1099,18 +1015,16 @@ feature {NONE} -- Expression processing
 		local
 			l_seed: INTEGER
 			l_iteration_component: ET_ITERATION_COMPONENT
-			l_iteration_components: detachable ET_ITERATION_COMPONENT_LIST
 		do
 			reset_fatal_error (False)
 			l_seed := a_name.seed
-			l_iteration_components := current_closure_impl.iteration_components
-			if l_iteration_components = Void then
+			if not attached current_closure_impl.iteration_components as l_iteration_components then
 					-- Internal error.
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_iteration_item_type", 1, "unknown iteration components.")
 				end
 			elseif l_seed < 1 or l_seed > l_iteration_components.count then
 					-- Internal error.
@@ -1118,7 +1032,7 @@ feature {NONE} -- Expression processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_iteration_item_type", 2, "unknown iteration component.")
 				end
 			else
 				l_iteration_component := l_iteration_components.iteration_component (l_seed)
@@ -1140,20 +1054,18 @@ feature {NONE} -- Expression processing
 			a_context_not_void: a_context /= Void
 		local
 			l_seed: INTEGER
-			l_locals: detachable ET_LOCAL_VARIABLE_LIST
 			l_local: ET_LOCAL_VARIABLE
 			l_type: ET_TYPE
 		do
 			reset_fatal_error (False)
-			l_locals := current_closure_impl.locals
 			l_seed := a_name.seed
-			if l_locals = Void then
+			if not attached current_closure_impl.locals as l_locals then
 					-- Internal error.
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_local_variable_type", 1, "unknown local variables.")
 				end
 			elseif l_seed < 1 or l_seed > l_locals.count then
 					-- Internal error.
@@ -1161,7 +1073,7 @@ feature {NONE} -- Expression processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_local_variable_type", 2, "unknown local variable.")
 				end
 			else
 				l_local := l_locals.local_variable (l_seed)
@@ -1510,15 +1422,10 @@ feature {NONE} -- Expression processing
 		require
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
-		local
-			l_type: ET_TYPE
-			l_type_type: ET_CLASS_TYPE
 		do
 			reset_fatal_error (False)
-			l_type := an_expression.type
-			a_context.force_last (l_type)
-			l_type_type := current_universe_impl.type_identity_type
-			a_context.force_last (l_type_type)
+			a_context.force_last (an_expression.type)
+			a_context.force_last (current_universe_impl.type_identity_type)
 		end
 
 	find_object_equality_expression_type (an_expression: ET_OBJECT_EQUALITY_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -1557,18 +1464,16 @@ feature {NONE} -- Expression processing
 			l_seed: INTEGER
 			l_type: detachable ET_TYPE
 			l_object_test: ET_NAMED_OBJECT_TEST
-			l_object_tests: detachable ET_OBJECT_TEST_LIST
 		do
 			reset_fatal_error (False)
 			l_seed := a_name.seed
-			l_object_tests := current_closure_impl.object_tests
-			if l_object_tests = Void then
+			if not attached current_closure_impl.object_tests as l_object_tests then
 					-- Internal error.
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_object_test_local_type", 1, "unknown object tests.")
 				end
 			elseif l_seed < 1 or l_seed > l_object_tests.count then
 					-- Internal error.
@@ -1576,7 +1481,7 @@ feature {NONE} -- Expression processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_object_test_local_type", 2, "unknown object test local.")
 				end
 			else
 				l_object_test := l_object_tests.object_test (l_seed)
@@ -1653,41 +1558,33 @@ feature {NONE} -- Expression processing
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_precursor_keyword: ET_PRECURSOR_KEYWORD
-			l_query: detachable ET_QUERY
-			l_parent_type: detachable ET_BASE_TYPE
-			l_class: ET_CLASS
 			l_type: ET_TYPE
+			l_seed: INTEGER
 		do
 			reset_fatal_error (False)
-			l_parent_type := an_expression.parent_type
-			if l_parent_type = Void then
+			l_seed := an_expression.precursor_keyword.seed
+			if not attached an_expression.parent_type as l_parent_type then
 					-- Internal error: the Precursor construct should already have been
 					-- resolved when flattening the features of `current_class_impl'.
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_precursor_expression_type", 1, "unknown parent type.")
+				end
+			elseif not attached l_parent_type.base_class.seeded_query (l_seed) as l_query then
+					-- Internal error: the Precursor construct should already have been
+					-- resolved when flattening the features of `current_class_impl'.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaac_error (generator, "find_precursor_expression_type", 2, "unknown query.")
 				end
 			else
-				l_precursor_keyword := an_expression.precursor_keyword
-				l_class := l_parent_type.base_class
-				l_query := l_class.seeded_query (l_precursor_keyword.seed)
-				if l_query = Void then
-						-- Internal error: the Precursor construct should already have been
-						-- resolved when flattening the features of `current_class_impl'.
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
-					end
-				else
 -- TODO: like argument.
-					l_type := l_query.type
-					a_context.force_last (l_type)
-				end
+				l_type := l_query.type
+				a_context.force_last (l_type)
 			end
 		end
 
@@ -1714,7 +1611,6 @@ feature {NONE} -- Expression processing
 			l_name: ET_CALL_NAME
 			l_actuals: detachable ET_ACTUAL_ARGUMENTS
 			l_class: ET_CLASS
-			l_query: detachable ET_QUERY
 			l_type: ET_TYPE
 			l_seed: INTEGER
 			l_actual: ET_EXPRESSION
@@ -1733,7 +1629,7 @@ feature {NONE} -- Expression processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_qualified_call_expression_type", 1, "unknown seed.")
 				end
 			elseif l_name.is_tuple_label then
 				if l_seed > a_context.base_type_actual_count then
@@ -1745,7 +1641,7 @@ feature {NONE} -- Expression processing
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "find_qualified_call_expression_type", 2, "unknown tuple label.")
 					end
 				else
 					l_class := a_context.base_class
@@ -1753,15 +1649,14 @@ feature {NONE} -- Expression processing
 					a_context.force_last (l_type)
 				end
 			else
-				l_class := a_context.base_class
-				l_query := l_class.seeded_query (l_seed)
-				if l_query = Void then
+				l_class := a_context.adapted_base_class_with_seeded_feature (l_seed).base_class
+				if not attached l_class.seeded_query (l_seed) as l_query then
 						-- Internal error: if we got a seed, `l_query' should not be void.
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "find_qualified_call_expression_type", 3, "unknown query.")
 					end
 				else
 					l_type := l_query.type
@@ -1902,7 +1797,7 @@ feature {NONE} -- Expression processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_result_type", 1, "Result not in query.")
 				end
 			else
 				a_context.force_last (l_type)
@@ -1968,7 +1863,7 @@ feature {NONE} -- Expression processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_result_address_type", 1, "Result not in query.")
 				end
 			else
 				l_typed_pointer_type := current_universe_impl.typed_pointer_identity_type
@@ -2005,7 +1900,6 @@ feature {NONE} -- Expression processing
 			a_context_not_void: a_context /= Void
 		local
 			l_class: ET_CLASS
-			l_query: detachable ET_QUERY
 			l_type: ET_TYPE
 			l_result_type: ET_TYPE
 			l_name: ET_FEATURE_NAME
@@ -2020,19 +1914,18 @@ feature {NONE} -- Expression processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_static_call_expression_type", 1, "unknown seed.")
 				end
 			else
 				a_context.force_last (l_type)
-				l_class := a_context.base_class
-				l_query := l_class.seeded_query (l_seed)
-				if l_query = Void then
+				l_class := a_context.adapted_base_class_with_seeded_feature (l_seed).base_class
+				if not attached l_class.seeded_query (l_seed) as l_query then
 						-- Internal error: if we got a seed, `l_query' should not be void.
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "find_static_call_expression_type", 2, "unknown query.")
 					end
 				else
 -- TODO: check that `l_query' is a constant attribute or an external function.
@@ -2099,7 +1992,6 @@ feature {NONE} -- Expression processing
 		local
 			l_name: ET_CALL_NAME
 			l_actuals: detachable ET_ACTUAL_ARGUMENTS
-			l_query: detachable ET_QUERY
 			l_type: ET_TYPE
 			l_seed: INTEGER
 			l_actual: ET_EXPRESSION
@@ -2114,56 +2006,53 @@ feature {NONE} -- Expression processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_unqualified_call_expression_type", 1, "unknown seed.")
+				end
+			elseif not attached current_class.seeded_query (l_seed) as l_query  then
+					-- Internal error: if we got a seed, `l_query' should not be void.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaac_error (generator, "find_unqualified_call_expression_type", 2, "unknown query.")
 				end
 			else
-				l_query := current_class.seeded_query (l_seed)
-				if l_query = Void then
-						-- Internal error: if we got a seed, `l_query' should not be void.
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
-					end
-				else
-					l_type := l_query.type
+				l_type := l_query.type
 -- TODO: like argument (the following is just a workaround
 -- which works only in a limited number of cases, in particular
 -- for ANY.clone).
-					if attached {ET_LIKE_FEATURE} l_type as l_like and then l_like.is_like_argument and then attached l_query.arguments as l_formal_arguments and then l_formal_arguments.count = 1 then
-						if l_actuals /= Void and then l_actuals.count = 1 then
-							l_formal_context := new_context (current_type)
-							l_formal_context.force_last (l_formal_arguments.formal_argument (1).type)
-							a_context.wipe_out
-							l_actual := l_actuals.actual_argument (1)
-							find_expression_type (l_actual, a_context, l_formal_context)
-							free_context (l_formal_context)
-							if not has_fatal_error then
-								if attached {ET_CONVERT_EXPRESSION} l_actual as l_convert_expression then
-									if attached {ET_BUILTIN_CONVERT_FEATURE} l_convert_expression.convert_feature as l_builtin then
-											-- Needed for compatibility with ISE 5.6.0610:
-											-- a formal generic parameter either conforms or converts to its constraint,
-											-- then the converted version can still be chained with a conformance to
-											-- `current_target_type'.
-										a_context.reset (current_type)
-										a_context.force_last (l_builtin.type)
-									end
+				if attached {ET_LIKE_FEATURE} l_type as l_like and then l_like.is_like_argument and then attached l_query.arguments as l_formal_arguments and then l_formal_arguments.count = 1 then
+					if l_actuals /= Void and then l_actuals.count = 1 then
+						l_formal_context := new_context (current_type)
+						l_formal_context.force_last (l_formal_arguments.formal_argument (1).type)
+						a_context.wipe_out
+						l_actual := l_actuals.actual_argument (1)
+						find_expression_type (l_actual, a_context, l_formal_context)
+						free_context (l_formal_context)
+						if not has_fatal_error then
+							if attached {ET_CONVERT_EXPRESSION} l_actual as l_convert_expression then
+								if attached {ET_BUILTIN_CONVERT_FEATURE} l_convert_expression.convert_feature as l_builtin then
+										-- Needed for compatibility with ISE 5.6.0610:
+										-- a formal generic parameter either conforms or converts to its constraint,
+										-- then the converted version can still be chained with a conformance to
+										-- `current_target_type'.
+									a_context.reset (current_type)
+									a_context.force_last (l_builtin.type)
 								end
 							end
-						else
-							a_context.force_last (l_type)
 						end
 					else
 						a_context.force_last (l_type)
 					end
-					if current_system.attachment_type_conformance_mode then
-						if not a_context.is_type_attached then
-							if attached {ET_IDENTIFIER} l_name as l_identifier and then l_query.is_stable_attribute and then current_attachment_scope.has_attribute (l_identifier) then
-									-- Even though this attribute has not been declared as attached,
-									-- we can guarantee that at this stage this entity is attached.
-								a_context.force_last (tokens.attached_like_current)
-							end
+				else
+					a_context.force_last (l_type)
+				end
+				if current_system.attachment_type_conformance_mode then
+					if not a_context.is_type_attached then
+						if l_query.is_stable_attribute and then current_attachment_scope.has_attribute (l_query.name) then
+								-- Even though this attribute has not been declared as attached,
+								-- we can guarantee that at this stage this entity is attached.
+							a_context.force_last (tokens.attached_like_current)
 						end
 					end
 				end
@@ -2243,7 +2132,7 @@ feature {NONE} -- Agent validity
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "find_call_agent_type", 1, "unknown agent target type.")
 					end
 				end
 			end
@@ -2259,8 +2148,6 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
-			l_query: detachable ET_QUERY
-			l_procedure: detachable ET_PROCEDURE
 			a_seed: INTEGER
 		do
 			reset_fatal_error (False)
@@ -2271,35 +2158,30 @@ feature {NONE} -- Agent validity
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_unqualified_call_agent_type", 1, "unknown seed.")
 				end
 			elseif an_expression.is_procedure then
-				l_procedure := current_class.seeded_procedure (a_seed)
-				if l_procedure = Void then
+				if not attached current_class.seeded_procedure (a_seed) as l_procedure then
 						-- Internal error: if we got a seed, `l_procedure' should not be void.
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "find_unqualified_call_agent_type", 2, "unknown procedure.")
 					end
 				else
 					find_unqualified_procedure_call_agent_type (an_expression, l_procedure, a_context)
 				end
-			else
-					-- We still need to find `l_query'.
-				l_query := current_class.seeded_query (a_seed)
-				if l_query = Void then
-						-- Internal error: if we got a seed, `l_query' should not be void.
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
-					end
-				else
-					find_unqualified_query_call_agent_type (an_expression, l_query, a_context)
+			elseif not attached current_class.seeded_query (a_seed) as l_query  then
+					-- Internal error: if we got a seed, `l_query' should not be void.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaac_error (generator, "find_unqualified_call_agent_type", 3, "unknown query.")
 				end
+			else
+				find_unqualified_query_call_agent_type (an_expression, l_query, a_context)
 			end
 		end
 
@@ -2406,8 +2288,6 @@ feature {NONE} -- Agent validity
 		local
 			a_name: ET_FEATURE_NAME
 			a_class: ET_CLASS
-			l_query: detachable ET_QUERY
-			l_procedure: detachable ET_PROCEDURE
 			a_seed: INTEGER
 		do
 			reset_fatal_error (False)
@@ -2421,7 +2301,7 @@ feature {NONE} -- Agent validity
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_qualified_call_agent_type", 1, "unknown seed.")
 				end
 			elseif a_name.is_tuple_label then
 -- TODO: when `a_target' is an identifier, check whether it is either
@@ -2430,15 +2310,14 @@ feature {NONE} -- Agent validity
 			elseif an_expression.is_procedure then
 -- TODO: when `a_target' is an identifier, check whether it is either
 -- a local variable, a formal argument or the name of an attribute.
-				a_class := a_context.base_class
-				l_procedure := a_class.seeded_procedure (a_seed)
-				if l_procedure = Void then
+				a_class := a_context.adapted_base_class_with_seeded_feature (a_seed).base_class
+				if not attached a_class.seeded_procedure (a_seed) as l_procedure then
 						-- Internal error: if we got a seed, `l_procedure' should not be void.
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "find_qualified_call_agent_type", 2, "unknown procedure.")
 					end
 				else
 					find_qualified_procedure_call_agent_type (an_expression, l_procedure, a_context)
@@ -2446,15 +2325,14 @@ feature {NONE} -- Agent validity
 			else
 -- TODO: when `a_target' is an identifier, check whether it is either
 -- a local variable, a formal argument or the name of an attribute.
-				a_class := a_context.base_class
-				l_query := a_class.seeded_query (a_seed)
-				if l_query = Void then
+				a_class := a_context.adapted_base_class_with_seeded_feature (a_seed).base_class
+				if not attached a_class.seeded_query (a_seed) as l_query  then
 						-- Internal error: if we got a seed, `l_query' should not be void.
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "find_qualified_call_agent_type", 3, "unknown query.")
 					end
 				else
 					find_qualified_query_call_agent_type (an_expression, l_query, a_context)
@@ -2605,8 +2483,6 @@ feature {NONE} -- Agent validity
 		local
 			a_name: ET_FEATURE_NAME
 			a_class: ET_CLASS
-			l_query: detachable ET_QUERY
-			l_procedure: detachable ET_PROCEDURE
 			a_seed: INTEGER
 			a_target_type: ET_TYPE
 		do
@@ -2619,37 +2495,35 @@ feature {NONE} -- Agent validity
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "find_typed_call_agent_type", 1, "unknown seed.")
 				end
 			elseif a_name.is_tuple_label then
 				a_context.force_last (a_target_type)
 				find_typed_tuple_label_call_agent_type (an_expression, a_context)
 			elseif an_expression.is_procedure then
 				a_context.force_last (a_target_type)
-				a_class := a_context.base_class
-				l_procedure := a_class.seeded_procedure (a_seed)
-				if l_procedure = Void then
+				a_class := a_context.adapted_base_class_with_seeded_feature (a_seed).base_class
+				if not attached a_class.seeded_procedure (a_seed) as l_procedure  then
 						-- Internal error: if we got a seed, `l_procedure' should not be void.
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "find_typed_call_agent_type", 2, "unknown procedure.")
 					end
 				else
 					find_typed_procedure_call_agent_type (an_expression, l_procedure, a_context)
 				end
 			else
 				a_context.force_last (a_target_type)
-				a_class := a_context.base_class
-				l_query := a_class.seeded_query (a_seed)
-				if l_query = Void then
+				a_class := a_context.adapted_base_class_with_seeded_feature (a_seed).base_class
+				if not attached a_class.seeded_query (a_seed) as l_query then
 						-- Internal error: if we got a seed, `l_query' should not be void.
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "find_typed_call_agent_type", 3, "unknown query.")
 					end
 				else
 					find_typed_query_call_agent_type (an_expression, l_query, a_context)
@@ -2978,7 +2852,7 @@ feature {NONE} -- Agent validity
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
 						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "fill_open_operands", 1, "invalid number of actual arguments.")
 						end
 					end
 				elseif l_formals = Void or else l_formals.count /= l_actual_list.count then
@@ -2987,7 +2861,7 @@ feature {NONE} -- Agent validity
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "fill_open_operands", 2, "invalid number of actual arguments.")
 					end
 				else
 					nb := l_actual_list.count
@@ -3008,6 +2882,9 @@ feature {NONE} -- Agent validity
 								-- This error should have already been reported when checking
 								-- `current_feature' (using ET_FEATURE_CHECKER for example).
 							set_fatal_error
+							if internal_error_enabled or not current_class.has_implementation_error then
+								error_handler.report_giaac_error (generator, "fill_open_operands", 3, "invalid kind of agent argument.")
+							end
 						end
 						i := i - 1
 					end
@@ -3188,7 +3065,7 @@ feature {ET_AST_NODE} -- Processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "process_identifier", 1, "invalid kind of identifier.")
 				end
 			end
 		end
@@ -3667,19 +3544,6 @@ feature {NONE} -- Common ancestor type
 			--
 			-- Note: For more details about Common Ancestor Type, see:
 			-- https://www.eiffel.org/doc/version/trunk/eiffel/Types#Common_ancestor_types
-
-feature {NONE} -- Constants
-
-	dummy_feature: ET_FEATURE
-			-- Dummy feature
-		local
-			a_name: ET_FEATURE_NAME
-		once
-			create {ET_IDENTIFIER} a_name.make ("**dummy**")
-			create {ET_DEFERRED_PROCEDURE} Result.make (a_name, Void, current_class)
-		ensure
-			dummy_feature_not_void: Result /= Void
-		end
 
 invariant
 

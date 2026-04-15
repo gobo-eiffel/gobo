@@ -12,9 +12,16 @@ class ET_AGENT_IMPLICIT_CURRENT_TARGET
 
 inherit
 
+	ET_CURRENT_OPERAND
+		undefine
+			break
+		end
+
 	ET_AGENT_TARGET
+		undefine
+			is_current,
+			is_instance_free
 		redefine
-			is_instance_free,
 			break
 		end
 
@@ -63,16 +70,10 @@ feature -- Access
 		do
 		end
 
-feature -- Status report
-
-	is_instance_free: BOOLEAN
-			-- Does current operand not depend on 'Current' or its attributes?
-			-- Note that we do not consider unqualified calls and Precursors as
-			-- instance-free because it's not always possible syntactically
-			-- to determine whether the feature being called is a class feature
-			-- or not.
+	hash_code: INTEGER
+			-- Hash code value
 		do
-			Result := False
+			Result := position.line
 		end
 
 feature -- Processing

@@ -14,6 +14,7 @@ inherit
 
 	ET_AST_NULL_PROCESSOR
 		redefine
+			make,
 			process_equality_expression,
 			process_infix_expression,
 			process_named_object_test,
@@ -23,9 +24,21 @@ inherit
 			process_prefix_expression
 		end
 
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
+
 create
 
 	make
+
+feature {NONE} -- Initialization
+
+	make
+			-- Create a new attachment scope builder.
+		do
+			current_class := tokens.unknown_class
+			precursor
+		end
 
 feature -- Status report
 
@@ -39,42 +52,55 @@ feature -- Access
 	scope: detachable ET_ATTACHMENT_SCOPE
 			-- Scope being built
 
+	current_class: ET_CLASS
+			-- Class being processed
+
 feature -- Basic operations
 
-	build_scope (a_expression: ET_EXPRESSION; a_scope: ET_ATTACHMENT_SCOPE)
+	build_scope (a_expression: ET_EXPRESSION; a_class: ET_CLASS; a_scope: ET_ATTACHMENT_SCOPE)
 			-- Add to `a_scope' the entities found in `a_expression'
-			-- that are guaranteed to be attached if `a_expression'
-			-- is evaluated to True.
+			-- (when viewed from `a_class`) that are guaranteed to be
+			-- attached if `a_expression' is evaluated to True.
 		require
 			a_expression_not_void: a_expression /= Void
+			a_class_not_void: a_class /= Void
 		local
 			old_negated: BOOLEAN
 			old_scope: like scope
+			old_class: like current_class
 		do
+			old_class := current_class
+			current_class := a_class
 			old_scope := scope
 			scope := a_scope
 			old_negated := is_negated
 			is_negated := False
 			a_expression.process (Current)
+			current_class := old_class
 			is_negated := old_negated
 			scope := old_scope
 		end
 
-	build_negated_scope (a_expression: ET_EXPRESSION; a_scope: ET_ATTACHMENT_SCOPE)
+	build_negated_scope (a_expression: ET_EXPRESSION; a_class: ET_CLASS; a_scope: ET_ATTACHMENT_SCOPE)
 			-- Add to `a_scope' the entities found in `a_expression'
-			-- that are guaranteed to be attached if `a_expression'
-			-- is evaluated to False.
+			-- (when viewed from `a_class`) that are guaranteed to be
+			-- attached if `a_expression' is evaluated to False.
 		require
 			a_expression_not_void: a_expression /= Void
+			a_class_not_void: a_class /= Void
 		local
 			old_negated: BOOLEAN
 			old_scope: like scope
+			old_class: like current_class
 		do
+			old_class := current_class
+			current_class := a_class
 			old_scope := scope
 			scope := a_scope
 			old_negated := is_negated
 			is_negated := True
 			a_expression.process (Current)
+			current_class := old_class
 			is_negated := old_negated
 			scope := old_scope
 		end
@@ -91,13 +117,17 @@ feature {ET_AST_NODE} -- Processing
 			elseif attached {ET_RESULT} a_expression then
 				l_scope.add_result
 			elseif attached {ET_IDENTIFIER} a_expression as l_identifier then
-				if l_identifier.is_local or l_identifier.is_argument or l_identifier.is_inline_separate_argument or l_identifier.is_feature_name then
+				if l_identifier.is_local or l_identifier.is_argument or l_identifier.is_inline_separate_argument then
 					l_scope.add_name (l_identifier)
+				elseif l_identifier.is_feature_name and then attached current_class.seeded_query (l_identifier.seed) as l_attribute then
+					l_scope.add_attribute (l_attribute.name)
 				end
 			elseif attached {ET_UNQUALIFIED_CALL_EXPRESSION} a_expression as l_unqualified_call then
 					-- This might be a stable attribute.
 				if l_unqualified_call.arguments = Void and then l_unqualified_call.parenthesis_call = Void and then attached {ET_IDENTIFIER} l_unqualified_call.name as l_identifier then
-					l_scope.add_name (l_identifier)
+					if l_identifier.is_feature_name and then attached current_class.seeded_query (l_identifier.seed) as l_attribute then
+						l_scope.add_attribute (l_attribute.name)
+					end
 				end
 			end
 		end
@@ -183,5 +213,9 @@ feature {ET_AST_NODE} -- Processing
 				end
 			end
 		end
+
+invariant
+
+	current_class_not_void: current_class /= Void
 
 end

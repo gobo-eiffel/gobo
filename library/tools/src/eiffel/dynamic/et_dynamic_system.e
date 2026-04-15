@@ -5,7 +5,7 @@
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_DYNAMIC_SYSTEM
@@ -421,13 +421,13 @@ feature -- Types
 					-- Add the new dynamic type and keep track
 					-- of its associated index.
 				if full_class_checking then
-					l_base_class.process (system_processor.implementation_checker)
-					if not l_base_class.implementation_checked or else l_base_class.has_implementation_error then
+					l_base_class.process (system_processor.attached_attribute_initialization_checker)
+					if not l_base_class.attached_attribute_initialization_checked_successfully then
 						set_fatal_error
 					end
 				else
 					l_base_class.process (system_processor.interface_checker)
-					if not l_base_class.interface_checked or else l_base_class.has_interface_error then
+					if not l_base_class.interface_checked_successfully then
 						set_fatal_error
 					end
 				end

@@ -53,7 +53,7 @@ inherit
 		end
 
 	ET_SHARED_TOKEN_CONSTANTS
-		export {NONE} end
+		export {NONE} all end
 
 create
 

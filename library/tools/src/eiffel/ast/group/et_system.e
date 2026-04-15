@@ -5,7 +5,7 @@
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_SYSTEM
@@ -342,6 +342,10 @@ feature -- Compilation options
 			-- Should the attachment status of the target of qualified calls
 			-- be checked at compile time?
 
+	attached_attribute_initialization_mode: BOOLEAN
+			-- Should the initialization of attached attributes be checked
+			-- at compile time?
+
 	check_for_void_target_mode: BOOLEAN
 			-- Should the attachment status of the target of qualified calls
 			-- be checked at runtime?
@@ -442,6 +446,14 @@ feature -- Compilation options setting
 			target_type_attachment_mode := b
 		ensure
 			target_type_attachment_mode_set: target_type_attachment_mode = b
+		end
+
+	set_attached_attribute_initialization_mode (b: BOOLEAN)
+			-- Set `attached_attribute_initialization_mode' to `b'.
+		do
+			attached_attribute_initialization_mode := b
+		ensure
+			attached_attribute_initialization_mode_set: attached_attribute_initialization_mode = b
 		end
 
 	set_check_for_void_target_mode (b: BOOLEAN)

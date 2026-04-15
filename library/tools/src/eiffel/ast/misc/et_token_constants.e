@@ -6508,6 +6508,15 @@ feature -- System
 
 	unknown_feature: ET_FEATURE
 			-- Shared unknown feature "*unknown*";
+		once
+			Result := unknown_procedure
+		ensure
+			instance_free: class
+			unknown_feature_not_void: Result /= Void
+		end
+
+	unknown_procedure: ET_PROCEDURE
+			-- Shared unknown procedure "*unknown*";
 		local
 			l_name: ET_IDENTIFIER
 		once
@@ -6515,7 +6524,7 @@ feature -- System
 			create {ET_DO_PROCEDURE} Result.make (l_name, Void, unknown_class)
 		ensure
 			instance_free: class
-			unknown_feature_not_void: Result /= Void
+			unknown_procedure_not_void: Result /= Void
 		end
 
 	standard_error_handler: ET_ERROR_HANDLER

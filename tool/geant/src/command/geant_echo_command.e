@@ -5,7 +5,7 @@
 		"Echo commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2021, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2026, Sven Ehrke and others"
 	license: "MIT License"
 
 class GEANT_ECHO_COMMAND
@@ -34,8 +34,11 @@ feature {NONE} -- Initialization
 			create append_property.make
 
 				-- Set default agents:
-			create message_only_agent_cell.make (agent write_message)
-			create message_with_file_agent_cell.make (agent write_message_to_file)
+			create message_only_agent_cell.make (agent {STRING}.do_nothing)
+			create message_with_file_agent_cell.make (agent {STRING}.print ({KL_TEXT_OUTPUT_FILE}?))
+			message_only_agent_cell.put (agent write_message)
+			message_with_file_agent_cell.put (agent write_message_to_file)
+
 		end
 
 feature -- Status report
@@ -53,8 +56,8 @@ feature -- Status report
 				end
 			end
 			Result := a_is_valid.item
- 		ensure then
- 			message_property_defined: Result implies message_property.is_defined
+		ensure then
+			message_property_defined: Result implies message_property.is_defined
 		end
 
 feature -- Access
@@ -114,7 +117,7 @@ feature {NONE} -- Implementation
 		require
 			a_message_not_void: a_message /= Void
 		do
- 			project.trace (<<"  [echo]">>)
+			project.trace (<<"  [echo]">>)
 			project.log (<<a_message>>)
 			exit_code := 0
 		end
@@ -126,7 +129,7 @@ feature {NONE} -- Implementation
 			a_file_not_void: a_file /= Void
 		do
 			if a_file.is_open_write then
- 				a_file.put_line (a_message)
+				a_file.put_line (a_message)
 				exit_code := 0
 			else
 				project.log (<<"  [echo] error: cannot write to file '", a_file.name, "'">>)

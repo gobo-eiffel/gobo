@@ -5,7 +5,7 @@
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_FEATURE
@@ -45,6 +45,7 @@ feature -- Initialization
 			-- Reset current feature as it was just after it was last parsed.
 		do
 			name.reset
+			name.set_seed (id)
 			first_seed := id
 			other_seeds := Void
 			version := id
@@ -743,6 +744,7 @@ feature -- Setting
 			a_seed_positive: a_seed > 0
 		do
 			first_seed := a_seed
+			name.set_seed (a_seed)
 		ensure
 			first_seed_set: first_seed = a_seed
 		end
@@ -916,16 +918,16 @@ feature -- Element change
 			l_precursor: ET_FEATURE
 		do
 			if attached first_precursor as l_first_precursor then
-				if not a_precursors.has (l_first_precursor) then
-					l_first_precursor.add_precursors (a_precursors)
+				l_first_precursor.add_precursors_impl (a_precursors)
+				if not a_precursors.has (l_first_precursor.implementation_feature) then
 					a_precursors.force_last (l_first_precursor.implementation_feature)
 				end
 				if attached other_precursors as l_other_precursors then
 					nb := l_other_precursors.count
 					from i := 1 until i > nb loop
 						l_precursor := l_other_precursors.item (i)
-						if not a_precursors.has (l_precursor) then
-							l_precursor.add_precursors (a_precursors)
+						l_precursor.add_precursors_impl (a_precursors)
+						if not a_precursors.has (l_precursor.implementation_feature) then
 							a_precursors.force_last (l_precursor.implementation_feature)
 						end
 						i := i + 1
