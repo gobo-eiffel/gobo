@@ -36,7 +36,7 @@ feature -- Element change
 		do
 			item := v
 		ensure
-			inserted: item = v or else v /= v
+			inserted: if item = v then True else v /= v end
 		end
 
 end
