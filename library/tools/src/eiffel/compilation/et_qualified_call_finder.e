@@ -1119,8 +1119,34 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_call'.
 		require
 			a_call_not_void: a_call /= Void
+		local
+			l_target: ET_EXPRESSION
+			l_arguments: detachable ET_ACTUAL_ARGUMENTS
 		do
-			has_qualified_call := True
+			l_target := a_call.target
+			l_arguments := a_call.arguments
+			l_target.process (Current)
+			if has_qualified_call then
+				-- Done.
+			elseif l_arguments /= Void then
+				process_actual_arguments (l_arguments)
+			end
+			if has_qualified_call then
+				-- Done.
+			elseif l_arguments /= Void and then has_reference_actual_argument (l_arguments) then
+					-- At least one of the arguments may be of reference type.
+				has_qualified_call := True
+			else
+				expression_type_finder.find_expression_type_in_closure (l_target, current_closure_impl, current_closure, current_class_impl, internal_type_context, current_universe.detachable_separate_any_type)
+				if expression_type_finder.has_fatal_error then
+						-- Error already reported.
+					set_fatal_error
+				end
+				if not internal_type_context.is_type_expanded then
+						-- The target may be of reference type.
+					has_qualified_call := True
+				end
+			end
 		end
 
 	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
@@ -1247,7 +1273,7 @@ feature {NONE} -- Implementation
 			-- Closure where the code currently being processed has been written
 
 	has_reference_actual_argument (a_arguments: ET_ACTUAL_ARGUMENTS): BOOLEAN
-			-- Does `a_arguments` contain at least one expression of reference type?
+			-- Does `a_arguments` contain at least one expression which may be of reference type?
 		require
 			a_arguments_not_void: a_arguments /= Void
 		local

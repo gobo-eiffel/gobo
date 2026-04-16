@@ -32,8 +32,7 @@ feature {NONE} -- Initialization
 			create directory.make
 
 				-- Set default agents:
-			create mkdir_agent_cell.make (agent {STRING}.do_nothing)
-			mkdir_agent_cell.put (agent create_directory)
+			create mkdir_agent_cell.make (agent create_directory)
 		end
 
 feature -- Status report

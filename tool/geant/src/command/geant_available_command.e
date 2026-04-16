@@ -35,8 +35,7 @@ feature {NONE} -- Initialization
 			create false_value.make
 
 				-- Set default agents:
-			create available_agent_cell.make (agent {STRING}.is_empty)
-			available_agent_cell.put (agent is_resource_existing)
+			create available_agent_cell.make (agent is_resource_existing)
 		end
 
 feature -- Status report

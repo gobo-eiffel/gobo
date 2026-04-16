@@ -34,11 +34,8 @@ feature {NONE} -- Initialization
 			create append_property.make
 
 				-- Set default agents:
-			create message_only_agent_cell.make (agent {STRING}.do_nothing)
-			create message_with_file_agent_cell.make (agent {STRING}.print ({KL_TEXT_OUTPUT_FILE}?))
-			message_only_agent_cell.put (agent write_message)
-			message_with_file_agent_cell.put (agent write_message_to_file)
-
+			create message_only_agent_cell.make (agent write_message)
+			create message_with_file_agent_cell.make (agent write_message_to_file)
 		end
 
 feature -- Status report
