@@ -119,7 +119,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_SYSTEM_TARGETED_FEATURE_MARKER
@@ -441,7 +441,7 @@ feature {NONE} -- Event handling
 			descendants (current_class).do_all (agent report_feature_called (an_attribute, current_class, ?))
 		end
 
-	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_TYPE_CONTEXT;
+	report_creation_expression (an_expression: ET_CREATION_EXPRESSION; a_creation_type: ET_TYPE_CONTEXT;
 		a_procedure: ET_PROCEDURE; an_actuals: detachable ET_ACTUAL_ARGUMENTS)
 			-- Report that a creation expression `an_expression' has been processed,
 			-- where `a_creation_type' is the creation type and `a_procedure' is the creation procedure.

@@ -128,6 +128,7 @@ feature -- Initialization
 			l_flattening_status_checker: ET_FLATTENING_STATUS_CHECKER
 			l_interface_status_checker: ET_INTERFACE_STATUS_CHECKER
 			l_implementation_status_checker: ET_IMPLEMENTATION_STATUS_CHECKER
+			l_attached_attribute_initialization_status_checker: ET_ATTACHED_ATTRIBUTE_INITIALIZATION_STATUS_CHECKER
 		do
 				-- Start by taking care of classes containing errors, and
 				-- also reset overridden and ignored classes as they were when last parsed.
@@ -178,6 +179,16 @@ feature -- Initialization
 				-- to the previous processing step. Otherwise the error
 				-- flag will be cleared.
 			classes_do_if_recursive (agent {ET_CLASS}.set_implementation_error, agent {ET_CLASS}.implementation_checked)
+				-- Classes that had an attached attribute initialization error need to be reprocessed.
+			classes_do_if_recursive (agent {ET_CLASS}.reset_after_implementation_checked, agent {ET_CLASS}.has_attached_attribute_initialization_error)
+				-- We mark classes with an attached attribute initialization error here to indicate that
+				-- we need to check whether they are still correct. If the error
+				-- is confirmed (because the class processing has become
+				-- invalid due to other classes having been modified or
+				-- recursively made invalid), then the class will be reset
+				-- to the previous processing step. Otherwise the error
+				-- flag will be cleared.
+			classes_do_if_recursive (agent {ET_CLASS}.set_attached_attribute_initialization_error, agent {ET_CLASS}.attached_attribute_initialization_checked)
 				-- Reset ancestors building.
 			create l_ancestors_status_checker.make (a_system_processor)
 			classes_do_if_recursive (agent l_ancestors_status_checker.process_class, agent {ET_CLASS}.ancestors_built)
@@ -190,6 +201,9 @@ feature -- Initialization
 				-- Reset implementation checking.
 			create l_implementation_status_checker.make (a_system_processor)
 			classes_do_if_recursive (agent l_implementation_status_checker.process_class, agent {ET_CLASS}.implementation_checked)
+				-- Reset attached attribute initialization checking.
+			create l_attached_attribute_initialization_status_checker.make (a_system_processor)
+			classes_do_if_recursive (agent l_attached_attribute_initialization_status_checker.process_class, agent {ET_CLASS}.attached_attribute_initialization_checked)
 				-- Reset the modified status of all classes.
 			master_classes_do_recursive (agent {ET_MASTER_CLASS}.set_modified (False))
 		end

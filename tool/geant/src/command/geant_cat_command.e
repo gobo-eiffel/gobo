@@ -5,7 +5,7 @@
 		"Cat commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2021, Eric Bezault and others"
+	copyright: "Copyright (c) 2021-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class GEANT_CAT_COMMAND
@@ -53,8 +53,8 @@ feature -- Status report
 				end
 			end
 			Result := a_is_valid.item
- 		ensure then
- 			file_property_defined: Result implies file_property.is_defined
+		ensure then
+			file_property_defined: Result implies file_property.is_defined
 		end
 
 feature -- Access

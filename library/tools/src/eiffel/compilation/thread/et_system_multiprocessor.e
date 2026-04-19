@@ -49,6 +49,7 @@ inherit
 			parse_classes,
 			parse_marked_classes,
 			check_implementation_validity,
+			check_attached_attribute_initialization_validity,
 			process_custom,
 			set_stop_request,
 			do_all,
@@ -743,6 +744,31 @@ feature -- Processing
 				i > nb
 			loop
 				create l_thread.make (agent (other_processors.item (i)).check_implementation_validity (a_classes))
+				l_thread.launch
+				i := i + 1
+			end
+			precursor (a_classes)
+			{THREAD_CONTROL}.join_all
+		end
+
+	check_attached_attribute_initialization_validity (a_classes: DS_ARRAYED_LIST [ET_CLASS])
+			-- Check that all attached attributes have been initialized 
+			-- at the end of all creation procedures of `a_classes`.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		local
+			i, nb: INTEGER
+			l_thread: WORKER_THREAD
+		do
+			from
+				i := 1
+				nb := other_processors.count
+			until
+				i > nb
+			loop
+				create l_thread.make (agent (other_processors.item (i)).check_attached_attribute_initialization_validity (a_classes))
 				l_thread.launch
 				i := i + 1
 			end

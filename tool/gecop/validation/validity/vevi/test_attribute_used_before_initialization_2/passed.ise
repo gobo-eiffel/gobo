@@ -1,0 +1,18 @@
+-------------------------------------------------------------------------------
+
+Error code: VEVI
+
+Error: variable is not properly set.
+What to do: ensure the variable is properly set by the corresponding
+  setter instruction.
+
+Class: AA
+Feature: f
+Creation procedure: make declared in AA
+Attribute(s): b
+Line: 20
+      do
+->      g (b)
+      end
+
+-------------------------------------------------------------------------------

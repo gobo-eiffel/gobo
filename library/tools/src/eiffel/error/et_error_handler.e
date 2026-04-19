@@ -175,10 +175,13 @@ feature -- Compilation report
 					info_file.put_line (a_class.upper_name)
 				elseif a_processor = a_system_processor.implementation_checker then
 					if a_system_processor.flat_mode then
-						info_file.put_string ("Degree 3 (flat) class ")
+						info_file.put_string ("Degree 3.1 (flat) class ")
 					else
-						info_file.put_string ("Degree 3 class ")
+						info_file.put_string ("Degree 3.1 class ")
 					end
+					info_file.put_line (a_class.upper_name)
+				elseif a_processor = a_system_processor.attached_attribute_initialization_checker then
+					info_file.put_string ("Degree 3.2 class ")
 					info_file.put_line (a_class.upper_name)
 				end
 				mutex.unlock
@@ -2681,6 +2684,173 @@ feature -- Validity errors
 			if reportable_vevi_error (a_class) then
 				create an_error.make_vevi0e (a_class, a_class_impl, a_attribute)
 				report_validity_error (an_error)
+			end
+		end
+
+	report_vevi0f_error (a_class, a_class_impl: ET_CLASS; a_creation_procedure: ET_PROCEDURE; a_attribute: ET_ATTRIBUTE)
+			-- Report VEVI error: the attribute 'a_attribute' of class `a_class`,
+			-- declared of attached type, is not initialized at the end of the creation
+			-- procedure `a_creation_procedure' declared in class `a_class_impl'
+			-- (possibly `a_class` itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_creation_procedure_not_void: a_creation_procedure /= Void
+			a_attribute_not_void: a_attribute /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vevi_error (a_class) then
+				create l_error.make_vevi0f (a_class, a_class_impl, a_creation_procedure, a_attribute)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vevi0g_error (a_class, a_class_impl: ET_CLASS; a_creation_procedure: ET_PROCEDURE; a_attributes: DS_ARRAYED_LIST [ET_ATTRIBUTE])
+			-- Report VEVI error: the attributes 'a_attributes' of class `a_class`,
+			-- declared of attached type, are not initialized at the end of the creation
+			-- procedure `a_creation_procedure' declared in class `a_class_impl'
+			-- (possibly `a_class` itself).
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_creation_procedure_not_void: a_creation_procedure /= Void
+			a_attributes_not_void: a_attributes /= Void
+			no_void_attribute: not a_attributes.has_void
+			two_or_more_attributes: a_attributes.count >= 2
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vevi_error (a_class) then
+				create l_error.make_vevi0g (a_class, a_class_impl, a_creation_procedure, a_attributes)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vevi0h_error (a_class, a_class_impl: ET_CLASS; a_current: ET_CURRENT; a_creation_procedure: ET_PROCEDURE; a_attribute: ET_ATTRIBUTE)
+			-- Report VEVI error: 'Current', written in `a_class_impl`, is used
+			-- before the attribute 'a_attribute' of one of its descendants `a_class'
+			-- (possibly itself), declared of attached type, is initialized by
+			-- `a_creation_procedure`.
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_current_not_void: a_current /= Void
+			a_creation_procedure_not_void: a_creation_procedure /= Void
+			a_attribute_not_void: a_attribute /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vevi_error (a_class) then
+				create l_error.make_vevi0h (a_class, a_class_impl, a_current, a_creation_procedure, a_attribute)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vevi0i_error (a_class, a_class_impl: ET_CLASS; a_current: ET_CURRENT; a_creation_procedure: ET_PROCEDURE; a_attributes: DS_ARRAYED_LIST [ET_ATTRIBUTE])
+			-- Report VEVI error: 'Current', written in `a_class_impl`, is used
+			-- before the attributes 'a_attributes' of one of its descendants `a_class'
+			-- (possibly itself), declared of attached type, are initialized by
+			-- `a_creation_procedure`.
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_current_not_void: a_current /= Void
+			a_creation_procedure_not_void: a_creation_procedure /= Void
+			a_attributes_not_void: a_attributes /= Void
+			no_void_attribute: not a_attributes.has_void
+			two_or_more_attributes: a_attributes.count >= 2
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vevi_error (a_class) then
+				create l_error.make_vevi0i (a_class, a_class_impl, a_current, a_creation_procedure, a_attributes)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vevi0j_error (a_class, a_class_impl: ET_CLASS; a_agent: ET_AGENT; a_creation_procedure: ET_PROCEDURE; a_attribute: ET_ATTRIBUTE)
+			-- Report VEVI error: the implicit target 'Current' of `a_agent`,
+			-- written in `a_class_impl`, is used before the attribute 'a_attribute'
+			-- of one of its descendants `a_class' (possibly itself), declared of
+			-- attached type, is initialized by `a_creation_procedure`.
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+			a_agent_not_qualified: not a_agent.is_qualified_call
+			a_creation_procedure_not_void: a_creation_procedure /= Void
+			a_attribute_not_void: a_attribute /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vevi_error (a_class) then
+				create l_error.make_vevi0j (a_class, a_class_impl, a_agent, a_creation_procedure, a_attribute)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vevi0k_error (a_class, a_class_impl: ET_CLASS; a_agent: ET_AGENT; a_creation_procedure: ET_PROCEDURE; a_attributes: DS_ARRAYED_LIST [ET_ATTRIBUTE])
+			-- Report VEVI error: the implicit target 'Current' of `a_agent`,
+			-- written in `a_class_impl`, is used before the attributes 'a_attributes'
+			-- of one of its descendants `a_class' (possibly itself), declared of
+			-- attached type, are initialized by `a_creation_procedure`.
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+			a_agent_not_qualified: not a_agent.is_qualified_call
+			a_creation_procedure_not_void: a_creation_procedure /= Void
+			a_attributes_not_void: a_attributes /= Void
+			no_void_attribute: not a_attributes.has_void
+			two_or_more_attributes: a_attributes.count >= 2
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vevi_error (a_class) then
+				create l_error.make_vevi0k (a_class, a_class_impl, a_agent, a_creation_procedure, a_attributes)
+				report_validity_error (l_error)
+			end
+		end
+
+	report_vevi0l_error (a_class, a_class_impl: ET_CLASS; a_call_name: ET_CALL_NAME; a_creation_procedure: ET_PROCEDURE; a_attribute: ET_ATTRIBUTE)
+			-- Report VEVI error: 'a_call_name', written in `a_class_impl`, is the
+			-- name of an attribute 'a_attribute' of one of its descendants `a_class'
+			-- (possibly itself), declared of attached type, used before being initialized
+			-- by `a_creation_procedure`.
+			--
+			-- ECMA-367-2: p.105
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_call_name_not_void: a_call_name /= Void
+			a_creation_procedure_not_void: a_creation_procedure /= Void
+			a_attribute_not_void: a_attribute /= Void
+		local
+			l_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vevi_error (a_class) then
+				create l_error.make_vevi0l (a_class, a_class_impl, a_call_name, a_creation_procedure, a_attribute)
+				report_validity_error (l_error)
 			end
 		end
 

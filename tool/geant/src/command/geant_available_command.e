@@ -5,7 +5,7 @@
 		"Available commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002-2016, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2026, Sven Ehrke and others"
 	license: "MIT License"
 
 class GEANT_AVAILABLE_COMMAND
@@ -46,16 +46,16 @@ feature -- Status report
 			a_is_valid: DS_CELL [BOOLEAN]
 		do
 			create a_is_valid.make (True)
- 			validate_condition (resource_name.is_defined, "  [available] error: 'resource' is not defined", a_is_valid)
-  			validate_condition (a_is_valid.item and then not resource_name.value.is_empty, "  [available] error: 'resource' is empty", a_is_valid)
- 			validate_condition (a_is_valid.item and then variable_name.is_defined, "  [available] error: 'variable' is not defined", a_is_valid)
-  			validate_condition (a_is_valid.item and then not variable_name.value.is_empty, "  [available] error: 'variable' is empty", a_is_valid)
+			validate_condition (resource_name.is_defined, "  [available] error: 'resource' is not defined", a_is_valid)
+			validate_condition (a_is_valid.item and then not resource_name.value.is_empty, "  [available] error: 'resource' is empty", a_is_valid)
+			validate_condition (a_is_valid.item and then variable_name.is_defined, "  [available] error: 'variable' is not defined", a_is_valid)
+			validate_condition (a_is_valid.item and then not variable_name.value.is_empty, "  [available] error: 'variable' is empty", a_is_valid)
 			Result := a_is_valid.item
 		ensure then
- 			resource_name_defined: Result implies resource_name.is_defined
- 			resource_name_not_empty: Result implies not resource_name.value.is_empty
- 			variable_name_defined: Result implies variable_name.is_defined
- 			variable_name_not_empty: Result implies not variable_name.value.is_empty
+			resource_name_defined: Result implies resource_name.is_defined
+			resource_name_not_empty: Result implies not resource_name.value.is_empty
+			variable_name_defined: Result implies variable_name.is_defined
+			variable_name_not_empty: Result implies not variable_name.value.is_empty
 		end
 
 feature -- Access

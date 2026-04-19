@@ -5,7 +5,7 @@
 		"Cells containing an item"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class DS_CELL [G]
@@ -36,7 +36,7 @@ feature -- Element change
 		do
 			item := v
 		ensure
-			inserted: {KL_TYPE [G]}.same_objects (item, v)
+			inserted: if item = v then True else v /= v end
 		end
 
 end

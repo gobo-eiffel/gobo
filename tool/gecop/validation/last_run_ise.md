@@ -4,10 +4,10 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     581 tests
-    # FAILED:     218 tests
+    # Passed:     609 tests
+    # FAILED:     224 tests
     # Aborted:    0 test
-    # Total:      799 tests
+    # Total:      833 tests
 
 Test Results:</br>
 FAIL:  \[[definition/difo1/test\_bar\_2](definition/difo1/test\_bar\_2)\] test\_failed</br>
@@ -162,6 +162,12 @@ FAIL:  \[[validity/vape2/test3](validity/vape2/test3)\] test\_failed</br>
 FAIL:  \[[validity/vape2/test4](validity/vape2/test4)\] test\_failed</br>
 FAIL:  \[[validity/vape2/test5](validity/vape2/test5)\] test\_failed</br>
 FAIL:  \[[validity/vape2/test6](validity/vape2/test6)\] test\_failed</br>
+FAIL:  \[[validity/vevi/test\_current\_not\_initialized\_12](validity/vevi/test\_current\_not\_initialized\_12)\] test\_failed</br>
+FAIL:  \[[validity/vevi/test\_current\_not\_initialized\_13](validity/vevi/test\_current\_not\_initialized\_13)\] test\_failed</br>
+FAIL:  \[[validity/vevi/test\_current\_not\_initialized\_14](validity/vevi/test\_current\_not\_initialized\_14)\] test\_failed</br>
+FAIL:  \[[validity/vevi/test\_current\_not\_initialized\_15](validity/vevi/test\_current\_not\_initialized\_15)\] test\_failed</br>
+FAIL:  \[[validity/vevi/test\_current\_not\_initialized\_6](validity/vevi/test\_current\_not\_initialized\_6)\] test\_failed</br>
+FAIL:  \[[validity/vevi/test\_current\_not\_initialized\_7](validity/vevi/test\_current\_not\_initialized\_7)\] test\_failed</br>
 FAIL:  \[[validity/vfav1/test1](validity/vfav1/test1)\] test\_failed</br>
 FAIL:  \[[validity/vfav1/test2](validity/vfav1/test2)\] test\_failed</br>
 FAIL:  \[[validity/vfav1/test8](validity/vfav1/test8)\] test\_failed</br>

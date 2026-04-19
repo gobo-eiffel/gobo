@@ -5,22 +5,34 @@
 		"Eiffel current entities"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_CURRENT
 
 inherit
 
+	ET_CURRENT_OPERAND
+		undefine
+			add_old_expressions,
+			has_result,
+			has_address_expression,
+			has_agent,
+			has_typed_object_test,
+			first_position,
+			last_position,
+			break
+		end
+
 	ET_EXPRESSION
 		undefine
+			is_current,
+			is_instance_free,
 			first_position,
 			last_position,
 			break
 		redefine
-			is_current,
-			is_never_void,
-			is_instance_free
+			is_never_void
 		end
 
 	ET_KEYWORD
@@ -40,20 +52,15 @@ create
 
 feature -- Status report
 
-	is_current: BOOLEAN = True
-			-- Is current expression the 'Current' entity (possibly parenthesized)?
-
 	is_never_void: BOOLEAN = True
 			-- Can current expression never be void?
 
-	is_instance_free: BOOLEAN
-			-- Does current expression not depend on 'Current' or its attributes?
-			-- Note that we do not consider unqualified calls and Precursors as
-			-- instance-free because it's not always possible syntactically
-			-- to determine whether the feature being called is a class feature
-			-- or not.
+feature -- Access
+
+	hash_code: INTEGER
+			-- Hash code value
 		do
-			Result := False
+			Result := position.line
 		end
 
 feature -- Processing

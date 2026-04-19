@@ -5,7 +5,7 @@
 		"Eiffel feature call handlers: traverse features and report when feature calls are found."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2023, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_FEATURE_CALL_HANDLER
@@ -77,6 +77,8 @@ inherit
 			process_feature_address,
 			process_formal_argument,
 			process_formal_argument_list,
+			process_general_qualified_feature_call_instruction,
+			process_general_qualified_feature_call_expression,
 			process_hexadecimal_integer_constant,
 			process_identifier,
 			process_if_expression,
@@ -160,8 +162,8 @@ feature {NONE} -- Initialization
 			create expression_type_finder.make (a_system_processor)
 			expression_type_finder.set_internal_error_enabled (internal_error_enabled)
 			current_type := current_class
-			current_feature := dummy_feature
-			current_feature_impl := dummy_feature.implementation_feature
+			current_feature := tokens.unknown_feature
+			current_feature_impl := tokens.unknown_feature
 			current_class_impl := current_feature_impl.implementation_class
 			create current_context.make_with_capacity (current_type, 10)
 			create enclosing_inline_agents.make (10)
@@ -176,7 +178,7 @@ feature -- Processing
 			--
 			-- Note that it is assumed that `a_feature' has been successfully checked
 			-- in the context of `a_current_type' (using ET_FEATURE_CHECKER for example).
-			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaaa_error)
+			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaac_error)
 			-- if `a_feature' has not been checked or if `internal_error_enabled' has been set.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -196,12 +198,12 @@ feature -- Processing
 			l_feature_impl := a_feature.implementation_feature
 			l_class_impl := a_feature.implementation_class
 			if not l_class_impl.is_preparsed then
-		 			-- Internal error: we should already have reported a VTCT error
+					-- Internal error: we should already have reported a VTCT error
 					-- somewhere stating that `l_class_impl' (which is supposed to
 					-- be an ancestor of `l_class') does not exist.
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "process_feature", 1, "unknown class.")
 				end
 			else
 				old_feature_impl := current_feature_impl
@@ -357,7 +359,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_TYPE_CONTEXT;
+	report_creation_expression (an_expression: ET_CREATION_EXPRESSION; a_creation_type: ET_TYPE_CONTEXT;
 		a_procedure: ET_PROCEDURE; an_actuals: detachable ET_ACTUAL_ARGUMENTS)
 			-- Report that a creation expression `an_expression' has been processed,
 			-- where `a_creation_type' is the creation type and `a_procedure' is the creation procedure.
@@ -369,8 +371,14 @@ feature {NONE} -- Event handling
 			a_procedure_not_void: a_procedure /= Void
 		local
 			l_base_class: ET_CLASS
+			l_seed: INTEGER
 		do
-			l_base_class := a_creation_type.base_class
+			if attached an_expression.creation_call as l_creation_call then
+				l_seed := l_creation_call.name.seed
+			else
+				l_seed := current_system.default_create_seed
+			end
+			l_base_class := a_creation_type.adapted_base_class_with_seeded_feature (l_seed).base_class
 			report_polymorphic_feature_call (a_procedure, l_base_class)
 		end
 
@@ -385,8 +393,14 @@ feature {NONE} -- Event handling
 			a_procedure_not_void: a_procedure /= Void
 		local
 			l_base_class: ET_CLASS
+			l_seed: INTEGER
 		do
-			l_base_class := a_creation_type.base_class
+			if attached an_instruction.creation_call as l_creation_call then
+				l_seed := l_creation_call.name.seed
+			else
+				l_seed := current_system.default_create_seed
+			end
+			l_base_class := a_creation_type.adapted_base_class_with_seeded_feature (l_seed).base_class
 			report_polymorphic_feature_call (a_procedure, l_base_class)
 		end
 
@@ -480,7 +494,7 @@ feature {NONE} -- Event handling
 		local
 			l_base_class: ET_CLASS
 		do
-			l_base_class := a_target_type.base_class
+			l_base_class := a_target_type.adapted_base_class_with_seeded_feature (an_expression.name.seed).base_class
 			report_polymorphic_feature_call (a_query, l_base_class)
 		end
 
@@ -498,7 +512,7 @@ feature {NONE} -- Event handling
 		local
 			l_base_class: ET_CLASS
 		do
-			l_base_class := a_target_type.base_class
+			l_base_class := a_target_type.adapted_base_class_with_seeded_feature (an_instruction.name.seed).base_class
 			report_polymorphic_feature_call (a_procedure, l_base_class)
 		end
 
@@ -517,7 +531,7 @@ feature {NONE} -- Event handling
 		local
 			l_base_class: ET_CLASS
 		do
-			l_base_class := a_target_type.base_class
+			l_base_class := a_target_type.adapted_base_class_with_seeded_feature (an_expression.name.seed).base_class
 			report_polymorphic_feature_call (a_procedure, l_base_class)
 		end
 
@@ -536,7 +550,7 @@ feature {NONE} -- Event handling
 		local
 			l_base_class: ET_CLASS
 		do
-			l_base_class := a_target_type.base_class
+			l_base_class := a_target_type.adapted_base_class_with_seeded_feature (an_expression.name.seed).base_class
 			report_polymorphic_feature_call (a_query, l_base_class)
 		end
 
@@ -552,7 +566,7 @@ feature {NONE} -- Event handling
 		local
 			l_base_class: ET_CLASS
 		do
-			l_base_class := a_type.base_class (current_class)
+			l_base_class := a_type.adapted_base_class_with_seeded_feature (an_expression.name.seed, current_class).base_class
 			report_polymorphic_feature_call (a_query, l_base_class)
 		end
 
@@ -568,7 +582,7 @@ feature {NONE} -- Event handling
 		local
 			l_base_class: ET_CLASS
 		do
-			l_base_class := a_type.base_class (current_class)
+			l_base_class := a_type.adapted_base_class_with_seeded_feature (an_instruction.name.seed, current_class).base_class
 			report_polymorphic_feature_call (a_procedure, l_base_class)
 		end
 
@@ -892,7 +906,7 @@ feature {ET_AST_NODE} -- Processing
 						-- Internal error: no other kind of targets.
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "process_call_agent", 1, "unknown agent target kind.")
 					end
 				end
 			end
@@ -1066,7 +1080,7 @@ feature {ET_AST_NODE} -- Processing
 			l_context.reset (current_type)
 			l_context.force_last (l_type)
 			if not has_fatal_error then
-				l_class := l_context.base_class
+				l_class := l_context.adapted_base_class_with_seeded_feature (l_seed).base_class
 				if attached l_class.seeded_procedure (l_seed) as l_procedure then
 					report_creation_expression (an_expression, l_context, l_procedure, an_expression.arguments)
 				else
@@ -1074,7 +1088,7 @@ feature {ET_AST_NODE} -- Processing
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "process_creation_expression", 1, "unknown creation procedure.")
 					end
 				end
 				reset_fatal_error (had_error)
@@ -1130,7 +1144,7 @@ feature {ET_AST_NODE} -- Processing
 				find_expression_type (l_target, l_context)
 			end
 			if not has_fatal_error then
-				l_class := l_context.base_class
+				l_class := l_context.adapted_base_class_with_seeded_feature (l_seed).base_class
 				if attached l_class.seeded_procedure (l_seed) as l_procedure then
 					report_creation_instruction (an_instruction, l_context, l_procedure)
 				else
@@ -1138,7 +1152,7 @@ feature {ET_AST_NODE} -- Processing
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "process_creation_instruction", 1, "unknown creation procedure.")
 					end
 				end
 				reset_fatal_error (had_error)
@@ -1580,7 +1594,7 @@ feature {ET_AST_NODE} -- Processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "process_feature_address", 1, "unknown feature.")
 				end
 			end
 		end
@@ -1616,6 +1630,18 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_general_qualified_feature_call_expression (a_expression: ET_GENERAL_QUALIFIED_FEATURE_CALL_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			process_qualified_feature_call_expression (a_expression)
+		end
+
+	process_general_qualified_feature_call_instruction (a_instruction: ET_GENERAL_QUALIFIED_FEATURE_CALL_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			process_qualified_feature_call_instruction (a_instruction)
+		end
+
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1637,7 +1663,7 @@ feature {ET_AST_NODE} -- Processing
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "process_identifier", 1, "unknown iteration components.")
 					end
 				elseif l_seed < 1 or l_seed > l_iteration_components.count then
 						-- Internal error.
@@ -1645,7 +1671,7 @@ feature {ET_AST_NODE} -- Processing
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "process_identifier", 2, "unknown iteration component.")
 					end
 				else
 					l_iteration_component := l_iteration_components.iteration_component (l_seed)
@@ -1908,6 +1934,8 @@ feature {ET_AST_NODE} -- Processing
 	process_iteration_expression (an_expression: ET_ITERATION_EXPRESSION)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
 		local
 			had_error: BOOLEAN
 		do
@@ -1944,6 +1972,8 @@ feature {ET_AST_NODE} -- Processing
 	process_iteration_instruction (an_instruction: ET_ITERATION_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_instruction_not_void: an_instruction /= Void
 		local
 			had_error: BOOLEAN
 		do
@@ -2000,7 +2030,7 @@ feature {ET_AST_NODE} -- Processing
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
 						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "process_like_feature", 1, "unknown feature.")
 						end
 					end
 				end
@@ -2281,7 +2311,7 @@ feature {ET_AST_NODE} -- Processing
 						-- features of `current_class_impl'.
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "process_precursor_expression", 1, "unknown parent type.")
 					end
 				else
 					l_precursor_keyword := an_expression.precursor_keyword
@@ -2292,7 +2322,7 @@ feature {ET_AST_NODE} -- Processing
 							-- features of `current_class_impl'.
 						set_fatal_error
 						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "process_precursor_expression", 2, "unknown feature.")
 						end
 					else
 						if current_class /= current_class_impl and l_parent_type.is_generic then
@@ -2305,7 +2335,7 @@ feature {ET_AST_NODE} -- Processing
 									-- of `current_class_impl', and hence of `current_class'.
 								set_fatal_error
 								if internal_error_enabled or not current_class.has_implementation_error then
-									error_handler.report_giaaa_error
+									error_handler.report_giaac_error (generator, "process_precursor_expression", 3, "invalid parent type.")
 								end
 							end
 						end
@@ -2343,7 +2373,7 @@ feature {ET_AST_NODE} -- Processing
 						-- features of `l_class_impl'.
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "process_precursor_instruction", 1, "unknown parent type.")
 					end
 				else
 					l_precursor_keyword := an_instruction.precursor_keyword
@@ -2354,7 +2384,7 @@ feature {ET_AST_NODE} -- Processing
 							-- features of `current_class_impl'.
 						set_fatal_error
 						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "process_precursor_instruction", 2, "unknown feature.")
 						end
 					else
 						if current_class /= current_class_impl and l_parent_type.is_generic then
@@ -2366,7 +2396,7 @@ feature {ET_AST_NODE} -- Processing
 									-- of `current_class_impl', and hence of `current_class'.
 								set_fatal_error
 								if internal_error_enabled or not current_class.has_implementation_error then
-									error_handler.report_giaaa_error
+									error_handler.report_giaac_error (generator, "process_precursor_instruction", 3, "invalid parent type.")
 								end
 							end
 						end
@@ -2411,7 +2441,7 @@ feature {ET_AST_NODE} -- Processing
 				l_context.reset (current_type)
 				find_expression_type (a_target, l_context)
 				if not has_fatal_error then
-					l_class := l_context.base_class
+					l_class := l_context.adapted_base_class_with_seeded_feature (l_seed).base_class
 					if attached l_class.seeded_procedure (l_seed) as l_procedure then
 						report_qualified_procedure_call_agent (an_expression, l_context, l_procedure)
 					else
@@ -2419,7 +2449,7 @@ feature {ET_AST_NODE} -- Processing
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
 						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "process_qualified_call_agent", 1, "unknown procedure.")
 						end
 					end
 				end
@@ -2428,13 +2458,16 @@ feature {ET_AST_NODE} -- Processing
 				l_context.reset (current_type)
 				find_expression_type (a_target, l_context)
 				if not has_fatal_error then
-					l_class := l_context.base_class
+					l_class := l_context.adapted_base_class_with_seeded_feature (l_seed).base_class
 					if attached l_class.seeded_query (l_seed) as l_query then
 						report_qualified_query_call_agent (an_expression, l_context, l_query)
 					else
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaac_error (generator, "process_qualified_call_agent", 2, "unknown query.")
+						end
 					end
 				end
 			end
@@ -2497,8 +2530,8 @@ feature {ET_AST_NODE} -- Processing
 				l_context.reset (current_type)
 				find_expression_type (l_target, l_context)
 				if not has_fatal_error then
-					l_class := l_context.base_class
 					l_seed := l_name.seed
+					l_class := l_context.adapted_base_class_with_seeded_feature (l_seed).base_class
 					if attached l_class.seeded_query (l_seed) as l_query then
 						report_qualified_call_expression (a_call, l_context, l_query)
 					else
@@ -2506,7 +2539,7 @@ feature {ET_AST_NODE} -- Processing
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
 						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "process_qualified_feature_call_expression", 1, "unknown query.")
 						end
 					end
 				end
@@ -2541,8 +2574,8 @@ feature {ET_AST_NODE} -- Processing
 				l_context.reset (current_type)
 				find_expression_type (l_target, l_context)
 				if not has_fatal_error then
-					l_class := l_context.base_class
-					l_seed := a_call.name.seed
+					l_seed := l_name.seed
+					l_class := l_context.adapted_base_class_with_seeded_feature (l_seed).base_class
 					if attached l_class.seeded_procedure (l_seed) as l_procedure then
 						report_qualified_call_instruction (a_call, l_context, l_procedure)
 					else
@@ -2550,7 +2583,7 @@ feature {ET_AST_NODE} -- Processing
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
 						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "process_qualified_feature_call_instruction", 1, "unknown procedure.")
 						end
 					end
 				end
@@ -2573,6 +2606,7 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_target_type: ET_TYPE
 			l_class: ET_CLASS
+			l_seed: INTEGER
 			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			reset_fatal_error (False)
@@ -2584,15 +2618,16 @@ feature {ET_AST_NODE} -- Processing
 					l_context.reset (current_type)
 					l_context.force_last (l_target_type)
 					if not has_fatal_error then
-						l_class := l_context.base_class
-						if attached l_class.seeded_query (a_type.seed) as l_query then
+						l_seed := a_type.seed
+						l_class := l_context.adapted_base_class_with_seeded_feature (l_seed).base_class
+						if attached l_class.seeded_query (l_seed) as l_query then
 							report_qualified_anchored_type (a_type, l_context, l_query)
 						else
 								-- This error should have already been reported when checking
 								-- `current_feature' (using ET_FEATURE_CHECKER for example).
 							set_fatal_error
 							if internal_error_enabled or not current_class.has_implementation_error then
-								error_handler.report_giaaa_error
+								error_handler.report_giaac_error (generator, "process_qualified_like_identifier", 1, "unknown query.")
 							end
 						end
 					end
@@ -2684,8 +2719,8 @@ feature {ET_AST_NODE} -- Processing
 					process_actual_arguments (l_arguments)
 					had_error := had_error or has_fatal_error
 				end
-				l_class := l_type.base_class (current_type)
 				l_seed := an_expression.name.seed
+				l_class := l_type.adapted_base_class_with_seeded_feature (l_seed, current_type).base_class
 				if attached l_class.seeded_query (l_seed) as l_query then
 					report_static_call_expression (an_expression, l_type, l_query)
 				else
@@ -2693,7 +2728,7 @@ feature {ET_AST_NODE} -- Processing
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "process_static_call_expression", 1, "unknown query.")
 					end
 				end
 				reset_fatal_error (had_error or has_fatal_error)
@@ -2722,8 +2757,8 @@ feature {ET_AST_NODE} -- Processing
 					process_actual_arguments (l_arguments)
 					had_error := had_error or has_fatal_error
 				end
-				l_class := l_type.base_class (current_type)
 				l_seed := an_instruction.name.seed
+				l_class := l_type.adapted_base_class_with_seeded_feature (l_seed, current_type).base_class
 				if attached l_class.seeded_procedure (l_seed) as l_procedure then
 					report_static_call_instruction (an_instruction, l_type, l_procedure)
 				else
@@ -2731,7 +2766,7 @@ feature {ET_AST_NODE} -- Processing
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "process_static_call_instruction", 1, "unknown procedure.")
 					end
 				end
 				reset_fatal_error (had_error or has_fatal_error)
@@ -2834,7 +2869,7 @@ feature {ET_AST_NODE} -- Processing
 				l_context := current_context
 				l_context.reset (current_type)
 				l_context.force_last (l_target_type)
-				l_class := l_context.base_class
+				l_class := l_context.adapted_base_class_with_seeded_feature (l_seed).base_class
 				if attached l_class.seeded_procedure (l_seed) as l_procedure then
 					report_qualified_procedure_call_agent (an_expression, l_context, l_procedure)
 				else
@@ -2842,14 +2877,14 @@ feature {ET_AST_NODE} -- Processing
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "process_typed_call_agent", 1, "unknown procedure.")
 					end
 				end
 			else
 				l_context := current_context
 				l_context.reset (current_type)
 				l_context.force_last (l_target_type)
-				l_class := l_context.base_class
+				l_class := l_context.adapted_base_class_with_seeded_feature (l_seed).base_class
 				if attached l_class.seeded_query (l_seed) as l_query then
 					report_qualified_query_call_agent (an_expression, l_context, l_query)
 				else
@@ -2857,7 +2892,7 @@ feature {ET_AST_NODE} -- Processing
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "process_typed_call_agent", 2, "unknown query.")
 					end
 				end
 			end
@@ -2933,7 +2968,7 @@ feature {ET_AST_NODE} -- Processing
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "process_unqualified_call_agent", 1, "unknown procedure.")
 					end
 				end
 			else
@@ -2944,7 +2979,7 @@ feature {ET_AST_NODE} -- Processing
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
+						error_handler.report_giaac_error (generator, "process_unqualified_call_agent", 2, "unknown query.")
 					end
 				end
 			end
@@ -3001,7 +3036,7 @@ feature {ET_AST_NODE} -- Processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "process_unqualified_feature_call_expression", 1, "unknown query.")
 				end
 			end
 		end
@@ -3029,7 +3064,7 @@ feature {ET_AST_NODE} -- Processing
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+					error_handler.report_giaac_error (generator, "process_unqualified_feature_call_instruction", 1, "unknown procedure.")
 				end
 			end
 		end
@@ -3129,14 +3164,14 @@ feature {ET_AST_NODE} -- Processing
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
 						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "process_writable", 1, "unknown query.")
 						end
 					elseif not l_attribute.is_attribute then
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
 						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
+							error_handler.report_giaac_error (generator, "process_writable", 2, "unknown attribute.")
 						end
 					else
 						report_attribute_assignment_target (a_writable, l_attribute)
@@ -3236,31 +3271,12 @@ feature {NONE} -- Expression types
 			a_current_class_preparsed: a_context.root_context.base_class.is_preparsed
 		do
 			reset_fatal_error (False)
-			if attached current_inline_agent as l_current_inline_agent then
-				expression_type_finder.find_expression_type_in_agent (a_expression, l_current_inline_agent, current_feature, a_context, current_system.detachable_separate_any_type)
-			elseif current_feature.is_feature then
-				expression_type_finder.find_expression_type_in_feature (a_expression, current_feature.as_feature, a_context, current_system.detachable_separate_any_type)
-			else
-				expression_type_finder.find_expression_type_in_invariant (a_expression, current_feature.as_invariants, a_context, current_system.detachable_separate_any_type)
-			end
+			expression_type_finder.find_expression_type_in_closure (a_expression, current_closure_impl, current_closure, current_class_impl, a_context, current_universe.detachable_separate_any_type)
 			reset_fatal_error (expression_type_finder.has_fatal_error)
 		end
 
 	expression_type_finder: ET_EXPRESSION_TYPE_FINDER
 			-- Expression type finder
-
-feature {NONE} -- Implementation
-
-	dummy_feature: ET_FEATURE
-			-- Dummy feature
-		local
-			a_name: ET_FEATURE_NAME
-		once
-			create {ET_IDENTIFIER} a_name.make ("**dummy**")
-			create {ET_DEFERRED_PROCEDURE} Result.make (a_name, Void, current_class)
-		ensure
-			dummy_feature_not_void: Result /= Void
-		end
 
 invariant
 

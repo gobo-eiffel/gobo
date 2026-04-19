@@ -5,7 +5,7 @@
 		"XML nodes that have a name"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2026, Andreas Leitner and others"
 	license: "MIT License"
 
 deferred class XM_NAMED_NODE
@@ -71,6 +71,10 @@ feature -- Access
 
 	name: STRING
 			-- Name
+		attribute
+		ensure
+			name_not_empty: Result.count > 0
+		end
 
 	namespace: XM_NAMESPACE
 			-- Namespace of the name of current node
@@ -120,7 +124,6 @@ feature -- Element change
 invariant
 
 	name_not_void: name /= Void
-	name_not_empty: name.count > 0
 	namespace_not_void: namespace /= Void
 
 end

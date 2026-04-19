@@ -69,6 +69,7 @@ feature {NONE} -- Initialization
 			create supplier_builder.make
 			supplier_builder.set (current_class, l_suppliers)
 			create no_suppliers.make (0)
+			create precursors.make (100)
 		ensure
 			feature_checker_set: feature_checker = a_feature_checker
 		end
@@ -572,7 +573,7 @@ feature {NONE} -- Feature validity
 			if feature_checker.has_fatal_error then
 				set_fatal_error (current_class)
 			end
-			check_assertions_validity (a_query, a_query, an_error_in_parent)
+			check_assertions_validity (a_query, an_error_in_parent)
 			feature_checker.set_precursor_queries (Void)
 			if flat_mode and not an_error_in_parent then
 				from precursor_queries.start until precursor_queries.after loop
@@ -597,7 +598,7 @@ feature {NONE} -- Feature validity
 			if feature_checker.has_fatal_error then
 				set_fatal_error (current_class)
 			end
-			check_assertions_validity (a_procedure, a_procedure, an_error_in_parent)
+			check_assertions_validity (a_procedure, an_error_in_parent)
 			feature_checker.set_precursor_procedures (Void)
 			if flat_mode and not an_error_in_parent then
 				from precursor_procedures.start until precursor_procedures.after loop
@@ -659,42 +660,42 @@ feature {NONE} -- Precursor validity
 			-- Queries associated with precursor expressions that appear
 			-- in the last feature processed
 
+	precursors: DS_HASH_SET [ET_FEATURE]
+			-- Feature precursors used to build inherited assertions
+
 feature {NONE} -- Assertion validity
 
-	check_assertions_validity (a_feature_impl, a_feature: ET_FEATURE; an_error_in_parent: BOOLEAN)
-			-- Check validity of pre- and postconditions of `a_feature_impl' in `current_class'.
-			-- `a_feature' is the version of `a_feature_impl' in `current_class' (useful
-			-- when processing inherited assertions).
+	check_assertions_validity (a_feature: ET_FEATURE; an_error_in_parent: BOOLEAN)
+			-- Check validity of pre- and postconditions of `a_feature' in `current_class'.
 		require
-			a_feature_impl_not_void: a_feature_impl /= Void
 			a_feature_not_void: a_feature /= Void
 		local
-			i, nb: INTEGER
+			l_precursors: like precursors
+			l_precursor: ET_FEATURE
 		do
-			if attached a_feature_impl.preconditions as a_preconditions then
-				feature_checker.check_feature_preconditions_validity (a_preconditions, a_feature_impl, a_feature, current_class)
-				if feature_checker.has_fatal_error then
-					set_fatal_error (current_class)
-				end
-			end
-			if attached a_feature_impl.postconditions as a_postconditions then
-				feature_checker.check_feature_postconditions_validity (a_postconditions, a_feature_impl, a_feature, current_class)
-				if feature_checker.has_fatal_error then
-					set_fatal_error (current_class)
-				end
-			end
+			l_precursors := precursors
+			l_precursors.wipe_out
 			if (flat_dbc_mode or flat_mode) and not an_error_in_parent then
-				if attached a_feature_impl.first_precursor as l_first_precursor then
-					check_assertions_validity (l_first_precursor, a_feature, an_error_in_parent)
-					if attached a_feature_impl.other_precursors as l_other_precursors then
-						nb := l_other_precursors.count
-						from i := 1 until i > nb loop
-							check_assertions_validity (l_other_precursors.item (i), a_feature, an_error_in_parent)
-							i := i + 1
-						end
+				a_feature.add_precursors_impl (l_precursors)
+			end
+			l_precursors.force_last (a_feature.implementation_feature)
+			from l_precursors.start until l_precursors.after loop
+				l_precursor := l_precursors.item_for_iteration
+				if attached l_precursor.preconditions as l_preconditions then
+					feature_checker.check_feature_preconditions_validity (l_preconditions, l_precursor, a_feature, current_class)
+					if feature_checker.has_fatal_error then
+						set_fatal_error (current_class)
 					end
 				end
+				if attached l_precursor.postconditions as l_postconditions then
+					feature_checker.check_feature_postconditions_validity (l_postconditions, l_precursor, a_feature, current_class)
+					if feature_checker.has_fatal_error then
+						set_fatal_error (current_class)
+					end
+				end
+				l_precursors.forth
 			end
+			l_precursors.wipe_out
 		end
 
 	check_invariants_validity (an_error_in_parent: BOOLEAN)
@@ -760,5 +761,7 @@ invariant
 	no_void_precursor_procedure: not precursor_procedures.has_void
 	precursor_queries_not_void: precursor_queries /= Void
 	no_void_precursor_query: not precursor_queries.has_void
+	precursors_not_void: precursors /= Void
+	no_void_precursor: not precursors.has_void
 
 end
