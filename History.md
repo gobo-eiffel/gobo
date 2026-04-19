@@ -2,6 +2,8 @@
 
 ## Version xx.xx.xx - xxxxxx
 
+* Added validation tests for `VEVI` ("Variable Initialization rule").
+
 ### gelsp
 
 * Click on a keyword to highlight all keywords of the

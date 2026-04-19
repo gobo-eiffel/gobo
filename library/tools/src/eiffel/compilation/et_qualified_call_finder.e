@@ -264,19 +264,26 @@ feature {ET_AST_NODE} -- Processing
 				in_assertions := True
 				l_old_class_impl := current_class_impl
 				l_old_closure_impl := current_closure_impl
-				l_ancestors := a_class.ancestors
-				nb := l_ancestors.count
-				from i := 1 until i > nb loop
-					if has_qualified_call then
-						i := nb + 1
-					else
-						l_class := l_ancestors.item (i).base_class
-						if attached l_class.invariants as l_invariants then
-							current_closure_impl := l_invariants
-							current_class_impl := l_invariants.implementation_class
-							process_assertions (l_invariants)
+				if attached a_class.invariants as l_invariants then
+					current_closure_impl := l_invariants
+					current_class_impl := l_invariants.implementation_class
+					process_assertions (l_invariants)
+				end
+				if not has_qualified_call then
+					l_ancestors := a_class.ancestors
+					nb := l_ancestors.count
+					from i := 1 until i > nb loop
+						if has_qualified_call then
+							i := nb + 1
+						else
+							l_class := l_ancestors.item (i).base_class
+							if attached l_class.invariants as l_invariants then
+								current_closure_impl := l_invariants
+								current_class_impl := l_invariants.implementation_class
+								process_assertions (l_invariants)
+							end
+							i := i + 1
 						end
-						i := i + 1
 					end
 				end
 				current_class_impl := l_old_class_impl

@@ -247,9 +247,12 @@ feature {NONE} -- Processing
 		local
 			l_list: DS_ARRAYED_LIST [ET_ATTRIBUTE]
 			l_old_creation_procedure: like current_creation_procedure
+			l_old_class_impl: like current_class_impl
 		do
 			l_old_creation_procedure := current_creation_procedure
 			current_creation_procedure := a_procedure
+			l_old_class_impl := current_class_impl
+				current_class_impl := a_procedure.implementation_class
 			a_procedure.process (Current)
 			if not are_all_attached_attributes_initialized then
 				l_list := attribute_list
@@ -267,6 +270,7 @@ feature {NONE} -- Processing
 			pending_errors.wipe_out
 			visited_features.wipe_out
 			current_creation_procedure := l_old_creation_procedure
+			current_class_impl := l_old_class_impl
 		end
 
 	process_none_class (a_class: ET_CLASS)

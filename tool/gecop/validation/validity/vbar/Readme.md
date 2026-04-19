@@ -8,7 +8,6 @@ These [tests](.) are exercising the validity rule below.
 
 An *Assignment* is valid if and only if its source expression is compatible with its target entity.
 
-
 ### ECMA 367-3 (working version 3-42), 8.23.2 page 213
 
 Same as above.

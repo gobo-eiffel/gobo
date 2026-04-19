@@ -1,0 +1,22 @@
+
+aa: system execution failed.
+Following is the set of recorded exceptions:
+
+******************************** Thread exception *****************************
+In thread           Root thread            0x0 (thread id)
+*******************************************************************************
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+ANY                 is_equal @N            is_empty:
+<XXXXXXXXXXXXXXXX>  (From BB)              Feature call on void target.  Fail
+-------------------------------------------------------------------------------
+ANY                 is_equal @N
+<XXXXXXXXXXXXXXXX>  (From BB)              Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  make @N
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  root's creation                                     
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Exit
+-------------------------------------------------------------------------------
