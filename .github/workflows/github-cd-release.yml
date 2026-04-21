@@ -13,7 +13,6 @@ permissions:
 env:
   GOBO_DEFAULT_GC: no
   GOBO_CLI_THREAD: 0
-  GOBO_SHORT_VERSION: $env:GITHUB_REF_NAME.TrimStart('gobo-')
 
 jobs:
 
@@ -255,13 +254,19 @@ jobs:
     needs: [linux_x86_64_test, linux_arm64_test, macos_x86_64_test, macos_arm64_test, windows_x86_64_test, windows_arm64_test]
     steps:
       - uses: actions/checkout@v4
+      - name: extract_gobo_version
+        id: gobo_version
+        run: |
+          $version = $env:GITHUB_REF_NAME.TrimStart('gobo-')
+          "version=$version" >> $env:GITHUB_OUTPUT
+        shell: pwsh
       - name: extract_release_notes
-        run: . "$env:GITHUB_WORKSPACE/.cicd/extract_release_notes.ps1" $env:GOBO_SHORT_VERSION History.md release_notes.md
+        run: . "$env:GITHUB_WORKSPACE/.cicd/extract_release_notes.ps1" ${{ steps.gobo_version.outputs.version }} History.md release_notes.md
         shell: pwsh
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          name: Gobo Eiffel $env:GOBO_SHORT_VERSION
+          name: Gobo Eiffel ${{ steps.gobo_version.outputs.version }}
           body_path: release_notes.md
           prerelease: true
           make_latest: false
