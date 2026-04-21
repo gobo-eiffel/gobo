@@ -252,7 +252,7 @@ jobs:
 
   create_release:
     runs-on: ubuntu-latest
-    needs: build_package
+    needs: [linux_x86_64_test, linux_arm64_test, macos_x86_64_test, macos_arm64_test, windows_x86_64_test, windows_arm64_test]
     steps:
       - uses: actions/checkout@v4
       - name: extract_release_notes
@@ -272,7 +272,7 @@ jobs:
 
   all_publish:
     runs-on: ubuntu-latest
-    needs: [linux_x86_64_test, linux_arm64_test, macos_x86_64_test, macos_arm64_test, windows_x86_64_test, windows_arm64_test]
+    needs: create_release
     steps:
       - uses: actions/download-artifact@v4
         with:
