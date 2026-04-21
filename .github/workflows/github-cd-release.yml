@@ -1,15 +1,19 @@
 # For available runners, see https://docs.github.com/en/enterprise-cloud@latest/actions/reference/runners/github-hosted-runners#standard-github-hosted-runners-for-public-repositories
 
-name: "Nightly Build"
+name: "Release Build"
 
 on:
-  schedule:
-    - cron: '22 1 * * *'
-  workflow_dispatch:
+  push:
+    tags:
+      - 'gobo-[0-9]+.[0-9]+'
+
+permissions:
+  contents: write
 
 env:
   GOBO_DEFAULT_GC: no
   GOBO_CLI_THREAD: 0
+  GOBO_SHORT_VERSION: $env:GITHUB_REF_NAME.TrimStart('gobo-')
 
 jobs:
 
@@ -243,6 +247,26 @@ jobs:
         run: . "$env:GITHUB_WORKSPACE/.cicd/test_delivery.ps1" github ${{ matrix.c_compiler }} ${{ matrix.eiffel_compiler }} ${{ matrix.system_under_test }}
 
 #
+# Create Github release.
+#
+
+  create_release:
+    runs-on: ubuntu-latest
+    needs: build_package
+    steps:
+      - uses: actions/checkout@v4
+      - name: extract_release_notes
+        run: . "$env:GITHUB_WORKSPACE/.cicd/extract_release_notes.ps1" $env:GOBO_SHORT_VERSION History.md release_notes.md
+        shell: pwsh
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Gobo Eiffel $env:GOBO_SHORT_VERSION
+          body_path: release_notes.md
+          prerelease: true
+          make_latest: false
+
+#
 # Publish packages.
 #
 
@@ -279,5 +303,5 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: gobo-*
-          tag: nightly
+          tag: ${{ github.ref_name }}
           rm: true
