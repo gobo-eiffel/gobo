@@ -1,6 +1,8 @@
 # Release History
 
-## Version xx.xx.xx - xxxxxx
+## Version 26.04.22 - 22 April 2026
+
+### gecop
 
 * Added validation tests for `VEVI` ("Variable Initialization rule").
 
