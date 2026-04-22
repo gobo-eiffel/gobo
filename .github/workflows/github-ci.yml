@@ -33,16 +33,16 @@ jobs:
         os: [ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-22.04-arm]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github ${{ matrix.c_compiler }}
         shell: pwsh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gobo_bin_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: bin
           retention-days: 1
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gobo_c_config_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config/default.cfg
@@ -57,16 +57,16 @@ jobs:
         os: [macos-26, macos-15, macos-15-intel, macos-14]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github ${{ matrix.c_compiler }}
         shell: pwsh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gobo_bin_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: bin
           retention-days: 1
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gobo_c_config_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config/default.cfg
@@ -81,15 +81,15 @@ jobs:
         os: [windows-2025, windows-2022, windows-11-arm]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_ge.ps1" github ${{ matrix.c_compiler }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gobo_bin_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: bin
           retention-days: 1
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gobo_c_config_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config/default.cfg
@@ -110,12 +110,12 @@ jobs:
         os: [ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-22.04-arm]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_bin_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: bin
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_c_config_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config
@@ -147,12 +147,12 @@ jobs:
             eiffel_compiler: debug_ise
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_bin_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: bin
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_c_config_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config
@@ -176,12 +176,12 @@ jobs:
             eiffel_compiler: debug_ise
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_bin_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: bin
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_c_config_${{ matrix.os }}_${{ matrix.c_compiler }}
           path: tool/gec/backend/c/config
