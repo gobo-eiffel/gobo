@@ -13,7 +13,7 @@
 	install_zig.ps1 github
 
 .NOTES
-	Copyright: "Copyright (c) 2024-2025, Eric Bezault and others"
+	Copyright: "Copyright (c) 2024-2026, Eric Bezault and others"
 	License: "MIT License"
 #>
 
@@ -32,7 +32,7 @@ if ($LastExitCode -ne 0) {
 	exit $LastExitCode
 }
 
-$GOBO_CI_ZIG_VERSION = "0.15.2"
+$GOBO_CI_ZIG_VERSION = "0.16.0"
 $GOBO_CI_ZIG_PATH = "https://ziglang.org/download/$GOBO_CI_ZIG_VERSION"
 # $GOBO_CI_ZIG_PATH = "https://ziglang.org/builds"
 
