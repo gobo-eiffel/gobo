@@ -263,7 +263,7 @@ jobs:
       - name: extract_release_notes
         run: . "$env:GITHUB_WORKSPACE/.cicd/extract_release_notes.ps1" ${{ steps.gobo_version.outputs.version }} History.md release_notes.md
         shell: pwsh
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.ref_name }}
           name: Gobo Eiffel ${{ steps.gobo_version.outputs.version }}
