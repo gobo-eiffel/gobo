@@ -1,4 +1,4 @@
 {
 	"gobo-eiffel.workspaceEcfFile": "library/common/config/ecf/integration.ecf",
-	"gobo-eiffel.workspaceEcfTarget": "integration_none"
+	"gobo-eiffel.workspaceEcfTarget": "integration"
 }
