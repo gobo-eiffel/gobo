@@ -33,6 +33,12 @@ if ($LastExitCode -ne 0) {
 }
 
 $GOBO_CI_ZIG_VERSION = "0.16.0"
+if ($GOBO_CI_OS -eq "windows" -and $GOBO_CI_ARCH -eq "arm64") {
+	# 'zig cc --version' exits with code -1073741819.
+	# See https://codeberg.org/ziglang/zig/issues/31865.
+	# Use previous Zig release.
+	$GOBO_CI_ZIG_VERSION = "0.15.2"
+}
 $GOBO_CI_ZIG_PATH = "https://ziglang.org/download/$GOBO_CI_ZIG_VERSION"
 # $GOBO_CI_ZIG_PATH = "https://ziglang.org/builds"
 
