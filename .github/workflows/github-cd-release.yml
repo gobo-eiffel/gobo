@@ -24,11 +24,11 @@ jobs:
     if: ${{ github.repository == 'gobo-eiffel/gobo' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github gcc
         shell: pwsh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gobo_delivery_linux_x86_64
           path: gobo-*.xz
@@ -38,11 +38,11 @@ jobs:
     if: ${{ github.repository == 'gobo-eiffel/gobo' }}
     runs-on: ubuntu-24.04-arm
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github gcc
         shell: pwsh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gobo_delivery_linux_arm64
           path: gobo-*.xz
@@ -52,11 +52,11 @@ jobs:
     if: ${{ github.repository == 'gobo-eiffel/gobo' }}
     runs-on: macos-15-intel
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github zig
         shell: pwsh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gobo_delivery_macos_x86_64
           path: gobo-*.xz
@@ -66,11 +66,11 @@ jobs:
     if: ${{ github.repository == 'gobo-eiffel/gobo' }}
     runs-on: macos-14
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github zig
         shell: pwsh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gobo_delivery_macos_arm64
           path: gobo-*.xz
@@ -80,11 +80,11 @@ jobs:
     if: ${{ github.repository == 'gobo-eiffel/gobo' }}
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github msc
         shell: pwsh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gobo_delivery_windows_x86_64
           path: gobo-*.7z
@@ -94,11 +94,11 @@ jobs:
     if: ${{ github.repository == 'gobo-eiffel/gobo' }}
     runs-on: windows-11-arm
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: build
         run: . "$env:GITHUB_WORKSPACE/.cicd/build_delivery.ps1" github msc
         shell: pwsh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gobo_delivery_windows_arm64
           path: gobo-*.7z
@@ -123,8 +123,8 @@ jobs:
           - c_compiler: gcc
             eiffel_compiler: debug_ise
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_delivery_linux_x86_64
           path: .
@@ -147,8 +147,8 @@ jobs:
           - c_compiler: gcc
             eiffel_compiler: debug_ise
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_delivery_linux_arm64
           path: .
@@ -171,8 +171,8 @@ jobs:
           - c_compiler: clang
             eiffel_compiler: debug_ise
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_delivery_macos_x86_64
           path: .
@@ -190,8 +190,8 @@ jobs:
         eiffel_compiler: [ge, debug_ge]
         system_under_test: [library, tool]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_delivery_macos_arm64
           path: .
@@ -214,8 +214,8 @@ jobs:
           - c_compiler: msc
             eiffel_compiler: debug_ise
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_delivery_windows_x86_64
           path: .
@@ -237,8 +237,8 @@ jobs:
           - c_compiler: msc
             eiffel_compiler: debug_ise
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_delivery_windows_arm64
           path: .
@@ -253,7 +253,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [linux_x86_64_test, linux_arm64_test, macos_x86_64_test, macos_arm64_test, windows_x86_64_test, windows_arm64_test]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: extract_gobo_version
         id: gobo_version
         run: |
@@ -263,7 +263,7 @@ jobs:
       - name: extract_release_notes
         run: . "$env:GITHUB_WORKSPACE/.cicd/extract_release_notes.ps1" ${{ steps.gobo_version.outputs.version }} History.md release_notes.md
         shell: pwsh
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.ref_name }}
           name: Gobo Eiffel ${{ steps.gobo_version.outputs.version }}
@@ -279,27 +279,27 @@ jobs:
     runs-on: ubuntu-latest
     needs: create_release
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_delivery_linux_x86_64
           path: .
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_delivery_linux_arm64
           path: .
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_delivery_macos_x86_64
           path: .
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_delivery_macos_arm64
           path: .
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_delivery_windows_x86_64
           path: .
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: gobo_delivery_windows_arm64
           path: .
