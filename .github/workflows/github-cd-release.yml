@@ -315,3 +315,75 @@ jobs:
           files: gobo-*
           tag: ${{ github.ref_name }}
           rm: true
+
+#
+# Build and publish RPM packages.
+#
+
+  linux_x86_64_rpm:
+    runs-on: ubuntu-latest
+    needs: all_publish
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
+        with:
+          name: gobo_delivery_linux_x86_64
+          path: .
+      - name: extract_gobo_version
+        id: gobo_version
+        run: |
+          $version = $env:GITHUB_REF_NAME.TrimStart('gobo-')
+          $archive = (Get-ChildItem "gobo-linux-x86_64-*.tar.xz").Name
+          $full_version = $archive -replace '^gobo-linux-x86_64-(.+)\.tar\.xz$', '$1'
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "full_version=$full_version" >> $env:GITHUB_OUTPUT
+        shell: pwsh
+      - name: build_rpm
+        run: |
+          sudo apt-get install -y rpm
+          mkdir -p ~/rpmbuild/{SOURCES,SPECS,BUILD,RPMS,SRPMS}
+          cp gobo-linux-x86_64-${{ steps.gobo_version.outputs.full_version }}.tar.xz \
+             ~/rpmbuild/SOURCES/gobo-linux-x86_64-${{ steps.gobo_version.outputs.full_version }}.tar.xz
+          cp .cicd/gobo-eiffel.spec ~/rpmbuild/SPECS/
+          rpmbuild -bb \
+            --define "version ${{ steps.gobo_version.outputs.version }}" \
+            --define "gobo_full_version ${{ steps.gobo_version.outputs.full_version }}" \
+            ~/rpmbuild/SPECS/gobo-eiffel.spec
+      - uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: ~/rpmbuild/RPMS/x86_64/gobo-eiffel-*.rpm
+
+  linux_arm64_rpm:
+    runs-on: ubuntu-24.04-arm
+    needs: all_publish
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
+        with:
+          name: gobo_delivery_linux_arm64
+          path: .
+      - name: extract_gobo_version
+        id: gobo_version
+        run: |
+          $version = $env:GITHUB_REF_NAME.TrimStart('gobo-')
+          $archive = (Get-ChildItem "gobo-linux-arm64-*.tar.xz").Name
+          $full_version = $archive -replace '^gobo-linux-arm64-(.+)\.tar\.xz$', '$1'
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "full_version=$full_version" >> $env:GITHUB_OUTPUT
+        shell: pwsh
+      - name: build_rpm
+        run: |
+          sudo apt-get install -y rpm
+          mkdir -p ~/rpmbuild/{SOURCES,SPECS,BUILD,RPMS,SRPMS}
+          cp gobo-linux-arm64-${{ steps.gobo_version.outputs.full_version }}.tar.xz \
+             ~/rpmbuild/SOURCES/gobo-linux-arm64-${{ steps.gobo_version.outputs.full_version }}.tar.xz
+          cp .cicd/gobo-eiffel.spec ~/rpmbuild/SPECS/
+          rpmbuild -bb \
+            --define "version ${{ steps.gobo_version.outputs.version }}" \
+            --define "gobo_full_version ${{ steps.gobo_version.outputs.full_version }}" \
+            ~/rpmbuild/SPECS/gobo-eiffel.spec
+      - uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: ~/rpmbuild/RPMS/aarch64/gobo-eiffel-*.rpm
