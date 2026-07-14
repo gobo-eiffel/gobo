@@ -176,9 +176,22 @@ extern void GE_scoop_session_add_call(GE_scoop_session* a_session, GE_scoop_call
 extern void GE_scoop_session_add_sync_call(GE_scoop_region* a_caller, GE_scoop_session* a_session);
 
 /*
- * Indicate that some preconditions in `a_caller' are waiting for some activity in `a_callee'.
+ * New of SCOOP precondition to indicate that `a_caller' failed to satisfy
+ * a wait precondition.
  */
-extern void GE_scoop_region_add_precondition(GE_scoop_region* a_caller, GE_scoop_region* a_callee);
+extern GE_scoop_precondition* GE_new_scoop_precondition(GE_scoop_region* a_caller);
+
+/*
+ * Indicate that some preconditions in `a_precondition->caller' are waiting for
+ * some activity in `a_callee'.
+ */
+extern void GE_scoop_region_add_precondition(GE_scoop_precondition* a_precondition, GE_scoop_region* a_callee);
+
+/*
+ * Indicate that the preconditions in `a_precondition->caller' are not
+ * waiting for some activity in `a_callee' anymore.
+ */
+extern void GE_scoop_region_remove_precondition(GE_scoop_precondition* a_precondition, GE_scoop_region* a_callee);
 
 /*
  * Indicate that `a_caller' is starting to wait for any activity to occur on the callees

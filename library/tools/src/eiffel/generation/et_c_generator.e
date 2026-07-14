@@ -23428,17 +23428,6 @@ feature {NONE} -- SCOOP
 					current_file.put_new_line
 					indent
 					print_indentation
-					current_file.put_string (c_ge_scoop_session_set_eiffel_called)
-					current_file.put_character ('(')
-					current_file.put_string (c_se)
-					print_comma
-					current_file.put_character ('%'')
-					current_file.put_character ('\')
-					current_file.put_character ('1')
-					current_file.put_character ('%'')
-					current_file.put_character (')')
-					print_semicolon_newline
-					print_indentation
 					current_file.put_string (c_ge_scoop_region_impersonate)
 					current_file.put_character ('(')
 					current_file.put_string (c_se)
@@ -23456,6 +23445,17 @@ feature {NONE} -- SCOOP
 					current_file.put_string (c_se)
 					current_file.put_string (c_arrow)
 					current_file.put_string (c_callee)
+					current_file.put_character (')')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ge_scoop_session_set_eiffel_called)
+					current_file.put_character ('(')
+					current_file.put_string (c_se)
+					print_comma
+					current_file.put_character ('%'')
+					current_file.put_character ('\')
+					current_file.put_character ('1')
+					current_file.put_character ('%'')
 					current_file.put_character (')')
 					print_semicolon_newline
 					dedent
@@ -24622,6 +24622,15 @@ feature {NONE} -- SCOOP
 				l_is_used := a_separate_formal_arguments.item_2 (i)
 				if l_name /= Void and l_is_used then
 					print_indentation
+					current_file.put_string (c_ge_scoop_precondition)
+					current_file.put_character ('*')
+					current_file.put_character (' ')
+					current_file.put_string (c_sprecond)
+					current_file.put_integer_32 (l_name.seed)
+					print_assign_to
+					current_file.put_character ('0')
+					print_semicolon_newline
+					print_indentation
 					current_file.put_string (c_ge_scoop_region)
 					current_file.put_character ('*')
 					current_file.put_character (' ')
@@ -24658,6 +24667,57 @@ feature {NONE} -- SCOOP
 				l_name := a_separate_formal_arguments.item_1 (i)
 				l_is_used := a_separate_formal_arguments.item_2 (i)
 				if l_name /= Void and l_is_used then
+					if l_used_count /= 1 then
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						current_file.put_string (c_sr)
+						current_file.put_integer_32 (l_name.seed)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+					end
+					print_indentation
+					current_file.put_string (c_sprecond)
+					current_file.put_integer_32 (l_name.seed)
+					print_assign_to
+					current_file.put_string (c_ge_new_scoop_precondition)
+					current_file.put_character ('(')
+					current_file.put_string (c_sr)
+					current_file.put_character (')')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ge_scoop_region_add_precondition)
+					current_file.put_character ('(')
+					current_file.put_string (c_sprecond)
+					current_file.put_integer_32 (l_name.seed)
+					print_comma
+					current_file.put_string (c_sr)
+					current_file.put_integer_32 (l_name.seed)
+					current_file.put_character (')')
+					print_semicolon_newline
+					if l_used_count /= 1 then
+						dedent
+						print_indentation
+						current_file.put_character ('}')
+						current_file.put_new_line
+					end
+				end
+				i := i + 1
+			end
+			print_indentation
+			current_file.put_string (c_ge_scoop_region_wait_preconditions)
+			current_file.put_character ('(')
+			current_file.put_string (c_sr)
+			current_file.put_character (')')
+			print_semicolon_newline
+			from i := 1 until i > nb loop
+				l_name := a_separate_formal_arguments.item_1 (i)
+				l_is_used := a_separate_formal_arguments.item_2 (i)
+				if l_name /= Void and l_is_used then
 					print_indentation
 					if l_used_count /= 1 then
 						current_file.put_string (c_if)
@@ -24668,9 +24728,10 @@ feature {NONE} -- SCOOP
 						current_file.put_character (')')
 						current_file.put_character (' ')
 					end
-					current_file.put_string (c_ge_scoop_region_add_precondition)
+					current_file.put_string (c_ge_scoop_region_remove_precondition)
 					current_file.put_character ('(')
-					current_file.put_string (c_sr)
+					current_file.put_string (c_sprecond)
+					current_file.put_integer_32 (l_name.seed)
 					print_comma
 					current_file.put_string (c_sr)
 					current_file.put_integer_32 (l_name.seed)
@@ -24679,12 +24740,6 @@ feature {NONE} -- SCOOP
 				end
 				i := i + 1
 			end
-			print_indentation
-			current_file.put_string (c_ge_scoop_region_wait_preconditions)
-			current_file.put_character ('(')
-			current_file.put_string (c_sr)
-			current_file.put_character (')')
-			print_semicolon_newline
 			print_indentation
 			current_file.put_string (c_continue)
 			print_semicolon_newline
@@ -49303,6 +49358,7 @@ feature {NONE} -- Constants
 	c_ge_new_once_per_object_data: STRING = "GE_new_once_per_object_data"
 	c_ge_new_scoop_call: STRING = "GE_new_scoop_call"
 	c_ge_new_scoop_condition: STRING = "GE_new_scoop_condition"
+	c_ge_new_scoop_precondition: STRING = "GE_new_scoop_precondition"
 	c_ge_new_scoop_region: STRING = "GE_new_scoop_region"
 	c_ge_new_special_of_reference_instance_of_encoded_type: STRING = "GE_new_special_of_reference_instance_of_encoded_type"
 	c_ge_new_str8: STRING = "GE_new_str8"
@@ -49380,14 +49436,16 @@ feature {NONE} -- Constants
 	c_ge_scoop_exceptions_stop_when_dirty: STRING = "GE_SCOOP_EXCEPTIONS_STOP_WHEN_DIRTY"
 	c_ge_scoop_multisessions_open_start: STRING = "GE_scoop_multisessions_open_start"
 	c_ge_scoop_multisessions_open_stop: STRING = "GE_scoop_multisessions_open_stop"
+	c_ge_scoop_precondition: STRING = "GE_scoop_precondition"
 	c_ge_scoop_processor_run: STRING = "GE_scoop_processor_run"
 	c_ge_scoop_region: STRING = "GE_scoop_region"
 	c_ge_scoop_region_add_precondition: STRING = "GE_scoop_region_add_precondition"
 	c_ge_scoop_region_has_lock_on: STRING = "GE_scoop_region_has_lock_on"
 	c_ge_scoop_region_impersonate: STRING = "GE_scoop_region_impersonate"
 	c_ge_scoop_region_pass_locks: STRING = "GE_scoop_region_pass_locks"
-	c_ge_scoop_region_set_context: STRING = "GE_scoop_region_set_context"
 	c_ge_scoop_region_release_locks: STRING = "GE_scoop_region_release_locks"
+	c_ge_scoop_region_remove_precondition: STRING = "GE_scoop_region_remove_precondition"
+	c_ge_scoop_region_set_context: STRING = "GE_scoop_region_set_context"
 	c_ge_scoop_region_wait_preconditions: STRING = "GE_scoop_region_wait_preconditions"
 	c_ge_scoop_session: STRING = "GE_scoop_session"
 	c_ge_scoop_session_add_call: STRING = "GE_scoop_session_add_call"
@@ -49529,6 +49587,7 @@ feature {NONE} -- Constants
 	c_se: STRING = "se"
 	c_size_t: STRING = "size_t"
 	c_sizeof: STRING = "sizeof"
+	c_sprecond: STRING = "sprecond"
 	c_sr: STRING = "sr"
 	c_status_suffix: STRING = "_status"
 	c_stderr: STRING = "stderr"

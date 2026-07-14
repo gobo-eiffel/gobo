@@ -664,23 +664,72 @@ void GE_scoop_region_set_impersonation_allowed(GE_scoop_region* a_region, char a
 }
 
 /*
- * Indicate that some preconditions in `a_caller' are waiting for some activity in `a_callee'.
+ * New of SCOOP precondition to indicate that `a_caller' failed to satisfy
+ * a wait precondition.
  */
-void GE_scoop_region_add_precondition(GE_scoop_region* a_caller, GE_scoop_region* a_callee)
+GE_scoop_precondition* GE_new_scoop_precondition(GE_scoop_region* a_caller)
 {
 	GE_scoop_precondition* l_precondition;
-	GE_scoop_precondition* l_last_precondition;
 
 	l_precondition = (GE_scoop_precondition*)GE_calloc(1, sizeof(GE_scoop_precondition));
 	l_precondition->caller = a_caller;
+	return l_precondition;
+}
+
+/*
+ * Indicate that some preconditions in `a_precondition->caller' are waiting for
+ * some activity in `a_callee'.
+ */
+void GE_scoop_region_add_precondition(GE_scoop_precondition* a_precondition, GE_scoop_region* a_callee)
+{
+	GE_scoop_precondition* l_last_precondition;
+
 	GE_mutex_lock((EIF_POINTER)a_callee->mutex);
 	l_last_precondition = a_callee->last_precondition;
-	a_callee->last_precondition = l_precondition;
+	a_callee->last_precondition = a_precondition;
 	if (l_last_precondition) {
-		l_last_precondition->next = l_precondition;
+		l_last_precondition->next = a_precondition;
 	} else {
-		a_callee->first_precondition = l_precondition;
+		a_callee->first_precondition = a_precondition;
 	}
+	GE_mutex_unlock((EIF_POINTER)a_callee->mutex);
+}
+
+/*
+ * Indicate that the preconditions in `a_precondition->caller' are not
+ * waiting for some activity in `a_callee' anymore.
+ */
+void GE_scoop_region_remove_precondition(GE_scoop_precondition* a_precondition, GE_scoop_region* a_callee)
+{
+	GE_scoop_precondition* l_previous_precondition;
+	GE_scoop_precondition* l_precondition;
+
+	GE_mutex_lock((EIF_POINTER)a_callee->mutex);
+	if (!a_callee->first_precondition) {
+		/* done */
+	} else if (a_callee->first_precondition == a_precondition) {
+		l_precondition = a_precondition->next;
+		a_callee->first_precondition = l_precondition;
+		if (!l_precondition) {
+			a_callee->last_precondition = 0;
+		}
+	} else {
+		l_previous_precondition = a_callee->first_precondition;
+		l_precondition = l_previous_precondition->next;
+		while (l_precondition) {
+			if (l_precondition == a_precondition) {
+				l_previous_precondition->next = l_precondition->next;
+				if (a_callee->last_precondition == l_precondition)  {
+					a_callee->last_precondition = l_previous_precondition;
+				}
+				break;
+			} else {
+				l_previous_precondition = l_precondition;
+				l_precondition = l_precondition->next;
+			}
+		}
+	}
+	GE_free(a_precondition);
 	GE_mutex_unlock((EIF_POINTER)a_callee->mutex);
 }
 
@@ -702,7 +751,6 @@ void GE_scoop_region_wait_preconditions(GE_scoop_region* a_caller)
 void GE_scoop_region_notify_preconditions(GE_scoop_region* a_callee)
 {
 	GE_scoop_precondition* l_precondition;
-	GE_scoop_precondition* l_next_precondition;
 	GE_scoop_region* l_caller;
 
 	GE_mutex_lock((EIF_POINTER)a_callee->mutex);
@@ -712,12 +760,8 @@ void GE_scoop_region_notify_preconditions(GE_scoop_region* a_callee)
 		GE_mutex_lock((EIF_POINTER)l_caller->precondition_mutex);
 		GE_condition_variable_broadcast((EIF_POINTER)l_caller->precondition_condition_variable);
 		GE_mutex_unlock((EIF_POINTER)l_caller->precondition_mutex);
-		l_next_precondition = l_precondition->next;
-		GE_free(l_precondition);
-		l_precondition = l_next_precondition;
+		l_precondition = l_precondition->next;
 	}
-	a_callee->first_precondition = 0;
-	a_callee->last_precondition = 0;
 	GE_mutex_unlock((EIF_POINTER)a_callee->mutex);
 }
 
@@ -832,12 +876,12 @@ static void GE_scoop_call_execute(GE_context* a_context, GE_scoop_session* a_ses
 				return;
 			}
 			a_call->execute(a_context, a_session, a_call);
-			GE_scoop_session_set_eiffel_called(a_session, '\1');
 			a_context->last_rescue = r.previous;
 			*a_context = l_old_context;
 			if (l_is_synchronous) {
 				GE_scoop_region_release_locks(l_caller, l_callee);
 			}
+			GE_scoop_session_set_eiffel_called(a_session, '\1');
 		}
 	} else if (a_call->is_condition) {
 		GE_scoop_condition* l_condition = ((GE_scoop_condition_call*)a_call)->condition;
