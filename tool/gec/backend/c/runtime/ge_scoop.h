@@ -258,6 +258,11 @@ extern void GE_scoop_session_set_eiffel_called(GE_scoop_session* a_session, char
 extern uint32_t GE_scoop_session_is_open(GE_scoop_session* a_session);
 
 /*
+ * Has `a_sesssion` been submitted for execution to the processor of its callee's region?
+ */
+extern char GE_scoop_session_is_submitted(GE_scoop_session* a_session);
+
+/*
  * Perform lock passing from the processor of `a_caller' to the processor of `a_callee' 
  * in case of a synchronous call.
  */
