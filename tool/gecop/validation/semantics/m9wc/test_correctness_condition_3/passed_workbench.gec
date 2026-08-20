@@ -1,0 +1,27 @@
+BB.f
+BB.is_valid: False
+
+aa: system execution failed.
+Following is the set of recorded exceptions:
+
+******************************** SCOOP exception ******************************
+In region  0xXXXXXXXXXXXXXXXX (region id)  0x0 (thread id)
+*******************************************************************************
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+AA                  g                      foo:                         
+<XXXXXXXXXXXXXXXX>                         Precondition violated.        Fail
+-------------------------------------------------------------------------------
+AA                  g                                                   
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  f                                                   
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  make                                                
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  root's creation                                     
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Exit
+-------------------------------------------------------------------------------

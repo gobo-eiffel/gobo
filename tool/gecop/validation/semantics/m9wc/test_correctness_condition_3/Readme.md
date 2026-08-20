@@ -4,7 +4,7 @@ This [test](.) is exercising the semantics rule [M9WC](../Readme.md).
 
 ### Description
 
-In this test, feature `f` of class `AA` contains a precondition with a qualified
-separate call whose target was locked in the caller. So the precondition is
+In this test, feature `g` of class `AA` contains a precondition with a qualified
+separate call with a target which was locked in the caller. So the precondition is
 a correctness condition. A precondition violation is raised because this correctness
 condition evaluates to false.

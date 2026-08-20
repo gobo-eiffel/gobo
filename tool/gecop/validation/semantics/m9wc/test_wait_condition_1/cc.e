@@ -15,7 +15,7 @@ feature
 
 	f
 		do
-			{EXECUTION_ENVIRONMENT}.sleep (1_000_000_000)
+			{EXECUTION_ENVIRONMENT}.sleep (500_000_000)
 			separate b as bb do
 				bb.set_value (10)
 			end

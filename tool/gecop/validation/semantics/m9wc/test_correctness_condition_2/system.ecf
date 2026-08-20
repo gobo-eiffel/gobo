@@ -18,7 +18,7 @@
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true">
-			<assertion precondition="true"/>
+			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<capability>
