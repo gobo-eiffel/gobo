@@ -65,7 +65,7 @@ and thirteen utilities:
 * [Gobo Eiffel C Compilation](./tool/gecc/doc/index.html) (gecc)
 * [Gobo Eiffel Cop](./tool/gecop/doc/index.html) (gecop)
 * [Gobo Eiffel Doc](./tool/gedoc/doc/index.html) (gedoc)
-* [Gobo Eiffel Image](./tool/image/doc/index.html) (geimage)
+* [Gobo Eiffel Image](./tool/geimage/doc/index.html) (geimage)
 * Gobo Eiffel Language Server (gelsp)
 * [Gobo Eiffel Lex](./tool/gelex/doc/index.html) (gelex)
 * [Gobo Eiffel Lint](./tool/gelint/doc/index.html) (gelint)
