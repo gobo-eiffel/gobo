@@ -374,7 +374,7 @@ static void GE_remove_scoop_session(GE_scoop_session* a_session)
 	} else {
 		l_region->last_session = a_session->previous;
 	}
-	if (!l_region->first_session && !l_region->first_pending_session) {
+	if (!l_region->first_session) {
 		*(l_region->keep_alive) = 0;
 	}
 	GE_mutex_unlock((EIF_POINTER)l_region->mutex);
@@ -387,76 +387,42 @@ static void GE_remove_scoop_session(GE_scoop_session* a_session)
 }
 
 /* 
- * Add SCOOP session `a_session' to the list of pending sessions to be executed by the processor of its callee.
+ * Move SCOOP session `a_session' to the first position in the list of sessions 
+ * to be executed by the processor of its callee.
  *
  * To be executed by any thread.
  * 
- * Not thread-safe.
- * Need to be protected by:
- * - `GE_scoop_multisessions_mutex`.
+ * No thread-safe.
+ * To be protected by:
  * - `a_session->callee->mutex`.
  */
-static void GE_unprotected_add_scoop_pending_session(GE_scoop_session* a_session)
-{
-	GE_scoop_region* l_region;
-	GE_scoop_session* l_last_session;
-
-	l_region = a_session->callee;
-	l_last_session = l_region->last_pending_session;
-	if (l_last_session) {
-		l_last_session->next = a_session;
-		a_session->previous = l_last_session;
-	} else {
-		l_region->first_pending_session = a_session;
-	}
-	l_region->last_pending_session = a_session;
-	*(l_region->keep_alive) = l_region;
-	/* If the processor of `l_region` was waiting for a session to execute,
-	 * then wake it up. */
-	GE_condition_variable_broadcast((EIF_POINTER)l_region->condition_variable);
-}
-
-/* 
- * Remove SCOOP session `a_session' from the list of pending sessions to be executed 
- * by the processor of its callee.
- *
- * To be executed by any thread.
- * 
- * Not thread-safe.
- * Need to be protected by:
- * - `GE_scoop_multisessions_mutex`.
- * - `a_session->callee->mutex`.
- */
-static void GE_unprotected_remove_scoop_pending_session(GE_scoop_session* a_session)
+static void GE_unprotected_move_scoop_session_to_first(GE_scoop_session* a_session)
 {
 	GE_scoop_region* l_region;
 	GE_scoop_session* l_other_session;
 
 	l_region = a_session->callee;
-	l_other_session = a_session->previous;
-	if (l_other_session) {
-		l_other_session->next = a_session->next;
+	if (a_session == l_region->first_session) {
+		/* Done */
+	} else if (a_session == l_region->last_session) {
+		l_region->last_session = a_session->previous;
+		l_region->last_session->next = 0;
+		a_session->previous = 0;
+		a_session->next = l_region->first_session;
+		l_region->first_session = a_session;
 	} else {
-		l_region->first_pending_session = a_session->next;
-	}
-	l_other_session = a_session->next;
-	if (l_other_session) {
-		l_other_session->previous = a_session->previous;
-	} else {
-		l_region->last_pending_session = a_session->previous;
-	}
-	a_session->next = 0;
-	a_session->previous = 0;
-	if (!l_region->first_session && !l_region->first_pending_session) {
-		*(l_region->keep_alive) = 0;
+		a_session->previous->next = a_session->next;
+		a_session->next->previous = a_session->previous;
+		a_session->previous = 0;
+		a_session->next = l_region->first_session;
+		l_region->first_session = a_session;
 	}
 }
 
 /* 
  * Add all SCOOP sessions being part of the same multisession as `a_session'
  * to the list of sessions to be executed by the processor of their respective
- * callees if they all had no session to execute, or to their list of pending
- * sessions otherwise.
+ * callees.
  *
  * To be executed by the thread associated with the caller of `a_session'.
  * 
@@ -470,7 +436,6 @@ static void GE_unprotected_remove_scoop_pending_session(GE_scoop_session* a_sess
  */
 static void GE_add_scoop_multisession(GE_scoop_session* a_session)
 {
-	char l_ready = '\1';
 	uint32_t i, l_count = 0;
 	GE_scoop_session* l_sibling;
 	GE_scoop_region* l_region;
@@ -481,9 +446,6 @@ static void GE_add_scoop_multisession(GE_scoop_session* a_session)
 		l_region = l_sibling->callee;
 		GE_mutex_lock((EIF_POINTER)l_region->mutex);
 		l_count++;
-		if (l_region->first_session) {
-			l_ready = 0;
-		}
 		l_sibling = l_sibling->next_sibling_session;
 		if (l_sibling == a_session) {
 			break;
@@ -492,11 +454,7 @@ static void GE_add_scoop_multisession(GE_scoop_session* a_session)
 	l_sibling = a_session;
 	for (i = 0; i < l_count; i++) {
 		GE_increment_scoop_sessions_count();
-		if (l_ready) {
-			GE_unprotected_add_scoop_session(l_sibling);
-		} else {
-			GE_unprotected_add_scoop_pending_session(l_sibling);
-		}
+		GE_unprotected_add_scoop_session(l_sibling);
 		GE_mutex_lock((EIF_POINTER)l_sibling->mutex);
 		l_sibling->is_submitted = '\1';
 		GE_mutex_unlock((EIF_POINTER)l_sibling->mutex);
@@ -507,82 +465,70 @@ static void GE_add_scoop_multisession(GE_scoop_session* a_session)
 }
 
 /* 
- * Check whether the processors of the callee regions of pending session
- * `a_session` and of all other sessions being part of the same multisession
- * have no session to execute. If so, then remove these sessions from their
- * respective list of pending sessions and add them to the list of sessions
- * ready to be executed, and return true. Otherwise return false.
- *
- * To be executed by the thread associated with the caller of `a_session'.
- * 
- * Not thread-safe.
- * Need to be protected by:
- * - `GE_scoop_multisessions_mutex`.
- * Protected by:
- * - `mutex` of the callee of each session being part of the same
- *   multisession as `a_session'.
- */
-static char GE_unprotected_try_promote_scoop_multisession(GE_scoop_session* a_session)
-{
-	char l_ready = '\1';
-	uint32_t i, l_count = 0;
-	GE_scoop_session* l_sibling;
-	GE_scoop_region* l_region;
-
-	l_sibling = a_session;
-	while (1) {
-		l_region = l_sibling->callee;
-		GE_mutex_lock((EIF_POINTER)l_region->mutex);
-		l_count++;
-		if (l_region->first_session) {
-			l_ready = 0;
-			break;
-		}
-		l_sibling = l_sibling->next_sibling_session;
-		if (l_sibling == a_session) {
-			break;
-		}
-	}
-	l_sibling = a_session;
-	for (i = 0; i < l_count; i++) {
-		if (l_ready) {
-			GE_unprotected_remove_scoop_pending_session(l_sibling);
-			GE_unprotected_add_scoop_session(l_sibling);
-		}
-		GE_mutex_unlock((EIF_POINTER)l_sibling->callee->mutex);
-		l_sibling = l_sibling->next_sibling_session;
-	}
-	return l_ready;
-}
-
-/* 
- * Check whether the processors of the callee regions of once of the pending
- * sessions of `a_region` and of all other sessions being part of the same
- * multisession have no session to execute. If so, then remove these sessions
- * from their respective list of pending sessions and add them to the list of
- * sessions ready to be executed.
+ * Check whether one of the sessions of `a_region`, and the sessions being part
+ * of the same multisession if any, could be immediately executed by the processors
+ * of the callee regions. If so, move them to the first position in the list of
+ * sessions of their respective region and mark them as ready for execution.
  * 
  * To be executed by the thread associated with `a_region'.
  * 
- * Not thread-safe.
- * Need to be protected by:
- * - `GE_scoop_multisessions_mutex`.
+ * Thread-safe.
  * Protected by:
+ * -`GE_scoop_multisessions_mutex`.
  * - `mutex` of the callee of each session being part of the same
- *   multisession as `a_session'.
+ *   multisession as candidate sessions of `a_region`.
  */
-static void GE_unprotected_promote_scoop_multisession(GE_scoop_region* a_region)
+static void GE_promote_scoop_session(GE_scoop_region* a_region)
 {
 	GE_scoop_session* l_session;
+	char l_ready = '\1';
+	uint32_t i, l_count = 0;
+	GE_scoop_session* l_sibling;
+	GE_scoop_region* l_sibling_region;
 
-	l_session = a_region->first_pending_session;
+	GE_mutex_lock((EIF_POINTER)GE_scoop_multisessions_mutex);
+	GE_mutex_lock((EIF_POINTER)a_region->mutex);
+	l_session = a_region->first_session;
 	while (l_session) {
-		if (GE_unprotected_try_promote_scoop_multisession(l_session)) {
+		if (l_session->next_sibling_session == l_session || l_session->is_running) {
+			GE_unprotected_move_scoop_session_to_first(l_session);
+			l_session->is_running = '\1';
 			break;
 		} else {
+			l_sibling = l_session->next_sibling_session;
+			l_count = 1;
+			l_ready = '\1';
+			while (l_sibling != l_session) {
+				l_sibling_region = l_sibling->callee;
+				GE_mutex_lock((EIF_POINTER)l_sibling_region->mutex);
+				l_count++;
+				if (l_sibling != l_sibling_region->first_session && l_sibling_region->first_session->is_running) {
+					l_ready = 0;
+					break;
+				}
+				l_sibling = l_sibling->next_sibling_session;
+			}
+			l_sibling = l_session;
+			for (i = 0; i < l_count; i++) {
+				if (l_ready) {
+					GE_unprotected_move_scoop_session_to_first(l_session);
+					l_session->is_running = '\1';
+				}
+				if (l_sibling != l_session) {
+					l_sibling_region = l_sibling->callee;
+					GE_condition_variable_broadcast((EIF_POINTER)l_sibling_region->condition_variable);
+					GE_mutex_unlock((EIF_POINTER)l_sibling_region->mutex);
+				}
+				l_sibling = l_sibling->next_sibling_session;
+			}
+			if (l_ready) {
+				break;
+			}
 			l_session = l_session->next;
 		}
 	}
+	GE_mutex_unlock((EIF_POINTER)a_region->mutex);
+	GE_mutex_unlock((EIF_POINTER)GE_scoop_multisessions_mutex);
 }
 
 /*
@@ -1178,18 +1124,21 @@ void GE_scoop_session_close(GE_scoop_region* a_caller, GE_scoop_session* a_sessi
 				 * up its caller's processor and exits. */
 				GE_mutex_lock(l_callee->mutex);
 				l_next_session = l_callee->first_session;
-				l_next_pending_session = l_callee->first_pending_session;
-				if (!l_next_session && l_next_pending_session) {
-					GE_mutex_lock((EIF_POINTER)GE_scoop_multisessions_mutex);
+				if (l_next_session && !l_next_session->is_running && (l_next_session->next_sibling_session != l_next_session)) {
 					GE_mutex_unlock(l_callee->mutex);
-					GE_unprotected_promote_scoop_multisession(l_callee);
+					GE_promote_scoop_session(l_callee);
 					GE_mutex_lock(l_callee->mutex);
-					GE_mutex_unlock((EIF_POINTER)GE_scoop_multisessions_mutex);
 					l_next_session = l_callee->first_session;
+					if (!l_next_session->is_running && (l_next_session->next_sibling_session != l_next_session)) {
+						l_next_session = 0;
+					}
 				}
-				GE_mutex_unlock(l_callee->mutex);
 				if (l_next_session) {
+					l_next_session->is_running = '\1';
+					GE_mutex_unlock(l_callee->mutex);
 					GE_scoop_session_execute(0, l_next_session);
+				} else {
+					GE_mutex_unlock(l_callee->mutex);
 				}
 			} else {
 				/* Wake up the callee's processor if needed to tell it that there is no call
@@ -1313,15 +1262,17 @@ static int GE_scoop_processor_run_one_iteration(GE_context* a_context)
 
 	GE_mutex_lock(l_mutex);
 	l_session = l_region->first_session;
-	if (!l_session && l_region->first_pending_session) {
-		GE_mutex_lock((EIF_POINTER)GE_scoop_multisessions_mutex);
+	if (l_session && !l_session->is_running && (l_session->next_sibling_session != l_session)) {
 		GE_mutex_unlock(l_mutex);
-		GE_unprotected_promote_scoop_multisession(l_region);
+		GE_promote_scoop_session(l_region);
 		GE_mutex_lock(l_mutex);
-		GE_mutex_unlock((EIF_POINTER)GE_scoop_multisessions_mutex);
 		l_session = l_region->first_session;
+		if (!l_session->is_running && (l_session->next_sibling_session != l_session)) {
+			l_session = 0;
+		}
 	}
 	if (l_session) {
+		l_session->is_running = '\1';
 		GE_mutex_unlock(l_mutex);
 		GE_scoop_session_execute(a_context, l_session);
 		GE_remove_scoop_session(l_session);

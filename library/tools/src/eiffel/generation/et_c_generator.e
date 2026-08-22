@@ -24101,6 +24101,13 @@ feature {NONE} -- SCOOP
 					end
 					i := i + 1
 				end
+				if l_separate_formal_arguments_count > 0 then
+					print_indentation
+					current_file.put_string (c_se0)
+					print_assign_to
+					current_file.put_character ('0')
+					print_semicolon_newline
+				end
 				if l_separate_formal_arguments_count > 1 then
 					print_indentation
 					current_file.put_string (c_if)
@@ -24200,6 +24207,13 @@ feature {NONE} -- SCOOP
 				l_dynamic_primary_type := l_dynamic_type_set.static_type.primary_type
 				print_open_separate_argument_scoop_session (l_name, l_dynamic_primary_type, nb > 1, Void, a_instruction)
 				i := i + 1
+			end
+			if nb > 0 then
+				print_indentation
+				current_file.put_string (c_se0)
+				print_assign_to
+				current_file.put_character ('0')
+				print_semicolon_newline
 			end
 			if nb > 1 then
 				print_indentation

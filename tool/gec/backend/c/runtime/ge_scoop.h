@@ -95,8 +95,15 @@ struct GE_scoop_call_struct {
  *   to the processor of its callee's region. It can be set by any thread and
  *   is protected by `mutex'.
  * 
+ * - `is_running` indicates whether the process of its callee's region (or another
+ *   processor on its behalf) is currently executing the calls of this session, or
+ *   if this session has been marked for being the next one that the processor should
+ *   execute (if it's not currently executing a session). It is protected by
+ *   `mutex` of the enclosing region.
+ * 
  * - `was_eiffel_called` indicates whether some Eiffel code been called as part of
- *   this session. It is protected by `mutex'.
+ *   this session. It is protected by `mutex'. It can be set by any thread and
+ *   is protected by `mutex'.
  * 
  * - `no_wait_condition_notification` indicates whether no wait condition notification
  *   should be sent when closing this session. It is protected by `mutex'.
@@ -113,20 +120,25 @@ struct GE_scoop_call_struct {
  * 
  * - `previous` and `next` are used to keep together sessions to be executed on objects
  *   of the same enclosing region. They can be set by any thread, and are protected by
- *   `mutex` of the enclosing region and also by `GE_scoop_multisessions_mutex` in case
- *   of pending sessions (in that case we need both mutex to set, and at least one mutex
- *   to access).
+ *   `mutex` of the enclosing region.
  * 
  * - `first_call` and `last_call` are the sequence of calls to be executed on objects
  *   of enclosing region. They are set by the thread associated with the caller. They
  *   are accessed and cleared by the thread associated with the callee. They are
  *   protected by `mutex`.
+ * 
+ * - `mutex` is used to protect access to `is_open`, `is _submitted`, `is_running`,
+ *   `was_eiffel_called`, `first_call`, `last_call`, and `next` of the enclosed calls.
+ * 
+ * - `condition_variable` is used to wait for new calls to be added while this sesssion
+ *   is being executed. It is protected by `mutex`.
  */
 struct GE_scoop_session_struct {
 	GE_scoop_region* volatile callee;
 	uint32_t volatile is_synchronized;
 	uint32_t volatile is_open;
 	char volatile is_submitted;
+	char volatile is_running;
 	char volatile was_eiffel_called;
 	char volatile no_wait_condition_notification;
 	GE_scoop_session* volatile next_locked_session;
@@ -135,8 +147,8 @@ struct GE_scoop_session_struct {
 	GE_scoop_session* volatile next;
 	GE_scoop_call* volatile first_call;
 	GE_scoop_call* volatile last_call;
-	EIF_MUTEX_TYPE* volatile mutex; /* To add, remove and access SCOOP calls, and to update `is_open', `is_submitted' and `was_eiffel_called'. */
-	EIF_COND_TYPE* volatile condition_variable; /* To add, remove and access SCOOP calls, and to update `is_open' and `is_submitted'. */
+	EIF_MUTEX_TYPE* volatile mutex;
+	EIF_COND_TYPE* volatile condition_variable;
 };
 
 /*
@@ -180,12 +192,23 @@ struct GE_scoop_session_struct {
  *   executed on objects of current region. They can be set by any thread and are
  *   protected by `mutex`.
  * 
- * - `first_pending_session` and `last_pending_session` are the sequence of sessions
- *   which are part of multisessions (e.g. feature with several separate arguments)
- *   and which will be executed on objects of current region when all sibling sessions
- *   are ready to be executed by their respective callee's regions. They can be set by
- *   any thread, and are protected by `mutex` and also by `GE_scoop_multisessions_mutex`
- *   (in that case we need both mutex to set, and at least one mutex to access).
+ * - `first_precondition` and `last_precondition` are the other regions whose
+ *   preconditions are waiting for some activity of current region. They are set
+ *   by the thread associated with the caller, and are protected by `mutex`.
+ * 
+ * - `mutex` is used to protect access to `is_impersonation_allowed`, `keep_alive`,
+ *   `first_session`, `last_session`, `first_precondition`, `last_precondition`,
+ *   and `is_running`, `next` and `previous`of the enclosed sessions.
+ * 
+ * - `condition_variable` is used to wait for new sessions to be added or promoted.
+ *   It is protected by `mutex`.
+ * 
+ * - `sync_mutex` and `sync_condition_variable` are used to wait for the callee
+ *   to be available in case of synchronous calls.
+ * 
+ * - `precondition_mutex` and `precondition_condition_variable` are used to wait
+ *   for some activity on the other regions before trying to evaluate a wait
+ *   precondition again on the current region.
  */
 typedef volatile struct GE_scoop_precondition_struct GE_scoop_precondition;
 struct GE_scoop_region_struct {
@@ -201,16 +224,14 @@ struct GE_scoop_region_struct {
 	GE_scoop_session* volatile first_locked_session;
 	GE_scoop_session* volatile first_session;
 	GE_scoop_session* volatile last_session;
-	GE_scoop_session* volatile first_pending_session;
-	GE_scoop_session* volatile last_pending_session;
-	GE_scoop_precondition* volatile first_precondition; /* Other regions whose preconditions are waiting for some activity of current region. Protected by `mutex'. */
-	GE_scoop_precondition* volatile last_precondition; /* Other regions whose preconditions are waiting for some activity of current region. Protected by `mutex'. */
-	EIF_MUTEX_TYPE* volatile mutex; /* To add, remove and access SCOOP sessions, and to access `is_impersonation_allowed'. */
-	EIF_COND_TYPE* volatile condition_variable; /* To add, remove and access SCOOP sessions, and to access `is_impersonation_allowed'. */
-	EIF_MUTEX_TYPE* volatile sync_mutex; /* For synchronization in case of synchronous calls. */
-	EIF_COND_TYPE* volatile sync_condition_variable; /* For synchronization in case of synchronous calls. */
-	EIF_MUTEX_TYPE* volatile precondition_mutex; /* To make preconditions of current region wait for some activity on other regions. */
-	EIF_COND_TYPE* volatile precondition_condition_variable; /* To make preconditions of current region wait for some activity on other regions. */
+	GE_scoop_precondition* volatile first_precondition;
+	GE_scoop_precondition* volatile last_precondition;
+	EIF_MUTEX_TYPE* volatile mutex;
+	EIF_COND_TYPE* volatile condition_variable;
+	EIF_MUTEX_TYPE* volatile sync_mutex;
+	EIF_COND_TYPE* volatile sync_condition_variable;
+	EIF_MUTEX_TYPE* volatile precondition_mutex;
+	EIF_COND_TYPE* volatile precondition_condition_variable;
 };
 
 /* Struct for SCOOP waiting precondition. */
