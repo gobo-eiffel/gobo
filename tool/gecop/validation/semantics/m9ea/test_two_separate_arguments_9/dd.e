@@ -18,6 +18,8 @@ feature
 			a: BOOLEAN
 		do
 			print ("start DD.g%N")
+			{SCHEDULER}.set_value (2)
+			{SCHEDULER}.wait_for_value (3)
 			{EXECUTION_ENVIRONMENT}.sleep (200_000_000)
 			print ("middle DD.g%N")
 			separate c as cc do

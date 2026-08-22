@@ -13,10 +13,10 @@ feature
 			create cc.make
 			create d.make (cc)
 			f (d)
-			{EXECUTION_ENVIRONMENT}.sleep (100_000_000)
+			{SCHEDULER}.wait_for_value (2)
 			print ("Calling BB.g...%N")
 			g (d)
-			{SCHEDULER}.set_value (2)
+			{SCHEDULER}.set_value (4)
 		end
 
 	cc: separate CC
@@ -39,6 +39,7 @@ feature
 		do
 			print ("BB.h%N")
 			a := c.x
+			{SCHEDULER}.set_value (3)
 			a := d.y
 		end
 

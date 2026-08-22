@@ -14,10 +14,10 @@ feature
 			create c.make
 			create d.make (c)
 			f (d)
-			{EXECUTION_ENVIRONMENT}.sleep (100_000_000)
+			{SCHEDULER}.wait_for_value (2)
 			print ("Calling BB.g...%N")
 			g (c, d)
-			{SCHEDULER}.set_value (2)
+			{SCHEDULER}.set_value (4)
 		end
 
 	f (d: separate DD)
@@ -30,6 +30,7 @@ feature
 			a: BOOLEAN
 		do
 			print ("BB.g%N")
+			{SCHEDULER}.set_value (3)
 			a := c.x
 			a := d.y
 		end

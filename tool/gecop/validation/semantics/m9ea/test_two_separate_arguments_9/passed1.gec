@@ -1,8 +1,0 @@
-start DD.g
-Calling BB.g...
-middle DD.g
-CC.f
-end DD.g
-BB.g
-CC.x
-DD.y
