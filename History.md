@@ -6,11 +6,16 @@
 
 * Made sure that `default_create` is called when initializing
   expanded objects.
+* When generating a new ECF file, turn on the preconditions.
 
 ### gecop
 
 * Added semantics tests for `VOIT` (Iteration rule).
 * Added validation tests for `VTEC-2` (Expanded Type rule).
+
+### gedoc
+
+* When generating a new ECF file, turn on the preconditions.
 
 ### Gobo Eiffel Tools Library
 
