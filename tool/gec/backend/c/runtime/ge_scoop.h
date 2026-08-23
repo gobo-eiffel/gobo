@@ -198,7 +198,7 @@ struct GE_scoop_session_struct {
  * 
  * - `mutex` is used to protect access to `is_impersonation_allowed`, `keep_alive`,
  *   `first_session`, `last_session`, `first_precondition`, `last_precondition`,
- *   and `is_running`, `next` and `previous`of the enclosed sessions.
+ *   and `is_running`, `next` and `previous` of the enclosed sessions.
  * 
  * - `condition_variable` is used to wait for new sessions to be added or promoted.
  *   It is protected by `mutex`.
