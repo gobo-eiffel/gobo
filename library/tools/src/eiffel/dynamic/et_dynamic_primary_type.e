@@ -858,6 +858,7 @@ feature {NONE} -- Features
 			end
 			if a_procedure.is_default_create_routine then
 				has_custom_default_create_routine := not attached {ET_DO_PROCEDURE} a_procedure.static_feature as l_do_procedure or else
+					a_procedure.has_separate_argument or else
 					(attached l_do_procedure.locals as l_locals and then not l_locals.is_empty) or else
 					(attached l_do_procedure.compound as l_compound and then not l_compound.is_empty) or else
 					l_do_procedure.rescue_clause /= Void or else

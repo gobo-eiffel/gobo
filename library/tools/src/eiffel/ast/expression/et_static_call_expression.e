@@ -24,7 +24,8 @@ inherit
 			has_address_expression,
 			has_agent,
 			has_typed_object_test,
-			add_old_expressions
+			add_old_expressions,
+			add_formal_arguments
 		redefine
 			reset,
 			is_never_void
@@ -38,6 +39,7 @@ inherit
 			has_agent,
 			has_typed_object_test,
 			add_old_expressions,
+			add_formal_arguments,
 			is_never_void
 		end
 

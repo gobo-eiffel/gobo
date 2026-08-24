@@ -6,7 +6,7 @@
 		or quantifier expressions).
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2019-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2019-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_ITERATION_EXPRESSION
@@ -28,7 +28,8 @@ inherit
 			has_address_expression,
 			has_agent,
 			has_typed_object_test,
-			add_old_expressions
+			add_old_expressions,
+			add_formal_arguments
 		redefine
 			reset,
 			is_instance_free
@@ -104,6 +105,27 @@ feature -- Access
 	iteration_expression: ET_EXPRESSION
 			-- Some or all expression
 		deferred
+		end
+
+feature -- Formal arguments
+
+	add_formal_arguments (a_list: DS_ARRAYED_LIST_2 [detachable ET_IDENTIFIER, BOOLEAN])
+			-- Add to `a_list' all formal arguments appearing in current expression
+			-- and (recursively) in its subexpressions: set the boolean to true
+			-- if the formal argument name at the index corresponding to its seed
+			-- is not Void.
+		do
+			iteration_expression.add_formal_arguments (a_list)
+			iterable_expression.add_formal_arguments (a_list)
+			if attached until_conditional as l_until_conditional then
+				l_until_conditional.expression.add_formal_arguments (a_list)
+			end
+			if attached invariant_part as l_invariant_part then
+				l_invariant_part.add_formal_arguments (a_list)
+			end
+			if attached variant_part as l_variant_part then
+				l_variant_part.expression.add_formal_arguments (a_list)
+			end
 		end
 
 feature -- Assertions

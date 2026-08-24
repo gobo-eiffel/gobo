@@ -5,7 +5,7 @@
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_DYNAMIC_TYPE_BUILDER
@@ -637,7 +637,7 @@ feature {NONE} -- Generation
 				else
 					check_feature_validity (l_static_feature, l_current_type)
 				end
-				if l_current_type.base_class.preconditions_enabled then
+				if l_current_type.base_class.preconditions_enabled or a_feature.has_separate_argument then
 					check_all_preconditions_validity (l_static_feature, l_current_type)
 				end
 				if l_current_type.base_class.postconditions_enabled then

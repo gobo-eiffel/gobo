@@ -5,7 +5,7 @@
 		"Eiffel assertion lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_ASSERTIONS
@@ -209,6 +209,27 @@ feature -- Setting
 			first_semicolon := a_first_semicolon
 		ensure
 			first_semicolon_set: first_semicolon = a_first_semicolon
+		end
+
+feature -- Formal arguments
+
+	add_formal_arguments (a_list: DS_ARRAYED_LIST_2 [detachable ET_IDENTIFIER, BOOLEAN])
+			-- Add to `a_list' all formal arguments appearing in current assertions
+			-- and (recursively) in their subexpressions: set the boolean to true
+			-- if the formal argument name at the index corresponding to its seed
+			-- is not Void.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if attached assertion (i).expression as l_expression then
+					l_expression.add_formal_arguments (a_list)
+				end
+				i := i + 1
+			end
 		end
 
 feature -- Element change

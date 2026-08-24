@@ -138,7 +138,7 @@ feature -- Replacement
 			a_replacement_not_void: a_replacement /= Void
 			valid_codes: across 1 |..| a_replacement.count as i all subject.valid_code (a_replacement.code (i.item)) end
 		do
-			check precodition: attached {STRING} subject as l_subject_string then
+			check precondition: attached {STRING} subject as l_subject_string then
 				Result := STRING_.new_empty_string (l_subject_string, subject_end - subject_start + 1)
 				append_replace_to_string (Result, a_replacement)
 			end
@@ -199,7 +199,7 @@ feature -- Replacement
 			a_replacement_not_void: a_replacement /= Void
 			valid_codes: across 1 |..| a_replacement.count as i all subject.valid_code (a_replacement.code (i.item)) end
 		do
-			check precodition: attached {STRING} subject as l_subject_string then
+			check precondition: attached {STRING} subject as l_subject_string then
 				Result := STRING_.new_empty_string (l_subject_string, subject_end - subject_start + 1)
 				append_replace_all_to_string (Result, a_replacement)
 			end
@@ -327,7 +327,7 @@ feature -- Splitting
 			l_last_char_matched: INTEGER
 			old_subject_start: INTEGER
 		do
-			check precodition: attached {STRING} subject as l_subject_string then
+			check precondition: attached {STRING} subject as l_subject_string then
 				i := subject_start
 				l_last_char_matched := i - 1
 				old_subject_start := i

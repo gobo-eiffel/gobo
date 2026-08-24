@@ -271,6 +271,7 @@ feature {NONE} -- Initialization
 			create separate_call_instruction.make (tokens.current_keyword, current_feature.static_feature.name, Void)
 			create separate_call_expression.make (tokens.current_keyword, current_feature.static_feature.name, Void)
 			create separate_arguments.make (10)
+			create separate_formal_arguments.make (20)
 			create formal_arguments.make (20)
 			create manifest_array_types.make (100)
 			create big_manifest_array_types.make (100)
@@ -2580,6 +2581,8 @@ feature {NONE} -- Feature generation
 			l_dll_file: STRING
 			l_has_include_files: BOOLEAN
 			l_has_reference_arguments: BOOLEAN
+			l_has_separate_formal_arguments: BOOLEAN
+			l_preconditions_enabled: BOOLEAN
 			l_print_body: BOOLEAN
 			l_print_footer: BOOLEAN
 		do
@@ -2845,21 +2848,52 @@ feature {NONE} -- Feature generation
 					current_file.put_string (c_ac)
 					current_file.put_string (c_arrow)
 					current_file.put_string (c_call)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
+					print_assign_to
 					current_file.put_string (c_tc_address)
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 				end
 				print_feature_trace_message_call (True)
+				if use_scoop then
+						-- Declaration of SCOOP sessions to register separate calls
+						-- in assertions of `a_feature'.
+					if has_separate_formal_arguments (a_feature) then
+						l_has_separate_formal_arguments := True
+						print_formal_argument_scoop_session_declarations (a_feature)
+						print_scoop_multisession_declaration
+						print_current_scoop_region_declaration
+						print_scoop_session_protection_declaration
+						print_indentation
+						current_file.put_string (c_while)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						current_file.put_character ('1')
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+						print_protect_all_scoop_sessions (a_feature)
+						print_open_formal_argument_scoop_sessions (a_feature)
+						l_print_body := True
+					end
+				end
 				if current_type.base_class.invariants_enabled and not current_feature.is_static and not a_creation then
 					print_all_invariants (True)
 					l_print_body := True
 				end
-				if current_type.base_class.preconditions_enabled then
-					print_all_preconditions (a_feature)
+				l_preconditions_enabled := current_type.base_class.preconditions_enabled
+				if l_preconditions_enabled or l_has_separate_formal_arguments then
+					print_all_preconditions (a_feature, l_preconditions_enabled)
 					l_print_body := True
+				end
+				if l_has_separate_formal_arguments then
+					print_indentation
+					current_file.put_string (c_break)
+					print_semicolon_newline
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
 				end
 				if current_type.base_class.postconditions_enabled then
 					print_all_old_expression_declarations (a_feature)
@@ -2877,12 +2911,9 @@ feature {NONE} -- Feature generation
 					current_file.put_string (c_tc)
 					current_file.put_character ('.')
 					current_file.put_string (c_object)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
+					print_assign_to
 					print_current_name (current_file)
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 				end
 			end
 				-- Put the body of the feature in a block so that there
@@ -3164,6 +3195,10 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				if l_print_footer then
 					print_footer_comment
 				end
+				if l_has_separate_formal_arguments then
+					print_unprotect_scoop_sessions
+					print_close_formal_argument_scoop_sessions (a_feature, False)
+				end
 				print_feature_trace_message_call (False)
 					-- Call stack.
 				if exception_trace_mode then
@@ -3249,289 +3284,16 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			a_feature_is_builtin: a_feature.is_builtin
 			valid_feature: current_feature.static_feature = a_feature
 		local
-			i, nb: INTEGER
-			l_name: ET_IDENTIFIER
-			l_argument_type: ET_DYNAMIC_TYPE
-			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
-			l_argument: ET_FORMAL_ARGUMENT
 			old_file: KI_TEXT_OUTPUT_STREAM
-			l_has_separate_arguments: BOOLEAN
-			l_separate_arguments_count: INTEGER
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
-				--
-				-- Declaration of variables.
-				--
-			if use_scoop then
-					-- Declaration of SCOOP sessions to register separate calls.
-				l_arguments := a_feature.arguments
-				if l_arguments /= Void then
-					nb := l_arguments.count
-					from i := 1 until i > nb loop
-						l_argument := l_arguments.formal_argument (i)
-						l_name := l_argument.name
-						l_argument_type := dynamic_type_set (l_name).static_type
-						if l_argument_type.is_separate then
-							l_has_separate_arguments := True
-							l_separate_arguments_count := l_separate_arguments_count + 1
-							print_indentation
-							current_file.put_string (c_ge_scoop_session)
-							current_file.put_character ('*')
-							current_file.put_character (' ')
-							print_separate_argument_session_name (l_name, current_file)
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
-							current_file.put_character ('0')
-							print_semicolon_newline
-						end
-						i := i + 1
-					end
-				end
-				if l_has_separate_arguments then
-					print_indentation
-					current_file.put_string (c_ge_scoop_region)
-					current_file.put_character ('*')
-					current_file.put_character (' ')
-					current_file.put_string (c_sr)
-					print_assign_to
-					current_file.put_string (c_ac)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_region)
-					print_semicolon_newline
-					print_indentation
-					current_file.put_string (c_ge_scoop_condition)
-					current_file.put_character ('*')
-					current_file.put_character (' ')
-					current_file.put_string (c_scond)
-					print_assign_to
-					current_file.put_character ('0')
-					print_semicolon_newline
-					print_indentation
-					current_file.put_string (c_ge_rescue)
-					current_file.put_character (' ')
-					current_file.put_character ('r')
-					current_file.put_character (';')
-					current_file.put_new_line
-				end
-			end
-				--
 				-- Instructions.
-				--
 			current_file := current_function_body_buffer
-			if l_has_separate_arguments then
-					-- Start the current SCOOP sessions.
-				if l_separate_arguments_count > 1 then
-					print_indentation
-					current_file.put_string (c_ge_scoop_multisessions_open_start)
-					current_file.put_character ('(')
-					current_file.put_character (')')
-					print_semicolon_newline
-					print_indentation
-					current_file.put_string (c_scond)
-					print_assign_to
-					current_file.put_string (c_ge_new_scoop_condition)
-					current_file.put_character ('(')
-					current_file.put_integer (l_separate_arguments_count)
-					current_file.put_character (')')
-					print_semicolon_newline
-				end
-				check l_has_separate_arguments: l_arguments /= Void then end
-				nb := l_arguments.count
-				from i := 1 until i > nb loop
-					l_argument := l_arguments.formal_argument (i)
-					l_name := l_argument.name
-					l_argument_type := dynamic_type_set (l_name).static_type
-					if l_argument_type.is_separate then
-						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_formal_argument (l_name)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						print_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_string (c_ge_scoop_session_open)
-						current_file.put_character ('(')
-						current_file.put_string (c_sr)
-						print_comma
-						print_attribute_region_access (l_name, l_argument_type.primary_type, False)
-						print_comma
-						current_file.put_string (c_scond)
-						current_file.put_character (')')
-						if l_separate_arguments_count > 1 then
-							current_file.put_character (';')
-							current_file.put_character (' ')
-							current_file.put_string (c_else)
-							current_file.put_character (' ')
-							current_file.put_string (c_ge_scoop_condition_decrement)
-							current_file.put_character ('(')
-							current_file.put_string (c_scond)
-							current_file.put_character (')')
-						end
-						print_semicolon_newline
-					end
-					i := i + 1
-				end
-				if l_separate_arguments_count > 1 then
-					print_indentation
-					current_file.put_string (c_ge_scoop_multisessions_open_stop)
-					current_file.put_character ('(')
-					current_file.put_character (')')
-					print_semicolon_newline
-				end
-				print_indentation
-				current_file.put_character ('r')
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('&')
-				current_file.put_character ('r')
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_string (c_if)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				current_file.put_string (c_ge_setjmp)
-				current_file.put_character ('(')
-				current_file.put_character ('r')
-				current_file.put_character ('.')
-				current_file.put_character ('j')
-				current_file.put_character ('b')
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('!')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('0')
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				indent
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('&')
-				current_file.put_character ('r')
-				current_file.put_character (';')
-				current_file.put_new_line
-					-- Make sure to exit from the current SCOOP sessions
-					-- before propagating the exception.
-				check l_has_separate_arguments: l_arguments /= Void then end
-				nb := l_arguments.count
-				from i := 1 until i > nb loop
-					l_argument := l_arguments.formal_argument (i)
-					l_name := l_argument.name
-					l_argument_type := dynamic_type_set (l_name).static_type
-					if l_argument_type.is_separate then
-						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_string (c_ge_scoop_session_close)
-						current_file.put_character ('(')
-						current_file.put_string (c_sr)
-						print_comma
-						print_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (')')
-						print_semicolon_newline
-					end
-					i := i + 1
-				end
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('r')
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_string (c_ge_jump_to_last_rescue)
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-				dedent
-				print_indentation
-				current_file.put_character ('}')
-				current_file.put_new_line
-			end
 			if a_feature.is_function then
 				print_external_builtin_function_body (a_feature)
 			else
 				print_external_builtin_procedure_body (a_feature)
-			end
-			if l_has_separate_arguments then
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('r')
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				current_file.put_character (';')
-				current_file.put_new_line
-					-- Exit from the current SCOOP sessions.
-				check l_has_separate_arguments: l_arguments /= Void then end
-				nb := l_arguments.count
-				from i := 1 until i > nb loop
-					l_argument := l_arguments.formal_argument (i)
-					l_name := l_argument.name
-					l_argument_type := dynamic_type_set (l_name).static_type
-					if l_argument_type.is_separate then
-						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_string (c_ge_scoop_session_close)
-						current_file.put_character ('(')
-						current_file.put_string (c_sr)
-						print_comma
-						print_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (')')
-						print_semicolon_newline
-					end
-					i := i + 1
-				end
 			end
 				-- Clean up.
 			current_file := old_file
@@ -7346,6 +7108,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if exception_trace_mode then
 				l_is_empty :=
 					not a_creation and then
+					not current_feature.has_separate_argument and then
 					not (current_type.base_class.invariants_enabled and not current_closure.is_static) and then
 					not current_type.base_class.preconditions_enabled and then
 					not current_type.base_class.postconditions_enabled and then
@@ -7530,9 +7293,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 		local
 			i, nb: INTEGER
 			l_name: ET_IDENTIFIER
-			l_argument_type: ET_DYNAMIC_TYPE
-			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
-			l_argument: ET_FORMAL_ARGUMENT
 			l_local_type_set: ET_DYNAMIC_TYPE_SET
 			l_local_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_rescue: detachable ET_COMPOUND
@@ -7546,7 +7306,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			l_once_index: INTEGER
 			l_has_separate_arguments: BOOLEAN
 			l_has_separate_formal_arguments: BOOLEAN
-			l_separate_formal_arguments_count: INTEGER
+			l_preconditions_enabled: BOOLEAN
 			l_print_body: BOOLEAN
 			l_print_footer: BOOLEAN
 		do
@@ -7571,66 +7331,18 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 					-- even for those of inline separate instructions contained
 					-- in `a_feature'.
 				if attached a_feature.inline_separate_arguments as l_inline_separate_arguments then
-					nb := l_inline_separate_arguments.count
-					l_has_separate_arguments := nb > 0
-					from i := 1 until i > nb loop
-						print_indentation
-						current_file.put_string (c_ge_scoop_session)
-						current_file.put_character ('*')
-						current_file.put_character (' ')
-						print_separate_argument_session_name (l_inline_separate_arguments.argument (i).name, current_file)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_character ('0')
-						print_semicolon_newline
-						i := i + 1
-					end
+					l_has_separate_arguments := l_inline_separate_arguments.count > 0
+					print_inline_argument_scoop_session_declarations (a_feature)
 				end
-				l_arguments := a_feature.arguments
-				if l_arguments /= Void then
-					nb := l_arguments.count
-					from i := 1 until i > nb loop
-						l_argument := l_arguments.formal_argument (i)
-						l_name := l_argument.name
-						l_argument_type := dynamic_type_set (l_name).static_type
-						if l_argument_type.is_separate then
-							l_has_separate_formal_arguments := True
-							l_separate_formal_arguments_count := l_separate_formal_arguments_count + 1
-							l_has_separate_arguments := True
-							print_indentation
-							current_file.put_string (c_ge_scoop_session)
-							current_file.put_character ('*')
-							current_file.put_character (' ')
-							print_separate_argument_session_name (l_name, current_file)
-							current_file.put_character (' ')
-							current_file.put_character ('=')
-							current_file.put_character (' ')
-							current_file.put_character ('0')
-							print_semicolon_newline
-						end
-						i := i + 1
-					end
+				if has_separate_formal_arguments (a_feature) then
+					l_has_separate_formal_arguments := True
+					l_has_separate_arguments := True
+					print_formal_argument_scoop_session_declarations (a_feature)
 				end
 				if l_has_separate_arguments then
-					print_indentation
-					current_file.put_string (c_ge_scoop_region)
-					current_file.put_character ('*')
-					current_file.put_character (' ')
-					current_file.put_string (c_sr)
-					print_assign_to
-					current_file.put_string (c_ac)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_region)
-					print_semicolon_newline
-					print_indentation
-					current_file.put_string (c_ge_scoop_condition)
-					current_file.put_character ('*')
-					current_file.put_character (' ')
-					current_file.put_string (c_scond)
-					print_assign_to
-					current_file.put_character ('0')
-					print_semicolon_newline
+					print_scoop_multisession_declaration
+					print_current_scoop_region_declaration
+					print_scoop_session_protection_declaration
 				end
 			end
 			l_rescue := a_feature.rescue_clause
@@ -7646,32 +7358,53 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 				current_file.put_string (c_uint32_t)
 				current_file.put_character (' ')
 				current_file.put_string (c_tr)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
 				current_file.put_string (c_in_rescue)
-				print_semicolon_newline
-			end
-			if l_has_separate_arguments then
-				print_indentation
-				current_file.put_string (c_ge_rescue)
-				current_file.put_character (' ')
-				current_file.put_string (c_r2)
 				print_semicolon_newline
 			end
 				--
 				-- Instructions.
 				--
 			current_file := current_function_body_buffer
+			if l_has_separate_formal_arguments then
+				print_indentation
+				current_file.put_string (c_while)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_character ('1')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+			end
+			if l_has_separate_arguments then
+				print_protect_all_scoop_sessions (a_feature)
+				l_print_body := True
+			end
+			if l_has_separate_formal_arguments then
+				print_open_formal_argument_scoop_sessions (a_feature)
+				l_print_body := True
+			end
 			if current_type.base_class.invariants_enabled and not current_closure.is_static and not a_creation then
 				print_all_invariants (True)
 				l_print_body := True
 			end
-			if current_type.base_class.preconditions_enabled then
-				print_all_preconditions (a_feature)
+			l_preconditions_enabled := current_type.base_class.preconditions_enabled
+			if l_preconditions_enabled or l_has_separate_formal_arguments then
+				print_all_preconditions (a_feature, l_preconditions_enabled)
 				l_print_body := True
+			end
+			if l_has_separate_formal_arguments then
+				print_indentation
+				current_file.put_string (c_break)
+				print_semicolon_newline
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
 			end
 			if current_type.base_class.postconditions_enabled then
 				print_all_old_expression_declarations (a_feature)
@@ -7680,192 +7413,10 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if l_print_body then
 				print_body_comment
 			end
-			if l_has_separate_formal_arguments then
-					-- Start the current SCOOP sessions.
-				if l_separate_formal_arguments_count > 1 then
-					print_indentation
-					current_file.put_string (c_ge_scoop_multisessions_open_start)
-					current_file.put_character ('(')
-					current_file.put_character (')')
-					print_semicolon_newline
-					print_indentation
-					current_file.put_string (c_scond)
-					print_assign_to
-					current_file.put_string (c_ge_new_scoop_condition)
-					current_file.put_character ('(')
-					current_file.put_integer (l_separate_formal_arguments_count)
-					current_file.put_character (')')
-					print_semicolon_newline
-				end
-				check l_has_separate_formal_arguments: l_arguments /= Void then end
-				nb := l_arguments.count
-				from i := 1 until i > nb loop
-					l_argument := l_arguments.formal_argument (i)
-					l_name := l_argument.name
-					l_argument_type := dynamic_type_set (l_name).static_type
-					if l_argument_type.is_separate then
-						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_formal_argument (l_name)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						print_separate_argument_session_name (l_name, current_file)
-						print_assign_to
-						current_file.put_string (c_ge_scoop_session_open)
-						current_file.put_character ('(')
-						current_file.put_string (c_sr)
-						print_comma
-						print_attribute_region_access (l_name, l_argument_type.primary_type, False)
-						print_comma
-						current_file.put_string (c_scond)
-						current_file.put_character (')')
-						if l_separate_formal_arguments_count > 1 then
-							current_file.put_character (';')
-							current_file.put_character (' ')
-							current_file.put_string (c_else)
-							current_file.put_character (' ')
-							current_file.put_string (c_ge_scoop_condition_decrement)
-							current_file.put_character ('(')
-							current_file.put_string (c_scond)
-							current_file.put_character (')')
-						end
-						print_semicolon_newline
-					end
-					i := i + 1
-				end
-				if l_separate_formal_arguments_count > 1 then
-					print_indentation
-					current_file.put_string (c_ge_scoop_multisessions_open_stop)
-					current_file.put_character ('(')
-					current_file.put_character (')')
-					print_semicolon_newline
-				end
-			end
 			reset_volatile_data
 			reset_rescue_data
 			locals_written := locals_written_in_rescue
 			locals_read := locals_read_in_rescue
-			if l_has_separate_arguments then
-				print_indentation
-				current_file.put_string (c_r2)
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				print_assign_to
-				current_file.put_character ('&')
-				current_file.put_string (c_r2)
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_if)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				current_file.put_string (c_ge_setjmp)
-				current_file.put_character ('(')
-				current_file.put_string (c_r2)
-				current_file.put_character ('.')
-				current_file.put_character ('j')
-				current_file.put_character ('b')
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('!')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('0')
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				indent
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				print_assign_to
-				current_file.put_character ('&')
-				current_file.put_string (c_r2)
-				print_semicolon_newline
-					-- Make sure to exit from the current SCOOP sessions
-					-- before propagating the exception.
-				if l_has_separate_formal_arguments then
-					check l_has_separate_formal_arguments: l_arguments /= Void then end
-					nb := l_arguments.count
-					from i := 1 until i > nb loop
-						l_argument := l_arguments.formal_argument (i)
-						l_name := l_argument.name
-						l_argument_type := dynamic_type_set (l_name).static_type
-						if l_argument_type.is_separate then
-							print_indentation
-							current_file.put_string (c_if)
-							current_file.put_character (' ')
-							current_file.put_character ('(')
-							print_separate_argument_session_name (l_name, current_file)
-							current_file.put_character (')')
-							current_file.put_character (' ')
-							current_file.put_string (c_ge_scoop_session_close)
-							current_file.put_character ('(')
-							current_file.put_string (c_sr)
-							print_comma
-							print_separate_argument_session_name (l_name, current_file)
-							current_file.put_character (')')
-							print_semicolon_newline
-						end
-						i := i + 1
-					end
-				end
-					-- Even the SCOOP sessions from the inline separate instructions.
-				if attached a_feature.inline_separate_arguments as l_inline_separate_arguments then
-					nb := l_inline_separate_arguments.count
-					from i := 1 until i > nb loop
-						l_name := l_inline_separate_arguments.argument (i).name
-						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_string (c_ge_scoop_session_close)
-						current_file.put_character ('(')
-						current_file.put_string (c_sr)
-						print_comma
-						print_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (')')
-						print_semicolon_newline
-						i := i + 1
-					end
-				end
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				print_assign_to
-				current_file.put_string (c_r2)
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_ge_jump_to_last_rescue)
-				current_file.put_character ('(')
-				current_file.put_string (c_ac)
-				current_file.put_character (')')
-				print_semicolon_newline
-				dedent
-				print_indentation
-				current_file.put_character ('}')
-				current_file.put_new_line
-			end
 			if l_rescue /= Void or l_is_once then
 				print_indentation
 				current_file.put_string (c_r)
@@ -8008,6 +7559,12 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			end
 			l_result_written_in_body := result_written
 			l_result_read_in_body := result_read
+			if l_has_separate_arguments then
+				print_unprotect_scoop_sessions
+			end
+			if l_has_separate_formal_arguments then
+				print_close_formal_argument_scoop_sessions (a_feature, False)
+			end
 			if l_rescue /= Void or l_is_once then
 				print_indentation
 				current_file.put_string (c_ac)
@@ -8022,44 +7579,6 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if a_result_type /= Void then
 					-- The 'Result' entity is always implicitly read in the body to return its value.
 				l_result_read_in_body := True
-			end
-			if l_has_separate_arguments then
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				print_assign_to
-				current_file.put_string (c_r2)
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				print_semicolon_newline
-			end
-			if l_has_separate_formal_arguments then
-					-- Exit from the current SCOOP sessions.
-				check l_has_separate_formal_arguments: l_arguments /= Void then end
-				nb := l_arguments.count
-				from i := 1 until i > nb loop
-					l_argument := l_arguments.formal_argument (i)
-					l_name := l_argument.name
-					l_argument_type := dynamic_type_set (l_name).static_type
-					if l_argument_type.is_separate then
-						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_string (c_ge_scoop_session_close)
-						current_file.put_character ('(')
-						current_file.put_string (c_sr)
-						print_comma
-						print_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (')')
-						print_semicolon_newline
-					end
-					i := i + 1
-				end
 			end
 				--
 				-- Local variables and result declaration.
@@ -8913,7 +8432,7 @@ error_handler.report_warning_message ("**** language not recognized: " + l_langu
 			if attached current_feature.invariants as l_all_invariants then
 				nb := l_all_invariants.count
 				if nb > 0 then
-					print_before_assertions
+					print_before_assertions (False)
 					from i := 1 until i > nb loop
 						index_offset := l_all_invariants.item_2 (i)
 						l_invariants := l_all_invariants.item_1 (i)
@@ -9528,7 +9047,7 @@ feature {NONE} -- Instruction generation
 				if line_generation_mode then
 					print_position (an_instruction.position, current_feature.static_feature.implementation_class)
 				end
-				print_before_assertions
+				print_before_assertions (False)
 				print_assertions (an_instruction, c_ge_ex_check)
 				print_after_assertions
 			else
@@ -9764,7 +9283,6 @@ feature {NONE} -- Instruction generation
 			i, nb: INTEGER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_dynamic_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if line_generation_mode then
 				print_position (a_instruction.position, current_feature.static_feature.implementation_class)
@@ -9792,127 +9310,12 @@ feature {NONE} -- Instruction generation
 			end
 			if attached a_instruction.compound as l_compound then
 				if use_scoop then
-						-- Start the current SCOOP sessions.
-					if nb > 1 then
-						print_indentation
-						current_file.put_string (c_ge_scoop_multisessions_open_start)
-						current_file.put_character ('(')
-						current_file.put_character (')')
-						print_semicolon_newline
-						print_indentation
-						current_file.put_string (c_scond)
-						print_assign_to
-						current_file.put_string (c_ge_new_scoop_condition)
-						current_file.put_character ('(')
-						current_file.put_integer (nb)
-						current_file.put_character (')')
-						print_semicolon_newline
-					else
-						print_indentation
-						current_file.put_string (c_scond)
-						print_assign_to
-						current_file.put_character ('0')
-						print_semicolon_newline
-					end
-					from i := 1 until i > nb loop
-						l_argument := l_arguments.argument (i)
-						l_name := l_argument.name
-						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_inline_separate_argument_name (l_name, current_file)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-						print_indentation
-						print_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_string (c_ge_scoop_session_open)
-						current_file.put_character ('(')
-						current_file.put_string (c_sr)
-						print_comma
-						l_dynamic_type_set := dynamic_type_set (l_name)
-						l_dynamic_primary_type := l_dynamic_type_set.static_type.primary_type
-						print_attribute_region_access (l_name, l_dynamic_primary_type, False)
-						print_comma
-						current_file.put_string (c_scond)
-						current_file.put_character (')')
-						print_semicolon_newline
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-						if nb > 1 then
-							current_file.put_character (' ')
-							current_file.put_string (c_else)
-							current_file.put_character (' ')
-							current_file.put_character ('{')
-							current_file.put_new_line
-							indent
-							print_indentation
-							current_file.put_string (c_ge_scoop_condition_decrement)
-							current_file.put_character ('(')
-							current_file.put_string (c_scond)
-							current_file.put_character (')')
-							print_semicolon_newline
-							dedent
-							print_indentation
-							current_file.put_character ('}')
-						end
-						current_file.put_new_line
-						i := i + 1
-					end
-					if nb > 1 then
-						print_indentation
-						current_file.put_string (c_ge_scoop_multisessions_open_stop)
-						current_file.put_character ('(')
-						current_file.put_character (')')
-						print_semicolon_newline
-					end
+					print_open_inline_argument_scoop_sessions (a_instruction)
 				end
 				print_compound (l_compound)
 				if use_scoop then
 						-- Exit from the current SCOOP sessions.
-					from i := 1 until i > nb loop
-						l_argument := l_arguments.argument (i)
-						l_name := l_argument.name
-						print_indentation
-						current_file.put_string (c_if)
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (')')
-						current_file.put_character (' ')
-						current_file.put_character ('{')
-						current_file.put_new_line
-						indent
-						print_indentation
-						current_file.put_string (c_ge_scoop_session_close)
-						current_file.put_character ('(')
-						current_file.put_string (c_sr)
-						print_comma
-						print_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (')')
-						print_semicolon_newline
-							-- Set the session to NULL so that we don't try to
-							-- exit again from it in case of an exception.
-						print_indentation
-						print_separate_argument_session_name (l_name, current_file)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_character ('0')
-						print_semicolon_newline
-						dedent
-						print_indentation
-						current_file.put_character ('}')
-						current_file.put_new_line
-						i := i + 1
-					end
+					print_close_inline_argument_scoop_sessions (a_instruction, False)
 				end
 			end
 		end
@@ -20731,35 +20134,12 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_character ('*')
 				current_file.put_character (' ')
 				print_separate_argument_session_name (agent_inline_separate_argument.name, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('0')
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_ge_scoop_region)
-				current_file.put_character ('*')
-				current_file.put_character (' ')
-				current_file.put_string (c_sr)
-				print_assign_to
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_region)
-				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_ge_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('r')
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_string (c_ge_scoop_condition)
-				current_file.put_character ('*')
-				current_file.put_character (' ')
-				current_file.put_string (c_scond)
 				print_assign_to
 				current_file.put_character ('0')
 				print_semicolon_newline
+				print_scoop_multisession_declaration
+				print_current_scoop_region_declaration
+				print_scoop_session_protection_declaration
 				print_indentation
 				print_type_declaration (l_target_type.primary_type, current_file)
 				current_file.put_character (' ')
@@ -20780,18 +20160,14 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 			current_file := current_function_body_buffer
 			if l_target_type_is_separate then
 				print_indentation
-				current_file.put_character ('r')
+				current_file.put_string (c_rs)
 				current_file.put_character ('.')
 				current_file.put_string (c_previous)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
 				current_file.put_string (c_last_rescue)
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
+				print_semicolon_newline
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
 				current_file.put_string (c_last_rescue)
@@ -20799,16 +20175,15 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_character ('=')
 				current_file.put_character (' ')
 				current_file.put_character ('&')
-				current_file.put_character ('r')
-				current_file.put_character (';')
-				current_file.put_new_line
+				current_file.put_string (c_rs)
+				print_semicolon_newline
 				print_indentation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
 				current_file.put_character ('(')
 				current_file.put_string (c_ge_setjmp)
 				current_file.put_character ('(')
-				current_file.put_character ('r')
+				current_file.put_string (c_rs)
 				current_file.put_character ('.')
 				current_file.put_character ('j')
 				current_file.put_character ('b')
@@ -20827,13 +20202,10 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_string (c_ac)
 				current_file.put_string (c_arrow)
 				current_file.put_string (c_last_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				current_file.put_character ('&')
-				current_file.put_character ('r')
-				current_file.put_character (';')
-				current_file.put_new_line
+				current_file.put_string (c_rs)
+				print_semicolon_newline
 				print_indentation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
@@ -20846,26 +20218,17 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				current_file.put_string (c_sr)
 				print_comma
 				print_separate_argument_session_name (agent_inline_separate_argument.name, current_file)
+				print_comma
+				current_file.put_character ('0')
 				current_file.put_character (')')
 				print_semicolon_newline
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('r')
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				print_semicolon_newline
+				print_unprotect_scoop_sessions
 				print_indentation
 				current_file.put_string (c_ge_jump_to_last_rescue)
 				current_file.put_character ('(')
 				current_file.put_string (c_ac)
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_semicolon_newline
 				dedent
 				print_indentation
 				current_file.put_character ('}')
@@ -20917,17 +20280,7 @@ error_handler.report_warning_message ("ET_C_GENERATOR.print_once_procedure_inlin
 				end
 			end
 			if l_target_type_is_separate then
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_last_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('r')
-				current_file.put_character ('.')
-				current_file.put_string (c_previous)
-				print_semicolon_newline
+				print_unprotect_scoop_sessions
 			end
 				-- Clean up.
 			current_file := old_file
@@ -23066,7 +22419,7 @@ feature {NONE} -- Deep features generation
 			-- Dynamic type sets of target of deep feature (deep twin or deep equal),
 			-- indexed by target static type
 
-feature {NONE} -- Separate calls
+feature {NONE} -- SCOOP
 
 	print_separate_call_declaration (i: INTEGER; a_separate_call: ET_SEPARATE_CALL; a_closure: ET_CLOSURE)
 			-- Print functions associated with the `i'-th separate call `a_separate_call'
@@ -23292,16 +22645,7 @@ feature {NONE} -- Separate calls
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
-			print_indentation
-			current_file.put_string (c_ge_scoop_region)
-			current_file.put_character ('*')
-			current_file.put_character (' ')
-			current_file.put_string (c_sr)
-			print_assign_to
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_region)
-			print_semicolon_newline
+			print_current_scoop_region_declaration
 			if l_result_type /= Void then
 				print_indentation
 				print_type_declaration (l_result_type, current_file)
@@ -23324,8 +22668,7 @@ feature {NONE} -- Separate calls
 				current_file.put_string (c_ge_scoop_region)
 				current_file.put_character ('*')
 				current_file.put_character (' ')
-				current_file.put_string (c_sr)
-				current_file.put_character ('2')
+				current_file.put_string (c_sr1)
 				print_semicolon_newline
 				print_indentation
 				print_type_declaration (l_target_type, current_file)
@@ -23339,21 +22682,14 @@ feature {NONE} -- Separate calls
 			current_file.put_character (' ')
 			current_file.put_string (c_se)
 			if not l_is_creation_call then
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				print_assign_to
 				current_file.put_character ('0')
 			end
 			print_semicolon_newline
 			l_is_synchronous_call := l_result_type /= Void or l_has_non_separate_reference_actual_argument or l_is_passive_region
 			l_is_asynchronous_call := l_is_creation_call and not l_has_reference_actual_argument and not l_is_passive_region
 			if not l_is_creation_call or else l_is_passive_region then
-				print_indentation
-				current_file.put_string (c_ge_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('r')
-				current_file.put_character (';')
-				current_file.put_new_line
+				print_scoop_session_protection_declaration
 			end
 				-- Print body to `current_file'.
 			current_file := current_function_body_buffer
@@ -23377,8 +22713,7 @@ feature {NONE} -- Separate calls
 						current_feature := l_old_current_feature
 					end
 					print_indentation
-					current_file.put_string (c_sr)
-					current_file.put_character ('2')
+					current_file.put_string (c_sr1)
 					print_assign_to
 					current_file.put_string (c_ge_new_scoop_region)
 					current_file.put_character ('(')
@@ -23430,18 +22765,28 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('(')
 					current_file.put_string (c_sr)
 					print_comma
-					current_file.put_string (c_sr)
-					current_file.put_character ('2')
+					current_file.put_string (c_sr1)
 					print_comma
 					current_file.put_character ('0')
 					current_file.put_character (')')
+					print_semicolon_newline
+						-- Make sure that this session is executed first by
+						-- the process of this new region.
+					print_indentation
+					current_file.put_string (c_se)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_is_running)
+					print_assign_to
+					current_file.put_character ('%'')
+					current_file.put_character ('\')
+					current_file.put_character ('1')
+					current_file.put_character ('%'')
 					print_semicolon_newline
 					if l_is_passive_region then
 						print_indentation
 						current_file.put_string (c_ge_scoop_region_set_context)
 						current_file.put_character ('(')
-						current_file.put_string (c_sr)
-						current_file.put_character ('2')
+						current_file.put_string (c_sr1)
 						print_comma
 						current_file.put_character ('0')
 						current_file.put_character (')')
@@ -23476,8 +22821,7 @@ feature {NONE} -- Separate calls
 				current_file.put_string (c_ge_scoop_region)
 				current_file.put_character ('*')
 				current_file.put_character (' ')
-				current_file.put_string (c_sr)
-				current_file.put_character ('1')
+				current_file.put_string (c_sr1)
 				print_assign_to
 				print_attribute_region_access (formal_argument (1), l_target_type, True)
 				print_semicolon_newline
@@ -23493,12 +22837,8 @@ feature {NONE} -- Separate calls
 					current_file.put_integer (j)
 					current_file.put_string (c_arrow)
 					current_file.put_string (c_callee)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_string (c_sr)
-					current_file.put_character ('1')
+					print_equal_to
+					current_file.put_string (c_sr1)
 					current_file.put_character (')')
 					current_file.put_character (' ')
 					current_file.put_string (c_se)
@@ -23740,35 +23080,29 @@ feature {NONE} -- Separate calls
 					current_file.put_character ('}')
 					current_file.put_new_line
 					print_indentation
-					current_file.put_character ('r')
+					current_file.put_string (c_rs)
 					current_file.put_character ('.')
 					current_file.put_string (c_previous)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
+					print_assign_to
 					current_file.put_string (c_ac)
 					current_file.put_string (c_arrow)
 					current_file.put_string (c_last_rescue)
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 					print_indentation
 					current_file.put_string (c_ac)
 					current_file.put_string (c_arrow)
 					current_file.put_string (c_last_rescue)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
+					print_assign_to
 					current_file.put_character ('&')
-					current_file.put_character ('r')
-					current_file.put_character (';')
-					current_file.put_new_line
+					current_file.put_string (c_rs)
+					print_semicolon_newline
 					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
 					current_file.put_character ('(')
 					current_file.put_string (c_ge_setjmp)
 					current_file.put_character ('(')
-					current_file.put_character ('r')
+					current_file.put_string (c_rs)
 					current_file.put_character ('.')
 					current_file.put_character ('j')
 					current_file.put_character ('b')
@@ -23787,13 +23121,10 @@ feature {NONE} -- Separate calls
 					current_file.put_string (c_ac)
 					current_file.put_string (c_arrow)
 					current_file.put_string (c_last_rescue)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
+					print_assign_to
 					current_file.put_character ('&')
-					current_file.put_character ('r')
-					current_file.put_character (';')
-					current_file.put_new_line
+					current_file.put_string (c_rs)
+					print_semicolon_newline
 					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
@@ -23828,24 +23159,13 @@ feature {NONE} -- Separate calls
 					print_indentation
 					current_file.put_character ('}')
 					current_file.put_new_line
-					print_indentation
-					current_file.put_string (c_ac)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_last_rescue)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('r')
-					current_file.put_character ('.')
-					current_file.put_string (c_previous)
-					print_semicolon_newline
+					print_unprotect_scoop_sessions
 					print_indentation
 					current_file.put_string (c_ge_jump_to_last_rescue)
 					current_file.put_character ('(')
 					current_file.put_string (c_ac)
 					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
+					print_semicolon_newline
 					dedent
 					print_indentation
 					current_file.put_character ('}')
@@ -23887,17 +23207,7 @@ feature {NONE} -- Separate calls
 						in_separate_creation_call := l_old_in_separate_creation_call
 					end
 					max_nested_inlining_count := l_old_max_nested_inlining_count
-					print_indentation
-					current_file.put_string (c_ac)
-					current_file.put_string (c_arrow)
-					current_file.put_string (c_last_rescue)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('r')
-					current_file.put_character ('.')
-					current_file.put_string (c_previous)
-					print_semicolon_newline
+					print_unprotect_scoop_sessions
 					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
@@ -23926,6 +23236,17 @@ feature {NONE} -- Separate calls
 					current_file.put_string (c_se)
 					current_file.put_string (c_arrow)
 					current_file.put_string (c_callee)
+					current_file.put_character (')')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ge_scoop_session_set_eiffel_called)
+					current_file.put_character ('(')
+					current_file.put_string (c_se)
+					print_comma
+					current_file.put_character ('%'')
+					current_file.put_character ('\')
+					current_file.put_character ('1')
+					current_file.put_character ('%'')
 					current_file.put_character (')')
 					print_semicolon_newline
 					dedent
@@ -23961,6 +23282,8 @@ feature {NONE} -- Separate calls
 				current_file.put_string (c_sr)
 				print_comma
 				current_file.put_string (c_se)
+				print_comma
+				current_file.put_character ('0')
 				current_file.put_character (')')
 				print_semicolon_newline
 				if l_once_creation_procedure /= Void and l_once_creation_static_procedure /= Void then
@@ -24632,6 +23955,1036 @@ feature {NONE} -- Separate calls
 			end
 		end
 
+	print_formal_argument_scoop_session_declarations (a_feature: ET_FEATURE_CLOSURE)
+			-- Print declaration of SCOOP sessions to register separate calls,
+			-- for the formal arguments of `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+			use_scoop: use_scoop
+		local
+			i, nb: INTEGER
+			l_argument: ET_FORMAL_ARGUMENT
+			l_name: ET_IDENTIFIER
+			l_argument_type: ET_DYNAMIC_TYPE
+		do
+			if attached a_feature.arguments as l_arguments then
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					from i := 1 until i > nb loop
+						l_argument := l_arguments.formal_argument (i)
+						l_name := l_argument.name
+						l_argument_type := dynamic_type_set (l_name).static_type
+						if l_argument_type.is_separate then
+							print_indentation
+							current_file.put_string (c_ge_scoop_session)
+							current_file.put_character ('*')
+							current_file.put_character (' ')
+							print_separate_argument_session_name (l_name, current_file)
+							print_assign_to
+							current_file.put_character ('0')
+							print_semicolon_newline
+							print_indentation
+							current_file.put_string (c_uint32_t)
+							current_file.put_character (' ')
+							print_separate_argument_session_is_open_name (l_name, current_file)
+							print_assign_to
+							current_file.put_character ('2')
+							print_semicolon_newline
+						end
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	print_inline_argument_scoop_session_declarations (a_feature: ET_FEATURE_CLOSURE)
+			-- Print declaration of SCOOP sessions to register separate calls,
+			-- for the arguments of inline separate instructions contained in `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+			use_scoop: use_scoop
+		local
+			i, nb: INTEGER
+		do
+			if attached a_feature.inline_separate_arguments as l_inline_separate_arguments then
+				nb := l_inline_separate_arguments.count
+				from i := 1 until i > nb loop
+					print_indentation
+					current_file.put_string (c_ge_scoop_session)
+					current_file.put_character ('*')
+					current_file.put_character (' ')
+					print_separate_argument_session_name (l_inline_separate_arguments.argument (i).name, current_file)
+					print_assign_to
+					current_file.put_character ('0')
+					print_semicolon_newline
+					i := i + 1
+				end
+			end
+		end
+
+	print_scoop_multisession_declaration
+			-- Print declaration of SCOOP session pointing to the previous open
+			-- session in case of multisession.
+		require
+			use_scoop: use_scoop
+		do
+			print_indentation
+			current_file.put_string (c_ge_scoop_session)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_se0)
+			print_assign_to
+			current_file.put_character ('0')
+			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_char)
+			current_file.put_character (' ')
+			current_file.put_string (c_se_had_lock)
+			print_assign_to
+			current_file.put_character ('0')
+			print_semicolon_newline
+		end
+
+	print_current_scoop_region_declaration
+			-- Print declaration of current SCOOP region.
+		require
+			use_scoop: use_scoop
+		do
+			print_indentation
+			current_file.put_string (c_ge_scoop_region)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_sr)
+			print_assign_to
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_region)
+			print_semicolon_newline
+		end
+
+	print_scoop_session_protection_declaration
+			-- Print declaration of the protection of SCOOP regions.
+		require
+			use_scoop: use_scoop
+		do
+			print_indentation
+			current_file.put_string (c_ge_rescue)
+			current_file.put_character (' ')
+			current_file.put_string (c_rs)
+			print_semicolon_newline
+		end
+
+	print_open_formal_argument_scoop_sessions (a_feature: ET_FEATURE_CLOSURE)
+			-- Print code to open SCOOP sessions of all separate formal arguments of `a_feature`.
+		require
+			a_feature_not_void: a_feature /= Void
+			use_scoop: use_scoop
+		local
+			l_separate_formal_arguments_count: INTEGER
+			i, nb: INTEGER
+			l_argument: ET_FORMAL_ARGUMENT
+			l_name: ET_IDENTIFIER
+			l_argument_type: ET_DYNAMIC_TYPE
+		do
+			if attached a_feature.arguments as l_arguments then
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					l_argument := l_arguments.formal_argument (i)
+					l_name := l_argument.name
+					l_argument_type := dynamic_type_set (l_name).static_type
+					if l_argument_type.is_separate then
+						l_separate_formal_arguments_count := l_separate_formal_arguments_count + 1
+					end
+					i := i + 1
+				end
+				if l_separate_formal_arguments_count > 1 then
+					print_indentation
+					current_file.put_string (c_se_had_lock)
+					print_assign_to
+					current_file.put_character ('0')
+					print_semicolon_newline
+				end
+				from i := 1 until i > nb loop
+					l_argument := l_arguments.formal_argument (i)
+					l_name := l_argument.name
+					l_argument_type := dynamic_type_set (l_name).static_type
+					if l_argument_type.is_separate then
+						print_open_separate_argument_scoop_session (l_name, l_argument_type.primary_type, l_separate_formal_arguments_count > 1, a_feature, Void)
+					end
+					i := i + 1
+				end
+				if l_separate_formal_arguments_count > 1 then
+					print_indentation
+					current_file.put_string (c_se0)
+					print_assign_to
+					current_file.put_character ('0')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_string (c_se_had_lock)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					from i := 1 until i > nb loop
+						l_argument := l_arguments.formal_argument (i)
+						l_name := l_argument.name
+						l_argument_type := dynamic_type_set (l_name).static_type
+						if l_argument_type.is_separate then
+							print_indentation
+							current_file.put_string (c_if)
+							current_file.put_character (' ')
+							current_file.put_character ('(')
+							print_separate_argument_session_name (l_name, current_file)
+							print_and_then
+							current_file.put_character ('!')
+							current_file.put_string (c_ge_scoop_session_is_submitted)
+							current_file.put_character ('(')
+							print_separate_argument_session_name (l_name, current_file)
+							current_file.put_character (')')
+							current_file.put_character (')')
+							current_file.put_character (' ')
+							current_file.put_string (c_ge_add_scoop_session)
+							current_file.put_character ('(')
+							print_separate_argument_session_name (l_name, current_file)
+							current_file.put_character (')')
+							print_semicolon_newline
+						end
+						i := i + 1
+					end
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+				end
+			end
+		end
+
+	print_close_formal_argument_scoop_sessions (a_feature: ET_FEATURE_CLOSURE; a_in_wait_condition: BOOLEAN)
+			-- Print code to close SCOOP sessions of all separate formal arguments of `a_feature`.
+		require
+			a_feature_not_void: a_feature /= Void
+			use_scoop: use_scoop
+		local
+			i, nb: INTEGER
+			l_argument: ET_FORMAL_ARGUMENT
+			l_name: ET_IDENTIFIER
+			l_argument_type: ET_DYNAMIC_TYPE
+		do
+			if attached a_feature.arguments as l_arguments then
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					l_argument := l_arguments.formal_argument (i)
+					l_name := l_argument.name
+					l_argument_type := dynamic_type_set (l_name).static_type
+					if l_argument_type.is_separate then
+						print_close_separate_argument_scoop_session (l_name, False, a_in_wait_condition)
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	print_open_inline_argument_scoop_sessions (a_instruction: ET_INLINE_SEPARATE_INSTRUCTION)
+			-- Print code to open SCOOP sessions of all separate inline arguments of `a_instruction`.
+		require
+			a_instruction_not_void: a_instruction /= Void
+			use_scoop: use_scoop
+		local
+			i, nb: INTEGER
+			l_arguments: ET_INLINE_SEPARATE_ARGUMENTS
+			l_argument: ET_INLINE_SEPARATE_ARGUMENT
+			l_name: ET_IDENTIFIER
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_primary_type: ET_DYNAMIC_PRIMARY_TYPE
+		do
+			l_arguments := a_instruction.arguments
+			nb := l_arguments.count
+			if nb > 1 then
+				print_indentation
+				current_file.put_string (c_se_had_lock)
+				print_assign_to
+				current_file.put_character ('0')
+				print_semicolon_newline
+			end
+			from i := 1 until i > nb loop
+				l_argument := l_arguments.argument (i)
+				l_name := l_argument.name
+				l_dynamic_type_set := dynamic_type_set (l_name)
+				l_dynamic_primary_type := l_dynamic_type_set.static_type.primary_type
+				print_open_separate_argument_scoop_session (l_name, l_dynamic_primary_type, nb > 1, Void, a_instruction)
+				i := i + 1
+			end
+			if nb > 1 then
+				print_indentation
+				current_file.put_string (c_se0)
+				print_assign_to
+				current_file.put_character ('0')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_se_had_lock)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				from i := 1 until i > nb loop
+					l_argument := l_arguments.argument (i)
+					l_name := l_argument.name
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_separate_argument_session_name (l_name, current_file)
+					print_and_then
+					current_file.put_character ('!')
+					current_file.put_string (c_ge_scoop_session_is_submitted)
+					current_file.put_character ('(')
+					print_separate_argument_session_name (l_name, current_file)
+					current_file.put_character (')')
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_string (c_ge_add_scoop_session)
+					current_file.put_character ('(')
+					print_separate_argument_session_name (l_name, current_file)
+					current_file.put_character (')')
+					print_semicolon_newline
+					i := i + 1
+				end
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+			end
+		end
+
+	print_close_inline_argument_scoop_sessions (a_instruction: ET_INLINE_SEPARATE_INSTRUCTION; a_in_wait_condition: BOOLEAN)
+			-- Print code to close SCOOP sessions of all separate inline arguments of `a_instruction`.
+		require
+			a_instruction_not_void: a_instruction /= Void
+			use_scoop: use_scoop
+		local
+			i, nb: INTEGER
+			l_arguments: ET_INLINE_SEPARATE_ARGUMENTS
+			l_argument: ET_INLINE_SEPARATE_ARGUMENT
+			l_name: ET_IDENTIFIER
+		do
+			l_arguments := a_instruction.arguments
+			nb := l_arguments.count
+			from i := 1 until i > nb loop
+				l_argument := l_arguments.argument (i)
+				l_name := l_argument.name
+				print_close_separate_argument_scoop_session (l_name, True, a_in_wait_condition)
+				i := i + 1
+			end
+		end
+
+	print_open_separate_argument_scoop_session (a_name: ET_IDENTIFIER; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_is_multisession: BOOLEAN;
+		a_feature: detachable ET_FEATURE_CLOSURE; a_instruction: detachable ET_INLINE_SEPARATE_INSTRUCTION)
+			-- Print code to open SCOOP session of separate argument `a_name`, which is either
+			-- a formal argument of `a_feature` or an inline separate argument of `a_instruction`.
+			-- `a_type` is the type of the separate argument.
+			-- `a_is_multisession` indicate whether there are several separate arguments in
+			-- `a_feature` or `a_instruction`.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_separate_argument: a_name.is_argument or a_name.is_inline_separate_argument
+			a_name_formal_argument: a_name.is_argument implies a_feature /= Void
+			a_name_inline_argument: a_name.is_inline_separate_argument implies a_instruction /= Void
+			a_type_not_void: a_type /= Void
+			use_scoop: use_scoop
+		local
+			i, nb: INTEGER
+			l_other_name: ET_IDENTIFIER
+		do
+			print_indentation
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_separate_argument_name (a_name, current_file)
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			if a_is_multisession then
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+			end
+			print_separate_argument_session_name (a_name, current_file)
+			print_assign_to
+			current_file.put_string (c_ge_scoop_session_open)
+			current_file.put_character ('(')
+			current_file.put_string (c_sr)
+			print_comma
+			print_attribute_region_access (a_name, a_type, False)
+			print_comma
+			current_file.put_string (c_se0)
+			current_file.put_character (')')
+			print_semicolon_newline
+			if a_is_multisession then
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_character ('!')
+				print_separate_argument_session_name (a_name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string (c_se_had_lock)
+				print_assign_to
+				current_file.put_character ('%'')
+				current_file.put_character ('\')
+				current_file.put_character ('1')
+				current_file.put_character ('%'')
+				print_semicolon_newline
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_character (' ')
+				current_file.put_string (c_else)
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string (c_uint32_t)
+				current_file.put_character (' ')
+				current_file.put_string (c_se_is_open)
+				print_assign_to
+				current_file.put_string (c_ge_scoop_session_is_open)
+				current_file.put_character ('(')
+				print_separate_argument_session_name (a_name, current_file)
+				current_file.put_character (')')
+				print_semicolon_newline
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_se_is_open)
+				print_equal_to
+				current_file.put_character ('1')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_string (c_se0)
+				print_assign_to
+				print_separate_argument_session_name (a_name, current_file)
+				print_semicolon_newline
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_character (' ')
+				current_file.put_string (c_else)
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				if a_feature /= Void and then attached a_feature.arguments as l_arguments then
+					nb := l_arguments.count
+					from i := 1 until i > nb loop
+						l_other_name := l_arguments.formal_argument (i).name
+						if l_other_name.seed >= a_name.seed then
+							i := nb + 1 -- Jump out of the loop
+						elseif dynamic_type_set (l_other_name).static_type.is_separate then
+							print_indentation
+							current_file.put_string (c_if)
+							current_file.put_character (' ')
+							current_file.put_character ('(')
+							print_separate_argument_session_name (a_name, current_file)
+							print_equal_to
+							print_separate_argument_session_name (l_other_name, current_file)
+							current_file.put_character (')')
+							current_file.put_character (' ')
+							current_file.put_string (c_se_is_open)
+							current_file.put_character ('-')
+							current_file.put_character ('-')
+							print_semicolon_newline
+						end
+						i := i + 1
+					end
+				elseif a_instruction /= Void and then attached a_instruction.arguments as l_arguments then
+					nb := l_arguments.count
+					from i := 1 until i > nb loop
+						l_other_name := l_arguments.argument (i).name
+						if l_other_name.seed >= a_name.seed then
+							i := nb + 1 -- Jump out of the loop
+						else
+							print_indentation
+							current_file.put_string (c_if)
+							current_file.put_character (' ')
+							current_file.put_character ('(')
+							print_separate_argument_session_name (a_name, current_file)
+							print_equal_to
+							print_separate_argument_session_name (l_other_name, current_file)
+							current_file.put_character (')')
+							current_file.put_character (' ')
+							current_file.put_string (c_se_is_open)
+							current_file.put_character ('-')
+							current_file.put_character ('-')
+							print_semicolon_newline
+						end
+						i := i + 1
+					end
+				end
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_string (c_se_is_open)
+				print_greater_than
+				current_file.put_character ('1')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_string (c_se_had_lock)
+				print_assign_to
+				current_file.put_character ('%'')
+				current_file.put_character ('\')
+				current_file.put_character ('1')
+				current_file.put_character ('%'')
+				print_semicolon_newline
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+				if a_feature /= Void then
+					print_indentation
+					print_separate_argument_session_is_open_name (a_name, current_file)
+					print_assign_to
+					current_file.put_string (c_se_is_open)
+					print_semicolon_newline
+				end
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+			elseif a_feature /= Void then
+				print_indentation
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_separate_argument_session_name (a_name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				print_separate_argument_session_is_open_name (a_name, current_file)
+				print_assign_to
+				current_file.put_string (c_ge_scoop_session_is_open)
+				current_file.put_character ('(')
+				print_separate_argument_session_name (a_name, current_file)
+				current_file.put_character (')')
+				print_semicolon_newline
+			end
+		end
+
+	print_close_separate_argument_scoop_session (a_name: ET_IDENTIFIER; a_inline: BOOLEAN; a_in_wait_condition: BOOLEAN)
+			-- Print code to close SCOOP session of separate argument of `a_name`.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_separate_argument: a_name.is_argument or a_name.is_inline_separate_argument
+			use_scoop: use_scoop
+		do
+			print_indentation
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_separate_argument_session_name (a_name, current_file)
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_string (c_ge_scoop_session_close)
+			current_file.put_character ('(')
+			current_file.put_string (c_sr)
+			print_comma
+			print_separate_argument_session_name (a_name, current_file)
+			print_comma
+			if a_in_wait_condition then
+				current_file.put_character ('%'')
+				current_file.put_character ('\')
+				current_file.put_character ('1')
+				current_file.put_character ('%'')
+			else
+				current_file.put_character ('0')
+			end
+			current_file.put_character (')')
+			print_semicolon_newline
+			if a_inline or a_in_wait_condition then
+					-- Set the session to NULL so that we don't try to
+					-- close it again from it in case of an exception
+					-- or a wait condition.
+				print_indentation
+				print_separate_argument_session_name (a_name, current_file)
+				print_assign_to
+				current_file.put_character ('0')
+				print_semicolon_newline
+			end
+		end
+
+	print_protect_all_scoop_sessions (a_feature: ET_FEATURE_CLOSURE)
+			-- Print code to start protection of SCOOP sessions of all separate
+			-- formal arguments and inline separate arguments of `a_feature`.
+		require
+			a_feature_not_void: a_feature /= Void
+			use_scoop: use_scoop
+		local
+			i, nb: INTEGER
+			l_name: ET_IDENTIFIER
+		do
+			print_indentation
+			current_file.put_string (c_rs)
+			current_file.put_character ('.')
+			current_file.put_string (c_previous)
+			print_assign_to
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_assign_to
+			current_file.put_character ('&')
+			current_file.put_string (c_rs)
+			print_semicolon_newline
+			print_indentation
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_setjmp)
+			current_file.put_character ('(')
+			current_file.put_string (c_rs)
+			current_file.put_character ('.')
+			current_file.put_character ('j')
+			current_file.put_character ('b')
+			current_file.put_character (')')
+			print_not_equal_to
+			current_file.put_character ('0')
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_assign_to
+			current_file.put_character ('&')
+			current_file.put_string (c_rs)
+			print_semicolon_newline
+				-- Make sure to exit from the current SCOOP sessions
+				-- before propagating the exception.
+			print_close_formal_argument_scoop_sessions (a_feature, False)
+				-- Even the SCOOP sessions from the inline separate instructions.
+			if attached a_feature.inline_separate_arguments as l_inline_separate_arguments then
+				nb := l_inline_separate_arguments.count
+				from i := 1 until i > nb loop
+					l_name := l_inline_separate_arguments.argument (i).name
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_separate_argument_session_name (l_name, current_file)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_string (c_ge_scoop_session_close)
+					current_file.put_character ('(')
+					current_file.put_string (c_sr)
+					print_comma
+					print_separate_argument_session_name (l_name, current_file)
+					print_comma
+					current_file.put_character ('0')
+					current_file.put_character (')')
+					print_semicolon_newline
+					i := i + 1
+				end
+			end
+			print_unprotect_scoop_sessions
+			print_indentation
+			current_file.put_string (c_ge_jump_to_last_rescue)
+			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			current_file.put_character (')')
+			print_semicolon_newline
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+		end
+
+	print_unprotect_scoop_sessions
+			-- Print code to stop protection of SCOOP sessions.
+		require
+			use_scoop: use_scoop
+		do
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_last_rescue)
+			print_assign_to
+			current_file.put_string (c_rs)
+			current_file.put_character ('.')
+			current_file.put_string (c_previous)
+			print_semicolon_newline
+		end
+
+	print_before_scoop_wait_precondition (a_feature: ET_FEATURE_CLOSURE; a_separate_formal_arguments: DS_ARRAYED_LIST_2 [detachable ET_IDENTIFIER, BOOLEAN]; a_correctness_enabled: BOOLEAN)
+			-- Print code before SCOOP wait precondition to `current_file'.
+			-- Reset the flag `was_eiffel_called` to the SCOOP sessions associated
+			-- with the used separate formal arguments of `a_feature` listed in
+			-- `a_separate_formal_arguments' if the region of this formal argument
+			-- is freshly locked in `a_feature' (no lock passing).
+		require
+			a_feature_not_void: a_feature /= Void
+			a_separate_formal_arguments_not_void: a_separate_formal_arguments /= Void
+		local
+			i, nb: INTEGER
+			l_name: detachable ET_IDENTIFIER
+			l_is_used: BOOLEAN
+			l_used_count: INTEGER
+			l_is_not_first: BOOLEAN
+		do
+			nb := a_separate_formal_arguments.count
+			from i := 1 until i > nb loop
+				l_name := a_separate_formal_arguments.item_1 (i)
+				l_is_used := a_separate_formal_arguments.item_2 (i)
+				if l_name /= Void and l_is_used then
+					l_used_count := l_used_count + 1
+					print_indentation
+					current_file.put_string (c_int)
+					current_file.put_character (' ')
+					current_file.put_character ('t')
+					current_file.put_character ('s')
+					current_file.put_integer_32 (l_name.seed)
+					print_assign_to
+					current_file.put_character ('(')
+					print_separate_argument_session_name (l_name, current_file)
+					print_and_then
+					print_separate_argument_session_is_open_name (l_name, current_file)
+					print_equal_to
+					current_file.put_character ('1')
+					current_file.put_character (')')
+					print_semicolon_newline
+				end
+				i := i + 1
+			end
+			from i := 1 until i > nb loop
+				l_name := a_separate_formal_arguments.item_1 (i)
+				l_is_used := a_separate_formal_arguments.item_2 (i)
+				if l_name /= Void and l_is_used then
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_character ('t')
+					current_file.put_character ('s')
+					current_file.put_integer_32 (l_name.seed)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_string (c_ge_scoop_session_set_eiffel_called)
+					current_file.put_character ('(')
+					print_separate_argument_session_name (l_name, current_file)
+					print_comma
+					current_file.put_character ('0')
+					current_file.put_character (')')
+					print_semicolon_newline
+				end
+				i := i + 1
+			end
+			print_indentation
+			if not a_correctness_enabled then
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				from i := 1 until i > nb loop
+					l_name := a_separate_formal_arguments.item_1 (i)
+					l_is_used := a_separate_formal_arguments.item_2 (i)
+					if l_name /= Void and l_is_used then
+						if l_is_not_first then
+							print_or_else
+						end
+						l_is_not_first := True
+						current_file.put_character ('t')
+						current_file.put_character ('s')
+						current_file.put_integer_32 (l_name.seed)
+					end
+					i := i + 1
+				end
+				current_file.put_character (')')
+				current_file.put_character (' ')
+			end
+		end
+
+	print_after_scoop_wait_precondition (a_feature: ET_FEATURE_CLOSURE; a_separate_formal_arguments: DS_ARRAYED_LIST_2 [detachable ET_IDENTIFIER, BOOLEAN])
+			-- Print to `current_file' then code after SCOOP wait precondition has been evaluated to false.
+			-- Check whether the flag `was_eiffel_called` has been set for the SCOOP sessions
+			-- associated with the used separate formal arguments of `a_feature` listed in
+			-- `a_separate_formal_arguments' if the region of this formal argument is freshly
+			-- locked in `a_feature' (no lock passing). If so, then this is a wait condition,
+			-- otherwise this is a correctness condition.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_separate_formal_arguments_not_void: a_separate_formal_arguments /= Void
+		local
+			i, nb: INTEGER
+			l_name: detachable ET_IDENTIFIER
+			l_is_used: BOOLEAN
+			l_is_not_first: BOOLEAN
+			l_used_count: INTEGER
+		do
+			nb := a_separate_formal_arguments.count
+			from i := 1 until i > nb loop
+				l_name := a_separate_formal_arguments.item_1 (i)
+				l_is_used := a_separate_formal_arguments.item_2 (i)
+				if l_name /= Void and l_is_used then
+					l_used_count := l_used_count + 1
+					print_indentation
+					current_file.put_character ('t')
+					current_file.put_character ('s')
+					current_file.put_integer_32 (l_name.seed)
+					print_assign_to
+					current_file.put_character ('(')
+					current_file.put_character ('t')
+					current_file.put_character ('s')
+					current_file.put_integer_32 (l_name.seed)
+					print_and_then
+					current_file.put_string (c_ge_scoop_session_was_eiffel_called)
+					current_file.put_character ('(')
+					print_separate_argument_session_name (l_name, current_file)
+					current_file.put_character (')')
+					current_file.put_character (')')
+					print_semicolon_newline
+				end
+				i := i + 1
+			end
+			print_indentation
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			from i := 1 until i > nb loop
+				l_name := a_separate_formal_arguments.item_1 (i)
+				l_is_used := a_separate_formal_arguments.item_2 (i)
+				if l_name /= Void and l_is_used then
+					if l_is_not_first then
+						print_or_else
+					end
+					l_is_not_first := True
+					current_file.put_character ('t')
+					current_file.put_character ('s')
+					current_file.put_integer_32 (l_name.seed)
+				end
+				i := i + 1
+			end
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			from i := 1 until i > nb loop
+				l_name := a_separate_formal_arguments.item_1 (i)
+				l_is_used := a_separate_formal_arguments.item_2 (i)
+				if l_name /= Void and l_is_used then
+					print_indentation
+					current_file.put_string (c_ge_scoop_precondition)
+					current_file.put_character ('*')
+					current_file.put_character (' ')
+					current_file.put_string (c_sprecond)
+					current_file.put_integer_32 (l_name.seed)
+					print_assign_to
+					current_file.put_character ('0')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ge_scoop_region)
+					current_file.put_character ('*')
+					current_file.put_character (' ')
+					current_file.put_string (c_sr)
+					current_file.put_integer_32 (l_name.seed)
+					print_assign_to
+					if l_used_count /= 1 then
+						current_file.put_character ('0')
+						print_semicolon_newline
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						current_file.put_character ('t')
+						current_file.put_character ('s')
+						current_file.put_integer_32 (l_name.seed)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_string (c_sr)
+						current_file.put_integer_32 (l_name.seed)
+						print_assign_to
+					end
+					print_separate_argument_session_name (l_name, current_file)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_callee)
+					print_semicolon_newline
+				end
+				i := i + 1
+			end
+			print_unprotect_scoop_sessions
+			print_close_formal_argument_scoop_sessions (a_feature, True)
+			from i := 1 until i > nb loop
+				l_name := a_separate_formal_arguments.item_1 (i)
+				l_is_used := a_separate_formal_arguments.item_2 (i)
+				if l_name /= Void and l_is_used then
+					if l_used_count /= 1 then
+						print_indentation
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						current_file.put_string (c_sr)
+						current_file.put_integer_32 (l_name.seed)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+					end
+					print_indentation
+					current_file.put_string (c_sprecond)
+					current_file.put_integer_32 (l_name.seed)
+					print_assign_to
+					current_file.put_string (c_ge_new_scoop_precondition)
+					current_file.put_character ('(')
+					current_file.put_string (c_sr)
+					current_file.put_character (')')
+					print_semicolon_newline
+					print_indentation
+					current_file.put_string (c_ge_scoop_region_add_precondition)
+					current_file.put_character ('(')
+					current_file.put_string (c_sprecond)
+					current_file.put_integer_32 (l_name.seed)
+					print_comma
+					current_file.put_string (c_sr)
+					current_file.put_integer_32 (l_name.seed)
+					current_file.put_character (')')
+					print_semicolon_newline
+					if l_used_count /= 1 then
+						dedent
+						print_indentation
+						current_file.put_character ('}')
+						current_file.put_new_line
+					end
+				end
+				i := i + 1
+			end
+			print_indentation
+			current_file.put_string (c_ge_scoop_region_wait_preconditions)
+			current_file.put_character ('(')
+			current_file.put_string (c_sr)
+			current_file.put_character (')')
+			print_semicolon_newline
+			from i := 1 until i > nb loop
+				l_name := a_separate_formal_arguments.item_1 (i)
+				l_is_used := a_separate_formal_arguments.item_2 (i)
+				if l_name /= Void and l_is_used then
+					print_indentation
+					if l_used_count /= 1 then
+						current_file.put_string (c_if)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						current_file.put_string (c_sr)
+						current_file.put_integer_32 (l_name.seed)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+					end
+					current_file.put_string (c_ge_scoop_region_remove_precondition)
+					current_file.put_character ('(')
+					current_file.put_string (c_sprecond)
+					current_file.put_integer_32 (l_name.seed)
+					print_comma
+					current_file.put_string (c_sr)
+					current_file.put_integer_32 (l_name.seed)
+					current_file.put_character (')')
+					print_semicolon_newline
+				end
+				i := i + 1
+			end
+			print_reset_assertions
+			print_indentation
+			current_file.put_string (c_continue)
+			print_semicolon_newline
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+		end
+
+	has_separate_formal_arguments (a_feature: ET_FEATURE_CLOSURE): BOOLEAN
+			-- Does `a_feature` have separate formal arguments?
+		require
+			a_feature_not_void: a_feature /= Void
+			use_scoop: use_scoop
+		local
+			i, nb: INTEGER
+			l_argument: ET_FORMAL_ARGUMENT
+			l_name: ET_IDENTIFIER
+			l_argument_type: ET_DYNAMIC_TYPE
+		do
+			if attached a_feature.arguments as l_arguments then
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					l_argument := l_arguments.formal_argument (i)
+					l_name := l_argument.name
+					l_argument_type := dynamic_type_set (l_name).static_type
+					if l_argument_type.is_separate then
+						Result := True
+						i := nb + 1 -- Jump out of the loop
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	fill_separate_formal_arguments (a_feature: ET_CLOSURE; a_separate_formal_arguments: DS_ARRAYED_LIST_2 [detachable ET_IDENTIFIER, BOOLEAN])
+			-- Fill `a_separate_formal_arguments` with separate formal arguments of `a_feature`.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_separate_formal_arguments_not_void: a_separate_formal_arguments /= Void
+			use_scoop: use_scoop
+		local
+			i, nb: INTEGER
+			l_argument: ET_FORMAL_ARGUMENT
+			l_name: ET_IDENTIFIER
+			l_argument_type: ET_DYNAMIC_TYPE
+		do
+			a_separate_formal_arguments.wipe_out
+			if attached a_feature.arguments as l_arguments then
+				nb := l_arguments.count
+				if nb > a_separate_formal_arguments.capacity then
+					a_separate_formal_arguments.resize (nb)
+				end
+				from i := 1 until i > nb loop
+					l_argument := l_arguments.formal_argument (i)
+					l_name := l_argument.name
+					l_argument_type := dynamic_type_set (l_name).static_type
+					if l_argument_type.is_separate then
+						a_separate_formal_arguments.put_last (l_name, False)
+					else
+						a_separate_formal_arguments.put_last (Void, False)
+					end
+					i := i + 1
+				end
+			end
+		end
+
 	separate_call_arguments: ET_ACTUAL_ARGUMENT_LIST
 			-- Arguments to be used when generating separate call objects
 
@@ -24648,8 +25001,21 @@ feature {NONE} -- Separate calls
 			-- (Used when determining the SCOOP sessions to be used when recording
 			-- a separate call to another SCOOP region.)
 
+	separate_formal_arguments: DS_ARRAYED_LIST_2 [detachable ET_IDENTIFIER, BOOLEAN]
+			-- Formal arguments, indexed by seed, which are declared as separate,
+			-- and void if not declrated as separate.
+			-- The boolean value indicates whether this separate formal argument
+			-- is used or not.
+
 	in_separate_creation_call: BOOLEAN
 			-- Is `separate_call_instruction' a creation of a separate object?
+
+	current_separate_call_count: INTEGER
+			-- Number of separate calls (calls whose target type is separate)
+			-- appearing in `current_feature'
+
+	current_inline_separate_arguments: DS_HASH_SET [INTEGER]
+			-- Inline separate argument seeds which are used in `current_feature'
 
 feature {NONE} -- Built-in feature generation
 
@@ -39651,8 +40017,9 @@ feature {NONE} -- Assertion generation
 			end
 		end
 
-	print_all_preconditions (a_feature: ET_CLOSURE)
+	print_all_preconditions (a_feature: ET_FEATURE_CLOSURE; a_correctness_enabled: BOOLEAN)
 			-- Print all preconditions (even those inherited from precursors) of `a_feature' to `current_file'.
+			-- Take care of SCOOP waiting preconditions.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
@@ -39663,63 +40030,175 @@ feature {NONE} -- Assertion generation
 			l_assertion: ET_ASSERTION
 			l_old_index_offset: INTEGER
 			l_old_preconditions: ET_PRECONDITIONS
+			l_separate_formal_arguments: like separate_formal_arguments
+			l_has_separate_formal_arguments: BOOLEAN
+			l_all_preconditions_use_separate_formal_arguments: BOOLEAN
+			l_preconditions_use_separate_formal_arguments: BOOLEAN
+			l_next_preconditions_use_separate_formal_arguments: BOOLEAN
+			l_expression_use_separate_formal_arguments: BOOLEAN
 		do
-			if attached {ET_FEATURE} a_feature as l_feature then
+			l_separate_formal_arguments := separate_formal_arguments
+			if use_scoop then
+				fill_separate_formal_arguments (a_feature, l_separate_formal_arguments)
+				l_has_separate_formal_arguments := l_separate_formal_arguments.has_non_void_1
+				if not l_has_separate_formal_arguments then
+					-- Done.
+				elseif attached {ET_FEATURE} a_feature as l_feature then
+					l_all_preconditions := current_feature.preconditions
+					nb := l_all_preconditions.count
+					from i := 1 until i > nb loop
+						l_all_preconditions.item_1 (i).add_formal_arguments (l_separate_formal_arguments)
+						i := i + 1
+					end
+				elseif attached a_feature.preconditions as l_preconditions_impl then
+					l_preconditions_impl.add_formal_arguments (l_separate_formal_arguments)
+				end
+				l_all_preconditions_use_separate_formal_arguments := l_separate_formal_arguments.has_2 (True)
+			end
+			if a_correctness_enabled or l_all_preconditions_use_separate_formal_arguments then
 				l_old_index_offset := index_offset
 				l_all_preconditions := current_feature.preconditions
-				l_count := l_all_preconditions.count
-				if l_count > 0 then
+				if attached {ET_FEATURE} a_feature as l_feature then
+					l_count := l_all_preconditions.count
+					if l_count > 0 then
+						index_offset := l_all_preconditions.item_2 (1)
+						l_preconditions := l_all_preconditions.item_1 (1)
+					end
+				elseif attached a_feature.preconditions as l_preconditions_impl then
+					l_preconditions := l_preconditions_impl
+					l_count := 1
+				end
+				if l_count > 0 and l_preconditions /= Void then
 					print_preconditions_comment
-					print_before_assertions
+					print_before_assertions (l_all_preconditions_use_separate_formal_arguments)
 					from k := 1 until k > l_count loop
-						index_offset := l_all_preconditions.item_2 (k)
-						l_preconditions := l_all_preconditions.item_1 (k)
+						if k /= 1 then
+							index_offset := l_all_preconditions.item_2 (k)
+							l_preconditions := l_all_preconditions.item_1 (k)
+						end
 						l_old_preconditions := current_preconditions
 						current_preconditions := l_preconditions
-						if k = l_count then
-							if not l_preconditions.are_all_true then
-								print_assertions (l_preconditions, c_ge_ex_pre)
+						l_preconditions_use_separate_formal_arguments := False
+						l_next_preconditions_use_separate_formal_arguments := False
+						if l_all_preconditions_use_separate_formal_arguments then
+							if k + 1 < l_count then
+								l_separate_formal_arguments.replace_all_2 (False)
+								l_all_preconditions.item_1 (k + 1).add_formal_arguments (l_separate_formal_arguments)
+								l_next_preconditions_use_separate_formal_arguments := l_separate_formal_arguments.has_2 (True)
 							end
-						else
-							j := j + 1
+							l_separate_formal_arguments.replace_all_2 (False)
+							l_preconditions.add_formal_arguments (l_separate_formal_arguments)
+							l_preconditions_use_separate_formal_arguments := l_separate_formal_arguments.has_2 (True)
+						end
+						if 
+							not l_preconditions.are_all_true and
+							(a_correctness_enabled or l_preconditions_use_separate_formal_arguments)
+						then
+							if k /= l_count then
+								j := j + 1
+							end
 							nb := l_preconditions.count
 							from i := 1 until i > nb loop
 								l_assertion := l_preconditions.assertion (i)
 								if attached l_assertion.expression as l_expression then
-									print_operand (l_expression)
-									fill_call_operands (1)
-									print_indentation
-									current_file.put_string (c_if)
-									current_file.put_character (' ')
-									current_file.put_character ('(')
-									current_file.put_character ('!')
-									current_file.put_character ('(')
-									print_expression (call_operands.first)
-									call_operands.wipe_out
-									current_file.put_character (')')
-									current_file.put_character (')')
-									current_file.put_character (' ')
-									current_file.put_character ('{')
-									current_file.put_new_line
-									indent
-									print_indentation
-									current_file.put_string (c_goto)
-									current_file.put_character (' ')
-									current_file.put_string (c_ge_pre)
-									if k + 1 /= l_count or else not l_all_preconditions.item_1 (k + 1).are_all_true then
-										current_file.put_integer (j)
-									else
-										current_file.put_integer (l_count)
+									l_expression_use_separate_formal_arguments := False
+									if l_preconditions_use_separate_formal_arguments then
+										l_separate_formal_arguments.replace_all_2 (False)
+										l_expression.add_formal_arguments (l_separate_formal_arguments)
+										l_expression_use_separate_formal_arguments := l_separate_formal_arguments.has_2 (True)
 									end
-									print_semicolon_newline
-									dedent
-									print_indentation
-									current_file.put_character ('}')
-									current_file.put_new_line
+									if a_correctness_enabled or l_expression_use_separate_formal_arguments then
+										print_indentation
+										current_file.put_character ('{')
+										current_file.put_new_line
+										indent
+										if l_expression_use_separate_formal_arguments then
+											print_before_scoop_wait_precondition (a_feature, l_separate_formal_arguments, a_correctness_enabled)
+											current_file.put_character ('{')
+											current_file.put_new_line
+											indent
+										elseif l_all_preconditions_use_separate_formal_arguments then
+											print_indentation
+											current_file.put_string (c_if)
+											current_file.put_character (' ')
+											current_file.put_character ('(')
+											current_file.put_character ('!')
+											current_file.put_string (c_old_in_assertion)
+											current_file.put_character (')')
+											current_file.put_character (' ')
+											current_file.put_character ('{')
+											current_file.put_new_line
+											indent
+										end
+										print_operand (l_expression)
+										fill_call_operands (1)
+										print_indentation
+										current_file.put_string (c_if)
+										current_file.put_character (' ')
+										current_file.put_character ('(')
+										current_file.put_character ('!')
+										current_file.put_character ('(')
+										print_expression (call_operands.first)
+										call_operands.wipe_out
+										current_file.put_character (')')
+										current_file.put_character (')')
+										current_file.put_character (' ')
+										current_file.put_character ('{')
+										current_file.put_new_line
+										indent
+										if l_expression_use_separate_formal_arguments then
+											print_after_scoop_wait_precondition (a_feature, l_separate_formal_arguments)
+										end
+										if k = l_count then
+											if a_correctness_enabled then
+												print_indentation
+												current_file.put_string (c_ge_raise_with_message)
+												current_file.put_character ('(')
+												current_file.put_string (c_ge_ex_pre)
+												print_comma
+												print_escaped_string (assertion_tag (l_assertion))
+												current_file.put_character (')')
+												print_semicolon_newline
+											end
+										else
+											print_indentation
+											current_file.put_string (c_goto)
+											current_file.put_character (' ')
+											current_file.put_string (c_ge_pre)
+											if
+												k + 1 /= l_count or else
+												(not l_all_preconditions.item_1 (k + 1).are_all_true and
+												(a_correctness_enabled or l_next_preconditions_use_separate_formal_arguments))
+											then
+												current_file.put_integer (j)
+											else
+												current_file.put_integer (l_count)
+											end
+											print_semicolon_newline
+										end
+										dedent
+										print_indentation
+										current_file.put_character ('}')
+										current_file.put_new_line
+										if l_all_preconditions_use_separate_formal_arguments or l_expression_use_separate_formal_arguments then
+											dedent
+											print_indentation
+											current_file.put_character ('}')
+											current_file.put_new_line
+										end
+										dedent
+										print_indentation
+										current_file.put_character ('}')
+										current_file.put_new_line
+									end
 								end
 								i := i + 1
 							end
-							if k + 1 /= l_count or else not l_all_preconditions.item_1 (k + 1).are_all_true then
+							if
+								k /= l_count and
+								(k + 1 /= l_count or else (not l_all_preconditions.item_1 (k + 1).are_all_true and
+								(a_correctness_enabled or l_next_preconditions_use_separate_formal_arguments)))
+							then
 								print_indentation
 								current_file.put_string (c_goto)
 								current_file.put_character (' ')
@@ -39744,15 +40223,8 @@ feature {NONE} -- Assertion generation
 					print_after_assertions
 				end
 				index_offset := l_old_index_offset
-			elseif attached a_feature.preconditions as l_preconditions_impl and then not l_preconditions_impl.are_all_true then
-				print_preconditions_comment
-				print_before_assertions
-				l_old_preconditions := current_preconditions
-				current_preconditions := l_preconditions_impl
-				print_assertions (l_preconditions_impl, c_ge_ex_pre)
-				current_preconditions := l_old_preconditions
-				print_after_assertions
 			end
+			l_separate_formal_arguments.wipe_out
 		end
 
 	print_all_postconditions (a_feature: ET_CLOSURE)
@@ -39775,7 +40247,7 @@ feature {NONE} -- Assertion generation
 				nb := l_all_postconditions.count
 				if nb > 0 then
 					print_postconditions_comment
-					print_before_assertions
+					print_before_assertions (False)
 					from i := 1 until i > nb loop
 						index_offset := l_all_postconditions.item_2 (i)
 						l_postconditions := l_all_postconditions.item_1 (i)
@@ -39790,7 +40262,7 @@ feature {NONE} -- Assertion generation
 				index_offset := l_old_index_offset
 			elseif attached a_feature.postconditions as l_postconditions_impl and then not l_postconditions_impl.are_all_true then
 				print_postconditions_comment
-				print_before_assertions
+				print_before_assertions (False)
 				l_old_postconditions := current_postconditions
 				current_postconditions := l_postconditions_impl
 				print_assertions (l_postconditions_impl, c_ge_ex_post)
@@ -39929,7 +40401,7 @@ feature {NONE} -- Assertion generation
 			a_repetition_component_not_void: a_repetition_component /= Void
 		do
 			if a_repetition_component.invariant_part /= Void or a_repetition_component.variant_part /= Void then
-				print_before_assertions
+				print_before_assertions (False)
 			end
 			if attached a_repetition_component.invariant_part as l_invariant_part then
 				print_assertions (l_invariant_part, c_ge_ex_linv)
@@ -40058,35 +40530,43 @@ feature {NONE} -- Assertion generation
 			end
 		end
 
-	print_before_assertions
+	print_before_assertions (a_recursive: BOOLEAN)
 			-- Print code before assertions to `current_file'.
-			-- Checks whether we are already checking assertions.
+			-- If `a_recursive` is False, then check whether we are already checking assertions.
 		do
 			print_indentation
-			current_file.put_string (c_if)
-			current_file.put_character (' ')
-			current_file.put_character ('(')
-			current_file.put_character ('!')
-			current_file.put_character ('(')
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_in_assertion)
-			current_file.put_character (')')
-			current_file.put_character (')')
-			current_file.put_character (' ')
+			if not a_recursive then
+				current_file.put_string (c_if)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_character ('!')
+				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_in_assertion)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+			end
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
 			print_indentation
+			current_file.put_string (c_uint32_t)
+			current_file.put_character (' ')
+			current_file.put_string (c_old_in_assertion)
+			print_assign_to
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_in_assertion)
+			print_semicolon_newline
+			print_indentation
 			current_file.put_string (c_ge_rescue)
 			current_file.put_character (' ')
-			current_file.put_character ('r')
-			current_file.put_character ('a')
-			current_file.put_character (';')
-			current_file.put_new_line
+			current_file.put_string (c_ra)
+			print_semicolon_newline
 			print_indentation
-			current_file.put_character ('r')
-			current_file.put_character ('a')
+			current_file.put_string (c_ra)
 			current_file.put_character ('.')
 			current_file.put_string (c_previous)
 			print_assign_to
@@ -40100,8 +40580,7 @@ feature {NONE} -- Assertion generation
 			current_file.put_string (c_last_rescue)
 			print_assign_to
 			current_file.put_character ('&')
-			current_file.put_character ('r')
-			current_file.put_character ('a')
+			current_file.put_string (c_ra)
 			print_semicolon_newline
 			print_indentation
 			current_file.put_string (c_if)
@@ -40109,8 +40588,7 @@ feature {NONE} -- Assertion generation
 			current_file.put_character ('(')
 			current_file.put_string (c_ge_setjmp)
 			current_file.put_character ('(')
-			current_file.put_character ('r')
-			current_file.put_character ('a')
+			current_file.put_string (c_ra)
 			current_file.put_character ('.')
 			current_file.put_character ('j')
 			current_file.put_character ('b')
@@ -40128,26 +40606,9 @@ feature {NONE} -- Assertion generation
 			current_file.put_string (c_last_rescue)
 			print_assign_to
 			current_file.put_character ('&')
-			current_file.put_character ('r')
-			current_file.put_character ('a')
+			current_file.put_string (c_ra)
 			print_semicolon_newline
-			print_indentation
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_in_assertion)
-			print_assign_to
-			current_file.put_character ('0')
-			print_semicolon_newline
-			print_indentation
-			current_file.put_string (c_ac)
-			current_file.put_string (c_arrow)
-			current_file.put_string (c_last_rescue)
-			print_assign_to
-			current_file.put_character ('r')
-			current_file.put_character ('a')
-			current_file.put_character ('.')
-			current_file.put_string (c_previous)
-			print_semicolon_newline
+			print_reset_assertions
 			print_indentation
 			current_file.put_string (c_ge_jump_to_last_rescue)
 			current_file.put_character ('(')
@@ -40170,27 +40631,32 @@ feature {NONE} -- Assertion generation
 	print_after_assertions
 			-- Print code after assertions to `current_file'.
 		do
+			print_reset_assertions
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+		end
+
+	print_reset_assertions
+			-- Print code reset assertion status to `current_file'.
+		do
 			print_indentation
 			current_file.put_string (c_ac)
 			current_file.put_string (c_arrow)
 			current_file.put_string (c_in_assertion)
 			print_assign_to
-			current_file.put_character ('0')
+			current_file.put_string (c_old_in_assertion)
 			print_semicolon_newline
 			print_indentation
 			current_file.put_string (c_ac)
 			current_file.put_string (c_arrow)
 			current_file.put_string (c_last_rescue)
 			print_assign_to
-			current_file.put_character ('r')
-			current_file.put_character ('a')
+			current_file.put_string (c_ra)
 			current_file.put_character ('.')
 			current_file.put_string (c_previous)
 			print_semicolon_newline
-			dedent
-			print_indentation
-			current_file.put_character ('}')
-			current_file.put_new_line
 		end
 
 	print_before_old_expression (a_old_expression: ET_OLD_EXPRESSION)
@@ -40513,6 +40979,8 @@ feature {NONE} -- Inlining
 			if exception_trace_mode then
 					-- Exception trace mode makes the code too big to inline.
 				Result := False
+			elseif use_scoop and then a_feature.has_separate_argument then
+				Result := False
 			elseif a_feature.target_type.base_class.preconditions_enabled and then not a_feature.preconditions.is_empty then
 				Result := False
 			elseif a_feature.target_type.base_class.postconditions_enabled and then not a_feature.postconditions.is_empty then
@@ -40527,8 +40995,6 @@ feature {NONE} -- Inlining
 			elseif nested_inlining_count >= max_nested_inlining_count then
 				Result := False
 			elseif not are_inlinable_call_operands (a_feature, a_target_type) then
-				Result := False
-			elseif use_scoop and then a_feature.has_separate_argument then
 				Result := False
 			elseif not attached {ET_DO_PROCEDURE} a_feature.static_feature as l_do_procedure then
 				Result := False
@@ -40571,6 +41037,8 @@ feature {NONE} -- Inlining
 			if exception_trace_mode then
 					-- Exception trace mode makes the code too big to inline.
 				Result := False
+			elseif use_scoop and then a_feature.has_separate_argument then
+				Result := False
 			elseif a_feature.target_type.base_class.preconditions_enabled and then not a_feature.preconditions.is_empty then
 				Result := False
 			elseif a_feature.target_type.base_class.postconditions_enabled and then not a_feature.postconditions.is_empty then
@@ -40585,8 +41053,6 @@ feature {NONE} -- Inlining
 			elseif nested_inlining_count >= max_nested_inlining_count then
 				Result := False
 			elseif not are_inlinable_call_operands (a_feature, a_target_type) then
-				Result := False
-			elseif use_scoop and then a_feature.has_separate_argument then
 				Result := False
 			elseif not attached {ET_DO_FUNCTION} a_feature.static_feature as l_do_function then
 				Result := False
@@ -44325,6 +44791,18 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
+	print_separate_argument_session_is_open_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print name of SCOOP session's 'is_open' for separate argument `a_name' to `a_file'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_separate_argument: a_name.is_argument or a_name.is_inline_separate_argument
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			print_separate_argument_session_name (a_name, a_file)
+			a_file.put_string (once "_is_open")
+		end
+
 	print_equality_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_PRIMARY_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print name of `i'-th equality ('=' or '/=' as well as '~' or '/~') function
 			-- appearing in `a_routine' from `a_type' to `a_file'.
@@ -47913,15 +48391,6 @@ feature {NONE} -- Inspect instructions/expressions
 			-- Number of strings appearing in inspect instructions/expressions
 			-- in current feature, so far
 
-feature {NONE} -- SCOOP
-
-	current_separate_call_count: INTEGER
-			-- Number of separate calls (calls whose target type is separate)
-			-- appearing in `current_feature'
-
-	current_inline_separate_arguments: DS_HASH_SET [INTEGER]
-			-- Inline separate argument seeds which are used in `current_feature'
-
 feature {NONE} -- Unqualified call expressions
 
 	new_unqualified_call_expression (a_name: ET_FEATURE_NAME; a_arguments: detachable ET_ACTUAL_ARGUMENT_LIST): ET_UNQUALIFIED_CALL_EXPRESSION
@@ -48877,6 +49346,7 @@ feature {NONE} -- Constants
 	c_case: STRING = "case"
 	c_char: STRING = "char"
 	c_const: STRING = "const"
+	c_continue: STRING = "continue"
 	c_cplusplus: STRING = "__cplusplus"
 	c_default: STRING = "default"
 	c_define: STRING = "#define"
@@ -48937,6 +49407,7 @@ feature {NONE} -- Constants
 	c_float: STRING = "float"
 	c_for: STRING = "for"
 	c_fprintf: STRING = "fprintf"
+	c_ge_add_scoop_session: STRING = "GE_add_scoop_session"
 	c_ge_argc: STRING = "GE_argc"
 	c_ge_argv: STRING = "GE_argv"
 	c_ge_attached_encoded_type: STRING = "GE_attached_encoded_type"
@@ -49083,6 +49554,7 @@ feature {NONE} -- Constants
 	c_ge_new_once_per_object_data: STRING = "GE_new_once_per_object_data"
 	c_ge_new_scoop_call: STRING = "GE_new_scoop_call"
 	c_ge_new_scoop_condition: STRING = "GE_new_scoop_condition"
+	c_ge_new_scoop_precondition: STRING = "GE_new_scoop_precondition"
 	c_ge_new_scoop_region: STRING = "GE_new_scoop_region"
 	c_ge_new_special_of_reference_instance_of_encoded_type: STRING = "GE_new_special_of_reference_instance_of_encoded_type"
 	c_ge_new_str8: STRING = "GE_new_str8"
@@ -49155,25 +49627,29 @@ feature {NONE} -- Constants
 	c_ge_rescue: STRING = "GE_rescue"
 	c_ge_retry: STRING = "GE_retry"
 	c_ge_scoop_call: STRING = "GE_scoop_call"
-	c_ge_scoop_condition: STRING = "GE_scoop_condition"
-	c_ge_scoop_condition_decrement: STRING = "GE_scoop_condition_decrement"
 	c_ge_scoop_exceptions_stop_when_dirty: STRING = "GE_SCOOP_EXCEPTIONS_STOP_WHEN_DIRTY"
-	c_ge_scoop_multisessions_open_start: STRING = "GE_scoop_multisessions_open_start"
-	c_ge_scoop_multisessions_open_stop: STRING = "GE_scoop_multisessions_open_stop"
+	c_ge_scoop_precondition: STRING = "GE_scoop_precondition"
 	c_ge_scoop_processor_run: STRING = "GE_scoop_processor_run"
 	c_ge_scoop_region: STRING = "GE_scoop_region"
+	c_ge_scoop_region_add_precondition: STRING = "GE_scoop_region_add_precondition"
 	c_ge_scoop_region_has_lock_on: STRING = "GE_scoop_region_has_lock_on"
 	c_ge_scoop_region_impersonate: STRING = "GE_scoop_region_impersonate"
 	c_ge_scoop_region_pass_locks: STRING = "GE_scoop_region_pass_locks"
-	c_ge_scoop_region_set_context: STRING = "GE_scoop_region_set_context"
 	c_ge_scoop_region_release_locks: STRING = "GE_scoop_region_release_locks"
+	c_ge_scoop_region_remove_precondition: STRING = "GE_scoop_region_remove_precondition"
+	c_ge_scoop_region_set_context: STRING = "GE_scoop_region_set_context"
+	c_ge_scoop_region_wait_preconditions: STRING = "GE_scoop_region_wait_preconditions"
 	c_ge_scoop_session: STRING = "GE_scoop_session"
 	c_ge_scoop_session_add_call: STRING = "GE_scoop_session_add_call"
 	c_ge_scoop_session_add_sync_call: STRING = "GE_scoop_session_add_sync_call"
 	c_ge_scoop_session_close: STRING = "GE_scoop_session_close"
 	c_ge_scoop_session_is_impersonation_allowed: STRING = "GE_scoop_session_is_impersonation_allowed"
+	c_ge_scoop_session_is_open: STRING = "GE_scoop_session_is_open"
+	c_ge_scoop_session_is_submitted: STRING = "GE_scoop_session_is_submitted"
 	c_ge_scoop_session_is_synchronized: STRING = "GE_scoop_session_is_synchronized"
 	c_ge_scoop_session_open: STRING = "GE_scoop_session_open"
+	c_ge_scoop_session_set_eiffel_called: STRING = "GE_scoop_session_set_eiffel_called"
+	c_ge_scoop_session_was_eiffel_called: STRING = "GE_scoop_session_was_eiffel_called"
 	c_ge_setjmp: STRING = "GE_setjmp"
 	c_ge_set_boolean_field: STRING = "GE_set_boolean_field"
 	c_ge_set_boolean_field_at: STRING = "GE_set_boolean_field_at"
@@ -49276,6 +49752,7 @@ feature {NONE} -- Constants
 	c_int64_t: STRING = "int64_t"
 	c_intptr_t: STRING = "intptr_t"
 	c_is_passive: STRING = "is_passive"
+	c_is_running: STRING = "is_running"
 	c_is_special: STRING = "is_special"
 	c_last_rescue: STRING = "last_rescue"
 	c_line: STRING = "#line"
@@ -49287,6 +49764,7 @@ feature {NONE} -- Constants
 	c_not_not: STRING = ""
 	c_object: STRING = "object"
 	c_offsetof: STRING = "offsetof"
+	c_old_in_assertion: STRING = "old_in_assertion"
 	c_once_objects: STRING = "once_objects"
 	c_onces: STRING = "onces"
 	c_or_else: STRING = "||"
@@ -49294,16 +49772,21 @@ feature {NONE} -- Constants
 	c_previous: STRING = "previous"
 	c_process_onces: STRING = "process_onces"
 	c_r: STRING = "r"
-	c_r2: STRING = "r2"
 	c_r3: STRING = "r3"
+	c_ra: STRING = "ra"
 	c_region: STRING = "region"
 	c_return: STRING = "return"
+	c_rs: STRING = "rs"
 	c_sc: STRING = "sc"
-	c_scond: STRING = "scond"
 	c_se: STRING = "se"
+	c_se0: STRING = "se0"
+	c_se_had_lock: STRING = "se_had_lock"
+	c_se_is_open: STRING = "se_is_open"
 	c_size_t: STRING = "size_t"
 	c_sizeof: STRING = "sizeof"
+	c_sprecond: STRING = "sprecond"
 	c_sr: STRING = "sr"
+	c_sr1: STRING = "sr1"
 	c_status_suffix: STRING = "_status"
 	c_stderr: STRING = "stderr"
 	c_struct: STRING = "struct"
@@ -49398,6 +49881,7 @@ invariant
 	separate_call_arguments_not_void: separate_call_arguments /= Void
 	separate_arguments_not_void: separate_arguments /= Void
 	separate_arguments_valid: across separate_arguments as l_separate_argument all l_separate_argument.is_argument or l_separate_argument.is_inline_separate_argument end
+	separate_formal_arguments_not_void: separate_formal_arguments /= Void
 	manifest_array_types_not_void: manifest_array_types /= Void
 	no_void_manifest_array_type: not manifest_array_types.has_void
 	big_manifest_array_types_not_void: big_manifest_array_types /= Void

@@ -15,6 +15,7 @@ inherit
 	ET_CURRENT_OPERAND
 		undefine
 			add_old_expressions,
+			add_formal_arguments,
 			has_result,
 			has_address_expression,
 			has_agent,

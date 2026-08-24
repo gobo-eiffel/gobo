@@ -20,7 +20,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>5 July 2026</date>
+	<date>12 July 2026</date>
 </chapterinfo>
 
 <title>Gec Limitations</title>
@@ -41,12 +41,6 @@ The following Eiffel constructs have not been implemented yet:
 		<term>Non-conforming inheritance</term>
 		<listitem><para>
 			feature replication still uses the pre-ECMA semantics of 'select'
-		</para></listitem>
-	</varlistentry>
-	<varlistentry>
-		<term>SCOOP</term>
-		<listitem><para>
-			using preconditions as wait conditions is not supported yet
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

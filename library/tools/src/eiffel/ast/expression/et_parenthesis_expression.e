@@ -5,7 +5,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_PARENTHESIS_EXPRESSION
@@ -34,6 +34,7 @@ inherit
 			is_instance_free,
 			reset,
 			add_old_expressions,
+			add_formal_arguments,
 			add_separate_arguments
 		end
 

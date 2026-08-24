@@ -5,7 +5,7 @@
 		"Eiffel object-test expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_OBJECT_TEST
@@ -20,7 +20,8 @@ inherit
 			has_address_expression,
 			has_agent,
 			has_typed_object_test,
-			add_old_expressions
+			add_old_expressions,
+			add_formal_arguments
 		end
 
 create
@@ -156,6 +157,17 @@ feature -- Setting
 			attached_keyword := a_attached
 		ensure
 			attached_keyword_set: attached_keyword = a_attached
+		end
+
+feature -- Formal arguments
+
+	add_formal_arguments (a_list: DS_ARRAYED_LIST_2 [detachable ET_IDENTIFIER, BOOLEAN])
+			-- Add to `a_list' all formal arguments appearing in current expression
+			-- and (recursively) in its subexpressions: set the boolean to true
+			-- if the formal argument name at the index corresponding to its seed
+			-- is not Void.
+		do
+			expression.add_formal_arguments (a_list)
 		end
 
 feature -- Assertions

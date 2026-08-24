@@ -239,7 +239,7 @@ feature -- Access
 		local
 			i, nb: INTEGER
 		do
-			check precodition: attached {STRING} subject as l_subject_string then
+			check precondition: attached {STRING} subject as l_subject_string then
 				i := captured_start_position (n)
 				nb := captured_end_position (n)
 				if i >= 1 and nb >= i then

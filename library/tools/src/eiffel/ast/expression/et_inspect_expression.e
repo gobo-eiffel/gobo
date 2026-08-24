@@ -21,6 +21,7 @@ inherit
 			has_agent,
 			has_typed_object_test,
 			add_old_expressions,
+			add_formal_arguments,
 			add_separate_arguments
 		end
 
@@ -137,6 +138,23 @@ feature -- Setting
 			else_part := a_else_part
 		ensure
 			else_part_set: else_part = a_else_part
+		end
+
+feature -- Formal arguments
+
+	add_formal_arguments (a_list: DS_ARRAYED_LIST_2 [detachable ET_IDENTIFIER, BOOLEAN])
+			-- Add to `a_list' all formal arguments appearing in current expression
+			-- and (recursively) in its subexpressions: set the boolean to true
+			-- if the formal argument name at the index corresponding to its seed
+			-- is not Void.
+		do
+			expression.add_formal_arguments (a_list)
+			if attached when_parts as l_when_parts then
+				l_when_parts.add_formal_arguments (a_list)
+			end
+			if attached else_part as l_else_part then
+				l_else_part.expression.add_formal_arguments (a_list)
+			end
 		end
 
 feature -- Assertions

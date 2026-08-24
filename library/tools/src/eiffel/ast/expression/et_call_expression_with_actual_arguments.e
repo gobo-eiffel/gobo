@@ -5,7 +5,7 @@
 		"Eiffel call expressions with actual arguments"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2024-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_CALL_EXPRESSION_WITH_ACTUAL_ARGUMENTS
@@ -20,7 +20,8 @@ inherit
 			has_address_expression,
 			has_agent,
 			has_typed_object_test,
-			add_old_expressions
+			add_old_expressions,
+			add_formal_arguments
 		end
 
 end
