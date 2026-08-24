@@ -11,6 +11,9 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
+		<option warning="warning">
+			<assertions precondition="true" check="false" invariant="false" loop="false" postcondition="false" supplier_precondition="false"/>
+		</option>
 		<setting name="console_application" value="true"/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>
 		<library name="argument" location="${GOBO_LIBRARY}/library/argument/library.ecf" readonly="true"/>
