@@ -515,8 +515,8 @@ static void GE_promote_scoop_session(GE_scoop_region* a_region)
 			l_sibling = l_session;
 			for (i = 0; i < l_count; i++) {
 				if (l_ready) {
-					GE_unprotected_move_scoop_session_to_first(l_session);
-					l_session->is_running = '\1';
+					GE_unprotected_move_scoop_session_to_first(l_sibling);
+					l_sibling->is_running = '\1';
 				}
 				if (l_sibling != l_session) {
 					l_sibling_region = l_sibling->callee;
