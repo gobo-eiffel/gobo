@@ -12,6 +12,13 @@
 * Added semantics tests for `VOIT` (Iteration rule).
 * Added validation tests for `VTEC-2` (Expanded Type rule).
 
+### gedoc
+
+* Added format `contract_view` to generate the contract-view
+  (or short form) of a class or of a set of classes, where
+  internal implementation details are hidden, keeping only
+  an interface representation.
+
 ### Gobo Eiffel Tools Library
 
 * Improved detection of non-initialialized attributes of attached

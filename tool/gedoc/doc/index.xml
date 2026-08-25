@@ -6,21 +6,21 @@
 		"Gobo Eiffel Doc"
 
 	tool: "Gobo Eiffel Doc"
-	copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2026, Eric Bezault and others"
 	license: "MIT License"
 -->
 
 <chapter xmlns="http://gobo-eiffel.gobosoft.com/documentation" id="gedoc/index">
 <chapterinfo>
 	<copyright>
-		<year>2017-2025</year>
+		<year>2017-2026</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>10 December 2025</date>
+	<date>25 August 2026</date>
 </chapterinfo>
 
 <title>Gobo Eiffel Doc</title>
@@ -50,6 +50,14 @@ This documentation of <projectname>gedoc</projectname> is structured as follows:
 		</term>
 		<listitem><para>
 			Using <projectname>gedoc</projectname> as an Eiffel pretty-printer.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="contract_viewer">Contract-Viewer</link>
+		</term>
+		<listitem><para>
+			Generating the contract-view (or short form) of a class or of a set of classes.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
