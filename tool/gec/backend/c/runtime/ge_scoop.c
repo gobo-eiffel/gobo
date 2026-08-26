@@ -105,6 +105,7 @@ uint32_t GE_decrement_scoop_sessions_count()
 		GE_unprotected_scoop_sessions_count--;
 	}
 	l_result = GE_unprotected_scoop_sessions_count;
+	GE_mutex_unlock((EIF_POINTER)GE_scoop_sessions_count_mutex);
 	if (l_result == 0) {
 			/*
 				No more SCOOP session to be executed.
@@ -117,7 +118,6 @@ uint32_t GE_decrement_scoop_sessions_count()
 		GE_condition_variable_broadcast((EIF_POINTER)l_main_region->condition_variable);
 		GE_mutex_unlock((EIF_POINTER)l_main_region->mutex);
 	}
-	GE_mutex_unlock((EIF_POINTER)GE_scoop_sessions_count_mutex);
 	return l_result;
 }
 
