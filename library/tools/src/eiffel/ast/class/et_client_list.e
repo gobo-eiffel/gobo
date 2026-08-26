@@ -116,6 +116,24 @@ feature -- Status report
 			end
 		end
 
+	has_class_name (a_class_name: ET_CLASS_NAME): BOOLEAN
+			-- Does the `a_class_name' appear in current list?
+		require
+			a_class_name_not_void: a_class_name /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if a_class_name.same_class_name (storage.item (i).name) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
 	has_descendant (a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Is `a_class' a descendant of any of classes in list?
 			-- True if `a_class' is "NONE", even if current list is empty.

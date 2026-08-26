@@ -19,6 +19,10 @@
 ### gedoc
 
 * When generating a new ECF file, turn on the preconditions.
+* Added format `contract_view` to generate the contract-view
+  (or short form) of a class or of a set of classes, where
+  internal implementation details are hidden, keeping only
+  an interface representation.
 
 ### Gobo Eiffel Tools Library
 

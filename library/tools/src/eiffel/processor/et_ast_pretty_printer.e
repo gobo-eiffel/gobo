@@ -3087,7 +3087,6 @@ feature {ET_AST_NODE} -- Processing
 				j := 1
 				l_queries := a_class.queries
 				nb_queries := l_queries.declared_count
-
 				k := 1
 				l_procedures := a_class.procedures
 				nb_procedures := l_procedures.declared_count
