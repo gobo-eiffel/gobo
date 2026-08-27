@@ -2836,6 +2836,7 @@ feature {NONE} -- Parsing
 						l_query_synonym := new_query_synonym (l_extended_feature_name, l_query)
 						if l_query_synonym /= Void then
 							l_query_synonym.set_frozen_keyword (l_frozen_keyword)
+							l_query := l_query_synonym
 						end
 						register_query_synonym (l_query_synonym)
 						last_extended_feature_name_items.remove

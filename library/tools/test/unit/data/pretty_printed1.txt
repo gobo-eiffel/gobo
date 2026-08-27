@@ -25,6 +25,9 @@ inherit
 
 feature {HASHABLE, COMPARABLE} -- Access
 
+	grouped_unique_first, grouped_unique_middle_1, grouped_unique_middle_2, grouped_unique_last: INTEGER = unique
+			-- Keep every grouped name.
+
 	frozen bar, baz (a_string, a_other_string: STRING; i: INTEGER): ANY
 			-- Do it, but do it well.
 		require
