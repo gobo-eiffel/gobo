@@ -19,8 +19,9 @@
 ### gedoc
 
 * When generating a new ECF file, turn on the preconditions.
-* Added format `contract_view` to generate the contract-view
-  (or short form) of a class or of a set of classes, where
+* Added formats `contract_view` and `flat_contract_view` to
+  generate the contract-view (or short form) and flat-contract-view
+  (or flat short form) of a class or of a set of classes, where
   internal implementation details are hidden, keeping only
   an interface representation.
 

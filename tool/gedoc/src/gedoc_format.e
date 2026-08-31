@@ -520,8 +520,6 @@ feature {NONE} -- Processing
 			system_processor.set_ise_version (ise_version)
 			system_processor.set_unknown_builtin_reported (False)
 			a_system.set_unique_universe_names
-			a_system.set_attachment_type_conformance_mode (False)
-			a_system.set_target_type_attachment_mode (False)
 			set_ast_factory
 			if input_classes.is_empty then
 					-- If `input_classes' is not empty, it means that we got them

@@ -1781,11 +1781,15 @@ feature -- Ancestors
 
 	ancestors: ET_BASE_TYPE_LIST
 			-- Proper ancestors in reverse topological order
-			-- (parents, then grand-parents, etc.)
+			-- (parents, then grand-parents, etc. Note some grand-parents
+			-- may appear before some parents while still preserving
+			-- the reverse topological order.)
 
 	ancestor_classes: DS_ARRAYED_LIST [ET_CLASS]
 			-- Proper ancestor classes in reverse topological order
-			-- (parents, then grand-parents, etc.)
+			-- (parents, then grand-parents, etc. Note some grand-parents
+			-- may appear before some parents while still preserving
+			-- the reverse topological order.)
 			-- Do not repeat the class in case of repeated inheritance.
 		local
 			i, nb: INTEGER
@@ -1814,11 +1818,15 @@ feature -- Ancestors
 
 	conforming_ancestors: ET_BASE_TYPE_LIST
 			-- Proper conforming ancestors in reverse topological order
-			-- (parents, then grand-parents, etc.)
+			-- (parents, then grand-parents, etc. Note some grand-parents
+			-- may appear before some parents while still preserving
+			-- the reverse topological order.)
 
 	conforming_ancestor_classes: DS_ARRAYED_LIST [ET_CLASS]
 			-- Proper conforming ancestor classes in reverse topological order
-			-- (parents, then grand-parents, etc.)
+			-- (parents, then grand-parents, etc. Note some grand-parents
+			-- may appear before some parents while still preserving
+			-- the reverse topological order.)
 			-- Do not repeat the class in case of repeated inheritance.
 		local
 			i, nb: INTEGER

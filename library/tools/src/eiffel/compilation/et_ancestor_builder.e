@@ -426,12 +426,15 @@ feature {NONE} -- Ancestors
 			a_type, l_ancestor_type, l_parent_ancestor_type: ET_BASE_TYPE
 			i, nb: INTEGER
 			anc: ET_BASE_TYPE_LIST
+			l_already_added: BOOLEAN
+			l_already_resolved: BOOLEAN
 		do
 				-- Add current parent to `ancestors'.
 			a_parent_type := a_parent.type
 			a_parent_class := a_parent_type.base_class
 			ancestors.search (a_parent_class)
 			if ancestors.found then
+				l_already_added := True
 				l_ancestor_type := ancestors.found_item
 					-- The context in which the current parent appears is
 					-- `current_class', hence `current_class' appearing
@@ -440,20 +443,26 @@ feature {NONE} -- Ancestors
 					set_fatal_error (current_class)
 					error_handler.report_gvagp0a_error (current_class, l_ancestor_type, a_parent_type)
 				end
-			else
-				l_ancestor_type := a_parent_type
-				ancestors.force_last_new (l_ancestor_type, a_parent_class)
-					-- Add proper ancestors of current parent
-					-- to the ancestors of `current_class'.
-				a_parameters := a_parent.type.actual_parameters
-				parent_context.set (a_parent_type, current_class)
-				anc := a_parent_class.ancestors
-				nb := anc.count
-				from i := 1 until i > nb loop
-					a_type := anc.item (i)
-					a_class := a_type.base_class
-					ancestors.search (a_class)
-					if ancestors.found then
+					-- Make sure to preserve topological order:
+					-- so even when the ancestor was already added
+					-- we move it to last position.
+				ancestors.remove_found_item
+			end
+			l_ancestor_type := a_parent_type
+			ancestors.force_last_new (l_ancestor_type, a_parent_class)
+				-- Add proper ancestors of current parent
+				-- to the ancestors of `current_class'.
+			a_parameters := a_parent.type.actual_parameters
+			parent_context.set (a_parent_type, current_class)
+			anc := a_parent_class.ancestors
+			nb := anc.count
+			from i := 1 until i > nb loop
+				l_already_resolved := False
+				a_type := anc.item (i)
+				a_class := a_type.base_class
+				ancestors.search (a_class)
+				if ancestors.found then
+					if not l_already_added then
 						l_parent_ancestor_type := ancestors.found_item
 						if not l_parent_ancestor_type.same_syntactical_type (a_type, parent_context, current_class) then
 								-- Compute actual generic derivation of `a_type' in
@@ -461,44 +470,56 @@ feature {NONE} -- Ancestors
 							if a_parameters /= Void then
 								a_type := a_type.resolved_formal_parameters (a_parameters)
 							end
+							l_already_resolved := True
 							set_fatal_error (current_class)
 							error_handler.report_gvagp0a_error (current_class, l_parent_ancestor_type, a_type)
 						end
-					else
-							-- Compute actual generic derivation of `a_type' in
-							-- `current_class' if needed before inserting it in
-							-- `ancestors'.
-						if a_parameters /= Void then
-							a_type := a_type.resolved_formal_parameters (a_parameters)
-						end
-						ancestors.force_last_new (a_type, a_class)
 					end
-					i := i + 1
+						-- Make sure to preserve topological order:
+						-- so even when the ancestor was already added
+						-- we move it to last position.
+					ancestors.remove_found_item
 				end
+					-- Compute actual generic derivation of `a_type' in
+					-- `current_class' if needed before inserting it in
+					-- `ancestors'.
+				if not l_already_resolved and a_parameters /= Void then
+					a_type := a_type.resolved_formal_parameters (a_parameters)
+				end
+				ancestors.force_last_new (a_type, a_class)
+				i := i + 1
 			end
 			if a_is_conforming then
 				conforming_ancestors.search (a_parent_class)
-				if not conforming_ancestors.found then
-					conforming_ancestors.force_last_new (l_ancestor_type, a_parent_class)
-					anc := a_parent_class.conforming_ancestors
-					nb := anc.count
-					from i := 1 until i > nb loop
-						a_type := anc.item (i)
-						a_class := a_type.base_class
+				if conforming_ancestors.found then
+						-- Make sure to preserve topological order:
+						-- so even when the ancestor was already added
+						-- we move it to last position.
+					conforming_ancestors.remove_found_item
+				end
+				conforming_ancestors.force_last_new (l_ancestor_type, a_parent_class)
+				anc := a_parent_class.conforming_ancestors
+				nb := anc.count
+				from i := 1 until i > nb loop
+					a_type := anc.item (i)
+					a_class := a_type.base_class
+					ancestors.search (a_class)
+					if not ancestors.found then
+							-- Internal error: a conforming ancestor is an ancestor.
+						set_fatal_error (current_class)
+						error_handler.report_giaaa_error
+					else
 						conforming_ancestors.search (a_class)
-						if not conforming_ancestors.found then
-							ancestors.search (a_class)
-							if not ancestors.found then
-									-- Internal error: a conforming ancestor is an ancestor.
-								set_fatal_error (current_class)
-								error_handler.report_giaaa_error
-							else
-								l_parent_ancestor_type := ancestors.found_item
-								conforming_ancestors.force_last_new (l_parent_ancestor_type, a_class)
-							end
+						if conforming_ancestors.found then
+								-- Make sure to preserve topological order:
+								-- so even when the ancestor was already added
+								-- we move it to last position.
+							conforming_ancestors.remove_found_item
 						end
-						i := i + 1
+						l_parent_ancestor_type := ancestors.found_item
+						conforming_ancestors.force_last_new (l_parent_ancestor_type, a_class)
 					end
+					i := i + 1
 				end
 			end
 		end

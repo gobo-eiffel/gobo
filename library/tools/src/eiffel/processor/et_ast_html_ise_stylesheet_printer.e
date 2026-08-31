@@ -17,7 +17,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_AST_HTML_ISE_STYLESHEET_PRINTER
@@ -161,10 +161,16 @@ feature -- Printing
 			a_feature_not_void: a_feature /= Void
 		local
 			l_old_comments_ignored: BOOLEAN
-			l_old_feature: like current_feature
+			l_old_closure: like current_closure
+			l_old_closure_impl: like current_closure_impl
+			l_old_class_impl: like current_class_impl
 		do
-			l_old_feature := current_feature
-			current_feature := a_feature
+			l_old_closure := current_closure
+			current_closure := a_feature
+			l_old_closure_impl := current_closure_impl
+			current_closure_impl := a_feature.implementation_feature
+			l_old_class_impl := current_class_impl
+			current_class_impl := a_feature.implementation_class
 			l_old_comments_ignored := comments_ignored
 			set_comments_ignored (True)
 			print_unescaped_string (html_start_span_title)
@@ -192,7 +198,9 @@ feature -- Printing
 			end
 			print_end_span
 			set_comments_ignored (l_old_comments_ignored)
-			current_feature := l_old_feature
+			current_closure := l_old_closure
+			current_closure_impl := l_old_closure_impl
+			current_class_impl := l_old_class_impl
 		end
 
 	print_cluster_names_recursive (a_clusters: ET_CLUSTERS)
