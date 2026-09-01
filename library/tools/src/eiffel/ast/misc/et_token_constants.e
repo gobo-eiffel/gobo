@@ -4783,6 +4783,15 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	interface_keyword: ET_KEYWORD
+			-- 'interface' keyword
+		once
+			create Result.make_interface
+		ensure
+			instance_free: class
+			keyword_not_void: Result /= Void
+		end
+
 	invariant_keyword: ET_INVARIANT_KEYWORD
 			-- 'invariant' keyword
 		once
@@ -6162,6 +6171,7 @@ feature -- Keyword and symbol names
 	indexing_keyword_name: STRING = "indexing"
 	inherit_keyword_name: STRING = "inherit"
 	inspect_keyword_name: STRING = "inspect"
+	interface_keyword_name: STRING = "interface"
 	invariant_keyword_name: STRING = "invariant"
 	is_keyword_name: STRING = "is"
 	like_keyword_name: STRING = "like"

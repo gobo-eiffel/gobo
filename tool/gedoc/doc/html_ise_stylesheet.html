@@ -62,17 +62,23 @@
    
    <p>
     For each Eiffel class <font color="#008080"><i><tt>FOO</tt></i></font>, <i>gedoc</i>
-    generates three HTML file: <font color="#800000"><i><tt>foo.html</tt></i></font>, <font color="#800000"><i><tt>foo_chart.html</tt></i></font>
-    and <font color="#800000"><i><tt>foo_links.html</tt></i></font>. The file <font color="#800000"><i><tt>foo.html</tt></i></font>
+    generates four HTML files: <font color="#800000"><i><tt>foo.html</tt></i></font>, <font color="#800000"><i><tt>foo_chart.html</tt></i></font>,
+    <font color="#800000"><i><tt>foo_links.html</tt></i></font> and <font color="#800000"><i><tt>foo_contract_view.html</tt></i></font>.
+    The file <font color="#800000"><i><tt>foo.html</tt></i></font>
     contains a pretty-printed, colorized and hyper-linked version of the class text.
     The file <font color="#800000"><i><tt>foo_chart.html</tt></i></font> contains general information about the
     class, the list of its parent classes, and the list of exported features (both
     declared in the class text and inherited from ancestors). Note that in order to
     comply with the original <font color="#800000"><i><tt>html-sytlesheet</tt></i></font> format from ISE
     EiffelStudio, features declared in class <font color="#008080"><i><tt>ANY</tt></i></font> are not listed
-    here, unless redefined in a descendant. And finally the file <font color="#800000"><i><tt>foo_links.html</tt></i></font>
+    here, unless redefined in a descendant. The file <font color="#800000"><i><tt>foo_links.html</tt></i></font>
     lists the parent classes of the class, its heirs (other classes having this
     class as parent), its direct client classes and supplier classes.
+    And finally the file <font color="#800000"><i><tt>foo_contract_view.html</tt></i></font> contains the
+    flat-contract-view of the class (a view where internal implementation details
+    are hidden). Note that this latter file is not part of the original
+    <font color="#800000"><i><tt>html-sytlesheet</tt></i></font> format from ISE EiffelStudio, but is added
+    here for convenience.
     
    </p>
    
@@ -87,7 +93,8 @@
     file <font color="#800000"><i><tt>foo_chart.html</tt></i></font> (already mentioned above) for the class 
     <font color="#008080"><i><tt>FOO</tt></i></font> currently displayed. The button <font color="#800000"><i><tt>Relations</tt></i></font>
     shows the file <font color="#800000"><i><tt>foo_links.html</tt></i></font>. The button <font color="#800000"><i><tt>Text</tt></i></font>
-    shows the file <font color="#800000"><i><tt>foo.html</tt></i></font>. Finally, in the text field 
+    shows the file <font color="#800000"><i><tt>foo.html</tt></i></font>. The button <font color="#800000"><i><tt>Contract View</tt></i></font>
+    shows the file <font color="#800000"><i><tt>foo_contract_view.html</tt></i></font>. Finally, in the text field 
     <font color="#800000"><i><tt>Go to:</tt></i></font> you can type the name of a class, then type "Enter"
     to jump to that class.
     
@@ -156,7 +163,7 @@
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright (c) 2017-2025, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>https://</b><a href="https://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>10 December 2025</font></address>
+     <address><font size="2"><b>Copyright (c) 2017-2026, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>https://</b><a href="https://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>1 September 2026</font></address>
     </td>
     <td align="right" valign="top"><a href="http://gobo-eiffel.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="contract_viewer.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="descendants.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

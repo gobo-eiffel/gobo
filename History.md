@@ -24,6 +24,8 @@
   (or flat short form) of a class or of a set of classes, where
   internal implementation details are hidden, keeping only
   an interface representation.
+* Added the generation of the flat-contract-view of classes
+  when using the format `html-stylesheet`.
 
 ### Gobo Eiffel Tools Library
 

@@ -5,7 +5,7 @@
 		"Eiffel alias 'free-operator' feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2020, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_ALIAS_FREE_NAME
@@ -16,6 +16,7 @@ inherit
 		undefine
 			hash_code,
 			lower_name,
+			operator_lower_name,
 			same_call_name,
 			is_bracket,
 			is_parenthesis,
@@ -46,8 +47,7 @@ inherit
 			is_prefix_minus,
 			is_prefix_plus,
 			is_prefix_not,
-			is_prefix_not_symbol,
-			operator_lower_name
+			is_prefix_not_symbol
 		redefine
 			alias_name, alias_lower_name,
 			operator_name,
@@ -144,10 +144,13 @@ feature -- Access
 	alias_name: STRING
 			-- Name of alias
 			-- (using UTF-8 encoding)
+		local
+			l_operator_name: STRING
 		do
-			create Result.make (operator_name.count + 8)
+			l_operator_name := operator_name
+			create Result.make (l_operator_name.count + 8)
 			Result.append_string (alias_double_quote)
-			Result.append_string (operator_name)
+			Result.append_string (l_operator_name)
 			Result.append_character ('%"')
 		end
 
@@ -158,17 +161,20 @@ feature -- Access
 		local
 			i, nb: INTEGER
 			c: CHARACTER
+			l_cloned: BOOLEAN
 		do
 			Result := alias_name
 			nb := Result.count
 			from i := 1 until i > nb loop
 				c := Result.item (i)
 				if c >= 'A' and c <= 'Z' then
-					Result := Result.as_lower
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
+					if not l_cloned then
+						Result := Result.twin
+						l_cloned := True
+					end
+					Result.put (c.as_lower, i)
 				end
+				i := i + 1
 			end
 		end
 

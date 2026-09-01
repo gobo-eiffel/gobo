@@ -5,7 +5,7 @@
 		"Eiffel free operators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_FREE_OPERATOR
@@ -108,10 +108,13 @@ feature -- Access
 	name: STRING_8
 			-- Name of feature
 			-- (using UTF-8 encoding)
+		local
+			l_operator_name: STRING
 		do
-			create Result.make (operator_name.count + 8)
+			l_operator_name := operator_name
+			create Result.make (l_operator_name.count + 8)
 			Result.append_string (alias_double_quote)
-			Result.append_string (operator_name)
+			Result.append_string (l_operator_name)
 			Result.append_character ('%"')
 		end
 

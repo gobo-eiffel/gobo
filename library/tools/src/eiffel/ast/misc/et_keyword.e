@@ -5,7 +5,7 @@
 		"Eiffel keywords"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2024, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_KEYWORD
@@ -62,6 +62,7 @@ create
 	make_indexing,
 	make_inherit,
 	make_inspect,
+	make_interface,
 	make_is,
 	make_like,
 	make_local,
@@ -469,6 +470,17 @@ feature {NONE} -- Initialization
 			make_token (tokens.inspect_keyword_name)
 		ensure
 			is_inspect: is_inspect
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
+	make_interface
+			-- Create a new 'interface' keyword.
+		do
+			code := tokens.interface_keyword_code
+			make_token (tokens.interface_keyword_name)
+		ensure
+			is_interface: is_interface
 			line_set: line = no_line
 			column_set: column = no_column
 		end
@@ -1035,6 +1047,12 @@ feature -- Status report
 			-- Is current keyword 'inspect'?
 		do
 			Result := (code = tokens.inspect_keyword_code)
+		end
+
+	is_interface: BOOLEAN
+			-- Is current keyword 'interface'?
+		do
+			Result := (code = tokens.interface_keyword_code)
 		end
 
 	is_invariant: BOOLEAN

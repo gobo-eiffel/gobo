@@ -169,8 +169,7 @@ feature {ET_AST_NODE} -- Processing
 								end
 								if not l_has_assertion then
 									indent
-									print_string (once "-- from class ")
-									process_name_of_named_class (l_base_class.name, l_base_class)
+									print_comment_text (once "-- from class {" + l_base_class.upper_name  + "}")
 									print_new_line
 									dedent
 									l_has_assertion := True
@@ -206,8 +205,7 @@ feature {ET_AST_NODE} -- Processing
 						if not l_has_assertion then
 							if flat_enabled then
 								indent
-								print_string (once "-- from class ")
-								process_name_of_named_class (a_class.name, a_class)
+								print_comment_text (once "-- from class {" + a_class.upper_name  + "}")
 								print_new_line
 								dedent
 							end
@@ -272,8 +270,7 @@ feature {ET_AST_NODE} -- Processing
 								end
 								if current_class_impl /= current_class then
 									print_space
-									print_string (once "-- from class ")
-									process_name_of_named_class (current_class_impl.name, current_class_impl)
+									print_comment_text (once "-- from class {" + current_class_impl.upper_name  + "}")
 								end
 								print_new_line
 								l_has_assertion := True
@@ -333,8 +330,7 @@ feature {ET_AST_NODE} -- Processing
 							l_class := l_first_precursor.implementation_class
 							if l_class /= current_class then
 								print_space
-								print_string (once "-- from class ")
-								process_name_of_named_class (l_class.name, l_class)
+								print_comment_text (once "-- from class {" + l_class.upper_name  + "}")
 							end
 							print_new_line
 							indent
@@ -353,8 +349,7 @@ feature {ET_AST_NODE} -- Processing
 					end
 					if current_class_impl /= current_class then
 						print_space
-						print_string (once "-- from class ")
-						process_name_of_named_class (current_class_impl.name, current_class_impl)
+						print_comment_text (once "-- from class {" + current_class_impl.upper_name  + "}")
 					end
 					print_new_line
 					indent
@@ -454,7 +449,7 @@ feature {ET_AST_NODE} -- Processing
 				end
 				tokens.class_keyword.process (Current)
 				print_space
-				print_string ("interface")
+				tokens.interface_keyword.process (Current)
 				print_space
 				process_name_of_named_class (a_class.name, a_class)
 				if attached a_class.formal_parameters as l_formal_parameters and then not l_formal_parameters.is_empty then
@@ -669,11 +664,9 @@ feature {ET_AST_NODE} -- Processing
 				indent
 				process_header_comment (a_feature)
 				if current_class /= a_feature.implementation_class then
-					print_string (once "-- (from class ")
-					process_name_of_named_class (a_feature.implementation_class.name, a_feature.implementation_class)
-					print_character (')')
-					print_new_line
+					print_comment_text (once "-- (from class {" + a_feature.implementation_class.upper_name  + "})")
 				end
+				print_new_line
 				dedent
 			end
 			if attached a_feature.first_note as l_note then
@@ -796,9 +789,7 @@ feature {ET_AST_NODE} -- Processing
 					tokens.feature_keyword.process (Current)
 					if not l_name.is_empty then
 						print_space
-						print_string (once "--")
-						print_space
-						print_string (l_name)
+						print_comment_text (once "-- " + l_name)
 					end
 					print_new_line
 					print_new_line
@@ -862,8 +853,7 @@ feature {ET_AST_NODE} -- Processing
 								process_header_comment (l_first_precursor.implementation_feature)
 							end
 						else
-							print_string (l_line)
-							print_new_line
+							print_comment_text (l_line)
 						end
 					end
 				end
