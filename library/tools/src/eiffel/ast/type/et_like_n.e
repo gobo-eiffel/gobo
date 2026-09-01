@@ -5,7 +5,7 @@
 		"Eiffel types appearing in nested type contexts and representing n-th type in these contexts"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2015-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2015-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_LIKE_N
@@ -20,6 +20,7 @@ inherit
 			add_adapted_base_classes_to_list,
 			adapted_base_class_with_named_feature,
 			adapted_base_class_with_seeded_feature,
+			adapted_base_type_with_seeded_feature,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
 			same_named_tuple_type_with_type_marks,
@@ -137,6 +138,26 @@ feature -- Access
 			else
 					-- We reached the root context.
 				Result := l_previous_context.root_context.context_adapted_base_class_with_seeded_feature (a_seed)
+			end
+		end
+
+	adapted_base_type_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base type of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint adapted base types containing
+			-- a feature with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
+		local
+			l_previous_context: ET_NESTED_TYPE_CONTEXT
+		do
+			l_previous_context := a_context.as_nested_type_context
+			if l_previous_context.valid_index (index) then
+				l_previous_context := a_context.as_nested_type_context
+				l_previous_context.force_last (previous)
+				Result := l_previous_context.item (index).adapted_base_type_with_seeded_feature (a_seed, l_previous_context)
+				l_previous_context.remove_last
+			else
+					-- We reached the root context.
+				Result := l_previous_context.root_context.context_adapted_base_type_with_seeded_feature (a_seed)
 			end
 		end
 
