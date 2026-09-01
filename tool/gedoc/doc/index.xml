@@ -20,7 +20,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>25 August 2026</date>
+	<date>31 August 2026</date>
 </chapterinfo>
 
 <title>Gobo Eiffel Doc</title>
@@ -57,7 +57,9 @@ This documentation of <projectname>gedoc</projectname> is structured as follows:
 			<link linkend="contract_viewer">Contract-Viewer</link>
 		</term>
 		<listitem><para>
-			Generating the contract-view (or short form) of a class or of a set of classes.
+			Generating the contract-view (or <projectname>short</projectname> form)
+			or flat-contract-view (or <projectname>flat short</projectname> form)
+			of a class or of a set of classes.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

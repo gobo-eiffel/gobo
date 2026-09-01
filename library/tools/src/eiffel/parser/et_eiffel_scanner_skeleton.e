@@ -1398,6 +1398,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.indexing_keyword_name)
 			Result.force_new (-1, tokens.inherit_keyword_name)
 			Result.force_new (-1, tokens.inspect_keyword_name)
+			Result.force_new (-1, tokens.interface_keyword_name)
 			Result.force_new (-1, tokens.invariant_keyword_name)
 			Result.force_new (-1, tokens.is_keyword_name)
 			Result.force_new (-1, tokens.like_keyword_name)

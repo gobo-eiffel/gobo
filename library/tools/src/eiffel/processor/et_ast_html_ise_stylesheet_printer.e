@@ -17,7 +17,7 @@
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_AST_HTML_ISE_STYLESHEET_PRINTER
@@ -75,12 +75,23 @@ feature -- Mapping
 	class_mapping: detachable DS_HASH_TABLE [STRING, ET_CLASS]
 			-- Mapping between classes and the href for these classes
 
-	feature_mapping: detachable DS_HASH_TABLE [STRING, ET_FEATURE]
+	feature_mapping: detachable DS_HASH_TABLE [DS_HASH_TABLE [STRING, ET_FEATURE], ET_CLASS]
 			-- Mapping between features and the href for these features
+
+	feature_href (a_feature: ET_FEATURE; a_class: ET_CLASS; a_mapping: attached like feature_mapping): detachable STRING
+			-- Href of `a_feature` from `a_class`, using `a_mapping`
+		local
+			l_feature_impl: ET_FEATURE
+		do
+			l_feature_impl := a_feature.implementation_feature
+			if attached a_mapping.value (l_feature_impl.implementation_class) as l_features then
+				Result := l_features.value (l_feature_impl)
+			end
+		end
 
 	root_path: detachable STRING
 			-- Path from which href in `class_mapping' and `fetaure_mapping'
-			-- are retalive
+			-- are relative
 
 	set_class_mapping (a_class_mapping: like class_mapping)
 			-- Set `class_mapping' to `a_class_mapping'.
@@ -161,10 +172,16 @@ feature -- Printing
 			a_feature_not_void: a_feature /= Void
 		local
 			l_old_comments_ignored: BOOLEAN
-			l_old_feature: like current_feature
+			l_old_closure: like current_closure
+			l_old_closure_impl: like current_closure_impl
+			l_old_class_impl: like current_class_impl
 		do
-			l_old_feature := current_feature
-			current_feature := a_feature
+			l_old_closure := current_closure
+			current_closure := a_feature
+			l_old_closure_impl := current_closure_impl
+			current_closure_impl := a_feature.implementation_feature
+			l_old_class_impl := current_class_impl
+			current_class_impl := a_feature.implementation_class
 			l_old_comments_ignored := comments_ignored
 			set_comments_ignored (True)
 			print_unescaped_string (html_start_span_title)
@@ -192,7 +209,9 @@ feature -- Printing
 			end
 			print_end_span
 			set_comments_ignored (l_old_comments_ignored)
-			current_feature := l_old_feature
+			current_closure := l_old_closure
+			current_closure_impl := l_old_closure_impl
+			current_class_impl := l_old_class_impl
 		end
 
 	print_cluster_names_recursive (a_clusters: ET_CLUSTERS)
@@ -465,13 +484,18 @@ feature -- Printing
 			-- Print indentation first if not done yet.
 		local
 			i, nb: INTEGER
+			c: CHARACTER
 		do
 			if not indentation_printed then
 				print_indentation
 			end
 			nb := s.count
 			from i := 1 until i > nb loop
-				put_character (s.item (i).as_lower)
+				c := s.item (i)
+				if c >= 'A' and c <= 'Z' then
+					c := c.as_lower
+				end
+				put_character (c)
 				i := i + 1
 			end
 			comment_printed := False
@@ -638,7 +662,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			print_unescaped_character ('>')
 			print_end_a
 			if attached feature_mapping as l_feature_mapping then
-				l_href := l_feature_mapping.value (a_feature.implementation_feature)
+				l_href := feature_href (a_feature, current_class, l_feature_mapping)
 			end
 			if l_href /= Void then
 				process_feature_name_with_href (l_feature_name, l_href)
@@ -668,7 +692,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 					if attached l_target_class.seeded_feature (a_feature_name.seed) as l_feature then
 						l_feature_name := l_feature.name
 						if attached feature_mapping as l_feature_mapping then
-							l_href := l_feature_mapping.value (l_feature.implementation_feature)
+							l_href := feature_href (l_feature, l_target_class, l_feature_mapping)
 						end
 					end
 				end
@@ -807,7 +831,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			l_feature_name := l_extended_feature_name.feature_name
 			if attached feature_mapping as l_feature_mapping then
 				if attached current_class.seeded_feature (l_feature_name.seed) as l_feature then
-					l_href := l_feature_mapping.value (l_feature.implementation_feature)
+					l_href := feature_href (l_feature, current_class, l_feature_mapping)
 				end
 			end
 			if l_href /= Void then
@@ -833,7 +857,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			if attached feature_mapping as l_feature_mapping then
 				if attached target_class as l_target_class then
 					if attached l_target_class.seeded_feature (a_keyword.seed) as l_feature then
-						l_href := l_feature_mapping.value (l_feature.implementation_feature)
+						l_href := feature_href (l_feature, l_target_class, l_feature_mapping)
 					end
 				end
 			end
@@ -915,7 +939,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			if attached {ET_IDENTIFIER} a_writable as l_identifier and then l_identifier.is_feature_name then
 				if attached feature_mapping as l_feature_mapping then
 					if attached current_class.seeded_feature (l_identifier.seed) as l_feature then
-						l_href := l_feature_mapping.value (l_feature.implementation_feature)
+						l_href := feature_href (l_feature, current_class, l_feature_mapping)
 					end
 				end
 				if l_href /= Void then
@@ -965,7 +989,7 @@ feature {NONE} -- Printing
 					l_feature_name := internal_feature_name
 					l_feature_name.set_name (a_quoted_name)
 					if attached current_class.named_feature (l_feature_name) as l_named_feature then
-						l_href := l_feature_mapping.value (l_named_feature.implementation_feature)
+						l_href := feature_href (l_named_feature, current_class, l_feature_mapping)
 					end
 				end
 				if l_href /= Void then
@@ -1032,7 +1056,7 @@ feature {NONE} -- Printing
 						l_feature_name := internal_feature_name
 						l_feature_name.set_name (a_feature_name)
 						if attached l_class.named_feature (l_feature_name) as l_named_feature then
-							l_href := l_feature_mapping.value (l_named_feature.implementation_feature)
+							l_href := feature_href (l_named_feature, l_class, l_feature_mapping)
 						end
 					end
 					if l_href /= Void then

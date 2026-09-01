@@ -32,7 +32,8 @@ feature {NONE} -- Initialization
 	make (a_input_filename: STRING; a_system_processor: like system_processor)
 			-- Create a new documentation format with `a_input_filename'.
 		do
-			create contract_viewer.make_null
+			create contract_viewer.make_null (a_system_processor)
+			contract_viewer.set_flat_enabled (False)
 			precursor (a_input_filename, a_system_processor)
 		end
 
@@ -42,11 +43,11 @@ feature {NONE} -- Processing
 			-- Process `input_classes' from `a_system'.
 		local
 			l_input_classes: like input_classes
-			l_formats: DS_ARRAYED_LIST [like Current]
 			l_processor_count: INTEGER
+			l_all_classes: like input_classes
+			l_formats: DS_ARRAYED_LIST [like Current]
 		do
 			l_input_classes := input_classes
-			system_processor.parse_classes (l_input_classes)
 			l_processor_count := system_processor.processor_count
 			if l_processor_count > 1 then
 					-- Make sure that output directories exist
@@ -54,6 +55,12 @@ feature {NONE} -- Processing
 					-- them at the same time.
 				create_class_output_directories (l_input_classes)
 			end
+			create l_all_classes.make (a_system.class_count_recursive)
+			a_system.classes_do_unless_recursive (agent l_all_classes.force_last, agent {ET_CLASS}.is_none)
+			l_input_classes := input_classes
+			system_processor.compile_degree_5 (l_all_classes, False)
+			system_processor.compile_degree_4 (l_all_classes)
+			system_processor.compile_degree_3 (l_input_classes)
 			create l_formats.make (l_processor_count)
 			system_processor.do_all (agent add_format (?, l_formats))
 			l_input_classes.do_all (agent {ET_CLASS}.set_marked (False))
@@ -64,7 +71,7 @@ feature {NONE} -- Processing
 feature {GEDOC_CONTRACT_VIEW_FORMAT} -- Processing
 
 	contract_view_class (a_class: ET_CLASS)
-			-- Contract-view `a_class' if it has not been marked yet.
+			-- Flat-Contract-view `a_class' if it has not been marked yet.
 		require
 			a_class_not_void: a_class /= Void
 		local

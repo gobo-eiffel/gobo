@@ -25,40 +25,26 @@ inherit
 			process_assigner_instruction,
 			process_assignment,
 			process_assignment_attempt,
-			process_attribute,
 			process_bang_instruction,
 			process_bracket_expression,
 			process_call_agent,
-			process_constant_attribute,
 			process_convert_from_expression,
 			process_convert_to_expression,
 			process_create_expression,
 			process_create_instruction,
-			process_deferred_function,
-			process_deferred_procedure,
-			process_do_function,
 			process_do_function_inline_agent,
-			process_do_procedure,
 			process_do_procedure_inline_agent,
-			process_dotnet_function,
-			process_dotnet_procedure,
 			process_explicit_convert_from_expression,
 			process_explicit_convert_to_expression,
-			process_extended_attribute,
-			process_external_function,
 			process_external_function_inline_agent,
-			process_external_procedure,
 			process_external_procedure_inline_agent,
 			process_feature_address,
 			process_general_qualified_feature_call_expression,
 			process_general_qualified_feature_call_instruction,
 			process_infix_expression,
-			process_invariants,
 			process_like_feature,
 			process_object_equality_expression,
-			process_once_function,
 			process_once_function_inline_agent,
-			process_once_procedure,
 			process_once_procedure_inline_agent,
 			process_parenthesis_expression,
 			process_parenthesis_instruction,
@@ -71,7 +57,6 @@ inherit
 			process_qualified_like_type,
 			process_static_call_expression,
 			process_static_call_instruction,
-			process_unique_attribute,
 			process_unqualified_call_expression,
 			process_unqualified_call_instruction
 		end
@@ -88,6 +73,8 @@ feature {NONE} -- Initialization
 			precursor (a_system_processor)
 			current_class := tokens.unknown_class
 			current_closure := tokens.unknown_feature
+			current_closure_impl := tokens.unknown_feature
+			current_class_impl := tokens.unknown_class
 			create expression_type_finder.make (a_system_processor)
 			create internal_type_context.make_with_capacity (current_class, 100)
 		end
@@ -99,14 +86,42 @@ feature -- Basic operations
 		require
 			a_caller_closure_not_void: a_caller_closure /= Void
 		local
-			l_old_current_class: like current_class
+			l_class_impl: like current_class
 			l_closure_impl: ET_STANDALONE_CLOSURE
 		do
 			l_closure_impl := a_caller_closure.implementation_feature
-			l_old_current_class := current_class
-			current_class := l_closure_impl.implementation_class
-			l_closure_impl.process (Current)
-			current_class := l_old_current_class
+			l_class_impl := l_closure_impl.implementation_class
+			find_callees_in_ast_node (l_closure_impl, l_closure_impl, l_closure_impl, l_class_impl, l_class_impl)
+		end
+
+	find_callees_in_ast_node (a_ast_node: ET_AST_NODE; a_closure_impl, a_closure: ET_CLOSURE; a_class_impl, a_class: ET_CLASS)
+			-- Find features called in `a_ast_node' which is written in `a_closure_impl`
+			-- in `a_class_impl` and viewed from `a_closure` in `a_class`.
+		require
+			a_ast_node_not_void: a_ast_node /= Void
+			a_closure_impl_not_void: a_closure_impl /= Void
+			a_closure_not_void: a_closure /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_not_void: a_class /= Void
+		local
+			l_old_closure: like current_closure
+			l_old_class: like current_class
+			l_old_closure_impl: like current_closure_impl
+			l_old_class_impl: like current_class_impl
+		do
+			l_old_closure := current_closure
+			current_closure := a_closure
+			l_old_class := current_class
+			current_class := a_class
+			l_old_closure_impl := current_closure_impl
+			current_closure_impl := a_closure_impl
+			l_old_class_impl := current_class_impl
+			current_class_impl := a_class_impl
+			a_ast_node.process (Current)
+			current_closure := l_old_closure
+			current_class := l_old_class
+			current_closure_impl := l_old_closure_impl
+			current_class_impl := l_old_class_impl
 		end
 
 	report_callee (a_call_name: ET_CALL_NAME; a_callee_class: ET_CLASS)
@@ -169,17 +184,6 @@ feature {ET_AST_NODE} -- Processing
 			precursor (a_instruction)
 		end
 
-	process_attribute (a_feature: ET_ATTRIBUTE)
-			-- Process `a_feature'.
-		local
-			l_old_closure: like current_closure
-		do
-			l_old_closure := current_closure
-			current_closure := a_feature
-			precursor (a_feature)
-			current_closure := l_old_closure
-		end
-
 	process_bang_instruction (a_instruction: ET_BANG_INSTRUCTION)
 			-- Process `a_instruction`.
 		do
@@ -207,22 +211,11 @@ feature {ET_AST_NODE} -- Processing
 			if attached {ET_AGENT_OPEN_TARGET} l_target as l_open_target then
 				internal_type_context.put_last (l_open_target.type)
 			elseif attached {ET_EXPRESSION} l_target as l_expression_target then
-				expression_type_finder.find_expression_type_in_closure (l_expression_target, current_closure, current_closure, current_class, internal_type_context, current_universe.detachable_separate_any_type)
+				expression_type_finder.find_expression_type_in_closure (l_expression_target, current_closure_impl, current_closure, current_class_impl, internal_type_context, current_universe.detachable_separate_any_type)
 			end
 			l_class := internal_type_context.adapted_base_class_with_seeded_feature (l_name.seed).base_class
 			report_callee (l_name, l_class)
 			precursor (a_expression)
-		end
-
-	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE)
-			-- Process `a_feature'.
-		local
-			l_old_closure: like current_closure
-		do
-			l_old_closure := current_closure
-			current_closure := a_feature
-			precursor (a_feature)
-			current_closure := l_old_closure
 		end
 
 	process_convert_from_expression (a_convert_expression: ET_CONVERT_FROM_EXPRESSION)
@@ -283,7 +276,7 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_instruction.type as l_type then
 				internal_type_context.put_last (l_type)
 			else
-				expression_type_finder.find_expression_type_in_closure (l_target, current_closure, current_closure, current_class, internal_type_context, current_universe.detachable_separate_any_type)
+				expression_type_finder.find_expression_type_in_closure (l_target, current_closure_impl, current_closure, current_class_impl, internal_type_context, current_universe.detachable_separate_any_type)
 			end
 			l_class := internal_type_context.adapted_base_class_with_seeded_feature (l_name.seed).base_class
 			report_callee (l_name, l_class)
@@ -292,92 +285,34 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION)
-			-- Process `a_feature'.
-		local
-			l_old_closure: like current_closure
-		do
-			l_old_closure := current_closure
-			current_closure := a_feature
-			precursor (a_feature)
-			current_closure := l_old_closure
-		end
-
-	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE)
-			-- Process `a_feature'.
-		local
-			l_old_closure: like current_closure
-		do
-			l_old_closure := current_closure
-			current_closure := a_feature
-			precursor (a_feature)
-			current_closure := l_old_closure
-		end
-
-	process_do_function (a_feature: ET_DO_FUNCTION)
-			-- Process `a_feature'.
-		local
-			l_old_closure: like current_closure
-		do
-			l_old_closure := current_closure
-			current_closure := a_feature
-			precursor (a_feature)
-			current_closure := l_old_closure
-		end
-
 	process_do_function_inline_agent (a_expression: ET_DO_FUNCTION_INLINE_AGENT)
 			-- Process `a_expression'.
 		local
 			l_old_closure: like current_closure
+			l_old_closure_impl: like current_closure_impl
 		do
 			l_old_closure := current_closure
 			current_closure := a_expression
+			l_old_closure_impl := current_closure_impl
+			current_closure_impl := a_expression.implementation_closure
 			precursor (a_expression)
 			current_closure := l_old_closure
-		end
-
-	process_do_procedure (a_feature: ET_DO_PROCEDURE)
-			-- Process `a_feature'.
-		local
-			l_old_closure: like current_closure
-		do
-			l_old_closure := current_closure
-			current_closure := a_feature
-			precursor (a_feature)
-			current_closure := l_old_closure
+			current_closure_impl := l_old_closure_impl
 		end
 
 	process_do_procedure_inline_agent (a_expression: ET_DO_PROCEDURE_INLINE_AGENT)
 			-- Process `a_expression'.
 		local
 			l_old_closure: like current_closure
+			l_old_closure_impl: like current_closure_impl
 		do
 			l_old_closure := current_closure
 			current_closure := a_expression
+			l_old_closure_impl := current_closure_impl
+			current_closure_impl := a_expression.implementation_closure
 			precursor (a_expression)
 			current_closure := l_old_closure
-		end
-
-	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION)
-			-- Process `a_feature'.
-		local
-			l_old_closure: like current_closure
-		do
-			l_old_closure := current_closure
-			current_closure := a_feature
-			precursor (a_feature)
-			current_closure := l_old_closure
-		end
-
-	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE)
-			-- Process `a_feature'.
-		local
-			l_old_closure: like current_closure
-		do
-			l_old_closure := current_closure
-			current_closure := a_feature
-			precursor (a_feature)
-			current_closure := l_old_closure
+			current_closure_impl := l_old_closure_impl
 		end
 
 	process_explicit_convert_from_expression (a_convert_expression: ET_EXPLICIT_CONVERT_FROM_EXPRESSION)
@@ -394,59 +329,35 @@ feature {ET_AST_NODE} -- Processing
 			precursor (a_convert_expression)
 		end
 
-	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE)
-			-- Process `a_feature'.
-		local
-			l_old_closure: like current_closure
-		do
-			l_old_closure := current_closure
-			current_closure := a_feature
-			precursor (a_feature)
-			current_closure := l_old_closure
-		end
-
-	process_external_function (a_feature: ET_EXTERNAL_FUNCTION)
-			-- Process `a_feature'.
-		local
-			l_old_closure: like current_closure
-		do
-			l_old_closure := current_closure
-			current_closure := a_feature
-			precursor (a_feature)
-			current_closure := l_old_closure
-		end
-
 	process_external_function_inline_agent (a_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
 			-- Process `a_expression'.
 		local
 			l_old_closure: like current_closure
+			l_old_closure_impl: like current_closure_impl
 		do
 			l_old_closure := current_closure
 			current_closure := a_expression
+			l_old_closure_impl := current_closure_impl
+			current_closure_impl := a_expression.implementation_closure
 			precursor (a_expression)
 			current_closure := l_old_closure
+			current_closure_impl := l_old_closure_impl
 		end
 
-	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE)
-			-- Process `a_feature'.
-		local
-			l_old_closure: like current_closure
-		do
-			l_old_closure := current_closure
-			current_closure := a_feature
-			precursor (a_feature)
-			current_closure := l_old_closure
-		end
 
 	process_external_procedure_inline_agent (a_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
 			-- Process `a_expression'.
 		local
 			l_old_closure: like current_closure
+			l_old_closure_impl: like current_closure_impl
 		do
 			l_old_closure := current_closure
 			current_closure := a_expression
+			l_old_closure_impl := current_closure_impl
+			current_closure_impl := a_expression.implementation_closure
 			precursor (a_expression)
 			current_closure := l_old_closure
+			current_closure_impl := l_old_closure_impl
 		end
 
 	process_feature_address (a_expression: ET_FEATURE_ADDRESS)
@@ -480,17 +391,6 @@ feature {ET_AST_NODE} -- Processing
 			precursor (a_expression)
 		end
 
-	process_invariants (a_list: ET_INVARIANTS)
-			-- Process `a_list'.
-		local
-			l_old_closure: like current_closure
-		do
-			l_old_closure := current_closure
-			current_closure := a_list
-			precursor (a_list)
-			current_closure := l_old_closure
-		end
-
 	process_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Process `a_type'.
 		local
@@ -508,48 +408,34 @@ feature {ET_AST_NODE} -- Processing
 			precursor (a_expression)
 		end
 
-	process_once_function (a_feature: ET_ONCE_FUNCTION)
-			-- Process `a_feature'.
-		local
-			l_old_closure: like current_closure
-		do
-			l_old_closure := current_closure
-			current_closure := a_feature
-			precursor (a_feature)
-			current_closure := l_old_closure
-		end
-
 	process_once_function_inline_agent (a_expression: ET_ONCE_FUNCTION_INLINE_AGENT)
 			-- Process `a_expression'.
 		local
 			l_old_closure: like current_closure
+			l_old_closure_impl: like current_closure_impl
 		do
 			l_old_closure := current_closure
 			current_closure := a_expression
+			l_old_closure_impl := current_closure_impl
+			current_closure_impl := a_expression.implementation_closure
 			precursor (a_expression)
 			current_closure := l_old_closure
-		end
-
-	process_once_procedure (a_feature: ET_ONCE_PROCEDURE)
-			-- Process `a_feature'.
-		local
-			l_old_closure: like current_closure
-		do
-			l_old_closure := current_closure
-			current_closure := a_feature
-			precursor (a_feature)
-			current_closure := l_old_closure
+			current_closure_impl := l_old_closure_impl
 		end
 
 	process_once_procedure_inline_agent (a_expression: ET_ONCE_PROCEDURE_INLINE_AGENT)
 			-- Process `a_expression'.
 		local
 			l_old_closure: like current_closure
+			l_old_closure_impl: like current_closure_impl
 		do
 			l_old_closure := current_closure
 			current_closure := a_expression
+			l_old_closure_impl := current_closure_impl
+			current_closure_impl := a_expression.implementation_closure
 			precursor (a_expression)
 			current_closure := l_old_closure
+			current_closure_impl := l_old_closure_impl
 		end
 
 	process_parenthesis_expression (a_expression: ET_PARENTHESIS_EXPRESSION)
@@ -641,7 +527,7 @@ feature {ET_AST_NODE} -- Processing
 			l_name := a_call.name
 			if not (attached {ET_IDENTIFIER} l_name as l_label and then l_label.is_tuple_label) then
 				internal_type_context.reset (current_class)
-				expression_type_finder.find_expression_type_in_closure (a_call.target, current_closure, current_closure, current_class, internal_type_context, current_universe.detachable_separate_any_type)
+				expression_type_finder.find_expression_type_in_closure (a_call.target, current_closure_impl, current_closure, current_class_impl, internal_type_context, current_universe.detachable_separate_any_type)
 				l_class := internal_type_context.adapted_base_class_with_seeded_feature (l_name.seed).base_class
 				report_callee (l_name, l_class)
 			end
@@ -715,17 +601,6 @@ feature {ET_AST_NODE} -- Processing
 			report_callee (l_name, l_class)
 		end
 
-	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE)
-			-- Process `a_feature'.
-		local
-			l_old_closure: like current_closure
-		do
-			l_old_closure := current_closure
-			current_closure := a_feature
-			precursor (a_feature)
-			current_closure := l_old_closure
-		end
-
 	process_unqualified_call_expression (a_expression: ET_UNQUALIFIED_CALL_EXPRESSION)
 			-- Process `a_expression'.
 		do
@@ -754,6 +629,37 @@ feature {NONE} -- Implementation
 			-- Closure (feature, invariant, inline agent)
 			-- being processed
 
+	current_closure_impl: ET_CLOSURE
+			-- Inner closure where the code being processed has been written
+			--
+			-- It might be different from `current_closure' or even from
+			-- `current_closure.implementation_closure' when
+			-- processing inherited assertions. For example:
+			--
+			--    deferred class A
+			--    feature
+			--       f (a: ANY)
+			--           require
+			--               pre: g (a)
+			--           deferred
+			--           end
+			--      g (a: ANY): BOOLEAN deferred end
+			--    end
+			--    class B
+			--    inherit
+			--        A
+			--    feature
+			--        f (a: STRING) do ... end
+			--        g (a: STRING): BOOLEAN do ... end
+			--    end
+			--
+			-- When processing the inherited precondition 'pre' in B.f,
+			-- `current_closure' is B.f and `current_closure_impl' is A.f
+			-- (where the inherited precondition has been written).
+
+	current_class_impl: ET_CLASS
+			-- Class where `current_closure_impl' has been written
+
 	expression_type_finder: ET_EXPRESSION_TYPE_FINDER
 			-- Expression type finder
 
@@ -763,6 +669,8 @@ feature {NONE} -- Implementation
 invariant
 
 	current_closure_not_void: current_closure /= Void
+	current_closure_impl_not_void: current_closure_impl /= Void
+	current_class_impl_not_void: current_class_impl /= Void
 	expression_type_finder_not_void: expression_type_finder /= Void
 	internal_type_context_not_void: internal_type_context /= Void
 

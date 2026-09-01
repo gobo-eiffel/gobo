@@ -487,7 +487,7 @@ feature {ET_AST_NODE} -- Processing
 				end
 				if l_unlabeled then
 					l_type := l_item.type
-					l_type.process (Current)
+					process_type (l_type)
 					comment_finder.add_excluded_node (l_type)
 					comment_finder.find_comments (l_item, comment_list)
 					comment_finder.reset_excluded_nodes
@@ -501,7 +501,7 @@ feature {ET_AST_NODE} -- Processing
 					tokens.colon_symbol.process (Current)
 					print_space
 					l_type := l_item.type
-					l_type.process (Current)
+					process_type (l_type)
 					comment_finder.add_excluded_node (l_type)
 					comment_finder.find_comments (l_item, comment_list)
 					comment_finder.reset_excluded_nodes
@@ -572,7 +572,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_argument'.
 		do
 			an_argument.left_brace.process (Current)
-			an_argument.type.process (Current)
+			process_type (an_argument.type)
 			an_argument.right_brace.process (Current)
 			print_space
 			an_argument.question_mark.process (Current)
@@ -766,7 +766,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_declared_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_type.process (Current)
+			process_type (l_type)
 			if attached a_feature.assigner as l_assigner then
 				print_space
 				l_assigner.process (Current)
@@ -795,7 +795,7 @@ feature {ET_AST_NODE} -- Processing
 			l_type := an_instruction.type
 			if l_type /= Void then
 				tokens.left_brace_symbol.process (Current)
-				l_type.process (Current)
+				process_type (l_type)
 				tokens.right_brace_symbol.process (Current)
 				print_space
 			end
@@ -803,7 +803,7 @@ feature {ET_AST_NODE} -- Processing
 			process_writable (an_instruction.target)
 			if attached an_instruction.creation_call as l_creation_call then
 				if l_type /= Void then
-					set_target_type (l_type)
+					set_target_type_with_seeded_feature (l_type, l_creation_call.name.seed)
 				else
 					set_target (an_instruction.target)
 				end
@@ -856,7 +856,7 @@ feature {ET_AST_NODE} -- Processing
 			from i := 1 until i > nb loop
 				l_item := a_list.item (i)
 				l_type := l_item.type
-				l_type.process (Current)
+				process_type (l_type)
 				comment_finder.add_excluded_node (l_type)
 				comment_finder.find_comments (l_item, comment_list)
 				comment_finder.reset_excluded_nodes
@@ -1025,7 +1025,7 @@ feature {ET_AST_NODE} -- Processing
 				-- So we have to print them explicitly here.
 			l_type := a_cast_type.type
 			tokens.left_brace_symbol.process (Current)
-			l_type.type.process (Current)
+			process_type (l_type.type)
 			tokens.right_brace_symbol.process (Current)
 			comment_finder.add_excluded_node (l_type)
 			comment_finder.find_comments (a_cast_type, comment_list)
@@ -1260,7 +1260,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 			a_type.colon.process (Current)
 			print_space
-			a_type.type.process (Current)
+			process_type (a_type.type)
 		end
 
 	process_comments
@@ -1337,7 +1337,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_declared_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_type.process (Current)
+			process_type (l_type)
 			print_space
 			if attached a_feature.assigner as l_assigner then
 				l_assigner.process (Current)
@@ -1363,6 +1363,10 @@ feature {ET_AST_NODE} -- Processing
 
 	process_constrained_formal_parameter (a_parameter: ET_CONSTRAINED_FORMAL_PARAMETER)
 			-- Process `a_parameter'.
+		local
+			i, nb: INTEGER
+			l_item: ET_FEATURE_NAME_ITEM
+			l_feature_name: ET_FEATURE_NAME
 		do
 			if use_as_type then
 				process_formal_parameter_type (a_parameter)
@@ -1378,9 +1382,27 @@ feature {ET_AST_NODE} -- Processing
 				a_parameter.constraint.process (Current)
 				if attached a_parameter.creation_procedures as l_creation_procedures then
 					print_space
-					set_target_type (a_parameter)
-					l_creation_procedures.process (Current)
-					set_target_type (Void)
+					l_creation_procedures.create_keyword.process (Current)
+					print_space
+					nb := l_creation_procedures.count
+					from i := 1 until i > nb loop
+						l_item := l_creation_procedures.item (i)
+						l_feature_name := l_item.feature_name
+						set_target_type_with_seeded_feature (a_parameter, l_feature_name.seed)
+						process_feature_name (l_feature_name)
+						set_target_type (Void)
+						if i /= nb then
+								-- The AST may or may not contain the comma.
+								-- So we have to print it explicitly here.
+							tokens.comma_symbol.process (Current)
+						end
+						comment_finder.add_excluded_node (l_feature_name)
+						comment_finder.find_comments (l_item, comment_list)
+						comment_finder.reset_excluded_nodes
+						print_space
+						i := i + 1
+					end
+					l_creation_procedures.end_keyword.process (Current)
 				end
 			end
 		end
@@ -1533,13 +1555,13 @@ feature {ET_AST_NODE} -- Processing
 			l_creation_type := an_expression.creation_type
 			l_type := l_creation_type.type
 			tokens.left_brace_symbol.process (Current)
-			l_type.process (Current)
+			process_type (l_type)
 			tokens.right_brace_symbol.process (Current)
 			comment_finder.add_excluded_node (l_type)
 			comment_finder.find_comments (l_creation_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			if attached an_expression.creation_call as l_creation_call then
-				set_target_type (l_type)
+				set_target_type_with_seeded_feature (l_type, l_creation_call.name.seed)
 				l_creation_call.process (Current)
 				set_target_type (Void)
 			end
@@ -1566,7 +1588,7 @@ feature {ET_AST_NODE} -- Processing
 			if attached an_instruction.creation_type as l_creation_type then
 				l_type := l_creation_type.type
 				tokens.left_brace_symbol.process (Current)
-				l_type.process (Current)
+				process_type (l_type)
 				tokens.right_brace_symbol.process (Current)
 				comment_finder.add_excluded_node (l_type)
 				comment_finder.find_comments (l_creation_type, comment_list)
@@ -1576,7 +1598,7 @@ feature {ET_AST_NODE} -- Processing
 			process_writable (an_instruction.target)
 			if attached an_instruction.creation_call as l_creation_call then
 				if l_type /= Void then
-					set_target_type (l_type)
+					set_target_type_with_seeded_feature (l_type, l_creation_call.name.seed)
 				else
 					set_target (an_instruction.target)
 				end
@@ -1736,7 +1758,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_declared_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_type.process (Current)
+			process_type (l_type)
 			if attached a_feature.assigner as l_assigner then
 				print_space
 				l_assigner.process (Current)
@@ -1914,7 +1936,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_declared_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_type.process (Current)
+			process_type (l_type)
 			if attached a_feature.assigner as l_assigner then
 				print_space
 				l_assigner.process (Current)
@@ -2014,7 +2036,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_declared_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_type.process (Current)
+			process_type (l_type)
 			process_comments
 			print_new_line
 			if attached an_expression.preconditions as l_preconditions then
@@ -2233,7 +2255,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_declared_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_type.process (Current)
+			process_type (l_type)
 			if attached a_feature.assigner as l_assigner then
 				print_space
 				l_assigner.process (Current)
@@ -2409,7 +2431,7 @@ feature {ET_AST_NODE} -- Processing
 			set_comments_ignored (True)
 			l_old_use_as_type := use_as_type
 			set_use_as_type (True)
-			a_convert_expression.type.process (Current)
+			process_type (a_convert_expression.type)
 			set_comments_ignored (l_old_comments_ignored)
 			set_use_as_type (l_old_use_as_type)
 			tokens.right_brace_symbol.process (Current)
@@ -2543,7 +2565,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_declared_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_type.process (Current)
+			process_type (l_type)
 			if attached a_feature.assigner as l_assigner then
 				print_space
 				l_assigner.process (Current)
@@ -2665,7 +2687,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_declared_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_type.process (Current)
+			process_type (l_type)
 			if attached a_feature.assigner as l_assigner then
 				print_space
 				l_assigner.process (Current)
@@ -2778,7 +2800,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_declared_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_type.process (Current)
+			process_type (l_type)
 			process_comments
 			print_new_line
 			if attached an_expression.preconditions as l_preconditions then
@@ -3191,7 +3213,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_declared_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_type.process (Current)
+			process_type (l_type)
 		end
 
 	process_formal_argument_list (a_list: ET_FORMAL_ARGUMENT_LIST)
@@ -3215,7 +3237,7 @@ feature {ET_AST_NODE} -- Processing
 					tokens.colon_symbol.process (Current)
 					print_space
 					l_type := l_item.type
-					l_type.process (Current)
+					process_type (l_type)
 					comment_finder.add_excluded_node (l_name)
 					comment_finder.add_excluded_node (l_type)
 					comment_finder.find_comments (l_item, comment_list)
@@ -3751,7 +3773,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_declared_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_type.process (Current)
+			process_type (l_type)
 		end
 
 	process_labeled_comma_actual_parameter (a_parameter: ET_LABELED_COMMA_ACTUAL_PARAMETER)
@@ -3841,7 +3863,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_declared_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_type.process (Current)
+			process_type (l_type)
 		end
 
 	process_local_variable_list (a_list: ET_LOCAL_VARIABLE_LIST)
@@ -3877,7 +3899,7 @@ feature {ET_AST_NODE} -- Processing
 						tokens.colon_symbol.process (Current)
 						print_space
 						l_type := l_item.type
-						l_type.process (Current)
+						process_type (l_type)
 						comment_finder.add_excluded_node (l_name)
 						comment_finder.add_excluded_node (l_type)
 						comment_finder.find_comments (l_item, comment_list)
@@ -4084,7 +4106,7 @@ feature {ET_AST_NODE} -- Processing
 			if attached an_expression.declared_type as l_declared_type then
 				l_type := l_declared_type.type
 				tokens.left_brace_symbol.process (Current)
-				l_type.process (Current)
+				process_type (l_type)
 				tokens.right_brace_symbol.process (Current)
 				comment_finder.add_excluded_node (l_type)
 				comment_finder.find_comments (l_declared_type, comment_list)
@@ -4208,7 +4230,7 @@ feature {ET_AST_NODE} -- Processing
 			if attached an_expression.declared_type as l_declared_type then
 				l_type := l_declared_type.type
 				tokens.left_brace_symbol.process (Current)
-				l_type.process (Current)
+				process_type (l_type)
 				tokens.right_brace_symbol.process (Current)
 				comment_finder.add_excluded_node (l_type)
 				comment_finder.find_comments (l_declared_type, comment_list)
@@ -4239,7 +4261,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.name.process (Current)
 			an_expression.colon.process (Current)
 			print_space
-			an_expression.type.process (Current)
+			process_type (an_expression.type)
 			an_expression.right_brace.process (Current)
 			print_space
 			an_expression.expression.process (Current)
@@ -4290,7 +4312,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_declared_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_type.process (Current)
+			process_type (l_type)
 			if attached a_feature.assigner as l_assigner then
 				print_space
 				l_assigner.process (Current)
@@ -4406,7 +4428,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_declared_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_type.process (Current)
+			process_type (l_type)
 			process_comments
 			print_new_line
 			if attached an_expression.preconditions as l_preconditions then
@@ -4647,7 +4669,7 @@ feature {ET_AST_NODE} -- Processing
 			a_selects: detachable ET_KEYWORD_FEATURE_NAME_LIST
 			an_end_keyword: detachable ET_TOKEN
 		do
-			a_parent.type.process (Current)
+			process_parent_type (a_parent.type)
 			indent
 			a_renames := a_parent.renames
 			an_exports := a_parent.exports
@@ -4784,6 +4806,14 @@ feature {ET_AST_NODE} -- Processing
 			end
 			process_comments
 			dedent
+		end
+
+	process_parent_type (a_type: ET_TYPE)
+			-- Process `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			a_type.process (Current)
 		end
 
 	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
@@ -4988,14 +5018,14 @@ feature {ET_AST_NODE} -- Processing
 			a_type.like_keyword.process (Current)
 			print_space
 			a_type.left_brace.process (Current)
-			a_type.target_type.process (Current)
+			process_type (a_type.target_type)
 			a_type.right_brace.process (Current)
 				-- The AST may or may not contain the dot.
 				-- So we have to print them explicitly here.
 			tokens.dot_symbol.process (Current)
 			l_qualified_feature_name := a_type.qualified_name
 			l_feature_name := l_qualified_feature_name.feature_name
-			set_target_type (a_type.target_type)
+			set_target_type_with_seeded_feature (a_type.target_type, l_feature_name.seed)
 			process_feature_name (l_feature_name)
 			set_target_type (Void)
 			comment_finder.add_excluded_node (l_feature_name)
@@ -5015,13 +5045,13 @@ feature {ET_AST_NODE} -- Processing
 					print_space
 				end
 			end
-			a_type.target_type.process (Current)
+			process_type (a_type.target_type)
 				-- The AST may or may not contain the dot.
 				-- So we have to print them explicitly here.
 			tokens.dot_symbol.process (Current)
 			l_qualified_feature_name := a_type.qualified_name
 			l_feature_name := l_qualified_feature_name.feature_name
-			set_target_type (a_type.target_type)
+			set_target_type_with_seeded_feature (a_type.target_type, l_feature_name.seed)
 			process_feature_name (l_feature_name)
 			set_target_type (Void)
 			comment_finder.add_excluded_node (l_feature_name)
@@ -5258,12 +5288,12 @@ feature {ET_AST_NODE} -- Processing
 			l_static_type := an_expression.static_type
 			l_type := l_static_type.type
 			tokens.left_brace_symbol.process (Current)
-			l_type.process (Current)
+			process_type (l_type)
 			tokens.right_brace_symbol.process (Current)
 			comment_finder.add_excluded_node (l_type)
 			comment_finder.find_comments (l_static_type, comment_list)
 			comment_finder.reset_excluded_nodes
-			set_target_type (l_type)
+			set_target_type_with_seeded_feature (l_type, an_expression.name.seed)
 			process_qualified_call (an_expression)
 			set_target_type (Void)
 		end
@@ -5280,12 +5310,12 @@ feature {ET_AST_NODE} -- Processing
 			l_static_type := an_instruction.static_type
 			l_type := l_static_type.type
 			tokens.left_brace_symbol.process (Current)
-			l_type.process (Current)
+			process_type (l_type)
 			tokens.right_brace_symbol.process (Current)
 			comment_finder.add_excluded_node (l_type)
 			comment_finder.find_comments (l_static_type, comment_list)
 			comment_finder.reset_excluded_nodes
-			set_target_type (l_type)
+			set_target_type_with_seeded_feature (l_type, an_instruction.name.seed)
 			process_qualified_call (an_instruction)
 			set_target_type (Void)
 		end
@@ -5423,6 +5453,14 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_type (a_type: ET_TYPE)
+			-- Process `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			a_type.process (Current)
+		end
+
 	process_type_constraint_list (a_list: ET_TYPE_CONSTRAINT_LIST)
 			-- Process `a_list'.
 		local
@@ -5460,12 +5498,42 @@ feature {ET_AST_NODE} -- Processing
 
 	process_type_rename_constraint (a_type_rename_constraint: ET_TYPE_RENAME_CONSTRAINT)
 			-- Process `a_type_rename_constraint'.
+		local
+			i, nb: INTEGER
+			l_renames: ET_CONSTRAINT_RENAME_LIST
+			l_item: ET_RENAME_ITEM
+			l_rename: ET_RENAME
 		do
-			a_type_rename_constraint.type.process (Current)
+			process_type (a_type_rename_constraint.type)
 			print_space
-			set_target_type (a_type_rename_constraint.type)
-			a_type_rename_constraint.renames.process (Current)
-			set_target_type (Void)
+			l_renames := a_type_rename_constraint.renames
+			l_renames.rename_keyword.process (Current)
+			print_space
+			nb := l_renames.count
+			from i := 1 until i > nb loop
+				l_item := l_renames.item (i)
+				l_rename := l_item.rename_pair
+				set_target_type_with_seeded_feature (a_type_rename_constraint.type, l_rename.old_name.seed)
+				process_feature_name (l_rename.old_name)
+				print_space
+				l_rename.as_keyword.process (Current)
+				print_space
+				l_rename.new_name.process (Current)
+				set_target_type (Void)
+				if i /= nb then
+						-- The AST may or may not contain the comma.
+						-- So we have to print it explicitly here.
+					tokens.comma_symbol.process (Current)
+				end
+				comment_finder.add_excluded_node (l_rename.old_name)
+				comment_finder.add_excluded_node (l_rename.as_keyword)
+				comment_finder.add_excluded_node (l_rename.new_name)
+				comment_finder.find_comments (l_item, comment_list)
+				comment_finder.reset_excluded_nodes
+				print_space
+				i := i + 1
+			end
+			l_renames.end_keyword.process (Current)
 		end
 
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT)
@@ -5514,7 +5582,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_declared_type, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_type.process (Current)
+			process_type (l_type)
 			print_space
 			if attached a_feature.assigner as l_assigner then
 				l_assigner.process (Current)
@@ -5901,6 +5969,14 @@ feature {NONE} -- Call targets
 
 	set_target_type (a_type: detachable ET_TYPE)
 			-- Set target type to be used when processing a feature name.
+		do
+		end
+
+	set_target_type_with_seeded_feature (a_type: detachable ET_TYPE; a_seed: INTEGER)
+			-- Set target type to be used when processing a feature name.
+			-- In case of a formal parameter, choose one of its constraint
+			-- adapted base classes containing a feature with seed `a_seed'
+			-- (or any of the constraints if none contains such feature).
 		do
 		end
 

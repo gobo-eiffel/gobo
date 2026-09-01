@@ -105,7 +105,7 @@ feature -- Argument parsing
 			-- Option for '--target=<target_name>'
 
 	format_option: AP_ENUMERATION_OPTION
-			-- Option for '--format=<pretty_print|contract_view|html_ise_stylesheet|descendants|unused_classes|implicit_converts|explicit_converts|ecf_pretty_print|available_targets|executable_name>'
+			-- Option for '--format=<pretty_print|contract_view|flat_contract_view|html_ise_stylesheet|descendants|unused_classes|implicit_converts|explicit_converts|ecf_pretty_print|available_targets|executable_name>'
 
 	class_option: AP_STRING_OPTION
 			-- Option for '--class=<class_name>'
@@ -187,6 +187,7 @@ feature -- Argument parsing
 			format_option.set_description ("Format for the output. (default: pretty_print)")
 			format_option.extend ("pretty_print")
 			format_option.extend ("contract_view")
+			format_option.extend ("flat_contract_view")
 			format_option.extend ("html_ise_stylesheet")
 			format_option.extend ("descendants")
 			format_option.extend ("unused_classes")
@@ -195,7 +196,7 @@ feature -- Argument parsing
 			format_option.extend ("ecf_pretty_print")
 			format_option.extend ("available_targets")
 			format_option.extend ("executable_name")
-			format_option.set_parameter_description ("pretty_print|contract_view|html_ise_stylesheet|descendants|unused_classes|implicit_converts|explicit_converts|ecf_pretty_print|available_targets|executable_name")
+			format_option.set_parameter_description ("pretty_print|contract_view|flat_contract_view|html_ise_stylesheet|descendants|unused_classes|implicit_converts|explicit_converts|ecf_pretty_print|available_targets|executable_name")
 			l_parser.options.force_last (format_option)
 				-- class.
 			create class_option.make ('c', "class")
@@ -301,6 +302,8 @@ feature -- Argument parsing
 				create {GEDOC_PRETTY_PRINT_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif not format_option.was_found or format_option.parameter ~ "contract_view" then
 				create {GEDOC_CONTRACT_VIEW_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
+			elseif not format_option.was_found or format_option.parameter ~ "flat_contract_view" then
+				create {GEDOC_FLAT_CONTRACT_VIEW_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif format_option.parameter ~ "html_ise_stylesheet" then
 				create {GEDOC_HTML_ISE_STYLESHEET_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif format_option.parameter ~ "descendants" then
