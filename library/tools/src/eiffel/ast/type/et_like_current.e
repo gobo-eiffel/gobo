@@ -5,7 +5,7 @@
 		"Eiffel 'like Current' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_LIKE_CURRENT
@@ -21,6 +21,7 @@ inherit
 			add_adapted_base_classes_to_list,
 			adapted_base_class_with_named_feature,
 			adapted_base_class_with_seeded_feature,
+			adapted_base_type_with_seeded_feature,
 			same_syntactical_like_current_with_type_marks,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
@@ -89,6 +90,15 @@ feature -- Access
 			-- such feature)
 		do
 			Result := a_context.adapted_base_class_with_seeded_feature (a_seed)
+		end
+
+	adapted_base_type_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base type of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint adapted base types containing
+			-- a feature with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
+		do
+			Result := a_context.adapted_base_type_with_seeded_feature (a_seed)
 		end
 
 	base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE

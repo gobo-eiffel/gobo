@@ -5,7 +5,7 @@
 		"Eiffel 'like feature' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class ET_LIKE_FEATURE
@@ -22,6 +22,7 @@ inherit
 			add_adapted_base_classes_to_list,
 			adapted_base_class_with_named_feature,
 			adapted_base_class_with_seeded_feature,
+			adapted_base_type_with_seeded_feature,
 			same_syntactical_like_feature_with_type_marks,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
@@ -200,6 +201,42 @@ feature -- Access
 				l_class := a_context.base_class
 				if attached l_class.seeded_query (seed) as l_query then
 					Result := l_query.type.adapted_base_class_with_seeded_feature (a_seed, a_context)
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we resolved
+						-- current anchored type.
+					Result := tokens.unknown_class
+				end
+			end
+		end
+
+	adapted_base_type_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base type of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint adapted base types containing
+			-- a feature with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
+		local
+			l_class: ET_CLASS
+			l_index: INTEGER
+		do
+			if seed = 0 then
+					-- Anchored type not resolved yet.
+				Result := tokens.unknown_class
+			elseif is_like_argument then
+				l_class := a_context.base_class
+				l_index := index
+				if attached l_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.adapted_base_type_with_seeded_feature (a_seed, a_context)
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current anchored type.
+					Result := tokens.unknown_class
+				end
+			else
+				l_class := a_context.base_class
+				if attached l_class.seeded_query (seed) as l_query then
+					Result := l_query.type.adapted_base_type_with_seeded_feature (a_seed, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved

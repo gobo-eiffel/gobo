@@ -5,7 +5,7 @@
 		"Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_TYPE
@@ -134,6 +134,19 @@ feature -- Access
 			-- no_cycle: no cycle in anchored types involved.
 		do
 			Result := base_class (a_context)
+		end
+
+	adapted_base_type_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base type of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint adapted base types containing
+			-- a feature with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := base_type (a_context)
 		end
 
 	base_type (a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE

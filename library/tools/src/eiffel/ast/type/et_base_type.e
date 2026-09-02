@@ -5,7 +5,7 @@
 		"Eiffel types directly based on a class"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2026, Eric Bezault and others"
 	license: "MIT License"
 
 deferred class ET_BASE_TYPE
@@ -62,6 +62,7 @@ inherit
 			add_adapted_base_classes_to_list as context_add_adapted_base_classes_to_list,
 			adapted_base_class_with_named_feature as context_adapted_base_class_with_named_feature,
 			adapted_base_class_with_seeded_feature as context_adapted_base_class_with_seeded_feature,
+			adapted_base_type_with_seeded_feature as context_adapted_base_type_with_seeded_feature,
 			same_named_type as context_same_named_type,
 			same_named_type_with_type_marks as context_same_named_type_with_type_marks,
 			same_base_type as context_same_base_type,
@@ -498,6 +499,15 @@ feature -- Type context
 			-- such feature)
 		do
 			Result := adapted_base_class_with_seeded_feature (a_seed, Current)
+		end
+
+	context_adapted_base_type_with_seeded_feature (a_seed: INTEGER): ET_ADAPTED_CLASS
+			-- Base type of current context, or in case of a formal parameter
+			-- one of its constraint adapted base types containing a feature
+			-- with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
+		do
+			Result := adapted_base_type_with_seeded_feature (a_seed, Current)
 		end
 
 	context_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): ET_BASE_TYPE

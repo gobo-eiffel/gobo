@@ -319,7 +319,7 @@ feature {ET_AST_NODE} -- Processing
 					elseif attached {ET_EXPRESSION} l_target as l_expression_target then
 						expression_type_finder.find_expression_type_in_closure (l_expression_target, l_closure, l_closure, current_class, internal_type_context, current_universe.detachable_separate_any_type)
 					end
-					l_target_type := internal_type_context.adapted_base_class_with_seeded_feature (l_name.seed).base_type
+					l_target_type := internal_type_context.adapted_base_type_with_seeded_feature (l_name.seed).base_type
 					create {ET_BROWSABLE_QUALIFIED_CALL_NAME} last_browsable_name.make (l_name, l_target_type, current_class)
 				end
 			else
@@ -432,7 +432,7 @@ feature {ET_AST_NODE} -- Processing
 					if l_name.contains_position (current_position) then
 						internal_type_context.reset (current_class)
 						internal_type_context.put_last (a_parameter.type)
-						l_target_type := internal_type_context.adapted_base_class_with_seeded_feature (l_name.seed).base_type
+						l_target_type := internal_type_context.adapted_base_type_with_seeded_feature (l_name.seed).base_type
 						create {ET_BROWSABLE_QUALIFIED_CALL_NAME} l_browsable_name.make (l_name, l_target_type, current_class)
 						l_browsable_name.set_only_procedure_expected (True)
 						l_browsable_name.set_only_feature_name_expected (True)
@@ -479,7 +479,7 @@ feature {ET_AST_NODE} -- Processing
 			if l_name.contains_position (current_position) then
 				internal_type_context.reset (current_class)
 				internal_type_context.put_last (a_expression.type)
-				l_target_type := internal_type_context.adapted_base_class_with_seeded_feature (l_name.seed).base_type
+				l_target_type := internal_type_context.adapted_base_type_with_seeded_feature (l_name.seed).base_type
 				create {ET_BROWSABLE_QUALIFIED_CALL_NAME} l_browsable_name.make (l_name, l_target_type, current_class)
 				l_browsable_name.set_only_creation_procedure_expected (True)
 				last_browsable_name := l_browsable_name
@@ -506,7 +506,7 @@ feature {ET_AST_NODE} -- Processing
 					else
 						expression_type_finder.find_expression_type_in_closure (l_target, l_closure, l_closure, current_class, internal_type_context, current_universe.detachable_separate_any_type)
 					end
-					l_target_type := internal_type_context.adapted_base_class_with_seeded_feature (l_name.seed).base_type
+					l_target_type := internal_type_context.adapted_base_type_with_seeded_feature (l_name.seed).base_type
 					create {ET_BROWSABLE_QUALIFIED_CALL_NAME} l_browsable_name.make (l_name, l_target_type, current_class)
 					l_browsable_name.set_only_creation_procedure_expected (True)
 					last_browsable_name := l_browsable_name
@@ -1433,7 +1433,7 @@ feature {ET_AST_NODE} -- Processing
 				if attached current_closure as l_closure then
 					internal_type_context.reset (current_class)
 					expression_type_finder.find_expression_type_in_closure (a_call.target, l_closure, l_closure, current_class, internal_type_context, current_universe.detachable_separate_any_type)
-					l_target_type := internal_type_context.adapted_base_class_with_seeded_feature (l_name.seed).base_type
+					l_target_type := internal_type_context.adapted_base_type_with_seeded_feature (l_name.seed).base_type
 					if attached {ET_IDENTIFIER} l_name as l_label and then l_label.is_tuple_label then
 						create {ET_BROWSABLE_TUPLE_LABEL_NAME} last_browsable_name.make (l_label, l_target_type, current_class)
 					else
@@ -1465,7 +1465,7 @@ feature {ET_AST_NODE} -- Processing
 			if l_name.contains_position (current_position) then
 				internal_type_context.reset (current_class)
 				internal_type_context.put_last (a_type.target_type)
-				l_target_type := internal_type_context.adapted_base_class_with_seeded_feature (l_name.seed).base_type
+				l_target_type := internal_type_context.adapted_base_type_with_seeded_feature (l_name.seed).base_type
 				create {ET_BROWSABLE_QUALIFIED_CALL_NAME} l_browsable_name.make (l_name, l_target_type, current_class)
 				l_browsable_name.set_only_feature_name_expected (True)
 				l_browsable_name.set_only_query_expected (True)
@@ -1602,7 +1602,7 @@ feature {ET_AST_NODE} -- Processing
 			if l_name.contains_position (current_position) then
 				internal_type_context.reset (current_class)
 				internal_type_context.put_last (a_call.type)
-				l_target_type := internal_type_context.adapted_base_class_with_seeded_feature (l_name.seed).base_type
+				l_target_type := internal_type_context.adapted_base_type_with_seeded_feature (l_name.seed).base_type
 				create {ET_BROWSABLE_QUALIFIED_CALL_NAME} l_browsable_name.make (l_name, l_target_type, current_class)
 				l_browsable_name.set_only_static_call_expected (True)
 				last_browsable_name := l_browsable_name
@@ -1675,7 +1675,7 @@ feature {ET_AST_NODE} -- Processing
 					if l_name.contains_position (current_position) then
 						internal_type_context.reset (current_class)
 						internal_type_context.put_last (a_type_rename_constraint.type)
-						l_target_type := internal_type_context.adapted_base_class_with_seeded_feature (l_name.seed).base_type
+						l_target_type := internal_type_context.adapted_base_type_with_seeded_feature (l_name.seed).base_type
 						create {ET_BROWSABLE_QUALIFIED_CALL_NAME} l_browsable_name.make (l_name, l_target_type, current_class)
 						l_browsable_name.set_only_feature_name_expected (True)
 						l_browsable_name.set_non_exported_feature_allowed (True)
@@ -1687,7 +1687,7 @@ feature {ET_AST_NODE} -- Processing
 					if l_name.contains_position (current_position) then
 						internal_type_context.reset (current_class)
 						internal_type_context.put_last (a_type_rename_constraint.type)
-						l_target_type := internal_type_context.adapted_base_class_with_seeded_feature (l_name.seed).base_type
+						l_target_type := internal_type_context.adapted_base_type_with_seeded_feature (l_name.seed).base_type
 						create {ET_BROWSABLE_QUALIFIED_CALL_NAME} l_browsable_name.make (l_name, l_target_type, current_class)
 						l_browsable_name.set_completion_disabled (True)
 						last_browsable_name := l_browsable_name

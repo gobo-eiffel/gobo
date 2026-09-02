@@ -27,6 +27,11 @@
 * Added the generation of the flat-contract-view of classes
   when using the format `html-stylesheet`.
 
+### gelsp
+
+* Fixed tooltip for the feature names of qualified calls when
+  the target types are generic.
+
 ### Gobo Eiffel Tools Library
 
 * Improved detection of non-initialialized attributes of attached
