@@ -1,6 +1,6 @@
 # Release History
 
-## Version xx.xx.xx - xxxxxx
+## Version 26.09.03 - 3 September 2026
 
 ### gec
 
