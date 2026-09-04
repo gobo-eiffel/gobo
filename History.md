@@ -1,5 +1,12 @@
 # Release History
 
+## Version xx.xx.xx - xxxxxx
+
+### gedoc
+
+* Added the generation of the contract-view of classes
+  when using the format `html-stylesheet`.
+
 ## Version 26.09.03 - 3 September 2026
 
 ### gec

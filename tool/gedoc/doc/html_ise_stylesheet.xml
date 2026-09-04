@@ -20,7 +20,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>1 September 2026</date>
+	<date>4 September 2026</date>
 </chapterinfo>
 
 <title>HTML Format with ISE's Stylesheet</title>
@@ -67,8 +67,9 @@ project, you can use the command-line options <filename>--class</filename> and
 <section><title>Generated Files</title>
 <para>
 For each Eiffel class <classname>FOO</classname>, <projectname>gedoc</projectname>
-generates four HTML files: <filename>foo.html</filename>, <filename>foo_chart.html</filename>,
-<filename>foo_links.html</filename> and <filename>foo_contract_view.html</filename>.
+generates five HTML files: <filename>foo.html</filename>, <filename>foo_chart.html</filename>,
+<filename>foo_links.html</filename>, <filename>foo_contract_view.html</filename>
+and <filename>foo_flat_contract_view.html</filename>.
 The file <filename>foo.html</filename>
 contains a pretty-printed, colorized and hyper-linked version of the class text.
 The file <filename>foo_chart.html</filename> contains general information about the
@@ -79,11 +80,12 @@ EiffelStudio, features declared in class <classname>ANY</classname> are not list
 here, unless redefined in a descendant. The file <filename>foo_links.html</filename>
 lists the parent classes of the class, its heirs (other classes having this
 class as parent), its direct client classes and supplier classes.
-And finally the file <filename>foo_contract_view.html</filename> contains the
-flat-contract-view of the class (a view where internal implementation details
-are hidden). Note that this latter file is not part of the original
-<filename>html-sytlesheet</filename> format from ISE EiffelStudio, but is added
-here for convenience.
+And finally the files <filename>foo_contract_view.html</filename> and
+<filename>foo_flat_contract_view.html</filename> contain the contract-view
+and flat-contract-view of the class (two views without or with inherited features
+where internal implementation details are hidden). Note that these two latter files
+are not part of the original <filename>html-sytlesheet</filename> format from
+ISE EiffelStudio, but are added here for convenience.
 </para>
 <para>
 Each HTML file has a natigation bar at the top and bottom of the page. The button
@@ -96,8 +98,9 @@ of classes in this library. The button <filename>Chart</filename> shows the
 file <filename>foo_chart.html</filename> (already mentioned above) for the class 
 <classname>FOO</classname> currently displayed. The button <filename>Relations</filename>
 shows the file <filename>foo_links.html</filename>. The button <filename>Text</filename>
-shows the file <filename>foo.html</filename>. The button <filename>Contract View</filename>
-shows the file <filename>foo_contract_view.html</filename>. Finally, in the text field 
+shows the file <filename>foo.html</filename>. The buttons <filename>Contract View</filename>
+and <filename>Flat Contract View</filename> show the files <filename>foo_contract_view.html</filename>
+and <filename>foo_flat_contract_view.html</filename>. Finally, in the text field 
 <filename>Go to:</filename> you can type the name of a class, then type "Enter"
 to jump to that class.
 </para>
