@@ -97,8 +97,12 @@ feature -- Mapping
 	feature_href (a_feature: ET_FEATURE; a_class: ET_CLASS; a_mapping: attached like feature_mapping): detachable STRING
 			-- Href of `a_feature` from `a_class`, using `a_mapping`
 		do
-			if attached a_mapping.value (a_class) as l_features then
-				Result := l_features.value (a_feature)
+			if flat_enabled then
+				if attached a_mapping.value (a_class) as l_features then
+					Result := l_features.value (a_feature)
+				end
+			else
+				Result := precursor (a_feature, a_class, a_mapping)
 			end
 		end
 

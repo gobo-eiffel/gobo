@@ -9,7 +9,7 @@
 			ec -filter html-stylesheet -all -config project.ecf
 	]"
 
-	copyright: "Copyright (c) 2017-2025, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2026, Eric Bezault and others"
 	license: "MIT License"
 
 class GEDOC_HTML_ISE_STYLESHEET_FORMAT
@@ -60,7 +60,6 @@ feature {NONE} -- Initialization
 			output_directory := "."
 			create html_printer.make_null (a_system_processor)
 			create html_contract_viewer.make_null (a_system_processor)
-			html_contract_viewer.set_flat_enabled (True)
 			create line_splitter.make_with_separators ("%R%N")
 		end
 
@@ -96,8 +95,10 @@ feature {NONE} -- Processing
 			l_class_chart_mapping: DS_HASH_TABLE [STRING, ET_CLASS]
 			l_class_links_mapping: DS_HASH_TABLE [STRING, ET_CLASS]
 			l_class_contract_view_mapping: DS_HASH_TABLE [STRING, ET_CLASS]
+			l_class_flat_contract_view_mapping: DS_HASH_TABLE [STRING, ET_CLASS]
 			l_feature_mapping: DS_HASH_TABLE [DS_HASH_TABLE [STRING, ET_FEATURE], ET_CLASS]
 			l_feature_contract_view_mapping: DS_HASH_TABLE [DS_HASH_TABLE [STRING, ET_FEATURE], ET_CLASS]
+			l_feature_flat_contract_view_mapping: DS_HASH_TABLE [DS_HASH_TABLE [STRING, ET_FEATURE], ET_CLASS]
 			l_parent_classes: DS_HASH_TABLE [DS_HASH_SET [ET_CLASS], ET_CLASS]
 			l_heir_classes: DS_HASH_TABLE [DS_HASH_SET [ET_CLASS], ET_CLASS]
 			l_client_classes: DS_HASH_TABLE [DS_HASH_SET [ET_CLASS], ET_CLASS]
@@ -142,8 +143,11 @@ feature {NONE} -- Processing
 			l_class_mapping := class_mapping ("", l_input_classes)
 			print_classes_text (l_input_classes, l_formats, l_class_mapping, l_feature_mapping, l_root_path)
 			l_class_contract_view_mapping := class_mapping ("_contract_view", l_input_classes)
-			l_feature_contract_view_mapping := feature_mapping ("_contract_view", l_input_classes, True)
+			l_feature_contract_view_mapping := feature_mapping ("_contract_view", l_input_classes, False)
 			print_classes_contract_view (l_input_classes, l_formats, l_class_contract_view_mapping, l_feature_contract_view_mapping, l_root_path)
+			l_class_flat_contract_view_mapping := class_mapping ("_flat_contract_view", l_input_classes)
+			l_feature_flat_contract_view_mapping := feature_mapping ("_flat_contract_view", l_input_classes, True)
+			print_classes_flat_contract_view (l_input_classes, l_formats, l_class_flat_contract_view_mapping, l_feature_flat_contract_view_mapping, l_root_path)
 			has_error := l_formats.there_exists (agent {like Current}.has_error)
 		end
 
@@ -261,7 +265,7 @@ feature {NONE} -- Output
 					l_printer.print_bom
 					l_title := concat (universe_lower_name (a_system), titla_suffix_documentation)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
-					print_navigation_bar (Void, True, True, True, False, False, False, False, a_root_path, l_file)
+					print_navigation_bar (Void, True, True, True, False, False, False, False, False, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
 						-- General.
 					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
@@ -307,7 +311,7 @@ feature {NONE} -- Output
 					l_printer.dedent
 					l_printer.print_new_line
 					l_file.put_string (html_end_pre)
-					print_navigation_bar (Void, True, True, True, False, False, False, False, a_root_path, l_file)
+					print_navigation_bar (Void, True, True, True, False, False, False, False, False, a_root_path, l_file)
 					print_footer (l_file)
 					l_printer.set_null_file
 					l_printer.reset
@@ -351,7 +355,7 @@ feature {NONE} -- Output
 					l_line_splitter := line_splitter
 					l_title := concat (universe_lower_name (a_system), title_suffix_class_dictionary)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
-					print_navigation_bar (Void, False, True, True, False, False, False, False, a_root_path, l_file)
+					print_navigation_bar (Void, False, True, True, False, False, False, False, False, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
 					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
 					l_printer.print_string (title_classes)
@@ -378,7 +382,7 @@ feature {NONE} -- Output
 					end
 					l_printer.dedent
 					l_file.put_string (html_end_pre)
-					print_navigation_bar (Void, False, True, True, False, False, False, False, a_root_path, l_file)
+					print_navigation_bar (Void, False, True, True, False, False, False, False, False, a_root_path, l_file)
 					print_footer (l_file)
 					l_printer.set_null_file
 					l_printer.reset
@@ -416,7 +420,7 @@ feature {NONE} -- Output
 					l_printer.print_bom
 					l_title := concat (universe_lower_name (a_system), title_suffix_alphabetical_group_list)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
-					print_navigation_bar (Void, True, False, True, False, False, False, False, a_root_path, l_file)
+					print_navigation_bar (Void, True, False, True, False, False, False, False, False, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
 					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
 					l_printer.print_string (title_groups)
@@ -432,7 +436,7 @@ feature {NONE} -- Output
 					l_printer.dedent
 					l_printer.print_new_line
 					l_file.put_string (html_end_pre)
-					print_navigation_bar (Void, True, False, True, False, False, False, False, a_root_path, l_file)
+					print_navigation_bar (Void, True, False, True, False, False, False, False, False, a_root_path, l_file)
 					print_footer (l_file)
 					l_printer.set_null_file
 					l_printer.reset
@@ -470,7 +474,7 @@ feature {NONE} -- Output
 					l_printer.print_bom
 					l_title := concat (universe_lower_name (a_system), title_suffix_group_hierarchy)
 					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
-					print_navigation_bar (Void, True, True, False, False, False, False, False, a_root_path, l_file)
+					print_navigation_bar (Void, True, True, False, False, False, False, False, False, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
 					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
 					l_printer.print_string (title_groups)
@@ -491,7 +495,7 @@ feature {NONE} -- Output
 					l_printer.dedent
 					l_printer.print_new_line
 					l_file.put_string (html_end_pre)
-					print_navigation_bar (Void, True, True, False, False, False, False, False, a_root_path, l_file)
+					print_navigation_bar (Void, True, True, False, False, False, False, False, False, a_root_path, l_file)
 					print_footer (l_file)
 					l_printer.set_null_file
 					l_printer.reset
@@ -542,7 +546,7 @@ feature {NONE} -- Output
 					l_printer.print_bom
 						-- Header.
 					print_header (a_universe.kind_capitalized_name + " " + l_universe_name, keyword_eiffel_group, a_root_path, l_file)
-					print_navigation_bar (Void, True, True, False, False, False, False, False, a_root_path, l_file)
+					print_navigation_bar (Void, True, True, False, False, False, False, False, False, a_root_path, l_file)
 						-- Universe name.
 					l_file.put_string (html_start_pre)
 					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
@@ -586,7 +590,7 @@ feature {NONE} -- Output
 					l_printer.print_new_line
 					l_file.put_string (html_end_pre)
 						-- Footer.
-					print_navigation_bar (Void, True, True, False, False, False, False, False, a_root_path, l_file)
+					print_navigation_bar (Void, True, True, False, False, False, False, False, False, a_root_path, l_file)
 					print_footer (l_file)
 					l_printer.set_null_file
 					l_printer.reset
@@ -720,6 +724,36 @@ feature {NONE} -- Output
 				system_processor.process_custom (a_classes)
 				system_processor.record_end_time (dt1, "Class Contract Views")
 				system_processor.report_custom_metrics (a_classes, "Generated contract view files for")
+			end
+		end
+
+	print_classes_flat_contract_view (a_classes: DS_ARRAYED_LIST [ET_CLASS]; a_formats: DS_ARRAYED_LIST [like Current]; a_class_mapping: DS_HASH_TABLE [STRING, ET_CLASS]; a_feature_mapping: DS_HASH_TABLE [DS_HASH_TABLE [STRING, ET_FEATURE], ET_CLASS]; a_root_path: STRING)
+			-- Print files "<class_name>_flat_contract_view.html" for each class in `a_classes' using `a_formats'.
+		require
+			a_classes_not_void: a_classes /= Void
+			no_void_class: not a_classes.has_void
+			a_formats_not_void: a_formats /= Void
+			no_void_format: not a_formats.has_void
+			a_class_mapping_not_void: a_class_mapping /= Void
+			a_feature_mapping_not_void: a_feature_mapping /= Void
+			a_root_path_not_void: a_root_path /= Void
+		local
+			i, nb: INTEGER
+			l_format: like Current
+			dt1: detachable DT_DATE_TIME
+		do
+			if not system_processor.stop_requested then
+				dt1 := system_processor.benchmark_start_time
+				nb := a_formats.count
+				from i := 1 until i > nb loop
+					l_format := a_formats.item (i)
+					l_format.system_processor.set_custom_processor (agent l_format.print_class_flat_contract_view (?, a_class_mapping, a_feature_mapping, a_root_path))
+					i := i + 1
+				end
+				a_classes.do_all (agent {ET_CLASS}.set_marked (False))
+				system_processor.process_custom (a_classes)
+				system_processor.record_end_time (dt1, "Class Flat Contract Views")
+				system_processor.report_custom_metrics (a_classes, "Generated flat contract view files for")
 			end
 		end
 
@@ -957,7 +991,7 @@ feature {NONE} -- Output
 			a_file.put_new_line
 		end
 
-	print_navigation_bar (a_class_name: detachable STRING; a_class_list, a_group_list, a_group_hierarchy, a_class_chart, a_class_links, a_class_text, a_class_contract_view: BOOLEAN; a_root_path: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
+	print_navigation_bar (a_class_name: detachable STRING; a_class_list, a_group_list, a_group_hierarchy, a_class_chart, a_class_links, a_class_text, a_class_contract_view, a_class_flat_contract_view: BOOLEAN; a_root_path: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print navigation bar to `a_file'.
 		require
 			a_root_path_not_void: a_root_path /= Void
@@ -1018,13 +1052,20 @@ feature {NONE} -- Output
 				else
 					a_file.put_line (navigation_line_16)
 				end
-				a_file.put_string (navigation_line_17a)
+				if a_class_flat_contract_view then
+					a_file.put_string (navigation_line_17a)
+					a_file.put_string (a_class_name)
+					a_file.put_line (navigation_line_17b)
+				else
+					a_file.put_line (navigation_line_18)
+				end
+				a_file.put_string (navigation_line_19a)
 				a_file.put_string (a_class_name)
-				a_file.put_line (navigation_line_17b)
+				a_file.put_line (navigation_line_19b)
 			else
-				a_file.put_line (navigation_line_18)
+				a_file.put_line (navigation_line_20)
 			end
-			a_file.put_string (navigation_line_19)
+			a_file.put_string (navigation_line_21)
 		end
 
 	class_output_directory (a_class: ET_CLASS): STRING
@@ -1079,7 +1120,7 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 								-- Header.
 							l_title := concat (l_class_name, title_suffix_chart)
 							print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
-							print_navigation_bar (l_class_name, True, True, True, False, True, True, True, a_root_path, l_file)
+							print_navigation_bar (l_class_name, True, True, True, False, True, True, True, True, a_root_path, l_file)
 								-- Content.
 							l_file.put_string (html_start_pre)
 							print_class_header (a_class, l_printer)
@@ -1089,7 +1130,7 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 							print_feature_signatures (a_class.procedures, title_commands, l_printer)
 							l_file.put_string (html_end_pre)
 								-- Footer.
-							print_navigation_bar (l_class_name, True, True, True, False, True, True, True, a_root_path, l_file)
+							print_navigation_bar (l_class_name, True, True, True, False, True, True, True, True, a_root_path, l_file)
 							print_footer (l_file)
 							l_printer.set_null_file
 							l_printer.reset
@@ -1145,7 +1186,7 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 								-- Header.
 							l_title := concat (l_class_name, title_suffix_relations)
 							print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
-							print_navigation_bar (l_class_name, True, True, True, True, False, True, True, a_root_path, l_file)
+							print_navigation_bar (l_class_name, True, True, True, True, False, True, True, True, a_root_path, l_file)
 								-- Content.
 							l_file.put_string (html_start_pre)
 							print_class_header (a_class, l_printer)
@@ -1155,7 +1196,7 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 							print_class_relation (a_class, title_suppliers, a_suppliers_classes, l_printer)
 							l_file.put_string (html_end_pre)
 								-- Footer.
-							print_navigation_bar (l_class_name, True, True, True, True, False, True, True, a_root_path, l_file)
+							print_navigation_bar (l_class_name, True, True, True, True, False, True, True, True, a_root_path, l_file)
 							print_footer (l_file)
 							l_printer.set_null_file
 							l_printer.reset
@@ -1206,11 +1247,11 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 							l_printer.print_bom
 							l_title := concat (l_class_name, title_suffix_text)
 							print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
-							print_navigation_bar (l_class_name, True, True, True, True, True, False, True, a_root_path, l_file)
+							print_navigation_bar (l_class_name, True, True, True, True, True, False, True, True, a_root_path, l_file)
 							l_file.put_string (html_start_pre)
 							a_class.process (l_printer)
 							l_file.put_string (html_end_pre)
-							print_navigation_bar (l_class_name, True, True, True, True, True, False, True, a_root_path, l_file)
+							print_navigation_bar (l_class_name, True, True, True, True, True, False, True, True, a_root_path, l_file)
 							print_footer (l_file)
 							l_printer.set_null_file
 							l_printer.reset
@@ -1252,6 +1293,7 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 						if l_file.is_open_write then
 							l_contract_viewer := html_contract_viewer
 							l_contract_viewer.reset
+							l_contract_viewer.set_flat_enabled (False)
 							l_contract_viewer.set_file (l_file)
 							l_contract_viewer.set_class_mapping (a_class_mapping)
 							l_contract_viewer.set_feature_mapping (a_feature_mapping)
@@ -1261,11 +1303,67 @@ feature {GEDOC_HTML_ISE_STYLESHEET_FORMAT} -- Output
 							l_contract_viewer.print_bom
 							l_title := concat (l_class_name, title_suffix_contract_view)
 							print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
-							print_navigation_bar (l_class_name, True, True, True, True, True, True, False, a_root_path, l_file)
+							print_navigation_bar (l_class_name, True, True, True, True, True, True, False, True, a_root_path, l_file)
 							l_file.put_string (html_start_pre)
 							a_class.process (l_contract_viewer)
 							l_file.put_string (html_end_pre)
-							print_navigation_bar (l_class_name, True, True, True, True, True, True, False, a_root_path, l_file)
+							print_navigation_bar (l_class_name, True, True, True, True, True, True, False, True, a_root_path, l_file)
+							print_footer (l_file)
+							l_contract_viewer.set_null_file
+							l_contract_viewer.reset
+							l_file.close
+						else
+							report_cannot_write_error (l_filename)
+						end
+					end
+					system_processor.report_class_processed (a_class)
+					a_class.set_marked (True)
+				end
+				a_class.processing_mutex.unlock
+			end
+		end
+
+	print_class_flat_contract_view (a_class: ET_CLASS; a_class_mapping: DS_HASH_TABLE [STRING, ET_CLASS]; a_feature_mapping: DS_HASH_TABLE [DS_HASH_TABLE [STRING, ET_FEATURE], ET_CLASS]; a_root_path: STRING)
+			-- Print file "<class_name>_flat_contract_view.html".
+		require
+			a_class_not_void: a_class /= Void
+			a_class_mapping_not_void: a_class_mapping /= Void
+			a_feature_mapping_not_void: a_feature_mapping /= Void
+			a_root_path_not_void: a_root_path /= Void
+		local
+			l_file: KL_TEXT_OUTPUT_FILE
+			l_filename: STRING
+			l_class_name: STRING
+			l_title: STRING
+			l_contract_viewer: ET_AST_HTML_ISE_STYLESHEET_CONTRACT_VIEWER
+		do
+			if not {PLATFORM}.is_thread_capable or else a_class.processing_mutex.try_lock then
+				if not a_class.is_marked then
+					l_class_name := class_lower_name (a_class)
+					l_filename := filename (class_output_directory (a_class), concat (l_class_name, filename_suffix_flat_contract_view))
+					if not is_file_overwritable (l_filename) then
+						report_file_already_exists_error (l_filename)
+					else
+						l_file := new_output_file (l_filename)
+						l_file.recursive_open_write
+						if l_file.is_open_write then
+							l_contract_viewer := html_contract_viewer
+							l_contract_viewer.reset
+							l_contract_viewer.set_flat_enabled (True)
+							l_contract_viewer.set_file (l_file)
+							l_contract_viewer.set_class_mapping (a_class_mapping)
+							l_contract_viewer.set_feature_mapping (a_feature_mapping)
+							l_contract_viewer.set_root_path (a_root_path)
+							l_contract_viewer.set_current_class (a_class)
+							l_contract_viewer.set_bom_enabled (False)
+							l_contract_viewer.print_bom
+							l_title := concat (l_class_name, title_suffix_flat_contract_view)
+							print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
+							print_navigation_bar (l_class_name, True, True, True, True, True, True, True, False, a_root_path, l_file)
+							l_file.put_string (html_start_pre)
+							a_class.process (l_contract_viewer)
+							l_file.put_string (html_end_pre)
+							print_navigation_bar (l_class_name, True, True, True, True, True, True, True, False, a_root_path, l_file)
 							print_footer (l_file)
 							l_contract_viewer.set_null_file
 							l_contract_viewer.reset
@@ -1911,6 +2009,9 @@ feature {NONE} -- Constants
 	title_suffix_contract_view: STRING = " Contract View"
 			-- Title suffix " Contract View"
 
+	title_suffix_flat_contract_view: STRING = " Flat Contract View"
+			-- Title suffix " Flat Contract View"
+
 	html_start_pre: STRING = "<pre>"
 			-- <pre>
 
@@ -2052,17 +2153,26 @@ feature {NONE} -- Constants
 	navigation_line_16: STRING = "<span class=%"nav class selected%">Contract View</span>"
 			-- 16th line in HTML navigation bar
 
-	navigation_line_17a: STRING = "<span class=%"nav class goto%">Go to: <input name=%"c%" value=%""
+	navigation_line_17a: STRING = "<a class=%"nav class%" href=%""
 			-- 17th line in HTML navigation bar, first part
 
-	navigation_line_17b: STRING = "%"></span>"
+	navigation_line_17b: STRING = "_flat_contract_view.html%">Flat Contract View</a>"
 			-- 17th line in HTML navigation bar, second part
 
-	navigation_line_18: STRING = "<span class=%"nav class goto%">Go to: <input name=%"c%" value=%"%"></span>"
+	navigation_line_18: STRING = "<span class=%"nav class selected%">Flat Contract View</span>"
 			-- 18th line in HTML navigation bar
 
-	navigation_line_19: STRING = "</div></form>"
-			-- 19th line in HTML navigation bar
+	navigation_line_19a: STRING = "<span class=%"nav class goto%">Go to: <input name=%"c%" value=%""
+			-- 19th line in HTML navigation bar, first part
+
+	navigation_line_19b: STRING = "%"></span>"
+			-- 19th line in HTML navigation bar, second part
+
+	navigation_line_20: STRING = "<span class=%"nav class goto%">Go to: <input name=%"c%" value=%"%"></span>"
+			-- 20th line in HTML navigation bar
+
+	navigation_line_21: STRING = "</div></form>"
+			-- 21th line in HTML navigation bar
 
 	filename_class_list: STRING = "class_list.html"
 			-- Filename "class_list.html"
@@ -2095,7 +2205,10 @@ feature {NONE} -- Constants
 			-- Filename suffix ".html"
 
 	filename_suffix_contract_view: STRING = "_contract_view.html"
-			-- Filename suffix ".html"
+			-- Filename suffix "_contract_view.html"
+
+	filename_suffix_flat_contract_view: STRING = "_flat_contract_view.html"
+			-- Filename suffix "_flat_contract_view.html"
 
 invariant
 
